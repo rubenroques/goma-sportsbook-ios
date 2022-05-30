@@ -23,6 +23,7 @@ class BetslipViewController: UIViewController {
     @IBOutlet private weak var accountValueBaseView: UIView!
     @IBOutlet private weak var accountValuePlusView: UIView!
     @IBOutlet private weak var accountValueLabel: UILabel!
+    @IBOutlet private weak var accountPlusImageView: UIImageView!
 
     @IBOutlet private weak var closeButton: UIButton!
     @IBOutlet private weak var tabsBaseView: UIView!
@@ -206,13 +207,15 @@ class BetslipViewController: UIViewController {
         self.accountValueBaseView.backgroundColor = .clear
         self.accountValuePlusView.backgroundColor = UIColor.App.highlightSecondary
         self.accountValueLabel.textColor = UIColor.App.textPrimary
-
+        self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        
         self.tabViewController.sliderBarColor = UIColor.App.highlightSecondary
         self.tabViewController.barColor = UIColor.App.backgroundPrimary
         self.tabViewController.textColor = UIColor.App.textPrimary
         self.tabViewController.separatorBarColor = UIColor.App.separatorLine
 
-        self.closeButton.titleLabel?.textColor = UIColor.App.textPrimary
+        self.closeButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+
         self.betsLabel.textColor = UIColor.App.textPrimary
         self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
     }

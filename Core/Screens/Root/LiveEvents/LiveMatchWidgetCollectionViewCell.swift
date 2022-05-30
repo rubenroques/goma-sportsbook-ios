@@ -138,6 +138,10 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayUpChangeOddValueImage.alpha = 0.0
         self.awayDownChangeOddValueImage.alpha = 0.0
 
+        self.homeOddTitleLabel.text = "-"
+        self.drawOddTitleLabel.text = "-"
+        self.awayOddTitleLabel.text = "-"
+
         self.eventNameLabel.text = ""
         self.homeParticipantNameLabel.text = ""
         self.awayParticipantNameLabel.text = ""
@@ -194,6 +198,10 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayParticipantNameLabel.text = ""
         self.matchTimeLabel.text = ""
         self.resultLabel.text = ""
+
+        self.homeOddTitleLabel.text = "-"
+        self.drawOddTitleLabel.text = "-"
+        self.awayOddTitleLabel.text = "-"
 
         self.homeOddValueLabel.text = ""
         self.drawOddValueLabel.text = ""
@@ -612,7 +620,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBAction private func didTapFavoritesButton(_ sender: Any) {
         if UserSessionStore.isUserLogged() {
             if let match = self.viewModel?.match {
-                // self.didTapFavoriteMatchAction?(match)
                 self.markAsFavorite(match: match)
             }
         }
@@ -787,43 +794,51 @@ extension LiveMatchWidgetCollectionViewCell {
 
     @IBAction private func didLongPressCard() {
 
-        guard
-            let parentViewController = self.viewController,
-            let match = self.viewModel?.match
-        else {
-            return
-        }
-
-        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-
-        if Env.favoritesManager.isEventFavorite(eventId: match.id) {
-            let favoriteAction: UIAlertAction = UIAlertAction(title: "Remove from favorites", style: .default) { _ -> Void in
-                Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
+        if UserSessionStore.isUserLogged() {
+          
+            guard
+                let parentViewController = self.viewController,
+                let match = self.viewModel?.match
+            else {
+                return
             }
-            actionSheetController.addAction(favoriteAction)
+
+            let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+            if Env.favoritesManager.isEventFavorite(eventId: match.id) {
+                let favoriteAction: UIAlertAction = UIAlertAction(title: "Remove from favorites", style: .default) { _ -> Void in
+                    Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
+                }
+                actionSheetController.addAction(favoriteAction)
+            }
+            else {
+                let favoriteAction: UIAlertAction = UIAlertAction(title: "Add to favorites", style: .default) { _ -> Void in
+                    Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: .match)
+                }
+                actionSheetController.addAction(favoriteAction)
+            }
+
+            let shareAction: UIAlertAction = UIAlertAction(title: "Share event", style: .default) { [weak self] _ -> Void in
+                self?.didTapShareButton()
+            }
+            actionSheetController.addAction(shareAction)
+
+            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { _ -> Void in }
+            actionSheetController.addAction(cancelAction)
+
+            if let popoverController = actionSheetController.popoverPresentationController {
+                popoverController.sourceView = parentViewController.view
+                popoverController.sourceRect = CGRect(x: parentViewController.view.bounds.midX, y: parentViewController.view.bounds.midY, width: 0, height: 0)
+                popoverController.permittedArrowDirections = []
+            }
+
+            parentViewController.present(actionSheetController, animated: true, completion: nil)
+        
         }
         else {
-            let favoriteAction: UIAlertAction = UIAlertAction(title: "Add to favorites", style: .default) { _ -> Void in
-                Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: .match)
-            }
-            actionSheetController.addAction(favoriteAction)
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.viewController?.present(loginViewController, animated: true, completion: nil)
         }
-
-        let shareAction: UIAlertAction = UIAlertAction(title: "Share event", style: .default) { [weak self] _ -> Void in
-            self?.didTapShareButton()
-        }
-        actionSheetController.addAction(shareAction)
-
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { _ -> Void in }
-        actionSheetController.addAction(cancelAction)
-
-        if let popoverController = actionSheetController.popoverPresentationController {
-            popoverController.sourceView = parentViewController.view
-            popoverController.sourceRect = CGRect(x: parentViewController.view.bounds.midX, y: parentViewController.view.bounds.midY, width: 0, height: 0)
-            popoverController.permittedArrowDirections = []
-        }
-
-        parentViewController.present(actionSheetController, animated: true, completion: nil)
     }
 
     private func didTapShareButton() {

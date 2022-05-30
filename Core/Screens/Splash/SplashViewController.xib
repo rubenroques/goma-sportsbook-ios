@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SplashViewController" customModule="DAZN" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SplashViewController" customModule="Crocobet" customModuleProvider="target">
             <connections>
                 <outlet property="view" destination="ZmS-qX-itl" id="jNn-km-yf7"/>
             </connections>
@@ -20,10 +20,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_horizontal_center" translatesAutoresizingMaskIntoConstraints="NO" id="dAh-qY-Dav">
-                    <rect key="frame" x="50" y="323.5" width="314" height="209"/>
+                    <rect key="frame" x="127" y="348" width="160" height="160"/>
                     <constraints>
-                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="1000" id="aQc-Lv-AaK"/>
-                        <constraint firstAttribute="width" secondItem="dAh-qY-Dav" secondAttribute="height" multiplier="15:10" id="yNJ-h7-1X3"/>
+                        <constraint firstAttribute="width" constant="160" id="f3D-gZ-1ve"/>
+                        <constraint firstAttribute="width" secondItem="dAh-qY-Dav" secondAttribute="height" multiplier="15:15" id="yNJ-h7-1X3"/>
                     </constraints>
                 </imageView>
                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="t17-ry-fsZ">
@@ -37,15 +37,14 @@
                 <constraint firstItem="dAh-qY-Dav" firstAttribute="centerY" secondItem="ZmS-qX-itl" secondAttribute="centerY" constant="-20" id="50f-5j-Ak4"/>
                 <constraint firstItem="dAh-qY-Dav" firstAttribute="centerX" secondItem="ZmS-qX-itl" secondAttribute="centerX" id="E59-DC-umR"/>
                 <constraint firstItem="t17-ry-fsZ" firstAttribute="centerX" secondItem="ZmS-qX-itl" secondAttribute="centerX" id="gTZ-7H-tLz"/>
-                <constraint firstItem="VxJ-Uj-Cmr" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="dAh-qY-Dav" secondAttribute="trailing" constant="50" id="lr6-qz-xU1"/>
             </constraints>
             <point key="canvasLocation" x="-768" y="291"/>
         </view>
     </objects>
     <resources>
-        <image name="logo_horizontal_center" width="400" height="44"/>
+        <image name="logo_horizontal_center" width="143" height="69"/>
         <namedColor name="backgroundPrimary">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.043137254901960784" green="0.043137254901960784" blue="0.043137254901960784" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

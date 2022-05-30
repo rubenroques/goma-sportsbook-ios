@@ -50,7 +50,9 @@ class RequestLocationAccessViewController: UIViewController {
         permissionTitleLabel.textColor = UIColor.App.textPrimary
         permissionTextLabel.textColor = UIColor.App.textPrimary
         permissionSubtitleLabel.textColor = UIColor.App.inputText
-        locationButton.setTitleColor(UIColor.white, for: .normal)
+
+        locationButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+
         locationButton.layer.borderColor = UIColor.App.highlightPrimary.cgColor
         locationButton.layer.backgroundColor = UIColor.App.highlightPrimary.cgColor
     }

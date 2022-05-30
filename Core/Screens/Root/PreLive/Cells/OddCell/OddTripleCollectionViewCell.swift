@@ -246,8 +246,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.homeNameCaptionLabel.textColor = UIColor.App.textPrimary
         self.awayNameCaptionLabel.textColor = UIColor.App.textPrimary
 
-        self.homeCircleCaptionView.backgroundColor = UIColor(hex: 0x5F54FF)
-        self.awayCircleCaptionView.backgroundColor = UIColor(hex: 0x46C1A7)
+        self.homeCircleCaptionView.backgroundColor = UIColor.App.statsHome
+        self.awayCircleCaptionView.backgroundColor = UIColor.App.statsAway
 
         if isLeftOutcomeButtonSelected {
             self.leftBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary

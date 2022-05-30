@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SimpleRegisterDetailsViewController" customModule="ShowcaseBeta" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SimpleRegisterDetailsViewController" customModule="DAZN" customModuleProvider="target">
             <connections>
                 <outlet property="backButton" destination="8dW-VF-FcY" id="j6s-NS-Vl3"/>
                 <outlet property="backView" destination="dDi-JT-QK6" id="81t-Wa-YoF"/>
@@ -58,13 +58,13 @@
                                                 <action selector="didTapBackButton" destination="-1" eventType="primaryActionTriggered" id="kHd-Ko-r1v"/>
                                             </connections>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jSl-FK-ly0">
-                                            <rect key="frame" x="355" y="0.0" width="51" height="44"/>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jSl-FK-ly0">
+                                            <rect key="frame" x="369" y="0.0" width="34" height="44"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="44" id="kWa-v0-zMV"/>
                                             </constraints>
-                                            <state key="normal" title="Button"/>
-                                            <buttonConfiguration key="configuration" style="plain" title="Quit"/>
+                                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                            <state key="normal" title="Quit"/>
                                             <connections>
                                                 <action selector="didTapQuitButton" destination="-1" eventType="touchUpInside" id="C9P-FR-DYF"/>
                                             </connections>
@@ -72,7 +72,7 @@
                                     </subviews>
                                     <color key="backgroundColor" systemColor="systemGray4Color"/>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="jSl-FK-ly0" secondAttribute="trailing" constant="8" id="Dij-oU-h1N"/>
+                                        <constraint firstAttribute="trailing" secondItem="jSl-FK-ly0" secondAttribute="trailing" constant="11" id="Dij-oU-h1N"/>
                                         <constraint firstItem="8dW-VF-FcY" firstAttribute="centerY" secondItem="dDi-JT-QK6" secondAttribute="centerY" id="fhL-rk-TAZ"/>
                                         <constraint firstAttribute="height" constant="44" id="lsW-aO-zB6"/>
                                         <constraint firstItem="jSl-FK-ly0" firstAttribute="centerY" secondItem="dDi-JT-QK6" secondAttribute="centerY" id="mZe-E2-QfG"/>
@@ -91,7 +91,7 @@
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uSA-WG-kVe">
                                     <rect key="frame" x="16" y="120" width="382" height="264"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ddC-qC-WR5" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ddC-qC-WR5" customClass="HeaderTextFieldView" customModule="DAZN" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="8" width="382" height="80"/>
                                             <color key="backgroundColor" systemColor="systemGrayColor"/>
                                             <constraints>
@@ -102,7 +102,7 @@
                                             <rect key="frame" x="350" y="29" width="20" height="20"/>
                                             <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </activityIndicatorView>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ujG-ac-Ti5" customClass="HeaderDropDownSelectionView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ujG-ac-Ti5" customClass="HeaderDropDownSelectionView" customModule="DAZN" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="96" width="382" height="80"/>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                             <accessibility key="accessibilityConfiguration">
@@ -115,7 +115,7 @@
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n4c-hX-yA0">
                                             <rect key="frame" x="0.0" y="184" width="382" height="80"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fve-LG-60v" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fve-LG-60v" customClass="HeaderTextFieldView" customModule="DAZN" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="110" height="80"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
@@ -123,7 +123,7 @@
                                                         <constraint firstAttribute="height" constant="80" id="ecb-Ot-DdZ"/>
                                                     </constraints>
                                                 </view>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0vx-bq-BHE" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0vx-bq-BHE" customClass="HeaderTextFieldView" customModule="DAZN" customModuleProvider="target">
                                                     <rect key="frame" x="126" y="0.0" width="256" height="80"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
@@ -165,21 +165,21 @@
                                         <constraint firstAttribute="height" constant="1" id="CXU-L3-BZ4"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Kb-Up-VfD" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Kb-Up-VfD" customClass="HeaderTextFieldView" customModule="DAZN" customModuleProvider="target">
                                     <rect key="frame" x="16" y="401" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="EaZ-4f-iwI"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I7d-C0-UTd" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I7d-C0-UTd" customClass="HeaderTextFieldView" customModule="DAZN" customModuleProvider="target">
                                     <rect key="frame" x="16" y="489" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="nV4-Hz-uja"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KVr-EE-y8V" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KVr-EE-y8V" customClass="HeaderTextFieldView" customModule="DAZN" customModuleProvider="target">
                                     <rect key="frame" x="16" y="577" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
@@ -198,7 +198,7 @@
                                         <action selector="signUpAction" destination="-1" eventType="touchUpInside" id="oAT-bx-KAv"/>
                                     </connections>
                                 </button>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="blR-iN-0su" customClass="PolicyLinkView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="blR-iN-0su" customClass="PolicyLinkView" customModule="DAZN" customModuleProvider="target">
                                     <rect key="frame" x="16" y="681" width="382" height="30"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>

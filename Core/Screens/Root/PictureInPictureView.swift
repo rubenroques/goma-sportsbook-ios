@@ -18,8 +18,12 @@ class PassthroughWindow: UIWindow {
 class PictureInPictureView: UIView {
 
     private lazy var pictureInPictureBackgroundView: UIView = Self.createPictureInPictureBackgroundView()
+
+    private lazy var backgroundCloseView: UIView = Self.createBackgroundCloseView()
+    private lazy var backgroundInfoLabel: UILabel = Self.createBackgroundInfoLabel()
+
     private lazy var pictureInPictureView: UIView = Self.createPictureInPictureView()
-    private lazy var pictureInPictureCloseView: UIView = Self.pictureInPictureCloseView()
+    private lazy var pictureInPictureCloseView: UIView = Self.createPictureInPictureCloseView()
     private lazy var pictureInPictureExpandView: UIView = Self.createPictureInPictureExpandView()
     private var pictureInPictureWebView: WKWebView?
 
@@ -34,6 +38,8 @@ class PictureInPictureView: UIView {
 
     private let horizontalSpacing: CGFloat = 20
     private let verticalSpacing: CGFloat = 20
+
+    private var isActive = false
 
     private var pictureInPicturePositionViews = [UIView]()
     private var pictureInPicturePositions: [CGPoint] {
@@ -65,16 +71,19 @@ class PictureInPictureView: UIView {
         self.setupSubviews()
         self.setupWithTheme()
 
-        let closeTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapPictureInPictureCloseView))
+        let backgroundCloseTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapBackgroundCloseView))
+        backgroundCloseTapGestureRecognizer.numberOfTapsRequired = 1
+        self.backgroundCloseView.addGestureRecognizer(backgroundCloseTapGestureRecognizer)
+
+        let closeTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapPlayerCloseView))
         closeTapGestureRecognizer.numberOfTapsRequired = 1
         self.pictureInPictureCloseView.addGestureRecognizer(closeTapGestureRecognizer)
 
-        let expandTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapPictureInPictureExpandView))
+        let expandTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapPlayerExpandView))
         expandTapGestureRecognizer.numberOfTapsRequired = 1
         self.pictureInPictureExpandView.addGestureRecognizer(expandTapGestureRecognizer)
 
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapPictureInPictureView))
-        tapGestureRecognizer.numberOfTapsRequired = 2
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapPlayerView))
         self.pictureInPictureView.addGestureRecognizer(tapGestureRecognizer)
 
         let panRecognizer = UIPanGestureRecognizer()
@@ -101,25 +110,34 @@ class PictureInPictureView: UIView {
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
 
+        if !isActive {
+            return nil
+        }
+
+        if self.isHidden {
+            return nil
+        }
+
         // if there are subviews, step through them
         // if the subview contains the point, call hitTest on the subview to see if the subview's subviews contain the point
         // if they do, return the result,
         // if they don't, return the subview that does contain the point.
         for subview in self.subviews.reversed() {
 
-            if subview != self.pictureInPictureView {
-                continue
-            }
-
             if subview.alpha == 0.0 {
                 continue
             }
 
-            let subPoint = subview.convert(point, from:self)
+            if subview.isHidden {
+                continue
+            }
+
+            let subPoint = subview.convert(point, from: self)
             if subview.point(inside: subPoint, with: event) == true {
                 if let result = subview.hitTest(subPoint, with: event) {
                     return result
-                } else {
+                }
+                else {
                     return subview
                 }
             }
@@ -142,7 +160,7 @@ class PictureInPictureView: UIView {
         case .began:
             initialMovementOffset = CGPoint(x: touchPoint.x - pictureInPictureView.center.x, y: touchPoint.y - pictureInPictureView.center.y)
 
-            UIView.animate(withDuration: 0.20) {
+            UIView.animate(withDuration: 0.18) {
                 self.pictureInPictureCloseView.alpha = 1.0
                 self.pictureInPictureExpandView.alpha = 1.0
 
@@ -157,8 +175,12 @@ class PictureInPictureView: UIView {
         case .changed:
             pictureInPictureView.center = CGPoint(x: touchPoint.x - initialMovementOffset.x, y: touchPoint.y - initialMovementOffset.y)
         case .ended, .cancelled:
-            let decelerationRate = UIScrollView.DecelerationRate.normal.rawValue
-            let velocity = recognizer.velocity(in: self)
+            let decelerationRate = 0.999 // UIScrollView.DecelerationRate.normal.rawValue
+            // let decelerationRate1 = UIScrollView.DecelerationRate.fast.rawValue
+            // let decelerationRate2 = UIScrollView.DecelerationRate.normal.rawValue
+
+            let velocityFactor = 0.5
+            let velocity = CGPoint(x: recognizer.velocity(in: self).x * velocityFactor, y: recognizer.velocity(in: self).y * velocityFactor)
             let projectedPosition = CGPoint(
                 x: pictureInPictureView.center.x + project(initialVelocity: velocity.x, decelerationRate: decelerationRate),
                 y: pictureInPictureView.center.y + project(initialVelocity: velocity.y, decelerationRate: decelerationRate)
@@ -191,16 +213,20 @@ extension PictureInPictureView {
 
 extension PictureInPictureView {
 
-    @objc private func didTapPictureInPictureCloseView() {
+    @objc private func didTapBackgroundCloseView() {
         self.hidePictureInPicture()
     }
 
-    @objc private func didTapPictureInPictureExpandView() {
+    @objc private func didTapPlayerCloseView() {
+        self.hidePictureInPicture()
+    }
+
+    @objc private func didTapPlayerExpandView() {
         self.expandPictureInPicture()
     }
 
-    @objc private func didTapPictureInPictureView() {
-        self.hidePictureInPicture()
+    @objc private func didTapPlayerView() {
+
     }
 
     private func openExternalVideo(fromURL url: URL) {
@@ -211,9 +237,11 @@ extension PictureInPictureView {
         let configuration = WKWebViewConfiguration()
         configuration.allowsInlineMediaPlayback = true
         configuration.mediaTypesRequiringUserActionForPlayback = []
+        configuration.allowsPictureInPictureMediaPlayback = false
 
         self.pictureInPictureWebView = WKWebView(frame: .zero, configuration: configuration)
         self.pictureInPictureWebView!.translatesAutoresizingMaskIntoConstraints = false
+        self.pictureInPictureWebView!.backgroundColor = .black
 
         let request = URLRequest(url: url)
         self.pictureInPictureWebView!.load(request)
@@ -230,6 +258,9 @@ extension PictureInPictureView {
         self.pictureInPictureView.bringSubviewToFront(self.pictureInPictureCloseView)
         self.pictureInPictureView.bringSubviewToFront(self.pictureInPictureExpandView)
 
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
+
         self.expandPictureInPicture()
 
         self.showPictureInPicture()
@@ -237,7 +268,7 @@ extension PictureInPictureView {
 
     private func expandPictureInPicture() {
 
-        UIView.animate(withDuration: 0.45) {
+        UIView.animate(withDuration: 0.38) {
 
             self.latestCenterPosition = self.center
             self.pictureInPictureView.center = self.center
@@ -247,7 +278,7 @@ extension PictureInPictureView {
             self.pictureInPictureCloseView.alpha = 0.0
             self.pictureInPictureExpandView.alpha = 0.0
 
-            let width = self.frame.size.width - 20
+            let width = self.frame.size.width - 30
             let height = width * (9/16)
 
             self.pictureInPictureViewWidthConstraint?.constant = width
@@ -260,15 +291,16 @@ extension PictureInPictureView {
 
     private func hidePictureInPicture() {
 
-        UIView.animate(withDuration: 0.35) {
-            self.pictureInPictureView.alpha = 0.0
-        }
-    completion: { _ in
-        self.pictureInPictureWebView?.removeFromSuperview()
-        self.pictureInPictureWebView = nil
-    }
+        self.isActive = false
 
-        UIView.animate(withDuration: 0.3) {
+        UIView.animate(withDuration: 0.27) {
+            self.pictureInPictureView.alpha = 0.0
+        } completion: { _ in
+            self.pictureInPictureWebView?.removeFromSuperview()
+            self.pictureInPictureWebView = nil
+        }
+
+        UIView.animate(withDuration: 0.27) {
             self.pictureInPictureBackgroundView.alpha = 0.0
         }
 
@@ -276,18 +308,19 @@ extension PictureInPictureView {
 
     func showPictureInPicture() {
 
-        UIView.animate(withDuration: 0.35) {
+        self.isActive = true
+
+        UIView.animate(withDuration: 0.27) {
             self.pictureInPictureView.alpha = 1.0
         }
 
-        UIView.animate(withDuration: 0.3) {
+        UIView.animate(withDuration: 0.27) {
             self.pictureInPictureBackgroundView.alpha = 1.0
         }
 
     }
 
 }
-
 
 extension PictureInPictureView {
 
@@ -318,14 +351,32 @@ extension PictureInPictureView {
 
 }
 
-
 extension PictureInPictureView {
 
     private static func createPictureInPictureBackgroundView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.9)
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.88)
+        return view
+    }
 
+    private static func createBackgroundCloseView() -> UIView {
+
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+
+        let imageView = UIImageView.init(image: UIImage(systemName: "multiply.circle"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = .white
+
+        view.addSubview(imageView, anchors: [LayoutAnchor.centerX(0), LayoutAnchor.centerY(0), LayoutAnchor.width(44), LayoutAnchor.height(44)])
+
+        return view
+    }
+
+    private static func createBackgroundInfoLabel() -> UILabel {
         let tipLabel = UILabel()
         tipLabel.translatesAutoresizingMaskIntoConstraints = false
         tipLabel.font = AppFont.with(type: .medium, size: 13)
@@ -333,33 +384,10 @@ extension PictureInPictureView {
         tipLabel.textAlignment = .center
         tipLabel.textColor = .white
         tipLabel.text = "Drag video for Miniplayer"
-        view.addSubview(tipLabel)
-
-        let imageView = UIImageView.init(image: UIImage(systemName: "multiply.circle"))
-        imageView.isUserInteractionEnabled = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = .white
-        view.addSubview(imageView)
-
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapPictureInPictureCloseView))
-        imageView.addGestureRecognizer(tapGesture)
-
-        view.addSubview(imageView)
-        NSLayoutConstraint.activate([
-            imageView.widthAnchor.constraint(equalToConstant: 45),
-            imageView.heightAnchor.constraint(equalToConstant: 45),
-            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            imageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-
-            tipLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            tipLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12),
-            tipLabel.bottomAnchor.constraint(equalTo: imageView.topAnchor, constant: -24)
-        ])
-        return view
+        return tipLabel
     }
 
-    private static func pictureInPictureCloseView() -> UIView {
+    private static func createPictureInPictureCloseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.App.buttonActiveHoverSecondary
@@ -403,6 +431,7 @@ extension PictureInPictureView {
 
     private func pictureInPictureCornerView() -> UIView {
         let view = UIView()
+        view.isHidden = true
         view.translatesAutoresizingMaskIntoConstraints = false
         view.widthAnchor.constraint(equalToConstant: pictureInPictureViewWidth).isActive = true
         view.heightAnchor.constraint(equalToConstant: pictureInPictureViewHeight).isActive = true
@@ -443,6 +472,9 @@ extension PictureInPictureView {
         bottomRightView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -horizontalSpacing).isActive = true
         bottomRightView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -verticalSpacing).isActive = true
 
+        self.pictureInPictureBackgroundView.addSubview(self.backgroundInfoLabel)
+        self.pictureInPictureBackgroundView.addSubview(self.backgroundCloseView)
+
         self.addSubview(self.pictureInPictureBackgroundView)
         self.pictureInPictureView.addSubview(self.pictureInPictureCloseView)
         self.pictureInPictureView.addSubview(self.pictureInPictureExpandView)
@@ -477,6 +509,17 @@ extension PictureInPictureView {
             self.pictureInPictureCloseView.topAnchor.constraint(equalTo: self.pictureInPictureView.topAnchor, constant: 7),
             self.pictureInPictureCloseView.widthAnchor.constraint(equalToConstant: 30),
             self.pictureInPictureCloseView.heightAnchor.constraint(equalToConstant: 26),
+        ])
+
+        NSLayoutConstraint.activate([
+            self.backgroundCloseView.widthAnchor.constraint(equalToConstant: 50),
+            self.backgroundCloseView.heightAnchor.constraint(equalToConstant: 50),
+            self.backgroundCloseView.centerXAnchor.constraint(equalTo: self.pictureInPictureBackgroundView.centerXAnchor),
+            self.backgroundCloseView.bottomAnchor.constraint(equalTo: self.pictureInPictureBackgroundView.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+
+            self.backgroundInfoLabel.centerXAnchor.constraint(equalTo: self.pictureInPictureBackgroundView.centerXAnchor),
+            self.backgroundInfoLabel.leadingAnchor.constraint(equalTo: self.pictureInPictureBackgroundView.leadingAnchor, constant: 12),
+            self.backgroundInfoLabel.bottomAnchor.constraint(equalTo: self.backgroundCloseView.topAnchor, constant: -24)
         ])
 
     }

@@ -101,7 +101,7 @@ class OutrightMarketDetailsViewController: UIViewController {
 
         self.betslipCountLabel.backgroundColor = UIColor.App.bubblesPrimary
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
-        self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
+        self.betslipCountLabel.textColor = UIColor.white
         
         self.titleLabel.backgroundColor = .clear
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
@@ -111,6 +111,8 @@ class OutrightMarketDetailsViewController: UIViewController {
         self.accountValueView.backgroundColor = UIColor.App.backgroundSecondary
         self.accountValueLabel.textColor = UIColor.App.textPrimary
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
+        self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        
     }
 
     override func viewDidLayoutSubviews() {
@@ -424,6 +426,7 @@ extension OutrightMarketDetailsViewController {
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.image = UIImage(named: "betslip_button_icon")
+        iconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         betslipButtonView.addSubview(iconImageView)
 
         NSLayoutConstraint.activate([

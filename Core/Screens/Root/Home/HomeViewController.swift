@@ -96,7 +96,7 @@ class HomeViewController: UIViewController {
 
         self.showLoading()
 
-        executeDelayed(1.6) {
+        executeDelayed(2.0) {
             self.hideLoading()
         }
     }
@@ -132,7 +132,7 @@ class HomeViewController: UIViewController {
 
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
-        self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
+        self.betslipCountLabel.textColor = UIColor.white
 
         self.chatButtonView.backgroundColor = UIColor.App.buttonActiveHoverSecondary
     }
@@ -141,7 +141,7 @@ class HomeViewController: UIViewController {
     private func bind(toViewModel viewModel: HomeViewModel) {
 
         viewModel.refreshPublisher
-            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .debounce(for: .milliseconds(600), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
                 self?.reloadData()
@@ -671,6 +671,7 @@ extension HomeViewController {
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.image = UIImage(named: "betslip_button_icon")
+        iconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         betslipButtonView.addSubview(iconImageView)
 
         NSLayoutConstraint.activate([

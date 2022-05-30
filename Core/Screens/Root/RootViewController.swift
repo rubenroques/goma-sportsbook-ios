@@ -51,6 +51,7 @@ class RootViewController: UIViewController {
     @IBOutlet private var accountValueView: UIView!
     @IBOutlet private var accountPlusView: UIView!
     @IBOutlet private var accountValueLabel: UILabel!
+    @IBOutlet private var accountPlusImageView: UIImageView!
 
     //
     //
@@ -128,6 +129,36 @@ class RootViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    @objc private func windowDidResignKeyNotification(_ notification: NSNotification) {
+        if let actorWindow = notification.object as? UIWindow {
+            if actorWindow == self.view.window {
+                print("WindowNotification main window resigning")
+            }
+            else if actorWindow == self.overlayWindow {
+                print("WindowNotification overlayWindow window resigning")
+            }
+            else {
+                print("WindowNotification other window resigning")
+            }
+        }
+    }
+
+    @objc private func windowDidBecomeKeyNotification(_ notification: NSNotification) {
+        if let actorWindow = notification.object as? UIWindow {
+            if actorWindow == self.view.window {
+                print("WindowNotification main window active")
+            }
+            else if actorWindow == self.overlayWindow {
+                print("WindowNotification overlayWindow window active")
+                self.pictureInPictureView?.isHidden = false
+            }
+            else {
+                print("WindowNotification other window active")
+                self.pictureInPictureView?.isHidden = true
+            }
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -141,10 +172,39 @@ class RootViewController: UIViewController {
         self.loadChildViewControllerIfNeeded(tab: self.selectedTabItem)
 
         //
-        // self.pictureInPictureView = PictureInPictureView()
-        // self.overlayWindow.addSubview(self.pictureInPictureView!, anchors: [.leading(0), .trailing(0), .top(0), .bottom(0)] )
+         self.pictureInPictureView = PictureInPictureView()
+         self.overlayWindow.addSubview(self.pictureInPictureView!, anchors: [.leading(0), .trailing(0), .top(0), .bottom(0)] )
+         self.overlayWindow.isHidden = false // .makeKeyAndVisible()
 
-        // self.overlayWindow.isHidden = false // .makeKeyAndVisible()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.windowDidResignKeyNotification(_:)),
+                                               name: UIWindow.didResignKeyNotification,
+                                               object: nil)
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.windowDidBecomeKeyNotification(_:)),
+                                               name: UIWindow.didBecomeKeyNotification,
+                                               object: nil)
+
+//        NotificationCenter.default.addObserver(
+//            forName: UIWindow.didResignKeyNotification,
+//            object: self.overlayWindow,
+//            queue: nil
+//        ) { notification in
+//            print("Video is now fullscreen")
+//
+//            self.pictureInPictureView?.isHidden = true
+//        }
+//
+//        NotificationCenter.default.addObserver(
+//            forName: UIWindow.didBecomeKeyNotification,
+//            object: self.overlayWindow,
+//            queue: nil
+//        ) { notification in
+//            print("Video stopped")
+//
+//            self.pictureInPictureView?.isHidden = false
+//        }
 
         //
         self.setupWithTheme()
@@ -260,6 +320,8 @@ class RootViewController: UIViewController {
 
         self.accountPlusView.layer.cornerRadius = CornerRadius.squareView
         self.accountPlusView.layer.masksToBounds = true
+
+        self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
     }
 
     func commonInit() {

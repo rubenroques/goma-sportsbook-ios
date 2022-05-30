@@ -17,8 +17,9 @@
         </array>
     </customFonts>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="RootViewController" customModule="DAZN" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="RootViewController" customModule="Crocobet" customModuleProvider="target">
             <connections>
+                <outlet property="accountPlusImageView" destination="bh5-DA-q2V" id="21r-Du-6fx"/>
                 <outlet property="accountPlusView" destination="iYA-bp-KRe" id="nII-Tt-fvU"/>
                 <outlet property="accountValueBaseView" destination="teU-V0-Kor" id="aIf-3X-9c4"/>
                 <outlet property="accountValueLabel" destination="pmm-Z8-DIa" id="8HD-gK-QDp"/>
@@ -35,8 +36,7 @@
                 <outlet property="liveTitleLabel" destination="0RE-N3-etL" id="WPx-mN-ddE"/>
                 <outlet property="loginBaseView" destination="96Y-v9-tV8" id="LDO-3e-LIF"/>
                 <outlet property="loginButton" destination="paS-oq-fLH" id="Nxt-Si-Q1c"/>
-                <outlet property="loginStackView" destination="goS-zH-sV2" id="bMS-cv-AGJ"/>
-                <outlet property="logoImageHeightConstraint" destination="528-TU-f8B" id="MAl-pf-VXJ"/>
+                <outlet property="logoImageHeightConstraint" destination="bgk-6Z-y0w" id="ygl-aQ-ITE"/>
                 <outlet property="logoImageView" destination="RMW-wP-BFm" id="dLz-AD-UpZ"/>
                 <outlet property="logoImageWidthConstraint" destination="TKe-uJ-MtR" id="nvR-Eb-KSx"/>
                 <outlet property="preLiveBaseView" destination="kSr-MY-svK" id="457-S1-5b0"/>
@@ -124,11 +124,11 @@
                                     <rect key="frame" x="41" y="0.0" width="0.0" height="64"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_horizontal_left" translatesAutoresizingMaskIntoConstraints="NO" id="RMW-wP-BFm">
-                                            <rect key="frame" x="0.0" y="15" width="0.0" height="34"/>
+                                            <rect key="frame" x="0.0" y="17" width="0.0" height="30"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="34" id="528-TU-f8B"/>
                                                 <constraint firstAttribute="width" id="TKe-uJ-MtR"/>
+                                                <constraint firstAttribute="height" constant="30" id="bgk-6Z-y0w"/>
                                             </constraints>
                                         </imageView>
                                     </subviews>
@@ -377,12 +377,12 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="KmS-Xh-sK7" secondAttribute="trailing" id="yT2-aa-NjI"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="23" y="-137"/>
+            <point key="canvasLocation" x="-239" y="-170"/>
         </view>
     </objects>
     <resources>
         <image name="empty_user_image" width="100" height="100"/>
-        <image name="logo_horizontal_left" width="99" height="39"/>
+        <image name="logo_horizontal_left" width="77" height="37"/>
         <image name="plus_small_icon" width="16" height="16"/>
         <image name="search_bar_icon" width="24" height="24"/>
         <image name="tabbar_home_icon" width="25" height="25"/>

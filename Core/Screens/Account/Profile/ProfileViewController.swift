@@ -14,6 +14,8 @@ class ProfileViewController: UIViewController {
 
     @IBOutlet private weak var closeButton: UIButton!
 
+    @IBOutlet private weak var topBarView: UIView!
+
     @IBOutlet private weak var profileBaseView: UIView!
     @IBOutlet private weak var profilePictureBaseView: UIView!
     @IBOutlet private weak var profilePictureImageView: UIImageView!
@@ -291,8 +293,11 @@ class ProfileViewController: UIViewController {
         closeButton.setTitleColor( UIColor.App.highlightPrimary.withAlphaComponent(0.7), for: .highlighted)
         closeButton.setTitleColor( UIColor.App.highlightPrimary.withAlphaComponent(0.4), for: .disabled)
 
+
         safeAreaTopView.backgroundColor = UIColor.App.backgroundPrimary
+        self.topBarView.backgroundColor = UIColor.App.backgroundPrimary
         profileBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
         profilePictureBaseView.backgroundColor = UIColor.App.highlightPrimary
         bonusBalanceBaseView.backgroundColor = UIColor.App.backgroundPrimary
         scrollBaseView.backgroundColor = UIColor.App.backgroundPrimary

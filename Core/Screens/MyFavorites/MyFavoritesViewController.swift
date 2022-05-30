@@ -179,13 +179,15 @@ class MyFavoritesViewController: UIViewController {
         self.emptyStateView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
-        self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
+        self.betslipCountLabel.textColor = UIColor.white
 
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
 
         self.accountValueView.backgroundColor = UIColor.App.backgroundSecondary
         self.accountValueLabel.textColor = UIColor.App.textPrimary
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
+        self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+
     }
 
     // MARK: Binding
@@ -644,6 +646,7 @@ extension MyFavoritesViewController {
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.image = UIImage(named: "betslip_button_icon")
+        iconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         betslipButtonView.addSubview(iconImageView)
 
         NSLayoutConstraint.activate([

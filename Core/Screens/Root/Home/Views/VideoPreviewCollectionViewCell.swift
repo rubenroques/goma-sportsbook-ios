@@ -92,6 +92,11 @@ class VideoPreviewCollectionViewCell: UICollectionViewCell {
         self.contentView.backgroundColor = .clear
 
         self.baseView.backgroundColor = UIColor.App.backgroundCards
+
+        self.imageView.backgroundColor = UIColor.App.backgroundCards
+        
+        self.titleLabel.textColor = UIColor.App.textPrimary
+        self.subtitleLabel.textColor = UIColor.App.textPrimary
     }
 
     func configure(withViewModel viewModel: VideoPreviewCellViewModel) {
