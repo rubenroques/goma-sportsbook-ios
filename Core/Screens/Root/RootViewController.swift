@@ -267,9 +267,8 @@ class RootViewController: UIViewController {
         self.redrawButtonButtons()
         if let image = self.logoImageView.image {
 
-            let maxAllowedWidth = self.topBarView.frame.width - (self.profileBaseView.frame.width + self.loginStackView.frame.width + self.searchButton.frame.width)
+            let maxAllowedWidth = CGFloat(150)
 
-            let defaultWidth = self.logoImageWidthConstraint.constant
             let defaultHeight = self.logoImageHeightConstraint.constant
 
             let ratio = image.size.height / image.size.width
