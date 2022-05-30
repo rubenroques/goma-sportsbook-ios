@@ -10,11 +10,6 @@ import Combine
 
 class ConversationDetailViewModel: NSObject {
 
-    // MARK: Private Properties
-    private var conversationData: ConversationData
-    private var cancellables = Set<AnyCancellable>()
-    private var socket = Env.gomaSocialClient.socket
-
     // MARK: Public Properties
     var messages: [MessageData] = []
     var sectionMessages: [String: [MessageData]] = [:]
@@ -32,6 +27,12 @@ class ConversationDetailViewModel: NSObject {
     
     var ticketAddedToBetslipAction: ((Bool) -> Void)?
 
+    
+    // MARK: Private Properties
+    private var conversationData: ConversationData
+    private var cancellables = Set<AnyCancellable>()
+
+    
     // MARK: Lifetime and Cycle
     init(conversationData: ConversationData) {
         self.conversationData = conversationData
@@ -48,12 +49,12 @@ class ConversationDetailViewModel: NSObject {
 
         let chatroomId = self.conversationData.id
 
-        if let conversationMessages = Env.gomaSocialClient.storage?.chatroomMessagesPublisher.value[chatroomId] {
-            self.processChatMessages(chatMessages: conversationMessages)
+        if let conversationMessages = Env.gomaSocialClient.chatroomMessagesPublisher.value[chatroomId] {
+            self.processChatMessages(chatMessages: Array(conversationMessages) )
             self.shouldScrollToLastMessage.send()
         }
 
-        Env.gomaSocialClient.storage?.chatroomMessageUpdaterPublisher
+        Env.gomaSocialClient.chatroomMessageUpdaterPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] chatMessages in
                 if let updatedMessage = chatMessages[chatroomId] {
@@ -256,24 +257,17 @@ class ConversationDetailViewModel: NSObject {
 
         // Sort by date
         self.dateMessages.sort {
-
             if let firstDate = self.getDateFromString(dateString: $0.date), let secondDate = self.getDateFromString(dateString: $1.date) {
                 return firstDate < secondDate
             }
             else {
                return $0.date < $1.date
             }
-
         }
-
     }
 
     func addMessage(message: MessageData) {
-
-        let chatroomId = self.conversationData.id
-
-        Env.gomaSocialClient.sendMessage(message: message, chatroomId: chatroomId)
-
+        Env.gomaSocialClient.sendMessage(chatroomId: self.conversationData.id, message: message.text, attachment: nil)
         self.sortAllMessages()
     }
 
@@ -441,7 +435,7 @@ extension ConversationDetailViewModel {
 
     func numberOfSections() -> Int {
         if self.dateMessages.isEmpty {
-            return 1
+            return 0
         }
         else {
             return self.dateMessages.count
@@ -453,7 +447,7 @@ extension ConversationDetailViewModel {
             return dateMessages.messages.count
         }
         else {
-            return 1
+            return 0
         }
 
     }
@@ -467,64 +461,4 @@ extension ConversationDetailViewModel {
         }
     }
 
-}
-
-struct MessageData {
-    var type: MessageType
-    var text: String
-    var date: String
-    var timestamp: Int
-    var userId: String?
-    var attachment: SharedBetTicketAttachment?
-}
-
-enum MessageType {
-    case receivedOffline
-    case receivedOnline
-    case sentNotSeen
-    case sentSeen
-}
-
-struct DateMessages {
-    var date: String
-    var messages: [MessageData]
-}
-
-struct ChatMessagesResponse: Decodable {
-    var messages: [ChatMessage]
-
-    enum CodingKeys: String, CodingKey {
-        case messages = "messages"
-    }
-}
-
-struct ChatMessage: Decodable {
-    var fromUser: String
-    var message: String
-    var repliedMessage: String?
-    var attachment: SharedBetTicketAttachment?
-    var toChatroom: Int
-    var date: Int
-
-    enum CodingKeys: String, CodingKey {
-        case fromUser = "fromUser"
-        case message = "message"
-        case repliedMessage = "repliedMessage"
-        case attachment = "attachment"
-        case toChatroom = "toChatroom"
-        case date = "date"
-    }
-
-    init(from decoder: Decoder) throws {
-
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        self.fromUser = try container.decode(String.self, forKey: .fromUser)
-        self.message = try container.decode(String.self, forKey: .message)
-        self.toChatroom = try container.decode(Int.self, forKey: .toChatroom)
-        self.date = try container.decode(Int.self, forKey: .date)
-
-        self.attachment = try? container.decode(SharedBetTicketAttachment.self, forKey: .attachment)
-        self.repliedMessage = try? container.decode(String.self, forKey: .repliedMessage)
-    }
 }

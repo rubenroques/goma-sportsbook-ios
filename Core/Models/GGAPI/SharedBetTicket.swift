@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SharedBetTicketAttachment: Codable {
+struct SharedBetTicketAttachment: Codable, Hashable {
 
     var id: String
     var type: String
@@ -66,7 +66,7 @@ struct SharedBetTicketAttachment: Codable {
 
 }
 
-struct SharedBetTicket: Codable {
+struct SharedBetTicket: Codable, Hashable {
     let betId: String
     let selections: [SharedBetTicketSelection]?
     let type: String?
@@ -163,7 +163,8 @@ extension BetHistoryEntry {
 }
 
 // MARK: - Selection
-struct SharedBetTicketSelection: Codable {
+struct SharedBetTicketSelection: Codable, Hashable {
+    
     let outcomeId: String
     let status: String?
     let priceValue: Double?

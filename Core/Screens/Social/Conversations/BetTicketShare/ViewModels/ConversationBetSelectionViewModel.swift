@@ -32,7 +32,6 @@ class ConversationBetSelectionViewModel {
     // MARK: Private Properties
     private var conversationData: ConversationData
     private var cancellables = Set<AnyCancellable>()
-    private var socket = Env.gomaSocialClient.socket
 
     private let recordsPerPage = 30
     private var openedTicketsPage = 0
@@ -180,10 +179,10 @@ class ConversationBetSelectionViewModel {
                 let attachment = self.generateAttachmentString(viewModel: viewModelValue,
                                                                withToken: betToken.sharedBetTokens.betTokenWithAllInfo)
 
-                self.socket?.emit("social.chatrooms.message", ["id": "\(self.conversationData.id)",
-                                                               "message": message,
-                                                         "repliedMessage": nil,
-                                                         "attachment": attachment ])
+                Env.gomaSocialClient.sendMessage(chatroomId: self.conversationData.id,
+                                                 message: message,
+                                                 attachment: attachment)
+  
                 self.isLoadingSharedBetPublisher.send(false)
                 self.messageSentAction?()
             })

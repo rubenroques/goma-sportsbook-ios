@@ -799,7 +799,6 @@ extension ConversationDetailViewController {
             self.view.bottomAnchor.constraint(equalTo: self.loadingBaseView.bottomAnchor)
         ])
 
-
         self.messageInputBottomConstraint =
         NSLayoutConstraint(item: self.messageInputBaseView,
                            attribute: .bottom,

@@ -7,15 +7,21 @@
 
 import Foundation
 import Combine
+import OrderedCollections
 import SocketIO
 
 class GomaGamingSocialServiceClient {
 
-    var manager: SocketManager?
-    var socket: SocketIOClient?
-    var storage: GomaGamingSocialClientStorage?
+    // MARK: Public Properties
+    var chatroomIdsPublisher: CurrentValueSubject<[Int], Never> = .init([])
+    var chatroomLastMessagePublisher: CurrentValueSubject<[Int: OrderedSet<ChatMessage>], Never> = .init([:])
+    var chatroomMessagesPublisher: CurrentValueSubject<[Int: OrderedSet<ChatMessage>], Never> = .init([:])
+    var chatroomMessageUpdaterPublisher: CurrentValueSubject<[Int: ChatMessage?], Never> = .init([:])
 
-    let websocketURL = "https://sportsbook-api.gomagaming.com/"
+    private var manager: SocketManager?
+    private var socket: SocketIOClient?
+        
+    private let websocketURL = "https://sportsbook-api.gomagaming.com/"
     private let authToken = "9g7rp9760c33c6g1f19mn5ut3asd67"
 
     private var shouldRestoreConnection = false
@@ -25,14 +31,15 @@ class GomaGamingSocialServiceClient {
     private var cancellables = Set<AnyCancellable>()
 
     init() {
-
+        
     }
 
     func connectSocket() {
 
         self.socket?.disconnect()
         
-        self.storage = nil
+        self.clearStorage()
+        
         self.socket = nil
         self.manager = nil
 
@@ -149,24 +156,30 @@ class GomaGamingSocialServiceClient {
         self.restoreConnection()
         self.shouldRestoreConnection = true
 
-        self.storage = GomaGamingSocialClientStorage()
+        self.clearStorage()
 
         print("SocketDebug: emit games.all")
     }
 
+    private func clearStorage() {
+        self.chatroomIdsPublisher.send([])
+        self.chatroomLastMessagePublisher.send([:])
+        self.chatroomMessagesPublisher.send([:])
+        self.chatroomMessageUpdaterPublisher.send([:])
+    }
+    
     private func setupPostConnection() {
 
-        self.storage = GomaGamingSocialClientStorage()
-
-        self.storage?.chatroomIdsPublisher
+        self.clearStorage()
+        self.getChatrooms()
+        
+        self.chatroomIdsPublisher
             .sink(receiveValue: { [weak self] chatroomIds in
-                if chatroomIds.isNotEmpty {
-                    self?.startLastMessagesListener(chatroomIds: chatroomIds)
-                    self?.startChatMessagesListener(chatroomIds: chatroomIds)
-                }
+                self?.startLastMessagesListener(chatroomIds: chatroomIds)
+                self?.startChatMessagesListener(chatroomIds: chatroomIds)
             })
             .store(in: &cancellables)
-//
+
 //        self.storage?.chatroomMessageUpdaterPublisher
 //            .sink(receiveValue: { [weak self] updatedMessages in
 //                let chatroomIds = Array(updatedMessages.keys)
@@ -175,89 +188,93 @@ class GomaGamingSocialServiceClient {
 //            .store(in: &cancellables)
     }
 
+    private func getChatrooms() {
+        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    print("SocketDebug: getChatrooms failure \(error)")
+                case .finished:
+                    print("SocketDebug: getChatrooms finished")
+                }
+            }, receiveValue: { [weak self] response in
+                if let chatrooms = response.data {
+                    self?.storeChatrooms(chatroomsData: chatrooms)
+                }
+            })
+            .store(in: &cancellables)
+    }
+    
+    private func storeChatrooms(chatroomsData: [ChatroomData]) {
+        self.chatroomIdsPublisher.send( chatroomsData.map({ $0.chatroom.id }) )
+    }
+    
     private func startLastMessagesListener(chatroomIds: [Int]) {
-
-        for chatroomId in chatroomIds {
-            self.socket?.emit("social.chatrooms.join", ["id": chatroomId])
-
-            print("SocketDebug: emit social.chatrooms.join id: \(chatroomId)")
-        }
-
+        
         self.socket?.on("social.chatrooms.join") { data, _ in
-
             print("SocketDebug: on social.chatrooms.join: \( data.json() )")
-
-            self.getChatMessages(data: data, completion: { [weak self] chatMessageResponse in
-
-                if let lastMessageResponse = chatMessageResponse {
-                    if lastMessageResponse.isNotEmpty {
-                        if let lastMessages = lastMessageResponse[safe: 0]?.messages, lastMessages.isNotEmpty {
-                            if let chatroomId = lastMessages[safe: 0]?.toChatroom {
-                                self?.storage?.chatroomLastMessagePublisher.value[chatroomId] = lastMessages
-                            }
+            let chatMessageResponse = self.parseChatMessages(data: data)
+            if let lastMessageResponse = chatMessageResponse {
+                if lastMessageResponse.isNotEmpty {
+                    if let lastMessages = lastMessageResponse[safe: 0]?.messages, lastMessages.isNotEmpty {
+                        if let chatroomId = lastMessages[safe: 0]?.toChatroom {
+                            self.chatroomLastMessagePublisher.value[chatroomId] = OrderedSet(lastMessages)
                         }
                     }
                 }
-
-            })
+            }
         }
-
+        
+        for chatroomId in chatroomIds {
+            self.socket?.emit("social.chatrooms.join", ["id": chatroomId])
+            print("SocketDebug: emit social.chatrooms.join id: \(chatroomId)")
+        }
+        
     }
 
     private func startChatMessagesListener(chatroomIds: [Int]) {
 
         for chatroomId in chatroomIds {
-
-            self.socket?.emit("social.chatrooms.messages", ["id": chatroomId,
-                                                            "page": 1])
-            
             self.socket?.on("social.chatroom.\(chatroomId)") { data, _ in
-
                 print("SocketDebug: on social.chatroom.\(chatroomId): \( data.json() )")
-
-                self.getChatMessages(data: data, completion: { [weak self] chatMessages in
-                    if let chatMessages = chatMessages?[safe: 0]?.messages {
-                        for chatMessage in chatMessages {
-                            let chatroomId = chatMessage.toChatroom
-                            self?.storage?.chatroomMessageUpdaterPublisher.value[chatroomId] = chatMessage
-                        }
+                let chatMessages = self.parseChatMessages(data: data)
+                if let chatMessages = chatMessages?[safe: 0]?.messages {
+                    for chatMessage in chatMessages {
+                        let chatroomId = chatMessage.toChatroom
+                        self.chatroomMessageUpdaterPublisher.value[chatroomId] = chatMessage
                     }
-                })
+                }
             }
-
+            self.socket?.emit("social.chatrooms.messages", ["id": chatroomId, "page": 1])
         }
 
         self.socket?.on("social.chatrooms.messages") { data, _ in
-
             print("SocketDebug: on social.chatrooms.messages: \( data.json() )")
-
-            self.getChatMessages(data: data, completion: { [weak self] chatMessages in
-
-                if let chatMessages = chatMessages?[safe: 0]?.messages {
-
-                    for chatMessage in chatMessages {
-
-                        let chatroomId = chatMessage.toChatroom
-                        if let storedMessages = self?.storage?.chatroomMessagesPublisher.value[chatroomId] {
-                            self?.storage?.chatroomMessagesPublisher.value[chatroomId]?.append(chatMessage)
-                        }
-                        else {
-                            self?.storage?.chatroomMessagesPublisher.value[chatroomId] = [chatMessage]
-                        }
-
+            let chatMessages = self.parseChatMessages(data: data)
+            
+            if let chatMessages = chatMessages?[safe: 0]?.messages {
+                for chatMessage in chatMessages {
+                    let chatroomId = chatMessage.toChatroom
+                    if var storedMessages = self.chatroomMessagesPublisher.value[chatroomId] {
+                        storedMessages.append(chatMessage)
+                        self.chatroomMessagesPublisher.value[chatroomId] = storedMessages
+                    }
+                    else {
+                        self.chatroomMessagesPublisher.value[chatroomId] = [chatMessage]
                     }
                 }
-            })
+            }
         }
 
     }
 
-    func sendMessage(message: MessageData, chatroomId: Int) {
+    func sendMessage(chatroomId: Int, message: String, attachment: [String: AnyObject]?) {
 
         self.socket?.emit("social.chatrooms.message", ["id": "\(chatroomId)",
-                                                       "message": message.text,
+                                                       "message": message,
                                                  "repliedMessage": nil,
-                                                 "attatchment": nil])
+                                                 "attatchment": attachment])
 
     }
 
@@ -265,19 +282,15 @@ class GomaGamingSocialServiceClient {
 
     }
 
-    func getChatMessages(data: [Any], completion: @escaping ([ChatMessagesResponse]?) -> Void) {
-        guard let json = try? JSONSerialization.data(withJSONObject: data, options: []) else { return }
+    func parseChatMessages(data: [Any]) -> [ChatMessagesResponse]? {
+        guard
+            let json = try? JSONSerialization.data(withJSONObject: data, options: [])
+        else {
+            return nil
+        }
         let decoder = JSONDecoder()
         let messages = try? decoder.decode([ChatMessagesResponse].self, from: json)
-        completion(messages)
-    }
-
-    func getChatMessagesTest(data: [Any], completion: @escaping ([JSON]?) -> Void) {
-        guard let json = try? JSONSerialization.data(withJSONObject: data, options: []) else { return }
-        let decoder = JSONDecoder()
-        let messages = try? decoder.decode([JSON].self, from: json)
-        completion(messages)
-
+        return messages
     }
 
 }

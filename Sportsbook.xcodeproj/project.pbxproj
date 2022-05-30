@@ -400,6 +400,7 @@
 		4572633E272C2220002F2959 /* MatchInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4572633C272C2220002F2959 /* MatchInfo.swift */; };
 		4572633F272C4355002F2959 /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726338272C1A22002F2959 /* LiveMatchWidgetCollectionViewCell.xib */; };
 		45726340272C4355002F2959 /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726338272C1A22002F2959 /* LiveMatchWidgetCollectionViewCell.xib */; };
+		45761A032844E85900A40826 /* PreviewChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D247C281AD374003EEDEC /* PreviewChatTableViewCell.swift */; };
 		457816A92706679400F66878 /* MatchLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457816A72706679400F66878 /* MatchLineTableViewCell.swift */; };
 		457816AA2706679400F66878 /* MatchLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457816A72706679400F66878 /* MatchLineTableViewCell.swift */; };
 		457816AB2706679400F66878 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
@@ -2373,7 +2374,6 @@
 		45A6BB7B28213FEA00D9B416 /* SocialModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D246B28180586003EEDEC /* SocialModels.swift */; };
 		45A6BB7C2821400000D9B416 /* ConversationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D24792818519A003EEDEC /* ConversationsViewModel.swift */; };
 		45A6BB7D2821400A00D9B416 /* PreviewChatCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D247F281AD3AC003EEDEC /* PreviewChatCellViewModel.swift */; };
-		45A6BB7E2821401700D9B416 /* PreviewChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D247C281AD374003EEDEC /* PreviewChatTableViewCell.swift */; };
 		45A6BB7F2821402900D9B416 /* GomaGamingSocialServiceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D2487281BEED1003EEDEC /* GomaGamingSocialServiceClient.swift */; };
 		45A6BB81282140D100D9B416 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = 45A6BB80282140D100D9B416 /* SocketIO */; };
 		45A6BB822821458900D9B416 /* FriendsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D247028183168003EEDEC /* FriendsListViewModel.swift */; };
@@ -5346,7 +5346,6 @@
 		456B341326C13AEE009D7D27 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				45B6E20E283F7CD1001B570C /* SocialSocket */,
 				A97D246A28180566003EEDEC /* GGAPI */,
 				45D728D52715F6C700EFE04D /* App */,
 				45B7DADD26F92CC30032C1C3 /* Shared */,
@@ -5448,6 +5447,48 @@
 				452036D826F09B67000BCFA6 /* Inconsolata */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		45761A022844E82F00A40826 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A97D247C281AD374003EEDEC /* PreviewChatTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		45761A042844E87900A40826 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				A97D24792818519A003EEDEC /* ConversationsViewModel.swift */,
+				A97D247F281AD3AC003EEDEC /* PreviewChatCellViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		45761A052844E8A600A40826 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				A9A207D9283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift */,
+				A98295A4283BA1420014066A /* BetSelectionCellViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		45761A062844E8AF00A40826 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A982959D283BA0AF0014066A /* BetSelectionTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		45761A072844E8C400A40826 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				A9992FE628083C7C0098854C /* ConversationsDetailViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		457CBC50282D291200ED0F00 /* EveryMatrix */ = {
@@ -5938,18 +5979,10 @@
 			isa = PBXGroup;
 			children = (
 				A9829596283B94CF0014066A /* ConversationBetSelectionViewController.swift */,
-				A9A207D9283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift */,
-				A982959D283BA0AF0014066A /* BetSelectionTableViewCell.swift */,
-				A98295A4283BA1420014066A /* BetSelectionCellViewModel.swift */,
+				45761A052844E8A600A40826 /* ViewModels */,
+				45761A062844E8AF00A40826 /* Cells */,
 			);
 			path = BetTicketShare;
-			sourceTree = "<group>";
-		};
-		45B6E20E283F7CD1001B570C /* SocialSocket */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = SocialSocket;
 			sourceTree = "<group>";
 		};
 		45B7DADD26F92CC30032C1C3 /* Shared */ = {
@@ -5974,6 +6007,26 @@
 				A9E7C6A427BA779200F784C9 /* AggregatorRepositoryType.swift */,
 			);
 			path = Shared;
+			sourceTree = "<group>";
+		};
+		45B803312844D155003418D2 /* ConversationDetails */ = {
+			isa = PBXGroup;
+			children = (
+				A9A2E7F327FDE3DA00D35A9D /* ConversationDetailViewController.swift */,
+				45761A072844E8C400A40826 /* ViewModels */,
+				A9A2E7F627FDF5AD00D35A9D /* Cells */,
+			);
+			path = ConversationDetails;
+			sourceTree = "<group>";
+		};
+		45B803322844D17B003418D2 /* ConversationList */ = {
+			isa = PBXGroup;
+			children = (
+				454E090A27EC7A0300391560 /* ConversationsViewController.swift */,
+				45761A042844E87900A40826 /* ViewModels */,
+				45761A022844E82F00A40826 /* Cells */,
+			);
+			path = ConversationList;
 			sourceTree = "<group>";
 		};
 		45BEA47626F4DC9900680181 /* SimpleRegister */ = {
@@ -6477,16 +6530,6 @@
 			path = Notifications;
 			sourceTree = "<group>";
 		};
-		A9992FE528083C500098854C /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				A97D24792818519A003EEDEC /* ConversationsViewModel.swift */,
-				A9992FE628083C7C0098854C /* ConversationsDetailViewModel.swift */,
-				A97D247F281AD3AC003EEDEC /* PreviewChatCellViewModel.swift */,
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
 		A9992FE928083CDF0098854C /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
@@ -6589,11 +6632,9 @@
 		A9A2E7F127FDE06C00D35A9D /* Conversations */ = {
 			isa = PBXGroup;
 			children = (
-				454E090A27EC7A0300391560 /* ConversationsViewController.swift */,
-				A9A2E7F327FDE3DA00D35A9D /* ConversationDetailViewController.swift */,
+				45B803322844D17B003418D2 /* ConversationList */,
+				45B803312844D155003418D2 /* ConversationDetails */,
 				45B6E20D283E4D34001B570C /* BetTicketShare */,
-				A9992FE528083C500098854C /* ViewModels */,
-				A9A2E7F627FDF5AD00D35A9D /* Cells */,
 			);
 			path = Conversations;
 			sourceTree = "<group>";
@@ -6617,7 +6658,6 @@
 				45B6E21D283FCFDC001B570C /* ReceivedTicketMessageTableViewCell.swift */,
 				45B6E216283FCF7D001B570C /* SentTicketMessageTableViewCell.swift */,
 				A9992FD428003DAC0098854C /* DateHeaderFooterView.swift */,
-				A97D247C281AD374003EEDEC /* PreviewChatTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -10701,6 +10741,7 @@
 				4589C8AC282024E400243547 /* CountrySelectorTableViewCell.swift in Sources */,
 				4589C8AD282024E400243547 /* BannerTopCollectionViewCell.swift in Sources */,
 				4589C8AE282024E400243547 /* SingleBettingTicketTableViewCell.swift in Sources */,
+				45761A032844E85900A40826 /* PreviewChatTableViewCell.swift in Sources */,
 				4589C8AF282024E400243547 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				4589C8B0282024E400243547 /* TabularBarDataSource.swift in Sources */,
 				4589C8B1282024E400243547 /* SportSectionHeaderView.swift in Sources */,
@@ -10797,7 +10838,6 @@
 				4589C904282024E400243547 /* DebugViewController.swift in Sources */,
 				4589C905282024E400243547 /* UIViewController+Extensions.swift in Sources */,
 				4589C906282024E400243547 /* CompetitionsFiltersView.swift in Sources */,
-				45A6BB7E2821401700D9B416 /* PreviewChatTableViewCell.swift in Sources */,
 				4589C907282024E400243547 /* CompetitionDetailsViewModel.swift in Sources */,
 				4589C908282024E400243547 /* SportsbookTarget.swift in Sources */,
 				4589C909282024E400243547 /* FailableDecodable.swift in Sources */,

@@ -191,8 +191,9 @@ class UserSessionStore {
         Env.gomaNetworkClient
             .requestUserRegister(deviceId: deviceId, userRegisterForm: userRegisterForm)
             .replaceError(with: MessageNetworkResponse.failed)
-            .sink { _ in
-
+            .sink { [weak self] response in
+                self?.loginGomaAPI(username: form.username, password: userId)
+                print("registrationOnGomaAPI \(response)")
             }
             .store(in: &cancellables)
     }
@@ -237,8 +238,8 @@ extension UserSessionStore {
 
     func setUserSettings(userSettings: String = "", defaultSettingsFallback: Bool = false) {
         if defaultSettingsFallback {
-            if !UserDefaults.standard.isKeyPresentInUserDefaults(key: "user_betslip_settings") {
-                let defaultUserSetting = Env.userBetslipSettingsSelectorList[1].key
+            if !UserDefaults.standard.isKeyPresentInUserDefaults(key: "user_betslip_settings"),
+               let defaultUserSetting = Env.userBetslipSettingsSelectorList[safe: 1]?.key {
                 UserDefaults.standard.set(defaultUserSetting, forKey: "user_betslip_settings")
             }
         }
@@ -271,11 +272,8 @@ extension UserSessionStore {
     private func registerUserSettings(userSettings: UserSettingsGoma) {
         do {
             let encoder = JSONEncoder()
-
             let data = try encoder.encode(userSettings)
-
             UserDefaults.standard.set(data, forKey: "gomaUserSettings")
-
         } catch {
             print("Unable to Encode User Settings Goma (\(error))")
         }
@@ -381,8 +379,7 @@ extension UserSessionStore {
 
         self.loadLoggedUser()
 
-        Env.everyMatrixClient.manager
-            .getModel(router: .login(username: user.username, password: userPassword), decodingType: LoginAccount.self)
+        Env.everyMatrixClient.login(username: user.username, password: userPassword)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 switch completion {
@@ -391,7 +388,7 @@ extension UserSessionStore {
                     self?.loginGomaAPI(username: user.username, password: user.userId)
                 case .failure(let error):
                     if error.localizedDescription.lowercased().contains("you are already logged in") {
-                        Env.favoritesManager.getUserMetadata()
+                        Env.favoritesManager.getUserFavorites()
                         self?.loginGomaAPI(username: user.username, password: user.userId)
                     }
                     print("error \(error)")
@@ -402,7 +399,6 @@ extension UserSessionStore {
                 Env.userSessionStore.isUserEmailVerified.send(account.isEmailVerified)
             }
             .store(in: &cancellables)
-
     }
 
     func loginGomaAPI(username: String, password: String) {
@@ -417,7 +413,6 @@ extension UserSessionStore {
                 Env.gomaSocialClient.connectSocket()
             })
             .store(in: &cancellables)
-
     }
 
 }

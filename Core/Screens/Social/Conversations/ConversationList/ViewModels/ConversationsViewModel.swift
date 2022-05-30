@@ -10,17 +10,17 @@ import Combine
 import SocketIO
 
 class ConversationsViewModel {
-
-    // MARK: Private Properties
-    private var cancellables = Set<AnyCancellable>()
-    private var initialConversations: [ConversationData] = []
-    private var socket = Env.gomaSocialClient.socket
-    private var conversationListeners: [Int: UUID] = [:]
-    private var conversationLastMessageList: [Int: ChatMessage] = [:]
+    
     // MARK: Public Properties
     var conversationsPublisher: CurrentValueSubject<[ConversationData], Never> = .init([])
     var dataNeedsReload: PassthroughSubject<Void, Never> = .init()
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    
+    // MARK: Private Properties
+    private var cancellables = Set<AnyCancellable>()
+    private var initialConversations: [ConversationData] = []
+    private var conversationListeners: [Int: UUID] = [:]
+    private var conversationLastMessageList: [Int: ChatMessage] = [:]
 
     init() {
 
@@ -81,47 +81,21 @@ class ConversationsViewModel {
         for conversation in self.conversationsPublisher.value {
             let chatroomId = conversation.id
 
-            Env.gomaSocialClient.storage?.chatroomLastMessagePublisher
+            Env.gomaSocialClient.chatroomLastMessagePublisher
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { [weak self] lastMessages in
 
                     if let lastMessageResponse = lastMessages[chatroomId] {
-                        if lastMessageResponse.isNotEmpty {
-
+                        if !lastMessageResponse.isEmpty {
                             if let lastMessage = lastMessageResponse[safe: 0] {
-
                                 self?.conversationLastMessageList[lastMessage.toChatroom] = lastMessage
-
                                 self?.updateConversationDetail(chatroomId: lastMessage.toChatroom)
                             }
-
                         }
                     }
+                    
                 })
                 .store(in: &cancellables)
-
-//            self.socket?.emit("social.chatrooms.join", ["id": chatroomId])
-//
-//            self.socket?.on("social.chatrooms.join") { data, ack in
-//
-//                Env.gomaSocialClient.getChatMessages(data: data, completion: { [weak self] chatMessageResponse in
-//
-//                    if let lastMessageResponse = chatMessageResponse {
-//                        if lastMessageResponse.isNotEmpty {
-//                            let lastMessages = lastMessageResponse[safe: 0]?.messages
-//
-//                            if let lastMessage = lastMessages?[safe: 0] {
-//
-//                                self?.conversationLastMessageList[lastMessage.toChatroom] = lastMessage
-//
-//                                self?.updateConversationDetail(chatroomId: lastMessage.toChatroom)
-//                            }
-//
-//                        }
-//                    }
-//
-//                })
-//            }
 
         }
     }
@@ -162,13 +136,10 @@ class ConversationsViewModel {
 
         for user in chatroomData.users {
             if let loggedUser = UserSessionStore.loggedUserSession() {
-
                 if user.username != loggedUser.username {
                     chatroomName = user.username
                 }
-
                 loggedUsername = loggedUser.username
-
             }
         }
 
@@ -178,7 +149,8 @@ class ConversationsViewModel {
                                                 lastMessage: "",
                                                 date: "",
                                                 lastMessageUser: loggedUsername,
-                                                isLastMessageSeen: true, groupUsers: chatroomUsers)
+                                                isLastMessageSeen: true,
+                                                groupUsers: chatroomUsers)
 
         self.conversationsPublisher.value.append(conversationData)
     }
@@ -189,9 +161,7 @@ class ConversationsViewModel {
         var chatroomUsers: [GomaFriend] = []
 
         if let loggedUser = UserSessionStore.loggedUserSession() {
-
             loggedUsername = loggedUser.username
-
         }
 
         for user in chatroomData.users {
@@ -204,7 +174,8 @@ class ConversationsViewModel {
                                                 lastMessage: "",
                                                 date: "",
                                                 lastMessageUser: loggedUsername,
-                                                isLastMessageSeen: true, groupUsers: chatroomUsers)
+                                                isLastMessageSeen: true,
+                                                groupUsers: chatroomUsers)
         self.conversationsPublisher.value.append(conversationData)
     }
 

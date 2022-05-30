@@ -57,7 +57,7 @@ class EveryMatrixServiceClient: ObservableObject {
         NotificationCenter.default.publisher(for: .userSessionConnected)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                Logger.log("EMSessionLoginFLow publishers - User Session Connected")
+                Logger.log("EMSessionLoginFLow publishers - User Session Connected [logged]")
                 self?.userSessionStatusPublisher.send(.logged)
             }
             .store(in: &cancellable)
@@ -65,7 +65,7 @@ class EveryMatrixServiceClient: ObservableObject {
         NotificationCenter.default.publisher(for: .userSessionForcedLogoutDisconnected)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                Logger.log("EMSessionLoginFLow publishers - User Session Forced Logout Disconnected")
+                Logger.log("EMSessionLoginFLow publishers - User Session Forced Logout Disconnected [anonymous]")
                 self?.userSessionStatusPublisher.send(.anonymous)
             }
             .store(in: &cancellable)
@@ -73,7 +73,7 @@ class EveryMatrixServiceClient: ObservableObject {
         NotificationCenter.default.publisher(for: .userSessionDisconnected)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                Logger.log("EMSessionLoginFLow publishers - User Session Disconnected")
+                Logger.log("EMSessionLoginFLow publishers - User Session Disconnected [anonymous]")
                 self?.userSessionStatusPublisher.send(.anonymous)
             }
             .store(in: &cancellable)

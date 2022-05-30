@@ -383,7 +383,7 @@ extension LoginViewController {
 
     @objc func didTapDebugFormFill() {
         
-        if self.usernameHeaderTextFieldView.text == "ruben" {
+        if self.usernameHeaderTextFieldView.text.isEmpty || self.usernameHeaderTextFieldView.text == "ruben" {
             self.usernameHeaderTextFieldView.setText("ruben@gomadevelopment.pt")
             self.passwordHeaderTextFieldView.setText("ruben=GOMA=12345")
             self.loginButton.isEnabled = true
