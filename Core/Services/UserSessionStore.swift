@@ -387,7 +387,7 @@ extension UserSessionStore {
             .sink { [weak self] completion in
                 switch completion {
                 case .finished:
-                    Env.favoritesManager.getUserMetadata()
+                    Env.favoritesManager.getUserFavorites()
                     self?.loginGomaAPI(username: user.username, password: user.userId)
                 case .failure(let error):
                     if error.localizedDescription.lowercased().contains("you are already logged in") {

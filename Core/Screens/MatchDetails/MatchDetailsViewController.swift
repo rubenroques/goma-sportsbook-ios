@@ -844,75 +844,83 @@ class MatchDetailsViewController: UIViewController {
 
     @IBAction private func didTapMoreOptionsButton() {
 
-        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        if UserSessionStore.isUserLogged() {
+            let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-        if Env.favoritesManager.isEventFavorite(eventId: self.viewModel.matchId) {
-            let favoriteAction: UIAlertAction = UIAlertAction(title: "Remove from favorites", style: .default) { _ -> Void in
-                Env.favoritesManager.removeFavorite(eventId: self.viewModel.matchId, favoriteType: .match)
+            if Env.favoritesManager.isEventFavorite(eventId: self.viewModel.matchId) {
+                let favoriteAction: UIAlertAction = UIAlertAction(title: "Remove from favorites", style: .default) { _ -> Void in
+                    Env.favoritesManager.removeFavorite(eventId: self.viewModel.matchId, favoriteType: .match)
+                }
+                actionSheetController.addAction(favoriteAction)
             }
-            actionSheetController.addAction(favoriteAction)
+            else {
+                let favoriteAction: UIAlertAction = UIAlertAction(title: "Add to favorites", style: .default) { _ -> Void in
+                    Env.favoritesManager.addFavorite(eventId: self.viewModel.matchId, favoriteType: .match)
+                }
+                actionSheetController.addAction(favoriteAction)
+            }
+
+            let shareAction: UIAlertAction = UIAlertAction(title: "Share event", style: .default) { [weak self] _ -> Void in
+                self?.didTapShareButton()
+            }
+            actionSheetController.addAction(shareAction)
+
+            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { _ -> Void in }
+            actionSheetController.addAction(cancelAction)
+
+            if let popoverController = actionSheetController.popoverPresentationController {
+                popoverController.sourceView = self.view
+                popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+                popoverController.permittedArrowDirections = []
+            }
+
+            self.present(actionSheetController, animated: true, completion: nil)
         }
         else {
-            let favoriteAction: UIAlertAction = UIAlertAction(title: "Add to favorites", style: .default) { _ -> Void in
-                Env.favoritesManager.addFavorite(eventId: self.viewModel.matchId, favoriteType: .match)
-            }
-            actionSheetController.addAction(favoriteAction)
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.present(loginViewController, animated: true, completion: nil)
         }
-
-        let shareAction: UIAlertAction = UIAlertAction(title: "Share event", style: .default) { [weak self] _ -> Void in
-            self?.didTapShareButton()
-        }
-        actionSheetController.addAction(shareAction)
-
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { _ -> Void in }
-        actionSheetController.addAction(cancelAction)
-
-        if let popoverController = actionSheetController.popoverPresentationController {
-            popoverController.sourceView = self.view
-            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-            popoverController.permittedArrowDirections = []
-        }
-
-        self.present(actionSheetController, animated: true, completion: nil)
     }
 
     private func didTapShareButton() {
 
-        guard let matchId = self.viewModel.match?.id else {
-            return
-        }
+        
+            guard let matchId = self.viewModel.match?.id else {
+                return
+            }
 
-        self.sharedGameCardView.isHidden = false
+            self.sharedGameCardView.isHidden = false
 
-        let renderer = UIGraphicsImageRenderer(size: self.sharedGameCardView.bounds.size)
-        let snapshot = renderer.image { _ in
-            self.sharedGameCardView.drawHierarchy(in: self.sharedGameCardView.bounds, afterScreenUpdates: true)
-        }
+            let renderer = UIGraphicsImageRenderer(size: self.sharedGameCardView.bounds.size)
+            let snapshot = renderer.image { _ in
+                self.sharedGameCardView.drawHierarchy(in: self.sharedGameCardView.bounds, afterScreenUpdates: true)
+            }
 
-        let metadata = LPLinkMetadata()
-        let urlMobile = Env.urlMobileShares
+            let metadata = LPLinkMetadata()
+            let urlMobile = Env.urlMobileShares
 
-        if let matchUrl = URL(string: "\(urlMobile)/gamedetail/\(matchId)") {
+            if let matchUrl = URL(string: "\(urlMobile)/gamedetail/\(matchId)") {
 
-            let imageProvider = NSItemProvider(object: snapshot)
-            metadata.imageProvider = imageProvider
-            metadata.url = matchUrl
-            metadata.originalURL = matchUrl
-            metadata.title = localized("check_this_game")
-        }
+                let imageProvider = NSItemProvider(object: snapshot)
+                metadata.imageProvider = imageProvider
+                metadata.url = matchUrl
+                metadata.originalURL = matchUrl
+                metadata.title = localized("check_this_game")
+            }
 
-        let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
+            let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
 
-        let shareActivityViewController = UIActivityViewController(activityItems: [metadataItemSource, snapshot], applicationActivities: nil)
-        if let popoverController = shareActivityViewController.popoverPresentationController {
-            popoverController.sourceView = self.view
-            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-            popoverController.permittedArrowDirections = []
-        }
-        shareActivityViewController.completionWithItemsHandler = { [weak self] _, _, _, _ in
-            self?.sharedGameCardView.isHidden = true
-        }
-        self.present(shareActivityViewController, animated: true, completion: nil)
+            let shareActivityViewController = UIActivityViewController(activityItems: [metadataItemSource, snapshot], applicationActivities: nil)
+            if let popoverController = shareActivityViewController.popoverPresentationController {
+                popoverController.sourceView = self.view
+                popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+                popoverController.permittedArrowDirections = []
+            }
+            shareActivityViewController.completionWithItemsHandler = { [weak self] _, _, _, _ in
+                self?.sharedGameCardView.isHidden = true
+            }
+            self.present(shareActivityViewController, animated: true, completion: nil)
+            
     }
 
 }
@@ -1085,7 +1093,6 @@ extension MatchDetailsViewController: UICollectionViewDelegate, UICollectionView
     }
 
 }
-
 
 extension MatchDetailsViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
