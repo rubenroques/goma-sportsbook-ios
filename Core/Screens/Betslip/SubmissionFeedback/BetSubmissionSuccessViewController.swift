@@ -11,7 +11,7 @@ class BetSubmissionSuccessViewController: UIViewController {
 
     @IBOutlet private weak var navigationView: UIView!
     @IBOutlet private weak var backButton: UIButton!
-    @IBOutlet private weak var topView: UIView!
+    @IBOutlet private weak var scrollView: UIView!
     @IBOutlet private weak var checkmarkImageView: UIImageView!
     @IBOutlet private weak var messageTitleLabel: UILabel!
     @IBOutlet private weak var messageSubtitleLabel: UILabel!
@@ -122,7 +122,7 @@ class BetSubmissionSuccessViewController: UIViewController {
     func setupWithTheme() {
 
         self.view.backgroundColor = UIColor.App.backgroundPrimary
-        self.topView.backgroundColor = UIColor.App.backgroundPrimary
+        self.scrollView.backgroundColor = UIColor.App.backgroundPrimary
         self.bottomView.backgroundColor = UIColor.App.backgroundPrimary
         self.bottomSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.safeAreaBottomView.backgroundColor = UIColor.App.backgroundPrimary
