@@ -10,6 +10,7 @@ import Foundation
 struct UserRegisterForm {
     let username: String
     let email: String
+    let mobilePrefix: String
     let mobile: String
     let birthDate: String
     let userProviderId: String
