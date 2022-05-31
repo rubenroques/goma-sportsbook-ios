@@ -155,7 +155,7 @@ class AddContactViewModel {
 
             let emailAddress = contact.emailAddresses.first?.value ?? ""
 
-            let phoneNumber: [String] = contact.phoneNumbers.map { $0.value.stringValue }
+            let phoneNumber: [String] = contact.phoneNumbers.map { $0.value.stringValue.replacingOccurrences(of: " ", with: "") }
 
             let identifier = contact.identifier
 
@@ -184,7 +184,7 @@ class AddContactViewModel {
             }
         }
 
-        // print("PHONES TO LOOK: \(phones)")
+        print("PHONES TO LOOK: \(phones)")
 
         Env.gomaNetworkClient.lookupPhones(deviceId: Env.deviceId, phones: phones)
             .receive(on: DispatchQueue.main)

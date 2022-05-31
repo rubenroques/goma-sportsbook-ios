@@ -27,12 +27,10 @@ class ConversationDetailViewModel: NSObject {
     
     var ticketAddedToBetslipAction: ((Bool) -> Void)?
 
-    
     // MARK: Private Properties
     private var conversationData: ConversationData
     private var cancellables = Set<AnyCancellable>()
 
-    
     // MARK: Lifetime and Cycle
     init(conversationData: ConversationData) {
         self.conversationData = conversationData

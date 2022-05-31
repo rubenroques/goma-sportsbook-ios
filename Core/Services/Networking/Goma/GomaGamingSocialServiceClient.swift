@@ -243,6 +243,9 @@ class GomaGamingSocialServiceClient {
                     for chatMessage in chatMessages {
                         let chatroomId = chatMessage.toChatroom
                         self.chatroomMessageUpdaterPublisher.value[chatroomId] = chatMessage
+
+                        // Update last message aswell, since last message socket listener doesn't live update
+                        self.chatroomLastMessagePublisher.value[chatroomId] = OrderedSet(chatMessages)
                     }
                 }
             }
