@@ -245,7 +245,6 @@ class SearchViewController: UIViewController {
             let matchDetailsViewController = MatchDetailsViewController(viewModel: matchViewModel)
             self.present(matchDetailsViewController, animated: true, completion: nil)
 
-
         }
         
 //        self.didTapFavoriteMatchAction = { match in
