@@ -57,16 +57,18 @@ struct SharedBetTicketAttachment: Codable, Hashable {
         try container.encode(type, forKey: .type)
         try container.encode(fromUser, forKey: .fromUser)
 
-        let jsonData = try JSONEncoder().encode(content)
-        let dictionary: [String: AnyObject] = (try JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers)
-            as? [String: AnyObject]) ?? [:]
-
-        try container.encode(dictionary.json(), forKey: .content)
+//        let jsonData = try JSONEncoder().encode(content)
+//        let dictionary: [String: AnyObject] = (try JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers)
+//            as? [String: AnyObject]) ?? [:]
+//
+//        try container.encode(dictionary.json(), forKey: .content)
+        try container.encode(content, forKey: .content)
     }
 
 }
 
 struct SharedBetTicket: Codable, Hashable {
+
     let betId: String
     let selections: [SharedBetTicketSelection]?
     let type: String?
@@ -106,6 +108,7 @@ struct SharedBetTicket: Codable, Hashable {
         case freeBet = "freeBet"
         case betShareToken = "betShareToken"
     }
+
 }
 
 extension SharedBetTicket {

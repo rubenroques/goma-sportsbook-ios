@@ -465,8 +465,14 @@ class RootViewController: UIViewController {
     }
 
     func openChatModal() {
-        let socialViewController = SocialViewController()
-        self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
+        if UserSessionStore.isUserLogged() {
+            let socialViewController = SocialViewController()
+            self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
+        }
+        else {
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.present(loginViewController, animated: true, completion: nil)
+        }
     }
 
     func openInternalWebview(onURL url: URL) {

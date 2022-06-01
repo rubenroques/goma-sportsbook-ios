@@ -54,7 +54,7 @@ class ConversationDetailViewModel: NSObject {
             self.shouldScrollToLastMessage.send()
         }
 
-        Env.gomaSocialClient.chatroomMessageUpdaterPublisher
+        Env.gomaSocialClient.chatroomNewMessagePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] chatMessages in
                 if let updatedMessage = chatMessages[chatroomId] {
@@ -189,41 +189,32 @@ class ConversationDetailViewModel: NSObject {
 
     private func updateChatMessages(newMessage: ChatMessage?) {
 
-        guard let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId else {return}
-
-        if let message = newMessage {
-
-            let formattedDate = self.getFormattedDate(date: message.date)
-            if "\(loggedUserId)" == message.fromUser {
-                let messageData = MessageData(type: .sentNotSeen,
-                                              text: message.message,
-                                              date: formattedDate,
-                                              timestamp: message.date,
-                                              userId: message.fromUser,
-                                              attachment: message.attachment)
-                self.messages.append(messageData)
-            }
-            else {
-                let messageData = MessageData(type: .receivedOnline,
-                                              text: message.message,
-                                              date: formattedDate,
-                                              timestamp: message.date,
-                                              userId: message.fromUser,
-                                              attachment: message.attachment)
-                self.messages.append(messageData)
-            }
-
-
-            let sortedTimestampMessages = self.messages.sorted {
-                $0.timestamp < $1.timestamp
-            }
-
-            self.messages = sortedTimestampMessages
-
-            self.sortAllMessages()
-
-            self.dataNeedsReload.send()
+        guard
+            let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId,
+            let message = newMessage
+        else {
+            return
         }
+
+        let formattedDate = self.getFormattedDate(date: message.date)
+
+        let messageData = MessageData(type: "\(loggedUserId)" == message.fromUser ? .sentNotSeen: .receivedOnline,
+                                      text: message.message,
+                                      date: formattedDate,
+                                      timestamp: message.date,
+                                      userId: message.fromUser,
+                                      attachment: message.attachment)
+        self.messages.append(messageData)
+
+        let sortedTimestampMessages = self.messages.sorted {
+            $0.timestamp < $1.timestamp
+        }
+
+        self.messages = sortedTimestampMessages
+
+        self.sortAllMessages()
+
+        self.dataNeedsReload.send()
     }
 
     private func getFormattedDate(date: Int) -> String {
@@ -251,18 +242,17 @@ class ConversationDetailViewModel: NSObject {
         }
 
         for (key, messages) in sectionMessages {
-            let dateMessage = DateMessages(date: key, messages: messages)
+            let dateMessage = DateMessages(dateString: key, messages: messages)
             self.dateMessages.append(dateMessage)
         }
 
         // Sort by date
         self.dateMessages.sort {
-            if let firstDate = self.getDateFromString(dateString: $0.date), let secondDate = self.getDateFromString(dateString: $1.date) {
+            if let firstDate = Self.dayDateFormatter.date(from: $0.dateString),
+                let secondDate = Self.dayDateFormatter.date(from: $1.dateString) {
                 return firstDate < secondDate
             }
-            else {
-               return $0.date < $1.date
-            }
+            return false
         }
     }
 
@@ -320,9 +310,15 @@ class ConversationDetailViewModel: NSObject {
 }
 
 extension ConversationDetailViewModel {
+    private static let dayDateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy"
+        return dateFormatter
+    }()
+}
+
+extension ConversationDetailViewModel {
     func addBetTicketToBetslip(withBetToken betToken: String) {
-        //    case getSharedBetTokens(betId: String)
-        //    case getSharedBetData(betToken: String)
 
         self.isLoadingSharedBetPublisher.send(true)
 
@@ -457,8 +453,11 @@ extension ConversationDetailViewModel {
             return ""
         }
         else {
-            return self.dateMessages[section].date
+            return self.dateMessages[section].dateString
         }
     }
 
+    func messageData(forIndexPath indexPath: IndexPath) -> MessageData? {
+        return self.dateMessages[safe: indexPath.section]?.messages[safe: indexPath.row]
+    }
 }
