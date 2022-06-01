@@ -255,7 +255,7 @@ extension GroupUserManagementTableViewCell {
             self.iconImageView.centerXAnchor.constraint(equalTo: self.iconBaseView.centerXAnchor),
             self.iconImageView.centerYAnchor.constraint(equalTo: self.iconBaseView.centerYAnchor),
 
-            self.deleteButton.leadingAnchor.constraint(equalTo: self.userInfoStackView.trailingAnchor, constant: 8),
+            self.deleteButton.leadingAnchor.constraint(greaterThanOrEqualTo: self.userInfoStackView.trailingAnchor, constant: 8),
             self.deleteButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -25),
             self.deleteButton.widthAnchor.constraint(equalToConstant: 40),
             self.deleteButton.heightAnchor.constraint(equalTo: self.deleteButton.widthAnchor),

@@ -223,7 +223,6 @@ class MyTicketsViewModel: NSObject {
                 }
             })
             .store(in: &cancellables)
-
     }
 
     func loadWonTickets(page: Int) {
@@ -357,8 +356,8 @@ class MyTicketsViewModel: NSObject {
                         ()
                     }
                 },
-                      receiveValue: { [weak self] betTokens in
-                        print("BET TOKEN: \(betTokens)")
+                receiveValue: { [weak self] betTokens in
+                    print("BET TOKEN: \(betTokens)")
                     let betToken = betTokens.sharedBetTokens.betTokenWithAllInfo
                     self?.clickedBetTokenPublisher.send(betToken)
 

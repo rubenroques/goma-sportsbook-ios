@@ -88,17 +88,19 @@ class ReceivedMessageTableViewCell: UITableViewCell {
 
     // MARK: Functions
 
-    func setupMessage(messageData: MessageData) {
-        self.messageLabel.text = messageData.messageText
+    func setupMessage(messageData: MessageData, username: String) {
+        self.messageLabel.text = messageData.text
 
-        self.messageDateLabel.text = messageData.messageDate
+        self.messageDateLabel.text = messageData.date
 
-        if messageData.messageType == .receivedOffline {
+        if messageData.type == .receivedOffline {
             self.showUserState = false
         }
-        else if messageData.messageType == .receivedOnline {
+        else if messageData.type == .receivedOnline {
             self.showUserState = true
         }
+
+        self.usernameLabel.text = username
     }
 
     private func setBubbleTailTriangle() {
@@ -230,7 +232,7 @@ extension ReceivedMessageTableViewCell {
     private func initConstraints() {
 
         NSLayoutConstraint.activate([
-            self.iconBaseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 20),
+            self.iconBaseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 16),
             self.iconBaseView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 16),
             self.iconBaseView.widthAnchor.constraint(equalToConstant: 24),
             self.iconBaseView.heightAnchor.constraint(equalTo: self.iconBaseView.widthAnchor),

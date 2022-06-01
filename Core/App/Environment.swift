@@ -22,6 +22,7 @@ class Environment {
     let userSessionStore = UserSessionStore()
     let businessSettingsSocket = RealtimeSocketClient()
     let locationManager = GeoLocationManager()
+    let gomaSocialClient = GomaGamingSocialServiceClient()
 
     var calendar = Calendar.autoupdatingCurrent
     var locale = Locale.autoupdatingCurrent

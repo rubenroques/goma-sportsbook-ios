@@ -319,6 +319,7 @@ class LoginViewController: UIViewController {
 
             }, receiveValue: { value in
                 Env.gomaNetworkClient.refreshAuthToken(token: value)
+                Env.gomaSocialClient.connectSocket()
             })
             .store(in: &cancellables)
     }
@@ -381,12 +382,19 @@ class LoginViewController: UIViewController {
 extension LoginViewController {
 
     @objc func didTapDebugFormFill() {
-
-        if TargetVariables.environmentType == .dev {
-            self.usernameHeaderTextFieldView.setText("ruben@gomadevelopment.pt") // Ivotest30
-            self.passwordHeaderTextFieldView.setText("ruben=GOMA=12345") // testesdoIvo1
+        
+        if self.usernameHeaderTextFieldView.text.isEmpty || self.usernameHeaderTextFieldView.text == "ruben" {
+            self.usernameHeaderTextFieldView.setText("ruben@gomadevelopment.pt")
+            self.passwordHeaderTextFieldView.setText("ruben=GOMA=12345")
             self.loginButton.isEnabled = true
         }
+        else if self.usernameHeaderTextFieldView.text == "ruben4" {
+            self.usernameHeaderTextFieldView.setText("wodes95597@steamoh.com")
+            self.passwordHeaderTextFieldView.setText("ruben=GOMA1")
+            self.loginButton.isEnabled = true
+            
+        }
+
     }
 
 }

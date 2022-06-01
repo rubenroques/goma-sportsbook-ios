@@ -71,7 +71,6 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
 
     public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
         print("TSWebSocketClient disconnect")
-
         if isConnected {
             delegate?.ssWampTransportDidDisconnect(error, reason: disconnectionReason)
         }
@@ -90,4 +89,41 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
         delegate?.ssWampTransportReceivedData(data)
     }
 
+    func didReceive(event: WebSocketEvent, client: WebSocket) {
+
+        switch event {
+        case .connected:
+            isConnected = true
+            delegate?.ssWampTransportDidConnectWithSerializer(JSONSSWampSerializer())
+
+        case .text(let text): // String
+            messageCounter += 1
+            if let data = text.data(using: .utf8) {
+                websocketDidReceiveData(socket: client, data: data)
+            }
+        case .binary(let data):
+            delegate?.ssWampTransportReceivedData(data)
+
+        case .disconnected, .reconnectSuggested, .cancelled:
+            print("TSWebSocketClient disconnect")
+            if isConnected {
+                delegate?.ssWampTransportDidDisconnect(nil, reason: disconnectionReason)
+            }
+            isConnected = false
+
+        case .error(let error):
+            print("TSWebSocketClient disconnect")
+            if isConnected {
+                delegate?.ssWampTransportDidDisconnect(error, reason: disconnectionReason)
+            }
+            isConnected = false
+            
+        case .pong, .ping, .viabilityChanged:
+            ()
+        }
+
+    }
+
 }
+
+

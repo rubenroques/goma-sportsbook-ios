@@ -1,22 +1,27 @@
 //
-//  SentMessageTableViewCell.swift
+//  SentTicketMessageTableViewCell.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 07/04/2022.
+//  Created by Ruben Roques on 26/05/2022.
 //
 
 import UIKit
 
-class SentMessageTableViewCell: UITableViewCell {
+class SentTicketMessageTableViewCell: UITableViewCell {
+
+    var didTapBetNowAction: ((BetSelectionCellViewModel) -> Void) = { _ in }
 
     // MARK: Private Properties
     private lazy var messageContainerView: UIView = Self.createMessageContainerView()
     private lazy var messageLabel: UILabel = Self.createMessageLabel()
+    private lazy var ticketBaseStackView: UIStackView = Self.createTicketBaseStackView()
     private lazy var dateStackView: UIStackView = Self.createDateStackView()
     private lazy var messageDateLabel: UILabel = Self.createMessageDateLabel()
     private lazy var messageStateBaseView: UIView = Self.createMessageStateBaseView()
     private lazy var messageStateImageView: UIImageView = Self.createMessageStateImageView()
     private lazy var topBubbleTailView: UIView = Self.createTopBubbleTailView()
+
+    private var ticketInMessageView: ChatTicketInMessageView?
 
     // MARK: Public Properties
     var isMessageSeen: Bool = false {
@@ -48,6 +53,11 @@ class SentMessageTableViewCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+
+        self.ticketBaseStackView.removeAllArrangedSubviews()
+        self.ticketInMessageView = nil
+
+        self.setupWithTheme()
     }
 
     override func layoutSubviews() {
@@ -57,7 +67,6 @@ class SentMessageTableViewCell: UITableViewCell {
         self.messageContainerView.layer.borderColor = UIColor.App.backgroundTertiary.cgColor
 
         self.setBubbleTailTriangle()
-
     }
 
     func setupWithTheme() {
@@ -75,21 +84,40 @@ class SentMessageTableViewCell: UITableViewCell {
         self.messageStateBaseView.backgroundColor = .clear
 
         self.topBubbleTailView.backgroundColor = .clear
+
+        self.ticketBaseStackView.backgroundColor = .clear
+
+        self.ticketInMessageView?.cardBackgroundColor = UIColor.App.backgroundSecondary
+
     }
 
     // MARK: Functions
 
     func setupMessage(messageData: MessageData) {
-        self.messageLabel.text = messageData.messageText
+        self.messageLabel.text = messageData.text
 
-        self.messageDateLabel.text = messageData.messageDate
+        self.messageDateLabel.text = messageData.date
 
-        if messageData.messageType == .sentNotSeen {
+        if messageData.type == .sentNotSeen {
             self.isMessageSeen = false
         }
-        else if messageData.messageType == .sentSeen {
+        else if messageData.type == .sentSeen {
             self.isMessageSeen = true
         }
+
+        self.ticketBaseStackView.removeAllArrangedSubviews()
+        if let attachment = messageData.attachment {
+            let ticket = BetHistoryEntry(sharedBetTicket: attachment.content)
+            let betSelectionCellViewModel = BetSelectionCellViewModel(ticket: ticket)
+            self.ticketInMessageView = ChatTicketInMessageView(betSelectionCellViewModel: betSelectionCellViewModel)
+
+            self.ticketInMessageView!.didTapBetNowAction = { [weak self] viewModel in
+                self?.didTapBetNowAction(viewModel)
+            }
+            self.ticketBaseStackView.addArrangedSubview(self.ticketInMessageView!)
+        }
+
+        self.ticketInMessageView?.cardBackgroundColor = UIColor.App.backgroundSecondary
     }
 
     private func setBubbleTailTriangle() {
@@ -112,13 +140,22 @@ class SentMessageTableViewCell: UITableViewCell {
 
 }
 
-extension SentMessageTableViewCell {
+extension SentTicketMessageTableViewCell {
 
     private static func createMessageContainerView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = CornerRadius.view
         return view
+    }
+
+    private static func createTicketBaseStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 0
+        stackView.distribution = .fill
+        return stackView
     }
 
     private static func createDateStackView() -> UIStackView {
@@ -178,6 +215,8 @@ extension SentMessageTableViewCell {
 
         self.messageContainerView.addSubview(self.messageLabel)
 
+        self.messageContainerView.addSubview(self.ticketBaseStackView)
+
         self.messageContainerView.addSubview(self.dateStackView)
 
         self.dateStackView.addArrangedSubview(self.messageDateLabel)
@@ -211,9 +250,13 @@ extension SentMessageTableViewCell {
             self.messageLabel.trailingAnchor.constraint(equalTo: self.messageContainerView.trailingAnchor, constant: -30),
             self.messageLabel.topAnchor.constraint(equalTo: self.messageContainerView.topAnchor, constant: 10),
 
+            self.ticketBaseStackView.leadingAnchor.constraint(equalTo: self.messageContainerView.leadingAnchor),
+            self.ticketBaseStackView.trailingAnchor.constraint(equalTo: self.messageContainerView.trailingAnchor),
+            self.ticketBaseStackView.topAnchor.constraint(equalTo: self.messageLabel.bottomAnchor, constant: 8),
+
             self.dateStackView.leadingAnchor.constraint(equalTo: self.messageContainerView.leadingAnchor, constant: 15),
             self.dateStackView.trailingAnchor.constraint(equalTo: self.messageContainerView.trailingAnchor, constant: -15),
-            self.dateStackView.topAnchor.constraint(equalTo: self.messageLabel.bottomAnchor, constant: 8),
+            self.dateStackView.topAnchor.constraint(equalTo: self.ticketBaseStackView.bottomAnchor, constant: 8),
             self.dateStackView.bottomAnchor.constraint(equalTo: self.messageContainerView.bottomAnchor, constant: -10),
             self.dateStackView.heightAnchor.constraint(equalToConstant: 25),
 
@@ -222,7 +265,6 @@ extension SentMessageTableViewCell {
             self.messageStateImageView.widthAnchor.constraint(equalToConstant: 15),
             self.messageStateImageView.centerYAnchor.constraint(equalTo: self.messageStateBaseView.centerYAnchor),
             self.messageStateImageView.trailingAnchor.constraint(equalTo: self.messageStateBaseView.trailingAnchor)
-
         ])
 
         NSLayoutConstraint.activate([

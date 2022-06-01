@@ -72,4 +72,27 @@ extension BettingTicket {
                   outcomeDescription: outcomeDescription)
     }
 
+//    init(betHistoryEntrySelection: BetHistoryEntrySelection) {
+//
+//        let matchDescription =  [betHistoryEntrySelection.homeParticipantName, betHistoryEntrySelection.awayParticipantName]
+//            .compactMap({ $0 })
+//            .joined(separator: " x ")
+//
+//        let matchDescription = matchDescription
+//        let marketDescription = betHistoryEntrySelection.marketName ?? ""
+//        let outcomeDescription = betHistoryEntrySelection.betName ?? ""
+//
+//
+//        self.init(id: betHistoryEntrySelection.id,
+//                  outcomeId: betHistoryEntrySelection.outcomeId,
+//                  marketId: betHistoryEntrySelection.eventId,
+//                  matchId: <#T##String#>,
+//                  value: 0.0,
+//                  isAvailable: true,
+//                  statusId: "1",
+//                  matchDescription: <#T##String#>,
+//                  marketDescription: <#T##String#>,
+//                  outcomeDescription: <#T##String#>)
+//    }
+
 }

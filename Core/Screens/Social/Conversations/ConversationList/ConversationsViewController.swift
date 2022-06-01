@@ -40,6 +40,8 @@ class ConversationsViewController: UIViewController {
         }
     }
 
+    var reloadFriendsData: (() -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(viewModel: ConversationsViewModel = ConversationsViewModel()) {
         self.viewModel = viewModel
@@ -66,6 +68,8 @@ class ConversationsViewController: UIViewController {
                                 forCellReuseIdentifier: PreviewChatTableViewCell.identifier)
 
         self.newGroupButton.addTarget(self, action: #selector(didTapNewGroupButton), for: .primaryActionTriggered)
+
+        self.newMessageButton.addTarget(self, action: #selector(didTapNewMessageButton), for: .primaryActionTriggered)
 
         let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(backgroundTapGesture)
@@ -112,6 +116,33 @@ class ConversationsViewController: UIViewController {
             self.newMessageButton.tintColor = UIColor.App.highlightSecondary
         }
 
+        self.setupSearchBar()
+
+    }
+
+    // MARK: Functions
+    private func showConversationDetail(conversationData: ConversationData) {
+        let conversationDetailViewModel = ConversationDetailViewModel(conversationData: conversationData)
+
+        let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
+
+        conversationDetailViewController.shouldCloseChat = { [weak self] in
+            self?.needsRefetchData()
+            self?.reloadFriendsData?()
+        }
+
+        conversationDetailViewController.shouldReloadData = { [weak self] in
+            self?.needsRefetchData()
+        }
+
+        self.navigationController?.pushViewController(conversationDetailViewController, animated: true)
+    }
+
+    func needsRefetchData() {
+        self.viewModel.refetchConversations()
+    }
+
+    private func setupSearchBar() {
         self.searchBar.searchBarStyle = UISearchBar.Style.prominent
         self.searchBar.sizeToFit()
         self.searchBar.isTranslucent = false
@@ -125,8 +156,8 @@ class ConversationsViewController: UIViewController {
 
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
             textfield.backgroundColor = UIColor.App.backgroundSecondary
-            textfield.textColor = .white
-            textfield.tintColor = .white
+            textfield.textColor = UIColor.App.textPrimary
+            textfield.tintColor = UIColor.App.textPrimary
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
                                                                                 UIColor.App.inputTextTitle,
@@ -137,17 +168,6 @@ class ConversationsViewController: UIViewController {
                 glassIconView.tintColor = UIColor.App.inputTextTitle
             }
         }
-
-    }
-
-    // MARK: Functions
-
-    private func showConversationDetail(conversationData: ConversationData) {
-        let conversationDetailViewModel = ConversationDetailViewModel(conversationData: conversationData)
-
-        let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
-
-        self.navigationController?.pushViewController(conversationDetailViewController, animated: true)
     }
 
     // MARK: - Bindings
@@ -190,7 +210,18 @@ extension ConversationsViewController {
         let newGroupViewModel = NewGroupViewModel()
         let newGroupViewController = NewGroupViewController(viewModel: newGroupViewModel)
 
+        newGroupViewController.chatListNeedReload = { [weak self] in
+            self?.needsRefetchData()
+        }
+
         self.navigationController?.pushViewController(newGroupViewController, animated: true)
+    }
+
+    @objc func didTapNewMessageButton() {
+        let newMessageViewModel = NewMesssageViewModel()
+        let newMessageViewController = NewMessageViewController(viewModel: newMessageViewModel)
+
+        self.navigationController?.pushViewController(newMessageViewController, animated: true)
     }
 }
 
@@ -214,18 +245,22 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
             fatalError()
         }
 
-        // TEST STATES
-        if indexPath.row <= 2 {
-            cell.isSeen = false
-            cell.isOnline = true
-        }
         if let cellData = self.viewModel.conversationsPublisher.value[safe: indexPath.row] {
             let cellViewModel = PreviewChatCellViewModel(cellData: cellData)
             cell.configure(withViewModel: cellViewModel)
         }
 
+        // TEST STATES
+        if indexPath.row <= 2 {
+            cell.isOnline = true
+        }
+
         cell.didTapConversationAction = { [weak self] conversationData in
             self?.showConversationDetail(conversationData: conversationData)
+        }
+
+        cell.removeChatroomAction = { [weak self] chatroomId in
+            self?.viewModel.removeChatroom(chatroomId: chatroomId)
         }
 
         return cell
@@ -236,7 +271,7 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 66
+        return 70
     }
 }
 
@@ -398,15 +433,17 @@ extension ConversationsViewController {
             self.headerSeparatorLineView.heightAnchor.constraint(equalToConstant: 1),
 
             self.newGroupButton.leadingAnchor.constraint(equalTo: self.tableViewHeader.leadingAnchor, constant: 23),
-            self.newGroupButton.bottomAnchor.constraint(equalTo: self.tableViewHeader.bottomAnchor, constant: -9),
+            self.newGroupButton.bottomAnchor.constraint(equalTo: self.tableViewHeader.bottomAnchor, constant: -12),
+            self.newGroupButton.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 10),
 
             self.newMessageButton.trailingAnchor.constraint(equalTo: self.tableViewHeader.trailingAnchor, constant: -23),
-            self.newMessageButton.bottomAnchor.constraint(equalTo: self.tableViewHeader.bottomAnchor, constant: -9),
+            self.newMessageButton.bottomAnchor.constraint(equalTo: self.tableViewHeader.bottomAnchor, constant: -12),
+            self.newMessageButton.centerYAnchor.constraint(equalTo: self.newGroupButton.centerYAnchor)
         ])
 
         // Table view
         NSLayoutConstraint.activate([
-            self.tableView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.tableView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 8),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),

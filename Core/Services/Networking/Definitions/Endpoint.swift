@@ -45,6 +45,7 @@ struct HTTP {
         case get
         case post
         case delete
+        case put
 
         func value() -> String {
             switch self {
@@ -54,6 +55,8 @@ struct HTTP {
                 return "POST"
             case .delete:
                 return "DELETE"
+            case .put:
+                return "PUT"
             }
         }
     }

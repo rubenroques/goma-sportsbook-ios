@@ -21,12 +21,9 @@ class UserActionView: UIView {
     // MARK: Public Properties
     var hasLineSeparator: Bool = false {
         didSet {
-            if hasLineSeparator {
-                self.separatorLineView.isHidden = false
-            }
-            else {
-                self.separatorLineView.isHidden = true
-            }
+
+            self.separatorLineView.isHidden = !hasLineSeparator
+
         }
     }
 
@@ -102,7 +99,7 @@ class UserActionView: UIView {
 
         self.closeButton.backgroundColor = .clear
 
-        self.separatorLineView.backgroundColor = .clear
+        self.separatorLineView.backgroundColor = UIColor.App.separatorLine
     }
 
     // MARK: Functions

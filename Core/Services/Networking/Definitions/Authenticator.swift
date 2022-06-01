@@ -94,6 +94,7 @@ class Authenticator {
                 .decode(type: AuthToken.self, decoder: JSONDecoder())
                 .handleEvents(receiveOutput: { token in
                     self?.currentToken = token
+                    print("GGAPI New Session Token [logged] \(token)")
                 }, receiveCompletion: { _ in
                     self?.queue.sync {
                         self?.refreshPublisher = nil
@@ -148,6 +149,7 @@ class Authenticator {
                 .decode(type: AuthToken.self, decoder: JSONDecoder())
                 .handleEvents(receiveOutput: { token in
                     self?.currentToken = token
+                    print("GGAPI New Session Token [anon] \(token)")
                 }, receiveCompletion: { _ in
                     self?.queue.sync {
                         self?.refreshPublisher = nil

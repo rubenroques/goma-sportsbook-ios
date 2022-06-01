@@ -26,6 +26,7 @@ class PreviewChatTableViewCell: UITableViewCell {
     private var viewModel: PreviewChatCellViewModel?
 
     var didTapConversationAction: ((ConversationData) -> Void)?
+    var removeChatroomAction: ((Int) -> Void)?
 
     var isSeen: Bool = false {
         didSet {
@@ -35,7 +36,14 @@ class PreviewChatTableViewCell: UITableViewCell {
             else {
                 self.dateLabel.textColor = UIColor.App.highlightPrimary
             }
-            self.feedbackImageView.isHidden = !isSeen
+
+            if self.messageLabel.text != "" {
+                self.feedbackImageView.isHidden = !isSeen
+            }
+            else {
+                self.feedbackImageView.isHidden = true
+            }
+
             self.numberMessagesLabel.isHidden = isSeen
         }
     }
@@ -43,10 +51,12 @@ class PreviewChatTableViewCell: UITableViewCell {
     var isOnline: Bool = false {
         didSet {
             if isOnline {
-                self.iconBaseView.backgroundColor = UIColor.App.highlightPrimary
+                self.iconBaseView.layer.borderWidth = 2
+                self.iconBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
             }
             else {
-                self.iconBaseView.backgroundColor = UIColor.App.backgroundSecondary
+                self.iconBaseView.layer.borderWidth = 2
+                self.iconBaseView.layer.borderColor = UIColor.App.backgroundOdds.cgColor
             }
         }
     }
@@ -104,11 +114,13 @@ class PreviewChatTableViewCell: UITableViewCell {
         self.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
         self.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.iconBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.baseView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.iconInnerView.backgroundColor = UIColor.App.backgroundSecondary
+        self.iconBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.photoImageView.backgroundColor = UIColor.App.backgroundSecondary
+        self.iconInnerView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.photoImageView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.initialLabel.textColor = UIColor.App.textSecondary
 
@@ -144,7 +156,7 @@ class PreviewChatTableViewCell: UITableViewCell {
 
         self.isSeen = viewModel.cellData.isLastMessageSeen
 
-        self.isOnline = !viewModel.cellData.isLastMessageSeen
+        self.isOnline = false
 
     }
 
@@ -152,6 +164,39 @@ class PreviewChatTableViewCell: UITableViewCell {
         if let viewModel = self.viewModel {
             self.didTapConversationAction?(viewModel.cellData)
         }
+    }
+
+    @objc private func didLongPressConversationView() {
+
+        guard
+            let parentViewController = self.viewController,
+            let chatroomId = self.viewModel?.cellData.id,
+            let chatroomType = self.viewModel?.cellData.conversationType
+        else {
+            return
+        }
+
+        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        // TEST
+        if chatroomType == .group {
+
+            let removeChatroomAction: UIAlertAction = UIAlertAction(title: "Remove chatroom", style: .default) { [weak self] _ -> Void in
+                self?.removeChatroomAction?(chatroomId)
+            }
+            actionSheetController.addAction(removeChatroomAction)
+        }
+
+        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ -> Void in }
+        actionSheetController.addAction(cancelAction)
+
+        if let popoverController = actionSheetController.popoverPresentationController {
+            popoverController.sourceView = parentViewController.view
+            popoverController.sourceRect = CGRect(x: parentViewController.view.bounds.midX, y: parentViewController.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+
+        parentViewController.present(actionSheetController, animated: true, completion: nil)
     }
 
 }
@@ -285,11 +330,14 @@ extension PreviewChatTableViewCell {
 
         // Initialize constraints
         self.initConstraints()
+
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressConversationView))
+        self.baseView.addGestureRecognizer(longPressGestureRecognizer)
     }
 
     private func initConstraints() {
         NSLayoutConstraint.activate([
-            self.baseView.heightAnchor.constraint(equalToConstant: 66),
+            self.baseView.heightAnchor.constraint(equalToConstant: 70),
 
             self.baseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             self.baseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
@@ -317,7 +365,7 @@ extension PreviewChatTableViewCell {
             self.nameLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 200),
 
             self.nameLineStackView.leadingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: 12),
-            self.nameLineStackView.topAnchor.constraint(equalTo: self.iconBaseView.topAnchor),
+            self.nameLineStackView.topAnchor.constraint(equalTo: self.iconBaseView.topAnchor, constant: 2),
 
             self.dateLabel.leadingAnchor.constraint(equalTo: self.nameLineStackView.trailingAnchor, constant: 8),
             self.dateLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -24),
@@ -327,7 +375,7 @@ extension PreviewChatTableViewCell {
             self.feedbackImageView.heightAnchor.constraint(equalTo: self.feedbackImageView.widthAnchor),
 
             self.messageLineStackView.leadingAnchor.constraint(equalTo: self.nameLineStackView.leadingAnchor),
-            self.messageLineStackView.topAnchor.constraint(equalTo: self.nameLineStackView.bottomAnchor, constant: 8),
+            self.messageLineStackView.topAnchor.constraint(equalTo: self.nameLineStackView.bottomAnchor, constant: 4),
             self.messageLineStackView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -23),
 
             self.baseView.bottomAnchor.constraint(equalTo: self.separatorLineView.bottomAnchor, constant: 0),

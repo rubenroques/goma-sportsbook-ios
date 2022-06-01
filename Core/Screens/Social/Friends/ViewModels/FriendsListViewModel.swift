@@ -20,6 +20,7 @@ class FriendsListViewModel {
 
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var dataNeedsReload: PassthroughSubject<Void, Never> = .init()
+    var conversationDataNeedsReload: PassthroughSubject<Void, Never> = .init()
 
     // MARK: Lifetime and cycle
     init() {
@@ -67,6 +68,35 @@ class FriendsListViewModel {
         self.friendsPublisher.value = self.initialFriends
 
         self.dataNeedsReload.send()
+    }
+
+    func removeFriend(friendId: Int) {
+        print("DELETE FRIEND ID: \(friendId)")
+
+        Env.gomaNetworkClient.deleteFriend(deviceId: Env.deviceId, userId: friendId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("DELETE FRIEND ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+
+            }, receiveValue: { [weak self] response in
+                print("DELETE FRIEND GOMA: \(response)")
+                self?.getFriends()
+                self?.conversationDataNeedsReload.send()
+            })
+            .store(in: &cancellables)
+    }
+
+    func refetchConversations() {
+        self.initialFriends = []
+
+        self.friendsPublisher.value = []
+
+        self.getFriends()
     }
 }
 
