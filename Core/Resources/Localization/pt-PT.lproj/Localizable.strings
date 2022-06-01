@@ -121,6 +121,8 @@ Terms of use, Privacy Policy and EULA";
 "limits_management" = "Limits Management";
 "app_settings" = "App Settings";
 "support" = "Support";
+"subject" = "Subject";
+"description" = "Description";
 
 "limits_management" = "Limits Management";
 "save" = "Save";

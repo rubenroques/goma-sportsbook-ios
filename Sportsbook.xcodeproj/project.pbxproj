@@ -3659,6 +3659,7 @@
 		F4CE68462742CD8A003413AE /* MultiSlider+Internal.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683F2742CD8A003413AE /* MultiSlider+Internal.swift */; };
 		F4CE68472742CD8A003413AE /* MultiSliderExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE68402742CD8A003413AE /* MultiSliderExtensions.swift */; };
 		F4CE68482742CD8A003413AE /* MultiSliderExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE68402742CD8A003413AE /* MultiSliderExtensions.swift */; };
+		F4D8DC792847853F00C2594B /* SupportPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8DC782847853F00C2594B /* SupportPageViewController.swift */; };
 		F4E3B74D2742B47100855C58 /* MainMarketType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E3B74C2742B47100855C58 /* MainMarketType.swift */; };
 		F4E3B74E2742B48400855C58 /* MainMarketType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E3B74C2742B47100855C58 /* MainMarketType.swift */; };
 		F4E3B75E2742BF9C00855C58 /* SweeterSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F4E3B75D2742BF9C00855C58 /* SweeterSwift */; };
@@ -4327,6 +4328,7 @@
 		F4CE683E2742CD8A003413AE /* MultiSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSlider.swift; sourceTree = "<group>"; };
 		F4CE683F2742CD8A003413AE /* MultiSlider+Internal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MultiSlider+Internal.swift"; sourceTree = "<group>"; };
 		F4CE68402742CD8A003413AE /* MultiSliderExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSliderExtensions.swift; sourceTree = "<group>"; };
+		F4D8DC782847853F00C2594B /* SupportPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportPageViewController.swift; sourceTree = "<group>"; };
 		F4E3B74C2742B47100855C58 /* MainMarketType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMarketType.swift; sourceTree = "<group>"; };
 		F4F8C9EE27BEBAF90082CC08 /* TransactionHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistory.swift; sourceTree = "<group>"; };
 		F4F8C9F127C0126D0082CC08 /* FilterHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterHistoryViewController.swift; sourceTree = "<group>"; };
@@ -5473,6 +5475,7 @@
 		4589F3EA26BF017A005DF543 /* Account */ = {
 			isa = PBXGroup;
 			children = (
+				F4D8DC7728477C8E00C2594B /* Support */,
 				A99F79F627CF9821008BAF41 /* Bonus */,
 				A9E7C6AA27BD573000F784C9 /* AppSettings */,
 				A90D8AF2277200A300DF88EB /* Withdraw */,
@@ -6873,6 +6876,14 @@
 			path = DropDownSelectionView;
 			sourceTree = "<group>";
 		};
+		F4D8DC7728477C8E00C2594B /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				F4D8DC782847853F00C2594B /* SupportPageViewController.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
 		F4E3B74F2742BE5200855C58 /* MultiSlider */ = {
 			isa = PBXGroup;
 			children = (
@@ -8145,6 +8156,7 @@
 				4572633D272C2220002F2959 /* MatchInfo.swift in Sources */,
 				F4CE68412742CD8A003413AE /* MultiSlider+Drag.swift in Sources */,
 				A9B840B126DF99B500269B05 /* EveryMatrixServiceClient.swift in Sources */,
+				F4D8DC792847853F00C2594B /* SupportPageViewController.swift in Sources */,
 				A90BC90527C3B3F500667616 /* OddsViewModel.swift in Sources */,
 				A9A2E7EF27FC97ED00D35A9D /* BonusProgressViewModel.swift in Sources */,
 				A98D3B2A271481A8003BAE6F /* SportSelectionViewController.swift in Sources */,
