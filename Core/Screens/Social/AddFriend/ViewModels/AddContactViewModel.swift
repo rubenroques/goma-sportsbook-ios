@@ -155,7 +155,7 @@ class AddContactViewModel {
 
             let emailAddress = contact.emailAddresses.first?.value ?? ""
 
-            let phoneNumber: [String] = contact.phoneNumbers.map { $0.value.stringValue.replacingOccurrences(of: " ", with: "") }
+            let phoneNumber: [String] = contact.phoneNumbers.map { $0.value.stringValue }
 
             let identifier = contact.identifier
 

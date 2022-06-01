@@ -21,6 +21,7 @@ class ConversationsViewModel {
     private var initialConversations: [ConversationData] = []
     private var conversationListeners: [Int: UUID] = [:]
     private var conversationLastMessageList: [Int: ChatMessage] = [:]
+    private var chatPage: Int = 1
 
     init() {
 
@@ -30,7 +31,7 @@ class ConversationsViewModel {
     private func getConversations() {
         self.isLoadingPublisher.send(true)
 
-        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId)
+        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId, page: self.chatPage)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -111,6 +112,7 @@ class ConversationsViewModel {
                                                                name: conversation.name,
                                                                lastMessage: lastMessage.message,
                                                                date: self.getFormattedDate(timestamp: lastMessage.date),
+                                                               timestamp: lastMessage.date,
                                                                lastMessageUser: lastMessage.fromUser,
                                                                isLastMessageSeen: conversation.isLastMessageSeen, groupUsers: conversation.groupUsers)
 
@@ -123,6 +125,18 @@ class ConversationsViewModel {
             }
 
         }
+
+        let sortedConversations = self.conversationsPublisher.value.sorted {
+            if let firstTimestamp = $0.timestamp, let secondTimestamp = $1.timestamp {
+                return firstTimestamp > secondTimestamp
+            }
+            else {
+                return $0.timestamp ?? 0 > $1.timestamp ?? 1
+            }
+
+        }
+
+        self.conversationsPublisher.value = sortedConversations
     }
 
     private func setupIndividualChatroomData(chatroomData: ChatroomData) {
@@ -227,15 +241,11 @@ class ConversationsViewModel {
         let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
 
         if Calendar.current.isDateInToday(date) {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "HH:mm"
-            let dateString = dateFormatter.string(from: date)
+            let dateString = Self.hourDateFormatter.string(from: date)
             return dateString
         }
 
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd-MM-yyyy"
-        let dateString = dateFormatter.string(from: date)
+        let dateString = Self.dayDateFormatter.string(from: date)
         return dateString
 
     }
@@ -250,6 +260,18 @@ extension ConversationsViewModel {
     func numberOfRows(forSectionIndex section: Int) -> Int {
         return self.conversationsPublisher.value.count
     }
+
+    private static let hourDateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        return dateFormatter
+    }()
+
+    private static let dayDateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy"
+        return dateFormatter
+    }()
 
 }
 

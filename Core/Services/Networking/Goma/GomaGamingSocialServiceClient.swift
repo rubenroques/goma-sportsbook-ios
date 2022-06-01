@@ -17,7 +17,9 @@ class GomaGamingSocialServiceClient {
     var chatroomLastMessagePublisher: CurrentValueSubject<[Int: OrderedSet<ChatMessage>], Never> = .init([:])
     var chatroomMessagesPublisher: CurrentValueSubject<[Int: OrderedSet<ChatMessage>], Never> = .init([:])
     var chatroomMessageUpdaterPublisher: CurrentValueSubject<[Int: ChatMessage?], Never> = .init([:])
-
+    var chatPage: Int = 1
+    
+    // MARK: Private Properties
     private var manager: SocketManager?
     private var socket: SocketIOClient?
         
@@ -189,7 +191,7 @@ class GomaGamingSocialServiceClient {
     }
 
     private func getChatrooms() {
-        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId)
+        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId, page: self.chatPage)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -244,8 +246,8 @@ class GomaGamingSocialServiceClient {
                         let chatroomId = chatMessage.toChatroom
                         self.chatroomMessageUpdaterPublisher.value[chatroomId] = chatMessage
 
-                        // Update last message aswell, since last message socket listener doesn't live update
-                        self.chatroomLastMessagePublisher.value[chatroomId] = OrderedSet(chatMessages)
+                        // Update last message aswell, since last message socket listener doesn't live updated
+                         self.chatroomLastMessagePublisher.value[chatroomId] = OrderedSet(chatMessages)
                     }
                 }
             }

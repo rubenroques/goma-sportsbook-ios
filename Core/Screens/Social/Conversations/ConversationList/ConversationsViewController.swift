@@ -486,6 +486,7 @@ struct ConversationData {
     var name: String
     var lastMessage: String
     var date: String
+    var timestamp: Int?
     var lastMessageUser: String?
     var isLastMessageSeen: Bool
     var groupUsers: [GomaFriend]?

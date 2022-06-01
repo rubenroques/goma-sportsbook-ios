@@ -161,8 +161,8 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
-    func requestChatrooms(deviceId: String) -> AnyPublisher<NetworkResponse<[ChatroomData]>, NetworkError> {
-        let endpoint = GomaGamingService.chatrooms
+    func requestChatrooms(deviceId: String, page: Int) -> AnyPublisher<NetworkResponse<[ChatroomData]>, NetworkError> {
+        let endpoint = GomaGamingService.chatrooms(page: "\(page)")
         let requestPublisher: AnyPublisher<NetworkResponse<[ChatroomData]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
