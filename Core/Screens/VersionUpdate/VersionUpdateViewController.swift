@@ -56,8 +56,8 @@ class VersionUpdateViewController: UIViewController {
         self.view.backgroundColor = UIColor(patternImage: imageGradient)
         containerView.backgroundColor = UIColor(patternImage: imageGradient)
         updateView.backgroundColor = UIColor(patternImage: imageGradient)
-        titleLabel.textColor = UIColor.App.textPrimary
-        textLabel.textColor = UIColor.App.textPrimary
+        titleLabel.textColor = UIColor.white
+        textLabel.textColor = UIColor.white
 
         updateButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         updateButton.layer.borderColor = UIColor.App.highlightPrimary.cgColor
