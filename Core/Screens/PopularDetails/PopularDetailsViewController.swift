@@ -343,7 +343,7 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return MatchWidgetCollectionViewCell.cellHeight + 20
+            return MatchWidgetCollectionViewCell.normalCellHeight + 20
         case 1:
             return 145 // outrightMarket lines
         case 2:
@@ -356,7 +356,7 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return MatchWidgetCollectionViewCell.cellHeight + 20
+            return MatchWidgetCollectionViewCell.normalCellHeight + 20
         case 1:
             return 145 // outrightMarket lines
         case 2:

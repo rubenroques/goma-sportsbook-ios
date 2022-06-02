@@ -374,7 +374,7 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
             case .outrightMarket:
                 return 145
             case .match:
-                return MatchWidgetCollectionViewCell.cellHeight + 20
+                return MatchWidgetCollectionViewCell.normalCellHeight + 20
             }
         }
 
@@ -391,7 +391,7 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
             case .outrightMarket:
                 return 145
             case .match:
-                return MatchWidgetCollectionViewCell.cellHeight + 20
+                return MatchWidgetCollectionViewCell.normalCellHeight + 20
             }
         }
 

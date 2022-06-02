@@ -171,7 +171,7 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
         if competitions.isEmpty {
             return 600
         }
-        return MatchWidgetCollectionViewCell.cellHeight + 20
+        return MatchWidgetCollectionViewCell.normalCellHeight + 20
     }
 
     func needReloadSection(_ section: Int, tableView: UITableView) {

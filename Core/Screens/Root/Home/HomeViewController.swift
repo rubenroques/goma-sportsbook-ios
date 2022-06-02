@@ -483,7 +483,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .bannerLine:
             return 180
         case .userFavorites:
-            return MatchWidgetCollectionViewCell.cellHeight + 20
+            return MatchWidgetCollectionViewCell.normalCellHeight + 20
         case .suggestedBets:
             return 336
         case .sport:

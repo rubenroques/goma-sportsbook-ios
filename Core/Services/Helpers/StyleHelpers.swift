@@ -37,4 +37,14 @@ struct StyleHelper {
         button.backgroundColor = .clear
     }
 
+    static func cardsStyleHeight() -> CGFloat {
+        var height = MatchWidgetCollectionViewCell.normalCellHeight
+        switch UserDefaults.standard.cardsStyle {
+        case .small:
+            height = MatchWidgetCollectionViewCell.smallCellHeight
+        case .normal:
+            height = MatchWidgetCollectionViewCell.normalCellHeight
+        }
+        return height
+    }
 }

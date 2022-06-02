@@ -382,7 +382,7 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-        let cellHeight = MatchWidgetCollectionViewCell.cellHeight
+        let cellHeight = MatchWidgetCollectionViewCell.normalCellHeight
         if indexPath.section == 1 {
             return CGSize(width: 99, height: cellHeight)
         }

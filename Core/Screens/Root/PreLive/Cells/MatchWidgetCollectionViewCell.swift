@@ -57,7 +57,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     var viewModel: MatchWidgetCellViewModel?
 
-    static var cellHeight: CGFloat = 156
+    static var normalCellHeight: CGFloat = 156
+    static var smallCellHeight: CGFloat = 40
 
     var isFavorite: Bool = false {
         didSet {

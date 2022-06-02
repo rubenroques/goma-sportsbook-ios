@@ -13,6 +13,7 @@ enum UserDefaultsKey: String {
     case userSkippedLoginFlow = "userSkippedLoginFlow"
     case userBetslipSettings = "user_betslip_settings"
     case userOddsFormat = "userOddsFormat"
+    case cardsStyle = "cardsStyleKey"
 }
 
 extension UserDefaults {
@@ -68,6 +69,22 @@ extension UserDefaults {
         }
     }
 
+    var cardsStyle: CardsStyle {
+        get {
+            let defaultValue = TargetVariables.defaultCardStyle
+            if let skipped = self.value(forKey: UserDefaultsKey.cardsStyle.rawValue) as? Int {
+                return CardsStyle(rawValue: skipped) ?? defaultValue // Has a previous stored value, use it
+            }
+            else {
+                setValue(defaultValue.rawValue, forKey: UserDefaultsKey.cardsStyle.rawValue)
+                return defaultValue
+            }
+        }
+        set {
+            setValue(newValue.rawValue, forKey: UserDefaultsKey.cardsStyle.rawValue)
+        }
+    }
+
     func clear() {
         let domain = Bundle.main.bundleIdentifier!
         UserDefaults.standard.removePersistentDomain(forName: domain)
@@ -85,4 +102,9 @@ extension UserDefaults {
         let element = try? JSONDecoder().decode(Element.self, from: data)
         return element
     }
+}
+
+enum CardsStyle: Int {
+    case small = 3
+    case normal = 5
 }
