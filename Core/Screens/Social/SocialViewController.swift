@@ -107,7 +107,9 @@ class SocialViewController: UIViewController {
             self?.friendsListViewController.needsRefetchData()
         }
 
-        // self.viewModel.socialClient.connectSocket()
+        // NEW LAYOUT
+        self.friendsButton.isHidden = true
+        self.settingsButton.isHidden = true
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -178,6 +180,11 @@ class SocialViewController: UIViewController {
         let addFriendsViewModel = AddFriendViewModel()
 
         let addFriendsViewController = AddFriendViewController(viewModel: addFriendsViewModel)
+
+        addFriendsViewController.chatListNeedsReload = { [weak self] in
+            self?.conversationsViewController.needsRefetchData()
+            self?.friendsListViewController.needsRefetchData()
+        }
 
         self.navigationController?.pushViewController(addFriendsViewController, animated: true)
     }

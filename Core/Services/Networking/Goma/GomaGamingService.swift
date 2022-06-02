@@ -116,7 +116,7 @@ extension GomaGamingService: Endpoint {
         case .removeFavorite(let favorite):
             return [URLQueryItem(name: "favorite_ids[]", value: favorite)]
         // Social
-        case .addFriend, .deleteFriend, .listFriends, .inviteFriend, .addGroup, .deleteGroup, .searchUserCode:
+        case .addFriend, .deleteFriend, .listFriends, .inviteFriend, .addGroup, .deleteGroup, .searchUserCode, .lookupPhone:
             return nil
         case .chatrooms(let page):
             return [URLQueryItem(name: "page", value: page)]
@@ -132,15 +132,15 @@ extension GomaGamingService: Endpoint {
 //            }
             print("EDIT GROUP QUERY: \(queryItemsURL)")
             return queryItemsURL
-        case .lookupPhone(let phones):
-            var queryItemsURL: [URLQueryItem] = []
-
-            for phone in phones {
-                let queryItem = URLQueryItem(name: "phone_numbers[]", value: "\(phone)")
-                queryItemsURL.append(queryItem)
-            }
-            print("PHONE QUERY: \(queryItemsURL)")
-            return queryItemsURL
+//        case .lookupPhone(let phones):
+//            var queryItemsURL: [URLQueryItem] = []
+//
+//            for phone in phones {
+//                let queryItem = URLQueryItem(name: "phone_numbers[]", value: "\(phone)")
+//                queryItemsURL.append(queryItem)
+//            }
+//            print("PHONE QUERY: \(queryItemsURL)")
+//            return queryItemsURL
         case .removeUser(_, let userId):
             return [URLQueryItem(name: "users_ids[]", value: userId)]
         case .addUserToGroup(_, let userIds):
@@ -185,9 +185,9 @@ extension GomaGamingService: Endpoint {
         case .removeFavorite:
             return .delete
         // Social
-        case .addFriend, .inviteFriend, .addGroup, .addUserToGroup:
+        case .addFriend, .inviteFriend, .addGroup, .addUserToGroup, .lookupPhone:
             return .post
-        case .listFriends, .chatrooms, .lookupPhone, .searchUserCode:
+        case .listFriends, .chatrooms, .searchUserCode:
             return .get
         case .deleteGroup, .deleteFriend, .removeUser:
             return .delete
@@ -276,6 +276,15 @@ extension GomaGamingService: Endpoint {
                     "users_ids": \(userIds)
                     }
                     """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+        case .lookupPhone(let phones):
+            let body = """
+                    {"phone_numbers":
+                    \(phones)
+                    }
+                    """
+            print("CONTACTS BODY: \(body)")
             let data = body.data(using: String.Encoding.utf8)!
             return data
         default:

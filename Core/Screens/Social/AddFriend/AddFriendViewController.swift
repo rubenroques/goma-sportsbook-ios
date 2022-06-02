@@ -38,6 +38,8 @@ class AddFriendViewController: UIViewController {
         }
     }
 
+    var chatListNeedsReload: (() -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(viewModel: AddFriendViewModel) {
         self.viewModel = viewModel
@@ -204,13 +206,16 @@ class AddFriendViewController: UIViewController {
     private func showAddFriendAlert(friendAlertType: FriendAlertType) {
         switch friendAlertType {
         case .success:
-            let addFriendAlert = UIAlertController(title: localized("friend_added"),
-                                                       message: localized("friend_added_message"),
-                                                       preferredStyle: UIAlertController.Style.alert)
+//            let addFriendAlert = UIAlertController(title: localized("friend_added"),
+//                                                       message: localized("friend_added_message"),
+//                                                       preferredStyle: UIAlertController.Style.alert)
+//
+//            addFriendAlert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+//
+//            self.present(addFriendAlert, animated: true, completion: nil)
+            self.chatListNeedsReload?()
 
-            addFriendAlert.addAction(UIAlertAction(title: localized("ok"), style: .default))
-
-            self.present(addFriendAlert, animated: true, completion: nil)
+            self.navigationController?.popViewController(animated: true)
         case .error:
             let errorFriendAlert = UIAlertController(title: localized("friend_added_error"),
                                                        message: localized("friend_added_message_error"),
@@ -248,6 +253,10 @@ class AddFriendViewController: UIViewController {
             let addContactViewModel = AddContactViewModel()
             let addContactViewController = AddContactViewController(viewModel: addContactViewModel)
 
+            addContactViewController.chatListNeedsReload = { [weak self] in
+                self?.chatListNeedsReload?()
+            }
+
             self.navigationController?.pushViewController(addContactViewController, animated: true)
 
         case .notDetermined:
@@ -261,6 +270,10 @@ class AddFriendViewController: UIViewController {
                     DispatchQueue.main.async {
                         let addContactViewModel = AddContactViewModel()
                         let addContactViewController = AddContactViewController(viewModel: addContactViewModel)
+
+                        addContactViewController.chatListNeedsReload = { [weak self] in
+                            self?.chatListNeedsReload?()
+                        }
 
                         self.navigationController?.pushViewController(addContactViewController, animated: true)
                     }

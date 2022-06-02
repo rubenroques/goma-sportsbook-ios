@@ -162,6 +162,7 @@ class ConversationsViewModel {
                                                 name: chatroomName,
                                                 lastMessage: "",
                                                 date: "",
+                                                timestamp: chatroomData.chatroom.creationTimestamp,
                                                 lastMessageUser: loggedUsername,
                                                 isLastMessageSeen: true,
                                                 groupUsers: chatroomUsers)
@@ -187,6 +188,7 @@ class ConversationsViewModel {
                                                 name: chatroomName,
                                                 lastMessage: "",
                                                 date: "",
+                                                timestamp: chatroomData.chatroom.creationTimestamp,
                                                 lastMessageUser: loggedUsername,
                                                 isLastMessageSeen: true,
                                                 groupUsers: chatroomUsers)

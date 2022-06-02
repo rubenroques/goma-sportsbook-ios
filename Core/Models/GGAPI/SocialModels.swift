@@ -35,11 +35,13 @@ struct Chatroom: Decodable {
     let id: Int
     let name: String
     let type: String
+    let creationTimestamp: Int?
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case name = "name"
         case type = "type"
+        case creationTimestamp = "created_at"
     }
 }
 
