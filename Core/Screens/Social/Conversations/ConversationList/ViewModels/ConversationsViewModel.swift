@@ -98,14 +98,37 @@ class ConversationsViewModel {
                 })
                 .store(in: &cancellables)
 
+            Env.gomaSocialClient.chatroomReadMessagesPublisher
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [weak self] usersResponse in
+
+                    if let usersResponse = usersResponse[chatroomId] {
+                        //self?.updateConversationReadStatus(chatroomId: chatroomId)
+                        self?.updateConversationDetail(chatroomId: chatroomId)
+                    }
+                })
+                .store(in: &cancellables)
+
         }
     }
 
     private func updateConversationDetail(chatroomId: Int) {
 
+        guard let userLoggedId = Env.gomaNetworkClient.getCurrentToken()?.userId else {return}
+
         for (index, conversation) in self.conversationsPublisher.value.enumerated() {
             if conversation.id == chatroomId {
                 if let lastMessage = self.conversationLastMessageList[chatroomId] {
+
+                    var isLastMessageRead = false
+
+                    if let usersReadList = Env.gomaSocialClient.chatroomReadMessagesPublisher.value[chatroomId], let userReadResponse = usersReadList[safe: 0] {
+                        for userId in userReadResponse.users {
+                            if userId == "\(userLoggedId)" && userReadResponse.messageId == lastMessage.date {
+                                isLastMessageRead = true
+                            }
+                        }
+                    }
 
                     let newConversationData = ConversationData(id: conversation.id,
                                                                conversationType: conversation.conversationType,
@@ -114,7 +137,7 @@ class ConversationsViewModel {
                                                                date: self.getFormattedDate(timestamp: lastMessage.date),
                                                                timestamp: lastMessage.date,
                                                                lastMessageUser: lastMessage.fromUser,
-                                                               isLastMessageSeen: conversation.isLastMessageSeen, groupUsers: conversation.groupUsers)
+                                                               isLastMessageSeen: isLastMessageRead, groupUsers: conversation.groupUsers)
 
                     self.initialConversations[index] = newConversationData
 
@@ -164,7 +187,7 @@ class ConversationsViewModel {
                                                 date: "",
                                                 timestamp: chatroomData.chatroom.creationTimestamp,
                                                 lastMessageUser: loggedUsername,
-                                                isLastMessageSeen: true,
+                                                isLastMessageSeen: false,
                                                 groupUsers: chatroomUsers)
 
         self.conversationsPublisher.value.append(conversationData)

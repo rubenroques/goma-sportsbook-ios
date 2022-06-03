@@ -52,6 +52,21 @@ class ConversationDetailViewModel: NSObject {
             self.shouldScrollToLastMessage.send()
         }
 
+        // Needs further testing
+//        if Env.gomaSocialClient.chatroomMessagesPublisher.value[chatroomId] == nil {
+//            Env.gomaSocialClient.startChatDetailMessageListener(chatroomId: chatroomId)
+//        }
+//
+//        Env.gomaSocialClient.chatroomMessagesPublisher
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] chatMessages in
+//                if let conversationMessages = chatMessages[chatroomId] {
+//                    self?.processChatMessages(chatMessages: Array(conversationMessages) )
+//                    self?.shouldScrollToLastMessage.send()
+//                }
+//            })
+//            .store(in: &cancellables)
+
         Env.gomaSocialClient.chatroomMessageUpdaterPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] chatMessages in

@@ -44,6 +44,8 @@ class ChatSettingsViewController: UIViewController {
 
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
 
+        self.closeButton.isHidden = true
+
     }
 
     // MARK: - Layout and Theme
@@ -182,7 +184,7 @@ extension ChatSettingsViewController {
         label.font = AppFont.with(type: .bold, size: 16)
         label.textAlignment = .center
         label.numberOfLines = 1
-        label.text = localized("settings")
+        label.text = localized("chat")
         return label
     }
 

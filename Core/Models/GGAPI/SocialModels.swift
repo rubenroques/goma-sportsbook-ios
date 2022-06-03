@@ -137,3 +137,13 @@ struct ChatMessage: Decodable, Hashable {
     }
     
 }
+
+struct ChatUsersResponse: Decodable {
+    var users: [String]
+    var messageId: Int
+
+    enum CodingKeys: String, CodingKey {
+        case users = "users"
+        case messageId = "message_id"
+    }
+}

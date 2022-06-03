@@ -44,7 +44,6 @@ class SocialViewController: UIViewController {
     private lazy var friendsButton: UIButton = Self.createFriendsButton()
     private lazy var settingsButton: UIButton = Self.createSettingsButton()
     private lazy var closeButton: UIButton = Self.createCloseButton()
-    private lazy var codeLabel: UILabel = Self.createCodeLabel()
 
     private var tabViewController: TabularViewController
     private var viewControllerTabDataSource: TitleTabularDataSource
@@ -155,7 +154,6 @@ class SocialViewController: UIViewController {
         self.closeButton.backgroundColor = .clear
         self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
-        self.codeLabel.textColor = UIColor.App.textPrimary
     }
 
     // MARK: - Bindings
@@ -283,13 +281,6 @@ extension SocialViewController {
         return button
     }
 
-    private static func createCodeLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Code: \(Env.gomaNetworkClient.getCurrentToken()?.code)"
-        return label
-    }
-
     private func setupSubviews() {
 
         self.view.addSubview(self.topSafeAreaView)
@@ -302,14 +293,11 @@ extension SocialViewController {
         self.navigationView.addSubview(self.settingsButton)
         self.navigationView.addSubview(self.closeButton)
 
-        self.view.addSubview(self.codeLabel)
-
         self.view.addSubview(self.containerBaseView)
 
         // Initialize constraints
         self.initConstraints()
 
-        self.view.bringSubviewToFront(self.codeLabel)
     }
 
     private func initConstraints() {
@@ -348,10 +336,7 @@ extension SocialViewController {
             self.containerBaseView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 10),
             self.containerBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             self.containerBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.containerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-
-            self.codeLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.codeLabel.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: -10),
+            self.containerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
         ])
 
     }
