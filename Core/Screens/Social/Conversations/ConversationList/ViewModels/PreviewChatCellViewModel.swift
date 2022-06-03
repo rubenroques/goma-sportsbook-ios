@@ -12,6 +12,7 @@ class PreviewChatCellViewModel {
 
     init(cellData: ConversationData) {
         self.cellData = cellData
+
     }
 
     func getGroupInitials(text: String) -> String {

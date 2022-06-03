@@ -27,6 +27,8 @@ class FriendsListViewController: UIViewController {
         }
     }
 
+    var reloadConversationsData: ( () -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(viewModel: FriendsListViewModel = FriendsListViewModel()) {
         self.viewModel = viewModel
@@ -60,6 +62,11 @@ class FriendsListViewController: UIViewController {
         self.view.addGestureRecognizer(backgroundTapGesture)
 
         self.bind(toViewModel: self.viewModel)
+
+        // TableView top padding fix
+        if #available(iOS 15.0, *) {
+          tableView.sectionHeaderTopPadding = 0
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -112,6 +119,13 @@ class FriendsListViewController: UIViewController {
                 self?.isEmptyState = friends.isEmpty
             })
             .store(in: &cancellables)
+
+        viewModel.conversationDataNeedsReload
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.reloadConversationsData?()
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Functions
@@ -127,8 +141,8 @@ class FriendsListViewController: UIViewController {
 
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
             textfield.backgroundColor = UIColor.App.backgroundSecondary
-            textfield.textColor = .white
-            textfield.tintColor = .white
+            textfield.textColor = UIColor.App.textPrimary
+            textfield.tintColor = UIColor.App.textPrimary
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_friend"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
                                                                                 UIColor.App.inputTextTitle,
@@ -140,6 +154,10 @@ class FriendsListViewController: UIViewController {
             }
         }
 
+    }
+
+    func needsRefetchData() {
+        self.viewModel.refetchConversations()
     }
 
     // MARK: Actions
@@ -219,6 +237,15 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
                 cell.configure(withViewModel: cellViewModel)
             }
 
+            cell.removeFriendAction = { [weak self] friendId in
+                self?.viewModel.removeFriend(friendId: friendId)
+            }
+
+            cell.showProfileAction = { [weak self] in
+                self?.handleProfileAction(friendData: friend)
+
+            }
+
         }
 
         return cell
@@ -247,10 +274,10 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 
         if !self.viewModel.friendsPublisher.value.isEmpty {
-            return 30
+            return UITableView.automaticDimension
         }
         else {
-            return 0
+            return 0.01
         }
 
     }
@@ -261,8 +288,87 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
             return 30
         }
         else {
-            return 0
+            return 0.01
         }
+    }
+
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+
+        let muteAction = UIContextualAction(style: .normal,
+                                        title: "Mute") { [weak self] action, view, completionHandler in
+            self?.handleMuteAction()
+            completionHandler(true)
+        }
+
+        if let friend = self.viewModel.friendsPublisher.value[safe: indexPath.row] {
+
+            if let cellViewModel = self.viewModel.cachedFriendCellViewModels[friend.id] {
+                if cellViewModel.notificationsEnabled {
+                    muteAction.title = "Mute"
+                }
+                else {
+                    muteAction.title = "Unmute"
+                }
+
+            }
+        }
+
+        muteAction.backgroundColor = UIColor.App.backgroundTertiary
+
+        let deleteAction = UIContextualAction(style: .normal,
+                                        title: "Delete") { [weak self] action, view, completionHandler in
+            if let friendData = self?.viewModel.friendsPublisher.value[safe: indexPath.row] {
+                self?.handleDeleteAction(friendId: friendData.id)
+                completionHandler(true)
+            }
+
+        }
+
+        deleteAction.backgroundColor = UIColor.App.backgroundSecondary
+
+        let profileAction = UIContextualAction(style: .normal,
+                                        title: "Profile") { [weak self] action, view, completionHandler in
+            if let friendData = self?.viewModel.friendsPublisher.value[safe: indexPath.row] {
+                self?.handleProfileAction(friendData: friendData)
+                completionHandler(true)
+            }
+
+        }
+
+        profileAction.backgroundColor = UIColor.App.backgroundTertiary
+
+        let swipeActionCofiguration = UISwipeActionsConfiguration(actions: [profileAction, deleteAction, muteAction])
+
+        swipeActionCofiguration.performsFirstActionWithFullSwipe = false
+
+        return swipeActionCofiguration
+
+    }
+
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .none
+    }
+
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    private func handleMuteAction() {
+        print("Muted!")
+    }
+
+    private func handleDeleteAction(friendId: Int) {
+        print("Deleted")
+        self.viewModel.removeFriend(friendId: friendId)
+    }
+
+    private func handleProfileAction(friendData: GomaFriend) {
+
+        let friendProfileViewModel = FriendProfileViewModel(friendData: friendData)
+
+        let friendProfileViewController = FriendProfileViewController(viewModel: friendProfileViewModel)
+
+        self.navigationController?.pushViewController(friendProfileViewController, animated: true)
     }
 
 }
@@ -282,6 +388,7 @@ extension FriendsListViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
+        tableView.contentInsetAdjustmentBehavior = .never
         return tableView
     }
 

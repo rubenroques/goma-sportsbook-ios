@@ -167,6 +167,7 @@ extension BonusDetailViewController {
         if let url = URL(string: self.viewModel.termsLinkStringPublisher.value) {
             UIApplication.shared.open(url)
         }
+
     }
 
 }

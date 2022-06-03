@@ -32,6 +32,7 @@ class NewGroupManagementViewController: UIViewController {
 
     // MARK: Public Properties
     var viewModel: NewGroupManagementViewModel
+    var chatListNeedReload: (() -> Void)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: NewGroupManagementViewModel) {
@@ -192,6 +193,7 @@ class NewGroupManagementViewController: UIViewController {
                 print("ADD GROUP GOMA: \(response)")
 
                 if let chatroomId = response.data?.id {
+                    self?.chatListNeedReload?()
                     self?.showConversationDetail(chatroomId: chatroomId, groupName: groupName)
                 }
             })
@@ -377,7 +379,7 @@ extension NewGroupManagementViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(localized("close"), for: .normal)
         button.setContentHuggingPriority(.required, for: .horizontal)
-        button.titleLabel?.font = AppFont.with(type: .semibold, size: 12)
+        button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         return button
     }
 

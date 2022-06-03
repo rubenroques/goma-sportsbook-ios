@@ -448,6 +448,7 @@ Terms of use, Privacy Policy and EULA";
 "select_friends_add" = "Select friends to add";
 "start_group_chat" = "Start Group Chat";
 "group_name" = "Group name";
+"select_a_friend" = "Select a friend";
 
 "my_friends" = "My Friends";
 "search_friend" = "Search a friend";
@@ -462,3 +463,37 @@ Terms of use, Privacy Policy and EULA";
 "message" = "Message";
 
 "chat_group_users_details" = "%s online, %s members";
+"invalid_code" = "Invalid Code";
+"invalid_code_message" = "The input code is invalid.";
+
+"friend_added" = "Friend/s Added";
+"friend_added_message" = "Friend request was sent to the selected users.";
+
+"friend_added_error" = "Friend Add Error";
+"friend_added_message_error" = "There was an error trying to add the selected friend/s. Try again later.";
+
+"new_message" = "New Message";
+"edit_contact" = "Edit contact";
+"delete" = "Delete";
+"block_contact" = "Block contact";
+"report" = "Report";
+
+"delete_contact" = "Delect Contact";
+"delete_contact_message" = "Are you sure you want to delete this contact?";
+
+"edit_group" = "Edit Group";
+"leave_group" = "Leave Group";
+"add_more_friends" = "Add more friends";
+
+"remove_user" = "Remove User";
+"remove_user_message" = "Are you sure you want to remove the selected user?";
+
+"not_allowed" = "Not Allowed";
+"minimum_users_message" = "You can't remove users if the group chat has only 3 users.";
+
+"group_name_changed" = "Group Name Changed";
+"group_name_changed_message" = "Group name was changed with success!";
+
+"mute" = "Mute";
+"unmute" = "Unmute";
+"unfriend" = "Unfriend";

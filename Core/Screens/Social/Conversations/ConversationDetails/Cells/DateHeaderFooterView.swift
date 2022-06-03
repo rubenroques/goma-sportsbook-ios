@@ -10,6 +10,7 @@ import UIKit
 class DateHeaderFooterView: UITableViewHeaderFooterView {
 
     // MARK: Private Properties
+    private lazy var baseView: UIView = Self.createBaseView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
 
     // MARK: - Lifetime and Cycle
@@ -18,7 +19,6 @@ class DateHeaderFooterView: UITableViewHeaderFooterView {
 
         self.setupSubviews()
         self.setupWithTheme()
-
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -28,6 +28,8 @@ class DateHeaderFooterView: UITableViewHeaderFooterView {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        self.setupWithTheme()
+        self.titleLabel.text = ""
     }
 
     // MARK: - Layout and Theme
@@ -37,13 +39,13 @@ class DateHeaderFooterView: UITableViewHeaderFooterView {
     }
 
     func setupWithTheme() {
+        self.baseView.backgroundColor = UIColor.App.backgroundPrimary
         self.titleLabel.textColor = UIColor.App.textDisablePrimary
     }
 
     // MARK: Functions
     func configureHeader(title: String) {
         self.titleLabel.text = title
-
     }
 }
 
@@ -52,11 +54,17 @@ class DateHeaderFooterView: UITableViewHeaderFooterView {
 //
 extension DateHeaderFooterView {
 
+    private static func createBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
-        label.text = "01/04/2022"
+        label.text = ""
         label.font = AppFont.with(type: .bold, size: 9)
         label.textAlignment = .center
         return label
@@ -64,7 +72,8 @@ extension DateHeaderFooterView {
 
     private func setupSubviews() {
 
-        self.contentView.addSubview(self.titleLabel)
+        self.contentView.addSubview(self.baseView)
+        self.baseView.addSubview(self.titleLabel)
 
         self.initConstraints()
     }
@@ -72,9 +81,16 @@ extension DateHeaderFooterView {
     private func initConstraints() {
 
         NSLayoutConstraint.activate([
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 30),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -30),
-            self.titleLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
+            self.baseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
+            self.baseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            self.baseView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+            self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 30),
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -30),
+            self.titleLabel.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor)
         ])
     }
 }

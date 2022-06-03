@@ -16,17 +16,10 @@ class SocialViewModel {
     }
 
     var startScreen: StartScreen
-    var socialClient: GomaGamingSocialServiceClient
 
     init(startScreen: StartScreen = .conversations) {
         self.startScreen = startScreen
 
-        self.socialClient = GomaGamingSocialServiceClient()
-    }
-
-    deinit {
-        print("DEINIT SOCIAL VM")
-        self.socialClient.disconnectSocket()
     }
 
 }
@@ -51,6 +44,7 @@ class SocialViewController: UIViewController {
     private lazy var friendsButton: UIButton = Self.createFriendsButton()
     private lazy var settingsButton: UIButton = Self.createSettingsButton()
     private lazy var closeButton: UIButton = Self.createCloseButton()
+    private lazy var codeLabel: UILabel = Self.createCodeLabel()
 
     private var tabViewController: TabularViewController
     private var viewControllerTabDataSource: TitleTabularDataSource
@@ -66,6 +60,7 @@ class SocialViewController: UIViewController {
         self.viewModel = viewModel
 
         self.conversationsViewController = ConversationsViewController(viewModel: ConversationsViewModel())
+
         self.friendsListViewController = FriendsListViewController(viewModel: FriendsListViewModel())
 
         self.viewControllers = [conversationsViewController, friendsListViewController]
@@ -74,6 +69,8 @@ class SocialViewController: UIViewController {
         self.viewControllerTabDataSource.initialPage = self.viewModel.startPageIndex()
 
         self.tabViewController = TabularViewController(dataSource: viewControllerTabDataSource)
+
+        self.tabViewController.disableScroll()
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -88,9 +85,12 @@ class SocialViewController: UIViewController {
 
         self.setupSubviews()
 
-        self.addChildViewController(tabViewController, toView: containerBaseView)
-        self.tabViewController.textFont = AppFont.with(type: .bold, size: 16)
-        self.tabViewController.setBarDistribution(.parent)
+        // Disabled Friends VC
+        // self.addChildViewController(tabViewController, toView: containerBaseView)
+        // self.tabViewController.textFont = AppFont.with(type: .bold, size: 16)
+        // self.tabViewController.setBarDistribution(.parent)
+
+        self.addChildViewController(self.conversationsViewController, toView: containerBaseView)
 
         self.setupWithTheme()
 
@@ -101,12 +101,22 @@ class SocialViewController: UIViewController {
         self.settingsButton.addTarget(self, action: #selector(didTapSettingsButton), for: .primaryActionTriggered)
 
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
+
+        self.friendsListViewController.reloadConversationsData = { [weak self] in
+            self?.conversationsViewController.needsRefetchData()
+        }
+
+        self.conversationsViewController.reloadFriendsData = { [weak self] in
+            self?.friendsListViewController.needsRefetchData()
+        }
+
+        // self.viewModel.socialClient.connectSocket()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        self.showWorkInProgressAlert()
+        // self.showWorkInProgressAlert()
     }
 
     // MARK: - Layout and Theme
@@ -128,6 +138,7 @@ class SocialViewController: UIViewController {
 
         self.tabViewController.sliderBarColor = UIColor.App.highlightSecondary
         self.tabViewController.barColor = UIColor.App.backgroundPrimary
+
         self.tabViewController.textColor = UIColor.App.textPrimary
         self.tabViewController.separatorBarColor = UIColor.App.separatorLine
 
@@ -144,6 +155,8 @@ class SocialViewController: UIViewController {
 
         self.closeButton.backgroundColor = .clear
         self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+
+        self.codeLabel.textColor = UIColor.App.textPrimary
     }
 
     // MARK: - Bindings
@@ -252,7 +265,7 @@ extension SocialViewController {
     private static func createSettingsButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "app_settings_profile_icon"), for: .normal)
+        button.setImage(UIImage(named: "chat_settings_icon"), for: .normal)
         button.contentMode = .scaleAspectFit
         return button
     }
@@ -264,6 +277,13 @@ extension SocialViewController {
         button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         button.setContentHuggingPriority(.required, for: .horizontal)
         return button
+    }
+
+    private static func createCodeLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Code: \(Env.gomaNetworkClient.getCurrentToken()?.code)"
+        return label
     }
 
     private func setupSubviews() {
@@ -278,10 +298,14 @@ extension SocialViewController {
         self.navigationView.addSubview(self.settingsButton)
         self.navigationView.addSubview(self.closeButton)
 
+        self.view.addSubview(self.codeLabel)
+
         self.view.addSubview(self.containerBaseView)
 
         // Initialize constraints
         self.initConstraints()
+
+        self.view.bringSubviewToFront(self.codeLabel)
     }
 
     private func initConstraints() {
@@ -301,7 +325,7 @@ extension SocialViewController {
             self.notificationsButton.widthAnchor.constraint(equalToConstant: 40),
             self.notificationsButton.heightAnchor.constraint(equalTo: self.notificationsButton.widthAnchor),
 
-            self.friendsButton.leadingAnchor.constraint(equalTo: self.notificationsButton.trailingAnchor, constant: 8),
+            self.friendsButton.leadingAnchor.constraint(equalTo: self.notificationsButton.trailingAnchor, constant: 0),
             self.friendsButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             self.friendsButton.widthAnchor.constraint(equalToConstant: 40),
             self.friendsButton.heightAnchor.constraint(equalTo: self.friendsButton.widthAnchor),
@@ -310,17 +334,20 @@ extension SocialViewController {
             self.settingsButton.widthAnchor.constraint(equalToConstant: 40),
             self.settingsButton.heightAnchor.constraint(equalTo: self.settingsButton.widthAnchor),
 
-            self.closeButton.leadingAnchor.constraint(equalTo: self.settingsButton.trailingAnchor, constant: 8),
+            self.closeButton.leadingAnchor.constraint(equalTo: self.settingsButton.trailingAnchor, constant: 0),
             self.closeButton.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -8),
             self.closeButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             self.closeButton.heightAnchor.constraint(equalToConstant: 40),
         ])
 
         NSLayoutConstraint.activate([
-            self.containerBaseView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.containerBaseView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 10),
             self.containerBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             self.containerBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.containerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+
+            self.codeLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.codeLabel.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: -10),
         ])
 
     }

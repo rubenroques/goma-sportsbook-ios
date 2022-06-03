@@ -87,7 +87,7 @@ class AddUnregisteredFriendTableViewCell: UITableViewCell {
 
     // MARK: Actions
     @objc func didTapInviteButton() {
-        if let phoneNumber = self.viewModel?.phone {
+        if let phoneNumber = self.viewModel?.phones.first {
             self.didTapInviteAction?(phoneNumber)
         }
     }

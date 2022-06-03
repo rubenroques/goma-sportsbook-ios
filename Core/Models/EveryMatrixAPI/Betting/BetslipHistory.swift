@@ -37,6 +37,8 @@ struct BetHistoryEntry: Codable {
     let settledDate: Date?
     let freeBet: Bool?
 
+    let betShareToken: String?
+
     enum CodingKeys: String, CodingKey {
         case betId = "betId"
         case selections = "selections"
@@ -55,6 +57,8 @@ struct BetHistoryEntry: Codable {
         case placedDate = "placedDate"
         case settledDate = "settledDate"
         case freeBet = "freeBet"
+
+        case betShareToken = "betShareToken"
     }
 }
 

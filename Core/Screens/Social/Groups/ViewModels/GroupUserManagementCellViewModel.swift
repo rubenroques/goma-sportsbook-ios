@@ -11,7 +11,7 @@ class GroupUserManagementCellViewModel {
 
     var userContact: UserContact
     var username: String
-    var phone: String
+    var phones: [String]
     var isOnline: Bool
     var isAdmin: Bool
 
@@ -20,7 +20,7 @@ class GroupUserManagementCellViewModel {
 
         self.username = userContact.username
 
-        self.phone = userContact.phone
+        self.phones = userContact.phones
 
         self.isOnline = false
 

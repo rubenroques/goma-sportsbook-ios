@@ -45,6 +45,8 @@ class NewGroupViewController: UIViewController {
         }
     }
 
+    var chatListNeedReload: (() -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(viewModel: NewGroupViewModel) {
         self.viewModel = viewModel
@@ -55,6 +57,7 @@ class NewGroupViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -81,22 +84,10 @@ class NewGroupViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
-        // TEST
-//        let chatroomId = "28"
-//
-//        Env.gomaNetworkClient.deleteGroup(deviceId: Env.deviceId, chatroomId: chatroomId)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .failure(let error):
-//                    print("DELETE GROUP ERROR: \(error)")
-//                case .finished:
-//                    ()
-//                }
-//            }, receiveValue: { response in
-//                print("DELETE GROUP GOMA: \(response)")
-//            })
-//            .store(in: &cancellables)
+        // TableView top padding fix
+        if #available(iOS 15.0, *) {
+          tableView.sectionHeaderTopPadding = 0
+        }
     }
 
     // MARK: - Layout and Theme
@@ -148,7 +139,7 @@ class NewGroupViewController: UIViewController {
 
     }
 
-    // MARK: binding
+    // MARK: Binding
 
     private func bind(toViewModel viewModel: NewGroupViewModel) {
 
@@ -194,8 +185,8 @@ class NewGroupViewController: UIViewController {
 
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
             textfield.backgroundColor = UIColor.App.backgroundSecondary
-            textfield.textColor = .white
-            textfield.tintColor = .white
+            textfield.textColor = UIColor.App.textPrimary
+            textfield.tintColor = UIColor.App.textPrimary
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_by_username"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
                                                                                 UIColor.App.inputTextTitle,
@@ -228,7 +219,7 @@ class NewGroupViewController: UIViewController {
         print("NEXT")
         var selectedUsers: [UserContact] = []
         if let loggedUser = UserSessionStore.loggedUserSession() {
-            let adminUser = UserContact(id: loggedUser.userId, username: loggedUser.username, phone: "+351968765890")
+            let adminUser = UserContact(id: loggedUser.userId, username: loggedUser.username, phones: ["+351968765890"])
 
             selectedUsers.append(adminUser)
         }
@@ -238,6 +229,10 @@ class NewGroupViewController: UIViewController {
         let newGroupManagementViewModel = NewGroupManagementViewModel(users: selectedUsers)
 
         let newGroupManagementViewController = NewGroupManagementViewController(viewModel: newGroupManagementViewModel)
+
+        newGroupManagementViewController.chatListNeedReload = { [weak self] in
+            self?.chatListNeedReload?()
+        }
 
         self.navigationController?.pushViewController(newGroupManagementViewController, animated: true)
     }
@@ -434,7 +429,7 @@ extension NewGroupViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(localized("close"), for: .normal)
         button.setContentHuggingPriority(.required, for: .horizontal)
-        button.titleLabel?.font = AppFont.with(type: .semibold, size: 12)
+        button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         return button
     }
 
@@ -567,7 +562,7 @@ extension NewGroupViewController {
             self.backButton.heightAnchor.constraint(equalTo: self.navigationView.heightAnchor),
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
             self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 10),
+            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 0),
 
             self.titleLabel.centerXAnchor.constraint(equalTo: self.navigationView.centerXAnchor),
             self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
