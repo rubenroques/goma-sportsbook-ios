@@ -35,13 +35,11 @@ class EmailVerificationViewController: UIViewController, ChooseEmailActionSheetP
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        commonInit()
-        setupWithTheme()
-
+        self.commonInit()
+        self.setupWithTheme()
     }
 
     func commonInit() {
-
         self.navigationTitleLabel.font = AppFont.with(type: .bold, size: 17)
         self.navigationTitleLabel.text = localized("email_verification")
 

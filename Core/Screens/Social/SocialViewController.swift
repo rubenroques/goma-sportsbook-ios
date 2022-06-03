@@ -84,9 +84,12 @@ class SocialViewController: UIViewController {
 
         self.setupSubviews()
 
-        self.addChildViewController(tabViewController, toView: containerBaseView)
-        self.tabViewController.textFont = AppFont.with(type: .bold, size: 16)
-        self.tabViewController.setBarDistribution(.parent)
+        // Disabled Friends VC
+        // self.addChildViewController(tabViewController, toView: containerBaseView)
+        // self.tabViewController.textFont = AppFont.with(type: .bold, size: 16)
+        // self.tabViewController.setBarDistribution(.parent)
+
+        self.addChildViewController(self.conversationsViewController, toView: containerBaseView)
 
         self.setupWithTheme()
 

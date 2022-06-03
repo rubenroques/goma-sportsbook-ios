@@ -93,7 +93,7 @@ enum MessageType {
 }
 
 struct DateMessages {
-    var date: String
+    var dateString: String
     var messages: [MessageData]
 }
 

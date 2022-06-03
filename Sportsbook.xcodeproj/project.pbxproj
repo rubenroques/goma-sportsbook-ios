@@ -15,6 +15,8 @@
 		4503E79B27D0E89600077CD2 /* CompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4503E79927D0E89600077CD2 /* CompetitionDetailsViewController.swift */; };
 		4503E79D27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4503E79C27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift */; };
 		4503E79E27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4503E79C27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift */; };
+		45085660284A640D00F4FB52 /* FriendProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99FD5102835479200275509 /* FriendProfileViewModel.swift */; };
+		45085661284A640D00F4FB52 /* FriendProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99FD5102835479200275509 /* FriendProfileViewModel.swift */; };
 		45109A662799C83700E4AC2E /* MatchStatsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45109A652799C83700E4AC2E /* MatchStatsViewModel.swift */; };
 		45109A672799C83700E4AC2E /* MatchStatsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45109A652799C83700E4AC2E /* MatchStatsViewModel.swift */; };
 		4515635F26BE032E00690896 /* AnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515635E26BE032E00690896 /* AnalyticsClient.swift */; };
@@ -9538,6 +9540,7 @@
 				457CBA64282D27D000ED0F00 /* MarketGroup.swift in Sources */,
 				457CBA65282D27D000ED0F00 /* MarketGroupDetailsStore.swift in Sources */,
 				457CBA66282D27D000ED0F00 /* StyleHelpers.swift in Sources */,
+				45085661284A640D00F4FB52 /* FriendProfileViewModel.swift in Sources */,
 				457CBC65282D291200ED0F00 /* ClientVariables.swift in Sources */,
 				457CBA67282D27D000ED0F00 /* PictureInPictureView.swift in Sources */,
 				457CBA68282D27D000ED0F00 /* BetslipViewController.swift in Sources */,
@@ -10037,6 +10040,7 @@
 				457CBD0A282D2CD100ED0F00 /* FunctionalUtils.swift in Sources */,
 				457CBD0B282D2CD100ED0F00 /* MarketGroup.swift in Sources */,
 				457CBD0C282D2CD100ED0F00 /* MarketGroupDetailsStore.swift in Sources */,
+				45085660284A640D00F4FB52 /* FriendProfileViewModel.swift in Sources */,
 				457CBD0D282D2CD100ED0F00 /* StyleHelpers.swift in Sources */,
 				457CBD0F282D2CD100ED0F00 /* PictureInPictureView.swift in Sources */,
 				457CBD10282D2CD100ED0F00 /* BetslipViewController.swift in Sources */,
@@ -11584,7 +11588,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 00521;
-				DEVELOPMENT_TEAM = 422GNXXZJR;
+				DEVELOPMENT_TEAM = TKH4GU3DG3;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -11610,7 +11614,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 00521;
-				DEVELOPMENT_TEAM = 422GNXXZJR;
+				DEVELOPMENT_TEAM = TKH4GU3DG3;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -11731,7 +11735,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/EveryMatrix/Misc/EveryMatrix.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00534;
+				CURRENT_PROJECT_VERSION = 00544;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/EveryMatrix/Misc/EveryMatrix-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -11757,7 +11761,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/EveryMatrix/Misc/EveryMatrix.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00534;
+				CURRENT_PROJECT_VERSION = 00544;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/EveryMatrix/Misc/EveryMatrix-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

@@ -403,7 +403,7 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let messageData = self.viewModel.dateMessages[safe: indexPath.section]?.messages[indexPath.row] {
+        if let messageData = self.viewModel.messageData(forIndexPath: indexPath) {
             if messageData.type == .sentNotSeen || messageData.type == .sentSeen {
                 if messageData.attachment != nil {
                     guard

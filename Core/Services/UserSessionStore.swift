@@ -182,8 +182,10 @@ class UserSessionStore {
     func registrationOnGomaAPI(form: EveryMatrix.SimpleRegisterForm, userId: String) {
 
         let deviceId = Env.deviceId
+        
         let userRegisterForm = UserRegisterForm(username: form.username,
                                                 email: form.email,
+                                                mobilePrefix: form.mobilePrefix,
                                                 mobile: form.mobileNumber,
                                                 birthDate: form.birthDate,
                                                 userProviderId: userId,

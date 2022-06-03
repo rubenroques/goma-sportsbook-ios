@@ -146,6 +146,7 @@ class SharedGameCardView: UIView {
             self.homeLabel.text = match.homeParticipant.name
             self.awayLabel.text = match.awayParticipant.name
 
+            // TODO: André - fix this with a  viewModel.isMAtchlive -> Bool
             if let matchInfo = viewModel.store.matchesInfoForMatch[match.id] {
                 self.isLiveCard = true
                 self.setLiveCardDetails(viewModel: viewModel)

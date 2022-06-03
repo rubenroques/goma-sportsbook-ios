@@ -57,4 +57,7 @@ struct TargetVariables: SportsbookTarget {
         return [Theme.dark]
     }
 
+    static var defaultCardStyle: CardsStyle {
+        return .normal
+    }
 }

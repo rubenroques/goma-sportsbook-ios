@@ -32,6 +32,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var resultLabel: UILabel!
     @IBOutlet private weak var matchTimeLabel: UILabel!
     @IBOutlet private weak var liveIndicatorImageView: UIImageView!
+    @IBOutlet private weak var resultCenterStackView: UIStackView!
 
     @IBOutlet private weak var oddsStackView: UIStackView!
 
@@ -55,6 +56,21 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet private weak var suspendedBaseView: UIView!
     @IBOutlet private weak var suspendedLabel: UILabel!
+
+    //
+    // Design Constraints
+    @IBOutlet private weak var topMarginSpaceConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var bottomMarginSpaceConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var leadingMarginSpaceConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var trailingMarginSpaceConstraint: NSLayoutConstraint!
+
+    @IBOutlet private weak var headerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var teamsHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var resultCenterConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var buttonsHeightConstraint: NSLayoutConstraint!
+
+    private var cachedCardsStyle: CardsStyle?
+    //
 
     var viewModel: MatchWidgetCellViewModel?
 
@@ -151,6 +167,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.locationFlagImageView.image = nil
         self.suspendedBaseView.isHidden = true
 
+        self.baseView.bringSubviewToFront(self.suspendedBaseView)
+
         self.liveIndicatorImageView.image = UIImage(named: "icon_live")
 
         let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
@@ -168,12 +186,14 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressCard))
         self.baseView.addGestureRecognizer(longPressGestureRecognizer)
 
+        self.adjustDesignToCardStyle()
         self.setupWithTheme()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
+        self.adjustDesignToCardStyle()
         self.setupWithTheme()
     }
 
@@ -254,6 +274,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.rightOutcomeDisabled = false
         self.suspendedBaseView.isHidden = true
 
+        self.adjustDesignToCardStyle()
         self.setupWithTheme()
     }
 
@@ -312,6 +333,71 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
             self.awayOddTitleLabel.textColor = UIColor.App.textPrimary
             self.awayOddValueLabel.textColor = UIColor.App.textPrimary
         }
+    }
+
+    private func adjustDesignToCardStyle() {
+
+        if self.cachedCardsStyle == StyleHelper.cardsStyleActive() {
+            return
+        }
+
+        self.cachedCardsStyle = StyleHelper.cardsStyleActive()
+
+        switch StyleHelper.cardsStyleActive() {
+        case .small:
+            self.adjustDesignToSmallCardStyle()
+        case .normal:
+            self.adjustDesignToNormalCardStyle()
+        }
+
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
+    }
+
+    private func adjustDesignToSmallCardStyle() {
+        self.topMarginSpaceConstraint.constant = 8
+        self.leadingMarginSpaceConstraint.constant = 8
+        self.trailingMarginSpaceConstraint.constant = 8
+        self.bottomMarginSpaceConstraint.constant = 8
+
+        self.headerHeightConstraint.constant = 12
+        self.teamsHeightConstraint.constant = 26
+        self.resultCenterConstraint.constant = -2
+        self.buttonsHeightConstraint.constant = 27
+
+        self.resultCenterStackView.spacing = -1
+
+        self.eventNameLabel.font = AppFont.with(type: .semibold, size: 9)
+        self.resultLabel.font = AppFont.with(type: .bold, size: 13)
+        self.matchTimeLabel.font = AppFont.with(type: .semibold, size: 8)
+        self.homeParticipantNameLabel.font = AppFont.with(type: .bold, size: 13)
+        self.awayParticipantNameLabel.font = AppFont.with(type: .bold, size: 13)
+        self.homeOddValueLabel.font = AppFont.with(type: .bold, size: 12)
+        self.drawOddValueLabel.font = AppFont.with(type: .bold, size: 12)
+        self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 12)
+    }
+
+    private func adjustDesignToNormalCardStyle() {
+        self.topMarginSpaceConstraint.constant = 11
+        self.bottomMarginSpaceConstraint.constant = 12
+        self.leadingMarginSpaceConstraint.constant = 12
+        self.trailingMarginSpaceConstraint.constant = 12
+
+        self.headerHeightConstraint.constant = 17
+        self.teamsHeightConstraint.constant = 67
+        self.resultCenterConstraint.constant = 0
+        self.buttonsHeightConstraint.constant = 40
+
+        self.resultCenterStackView.spacing = 2
+
+        self.eventNameLabel.font = AppFont.with(type: .semibold, size: 11)
+        self.resultLabel.font = AppFont.with(type: .bold, size: 16)
+        self.matchTimeLabel.font = AppFont.with(type: .semibold, size: 8)
+        self.homeParticipantNameLabel.font = AppFont.with(type: .bold, size: 14)
+        self.awayParticipantNameLabel.font = AppFont.with(type: .bold, size: 14)
+        self.homeOddValueLabel.font = AppFont.with(type: .bold, size: 13)
+        self.drawOddValueLabel.font = AppFont.with(type: .bold, size: 13)
+        self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 13)
     }
 
     func configure(withViewModel viewModel: MatchWidgetCellViewModel) {

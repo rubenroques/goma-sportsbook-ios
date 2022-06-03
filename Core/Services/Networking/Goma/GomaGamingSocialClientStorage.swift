@@ -7,7 +7,7 @@
 
 import Foundation
 import Combine
-
+/*
 class GomaGamingSocialClientStorage {
 
     // MARK: Public Properties
@@ -56,3 +56,4 @@ class GomaGamingSocialClientStorage {
     }
 
 }
+*/

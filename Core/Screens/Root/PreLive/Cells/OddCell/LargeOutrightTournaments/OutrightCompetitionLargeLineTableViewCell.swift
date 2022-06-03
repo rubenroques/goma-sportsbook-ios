@@ -49,6 +49,17 @@ class OutrightCompetitionLargeLineTableViewCell: UITableViewCell {
         self.setupSubviews()
         self.setupWithTheme()
 
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self
+
+        self.collectionView.register(OutrightCompetitionLargeWidgetCollectionViewCell.self,
+                                     forCellWithReuseIdentifier: OutrightCompetitionLargeWidgetCollectionViewCell.identifier)
+        self.collectionView.register(SeeMoreMarketsCollectionViewCell.nib,
+                                     forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)
+        self.collectionView.register(UICollectionViewCell.self,
+                                     forCellWithReuseIdentifier: UICollectionViewCell.identifier)
+
+
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapSeeAll))
         self.linesStackView.addGestureRecognizer(tapGestureRecognizer)
    }
@@ -206,8 +217,14 @@ extension OutrightCompetitionLargeLineTableViewCell: UICollectionViewDelegate, U
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
 
+        var height: CGFloat = 124
+        switch StyleHelper.cardsStyleActive() {
+        case .small: height = 90
+        case .normal: height = 124
+        }
+
         if indexPath.section == 1 {
-            return CGSize(width: 99, height: 124)
+            return CGSize(width: 99, height: height)
         }
         else {
             let screenWidth = UIScreen.main.bounds.size.width
@@ -215,7 +232,7 @@ extension OutrightCompetitionLargeLineTableViewCell: UICollectionViewDelegate, U
             if width > 390 {
                 width = 390
             }
-            return CGSize(width: width, height: 124)
+            return CGSize(width: width, height: height)
         }
     }
 }
@@ -251,16 +268,6 @@ extension OutrightCompetitionLargeLineTableViewCell {
         self.linesStackView.addArrangedSubview(self.collectionView)
 
         self.contentView.addSubview(self.linesStackView)
-
-        self.collectionView.delegate = self
-        self.collectionView.dataSource = self
-
-        self.collectionView.register(OutrightCompetitionLargeWidgetCollectionViewCell.self,
-                                     forCellWithReuseIdentifier: OutrightCompetitionLargeWidgetCollectionViewCell.identifier)
-        self.collectionView.register(SeeMoreMarketsCollectionViewCell.nib,
-                                     forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)
-        self.collectionView.register(UICollectionViewCell.self,
-                                     forCellWithReuseIdentifier: UICollectionViewCell.identifier)
 
         // Initialize constraints
         self.initConstraints()

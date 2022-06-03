@@ -44,6 +44,7 @@ class RootViewController: UIViewController {
     @IBOutlet private weak var logoImageHeightConstraint: NSLayoutConstraint!
 
     @IBOutlet private var loginBaseView: UIView!
+    @IBOutlet private var loginStackView: UIStackView!
     @IBOutlet private var loginButton: UIButton!
 
     @IBOutlet private var accountValueBaseView: UIView!
@@ -326,11 +327,26 @@ class RootViewController: UIViewController {
     func commonInit() {
 
         self.redrawButtonButtons()
-
         if let image = self.logoImageView.image {
+
+            let maxAllowedWidth = CGFloat(150)
+
+            let defaultHeight = self.logoImageHeightConstraint.constant
+
             let ratio = image.size.height / image.size.width
-            let newHeight = self.logoImageHeightConstraint.constant / ratio
-            self.logoImageWidthConstraint.constant = newHeight
+
+            let newWidth = defaultHeight / ratio
+
+            if newWidth > maxAllowedWidth {
+                 let limitedHeight = maxAllowedWidth * ratio
+                 self.logoImageWidthConstraint.constant = maxAllowedWidth
+                 self.logoImageHeightConstraint.constant = limitedHeight
+            }
+            else {
+                 self.logoImageWidthConstraint.constant = newWidth
+                 self.logoImageHeightConstraint.constant = defaultHeight
+            }
+
             self.view.layoutIfNeeded()
         }
 
@@ -465,8 +481,14 @@ class RootViewController: UIViewController {
     }
 
     func openChatModal() {
-        let socialViewController = SocialViewController()
-        self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
+        if UserSessionStore.isUserLogged() {
+            let socialViewController = SocialViewController()
+            self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
+        }
+        else {
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.present(loginViewController, animated: true, completion: nil)
+        }
     }
 
     func openInternalWebview(onURL url: URL) {

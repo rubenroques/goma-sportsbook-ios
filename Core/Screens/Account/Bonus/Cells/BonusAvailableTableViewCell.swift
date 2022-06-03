@@ -257,7 +257,17 @@ extension BonusAvailableTableViewCell {
 
     private static func createMoreInfoButton() -> UIButton {
         let button = UIButton()
-        StyleHelper.styleInfoButton(button: button)
+
+        button.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        button.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        button.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
+
+        button.layer.cornerRadius = CornerRadius.button
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.App.textPrimary.cgColor
+        button.layer.masksToBounds = true
+        button.backgroundColor = .clear
+
         button.setTitle(localized("more_info"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 17)
         return button

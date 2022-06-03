@@ -15,7 +15,7 @@
         </array>
     </customFonts>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PopUpPromotionView" customModule="ShowcaseBeta" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PopUpPromotionView" customModule="Crocobet" customModuleProvider="target">
             <connections>
                 <outlet property="baseView" destination="ITE-2G-xDf" id="sPy-It-sAl"/>
                 <outlet property="dismissButton" destination="bnt-c8-RIa" id="tvV-7l-XKX"/>
@@ -173,7 +173,7 @@
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4ss-Ba-CYi">
                                     <rect key="frame" x="0.0" y="457.5" width="372" height="52"/>
                                     <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bnt-c8-RIa" customClass="RoundButton" customModule="ShowcaseBeta" customModuleProvider="target">
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bnt-c8-RIa">
                                             <rect key="frame" x="51" y="1" width="270" height="50"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="50" id="DW6-6z-qop"/>

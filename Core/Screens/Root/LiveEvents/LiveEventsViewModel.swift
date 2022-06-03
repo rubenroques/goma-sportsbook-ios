@@ -454,18 +454,14 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        4
+        return 2
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 0
-        case 1:
-            return 0
-        case 2:
             return self.matches.count
-        case 3:
+        case 1:
             return self.shouldShowLoadingCell ? 1 : 0
         default:
             return 0
@@ -475,10 +471,6 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            return UITableViewCell()
-        case 1:
-            return UITableViewCell()
-        case 2:
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.matches[safe: indexPath.row] {
 
@@ -499,7 +491,7 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
                 
                 return cell
             }
-        case 3:
+        case 1:
             if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
                 return cell
             }
@@ -520,14 +512,14 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 2 {
+        if section == 0 {
             return 54
         }
         return 0.01
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        if section == 2 {
+        if section == 0 {
             return 54
         }
         return 0.01
@@ -535,26 +527,24 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
-        case 3:
-            // Loading cell
-            return 70
+        case 1:
+            return 70 // Loading cell
         default:
-            return MatchWidgetCollectionViewCell.cellHeight + 20
+            return UITableView.automaticDimension
         }
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
-        case 3:
-            // Loading cell
-            return 70
+        case 1:
+            return 70 // Loading cell
         default:
-            return MatchWidgetCollectionViewCell.cellHeight + 20
+            return StyleHelper.cardsStyleHeight() + 20
         }
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.section == 3, self.matches.isNotEmpty {
+        if indexPath.section == 1, self.matches.isNotEmpty {
             if let typedCell = cell as? LoadingMoreTableViewCell {
                 typedCell.startAnimating()
             }

@@ -14,7 +14,7 @@ struct TargetVariables: SportsbookTarget {
     #if DEBUG
     static var environmentType: EnvironmentType = .dev
     #else
-    static var environmentType: EnvironmentType = .dev
+    static var environmentType: EnvironmentType = .prod
     #endif
 
     static var gomaGamingHost: String {
@@ -56,5 +56,9 @@ struct TargetVariables: SportsbookTarget {
     static var supportedThemes: [Theme] {
         return Theme.allCases
     }
-    
+
+    static var defaultCardStyle: CardsStyle {
+        return .normal
+    }
+
 }
