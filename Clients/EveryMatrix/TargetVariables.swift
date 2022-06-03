@@ -14,7 +14,7 @@ struct TargetVariables: SportsbookTarget {
     #if DEBUG
     static var environmentType: EnvironmentType = .dev
     #else
-    static var environmentType: EnvironmentType = .dev
+    static var environmentType: EnvironmentType = .prod
     #endif
 
     static var gomaGamingHost: String {

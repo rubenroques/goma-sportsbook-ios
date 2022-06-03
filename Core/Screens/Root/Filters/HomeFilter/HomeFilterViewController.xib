@@ -145,11 +145,12 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bHi-10-aed">
                     <rect key="frame" x="0.0" y="812" width="414" height="50"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fM0-46-agy" customClass="RoundButton" customModule="Crocobet" customModuleProvider="target">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fM0-46-agy">
                             <rect key="frame" x="16" y="0.0" width="382" height="50"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="2SS-9t-Rlx"/>
                             </constraints>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="Button"/>
                             <connections>
                                 <action selector="applyFiltersAction" destination="-1" eventType="touchUpInside" id="Hnj-pt-S4D"/>

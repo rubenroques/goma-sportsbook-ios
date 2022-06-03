@@ -82,8 +82,8 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
         self.viewModel = nil
         self.titleLabel.text = ""
 
-        self.adjustDesignToCardStyle()
         self.setupWithTheme()
+        self.adjustDesignToCardStyle()
     }
 
     override func layoutSubviews() {
@@ -95,8 +95,8 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
-        self.adjustDesignToCardStyle()
         self.setupWithTheme()
+        self.adjustDesignToCardStyle()
     }
 
     func setupWithTheme() {

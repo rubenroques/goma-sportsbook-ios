@@ -42,7 +42,17 @@ class CompetitionWidgetCollectionViewCell: UICollectionViewCell {
     private lazy var bottomView: UIView = Self.createBottomView()
     private lazy var seeAllView: UIView = Self.createSeeAllView()
     private lazy var seeAllLabel: UILabel = Self.createSeeAllLabel()
-    
+
+    private var topMarginSpaceConstraint = NSLayoutConstraint()
+    private var bottomMarginSpaceConstraint = NSLayoutConstraint()
+    private var leadingMarginSpaceConstraint = NSLayoutConstraint()
+    private var trailingMarginSpaceConstraint = NSLayoutConstraint()
+
+    private var imageHeightConstraint = NSLayoutConstraint()
+    private var buttonHeightConstraint = NSLayoutConstraint()
+
+    private var cachedCardsStyle: CardsStyle?
+
     private var viewModel: CompetitionWidgetViewModel?
     private var cancellables: Set<AnyCancellable> = []
 
@@ -51,6 +61,7 @@ class CompetitionWidgetCollectionViewCell: UICollectionViewCell {
 
         self.setupSubviews()
         self.setupWithTheme()
+        self.adjustDesignToCardStyle()
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOpenCompetition))
         self.contentView.addGestureRecognizer(tapGestureRecognizer)
@@ -69,6 +80,9 @@ class CompetitionWidgetCollectionViewCell: UICollectionViewCell {
         self.viewModel = nil
         self.titleLabel.text = ""
         self.flagImageView.image = nil
+
+        self.setupWithTheme()
+        self.adjustDesignToCardStyle()
     }
 
     override func layoutSubviews() {
@@ -79,6 +93,8 @@ class CompetitionWidgetCollectionViewCell: UICollectionViewCell {
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
+
+        self.adjustDesignToCardStyle()
         self.setupWithTheme()
     }
 
@@ -93,6 +109,49 @@ class CompetitionWidgetCollectionViewCell: UICollectionViewCell {
 
         self.seeAllView.backgroundColor = UIColor.App.backgroundOdds
         self.seeAllLabel.textColor = UIColor.App.textPrimary
+    }
+
+    private func adjustDesignToCardStyle() {
+
+        if self.cachedCardsStyle == StyleHelper.cardsStyleActive() {
+            return
+        }
+
+        self.cachedCardsStyle = StyleHelper.cardsStyleActive()
+
+        switch StyleHelper.cardsStyleActive() {
+        case .small:
+            self.adjustDesignToSmallCardStyle()
+        case .normal:
+            self.adjustDesignToNormalCardStyle()
+        }
+
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
+    }
+
+    private func adjustDesignToSmallCardStyle() {
+        self.topMarginSpaceConstraint.constant = 8
+        self.leadingMarginSpaceConstraint.constant = 8
+        self.trailingMarginSpaceConstraint.constant = -8
+        self.bottomMarginSpaceConstraint.constant = -8
+
+        self.imageHeightConstraint.constant = 12
+        self.buttonHeightConstraint.constant = 27
+
+        self.titleLabel.font = AppFont.with(type: .bold, size: 13)
+    }
+
+    private func adjustDesignToNormalCardStyle() {
+        self.topMarginSpaceConstraint.constant = 11
+        self.leadingMarginSpaceConstraint.constant = 12
+        self.trailingMarginSpaceConstraint.constant = -12
+        self.bottomMarginSpaceConstraint.constant = -12
+
+        self.imageHeightConstraint.constant = 16
+        self.buttonHeightConstraint.constant = 40
+
+        self.titleLabel.font = AppFont.with(type: .bold, size: 14)
     }
 
     func configure(withViewModel viewModel: CompetitionWidgetViewModel) {
@@ -180,57 +239,53 @@ extension CompetitionWidgetCollectionViewCell {
     }
 
     private func setupSubviews() {
-        // Add subviews to self.view or each other
         self.contentView.addSubview(self.baseView)
 
-        self.baseView.addSubview(self.baseStackView)
-
-        self.topView.addSubview(self.flagImageView)
-        self.topView.addSubview(self.titleLabel)
-
-        self.bottomView.addSubview(self.seeAllView)
+        self.baseView.addSubview(self.flagImageView)
+        self.baseView.addSubview(self.titleLabel)
 
         self.seeAllView.addSubview(self.seeAllLabel)
-
-        self.baseStackView.addArrangedSubview(self.topView)
-        self.baseStackView.addArrangedSubview(self.bottomView)
+        self.baseView.addSubview(self.seeAllView)
 
         // Initialize constraints
         self.initConstraints()
     }
 
     private func initConstraints() {
-        NSLayoutConstraint.activate([
-            self.contentView.heightAnchor.constraint(equalToConstant: 120),
 
+        self.imageHeightConstraint = self.flagImageView.widthAnchor.constraint(equalToConstant: 16)
+        self.topMarginSpaceConstraint = self.titleLabel.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 11)
+
+        self.leadingMarginSpaceConstraint = self.seeAllView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 12)
+        self.trailingMarginSpaceConstraint = self.seeAllView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -12)
+        self.bottomMarginSpaceConstraint = self.seeAllView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -12)
+        self.buttonHeightConstraint = self.seeAllView.heightAnchor.constraint(equalToConstant: 40)
+
+        NSLayoutConstraint.activate([
             self.baseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             self.baseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
             self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             self.baseView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
 
-            self.baseStackView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
-            self.baseStackView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
-            self.baseStackView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 16),
-            self.baseStackView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -10),
+            self.titleLabel.centerXAnchor.constraint(equalTo: self.baseView.centerXAnchor),
+            self.titleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.seeAllView.leadingAnchor),
+            self.topMarginSpaceConstraint,
+            self.titleLabel.bottomAnchor.constraint(equalTo: self.seeAllView.topAnchor, constant: -6),
 
-            self.titleLabel.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
-            self.titleLabel.centerXAnchor.constraint(equalTo: self.topView.centerXAnchor),
-            self.titleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.topView.leadingAnchor),
-
-            self.flagImageView.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
+            self.flagImageView.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor, constant: -1),
             self.flagImageView.trailingAnchor.constraint(equalTo: self.titleLabel.leadingAnchor, constant: -5),
             self.flagImageView.widthAnchor.constraint(equalTo: self.flagImageView.heightAnchor),
-            self.flagImageView.widthAnchor.constraint(equalToConstant: 16),
+            self.imageHeightConstraint,
 
             //
             self.seeAllLabel.centerYAnchor.constraint(equalTo: self.seeAllView.centerYAnchor),
             self.seeAllLabel.centerXAnchor.constraint(equalTo: self.seeAllView.centerXAnchor),
             self.seeAllLabel.leadingAnchor.constraint(equalTo: self.seeAllView.leadingAnchor),
 
-            self.seeAllView.centerYAnchor.constraint(equalTo: self.bottomView.centerYAnchor),
-            self.seeAllView.centerXAnchor.constraint(equalTo: self.bottomView.centerXAnchor),
-            self.seeAllView.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 2),
-            self.seeAllView.leadingAnchor.constraint(equalTo: self.bottomView.leadingAnchor, constant: 16),
+            self.leadingMarginSpaceConstraint, // See All view
+            self.trailingMarginSpaceConstraint, // See All view
+            self.bottomMarginSpaceConstraint, // See All view
+            self.buttonHeightConstraint, // See All view
         ])
     }
 }

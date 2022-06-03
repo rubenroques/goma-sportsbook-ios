@@ -468,7 +468,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 switch sportMatchLineViewModel.layoutTypePublisher.value {
                 case .doubleLine: return UITableView.automaticDimension
                 case .singleLine: return UITableView.automaticDimension
-                case .competition: return 200
+                case .competition: return UITableView.automaticDimension
                 case .video: return 258
                 }
             }
@@ -512,7 +512,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 switch sportMatchLineViewModel.layoutTypePublisher.value {
                 case .doubleLine: return StyleHelper.cardsStyleHeight() * 2 + 79 // 400
                 case .singleLine: return StyleHelper.cardsStyleHeight() + 79 // 226
-                case .competition: return 200
+                case .competition: return StyleHelper.competitionCardsStyleHeight() + 20
                 case .video: return 258
                 }
             }

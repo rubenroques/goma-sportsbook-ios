@@ -24,7 +24,8 @@ class HomeFilterViewController: UIViewController {
     @IBOutlet private var cardSltyleCollapseView: FilterCollapseView!
     @IBOutlet private var oddsCollapseView: FilterSliderCollapseView!
     @IBOutlet private var bottomButtonView: UIView!
-    @IBOutlet private var applyButton: RoundButton!
+    @IBOutlet private var applyButton: UIButton!
+
     var timeRangeMultiSlider: MultiSlider?
     var oddRangeMultiSlider: MultiSlider?
 
@@ -110,7 +111,8 @@ class HomeFilterViewController: UIViewController {
         self.setupCardSltyleCollapseView()
         self.setupOddsSection()
 
-        applyButton.setTitle(localized("apply"), for: .normal)
+        self.applyButton.setTitle(localized("apply"), for: .normal)
+        self.applyButton.titleLabel?.font = AppFont.with(type: .bold, size: 18)
 
         StyleHelper.styleButton(button: self.applyButton)
     }
@@ -119,21 +121,16 @@ class HomeFilterViewController: UIViewController {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         topView.backgroundColor = UIColor.App.backgroundPrimary
-
         navigationView.backgroundColor = UIColor.App.backgroundPrimary
-
         navigationLabel.textColor = UIColor.App.textPrimary
 
         navigationResetButton.setTitleColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
-
         navigationCancelButton.setTitleColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
 
         scrollView.backgroundColor = UIColor.App.backgroundPrimary
-
         stackContainerView.backgroundColor = UIColor.App.backgroundPrimary
 
         stackView.backgroundColor = UIColor.App.backgroundPrimary
-
         bottomButtonView.backgroundColor = UIColor.App.backgroundPrimary
 
         StyleHelper.styleButton(button: self.applyButton)

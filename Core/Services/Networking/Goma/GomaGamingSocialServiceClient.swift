@@ -266,6 +266,7 @@ class GomaGamingSocialServiceClient {
             if let chatMessages = chatMessages?[safe: 0]?.messages {
                 for chatMessage in chatMessages {
                     let chatroomId = chatMessage.toChatroom
+
                     if var storedMessages = self.chatroomMessagesPublisher.value[chatroomId] {
                         storedMessages.append(chatMessage)
                         self.chatroomMessagesPublisher.value[chatroomId] = storedMessages
