@@ -343,9 +343,9 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return MatchWidgetCollectionViewCell.cellHeight + 20
+            return UITableView.automaticDimension
         case 1:
-            return 145 // outrightMarket lines
+            return StyleHelper.competitionCardsStyleHeight() + 20 // 145 // outrightMarket lines
         case 2:
             return 80
         default:
@@ -356,9 +356,9 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return MatchWidgetCollectionViewCell.cellHeight + 20
+            return StyleHelper.cardsStyleHeight() + 20
         case 1:
-            return 145 // outrightMarket lines
+            return StyleHelper.competitionCardsStyleHeight() + 20 // 145 // outrightMarket lines
         case 2:
             return 80
         default:

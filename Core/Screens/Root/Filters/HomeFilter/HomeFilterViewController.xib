@@ -8,11 +8,12 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HomeFilterViewController" customModule="ShowcaseBeta" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HomeFilterViewController" customModule="Crocobet" customModuleProvider="target">
             <connections>
                 <outlet property="applyButton" destination="fM0-46-agy" id="vtA-hh-0Ni"/>
                 <outlet property="availableMarketsCollapseView" destination="EYI-Lj-7qZ" id="VnT-LL-KDY"/>
                 <outlet property="bottomButtonView" destination="bHi-10-aed" id="XVK-fm-6Ke"/>
+                <outlet property="cardSltyleCollapseView" destination="x4N-BV-Wsu" id="uC6-o8-ayl"/>
                 <outlet property="navigationCancelButton" destination="kL2-43-TO3" id="Rxo-Me-gOL"/>
                 <outlet property="navigationLabel" destination="Ejx-cF-UUx" id="fmU-SL-45P"/>
                 <outlet property="navigationResetButton" destination="GM2-dD-wVn" id="eAc-he-og4"/>
@@ -84,25 +85,29 @@
                     <rect key="frame" x="0.0" y="100" width="414" height="696"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mnJ-xO-3YO">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="270"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="340"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="270" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="y49-2C-atV">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="270"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="340"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="CIX-NU-7Gy" customClass="FilterCollapseView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="CIX-NU-7Gy" customClass="FilterCollapseView" customModule="Crocobet" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </view>
-                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="Oo4-XL-mFO" customClass="FilterSliderCollapseView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="Oo4-XL-mFO" customClass="FilterSliderCollapseView" customModule="Crocobet" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="70" width="414" height="60"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </view>
-                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="EYI-Lj-7qZ" customClass="FilterCollapseView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="EYI-Lj-7qZ" customClass="FilterCollapseView" customModule="Crocobet" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="140" width="414" height="60"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </view>
-                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="kHG-GY-PFB" customClass="FilterSliderCollapseView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="kHG-GY-PFB" customClass="FilterSliderCollapseView" customModule="Crocobet" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="210" width="414" height="60"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </view>
+                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="x4N-BV-Wsu" customClass="FilterCollapseView" customModule="Crocobet" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="280" width="414" height="60"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </view>
                                     </subviews>
@@ -140,11 +145,12 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bHi-10-aed">
                     <rect key="frame" x="0.0" y="812" width="414" height="50"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fM0-46-agy" customClass="RoundButton" customModule="ShowcaseBeta" customModuleProvider="target">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fM0-46-agy">
                             <rect key="frame" x="16" y="0.0" width="382" height="50"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="2SS-9t-Rlx"/>
                             </constraints>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="Button"/>
                             <connections>
                                 <action selector="applyFiltersAction" destination="-1" eventType="touchUpInside" id="Hnj-pt-S4D"/>

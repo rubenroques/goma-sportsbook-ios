@@ -74,11 +74,8 @@ class FriendStatusTableViewCell: UITableViewCell {
         super.layoutSubviews()
 
         self.iconBaseView.layer.cornerRadius = self.iconBaseView.frame.size.width / 2
-
         self.iconInnerView.layer.cornerRadius = self.iconInnerView.frame.size.width / 2
-
         self.photoImageView.layer.cornerRadius = self.photoImageView.frame.size.width / 2
-
         self.statusView.layer.cornerRadius = self.statusView.frame.size.width / 2
     }
 

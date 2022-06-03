@@ -140,6 +140,14 @@ class HomeViewController: UIViewController {
     // MARK: - Bindings
     private func bind(toViewModel viewModel: HomeViewModel) {
 
+        NotificationCenter.default.publisher(for: .cardsStyleChanged)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.reloadData()
+            }
+            .store(in: &cancellables)
+
+
         viewModel.refreshPublisher
             .debounce(for: .milliseconds(600), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
@@ -458,9 +466,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             else {
                 switch sportMatchLineViewModel.layoutTypePublisher.value {
-                case .doubleLine: return 400
-                case .singleLine: return 226
-                case .competition: return 200
+                case .doubleLine: return UITableView.automaticDimension
+                case .singleLine: return UITableView.automaticDimension
+                case .competition: return UITableView.automaticDimension
                 case .video: return 258
                 }
             }
@@ -483,7 +491,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .bannerLine:
             return 180
         case .userFavorites:
-            return MatchWidgetCollectionViewCell.cellHeight + 20
+            return StyleHelper.cardsStyleHeight() + 20
         case .suggestedBets:
             return 336
         case .sport:
@@ -502,9 +510,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             else {
                 switch sportMatchLineViewModel.layoutTypePublisher.value {
-                case .doubleLine: return 400
-                case .singleLine: return 226
-                case .competition: return 200
+                case .doubleLine: return StyleHelper.cardsStyleHeight() * 2 + 79 // 400
+                case .singleLine: return StyleHelper.cardsStyleHeight() + 79 // 226
+                case .competition: return StyleHelper.competitionCardsStyleHeight() + 20
                 case .video: return 258
                 }
             }

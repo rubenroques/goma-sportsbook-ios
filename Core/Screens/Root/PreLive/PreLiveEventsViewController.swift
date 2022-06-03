@@ -371,6 +371,14 @@ class PreLiveEventsViewController: UIViewController {
 
     func connectPublishers() {
 
+        NotificationCenter.default.publisher(for: .cardsStyleChanged)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.reloadData()
+            }
+            .store(in: &cancellables)
+
+        
         self.viewModel.isLoading
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in

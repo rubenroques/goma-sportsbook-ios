@@ -529,7 +529,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
             switch cellInfo {
             case .match:
-                return MatchWidgetCollectionViewCell.cellHeight + 20
+                return UITableView.automaticDimension
             case .competition:
                 return UITableView.automaticDimension
             }
@@ -547,7 +547,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
             switch cellInfo {
             case .match:
-                return MatchWidgetCollectionViewCell.cellHeight + 20
+                return StyleHelper.cardsStyleHeight() + 20
             case .competition:
                 return 56
             }
