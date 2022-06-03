@@ -43,6 +43,19 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var awayCircleCaptionView: UIView!
     @IBOutlet private weak var awayNameCaptionLabel: UILabel!
 
+    //
+    // Design Constraints
+    @IBOutlet private weak var topMarginSpaceConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var bottomMarginSpaceConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var leadingMarginSpaceConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var trailingMarginSpaceConstraint: NSLayoutConstraint!
+
+    @IBOutlet private weak var headerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var buttonsHeightConstraint: NSLayoutConstraint!
+
+    private var cachedCardsStyle: CardsStyle?
+    //
+
     var matchStatsViewModel: MatchStatsViewModel?
 
     var match: Match?
@@ -83,7 +96,6 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         self.baseView.bringSubviewToFront(self.suspendedBaseView)
 
-        self.marketNameLabel.font = AppFont.with(type: .bold, size: 14)
         self.statsBaseView.isHidden = true
 
         self.homeCircleCaptionView.layer.masksToBounds = true
@@ -119,7 +131,24 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
         self.addGestureRecognizer(tapMatchView)
 
+        self.adjustDesignToCardStyle()
         self.setupWithTheme()
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        self.adjustDesignToCardStyle()
+        self.setupWithTheme()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        self.baseView.layer.cornerRadius = 9
+
+        self.homeCircleCaptionView.layer.cornerRadius = self.homeCircleCaptionView.frame.size.width / 2
+        self.awayCircleCaptionView.layer.cornerRadius = self.awayCircleCaptionView.frame.size.width / 2
     }
 
     override func prepareForReuse() {
@@ -166,33 +195,30 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.rightUpChangeOddValueImage.alpha = 0.0
         self.rightDownChangeOddValueImage.alpha = 0.0
 
-        self.marketNameLabel.font = AppFont.with(type: .bold, size: 14)
-
         self.leftOddButtonSubscriber?.cancel()
         self.leftOddButtonSubscriber = nil
-
         self.rightOddButtonSubscriber?.cancel()
         self.rightOddButtonSubscriber = nil
 
-        self.matchStatsSubscriber?.cancel()
-        self.matchStatsSubscriber = nil
-
         self.marketSubscriber?.cancel()
         self.marketSubscriber = nil
+        self.matchStatsSubscriber?.cancel()
+        self.matchStatsSubscriber = nil
 
         self.currentLeftOddValue = nil
         self.currentRightOddValue = nil
 
         self.suspendedBaseView.isHidden = true
-    }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
+        switch StyleHelper.cardsStyleActive() {
+        case .small:
+            self.marketNameLabel.font = AppFont.with(type: .bold, size: 13)
+        case .normal:
+            self.marketNameLabel.font = AppFont.with(type: .bold, size: 14)
+        }
 
-        self.baseView.layer.cornerRadius = 9
-
-        self.homeCircleCaptionView.layer.cornerRadius = self.homeCircleCaptionView.frame.size.width / 2
-        self.awayCircleCaptionView.layer.cornerRadius = self.awayCircleCaptionView.frame.size.width / 2
+        self.adjustDesignToCardStyle()
+        self.setupWithTheme()
     }
 
     func setupWithTheme() {
@@ -237,6 +263,53 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
             self.rightOddTitleLabel.textColor = UIColor.App.textPrimary
             self.rightOddValueLabel.textColor = UIColor.App.textPrimary
         }
+    }
+
+    private func adjustDesignToCardStyle() {
+
+        if self.cachedCardsStyle == StyleHelper.cardsStyleActive() {
+            return
+        }
+
+        self.cachedCardsStyle = StyleHelper.cardsStyleActive()
+
+        switch StyleHelper.cardsStyleActive() {
+        case .small:
+            self.adjustDesignToSmallCardStyle()
+        case .normal:
+            self.adjustDesignToNormalCardStyle()
+        }
+
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
+    }
+
+    private func adjustDesignToSmallCardStyle() {
+        self.topMarginSpaceConstraint.constant = 8
+        self.leadingMarginSpaceConstraint.constant = 8
+        self.trailingMarginSpaceConstraint.constant = 8
+        self.bottomMarginSpaceConstraint.constant = 8
+
+        self.headerHeightConstraint.constant = 12
+        self.buttonsHeightConstraint.constant = 27
+
+        self.marketNameLabel.font = AppFont.with(type: .bold, size: 13)
+        self.leftOddValueLabel.font = AppFont.with(type: .bold, size: 12)
+        self.rightOddValueLabel.font = AppFont.with(type: .bold, size: 12)
+    }
+
+    private func adjustDesignToNormalCardStyle() {
+        self.topMarginSpaceConstraint.constant = 11
+        self.bottomMarginSpaceConstraint.constant = 12
+        self.leadingMarginSpaceConstraint.constant = 12
+        self.trailingMarginSpaceConstraint.constant = 12
+
+        self.headerHeightConstraint.constant = 17
+        self.buttonsHeightConstraint.constant = 40
+
+        self.marketNameLabel.font = AppFont.with(type: .bold, size: 14)
+        self.leftOddValueLabel.font = AppFont.with(type: .bold, size: 13)
+        self.rightOddValueLabel.font = AppFont.with(type: .bold, size: 13)
     }
 
     func setupWithMarket(_ market: Market, match: Match, teamsText: String, countryIso: String, store: AggregatorStore) {
@@ -499,6 +572,10 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
 extension OddDoubleCollectionViewCell {
     private func setupStatsLine(withjson json: JSON) {
+
+        if StyleHelper.cardsStyleActive() == .small {
+            return
+        }
 
         guard
             let eventPartId = self.market?.eventPartId,

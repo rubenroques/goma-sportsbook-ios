@@ -86,7 +86,9 @@
                 <outlet property="backSliderView" destination="YIC-ax-7bK" id="3JZ-z3-DCe"/>
                 <outlet property="collectionBaseView" destination="fOk-kh-uh7" id="c1Q-5a-x7g"/>
                 <outlet property="collectionView" destination="xTg-0G-xs9" id="lP7-fe-d9F"/>
-                <outlet property="collectionViewHeight" destination="KNf-qR-lrg" id="rh3-m8-9Qz"/>
+                <outlet property="collectionViewBottomMarginConstraint" destination="d7t-Zr-bB2" id="Cm0-x4-gKS"/>
+                <outlet property="collectionViewHeightConstraint" destination="KNf-qR-lrg" id="ISC-9y-5oQ"/>
+                <outlet property="collectionViewTopMarginConstraint" destination="aiK-Nl-cel" id="Wht-tx-nHN"/>
                 <outlet property="debugLabel" destination="EDO-2g-DLF" id="kBw-4a-azP"/>
             </connections>
             <point key="canvasLocation" x="36.956521739130437" y="153.01339285714286"/>

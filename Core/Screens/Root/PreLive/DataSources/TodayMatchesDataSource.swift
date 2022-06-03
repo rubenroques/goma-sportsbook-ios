@@ -113,7 +113,7 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
             // Loading cell
             return 70
         default:
-            return MatchWidgetCollectionViewCell.normalCellHeight + 20
+            return StyleHelper.cardsStyleHeight() + 20
         }
     }
 

@@ -20,11 +20,11 @@ extension UserDefaults {
 
     var theme: Theme {
         get {
-            register(defaults: [UserDefaultsKey.theme.rawValue: Theme.device.rawValue])
-            return Theme(rawValue: integer(forKey: UserDefaultsKey.theme.rawValue)) ?? .device
+            self.register(defaults: [UserDefaultsKey.theme.rawValue: Theme.device.rawValue])
+            return Theme(rawValue: self.integer(forKey: UserDefaultsKey.theme.rawValue)) ?? .device
         }
         set {
-            set(newValue.rawValue, forKey: UserDefaultsKey.theme.rawValue)
+            self.set(newValue.rawValue, forKey: UserDefaultsKey.theme.rawValue)
         }
     }
 
@@ -33,7 +33,7 @@ extension UserDefaults {
             return self.codable(forKey: UserDefaultsKey.userSession.rawValue)
         }
         set {
-            set(codable: newValue, forKey: UserDefaultsKey.userSession.rawValue)
+            self.set(codable: newValue, forKey: UserDefaultsKey.userSession.rawValue)
         }
     }
 
@@ -42,20 +42,20 @@ extension UserDefaults {
             if let skipped = self.value(forKey: UserDefaultsKey.userSkippedLoginFlow.rawValue) as? Bool {
                 return skipped
             }
-            setValue(false, forKey: UserDefaultsKey.userSkippedLoginFlow.rawValue)
+            self.setValue(false, forKey: UserDefaultsKey.userSkippedLoginFlow.rawValue)
             return false
         }
         set {
-            setValue(newValue, forKey: UserDefaultsKey.userSkippedLoginFlow.rawValue)
+            self.setValue(newValue, forKey: UserDefaultsKey.userSkippedLoginFlow.rawValue)
         }
     }
 
     var userBetslipSettings: String {
         get {
-            return UserDefaults.standard.string(forKey: "user_betslip_settings") ?? ""
+            return self.string(forKey: "user_betslip_settings") ?? ""
         }
         set {
-            UserDefaults.standard.setValue(newValue, forKey: "user_betslip_settings")
+            self.setValue(newValue, forKey: "user_betslip_settings")
         }
     }
 
@@ -76,19 +76,20 @@ extension UserDefaults {
                 return CardsStyle(rawValue: skipped) ?? defaultValue // Has a previous stored value, use it
             }
             else {
-                setValue(defaultValue.rawValue, forKey: UserDefaultsKey.cardsStyle.rawValue)
+                self.setValue(defaultValue.rawValue, forKey: UserDefaultsKey.cardsStyle.rawValue)
                 return defaultValue
             }
         }
         set {
-            setValue(newValue.rawValue, forKey: UserDefaultsKey.cardsStyle.rawValue)
+            self.setValue(newValue.rawValue, forKey: UserDefaultsKey.cardsStyle.rawValue)
+            self.synchronize()
         }
     }
 
     func clear() {
         let domain = Bundle.main.bundleIdentifier!
-        UserDefaults.standard.removePersistentDomain(forName: domain)
-        UserDefaults.standard.synchronize()
+        self.removePersistentDomain(forName: domain)
+        self.synchronize()
     }
 }
 

@@ -159,7 +159,7 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
         if competitions.isEmpty {
             return 600
         }
-        return MatchWidgetCollectionViewCell.normalCellHeight + 20
+        return StyleHelper.cardsStyleHeight() + 20
     }
 
     func needReloadSection(_ section: Int, tableView: UITableView) {

@@ -37,14 +37,43 @@ struct StyleHelper {
         button.backgroundColor = .clear
     }
 
-    static func cardsStyleHeight() -> CGFloat {
-        var height = MatchWidgetCollectionViewCell.normalCellHeight
-        switch UserDefaults.standard.cardsStyle {
-        case .small:
-            height = MatchWidgetCollectionViewCell.smallCellHeight
-        case .normal:
-            height = MatchWidgetCollectionViewCell.normalCellHeight
-        }
-        return height
+    static func cardsStyleActive() -> CardsStyle {
+        return UserDefaults.standard.cardsStyle
     }
+
+    static func cardsStyleHeight() -> CGFloat {
+        switch Self.cardsStyleActive() {
+        case .small:
+            return MatchWidgetCollectionViewCell.smallCellHeight
+        case .normal:
+            return MatchWidgetCollectionViewCell.normalCellHeight
+        }
+    }
+
+    static func competitionCardsStyleHeight() -> CGFloat {
+        switch Self.cardsStyleActive() {
+        case .small:
+            return 90
+        case .normal:
+            return 125
+        }
+    }
+
+    static func cardsStyleMargin() -> CGFloat {
+        switch Self.cardsStyleActive() {
+        case .small:
+            return 1
+        case .normal:
+            return 8
+        }
+    }
+
 }
+
+
+extension Notification.Name {
+
+    static let cardsStyleChanged = Notification.Name("CardsStyleChanged")
+
+}
+

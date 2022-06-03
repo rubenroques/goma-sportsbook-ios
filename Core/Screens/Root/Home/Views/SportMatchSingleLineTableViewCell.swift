@@ -27,7 +27,16 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
     private lazy var seeAllLabel: UILabel = Self.createSeeAllLabel()
     private lazy var backView: UIView = Self.createBackView()
     private lazy var backImage: UIImageView = Self.createBackImage()
-    
+
+    private var collectionViewHeightConstraint: NSLayoutConstraint!
+    private let cellInternSpace: CGFloat = 2.0
+    private var cachedCardStyle: CardsStyle?
+
+    private var collectionViewHeight: CGFloat {
+        let cardHeight = StyleHelper.cardsStyleHeight()
+        return cardHeight + cellInternSpace + cellInternSpace
+    }
+
     private var showingBackSliderView: Bool = false
 
     private var viewModel: SportMatchLineViewModel?
@@ -64,6 +73,14 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
 
         self.showingBackSliderView = false
         self.backView.alpha = 0.0
+
+        if self.cachedCardStyle != StyleHelper.cardsStyleActive() {
+            self.cachedCardStyle = StyleHelper.cardsStyleActive()
+            self.collectionViewHeightConstraint.constant = self.collectionViewHeight
+
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        }
 
         self.reloadCollections()
     }
@@ -382,7 +399,7 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-        let cellHeight = MatchWidgetCollectionViewCell.normalCellHeight
+        let cellHeight = StyleHelper.cardsStyleHeight()
         if indexPath.section == 1 {
             return CGSize(width: 99, height: cellHeight)
         }
@@ -503,6 +520,9 @@ extension SportMatchSingleLineTableViewCell {
     }
 
     private func initConstraints() {
+
+        self.collectionViewHeightConstraint = self.collectionView.heightAnchor.constraint(equalToConstant: self.collectionViewHeight)
+
         NSLayoutConstraint.activate([            
             self.titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 16),
 
@@ -515,7 +535,7 @@ extension SportMatchSingleLineTableViewCell {
             self.linesStackView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 16),
             self.linesStackView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -16),
 
-            self.collectionView.heightAnchor.constraint(equalToConstant: 160),
+            self.collectionViewHeightConstraint,
 
             self.seeAllLabel.centerXAnchor.constraint(equalTo: self.seeAllView.centerXAnchor),
             self.seeAllLabel.centerYAnchor.constraint(equalTo: self.seeAllView.centerYAnchor),

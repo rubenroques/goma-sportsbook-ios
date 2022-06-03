@@ -223,7 +223,7 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
             return 600
         }
         else {
-            return MatchWidgetCollectionViewCell.normalCellHeight + 20
+            return StyleHelper.cardsStyleHeight() + 20
         }
 
     }

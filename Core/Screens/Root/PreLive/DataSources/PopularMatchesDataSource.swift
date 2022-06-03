@@ -158,11 +158,11 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
         case 0:
             return 145 // Outrights
         case 1:
-            return MatchWidgetCollectionViewCell.normalCellHeight + 20 // Matches
+            return StyleHelper.cardsStyleHeight() + 20 // Matches
         case 2:
             return 70 // Loading cell
         default:
-            return MatchWidgetCollectionViewCell.normalCellHeight + 20
+            return StyleHelper.cardsStyleHeight() + 20
         }
     }
 

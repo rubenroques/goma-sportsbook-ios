@@ -16,7 +16,11 @@ class MatchLineTableViewCell: UITableViewCell {
     @IBOutlet private var collectionBaseView: UIView!
     @IBOutlet private var collectionView: UICollectionView!
 
-    @IBOutlet private var collectionViewHeight: NSLayoutConstraint!
+    @IBOutlet private var collectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private var collectionViewTopMarginConstraint: NSLayoutConstraint!
+    @IBOutlet private var collectionViewBottomMarginConstraint: NSLayoutConstraint!
+
+    private var cachedCardsStyle: CardsStyle?
 
     private var match: Match?
     private var store: AggregatorStore?
@@ -34,7 +38,12 @@ class MatchLineTableViewCell: UITableViewCell {
     var matchWentLive: (() -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
 
-    private let cellInternSpace: CGFloat = 8.0
+    private let cellInternSpace: CGFloat = 2.0
+
+    private var collectionViewHeight: CGFloat {
+        let cardHeight = StyleHelper.cardsStyleHeight()
+        return cardHeight + cellInternSpace + cellInternSpace
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -74,10 +83,17 @@ class MatchLineTableViewCell: UITableViewCell {
         let backSliderTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackSliderButton))
         self.backSliderView.addGestureRecognizer(backSliderTapGesture)
 
-        
+        //
+        self.collectionViewHeightConstraint.constant = self.collectionViewHeight
+        self.collectionViewTopMarginConstraint.constant = StyleHelper.cardsStyleMargin()
+        self.collectionViewBottomMarginConstraint.constant = StyleHelper.cardsStyleMargin()
+
+        UIView.performWithoutAnimation {
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        }
 
         self.setupWithTheme()
-
     }
 
     override func prepareForReuse() {
@@ -101,6 +117,20 @@ class MatchLineTableViewCell: UITableViewCell {
         self.matchInfoPublisher?.cancel()
         self.matchInfoPublisher = nil
 
+        if self.cachedCardsStyle != StyleHelper.cardsStyleActive() {
+
+            self.cachedCardsStyle = StyleHelper.cardsStyleActive()
+
+            self.collectionViewHeightConstraint.constant = self.collectionViewHeight
+            self.collectionViewTopMarginConstraint.constant = StyleHelper.cardsStyleMargin()
+            self.collectionViewBottomMarginConstraint.constant = StyleHelper.cardsStyleMargin()
+
+            UIView.performWithoutAnimation {
+                self.setNeedsLayout()
+                self.layoutIfNeeded()
+            }
+        }
+
         self.collectionView.reloadData()
     }
 
@@ -115,7 +145,7 @@ class MatchLineTableViewCell: UITableViewCell {
         self.backgroundColor = .clear
         self.backgroundView?.backgroundColor = .clear
 
-        self.collectionBaseView.backgroundColor = .green
+        self.collectionBaseView.backgroundColor = .clear
         self.collectionView.backgroundColor = .clear
         self.collectionView.backgroundView?.backgroundColor = UIColor.App.backgroundCards
 
@@ -366,17 +396,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-        var height = MatchWidgetCollectionViewCell.normalCellHeight
-        switch UserDefaults.standard.cardsStyle {
-        case .small:
-            height = MatchWidgetCollectionViewCell.smallCellHeight
-        case .normal:
-            height = MatchWidgetCollectionViewCell.normalCellHeight
-        }
-
-//        #if DEBUG
-//        height = MatchWidgetCollectionViewCell.smallCellHeight
-//        #endif
+        let height = StyleHelper.cardsStyleHeight()
 
         if indexPath.section == 1 {
             return CGSize(width: 99, height: height)
