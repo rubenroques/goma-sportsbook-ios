@@ -98,19 +98,23 @@ class SupportPageViewController: UIViewController {
         self.titleLabel.backgroundColor = .clear
         self.titleLabel.textColor = UIColor.App.textPrimary
         
-        self.subjectTextField.backgroundColor = UIColor.App.backgroundPrimary
+        self.subjectTextField.backgroundColor = .clear
         self.subjectTextField.setHeaderLabelColor(UIColor.App.textSecondary)
-        self.subjectTextField.setTextFieldColor(UIColor.App.inputText)
+        self.subjectTextField.setTextFieldColor(UIColor.App.textPrimary)
         self.subjectTextField.setSecureField(false)
         self.subjectTextField.textField.font = AppFont.with(type: .semibold, size: 15)
+        self.subjectTextField.headerLabel.backgroundColor = UIColor.App.backgroundCards
+        self.subjectTextField.setViewColor(UIColor.App.backgroundCards)
         
-        self.descriptionView.backgroundColor = UIColor.App.backgroundSecondary
+        self.descriptionView.backgroundColor = UIColor.App.backgroundCards
         self.descriptionView.layer.cornerRadius = CornerRadius.headerInput
         self.descriptionView.layer.borderWidth = 1
         self.descriptionView.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
         
-        self.descriptionTextView.backgroundColor = UIColor.App.backgroundSecondary
+        self.descriptionTextView.backgroundColor = .clear
+        self.descriptionPlaceholderLabel.backgroundColor = .clear
         self.descriptionPlaceholderLabel.textColor = UIColor.App.textSecondary
+        self.descriptionTextView.textColor = UIColor.App.backgroundOdds
         
         self.backButtonBaseView.backgroundColor = .clear
         
@@ -140,8 +144,7 @@ class SupportPageViewController: UIViewController {
                 self?.didTapBackButton()
                 
             }
-            else
-            {
+            else {
                 self?.showAlert(title: localized("supportErrorTitle"), subtitle: localized("supportErrorSubtitle"), buttonText: "OK", backAction: false)
             }
             
@@ -348,12 +351,16 @@ extension SupportPageViewController: UITextViewDelegate {
         self.descriptionView.layer.cornerRadius = CornerRadius.headerInput
         self.descriptionView.layer.borderWidth = 1
         self.descriptionView.layer.borderColor = UIColor.App.textPrimary.cgColor
+        
+        self.descriptionTextView.textColor =  UIColor.App.textPrimary
     }
     func textViewDidEndEditing(_ textView: UITextView) {
         print("end EDIT")
         self.descriptionView.layer.cornerRadius = CornerRadius.headerInput
         self.descriptionView.layer.borderWidth = 1
         self.descriptionView.layer.borderColor = UIColor.App.backgroundPrimary.cgColor
+        
+        self.descriptionTextView.textColor =  UIColor.App.backgroundOdds
     }
 
 }
