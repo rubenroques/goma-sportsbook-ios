@@ -51,7 +51,7 @@ enum TSRouter {
 
     case tournamentOddsPublisher(operatorId: String, language: String, eventId: String)
 
-    case searchV2(language: String, limit: Int, query: String, eventStatuses: [Int], include: [String], bettingTypeIds: [String], sortBy: [String])
+    case searchV2(language: String, limit: Int, query: String, eventStatuses: [Int], include: [String], bettingTypeIds: [String], sortBy: [String], includeVirtualSports: Bool)
 
     case getSharedBetTokens(betId: String)
     case getSharedBetData(betToken: String)
@@ -585,14 +585,15 @@ enum TSRouter {
                     "nrOfRecords": records,
                     "page": page]
 
-        case .searchV2(let language, let limit, let query, let eventStatuses, let include, let bettingTypeIds, let sortBy):
+        case .searchV2(let language, let limit, let query, let eventStatuses, let include, let bettingTypeIds, let sortBy, let includeVirtualSports):
             return ["lang": language,
                     "limit": limit,
                     "query": query,
                     "eventStatuses": eventStatuses,
                     "include": include,
                     "bettingTypeIds": bettingTypeIds,
-                    "sortBy": sortBy]
+                    "sortBy": sortBy,
+                    "includeVirtualSports": includeVirtualSports]
 
         case .getSharedBetTokens(let betId):
             return ["betId": betId]
