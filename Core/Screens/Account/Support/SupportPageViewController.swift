@@ -10,8 +10,10 @@ import Combine
 
 class SupportPageViewController: UIViewController {
     
+    // MARK: - Variables
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var navigationBaseView: UIView = Self.createNavigationBaseView()
+    private lazy var backButtonBaseView: UIView = Self.createBackButtonBaseView()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var subjectTextField: HeaderTextFieldView = Self.createSubjectTextField()
@@ -20,8 +22,21 @@ class SupportPageViewController: UIViewController {
     private lazy var descriptionTextView: UITextView = Self.createDescriptionTextView()
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var sendButton: UIButton = Self.createSendButton()
-  
+   
+    private let viewModel: SupportPageViewModel
+    var cancellables = Set<AnyCancellable>()
+   
     // MARK: - Lifetime and Cycle
+    init(viewModel: SupportPageViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -47,15 +62,30 @@ class SupportPageViewController: UIViewController {
     func commonInit() {
         self.descriptionTextView.delegate = self
         
-        self.backButton.addTarget(self, action: #selector(self.didTapBackButton), for: .primaryActionTriggered)
+        self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
+
+        let tapBackButtonGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackButton))
+        self.backButtonBaseView.addGestureRecognizer(tapBackButtonGestureRecognizer)
         
-        let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
-        self.baseView.addGestureRecognizer(tapGestureRecognizer)
+        let tapBackgroundGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
+        self.baseView.addGestureRecognizer(tapBackgroundGestureRecognizer)
         
         self.sendButton.isUserInteractionEnabled = true
         let tapSendButton = UITapGestureRecognizer(target: self, action: #selector(self.didTapSend))
         self.sendButton.addGestureRecognizer(tapSendButton)
         StyleHelper.styleButton(button: self.sendButton)
+        
+        Publishers.CombineLatest(self.subjectTextField.textPublisher, self.descriptionTextView.textPublisher)
+            .map { subjectText, descriptionViewText in
+                if subjectText?.isNotEmpty ?? false && descriptionViewText?.isNotEmpty ?? false {
+
+                    return true
+                }
+           
+                return false
+            }
+            .assign(to: \.isEnabled, on: self.sendButton)
+            .store(in: &self.cancellables)
         
     }
 
@@ -82,6 +112,8 @@ class SupportPageViewController: UIViewController {
         self.descriptionTextView.backgroundColor = UIColor.App.backgroundSecondary
         self.descriptionPlaceholderLabel.textColor = UIColor.App.textSecondary
         
+        self.backButtonBaseView.backgroundColor = .clear
+        
     }
     
     // MARK: - Actions
@@ -99,7 +131,37 @@ class SupportPageViewController: UIViewController {
     }
     
     @objc func didTapSend() {
-        print("sending")
+  
+        self.viewModel.sendEmail(title: self.subjectTextField.text, message: self.descriptionTextView.text)
+        self.viewModel.supportResponseAction = { [weak self] withSuccess in
+            
+            if withSuccess {
+                self?.showAlert(title: localized("supportSuccessTitle"), subtitle: localized("supportSuccessSubtitle"), buttonText: "OK", backAction: true)
+                self?.didTapBackButton()
+                
+            }
+            else
+            {
+                self?.showAlert(title: localized("supportErrorTitle"), subtitle: localized("supportErrorSubtitle"), buttonText: "OK", backAction: false)
+            }
+            
+        }
+    }
+
+    func showAlert(title: String, subtitle: String, buttonText: String, backAction: Bool) {
+        if backAction {
+            let alert = UIAlertController(title: title, message: subtitle, preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: buttonText, style: UIAlertAction.Style.default, handler: {( action:UIAlertAction!) in
+                self.didTapBackButton()
+            }))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else {
+            let alert = UIAlertController(title: title, message: subtitle, preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: buttonText, style: UIAlertAction.Style.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+      
     }
 }
 
@@ -109,6 +171,11 @@ class SupportPageViewController: UIViewController {
 extension SupportPageViewController {
 
     private static func createTopSafeAreaView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    private static func createBackButtonBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -181,6 +248,7 @@ extension SupportPageViewController {
         sendButton.translatesAutoresizingMaskIntoConstraints = false
         sendButton.setTitle("Send", for: .normal)
         sendButton.setTitle("Send", for: .disabled)
+        sendButton.isEnabled = false
         sendButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         sendButton.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
         sendButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
@@ -192,7 +260,9 @@ extension SupportPageViewController {
     private func setupSubviews() {
 
         self.navigationBaseView.addSubview(self.titleLabel)
-        self.navigationBaseView.addSubview(self.backButton)
+        self.navigationBaseView.addSubview(self.backButtonBaseView)
+        
+        self.backButtonBaseView.addSubview(self.backButton)
         
         self.descriptionView.addSubview(self.descriptionPlaceholderLabel)
         self.descriptionView.addSubview(self.descriptionTextView)
@@ -224,12 +294,12 @@ extension SupportPageViewController {
             self.navigationBaseView.bottomAnchor.constraint(equalTo: self.view.topAnchor, constant: 70),
             
             self.titleLabel.centerXAnchor.constraint(equalTo: self.navigationBaseView.centerXAnchor),
-            self.titleLabel.centerYAnchor.constraint(equalTo: self.backButton.centerYAnchor),
+            self.titleLabel.centerYAnchor.constraint(equalTo: self.backButtonBaseView.centerYAnchor),
 
-            self.backButton.leadingAnchor.constraint(equalTo: self.navigationBaseView.leadingAnchor, constant: 27),
-            self.backButton.centerYAnchor.constraint(equalTo: self.navigationBaseView.centerYAnchor),
-            self.backButton.heightAnchor.constraint(equalToConstant: 13),
-            self.backButton.widthAnchor.constraint(equalToConstant: 7),
+            self.backButtonBaseView.leadingAnchor.constraint(equalTo: self.navigationBaseView.leadingAnchor, constant: 27),
+            self.backButtonBaseView.centerYAnchor.constraint(equalTo: self.navigationBaseView.centerYAnchor),
+            self.backButtonBaseView.heightAnchor.constraint(equalToConstant: 20),
+            self.backButtonBaseView.widthAnchor.constraint(equalToConstant: 20),
         ])
         
         NSLayoutConstraint.activate([
@@ -277,7 +347,7 @@ extension SupportPageViewController: UITextViewDelegate {
         print("BEGIN EDIT")
         self.descriptionView.layer.cornerRadius = CornerRadius.headerInput
         self.descriptionView.layer.borderWidth = 1
-        self.descriptionView.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
+        self.descriptionView.layer.borderColor = UIColor.App.textPrimary.cgColor
     }
     func textViewDidEndEditing(_ textView: UITextView) {
         print("end EDIT")

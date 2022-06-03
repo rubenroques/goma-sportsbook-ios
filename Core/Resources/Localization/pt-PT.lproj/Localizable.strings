@@ -124,6 +124,12 @@ Terms of use, Privacy Policy and EULA";
 "subject" = "Subject";
 "description" = "Description";
 
+"supportSuccessTitle" = "Success";
+"supportSuccessSubtitle" = "Your message was successfully sent.";
+
+"supportErrorTitle" = "Error";
+"supportErrorSubtitle" = "We can't send your message at this moment. Please try again later.";
+
 "limits_management" = "Limits Management";
 "save" = "Save";
 "deposit_limit" = "Deposit Limit";

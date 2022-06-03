@@ -519,7 +519,8 @@ extension ProfileViewController {
     }
 
     @objc func supportViewTapped(sender: UITapGestureRecognizer) {
-
+        let supportViewController = SupportPageViewController(viewModel: SupportPageViewModel())
+        self.navigationController?.pushViewController(supportViewController, animated: true)
     }
 
 }

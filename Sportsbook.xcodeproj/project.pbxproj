@@ -3660,6 +3660,23 @@
 		F4CE68472742CD8A003413AE /* MultiSliderExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE68402742CD8A003413AE /* MultiSliderExtensions.swift */; };
 		F4CE68482742CD8A003413AE /* MultiSliderExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE68402742CD8A003413AE /* MultiSliderExtensions.swift */; };
 		F4D8DC792847853F00C2594B /* SupportPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8DC782847853F00C2594B /* SupportPageViewController.swift */; };
+		F4D8DC7B284809E700C2594B /* SupportPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8DC7A284809E700C2594B /* SupportPageViewModel.swift */; };
+		F4D8DC7D2849092300C2594B /* SupportTicketResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8DC7C2849092300C2594B /* SupportTicketResponse.swift */; };
+		F4D8DC7E2849092300C2594B /* SupportTicketResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8DC7C2849092300C2594B /* SupportTicketResponse.swift */; };
+		F4D8DC7F2849092300C2594B /* SupportTicketResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8DC7C2849092300C2594B /* SupportTicketResponse.swift */; };
+		F4D8DC802849092300C2594B /* SupportTicketResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8DC7C2849092300C2594B /* SupportTicketResponse.swift */; };
+		F4D8DC812849092300C2594B /* SupportTicketResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8DC7C2849092300C2594B /* SupportTicketResponse.swift */; };
+		F4D8DC822849092300C2594B /* SupportTicketResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8DC7C2849092300C2594B /* SupportTicketResponse.swift */; };
+		F4D8DC842849094000C2594B /* SupportPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8DC782847853F00C2594B /* SupportPageViewController.swift */; };
+		F4D8DC852849094000C2594B /* SupportPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8DC782847853F00C2594B /* SupportPageViewController.swift */; };
+		F4D8DC862849094100C2594B /* SupportPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8DC782847853F00C2594B /* SupportPageViewController.swift */; };
+		F4D8DC872849094100C2594B /* SupportPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8DC782847853F00C2594B /* SupportPageViewController.swift */; };
+		F4D8DC882849094200C2594B /* SupportPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8DC782847853F00C2594B /* SupportPageViewController.swift */; };
+		F4D8DC8A2849094800C2594B /* SupportPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8DC7A284809E700C2594B /* SupportPageViewModel.swift */; };
+		F4D8DC8B2849094800C2594B /* SupportPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8DC7A284809E700C2594B /* SupportPageViewModel.swift */; };
+		F4D8DC8C2849094900C2594B /* SupportPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8DC7A284809E700C2594B /* SupportPageViewModel.swift */; };
+		F4D8DC8D2849094A00C2594B /* SupportPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8DC7A284809E700C2594B /* SupportPageViewModel.swift */; };
+		F4D8DC8E2849094B00C2594B /* SupportPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8DC7A284809E700C2594B /* SupportPageViewModel.swift */; };
 		F4E3B74D2742B47100855C58 /* MainMarketType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E3B74C2742B47100855C58 /* MainMarketType.swift */; };
 		F4E3B74E2742B48400855C58 /* MainMarketType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E3B74C2742B47100855C58 /* MainMarketType.swift */; };
 		F4E3B75E2742BF9C00855C58 /* SweeterSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F4E3B75D2742BF9C00855C58 /* SweeterSwift */; };
@@ -4329,6 +4346,8 @@
 		F4CE683F2742CD8A003413AE /* MultiSlider+Internal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MultiSlider+Internal.swift"; sourceTree = "<group>"; };
 		F4CE68402742CD8A003413AE /* MultiSliderExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSliderExtensions.swift; sourceTree = "<group>"; };
 		F4D8DC782847853F00C2594B /* SupportPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportPageViewController.swift; sourceTree = "<group>"; };
+		F4D8DC7A284809E700C2594B /* SupportPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportPageViewModel.swift; sourceTree = "<group>"; };
+		F4D8DC7C2849092300C2594B /* SupportTicketResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportTicketResponse.swift; sourceTree = "<group>"; };
 		F4E3B74C2742B47100855C58 /* MainMarketType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMarketType.swift; sourceTree = "<group>"; };
 		F4F8C9EE27BEBAF90082CC08 /* TransactionHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistory.swift; sourceTree = "<group>"; };
 		F4F8C9F127C0126D0082CC08 /* FilterHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterHistoryViewController.swift; sourceTree = "<group>"; };
@@ -6174,6 +6193,7 @@
 			isa = PBXGroup;
 			children = (
 				A97D246B28180586003EEDEC /* SocialModels.swift */,
+				F4D8DC7C2849092300C2594B /* SupportTicketResponse.swift */,
 			);
 			path = GGAPI;
 			sourceTree = "<group>";
@@ -6880,6 +6900,7 @@
 			isa = PBXGroup;
 			children = (
 				F4D8DC782847853F00C2594B /* SupportPageViewController.swift */,
+				F4D8DC7A284809E700C2594B /* SupportPageViewModel.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -8260,6 +8281,7 @@
 				4532213F280F01410092CCB4 /* TransactionsHistoryViewModel.swift in Sources */,
 				45A2898626C418F700BCD5DA /* NetworkError.swift in Sources */,
 				45166D0726F3548D00E69D65 /* ResultSSWampMessage.swift in Sources */,
+				F4D8DC7B284809E700C2594B /* SupportPageViewModel.swift in Sources */,
 				A99A972226FE16D500F8D163 /* FullRegisterAddressCountryViewController.swift in Sources */,
 				45166D2126F3548D00E69D65 /* SSWampRole.swift in Sources */,
 				454E0ABA2732C58D00794E0C /* TabularViewController.swift in Sources */,
@@ -8534,6 +8556,7 @@
 				4503E79D27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift in Sources */,
 				455A0CA226BD96BF00EC572D /* SportsbookTarget.swift in Sources */,
 				454E0A8E2731B01F00794E0C /* FailableDecodable.swift in Sources */,
+				F4D8DC7D2849092300C2594B /* SupportTicketResponse.swift in Sources */,
 				45BF4E6D270DC37D00785E79 /* FilterLineView.swift in Sources */,
 				A9BA6D5228100F0C00E82724 /* AddContactViewController.swift in Sources */,
 				A99F7A1327D11BFE008BAF41 /* Bonus.swift in Sources */,
@@ -8673,6 +8696,7 @@
 				45C26DD227976ADF00513D41 /* TodayMatchesDataSource.swift in Sources */,
 				A9E7C6A627BA779200F784C9 /* AggregatorRepositoryType.swift in Sources */,
 				45505F4E28058EB900D4B53E /* BonusRootViewController.swift in Sources */,
+				F4D8DC8A2849094800C2594B /* SupportPageViewModel.swift in Sources */,
 				45166CF226F3548D00E69D65 /* UnsubscribeSSWampMessage.swift in Sources */,
 				A978EBE827E4A1A400322F49 /* PopularDetailsViewController.swift in Sources */,
 				455A0D2526BDE88D00EC572D /* Router.swift in Sources */,
@@ -8860,6 +8884,7 @@
 				A9992FDA280057BB0098854C /* ChatMessageView.swift in Sources */,
 				455C962226FDD66400456F30 /* ProfileViewController.swift in Sources */,
 				A99F79F927CF98FB008BAF41 /* BonusViewController.swift in Sources */,
+				F4D8DC7E2849092300C2594B /* SupportTicketResponse.swift in Sources */,
 				454E0AD22734A39800794E0C /* CurrencyHelper.swift in Sources */,
 				A9992FE428071E8C0098854C /* UserActionView.swift in Sources */,
 				45166D2426F3548D00E69D65 /* SSWampExtensions.swift in Sources */,
@@ -9055,6 +9080,7 @@
 				455A0D0526BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45166D0626F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */,
 				455643A226F2634E00EE78FA /* GomaClientSettings.swift in Sources */,
+				F4D8DC842849094000C2594B /* SupportPageViewController.swift in Sources */,
 				A9A2E7F527FDE3DA00D35A9D /* ConversationDetailViewController.swift in Sources */,
 				45A2897B26C3E57E00BCD5DA /* Endpoint.swift in Sources */,
 				454F0A8427C4EA69003123DF /* OutrightMarketDetailsStore.swift in Sources */,
@@ -9149,6 +9175,7 @@
 				457CBA2E282D27D000ED0F00 /* PopularDetailsViewController.swift in Sources */,
 				457CBA2F282D27D000ED0F00 /* SocialModels.swift in Sources */,
 				457CBA30282D27D000ED0F00 /* BonusRootViewController.swift in Sources */,
+				F4D8DC8D2849094A00C2594B /* SupportPageViewModel.swift in Sources */,
 				457CBA31282D27D000ED0F00 /* Router.swift in Sources */,
 				457CBA32282D27D000ED0F00 /* Date+Extension.swift in Sources */,
 				457CBA33282D27D000ED0F00 /* LiveDetailsViewController.swift in Sources */,
@@ -9336,6 +9363,7 @@
 				457CBAE8282D27D000ED0F00 /* ChatMessageView.swift in Sources */,
 				457CBAE9282D27D000ED0F00 /* CurrencyHelper.swift in Sources */,
 				457CBAEA282D27D000ED0F00 /* SSWampExtensions.swift in Sources */,
+				F4D8DC812849092300C2594B /* SupportTicketResponse.swift in Sources */,
 				457CBAEB282D27D000ED0F00 /* Theme.swift in Sources */,
 				457CBAEC282D27D000ED0F00 /* UserActionView.swift in Sources */,
 				457CBAED282D27D000ED0F00 /* SpinnerViewController.swift in Sources */,
@@ -9531,6 +9559,7 @@
 				457CBBAC282D27D000ED0F00 /* UnregisteredSSWampMessage.swift in Sources */,
 				457CBBAD282D27D000ED0F00 /* GomaClientSettings.swift in Sources */,
 				457CBBAE282D27D000ED0F00 /* ConversationDetailViewController.swift in Sources */,
+				F4D8DC872849094100C2594B /* SupportPageViewController.swift in Sources */,
 				457CBBAF282D27D000ED0F00 /* Endpoint.swift in Sources */,
 				457CBBB0282D27D000ED0F00 /* OutrightMarketDetailsStore.swift in Sources */,
 				457CBBB1282D27D000ED0F00 /* RecentSearchTableViewCell.swift in Sources */,
@@ -9625,6 +9654,7 @@
 				457CBCD4282D2CD100ED0F00 /* UnsubscribeSSWampMessage.swift in Sources */,
 				457CBCD5282D2CD100ED0F00 /* PopularDetailsViewController.swift in Sources */,
 				457CBCD6282D2CD100ED0F00 /* SocialModels.swift in Sources */,
+				F4D8DC8E2849094B00C2594B /* SupportPageViewModel.swift in Sources */,
 				457CBCD7282D2CD100ED0F00 /* BonusRootViewController.swift in Sources */,
 				457CBCD8282D2CD100ED0F00 /* Router.swift in Sources */,
 				457CBCD9282D2CD100ED0F00 /* Date+Extension.swift in Sources */,
@@ -9812,6 +9842,7 @@
 				457CBD90282D2CD100ED0F00 /* ChatMessageView.swift in Sources */,
 				457CBD91282D2CD100ED0F00 /* CurrencyHelper.swift in Sources */,
 				457CBD92282D2CD100ED0F00 /* SSWampExtensions.swift in Sources */,
+				F4D8DC822849092300C2594B /* SupportTicketResponse.swift in Sources */,
 				457CBD93282D2CD100ED0F00 /* Theme.swift in Sources */,
 				457CBD94282D2CD100ED0F00 /* UserActionView.swift in Sources */,
 				457CBD95282D2CD100ED0F00 /* SpinnerViewController.swift in Sources */,
@@ -10007,6 +10038,7 @@
 				457CBE53282D2CD100ED0F00 /* UnregisteredSSWampMessage.swift in Sources */,
 				457CBE54282D2CD100ED0F00 /* GomaClientSettings.swift in Sources */,
 				457CBE55282D2CD100ED0F00 /* ConversationDetailViewController.swift in Sources */,
+				F4D8DC882849094200C2594B /* SupportPageViewController.swift in Sources */,
 				457CBE56282D2CD100ED0F00 /* Endpoint.swift in Sources */,
 				457CBE57282D2CD100ED0F00 /* OutrightMarketDetailsStore.swift in Sources */,
 				457CBE58282D2CD100ED0F00 /* RecentSearchTableViewCell.swift in Sources */,
@@ -10101,6 +10133,7 @@
 				4589C7BA282024E400243547 /* PopularDetailsViewController.swift in Sources */,
 				45A6BB7B28213FEA00D9B416 /* SocialModels.swift in Sources */,
 				4589C7BB282024E400243547 /* BonusRootViewController.swift in Sources */,
+				F4D8DC8B2849094800C2594B /* SupportPageViewModel.swift in Sources */,
 				4589C7BC282024E400243547 /* Router.swift in Sources */,
 				4589C7BD282024E400243547 /* Date+Extension.swift in Sources */,
 				4589C7BE282024E400243547 /* LiveDetailsViewController.swift in Sources */,
@@ -10288,6 +10321,7 @@
 				4589C86F282024E400243547 /* CurrencyHelper.swift in Sources */,
 				4589C870282024E400243547 /* SSWampExtensions.swift in Sources */,
 				4589C871282024E400243547 /* Theme.swift in Sources */,
+				F4D8DC7F2849092300C2594B /* SupportTicketResponse.swift in Sources */,
 				4589C872282024E400243547 /* UserActionView.swift in Sources */,
 				4589C873282024E400243547 /* SpinnerViewController.swift in Sources */,
 				4589C874282024E400243547 /* MatchWidgetCollectionViewCell.swift in Sources */,
@@ -10483,6 +10517,7 @@
 				4589C92C282024E400243547 /* UnregisteredSSWampMessage.swift in Sources */,
 				4589C92D282024E400243547 /* GomaClientSettings.swift in Sources */,
 				4589C92E282024E400243547 /* ConversationDetailViewController.swift in Sources */,
+				F4D8DC852849094000C2594B /* SupportPageViewController.swift in Sources */,
 				4589C92F282024E400243547 /* Endpoint.swift in Sources */,
 				4589C930282024E400243547 /* OutrightMarketDetailsStore.swift in Sources */,
 				4589C931282024E400243547 /* RecentSearchTableViewCell.swift in Sources */,
@@ -10577,6 +10612,7 @@
 				45A6BC0628246A7500D9B416 /* AggregatorRepositoryType.swift in Sources */,
 				45A6BC0728246A7500D9B416 /* UnsubscribeSSWampMessage.swift in Sources */,
 				45A6BC0828246A7500D9B416 /* PopularDetailsViewController.swift in Sources */,
+				F4D8DC8C2849094900C2594B /* SupportPageViewModel.swift in Sources */,
 				45A6BC0928246A7500D9B416 /* BonusRootViewController.swift in Sources */,
 				45A6BC0A28246A7500D9B416 /* Router.swift in Sources */,
 				45A6BC0B28246A7500D9B416 /* Date+Extension.swift in Sources */,
@@ -10764,6 +10800,7 @@
 				45A6BCC128246A7500D9B416 /* ChatMessageView.swift in Sources */,
 				45A6BCC228246A7500D9B416 /* CurrencyHelper.swift in Sources */,
 				45A6BCC328246A7500D9B416 /* SSWampExtensions.swift in Sources */,
+				F4D8DC802849092300C2594B /* SupportTicketResponse.swift in Sources */,
 				45A6BCC428246A7500D9B416 /* Theme.swift in Sources */,
 				45A6BCC528246A7500D9B416 /* UserActionView.swift in Sources */,
 				45A6BCC628246A7500D9B416 /* SpinnerViewController.swift in Sources */,
@@ -10959,6 +10996,7 @@
 				45A6BD8328246A7500D9B416 /* NibIdentifiable.swift in Sources */,
 				45A6BD8428246A7500D9B416 /* UnregisteredSSWampMessage.swift in Sources */,
 				45A6BD8528246A7500D9B416 /* GomaClientSettings.swift in Sources */,
+				F4D8DC862849094100C2594B /* SupportPageViewController.swift in Sources */,
 				45A6BD8628246A7500D9B416 /* ConversationDetailViewController.swift in Sources */,
 				45A6BD8728246A7500D9B416 /* Endpoint.swift in Sources */,
 				45A6BD8828246A7500D9B416 /* OutrightMarketDetailsStore.swift in Sources */,
