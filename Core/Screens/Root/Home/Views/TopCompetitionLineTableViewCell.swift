@@ -37,6 +37,14 @@ class TopCompetitionLineTableViewCell: UITableViewCell {
         self.setupWithTheme()
 
         //
+
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self
+
+        self.collectionView.register(CompetitionWidgetCollectionViewCell.self, forCellWithReuseIdentifier: CompetitionWidgetCollectionViewCell.identifier)
+        self.collectionView.register(SeeMoreMarketsCollectionViewCell.nib, forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)
+        self.collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: UICollectionViewCell.identifier)
+
         self.collectionViewHeightConstraint.constant = self.collectionViewHeight
 
         UIView.performWithoutAnimation {
@@ -288,19 +296,12 @@ extension TopCompetitionLineTableViewCell {
 
     private func setupSubviews() {
         // Add subviews to self.view or each other
-        self.contentView.addSubview(self.titleLabel)
         self.contentView.clipsToBounds = true
 
-        self.linesStackView.addArrangedSubview(self.collectionView)
-
+        self.contentView.addSubview(self.titleLabel)
         self.contentView.addSubview(self.linesStackView)
-  
-        self.collectionView.delegate = self
-        self.collectionView.dataSource = self
 
-        self.collectionView.register(CompetitionWidgetCollectionViewCell.self, forCellWithReuseIdentifier: CompetitionWidgetCollectionViewCell.identifier)
-        self.collectionView.register(SeeMoreMarketsCollectionViewCell.nib, forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)
-        self.collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: UICollectionViewCell.identifier)
+        self.linesStackView.addArrangedSubview(self.collectionView)
 
         // Initialize constraints
         self.initConstraints()

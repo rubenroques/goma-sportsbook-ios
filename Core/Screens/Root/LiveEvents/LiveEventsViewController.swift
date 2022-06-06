@@ -79,6 +79,29 @@ class LiveEventsViewController: UIViewController {
         return betslipCountLabel
     }()
 
+    private lazy var chatButtonView: UIView = {
+        let chatButtonView = UIView()
+        chatButtonView.translatesAutoresizingMaskIntoConstraints = false
+
+        let iconImageView = UIImageView()
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        iconImageView.contentMode = .scaleAspectFit
+        iconImageView.image = UIImage(named: "chat_float_icon")
+        chatButtonView.addSubview(iconImageView)
+
+        NSLayoutConstraint.activate([
+            chatButtonView.widthAnchor.constraint(equalToConstant: 46),
+            chatButtonView.widthAnchor.constraint(equalTo: chatButtonView.heightAnchor),
+
+            iconImageView.widthAnchor.constraint(equalToConstant: 22),
+            iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
+            iconImageView.centerXAnchor.constraint(equalTo: chatButtonView.centerXAnchor),
+            iconImageView.centerYAnchor.constraint(equalTo: chatButtonView.centerYAnchor),
+        ])
+
+        return chatButtonView
+    }()
+
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
     private let refreshControl = UIRefreshControl()
@@ -97,6 +120,7 @@ class LiveEventsViewController: UIViewController {
     }
 
     var didChangeSport: ((Sport) -> Void)?
+    var didTapChatButtonAction: (() -> Void)?
     var didTapBetslipButtonAction: (() -> Void)?
 
     init(selectedSport: Sport = Sport.football) {
@@ -148,11 +172,12 @@ class LiveEventsViewController: UIViewController {
 //                self.tableView.reloadData()
 //            }
 //        }
-        
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.setHomeFilters(homeFilters: self.viewModel.homeFilterOptions)
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -167,8 +192,11 @@ class LiveEventsViewController: UIViewController {
         self.liveEventsCountView.layer.cornerRadius = self.liveEventsCountView.frame.size.width / 2
         self.filtersButtonView.layer.cornerRadius = self.filtersButtonView.frame.height / 2
         self.sportsSelectorButtonView.layer.cornerRadius = self.sportsSelectorButtonView.frame.height / 2
+
         self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
         self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
+
+        self.chatButtonView.layer.cornerRadius = self.chatButtonView.frame.height / 2
     }
 
     private func commonInit() {
@@ -236,7 +264,8 @@ class LiveEventsViewController: UIViewController {
 
         let didTapSportsSelection = UITapGestureRecognizer(target: self, action: #selector(handleSportsSelectionTap))
         sportsSelectorButtonView.addGestureRecognizer(didTapSportsSelection)
-        
+
+        // == BetslipButtonView
         self.betslipButtonView.addSubview(self.betslipCountLabel)
 
         self.view.addSubview(self.betslipButtonView)
@@ -254,6 +283,20 @@ class LiveEventsViewController: UIViewController {
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
         betslipButtonView.addGestureRecognizer(tapBetslipView)
+        // ==
+
+
+        // == ChatButtonView
+        let tapChatView = UITapGestureRecognizer(target: self, action: #selector(didTapChatView))
+        self.chatButtonView.addGestureRecognizer(tapChatView)
+
+        self.view.addSubview(self.chatButtonView)
+
+        NSLayoutConstraint.activate([
+            self.chatButtonView.centerXAnchor.constraint(equalTo: self.betslipButtonView.centerXAnchor),
+            self.chatButtonView.bottomAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -10),
+        ])
+        // ==
 
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
@@ -373,7 +416,9 @@ class LiveEventsViewController: UIViewController {
 
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
         self.betslipButtonView.backgroundColor = UIColor.App.buttonBackgroundPrimary
-    
+
+        self.chatButtonView.backgroundColor = UIColor.App.buttonActiveHoverSecondary
+
         self.emptyBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
         self.secondTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
@@ -417,7 +462,11 @@ class LiveEventsViewController: UIViewController {
     @objc func didTapBetslipView() {
         self.didTapBetslipButtonAction?()
     }
-    
+
+    @objc func didTapChatView() {
+        self.didTapChatButtonAction?()
+    }
+
     func setEmptyStateBaseView(firstLabelText: String, secondLabelText: String, isUserLoggedIn: Bool) {
     
         if isUserLoggedIn {
@@ -540,13 +589,18 @@ extension LiveEventsViewController: UICollectionViewDelegate, UICollectionViewDa
 
 extension LiveEventsViewController: HomeFilterOptionsViewDelegate {
 
-    func setHomeFilters(homeFilters: HomeFilterOptions) {
+    func setHomeFilters(homeFilters: HomeFilterOptions?) {
         self.viewModel.homeFilterOptions = homeFilters
-        
-        if homeFilters.countFilters != 0 {
+
+        var countFilters = homeFilters?.countFilters ?? 0
+        if StyleHelper.cardsStyleActive() == .small {
+            countFilters += 1
+        }
+
+        if countFilters != 0 {
             filtersCountLabel.isHidden = false
             self.view.bringSubviewToFront(filtersCountLabel)
-            filtersCountLabel.text = String(homeFilters.countFilters)
+            filtersCountLabel.text = String(countFilters)
             filtersCountLabel.layer.cornerRadius =  filtersCountLabel.frame.width/2
             filtersCountLabel.layer.masksToBounds = true
         }

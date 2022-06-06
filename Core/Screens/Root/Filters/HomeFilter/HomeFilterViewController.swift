@@ -6,9 +6,16 @@
 //
 
 import UIKit
-
 import OrderedCollections
 
+//
+protocol HomeFilterOptionsViewDelegate: AnyObject {
+    var turnTimeRangeOn: Bool { get set }
+    func setHomeFilters(homeFilters: HomeFilterOptions?)
+
+}
+
+//
 class HomeFilterViewController: UIViewController {
     @IBOutlet private var topView: UIView!
     @IBOutlet private var navigationView: UIView!
@@ -410,7 +417,8 @@ class HomeFilterViewController: UIViewController {
         if defaultMarket.marketId != MainMarketType.homeDrawAway.marketId {
            countFilters += 1
         }
-        
+
+
         let homeFilterOptions = HomeFilterOptions(lowerBoundTimeRange: lowerBoundTimeRange,
                                                   highBoundTimeRange: highBoundTimeRange,
                                                   defaultMarket: defaultMarket,
@@ -424,3 +432,4 @@ class HomeFilterViewController: UIViewController {
     }
 
 }
+

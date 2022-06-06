@@ -87,7 +87,7 @@ class SentTicketMessageTableViewCell: UITableViewCell {
 
         self.ticketBaseStackView.backgroundColor = .clear
 
-        self.ticketInMessageView?.cardBackgroundColor = UIColor.App.backgroundSecondary
+        self.ticketInMessageView?.setupWithTheme()
 
     }
 
@@ -109,9 +109,10 @@ class SentTicketMessageTableViewCell: UITableViewCell {
         if let attachment = messageData.attachment {
             let ticket = BetHistoryEntry(sharedBetTicket: attachment.content)
             let betSelectionCellViewModel = BetSelectionCellViewModel(ticket: ticket)
-            self.ticketInMessageView = ChatTicketInMessageView(betSelectionCellViewModel: betSelectionCellViewModel)
+            self.ticketInMessageView = ChatTicketInMessageView(betSelectionCellViewModel: betSelectionCellViewModel,
+                                                               shouldShowButton: false)
 
-            self.ticketInMessageView!.didTapBetNowAction = { [weak self] viewModel in
+            self.ticketInMessageView!.didTapBetNowAction = { [weak self] viewModel in
                 self?.didTapBetNowAction(viewModel)
             }
             self.ticketBaseStackView.addArrangedSubview(self.ticketInMessageView!)
