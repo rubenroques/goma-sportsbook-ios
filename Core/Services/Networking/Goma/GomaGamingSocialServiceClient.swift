@@ -360,6 +360,52 @@ class GomaGamingSocialServiceClient {
         }
     }
 
+    func refreshChatroomsList() {
+        self.clearSocketCustomHandlers()
+
+        self.getChatrooms()
+    }
+
+    func setupChatDetailListener(chatroomId: Int) {
+
+        if !self.chatroomIdsPublisher.value.contains(chatroomId) {
+
+            // JOIN
+            self.socket?.emit("social.chatrooms.join", ["id": chatroomId])
+            Logger.log("SocketSocialDebug: emit social.chatrooms.join id: \(chatroomId)")
+
+            // MESSAGES
+            let messagesHandlerId = self.socket?.on("social.chatroom.\(chatroomId)") { data, _ in
+                // Logger.log("SocketSocialDebug: on social.chatroom.\(chatroomId): \( data.json() )")
+                let chatMessages = self.parseChatMessages(data: data)
+                if let chatMessages = chatMessages?[safe: 0]?.messages {
+                    for chatMessage in chatMessages {
+                        let chatroomId = chatMessage.toChatroom
+                        self.chatroomNewMessagePublisher.value[chatroomId] = chatMessage
+
+                        // Update last message aswell, since last message socket listener doesn't live updated
+                        self.chatroomLastMessagePublisher.value[chatroomId] = OrderedSet(chatMessages)
+                    }
+                }
+            }
+            if let messagesHandlerId = messagesHandlerId {
+                self.socketCustomHandlers.insert(messagesHandlerId)
+            }
+
+            // READ
+            let readHandlerId = self.socket?.on("social.chatroom.\(chatroomId).read") { data, _ in
+                print("SocketDebug: on social.chatroom.\(chatroomId).read: \( data.json() )")
+                let chatUsers = self.parseChatUsers(data: data)
+                print("CHAT USERS: \(chatUsers)")
+                self.chatroomReadMessagesPublisher.value[chatroomId] = chatUsers
+
+            }
+            if let readHandlerId = readHandlerId {
+                self.socketCustomHandlers.insert(readHandlerId)
+            }
+        }
+    }
+
     func setChatroomRead(chatroomId: Int, messageId: Int) {
         self.socket?.emit("social.chatrooms.messages.read", ["id": chatroomId, "message_id": messageId])
     }

@@ -82,7 +82,6 @@ class ConversationDetailViewController: UIViewController {
         self.tableView.register(SentTicketMessageTableViewCell.self,
                                 forCellReuseIdentifier: SentTicketMessageTableViewCell.identifier)
 
-        
         tableView.register(DateHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: DateHeaderFooterView.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
@@ -116,8 +115,13 @@ class ConversationDetailViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+    }
 
-        self.scrollToBottomTableView(animated: false)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        self.scrollToBottomTableView()
+
     }
 
     // MARK: - Layout and Theme
@@ -244,15 +248,22 @@ class ConversationDetailViewController: UIViewController {
     }
 
     func scrollToBottomTableView(animated: Bool = true) {
-        DispatchQueue.main.async {
-            if self.viewModel.dateMessages.isNotEmpty {
-                let section = self.viewModel.dateMessages.count - 1
-                let row = self.viewModel.dateMessages[section].messages.count - 1
+        if self.viewModel.dateMessages.isNotEmpty {
+
+            let section = self.viewModel.dateMessages.count - 1
+
+            if let dateMessages = self.viewModel.dateMessages[safe: section] {
+
+                let row = dateMessages.messages.count - 1
 
                 let indexPath = IndexPath(row: row, section: section)
+
                 self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: animated)
+
             }
+
         }
+
     }
 
     private func showBetSelectionScreen() {

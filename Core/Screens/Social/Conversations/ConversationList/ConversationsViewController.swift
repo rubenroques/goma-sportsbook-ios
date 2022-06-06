@@ -16,7 +16,7 @@ class ConversationsViewController: UIViewController {
     private lazy var searchBar: UISearchBar = Self.createSearchBar()
 
     private lazy var newGroupButton: UIButton = Self.createNewGroupButton()
-    private lazy var addFriendButton: UIButton = Self.createAddFriendButton()
+    private lazy var newMessageButton: UIButton = Self.createNewMessageButton()
     private lazy var headerSeparatorLineView: UIView = Self.createHeaderSeparatorLineView()
     private lazy var emptyStateView: UIView = Self.createEmptyStateView()
     private lazy var emptyStateImageView: UIImageView = Self.createEmptyStateImageView()
@@ -69,7 +69,7 @@ class ConversationsViewController: UIViewController {
 
         self.newGroupButton.addTarget(self, action: #selector(didTapNewGroupButton), for: .primaryActionTriggered)
 
-        self.addFriendButton.addTarget(self, action: #selector(didTapAddFriendButton), for: .primaryActionTriggered)
+        self.newMessageButton.addTarget(self, action: #selector(didTapNewMessageButton), for: .primaryActionTriggered)
 
         let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(backgroundTapGesture)
@@ -100,7 +100,7 @@ class ConversationsViewController: UIViewController {
         self.tableViewHeader.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.addFriendButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
+        self.newMessageButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
         self.newGroupButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
 
         self.headerSeparatorLineView.backgroundColor = UIColor.App.separatorLine
@@ -111,9 +111,9 @@ class ConversationsViewController: UIViewController {
 
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
-        if let image = self.addFriendButton.imageView?.image?.withRenderingMode(.alwaysTemplate) {
-            self.addFriendButton.setImage(image, for: .normal)
-            self.addFriendButton.tintColor = UIColor.App.highlightSecondary
+        if let image = self.newMessageButton.imageView?.image?.withRenderingMode(.alwaysTemplate) {
+            self.newMessageButton.setImage(image, for: .normal)
+            self.newMessageButton.tintColor = UIColor.App.highlightSecondary
         }
 
         self.setupSearchBar()
@@ -217,7 +217,7 @@ extension ConversationsViewController {
         self.navigationController?.pushViewController(newGroupViewController, animated: true)
     }
 
-    @objc func didTapAddFriendButton() {
+    @objc func didTapNewMessageButton() {
 //        let newMessageViewModel = NewMesssageViewModel()
 //        let newMessageViewController = NewMessageViewController(viewModel: newMessageViewModel)
 //
@@ -349,9 +349,9 @@ extension ConversationsViewController {
         return newGroupButton
     }
 
-    private static func createAddFriendButton() -> UIButton {
+    private static func createNewMessageButton() -> UIButton {
         let addFriendButton = UIButton(type: .custom)
-        addFriendButton.setTitle(localized("add_friend"), for: .normal)
+        addFriendButton.setTitle(localized("new_message"), for: .normal)
         addFriendButton.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         addFriendButton.translatesAutoresizingMaskIntoConstraints = false
         return addFriendButton
@@ -413,7 +413,7 @@ extension ConversationsViewController {
 
         self.tableViewHeader.addSubview(self.searchBar)
         self.tableViewHeader.addSubview(self.newGroupButton)
-        self.tableViewHeader.addSubview(self.addFriendButton)
+        self.tableViewHeader.addSubview(self.newMessageButton)
         self.tableViewHeader.addSubview(self.headerSeparatorLineView)
 
         self.view.addSubview(self.tableView)
@@ -449,9 +449,9 @@ extension ConversationsViewController {
             self.newGroupButton.bottomAnchor.constraint(equalTo: self.tableViewHeader.bottomAnchor, constant: -12),
             self.newGroupButton.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 10),
 
-            self.addFriendButton.trailingAnchor.constraint(equalTo: self.tableViewHeader.trailingAnchor, constant: -23),
-            self.addFriendButton.bottomAnchor.constraint(equalTo: self.tableViewHeader.bottomAnchor, constant: -12),
-            self.addFriendButton.centerYAnchor.constraint(equalTo: self.newGroupButton.centerYAnchor)
+            self.newMessageButton.trailingAnchor.constraint(equalTo: self.tableViewHeader.trailingAnchor, constant: -23),
+            self.newMessageButton.bottomAnchor.constraint(equalTo: self.tableViewHeader.bottomAnchor, constant: -12),
+            self.newMessageButton.centerYAnchor.constraint(equalTo: self.newGroupButton.centerYAnchor)
         ])
 
         // Table view

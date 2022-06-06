@@ -204,13 +204,9 @@ class AddContactViewController: UIViewController {
     private func showAddFriendAlert(friendAlertType: FriendAlertType) {
         switch friendAlertType {
         case .success:
-//            let addFriendAlert = UIAlertController(title: localized("friend_added"),
-//                                                       message: localized("friend_added_message"),
-//                                                       preferredStyle: UIAlertController.Style.alert)
-//
-//            addFriendAlert.addAction(UIAlertAction(title: localized("ok"), style: .default))
-//
-//            self.present(addFriendAlert, animated: true, completion: nil)
+            
+            Env.gomaSocialClient.forceRefresh()
+
             self.chatListNeedsReload?()
 
             self.navigationController?.popToRootViewController(animated: true)
@@ -384,7 +380,7 @@ extension AddContactViewController: UITableViewDataSource, UITableViewDelegate {
             }
 
             if self.viewModel.sectionUsersArray[section].contactType == .registered {
-                let resultsLabel = "Results (\(self.viewModel.sectionUsersArray[section].userContacts.count))"
+                let resultsLabel = localized("my_friends")
 
                 headerView.configureHeader(title: resultsLabel)
             }

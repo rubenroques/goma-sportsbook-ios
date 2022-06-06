@@ -147,7 +147,6 @@ class HomeViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-
         viewModel.refreshPublisher
             .debounce(for: .milliseconds(600), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)

@@ -8,7 +8,8 @@
 import Foundation
 import Combine
 
-class ConversationDetailViewModel: NSObject {
+class
+ConversationDetailViewModel: NSObject {
 
     // MARK: Public Properties
     var messages: [MessageData] = []
@@ -47,6 +48,9 @@ class ConversationDetailViewModel: NSObject {
 
         let chatroomId = self.conversationData.id
 
+        // Setup listeners if there is no associated chatroom
+//        Env.gomaSocialClient.setupChatDetailListener(chatroomId: chatroomId)
+
         if let conversationMessages = Env.gomaSocialClient.chatroomMessagesPublisher.value[chatroomId] {
             self.processChatMessages(chatMessages: Array(conversationMessages) )
             self.shouldScrollToLastMessage.send()
@@ -76,6 +80,10 @@ class ConversationDetailViewModel: NSObject {
                 }
             })
             .store(in: &cancellables)
+
+    }
+
+    private func setLastMessageRead() {
 
     }
 
@@ -267,6 +275,15 @@ class ConversationDetailViewModel: NSObject {
             }
             return false
         }
+
+        // TESTING SET READ MESSAGE
+        if let lastMessage = self.dateMessages.last?.messages.last,
+           let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId,
+           let lastMessageUserId = lastMessage.userId,
+           lastMessageUserId != "\(loggedUserId)" {
+            print("SET MESSAGE AS READ")
+        }
+
     }
 
     func addMessage(message: MessageData) {
