@@ -593,7 +593,7 @@ extension LiveEventsViewController: HomeFilterOptionsViewDelegate {
         self.viewModel.homeFilterOptions = homeFilters
 
         var countFilters = homeFilters?.countFilters ?? 0
-        if StyleHelper.cardsStyleActive() == .small {
+        if StyleHelper.cardsStyleActive() != TargetVariables.defaultCardStyle {
             countFilters += 1
         }
 
