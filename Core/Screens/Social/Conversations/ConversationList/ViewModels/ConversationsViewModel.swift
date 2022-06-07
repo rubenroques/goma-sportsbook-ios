@@ -45,6 +45,9 @@ class ConversationsViewModel {
 
             }, receiveValue: { [weak self] response in
                 if let chatrooms = response.data {
+
+                    Env.gomaSocialClient.verifyIfNewChat(chatrooms: chatrooms)
+
                     self?.storeChatrooms(chatroomsData: chatrooms)
                 }
 

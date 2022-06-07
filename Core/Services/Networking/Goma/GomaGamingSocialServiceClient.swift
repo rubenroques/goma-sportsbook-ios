@@ -206,6 +206,15 @@ class GomaGamingSocialServiceClient {
         }
     }
 
+    func verifyIfNewChat(chatrooms: [ChatroomData]) {
+
+        for chatroom in chatrooms {
+            if !self.chatroomIdsPublisher.value.contains(chatroom.chatroom.id) {
+                self.forceRefresh()
+            }
+        }
+    }
+
     private func clearStorage() {
         self.chatroomIdsPublisher.send([])
         self.chatroomLastMessagePublisher.send([:])
