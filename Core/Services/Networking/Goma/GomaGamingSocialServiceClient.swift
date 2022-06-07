@@ -30,12 +30,15 @@ class GomaGamingSocialServiceClient {
             .map { users -> [Bool] in
                 let userId = Env.gomaNetworkClient.getCurrentToken()?.userId ?? -1
                 return users
-                    .map({$0.contains(String(userId))})
+                    .map({!$0.contains(String(userId))})
                     .filter({ $0 })
             }
             .map(\.count)
             .eraseToAnyPublisher()
     }
+
+    var unreadMessagesState: CurrentValueSubject<Bool, Never> = .init(false)
+
     var chatPage: Int = 1
     
     // MARK: Private Properties
@@ -352,6 +355,11 @@ class GomaGamingSocialServiceClient {
 
                         // Update last message aswell, since last message socket listener doesn't live updated
                          self.chatroomLastMessagePublisher.value[chatroomId] = OrderedSet(chatMessages)
+                        if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+                            if chatMessage.fromUser != "\(loggedUserId)" {
+                                self.unreadMessagesState.send(true)
+                            }
+                        }
                     }
                 }
             }

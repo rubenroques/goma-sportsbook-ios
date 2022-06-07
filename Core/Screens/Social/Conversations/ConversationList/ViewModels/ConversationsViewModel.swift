@@ -49,6 +49,8 @@ class ConversationsViewModel {
                     Env.gomaSocialClient.verifyIfNewChat(chatrooms: chatrooms)
 
                     self?.storeChatrooms(chatroomsData: chatrooms)
+
+                    Env.gomaSocialClient.unreadMessagesState.send(false)
                 }
 
             })
