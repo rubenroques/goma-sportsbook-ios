@@ -262,11 +262,6 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
             cell.configure(withViewModel: cellViewModel)
         }
 
-        // TEST STATES
-//        if indexPath.row <= 2 {
-//            cell.isOnline = true
-//        }
-
         cell.didTapConversationAction = { [weak self] conversationData in
             self?.showConversationDetail(conversationData: conversationData)
         }

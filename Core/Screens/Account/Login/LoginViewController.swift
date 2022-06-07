@@ -320,12 +320,13 @@ class LoginViewController: UIViewController {
             }, receiveValue: { value in
                 Env.gomaNetworkClient.refreshAuthToken(token: value)
                 Env.gomaSocialClient.connectSocket()
+
+                Env.userSessionStore.hasGomaUserSessionPublisher.send(true)
             })
             .store(in: &cancellables)
     }
 
     func showLoadingSpinner() {
-
         view.addSubview(spinnerViewController.view)
         spinnerViewController.view.translatesAutoresizingMaskIntoConstraints = false
         spinnerViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
@@ -333,7 +334,6 @@ class LoginViewController: UIViewController {
         spinnerViewController.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         spinnerViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         spinnerViewController.didMove(toParent: self)
-
     }
 
     func hideLoadingSpinner() {

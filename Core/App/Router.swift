@@ -14,6 +14,8 @@ enum Route {
     case resolvedBet(id: String)
     case event(id: String)
     case ticket(id: String)
+    case chatMessage(id: String)
+    case chatNotifications
     case none
 }
 
@@ -212,6 +214,10 @@ class Router {
             self.showMatchDetailScreen(matchId: id)
         case .ticket(let id):
             self.showBetslipWithTicket(token: id)
+        case .chatMessage(let id):
+            self.showChatDetails(withId: id)
+        case .chatNotifications:
+            self.showChatNotifications()
         case .none:
             ()
         }
@@ -334,6 +340,46 @@ class Router {
         self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
     }
 
+    //
+    // Chat
+    func showChatNotifications() {
+        
+        let chatNotificationsViewController = ChatNotificationsViewController()
+        self.showIntoSocialViewControllerModal(chatNotificationsViewController)
+    }
+
+    func showChatDetails(withId id: String) {
+        guard let chatId = Int(id) else {return}
+
+        let conversationDetailViewModel = ConversationDetailViewModel(chatId: chatId)
+        let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
+        self.showIntoSocialViewControllerModal(conversationDetailViewController)
+
+    }
+
+    private func showIntoSocialViewControllerModal(_ viewController: UIViewController) {
+        if let rootNavigationViewController = self.rootViewController?.presentedViewController as? UINavigationController,
+           rootNavigationViewController.rootViewController is SocialViewController {
+            rootNavigationViewController.popToRootViewController(animated: true)
+          
+            rootNavigationViewController.pushViewController(viewController, animated: true)
+        }
+        else {
+            if self.rootViewController?.presentedViewController?.isModal == true {
+                self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
+            }
+            
+
+            let socialViewController = SocialViewController(viewModel: SocialViewModel())
+            
+            let navigationViewController = Router.navigationController(with: socialViewController)
+            navigationViewController.pushViewController(viewController, animated: false)
+            
+            self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
+        }
+    }
+    
+    //
     func subscribeBetslipSharedTicketStatus(betToken: String) {
 
         Env.urlSchemaManager.getBetslipTicketData(betToken: betToken)

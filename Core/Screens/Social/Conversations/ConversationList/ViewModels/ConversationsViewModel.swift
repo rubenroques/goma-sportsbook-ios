@@ -39,7 +39,6 @@ class ConversationsViewModel {
                     print("CHATROOMS ERROR: \(error)")
                     self?.isLoadingPublisher.send(false)
                     self?.dataNeedsReload.send()
-
                 case .finished:
                     ()
                 }
@@ -56,16 +55,11 @@ class ConversationsViewModel {
     private func storeChatrooms(chatroomsData: [ChatroomData]) {
 
         for chatroomData in chatroomsData {
-
             if chatroomData.chatroom.type == ChatroomType.individual.identifier {
-
                 self.setupIndividualChatroomData(chatroomData: chatroomData)
-
             }
             else {
-
                 self.setupGroupChatroomData(chatroomData: chatroomData)
-
             }
         }
 
