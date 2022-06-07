@@ -116,7 +116,7 @@ class ConversationDetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        Env.gomaSocialClient.showChatroomOnForeground(withId: self.viewModel.conversationId)
+        Env.gomaSocialClient.showChatroomOnForeground(withId: String(self.viewModel.conversationId))
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -126,6 +126,8 @@ class ConversationDetailViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
         Env.gomaSocialClient.hideChatroomOnForeground()
     }
 

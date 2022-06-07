@@ -343,60 +343,21 @@ class Router {
     //
     // Chat
     func showChatNotifications() {
-//        if self.rootViewController?.presentedViewController?.isModal == true {
-//            self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
-//        }
-//
-//        let chatNotificationsViewController = ChatNotificationsViewController()
-//        let navigationViewController = Router.navigationController(with: chatNotificationsViewController)
-//        self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
-//
         
         let chatNotificationsViewController = ChatNotificationsViewController()
         self.showIntoSocialViewControllerModal(chatNotificationsViewController)
     }
 
     func showChatDetails(withId id: String) {
-        let conversationDetailViewModel = ConversationDetailViewModel(chatId: id)
+        guard let chatId = Int(id) else {return}
+
+        let conversationDetailViewModel = ConversationDetailViewModel(chatId: chatId)
         let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
         self.showIntoSocialViewControllerModal(conversationDetailViewController)
-        
-//        if let rootNavigationViewController = self.rootViewController?.presentedViewController as? UINavigationController,
-//           rootNavigationViewController.rootViewController is SocialViewController {
-//            rootNavigationViewController.popToRootViewController(animated: true)
-//
-//            let conversationDetailViewModel = ConversationDetailViewModel(conversationData: ConversationData(id: 81,
-//                                                                                                             conversationType: .user,
-//                                                                                                             name: "AA",
-//                                                                                                             lastMessage: "a",
-//                                                                                                             date: "11",
-//                                                                                                             isLastMessageSeen: true))
-//            let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
-//            rootNavigationViewController.pushViewController(conversationDetailViewController, animated: true)
-//        }
-//        else {
-//
-//            if self.rootViewController?.presentedViewController?.isModal == true {
-//                self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
-//            }
-//
-//            let socialViewController = SocialViewController(viewModel: SocialViewModel())
-//            let navigationViewController = Router.navigationController(with: socialViewController)
-//
-//            let conversationDetailViewModel = ConversationDetailViewModel(conversationData: ConversationData(id: 81,
-//                                                                                                             conversationType: .user,
-//                                                                                                             name: "AA",
-//                                                                                                             lastMessage: "a",
-//                                                                                                             date: "11",
-//                                                                                                             isLastMessageSeen: true))
-//            let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
-//
-//            navigationViewController.pushViewController(conversationDetailViewController, animated: false)
-//            self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
-//        }
+
     }
 
-    func showIntoSocialViewControllerModal(_ viewController: UIViewController) {
+    private func showIntoSocialViewControllerModal(_ viewController: UIViewController) {
         if let rootNavigationViewController = self.rootViewController?.presentedViewController as? UINavigationController,
            rootNavigationViewController.rootViewController is SocialViewController {
             rootNavigationViewController.popToRootViewController(animated: true)

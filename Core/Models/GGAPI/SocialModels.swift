@@ -147,3 +147,11 @@ struct ChatUsersResponse: Decodable {
         case messageId = "message_id"
     }
 }
+
+struct AddFriendResponse: Decodable {
+    var chatroomIds: [Int]?
+
+    enum CodingKeys: String, CodingKey {
+        case chatroomIds = "chat_room_ids"
+    }
+}

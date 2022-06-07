@@ -116,9 +116,15 @@ class ConversationsViewModel {
 
                     var isLastMessageRead = false
 
-                    if let usersReadList = Env.gomaSocialClient.chatroomReadMessagesPublisher.value[chatroomId], let userReadResponse = usersReadList[safe: 0] {
-                        for userId in userReadResponse.users {
-                            if userId == "\(userLoggedId)" && userReadResponse.messageId == lastMessage.date {
+                    // Check if it was own user
+                    if lastMessage.fromUser == "\(userLoggedId)" {
+                        isLastMessageRead = true
+                    }
+
+                    // Check socket read list
+                    if let usersReadList = Env.gomaSocialClient.chatroomReadMessagesPublisher.value[chatroomId] {
+                        for userId in usersReadList.users {
+                            if userId == "\(userLoggedId)" && usersReadList.messageId == lastMessage.date {
                                 isLastMessageRead = true
                             }
                         }

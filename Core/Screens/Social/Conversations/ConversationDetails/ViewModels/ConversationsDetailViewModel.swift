@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import Kingfisher
 
 class ConversationDetailViewModel: NSObject {
 
@@ -16,7 +17,7 @@ class ConversationDetailViewModel: NSObject {
     var dateMessages: [DateMessages] = []
     var isChatOnline: Bool = false
     var isChatGroup: Bool = false
-
+    var isInitialMessagesLoaded: Bool = false
     var titlePublisher: CurrentValueSubject<String, Never> = .init("")
     var usersPublisher: CurrentValueSubject<String, Never> = .init("")
     var groupInitialsPublisher: CurrentValueSubject<String, Never> = .init("")
@@ -28,7 +29,7 @@ class ConversationDetailViewModel: NSObject {
     
     var ticketAddedToBetslipAction: ((Bool) -> Void)?
     
-    var conversationId: String
+    var conversationId: Int
     
     // MARK: Private Properties
     private var chatroomMessagesPublisher: AnyCancellable?
@@ -37,7 +38,7 @@ class ConversationDetailViewModel: NSObject {
 
     // MARK: Lifetime and Cycle
     // MARK: Lifetime and Cycle
-    init(chatId: String) {
+    init(chatId: Int) {
         self.conversationId = chatId
         
         super.init()
@@ -45,7 +46,7 @@ class ConversationDetailViewModel: NSObject {
         Publishers.CombineLatest(Env.userSessionStore.hasGomaUserSessionPublisher, Env.gomaSocialClient.socketConnectedPublisher)
             .sink { [weak self] hasGomaUserSession, socketConnected in
                 if hasGomaUserSession && socketConnected {
-                    self?.requestChatroomDetails(withId: chatId)
+                    self?.requestChatroomDetails(withId: String(chatId))
                 }
             }
             .store(in: &cancellables)
@@ -55,7 +56,7 @@ class ConversationDetailViewModel: NSObject {
         self.isLoadingConversationPublisher.send(true)
         
         self.conversationData = conversationData
-        self.conversationId = String(conversationData.id)
+        self.conversationId = conversationData.id
         
         super.init()
 
@@ -120,13 +121,34 @@ class ConversationDetailViewModel: NSObject {
         Env.gomaSocialClient.chatroomNewMessagePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] chatMessages in
-                if let updatedMessage = chatMessages[conversationData.id] {
-                    self?.updateChatMessages(newMessage: updatedMessage)
-                    self?.shouldScrollToLastMessage.send()
+
+                if let conversationId = self?.conversationId ,
+                   let updatedMessage = chatMessages[conversationId] {
+                    guard let self = self else {return}
+
+                    if !self.isNewMessageProcessed(chatMessage: updatedMessage) {
+                        self.updateChatMessages(newMessage: updatedMessage)
+                        self.shouldScrollToLastMessage.send()
+                        Env.gomaSocialClient.clearNewMessage(chatroomId: conversationId)
+                    }
+
                 }
             })
             .store(in: &cancellables)
 
+    }
+
+    private func isNewMessageProcessed(chatMessage: ChatMessage?) -> Bool {
+
+        if let chatMessage = chatMessage {
+            if self.messages.contains(where: {$0.timestamp == chatMessage.date}) {
+                return true
+            }
+
+            return false
+        }
+
+        return true
     }
 
     private func setLastMessageRead() {
@@ -344,6 +366,7 @@ class ConversationDetailViewModel: NSObject {
            let lastMessageUserId = lastMessage.userId,
            lastMessageUserId != "\(loggedUserId)" {
             print("SET MESSAGE AS READ")
+            Env.gomaSocialClient.setChatroomRead(chatroomId: self.conversationId, messageId: lastMessage.timestamp)
         }
 
     }
