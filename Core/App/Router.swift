@@ -357,13 +357,7 @@ class Router {
     }
 
     func showChatDetails(withId id: String) {
-                
-        let conversationDetailViewModel = ConversationDetailViewModel(conversationData: ConversationData(id: 81,
-                                                                                                         conversationType: .user,
-                                                                                                         name: "AA",
-                                                                                                         lastMessage: "a",
-                                                                                                         date: "11",
-                                                                                                         isLastMessageSeen: true))
+        let conversationDetailViewModel = ConversationDetailViewModel(chatId: id)
         let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
         self.showIntoSocialViewControllerModal(conversationDetailViewController)
         
