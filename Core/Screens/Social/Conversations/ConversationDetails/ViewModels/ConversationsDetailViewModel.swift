@@ -17,7 +17,8 @@ ConversationDetailViewModel: NSObject {
     var dateMessages: [DateMessages] = []
     var isChatOnline: Bool = false
     var isChatGroup: Bool = false
-
+    var isInitialMessagesLoaded: Bool = false
+    var chatroomId: Int
     var titlePublisher: CurrentValueSubject<String, Never> = .init("")
     var usersPublisher: CurrentValueSubject<String, Never> = .init("")
     var groupInitialsPublisher: CurrentValueSubject<String, Never> = .init("")
@@ -35,6 +36,8 @@ ConversationDetailViewModel: NSObject {
     // MARK: Lifetime and Cycle
     init(conversationData: ConversationData) {
         self.conversationData = conversationData
+
+        self.chatroomId = conversationData.id
 
         super.init()
 
@@ -75,12 +78,31 @@ ConversationDetailViewModel: NSObject {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] chatMessages in
                 if let updatedMessage = chatMessages[chatroomId] {
-                    self?.updateChatMessages(newMessage: updatedMessage)
-                    self?.shouldScrollToLastMessage.send()
+                    guard let self = self else {return}
+
+                    if !self.isNewMessageProcessed(chatMessage: updatedMessage) {
+                        self.updateChatMessages(newMessage: updatedMessage)
+                        self.shouldScrollToLastMessage.send()
+                        Env.gomaSocialClient.clearNewMessage(chatroomId: chatroomId)
+                    }
+
                 }
             })
             .store(in: &cancellables)
 
+    }
+
+    private func isNewMessageProcessed(chatMessage: ChatMessage?) -> Bool {
+
+        if let chatMessage = chatMessage {
+            if self.messages.contains(where: {$0.timestamp == chatMessage.date}) {
+                return true
+            }
+
+            return false
+        }
+
+        return true
     }
 
     private func setLastMessageRead() {
@@ -282,6 +304,7 @@ ConversationDetailViewModel: NSObject {
            let lastMessageUserId = lastMessage.userId,
            lastMessageUserId != "\(loggedUserId)" {
             print("SET MESSAGE AS READ")
+            Env.gomaSocialClient.setChatroomRead(chatroomId: self.chatroomId, messageId: lastMessage.timestamp)
         }
 
     }
