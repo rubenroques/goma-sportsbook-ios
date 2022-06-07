@@ -144,6 +144,11 @@ class GomaGamingSocialServiceClient {
 
             Logger.log("SocketSocialDebug: error \(data)")
         }
+        
+        self.socket?.onAny({ data in
+            // Logger.log("SocketSocialDebug: Any - \(data)")
+        })
+        
         //
         //
         //

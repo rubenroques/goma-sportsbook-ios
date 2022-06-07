@@ -392,9 +392,20 @@ extension LoginViewController {
             self.usernameHeaderTextFieldView.setText("wodes95597@steamoh.com")
             self.passwordHeaderTextFieldView.setText("ruben=GOMA1")
             self.loginButton.isEnabled = true
+        }
+        else if self.usernameHeaderTextFieldView.text == "ruben5" {
+            self.usernameHeaderTextFieldView.setText("bohifo2337@dilanfa.com")
+            self.passwordHeaderTextFieldView.setText("Ruben)12345")
+            self.loginButton.isEnabled = true
             
         }
-
+        else if self.usernameHeaderTextFieldView.text == "ruben6" {
+            self.usernameHeaderTextFieldView.setText("devil11308@game4hr.com")
+            self.passwordHeaderTextFieldView.setText("Ruben)1234")
+            self.loginButton.isEnabled = true
+            
+        }
+        
     }
 
 }

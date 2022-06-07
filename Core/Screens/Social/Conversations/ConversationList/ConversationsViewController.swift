@@ -100,8 +100,8 @@ class ConversationsViewController: UIViewController {
         self.tableViewHeader.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.newMessageButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
-        self.newGroupButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
+        self.newMessageButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+        self.newGroupButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         self.headerSeparatorLineView.backgroundColor = UIColor.App.separatorLine
 
@@ -113,7 +113,7 @@ class ConversationsViewController: UIViewController {
 
         if let image = self.newMessageButton.imageView?.image?.withRenderingMode(.alwaysTemplate) {
             self.newMessageButton.setImage(image, for: .normal)
-            self.newMessageButton.tintColor = UIColor.App.highlightSecondary
+            self.newMessageButton.tintColor = UIColor.App.highlightPrimary
         }
 
         self.setupSearchBar()
