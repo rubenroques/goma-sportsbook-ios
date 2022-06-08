@@ -101,6 +101,22 @@ class PreLiveEventsViewController: UIViewController {
 
         return chatButtonView
     }()
+    private lazy var chatCountLabel: UILabel = {
+        var chatCountLabel = UILabel()
+        chatCountLabel.translatesAutoresizingMaskIntoConstraints = false
+        chatCountLabel.textColor = UIColor.App.textPrimary
+        chatCountLabel.backgroundColor = UIColor.App.bubblesPrimary
+        chatCountLabel.font = AppFont.with(type: .semibold, size: 10)
+        chatCountLabel.textAlignment = .center
+        chatCountLabel.clipsToBounds = true
+        chatCountLabel.layer.masksToBounds = true
+        chatCountLabel.text = ""
+        NSLayoutConstraint.activate([
+            chatCountLabel.widthAnchor.constraint(equalToConstant: 20),
+            chatCountLabel.widthAnchor.constraint(equalTo: chatCountLabel.heightAnchor),
+        ])
+        return chatCountLabel
+    }()
 
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
@@ -254,6 +270,7 @@ class PreLiveEventsViewController: UIViewController {
         self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
 
         self.chatButtonView.layer.cornerRadius = self.chatButtonView.frame.height / 2
+        self.chatCountLabel.layer.cornerRadius = self.chatCountLabel.frame.height / 2
 
         self.filtersCountLabel.layer.cornerRadius = self.filtersCountLabel.frame.width/2
     }
@@ -390,9 +407,16 @@ class PreLiveEventsViewController: UIViewController {
 
         self.view.addSubview(self.chatButtonView)
 
+        self.chatButtonView.addSubview(self.chatCountLabel)
+
+        self.chatCountLabel.isHidden = true
+
         NSLayoutConstraint.activate([
             self.chatButtonView.centerXAnchor.constraint(equalTo: self.betslipButtonView.centerXAnchor),
             self.chatButtonView.bottomAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -10),
+
+            self.chatCountLabel.trailingAnchor.constraint(equalTo: self.chatButtonView.trailingAnchor, constant: 2),
+            self.chatCountLabel.topAnchor.constraint(equalTo: self.chatButtonView.topAnchor, constant: -3),
         ])
         // ==
 
@@ -543,6 +567,14 @@ class PreLiveEventsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        Env.gomaSocialClient.unreadMessagesState
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] unreadMessagesState in
+
+                self?.chatCountLabel.isHidden = !unreadMessagesState
+            }
+            .store(in: &cancellables)
+
 //        Env.userSessionStore.isUserProfileIncomplete
 //            .receive(on: DispatchQueue.main)
 //            .sink(receiveValue: { _ in
@@ -582,6 +614,8 @@ class PreLiveEventsViewController: UIViewController {
         self.betslipCountLabel.textColor = UIColor.white
 
         self.chatButtonView.backgroundColor = UIColor.App.buttonActiveHoverSecondary
+        self.chatCountLabel.backgroundColor = UIColor.App.alertError
+        self.chatCountLabel.textColor = UIColor.white
 
         self.emptyBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary

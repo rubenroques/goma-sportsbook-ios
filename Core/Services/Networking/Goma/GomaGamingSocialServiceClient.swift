@@ -406,7 +406,6 @@ class GomaGamingSocialServiceClient {
             let handlerId = self.socket?.on("social.chatroom.\(chatroomId).read") { data, _ in
                 print("SocketDebug: on social.chatroom.\(chatroomId).read: \( data.json() )")
                 let chatUsers = self.parseChatUsers(data: data)
-                print("CHAT USERS: \(chatUsers)")
                 self.chatroomReadMessagesPublisher.value[chatroomId] = chatUsers?.first
 
             }
