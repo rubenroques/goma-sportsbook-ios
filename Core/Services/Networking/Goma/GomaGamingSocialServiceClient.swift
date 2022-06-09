@@ -424,7 +424,7 @@ class GomaGamingSocialServiceClient {
 
             // MESSAGES
             let messagesHandlerId = self.socket?.on("social.chatroom.\(chatroomId)") { data, _ in
-                // Logger.log("SocketSocialDebug: on social.chatroom.\(chatroomId): \( data.json() )")
+                Logger.log("SocketSocialDebug: on social.chatroom.\(chatroomId): \( data.json() )")
                 let chatMessages = self.parseChatMessages(data: data)
                 if let chatMessages = chatMessages?[safe: 0]?.messages {
                     for chatMessage in chatMessages {

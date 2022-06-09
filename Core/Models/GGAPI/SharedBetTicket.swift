@@ -219,7 +219,6 @@ struct SharedBetTicketSelection: Codable, Hashable {
         case marketName = "bet_type"
         case betName = "outcome_name"
 
-
     }
 }
 
