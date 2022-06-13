@@ -31,18 +31,18 @@ class EditContactViewModel {
     }
 
     func deleteContact() {
-        var loggedUserId = ""
+        var loggedUserId = 0
         var userId = 0
 
-        if let loggedUser = UserSessionStore.loggedUserSession() {
+        if let currentUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
 
-            loggedUserId = loggedUser.userId
+            loggedUserId = currentUserId
 
         }
 
         if let groupUsers = self.conversationData.groupUsers {
             for user in groupUsers {
-                if loggedUserId != "\(user.id)" {
+                if loggedUserId != user.id {
                     userId = user.id
                 }
             }

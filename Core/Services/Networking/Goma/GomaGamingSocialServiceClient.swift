@@ -35,6 +35,8 @@ class GomaGamingSocialServiceClient {
             .map(\.count)
             .eraseToAnyPublisher()
     }
+
+    var unreadMessagesState: CurrentValueSubject<Bool, Never> = .init(false)
     var hasMessagesFinishedLoading: CurrentValueSubject<Bool, Never> = .init(false)
 
     var chatPage: Int = 1
@@ -212,6 +214,15 @@ class GomaGamingSocialServiceClient {
         }
     }
 
+    func verifyIfNewChat(chatrooms: [ChatroomData]) {
+
+        for chatroom in chatrooms {
+            if !self.chatroomIdsPublisher.value.contains(chatroom.chatroom.id) {
+                self.forceRefresh()
+            }
+        }
+    }
+
     private func clearStorage() {
         self.chatroomIdsPublisher.send([])
         self.chatroomLastMessagePublisher = [:]
@@ -314,11 +325,17 @@ class GomaGamingSocialServiceClient {
                         }
 
                         // Update last message aswell, since last message socket listener doesn't live updated
-                        if let lastMessageList = self.chatroomLastMessagePublisher[chatroomId] {
+                         if let lastMessageList = self.chatroomLastMessagePublisher[chatroomId] {
                             lastMessageList.send(chatMessage)
                         }
                         else {
                             self.chatroomLastMessagePublisher[chatroomId] = .init(chatMessage)
+                        }
+                        
+                        if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+                            if chatMessage.fromUser != "\(loggedUserId)" {
+                                self.unreadMessagesState.send(true)
+                            }
                         }
                     }
                 }

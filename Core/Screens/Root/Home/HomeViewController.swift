@@ -26,6 +26,7 @@ class HomeViewController: UIViewController {
     private lazy var betslipButtonView: UIView = Self.createBetslipButtonView()
     private lazy var chatButtonView: UIView = Self.createChatButtonView()
     private lazy var betslipCountLabel: UILabel = Self.createBetslipCountLabel()
+    private lazy var chatCountLabel: UILabel = Self.createChatCountLabel()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
@@ -75,6 +76,8 @@ class HomeViewController: UIViewController {
 
         self.betslipCountLabel.isHidden = true
 
+        self.chatCountLabel.isHidden = true
+
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
         self.betslipButtonView.addGestureRecognizer(tapBetslipView)
 
@@ -113,6 +116,7 @@ class HomeViewController: UIViewController {
         self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
 
         self.chatButtonView.layer.cornerRadius = self.chatButtonView.frame.height / 2
+        self.chatCountLabel.layer.cornerRadius = self.chatCountLabel.frame.height / 2
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -135,6 +139,8 @@ class HomeViewController: UIViewController {
         self.betslipCountLabel.textColor = UIColor.white
 
         self.chatButtonView.backgroundColor = UIColor.App.buttonActiveHoverSecondary
+        self.chatCountLabel.backgroundColor = UIColor.App.alertError
+        self.chatCountLabel.textColor = UIColor.white
     }
 
     // MARK: - Bindings
@@ -168,6 +174,14 @@ class HomeViewController: UIViewController {
                     self?.betslipCountLabel.isHidden = false
                 }
             })
+            .store(in: &cancellables)
+
+        Env.gomaSocialClient.unreadMessagesState
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] unreadMessagesState in
+
+                self?.chatCountLabel.isHidden = !unreadMessagesState
+            }
             .store(in: &cancellables)
 
     }
@@ -717,7 +731,6 @@ extension HomeViewController {
         return chatButtonView
     }
 
-
     private static func createBetslipCountLabel() -> UILabel {
         let betslipCountLabel = UILabel()
         betslipCountLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -729,6 +742,19 @@ extension HomeViewController {
         betslipCountLabel.layer.masksToBounds = true
         betslipCountLabel.text = "0"
         return betslipCountLabel
+    }
+
+    private static func createChatCountLabel() -> UILabel {
+        let chatCountLabel = UILabel()
+        chatCountLabel.translatesAutoresizingMaskIntoConstraints = false
+        chatCountLabel.textColor = UIColor.App.textPrimary
+        chatCountLabel.backgroundColor = UIColor.App.bubblesPrimary
+        chatCountLabel.font = AppFont.with(type: .semibold, size: 10)
+        chatCountLabel.textAlignment = .center
+        chatCountLabel.clipsToBounds = true
+        chatCountLabel.layer.masksToBounds = true
+        chatCountLabel.text = ""
+        return chatCountLabel
     }
 
     private static func createLoadingBaseView() -> UIView {
@@ -753,6 +779,8 @@ extension HomeViewController {
         self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
 
         self.betslipButtonView.addSubview(self.betslipCountLabel)
+
+        self.chatButtonView.addSubview(self.chatCountLabel)
 
         self.view.addSubview(self.betslipButtonView)
         self.view.addSubview(self.chatButtonView)
@@ -798,6 +826,12 @@ extension HomeViewController {
         NSLayoutConstraint.activate([
             self.chatButtonView.centerXAnchor.constraint(equalTo: self.betslipButtonView.centerXAnchor),
             self.chatButtonView.bottomAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -10),
+
+            self.chatCountLabel.trailingAnchor.constraint(equalTo: self.chatButtonView.trailingAnchor, constant: 2),
+            self.chatCountLabel.topAnchor.constraint(equalTo: self.chatButtonView.topAnchor, constant: -3),
+
+            self.chatCountLabel.widthAnchor.constraint(equalToConstant: 20),
+            self.chatCountLabel.widthAnchor.constraint(equalTo: self.chatCountLabel.heightAnchor),
         ])
 
     }
