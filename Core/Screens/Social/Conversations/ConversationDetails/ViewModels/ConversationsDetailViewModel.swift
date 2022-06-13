@@ -110,20 +110,40 @@ class ConversationDetailViewModel: NSObject {
 
         guard let conversationData = self.conversationData else { return }
 
-        self.chatroomMessagesPublisher = Env.gomaSocialClient.chatroomMessagesPublisher
+        Env.gomaSocialClient.setupChatDetailListener(chatroomId: self.conversationId)
+
+        Env.gomaSocialClient.hasMessagesFinishedLoading
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] chatMessages in
-                if let conversationMessages = chatMessages[conversationData.id] {
-                    self?.initialChatMessagesProcessing(chatMessages: Array(conversationMessages) )
+            .sink(receiveValue: { [weak self] finishedLoading in
+                if finishedLoading {
+                    self?.setupMessagesPublishers()
+                    Env.gomaSocialClient.resetFinishedLoadingPublisher()
                 }
             })
+            .store(in: &cancellables)
 
-        Env.gomaSocialClient.chatroomNewMessagePublisher
+    }
+
+    private func setupMessagesPublishers() {
+
+        if let chatroomMessagesPublisher = Env.gomaSocialClient.chatroomMessagesPublisher(forChatroomId: self.conversationId) {
+
+            self.chatroomMessagesPublisher = chatroomMessagesPublisher
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [weak self] chatMessages in
+
+                    self?.initialChatMessagesProcessing(chatMessages: Array(chatMessages))
+                })
+        }
+
+        if let newMessagePublisher = Env.gomaSocialClient.newMessagePublisher(forChatroomId: self.conversationId) {
+
+            newMessagePublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] chatMessages in
+            .sink(receiveValue: { [weak self] chatMessage in
 
                 if let conversationId = self?.conversationId ,
-                   let updatedMessage = chatMessages[conversationId] {
+                   let updatedMessage = chatMessage {
                     guard let self = self else {return}
 
                     if !self.isNewMessageProcessed(chatMessage: updatedMessage) {
@@ -135,7 +155,7 @@ class ConversationDetailViewModel: NSObject {
                 }
             })
             .store(in: &cancellables)
-
+        }
     }
 
     private func isNewMessageProcessed(chatMessage: ChatMessage?) -> Bool {
