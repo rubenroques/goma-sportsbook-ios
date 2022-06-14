@@ -337,6 +337,8 @@ class GomaGamingSocialServiceClient {
                                 self.unreadMessagesState.send(true)
                             }
                         }
+
+                        self.newMessageUnreadEmit(chatroomId: chatroomId)
                     }
                 }
             }
@@ -389,19 +391,23 @@ class GomaGamingSocialServiceClient {
                 let chatUsers = self.parseChatUsers(data: data)
 
                 if let chatUserResponse = chatUsers?.first {
-                    self.chatroomReadMessagesPublisher.value[chatroomId] = .init(chatUserResponse)
+                    self.chatroomReadMessagesPublisher.value[chatroomId] = chatUserResponse
                 }
 
             }
             if let handlerId = handlerId {
                 self.socketCustomHandlers.insert(handlerId)
             }
+
+            self.socket?.emit("social.chatrooms.messages.read", ["id": chatroomId])
         }
     }
+    private func newMessageUnreadEmit(chatroomId: Int) {
+        self.socket?.emit("social.chatrooms.messages.read", ["id": chatroomId])
+    }
 
-    func setupChatDetailListener(chatroomId: Int) {
-
-        self.socket?.emit("social.chatrooms.messages", ["id": chatroomId, "page": 1])
+    func emitChatDetailMessages(chatroomId: Int, page: Int) {
+        self.socket?.emit("social.chatrooms.messages", ["id": chatroomId, "page": page])
 
     }
 

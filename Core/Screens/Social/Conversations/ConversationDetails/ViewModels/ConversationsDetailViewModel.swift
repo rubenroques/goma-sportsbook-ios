@@ -30,6 +30,7 @@ class ConversationDetailViewModel: NSObject {
     var ticketAddedToBetslipAction: ((Bool) -> Void)?
     
     var conversationId: Int
+    var messagesPage: Int = 1
     
     // MARK: Private Properties
     private var chatroomMessagesPublisher: AnyCancellable?
@@ -110,7 +111,7 @@ class ConversationDetailViewModel: NSObject {
 
         guard let conversationData = self.conversationData else { return }
 
-        Env.gomaSocialClient.setupChatDetailListener(chatroomId: self.conversationId)
+        Env.gomaSocialClient.emitChatDetailMessages(chatroomId: self.conversationId, page: self.messagesPage)
 
         Env.gomaSocialClient.hasMessagesFinishedLoading
             .receive(on: DispatchQueue.main)
@@ -266,13 +267,21 @@ class ConversationDetailViewModel: NSObject {
     }
 
     private func initialChatMessagesProcessing(chatMessages: [ChatMessage]) {
+
         self.messages = self.convertChatMessages(chatMessages: chatMessages)
-        
-        self.sortAllMessages()
-        
-        self.isChatOnline = true
-        self.dataNeedsReload.send()
-        self.shouldScrollToLastMessage.send()
+
+        if self.messages.count/self.messagesPage == 10 {
+            self.messagesPage += 1
+            Env.gomaSocialClient.emitChatDetailMessages(chatroomId: self.conversationId, page: self.messagesPage)
+        }
+        else {
+            self.sortAllMessages()
+
+            self.isChatOnline = true
+            self.dataNeedsReload.send()
+            //self.shouldScrollToLastMessage.send()
+        }
+
     }
     
     private func convertChatMessages(chatMessages: [ChatMessage]) -> [MessageData] {
@@ -355,6 +364,9 @@ class ConversationDetailViewModel: NSObject {
         self.sectionMessages = [:]
         self.dateMessages = []
 
+        // Reverse messages array
+        self.messages.reverse()
+
         for message in messages {
             let messageDate = getDateFormatted(dateString: message.date)
 
@@ -380,14 +392,17 @@ class ConversationDetailViewModel: NSObject {
             return false
         }
 
+        // Reverse date messages array
+        self.dateMessages.reverse()
+
         // TESTING SET READ MESSAGE
-        if let lastMessage = self.dateMessages.last?.messages.last,
-           let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId,
-           let lastMessageUserId = lastMessage.userId,
-           lastMessageUserId != "\(loggedUserId)" {
-            print("SET MESSAGE AS READ")
-            Env.gomaSocialClient.setChatroomRead(chatroomId: self.conversationId, messageId: lastMessage.timestamp)
-        }
+//        if let lastMessage = self.dateMessages.last?.messages.last,
+//           let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId,
+//           let lastMessageUserId = lastMessage.userId,
+//           lastMessageUserId != "\(loggedUserId)" {
+//            print("SET MESSAGE AS READ")
+//            Env.gomaSocialClient.setChatroomRead(chatroomId: self.conversationId, messageId: lastMessage.timestamp)
+//        }
 
     }
 

@@ -567,12 +567,18 @@ class PreLiveEventsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        Env.gomaSocialClient.unreadMessagesState
+        Env.gomaSocialClient.unreadMessagesCountPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] unreadMessagesState in
-
-                self?.chatCountLabel.isHidden = !unreadMessagesState
-            }
+            .sink(receiveValue: { [weak self] unreadCounter in
+                print("UNREAD COUNT: \(unreadCounter)")
+                if unreadCounter > 0 {
+                    self?.chatCountLabel.text = "\(unreadCounter)"
+                    self?.chatCountLabel.isHidden = false
+                }
+                else {
+                    self?.chatCountLabel.isHidden = true
+                }
+            })
             .store(in: &cancellables)
 
 //        Env.userSessionStore.isUserProfileIncomplete

@@ -176,12 +176,26 @@ class HomeViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        Env.gomaSocialClient.unreadMessagesState
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] unreadMessagesState in
+//        Env.gomaSocialClient.unreadMessagesState
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] unreadMessagesState in
+//
+//                self?.chatCountLabel.isHidden = !unreadMessagesState
+//            }
+//            .store(in: &cancellables)
 
-                self?.chatCountLabel.isHidden = !unreadMessagesState
-            }
+        Env.gomaSocialClient.unreadMessagesCountPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] unreadCounter in
+                print("UNREAD COUNT: \(unreadCounter)")
+                if unreadCounter > 0 {
+                    self?.chatCountLabel.text = "\(unreadCounter)"
+                    self?.chatCountLabel.isHidden = false
+                }
+                else {
+                    self?.chatCountLabel.isHidden = true
+                }
+            })
             .store(in: &cancellables)
 
     }

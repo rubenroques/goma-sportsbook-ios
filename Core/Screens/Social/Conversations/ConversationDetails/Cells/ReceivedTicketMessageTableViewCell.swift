@@ -120,6 +120,12 @@ class ReceivedTicketMessageTableViewCell: UITableViewCell {
         self.ticketInMessageView?.cardBackgroundColor = UIColor.App.backgroundSecondary
     }
 
+    func isReversedCell(isReversed: Bool) {
+        if isReversed {
+            self.contentView.transform = CGAffineTransform(scaleX: 1, y: -1)
+        }
+    }
+
     private func setBubbleTailTriangle() {
         let heightWidth = self.topBubbleTailView.frame.width
         let path = CGMutablePath()
