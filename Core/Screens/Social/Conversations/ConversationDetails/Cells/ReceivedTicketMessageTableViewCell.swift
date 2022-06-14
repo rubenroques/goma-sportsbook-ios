@@ -84,7 +84,8 @@ class ReceivedTicketMessageTableViewCell: UITableViewCell {
         self.topBubbleTailView.backgroundColor = .clear
         self.ticketBaseStackView.backgroundColor = .clear
 
-        self.ticketInMessageView?.cardBackgroundColor = UIColor.App.backgroundSecondary
+        self.ticketInMessageView?.setupWithTheme()
+
     }
 
     // MARK: Functions
@@ -106,7 +107,8 @@ class ReceivedTicketMessageTableViewCell: UITableViewCell {
         if let attachment = messageData.attachment {
             let ticket = BetHistoryEntry(sharedBetTicket: attachment.content)
             let betSelectionCellViewModel = BetSelectionCellViewModel(ticket: ticket)
-            self.ticketInMessageView = ChatTicketInMessageView(betSelectionCellViewModel: betSelectionCellViewModel)
+            self.ticketInMessageView = ChatTicketInMessageView(betSelectionCellViewModel: betSelectionCellViewModel,
+                                                               shouldShowButton: true)
 
             self.ticketInMessageView!.didTapBetNowAction = { [weak self] viewModel in
                 self?.didTapBetNowAction(viewModel)

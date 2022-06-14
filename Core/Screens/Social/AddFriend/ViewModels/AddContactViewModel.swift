@@ -184,7 +184,7 @@ class AddContactViewModel {
             }
         }
 
-        // print("PHONES TO LOOK: \(phones)")
+        print("PHONES TO LOOK: \(phones)")
 
         Env.gomaNetworkClient.lookupPhones(deviceId: Env.deviceId, phones: phones)
             .receive(on: DispatchQueue.main)

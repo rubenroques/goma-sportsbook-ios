@@ -42,6 +42,8 @@ class AddContactViewController: UIViewController {
         }
     }
 
+    var chatListNeedsReload: (() -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(viewModel: AddContactViewModel) {
         self.viewModel = viewModel
@@ -202,13 +204,12 @@ class AddContactViewController: UIViewController {
     private func showAddFriendAlert(friendAlertType: FriendAlertType) {
         switch friendAlertType {
         case .success:
-            let addFriendAlert = UIAlertController(title: localized("friend_added"),
-                                                       message: localized("friend_added_message"),
-                                                       preferredStyle: UIAlertController.Style.alert)
+            
+            Env.gomaSocialClient.forceRefresh()
 
-            addFriendAlert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+            self.chatListNeedsReload?()
 
-            self.present(addFriendAlert, animated: true, completion: nil)
+            self.navigationController?.popToRootViewController(animated: true)
         case .error:
             let errorFriendAlert = UIAlertController(title: localized("friend_added_error"),
                                                        message: localized("friend_added_message_error"),
@@ -379,7 +380,7 @@ extension AddContactViewController: UITableViewDataSource, UITableViewDelegate {
             }
 
             if self.viewModel.sectionUsersArray[section].contactType == .registered {
-                let resultsLabel = "Results (\(self.viewModel.sectionUsersArray[section].userContacts.count))"
+                let resultsLabel = localized("my_friends")
 
                 headerView.configureHeader(title: resultsLabel)
             }

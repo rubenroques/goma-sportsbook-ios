@@ -356,8 +356,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.eventNameLabel.font = AppFont.with(type: .semibold, size: 9)
         self.dateLabel.font = AppFont.with(type: .semibold, size: 10)
         self.timeLabel.font = AppFont.with(type: .bold, size: 13)
+
         self.homeParticipantNameLabel.font = AppFont.with(type: .bold, size: 13)
+        self.homeParticipantNameLabel.numberOfLines = 2
         self.awayParticipantNameLabel.font = AppFont.with(type: .bold, size: 13)
+        self.awayParticipantNameLabel.numberOfLines = 2
+
         self.homeOddValueLabel.font = AppFont.with(type: .bold, size: 12)
         self.drawOddValueLabel.font = AppFont.with(type: .bold, size: 12)
         self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 12)
@@ -377,8 +381,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.eventNameLabel.font = AppFont.with(type: .semibold, size: 11)
         self.dateLabel.font = AppFont.with(type: .semibold, size: 12)
         self.timeLabel.font = AppFont.with(type: .bold, size: 16)
+
         self.homeParticipantNameLabel.font = AppFont.with(type: .bold, size: 14)
+        self.homeParticipantNameLabel.numberOfLines = 3
         self.awayParticipantNameLabel.font = AppFont.with(type: .bold, size: 14)
+        self.awayParticipantNameLabel.numberOfLines = 3
+
         self.homeOddValueLabel.font = AppFont.with(type: .bold, size: 13)
         self.drawOddValueLabel.font = AppFont.with(type: .bold, size: 13)
         self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 13)

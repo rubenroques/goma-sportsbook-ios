@@ -490,3 +490,5 @@ Terms of use, Privacy Policy and EULA";
 "mute" = "Mute";
 "unmute" = "Unmute";
 "unfriend" = "Unfriend";
+
+"user_code" = "User code: %s";

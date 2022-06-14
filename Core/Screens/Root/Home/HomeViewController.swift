@@ -147,7 +147,6 @@ class HomeViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-
         viewModel.refreshPublisher
             .debounce(for: .milliseconds(600), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
@@ -696,26 +695,26 @@ extension HomeViewController {
     }
 
     private static func createChatButtonView() -> UIView {
-        let betslipButtonView = UIView()
-        betslipButtonView.translatesAutoresizingMaskIntoConstraints = false
+        let chatButtonView = UIView()
+        chatButtonView.translatesAutoresizingMaskIntoConstraints = false
 
         let iconImageView = UIImageView()
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.image = UIImage(named: "chat_float_icon")
-        betslipButtonView.addSubview(iconImageView)
+        chatButtonView.addSubview(iconImageView)
 
         NSLayoutConstraint.activate([
-            betslipButtonView.widthAnchor.constraint(equalToConstant: 46),
-            betslipButtonView.widthAnchor.constraint(equalTo: betslipButtonView.heightAnchor),
+            chatButtonView.widthAnchor.constraint(equalToConstant: 46),
+            chatButtonView.widthAnchor.constraint(equalTo: chatButtonView.heightAnchor),
 
             iconImageView.widthAnchor.constraint(equalToConstant: 22),
             iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
-            iconImageView.centerXAnchor.constraint(equalTo: betslipButtonView.centerXAnchor),
-            iconImageView.centerYAnchor.constraint(equalTo: betslipButtonView.centerYAnchor),
+            iconImageView.centerXAnchor.constraint(equalTo: chatButtonView.centerXAnchor),
+            iconImageView.centerYAnchor.constraint(equalTo: chatButtonView.centerYAnchor),
         ])
 
-        return betslipButtonView
+        return chatButtonView
     }
 
 

@@ -79,6 +79,29 @@ class PreLiveEventsViewController: UIViewController {
         return betslipCountLabel
     }()
 
+    private lazy var chatButtonView: UIView = {
+        let chatButtonView = UIView()
+        chatButtonView.translatesAutoresizingMaskIntoConstraints = false
+
+        let iconImageView = UIImageView()
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        iconImageView.contentMode = .scaleAspectFit
+        iconImageView.image = UIImage(named: "chat_float_icon")
+        chatButtonView.addSubview(iconImageView)
+
+        NSLayoutConstraint.activate([
+            chatButtonView.widthAnchor.constraint(equalToConstant: 46),
+            chatButtonView.widthAnchor.constraint(equalTo: chatButtonView.heightAnchor),
+
+            iconImageView.widthAnchor.constraint(equalToConstant: 22),
+            iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
+            iconImageView.centerXAnchor.constraint(equalTo: chatButtonView.centerXAnchor),
+            iconImageView.centerYAnchor.constraint(equalTo: chatButtonView.centerYAnchor),
+        ])
+
+        return chatButtonView
+    }()
+
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
 
@@ -116,6 +139,7 @@ class PreLiveEventsViewController: UIViewController {
     var openScreenOnCompetition: String?
 
     var didChangeSport: ((Sport) -> Void)?
+    var didTapChatButtonAction: (() -> Void)?
     var didTapBetslipButtonAction: (() -> Void)?
 
     private var lastContentOffset: CGFloat = 0
@@ -201,6 +225,12 @@ class PreLiveEventsViewController: UIViewController {
 //            .store(in: &self.cancellables)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.setHomeFilters(homeFilters: self.viewModel.homeFilterOptions)
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
@@ -223,8 +253,9 @@ class PreLiveEventsViewController: UIViewController {
         self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
         self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
 
-        filtersCountLabel.layer.cornerRadius =  filtersCountLabel.frame.width/2
-       
+        self.chatButtonView.layer.cornerRadius = self.chatButtonView.frame.height / 2
+
+        self.filtersCountLabel.layer.cornerRadius = self.filtersCountLabel.frame.width/2
     }
 
     private func commonInit() {
@@ -334,8 +365,11 @@ class PreLiveEventsViewController: UIViewController {
             self.competitionsFiltersBaseView.bottomAnchor.constraint(equalTo: self.competitionsFiltersView.bottomAnchor),
         ])
 
-        //
+        // == BetslipButtonView
         self.betslipButtonView.addSubview(self.betslipCountLabel)
+
+        let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
+        betslipButtonView.addGestureRecognizer(tapBetslipView)
 
         self.view.addSubview(self.betslipButtonView)
         self.betslipCountLabel.isHidden = true
@@ -349,14 +383,25 @@ class PreLiveEventsViewController: UIViewController {
             self.betslipButtonView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
             self.betslipButtonViewBottomConstraint!
         ])
+        // ==
 
+        // == ChatButtonView
+        let tapChatView = UITapGestureRecognizer(target: self, action: #selector(didTapChatView))
+        self.chatButtonView.addGestureRecognizer(tapChatView)
+
+        self.view.addSubview(self.chatButtonView)
+
+        NSLayoutConstraint.activate([
+            self.chatButtonView.centerXAnchor.constraint(equalTo: self.betslipButtonView.centerXAnchor),
+            self.chatButtonView.bottomAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -10),
+        ])
+        // ==
+
+        //
         self.view.bringSubviewToFront(self.competitionsFiltersDarkBackgroundView)
         self.view.bringSubviewToFront(self.competitionsFiltersBaseView)
         self.view.bringSubviewToFront(self.loadingBaseView)
         self.view.bringSubviewToFront(self.filtersCountLabel)
-
-        let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
-        betslipButtonView.addGestureRecognizer(tapBetslipView)
 
         self.shouldDetectScrollMovement = false
         self.competitionsFiltersBaseView.isHidden = true
@@ -536,7 +581,9 @@ class PreLiveEventsViewController: UIViewController {
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
         self.betslipCountLabel.textColor = UIColor.white
-        
+
+        self.chatButtonView.backgroundColor = UIColor.App.buttonActiveHoverSecondary
+
         self.emptyBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
         self.secondTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
@@ -671,6 +718,11 @@ class PreLiveEventsViewController: UIViewController {
     @objc func didTapBetslipView() {
         self.didTapBetslipButtonAction?()
     }
+
+    @objc func didTapChatView() {
+        self.didTapChatButtonAction?()
+    }
+
     
     func setEmptyStateBaseView(firstLabelText: String, secondLabelText: String, isUserLoggedIn: Bool) {
     
@@ -886,21 +938,19 @@ extension PreLiveEventsViewController: SportTypeSelectionViewDelegate {
     }
 }
 
-protocol HomeFilterOptionsViewDelegate: AnyObject {
-    var turnTimeRangeOn: Bool { get set }
-    func setHomeFilters(homeFilters: HomeFilterOptions)
-    
-}
-
 extension PreLiveEventsViewController: HomeFilterOptionsViewDelegate {
 
-    func setHomeFilters(homeFilters: HomeFilterOptions) {
+    func setHomeFilters(homeFilters: HomeFilterOptions?) {
         self.viewModel.homeFilterOptions = homeFilters
-        
-        if homeFilters.countFilters != 0 {
+
+        var countFilters = homeFilters?.countFilters ?? 0
+        if StyleHelper.cardsStyleActive() != TargetVariables.defaultCardStyle {
+            countFilters += 1
+        }
+
+        if countFilters != 0 {
             filtersCountLabel.isHidden = false
-            filtersCountLabel.text = String(homeFilters.countFilters)
-           
+            filtersCountLabel.text = String(countFilters)
         }
         else {
             filtersCountLabel.isHidden = true

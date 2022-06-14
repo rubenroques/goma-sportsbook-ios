@@ -11,6 +11,7 @@ import Combine
 class NewMesssageViewModel {
     // MARK: Private Properties
     private var cancellables = Set<AnyCancellable>()
+    private var chatPage: Int = 1
 
     // MARK: Public Properties
     var usersPublisher: CurrentValueSubject<[UserContact], Never> = .init([])
@@ -85,7 +86,7 @@ class NewMesssageViewModel {
     }
 
     private func getIndividualChatroomsData() {
-        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId)
+        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId, page: self.chatPage)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {

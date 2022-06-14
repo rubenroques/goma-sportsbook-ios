@@ -13,11 +13,32 @@ import SocketIO
 class GomaGamingSocialServiceClient {
 
     // MARK: Public Properties
+    var socketConnectedPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    
     var chatroomIdsPublisher: CurrentValueSubject<[Int], Never> = .init([])
     var chatroomLastMessagePublisher: CurrentValueSubject<[Int: OrderedSet<ChatMessage>], Never> = .init([:])
     var chatroomMessagesPublisher: CurrentValueSubject<[Int: OrderedSet<ChatMessage>], Never> = .init([:])
     var chatroomNewMessagePublisher: CurrentValueSubject<[Int: ChatMessage?], Never> = .init([:])
 
+    // var chatroomMessageUpdaterPublisher: CurrentValueSubject<[Int: ChatMessage?], Never> = .init([:])
+    var chatroomReadMessagesPublisher: CurrentValueSubject<[Int: ChatUsersResponse], Never> = .init([:])
+    var unreadMessagesCountPublisher: AnyPublisher<Int, Never>{
+        return chatroomReadMessagesPublisher
+            .map { dictionary in
+                return dictionary.values.map({$0.users})
+            }
+            .map { users -> [Bool] in
+                let userId = Env.gomaNetworkClient.getCurrentToken()?.userId ?? -1
+                return users
+                    .map({$0.contains(String(userId))})
+                    .filter({ $0 })
+            }
+            .map(\.count)
+            .eraseToAnyPublisher()
+    }
+    var chatPage: Int = 1
+    
+    // MARK: Private Properties
     private var manager: SocketManager?
     private var socket: SocketIOClient?
         
@@ -25,9 +46,15 @@ class GomaGamingSocialServiceClient {
     private let authToken = "9g7rp9760c33c6g1f19mn5ut3asd67"
 
     private var shouldRestoreConnection = false
-    private var isConnected = false
+    private var isConnected = false {
+        didSet {
+            self.socketConnectedPublisher.send(isConnected)
+        }
+    }
     private var isConnecting = false
 
+    private var chatroomOnForegroundId: String?
+    
     private var socketCustomHandlers = Set<UUID>()
     private var cancellables = Set<AnyCancellable>()
 
@@ -38,6 +65,7 @@ class GomaGamingSocialServiceClient {
             .sink(receiveValue: { [weak self] chatroomIds in
                 self?.startLastMessagesListener(chatroomIds: chatroomIds)
                 self?.startChatMessagesListener(chatroomIds: chatroomIds)
+                self?.startChatReadMessagesListener(chatroomIds: chatroomIds)
             })
             .store(in: &cancellables)
     }
@@ -46,6 +74,9 @@ class GomaGamingSocialServiceClient {
 
         self.socket?.removeAllHandlers()
         self.socket?.disconnect()
+                
+        self.isConnected = false
+        self.isConnecting = false
         
         self.clearStorage()
         
@@ -86,10 +117,10 @@ class GomaGamingSocialServiceClient {
             Logger.log("SocketSocialDebug: Connected")
             Logger.log("SocketSocialDebug connected to Goma Social Server!")
 
+            self.setupPostConnection()
+            
             self.isConnected = true
             self.isConnecting = false
-
-            self.setupPostConnection()
         }
 
         self.socket?.on(clientEvent: .reconnectAttempt) { data, _ in
@@ -113,6 +144,11 @@ class GomaGamingSocialServiceClient {
 
             Logger.log("SocketSocialDebug: error \(data)")
         }
+        
+        self.socket?.onAny({ data in
+            // Logger.log("SocketSocialDebug: Any - \(data)")
+        })
+        
         //
         //
         //
@@ -180,17 +216,29 @@ class GomaGamingSocialServiceClient {
         self.chatroomLastMessagePublisher.send([:])
         self.chatroomMessagesPublisher.send([:])
         self.chatroomNewMessagePublisher.send([:])
+        self.chatroomReadMessagesPublisher.send([:])
     }
     
     private func setupPostConnection() {
         self.clearStorage()
+
         self.clearSocketCustomHandlers()
 
         self.getChatrooms()
+
+//        self.getChatrooms()
+//
+//        self.chatroomIdsPublisher
+//            .sink(receiveValue: { [weak self] chatroomIds in
+//                self?.startLastMessagesListener(chatroomIds: chatroomIds)
+//                self?.startChatMessagesListener(chatroomIds: chatroomIds)
+//                self?.startChatReadMessagesListener(chatroomIds: chatroomIds)
+//            })
+//            .store(in: &cancellables)
     }
 
     private func getChatrooms() {
-        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId)
+        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId, page: self.chatPage)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -241,51 +289,173 @@ class GomaGamingSocialServiceClient {
         
     }
 
+//    func startChatDetailMessageListener(chatroomId: Int) {
+//        self.socket?.on("social.chatroom.\(chatroomId)") { data, _ in
+//            print("SocketDebug: on social.chatroom.\(chatroomId): \( data.json() )")
+//            let chatMessages = self.parseChatMessages(data: data)
+//            if let chatMessages = chatMessages?[safe: 0]?.messages {
+//                for chatMessage in chatMessages {
+//                    let chatroomId = chatMessage.toChatroom
+//                    self.chatroomNewMessagePublisher.value[chatroomId] = chatMessage
+//
+//                    // Update last message aswell, since last message socket listener doesn't live updated
+//                     self.chatroomLastMessagePublisher.value[chatroomId] = OrderedSet(chatMessages)
+//                }
+//            }
+//        }
+//
+//        self.socket?.emit("social.chatrooms.messages", ["id": chatroomId, "page": 1])
+//
+//        self.socket?.on("social.chatrooms.messages") { data, _ in
+//            print("SocketDebug: on social.chatrooms.messages: \( data.json() )")
+//            let chatMessages = self.parseChatMessages(data: data)
+//
+//            if let chatMessages = chatMessages?[safe: 0]?.messages {
+//                for chatMessage in chatMessages {
+//                    let chatroomId = chatMessage.toChatroom
+//                    if var storedMessages = self.chatroomMessagesPublisher.value[chatroomId] {
+//                        storedMessages.append(chatMessage)
+//                        self.chatroomMessagesPublisher.value[chatroomId] = storedMessages
+//                    }
+//                    else {
+//                        self.chatroomMessagesPublisher.value[chatroomId] = [chatMessage]
+//                    }
+//                }
+//            }
+//        }
+//    }
+
     private func startChatMessagesListener(chatroomIds: [Int]) {
 
         for chatroomId in chatroomIds {
-            let handlerId = self.socket?.on("social.chatroom.\(chatroomId)") { data, _ in
-                // Logger.log("SocketSocialDebug: on social.chatroom.\(chatroomId): \( data.json() )")
+            let chatHandlerId = self.socket?.on("social.chatroom.\(chatroomId)") { data, _ in
+                Logger.log("SocketSocialDebug: on social.chatroom.\(chatroomId): \( data.json() )")
                 let chatMessages = self.parseChatMessages(data: data)
                 if let chatMessages = chatMessages?[safe: 0]?.messages {
                     for chatMessage in chatMessages {
                         let chatroomId = chatMessage.toChatroom
+
+                        // Update stored messages aswell
+                        if var storedMessages = self.chatroomMessagesPublisher.value[chatroomId] {
+                            storedMessages.append(chatMessage)
+                            self.chatroomMessagesPublisher.value[chatroomId] = storedMessages
+                        }
+                        else {
+                            self.chatroomMessagesPublisher.value[chatroomId] = [chatMessage]
+                        }
+
                         self.chatroomNewMessagePublisher.value[chatroomId] = chatMessage
+
+                        // Update last message aswell, since last message socket listener doesn't live updated
+                         self.chatroomLastMessagePublisher.value[chatroomId] = OrderedSet(chatMessages)
                     }
                 }
             }
-            if let handlerId = handlerId {
-                self.socketCustomHandlers.insert(handlerId)
+            if let chatHandlerId = chatHandlerId {
+                self.socketCustomHandlers.insert(chatHandlerId)
             }
         }
 
-        let handlerId = self.socket?.on("social.chatrooms.messages") { data, _ in
-            // Logger.log("SocketSocialDebug: on social.chatrooms.messages: \(data.json())")
+        let messagesHandlerId = self.socket?.on("social.chatrooms.messages") { data, _ in
+            Logger.log("SocketSocialDebug: on social.chatrooms.messages: \(data.json())")
             let chatMessages = self.parseChatMessages(data: data)
             
             if let chatMessages = chatMessages?[safe: 0]?.messages {
+                
+                var chatroomMessagesDictionary = self.chatroomMessagesPublisher.value
+                
                 for chatMessage in chatMessages {
                     let chatroomId = chatMessage.toChatroom
-
-                    if var storedMessages = self.chatroomMessagesPublisher.value[chatroomId] {
+                    if var storedMessages = chatroomMessagesDictionary[chatroomId] {
                         storedMessages.append(chatMessage)
-                        self.chatroomMessagesPublisher.value[chatroomId] = storedMessages
+                        chatroomMessagesDictionary[chatroomId] = storedMessages
                     }
                     else {
-                        self.chatroomMessagesPublisher.value[chatroomId] = [chatMessage]
+                        chatroomMessagesDictionary[chatroomId] = [chatMessage]
                     }
                 }
+                
+                self.chatroomMessagesPublisher.send(chatroomMessagesDictionary)
             }
         }
 
-        if let handlerId = handlerId {
-            self.socketCustomHandlers.insert(handlerId)
+        if let messagesHandlerId = messagesHandlerId {
+            self.socketCustomHandlers.insert(messagesHandlerId)
         }
 
         for chatroomId in chatroomIds {
             self.socket?.emit("social.chatrooms.messages", ["id": chatroomId, "page": 1])
         }
 
+    }
+
+    func startChatReadMessagesListener(chatroomIds: [Int]) {
+        for chatroomId in chatroomIds {
+            let handlerId = self.socket?.on("social.chatroom.\(chatroomId).read") { data, _ in
+                print("SocketDebug: on social.chatroom.\(chatroomId).read: \( data.json() )")
+                let chatUsers = self.parseChatUsers(data: data)
+                print("CHAT USERS: \(chatUsers)")
+                self.chatroomReadMessagesPublisher.value[chatroomId] = chatUsers?.first
+
+            }
+            if let handlerId = handlerId {
+                self.socketCustomHandlers.insert(handlerId)
+            }
+        }
+    }
+
+    func refreshChatroomsList() {
+        self.clearSocketCustomHandlers()
+
+        self.getChatrooms()
+    }
+
+    func clearNewMessage(chatroomId: Int) {
+        self.chatroomNewMessagePublisher.value[chatroomId] = nil
+    }
+
+    func setupChatDetailListener(chatroomId: Int) {
+
+        if !self.chatroomIdsPublisher.value.contains(chatroomId) {
+
+            // JOIN
+            self.socket?.emit("social.chatrooms.join", ["id": chatroomId])
+            Logger.log("SocketSocialDebug: emit social.chatrooms.join id: \(chatroomId)")
+
+            // MESSAGES
+            let messagesHandlerId = self.socket?.on("social.chatroom.\(chatroomId)") { data, _ in
+                // Logger.log("SocketSocialDebug: on social.chatroom.\(chatroomId): \( data.json() )")
+                let chatMessages = self.parseChatMessages(data: data)
+                if let chatMessages = chatMessages?[safe: 0]?.messages {
+                    for chatMessage in chatMessages {
+                        let chatroomId = chatMessage.toChatroom
+                        self.chatroomNewMessagePublisher.value[chatroomId] = chatMessage
+
+                        // Update last message aswell, since last message socket listener doesn't live updated
+                        self.chatroomLastMessagePublisher.value[chatroomId] = OrderedSet(chatMessages)
+                    }
+                }
+            }
+            if let messagesHandlerId = messagesHandlerId {
+                self.socketCustomHandlers.insert(messagesHandlerId)
+            }
+
+            // READ
+            let readHandlerId = self.socket?.on("social.chatroom.\(chatroomId).read") { data, _ in
+                print("SocketDebug: on social.chatroom.\(chatroomId).read: \( data.json() )")
+                let chatUsers = self.parseChatUsers(data: data)
+                print("CHAT USERS: \(chatUsers)")
+                self.chatroomReadMessagesPublisher.value[chatroomId] = chatUsers?.first
+
+            }
+            if let readHandlerId = readHandlerId {
+                self.socketCustomHandlers.insert(readHandlerId)
+            }
+        }
+    }
+
+    func setChatroomRead(chatroomId: Int, messageId: Int) {
+        self.socket?.emit("social.chatrooms.messages.read", ["id": chatroomId, "message_id": messageId])
     }
 
     func sendMessage(chatroomId: Int, message: String, attachment: [String: AnyObject]?) {
@@ -307,6 +477,17 @@ class GomaGamingSocialServiceClient {
         return messages
     }
 
+    func parseChatUsers(data: [Any]) -> [ChatUsersResponse]? {
+        guard
+            let json = try? JSONSerialization.data(withJSONObject: data, options: [])
+        else {
+            return nil
+        }
+        let decoder = JSONDecoder()
+        let users = try? decoder.decode([ChatUsersResponse].self, from: json)
+        return users
+    }
+
 }
 
 extension GomaGamingSocialServiceClient {
@@ -315,4 +496,18 @@ extension GomaGamingSocialServiceClient {
         case invalidContent
     }
 
+}
+
+extension GomaGamingSocialServiceClient {
+    func chatroomOnForeground() -> String? {
+        return self.chatroomOnForegroundId
+    }
+    
+    func showChatroomOnForeground(withId id: String) {
+        self.chatroomOnForegroundId = id
+    }
+    
+    func hideChatroomOnForeground() {
+        self.chatroomOnForegroundId = nil
+    }
 }

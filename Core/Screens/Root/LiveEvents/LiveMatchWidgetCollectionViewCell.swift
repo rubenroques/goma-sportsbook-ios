@@ -370,8 +370,12 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.eventNameLabel.font = AppFont.with(type: .semibold, size: 9)
         self.resultLabel.font = AppFont.with(type: .bold, size: 13)
         self.matchTimeLabel.font = AppFont.with(type: .semibold, size: 8)
+
         self.homeParticipantNameLabel.font = AppFont.with(type: .bold, size: 13)
+        self.homeParticipantNameLabel.numberOfLines = 2
         self.awayParticipantNameLabel.font = AppFont.with(type: .bold, size: 13)
+        self.awayParticipantNameLabel.numberOfLines = 2
+
         self.homeOddValueLabel.font = AppFont.with(type: .bold, size: 12)
         self.drawOddValueLabel.font = AppFont.with(type: .bold, size: 12)
         self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 12)
@@ -393,8 +397,12 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.eventNameLabel.font = AppFont.with(type: .semibold, size: 11)
         self.resultLabel.font = AppFont.with(type: .bold, size: 16)
         self.matchTimeLabel.font = AppFont.with(type: .semibold, size: 8)
+
         self.homeParticipantNameLabel.font = AppFont.with(type: .bold, size: 14)
+        self.homeParticipantNameLabel.numberOfLines = 3
         self.awayParticipantNameLabel.font = AppFont.with(type: .bold, size: 14)
+        self.awayParticipantNameLabel.numberOfLines = 3
+
         self.homeOddValueLabel.font = AppFont.with(type: .bold, size: 13)
         self.drawOddValueLabel.font = AppFont.with(type: .bold, size: 13)
         self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 13)
@@ -657,6 +665,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         if homeGoals.isNotEmpty && awayGoals.isNotEmpty {
             self.resultLabel.text = "\(homeGoals) - \(awayGoals)"
+            self.resultLabel.setNeedsLayout()
+            self.resultLabel.layoutIfNeeded()
         }
 
         if minutes.isNotEmpty && matchPart.isNotEmpty {

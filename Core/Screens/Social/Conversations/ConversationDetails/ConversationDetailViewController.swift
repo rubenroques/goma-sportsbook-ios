@@ -82,7 +82,6 @@ class ConversationDetailViewController: UIViewController {
         self.tableView.register(SentTicketMessageTableViewCell.self,
                                 forCellReuseIdentifier: SentTicketMessageTableViewCell.identifier)
 
-        
         tableView.register(DateHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: DateHeaderFooterView.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
@@ -116,8 +115,20 @@ class ConversationDetailViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        Env.gomaSocialClient.showChatroomOnForeground(withId: String(self.viewModel.conversationId))
+    }
 
-        self.scrollToBottomTableView(animated: false)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        self.scrollToBottomTableView()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        Env.gomaSocialClient.hideChatroomOnForeground()
     }
 
     // MARK: - Layout and Theme
@@ -209,6 +220,17 @@ class ConversationDetailViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        viewModel.isLoadingConversationPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                if isLoading {
+                    self?.showLoading()
+                }
+                else {
+                    self?.hideLoading()
+                }
+            }.store(in: &cancellables)
+
         viewModel.isLoadingSharedBetPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
@@ -244,27 +266,30 @@ class ConversationDetailViewController: UIViewController {
     }
 
     func scrollToBottomTableView(animated: Bool = true) {
-        DispatchQueue.main.async {
-            if self.viewModel.dateMessages.isNotEmpty {
-                let section = self.viewModel.dateMessages.count - 1
-                let row = self.viewModel.dateMessages[section].messages.count - 1
+        if self.viewModel.dateMessages.isNotEmpty {
+
+            let section = self.viewModel.dateMessages.count - 1
+
+            if let dateMessages = self.viewModel.dateMessages[safe: section] {
+
+                let row = dateMessages.messages.count - 1
 
                 let indexPath = IndexPath(row: row, section: section)
+
                 self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: animated)
+
             }
+
         }
+
     }
 
     private func showBetSelectionScreen() {
-        print("Show Bet Selection!")
-
-        let conversationData = self.viewModel.getConversationData()
-
-        let betSelectionViewModel = ConversationBetSelectionViewModel(conversationData: conversationData)
-
-        let betSelectionViewController = ConversationBetSelectionViewController(viewModel: betSelectionViewModel)
-
-        self.present(betSelectionViewController, animated: true, completion: nil)
+        if let conversationData = self.viewModel.getConversationData() {
+            let betSelectionViewModel = ConversationBetSelectionViewModel(conversationData: conversationData)
+            let betSelectionViewController = ConversationBetSelectionViewController(viewModel: betSelectionViewModel)
+            self.present(betSelectionViewController, animated: true, completion: nil)
+        }
     }
 
     private func addTicketToBetslip(ticket: BetHistoryEntry) {
@@ -306,42 +331,33 @@ class ConversationDetailViewController: UIViewController {
     }
 
     @objc func didTapContactInfo() {
-        if self.isChatGroup {
-
+        
+        guard
             let conversationData = self.viewModel.getConversationData()
-            
-            // print("GROUP USERS: \(conversationData)")
-
+        else {
+            return
+        }
+        
+        if self.isChatGroup {
             let editGroupViewModel = EditGroupViewModel(conversationData: conversationData)
-
             let editContactViewController = EditGroupViewController(viewModel: editGroupViewModel)
-
             editContactViewController.shouldCloseChat = { [weak self] in
                 self?.shouldCloseChat?()
             }
-
             editContactViewController.shouldReloadData = { [weak self] in
                 self?.shouldReloadData?()
             }
-
             editContactViewController.shouldUpdateGroupInfo = { [weak self] groupInfo in
                 self?.viewModel.updateConversationInfo(groupInfo: groupInfo)
             }
-
             self.navigationController?.pushViewController(editContactViewController, animated: true)
         }
         else {
-
-            let conversationData = self.viewModel.getConversationData()
-
             let editContactViewModel = EditContactViewModel(conversationData: conversationData)
-
             let editContactViewController = EditContactViewController(viewModel: editContactViewModel)
-
             editContactViewController.shouldCloseChat = { [weak self] in
                 self?.shouldCloseChat?()
             }
-
             self.navigationController?.pushViewController(editContactViewController, animated: true)
         }
     }

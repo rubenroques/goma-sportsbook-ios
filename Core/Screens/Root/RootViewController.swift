@@ -655,6 +655,9 @@ extension RootViewController {
             self.preLiveViewController.didChangeSport = { [weak self] newSport in
                 self?.didChangedPreLiveSport(newSport)
             }
+            self.preLiveViewController.didTapChatButtonAction = { [weak self] in
+                self?.openChatModal()
+            }
             self.preLiveViewController.didTapBetslipButtonAction = { [weak self] in
                 self?.openBetslipModal()
             }
@@ -666,6 +669,9 @@ extension RootViewController {
             self.liveEventsViewController.selectedSport = self.currentSport
             self.liveEventsViewController.didChangeSport = { [weak self] newSport in
                 self?.didChangedLiveSport(newSport)
+            }
+            self.liveEventsViewController.didTapChatButtonAction = { [weak self] in
+                self?.openChatModal()
             }
             self.liveEventsViewController.didTapBetslipButtonAction = { [weak self] in
                 self?.openBetslipModal()

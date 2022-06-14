@@ -22,6 +22,7 @@ class ChatTicketInMessageView: UIView {
 
     private var cancellables = Set<AnyCancellable>()
 
+    private var shouldShowButton: Bool
     private var betSelectionCellViewModel: BetSelectionCellViewModel
 
     var cardBackgroundColor: UIColor = .white {
@@ -31,9 +32,10 @@ class ChatTicketInMessageView: UIView {
     }
 
     // MARK: Lifetime and Cycle
-    init(betSelectionCellViewModel: BetSelectionCellViewModel) {
+    init(betSelectionCellViewModel: BetSelectionCellViewModel, shouldShowButton: Bool) {
         self.betSelectionCellViewModel = betSelectionCellViewModel
-
+        self.shouldShowButton = shouldShowButton
+        
         super.init(frame: .zero)
         self.commonInit()
     }
@@ -57,6 +59,10 @@ class ChatTicketInMessageView: UIView {
         self.betNowButton.addTarget(self, action: #selector(self.didTapBetNowButton), for: .primaryActionTriggered)
 
         self.totalOddValueLabel.text = self.betSelectionCellViewModel.oddValueString
+
+        if !shouldShowButton {
+            self.betNowButton.isHidden = true
+        }
     }
 
     override func layoutSubviews() {
@@ -69,13 +75,21 @@ class ChatTicketInMessageView: UIView {
 
         self.backgroundColor = .clear
 
-        self.baseView.backgroundColor = self.cardBackgroundColor
+        self.baseView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.ticketsStackView.backgroundColor = .clear
         self.separatorLineView.backgroundColor = UIColor.App.separatorLine
 
         self.totalOddTitleLabel.textColor = UIColor.App.textSecondary
         self.totalOddValueLabel.textColor = UIColor.App.textPrimary
+
+        self.betNowButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        self.betNowButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.betNowButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.39), for: .disabled)
+
+        self.betNowButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
+        self.betNowButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary.withAlphaComponent(0.7), for: .highlighted)
+
     }
 
     func setupTicketStackView() {

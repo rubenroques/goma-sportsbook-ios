@@ -193,6 +193,7 @@ class NewGroupManagementViewController: UIViewController {
                 print("ADD GROUP GOMA: \(response)")
 
                 if let chatroomId = response.data?.id {
+                    Env.gomaSocialClient.forceRefresh()
                     self?.chatListNeedReload?()
                     self?.showConversationDetail(chatroomId: chatroomId, groupName: groupName)
                 }

@@ -20,7 +20,11 @@ class ProfileViewController: UIViewController {
     @IBOutlet private weak var profilePictureBaseView: UIView!
     @IBOutlet private weak var profilePictureImageView: UIImageView!
     @IBOutlet private weak var usernameLabel: UILabel!
+
+    @IBOutlet private weak var userCodeStackView: UIStackView!
     @IBOutlet private weak var userIdLabel: UILabel!
+    @IBOutlet private weak var userCodeCopyView: UIView!
+    @IBOutlet private weak var userCodeCopyImageView: UIImageView!
     @IBOutlet private weak var shadowView: UIView!
 
     @IBOutlet private weak var totalBalanceView: UIView!
@@ -54,6 +58,7 @@ class ProfileViewController: UIViewController {
 
     var userSession: UserSession?
     var cancellables = Set<AnyCancellable>()
+    let pasteboard = UIPasteboard.general
 
     enum PageMode {
         case user
@@ -92,7 +97,12 @@ class ProfileViewController: UIViewController {
 
         if let user = self.userSession {
             self.usernameLabel.text = user.username
-            self.userIdLabel.text = user.userId
+            // self.userIdLabel.text = user.userId
+        }
+
+        if let userCode = Env.gomaNetworkClient.getCurrentToken()?.code {
+            let userCodeString = localized("user_code").replacingOccurrences(of: "%s", with: userCode)
+            self.userIdLabel.text = userCodeString
         }
 
         Env.everyMatrixClient.getProfileStatus()
@@ -216,7 +226,6 @@ class ProfileViewController: UIViewController {
 
         currentBalanceLabel.text = localized("loading")
 
-
         if let versionNumber = Bundle.main.versionNumber,
            let buildNumber = Bundle.main.buildNumber {
             let appVersionRawString = localized("app_version_profile")
@@ -233,6 +242,15 @@ class ProfileViewController: UIViewController {
         self.verifyUserActivationConditions()
 
         self.setupStackView()
+
+        let copyCodeTap = UITapGestureRecognizer(target: self, action: #selector(self.tapCopyCode))
+        self.userCodeStackView.addGestureRecognizer(copyCodeTap)
+    }
+
+    @objc func tapCopyCode() {
+        if let userCode = Env.gomaNetworkClient.getCurrentToken()?.code {
+            self.pasteboard.string = userCode
+        }
     }
 
     func verifyUserActivationConditions() {
@@ -290,7 +308,6 @@ class ProfileViewController: UIViewController {
         closeButton.setTitleColor( UIColor.App.highlightPrimary, for: .normal)
         closeButton.setTitleColor( UIColor.App.highlightPrimary.withAlphaComponent(0.7), for: .highlighted)
         closeButton.setTitleColor( UIColor.App.highlightPrimary.withAlphaComponent(0.4), for: .disabled)
-
 
         safeAreaTopView.backgroundColor = UIColor.App.backgroundPrimary
         self.topBarView.backgroundColor = UIColor.App.backgroundPrimary
