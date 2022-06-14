@@ -226,8 +226,6 @@ class ProfileViewController: UIViewController {
         }
 
         self.infoLabel.isUserInteractionEnabled = true
-        let infolabelTapGesture = UITapGestureRecognizer.init(target: self, action: #selector(self.didTapAppVersionLabel))
-        self.infoLabel.addGestureRecognizer(infolabelTapGesture)
 
         self.activationAlertScrollableView.layer.cornerRadius = CornerRadius.button
         self.activationAlertScrollableView.layer.masksToBounds = true
@@ -454,19 +452,6 @@ class ProfileViewController: UIViewController {
         }
     }
 
-    @IBAction private func didTapAppVersionLabel() {
-        guard
-            Env.everyMatrixClient.userSessionStatusPublisher.value == .logged,
-            let userId = UserSessionStore.loggedUserSession()?.userId
-        else {
-            return
-        }
-
-        let casinoWebViewController = CasinoWebViewController(userId: userId)
-        casinoWebViewController.modalPresentationStyle = .fullScreen
-
-        self.present(casinoWebViewController, animated: true, completion: nil)
-    }
 }
 
 extension ProfileViewController {

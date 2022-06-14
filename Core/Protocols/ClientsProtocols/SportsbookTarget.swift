@@ -33,5 +33,7 @@ protocol SportsbookTarget {
     static var supportedThemes: [Theme] { get }
 
     static var defaultCardStyle: CardsStyle { get }
+    
+    static var casinoURL: String { get }
 
 }
