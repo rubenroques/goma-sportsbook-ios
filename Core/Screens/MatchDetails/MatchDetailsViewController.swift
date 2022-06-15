@@ -76,47 +76,13 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var matchNotAvailableView: UIView!
     @IBOutlet private var matchNotAvailableLabel: UILabel!
 
-    private lazy var betslipButtonView: UIView = {
-        var betslipButtonView = UIView()
-        betslipButtonView.translatesAutoresizingMaskIntoConstraints = false
-
-        var iconImageView = UIImageView()
-        iconImageView.contentMode = .scaleAspectFit
-        iconImageView.image = UIImage(named: "betslip_button_icon")
-        iconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
-        iconImageView.translatesAutoresizingMaskIntoConstraints = false
-        betslipButtonView.addSubview(iconImageView)
-
-        NSLayoutConstraint.activate([
-            betslipButtonView.widthAnchor.constraint(equalToConstant: 56),
-            betslipButtonView.widthAnchor.constraint(equalTo: betslipButtonView.heightAnchor),
-
-            iconImageView.widthAnchor.constraint(equalToConstant: 30),
-            iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
-
-            iconImageView.centerXAnchor.constraint(equalTo: betslipButtonView.centerXAnchor),
-            iconImageView.centerYAnchor.constraint(equalTo: betslipButtonView.centerYAnchor),
-        ])
-
-        return betslipButtonView
-    }()
-    private lazy var betslipCountLabel: UILabel = {
-        var betslipCountLabel = UILabel()
-        betslipCountLabel.translatesAutoresizingMaskIntoConstraints = false
-        betslipCountLabel.textColor = .white
-        betslipCountLabel.backgroundColor = UIColor.App.alertError
-        betslipCountLabel.font = AppFont.with(type: .semibold, size: 10)
-        betslipCountLabel.textAlignment = .center
-        betslipCountLabel.clipsToBounds = true
-        betslipCountLabel.layer.masksToBounds = true
-        betslipCountLabel.text = "0"
-        NSLayoutConstraint.activate([
-            betslipCountLabel.widthAnchor.constraint(equalToConstant: 20),
-            betslipCountLabel.widthAnchor.constraint(equalTo: betslipCountLabel.heightAnchor),
-        ])
-        return betslipCountLabel
-    }()
-
+    private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
+    private static func createFloatingShortcutsView() -> FloatingShortcutsView {
+        let floatingShortcutsView = FloatingShortcutsView()
+        floatingShortcutsView.translatesAutoresizingMaskIntoConstraints = false
+        return floatingShortcutsView
+    }
+    
     private lazy var sharedGameCardView: SharedGameCardView = {
         let gameCard = SharedGameCardView()
         gameCard.translatesAutoresizingMaskIntoConstraints = false
@@ -274,21 +240,18 @@ class MatchDetailsViewController: UIViewController {
 
         // betslip
         //
-        self.betslipButtonView.addSubview(self.betslipCountLabel)
-
-        self.view.addSubview(self.betslipButtonView)
-        self.betslipCountLabel.isHidden = true
-
+        self.view.addSubview(self.floatingShortcutsView)
         NSLayoutConstraint.activate([
-            self.betslipCountLabel.trailingAnchor.constraint(equalTo: self.betslipButtonView.trailingAnchor, constant: 2),
-            self.betslipCountLabel.topAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -3),
-
-            self.betslipButtonView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
-            self.betslipButtonView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -12)
+            self.floatingShortcutsView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
+            self.floatingShortcutsView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
         ])
 
-        let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
-        betslipButtonView.addGestureRecognizer(tapBetslipView)
+        self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in
+            self?.didTapBetslipView()
+        }
+        self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
+            self?.didTapChatView()
+        }
 
         // matchFieldWebView
         //
@@ -370,6 +333,8 @@ class MatchDetailsViewController: UIViewController {
             self.backButton.setImage(UIImage(named: "arrow_close_icon"), for: .normal)
         }
 
+        self.floatingShortcutsView.resetAnimations()
+        
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
 
@@ -377,14 +342,6 @@ class MatchDetailsViewController: UIViewController {
         super.viewWillDisappear(animated)
 
         self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
-    }
-
-    // MARK: - Layout and Theme
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
-        self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
-
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -430,10 +387,6 @@ class MatchDetailsViewController: UIViewController {
         // TableView
         self.tableView.backgroundColor = .clear
 
-        self.betslipCountLabel.backgroundColor = UIColor.App.bubblesPrimary
-        self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
-        self.betslipCountLabel.textColor = UIColor.white
-        
         self.matchFieldBaseView.backgroundColor = UIColor.App.backgroundTertiary
         self.matchFieldToggleView.backgroundColor = UIColor.App.backgroundTertiary
         self.matchFieldWebView.backgroundColor = UIColor.App.backgroundTertiary
@@ -510,21 +463,6 @@ class MatchDetailsViewController: UIViewController {
                     self?.loadingView.stopAnimating()
                 }
             }
-            .store(in: &cancellables)
-
-        Env.betslipManager.bettingTicketsPublisher
-            .map(\.count)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] betslipValue in
-
-                if betslipValue == 0 {
-                    self?.betslipCountLabel.isHidden = true
-                }
-                else {
-                    self?.betslipCountLabel.text = "\(betslipValue)"
-                    self?.betslipCountLabel.isHidden = false
-                }
-            })
             .store(in: &cancellables)
 
         self.viewModel.marketGroupsPublisher
@@ -661,7 +599,6 @@ class MatchDetailsViewController: UIViewController {
         }
         self.statsCollectionView.reloadData()
     }
-
 
     func reloadSelectedIndex() {
         self.selectMarketType(atIndex: self.currentPageViewControllerIndex)
@@ -814,7 +751,22 @@ class MatchDetailsViewController: UIViewController {
         }
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
-
+    
+    @objc func didTapChatView() {
+        self.openChatModal()
+    }
+    
+    func openChatModal() {
+        if UserSessionStore.isUserLogged() {
+            let socialViewController = SocialViewController()
+            self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
+        }
+        else {
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.present(loginViewController, animated: true, completion: nil)
+        }
+    }
+    
     @objc private func didTapAccountValue() {
         let depositViewController = DepositViewController()
         let navigationViewController = Router.navigationController(with: depositViewController)

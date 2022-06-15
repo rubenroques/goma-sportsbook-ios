@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import QuartzCore
 import SceneKit
 import Combine
 
@@ -63,14 +64,14 @@ class FloatingShortcutsView: UIView {
         self.chatButtonView.addGestureRecognizer(tapChatView)
         
         self.flipNumberView.alpha = 0.0
-        
-        self.betslipCountBaseView.isHidden = true
-        self.betslipCountLabel.isHidden = true
-        
+
         self.betslipButtonView.clipsToBounds = true
         
+        self.resetAnimations()
+
         Env.betslipManager.bettingTicketsPublisher
             .map(\.count)
+            .dropFirst()
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] betslipValue in
@@ -80,6 +81,7 @@ class FloatingShortcutsView: UIView {
         
         Env.betslipManager.bettingTicketsPublisher
             .receive(on: DispatchQueue.main)
+            .dropFirst()
             .map({ orderedSet -> Double in
                 let newArray = orderedSet.map { $0.value }
                 let multiple: Double = newArray.reduce(1.0, *)
@@ -129,13 +131,30 @@ class FloatingShortcutsView: UIView {
         self.didTapChatButtonAction()
     }
     
-    func addAnimations() {
-        let rotation: CABasicAnimation = CABasicAnimation(keyPath: "transform.rotation.y")
-        rotation.toValue = NSNumber(value: Double.pi * 2)
-        rotation.duration = 1
-        rotation.isCumulative = true
-        rotation.repeatCount = Float.greatestFiniteMagnitude
-        self.betslipCountLabel.layer.add(rotation, forKey: "rotationAnimation")
+    func resetAnimations() {
+        
+        self.layer.removeAllAnimations()
+        
+        UIView.performWithoutAnimation {
+            let bettingTicketsCount = Env.betslipManager.bettingTicketsPublisher.value
+                .count
+            
+            if bettingTicketsCount == 0 {
+                self.betslipCountLabel.text = "\(bettingTicketsCount)"
+                self.betslipCountLabel.alpha = 0.0
+                self.betslipCountLabel.isHidden = true
+                self.betslipCountBaseView.isHidden = true
+            }
+            else {
+                self.betslipCountLabel.text = "\(bettingTicketsCount)"
+                self.betslipCountLabel.alpha = 1.0
+                self.betslipCountLabel.isHidden = false
+                self.betslipCountBaseView.isHidden = false
+            }
+            
+            self.betslipIconImageView.alpha = 1.0
+            self.flipNumberView.alpha = 0.0
+        }
     }
     
     func triggerFlipperAnimation(withValue value: Double) {
