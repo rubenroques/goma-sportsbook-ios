@@ -94,12 +94,12 @@ class ConversationDetailViewController: UIViewController {
         let contactTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapContactInfo))
         self.navigationView.addGestureRecognizer(contactTapGesture)
 
-        if self.viewModel.isChatOnline {
-            self.iconStateView.isHidden = false
-        }
-        else {
-            self.iconStateView.isHidden = true
-        }
+//        if self.viewModel.isChatOnline {
+//            self.iconStateView.isHidden = false
+//        }
+//        else {
+//            self.iconStateView.isHidden = true
+//        }
 
         self.isChatGroup = self.viewModel.isChatGroup
 
@@ -249,6 +249,13 @@ class ConversationDetailViewController: UIViewController {
                 self?.showBetslipViewController()
             }
         }
+
+        viewModel.isChatOnlinePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isOnline in
+                self?.iconStateView.isHidden = !isOnline
+            })
+            .store(in: &cancellables)
         
     }
 
@@ -461,7 +468,7 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
                     }
                     if let userId = messageData.userId {
                         let username = self.viewModel.getUsername(userId: userId)
-                        cell.setupMessage(messageData: messageData, username: username)
+                        cell.setupMessage(messageData: messageData, username: username, chatroomId: self.viewModel.conversationId)
                         cell.didTapBetNowAction = { [weak self] viewModel in
                             self?.addTicketToBetslip(ticket: viewModel.ticket)
                         }
@@ -479,7 +486,7 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
                     }
                     if let userId = messageData.userId {
                         let username = self.viewModel.getUsername(userId: userId)
-                        cell.setupMessage(messageData: messageData, username: username)
+                        cell.setupMessage(messageData: messageData, username: username, chatroomId: self.viewModel.conversationId)
                     }
 
                     cell.isReversedCell(isReversed: true)

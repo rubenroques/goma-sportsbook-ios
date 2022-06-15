@@ -6,24 +6,59 @@
 //
 
 import Foundation
+import Combine
 
 class GroupUserManagementCellViewModel {
+
+    private var cancellables = Set<AnyCancellable>()
 
     var userContact: UserContact
     var username: String
     var phones: [String]
-    var isOnline: Bool
+    var isOnlinePublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isAdmin: Bool
+    var chatroomId: Int?
 
-    init(userContact: UserContact) {
+    init(userContact: UserContact, chatroomId: Int? = nil) {
         self.userContact = userContact
 
         self.username = userContact.username
 
         self.phones = userContact.phones
 
-        self.isOnline = false
-
         self.isAdmin = false
+
+        self.chatroomId = chatroomId
+
+        self.setupPublishers()
+    }
+
+    private func setupPublishers() {
+        if let onlineUsersPublisher = Env.gomaSocialClient.onlineUsersPublisher() {
+
+            onlineUsersPublisher
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [weak self] onlineUsersResponse in
+                    guard let self = self else {return}
+
+                    if let chatroomId = self.chatroomId,
+                        let onlineUsersChat = onlineUsersResponse[chatroomId] {
+
+                        let userId = self.userContact.id
+
+                        if onlineUsersChat.users.contains(userId) {
+                            self.isOnlinePublisher.send(true)
+
+                        }
+                        else {
+                            self.isOnlinePublisher.send(false)
+
+                        }
+
+                    }
+
+                })
+                .store(in: &cancellables)
+        }
     }
 }

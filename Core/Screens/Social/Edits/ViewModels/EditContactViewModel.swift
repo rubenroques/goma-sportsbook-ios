@@ -17,7 +17,7 @@ class EditContactViewModel {
     // MARK: Public Properties
     var usernamePublisher: CurrentValueSubject<String, Never> = .init("")
     var shouldCloseChat: CurrentValueSubject<Bool, Never> = .init(false)
-
+    var isOnlinePublisher: CurrentValueSubject<Bool, Never> = .init(false)
     init(conversationData: ConversationData) {
         self.conversationData = conversationData
 
@@ -28,6 +28,33 @@ class EditContactViewModel {
 
         self.usernamePublisher.value = self.conversationData.name
 
+        if let onlineUsersPublisher = Env.gomaSocialClient.onlineUsersPublisher() {
+
+            onlineUsersPublisher
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [weak self] onlineUsersResponse in
+                    guard let self = self else {return}
+
+                    let chatroomId = self.conversationData.id
+                    let userId = self.conversationData.groupUsers
+                    if let onlineUsersChat = onlineUsersResponse[chatroomId],
+                       let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+
+                        if onlineUsersChat.users.contains("\(loggedUserId)") && onlineUsersChat.users.count > 1 {
+
+                            self.isOnlinePublisher.send(true)
+                        }
+                        else {
+                            self.isOnlinePublisher.send(false)
+
+                        }
+
+                    }
+
+                })
+                .store(in: &cancellables)
+        }
+        
     }
 
     func deleteContact() {

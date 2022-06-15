@@ -15,7 +15,7 @@ class ConversationDetailViewModel: NSObject {
     var messages: [MessageData] = []
     var sectionMessages: [String: [MessageData]] = [:]
     var dateMessages: [DateMessages] = []
-    var isChatOnline: Bool = false
+    var isChatOnlinePublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isChatGroup: Bool = false
     var isInitialMessagesLoaded: Bool = false
     var titlePublisher: CurrentValueSubject<String, Never> = .init("")
@@ -123,6 +123,30 @@ class ConversationDetailViewModel: NSObject {
             })
             .store(in: &cancellables)
 
+        if let onlineUsersPublisher = Env.gomaSocialClient.onlineUsersPublisher() {
+
+            onlineUsersPublisher
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [weak self] onlineUsersResponse in
+                    guard let self = self else {return}
+
+                    if let onlineUsersChat = onlineUsersResponse[self.conversationId],
+                       let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+                        if onlineUsersChat.users.contains("\(loggedUserId)") && onlineUsersChat.users.count > 1 {
+
+                            self.isChatOnlinePublisher.send(true)
+                        }
+                        else {
+                            self.isChatOnlinePublisher.send(false)
+
+                        }
+
+                    }
+
+                })
+                .store(in: &cancellables)
+        }
+
     }
 
     private func setupMessagesPublishers() {
@@ -170,10 +194,6 @@ class ConversationDetailViewModel: NSObject {
         }
 
         return true
-    }
-
-    private func setLastMessageRead() {
-
     }
 
     private func setupConversationInfo() {
@@ -277,7 +297,6 @@ class ConversationDetailViewModel: NSObject {
         else {
             self.sortAllMessages()
 
-            self.isChatOnline = true
             self.dataNeedsReload.send()
             //self.shouldScrollToLastMessage.send()
         }
@@ -534,7 +553,6 @@ extension ConversationDetailViewModel {
         return conversationData
     }
 
-    
 }
 
 extension ConversationDetailViewModel {

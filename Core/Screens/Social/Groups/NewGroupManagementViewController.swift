@@ -231,12 +231,12 @@ extension NewGroupManagementViewController: UITableViewDataSource, UITableViewDe
 
             if let cellViewModel = self.viewModel.cachedUserCellViewModels[userContact.id] {
                 // TEST
-                if indexPath.row % 2 == 0 {
-                    cellViewModel.isOnline = true
-                }
-                if indexPath.row == 0 {
-                    cellViewModel.isAdmin = true
-                }
+//                if indexPath.row % 2 == 0 {
+//                    cellViewModel.isOnline = true
+//                }
+//                if indexPath.row == 0 {
+//                    cellViewModel.isAdmin = true
+//                }
 
                 cell.configure(viewModel: cellViewModel)
 
@@ -245,12 +245,12 @@ extension NewGroupManagementViewController: UITableViewDataSource, UITableViewDe
                 let cellViewModel = GroupUserManagementCellViewModel(userContact: userContact)
                 self.viewModel.cachedUserCellViewModels[userContact.id] = cellViewModel
                 // TEST
-                if indexPath.row % 2 == 0 {
-                    cellViewModel.isOnline = true
-                }
-                if indexPath.row == 0 {
-                    cellViewModel.isAdmin = true
-                }
+//                if indexPath.row % 2 == 0 {
+//                    cellViewModel.isOnline = true
+//                }
+//                if indexPath.row == 0 {
+//                    cellViewModel.isAdmin = true
+//                }
                 
                 cell.configure(viewModel: cellViewModel)
 
