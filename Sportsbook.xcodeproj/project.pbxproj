@@ -370,6 +370,18 @@
 		45628E7E27BEE02400AAB160 /* SuggestedBetLineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45628E7C27BEE02400AAB160 /* SuggestedBetLineViewModel.swift */; };
 		45628E8027BFBE4900AAB160 /* CompetitionWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45628E7F27BFBE4900AAB160 /* CompetitionWidgetCollectionViewCell.swift */; };
 		45628E8127BFBE4900AAB160 /* CompetitionWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45628E7F27BFBE4900AAB160 /* CompetitionWidgetCollectionViewCell.swift */; };
+		4568B9642858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
+		4568B9652858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
+		4568B9662858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
+		4568B9672858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
+		4568B9682858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
+		4568B9692858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
+		4568B96D2858E45F00FA99B3 /* FlipNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4568B96C2858E45F00FA99B3 /* FlipNumberView.swift */; };
+		4568B96E2858E45F00FA99B3 /* FlipNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4568B96C2858E45F00FA99B3 /* FlipNumberView.swift */; };
+		4568B96F2858E45F00FA99B3 /* FlipNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4568B96C2858E45F00FA99B3 /* FlipNumberView.swift */; };
+		4568B9702858E45F00FA99B3 /* FlipNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4568B96C2858E45F00FA99B3 /* FlipNumberView.swift */; };
+		4568B9712858E45F00FA99B3 /* FlipNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4568B96C2858E45F00FA99B3 /* FlipNumberView.swift */; };
+		4568B9722858E45F00FA99B3 /* FlipNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4568B96C2858E45F00FA99B3 /* FlipNumberView.swift */; };
 		456B341D26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456B341C26C17D43009D7D27 /* UIStackView+Extensions.swift */; };
 		456B341E26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456B341C26C17D43009D7D27 /* UIStackView+Extensions.swift */; };
 		456B342126C17DF4009D7D27 /* Optional+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456B342026C17DF4009D7D27 /* Optional+Extensions.swift */; };
@@ -4017,6 +4029,8 @@
 		45626E432755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OverUnderMarketDetailTableViewCell.xib; sourceTree = "<group>"; };
 		45628E7C27BEE02400AAB160 /* SuggestedBetLineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedBetLineViewModel.swift; sourceTree = "<group>"; };
 		45628E7F27BFBE4900AAB160 /* CompetitionWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
+		4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = CilinderSceneKitScene.scn; sourceTree = "<group>"; };
+		4568B96C2858E45F00FA99B3 /* FlipNumberView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlipNumberView.swift; sourceTree = "<group>"; };
 		456B341C26C17D43009D7D27 /* UIStackView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extensions.swift"; sourceTree = "<group>"; };
 		456B342026C17DF4009D7D27 /* Optional+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extensions.swift"; sourceTree = "<group>"; };
 		456B342326C17E83009D7D27 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -5335,6 +5349,14 @@
 			path = Account;
 			sourceTree = "<group>";
 		};
+		4568B96B2858E43700FA99B3 /* FlipperView */ = {
+			isa = PBXGroup;
+			children = (
+				4568B96C2858E45F00FA99B3 /* FlipNumberView.swift */,
+			);
+			path = FlipperView;
+			sourceTree = "<group>";
+		};
 		456B341226C13AE1009D7D27 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
@@ -5638,6 +5660,7 @@
 			isa = PBXGroup;
 			children = (
 				4589C753281C2DFF00243547 /* FloatingShortcutsView.swift */,
+				4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */,
 			);
 			path = FloatingShortcutsView;
 			sourceTree = "<group>";
@@ -5736,6 +5759,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4568B96B2858E43700FA99B3 /* FlipperView */,
 				4589C752281C2DE200243547 /* FloatingShortcutsView */,
 				4589C74B281C007E00243547 /* SegmentControlView */,
 				A9992FD7280057960098854C /* Chat */,
@@ -7555,6 +7579,7 @@
 				A92F5D7C271716B900884BDF /* FilterRowView.xib in Resources */,
 				F4B32D9E2791BBA5001E31A5 /* Colors.xcassets in Resources */,
 				A99A970D26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */,
+				4568B9642858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */,
 				A90D8AFD277223DC00DF88EB /* WithdrawWebViewController.xib in Resources */,
 				A92F5D96272C410400884BDF /* DocumentPickerView.xib in Resources */,
 				A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */,
@@ -7643,6 +7668,7 @@
 				45D712FB27033BEF00AC0364 /* LiveEventsViewController.xib in Resources */,
 				F48CB9A327628C280070052B /* BetSuggestedCollectionViewCell.xib in Resources */,
 				A9C82FD226F9F52E00059DCD /* PopUpPromotionView.xib in Resources */,
+				4568B9652858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */,
 				A96B619A27A0508E005DC376 /* RecentSearchTableViewCell.xib in Resources */,
 				454E0ACF2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				45D728D427158DA400EFE04D /* BannerMatchCollectionViewCell.xib in Resources */,
@@ -7823,6 +7849,7 @@
 				457CBC04282D27D000ED0F00 /* RecentSearchHeaderView.xib in Resources */,
 				457CBC05282D27D000ED0F00 /* SportSelectionViewController.xib in Resources */,
 				457CBC06282D27D000ED0F00 /* FilterRowView.xib in Resources */,
+				4568B9682858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */,
 				457CBC07282D27D000ED0F00 /* ProfileLimitsManagementViewController.xib in Resources */,
 				457CBC08282D27D000ED0F00 /* WithdrawWebViewController.xib in Resources */,
 				457CBC09282D27D000ED0F00 /* DocumentPickerView.xib in Resources */,
@@ -7904,6 +7931,7 @@
 				457CBE7B282D2CD100ED0F00 /* CountryFlags.xcassets in Resources */,
 				457CBE7C282D2CD100ED0F00 /* FilterSliderCollapseView.xib in Resources */,
 				457CBE7E282D2CD100ED0F00 /* TournamentTableViewHeader.xib in Resources */,
+				4568B9692858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */,
 				457CBE7F282D2CD100ED0F00 /* BetSubmissionSuccessViewController.xib in Resources */,
 				457CBE80282D2CD100ED0F00 /* SplashViewController.xib in Resources */,
 				457CBE81282D2CD100ED0F00 /* HeaderTextFieldView.xib in Resources */,
@@ -8084,6 +8112,7 @@
 				4589C983282024E400243547 /* SportSelectionViewController.xib in Resources */,
 				4589C984282024E400243547 /* FilterRowView.xib in Resources */,
 				4589C986282024E400243547 /* ProfileLimitsManagementViewController.xib in Resources */,
+				4568B9662858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */,
 				4589C987282024E400243547 /* WithdrawWebViewController.xib in Resources */,
 				4589C988282024E400243547 /* DocumentPickerView.xib in Resources */,
 				4589C989282024E400243547 /* MaintenanceViewController.xib in Resources */,
@@ -8214,6 +8243,7 @@
 				45A6BDDB28246A7500D9B416 /* RecentSearchHeaderView.xib in Resources */,
 				45A6BDDC28246A7500D9B416 /* SportSelectionViewController.xib in Resources */,
 				45A6BDDD28246A7500D9B416 /* FilterRowView.xib in Resources */,
+				4568B9672858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */,
 				45A6BDDF28246A7500D9B416 /* ProfileLimitsManagementViewController.xib in Resources */,
 				45A6BDE028246A7500D9B416 /* WithdrawWebViewController.xib in Resources */,
 				45A6BDE128246A7500D9B416 /* DocumentPickerView.xib in Resources */,
@@ -8739,6 +8769,7 @@
 				455A0CB626BD9B6000EC572D /* EnvironmentType.swift in Sources */,
 				455C960C26FCDDE700456F30 /* CountrySelectorTableViewCell.swift in Sources */,
 				45D3DE4027149BE800717124 /* BannerTopCollectionViewCell.swift in Sources */,
+				4568B96D2858E45F00FA99B3 /* FlipNumberView.swift in Sources */,
 				454E0AC3273305E200794E0C /* SingleBettingTicketTableViewCell.swift in Sources */,
 				45C26DC827976A3900513D41 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				454E0AAE2732C58D00794E0C /* TabularBarDataSource.swift in Sources */,
@@ -9247,6 +9278,7 @@
 				455A0CF526BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
 				45166D0E26F3548D00E69D65 /* WelcomeSSWampMessage.swift in Sources */,
 				455A0CB726BD9B6000EC572D /* EnvironmentType.swift in Sources */,
+				4568B96E2858E45F00FA99B3 /* FlipNumberView.swift in Sources */,
 				455C960D26FCDDE700456F30 /* CountrySelectorTableViewCell.swift in Sources */,
 				45D3DE4127149BE800717124 /* BannerTopCollectionViewCell.swift in Sources */,
 				454E0AC4273305E200794E0C /* SingleBettingTicketTableViewCell.swift in Sources */,
@@ -9747,6 +9779,7 @@
 				457CBB2A282D27D000ED0F00 /* BannerTopCollectionViewCell.swift in Sources */,
 				457CBB2B282D27D000ED0F00 /* SingleBettingTicketTableViewCell.swift in Sources */,
 				457CBB2C282D27D000ED0F00 /* FavoriteCompetitionsDataSource.swift in Sources */,
+				4568B9712858E45F00FA99B3 /* FlipNumberView.swift in Sources */,
 				457CBB2D282D27D000ED0F00 /* TabularBarDataSource.swift in Sources */,
 				457CBB2E282D27D000ED0F00 /* SportSectionHeaderView.swift in Sources */,
 				457CBB2F282D27D000ED0F00 /* MyTicketBetLineViewModel.swift in Sources */,
@@ -10247,6 +10280,7 @@
 				457CBDD2282D2CD100ED0F00 /* BannerTopCollectionViewCell.swift in Sources */,
 				457CBDD3282D2CD100ED0F00 /* SingleBettingTicketTableViewCell.swift in Sources */,
 				457CBDD4282D2CD100ED0F00 /* FavoriteCompetitionsDataSource.swift in Sources */,
+				4568B9722858E45F00FA99B3 /* FlipNumberView.swift in Sources */,
 				457CBDD5282D2CD100ED0F00 /* TabularBarDataSource.swift in Sources */,
 				457CBDD6282D2CD100ED0F00 /* SportSectionHeaderView.swift in Sources */,
 				457CBDD7282D2CD100ED0F00 /* MyTicketBetLineViewModel.swift in Sources */,
@@ -10747,6 +10781,7 @@
 				4589C8AE282024E400243547 /* SingleBettingTicketTableViewCell.swift in Sources */,
 				45761A032844E85900A40826 /* PreviewChatTableViewCell.swift in Sources */,
 				4589C8AF282024E400243547 /* FavoriteCompetitionsDataSource.swift in Sources */,
+				4568B96F2858E45F00FA99B3 /* FlipNumberView.swift in Sources */,
 				4589C8B0282024E400243547 /* TabularBarDataSource.swift in Sources */,
 				4589C8B1282024E400243547 /* SportSectionHeaderView.swift in Sources */,
 				4589C8B2282024E400243547 /* MyTicketBetLineViewModel.swift in Sources */,
@@ -11247,6 +11282,7 @@
 				45A6BD0328246A7500D9B416 /* SingleBettingTicketTableViewCell.swift in Sources */,
 				45A6BD0428246A7500D9B416 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				45A6BD0528246A7500D9B416 /* TabularBarDataSource.swift in Sources */,
+				4568B9702858E45F00FA99B3 /* FlipNumberView.swift in Sources */,
 				45A6BD0628246A7500D9B416 /* SportSectionHeaderView.swift in Sources */,
 				45A6BD0728246A7500D9B416 /* MyTicketBetLineViewModel.swift in Sources */,
 				45A6BD0828246A7500D9B416 /* CheckboxButton.swift in Sources */,

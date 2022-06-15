@@ -134,7 +134,14 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             print("Message ID: \(messageID)")
         }
 
-        let routeId = userInfo["routeId"] as? String ?? ""
+        var routeId: String = ""
+        if let routeIdValue = userInfo["routeId"] as? String {
+            routeId = routeIdValue
+        }
+        else if let routeIdValue = userInfo["routeId"] as? Int {
+            routeId = String(routeIdValue)
+        }
+        
         let routeLabel = userInfo["routeLabel"] as? String ?? ""
 
         let chatroomOnForegroundID = Env.gomaSocialClient.chatroomOnForeground()

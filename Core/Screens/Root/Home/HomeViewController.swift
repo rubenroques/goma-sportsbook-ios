@@ -29,6 +29,8 @@ class HomeViewController: UIViewController {
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
+    private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
+    
     private let refreshControl = UIRefreshControl()
 
     // Logic
@@ -81,6 +83,14 @@ class HomeViewController: UIViewController {
         let tapChatView = UITapGestureRecognizer(target: self, action: #selector(didTapChatView))
         self.chatButtonView.addGestureRecognizer(tapChatView)
 
+        self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in
+            self?.didTapBetslipView()
+        }
+        
+        self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
+            self?.didTapChatView()
+        }
+        
         self.bind(toViewModel: self.viewModel)
 
         self.didSelectActivationAlertAction = { alertType in
@@ -717,7 +727,6 @@ extension HomeViewController {
         return chatButtonView
     }
 
-
     private static func createBetslipCountLabel() -> UILabel {
         let betslipCountLabel = UILabel()
         betslipCountLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -729,6 +738,12 @@ extension HomeViewController {
         betslipCountLabel.layer.masksToBounds = true
         betslipCountLabel.text = "0"
         return betslipCountLabel
+    }
+    
+    private static func createFloatingShortcutsView() -> FloatingShortcutsView {
+        let floatingShortcutsView = FloatingShortcutsView()
+        floatingShortcutsView.translatesAutoresizingMaskIntoConstraints = false
+        return floatingShortcutsView
     }
 
     private static func createLoadingBaseView() -> UIView {
@@ -754,9 +769,8 @@ extension HomeViewController {
 
         self.betslipButtonView.addSubview(self.betslipCountLabel)
 
-        self.view.addSubview(self.betslipButtonView)
-        self.view.addSubview(self.chatButtonView)
-
+        self.view.addSubview(self.floatingShortcutsView)
+        
         // Initialize constraints
         self.initConstraints()
 
@@ -785,19 +799,8 @@ extension HomeViewController {
         ])
 
         NSLayoutConstraint.activate([
-            self.betslipCountLabel.trailingAnchor.constraint(equalTo: self.betslipButtonView.trailingAnchor, constant: 2),
-            self.betslipCountLabel.topAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -3),
-
-            self.betslipButtonView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
-            self.betslipButtonView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -12),
-
-            self.betslipCountLabel.widthAnchor.constraint(equalToConstant: 20),
-            self.betslipCountLabel.widthAnchor.constraint(equalTo: self.betslipCountLabel.heightAnchor),
-        ])
-
-        NSLayoutConstraint.activate([
-            self.chatButtonView.centerXAnchor.constraint(equalTo: self.betslipButtonView.centerXAnchor),
-            self.chatButtonView.bottomAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -10),
+            self.floatingShortcutsView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
+            self.floatingShortcutsView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -12),
         ])
 
     }
