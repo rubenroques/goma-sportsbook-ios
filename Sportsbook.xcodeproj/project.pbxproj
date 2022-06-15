@@ -3800,6 +3800,24 @@
 		F48CB9A327628C280070052B /* BetSuggestedCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F48CB99F27628C280070052B /* BetSuggestedCollectionViewCell.xib */; };
 		F4A438E5274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */; };
 		F4A438E6274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */; };
+		F4A62A872850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
+		F4A62A882850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
+		F4A62A892850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
+		F4A62A8A2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
+		F4A62A8B2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
+		F4A62A8C2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */; };
+		F4A62A8E2858CA83007B46C5 /* CasinoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A8D2858CA82007B46C5 /* CasinoViewModel.swift */; };
+		F4A62A8F2858CA83007B46C5 /* CasinoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A8D2858CA82007B46C5 /* CasinoViewModel.swift */; };
+		F4A62A902858CA83007B46C5 /* CasinoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A8D2858CA82007B46C5 /* CasinoViewModel.swift */; };
+		F4A62A912858CA83007B46C5 /* CasinoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A8D2858CA82007B46C5 /* CasinoViewModel.swift */; };
+		F4A62A922858CA83007B46C5 /* CasinoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A8D2858CA82007B46C5 /* CasinoViewModel.swift */; };
+		F4A62A932858CA83007B46C5 /* CasinoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A8D2858CA82007B46C5 /* CasinoViewModel.swift */; };
+		F4A62A95285946AD007B46C5 /* CasinoGameDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A94285946AD007B46C5 /* CasinoGameDetailViewModel.swift */; };
+		F4A62A96285946AD007B46C5 /* CasinoGameDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A94285946AD007B46C5 /* CasinoGameDetailViewModel.swift */; };
+		F4A62A97285946AD007B46C5 /* CasinoGameDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A94285946AD007B46C5 /* CasinoGameDetailViewModel.swift */; };
+		F4A62A98285946AD007B46C5 /* CasinoGameDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A94285946AD007B46C5 /* CasinoGameDetailViewModel.swift */; };
+		F4A62A99285946AD007B46C5 /* CasinoGameDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A94285946AD007B46C5 /* CasinoGameDetailViewModel.swift */; };
+		F4A62A9A285946AD007B46C5 /* CasinoGameDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A62A94285946AD007B46C5 /* CasinoGameDetailViewModel.swift */; };
 		F4B32D992790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B32D972790D0AC001E31A5 /* EmptyCardTableViewCell.swift */; };
 		F4B32D9A2790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B32D972790D0AC001E31A5 /* EmptyCardTableViewCell.swift */; };
 		F4B32D9B2790D0AC001E31A5 /* EmptyCardTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4B32D982790D0AC001E31A5 /* EmptyCardTableViewCell.xib */; };
@@ -4501,6 +4519,9 @@
 		F48D33B627BBD578006E04CB /* HistoryViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewModel.swift; sourceTree = "<group>"; };
 		F48D33B727BBD578006E04CB /* HistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BetSubmissionSuccessViewController.xib; sourceTree = "<group>"; };
+		F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CasinoGameDetailViewController.swift; sourceTree = "<group>"; };
+		F4A62A8D2858CA82007B46C5 /* CasinoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CasinoViewModel.swift; sourceTree = "<group>"; };
+		F4A62A94285946AD007B46C5 /* CasinoGameDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CasinoGameDetailViewModel.swift; sourceTree = "<group>"; };
 		F4B32D972790D0AC001E31A5 /* EmptyCardTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyCardTableViewCell.swift; sourceTree = "<group>"; };
 		F4B32D982790D0AC001E31A5 /* EmptyCardTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EmptyCardTableViewCell.xib; sourceTree = "<group>"; };
 		F4B32D9D2791BBA5001E31A5 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
@@ -4931,6 +4952,9 @@
 			isa = PBXGroup;
 			children = (
 				4523AECF27FB284000C5BF4E /* CasinoWebViewController.swift */,
+				F4A62A862850FAB5007B46C5 /* CasinoGameDetailViewController.swift */,
+				F4A62A8D2858CA82007B46C5 /* CasinoViewModel.swift */,
+				F4A62A94285946AD007B46C5 /* CasinoGameDetailViewModel.swift */,
 			);
 			path = Casino;
 			sourceTree = "<group>";
@@ -8441,6 +8465,7 @@
 				45628E7D27BEE02400AAB160 /* SuggestedBetLineViewModel.swift in Sources */,
 				45D728D127158DA400EFE04D /* BannerMatchCollectionViewCell.swift in Sources */,
 				A92F5D802718384900884BDF /* FilterSliderCollapseView.swift in Sources */,
+				F4A62A95285946AD007B46C5 /* CasinoGameDetailViewModel.swift in Sources */,
 				4556439E26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */,
 				A9C82FCE26F9E0F900059DCD /* PopUpPromotionView.swift in Sources */,
 				45B0BD3F271F18DB009C41FA /* CheckboxToggleView.swift in Sources */,
@@ -8617,6 +8642,7 @@
 				A9E7C69427B5638500F784C9 /* MyFavoriteMatchesDataSource.swift in Sources */,
 				45A6BB932822B50D00D9B416 /* DynamicHomeViewTemplateDataSource.swift in Sources */,
 				F4CE68472742CD8A003413AE /* MultiSliderExtensions.swift in Sources */,
+				F4A62A8E2858CA83007B46C5 /* CasinoViewModel.swift in Sources */,
 				A9992FD227FF1F260098854C /* SentMessageTableViewCell.swift in Sources */,
 				4589C754281C2E0000243547 /* FloatingShortcutsView.swift in Sources */,
 				A97D2477281831E7003EEDEC /* FriendStatusCellViewModel.swift in Sources */,
@@ -8903,6 +8929,7 @@
 				A90BC91A27CCE0B300667616 /* SharedGameCardView.swift in Sources */,
 				A9B841BF26EA5A1000269B05 /* Event.swift in Sources */,
 				45AA91CD27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift in Sources */,
+				F4A62A872850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				455A0D0426BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45166D0526F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */,
 				455643A126F2634E00EE78FA /* GomaClientSettings.swift in Sources */,
@@ -8950,6 +8977,7 @@
 				455A0CFD26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
 				45628E7E27BEE02400AAB160 /* SuggestedBetLineViewModel.swift in Sources */,
 				45D728D227158DA400EFE04D /* BannerMatchCollectionViewCell.swift in Sources */,
+				F4A62A96285946AD007B46C5 /* CasinoGameDetailViewModel.swift in Sources */,
 				A92F5D812718384900884BDF /* FilterSliderCollapseView.swift in Sources */,
 				4556439F26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */,
 				45166D0226F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */,
@@ -9126,6 +9154,7 @@
 				45626E3E2755445A0069B89B /* OutcomeSelectionButtonView.swift in Sources */,
 				45A6BB942822B50D00D9B416 /* DynamicHomeViewTemplateDataSource.swift in Sources */,
 				455C677B27E39C3D00AAB2A5 /* PopularDetailsViewModel.swift in Sources */,
+				F4A62A8F2858CA83007B46C5 /* CasinoViewModel.swift in Sources */,
 				A9992FD327FF1F260098854C /* SentMessageTableViewCell.swift in Sources */,
 				4589C755281C2E0000243547 /* FloatingShortcutsView.swift in Sources */,
 				A97D2478281831E7003EEDEC /* FriendStatusCellViewModel.swift in Sources */,
@@ -9412,6 +9441,7 @@
 				A90BC91B27CCE0B300667616 /* SharedGameCardView.swift in Sources */,
 				A9B841C026EA5A1000269B05 /* Event.swift in Sources */,
 				45AA91CE27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift in Sources */,
+				F4A62A882850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				455A0D0526BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45166D0626F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */,
 				455643A226F2634E00EE78FA /* GomaClientSettings.swift in Sources */,
@@ -9451,6 +9481,7 @@
 				457CB9F3282D27D000ED0F00 /* FilterSliderCollapseView.swift in Sources */,
 				457CB9F4282D27D000ED0F00 /* FirebaseClientSettings.swift in Sources */,
 				457CB9F5282D27D000ED0F00 /* PopUpPromotionView.swift in Sources */,
+				F4A62A99285946AD007B46C5 /* CasinoGameDetailViewModel.swift in Sources */,
 				45B6E239284151F8001B570C /* ActionButtonTableViewCell.swift in Sources */,
 				457CB9F6282D27D000ED0F00 /* CheckboxToggleView.swift in Sources */,
 				457CB9F7282D27D000ED0F00 /* MatchDetailsViewController.swift in Sources */,
@@ -9627,6 +9658,7 @@
 				457CBA96282D27D000ED0F00 /* OutcomeSelectionButtonView.swift in Sources */,
 				457CBA97282D27D000ED0F00 /* MyFavoriteMatchesDataSource.swift in Sources */,
 				457CBA98282D27D000ED0F00 /* MultiSliderExtensions.swift in Sources */,
+				F4A62A922858CA83007B46C5 /* CasinoViewModel.swift in Sources */,
 				457CBA99282D27D000ED0F00 /* DynamicHomeViewTemplateDataSource.swift in Sources */,
 				457CBA9A282D27D000ED0F00 /* SentMessageTableViewCell.swift in Sources */,
 				457CBA9B282D27D000ED0F00 /* FloatingShortcutsView.swift in Sources */,
@@ -9913,6 +9945,7 @@
 				457CBBA8282D27D000ED0F00 /* SharedGameCardView.swift in Sources */,
 				457CBBA9282D27D000ED0F00 /* Event.swift in Sources */,
 				457CBBAA282D27D000ED0F00 /* SportMatchSingleLineTableViewCell.swift in Sources */,
+				F4A62A8B2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				457CBBAB282D27D000ED0F00 /* NibIdentifiable.swift in Sources */,
 				457CBBAC282D27D000ED0F00 /* UnregisteredSSWampMessage.swift in Sources */,
 				457CBBAD282D27D000ED0F00 /* GomaClientSettings.swift in Sources */,
@@ -9952,6 +9985,7 @@
 				457CBC9A282D2CD100ED0F00 /* FilterSliderCollapseView.swift in Sources */,
 				457CBC9B282D2CD100ED0F00 /* FirebaseClientSettings.swift in Sources */,
 				457CBC9C282D2CD100ED0F00 /* PopUpPromotionView.swift in Sources */,
+				F4A62A9A285946AD007B46C5 /* CasinoGameDetailViewModel.swift in Sources */,
 				45B6E238284151F7001B570C /* ActionButtonTableViewCell.swift in Sources */,
 				457CBC9D282D2CD100ED0F00 /* CheckboxToggleView.swift in Sources */,
 				457CBC9E282D2CD100ED0F00 /* MatchDetailsViewController.swift in Sources */,
@@ -10128,6 +10162,7 @@
 				457CBD40282D2CD100ED0F00 /* MyFavoriteMatchesDataSource.swift in Sources */,
 				457CBD41282D2CD100ED0F00 /* MultiSliderExtensions.swift in Sources */,
 				457CBD42282D2CD100ED0F00 /* DynamicHomeViewTemplateDataSource.swift in Sources */,
+				F4A62A932858CA83007B46C5 /* CasinoViewModel.swift in Sources */,
 				457CBD43282D2CD100ED0F00 /* SentMessageTableViewCell.swift in Sources */,
 				457CBD44282D2CD100ED0F00 /* FloatingShortcutsView.swift in Sources */,
 				457CBD45282D2CD100ED0F00 /* OutrightCompetitionLineTableViewCell.swift in Sources */,
@@ -10414,6 +10449,7 @@
 				457CBE4F282D2CD100ED0F00 /* SharedGameCardView.swift in Sources */,
 				457CBE50282D2CD100ED0F00 /* Event.swift in Sources */,
 				457CBE51282D2CD100ED0F00 /* SportMatchSingleLineTableViewCell.swift in Sources */,
+				F4A62A8C2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				457CBE52282D2CD100ED0F00 /* NibIdentifiable.swift in Sources */,
 				457CBE53282D2CD100ED0F00 /* UnregisteredSSWampMessage.swift in Sources */,
 				457CBE54282D2CD100ED0F00 /* GomaClientSettings.swift in Sources */,
@@ -10453,6 +10489,7 @@
 				4589C781282024E400243547 /* BannerMatchCollectionViewCell.swift in Sources */,
 				4589C782282024E400243547 /* FilterSliderCollapseView.swift in Sources */,
 				4589C783282024E400243547 /* FirebaseClientSettings.swift in Sources */,
+				F4A62A97285946AD007B46C5 /* CasinoGameDetailViewModel.swift in Sources */,
 				4589C784282024E400243547 /* PopUpPromotionView.swift in Sources */,
 				4589C785282024E400243547 /* CheckboxToggleView.swift in Sources */,
 				4589C786282024E400243547 /* MatchDetailsViewController.swift in Sources */,
@@ -10629,6 +10666,7 @@
 				4589C824282024E400243547 /* SentMessageTableViewCell.swift in Sources */,
 				4589C825282024E400243547 /* FloatingShortcutsView.swift in Sources */,
 				4589C826282024E400243547 /* OutrightCompetitionLineTableViewCell.swift in Sources */,
+				F4A62A902858CA83007B46C5 /* CasinoViewModel.swift in Sources */,
 				4589C827282024E400243547 /* SubscribeSSWampMessage.swift in Sources */,
 				4589C828282024E400243547 /* EditAlertView.swift in Sources */,
 				4589C829282024E400243547 /* SharedBetToken.swift in Sources */,
@@ -10915,6 +10953,7 @@
 				4589C928282024E400243547 /* SharedGameCardView.swift in Sources */,
 				4589C929282024E400243547 /* Event.swift in Sources */,
 				4589C92A282024E400243547 /* SportMatchSingleLineTableViewCell.swift in Sources */,
+				F4A62A892850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				4589C92B282024E400243547 /* NibIdentifiable.swift in Sources */,
 				4589C92C282024E400243547 /* UnregisteredSSWampMessage.swift in Sources */,
 				4589C92D282024E400243547 /* GomaClientSettings.swift in Sources */,
@@ -10954,6 +10993,7 @@
 				45A6BBCB28246A7400D9B416 /* SuggestedBetLineViewModel.swift in Sources */,
 				45A6BBCC28246A7400D9B416 /* BannerMatchCollectionViewCell.swift in Sources */,
 				45A6BBCD28246A7400D9B416 /* FilterSliderCollapseView.swift in Sources */,
+				F4A62A98285946AD007B46C5 /* CasinoGameDetailViewModel.swift in Sources */,
 				45A6BBCE28246A7400D9B416 /* FirebaseClientSettings.swift in Sources */,
 				45A6BBCF28246A7400D9B416 /* PopUpPromotionView.swift in Sources */,
 				45A6BBD028246A7400D9B416 /* CheckboxToggleView.swift in Sources */,
@@ -11130,6 +11170,7 @@
 				45A6BC7328246A7500D9B416 /* SentMessageTableViewCell.swift in Sources */,
 				45A6BC7428246A7500D9B416 /* FloatingShortcutsView.swift in Sources */,
 				45A6BC7528246A7500D9B416 /* FriendStatusCellViewModel.swift in Sources */,
+				F4A62A912858CA83007B46C5 /* CasinoViewModel.swift in Sources */,
 				45A6BC7628246A7500D9B416 /* OutrightCompetitionLineTableViewCell.swift in Sources */,
 				45A6BC7728246A7500D9B416 /* SubscribeSSWampMessage.swift in Sources */,
 				45A6BC7828246A7500D9B416 /* EditAlertView.swift in Sources */,
@@ -11416,6 +11457,7 @@
 				45A6BD7F28246A7500D9B416 /* RecentSearchHeaderView.swift in Sources */,
 				45A6BD8028246A7500D9B416 /* SharedGameCardView.swift in Sources */,
 				45A6BD8128246A7500D9B416 /* Event.swift in Sources */,
+				F4A62A8A2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				45A6BD8228246A7500D9B416 /* SportMatchSingleLineTableViewCell.swift in Sources */,
 				45A6BD8328246A7500D9B416 /* NibIdentifiable.swift in Sources */,
 				45A6BD8428246A7500D9B416 /* UnregisteredSSWampMessage.swift in Sources */,
@@ -11624,7 +11666,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 00521;
-				DEVELOPMENT_TEAM = TKH4GU3DG3;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -11650,7 +11692,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 00521;
-				DEVELOPMENT_TEAM = TKH4GU3DG3;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (

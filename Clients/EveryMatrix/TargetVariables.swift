@@ -60,5 +60,9 @@ struct TargetVariables: SportsbookTarget {
     static var defaultCardStyle: CardsStyle {
         return .small
     }
+    
+    static var casinoURL: String {
+        return "https://sportsbook-cms.gomagaming.com/casino/"
+    }
 
 }
