@@ -87,6 +87,10 @@ class BonusViewController: UIViewController {
         self.bind(toViewModel: self.viewModel)
 
         self.setupPublishersAndActions()
+
+        if #available(iOS 15.0, *) {
+            self.tableView.sectionHeaderTopPadding = 0
+        }
     }
 
     // MARK: Layout and Theme
@@ -166,17 +170,20 @@ class BonusViewController: UIViewController {
         viewModel.isBonusHistoryEmptyPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isBonusHistoryEmpty in
-                self?.isEmptyState = isBonusHistoryEmpty
+                if self?.viewModel.bonusListType == .history {
+                    self?.isEmptyState = isBonusHistoryEmpty
+                }
             })
             .store(in: &cancellables)
 
         viewModel.isBonusActiveEmptyPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isBonusActiveEmpty in
-                self?.isEmptyState = isBonusActiveEmpty
+                if self?.viewModel.bonusListType == .active {
+                    self?.isEmptyState = isBonusActiveEmpty
+                }
             })
             .store(in: &cancellables)
-
 
         viewModel.shouldReloadData
             .receive(on: DispatchQueue.main)
@@ -188,7 +195,7 @@ class BonusViewController: UIViewController {
         Publishers.CombineLatest3(viewModel.isBonusApplicableLoading, viewModel.isBonusClaimableLoading, viewModel.isBonusGrantedLoading)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { isApplicableLoading, isClaimableLoading, isGrantedLoading in
-                if isApplicableLoading && isClaimableLoading && isGrantedLoading {
+                if isApplicableLoading || isClaimableLoading || isGrantedLoading {
                     self.isLoading = true
                 }
                 else if !isApplicableLoading && !isClaimableLoading && !isGrantedLoading {
@@ -546,6 +553,7 @@ extension BonusViewController {
         self.view.addGestureRecognizer(backgroundTapGesture)
 
         self.initConstraints()
+
     }
 
     private func initConstraints() {
@@ -578,7 +586,7 @@ extension BonusViewController {
         NSLayoutConstraint.activate([
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.tableView.topAnchor.constraint(equalTo: self.promoCodeStackView.bottomAnchor, constant: 16),
+            self.tableView.topAnchor.constraint(equalTo: self.promoCodeStackView.bottomAnchor, constant: 0),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
 

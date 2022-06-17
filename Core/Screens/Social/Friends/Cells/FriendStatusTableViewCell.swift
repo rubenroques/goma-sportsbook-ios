@@ -37,19 +37,19 @@ class FriendStatusTableViewCell: UITableViewCell {
 
     var isOnline: Bool = false {
         didSet {
-            if isOnline {
-                self.iconBaseView.layer.borderWidth = 2
-                self.iconBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
-            }
-            else {
-                self.iconBaseView.layer.borderWidth = 2
-                self.iconBaseView.layer.borderColor = UIColor.App.backgroundOdds.cgColor
-            }
+            self.statusView.isHidden = !isOnline
+        }
+    }
+
+    var hasSeparatorLine: Bool = true {
+        didSet {
+            self.separatorLineView.isHidden = !hasSeparatorLine
         }
     }
 
     var removeFriendAction: ((Int) -> Void)?
     var showProfileAction: (() -> Void)?
+    var shouldShowChatroom: (() -> Void)?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -74,11 +74,8 @@ class FriendStatusTableViewCell: UITableViewCell {
         super.layoutSubviews()
 
         self.iconBaseView.layer.cornerRadius = self.iconBaseView.frame.size.width / 2
-
         self.iconInnerView.layer.cornerRadius = self.iconInnerView.frame.size.width / 2
-
         self.photoImageView.layer.cornerRadius = self.photoImageView.frame.size.width / 2
-
         self.statusView.layer.cornerRadius = self.statusView.frame.size.width / 2
     }
 
@@ -87,6 +84,8 @@ class FriendStatusTableViewCell: UITableViewCell {
         self.backgroundColor = UIColor.App.backgroundPrimary
 
         self.iconBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.iconBaseView.layer.borderWidth = 2
+        self.iconBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
 
         self.iconInnerView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -111,9 +110,13 @@ class FriendStatusTableViewCell: UITableViewCell {
 
         self.notificationsEnabled = viewModel.notificationsEnabled
 
-        self.isOnline = true
-
         self.notificationEnabledButton.isHidden = true
+
+        viewModel.isOnlinePublisher
+            .sink(receiveValue: { [weak self] isOnline in
+                self?.isOnline = isOnline
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Actions
@@ -155,7 +158,7 @@ class FriendStatusTableViewCell: UITableViewCell {
     }
 
     @objc func didTapBaseView() {
-        self.showProfileAction?()
+        self.shouldShowChatroom?()
     }
 
 }
@@ -276,8 +279,8 @@ extension FriendStatusTableViewCell {
             self.photoImageView.centerXAnchor.constraint(equalTo: self.iconInnerView.centerXAnchor),
             self.photoImageView.centerYAnchor.constraint(equalTo: self.iconInnerView.centerYAnchor),
 
-            self.nameLabel.leadingAnchor.constraint(equalTo: self.photoImageView.trailingAnchor, constant: 12),
-            self.nameLabel.centerYAnchor.constraint(equalTo: self.photoImageView.centerYAnchor),
+            self.nameLabel.leadingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: 15),
+            self.nameLabel.centerYAnchor.constraint(equalTo: self.iconBaseView.centerYAnchor),
 
             self.statusView.heightAnchor.constraint(equalTo: self.statusView.widthAnchor),
             self.statusView.heightAnchor.constraint(equalToConstant: 8),

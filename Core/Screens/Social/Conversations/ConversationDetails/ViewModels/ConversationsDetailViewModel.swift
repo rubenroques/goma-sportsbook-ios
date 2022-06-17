@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import Kingfisher
 
 class ConversationDetailViewModel: NSObject {
 
@@ -14,68 +15,219 @@ class ConversationDetailViewModel: NSObject {
     var messages: [MessageData] = []
     var sectionMessages: [String: [MessageData]] = [:]
     var dateMessages: [DateMessages] = []
-    var isChatOnline: Bool = false
+    var isChatOnlinePublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isChatGroup: Bool = false
-
+    var isInitialMessagesLoaded: Bool = false
     var titlePublisher: CurrentValueSubject<String, Never> = .init("")
     var usersPublisher: CurrentValueSubject<String, Never> = .init("")
     var groupInitialsPublisher: CurrentValueSubject<String, Never> = .init("")
     var dataNeedsReload: PassthroughSubject<Void, Never> = .init()
     var shouldScrollToLastMessage: PassthroughSubject<Void, Never> = .init()
 
+    var isLoadingConversationPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isLoadingSharedBetPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var onlineUsersCountPublisher: CurrentValueSubject<Int, Never> = .init(0)
     
     var ticketAddedToBetslipAction: ((Bool) -> Void)?
-
+    
+    var conversationId: Int
+    var messagesPage: Int = 1
     
     // MARK: Private Properties
-    private var conversationData: ConversationData
+    private var chatroomMessagesPublisher: AnyCancellable?
+    private var conversationData: ConversationData?
     private var cancellables = Set<AnyCancellable>()
 
-    
     // MARK: Lifetime and Cycle
+    // MARK: Lifetime and Cycle
+    init(chatId: Int) {
+        self.conversationId = chatId
+        
+        super.init()
+        
+        Publishers.CombineLatest(Env.userSessionStore.hasGomaUserSessionPublisher, Env.gomaSocialClient.socketConnectedPublisher)
+            .sink { [weak self] hasGomaUserSession, socketConnected in
+                if hasGomaUserSession && socketConnected {
+                    self?.requestChatroomDetails(withId: String(chatId))
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
     init(conversationData: ConversationData) {
+        self.isLoadingConversationPublisher.send(true)
+        
         self.conversationData = conversationData
-
+        self.conversationId = conversationData.id
+        
         super.init()
 
         self.setupConversationInfo()
-
         self.startSocketListening()
+        
+        self.isLoadingConversationPublisher.send(false)
     }
 
     // MARK: Functions
+    func requestChatroomDetails(withId id: String) {
+           
+        self.isLoadingConversationPublisher.send(true)
+        
+        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId, page: 0)
+            .compactMap({ chatrooms in
+                return chatrooms.data?
+                    .filter({ chatroom in
+                        String(chatroom.chatroom.id) == id
+                    })
+                    .first
+            })
+            .map({ chatroomData -> ConversationData in
+                if chatroomData.chatroom.type == ChatroomType.individual.identifier {
+                    return self.createIndividualConversationData(fromChatroomData: chatroomData)
+                }
+                else {
+                    return self.createGroupConversationData(fromChatroomData: chatroomData)
+                }
+            })
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    Logger.log("SocketSocialDebug: getChatrooms failure \(error)")
+                case .finished:
+                    Logger.log("SocketSocialDebug: getChatrooms finished")
+                }
+                self.isLoadingConversationPublisher.send(false)
+            }, receiveValue: { [weak self] conversationData in
+                self?.conversationData = conversationData
+                
+                self?.setupConversationInfo()
+                self?.startSocketListening()
+            })
+            .store(in: &cancellables)
+        
+    }
+    
     func startSocketListening() {
 
-        let chatroomId = self.conversationData.id
+        guard let conversationData = self.conversationData else { return }
 
-        if let conversationMessages = Env.gomaSocialClient.chatroomMessagesPublisher.value[chatroomId] {
-            self.processChatMessages(chatMessages: Array(conversationMessages) )
-            self.shouldScrollToLastMessage.send()
-        }
+        Env.gomaSocialClient.emitChatDetailMessages(chatroomId: self.conversationId, page: self.messagesPage)
 
-        Env.gomaSocialClient.chatroomNewMessagePublisher
+        Env.gomaSocialClient.hasMessagesFinishedLoading
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] chatMessages in
-                if let updatedMessage = chatMessages[chatroomId] {
-                    self?.updateChatMessages(newMessage: updatedMessage)
-                    self?.shouldScrollToLastMessage.send()
+            .sink(receiveValue: { [weak self] finishedLoading in
+                if finishedLoading {
+                    self?.setupMessagesPublishers()
+                    Env.gomaSocialClient.resetFinishedLoadingPublisher()
                 }
             })
             .store(in: &cancellables)
 
+        if let onlineUsersPublisher = Env.gomaSocialClient.onlineUsersPublisher() {
+
+            onlineUsersPublisher
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [weak self] onlineUsersResponse in
+                    guard let self = self else {return}
+
+                    if let onlineUsersChat = onlineUsersResponse[self.conversationId],
+                       let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+                        if onlineUsersChat.users.contains("\(loggedUserId)") && onlineUsersChat.users.count > 1 {
+
+                            self.isChatOnlinePublisher.send(true)
+                        }
+                        else {
+                            self.isChatOnlinePublisher.send(false)
+
+                        }
+
+                        if let groupUsers = self.conversationData?.groupUsers {
+
+                            let numberUsers = groupUsers.count
+                            let onlineUsers = onlineUsersChat.users.count
+                            var userDetailsString = ""
+
+                            let chatGroupDetailString = localized("chat_group_users_details")
+
+                            userDetailsString = chatGroupDetailString.replacingFirstOccurrence(of: "%s", with: "\(onlineUsers)")
+                            userDetailsString = userDetailsString.replacingOccurrences(of: "%s", with: "\(numberUsers)")
+
+                            self.usersPublisher.send(userDetailsString)
+
+                        }
+
+                    }
+
+                })
+                .store(in: &cancellables)
+        }
+
+    }
+
+    private func setupMessagesPublishers() {
+
+        if let chatroomMessagesPublisher = Env.gomaSocialClient.chatroomMessagesPublisher(forChatroomId: self.conversationId) {
+
+            self.chatroomMessagesPublisher = chatroomMessagesPublisher
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [weak self] chatMessages in
+
+                    self?.initialChatMessagesProcessing(chatMessages: Array(chatMessages))
+                })
+        }
+
+        if let newMessagePublisher = Env.gomaSocialClient.newMessagePublisher(forChatroomId: self.conversationId) {
+
+            newMessagePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] chatMessage in
+
+                if let conversationId = self?.conversationId ,
+                   let updatedMessage = chatMessage {
+                    guard let self = self else {return}
+
+                    if !self.isNewMessageProcessed(chatMessage: updatedMessage) {
+                        self.updateChatMessages(newMessage: updatedMessage)
+                        self.shouldScrollToLastMessage.send()
+                        Env.gomaSocialClient.clearNewMessage(chatroomId: conversationId)
+                    }
+
+                }
+            })
+            .store(in: &cancellables)
+        }
+    }
+
+    private func isNewMessageProcessed(chatMessage: ChatMessage?) -> Bool {
+
+        if let chatMessage = chatMessage {
+            if self.messages.contains(where: {$0.timestamp == chatMessage.date}) {
+                return true
+            }
+
+            return false
+        }
+
+        return true
     }
 
     private func setupConversationInfo() {
 
-        self.titlePublisher.value = self.conversationData.name
-
-        if self.conversationData.conversationType == .user {
-            self.usersPublisher.value = "\(self.conversationData.name.lowercased())"
+        guard let conversationData = self.conversationData else { return }
+        
+        #if DEBUG
+        self.titlePublisher.value = "\(conversationData.name)-\(conversationData.id)"
+        #else
+        self.titlePublisher.value = conversationData.name
+        #endif
+        
+        if conversationData.conversationType == .user {
+            self.usersPublisher.value = "\(conversationData.name.lowercased())"
             self.isChatGroup = false
         }
         else {
-            if let groupUsers = self.conversationData.groupUsers {
+            if let groupUsers = conversationData.groupUsers {
 
                 let numberUsers = groupUsers.count
                 let onlineUsers = 0
@@ -88,7 +240,7 @@ class ConversationDetailViewModel: NSObject {
 
                 self.usersPublisher.value = userDetailsString
 
-                self.groupInitialsPublisher.value = self.getGroupInitials(text: self.conversationData.name)
+                self.groupInitialsPublisher.value = self.getGroupInitials(text: conversationData.name)
 
                 self.isChatGroup = true
             }
@@ -96,7 +248,7 @@ class ConversationDetailViewModel: NSObject {
         }
     }
 
-    func getConversationData() -> ConversationData {
+    func getConversationData() -> ConversationData? {
         return self.conversationData
     }
 
@@ -122,7 +274,8 @@ class ConversationDetailViewModel: NSObject {
 
     func updateConversationInfo(groupInfo: GroupInfo) {
 
-        var newConversationData = self.conversationData
+        guard var newConversationData = self.conversationData else { return }
+        
         var newConversationGroupUsers: [GomaFriend] = []
         newConversationData.name = groupInfo.name
 
@@ -149,8 +302,30 @@ class ConversationDetailViewModel: NSObject {
         self.setupConversationInfo()
     }
 
-    private func processChatMessages(chatMessages: [ChatMessage]) {
-        guard let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId else {return}
+    private func initialChatMessagesProcessing(chatMessages: [ChatMessage]) {
+
+        self.messages = self.convertChatMessages(chatMessages: chatMessages)
+
+        if self.messages.count/self.messagesPage == 10 {
+            self.messagesPage += 1
+            Env.gomaSocialClient.emitChatDetailMessages(chatroomId: self.conversationId, page: self.messagesPage)
+        }
+        else {
+            self.sortAllMessages()
+
+            self.dataNeedsReload.send()
+            //self.shouldScrollToLastMessage.send()
+        }
+
+    }
+    
+    private func convertChatMessages(chatMessages: [ChatMessage]) -> [MessageData] {
+        
+        // We need to make sure the array is empty, this is used only in the init or
+        // in subsequent calls os the publisher
+        var messages: [MessageData] = []
+        
+        guard let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId else { return [] }
 
         for message in chatMessages {
             let formattedDate = self.getFormattedDate(date: message.date)
@@ -161,7 +336,7 @@ class ConversationDetailViewModel: NSObject {
                                               timestamp: message.date,
                                               userId: message.fromUser,
                                               attachment: message.attachment)
-                self.messages.append(messageData)
+                messages.append(messageData)
             }
             else {
                 let messageData = MessageData(type: .receivedOnline,
@@ -170,21 +345,15 @@ class ConversationDetailViewModel: NSObject {
                                               timestamp: message.date,
                                               userId: message.fromUser,
                                               attachment: message.attachment)
-                self.messages.append(messageData)
+                messages.append(messageData)
             }
         }
 
-        let sortedTimestampMessages = self.messages.sorted {
+        let sortedTimestampMessages = messages.sorted {
             $0.timestamp < $1.timestamp
         }
-
-        self.messages = sortedTimestampMessages
-
-        self.sortAllMessages()
-
-        self.isChatOnline = true
-
-        self.dataNeedsReload.send()
+        
+        return sortedTimestampMessages
     }
 
     private func updateChatMessages(newMessage: ChatMessage?) {
@@ -227,8 +396,11 @@ class ConversationDetailViewModel: NSObject {
 
     func sortAllMessages() {
 
-        sectionMessages = [:]
-        dateMessages = []
+        self.sectionMessages = [:]
+        self.dateMessages = []
+
+        // Reverse messages array
+        self.messages.reverse()
 
         for message in messages {
             let messageDate = getDateFormatted(dateString: message.date)
@@ -254,10 +426,29 @@ class ConversationDetailViewModel: NSObject {
             }
             return false
         }
+
+        // Reverse date messages array
+        self.dateMessages.reverse()
+
+        // TESTING SET READ MESSAGE
+//        if let lastMessage = self.dateMessages.last?.messages.last,
+//           let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId,
+//           let lastMessageUserId = lastMessage.userId,
+//           lastMessageUserId != "\(loggedUserId)" {
+//            print("SET MESSAGE AS READ")
+//            Env.gomaSocialClient.setChatroomRead(chatroomId: self.conversationId, messageId: lastMessage.timestamp)
+//        }
+
     }
 
     func addMessage(message: MessageData) {
-        Env.gomaSocialClient.sendMessage(chatroomId: self.conversationData.id, message: message.text, attachment: nil)
+        
+        guard let conversationData = self.conversationData else { return }
+        
+        Env.gomaSocialClient.sendMessage(chatroomId: conversationData.id,
+                                         message: message.text,
+                                         attachment: nil)
+        
         self.sortAllMessages()
     }
 
@@ -299,7 +490,9 @@ class ConversationDetailViewModel: NSObject {
 
     func getUsername(userId: String) -> String {
 
-        if let users = self.conversationData.groupUsers {
+        guard let conversationData = self.conversationData else { return "" }
+
+        if let users = conversationData.groupUsers {
             if let user = users.first(where: { "\($0.id)" == userId}) {
                 return user.username
             }
@@ -315,6 +508,67 @@ extension ConversationDetailViewModel {
         dateFormatter.dateFormat = "dd-MM-yyyy"
         return dateFormatter
     }()
+}
+
+extension ConversationDetailViewModel {
+    
+    
+    private func createIndividualConversationData(fromChatroomData chatroomData: ChatroomData) -> ConversationData {
+        var loggedUsername = ""
+        var chatroomName = ""
+        var chatroomUsers: [GomaFriend] = []
+
+        for user in chatroomData.users {
+            chatroomUsers.append(user)
+        }
+
+        for user in chatroomData.users {
+            if let loggedUser = UserSessionStore.loggedUserSession() {
+                if user.username != loggedUser.username {
+                    chatroomName = user.username
+                }
+                loggedUsername = loggedUser.username
+            }
+        }
+
+        let conversationData = ConversationData(id: chatroomData.chatroom.id,
+                                                conversationType: .user,
+                                                name: chatroomName,
+                                                lastMessage: "",
+                                                date: "",
+                                                timestamp: chatroomData.chatroom.creationTimestamp,
+                                                lastMessageUser: loggedUsername,
+                                                isLastMessageSeen: false,
+                                                groupUsers: chatroomUsers)
+
+        return conversationData
+    }
+
+    private func createGroupConversationData(fromChatroomData chatroomData: ChatroomData) -> ConversationData {
+        var loggedUsername = ""
+        let chatroomName = chatroomData.chatroom.name
+        var chatroomUsers: [GomaFriend] = []
+
+        if let loggedUser = UserSessionStore.loggedUserSession() {
+            loggedUsername = loggedUser.username
+        }
+
+        for user in chatroomData.users {
+            chatroomUsers.append(user)
+        }
+
+        let conversationData = ConversationData(id: chatroomData.chatroom.id,
+                                                conversationType: .group,
+                                                name: chatroomName,
+                                                lastMessage: "",
+                                                date: "",
+                                                timestamp: chatroomData.chatroom.creationTimestamp,
+                                                lastMessageUser: loggedUsername,
+                                                isLastMessageSeen: true,
+                                                groupUsers: chatroomUsers)
+        return conversationData
+    }
+
 }
 
 extension ConversationDetailViewModel {

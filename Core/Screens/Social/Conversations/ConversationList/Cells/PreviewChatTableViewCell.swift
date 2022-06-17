@@ -32,9 +32,15 @@ class PreviewChatTableViewCell: UITableViewCell {
         didSet {
             if isSeen {
                 self.dateLabel.textColor = UIColor.App.textSecondary
+                self.iconBaseView.layer.borderWidth = 2
+                self.iconBaseView.layer.borderColor = UIColor.App.backgroundOdds.cgColor
+                self.nameLabel.font = AppFont.with(type: .semibold, size: 16)
             }
             else {
                 self.dateLabel.textColor = UIColor.App.highlightPrimary
+                self.iconBaseView.layer.borderWidth = 2
+                self.iconBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+                self.nameLabel.font = AppFont.with(type: .bold, size: 16)
             }
 
             if self.messageLabel.text != "" {
@@ -44,20 +50,20 @@ class PreviewChatTableViewCell: UITableViewCell {
                 self.feedbackImageView.isHidden = true
             }
 
-            self.numberMessagesLabel.isHidden = isSeen
+            self.numberMessagesLabel.isHidden = true
         }
     }
 
     var isOnline: Bool = false {
         didSet {
-            if isOnline {
-                self.iconBaseView.layer.borderWidth = 2
-                self.iconBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
-            }
-            else {
-                self.iconBaseView.layer.borderWidth = 2
-                self.iconBaseView.layer.borderColor = UIColor.App.backgroundOdds.cgColor
-            }
+//            if isOnline {
+//                self.iconBaseView.layer.borderWidth = 2
+//                self.iconBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+//            }
+//            else {
+//                self.iconBaseView.layer.borderWidth = 2
+//                self.iconBaseView.layer.borderColor = UIColor.App.backgroundOdds.cgColor
+//            }
         }
     }
 
@@ -251,7 +257,7 @@ extension PreviewChatTableViewCell {
         let nameLabel = UILabel()
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.font = AppFont.with(type: .bold, size: 16)
-        nameLabel.text = "Suspendisse potenti. Cras a suscipit mi. Nam et mi ac ipsum luctus maximus."
+        nameLabel.text = "Username"
         nameLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return nameLabel
     }

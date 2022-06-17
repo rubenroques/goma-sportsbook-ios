@@ -93,6 +93,12 @@ class SentMessageTableViewCell: UITableViewCell {
 
     }
 
+    func isReversedCell(isReversed: Bool) {
+        if isReversed {
+            self.contentView.transform = CGAffineTransform(scaleX: 1, y: -1)
+        }
+    }
+
     private func setBubbleTailTriangle() {
         let heightWidth = self.topBubbleTailView.frame.width - 1
         let path = CGMutablePath()

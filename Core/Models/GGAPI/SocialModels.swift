@@ -35,11 +35,13 @@ struct Chatroom: Decodable {
     let id: Int
     let name: String
     let type: String
+    let creationTimestamp: Int?
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case name = "name"
         case type = "type"
+        case creationTimestamp = "created_at"
     }
 }
 
@@ -134,4 +136,30 @@ struct ChatMessage: Decodable, Hashable {
         self.repliedMessage = try? container.decode(String.self, forKey: .repliedMessage)
     }
     
+}
+
+struct ChatUsersResponse: Decodable {
+    var users: [String]
+    var messageId: Int
+
+    enum CodingKeys: String, CodingKey {
+        case users = "users"
+        case messageId = "message_id"
+    }
+}
+
+struct ChatOnlineUsersResponse: Decodable {
+    var users: [String]
+
+    enum CodingKeys: String, CodingKey {
+        case users = "users"
+    }
+}
+
+struct AddFriendResponse: Decodable {
+    var chatroomIds: [Int]?
+
+    enum CodingKeys: String, CodingKey {
+        case chatroomIds = "chat_room_ids"
+    }
 }

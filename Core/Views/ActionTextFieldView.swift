@@ -219,7 +219,17 @@ extension ActionTextFieldView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Action", for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 14)
-        StyleHelper.styleInfoButton(button: button)
+
+        button.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        button.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        button.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
+
+        button.layer.cornerRadius = CornerRadius.button
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.App.textPrimary.cgColor
+        button.layer.masksToBounds = true
+        button.backgroundColor = .clear
+
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
         button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return button

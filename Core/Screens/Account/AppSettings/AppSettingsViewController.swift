@@ -81,9 +81,16 @@ class AppSettingsViewController: UIViewController {
 
         let oddsView = SettingsRowView()
         oddsView.setTitle(title: localized("odds"))
+        oddsView.hasSeparatorLineView = true
         oddsView.hasNavigationImageView = true
         let oddsTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapOddsView))
         oddsView.addGestureRecognizer(oddsTap)
+
+        let chatView = SettingsRowView()
+        chatView.setTitle(title: localized("chat"))
+        chatView.hasNavigationImageView = true
+        let chatTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapChatView))
+        chatView.addGestureRecognizer(chatTap)
 
         self.topStackView.addArrangedSubview(notificationView)
 
@@ -92,6 +99,8 @@ class AppSettingsViewController: UIViewController {
         }
 
         self.topStackView.addArrangedSubview(oddsView)
+
+        self.topStackView.addArrangedSubview(chatView)
 
     }
 
@@ -137,6 +146,14 @@ extension AppSettingsViewController {
     @objc private func didTapOddsView() {
         let oddsViewController = OddsViewController()
         self.navigationController?.pushViewController(oddsViewController, animated: true)
+    }
+
+    @objc private func didTapChatView() {
+        let chatSettingsViewModel = ChatSettingsViewModel()
+
+        let chatSettingsViewController = ChatSettingsViewController(viewModel: chatSettingsViewModel)
+
+        self.navigationController?.pushViewController(chatSettingsViewController, animated: true)
     }
 }
 

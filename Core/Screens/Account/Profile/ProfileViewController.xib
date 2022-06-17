@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -49,6 +49,9 @@
                 <outlet property="totalBalanceLabel" destination="F24-gl-VWS" id="NVQ-MP-O0b"/>
                 <outlet property="totalBalanceTitleLabel" destination="ZNA-lM-Y9t" id="x9d-if-LRb"/>
                 <outlet property="totalBalanceView" destination="4us-C6-c7y" id="HGL-HF-0K7"/>
+                <outlet property="userCodeCopyImageView" destination="m3C-mi-Inl" id="aUy-5P-F8S"/>
+                <outlet property="userCodeCopyView" destination="kH0-av-4Qa" id="3DQ-tl-KTE"/>
+                <outlet property="userCodeStackView" destination="M40-Fh-HHv" id="1RD-6X-neb"/>
                 <outlet property="userIdLabel" destination="1gg-my-EQA" id="vat-Rd-pmO"/>
                 <outlet property="usernameLabel" destination="Y8Q-jn-Zp8" id="ZIJ-NC-CW1"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -78,17 +81,43 @@
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y8Q-jn-Zp8">
-                            <rect key="frame" x="179" y="23.5" width="56.5" height="22"/>
+                            <rect key="frame" x="179" y="25" width="56.5" height="19"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="22"/>
                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1gg-my-EQA">
-                            <rect key="frame" x="193" y="51.5" width="28" height="11"/>
-                            <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="11"/>
-                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <nil key="highlightedColor"/>
-                        </label>
+                        <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="M40-Fh-HHv">
+                            <rect key="frame" x="157" y="50" width="100" height="20"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1gg-my-EQA">
+                                    <rect key="frame" x="0.0" y="0.0" width="76" height="20"/>
+                                    <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="11"/>
+                                    <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kH0-av-4Qa">
+                                    <rect key="frame" x="80" y="0.0" width="20" height="20"/>
+                                    <subviews>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="copy_clipboard_icon" translatesAutoresizingMaskIntoConstraints="NO" id="m3C-mi-Inl">
+                                            <rect key="frame" x="3" y="2" width="14" height="14"/>
+                                        </imageView>
+                                    </subviews>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="20" id="ELI-eQ-ShK"/>
+                                        <constraint firstItem="m3C-mi-Inl" firstAttribute="leading" secondItem="kH0-av-4Qa" secondAttribute="leading" constant="3" id="Grt-54-qHR"/>
+                                        <constraint firstItem="m3C-mi-Inl" firstAttribute="top" secondItem="kH0-av-4Qa" secondAttribute="top" constant="2" id="WWE-0q-1SO"/>
+                                        <constraint firstAttribute="trailing" secondItem="m3C-mi-Inl" secondAttribute="trailing" constant="3" id="a1J-Db-wjv"/>
+                                        <constraint firstAttribute="height" constant="20" id="lez-fD-Ulk"/>
+                                        <constraint firstAttribute="bottom" secondItem="m3C-mi-Inl" secondAttribute="bottom" constant="4" id="xHZ-JU-5zR"/>
+                                    </constraints>
+                                </view>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="fc5-zT-FAb"/>
+                                <constraint firstAttribute="height" constant="20" id="xsa-KX-pAI"/>
+                            </constraints>
+                        </stackView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wIc-jL-CMS">
                             <rect key="frame" x="348" y="17" width="58" height="32"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
@@ -102,13 +131,14 @@
                     </subviews>
                     <color key="backgroundColor" name="backgroundPrimary"/>
                     <constraints>
+                        <constraint firstItem="M40-Fh-HHv" firstAttribute="top" secondItem="Y8Q-jn-Zp8" secondAttribute="bottom" constant="6" id="0Jh-Sb-YAD"/>
                         <constraint firstItem="Y8Q-jn-Zp8" firstAttribute="centerX" secondItem="upr-br-gCP" secondAttribute="centerX" id="77J-tn-z3X"/>
                         <constraint firstItem="Jbl-ih-uBZ" firstAttribute="centerY" secondItem="rcX-bW-GVx" secondAttribute="centerY" id="F1b-SP-hKa"/>
                         <constraint firstItem="rcX-bW-GVx" firstAttribute="top" secondItem="upr-br-gCP" secondAttribute="top" constant="17" id="GJg-SE-nyY"/>
-                        <constraint firstItem="1gg-my-EQA" firstAttribute="top" secondItem="Y8Q-jn-Zp8" secondAttribute="bottom" constant="6" id="X30-yI-LWd"/>
                         <constraint firstAttribute="trailing" secondItem="wIc-jL-CMS" secondAttribute="trailing" constant="8" id="Xvv-tM-j6t"/>
+                        <constraint firstItem="M40-Fh-HHv" firstAttribute="centerX" secondItem="upr-br-gCP" secondAttribute="centerX" id="YVj-tN-PFt"/>
+                        <constraint firstAttribute="bottom" secondItem="M40-Fh-HHv" secondAttribute="bottom" id="ZDR-zl-FhS"/>
                         <constraint firstItem="Jbl-ih-uBZ" firstAttribute="top" secondItem="rcX-bW-GVx" secondAttribute="top" constant="-4" id="biG-e9-zTy"/>
-                        <constraint firstItem="1gg-my-EQA" firstAttribute="centerX" secondItem="upr-br-gCP" secondAttribute="centerX" id="g0e-Tr-G0w"/>
                         <constraint firstAttribute="height" constant="70" id="g4R-ms-IT6"/>
                         <constraint firstItem="Y8Q-jn-Zp8" firstAttribute="centerY" secondItem="rcX-bW-GVx" secondAttribute="centerY" id="i3R-Mt-1Tb"/>
                         <constraint firstItem="wIc-jL-CMS" firstAttribute="top" secondItem="upr-br-gCP" secondAttribute="top" constant="17" id="iK7-HN-OkL"/>
@@ -377,6 +407,7 @@ Sportsbook® All Rights Reserved</string>
         </view>
     </objects>
     <resources>
+        <image name="copy_clipboard_icon" width="16" height="16"/>
         <image name="empty_user_image" width="100" height="100"/>
         <image name="logout_account_icon" width="20" height="20"/>
         <namedColor name="backgroundPrimary">

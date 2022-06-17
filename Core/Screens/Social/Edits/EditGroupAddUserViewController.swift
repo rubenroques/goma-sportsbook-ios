@@ -250,10 +250,6 @@ extension EditGroupAddUserViewController: UITableViewDataSource, UITableViewDele
         if let userContact = self.viewModel.usersPublisher.value[safe: indexPath.row] {
 
             if let cellViewModel = self.viewModel.cachedCellViewModels[userContact.id] {
-                // TEST
-                if indexPath.row % 2 == 0 {
-                    cellViewModel.isOnline = true
-                }
 
                 cell.configure(viewModel: cellViewModel)
 
@@ -264,10 +260,6 @@ extension EditGroupAddUserViewController: UITableViewDataSource, UITableViewDele
             else {
                 let cellViewModel = AddFriendCellViewModel(userContact: userContact)
                 self.viewModel.cachedCellViewModels[userContact.id] = cellViewModel
-                // TEST
-                if indexPath.row % 2 == 0 {
-                    cellViewModel.isOnline = true
-                }
 
                 cell.configure(viewModel: cellViewModel)
 

@@ -20,7 +20,11 @@ class ProfileViewController: UIViewController {
     @IBOutlet private weak var profilePictureBaseView: UIView!
     @IBOutlet private weak var profilePictureImageView: UIImageView!
     @IBOutlet private weak var usernameLabel: UILabel!
+
+    @IBOutlet private weak var userCodeStackView: UIStackView!
     @IBOutlet private weak var userIdLabel: UILabel!
+    @IBOutlet private weak var userCodeCopyView: UIView!
+    @IBOutlet private weak var userCodeCopyImageView: UIImageView!
     @IBOutlet private weak var shadowView: UIView!
 
     @IBOutlet private weak var totalBalanceView: UIView!
@@ -54,6 +58,7 @@ class ProfileViewController: UIViewController {
 
     var userSession: UserSession?
     var cancellables = Set<AnyCancellable>()
+    let pasteboard = UIPasteboard.general
 
     enum PageMode {
         case user
@@ -92,7 +97,12 @@ class ProfileViewController: UIViewController {
 
         if let user = self.userSession {
             self.usernameLabel.text = user.username
-            self.userIdLabel.text = user.userId
+            // self.userIdLabel.text = user.userId
+        }
+
+        if let userCode = Env.gomaNetworkClient.getCurrentToken()?.code {
+            let userCodeString = localized("user_code").replacingOccurrences(of: "%s", with: userCode)
+            self.userIdLabel.text = userCodeString
         }
 
         Env.everyMatrixClient.getProfileStatus()
@@ -216,7 +226,6 @@ class ProfileViewController: UIViewController {
 
         currentBalanceLabel.text = localized("loading")
 
-
         if let versionNumber = Bundle.main.versionNumber,
            let buildNumber = Bundle.main.buildNumber {
             let appVersionRawString = localized("app_version_profile")
@@ -226,8 +235,6 @@ class ProfileViewController: UIViewController {
         }
 
         self.infoLabel.isUserInteractionEnabled = true
-        let infolabelTapGesture = UITapGestureRecognizer.init(target: self, action: #selector(self.didTapAppVersionLabel))
-        self.infoLabel.addGestureRecognizer(infolabelTapGesture)
 
         self.activationAlertScrollableView.layer.cornerRadius = CornerRadius.button
         self.activationAlertScrollableView.layer.masksToBounds = true
@@ -235,6 +242,22 @@ class ProfileViewController: UIViewController {
         self.verifyUserActivationConditions()
 
         self.setupStackView()
+
+        let copyCodeTap = UITapGestureRecognizer(target: self, action: #selector(self.tapCopyCode))
+        self.userCodeStackView.addGestureRecognizer(copyCodeTap)
+
+    }
+
+    @objc func tapCopyCode() {
+        if let userCode = Env.gomaNetworkClient.getCurrentToken()?.code {
+            self.pasteboard.string = userCode
+
+            let customCodeString = localized("user_code_copied").replacingOccurrences(of: "%s", with: userCode)
+
+            let customToast = ToastCustom.text(title: customCodeString)
+
+            customToast.show()
+        }
     }
 
     func verifyUserActivationConditions() {
@@ -292,7 +315,6 @@ class ProfileViewController: UIViewController {
         closeButton.setTitleColor( UIColor.App.highlightPrimary, for: .normal)
         closeButton.setTitleColor( UIColor.App.highlightPrimary.withAlphaComponent(0.7), for: .highlighted)
         closeButton.setTitleColor( UIColor.App.highlightPrimary.withAlphaComponent(0.4), for: .disabled)
-
 
         safeAreaTopView.backgroundColor = UIColor.App.backgroundPrimary
         self.topBarView.backgroundColor = UIColor.App.backgroundPrimary
@@ -454,19 +476,6 @@ class ProfileViewController: UIViewController {
         }
     }
 
-    @IBAction private func didTapAppVersionLabel() {
-        guard
-            Env.everyMatrixClient.userSessionStatusPublisher.value == .logged,
-            let userId = UserSessionStore.loggedUserSession()?.userId
-        else {
-            return
-        }
-
-        let casinoWebViewController = CasinoWebViewController(userId: userId)
-        casinoWebViewController.modalPresentationStyle = .fullScreen
-
-        self.present(casinoWebViewController, animated: true, completion: nil)
-    }
 }
 
 extension ProfileViewController {
