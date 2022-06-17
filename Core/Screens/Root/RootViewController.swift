@@ -851,7 +851,7 @@ extension RootViewController {
     @objc private func didTapSportsbookIcon() {
         self.casinoButtonBaseView.isHidden = false
         self.tabBarView.isHidden = false
-        self.searchButton.isHidden = true
+        self.searchButton.isHidden = false
         self.selectedTabItem = .home
         self.selectHomeTabBarItem()
     }
