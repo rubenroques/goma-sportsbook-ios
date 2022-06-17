@@ -276,6 +276,20 @@ class LiveEventsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+//        Env.gomaSocialClient.unreadMessagesCountPublisher
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] unreadCounter in
+//                print("UNREAD COUNT: \(unreadCounter)")
+//                if unreadCounter > 0 {
+//                    self?.chatCountLabel.text = "\(unreadCounter)"
+//                    self?.chatCountLabel.isHidden = false
+//                }
+//                else {
+//                    self?.chatCountLabel.isHidden = true
+//                }
+//            })
+//            .store(in: &cancellables)
+
     }
 
     private func setupWithTheme() {
@@ -306,7 +320,6 @@ class LiveEventsViewController: UIViewController {
         }
         //
         //
-
 
         self.tableView.backgroundColor = .clear
         self.tableView.backgroundView?.backgroundColor = .clear

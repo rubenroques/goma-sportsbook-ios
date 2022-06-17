@@ -492,3 +492,4 @@ Terms of use, Privacy Policy and EULA";
 "unfriend" = "Unfriend";
 
 "user_code" = "User code: %s";
+"user_code_copied" = "User Code %s copied.";

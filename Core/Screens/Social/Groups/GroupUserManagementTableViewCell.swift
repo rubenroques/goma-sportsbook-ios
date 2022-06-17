@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class GroupUserManagementTableViewCell: UITableViewCell {
 
@@ -21,6 +22,8 @@ class GroupUserManagementTableViewCell: UITableViewCell {
     private lazy var userStateView: UIView = Self.createUserStateView()
     private lazy var deleteButton: UIButton = Self.createDeleteButton()
     private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
+
+    private var cancellables = Set<AnyCancellable>()
 
     var viewModel: GroupUserManagementCellViewModel?
     var didTapDeleteAction: (() -> Void)?
@@ -113,9 +116,13 @@ class GroupUserManagementTableViewCell: UITableViewCell {
 
         self.titleLabel.text = viewModel.username
 
-        self.isOnline = viewModel.isOnline
-
         self.isAdmin = viewModel.isAdmin
+
+        viewModel.isOnlinePublisher
+            .sink(receiveValue: { [weak self] isOnline in
+                self?.isOnline = isOnline
+            })
+            .store(in: &cancellables)
 
     }
 

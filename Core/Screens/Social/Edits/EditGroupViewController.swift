@@ -413,29 +413,29 @@ extension EditGroupViewController: UITableViewDataSource, UITableViewDelegate {
 
                 if let cellViewModel = self.viewModel.cachedUserCellViewModels[userContact.id] {
                     // TEST
-                    if indexPath.row % 2 == 0 {
-                        cellViewModel.isOnline = true
-                    }
-
-                    if userContact.id == "\(adminUserId)" {
-                        cellViewModel.isAdmin = true
-                    }
+//                    if indexPath.row % 2 == 0 {
+//                        cellViewModel.isOnline = true
+//                    }
+//
+//                    if userContact.id == "\(adminUserId)" {
+//                        cellViewModel.isAdmin = true
+//                    }
 
                     cell.configure(viewModel: cellViewModel)
 
                 }
                 else {
-                    let cellViewModel = GroupUserManagementCellViewModel(userContact: userContact)
+                    let cellViewModel = GroupUserManagementCellViewModel(userContact: userContact, chatroomId: self.viewModel.getChatroomId())
                     self.viewModel.cachedUserCellViewModels[userContact.id] = cellViewModel
                     // TEST
-                    if indexPath.row % 2 == 0 {
-                        cellViewModel.isOnline = true
-                    }
+//                    if indexPath.row % 2 == 0 {
+//                        cellViewModel.isOnline = true
+//                    }
+//
+//                    if userContact.id == "\(adminUserId)" {
+//                        cellViewModel.isAdmin = true
+//                    }
                     
-                    if userContact.id == "\(adminUserId)" {
-                        cellViewModel.isAdmin = true
-                    }
-
                     cell.configure(viewModel: cellViewModel)
 
                 }

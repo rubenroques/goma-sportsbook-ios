@@ -94,12 +94,12 @@ class ConversationDetailViewController: UIViewController {
         let contactTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapContactInfo))
         self.navigationView.addGestureRecognizer(contactTapGesture)
 
-        if self.viewModel.isChatOnline {
-            self.iconStateView.isHidden = false
-        }
-        else {
-            self.iconStateView.isHidden = true
-        }
+//        if self.viewModel.isChatOnline {
+//            self.iconStateView.isHidden = false
+//        }
+//        else {
+//            self.iconStateView.isHidden = true
+//        }
 
         self.isChatGroup = self.viewModel.isChatGroup
 
@@ -110,6 +110,8 @@ class ConversationDetailViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+
+        self.tableView.transform = CGAffineTransform(scaleX: 1, y: -1)
 
     }
 
@@ -122,7 +124,7 @@ class ConversationDetailViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        self.scrollToBottomTableView()
+        // self.scrollToBottomTableView()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -216,7 +218,7 @@ class ConversationDetailViewController: UIViewController {
         viewModel.shouldScrollToLastMessage
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
-                self?.scrollToBottomTableView()
+                self?.scrollToTopTableView()
             })
             .store(in: &cancellables)
 
@@ -247,6 +249,13 @@ class ConversationDetailViewController: UIViewController {
                 self?.showBetslipViewController()
             }
         }
+
+        viewModel.isChatOnlinePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isOnline in
+                self?.iconStateView.isHidden = !isOnline
+            })
+            .store(in: &cancellables)
         
     }
 
@@ -265,14 +274,13 @@ class ConversationDetailViewController: UIViewController {
 
     }
 
-    func scrollToBottomTableView(animated: Bool = true) {
+    func scrollToTopTableView(animated: Bool = true) {
         if self.viewModel.dateMessages.isNotEmpty {
 
-            let section = self.viewModel.dateMessages.count - 1
+            let section = 0
+            let row = 0
 
             if let dateMessages = self.viewModel.dateMessages[safe: section] {
-
-                let row = dateMessages.messages.count - 1
 
                 let indexPath = IndexPath(row: row, section: section)
 
@@ -380,7 +388,7 @@ class ConversationDetailViewController: UIViewController {
     @objc func keyboardWillShow(notification: NSNotification) {
         self.messageInputKeyboardConstraint.isActive = false
         self.messageInputBottomConstraint.isActive = true
-        self.scrollToBottomTableView()
+        //self.scrollToBottomTableView()
 
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             let keyboardHeight = keyboardSize.height - self.bottomSafeAreaView.frame.height
@@ -431,6 +439,9 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
                     cell.didTapBetNowAction = { [weak self] viewModel in
                         self?.addTicketToBetslip(ticket: viewModel.ticket)
                     }
+
+                    cell.isReversedCell(isReversed: true)
+
                     return cell
                 }
                 else {
@@ -439,7 +450,11 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
                     else {
                         fatalError()
                     }
+
                     cell.setupMessage(messageData: messageData)
+
+                    cell.isReversedCell(isReversed: true)
+
                     return cell
                 }
             }
@@ -453,11 +468,14 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
                     }
                     if let userId = messageData.userId {
                         let username = self.viewModel.getUsername(userId: userId)
-                        cell.setupMessage(messageData: messageData, username: username)
+                        cell.setupMessage(messageData: messageData, username: username, chatroomId: self.viewModel.conversationId)
                         cell.didTapBetNowAction = { [weak self] viewModel in
                             self?.addTicketToBetslip(ticket: viewModel.ticket)
                         }
                     }
+
+                    cell.isReversedCell(isReversed: true)
+
                     return cell
                 }
                 else {
@@ -468,8 +486,11 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
                     }
                     if let userId = messageData.userId {
                         let username = self.viewModel.getUsername(userId: userId)
-                        cell.setupMessage(messageData: messageData, username: username)
+                        cell.setupMessage(messageData: messageData, username: username, chatroomId: self.viewModel.conversationId)
                     }
+
+                    cell.isReversedCell(isReversed: true)
+
                     return cell
                 }
             }
@@ -478,16 +499,33 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        guard
+//            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: DateHeaderFooterView.identifier) as? DateHeaderFooterView
+//        else {
+//            fatalError()
+//        }
+//
+//        let headerDate = self.viewModel.sectionTitle(forSectionIndex: section)
+//        headerView.configureHeader(title: headerDate)
+//
+//        return headerView
+        return UIView()
+    }
+
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         guard
-            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: DateHeaderFooterView.identifier) as? DateHeaderFooterView
+            let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: DateHeaderFooterView.identifier) as? DateHeaderFooterView
         else {
             fatalError()
         }
-        
-        let headerDate = self.viewModel.sectionTitle(forSectionIndex: section)
-        headerView.configureHeader(title: headerDate)
 
-        return headerView
+        let footerDate = self.viewModel.sectionTitle(forSectionIndex: section)
+
+        footerView.configureHeader(title: footerDate)
+
+        footerView.isReversedContent(isReversed: true)
+
+        return footerView
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -499,19 +537,21 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 20
+        // return 20
+        return 0.1
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        return 20
+        // return 20
+        return 0.1
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 0
+        return 20
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
-        return 0
+        return 20
     }
 }
 

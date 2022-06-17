@@ -47,6 +47,12 @@ class DateHeaderFooterView: UITableViewHeaderFooterView {
     func configureHeader(title: String) {
         self.titleLabel.text = title
     }
+
+    func isReversedContent(isReversed: Bool) {
+        if isReversed {
+            self.contentView.transform = CGAffineTransform(scaleX: 1, y: -1)
+        }
+    }
 }
 
 //
