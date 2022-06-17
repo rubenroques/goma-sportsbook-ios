@@ -115,10 +115,10 @@ extension ChooseEmailActionSheetPresenter {
     func setupChooseEmailActionSheet(withTitle title: String? = localized("choose_email")) -> UIAlertController {
         let emailActionSheet = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
         emailActionSheet.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
-        if let action = openAction(withURL: "mailto:", andTitleActionTitle: "Mail") {
+        if let action = openAction(withURL: "message://", andTitleActionTitle: "Mail") {
             emailActionSheet.addAction(action)
         }
-
+     
          if let action = openAction(withURL: "googlegmail:///", andTitleActionTitle: "Gmail") {
             emailActionSheet.addAction(action)
          }
