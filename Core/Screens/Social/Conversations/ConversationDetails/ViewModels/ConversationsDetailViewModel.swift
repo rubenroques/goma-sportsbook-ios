@@ -26,6 +26,7 @@ class ConversationDetailViewModel: NSObject {
 
     var isLoadingConversationPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isLoadingSharedBetPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var onlineUsersCountPublisher: CurrentValueSubject<Int, Never> = .init(0)
     
     var ticketAddedToBetslipAction: ((Bool) -> Void)?
     
@@ -138,6 +139,21 @@ class ConversationDetailViewModel: NSObject {
                         }
                         else {
                             self.isChatOnlinePublisher.send(false)
+
+                        }
+
+                        if let groupUsers = self.conversationData?.groupUsers {
+
+                            let numberUsers = groupUsers.count
+                            let onlineUsers = onlineUsersChat.users.count
+                            var userDetailsString = ""
+
+                            let chatGroupDetailString = localized("chat_group_users_details")
+
+                            userDetailsString = chatGroupDetailString.replacingFirstOccurrence(of: "%s", with: "\(onlineUsers)")
+                            userDetailsString = userDetailsString.replacingOccurrences(of: "%s", with: "\(numberUsers)")
+
+                            self.usersPublisher.send(userDetailsString)
 
                         }
 

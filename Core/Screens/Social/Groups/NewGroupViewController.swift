@@ -216,10 +216,10 @@ class NewGroupViewController: UIViewController {
     }
 
     @objc func didTapNextButton() {
-        print("NEXT")
         var selectedUsers: [UserContact] = []
-        if let loggedUser = UserSessionStore.loggedUserSession() {
-            let adminUser = UserContact(id: loggedUser.userId, username: loggedUser.username, phones: ["+351968765890"])
+        if let loggedUser = UserSessionStore.loggedUserSession(),
+           let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+            let adminUser = UserContact(id: "\(loggedUserId)", username: loggedUser.username, phones: [])
 
             selectedUsers.append(adminUser)
         }
@@ -302,9 +302,9 @@ extension NewGroupViewController: UITableViewDataSource, UITableViewDelegate {
 
             if let cellViewModel = self.viewModel.cachedFriendCellViewModels[userContact.id] {
                 // TEST
-                if indexPath.row % 2 == 0 {
-                    cellViewModel.isOnline = true
-                }
+//                if indexPath.row % 2 == 0 {
+//                    cellViewModel.isOnline = true
+//                }
                 cell.configure(viewModel: cellViewModel)
 
                 cell.didTapCheckboxAction = { [weak self] in
@@ -315,9 +315,9 @@ extension NewGroupViewController: UITableViewDataSource, UITableViewDelegate {
                 let cellViewModel = AddFriendCellViewModel(userContact: userContact)
                 self.viewModel.cachedFriendCellViewModels[userContact.id] = cellViewModel
                 // TEST
-                if indexPath.row % 2 == 0 {
-                    cellViewModel.isOnline = true
-                }
+//                if indexPath.row % 2 == 0 {
+//                    cellViewModel.isOnline = true
+//                }
                 cell.configure(viewModel: cellViewModel)
 
                 cell.didTapCheckboxAction = { [weak self] in

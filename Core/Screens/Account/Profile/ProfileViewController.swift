@@ -247,11 +247,18 @@ class ProfileViewController: UIViewController {
 
         let copyCodeTap = UITapGestureRecognizer(target: self, action: #selector(self.tapCopyCode))
         self.userCodeStackView.addGestureRecognizer(copyCodeTap)
+
     }
 
     @objc func tapCopyCode() {
         if let userCode = Env.gomaNetworkClient.getCurrentToken()?.code {
             self.pasteboard.string = userCode
+
+            let customCodeString = localized("user_code_copied").replacingOccurrences(of: "%s", with: userCode)
+
+            let customToast = ToastCustom.text(title: customCodeString)
+
+            customToast.show()
         }
     }
 

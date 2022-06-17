@@ -110,9 +110,13 @@ class FriendStatusTableViewCell: UITableViewCell {
 
         self.notificationsEnabled = viewModel.notificationsEnabled
 
-        self.isOnline = false
-
         self.notificationEnabledButton.isHidden = true
+
+        viewModel.isOnlinePublisher
+            .sink(receiveValue: { [weak self] isOnline in
+                self?.isOnline = isOnline
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Actions

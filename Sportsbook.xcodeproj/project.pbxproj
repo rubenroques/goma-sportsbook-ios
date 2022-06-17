@@ -3710,6 +3710,12 @@
 		A9BCF45127552851006DD528 /* Cashout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF44F27552851006DD528 /* Cashout.swift */; };
 		A9BCF45627554E88006DD528 /* CashoutSubmission.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF45527554E88006DD528 /* CashoutSubmission.swift */; };
 		A9BCF45727554E88006DD528 /* CashoutSubmission.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF45527554E88006DD528 /* CashoutSubmission.swift */; };
+		A9C18A92285CDF0B009F0063 /* ToastCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C18A91285CDF0B009F0063 /* ToastCustom.swift */; };
+		A9C18A93285CDF0B009F0063 /* ToastCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C18A91285CDF0B009F0063 /* ToastCustom.swift */; };
+		A9C18A94285CDF0B009F0063 /* ToastCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C18A91285CDF0B009F0063 /* ToastCustom.swift */; };
+		A9C18A95285CDF0B009F0063 /* ToastCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C18A91285CDF0B009F0063 /* ToastCustom.swift */; };
+		A9C18A96285CDF0B009F0063 /* ToastCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C18A91285CDF0B009F0063 /* ToastCustom.swift */; };
+		A9C18A97285CDF0B009F0063 /* ToastCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C18A91285CDF0B009F0063 /* ToastCustom.swift */; };
 		A9C6022B2716F13F00992E11 /* HomeFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C602292716F13F00992E11 /* HomeFilterViewController.swift */; };
 		A9C6022C2716F13F00992E11 /* HomeFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */; };
 		A9C6022D2716F40300992E11 /* HomeFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C602292716F13F00992E11 /* HomeFilterViewController.swift */; };
@@ -4448,6 +4454,7 @@
 		A9BCF44B2750FCA5006DD528 /* BetslipErrorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BetslipErrorView.xib; sourceTree = "<group>"; };
 		A9BCF44F27552851006DD528 /* Cashout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cashout.swift; sourceTree = "<group>"; };
 		A9BCF45527554E88006DD528 /* CashoutSubmission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashoutSubmission.swift; sourceTree = "<group>"; };
+		A9C18A91285CDF0B009F0063 /* ToastCustom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastCustom.swift; sourceTree = "<group>"; };
 		A9C602292716F13F00992E11 /* HomeFilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFilterViewController.swift; sourceTree = "<group>"; };
 		A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeFilterViewController.xib; sourceTree = "<group>"; };
 		A9C602342716F7BE00992E11 /* FilterCollapseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCollapseView.swift; sourceTree = "<group>"; };
@@ -6519,6 +6526,7 @@
 				A9B058A028293C250089B0D7 /* UserInfoView.swift */,
 				A9A207E0283BDFCB00499DBC /* ChatTicketSelectionView.swift */,
 				45B6E224283FD08C001B570C /* ChatTicketInMessageView.swift */,
+				A9C18A91285CDF0B009F0063 /* ToastCustom.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -8685,6 +8693,7 @@
 				A9B0588E28252B360089B0D7 /* NewMessageViewModel.swift in Sources */,
 				457F49642737D9120047169D /* BetSubmissionSuccessViewController.swift in Sources */,
 				A9627A0C274548610001E1D5 /* ActivationAlertCollectionViewCell.swift in Sources */,
+				A9C18A92285CDF0B009F0063 /* ToastCustom.swift in Sources */,
 				4589F41926BF0243005DF543 /* NibView.swift in Sources */,
 				A96CA7C027F474CC00022DB2 /* BonusHistoryCellViewModel.swift in Sources */,
 				A9A2E7EC27FC4FC700D35A9D /* BonusProgressView.swift in Sources */,
@@ -9193,6 +9202,7 @@
 				A9B0588F28252B360089B0D7 /* NewMessageViewModel.swift in Sources */,
 				A979CA54275E6C0B00230E93 /* MatchOddsContent.swift in Sources */,
 				45166CF426F3548D00E69D65 /* EventSSWampMessage.swift in Sources */,
+				A9C18A93285CDF0B009F0063 /* ToastCustom.swift in Sources */,
 				457F49652737D9120047169D /* BetSubmissionSuccessViewController.swift in Sources */,
 				A96CA7C127F474CC00022DB2 /* BonusHistoryCellViewModel.swift in Sources */,
 				A9A2E7ED27FC4FC700D35A9D /* BonusProgressView.swift in Sources */,
@@ -9693,6 +9703,7 @@
 				457CBAF6282D27D000ED0F00 /* NibView.swift in Sources */,
 				457CBAF7282D27D000ED0F00 /* BonusHistoryCellViewModel.swift in Sources */,
 				457CBAF8282D27D000ED0F00 /* BonusProgressView.swift in Sources */,
+				A9C18A96285CDF0B009F0063 /* ToastCustom.swift in Sources */,
 				457CBAF9282D27D000ED0F00 /* DateHeaderFooterView.swift in Sources */,
 				457CBAFA282D27D000ED0F00 /* MaintenanceViewController.swift in Sources */,
 				457CBAFB282D27D000ED0F00 /* FriendStatusCellViewModel.swift in Sources */,
@@ -10193,6 +10204,7 @@
 				457CBD9E282D2CD100ED0F00 /* NibView.swift in Sources */,
 				457CBD9F282D2CD100ED0F00 /* BonusHistoryCellViewModel.swift in Sources */,
 				457CBDA0282D2CD100ED0F00 /* BonusProgressView.swift in Sources */,
+				A9C18A97285CDF0B009F0063 /* ToastCustom.swift in Sources */,
 				457CBDA1282D2CD100ED0F00 /* DateHeaderFooterView.swift in Sources */,
 				457CBDA2282D2CD100ED0F00 /* MaintenanceViewController.swift in Sources */,
 				457CBDA3282D2CD100ED0F00 /* FriendStatusCellViewModel.swift in Sources */,
@@ -10693,6 +10705,7 @@
 				4589C87D282024E400243547 /* BonusHistoryCellViewModel.swift in Sources */,
 				4589C87E282024E400243547 /* BonusProgressView.swift in Sources */,
 				4589C87F282024E400243547 /* DateHeaderFooterView.swift in Sources */,
+				A9C18A94285CDF0B009F0063 /* ToastCustom.swift in Sources */,
 				4589C880282024E400243547 /* MaintenanceViewController.swift in Sources */,
 				45A6BB832821459200D9B416 /* FriendStatusCellViewModel.swift in Sources */,
 				45A6BB84282145BB00D9B416 /* FriendStatusTableViewCell.swift in Sources */,
@@ -11193,6 +11206,7 @@
 				45A6BCCF28246A7500D9B416 /* NibView.swift in Sources */,
 				45A6BCD028246A7500D9B416 /* BonusHistoryCellViewModel.swift in Sources */,
 				45A6BCD128246A7500D9B416 /* BonusProgressView.swift in Sources */,
+				A9C18A95285CDF0B009F0063 /* ToastCustom.swift in Sources */,
 				45A6BCD228246A7500D9B416 /* DateHeaderFooterView.swift in Sources */,
 				45A6BCD328246A7500D9B416 /* MaintenanceViewController.swift in Sources */,
 				45A6BCD428246A7500D9B416 /* CallSSWampMessage.swift in Sources */,
