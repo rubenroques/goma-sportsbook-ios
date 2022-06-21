@@ -94,13 +94,6 @@ class ConversationDetailViewController: UIViewController {
         let contactTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapContactInfo))
         self.navigationView.addGestureRecognizer(contactTapGesture)
 
-//        if self.viewModel.isChatOnline {
-//            self.iconStateView.isHidden = false
-//        }
-//        else {
-//            self.iconStateView.isHidden = true
-//        }
-
         self.isChatGroup = self.viewModel.isChatGroup
 
         self.bind(toViewModel: self.viewModel)
@@ -309,7 +302,9 @@ class ConversationDetailViewController: UIViewController {
     // MARK: Actions
     @objc func didTapBackButton() {
         
-        self.shouldReloadData?()
+        // self.shouldReloadData?()
+
+        Env.gomaSocialClient.reloadChatroomsList.send()
 
         self.navigationController?.popToRootViewController(animated: true)
     }
@@ -388,7 +383,7 @@ class ConversationDetailViewController: UIViewController {
     @objc func keyboardWillShow(notification: NSNotification) {
         self.messageInputKeyboardConstraint.isActive = false
         self.messageInputBottomConstraint.isActive = true
-        //self.scrollToBottomTableView()
+        self.scrollToTopTableView()
 
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             let keyboardHeight = keyboardSize.height - self.bottomSafeAreaView.frame.height
@@ -552,6 +547,14 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
 
     func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
         return 20
+    }
+
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        isModalInPresentation = true
+    }
+
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        isModalInPresentation = false
     }
 }
 

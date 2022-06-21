@@ -36,6 +36,7 @@ enum GomaGamingService {
     case removeUser(chatroomId: Int, userId: String)
     case addUserToGroup(chatroomId: Int, userIds: [String])
     case searchUserCode(code: String)
+    case getNotification(type: String)
 }
 
 extension GomaGamingService: Endpoint {
@@ -100,6 +101,8 @@ extension GomaGamingService: Endpoint {
             return "/api/social/\(apiVersion)/groups/\(chatroomId)/users"
         case .searchUserCode(let code):
             return "/api/users/\(apiVersion)/code/\(code)"
+        case .getNotification:
+            return "/api/notifications/\(apiVersion)"
         }
     }
 
@@ -153,6 +156,9 @@ extension GomaGamingService: Endpoint {
 
             print("ADD USER GROUP QUERY: \(queryItemsURL)")
             return queryItemsURL
+        case .getNotification(let type):
+            return [URLQueryItem(name: "type", value: type)]
+
         }
     }
 
@@ -187,7 +193,7 @@ extension GomaGamingService: Endpoint {
         // Social
         case .addFriend, .inviteFriend, .addGroup, .addUserToGroup, .lookupPhone:
             return .post
-        case .listFriends, .chatrooms, .searchUserCode:
+        case .listFriends, .chatrooms, .searchUserCode, .getNotification:
             return .get
         case .deleteGroup, .deleteFriend, .removeUser:
             return .delete

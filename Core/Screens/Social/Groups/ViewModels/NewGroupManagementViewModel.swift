@@ -54,4 +54,13 @@ class NewGroupManagementViewModel {
         return initials
     }
 
+    func getAdminUserId() -> Int {
+
+        if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+            return loggedUserId
+        }
+
+        return 0
+    }
+
 }

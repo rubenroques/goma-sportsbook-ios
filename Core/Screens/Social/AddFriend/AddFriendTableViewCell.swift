@@ -121,8 +121,6 @@ class AddFriendTableViewCell: UITableViewCell {
 
         self.isCheckboxSelected = viewModel.isCheckboxSelected
 
-        // self.isOnline = viewModel.isOnline
-
         viewModel.isOnlinePublisher
             .sink(receiveValue: { [weak self] isOnline in
                 self?.isOnline = isOnline

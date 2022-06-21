@@ -163,3 +163,50 @@ struct AddFriendResponse: Decodable {
         case chatroomIds = "chat_room_ids"
     }
 }
+
+struct ChatNotification: Decodable {
+    var id: Int
+    var firstSentDate: String?
+    var lastSentDate: String?
+    var title: String
+    var text: String
+    var type: String
+    var typeId: Int
+    var processed: Int
+    var createdAt: String?
+    var updatedAt: String?
+    var url: String?
+    var imageUrl: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case firstSentDate = "first_sent_date"
+        case lastSentDate = "last_sent_date"
+        case title = "title"
+        case text = "text"
+        case type = "type"
+        case typeId = "type_id"
+        case processed = "processed"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case url = "url"
+        case imageUrl = "image_url"
+    }
+
+}
+
+enum NotificationsType {
+    case bet
+    case event
+    case chat
+    case custom
+
+    var identifier : String {
+        switch self {
+        case .bet: return "bet"
+        case .event: return "event"
+        case .chat: return "chat"
+        case .custom: return "custom"
+        }
+    }
+}

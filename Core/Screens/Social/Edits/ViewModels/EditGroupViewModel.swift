@@ -83,7 +83,6 @@ class EditGroupViewModel {
                 // self?.isLoadingPublisher.send(false)
 
             }, receiveValue: { [weak self] response in
-                print("EDIT GROUP GOMA: \(response)")
                 self?.groupNamePublisher.value = groupName
                 self?.isGroupEdited = true
                 self?.editGroupFinished.send()
@@ -106,7 +105,6 @@ class EditGroupViewModel {
                 }
 
             }, receiveValue: { [weak self] response in
-                print("REMOVE USER GROUP GOMA: \(response)")
                 self?.isGroupEdited = true
                 self?.users.remove(at: userIndex)
                 self?.cachedUserCellViewModels[userId] = nil

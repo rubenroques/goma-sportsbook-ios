@@ -417,9 +417,9 @@ extension EditGroupViewController: UITableViewDataSource, UITableViewDelegate {
 //                        cellViewModel.isOnline = true
 //                    }
 //
-//                    if userContact.id == "\(adminUserId)" {
-//                        cellViewModel.isAdmin = true
-//                    }
+                    if userContact.id == "\(adminUserId)" {
+                        cellViewModel.isAdmin = true
+                    }
 
                     cell.configure(viewModel: cellViewModel)
 
@@ -432,9 +432,9 @@ extension EditGroupViewController: UITableViewDataSource, UITableViewDelegate {
 //                        cellViewModel.isOnline = true
 //                    }
 //
-//                    if userContact.id == "\(adminUserId)" {
-//                        cellViewModel.isAdmin = true
-//                    }
+                    if userContact.id == "\(adminUserId)" {
+                        cellViewModel.isAdmin = true
+                    }
                     
                     cell.configure(viewModel: cellViewModel)
 

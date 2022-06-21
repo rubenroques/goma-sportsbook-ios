@@ -95,13 +95,6 @@ class ReceivedMessageTableViewCell: UITableViewCell {
 
         self.messageDateLabel.text = messageData.date
 
-//        if messageData.type == .receivedOffline {
-//            self.showUserState = false
-//        }
-//        else if messageData.type == .receivedOnline {
-//            self.showUserState = true
-//        }
-
         self.usernameLabel.text = username
 
         if let onlineUsersPublisher = Env.gomaSocialClient.onlineUsersPublisher() {

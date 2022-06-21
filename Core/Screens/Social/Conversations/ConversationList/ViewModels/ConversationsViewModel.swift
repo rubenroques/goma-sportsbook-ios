@@ -26,6 +26,17 @@ class ConversationsViewModel {
     init() {
 
         self.getConversations()
+        self.setupPublishers()
+    }
+
+    private func setupPublishers() {
+        Env.gomaSocialClient.reloadChatroomsList
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.refetchConversations()
+            })
+            .store(in: &cancellables)
+
     }
 
     private func getConversations() {
@@ -46,7 +57,7 @@ class ConversationsViewModel {
             }, receiveValue: { [weak self] response in
                 if let chatrooms = response.data {
 
-                    Env.gomaSocialClient.verifyIfNewChat(chatrooms: chatrooms)
+                    //Env.gomaSocialClient.verifyIfNewChat(chatrooms: chatrooms)
 
                     self?.storeChatrooms(chatroomsData: chatrooms)
 
@@ -87,8 +98,10 @@ class ConversationsViewModel {
                     .receive(on: DispatchQueue.main)
                     .sink(receiveValue: { [weak self] lastMessage in
 
-                        self?.conversationLastMessageList[lastMessage.toChatroom] = lastMessage
-                        self?.updateConversationDetail(chatroomId: lastMessage.toChatroom)
+                        if let chatroomId = lastMessage?.toChatroom {
+                            self?.conversationLastMessageList[chatroomId] = lastMessage
+                            self?.updateConversationDetail(chatroomId: chatroomId)
+                        }
 
                     })
                     .store(in: &cancellables)

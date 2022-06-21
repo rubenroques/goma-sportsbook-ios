@@ -10,19 +10,83 @@ import Combine
 
 class ChatNotificationsViewModel {
     // MARK: Private Properties
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
     var followerViewsPublisher: CurrentValueSubject<[UserActionView], Never> = .init([])
     var sharedTicketViewsPublisher: CurrentValueSubject<[UserActionView], Never> = .init([])
+    var chatNotificationViewsPublisher: CurrentValueSubject<[UserActionView], Never> = .init([])
+    var chatNotificationsPublisher: CurrentValueSubject<[ChatNotification], Never> = .init([])
+    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     var shouldRemoveFollowerView: ((UserActionView) -> Void)?
     var shouldRemoveSharedTicketView: ((UserActionView) -> Void)?
-
+    var shouldRemoveChatNotificationView: ((UserActionView) -> Void)?
     var isEmptyStatePublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     init() {
-        self.setupFollowerViews()
-        self.setupSharedTicketViews()
+        //self.setupFollowerViews()
+        //self.setupSharedTicketViews()
+        self.getChatNotifications()
+    }
+
+    private func getChatNotifications() {
+        self.isLoadingPublisher.send(true)
+
+        Env.gomaNetworkClient.requestNotifications(deviceId: Env.deviceId, type: .chat)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("CHAT NOTIFICATIONS ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+
+                self?.isLoadingPublisher.send(false)
+
+            }, receiveValue: { [weak self] response in
+                if let chatNotifications = response.data {
+                    self?.setupChatNotificationViews(chatNotifications: chatNotifications)
+                }
+            })
+            .store(in: &cancellables)
+    }
+
+    private func setupChatNotificationViews(chatNotifications: [ChatNotification]) {
+
+        for (index, chatNotification) in chatNotifications.enumerated() {
+
+            let chatNotificationView = UserActionView()
+
+            chatNotificationView.identifier = chatNotification.id
+
+            if index == chatNotifications.count - 1 {
+                chatNotificationView.hasLineSeparator = false
+            }
+
+            chatNotificationView.setupViewInfoSimple(title: chatNotification.text)
+
+            chatNotificationView.tappedCloseButtonAction = { [weak self] in
+                if let viewIdentifier = chatNotificationView.identifier {
+                    self?.shouldRemoveChatNotificationView?(chatNotificationView)
+                    chatNotificationView.removeFromSuperview()
+
+                    if let chatNotificationsView = self?.chatNotificationViewsPublisher.value {
+                        for (index, view) in chatNotificationsView.enumerated() {
+                            if view.identifier == viewIdentifier {
+                                self?.chatNotificationViewsPublisher.value.remove(at: index)
+                            }
+                        }
+                    }
+                }
+            }
+
+            self.chatNotificationViewsPublisher.value.append(chatNotificationView)
+        }
+
+        self.chatNotificationsPublisher.value = chatNotifications
+        self.isLoadingPublisher.send(false)
     }
 
     private func setupFollowerViews() {

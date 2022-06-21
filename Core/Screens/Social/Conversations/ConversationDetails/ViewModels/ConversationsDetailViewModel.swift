@@ -103,6 +103,7 @@ class ConversationDetailViewModel: NSObject {
                 
                 self?.setupConversationInfo()
                 self?.startSocketListening()
+
             })
             .store(in: &cancellables)
         
@@ -314,7 +315,6 @@ class ConversationDetailViewModel: NSObject {
             self.sortAllMessages()
 
             self.dataNeedsReload.send()
-            //self.shouldScrollToLastMessage.send()
         }
 
     }
@@ -325,7 +325,7 @@ class ConversationDetailViewModel: NSObject {
         // in subsequent calls os the publisher
         var messages: [MessageData] = []
         
-        guard let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId else { return [] }
+        guard let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId else { return [] }
 
         for message in chatMessages {
             let formattedDate = self.getFormattedDate(date: message.date)
@@ -511,8 +511,7 @@ extension ConversationDetailViewModel {
 }
 
 extension ConversationDetailViewModel {
-    
-    
+
     private func createIndividualConversationData(fromChatroomData chatroomData: ChatroomData) -> ConversationData {
         var loggedUsername = ""
         var chatroomName = ""
@@ -677,7 +676,6 @@ extension ConversationDetailViewModel {
 
         return nil
     }
-
 
 }
 
