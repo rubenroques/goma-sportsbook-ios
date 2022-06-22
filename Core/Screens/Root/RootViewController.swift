@@ -332,7 +332,7 @@ class RootViewController: UIViewController {
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-
+        
         self.setupWithTheme()
     }
 

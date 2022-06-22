@@ -24,6 +24,8 @@ class CasinoWebViewController: UIViewController {
     private var noSessionUrlString: String = TargetVariables.casinoURL
     
     private var viewModel: CasinoViewModel
+    private let refreshControl = UIRefreshControl()
+
 
     init(userId: String) {
         self.userId = userId
@@ -44,6 +46,11 @@ class CasinoWebViewController: UIViewController {
 
         self.webView.uiDelegate = self
         self.webView.navigationDelegate = self
+        self.refreshControl.tintColor = UIColor.lightGray
+        self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
+       // self.webView.scrollView.addSubview(self.refreshControl)
+        
+        self.webView.scrollView.refreshControl = self.refreshControl
         
         self.viewModel.isUserLoggedPublisher.receive(on: DispatchQueue.main)
             .dropFirst()
@@ -58,6 +65,7 @@ class CasinoWebViewController: UIViewController {
                         self?.userId = loggedUser.userId
                     }
                 }
+                
                 self?.showLoading()
 
                 self?.loadInitialPage()
@@ -111,9 +119,17 @@ class CasinoWebViewController: UIViewController {
     }
 
     // MARK: - Layout and Theme
+    @objc func refreshControllPulled() {
+        self.viewModel.refresh()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-
+        self.hideLoading()
         self.setupWithTheme()
     }
 
@@ -139,6 +155,23 @@ class CasinoWebViewController: UIViewController {
     private func hideLoading() {
         self.loadingBaseView.isHidden = true
         self.loadingActivityIndicatorView.stopAnimating()
+    }
+    
+    private func bind(toViewModel viewModel: HomeViewModel) {
+
+        self.viewModel.refreshPublisher
+            .debounce(for: .milliseconds(600), scheduler: DispatchQueue.main)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.reloadData()
+                
+            })
+            .store(in: &self.cancellables)
+        
+    }
+    
+    func reloadData() {
+        self.webView.reload()
     }
 }
 
@@ -185,14 +218,17 @@ extension CasinoWebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         if self.userId != "" {
             self.showLoading()
+            
         }
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        self.refreshControl.endRefreshing()
         self.hideLoading()
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        self.refreshControl.endRefreshing()
         self.hideLoading()
     }
 }
