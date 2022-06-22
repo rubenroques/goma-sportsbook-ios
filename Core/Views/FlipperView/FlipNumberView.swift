@@ -74,6 +74,8 @@ class FlipNumberView: UIView {
         label.textAlignment = .center
         label.text = "."
         label.font = AppFont.with(type: .bold, size: 15)
+        label.textColor = UIColor.App.buttonTextPrimary
+        
         NSLayoutConstraint.activate([
             label.widthAnchor.constraint(equalToConstant: 4.5)
         ])
@@ -197,7 +199,7 @@ class FlipNumberStripView: UIView, UITableViewDelegate, UITableViewDataSource {
         return tableView
     }()
     
-    private let infiniteSize = 1000
+    private let infiniteSize = 100_000
     private let values = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     private var currentPosition: Int = 0
     

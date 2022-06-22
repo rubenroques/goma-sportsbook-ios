@@ -179,6 +179,10 @@ class FloatingShortcutsView: UIView {
     
     func triggerFlipperAnimation(withValue value: Double) {
         
+        if value > 100_000 {
+            return
+        }
+        
         // Hide icon
         UIView.animate(withDuration: 0.3,
                        delay: 0.0,
