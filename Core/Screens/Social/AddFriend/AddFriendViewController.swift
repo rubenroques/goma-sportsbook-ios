@@ -173,6 +173,13 @@ class AddFriendViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+        viewModel.userContactSection
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] userContacts in
+                self?.isEmptySearch = userContacts.isEmpty
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Functions

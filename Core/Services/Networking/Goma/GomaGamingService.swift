@@ -32,11 +32,13 @@ enum GomaGamingService {
     case addGroup(userIds: [String], groupName: String)
     case deleteGroup(chatroomId: Int)
     case editGroup(chatroomId: Int, groupName: String)
+    case leaveGroup(chatroomId: Int)
     case lookupPhone(phones: [String])
     case removeUser(chatroomId: Int, userId: String)
     case addUserToGroup(chatroomId: Int, userIds: [String])
     case searchUserCode(code: String)
     case getNotification(type: String)
+    case setNotificationRead(id: String)
 }
 
 extension GomaGamingService: Endpoint {
@@ -93,6 +95,8 @@ extension GomaGamingService: Endpoint {
             return "/api/social/\(apiVersion)/groups/\(chatroomId)"
         case .editGroup(let chatroomId, _):
             return "/api/social/\(apiVersion)/groups/\(chatroomId)"
+        case .leaveGroup(let chatroomId):
+            return "/api/social/\(apiVersion)/groups/\(chatroomId)/users/leave"
         case .lookupPhone:
             return "/api/users/\(apiVersion)/in-app"
         case .removeUser(let chatroomId, _):
@@ -103,6 +107,8 @@ extension GomaGamingService: Endpoint {
             return "/api/users/\(apiVersion)/code/\(code)"
         case .getNotification:
             return "/api/notifications/\(apiVersion)"
+        case .setNotificationRead(let id):
+            return "/api/notifications/\(apiVersion)/\(id)/read"
         }
     }
 
@@ -119,7 +125,7 @@ extension GomaGamingService: Endpoint {
         case .removeFavorite(let favorite):
             return [URLQueryItem(name: "favorite_ids[]", value: favorite)]
         // Social
-        case .addFriend, .deleteFriend, .listFriends, .inviteFriend, .addGroup, .deleteGroup, .searchUserCode, .lookupPhone:
+        case .addFriend, .deleteFriend, .listFriends, .inviteFriend, .addGroup, .deleteGroup, .leaveGroup, .searchUserCode, .lookupPhone, .setNotificationRead:
             return nil
         case .chatrooms(let page):
             return [URLQueryItem(name: "page", value: page)]
@@ -191,11 +197,11 @@ extension GomaGamingService: Endpoint {
         case .removeFavorite:
             return .delete
         // Social
-        case .addFriend, .inviteFriend, .addGroup, .addUserToGroup, .lookupPhone:
+        case .addFriend, .inviteFriend, .addGroup, .addUserToGroup, .lookupPhone, .setNotificationRead:
             return .post
         case .listFriends, .chatrooms, .searchUserCode, .getNotification:
             return .get
-        case .deleteGroup, .deleteFriend, .removeUser:
+        case .deleteGroup, .leaveGroup, .deleteFriend, .removeUser:
             return .delete
         case .editGroup:
             return .put

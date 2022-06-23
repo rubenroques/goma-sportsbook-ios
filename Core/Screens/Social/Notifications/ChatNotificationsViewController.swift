@@ -245,6 +245,7 @@ class ChatNotificationsViewController: UIViewController {
 
     // MARK: Actions
     @objc func didTapBackButton() {
+
         self.navigationController?.popViewController(animated: true)
     }
 

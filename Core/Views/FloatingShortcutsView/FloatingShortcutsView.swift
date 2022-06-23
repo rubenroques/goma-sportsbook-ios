@@ -98,6 +98,7 @@ class FloatingShortcutsView: UIView {
         Env.gomaSocialClient.unreadMessagesCountPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] unreadCounter in
+                print("UNREAD COUNTER: \(unreadCounter)")
                 if unreadCounter > 0 {
                     self?.chatCountLabel.text = "\(unreadCounter)"
                     self?.chatCountLabel.isHidden = false

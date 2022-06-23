@@ -106,8 +106,15 @@ class UserActionView: UIView {
         self.actionButton.setTitle(actionTitle, for: .normal)
     }
 
-    func setupViewInfoSimple(title: String) {
+    func setupViewInfoSimple(title: String, readState: Int) {
         self.titleLabel.text = title
+
+        if readState == 0 {
+            self.isOnline = true
+        }
+        else {
+            self.isOnline = false
+        }
 
         self.actionButton.isHidden = true
 

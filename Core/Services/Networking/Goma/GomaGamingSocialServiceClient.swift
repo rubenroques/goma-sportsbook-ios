@@ -245,6 +245,11 @@ class GomaGamingSocialServiceClient {
 
     }
 
+    func clearUserChatroomsData() {
+        self.clearSocketCustomHandlers()
+        self.clearStorage()
+    }
+
     private func getChatrooms() {
         Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId, page: self.chatPage)
             .receive(on: DispatchQueue.main)
@@ -344,7 +349,12 @@ class GomaGamingSocialServiceClient {
                             }
                         }
 
-                        self.newMessageUnreadEmit(chatroomId: chatroomId)
+                        if let chatroomOnForegroundId = self.chatroomOnForegroundId,
+                           chatroomOnForegroundId == "\(chatMessage.toChatroom)" {
+
+                            self.newMessageUnreadEmit(chatroomId: chatroomId, messageId: chatMessage.date)
+
+                        }
                     }
                 }
             }
@@ -412,8 +422,9 @@ class GomaGamingSocialServiceClient {
             self.socket?.emit("social.chatrooms.messages.read", ["id": chatroomId])
         }
     }
-    private func newMessageUnreadEmit(chatroomId: Int) {
-        self.socket?.emit("social.chatrooms.messages.read", ["id": chatroomId])
+    private func newMessageUnreadEmit(chatroomId: Int, messageId: Int) {
+        print("NEW MESSAGE TO SET AS READ!")
+        self.socket?.emit("social.chatrooms.messages.read", ["id": chatroomId, "message_id": messageId])
     }
 
     func emitChatDetailMessages(chatroomId: Int, page: Int) {
@@ -489,7 +500,12 @@ class GomaGamingSocialServiceClient {
                         }
                     }
 
-                    self.newMessageUnreadEmit(chatroomId: chatroomId)
+                    if let chatroomOnForegroundId = self.chatroomOnForegroundId,
+                       chatroomOnForegroundId == "\(chatMessage.toChatroom)" {
+
+                        self.newMessageUnreadEmit(chatroomId: chatroomId, messageId: chatMessage.date)
+
+                    }
                 }
             }
         }

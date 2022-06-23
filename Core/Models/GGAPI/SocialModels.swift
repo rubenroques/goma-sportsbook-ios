@@ -177,6 +177,7 @@ struct ChatNotification: Decodable {
     var updatedAt: String?
     var url: String?
     var imageUrl: String?
+    var notificationUsers: [NotificationUser]
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -191,8 +192,28 @@ struct ChatNotification: Decodable {
         case updatedAt = "updated_at"
         case url = "url"
         case imageUrl = "image_url"
+        case notificationUsers = "notification_users"
     }
 
+}
+
+struct NotificationUser: Decodable {
+
+    var id: Int
+    var notificationId: Int
+    var userId: Int
+    var read: Int
+    var createdAt: String
+    var updatedAt: String
+
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case notificationId = "notification_id"
+        case userId = "user_id"
+        case read = "read"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+    }
 }
 
 enum NotificationsType {

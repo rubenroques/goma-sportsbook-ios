@@ -16,7 +16,7 @@ class ConversationDetailViewModel: NSObject {
     var sectionMessages: [String: [MessageData]] = [:]
     var dateMessages: [DateMessages] = []
     var isChatOnlinePublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    var isChatGroup: Bool = false
+    var isChatGroupPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isInitialMessagesLoaded: Bool = false
     var titlePublisher: CurrentValueSubject<String, Never> = .init("")
     var usersPublisher: CurrentValueSubject<String, Never> = .init("")
@@ -225,7 +225,7 @@ class ConversationDetailViewModel: NSObject {
         
         if conversationData.conversationType == .user {
             self.usersPublisher.value = "\(conversationData.name.lowercased())"
-            self.isChatGroup = false
+            self.isChatGroupPublisher.send(false)
         }
         else {
             if let groupUsers = conversationData.groupUsers {
@@ -243,7 +243,7 @@ class ConversationDetailViewModel: NSObject {
 
                 self.groupInitialsPublisher.value = self.getGroupInitials(text: conversationData.name)
 
-                self.isChatGroup = true
+                self.isChatGroupPublisher.send(true)
             }
 
         }

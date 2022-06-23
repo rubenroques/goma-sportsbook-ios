@@ -94,7 +94,7 @@ class ConversationDetailViewController: UIViewController {
         let contactTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapContactInfo))
         self.navigationView.addGestureRecognizer(contactTapGesture)
 
-        self.isChatGroup = self.viewModel.isChatGroup
+        //self.isChatGroup = self.viewModel.isChatGroup
 
         self.bind(toViewModel: self.viewModel)
 
@@ -105,6 +105,7 @@ class ConversationDetailViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
 
         self.tableView.transform = CGAffineTransform(scaleX: 1, y: -1)
+        self.tableView.bounces = false
 
     }
 
@@ -117,7 +118,6 @@ class ConversationDetailViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        // self.scrollToBottomTableView()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -192,6 +192,12 @@ class ConversationDetailViewController: UIViewController {
         viewModel.usersPublisher
             .sink(receiveValue: { [weak self] users in
                 self?.subtitleLabel.text = users
+            })
+            .store(in: &cancellables)
+
+        viewModel.isChatGroupPublisher
+            .sink(receiveValue: { [weak self] isChatGroup in
+                self?.isChatGroup = isChatGroup
             })
             .store(in: &cancellables)
 
@@ -301,8 +307,6 @@ class ConversationDetailViewController: UIViewController {
 
     // MARK: Actions
     @objc func didTapBackButton() {
-        
-        // self.shouldReloadData?()
 
         Env.gomaSocialClient.reloadChatroomsList.send()
 
@@ -551,6 +555,7 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
 
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         isModalInPresentation = true
+
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -870,5 +875,14 @@ extension ConversationDetailViewController {
 
         self.messageInputKeyboardConstraint.isActive = false
 
+    }
+}
+
+extension ConversationDetailViewController: UIAdaptivePresentationControllerDelegate {
+
+    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+
+        print("IS DISMISSING")
+        return false
     }
 }

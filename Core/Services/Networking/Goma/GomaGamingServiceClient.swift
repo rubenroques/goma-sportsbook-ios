@@ -186,6 +186,12 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
+    func leaveGroup(deviceId: String, chatroomId: Int) -> AnyPublisher<NetworkResponse<[String]>, NetworkError> {
+        let endpoint = GomaGamingService.leaveGroup(chatroomId: chatroomId)
+        let requestPublisher: AnyPublisher<NetworkResponse<[String]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
     func lookupPhones(deviceId: String, phones: [String]) -> AnyPublisher<[GomaContact], NetworkError> {
         let endpoint = GomaGamingService.lookupPhone(phones: phones)
         let requestPublisher: AnyPublisher<[GomaContact], NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
@@ -222,4 +228,10 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
+    func setNotificationRead(deviceId: String, notificationId: String) ->
+    AnyPublisher<NetworkResponse<[JSON]>, NetworkError> {
+        let endpoint = GomaGamingService.setNotificationRead(id: notificationId)
+        let requestPublisher: AnyPublisher<NetworkResponse<[JSON]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
 }

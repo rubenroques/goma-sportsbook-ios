@@ -47,6 +47,7 @@ class ChatNotificationsViewModel {
 
             }, receiveValue: { [weak self] response in
                 if let chatNotifications = response.data {
+                    
                     self?.setupChatNotificationViews(chatNotifications: chatNotifications)
                 }
             })
@@ -65,7 +66,7 @@ class ChatNotificationsViewModel {
                 chatNotificationView.hasLineSeparator = false
             }
 
-            chatNotificationView.setupViewInfoSimple(title: chatNotification.text)
+            chatNotificationView.setupViewInfoSimple(title: chatNotification.text, readState: chatNotification.notificationUsers[safe: 0]?.read ?? -1)
 
             chatNotificationView.tappedCloseButtonAction = { [weak self] in
                 if let viewIdentifier = chatNotificationView.identifier {
@@ -87,6 +88,47 @@ class ChatNotificationsViewModel {
 
         self.chatNotificationsPublisher.value = chatNotifications
         self.isLoadingPublisher.send(false)
+
+        self.markNotificationsAsRead()
+    }
+
+    func markNotificationsAsRead() {
+        for chatNotification in self.chatNotificationsPublisher.value {
+
+            if let notificationRead = chatNotification.notificationUsers[safe: 0]?.read,
+               notificationRead == 0 {
+                
+                Env.gomaNetworkClient.setNotificationRead(deviceId: Env.deviceId, notificationId: "\(chatNotification.id)")
+                    .receive(on: DispatchQueue.main)
+                    .sink(receiveCompletion: { [weak self] completion in
+                        switch completion {
+                        case .failure(let error):
+                            print("CHAT NOTIF ERROR: \(error)")
+                        case .finished:
+                            ()
+                        }
+                    }, receiveValue: { [weak self] _ in
+                        print("CHAT NOTIF READ SUCCESS")
+                    })
+                    .store(in: &cancellables)
+            }
+        }
+//        if let chatNotification = self.chatNotificationsPublisher.value[safe: 0] {
+//
+//        Env.gomaNetworkClient.setNotificationRead(deviceId: Env.deviceId, notificationId: "\(chatNotification.id)")
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("CHAT NOTIF ERROR: \(error)")
+//                case .finished:
+//                    ()
+//                }
+//            }, receiveValue: { [weak self] _ in
+//                print("CHAT NOTIF READ SUCCESS")
+//            })
+//            .store(in: &cancellables)
+//        }
     }
 
     private func setupFollowerViews() {
