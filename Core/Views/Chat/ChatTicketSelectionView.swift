@@ -57,9 +57,18 @@ class ChatTicketSelectionView: UIView {
             self.sportIconImageView.setImageColor(color: UIColor.App.textPrimary)
         }
 
-        if let venueId = self.betHistoryEntrySelection.venueId,
-            let image = UIImage(named: Assets.flagName(withCountryCode: venueId)) {
-            self.countryIconImageView.image = image
+        if let venueId = self.betHistoryEntrySelection.venueId {
+
+            if let venue = Env.gomaSocialClient.location(forId: venueId),
+               let venueCode = venue.code {
+                let image = UIImage(named: Assets.flagName(withCountryCode: venueCode))
+                self.countryIconImageView.image = image
+            }
+            else {
+                let image = UIImage(named: Assets.flagName(withCountryCode: venueId))
+                self.countryIconImageView.image = image
+            }
+
         }
         else {
             self.countryIconImageView.isHidden = true
@@ -136,7 +145,7 @@ extension ChatTicketSelectionView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "country_flag_240")
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
     }

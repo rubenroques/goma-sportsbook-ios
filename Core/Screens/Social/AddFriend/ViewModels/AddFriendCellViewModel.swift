@@ -16,7 +16,6 @@ class AddFriendCellViewModel {
     var username: String
     var phones: [String]
     var isCheckboxSelected: Bool
-    // var isOnline: Bool
     var isOnlinePublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     init(userContact: UserContact) {

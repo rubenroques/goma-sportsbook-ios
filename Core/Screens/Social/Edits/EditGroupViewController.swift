@@ -228,6 +228,17 @@ class EditGroupViewController: UIViewController {
 //                self?.isLoading = isLoading
 //            })
 //            .store(in: &cancellables)
+
+        viewModel.hasLeftGroupPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] hasLeftGroup in
+                if hasLeftGroup {
+                    Env.gomaSocialClient.reloadChatroomsList.send()
+
+                    self?.navigationController?.popToRootViewController(animated: true)
+                }
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Functions
@@ -367,6 +378,20 @@ class EditGroupViewController: UIViewController {
 
     @objc func didTapLeaveButton() {
         print("LEAVE GROUP")
+
+        let leaveGroupAlert = UIAlertController(title: localized("leave_group"),
+                                            message: localized("leave_group_message"),
+                                            preferredStyle: UIAlertController.Style.alert)
+
+        leaveGroupAlert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+
+            self?.viewModel.leaveGroup()
+
+        }))
+
+        leaveGroupAlert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel))
+
+        self.present(leaveGroupAlert, animated: true, completion: nil)
     }
 
     @objc func didTapBackground() {
@@ -417,9 +442,9 @@ extension EditGroupViewController: UITableViewDataSource, UITableViewDelegate {
 //                        cellViewModel.isOnline = true
 //                    }
 //
-//                    if userContact.id == "\(adminUserId)" {
-//                        cellViewModel.isAdmin = true
-//                    }
+                    if userContact.id == "\(adminUserId)" {
+                        cellViewModel.isAdmin = true
+                    }
 
                     cell.configure(viewModel: cellViewModel)
 
@@ -432,9 +457,9 @@ extension EditGroupViewController: UITableViewDataSource, UITableViewDelegate {
 //                        cellViewModel.isOnline = true
 //                    }
 //
-//                    if userContact.id == "\(adminUserId)" {
-//                        cellViewModel.isAdmin = true
-//                    }
+                    if userContact.id == "\(adminUserId)" {
+                        cellViewModel.isAdmin = true
+                    }
                     
                     cell.configure(viewModel: cellViewModel)
 
