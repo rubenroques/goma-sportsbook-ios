@@ -181,7 +181,7 @@ extension SentTicketMessageTableViewCell {
         label.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = AppFont.with(type: .medium, size: 14)
+        label.font = AppFont.with(type: .medium, size: 16)
         return label
     }
 

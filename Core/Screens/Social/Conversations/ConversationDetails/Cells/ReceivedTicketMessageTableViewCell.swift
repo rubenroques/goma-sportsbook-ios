@@ -240,7 +240,7 @@ extension ReceivedTicketMessageTableViewCell {
         label.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur porttitor mi eget pharetra eleifend. Nam vel finibus nibh, nec ullamcorper elit."
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = AppFont.with(type: .medium, size: 14)
+        label.font = AppFont.with(type: .medium, size: 16)
         return label
     }
 

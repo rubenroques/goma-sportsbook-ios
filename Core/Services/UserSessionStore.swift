@@ -129,6 +129,7 @@ class UserSessionStore {
         self.unsubscribeWalletUpdates()
 
         Env.favoritesManager.clearCachedFavorites()
+        Env.gomaSocialClient.clearUserChatroomsData()
 
         UserDefaults.standard.removeObject(forKey: "user_betslip_settings")
         

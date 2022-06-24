@@ -36,7 +36,7 @@ class EditContactViewModel {
                     guard let self = self else {return}
 
                     let chatroomId = self.conversationData.id
-                    let userId = self.conversationData.groupUsers
+
                     if let onlineUsersChat = onlineUsersResponse[chatroomId],
                        let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
 
@@ -86,7 +86,6 @@ class EditContactViewModel {
                 }
 
             }, receiveValue: { [weak self] response in
-                print("DELETE FRIEND GOMA: \(response)")
                 self?.shouldCloseChat.send(true)
             })
             .store(in: &cancellables)

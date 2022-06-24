@@ -74,9 +74,6 @@ class UserActionView: UIView {
         self.iconBaseView.layer.cornerRadius = self.iconBaseView.frame.height / 2
         self.iconImageView.layer.cornerRadius = self.iconImageView.frame.height / 2
 
-        self.drawDottedLine(start: CGPoint(x: 0, y: 0),
-                            end: CGPoint(x: self.separatorLineView.frame.width, y: 0))
-
         self.layoutSubviews()
         self.layoutIfNeeded()
 
@@ -103,23 +100,24 @@ class UserActionView: UIView {
     }
 
     // MARK: Functions
-    // NOT WORKING
-    func drawDottedLine(start: CGPoint, end: CGPoint) {
-        let shapeLayer = CAShapeLayer()
-        shapeLayer.strokeColor = UIColor.App.alertSuccess.cgColor
-        shapeLayer.lineWidth = 1
-        shapeLayer.lineDashPattern = [3, 2]
-
-        let path = CGMutablePath()
-        path.addLines(between: [start, end])
-        shapeLayer.path = path
-        self.separatorLineView.layer.addSublayer(shapeLayer)
-    }
-
     func setupViewInfo(title: String, actionTitle: String) {
         self.titleLabel.text = title
 
         self.actionButton.setTitle(actionTitle, for: .normal)
+    }
+
+    func setupViewInfoSimple(title: String, readState: Int) {
+        self.titleLabel.text = title
+
+        if readState == 0 {
+            self.isOnline = true
+        }
+        else {
+            self.isOnline = false
+        }
+
+        self.actionButton.isHidden = true
+
     }
 
     func setActionButtonColor(color: UIColor) {
@@ -169,6 +167,7 @@ extension UserActionView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "@Title"
         label.font = AppFont.with(type: .semibold, size: 14)
+        label.numberOfLines = 0
         return label
     }
 
@@ -221,7 +220,7 @@ extension UserActionView {
             self.containerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             self.containerView.topAnchor.constraint(equalTo: self.topAnchor),
             self.containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            self.containerView.heightAnchor.constraint(equalToConstant: 50),
+            self.containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 50),
 
             self.iconBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 20),
             self.iconBaseView.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
@@ -241,7 +240,7 @@ extension UserActionView {
             self.actionButton.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
 
             self.closeButton.leadingAnchor.constraint(equalTo: self.actionButton.trailingAnchor, constant: 8),
-            self.closeButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -20),
+            self.closeButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -6),
             self.closeButton.widthAnchor.constraint(equalToConstant: 40),
             self.closeButton.heightAnchor.constraint(equalTo: self.closeButton.widthAnchor),
             self.closeButton.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),

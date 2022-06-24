@@ -99,6 +99,8 @@ class ChatTicketInMessageView: UIView {
             let ticketView = ChatTicketSelectionView(betHistoryEntrySelection: selection)
             self.ticketsStackView.addArrangedSubview(ticketView)
         }
+
+        self.ticketsStackView.layoutIfNeeded()
     }
 
     @objc func didTapBetNowButton() {
