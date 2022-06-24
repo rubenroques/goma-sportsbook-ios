@@ -11,16 +11,15 @@ import Combine
 class CasinoViewModel: NSObject {
 
     var isUserLoggedPublisher: CurrentValueSubject<Bool, Never> = .init(true)
+    
     private var cancellables = Set<AnyCancellable>()
     
     override init() {
         super.init()
-
         self.setupPublishers()
     }
 
     func setupPublishers() {
-
         Env.userSessionStore.userSessionPublisher
             .receive(on: DispatchQueue.main)
             .map({ $0 != nil })
@@ -28,7 +27,6 @@ class CasinoViewModel: NSObject {
                 self?.isUserLoggedPublisher.send(isUserLoggedIn)
             })
             .store(in: &cancellables)
-
     }
-
+    
 }

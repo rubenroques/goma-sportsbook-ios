@@ -13,7 +13,8 @@ class OutrightMarketDetailsViewModel {
     var competition: Competition
 
     var isLoadingPublisher = CurrentValueSubject<Bool, Never>.init(true)
-
+    var isCompetitionBettingAvailablePublisher = CurrentValueSubject<Bool, Never>.init(true)
+    
     var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
     // MARK: - Private Properties
@@ -34,10 +35,19 @@ class OutrightMarketDetailsViewModel {
     }
 
     // MARK: - View Configuration
-    func competitionName() -> String {
+    var competitionName: String {
         return self.competition.name
     }
 
+    var countryImageName: String {
+        if let isoCode = self.competition.venue?.isoCode {
+            return Assets.flagName(withCountryCode: isoCode)
+        }
+        else {
+            return "country_flag_240"
+        }
+    }
+    
     func numberOfSections() -> Int {
         return 1
     }
@@ -95,13 +105,19 @@ class OutrightMarketDetailsViewModel {
     private func storeAggregator(_ aggregator: EveryMatrix.Aggregator) {
         self.store.storeMarketGroupDetails(fromAggregator: aggregator, onMarketGroup: Self.groupKey)
         self.marketGroupOrganizers = self.store.marketGroupOrganizers(withGroupKey: Self.groupKey)
-
+        
+        self.isCompetitionBettingAvailablePublisher.send(self.marketGroupOrganizers.isNotEmpty)
+                
         self.refreshPublisher.send()
         self.isLoadingPublisher.send(false)
     }
 
     private func updateWithAggregator(_ aggregator: EveryMatrix.Aggregator) {
         self.store.updateMarketGroupDetails(fromAggregator: aggregator)
+        
+        let updatedMarketGroupOrganizers = self.store.marketGroupOrganizers(withGroupKey: Self.groupKey)
+        self.isCompetitionBettingAvailablePublisher.send(updatedMarketGroupOrganizers.isNotEmpty)
+        
         self.isLoadingPublisher.send(false)
     }
 

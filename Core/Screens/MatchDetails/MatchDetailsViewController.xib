@@ -599,7 +599,7 @@
         <image name="more_options_icon" width="6" height="22"/>
         <image name="plus_small_icon" width="16" height="16"/>
         <namedColor name="buttonBackgroundPrimary">
-            <color red="0.18823529411764706" green="0.36078431372549019" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.6470588235294118" blue="0.85882352941176465" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
