@@ -24,10 +24,12 @@ class CasinoWebViewController: UIViewController {
     private var noSessionUrlString: String = TargetVariables.casinoURL
     
     private var viewModel: CasinoViewModel
+    private let refreshControl = UIRefreshControl()
 
-    init(userId: String) {
+    init(userId: String, viewModel: CasinoViewModel = CasinoViewModel() ) {
         self.userId = userId
-        self.viewModel = CasinoViewModel()
+        self.viewModel = viewModel
+        
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -45,46 +47,48 @@ class CasinoWebViewController: UIViewController {
         self.webView.uiDelegate = self
         self.webView.navigationDelegate = self
         
-        self.viewModel.isUserLoggedPublisher.receive(on: DispatchQueue.main)
+        self.refreshControl.tintColor = UIColor.lightGray
+        self.refreshControl.addTarget(self, action: #selector(self.refreshWebView), for: .valueChanged)
+        self.webView.scrollView.refreshControl = self.refreshControl
+        
+        self.viewModel.isUserLoggedPublisher
+            .receive(on: DispatchQueue.main)
             .dropFirst()
-            .sink(receiveValue: { [weak self] isLogged in
-                if !isLogged {
-                    self?.userId = ""
-                    
-                }
-                else {
-                    if let loggedUser = UserSessionStore.loggedUserSession() {
-
-                        self?.userId = loggedUser.userId
-                    }
-                }
-                self?.showLoading()
-
-                self?.loadInitialPage()
+            .sink(receiveValue: { [weak self] _ in
+                self?.refreshWebView()
             })
             .store(in: &self.cancellables)
 
     }
 
+    @objc func refreshWebView() {
+        self.userId = UserSessionStore.loggedUserSession()?.userId ?? ""
+        
+        self.showLoading()
+        self.loadInitialPage()
+    }
+    
     func loadInitialPage() {
 
         Env.everyMatrixClient.getCMSSessionID()
             .receive(on: DispatchQueue.main)
-            .sink { _ in
-
-            } receiveValue: { cmsSessionInfo in
-                
-                self.loadWebView(withID: cmsSessionInfo.id)
+            .map { cmsSessionInfo in
+                let cmsSessionInfoId: String? = cmsSessionInfo.id
+                return cmsSessionInfoId
             }
+            .replaceError(with: nil)
+            .sink(receiveValue: { [weak self] cmsSessionInfoId in
+                self?.loadWebView(withID: cmsSessionInfoId)
+            })
             .store(in: &self.cancellables)
 
     }
 
-    func loadWebView(withID id: String) {
+    func loadWebView(withID id: String?) {
         
         var urlString = ""
-        if self.userId != ""{
-            urlString = "\(self.noSessionUrlString)\(self.userId)/\(id)"
+        if let cmsSessionInfoId = id, self.userId != "" {
+            urlString = "\(self.noSessionUrlString)\(self.userId)/\(cmsSessionInfoId)"
         }
         else {
             urlString = self.noSessionUrlString
@@ -109,11 +113,11 @@ class CasinoWebViewController: UIViewController {
         }
         
     }
-
+    
     // MARK: - Layout and Theme
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-
+        self.hideLoading()
         self.setupWithTheme()
     }
 
@@ -128,7 +132,6 @@ class CasinoWebViewController: UIViewController {
 
         self.loadingBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
         self.loadingActivityIndicatorView.color = UIColor.lightGray
-       
     }
 
     private func showLoading() {
@@ -140,6 +143,7 @@ class CasinoWebViewController: UIViewController {
         self.loadingBaseView.isHidden = true
         self.loadingActivityIndicatorView.stopAnimating()
     }
+
 }
 
 extension CasinoWebViewController: WKUIDelegate {
@@ -185,14 +189,17 @@ extension CasinoWebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         if self.userId != "" {
             self.showLoading()
+            
         }
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        self.refreshControl.endRefreshing()
         self.hideLoading()
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        self.refreshControl.endRefreshing()
         self.hideLoading()
     }
 }
