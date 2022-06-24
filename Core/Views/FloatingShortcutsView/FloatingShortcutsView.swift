@@ -18,6 +18,7 @@ class FloatingShortcutsView: UIView {
     private lazy var containerView: UIView = Self.createContainerView()
     
     private lazy var chatButtonView: UIView = Self.createChatButtonView()
+    private lazy var chatCountLabel: UILabel = Self.createChatCountLabel()
 
     private lazy var betslipButtonView: UIView = Self.createBetslipButtonView()
     private lazy var betslipIconImageView: UIImageView = Self.createBetslipIconImageView()
@@ -25,6 +26,7 @@ class FloatingShortcutsView: UIView {
     
     private lazy var betslipCountBaseView: UIView = Self.createBetslipCountBaseView()
     private lazy var betslipCountLabel: UILabel = Self.createBetslipCountLabel()
+    private lazy var betslipTapActionView: UIView = Self.createBetslipTapActionView()
 
     private lazy var coinSceneView: SCNView = Self.createBetslipCoinSceneView()
     private let coinScene = SCNScene.init(named: "CilinderSceneKitScene.scn")!
@@ -58,13 +60,15 @@ class FloatingShortcutsView: UIView {
         self.setupWithTheme()
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
-        self.betslipButtonView.addGestureRecognizer(tapBetslipView)
+        self.betslipTapActionView.addGestureRecognizer(tapBetslipView)
         
         let tapChatView = UITapGestureRecognizer(target: self, action: #selector(didTapChatView))
         self.chatButtonView.addGestureRecognizer(tapChatView)
         
         self.flipNumberView.alpha = 0.0
 
+        self.betslipCountBaseView.isUserInteractionEnabled = false
+        
         self.betslipButtonView.clipsToBounds = true
         
         self.resetAnimations()
@@ -93,6 +97,19 @@ class FloatingShortcutsView: UIView {
                 self?.triggerFlipperAnimation(withValue: multiplier)
             })
             .store(in: &cancellables)
+
+        Env.gomaSocialClient.unreadMessagesCountPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] unreadCounter in
+                if unreadCounter > 0 {
+                    self?.chatCountLabel.text = "\(unreadCounter)"
+                    self?.chatCountLabel.isHidden = false
+                }
+                else {
+                    self?.chatCountLabel.isHidden = true
+                }
+            })
+            .store(in: &cancellables)
         
     }
 
@@ -108,6 +125,8 @@ class FloatingShortcutsView: UIView {
         self.betslipCountLabel.textColor = UIColor.white
         
         self.chatButtonView.backgroundColor = UIColor.App.buttonActiveHoverSecondary
+        self.chatCountLabel.backgroundColor = UIColor.App.alertError
+        self.chatCountLabel.textColor = UIColor.white
     }
 
     override func layoutSubviews() {
@@ -117,6 +136,7 @@ class FloatingShortcutsView: UIView {
         self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
 
         self.chatButtonView.layer.cornerRadius = self.chatButtonView.frame.height / 2
+        self.chatCountLabel.layer.cornerRadius = self.chatCountLabel.frame.height / 2
     }
 
     override var intrinsicContentSize: CGSize {
@@ -158,6 +178,10 @@ class FloatingShortcutsView: UIView {
     }
     
     func triggerFlipperAnimation(withValue value: Double) {
+        
+        if value > 100_000 {
+            return
+        }
         
         // Hide icon
         UIView.animate(withDuration: 0.3,
@@ -325,6 +349,19 @@ extension FloatingShortcutsView {
         return betslipButtonView
     }
 
+    private static func createChatCountLabel() -> UILabel {
+        let chatCountLabel = UILabel()
+        chatCountLabel.translatesAutoresizingMaskIntoConstraints = false
+        chatCountLabel.textColor = UIColor.App.textPrimary
+        chatCountLabel.backgroundColor = UIColor.App.bubblesPrimary
+        chatCountLabel.font = AppFont.with(type: .semibold, size: 10)
+        chatCountLabel.textAlignment = .center
+        chatCountLabel.clipsToBounds = true
+        chatCountLabel.layer.masksToBounds = true
+        chatCountLabel.text = ""
+        return chatCountLabel
+    }
+
     private static func createBetslipCountBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -350,6 +387,14 @@ extension FloatingShortcutsView {
         view.backgroundColor = UIColor.systemYellow
         return view
     }
+    
+    private static func createBetslipTapActionView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.clear
+        return view
+    }
+    
     
     private static func createBetslipCoinSceneView() -> SCNView {
         let view = SCNView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
@@ -407,8 +452,7 @@ extension FloatingShortcutsView {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
-    
-    
+
     private func setupSubviews() {
 
         self.addSubview(self.containerView)
@@ -429,7 +473,10 @@ extension FloatingShortcutsView {
         self.containerView.addSubview(self.betslipButtonView)
         self.containerView.addSubview(self.chatButtonView)
 
+        self.chatButtonView.addSubview(self.chatCountLabel)
+
         self.containerView.addSubview(self.betslipCountBaseView)
+        self.containerView.addSubview(self.betslipTapActionView)
         // Initialize constraints
         self.initConstraints()
 
@@ -444,6 +491,13 @@ extension FloatingShortcutsView {
             self.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
             self.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+        ])
+        
+        NSLayoutConstraint.activate([
+            self.betslipTapActionView.topAnchor.constraint(equalTo: self.betslipButtonView.topAnchor),
+            self.betslipTapActionView.bottomAnchor.constraint(equalTo: self.betslipButtonView.bottomAnchor),
+            self.betslipTapActionView.leadingAnchor.constraint(equalTo: self.betslipButtonView.leadingAnchor),
+            self.betslipTapActionView.trailingAnchor.constraint(equalTo: self.betslipButtonView.trailingAnchor),
         ])
         
         NSLayoutConstraint.activate([
@@ -463,6 +517,12 @@ extension FloatingShortcutsView {
         NSLayoutConstraint.activate([
             self.chatButtonView.centerXAnchor.constraint(equalTo: self.betslipButtonView.centerXAnchor),
             self.chatButtonView.bottomAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -10),
+
+            self.chatCountLabel.trailingAnchor.constraint(equalTo: self.chatButtonView.trailingAnchor, constant: 2),
+            self.chatCountLabel.topAnchor.constraint(equalTo: self.chatButtonView.topAnchor, constant: -3),
+
+            self.chatCountLabel.widthAnchor.constraint(equalToConstant: 20),
+            self.chatCountLabel.widthAnchor.constraint(equalTo: self.chatCountLabel.heightAnchor)
         ])
         
         NSLayoutConstraint.activate([

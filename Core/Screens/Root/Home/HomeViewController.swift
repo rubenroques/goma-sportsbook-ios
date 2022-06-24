@@ -23,7 +23,6 @@ class HomeViewController: UIViewController {
     // MARK: - Private Properties
     // Sub Views
     private lazy var tableView: UITableView = Self.createTableView()
-
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
@@ -106,8 +105,6 @@ class HomeViewController: UIViewController {
         
         self.floatingShortcutsView.resetAnimations()
     }
-
-    // MARK: - Layout and Theme
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -673,7 +670,7 @@ extension HomeViewController {
         self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
 
         self.view.addSubview(self.floatingShortcutsView)
-        
+
         // Initialize constraints
         self.initConstraints()
 

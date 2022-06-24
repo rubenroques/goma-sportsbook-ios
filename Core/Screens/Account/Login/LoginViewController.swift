@@ -405,6 +405,12 @@ extension LoginViewController {
             self.loginButton.isEnabled = true
             
         }
+        else if self.usernameHeaderTextFieldView.text == "mosafe" {
+            self.usernameHeaderTextFieldView.setText("modaf")
+            self.passwordHeaderTextFieldView.setText("teste123456.")
+            self.loginButton.isEnabled = true
+            
+        }
         
     }
 

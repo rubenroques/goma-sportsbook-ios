@@ -45,7 +45,12 @@ class ConversationsViewModel {
 
             }, receiveValue: { [weak self] response in
                 if let chatrooms = response.data {
+
+                    Env.gomaSocialClient.verifyIfNewChat(chatrooms: chatrooms)
+
                     self?.storeChatrooms(chatroomsData: chatrooms)
+
+                    Env.gomaSocialClient.unreadMessagesState.send(false)
                 }
 
             })
@@ -76,32 +81,31 @@ class ConversationsViewModel {
         for conversation in self.conversationsPublisher.value {
             let chatroomId = conversation.id
 
-            Env.gomaSocialClient.chatroomLastMessagePublisher
-                .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { [weak self] lastMessages in
+            if let lastMessagePublisher = Env.gomaSocialClient.lastMessagePublisher(forChatroomId: chatroomId) {
 
-                    if let lastMessageResponse = lastMessages[chatroomId] {
-                        if !lastMessageResponse.isEmpty {
-                            if let lastMessage = lastMessageResponse[safe: 0] {
-                                self?.conversationLastMessageList[lastMessage.toChatroom] = lastMessage
-                                self?.updateConversationDetail(chatroomId: lastMessage.toChatroom)
-                            }
-                        }
-                    }
-                    
-                })
-                .store(in: &cancellables)
+                lastMessagePublisher
+                    .receive(on: DispatchQueue.main)
+                    .sink(receiveValue: { [weak self] lastMessage in
 
-            Env.gomaSocialClient.chatroomReadMessagesPublisher
-                .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { [weak self] usersResponse in
+                        self?.conversationLastMessageList[lastMessage.toChatroom] = lastMessage
+                        self?.updateConversationDetail(chatroomId: lastMessage.toChatroom)
 
-                    if let usersResponse = usersResponse[chatroomId] {
-                        //self?.updateConversationReadStatus(chatroomId: chatroomId)
-                        self?.updateConversationDetail(chatroomId: chatroomId)
-                    }
-                })
-                .store(in: &cancellables)
+                    })
+                    .store(in: &cancellables)
+            }
+
+            if let readMessagesPublisher = Env.gomaSocialClient.readMessagePublisher() {
+
+                readMessagesPublisher
+                    .receive(on: DispatchQueue.main)
+                    .sink(receiveValue: { [weak self] usersResponse in
+
+                            //self?.updateConversationReadStatus(chatroomId: chatroomId)
+                            self?.updateConversationDetail(chatroomId: chatroomId)
+
+                    })
+                    .store(in: &cancellables)
+            }
 
         }
     }
@@ -122,9 +126,9 @@ class ConversationsViewModel {
                     }
 
                     // Check socket read list
-                    if let usersReadList = Env.gomaSocialClient.chatroomReadMessagesPublisher.value[chatroomId] {
-                        for userId in usersReadList.users {
-                            if userId == "\(userLoggedId)" && usersReadList.messageId == lastMessage.date {
+                    if let usersReadPublisher = Env.gomaSocialClient.readMessagePublisher(), let chatUserResponse = usersReadPublisher.value[chatroomId] {
+                        for userId in chatUserResponse.users {
+                            if userId == "\(userLoggedId)" && chatUserResponse.messageId == lastMessage.date {
                                 isLastMessageRead = true
                             }
                         }

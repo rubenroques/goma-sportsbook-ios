@@ -148,6 +148,14 @@ struct ChatUsersResponse: Decodable {
     }
 }
 
+struct ChatOnlineUsersResponse: Decodable {
+    var users: [String]
+
+    enum CodingKeys: String, CodingKey {
+        case users = "users"
+    }
+}
+
 struct AddFriendResponse: Decodable {
     var chatroomIds: [Int]?
 

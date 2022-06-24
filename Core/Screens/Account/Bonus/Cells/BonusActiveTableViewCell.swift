@@ -192,8 +192,8 @@ extension BonusActiveTableViewCell {
         NSLayoutConstraint.activate([
             self.containerView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 25),
             self.containerView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -25),
-            self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 25),
-            self.containerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -25)
+            self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 8),
+            self.containerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -8)
 
         ])
 

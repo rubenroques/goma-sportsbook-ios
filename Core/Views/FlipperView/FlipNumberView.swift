@@ -59,7 +59,7 @@ class FlipNumberView: UIView {
         for i in 0...8 {
             let flipNumberStripView = FlipNumberStripView()
             NSLayoutConstraint.activate([
-                flipNumberStripView.widthAnchor.constraint(equalToConstant: 11)
+                flipNumberStripView.widthAnchor.constraint(equalToConstant: 10)
             ])
             
             stripsDictionary[i] = flipNumberStripView
@@ -74,8 +74,10 @@ class FlipNumberView: UIView {
         label.textAlignment = .center
         label.text = "."
         label.font = AppFont.with(type: .bold, size: 15)
+        label.textColor = UIColor.App.buttonTextPrimary
+        
         NSLayoutConstraint.activate([
-            label.widthAnchor.constraint(equalToConstant: 6)
+            label.widthAnchor.constraint(equalToConstant: 4.5)
         ])
         
         self.stackView.insertArrangedSubview(label, at: self.stackView.arrangedSubviews.count-2)
@@ -197,7 +199,7 @@ class FlipNumberStripView: UIView, UITableViewDelegate, UITableViewDataSource {
         return tableView
     }()
     
-    private let infiniteSize = 1000
+    private let infiniteSize = 100_000
     private let values = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     private var currentPosition: Int = 0
     
@@ -377,6 +379,7 @@ class FlipNumberStripCellView: UITableViewCell {
     // MARK: Cell clear for reuse
     override func prepareForReuse() {
         super.prepareForReuse()
+        
         self.numberLabel.text = nil
     }
     
@@ -385,10 +388,10 @@ class FlipNumberStripCellView: UITableViewCell {
         self.backgroundView?.backgroundColor = .clear
         
         self.contentView.addSubview(self.numberLabel)
-        
+        self.numberLabel.textColor = UIColor.App.buttonTextPrimary
         NSLayoutConstraint.activate([
             self.contentView.centerXAnchor.constraint(equalTo: self.numberLabel.centerXAnchor),
-            self.numberLabel.widthAnchor.constraint(equalToConstant: 15),
+            self.numberLabel.widthAnchor.constraint(equalToConstant: 16),
             
             self.contentView.topAnchor.constraint(equalTo: self.numberLabel.topAnchor),
             self.contentView.bottomAnchor.constraint(equalTo: self.numberLabel.bottomAnchor)
