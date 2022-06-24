@@ -39,7 +39,6 @@ class RootViewController: UIViewController {
     @IBOutlet private weak var casinoIconImageView: UIImageView!
     
     @IBOutlet private weak var sportsbookButtonBaseView: UIView!
-    @IBOutlet private weak var sportsbookTitleLabel: UILabel!
     @IBOutlet private weak var sportsbookIconImageView: UIImageView!
     
     @IBOutlet private weak var profileBaseView: UIView!
@@ -390,14 +389,13 @@ class RootViewController: UIViewController {
         
         self.casinoBaseView.isHidden = true
         
-        self.sportsbookTitleLabel.text = localized("sports")
 
         self.sportsbookButtonBaseView.isHidden = true
         
         self.casinoButtonBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.casinoButtonBaseView.layer.maskedCorners = [ .layerMinXMaxYCorner, .layerMinXMinYCorner]
         
-        self.sportsbookButtonBaseView.backgroundColor = UIColor.App.highlightPrimary
+        self.sportsbookButtonBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.sportsbookButtonBaseView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
         
         let homeTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapHomeTabItem))
@@ -484,7 +482,6 @@ class RootViewController: UIViewController {
         self.casinoIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         
         self.sportsbookButtonBaseView.alpha = self.activeButtonAlpha
-        self.sportsbookTitleLabel.textColor = UIColor.App.buttonTextPrimary
         self.sportsbookIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         
         self.redrawButtonButtons()
