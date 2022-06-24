@@ -94,8 +94,6 @@ class ConversationDetailViewController: UIViewController {
         let contactTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapContactInfo))
         self.navigationView.addGestureRecognizer(contactTapGesture)
 
-        //self.isChatGroup = self.viewModel.isChatGroup
-
         self.bind(toViewModel: self.viewModel)
 
         self.setupPublishers()
@@ -105,8 +103,11 @@ class ConversationDetailViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
 
         self.tableView.transform = CGAffineTransform(scaleX: 1, y: -1)
-        self.tableView.bounces = false
-
+        
+        self.tableView.isDirectionalLockEnabled = true 
+        self.tableView.alwaysBounceHorizontal = true
+        self.tableView.alwaysBounceVertical = false
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -118,6 +119,7 @@ class ConversationDetailViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
+        self.presentationController?.presentedView?.gestureRecognizers?.first?.isEnabled = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
