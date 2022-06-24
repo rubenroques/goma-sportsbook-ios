@@ -92,12 +92,15 @@ class BetslipManager: NSObject {
             }
             .store(in: &cancellables)
 
-
     }
 
     func addBettingTicket(_ bettingTicket: BettingTicket) {
         bettingTicketsDictionaryPublisher.value[bettingTicket.id] = bettingTicket
         self.subscribeBettingTicketPublisher(bettingTicket: bettingTicket)
+        UserDefaults.standard.cachedBetslipTickets = self.bettingTicketsPublisher.value
+        
+        print(UserDefaults.standard.cachedBetslipTickets)
+        
     }
 
     func removeBettingTicket(_ bettingTicket: BettingTicket) {

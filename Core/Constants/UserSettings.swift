@@ -14,6 +14,7 @@ enum UserDefaultsKey: String {
     case userBetslipSettings = "user_betslip_settings"
     case userOddsFormat = "userOddsFormat"
     case cardsStyle = "cardsStyleKey"
+    case cachedBetslipTickets = "cachedBetslipTickets"
 }
 
 extension UserDefaults {
@@ -56,6 +57,19 @@ extension UserDefaults {
         }
         set {
             self.setValue(newValue, forKey: "user_betslip_settings")
+        }
+    }
+    
+    var cachedBetslipTickets: [BettingTicket] {
+        get {
+            if let array = self.value(forKey: "cachedBetslipTickets") {
+                return array as! [BettingTicket]
+            }else{
+                return []
+            }
+        }
+        set {
+            self.setValue(newValue, forKey: "cachedBetslipTickets")
         }
     }
 
