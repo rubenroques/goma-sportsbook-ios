@@ -43,6 +43,8 @@ class GomaGamingSocialServiceClient {
     var reloadChatroomsList: PassthroughSubject<Void, Never> = .init()
 
     var chatPage: Int = 1
+
+    var locations: OrderedDictionary<String, EveryMatrix.Location> = [:]
     
     // MARK: Private Properties
     private var manager: SocketManager?
@@ -633,6 +635,17 @@ class GomaGamingSocialServiceClient {
         return self.chatroomOnlineUsersPublisher
     }
 
+    // Locations
+    func storeLocations(locations: [EveryMatrix.Location]) {
+        self.locations = [:]
+        for location in locations {
+            self.locations[location.id] = location
+        }
+    }
+
+    func location(forId id: String) -> EveryMatrix.Location? {
+        return self.locations[id]
+    }
 }
 
 extension GomaGamingSocialServiceClient {

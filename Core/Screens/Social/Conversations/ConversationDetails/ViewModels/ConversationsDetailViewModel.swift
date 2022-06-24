@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import Kingfisher
+import OrderedCollections
 
 class ConversationDetailViewModel: NSObject {
 
@@ -44,14 +45,31 @@ class ConversationDetailViewModel: NSObject {
         self.conversationId = chatId
         
         super.init()
-        
-        Publishers.CombineLatest(Env.userSessionStore.hasGomaUserSessionPublisher, Env.gomaSocialClient.socketConnectedPublisher)
-            .sink { [weak self] hasGomaUserSession, socketConnected in
-                if hasGomaUserSession && socketConnected {
-                    self?.requestChatroomDetails(withId: String(chatId))
+
+//        self.fetchLocations()
+//            .sink { [weak self] locations in
+//                Env.gomaSocialClient.storeLocations(locations: locations)
+//            }
+//            .store(in: &cancellables)
+
+        self.fetchLocations()
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("Error getting locations: \(error)")
+                case .finished:
+                    ()
                 }
-            }
+
+                self?.isLoadingConversationPublisher.send(false)
+
+            }, receiveValue: { [weak self] locations in
+                Env.gomaSocialClient.storeLocations(locations: locations)
+
+                self?.setupPublishers()
+            })
             .store(in: &cancellables)
+
     }
     
     init(conversationData: ConversationData) {
@@ -62,13 +80,44 @@ class ConversationDetailViewModel: NSObject {
         
         super.init()
 
-        self.setupConversationInfo()
-        self.startSocketListening()
-        
-        self.isLoadingConversationPublisher.send(false)
+        self.fetchLocations()
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("Error getting locations: \(error)")
+                case .finished:
+                    ()
+                }
+
+                self?.isLoadingConversationPublisher.send(false)
+
+            }, receiveValue: { [weak self] locations in
+                Env.gomaSocialClient.storeLocations(locations: locations)
+
+                self?.setupConversationInfo()
+                self?.startSocketListening()
+
+                self?.isLoadingConversationPublisher.send(false)
+            })
+            .store(in: &cancellables)
+
     }
 
     // MARK: Functions
+    private func setupPublishers() {
+
+        Publishers.CombineLatest(Env.userSessionStore.hasGomaUserSessionPublisher, Env.gomaSocialClient.socketConnectedPublisher)
+            .sink { [weak self] hasGomaUserSession, socketConnected in
+                if hasGomaUserSession && socketConnected {
+
+                    if let chatId = self?.conversationId {
+                        self?.requestChatroomDetails(withId: String(chatId))
+                    }
+                }
+            }
+            .store(in: &cancellables)
+    }
+
     func requestChatroomDetails(withId id: String) {
            
         self.isLoadingConversationPublisher.send(true)
@@ -163,6 +212,17 @@ class ConversationDetailViewModel: NSObject {
                 })
                 .store(in: &cancellables)
         }
+
+    }
+
+    func fetchLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {
+
+        let router = TSRouter.getLocations(language: "en", sortByPopularity: false)
+        return Env.everyMatrixClient.manager.getModel(router: router, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
+            .map(\.records)
+            .compactMap({$0})
+            .replaceError(with: [EveryMatrix.Location]())
+            .eraseToAnyPublisher()
 
     }
 
