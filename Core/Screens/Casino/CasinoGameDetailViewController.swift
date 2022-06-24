@@ -69,11 +69,9 @@ class CasinoGameDetailViewController: UIViewController {
                 self?.accountValueLabel.text = balance
             })
             .store(in: &self.cancellables)
-
         
-        
-
     }
+    
     // MARK: - Layout and Theme
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)

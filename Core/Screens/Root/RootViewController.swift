@@ -37,10 +37,8 @@ class RootViewController: UIViewController {
     
     @IBOutlet private weak var casinoButtonBaseView: UIView!
     @IBOutlet private weak var casinoIconImageView: UIImageView!
-    @IBOutlet private weak var casinoTitleLabel: UILabel!
     
     @IBOutlet private weak var sportsbookButtonBaseView: UIView!
-    @IBOutlet private weak var sportsbookTitleLabel: UILabel!
     @IBOutlet private weak var sportsbookIconImageView: UIImageView!
     
     @IBOutlet private weak var profileBaseView: UIView!
@@ -332,7 +330,7 @@ class RootViewController: UIViewController {
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-
+        
         self.setupWithTheme()
     }
 
@@ -388,18 +386,16 @@ class RootViewController: UIViewController {
         self.homeTitleLabel.text = localized("home")
         self.sportsTitleLabel.text = localized("sports")
         self.liveTitleLabel.text = localized("live")
-        self.casinoTitleLabel.text = localized("casino")
         
         self.casinoBaseView.isHidden = true
         
-        self.sportsbookTitleLabel.text = localized("sports")
 
         self.sportsbookButtonBaseView.isHidden = true
         
-        self.casinoButtonBaseView.backgroundColor = UIColor.App.highlightPrimary
+        self.casinoButtonBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.casinoButtonBaseView.layer.maskedCorners = [ .layerMinXMaxYCorner, .layerMinXMinYCorner]
         
-        self.sportsbookButtonBaseView.backgroundColor = UIColor.App.highlightPrimary
+        self.sportsbookButtonBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.sportsbookButtonBaseView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
         
         let homeTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapHomeTabItem))
@@ -443,7 +439,6 @@ class RootViewController: UIViewController {
         self.homeTitleLabel.textColor = UIColor.App.highlightPrimary
         self.liveTitleLabel.textColor = UIColor.App.highlightPrimary
         self.sportsTitleLabel.textColor = UIColor.App.highlightPrimary
-        self.casinoTitleLabel.textColor = UIColor.App.highlightPrimary
         
         self.sportsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
         self.homeIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
@@ -484,11 +479,9 @@ class RootViewController: UIViewController {
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
 
         self.casinoButtonBaseView.alpha = self.activeButtonAlpha
-        self.casinoTitleLabel.textColor = UIColor.App.buttonTextPrimary
         self.casinoIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         
         self.sportsbookButtonBaseView.alpha = self.activeButtonAlpha
-        self.sportsbookTitleLabel.textColor = UIColor.App.buttonTextPrimary
         self.sportsbookIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         
         self.redrawButtonButtons()
@@ -698,7 +691,7 @@ extension RootViewController {
     }
 
     @objc private func didTapProfileButton() {
-        self.pushProfileViewController()
+        self.presentProfileViewController()
     }
 
     @objc private func didTapAccountValue() {
@@ -707,7 +700,7 @@ extension RootViewController {
         self.present(navigationViewController, animated: true, completion: nil)
     }
 
-    private func pushProfileViewController() {
+    private func presentProfileViewController() {
         if let loggedUser = UserSessionStore.loggedUserSession() {
             let profileViewController = ProfileViewController(userSession: loggedUser)
             let navigationViewController = Router.navigationController(with: profileViewController)

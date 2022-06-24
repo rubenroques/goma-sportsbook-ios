@@ -18,18 +18,11 @@ class ListTypeCollectionViewCell: UICollectionViewCell {
 
     var selectedType: Bool = false
 
-    override var bounds: CGRect {
-        didSet {
-            self.setNeedsLayout()
-            self.layoutIfNeeded()
-        }
-    }
-
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        self.selectionHighlightView.layer.cornerRadius = selectionHighlightView.frame.size.height / 2
-        self.labelView.layer.cornerRadius = labelView.frame.size.height / 2
+        self.selectionHighlightView.layer.cornerRadius = self.selectionHighlightView.frame.size.height / 2
+        self.labelView.layer.cornerRadius = self.labelView.frame.size.height / 2
     }
 
     override func awakeFromNib() {

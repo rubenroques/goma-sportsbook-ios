@@ -172,7 +172,7 @@ final class TSManager {
                     Logger.log("TSManager getModel initial dump - proc:\(initialDumpProcedure) url:\(router.procedure), args:\(router.args ?? [] )")
                 }
                 else {
-                    Logger.log("TSManager getModel - url:\(router.procedure), args:\(router.args ?? [] )")
+                    Logger.log("TSManager getModel - url:\(router.procedure), args:\(router.args ?? [] ), kwargs:\(router.kwargs ?? [:] )")
                 }
 
                 if swampSession.isConnected() {
