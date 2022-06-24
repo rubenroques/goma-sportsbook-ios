@@ -215,27 +215,6 @@ class CompetitionDetailsViewModel {
                 processedCompetitions.append(competition)
             }
         }
-        
-        if processedCompetitions.isEmpty {
-                  for competitionId in self.competitionsIds {
-                      if let rawCompetition = self.store.tournaments[competitionId] {
-
-                          var location: Location?
-                          if let rawLocation = self.store.location(forId: rawCompetition.venueId ?? "") {
-                              location = Location(id: rawLocation.id,
-                                              name: rawLocation.name ?? "",
-                                              isoCode: rawLocation.code ?? "")
-                          }
-
-                          let competition = Competition(id: competitionId,
-                                                        name: rawCompetition.name ?? "",
-                                                        matches: (competitionsMatches[competitionId] ?? []),
-                                                        venue: location,
-                                                        outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
-                          processedCompetitions.append(competition)
-                      }
-                  }
-              }
 
         if processedCompetitions.isEmpty {
             for competitionId in self.competitionsIds {

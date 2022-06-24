@@ -427,6 +427,7 @@ extension PopularDetailsViewController {
         titleLabel.font = AppFont.with(type: .semibold, size: 14)
         titleLabel.textAlignment = .left
         titleLabel.text = "Popular Matches"
+        titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return titleLabel
     }
 

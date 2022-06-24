@@ -698,7 +698,7 @@ extension RootViewController {
     }
 
     @objc private func didTapProfileButton() {
-        self.pushProfileViewController()
+        self.presentProfileViewController()
     }
 
     @objc private func didTapAccountValue() {
@@ -707,7 +707,7 @@ extension RootViewController {
         self.present(navigationViewController, animated: true, completion: nil)
     }
 
-    private func pushProfileViewController() {
+    private func presentProfileViewController() {
         if let loggedUser = UserSessionStore.loggedUserSession() {
             let profileViewController = ProfileViewController(userSession: loggedUser)
             let navigationViewController = Router.navigationController(with: profileViewController)

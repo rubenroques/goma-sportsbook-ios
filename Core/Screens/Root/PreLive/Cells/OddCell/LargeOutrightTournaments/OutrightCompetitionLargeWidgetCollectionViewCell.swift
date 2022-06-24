@@ -34,6 +34,7 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
 
     private lazy var competitionBaseStackView: UIStackView = Self.createCompetitionBaseStackView()
 
+    private lazy var favoritesIconImageView: UIImageView = Self.createFavoritesIconImageView()
     private lazy var favoriteCompetitionButton: UIButton = Self.createFavoriteCompetitionButton()
     private lazy var countryFlagCompetitionImageView: UIImageView = Self.createCountryFlagCompetitionImageView()
     private lazy var countryNameCompetitionLabel: UILabel = Self.createCountryNameCompetitionLabel()
@@ -53,6 +54,17 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
     private var headerHeightConstraint = NSLayoutConstraint()
     private var buttonHeightConstraint = NSLayoutConstraint()
 
+    private var isFavorite: Bool = false {
+        didSet {
+            if isFavorite {
+                self.favoritesIconImageView.image = UIImage(named: "selected_favorite_icon")
+            }
+            else {
+                self.favoritesIconImageView.image = UIImage(named: "unselected_favorite_icon")
+            }
+        }
+    }
+    
     private var cachedCardsStyle: CardsStyle?
 
     private var viewModel: OutrightCompetitionLargeWidgetViewModel?
@@ -68,6 +80,8 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSeeAll))
         self.contentView.addGestureRecognizer(tapGesture)
 
+        self.favoriteCompetitionButton.addTarget(self, action: #selector(didTapFavoritesButton(_:)), for: .primaryActionTriggered)
+        
         self.setNeedsLayout()
         self.layoutIfNeeded()
     }
@@ -113,7 +127,6 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
         self.seeAllView.backgroundColor = UIColor.App.backgroundOdds
         self.seeAllLabel.textColor = UIColor.App.textPrimary
     }
-
 
     private func adjustDesignToCardStyle() {
 
@@ -164,6 +177,9 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
         self.titleLabel.text = viewModel.name
         self.countryFlagCompetitionImageView.image = UIImage(named: viewModel.countryImageName)
         self.countryNameCompetitionLabel.text = viewModel.countryName
+        
+        self.isFavorite = Env.favoritesManager.isEventFavorite(eventId: viewModel.competition.id)
+        
     }
 
     @objc func didTapSeeAll() {
@@ -171,7 +187,30 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
             self.tappedLineAction?(viewModel.competition)
         }
     }
+    
+    func markAsFavorite(competition: Competition) {
+        if Env.favoritesManager.isEventFavorite(eventId: competition.id) {
+            Env.favoritesManager.removeFavorite(eventId: competition.id, favoriteType: .competition)
+            self.isFavorite = false
+        }
+        else {
+            Env.favoritesManager.addFavorite(eventId: competition.id, favoriteType: .competition)
+            self.isFavorite = true
+        }
+    }
 
+    @objc private func didTapFavoritesButton(_ sender: Any) {
+        if UserSessionStore.isUserLogged() {
+            if let competition = self.viewModel?.competition {
+                self.markAsFavorite(competition: competition)
+            }
+        }
+        else {
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.viewController?.present(loginViewController, animated: true, completion: nil)
+        }
+    }
+    
 }
 
 extension OutrightCompetitionLargeWidgetCollectionViewCell {
@@ -201,10 +240,15 @@ extension OutrightCompetitionLargeWidgetCollectionViewCell {
         linesStackView.translatesAutoresizingMaskIntoConstraints = false
         return linesStackView
     }
-
+    private static func createFavoritesIconImageView() -> UIImageView {
+        let favoritesIconImageView = UIImageView()
+        favoritesIconImageView.translatesAutoresizingMaskIntoConstraints = false
+        favoritesIconImageView.image = UIImage(named: "unselected_favorite_icon")
+        return favoritesIconImageView
+    }
     private static func createFavoriteCompetitionButton() -> UIButton {
         let favoriteCompetitionButton = UIButton(type: .custom)
-        favoriteCompetitionButton.setImage(UIImage(named: "unselected_favorite_icon"), for: .normal)
+        favoriteCompetitionButton.backgroundColor = .clear
         favoriteCompetitionButton.translatesAutoresizingMaskIntoConstraints = false
         return favoriteCompetitionButton
     }
@@ -269,15 +313,16 @@ extension OutrightCompetitionLargeWidgetCollectionViewCell {
 
         self.baseView.addSubview(self.competitionBaseStackView)
 
-        self.competitionBaseStackView.addArrangedSubview(favoriteCompetitionButton)
-        self.competitionBaseStackView.addArrangedSubview(countryFlagCompetitionImageView)
-        self.competitionBaseStackView.addArrangedSubview(countryNameCompetitionLabel)
+        self.competitionBaseStackView.addArrangedSubview(self.favoritesIconImageView)
+        self.competitionBaseStackView.addArrangedSubview(self.countryFlagCompetitionImageView)
+        self.competitionBaseStackView.addArrangedSubview(self.countryNameCompetitionLabel)
 
         self.baseView.addSubview(self.titleLabel)
 
         self.seeAllView.addSubview(self.seeAllLabel)
         self.baseView.addSubview(self.seeAllView)
 
+        self.baseView.addSubview(self.favoriteCompetitionButton)
         // Initialize constraints
         self.initConstraints()
     }
@@ -303,15 +348,22 @@ extension OutrightCompetitionLargeWidgetCollectionViewCell {
             self.competitionBaseStackView.trailingAnchor.constraint(equalTo: self.seeAllView.trailingAnchor),
             self.topMarginSpaceConstraint,
 
-            self.favoriteCompetitionButton.heightAnchor.constraint(equalTo: self.favoriteCompetitionButton.widthAnchor),
+            self.favoritesIconImageView.heightAnchor.constraint(equalTo: self.favoritesIconImageView.widthAnchor),
             self.countryFlagCompetitionImageView.heightAnchor.constraint(equalTo: self.countryFlagCompetitionImageView.widthAnchor),
             self.headerHeightConstraint,
 
+            //
             self.titleLabel.leadingAnchor.constraint(equalTo: self.seeAllView.leadingAnchor),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.seeAllView.trailingAnchor),
             self.titleLabel.topAnchor.constraint(equalTo: self.competitionBaseStackView.bottomAnchor, constant: 6),
             self.titleLabel.bottomAnchor.constraint(equalTo: self.seeAllView.topAnchor, constant: -6),
 
+            //
+            self.favoriteCompetitionButton.heightAnchor.constraint(equalToConstant: 40),
+            self.favoriteCompetitionButton.widthAnchor.constraint(equalToConstant: 40),
+            self.favoriteCompetitionButton.centerXAnchor.constraint(equalTo: self.favoritesIconImageView.centerXAnchor),
+            self.favoriteCompetitionButton.centerYAnchor.constraint(equalTo: self.favoritesIconImageView.centerYAnchor),
+            
             //
             self.seeAllLabel.centerYAnchor.constraint(equalTo: self.seeAllView.centerYAnchor),
             self.seeAllLabel.centerXAnchor.constraint(equalTo: self.seeAllView.centerXAnchor),
