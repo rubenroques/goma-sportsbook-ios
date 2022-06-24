@@ -29,7 +29,6 @@
                 <outlet property="casinoBaseView" destination="e31-vV-LiP" id="Vnn-JW-7yJ"/>
                 <outlet property="casinoButtonBaseView" destination="WaX-Xt-ClH" id="dTX-6J-5XO"/>
                 <outlet property="casinoIconImageView" destination="3bN-uV-pM1" id="Afb-3U-jgZ"/>
-                <outlet property="casinoTitleLabel" destination="594-8N-csj" id="vCb-vT-DE1"/>
                 <outlet property="contentView" destination="Su0-qa-MeF" id="HFX-VT-ZHn"/>
                 <outlet property="homeBaseView" destination="xew-dh-4hf" id="DMM-4L-5D9"/>
                 <outlet property="homeButtonBaseView" destination="4rF-OG-Pdw" id="pw0-Kh-2Ej"/>
@@ -272,34 +271,20 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WaX-Xt-ClH">
                     <rect key="frame" x="530" y="1098" width="80" height="52"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_live_icon" translatesAutoresizingMaskIntoConstraints="NO" id="3bN-uV-pM1">
-                            <rect key="frame" x="30" y="9" width="20" height="20"/>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="casino_icon" translatesAutoresizingMaskIntoConstraints="NO" id="3bN-uV-pM1">
+                            <rect key="frame" x="25" y="11" width="30" height="30"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="20" id="gjo-4P-dO7"/>
-                                <constraint firstAttribute="width" constant="20" id="p9g-vQ-SA2"/>
+                                <constraint firstAttribute="height" constant="30" id="gjo-4P-dO7"/>
+                                <constraint firstAttribute="width" constant="30" id="p9g-vQ-SA2"/>
                             </constraints>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Casino" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="594-8N-csj">
-                            <rect key="frame" x="5" y="34" width="70" height="15"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="15" id="QDm-wj-lnD"/>
-                                <constraint firstAttribute="width" constant="70" id="Uoc-I9-sCX"/>
-                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="XUG-t4-K69"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
-                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <nil key="highlightedColor"/>
-                        </label>
                     </subviews>
                     <color key="backgroundColor" name="backgroundPrimary"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="52" id="1mU-99-Zct"/>
                         <constraint firstItem="3bN-uV-pM1" firstAttribute="centerX" secondItem="WaX-Xt-ClH" secondAttribute="centerX" id="I87-gg-H5m"/>
                         <constraint firstAttribute="width" constant="80" id="NU4-Rn-5Gt"/>
-                        <constraint firstAttribute="bottom" secondItem="594-8N-csj" secondAttribute="bottom" constant="3" id="XNI-mG-6aB"/>
-                        <constraint firstItem="594-8N-csj" firstAttribute="centerX" secondItem="3bN-uV-pM1" secondAttribute="centerX" id="awe-7a-XUQ"/>
-                        <constraint firstItem="594-8N-csj" firstAttribute="top" secondItem="3bN-uV-pM1" secondAttribute="bottom" constant="5" id="lii-Ra-1ZR"/>
-                        <constraint firstItem="594-8N-csj" firstAttribute="top" secondItem="3bN-uV-pM1" secondAttribute="bottom" constant="5" id="nea-OO-ddC"/>
+                        <constraint firstItem="3bN-uV-pM1" firstAttribute="centerY" secondItem="WaX-Xt-ClH" secondAttribute="centerY" id="c9t-yr-tsa"/>
                     </constraints>
                 </view>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KmS-Xh-sK7">
@@ -437,7 +422,6 @@
                 <constraint firstAttribute="trailing" secondItem="fh2-pN-wGO" secondAttribute="trailing" id="0Gk-JN-l9N"/>
                 <constraint firstItem="Su0-qa-MeF" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="2qF-AA-Ckl"/>
                 <constraint firstItem="fh2-pN-wGO" firstAttribute="top" secondItem="KmS-Xh-sK7" secondAttribute="bottom" id="5Q5-T9-GDv"/>
-                <constraint firstItem="KmS-Xh-sK7" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="bottom" constant="-86" id="9sh-9w-3ea"/>
                 <constraint firstAttribute="trailing" secondItem="7JK-Qm-Mkc" secondAttribute="trailing" id="A9m-dn-M0P"/>
                 <constraint firstItem="Su0-qa-MeF" firstAttribute="top" secondItem="HKG-0A-qeh" secondAttribute="bottom" id="BcZ-1W-3cV"/>
                 <constraint firstItem="KmS-Xh-sK7" firstAttribute="top" secondItem="tbw-wl-ySe" secondAttribute="bottom" id="Ems-FJ-zUG"/>
@@ -466,6 +450,7 @@
         </view>
     </objects>
     <resources>
+        <image name="casino_icon" width="21" height="22.5"/>
         <image name="empty_user_image" width="100" height="100"/>
         <image name="logo_horizontal_left" width="77" height="37"/>
         <image name="plus_small_icon" width="16" height="16"/>
@@ -477,7 +462,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="textPrimary">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.066666666666666666" green="0.086274509803921567" blue="0.098039215686274508" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

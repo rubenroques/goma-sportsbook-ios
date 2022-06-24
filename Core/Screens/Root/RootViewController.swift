@@ -37,7 +37,6 @@ class RootViewController: UIViewController {
     
     @IBOutlet private weak var casinoButtonBaseView: UIView!
     @IBOutlet private weak var casinoIconImageView: UIImageView!
-    @IBOutlet private weak var casinoTitleLabel: UILabel!
     
     @IBOutlet private weak var sportsbookButtonBaseView: UIView!
     @IBOutlet private weak var sportsbookTitleLabel: UILabel!
@@ -388,7 +387,6 @@ class RootViewController: UIViewController {
         self.homeTitleLabel.text = localized("home")
         self.sportsTitleLabel.text = localized("sports")
         self.liveTitleLabel.text = localized("live")
-        self.casinoTitleLabel.text = localized("casino")
         
         self.casinoBaseView.isHidden = true
         
@@ -396,7 +394,7 @@ class RootViewController: UIViewController {
 
         self.sportsbookButtonBaseView.isHidden = true
         
-        self.casinoButtonBaseView.backgroundColor = UIColor.App.highlightPrimary
+        self.casinoButtonBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.casinoButtonBaseView.layer.maskedCorners = [ .layerMinXMaxYCorner, .layerMinXMinYCorner]
         
         self.sportsbookButtonBaseView.backgroundColor = UIColor.App.highlightPrimary
@@ -443,7 +441,6 @@ class RootViewController: UIViewController {
         self.homeTitleLabel.textColor = UIColor.App.highlightPrimary
         self.liveTitleLabel.textColor = UIColor.App.highlightPrimary
         self.sportsTitleLabel.textColor = UIColor.App.highlightPrimary
-        self.casinoTitleLabel.textColor = UIColor.App.highlightPrimary
         
         self.sportsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
         self.homeIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
@@ -484,7 +481,6 @@ class RootViewController: UIViewController {
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
 
         self.casinoButtonBaseView.alpha = self.activeButtonAlpha
-        self.casinoTitleLabel.textColor = UIColor.App.buttonTextPrimary
         self.casinoIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         
         self.sportsbookButtonBaseView.alpha = self.activeButtonAlpha
