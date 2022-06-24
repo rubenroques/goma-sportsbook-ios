@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Group 17 Copy.png",
+      "filename" : "casino.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Group 17 Copy-1.png",
+      "filename" : "casino@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Group 17 Copy-2.png",
+      "filename" : "casino@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
