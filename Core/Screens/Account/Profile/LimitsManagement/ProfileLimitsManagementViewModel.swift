@@ -25,6 +25,7 @@ class ProfileLimitsManagementViewModel: NSObject {
     var lossLimitPerMonth: EveryMatrix.Limit?
 
     var limitsLoadedPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var isUserLoggedPublisher: CurrentValueSubject<Bool, Never> = .init(true)
     var limitOptionsSet: [String] = []
     var limitOptionsCheckPublisher: CurrentValueSubject<[String], Never> = .init([])
     var limitOptionsErrorPublisher: CurrentValueSubject<String, Never> = .init("")
@@ -36,6 +37,7 @@ class ProfileLimitsManagementViewModel: NSObject {
     // MARK: Cycles
     override init() {
         super.init()
+      
 
         self.getLimits()
     }

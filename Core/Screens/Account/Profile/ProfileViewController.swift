@@ -104,6 +104,14 @@ class ProfileViewController: UIViewController {
             let userCodeString = localized("user_code").replacingOccurrences(of: "%s", with: userCode)
             self.userIdLabel.text = userCodeString
         }
+        Env.userSessionStore.userSessionPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { userSession in
+                if userSession == nil {
+                    self.dismiss(animated: false, completion: nil)
+                }
+            }
+            .store(in: &cancellables)
 
         Env.everyMatrixClient.getProfileStatus()
             .receive(on: DispatchQueue.main)
