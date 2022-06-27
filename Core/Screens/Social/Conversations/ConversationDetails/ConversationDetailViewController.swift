@@ -292,10 +292,18 @@ class ConversationDetailViewController: UIViewController {
     }
 
     private func showBetSelectionScreen() {
+//        if let conversationData = self.viewModel.getConversationData() {
+//            let betSelectionViewModel = ConversationBetSelectionViewModel(conversationData: conversationData)
+//            let betSelectionViewController = ConversationBetSelectionViewController(viewModel: betSelectionViewModel)
+//            self.present(betSelectionViewController, animated: true, completion: nil)
+//        }
+
         if let conversationData = self.viewModel.getConversationData() {
-            let betSelectionViewModel = ConversationBetSelectionViewModel(conversationData: conversationData)
-            let betSelectionViewController = ConversationBetSelectionViewController(viewModel: betSelectionViewModel)
-            self.present(betSelectionViewController, animated: true, completion: nil)
+            let conversationBetSelectionRootViewModel = ConversationBetSelectionRootViewModel(startTabIndex: 0, conversationData: conversationData)
+
+            let conversationBetSelectionRootViewController = ConversationBetSelectionRootViewController(viewModel: conversationBetSelectionRootViewModel)
+
+            self.present(conversationBetSelectionRootViewController, animated: true, completion: nil)
         }
     }
 

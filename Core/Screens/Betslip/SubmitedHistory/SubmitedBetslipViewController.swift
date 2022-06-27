@@ -10,9 +10,7 @@ import Combine
 import OrderedCollections
 
 class SubmitedBetslipViewController: UIViewController {
-    
-    
-    
+
     @IBOutlet private weak var betTypeSegmentControlBaseView: UIView!
     @IBOutlet private weak var betTypeSegmentControl: UISegmentedControl!
     
@@ -123,7 +121,6 @@ class SubmitedBetslipViewController: UIViewController {
         ], for: .disabled)
 
         self.betTypeSegmentControl.selectedSegmentTintColor = UIColor.App.highlightPrimary
-
 
         self.betTypeSegmentControlBaseView.backgroundColor = UIColor.App.backgroundPrimary
     }

@@ -38,6 +38,10 @@ class BetSelectionCellViewModel {
         return OddConverter.stringForValue(self.ticket.totalPriceValue ?? 0.0, format: UserDefaults.standard.userOddsFormat)
     }
 
-
+//    var betAmountString: String {
+//        let currency = CurrencyType
+//        return self.ticket.totalBetAmount
+//
+//    }
 
 }

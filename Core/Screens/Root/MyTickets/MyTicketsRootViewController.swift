@@ -111,7 +111,6 @@ class MyTicketsRootViewController: UIViewController {
         StyleHelper.styleButton(button: self.noLoginButton)
    }
 
-
     // MARK: - Bindings
     private func bind(toViewModel viewModel: MyTicketsRootViewModel) {
 

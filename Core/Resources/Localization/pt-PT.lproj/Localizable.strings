@@ -496,3 +496,6 @@ Terms of use, Privacy Policy and EULA";
 
 "leave_group" = "Leave Group";
 "leave_group_message" = "Are you sure you want to leave the group?";
+
+"share_my_tickets" = "Share my tickets";
+"not_bets_tickets_section" = "You don't have any bets for this section.";
