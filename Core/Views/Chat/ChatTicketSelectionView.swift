@@ -138,6 +138,8 @@ class ChatTicketSelectionView: UIView {
         self.matchLabel.textColor = UIColor.App.textPrimary
 
         self.marketLabel.textColor = UIColor.App.textSecondary
+
+        self.betStatusLabel.textColor = UIColor.App.buttonTextPrimary
     }
 }
 

@@ -115,14 +115,14 @@ class BetSelectionStateTableViewCell: UITableViewCell {
         self.bottomStateView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.bottomTitlesStackView.backgroundColor = .clear
-        self.totalOddTitleLabel.textColor = UIColor.App.textPrimary
-        self.betAmountTitleLabel.textColor = UIColor.App.textPrimary
-        self.possibleWinningTitleLabel.textColor = UIColor.App.textPrimary
+        self.totalOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+        self.betAmountTitleLabel.textColor = UIColor.App.buttonTextPrimary
+        self.possibleWinningTitleLabel.textColor = UIColor.App.buttonTextPrimary
 
         self.bottomValuesStackView.backgroundColor = .clear
-        self.totalOddValueLabel.textColor = UIColor.App.textPrimary
-        self.betAmountValueLabel.textColor = UIColor.App.textPrimary
-        self.possibleWinningValueLabel.textColor = UIColor.App.textPrimary
+        self.totalOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        self.betAmountValueLabel.textColor = UIColor.App.buttonTextPrimary
+        self.possibleWinningValueLabel.textColor = UIColor.App.buttonTextPrimary
     }
 
     // MARK: Functions
