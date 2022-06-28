@@ -1,23 +1,19 @@
 //
-//  BetSelectionStateTableViewCell.swift
+//  ChatTicketStateInMessageView.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 27/06/2022.
+//  Created by André Lascas on 28/06/2022.
 //
 
 import UIKit
 import Combine
 
-class BetSelectionStateTableViewCell: UITableViewCell {
+class ChatTicketStateInMessageView: UIView {
 
     // MARK: Private Properties
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var topStateView: UIView = Self.createTopStateView()
-    private lazy var checkboxBaseView: UIView = Self.createCheckboxBaseView()
-    private lazy var checkboxImageView: UIImageView = Self.createCheckboxImageView()
     private lazy var ticketsStackView: UIStackView = Self.createTicketsStackView()
-    private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
-
     private lazy var bottomStateView: UIView = Self.createBottomStateView()
     private lazy var bottomTitlesStackView: UIStackView = Self.createBottomTitlesStackView()
     private lazy var totalOddTitleLabel: UILabel = Self.createTotalOddTitleLabel()
@@ -29,13 +25,18 @@ class BetSelectionStateTableViewCell: UITableViewCell {
     private lazy var betAmountValueLabel: UILabel = Self.createBetAmountValueLabel()
     private lazy var possibleWinningValueLabel: UILabel = Self.createPossibleWinningValueLabel()
 
+    private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
+
     private var cancellables = Set<AnyCancellable>()
 
-    // MARK: Public Properties
-    var viewModel: BetSelectionCellViewModel?
+    private var betSelectionCellViewModel: BetSelectionCellViewModel
 
-    var didTapCheckboxAction: ((BetSelectionCellViewModel) -> Void)?
-    var didTapUncheckboxAction: ((BetSelectionCellViewModel) -> Void)?
+    // MARK: Public Properties
+    var cardBackgroundColor: UIColor = .white {
+        didSet {
+            self.baseView.backgroundColor = self.cardBackgroundColor
+        }
+    }
 
     var betState: BetState = .draw {
         didSet {
@@ -53,64 +54,64 @@ class BetSelectionStateTableViewCell: UITableViewCell {
         }
     }
 
-    // MARK: Public Properties
-    var isCheckboxSelected: Bool = false {
-        didSet {
-            if isCheckboxSelected {
-                self.checkboxImageView.image = UIImage(named: "radio_selected_icon")
-            }
-            else {
-                self.checkboxImageView.image = UIImage(named: "radio_unselected_icon")
-            }
-        }
+    // MARK: Lifetime and Cycle
+    init(betSelectionCellViewModel: BetSelectionCellViewModel) {
+        self.betSelectionCellViewModel = betSelectionCellViewModel
+
+        super.init(frame: .zero)
+        self.commonInit()
     }
 
-    // MARK: Lifetime and Cycle
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    @available(iOS, unavailable)
+    override init(frame: CGRect) {
+        fatalError()
+    }
 
+    @available(iOS, unavailable)
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+
+    func commonInit() {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
-    }
+        self.setupTicketStackView()
 
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+        if self.betSelectionCellViewModel.ticket.status == "WON" {
+            self.betState = .won
+        }
+        else if self.betSelectionCellViewModel.ticket.status == "LOST" {
+            self.betState = .lost
+        }
+        else {
+            self.betState = .draw
+        }
 
-    override func prepareForReuse() {
-        super.prepareForReuse()
+        self.totalOddValueLabel.text = self.betSelectionCellViewModel.oddValueString
 
-        self.isCheckboxSelected = false
+        self.betAmountValueLabel.text = self.betSelectionCellViewModel.betAmountString
 
-        self.ticketsStackView.removeAllArrangedSubviews()
+        self.possibleWinningValueLabel.text = self.betSelectionCellViewModel.possibleWinningString
+
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        self.baseView.clipsToBounds = true
-        self.baseView.layer.cornerRadius = CornerRadius.view
-
-        self.ticketsStackView.layoutIfNeeded()
-        self.ticketsStackView.layoutSubviews()
     }
 
     // MARK: Layout and Theme
     func setupWithTheme() {
-        self.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
-        self.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.backgroundColor = .clear
 
         self.baseView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.topStateView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.checkboxBaseView.backgroundColor = .clear
-        self.checkboxImageView.backgroundColor = .clear
         self.ticketsStackView.backgroundColor = .clear
-        self.separatorLineView.backgroundColor = UIColor.App.buttonTextPrimary
+        self.separatorLineView.backgroundColor = .white
 
         self.bottomStateView.backgroundColor = UIColor.App.backgroundSecondary
 
@@ -123,72 +124,30 @@ class BetSelectionStateTableViewCell: UITableViewCell {
         self.totalOddValueLabel.textColor = UIColor.App.textPrimary
         self.betAmountValueLabel.textColor = UIColor.App.textPrimary
         self.possibleWinningValueLabel.textColor = UIColor.App.textPrimary
-    }
 
-    // MARK: Functions
-    func configure(withViewModel viewModel: BetSelectionCellViewModel) {
-        self.viewModel = viewModel
-
-        viewModel.isCheckboxSelectedPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] selected in
-                self?.isCheckboxSelected = selected
-            }
-            .store(in: &cancellables)
-
-        if viewModel.ticket.status == "WON" {
-            self.betState = .won
-        }
-        else if viewModel.ticket.status == "LOST" {
-            self.betState = .lost
-        }
-        else {
-            self.betState = .draw
-        }
-
-        self.setupTicketStackView()
-
-        self.totalOddValueLabel.text = viewModel.oddValueString
-
-        self.betAmountValueLabel.text = viewModel.betAmountString
-
-        self.possibleWinningValueLabel.text = viewModel.possibleWinningString
     }
 
     func setupTicketStackView() {
         self.ticketsStackView.removeAllArrangedSubviews()
 
-        if let viewModel = viewModel {
-            for selection in viewModel.betSelections() {
-                let ticketView = ChatTicketSelectionView(betHistoryEntrySelection: selection)
-                self.ticketsStackView.addArrangedSubview(ticketView)
-            }
+        for selection in self.betSelectionCellViewModel.betSelections() {
+            let ticketView = ChatTicketSelectionView(betHistoryEntrySelection: selection, hasBetStatus: true)
+            self.ticketsStackView.addArrangedSubview(ticketView)
         }
 
         self.ticketsStackView.layoutIfNeeded()
     }
 
-    // MARK: Actions
-    @objc func didTapCheckbox(_ sender: UITapGestureRecognizer) {
-
-        if let viewModel = self.viewModel {
-            if self.isCheckboxSelected {
-                self.didTapUncheckboxAction?(viewModel)
-            }
-            else {
-                self.didTapCheckboxAction?(viewModel)
-            }
-        }
-
-    }
-
 }
 
-extension BetSelectionStateTableViewCell {
+extension ChatTicketStateInMessageView {
 
     private static func createBaseView() -> UIView {
         let baseView = UIView()
         baseView.translatesAutoresizingMaskIntoConstraints = false
+        baseView.layer.cornerRadius = CornerRadius.view
+        baseView.layer.masksToBounds = true
+        baseView.clipsToBounds = true
         return baseView
     }
 
@@ -196,20 +155,6 @@ extension BetSelectionStateTableViewCell {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
-    }
-
-    private static func createCheckboxBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createCheckboxImageView() -> UIImageView {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "radio_unselected_icon")
-        imageView.contentMode = .center
-        return imageView
     }
 
     private static func createTicketsStackView() -> UIStackView {
@@ -246,7 +191,7 @@ extension BetSelectionStateTableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Total Odd"
-        label.font = AppFont.with(type: .bold, size: 12)
+        label.font = AppFont.with(type: .semibold, size: 10)
         label.numberOfLines = 1
         label.textAlignment = .center
         return label
@@ -256,7 +201,7 @@ extension BetSelectionStateTableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Bet Amount"
-        label.font = AppFont.with(type: .bold, size: 12)
+        label.font = AppFont.with(type: .semibold, size: 10)
         label.numberOfLines = 1
         label.textAlignment = .center
         return label
@@ -266,7 +211,7 @@ extension BetSelectionStateTableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Possible Winning"
-        label.font = AppFont.with(type: .bold, size: 12)
+        label.font = AppFont.with(type: .semibold, size: 10)
         label.numberOfLines = 1
         label.textAlignment = .center
         return label
@@ -285,7 +230,7 @@ extension BetSelectionStateTableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "--"
-        label.font = AppFont.with(type: .bold, size: 14)
+        label.font = AppFont.with(type: .semibold, size: 13)
         label.numberOfLines = 1
         label.textAlignment = .center
         return label
@@ -295,7 +240,7 @@ extension BetSelectionStateTableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "--"
-        label.font = AppFont.with(type: .bold, size: 14)
+        label.font = AppFont.with(type: .semibold, size: 13)
         label.numberOfLines = 1
         label.textAlignment = .center
         return label
@@ -305,7 +250,7 @@ extension BetSelectionStateTableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "--"
-        label.font = AppFont.with(type: .bold, size: 14)
+        label.font = AppFont.with(type: .semibold, size: 13)
         label.numberOfLines = 1
         label.textAlignment = .center
         return label
@@ -313,13 +258,9 @@ extension BetSelectionStateTableViewCell {
 
     private func setupSubviews() {
 
-        self.contentView.addSubview(self.baseView)
-
-        self.baseView.addSubview(self.checkboxBaseView)
+        self.addSubview(self.baseView)
 
         self.baseView.addSubview(self.topStateView)
-
-        self.checkboxBaseView.addSubview(self.checkboxImageView)
 
         self.baseView.addSubview(self.ticketsStackView)
 
@@ -339,54 +280,40 @@ extension BetSelectionStateTableViewCell {
 
         self.initConstraints()
 
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapCheckbox(_:)))
-        self.checkboxBaseView.addGestureRecognizer(tapGesture)
-
     }
 
     private func initConstraints() {
         NSLayoutConstraint.activate([
             self.baseView.heightAnchor.constraint(greaterThanOrEqualToConstant: 140),
-            self.baseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 25),
-            self.baseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -25),
-            self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 7),
-            self.baseView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -7 ),
+            self.baseView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15),
+            self.baseView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15),
+            self.baseView.topAnchor.constraint(equalTo: self.topAnchor, constant: 2),
+            self.baseView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -2),
 
             self.topStateView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
             self.topStateView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
             self.topStateView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
             self.topStateView.heightAnchor.constraint(equalToConstant: 6),
-
-            self.checkboxBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -5),
-            self.checkboxBaseView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 5),
-            self.checkboxBaseView.widthAnchor.constraint(equalToConstant: 40),
-            self.checkboxBaseView.heightAnchor.constraint(equalTo: self.checkboxBaseView.widthAnchor),
-
-            self.checkboxImageView.widthAnchor.constraint(equalToConstant: 40),
-            self.checkboxImageView.heightAnchor.constraint(equalTo: self.checkboxImageView.widthAnchor),
-            self.checkboxImageView.centerXAnchor.constraint(equalTo: self.checkboxBaseView.centerXAnchor),
-            self.checkboxImageView.centerYAnchor.constraint(equalTo: self.checkboxBaseView.centerYAnchor),
         ])
 
         // Stackview
         NSLayoutConstraint.activate([
             self.ticketsStackView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 15),
-            self.ticketsStackView.trailingAnchor.constraint(equalTo: self.checkboxBaseView.leadingAnchor),
-            self.ticketsStackView.topAnchor.constraint(equalTo: self.topStateView.bottomAnchor, constant: 5),
+            self.ticketsStackView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -15),
+            self.ticketsStackView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 15),
             self.ticketsStackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 30)
         ])
 
         // Bottom part
         NSLayoutConstraint.activate([
-
             self.bottomStateView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
             self.bottomStateView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
             self.bottomStateView.topAnchor.constraint(equalTo: self.ticketsStackView.bottomAnchor),
             self.bottomStateView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
             self.bottomStateView.heightAnchor.constraint(equalToConstant: 60),
 
-            self.bottomTitlesStackView.leadingAnchor.constraint(equalTo: self.bottomStateView.leadingAnchor),
-            self.bottomTitlesStackView.trailingAnchor.constraint(equalTo: self.bottomStateView.trailingAnchor),
+            self.bottomTitlesStackView.leadingAnchor.constraint(equalTo: self.bottomStateView.leadingAnchor, constant: 10),
+            self.bottomTitlesStackView.trailingAnchor.constraint(equalTo: self.bottomStateView.trailingAnchor, constant: -10),
             self.bottomTitlesStackView.topAnchor.constraint(equalTo: self.bottomStateView.topAnchor),
             self.bottomTitlesStackView.heightAnchor.constraint(equalToConstant: 29),
 
@@ -395,26 +322,12 @@ extension BetSelectionStateTableViewCell {
             self.separatorLineView.heightAnchor.constraint(equalToConstant: 1),
             self.separatorLineView.topAnchor.constraint(equalTo: self.bottomTitlesStackView.bottomAnchor, constant: 1),
 
-            self.bottomValuesStackView.leadingAnchor.constraint(equalTo: self.bottomStateView.leadingAnchor),
-            self.bottomValuesStackView.trailingAnchor.constraint(equalTo: self.bottomStateView.trailingAnchor),
+            self.bottomValuesStackView.leadingAnchor.constraint(equalTo: self.bottomStateView.leadingAnchor, constant: 10),
+            self.bottomValuesStackView.trailingAnchor.constraint(equalTo: self.bottomStateView.trailingAnchor, constant: -10),
             self.bottomValuesStackView.topAnchor.constraint(equalTo: self.separatorLineView.bottomAnchor, constant: 1),
             self.bottomValuesStackView.heightAnchor.constraint(equalToConstant: 29)
-
-//            self.totalOddTitleLabel.heightAnchor.constraint(equalToConstant: 40),
-//            self.totalOddTitleLabel.leadingAnchor.constraint(equalTo: self.separatorLineView.leadingAnchor),
-//            self.totalOddTitleLabel.topAnchor.constraint(equalTo: self.separatorLineView.bottomAnchor),
-//            self.totalOddTitleLabel.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
-//
-//            self.totalOddValueLabel.leadingAnchor.constraint(equalTo: self.totalOddTitleLabel.trailingAnchor, constant: 5),
-//            self.totalOddValueLabel.trailingAnchor.constraint(equalTo: self.checkboxBaseView.trailingAnchor, constant: -10),
-//            self.totalOddValueLabel.centerYAnchor.constraint(equalTo: self.totalOddTitleLabel.centerYAnchor)
         ])
+
     }
 
-}
-
-enum BetState {
-    case won
-    case lost
-    case draw
 }

@@ -12,7 +12,6 @@ class ConversationBetSelectionViewModel {
 
     // MARK: Public Properties
     var cachedCellViewModels: [String: BetSelectionCellViewModel] = [:]
-    // var isChatOnline: Bool = false
     var isChatGroup: Bool = false
     private var selectedMyTicketsTypeIndex: Int = 0
     var myTicketsTypePublisher: CurrentValueSubject<MyTicketsType, Never> = .init(.opened)
@@ -142,11 +141,6 @@ class ConversationBetSelectionViewModel {
     func reloadData() {
         self.dataNeedsReload.send()
     }
-
-//    func requestTicketsNextPage() {
-//        self.openedTicketsPage += 1
-//        self.loadOpenedTickets(page: openedTicketsPage)
-//    }
 
     func requestNextPage() {
         switch myTicketsTypePublisher.value {
