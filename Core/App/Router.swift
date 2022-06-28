@@ -316,8 +316,9 @@ class Router {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
 
-        let betslipViewController = BetslipViewController.init(startScreen: .myTickets(ticketType, ticketId) )
-        self.rootViewController?.present(betslipViewController, animated: true, completion: nil)
+        let betslipViewController = BetslipViewController.init(startScreen: .myTickets(ticketType, ticketId))
+        let navigationViewController = Router.navigationController(with: betslipViewController)
+        self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
     }
 
     func showBetslip() {
