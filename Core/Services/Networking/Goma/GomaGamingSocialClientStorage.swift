@@ -18,13 +18,13 @@ class GomaGamingSocialClientStorage {
 
     // MARK: Private Properties
     private var cancellables = Set<AnyCancellable>()
-
+    private var chatPage: Int = 1
     init() {
         self.getChatrooms()
     }
 
     private func getChatrooms() {
-        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId)
+        Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId, page: self.chatPage)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {

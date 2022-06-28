@@ -21,7 +21,7 @@ class NewGroupManagementViewModel {
     init(users: [UserContact]) {
 
         self.users = users
-        //self.getUsers()
+
         self.processUserContacts()
     }
 
@@ -32,31 +32,6 @@ class NewGroupManagementViewModel {
                 self.gomaFriends.append(gomaFriend)
             }
         }
-    }
-
-    func getUsers() {
-        // TEST
-        if self.users.isEmpty {
-            for i in 0...19 {
-                if i <= 5 {
-                    let user = UserContact(id: "\(i)", username: "@GOMA_User_\(i)", phones: ["+351 999 888 777"])
-                    self.users.append(user)
-                }
-                else if i > 5 && i <= 13 {
-                    let user = UserContact(id: "\(i)", username: "@Sportsbook_Admin_\(i)", phones: ["+351 995 664 551"])
-                    self.users.append(user)
-                }
-                else {
-                    let user = UserContact(id: "\(i)", username: "@Ze_da_Tasca_\(i)", phones: ["+351 991 233 012"])
-                    self.users.append(user)
-                }
-
-            }
-
-            //self.isEmptySearchPublisher.send(false)
-        }
-
-        self.dataNeedsReload.send()
     }
 
     func getGroupInitials(text: String) -> String {
@@ -77,6 +52,15 @@ class NewGroupManagementViewModel {
         }
 
         return initials
+    }
+
+    func getAdminUserId() -> Int {
+
+        if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+            return loggedUserId
+        }
+
+        return 0
     }
 
 }

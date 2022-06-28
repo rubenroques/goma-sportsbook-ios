@@ -83,6 +83,8 @@ enum TSRouter {
     case accountBalancePublisher
     case eventCategoryBySport(operatorId: String, language: String, sportId: String)
 
+    case eventsDetails(operatorId: String, language: String, events: [String])
+                       
     // Others
     case registrationDismissed
     case getTransportSessionID
@@ -280,7 +282,9 @@ enum TSRouter {
         case .tournamentOddsPublisher(let operatorId, let language, let eventId):
             return "/sports/\(operatorId)/\(language)/\(eventId)/tournament-odds"
 
-        //
+        case .eventsDetails:
+            return "/sports#events"
+        
         //
         //
         //
@@ -601,6 +605,9 @@ enum TSRouter {
         case .getSharedBetData(let betToken):
             return ["betToken": betToken]
 
+        case .eventsDetails(_, let language, let events):
+            let data: [String: Any]? = ["lang": language, "eventIds": events]
+            return data
         //
         //
         //

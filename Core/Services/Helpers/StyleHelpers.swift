@@ -22,19 +22,43 @@ struct StyleHelper {
         button.backgroundColor = .clear
     }
 
-    static func styleInfoButton(button: UIButton) {
-        button.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
-        button.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        button.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
+    static func cardsStyleActive() -> CardsStyle {
+        return UserDefaults.standard.cardsStyle
+    }
 
-        button.setBackgroundColor(UIColor.App.backgroundSecondary, for: .normal)
-        button.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .highlighted)
+    static func cardsStyleHeight() -> CGFloat {
+        switch Self.cardsStyleActive() {
+        case .small:
+            return MatchWidgetCollectionViewCell.smallCellHeight
+        case .normal:
+            return MatchWidgetCollectionViewCell.normalCellHeight
+        }
+    }
 
-        button.layer.cornerRadius = CornerRadius.button
-        button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.App.textPrimary.cgColor
-        button.layer.masksToBounds = true
-        button.backgroundColor = .clear
+    static func competitionCardsStyleHeight() -> CGFloat {
+        switch Self.cardsStyleActive() {
+        case .small:
+            return 90
+        case .normal:
+            return 125
+        }
+    }
+
+    static func cardsStyleMargin() -> CGFloat {
+        switch Self.cardsStyleActive() {
+        case .small:
+            return 1
+        case .normal:
+            return 8
+        }
     }
 
 }
+
+
+extension Notification.Name {
+
+    static let cardsStyleChanged = Notification.Name("CardsStyleChanged")
+
+}
+

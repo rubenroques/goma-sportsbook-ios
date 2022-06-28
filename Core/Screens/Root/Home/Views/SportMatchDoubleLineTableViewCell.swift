@@ -30,7 +30,17 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
     private lazy var secondBackView: UIView = Self.createBackView()
     private lazy var firstBackImage: UIImageView = Self.createBackImage()
     private lazy var secondBackImage: UIImageView = Self.createBackImage()
-    
+
+    private var topCollectionViewHeightConstraint: NSLayoutConstraint!
+    private var bottomCollectionViewHeightConstraint: NSLayoutConstraint!
+    private let cellInternSpace: CGFloat = 2.0
+    private var cachedCardStyle: CardsStyle?
+
+    private var collectionViewHeight: CGFloat {
+        let cardHeight = StyleHelper.cardsStyleHeight()
+        return cardHeight + cellInternSpace + cellInternSpace
+    }
+
     private var showingFirstBackSliderView: Bool = false
     private var showingSecondBackSliderView: Bool = false
 
@@ -80,6 +90,15 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
         self.showingSecondBackSliderView = false
         self.secondBackView.alpha = 0.0
 
+        if self.cachedCardStyle != StyleHelper.cardsStyleActive() {
+            self.cachedCardStyle = StyleHelper.cardsStyleActive()
+            self.topCollectionViewHeightConstraint.constant = collectionViewHeight
+            self.bottomCollectionViewHeightConstraint.constant = collectionViewHeight
+
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        }
+
         self.reloadCollections()
     }
 
@@ -107,7 +126,6 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
 
         self.seeAllView.backgroundColor = UIColor.App.backgroundPrimary
         self.seeAllLabel.textColor = UIColor.App.highlightPrimary
-
     }
 
     func configure(withViewModel viewModel: SportMatchLineViewModel) {
@@ -461,7 +479,7 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-        let cellHeight = MatchWidgetCollectionViewCell.cellHeight
+        let cellHeight = StyleHelper.cardsStyleHeight()
         if indexPath.section == 1 {
             return CGSize(width: 99, height: cellHeight)
         }
@@ -609,6 +627,10 @@ extension SportMatchDoubleLineTableViewCell {
     }
 
     private func initConstraints() {
+
+        self.topCollectionViewHeightConstraint = self.topCollectionView.heightAnchor.constraint(equalToConstant: self.collectionViewHeight)
+        self.bottomCollectionViewHeightConstraint = self.bottomCollectionView.heightAnchor.constraint(equalToConstant: self.collectionViewHeight)
+
         NSLayoutConstraint.activate([            
             self.titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 16),
 
@@ -621,8 +643,8 @@ extension SportMatchDoubleLineTableViewCell {
             self.linesStackView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 16),
             self.linesStackView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -16),
 
-            self.topCollectionView.heightAnchor.constraint(equalToConstant: 160),
-            self.bottomCollectionView.heightAnchor.constraint(equalToConstant: 160),
+            self.topCollectionViewHeightConstraint,
+            self.bottomCollectionViewHeightConstraint,
 
             self.seeAllLabel.centerXAnchor.constraint(equalTo: self.seeAllView.centerXAnchor),
             self.seeAllLabel.centerYAnchor.constraint(equalTo: self.seeAllView.centerYAnchor),
@@ -651,7 +673,6 @@ extension SportMatchDoubleLineTableViewCell {
             self.secondBackImage.trailingAnchor.constraint(equalTo: self.secondBackView.trailingAnchor, constant: -7),
             self.secondBackImage.heightAnchor.constraint(equalToConstant: 24),
             self.secondBackImage.widthAnchor.constraint(equalToConstant: 24),
-
 
      ])
     }

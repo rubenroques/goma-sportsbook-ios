@@ -19,8 +19,9 @@ class LiveDetailsViewController: UIViewController {
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var tableView: UITableView = Self.createTableView()
-    private lazy var betslipButtonView: UIView = Self.createBetslipButtonView()
-    private lazy var betslipCountLabel: UILabel = Self.createBetslipCountLabel()
+
+    private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
+    
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
@@ -53,8 +54,6 @@ class LiveDetailsViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.betslipCountLabel.isHidden = true
-
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
@@ -74,9 +73,13 @@ class LiveDetailsViewController: UIViewController {
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
-        let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
-        self.betslipButtonView.addGestureRecognizer(tapBetslipView)
-
+        self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in
+            self?.didTapBetslipView()
+        }
+        self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
+            self?.didTapChatView()
+        }
+        
         self.accountValueView.isHidden = true
         let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
         self.accountValueView.addGestureRecognizer(accountValueTapGesture)
@@ -89,6 +92,7 @@ class LiveDetailsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        self.floatingShortcutsView.resetAnimations()
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
 
@@ -116,10 +120,6 @@ class LiveDetailsViewController: UIViewController {
 
         self.tableView.backgroundColor = .clear
 
-        self.betslipCountLabel.backgroundColor = UIColor.App.bubblesPrimary
-        self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
-        self.betslipCountLabel.textColor = UIColor.white
-        
         self.titleLabel.backgroundColor = .clear
 
         self.accountValueView.backgroundColor = UIColor.App.backgroundSecondary
@@ -128,12 +128,6 @@ class LiveDetailsViewController: UIViewController {
         self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
     }
 
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
-        self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
-        self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
-    }
 
     // MARK: - Bindings
     private func bind(toViewModel viewModel: LiveDetailsViewModel) {
@@ -176,21 +170,6 @@ class LiveDetailsViewController: UIViewController {
                     self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
                 }
             }
-            .store(in: &cancellables)
-
-        Env.betslipManager.bettingTicketsPublisher
-            .map(\.count)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] betslipValue in
-
-                if betslipValue == 0 {
-                    self?.betslipCountLabel.isHidden = true
-                }
-                else {
-                    self?.betslipCountLabel.text = "\(betslipValue)"
-                    self?.betslipCountLabel.isHidden = false
-                }
-            })
             .store(in: &cancellables)
 
         self.viewModel.isLoading
@@ -248,6 +227,21 @@ class LiveDetailsViewController: UIViewController {
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
 
+    @objc func didTapChatView() {
+        self.openChatModal()
+    }
+    
+    func openChatModal() {
+        if UserSessionStore.isUserLogged() {
+            let socialViewController = SocialViewController()
+            self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
+        }
+        else {
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.present(loginViewController, animated: true, completion: nil)
+        }
+    }
+    
     private func openMatchDetails(_ match: Match) {
         let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
         self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
@@ -319,7 +313,7 @@ extension LiveDetailsViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return MatchWidgetCollectionViewCell.cellHeight + 20
+            return UITableView.automaticDimension
         case 1:
             return 80
         default:
@@ -330,7 +324,7 @@ extension LiveDetailsViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return MatchWidgetCollectionViewCell.cellHeight + 20
+            return StyleHelper.cardsStyleHeight() + 20
         case 1:
             return 80
         default:
@@ -388,6 +382,7 @@ extension LiveDetailsViewController {
         titleLabel.font = AppFont.with(type: .semibold, size: 14)
         titleLabel.textAlignment = .left
         titleLabel.text = "Live Matches"
+        titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return titleLabel
     }
 
@@ -417,42 +412,11 @@ extension LiveDetailsViewController {
         tableView.allowsSelection = false
         return tableView
     }
-
-    private static func createBetslipButtonView() -> UIView {
-        let betslipButtonView = UIView()
-        betslipButtonView.translatesAutoresizingMaskIntoConstraints = false
-
-        let iconImageView = UIImageView()
-        iconImageView.translatesAutoresizingMaskIntoConstraints = false
-        iconImageView.contentMode = .scaleAspectFit
-        iconImageView.image = UIImage(named: "betslip_button_icon")
-        iconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
-        betslipButtonView.addSubview(iconImageView)
-
-        NSLayoutConstraint.activate([
-            betslipButtonView.widthAnchor.constraint(equalToConstant: 56),
-            betslipButtonView.widthAnchor.constraint(equalTo: betslipButtonView.heightAnchor),
-
-            iconImageView.widthAnchor.constraint(equalToConstant: 30),
-            iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
-            iconImageView.centerXAnchor.constraint(equalTo: betslipButtonView.centerXAnchor),
-            iconImageView.centerYAnchor.constraint(equalTo: betslipButtonView.centerYAnchor),
-        ])
-
-        return betslipButtonView
-    }
-
-    private static func createBetslipCountLabel() -> UILabel {
-        let betslipCountLabel = UILabel()
-        betslipCountLabel.translatesAutoresizingMaskIntoConstraints = false
-        betslipCountLabel.textColor = UIColor.App.textPrimary
-        betslipCountLabel.backgroundColor = UIColor.App.bubblesPrimary
-        betslipCountLabel.font = AppFont.with(type: .semibold, size: 10)
-        betslipCountLabel.textAlignment = .center
-        betslipCountLabel.clipsToBounds = true
-        betslipCountLabel.layer.masksToBounds = true
-        betslipCountLabel.text = "0"
-        return betslipCountLabel
+    
+    private static func createFloatingShortcutsView() -> FloatingShortcutsView {
+        let floatingShortcutsView = FloatingShortcutsView()
+        floatingShortcutsView.translatesAutoresizingMaskIntoConstraints = false
+        return floatingShortcutsView
     }
 
     private static func createLoadingBaseView() -> UIView {
@@ -518,8 +482,7 @@ extension LiveDetailsViewController {
 
         self.view.addSubview(self.tableView)
 
-        self.betslipButtonView.addSubview(self.betslipCountLabel)
-        self.view.addSubview(self.betslipButtonView)
+        self.view.addSubview(self.floatingShortcutsView)
 
         self.view.addSubview(self.loadingBaseView)
         self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
@@ -592,16 +555,9 @@ extension LiveDetailsViewController {
             self.view.bottomAnchor.constraint(equalTo: self.loadingBaseView.bottomAnchor)
         ])
 
-        // Betslip button
         NSLayoutConstraint.activate([
-            self.betslipCountLabel.trailingAnchor.constraint(equalTo: self.betslipButtonView.trailingAnchor, constant: 2),
-            self.betslipCountLabel.topAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -3),
-
-            self.betslipButtonView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
-            self.betslipButtonView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
-
-            self.betslipCountLabel.widthAnchor.constraint(equalToConstant: 20),
-            self.betslipCountLabel.widthAnchor.constraint(equalTo: self.betslipCountLabel.heightAnchor),
+            self.floatingShortcutsView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
+            self.floatingShortcutsView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
         ])
 
     }

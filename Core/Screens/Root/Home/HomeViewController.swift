@@ -23,12 +23,11 @@ class HomeViewController: UIViewController {
     // MARK: - Private Properties
     // Sub Views
     private lazy var tableView: UITableView = Self.createTableView()
-    private lazy var betslipButtonView: UIView = Self.createBetslipButtonView()
-    private lazy var chatButtonView: UIView = Self.createChatButtonView()
-    private lazy var betslipCountLabel: UILabel = Self.createBetslipCountLabel()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
+    private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
+    
     private let refreshControl = UIRefreshControl()
 
     // Logic
@@ -73,14 +72,14 @@ class HomeViewController: UIViewController {
 
         self.loadingBaseView.isHidden = true
 
-        self.betslipCountLabel.isHidden = true
-
-        let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
-        self.betslipButtonView.addGestureRecognizer(tapBetslipView)
-
-        let tapChatView = UITapGestureRecognizer(target: self, action: #selector(didTapChatView))
-        self.chatButtonView.addGestureRecognizer(tapChatView)
-
+        self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in
+            self?.didTapBetslipView()
+        }
+        
+        self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
+            self?.didTapChatView()
+        }
+        
         self.bind(toViewModel: self.viewModel)
 
         self.didSelectActivationAlertAction = { alertType in
@@ -103,16 +102,8 @@ class HomeViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-    }
-
-    // MARK: - Layout and Theme
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
-        self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
-        self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
-
-        self.chatButtonView.layer.cornerRadius = self.chatButtonView.frame.height / 2
+        
+        self.floatingShortcutsView.resetAnimations()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -130,15 +121,17 @@ class HomeViewController: UIViewController {
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.loadingActivityIndicatorView.tintColor = UIColor.gray
 
-        self.betslipCountLabel.backgroundColor = UIColor.App.alertError
-        self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
-        self.betslipCountLabel.textColor = UIColor.white
-
-        self.chatButtonView.backgroundColor = UIColor.App.buttonActiveHoverSecondary
     }
 
     // MARK: - Bindings
     private func bind(toViewModel viewModel: HomeViewModel) {
+
+        NotificationCenter.default.publisher(for: .cardsStyleChanged)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.reloadData()
+            }
+            .store(in: &cancellables)
 
         viewModel.refreshPublisher
             .debounce(for: .milliseconds(600), scheduler: DispatchQueue.main)
@@ -148,20 +141,6 @@ class HomeViewController: UIViewController {
                 self?.refreshControl.endRefreshing()
             })
             .store(in: &self.cancellables)
-
-        Env.betslipManager.bettingTicketsPublisher
-            .map(\.count)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] betslipValue in
-                if betslipValue == 0 {
-                    self?.betslipCountLabel.isHidden = true
-                }
-                else {
-                    self?.betslipCountLabel.text = "\(betslipValue)"
-                    self?.betslipCountLabel.isHidden = false
-                }
-            })
-            .store(in: &cancellables)
 
     }
 
@@ -458,9 +437,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             else {
                 switch sportMatchLineViewModel.layoutTypePublisher.value {
-                case .doubleLine: return 400
-                case .singleLine: return 226
-                case .competition: return 200
+                case .doubleLine: return UITableView.automaticDimension
+                case .singleLine: return UITableView.automaticDimension
+                case .competition: return UITableView.automaticDimension
                 case .video: return 258
                 }
             }
@@ -483,7 +462,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .bannerLine:
             return 180
         case .userFavorites:
-            return MatchWidgetCollectionViewCell.cellHeight + 20
+            return StyleHelper.cardsStyleHeight() + 20
         case .suggestedBets:
             return 336
         case .sport:
@@ -502,9 +481,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             else {
                 switch sportMatchLineViewModel.layoutTypePublisher.value {
-                case .doubleLine: return 400
-                case .singleLine: return 226
-                case .competition: return 200
+                case .doubleLine: return StyleHelper.cardsStyleHeight() * 2 + 79 // 400
+                case .singleLine: return StyleHelper.cardsStyleHeight() + 79 // 226
+                case .competition: return StyleHelper.competitionCardsStyleHeight() + 20
                 case .video: return 258
                 }
             }
@@ -663,65 +642,10 @@ extension HomeViewController {
         return tableView
     }
 
-    private static func createBetslipButtonView() -> UIView {
-        let betslipButtonView = UIView()
-        betslipButtonView.translatesAutoresizingMaskIntoConstraints = false
-
-        let iconImageView = UIImageView()
-        iconImageView.translatesAutoresizingMaskIntoConstraints = false
-        iconImageView.contentMode = .scaleAspectFit
-        iconImageView.image = UIImage(named: "betslip_button_icon")
-        iconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
-        betslipButtonView.addSubview(iconImageView)
-
-        NSLayoutConstraint.activate([
-            betslipButtonView.widthAnchor.constraint(equalToConstant: 56),
-            betslipButtonView.widthAnchor.constraint(equalTo: betslipButtonView.heightAnchor),
-
-            iconImageView.widthAnchor.constraint(equalToConstant: 30),
-            iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
-            iconImageView.centerXAnchor.constraint(equalTo: betslipButtonView.centerXAnchor),
-            iconImageView.centerYAnchor.constraint(equalTo: betslipButtonView.centerYAnchor),
-        ])
-
-        return betslipButtonView
-    }
-
-    private static func createChatButtonView() -> UIView {
-        let betslipButtonView = UIView()
-        betslipButtonView.translatesAutoresizingMaskIntoConstraints = false
-
-        let iconImageView = UIImageView()
-        iconImageView.translatesAutoresizingMaskIntoConstraints = false
-        iconImageView.contentMode = .scaleAspectFit
-        iconImageView.image = UIImage(named: "chat_float_icon")
-        betslipButtonView.addSubview(iconImageView)
-
-        NSLayoutConstraint.activate([
-            betslipButtonView.widthAnchor.constraint(equalToConstant: 46),
-            betslipButtonView.widthAnchor.constraint(equalTo: betslipButtonView.heightAnchor),
-
-            iconImageView.widthAnchor.constraint(equalToConstant: 22),
-            iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
-            iconImageView.centerXAnchor.constraint(equalTo: betslipButtonView.centerXAnchor),
-            iconImageView.centerYAnchor.constraint(equalTo: betslipButtonView.centerYAnchor),
-        ])
-
-        return betslipButtonView
-    }
-
-
-    private static func createBetslipCountLabel() -> UILabel {
-        let betslipCountLabel = UILabel()
-        betslipCountLabel.translatesAutoresizingMaskIntoConstraints = false
-        betslipCountLabel.textColor = UIColor.App.textPrimary
-        betslipCountLabel.backgroundColor = UIColor.App.bubblesPrimary
-        betslipCountLabel.font = AppFont.with(type: .semibold, size: 10)
-        betslipCountLabel.textAlignment = .center
-        betslipCountLabel.clipsToBounds = true
-        betslipCountLabel.layer.masksToBounds = true
-        betslipCountLabel.text = "0"
-        return betslipCountLabel
+    private static func createFloatingShortcutsView() -> FloatingShortcutsView {
+        let floatingShortcutsView = FloatingShortcutsView()
+        floatingShortcutsView.translatesAutoresizingMaskIntoConstraints = false
+        return floatingShortcutsView
     }
 
     private static func createLoadingBaseView() -> UIView {
@@ -745,10 +669,7 @@ extension HomeViewController {
         self.view.addSubview(self.loadingBaseView)
         self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
 
-        self.betslipButtonView.addSubview(self.betslipCountLabel)
-
-        self.view.addSubview(self.betslipButtonView)
-        self.view.addSubview(self.chatButtonView)
+        self.view.addSubview(self.floatingShortcutsView)
 
         // Initialize constraints
         self.initConstraints()
@@ -778,19 +699,8 @@ extension HomeViewController {
         ])
 
         NSLayoutConstraint.activate([
-            self.betslipCountLabel.trailingAnchor.constraint(equalTo: self.betslipButtonView.trailingAnchor, constant: 2),
-            self.betslipCountLabel.topAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -3),
-
-            self.betslipButtonView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
-            self.betslipButtonView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -12),
-
-            self.betslipCountLabel.widthAnchor.constraint(equalToConstant: 20),
-            self.betslipCountLabel.widthAnchor.constraint(equalTo: self.betslipCountLabel.heightAnchor),
-        ])
-
-        NSLayoutConstraint.activate([
-            self.chatButtonView.centerXAnchor.constraint(equalTo: self.betslipButtonView.centerXAnchor),
-            self.chatButtonView.bottomAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -10),
+            self.floatingShortcutsView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
+            self.floatingShortcutsView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -12),
         ])
 
     }

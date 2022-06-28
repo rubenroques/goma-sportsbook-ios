@@ -9,6 +9,7 @@ import UIKit
 import Firebase
 import FirebaseMessaging
 import SwiftyBeaver
+import SwiftUI
 
 let swiftyBeaverLog = SwiftyBeaver.self
 
@@ -125,11 +126,36 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
 
-        if #available(iOS 14.0, *) {
-            completionHandler([.banner])
+        let userInfo = notification.request.content.userInfo
+
+        // Print message ID.
+        let gcmMessageIDKey = "gcm.message_id"
+        if let messageID = userInfo[gcmMessageIDKey] {
+            print("Message ID: \(messageID)")
+        }
+
+        var routeId: String = ""
+        if let routeIdValue = userInfo["routeId"] as? String {
+            routeId = routeIdValue
+        }
+        else if let routeIdValue = userInfo["routeId"] as? Int {
+            routeId = String(routeIdValue)
+        }
+        
+        let routeLabel = userInfo["routeLabel"] as? String ?? ""
+
+        let chatroomOnForegroundID = Env.gomaSocialClient.chatroomOnForeground()
+
+        if routeLabel == "chat_message" && routeId == chatroomOnForegroundID {
+            completionHandler([])
         }
         else {
-            completionHandler([.alert])
+            if #available(iOS 14.0, *) {
+                completionHandler([.banner])
+            }
+            else {
+                completionHandler([.alert])
+            }
         }
     }
 
@@ -159,6 +185,13 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             route = .resolvedBet(id: routeId)
         case (_, "event"):
             route = .event(id: routeId)
+        case (_, "chat"):
+            if routeId.isNotEmpty {
+                route = .chatMessage(id: routeId)
+            }
+            else {
+                route = .chatNotifications
+            }
         default:
             ()
         }

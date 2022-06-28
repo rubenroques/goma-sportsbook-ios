@@ -404,7 +404,12 @@ class PreLiveEventsViewModel: NSObject {
             // Check default market order
             var marketSort: [Market] = []
             let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
-            marketSort.append(match.markets[favoriteMarketIndex ?? 0])
+
+            
+            if let newFirstMarket = match.markets[safe: (favoriteMarketIndex ?? 0)] {
+                marketSort.append(newFirstMarket)
+            }
+            
             for market in match.markets {
                 if market.typeId != marketSort[0].typeId {
                     marketSort.append(market)
@@ -437,10 +442,18 @@ class PreLiveEventsViewModel: NSObject {
         var filteredMatches: [Match] = []
 
         for match in matches {
+            if match.markets.isEmpty {
+                continue
+            }
+            
             // Check default market order
             var marketSort: [Market] = []
             let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
-            marketSort.append(match.markets[favoriteMarketIndex ?? 0])
+            
+            if let newFirstMarket = match.markets[safe: (favoriteMarketIndex ?? 0)] {
+                marketSort.append(newFirstMarket)
+            }
+            
             for market in match.markets where market.typeId != marketSort[0].typeId {
                 marketSort.append(market)
             }
@@ -477,10 +490,19 @@ class PreLiveEventsViewModel: NSObject {
         var filteredCompetitions: [Competition] = []
         for competition in competitions where competition.matches.isNotEmpty {
             for match in competition.matches {
+                
+                if match.markets.isEmpty {
+                    continue
+                }
+                
                 // Check default market order
                 var marketSort: [Market] = []
                 let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
-                marketSort.append(match.markets[favoriteMarketIndex ?? 0])
+                
+                if let newFirstMarket = match.markets[safe: (favoriteMarketIndex ?? 0)] {
+                    marketSort.append(newFirstMarket)
+                }
+                
                 for market in match.markets {
                     if market.typeId != marketSort[0].typeId {
                         marketSort.append(market)
@@ -710,6 +732,7 @@ class PreLiveEventsViewModel: NSObject {
                     print("EventCategoryBySport completion \(completion)")
                 })
                 .map({ [weak self] (subscriptionContent: TSSubscriptionContent<EveryMatrixSocketResponse<EveryMatrix.EventCategory>>) -> [EveryMatrix.Location]? in
+                    
                     if case .connect(let publisherIdentifiable) = subscriptionContent {
                         self?.locationsRegister = publisherIdentifiable
                     }

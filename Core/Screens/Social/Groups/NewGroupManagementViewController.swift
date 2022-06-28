@@ -33,6 +33,8 @@ class NewGroupManagementViewController: UIViewController {
     // MARK: Public Properties
     var viewModel: NewGroupManagementViewModel
     var chatListNeedReload: (() -> Void)?
+    var newChatroomId: Int = -1
+    var newChatroomName: String = ""
 
     // MARK: - Lifetime and Cycle
     init(viewModel: NewGroupManagementViewModel) {
@@ -69,6 +71,7 @@ class NewGroupManagementViewController: UIViewController {
         self.view.addGestureRecognizer(backgroundTapGesture)
 
         self.bind(toViewModel: self.viewModel)
+
     }
 
     // MARK: - Layout and Theme
@@ -128,18 +131,12 @@ class NewGroupManagementViewController: UIViewController {
 
     // MARK: Functions
     private func showConversationDetail(chatroomId: Int, groupName: String) {
-        let conversationData = ConversationData(id: chatroomId,
-                                                conversationType: .group,
-                                                name: groupName,
-                                                lastMessage: "",
-                                                date: "Now",
-                                                lastMessageUser: nil,
-                                                isLastMessageSeen: false,
-                                                groupUsers: self.viewModel.gomaFriends)
 
-        let conversationDetailViewModel = ConversationDetailViewModel(conversationData: conversationData)
+        let conversationDetailViewModel = ConversationDetailViewModel(chatId: chatroomId)
 
         let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
+
+        self.chatListNeedReload?()
 
         self.navigationController?.pushViewController(conversationDetailViewController, animated: true)
     }
@@ -172,7 +169,7 @@ class NewGroupManagementViewController: UIViewController {
     }
 
     @objc func didTapStartNewGroupButton() {
-        //self.navigationController?.popViewController(animated: true)
+
         var userIds: [String] = []
         let groupName = self.newGroupTextField.text ?? ""
 
@@ -193,7 +190,11 @@ class NewGroupManagementViewController: UIViewController {
                 print("ADD GROUP GOMA: \(response)")
 
                 if let chatroomId = response.data?.id {
-                    self?.chatListNeedReload?()
+                    self?.newChatroomId = chatroomId
+                    self?.newChatroomName = groupName
+
+                    Env.gomaSocialClient.forceRefresh()
+                    
                     self?.showConversationDetail(chatroomId: chatroomId, groupName: groupName)
                 }
             })
@@ -228,12 +229,11 @@ extension NewGroupManagementViewController: UITableViewDataSource, UITableViewDe
 
         if let userContact = self.viewModel.users[safe: indexPath.row] {
 
+            let adminUserId = self.viewModel.getAdminUserId()
+
             if let cellViewModel = self.viewModel.cachedUserCellViewModels[userContact.id] {
-                // TEST
-                if indexPath.row % 2 == 0 {
-                    cellViewModel.isOnline = true
-                }
-                if indexPath.row == 0 {
+               
+                if userContact.id == "\(adminUserId)" {
                     cellViewModel.isAdmin = true
                 }
 
@@ -243,11 +243,8 @@ extension NewGroupManagementViewController: UITableViewDataSource, UITableViewDe
             else {
                 let cellViewModel = GroupUserManagementCellViewModel(userContact: userContact)
                 self.viewModel.cachedUserCellViewModels[userContact.id] = cellViewModel
-                // TEST
-                if indexPath.row % 2 == 0 {
-                    cellViewModel.isOnline = true
-                }
-                if indexPath.row == 0 {
+
+                if userContact.id == "\(adminUserId)" {
                     cellViewModel.isAdmin = true
                 }
                 
@@ -322,7 +319,6 @@ extension NewGroupManagementViewController: UITableViewDataSource, UITableViewDe
 extension NewGroupManagementViewController: UITextFieldDelegate {
 
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        print("TEXT: \(textField.text)")
 
         if let text = textField.text, text != "" {
             self.newGroupIconLabel.text = self.viewModel.getGroupInitials(text: text)

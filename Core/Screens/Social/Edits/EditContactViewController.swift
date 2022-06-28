@@ -136,6 +136,12 @@ class EditContactViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+        viewModel.isOnlinePublisher
+            .sink(receiveValue: { [weak self] isOnline in
+                self?.userInfoView.isOnline = isOnline
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Actions
@@ -285,7 +291,7 @@ extension EditContactViewController {
     private static func createUserInfoView() -> UserInfoView {
         let view = UserInfoView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.isOnline = true
+        // view.isOnline = true
         return view
     }
 

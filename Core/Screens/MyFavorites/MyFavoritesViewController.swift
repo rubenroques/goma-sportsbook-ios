@@ -19,8 +19,9 @@ class MyFavoritesViewController: UIViewController {
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var loadingScreenBaseView: UIView = Self.createLoadingScreenBaseView()
     private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
-    private lazy var betslipButtonView: UIView = Self.createBetslipButtonView()
-    private lazy var betslipCountLabel: UILabel = Self.createBetslipCountLabel()
+
+    private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
+    
     private lazy var emptyStateView: UIView = Self.createEmptyStateView()
     private lazy var emptyStateImageView: UIImageView = Self.createEmptyStateImageView()
     private lazy var emptyStateTitleLabel: UILabel = Self.createEmptyStateTitleLabel()
@@ -35,7 +36,9 @@ class MyFavoritesViewController: UIViewController {
 
     // Data Sources
     private var myFavoriteMatchesDataSource = MyFavoriteMatchesDataSource(userFavoriteMatches: [], store: FavoritesAggregatorsRepository())
-    private var myFavoriteCompetitionsDataSource = MyFavoriteCompetitionsDataSource(favoriteCompetitions: [], store: FavoritesAggregatorsRepository())
+    private var myFavoriteCompetitionsDataSource = MyFavoriteCompetitionsDataSource(favoriteCompetitions: [],
+                                                                                    favoriteOutrightCompetitions: [],
+                                                                                    store: FavoritesAggregatorsRepository())
 
     // MARK: Public Properties
     var viewModel: MyFavoritesViewModel
@@ -89,15 +92,23 @@ class MyFavoritesViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
+        self.myFavoriteCompetitionsDataSource.didSelectCompetitionAction = { competition in
+            let viewModel = OutrightMarketDetailsViewModel(competition: competition, store: OutrightMarketDetailsStore())
+            let outrightMarketDetailsViewController = OutrightMarketDetailsViewController(viewModel: viewModel)
+            self.navigationController?.pushViewController(outrightMarketDetailsViewController, animated: true)
+        }
+        
         self.isEmptyState = false
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
 
-        self.betslipCountLabel.isHidden = true
-
-        let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
-        self.betslipButtonView.addGestureRecognizer(tapBetslipView)
-
+        self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in
+            self?.didTapBetslipView()
+        }
+        self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
+            self?.didTapChatView()
+        }
+        
         let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
         self.accountValueView.addGestureRecognizer(accountValueTapGesture)
         self.accountValueView.isHidden = true
@@ -150,13 +161,6 @@ class MyFavoritesViewController: UIViewController {
     }
 
     // MARK: Layout and Theme
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
-        self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
-        self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -177,11 +181,6 @@ class MyFavoritesViewController: UIViewController {
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
         self.loadingScreenBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
         self.emptyStateView.backgroundColor = UIColor.App.backgroundPrimary
-
-        self.betslipCountLabel.backgroundColor = UIColor.App.alertError
-        self.betslipCountLabel.textColor = UIColor.white
-
-        self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
 
         self.accountValueView.backgroundColor = UIColor.App.backgroundSecondary
         self.accountValueLabel.textColor = UIColor.App.textPrimary
@@ -291,7 +290,6 @@ class MyFavoritesViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        
         viewModel.isLoadingPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLoading in
@@ -337,40 +335,13 @@ class MyFavoritesViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        Env.betslipManager.bettingTicketsPublisher
-            .map(\.count)
+        viewModel.favoriteOutrightCompetitionsDataPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] betslipValue in
-                if betslipValue == 0 {
-                    self?.betslipCountLabel.isHidden = true
-                }
-                else {
-                    self?.betslipCountLabel.text = "\(betslipValue)"
-                    self?.betslipCountLabel.isHidden = false
-                }
+            .sink(receiveValue: { [weak self] competitions in
+                self?.myFavoriteCompetitionsDataSource.outrightCompetitions = competitions
             })
             .store(in: &cancellables)
-
-    }
-
-    // MARK: Functions
-    func openBetslipModal() {
-        let betslipViewController = BetslipViewController()
-        betslipViewController.willDismissAction = { [weak self] in
-            self?.tableView.reloadData()
-        }
-        self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
-    }
-
-    @objc private func didTapAccountValue() {
-        let depositViewController = DepositViewController()
-        let navigationViewController = Router.navigationController(with: depositViewController)
-        self.present(navigationViewController, animated: true, completion: nil)
-    }
-
-    func presentLoginViewController() {
-      let loginViewController = Router.navigationController(with: LoginViewController())
-      self.present(loginViewController, animated: true, completion: nil)
+        
     }
 
 }
@@ -556,7 +527,42 @@ extension MyFavoritesViewController {
     @objc func didTapBetslipView() {
         self.openBetslipModal()
     }
+    
+    func openBetslipModal() {
+        let betslipViewController = BetslipViewController()
+        betslipViewController.willDismissAction = { [weak self] in
+            self?.tableView.reloadData()
+        }
+        self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
+    }
+    
+    @objc func didTapChatView() {
+        self.openChatModal()
+    }
+    
+    func openChatModal() {
+        if UserSessionStore.isUserLogged() {
+            let socialViewController = SocialViewController()
+            self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
+        }
+        else {
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.present(loginViewController, animated: true, completion: nil)
+        }
+    }
 
+
+    @objc private func didTapAccountValue() {
+        let depositViewController = DepositViewController()
+        let navigationViewController = Router.navigationController(with: depositViewController)
+        self.present(navigationViewController, animated: true, completion: nil)
+    }
+
+    func presentLoginViewController() {
+      let loginViewController = Router.navigationController(with: LoginViewController())
+      self.present(loginViewController, animated: true, completion: nil)
+    }
+    
     @objc func didTapLoginButton() {
         let loginViewController = LoginViewController()
 
@@ -638,41 +644,10 @@ extension MyFavoritesViewController {
         return activityIndicatorView
     }
 
-    private static func createBetslipButtonView() -> UIView {
-        let betslipButtonView = UIView()
-        betslipButtonView.translatesAutoresizingMaskIntoConstraints = false
-
-        let iconImageView = UIImageView()
-        iconImageView.translatesAutoresizingMaskIntoConstraints = false
-        iconImageView.contentMode = .scaleAspectFit
-        iconImageView.image = UIImage(named: "betslip_button_icon")
-        iconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
-        betslipButtonView.addSubview(iconImageView)
-
-        NSLayoutConstraint.activate([
-            betslipButtonView.widthAnchor.constraint(equalToConstant: 56),
-            betslipButtonView.widthAnchor.constraint(equalTo: betslipButtonView.heightAnchor),
-
-            iconImageView.widthAnchor.constraint(equalToConstant: 30),
-            iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
-            iconImageView.centerXAnchor.constraint(equalTo: betslipButtonView.centerXAnchor),
-            iconImageView.centerYAnchor.constraint(equalTo: betslipButtonView.centerYAnchor),
-        ])
-
-        return betslipButtonView
-    }
-
-    private static func createBetslipCountLabel() -> UILabel {
-        let betslipCountLabel = UILabel()
-        betslipCountLabel.translatesAutoresizingMaskIntoConstraints = false
-        betslipCountLabel.textColor = UIColor.App.textPrimary
-        betslipCountLabel.backgroundColor = UIColor.App.bubblesPrimary
-        betslipCountLabel.font = AppFont.with(type: .semibold, size: 10)
-        betslipCountLabel.textAlignment = .center
-        betslipCountLabel.clipsToBounds = true
-        betslipCountLabel.layer.masksToBounds = true
-        betslipCountLabel.text = "0"
-        return betslipCountLabel
+    private static func createFloatingShortcutsView() -> FloatingShortcutsView {
+        let floatingShortcutsView = FloatingShortcutsView()
+        floatingShortcutsView.translatesAutoresizingMaskIntoConstraints = false
+        return floatingShortcutsView
     }
 
     private static func createEmptyStateView() -> UIView {
@@ -739,7 +714,7 @@ extension MyFavoritesViewController {
         label.text = "Loading"
         return label
     }
-
+    
     private func setupSubviews() {
         self.view.addSubview(self.topSafeAreaView)
         self.view.addSubview(self.topView)
@@ -767,10 +742,12 @@ extension MyFavoritesViewController {
         self.topSliderCollectionView.dataSource = self
 
         tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+        tableView.register(OutrightCompetitionLargeLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
         tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
         tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
         tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
+        
         tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
         tableView.register(EmptyCardTableViewCell.nib, forCellReuseIdentifier: EmptyCardTableViewCell.identifier)
 
@@ -779,10 +756,8 @@ extension MyFavoritesViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
-        self.betslipButtonView.addSubview(self.betslipCountLabel)
-
-        self.view.addSubview(self.betslipButtonView)
-
+        self.view.addSubview(self.floatingShortcutsView)
+        
         self.view.addSubview(self.emptyStateView)
 
         self.emptyStateView.addSubview(self.emptyStateImageView)
@@ -864,14 +839,8 @@ extension MyFavoritesViewController {
 
         // Betslip
         NSLayoutConstraint.activate([
-            self.betslipCountLabel.trailingAnchor.constraint(equalTo: self.betslipButtonView.trailingAnchor, constant: 2),
-            self.betslipCountLabel.topAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -3),
-
-            self.betslipButtonView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
-            self.betslipButtonView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -40),
-
-            self.betslipCountLabel.widthAnchor.constraint(equalToConstant: 20),
-            self.betslipCountLabel.widthAnchor.constraint(equalTo: self.betslipCountLabel.heightAnchor),
+            self.floatingShortcutsView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
+            self.floatingShortcutsView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
         ])
 
         // Empty state view

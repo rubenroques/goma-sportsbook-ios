@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import Combine
 class ReceivedMessageTableViewCell: UITableViewCell {
 
     // MARK: Private Properties
@@ -20,6 +20,8 @@ class ReceivedMessageTableViewCell: UITableViewCell {
     private lazy var messageLabel: UILabel = Self.createMessageLabel()
     private lazy var messageDateLabel: UILabel = Self.createMessageDateLabel()
     private lazy var topBubbleTailView: UIView = Self.createTopBubbleTailView()
+
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
     var showUserState: Bool = false {
@@ -88,19 +90,42 @@ class ReceivedMessageTableViewCell: UITableViewCell {
 
     // MARK: Functions
 
-    func setupMessage(messageData: MessageData, username: String) {
+    func setupMessage(messageData: MessageData, username: String, chatroomId: Int) {
         self.messageLabel.text = messageData.text
 
         self.messageDateLabel.text = messageData.date
 
-        if messageData.type == .receivedOffline {
-            self.showUserState = false
-        }
-        else if messageData.type == .receivedOnline {
-            self.showUserState = true
-        }
-
         self.usernameLabel.text = username
+
+        if let onlineUsersPublisher = Env.gomaSocialClient.onlineUsersPublisher() {
+
+            onlineUsersPublisher
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [weak self] onlineUsersResponse in
+                    guard let self = self else {return}
+
+                    if let onlineUsersChat = onlineUsersResponse[chatroomId], let messageUserId = messageData.userId {
+
+                        if onlineUsersChat.users.contains(messageUserId) {
+                            self.showUserState = true
+
+                        }
+                        else {
+                            self.showUserState = false
+
+                        }
+
+                    }
+
+                })
+                .store(in: &cancellables)
+        }
+    }
+
+    func isReversedCell(isReversed: Bool) {
+        if isReversed {
+            self.contentView.transform = CGAffineTransform(scaleX: 1, y: -1)
+        }
     }
 
     private func setBubbleTailTriangle() {
@@ -181,7 +206,7 @@ extension ReceivedMessageTableViewCell {
         label.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur porttitor mi eget pharetra eleifend. Nam vel finibus nibh, nec ullamcorper elit."
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = AppFont.with(type: .medium, size: 14)
+        label.font = AppFont.with(type: .medium, size: 16)
         return label
     }
 

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class AddFriendTableViewCell: UITableViewCell {
 
@@ -19,6 +20,8 @@ class AddFriendTableViewCell: UITableViewCell {
     private lazy var checkboxBaseView: UIView = Self.createCheckboxBaseView()
     private lazy var checkboxImageView: UIImageView = Self.createCheckboxImageView()
     private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
+
+    private var cancellables = Set<AnyCancellable>()
 
     var viewModel: AddFriendCellViewModel?
     var didTapCheckboxAction: (() -> Void)?
@@ -118,7 +121,11 @@ class AddFriendTableViewCell: UITableViewCell {
 
         self.isCheckboxSelected = viewModel.isCheckboxSelected
 
-        self.isOnline = viewModel.isOnline
+        viewModel.isOnlinePublisher
+            .sink(receiveValue: { [weak self] isOnline in
+                self?.isOnline = isOnline
+            })
+            .store(in: &cancellables)
 
     }
 

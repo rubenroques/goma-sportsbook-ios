@@ -142,7 +142,7 @@ extension ChatMessageView {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.isEditable = true
-        textView.font = AppFont.with(type: .semibold, size: 14)
+        textView.font = AppFont.with(type: .semibold, size: 16)
         textView.text = localized("message")
         return textView
     }

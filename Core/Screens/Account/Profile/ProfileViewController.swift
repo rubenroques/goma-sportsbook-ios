@@ -20,7 +20,11 @@ class ProfileViewController: UIViewController {
     @IBOutlet private weak var profilePictureBaseView: UIView!
     @IBOutlet private weak var profilePictureImageView: UIImageView!
     @IBOutlet private weak var usernameLabel: UILabel!
+
+    @IBOutlet private weak var userCodeStackView: UIStackView!
     @IBOutlet private weak var userIdLabel: UILabel!
+    @IBOutlet private weak var userCodeCopyView: UIView!
+    @IBOutlet private weak var userCodeCopyImageView: UIImageView!
     @IBOutlet private weak var shadowView: UIView!
 
     @IBOutlet private weak var totalBalanceView: UIView!
@@ -54,6 +58,7 @@ class ProfileViewController: UIViewController {
 
     var userSession: UserSession?
     var cancellables = Set<AnyCancellable>()
+    let pasteboard = UIPasteboard.general
 
     enum PageMode {
         case user
@@ -92,8 +97,22 @@ class ProfileViewController: UIViewController {
 
         if let user = self.userSession {
             self.usernameLabel.text = user.username
-            self.userIdLabel.text = user.userId
+            // self.userIdLabel.text = user.userId
         }
+
+        if let userCode = Env.gomaNetworkClient.getCurrentToken()?.code {
+            let userCodeString = localized("user_code").replacingOccurrences(of: "%s", with: userCode)
+            self.userIdLabel.text = userCodeString
+        }
+        
+        Env.userSessionStore.userSessionPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] userSession in
+                if userSession == nil {
+                    self?.dismiss(animated: false, completion: nil)
+                }
+            }
+            .store(in: &cancellables)
 
         Env.everyMatrixClient.getProfileStatus()
             .receive(on: DispatchQueue.main)
@@ -216,7 +235,6 @@ class ProfileViewController: UIViewController {
 
         currentBalanceLabel.text = localized("loading")
 
-
         if let versionNumber = Bundle.main.versionNumber,
            let buildNumber = Bundle.main.buildNumber {
             let appVersionRawString = localized("app_version_profile")
@@ -226,8 +244,6 @@ class ProfileViewController: UIViewController {
         }
 
         self.infoLabel.isUserInteractionEnabled = true
-        let infolabelTapGesture = UITapGestureRecognizer.init(target: self, action: #selector(self.didTapAppVersionLabel))
-        self.infoLabel.addGestureRecognizer(infolabelTapGesture)
 
         self.activationAlertScrollableView.layer.cornerRadius = CornerRadius.button
         self.activationAlertScrollableView.layer.masksToBounds = true
@@ -235,6 +251,22 @@ class ProfileViewController: UIViewController {
         self.verifyUserActivationConditions()
 
         self.setupStackView()
+
+        let copyCodeTap = UITapGestureRecognizer(target: self, action: #selector(self.tapCopyCode))
+        self.userCodeStackView.addGestureRecognizer(copyCodeTap)
+
+    }
+
+    @objc func tapCopyCode() {
+        if let userCode = Env.gomaNetworkClient.getCurrentToken()?.code {
+            self.pasteboard.string = userCode
+
+            let customCodeString = localized("user_code_copied").replacingOccurrences(of: "%s", with: userCode)
+
+            let customToast = ToastCustom.text(title: customCodeString)
+
+            customToast.show()
+        }
     }
 
     func verifyUserActivationConditions() {
@@ -275,7 +307,6 @@ class ProfileViewController: UIViewController {
                 }
                 else if alertType == ActivationAlertType.profile {
                     let fullRegisterViewController = FullRegisterPersonalInfoViewController()
-                    // self.present(fullRegisterViewController, animated: true, completion: nil)
                     self.navigationController?.pushViewController(fullRegisterViewController, animated: true)
                 }
             }
@@ -292,7 +323,6 @@ class ProfileViewController: UIViewController {
         closeButton.setTitleColor( UIColor.App.highlightPrimary, for: .normal)
         closeButton.setTitleColor( UIColor.App.highlightPrimary.withAlphaComponent(0.7), for: .highlighted)
         closeButton.setTitleColor( UIColor.App.highlightPrimary.withAlphaComponent(0.4), for: .disabled)
-
 
         safeAreaTopView.backgroundColor = UIColor.App.backgroundPrimary
         self.topBarView.backgroundColor = UIColor.App.backgroundPrimary
@@ -337,37 +367,6 @@ class ProfileViewController: UIViewController {
         logoutButton.setTitleColor( UIColor.App.textPrimary.withAlphaComponent(0.7), for: .highlighted)
         logoutButton.setTitleColor( UIColor.App.textPrimary.withAlphaComponent(0.4), for: .disabled)
         logoutButton.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
-
-        //
-//        personalInfoBaseView.backgroundColor = UIColor.App.backgroundSecondary
-//        personalInfoIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-//        personalInfoIconImageView.backgroundColor = .clear
-//        personalInfoLabel.textColor =  UIColor.App.textPrimary
-//
-//        favoritesBaseView.backgroundColor = UIColor.App.backgroundSecondary
-//        favoritesIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-//        favoritesIconImageView.backgroundColor = .clear
-//        favoritesLabel.textColor =  UIColor.App.textPrimary
-//
-//        historyBaseView.backgroundColor = UIColor.App.backgroundSecondary
-//        historyIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-//        historyIconImageView.backgroundColor = .clear
-//        historyLabel.textColor =  UIColor.App.textPrimary
-//
-//        bonusBaseView.backgroundColor = UIColor.App.backgroundSecondary
-//        bonusIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-//        bonusIconImageView.backgroundColor = .clear
-//        bonusLabel.textColor =  UIColor.App.textPrimary
-//
-//        appSettingsBaseView.backgroundColor = UIColor.App.backgroundSecondary
-//        appSettingsIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-//        appSettingsIconImageView.backgroundColor = .clear
-//        appSettingsLabel.textColor =  UIColor.App.textPrimary
-//
-//        supportBaseView.backgroundColor = UIColor.App.backgroundSecondary
-//        supportIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-//        supportIconImageView.backgroundColor = .clear
-//        supportLabel.textColor =  UIColor.App.textPrimary
 
         infoLabel.textColor = UIColor.App.textPrimary
         
@@ -454,19 +453,6 @@ class ProfileViewController: UIViewController {
         }
     }
 
-    @IBAction private func didTapAppVersionLabel() {
-        guard
-            Env.everyMatrixClient.userSessionStatusPublisher.value == .logged,
-            let userId = UserSessionStore.loggedUserSession()?.userId
-        else {
-            return
-        }
-
-        let casinoWebViewController = CasinoWebViewController(userId: userId)
-        casinoWebViewController.modalPresentationStyle = .fullScreen
-
-        self.present(casinoWebViewController, animated: true, completion: nil)
-    }
 }
 
 extension ProfileViewController {
@@ -480,7 +466,6 @@ extension ProfileViewController {
     @IBAction private func didTapLogoutButton() {
         AnalyticsClient.sendEvent(event: .userLogout)
         Env.userSessionStore.logout()
-        Env.favoritesManager.favoriteEventsIdPublisher.send([])
         self.didTapCloseButton()
     }
 }
@@ -519,7 +504,8 @@ extension ProfileViewController {
     }
 
     @objc func supportViewTapped(sender: UITapGestureRecognizer) {
-
+        let supportViewController = SupportPageViewController(viewModel: SupportPageViewModel())
+        self.navigationController?.pushViewController(supportViewController, animated: true)
     }
 
 }

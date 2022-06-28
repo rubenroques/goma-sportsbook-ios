@@ -228,6 +228,17 @@ class EditGroupViewController: UIViewController {
 //                self?.isLoading = isLoading
 //            })
 //            .store(in: &cancellables)
+
+        viewModel.hasLeftGroupPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] hasLeftGroup in
+                if hasLeftGroup {
+                    Env.gomaSocialClient.reloadChatroomsList.send()
+
+                    self?.navigationController?.popToRootViewController(animated: true)
+                }
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Functions
@@ -367,6 +378,20 @@ class EditGroupViewController: UIViewController {
 
     @objc func didTapLeaveButton() {
         print("LEAVE GROUP")
+
+        let leaveGroupAlert = UIAlertController(title: localized("leave_group"),
+                                            message: localized("leave_group_message"),
+                                            preferredStyle: UIAlertController.Style.alert)
+
+        leaveGroupAlert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+
+            self?.viewModel.leaveGroup()
+
+        }))
+
+        leaveGroupAlert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel))
+
+        self.present(leaveGroupAlert, animated: true, completion: nil)
     }
 
     @objc func didTapBackground() {
@@ -413,10 +438,10 @@ extension EditGroupViewController: UITableViewDataSource, UITableViewDelegate {
 
                 if let cellViewModel = self.viewModel.cachedUserCellViewModels[userContact.id] {
                     // TEST
-                    if indexPath.row % 2 == 0 {
-                        cellViewModel.isOnline = true
-                    }
-
+//                    if indexPath.row % 2 == 0 {
+//                        cellViewModel.isOnline = true
+//                    }
+//
                     if userContact.id == "\(adminUserId)" {
                         cellViewModel.isAdmin = true
                     }
@@ -425,17 +450,17 @@ extension EditGroupViewController: UITableViewDataSource, UITableViewDelegate {
 
                 }
                 else {
-                    let cellViewModel = GroupUserManagementCellViewModel(userContact: userContact)
+                    let cellViewModel = GroupUserManagementCellViewModel(userContact: userContact, chatroomId: self.viewModel.getChatroomId())
                     self.viewModel.cachedUserCellViewModels[userContact.id] = cellViewModel
                     // TEST
-                    if indexPath.row % 2 == 0 {
-                        cellViewModel.isOnline = true
-                    }
-                    
+//                    if indexPath.row % 2 == 0 {
+//                        cellViewModel.isOnline = true
+//                    }
+//
                     if userContact.id == "\(adminUserId)" {
                         cellViewModel.isAdmin = true
                     }
-
+                    
                     cell.configure(viewModel: cellViewModel)
 
                 }

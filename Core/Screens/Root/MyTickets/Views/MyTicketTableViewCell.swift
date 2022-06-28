@@ -146,8 +146,6 @@ class MyTicketTableViewCell: UITableViewCell {
         self.bottomBaseView.backgroundColor = .clear
         self.bottomStackView.backgroundColor = .clear
         self.cashoutBaseView.backgroundColor = .clear
-
-        self.cashoutButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
         
         self.cashoutButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
         self.cashoutButton.setTitleColor(UIColor.App.textPrimary.withAlphaComponent(0.7), for: .highlighted)

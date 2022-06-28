@@ -16,6 +16,12 @@ class MatchLineTableViewCell: UITableViewCell {
     @IBOutlet private var collectionBaseView: UIView!
     @IBOutlet private var collectionView: UICollectionView!
 
+    @IBOutlet private var collectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private var collectionViewTopMarginConstraint: NSLayoutConstraint!
+    @IBOutlet private var collectionViewBottomMarginConstraint: NSLayoutConstraint!
+
+    private var cachedCardsStyle: CardsStyle?
+
     private var match: Match?
     private var store: AggregatorStore?
 
@@ -31,6 +37,13 @@ class MatchLineTableViewCell: UITableViewCell {
     var tappedMatchLineAction: (() -> Void)?
     var matchWentLive: (() -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
+
+    private let cellInternSpace: CGFloat = 2.0
+
+    private var collectionViewHeight: CGFloat {
+        let cardHeight = StyleHelper.cardsStyleHeight()
+        return cardHeight + cellInternSpace + cellInternSpace
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -70,8 +83,17 @@ class MatchLineTableViewCell: UITableViewCell {
         let backSliderTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackSliderButton))
         self.backSliderView.addGestureRecognizer(backSliderTapGesture)
 
-        self.setupWithTheme()
+        //
+        self.collectionViewHeightConstraint.constant = self.collectionViewHeight
+        self.collectionViewTopMarginConstraint.constant = StyleHelper.cardsStyleMargin()
+        self.collectionViewBottomMarginConstraint.constant = StyleHelper.cardsStyleMargin()
 
+        UIView.performWithoutAnimation {
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        }
+
+        self.setupWithTheme()
     }
 
     override func prepareForReuse() {
@@ -94,6 +116,20 @@ class MatchLineTableViewCell: UITableViewCell {
 
         self.matchInfoPublisher?.cancel()
         self.matchInfoPublisher = nil
+
+        if self.cachedCardsStyle != StyleHelper.cardsStyleActive() {
+
+            self.cachedCardsStyle = StyleHelper.cardsStyleActive()
+
+            self.collectionViewHeightConstraint.constant = self.collectionViewHeight
+            self.collectionViewTopMarginConstraint.constant = StyleHelper.cardsStyleMargin()
+            self.collectionViewBottomMarginConstraint.constant = StyleHelper.cardsStyleMargin()
+
+            UIView.performWithoutAnimation {
+                self.setNeedsLayout()
+                self.layoutIfNeeded()
+            }
+        }
 
         self.collectionView.reloadData()
     }
@@ -268,12 +304,6 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                     cell.tappedMatchWidgetAction = {
                         self.tappedMatchLineAction?()
                     }
-                  
-//                    cell.didTapFavoriteMatchAction = { [weak self] match in
-//                        print("Tapped Favorite")
-//                        self?.didTapFavoriteMatchAction?(match)
-//                    }
-                    
                 }
                 cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
 
@@ -294,15 +324,8 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                     cell.tappedMatchWidgetAction = {
                         self.tappedMatchLineAction?()
                     }
-                   
                 }
-                
-//                cell.didTapFavoriteMatchAction = { [weak self] match in
-//                    self?.didTapFavoriteMatchAction?(match)
-//                }
-                
                 cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
-
                 return cell
             }
         }
@@ -373,8 +396,10 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
 
+        let height = StyleHelper.cardsStyleHeight()
+
         if indexPath.section == 1 {
-            return CGSize(width: 99, height: MatchWidgetCollectionViewCell.cellHeight)
+            return CGSize(width: 99, height: height)
         }
         else {
             let screenWidth = UIScreen.main.bounds.size.width
@@ -384,7 +409,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 width = 390
             }
             
-            return CGSize(width: width, height: MatchWidgetCollectionViewCell.cellHeight) // design width: 331
+            return CGSize(width: width, height: height) // design width: 331
         }
     }
 }

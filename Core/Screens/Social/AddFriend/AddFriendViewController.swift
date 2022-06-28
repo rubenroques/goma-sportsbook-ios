@@ -38,6 +38,8 @@ class AddFriendViewController: UIViewController {
         }
     }
 
+    var chatListNeedsReload: (() -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(viewModel: AddFriendViewModel) {
         self.viewModel = viewModel
@@ -61,6 +63,8 @@ class AddFriendViewController: UIViewController {
         self.tableView.register(ResultsHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: ResultsHeaderFooterView.identifier)
         self.tableView.register(AddFriendTableViewCell.self,
                                 forCellReuseIdentifier: AddFriendTableViewCell.identifier)
+        self.tableView.register(FriendStatusTableViewCell.self,
+                                forCellReuseIdentifier: FriendStatusTableViewCell.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
@@ -147,7 +151,7 @@ class AddFriendViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        viewModel.usersPublisher
+        viewModel.friendsPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] users in
                 self?.isEmptySearch = users.isEmpty
@@ -167,6 +171,13 @@ class AddFriendViewController: UIViewController {
                 if showAlert, let friendAlertType = viewModel.friendAlertType {
                     self?.showAddFriendAlert(friendAlertType: friendAlertType)
                 }
+            })
+            .store(in: &cancellables)
+
+        viewModel.userContactSection
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] userContacts in
+                self?.isEmptySearch = userContacts.isEmpty
             })
             .store(in: &cancellables)
     }
@@ -204,13 +215,11 @@ class AddFriendViewController: UIViewController {
     private func showAddFriendAlert(friendAlertType: FriendAlertType) {
         switch friendAlertType {
         case .success:
-            let addFriendAlert = UIAlertController(title: localized("friend_added"),
-                                                       message: localized("friend_added_message"),
-                                                       preferredStyle: UIAlertController.Style.alert)
 
-            addFriendAlert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+            Env.gomaSocialClient.forceRefresh()
+            self.chatListNeedsReload?()
 
-            self.present(addFriendAlert, animated: true, completion: nil)
+            self.navigationController?.popViewController(animated: true)
         case .error:
             let errorFriendAlert = UIAlertController(title: localized("friend_added_error"),
                                                        message: localized("friend_added_message_error"),
@@ -221,6 +230,17 @@ class AddFriendViewController: UIViewController {
             self.present(errorFriendAlert, animated: true, completion: nil)
         }
 
+    }
+
+    private func showChatroom(friendId: Int) {
+
+        let conversationData = self.viewModel.getConversationData(userId: "\(friendId)")
+
+        let conversationDetailViewModel = ConversationDetailViewModel(conversationData: conversationData)
+
+        let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
+
+        self.navigationController?.pushViewController(conversationDetailViewController, animated: true)
     }
 
     // MARK: Actions
@@ -248,6 +268,10 @@ class AddFriendViewController: UIViewController {
             let addContactViewModel = AddContactViewModel()
             let addContactViewController = AddContactViewController(viewModel: addContactViewModel)
 
+            addContactViewController.chatListNeedsReload = { [weak self] in
+                self?.chatListNeedsReload?()
+            }
+
             self.navigationController?.pushViewController(addContactViewController, animated: true)
 
         case .notDetermined:
@@ -261,6 +285,10 @@ class AddFriendViewController: UIViewController {
                     DispatchQueue.main.async {
                         let addContactViewModel = AddContactViewModel()
                         let addContactViewController = AddContactViewController(viewModel: addContactViewModel)
+
+                        addContactViewController.chatListNeedsReload = { [weak self] in
+                            self?.chatListNeedsReload?()
+                        }
 
                         self.navigationController?.pushViewController(addContactViewController, animated: true)
                     }
@@ -290,26 +318,6 @@ class AddFriendViewController: UIViewController {
         self.searchFriendTextFieldView.resignFirstResponder()
     }
 
-    // TEST
-    private func addGomaFriend() {
-        let userIds = ["42", "124", "215", "225", "224"]
-
-        Env.gomaNetworkClient.addFriends(deviceId: Env.deviceId, userIds: userIds)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure(let error):
-                    print("ADD FRIEND ERROR: \(error)")
-                case .finished:
-                    print("ADD FRIEND FINISHED")
-                }
-            }, receiveValue: { response in
-                print("ADD FRIEND GOMA: \(response)")
-            })
-            .store(in: &cancellables)
-
-    }
-
 }
 
 //
@@ -318,63 +326,130 @@ class AddFriendViewController: UIViewController {
 extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return self.viewModel.userContactSection.value.count
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.usersPublisher.value.count
+        // return self.viewModel.usersPublisher.value.count
+        return self.viewModel.userContactSection.value[section].userContacts.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        guard let cell = tableView.dequeueCellType(AddFriendTableViewCell.self)
-        else {
-            fatalError()
-        }
+        if self.viewModel.userContactSection.value[indexPath.section].contactSectionType == .search {
 
-        if let userContact = self.viewModel.usersPublisher.value[safe: indexPath.row] {
-
-            if let cellViewModel = self.viewModel.cachedCellViewModels[userContact.id] {
-                cell.configure(viewModel: cellViewModel)
-
-                cell.didTapCheckboxAction = { [weak self] in
-                    self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
-                }
-            }
+            guard let cell = tableView.dequeueCellType(AddFriendTableViewCell.self)
             else {
-                let cellViewModel = AddFriendCellViewModel(userContact: userContact)
-                self.viewModel.cachedCellViewModels[userContact.id] = cellViewModel
-                cell.configure(viewModel: cellViewModel)
-
-                cell.didTapCheckboxAction = { [weak self] in
-                    self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
-                }
+                fatalError()
             }
 
+            if let userContact = self.viewModel.usersPublisher.value[safe: indexPath.row] {
+
+                if let cellViewModel = self.viewModel.cachedSearchCellViewModels[userContact.id] {
+                    cell.configure(viewModel: cellViewModel)
+
+                    cell.didTapCheckboxAction = { [weak self] in
+                        self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
+                    }
+                }
+                else {
+                    let cellViewModel = AddFriendCellViewModel(userContact: userContact)
+                    self.viewModel.cachedSearchCellViewModels[userContact.id] = cellViewModel
+                    cell.configure(viewModel: cellViewModel)
+
+                    cell.didTapCheckboxAction = { [weak self] in
+                        self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
+                    }
+                }
+
+            }
+
+            if indexPath.row == self.viewModel.usersPublisher.value.count - 1 {
+                cell.hasSeparatorLine = false
+            }
+
+            return cell
+        }
+        else if self.viewModel.userContactSection.value[indexPath.section].contactSectionType == .friends {
+            guard
+                let cell = tableView.dequeueCellType(FriendStatusTableViewCell.self)
+            else {
+                fatalError()
+            }
+
+            if let friend = self.viewModel.friendsPublisher.value[safe: indexPath.row] {
+
+                if let cellViewModel = self.viewModel.cachedFriendsCellViewModels[friend.id] {
+                    cell.configure(withViewModel: cellViewModel)
+                }
+                else {
+                    let cellViewModel = FriendStatusCellViewModel(friend: friend)
+                    self.viewModel.cachedFriendsCellViewModels[friend.id] = cellViewModel
+
+                    cell.configure(withViewModel: cellViewModel)
+                }
+
+                if indexPath.row == self.viewModel.userContactSection.value[indexPath.section].userContacts.count - 1 {
+                    cell.hasSeparatorLine = false
+                }
+                else {
+                    cell.hasSeparatorLine = true
+                }
+
+                cell.shouldShowChatroom = { [weak self] in
+                    self?.showChatroom(friendId: friend.id)
+                }
+
+            }
+
+            return cell
         }
 
-        if indexPath.row == self.viewModel.usersPublisher.value.count - 1 {
-            cell.hasSeparatorLine = false
+        else {
+            return UITableViewCell()
         }
-
-        return cell
 
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
-        if self.viewModel.usersPublisher.value.isNotEmpty {
-            guard
-                let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ResultsHeaderFooterView.identifier) as? ResultsHeaderFooterView
+        if self.viewModel.userContactSection.value[section].contactSectionType == .search {
+
+            if self.viewModel.usersPublisher.value.isNotEmpty {
+                guard
+                    let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ResultsHeaderFooterView.identifier) as? ResultsHeaderFooterView
+                else {
+                    fatalError()
+                }
+
+                let resultsLabel = "Results (\(self.viewModel.usersPublisher.value.count))"
+
+                headerView.configureHeader(title: resultsLabel)
+
+                return headerView
+            }
             else {
-                fatalError()
+                return UIView()
+            }
+        }
+        else if self.viewModel.userContactSection.value[section].contactSectionType == .friends {
+            if self.viewModel.friendsPublisher.value.isNotEmpty {
+                guard
+                    let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ResultsHeaderFooterView.identifier) as? ResultsHeaderFooterView
+                else {
+                    fatalError()
+                }
+
+                let resultsLabel = localized("my_friends")
+
+                headerView.configureHeader(title: resultsLabel)
+
+                return headerView
+            }
+            else {
+                return UIView()
             }
 
-            let resultsLabel = "Results (\(self.viewModel.usersPublisher.value.count))"
-
-            headerView.configureHeader(title: resultsLabel)
-
-            return headerView
         }
         else {
             return UIView()
@@ -383,7 +458,7 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
-        if self.viewModel.usersPublisher.value.isNotEmpty {
+        if self.viewModel.userContactSection.value.isNotEmpty {
             return 70
         }
         else {
@@ -394,7 +469,7 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
 
-        if self.viewModel.usersPublisher.value.isNotEmpty {
+        if self.viewModel.userContactSection.value.isNotEmpty {
             return 70
         }
         else {
@@ -405,7 +480,7 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 
-        if self.viewModel.usersPublisher.value.isNotEmpty {
+        if self.viewModel.userContactSection.value.isNotEmpty {
             return 30
         }
         else {
@@ -416,7 +491,7 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
 
-        if self.viewModel.usersPublisher.value.isNotEmpty {
+        if self.viewModel.userContactSection.value.isNotEmpty {
             return 30
         }
         else {

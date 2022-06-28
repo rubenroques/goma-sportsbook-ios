@@ -28,14 +28,18 @@ enum GomaGamingService {
     case deleteFriend(userId: Int)
     case listFriends
     case inviteFriend(phone: String)
-    case chatrooms
+    case chatrooms(page: String)
     case addGroup(userIds: [String], groupName: String)
     case deleteGroup(chatroomId: Int)
     case editGroup(chatroomId: Int, groupName: String)
+    case leaveGroup(chatroomId: Int)
     case lookupPhone(phones: [String])
     case removeUser(chatroomId: Int, userId: String)
     case addUserToGroup(chatroomId: Int, userIds: [String])
     case searchUserCode(code: String)
+    case getNotification(type: String)
+    case setNotificationRead(id: String)
+    case sendSupportTicket(title: String, message: String)
 }
 
 extension GomaGamingService: Endpoint {
@@ -92,6 +96,8 @@ extension GomaGamingService: Endpoint {
             return "/api/social/\(apiVersion)/groups/\(chatroomId)"
         case .editGroup(let chatroomId, _):
             return "/api/social/\(apiVersion)/groups/\(chatroomId)"
+        case .leaveGroup(let chatroomId):
+            return "/api/social/\(apiVersion)/groups/\(chatroomId)/users/leave"
         case .lookupPhone:
             return "/api/users/\(apiVersion)/in-app"
         case .removeUser(let chatroomId, _):
@@ -100,6 +106,12 @@ extension GomaGamingService: Endpoint {
             return "/api/social/\(apiVersion)/groups/\(chatroomId)/users"
         case .searchUserCode(let code):
             return "/api/users/\(apiVersion)/code/\(code)"
+        case .getNotification:
+            return "/api/notifications/\(apiVersion)"
+        case .setNotificationRead(let id):
+            return "/api/notifications/\(apiVersion)/\(id)/read"
+        case .sendSupportTicket:
+            return "/api/users/\(apiVersion)/contact"
         }
     }
 
@@ -111,13 +123,15 @@ extension GomaGamingService: Endpoint {
             return [URLQueryItem(name: "lat", value: latitude),
                     URLQueryItem(name: "lng", value: longitude)]
         case .settings, .simpleRegister, .modalPopUpDetails, .login,
-                .suggestedBets, .addFavorites, .matchStats, .userSettings, .sendUserSettings:
+                .suggestedBets, .addFavorites, .matchStats, .userSettings, .sendUserSettings, .sendSupportTicket:
             return nil
         case .removeFavorite(let favorite):
             return [URLQueryItem(name: "favorite_ids[]", value: favorite)]
         // Social
-        case .addFriend, .deleteFriend, .listFriends, .inviteFriend ,.chatrooms, .addGroup, .deleteGroup, .searchUserCode:
+        case .addFriend, .deleteFriend, .listFriends, .inviteFriend, .addGroup, .deleteGroup, .leaveGroup, .searchUserCode, .lookupPhone, .setNotificationRead:
             return nil
+        case .chatrooms(let page):
+            return [URLQueryItem(name: "page", value: page)]
         case .editGroup(_, let groupName):
             var queryItemsURL: [URLQueryItem] = []
 
@@ -130,15 +144,15 @@ extension GomaGamingService: Endpoint {
 //            }
             print("EDIT GROUP QUERY: \(queryItemsURL)")
             return queryItemsURL
-        case .lookupPhone(let phones):
-            var queryItemsURL: [URLQueryItem] = []
-
-            for phone in phones {
-                let queryItem = URLQueryItem(name: "phone_numbers[]", value: "\(phone)")
-                queryItemsURL.append(queryItem)
-            }
-            print("PHONE QUERY: \(queryItemsURL)")
-            return queryItemsURL
+//        case .lookupPhone(let phones):
+//            var queryItemsURL: [URLQueryItem] = []
+//
+//            for phone in phones {
+//                let queryItem = URLQueryItem(name: "phone_numbers[]", value: "\(phone)")
+//                queryItemsURL.append(queryItem)
+//            }
+//            print("PHONE QUERY: \(queryItemsURL)")
+//            return queryItemsURL
         case .removeUser(_, let userId):
             return [URLQueryItem(name: "users_ids[]", value: userId)]
         case .addUserToGroup(_, let userIds):
@@ -151,6 +165,9 @@ extension GomaGamingService: Endpoint {
 
             print("ADD USER GROUP QUERY: \(queryItemsURL)")
             return queryItemsURL
+        case .getNotification(let type):
+            return [URLQueryItem(name: "type", value: type)]
+
         }
     }
 
@@ -178,16 +195,16 @@ extension GomaGamingService: Endpoint {
         case .geolocation, .settings, .modalPopUpDetails, .suggestedBets,
                 .matchStats, .userSettings:
             return .get
-        case .log, .simpleRegister, .login, .addFavorites, .sendUserSettings:
+        case .log, .simpleRegister, .login, .addFavorites, .sendUserSettings,  .sendSupportTicket:
             return .post
         case .removeFavorite:
             return .delete
         // Social
-        case .addFriend, .inviteFriend, .addGroup, .addUserToGroup:
+        case .addFriend, .inviteFriend, .addGroup, .addUserToGroup, .lookupPhone, .setNotificationRead:
             return .post
-        case .listFriends, .chatrooms, .lookupPhone, .searchUserCode:
+        case .listFriends, .chatrooms, .searchUserCode, .getNotification:
             return .get
-        case .deleteGroup, .deleteFriend, .removeUser:
+        case .deleteGroup, .leaveGroup, .deleteFriend, .removeUser:
             return .delete
         case .editGroup:
             return .put
@@ -235,6 +252,15 @@ extension GomaGamingService: Endpoint {
                     """
             let data = body.data(using: String.Encoding.utf8)!
             return data
+            
+        case .sendSupportTicket(let title, let message):
+            let body = """
+                       {"title": "\(title)",
+                        "message": "\(message)"}
+                       """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+            
         case .sendUserSettings(let userSettings):
             let body = """
                        {"odd_validation_type": "\(userSettings.oddValidationType)",
@@ -275,6 +301,15 @@ extension GomaGamingService: Endpoint {
                     "users_ids": \(userIds)
                     }
                     """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+        case .lookupPhone(let phones):
+            let body = """
+                    {"phone_numbers":
+                    \(phones)
+                    }
+                    """
+            print("CONTACTS BODY: \(body)")
             let data = body.data(using: String.Encoding.utf8)!
             return data
         default:

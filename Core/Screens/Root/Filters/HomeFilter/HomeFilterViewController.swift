@@ -6,9 +6,16 @@
 //
 
 import UIKit
-
 import OrderedCollections
 
+//
+protocol HomeFilterOptionsViewDelegate: AnyObject {
+    var turnTimeRangeOn: Bool { get set }
+    func setHomeFilters(homeFilters: HomeFilterOptions?)
+
+}
+
+//
 class HomeFilterViewController: UIViewController {
     @IBOutlet private var topView: UIView!
     @IBOutlet private var navigationView: UIView!
@@ -21,12 +28,17 @@ class HomeFilterViewController: UIViewController {
     @IBOutlet private var sortByFilterCollapseView: FilterCollapseView!
     @IBOutlet private var timeRangeCollapseView: FilterSliderCollapseView!
     @IBOutlet private var availableMarketsCollapseView: FilterCollapseView!
+    @IBOutlet private var cardSltyleCollapseView: FilterCollapseView!
     @IBOutlet private var oddsCollapseView: FilterSliderCollapseView!
     @IBOutlet private var bottomButtonView: UIView!
-    @IBOutlet private var applyButton: RoundButton!
+    @IBOutlet private var applyButton: UIButton!
+
     var timeRangeMultiSlider: MultiSlider?
     var oddRangeMultiSlider: MultiSlider?
-    
+
+    var smallCardStyleOption = FilterRowView()
+    var normalCardStyleOption = FilterRowView()
+
     // Variables
     // var timeSliderValues: [CGFloat] = []
     var lowerBoundTimeRange: CGFloat = 0.0
@@ -97,44 +109,38 @@ class HomeFilterViewController: UIViewController {
 
         sortByFilterCollapseView.isHidden = true
         
-        setupTimeRangeSection()
+        self.setupTimeRangeSection()
 
         if let marketId = filterValues?.defaultMarket.marketId {
-            setupAvailableMarketsSection(value: marketId)
+            self.setupAvailableMarketsSection(value: marketId)
         }
-        
-        setupOddsSection()
 
-        applyButton.setTitle(localized("apply"), for: .normal)
-        applyButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
-        applyButton.layer.cornerRadius = CornerRadius.button
+        self.setupCardSltyleCollapseView()
+        self.setupOddsSection()
 
+        self.applyButton.setTitle(localized("apply"), for: .normal)
+        self.applyButton.titleLabel?.font = AppFont.with(type: .bold, size: 18)
+
+        StyleHelper.styleButton(button: self.applyButton)
     }
 
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         topView.backgroundColor = UIColor.App.backgroundPrimary
-
         navigationView.backgroundColor = UIColor.App.backgroundPrimary
-
         navigationLabel.textColor = UIColor.App.textPrimary
 
         navigationResetButton.setTitleColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
-
         navigationCancelButton.setTitleColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
 
         scrollView.backgroundColor = UIColor.App.backgroundPrimary
-
         stackContainerView.backgroundColor = UIColor.App.backgroundPrimary
 
         stackView.backgroundColor = UIColor.App.backgroundPrimary
-
         bottomButtonView.backgroundColor = UIColor.App.backgroundPrimary
 
-        applyButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
-        applyButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
-        
+        StyleHelper.styleButton(button: self.applyButton)
     }
 
     func setupTimeRangeSection() {
@@ -213,21 +219,76 @@ class HomeFilterViewController: UIViewController {
         // Set selected view
         let viewInt = Int(value)
         for view in marketViews {
-            view.didTapView = { _ in
-                self.checkMarketRadioOptions(views: self.marketViews, viewTapped: view)
+            view.didTapView = { [weak self] _ in
+                self?.checkMarketRadioOptions(views: self?.marketViews ?? [], viewTapped: view)
             }
+
             // Default market selected
             if view.viewId == viewInt {
                 view.isChecked = true
             }
         }
 
-        availableMarketsCollapseView.didToggle = { value in
-            if value {
+        availableMarketsCollapseView.didToggle = { [weak self] finished in
+            if finished {
                 UIView.animate(withDuration: 0.2, delay: 0.2, options: .curveEaseIn, animations: {
-                    self.view.layoutIfNeeded()
-                }, completion: { _ in
-                })
+                    self?.view.layoutIfNeeded()
+                }, completion: nil)
+            }
+        }
+    }
+
+    func setupCardSltyleCollapseView() {
+        cardSltyleCollapseView.setTitle(title: "Cards Style")
+
+        self.smallCardStyleOption = FilterRowView()
+        smallCardStyleOption.buttonType = .radio
+        smallCardStyleOption.isChecked = false
+        smallCardStyleOption.setTitle(title: "Small")
+        smallCardStyleOption.viewId = 0
+
+        cardSltyleCollapseView.addViewtoStack(view: smallCardStyleOption)
+
+        self.normalCardStyleOption = FilterRowView()
+        self.normalCardStyleOption.buttonType = .radio
+        self.normalCardStyleOption.isChecked = false
+        self.normalCardStyleOption.setTitle(title: "Normal")
+        self.normalCardStyleOption.viewId = 0
+
+        cardSltyleCollapseView.addViewtoStack(view: normalCardStyleOption)
+
+        switch StyleHelper.cardsStyleActive() {
+        case .small:
+            self.smallCardStyleOption.isChecked = true
+            self.normalCardStyleOption.isChecked = false
+        case .normal:
+            self.smallCardStyleOption.isChecked = false
+            self.normalCardStyleOption.isChecked = true
+        }
+
+        smallCardStyleOption.didTapView = { [weak self] _ in
+            UserDefaults.standard.cardsStyle = .small
+
+            self?.smallCardStyleOption.isChecked = true
+            self?.normalCardStyleOption.isChecked = false
+
+            NotificationCenter.default.post(name: .cardsStyleChanged, object: nil)
+        }
+
+        self.normalCardStyleOption.didTapView = { [weak self] _ in
+            UserDefaults.standard.cardsStyle = .normal
+
+            self?.smallCardStyleOption.isChecked = false
+            self?.normalCardStyleOption.isChecked = true
+
+            NotificationCenter.default.post(name: .cardsStyleChanged, object: nil)
+        }
+
+        cardSltyleCollapseView.didToggle = { [weak self] finished in
+            if finished {
+                UIView.animate(withDuration: 0.2, delay: 0.2, options: .curveEaseIn, animations: {
+                    self?.view.layoutIfNeeded()
+                }, completion: nil)
             }
         }
     }
@@ -356,7 +417,8 @@ class HomeFilterViewController: UIViewController {
         if defaultMarket.marketId != MainMarketType.homeDrawAway.marketId {
            countFilters += 1
         }
-        
+
+
         let homeFilterOptions = HomeFilterOptions(lowerBoundTimeRange: lowerBoundTimeRange,
                                                   highBoundTimeRange: highBoundTimeRange,
                                                   defaultMarket: defaultMarket,
@@ -370,3 +432,4 @@ class HomeFilterViewController: UIViewController {
     }
 
 }
+

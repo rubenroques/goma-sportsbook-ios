@@ -160,7 +160,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                 return 105
             }
             else {
-                return MatchWidgetCollectionViewCell.cellHeight + 20
+                return UITableView.automaticDimension
             }
         }
         return .leastNonzeroMagnitude
@@ -176,7 +176,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                 return 105
             }
             else {
-                return MatchWidgetCollectionViewCell.cellHeight + 20
+                return StyleHelper.cardsStyleHeight() + 20
             }
         }
         return .leastNonzeroMagnitude

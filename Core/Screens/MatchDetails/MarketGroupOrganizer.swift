@@ -38,9 +38,32 @@ struct ColumnListedMarketGroupOrganizer: MarketGroupOrganizer {
 
     init(id: String, name: String, outcomes: [String: [Outcome]] ) {
 
+        var processedOutcomes = outcomes
+        
+        // Custom processing
+        // If we got a x_or_more market with all the options in the same column we split the in 3
+        if Array(outcomes.keys) == ["x_or_more"] {
+            processedOutcomes = [:]
+            
+            let outcomeValues = outcomes["x_or_more"] ?? []
+            let arraySlicesCount = Int( ceil( Double(outcomeValues.count)/3) )
+            let arraysSplited = outcomeValues.chunked(into: arraySlicesCount )
+            
+            if let arraysSplited0 = arraysSplited[safe: 0] {
+                processedOutcomes["x_or_more_0"] = arraysSplited0
+            }
+            if let arraysSplited1 = arraysSplited[safe: 1] {
+                processedOutcomes["x_or_more_1"] = arraysSplited1
+            }
+            if let arraysSplited2 = arraysSplited[safe: 2] {
+                processedOutcomes["x_or_more_2"] = arraysSplited2
+            }
+        }
+        //
+        
         self.id = id
         self.name = name
-        self.outcomes = outcomes
+        self.outcomes = processedOutcomes
 
         self.sortedOutcomeKeys = []
         self.sortedOutcomeKeys = self.outcomes.keys.sorted { out1Name, out2Name in
@@ -65,8 +88,12 @@ struct ColumnListedMarketGroupOrganizer: MarketGroupOrganizer {
                     let leftNameDigit3 = leftOutcome.nameDigit3 ?? 0.0
                     let rightNameDigit3 = rightOutcome.nameDigit3 ?? 0.0
 
-                    if (leftOutcome.codeName == "away" || rightOutcome.codeName == "away" || leftOutcome.codeName == "away_draw" || rightOutcome.codeName == "away_draw")
+                    if (leftOutcome.codeName == "away" ||
+                        rightOutcome.codeName == "away" ||
+                        leftOutcome.codeName == "away_draw" ||
+                        rightOutcome.codeName == "away_draw")
                         && (leftOutcome.nameDigit2 != nil && rightOutcome.nameDigit2 != nil) {
+                        
                         leftNameDigit1 = leftOutcome.nameDigit2 ?? 0.0
                         rightNameDigit1 = rightOutcome.nameDigit2 ?? 0.0
 
@@ -97,7 +124,7 @@ struct ColumnListedMarketGroupOrganizer: MarketGroupOrganizer {
         }
 
         var maxLineValue = 0
-        for outcomeArray in outcomes.values {
+        for outcomeArray in self.outcomes.values {
             maxLineValue = max(maxLineValue, outcomeArray.count)
         }
 

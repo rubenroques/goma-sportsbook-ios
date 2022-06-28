@@ -34,6 +34,7 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
 
     private lazy var competitionBaseStackView: UIStackView = Self.createCompetitionBaseStackView()
 
+    private lazy var favoritesIconImageView: UIImageView = Self.createFavoritesIconImageView()
     private lazy var favoriteCompetitionButton: UIButton = Self.createFavoriteCompetitionButton()
     private lazy var countryFlagCompetitionImageView: UIImageView = Self.createCountryFlagCompetitionImageView()
     private lazy var countryNameCompetitionLabel: UILabel = Self.createCountryNameCompetitionLabel()
@@ -45,6 +46,27 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
     private lazy var seeAllView: UIView = Self.createSeeAllView()
     private lazy var seeAllLabel: UILabel = Self.createSeeAllLabel()
 
+    private var topMarginSpaceConstraint = NSLayoutConstraint()
+    private var bottomMarginSpaceConstraint = NSLayoutConstraint()
+    private var leadingMarginSpaceConstraint = NSLayoutConstraint()
+    private var trailingMarginSpaceConstraint = NSLayoutConstraint()
+
+    private var headerHeightConstraint = NSLayoutConstraint()
+    private var buttonHeightConstraint = NSLayoutConstraint()
+
+    private var isFavorite: Bool = false {
+        didSet {
+            if isFavorite {
+                self.favoritesIconImageView.image = UIImage(named: "selected_favorite_icon")
+            }
+            else {
+                self.favoritesIconImageView.image = UIImage(named: "unselected_favorite_icon")
+            }
+        }
+    }
+    
+    private var cachedCardsStyle: CardsStyle?
+
     private var viewModel: OutrightCompetitionLargeWidgetViewModel?
     private var cancellables: Set<AnyCancellable> = []
 
@@ -53,10 +75,13 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
 
         self.setupSubviews()
         self.setupWithTheme()
+        self.adjustDesignToCardStyle()
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSeeAll))
         self.contentView.addGestureRecognizer(tapGesture)
 
+        self.favoriteCompetitionButton.addTarget(self, action: #selector(didTapFavoritesButton(_:)), for: .primaryActionTriggered)
+        
         self.setNeedsLayout()
         self.layoutIfNeeded()
     }
@@ -71,6 +96,8 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
         self.viewModel = nil
         self.titleLabel.text = ""
 
+        self.setupWithTheme()
+        self.adjustDesignToCardStyle()
     }
 
     override func layoutSubviews() {
@@ -81,7 +108,9 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
+
         self.setupWithTheme()
+        self.adjustDesignToCardStyle()
     }
 
     func setupWithTheme() {
@@ -99,12 +128,58 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
         self.seeAllLabel.textColor = UIColor.App.textPrimary
     }
 
+    private func adjustDesignToCardStyle() {
+
+        if self.cachedCardsStyle == StyleHelper.cardsStyleActive() {
+            return
+        }
+
+        self.cachedCardsStyle = StyleHelper.cardsStyleActive()
+
+        switch StyleHelper.cardsStyleActive() {
+        case .small:
+            self.adjustDesignToSmallCardStyle()
+        case .normal:
+            self.adjustDesignToNormalCardStyle()
+        }
+
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
+    }
+
+    private func adjustDesignToSmallCardStyle() {
+        self.topMarginSpaceConstraint.constant = 8
+        self.leadingMarginSpaceConstraint.constant = 8
+        self.trailingMarginSpaceConstraint.constant = -8
+        self.bottomMarginSpaceConstraint.constant = -8
+
+        self.headerHeightConstraint.constant = 12
+        self.buttonHeightConstraint.constant = 27
+
+        self.titleLabel.font = AppFont.with(type: .bold, size: 13)
+    }
+
+    private func adjustDesignToNormalCardStyle() {
+        self.topMarginSpaceConstraint.constant = 11
+        self.leadingMarginSpaceConstraint.constant = 12
+        self.trailingMarginSpaceConstraint.constant = -12
+        self.bottomMarginSpaceConstraint.constant = -12
+
+        self.headerHeightConstraint.constant = 16
+        self.buttonHeightConstraint.constant = 40
+
+        self.titleLabel.font = AppFont.with(type: .bold, size: 14)
+    }
+
     func configure(withViewModel viewModel: OutrightCompetitionLargeWidgetViewModel) {
         self.viewModel = viewModel
 
         self.titleLabel.text = viewModel.name
         self.countryFlagCompetitionImageView.image = UIImage(named: viewModel.countryImageName)
         self.countryNameCompetitionLabel.text = viewModel.countryName
+        
+        self.isFavorite = Env.favoritesManager.isEventFavorite(eventId: viewModel.competition.id)
+        
     }
 
     @objc func didTapSeeAll() {
@@ -112,7 +187,30 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
             self.tappedLineAction?(viewModel.competition)
         }
     }
+    
+    func markAsFavorite(competition: Competition) {
+        if Env.favoritesManager.isEventFavorite(eventId: competition.id) {
+            Env.favoritesManager.removeFavorite(eventId: competition.id, favoriteType: .competition)
+            self.isFavorite = false
+        }
+        else {
+            Env.favoritesManager.addFavorite(eventId: competition.id, favoriteType: .competition)
+            self.isFavorite = true
+        }
+    }
 
+    @objc private func didTapFavoritesButton(_ sender: Any) {
+        if UserSessionStore.isUserLogged() {
+            if let competition = self.viewModel?.competition {
+                self.markAsFavorite(competition: competition)
+            }
+        }
+        else {
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.viewController?.present(loginViewController, animated: true, completion: nil)
+        }
+    }
+    
 }
 
 extension OutrightCompetitionLargeWidgetCollectionViewCell {
@@ -142,10 +240,15 @@ extension OutrightCompetitionLargeWidgetCollectionViewCell {
         linesStackView.translatesAutoresizingMaskIntoConstraints = false
         return linesStackView
     }
-
+    private static func createFavoritesIconImageView() -> UIImageView {
+        let favoritesIconImageView = UIImageView()
+        favoritesIconImageView.translatesAutoresizingMaskIntoConstraints = false
+        favoritesIconImageView.image = UIImage(named: "unselected_favorite_icon")
+        return favoritesIconImageView
+    }
     private static func createFavoriteCompetitionButton() -> UIButton {
         let favoriteCompetitionButton = UIButton(type: .custom)
-        favoriteCompetitionButton.setImage(UIImage(named: "unselected_favorite_icon"), for: .normal)
+        favoriteCompetitionButton.backgroundColor = .clear
         favoriteCompetitionButton.translatesAutoresizingMaskIntoConstraints = false
         return favoriteCompetitionButton
     }
@@ -179,7 +282,6 @@ extension OutrightCompetitionLargeWidgetCollectionViewCell {
         return titleLabel
     }
 
-
     private static func createBottomView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -211,58 +313,66 @@ extension OutrightCompetitionLargeWidgetCollectionViewCell {
 
         self.baseView.addSubview(self.competitionBaseStackView)
 
-        self.competitionBaseStackView.addArrangedSubview(favoriteCompetitionButton)
-        self.competitionBaseStackView.addArrangedSubview(countryFlagCompetitionImageView)
-        self.competitionBaseStackView.addArrangedSubview(countryNameCompetitionLabel)
+        self.competitionBaseStackView.addArrangedSubview(self.favoritesIconImageView)
+        self.competitionBaseStackView.addArrangedSubview(self.countryFlagCompetitionImageView)
+        self.competitionBaseStackView.addArrangedSubview(self.countryNameCompetitionLabel)
 
-        self.baseView.addSubview(self.baseStackView)
-
-        self.topView.addSubview(self.titleLabel)
-
-        self.bottomView.addSubview(self.seeAllView)
+        self.baseView.addSubview(self.titleLabel)
 
         self.seeAllView.addSubview(self.seeAllLabel)
+        self.baseView.addSubview(self.seeAllView)
 
-        self.baseStackView.addArrangedSubview(self.topView)
-        self.baseStackView.addArrangedSubview(self.bottomView)
-
+        self.baseView.addSubview(self.favoriteCompetitionButton)
         // Initialize constraints
         self.initConstraints()
     }
 
     private func initConstraints() {
+
+        self.topMarginSpaceConstraint = self.competitionBaseStackView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 11)
+        self.headerHeightConstraint = self.countryFlagCompetitionImageView.heightAnchor.constraint(equalToConstant: 16)
+
+        self.buttonHeightConstraint = self.seeAllView.heightAnchor.constraint(equalToConstant: 40)
+
+        self.leadingMarginSpaceConstraint = self.seeAllView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 12)
+        self.trailingMarginSpaceConstraint = self.seeAllView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -12)
+        self.bottomMarginSpaceConstraint = self.seeAllView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -12)
+
         NSLayoutConstraint.activate([
             self.baseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             self.baseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
             self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             self.baseView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
 
-            self.competitionBaseStackView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 12),
-            self.competitionBaseStackView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -12),
-            self.competitionBaseStackView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 9),
+            self.competitionBaseStackView.leadingAnchor.constraint(equalTo: self.seeAllView.leadingAnchor),
+            self.competitionBaseStackView.trailingAnchor.constraint(equalTo: self.seeAllView.trailingAnchor),
+            self.topMarginSpaceConstraint,
 
-            self.favoriteCompetitionButton.heightAnchor.constraint(equalTo: self.favoriteCompetitionButton.widthAnchor),
+            self.favoritesIconImageView.heightAnchor.constraint(equalTo: self.favoritesIconImageView.widthAnchor),
             self.countryFlagCompetitionImageView.heightAnchor.constraint(equalTo: self.countryFlagCompetitionImageView.widthAnchor),
-            self.countryFlagCompetitionImageView.heightAnchor.constraint(equalToConstant: 16),
+            self.headerHeightConstraint,
 
-            self.baseStackView.topAnchor.constraint(equalTo: self.competitionBaseStackView.bottomAnchor, constant: 9),
-            self.baseStackView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
-            self.baseStackView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
-            self.baseStackView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -10),
+            //
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.seeAllView.leadingAnchor),
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.seeAllView.trailingAnchor),
+            self.titleLabel.topAnchor.constraint(equalTo: self.competitionBaseStackView.bottomAnchor, constant: 6),
+            self.titleLabel.bottomAnchor.constraint(equalTo: self.seeAllView.topAnchor, constant: -6),
 
-            self.titleLabel.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
-            self.titleLabel.centerXAnchor.constraint(equalTo: self.topView.centerXAnchor),
-            self.titleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.topView.leadingAnchor),
-
+            //
+            self.favoriteCompetitionButton.heightAnchor.constraint(equalToConstant: 40),
+            self.favoriteCompetitionButton.widthAnchor.constraint(equalToConstant: 40),
+            self.favoriteCompetitionButton.centerXAnchor.constraint(equalTo: self.favoritesIconImageView.centerXAnchor),
+            self.favoriteCompetitionButton.centerYAnchor.constraint(equalTo: self.favoritesIconImageView.centerYAnchor),
+            
             //
             self.seeAllLabel.centerYAnchor.constraint(equalTo: self.seeAllView.centerYAnchor),
             self.seeAllLabel.centerXAnchor.constraint(equalTo: self.seeAllView.centerXAnchor),
             self.seeAllLabel.leadingAnchor.constraint(equalTo: self.seeAllView.leadingAnchor),
 
-            self.seeAllView.centerYAnchor.constraint(equalTo: self.bottomView.centerYAnchor),
-            self.seeAllView.centerXAnchor.constraint(equalTo: self.bottomView.centerXAnchor),
-            self.seeAllView.heightAnchor.constraint(equalToConstant: 40),
-            self.seeAllView.leadingAnchor.constraint(equalTo: self.bottomView.leadingAnchor, constant: 16),
+            self.leadingMarginSpaceConstraint, // SeeAll view
+            self.trailingMarginSpaceConstraint, // SeeAll view
+            self.bottomMarginSpaceConstraint, // SeeAll view
+            self.buttonHeightConstraint, // SeeAll view
         ])
     }
 }

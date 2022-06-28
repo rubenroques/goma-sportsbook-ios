@@ -100,8 +100,8 @@ class ConversationsViewController: UIViewController {
         self.tableViewHeader.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.newMessageButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
-        self.newGroupButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
+        self.newMessageButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+        self.newGroupButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         self.headerSeparatorLineView.backgroundColor = UIColor.App.separatorLine
 
@@ -113,7 +113,7 @@ class ConversationsViewController: UIViewController {
 
         if let image = self.newMessageButton.imageView?.image?.withRenderingMode(.alwaysTemplate) {
             self.newMessageButton.setImage(image, for: .normal)
-            self.newMessageButton.tintColor = UIColor.App.highlightSecondary
+            self.newMessageButton.tintColor = UIColor.App.highlightPrimary
         }
 
         self.setupSearchBar()
@@ -122,7 +122,8 @@ class ConversationsViewController: UIViewController {
 
     // MARK: Functions
     private func showConversationDetail(conversationData: ConversationData) {
-        let conversationDetailViewModel = ConversationDetailViewModel(conversationData: conversationData)
+        //let conversationDetailViewModel = ConversationDetailViewModel(conversationData: conversationData)
+        let conversationDetailViewModel = ConversationDetailViewModel(chatId: conversationData.id)
 
         let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
 
@@ -218,10 +219,22 @@ extension ConversationsViewController {
     }
 
     @objc func didTapNewMessageButton() {
-        let newMessageViewModel = NewMesssageViewModel()
-        let newMessageViewController = NewMessageViewController(viewModel: newMessageViewModel)
+//        let newMessageViewModel = NewMesssageViewModel()
+//        let newMessageViewController = NewMessageViewController(viewModel: newMessageViewModel)
+//
+//        self.navigationController?.pushViewController(newMessageViewController, animated: true)
 
-        self.navigationController?.pushViewController(newMessageViewController, animated: true)
+        let addFriendsViewModel = AddFriendViewModel()
+
+        let addFriendsViewController = AddFriendViewController(viewModel: addFriendsViewModel)
+
+        addFriendsViewController.chatListNeedsReload = { [weak self] in
+            self?.needsRefetchData()
+            self?.reloadFriendsData?()
+        }
+
+        self.navigationController?.pushViewController(addFriendsViewController, animated: true)
+
     }
 }
 
@@ -248,11 +261,6 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
         if let cellData = self.viewModel.conversationsPublisher.value[safe: indexPath.row] {
             let cellViewModel = PreviewChatCellViewModel(cellData: cellData)
             cell.configure(withViewModel: cellViewModel)
-        }
-
-        // TEST STATES
-        if indexPath.row <= 2 {
-            cell.isOnline = true
         }
 
         cell.didTapConversationAction = { [weak self] conversationData in
@@ -338,10 +346,11 @@ extension ConversationsViewController {
     }
 
     private static func createNewMessageButton() -> UIButton {
-        let newMessageButton = UIButton(type: .custom)
-        newMessageButton.setImage(UIImage(named: "new_message_icon"), for: .normal)
-        newMessageButton.translatesAutoresizingMaskIntoConstraints = false
-        return newMessageButton
+        let addFriendButton = UIButton(type: .custom)
+        addFriendButton.setTitle(localized("new_message"), for: .normal)
+        addFriendButton.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
+        addFriendButton.translatesAutoresizingMaskIntoConstraints = false
+        return addFriendButton
     }
 
     private static func createHeaderSeparatorLineView() -> UIView {
@@ -486,6 +495,7 @@ struct ConversationData {
     var name: String
     var lastMessage: String
     var date: String
+    var timestamp: Int?
     var lastMessageUser: String?
     var isLastMessageSeen: Bool
     var groupUsers: [GomaFriend]?

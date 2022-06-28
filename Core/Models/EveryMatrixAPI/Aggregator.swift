@@ -27,7 +27,7 @@ extension EveryMatrix {
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
 
-            let messageTypeString = try container.decode(String.self, forKey: .messageType)
+            let messageTypeString = (try? container.decode(String.self, forKey: .messageType)) ?? "RPC"
             if messageTypeString == "UPDATE" {
                 let rawItems = try container.decode([FailableDecodable<ContentUpdate>].self, forKey: .content).compactMap({ $0.base })
                 let filteredItems = rawItems.filter({
@@ -39,6 +39,10 @@ extension EveryMatrix {
                 messageType = .update(content: filteredItems)
             }
             else if messageTypeString == "INITIAL_DUMP" {
+                let items = try container.decode([FailableDecodable<Content>].self, forKey: .content).compactMap({ $0.base })
+                messageType = .initialDump(content: items)
+            }
+            else if messageTypeString == "RPC" {
                 let items = try container.decode([FailableDecodable<Content>].self, forKey: .content).compactMap({ $0.base })
                 messageType = .initialDump(content: items)
             }

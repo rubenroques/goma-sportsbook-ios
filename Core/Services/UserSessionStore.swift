@@ -24,6 +24,8 @@ class UserSessionStore {
     var userWalletPublisher: AnyCancellable?
     var userWalletRegister: EndpointPublisherIdentifiable?
 
+    var hasGomaUserSessionPublisher = CurrentValueSubject<Bool, Never>(false)
+    
     var shouldRecordUserSession = true
     var isUserProfileIncomplete = CurrentValueSubject<Bool, Never>(true)
     var isUserEmailVerified = CurrentValueSubject<Bool, Never>(false)
@@ -120,16 +122,20 @@ class UserSessionStore {
         }
 
         UserDefaults.standard.userSession = nil
-        userSessionPublisher.send(nil)
-        userBalanceWallet.send(nil)
+        
+        self.userSessionPublisher.send(nil)
+        self.userBalanceWallet.send(nil)
+        
         self.unsubscribeWalletUpdates()
 
         Env.favoritesManager.clearCachedFavorites()
+        Env.gomaSocialClient.clearUserChatroomsData()
 
         UserDefaults.standard.removeObject(forKey: "user_betslip_settings")
         
         Env.gomaNetworkClient.reconnectSession()
-
+        self.hasGomaUserSessionPublisher.send(false)
+        
         Env.everyMatrixClient
             .logout()
             .sink(receiveCompletion: { completion in
@@ -410,9 +416,11 @@ extension UserSessionStore {
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
                 
-            }, receiveValue: { value in
+            }, receiveValue: { [weak self] value in
                 Env.gomaNetworkClient.refreshAuthToken(token: value)
                 Env.gomaSocialClient.connectSocket()
+                
+                self?.hasGomaUserSessionPublisher.send(true)
             })
             .store(in: &cancellables)
     }

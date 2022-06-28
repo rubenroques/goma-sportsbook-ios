@@ -17,6 +17,7 @@ class OutrightMarketDetailsViewController: UIViewController {
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var navigationView: UIView = Self.createNavigationView()
+    private lazy var flagImageView: UIImageView = Self.createFlagImageView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var headerView: UIView = Self.createHeaderView()
@@ -24,8 +25,9 @@ class OutrightMarketDetailsViewController: UIViewController {
     private lazy var outrightsLabel: UILabel = Self.createOutrightsLabel()
     private lazy var marketsLabel: UILabel = Self.createMarketsLabel()
     private lazy var tableView: UITableView = Self.createTableView()
-    private lazy var betslipButtonView: UIView = Self.createBetslipButtonView()
-    private lazy var betslipCountLabel: UILabel = Self.createBetslipCountLabel()
+
+    private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
+    
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var moreOptionsButton: UIButton = Self.createMoreOptionsButton()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
@@ -35,6 +37,9 @@ class OutrightMarketDetailsViewController: UIViewController {
     private lazy var accountPlusImageView: UIImageView = Self.createAccountPlusImageView()
     private lazy var accountValueLabel: UILabel = Self.createAccountValueLabel()
 
+    private lazy var unavailableMarketsView: UIView = Self.createUnavailableMarketsView()
+    private lazy var unavailableMarketsLabel: UILabel = Self.createUnavailableMarketsLabel()
+    
     private var expandedMarketGroupIds: Set<String> = []
 
     private var viewModel: OutrightMarketDetailsViewModel
@@ -66,7 +71,6 @@ class OutrightMarketDetailsViewController: UIViewController {
         self.setupWithTheme()
 
         self.loadingBaseView.isHidden = true
-        self.betslipCountLabel.isHidden = true
 
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -78,19 +82,37 @@ class OutrightMarketDetailsViewController: UIViewController {
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
         self.moreOptionsButton.addTarget(self, action: #selector(didTapMoreOptionsButton), for: .allEvents)
 
-        let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
-        self.betslipButtonView.addGestureRecognizer(tapBetslipView)
-
+        self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in
+            self?.didTapBetslipView()
+        }
+        self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
+            self?.didTapChatView()
+        }
+        
         let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
         self.accountValueView.addGestureRecognizer(accountValueTapGesture)
         self.accountValueView.isHidden = true
 
+        self.unavailableMarketsView.isHidden = true
+        
         self.showLoading()
 
         self.bind(toViewModel: self.viewModel)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.floatingShortcutsView.resetAnimations()
+    }
+    
     // MARK: - Layout and Theme
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    
+        self.flagImageView.layer.cornerRadius = self.flagImageView.frame.size.height/2
+    }
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -110,10 +132,6 @@ class OutrightMarketDetailsViewController: UIViewController {
 
         self.tableView.backgroundColor = .clear
         
-        self.betslipCountLabel.backgroundColor = UIColor.App.bubblesPrimary
-        self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
-        self.betslipCountLabel.textColor = UIColor.white
-        
         self.titleLabel.backgroundColor = .clear
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -124,13 +142,8 @@ class OutrightMarketDetailsViewController: UIViewController {
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
         self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
-        self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
-        self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
+        self.unavailableMarketsView.backgroundColor = UIColor.App.backgroundPrimary
+        self.unavailableMarketsLabel.textColor = UIColor.App.textPrimary
     }
 
     // MARK: - Bindings
@@ -176,21 +189,6 @@ class OutrightMarketDetailsViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        Env.betslipManager.bettingTicketsPublisher
-            .map(\.count)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] betslipValue in
-
-                if betslipValue == 0 {
-                    self?.betslipCountLabel.isHidden = true
-                }
-                else {
-                    self?.betslipCountLabel.text = "\(betslipValue)"
-                    self?.betslipCountLabel.isHidden = false
-                }
-            })
-            .store(in: &cancellables)
-
         self.viewModel.isLoadingPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
@@ -202,6 +200,16 @@ class OutrightMarketDetailsViewController: UIViewController {
                 }
             }.store(in: &cancellables)
 
+        self.viewModel.isCompetitionBettingAvailablePublisher
+            .sink { [weak self] isCompetitionBettingAvailable in
+                if isCompetitionBettingAvailable {
+                    self?.unavailableMarketsView.isHidden = true
+                }
+                else {
+                    self?.unavailableMarketsView.isHidden = false
+                }
+            }.store(in: &cancellables)
+        
         self.viewModel.refreshPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
@@ -209,7 +217,9 @@ class OutrightMarketDetailsViewController: UIViewController {
             })
             .store(in: &self.cancellables)
 
-        self.titleLabel.text = self.viewModel.competitionName()
+        self.titleLabel.text = self.viewModel.competitionName
+        self.flagImageView.image = UIImage(named: viewModel.countryImageName)
+
     }
 
     private func reloadTableView() {
@@ -319,6 +329,22 @@ class OutrightMarketDetailsViewController: UIViewController {
         let depositViewController = DepositViewController()
         let navigationViewController = Router.navigationController(with: depositViewController)
         self.present(navigationViewController, animated: true, completion: nil)
+    }
+    
+    
+    @objc func didTapChatView() {
+        self.openChatModal()
+    }
+    
+    func openChatModal() {
+        if UserSessionStore.isUserLogged() {
+            let socialViewController = SocialViewController()
+            self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
+        }
+        else {
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.present(loginViewController, animated: true, completion: nil)
+        }
     }
     
 }
@@ -437,6 +463,16 @@ extension OutrightMarketDetailsViewController {
         return view
     }
 
+    private static func createFlagImageView() -> UIImageView {
+        let view = UIImageView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        view.contentMode = .scaleAspectFill
+        view.clipsToBounds = true
+        view.layer.masksToBounds = true
+        return view
+    }
+    
     private static func createTitleLabel() -> UILabel {
         let titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -444,6 +480,7 @@ extension OutrightMarketDetailsViewController {
         titleLabel.font = AppFont.with(type: .semibold, size: 14)
         titleLabel.textAlignment = .left
         titleLabel.text = ""
+        titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return titleLabel
     }
 
@@ -509,44 +546,13 @@ extension OutrightMarketDetailsViewController {
         }
         return tableView
     }
-
-    private static func createBetslipButtonView() -> UIView {
-        let betslipButtonView = UIView()
-        betslipButtonView.translatesAutoresizingMaskIntoConstraints = false
-
-        let iconImageView = UIImageView()
-        iconImageView.translatesAutoresizingMaskIntoConstraints = false
-        iconImageView.contentMode = .scaleAspectFit
-        iconImageView.image = UIImage(named: "betslip_button_icon")
-        iconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
-        betslipButtonView.addSubview(iconImageView)
-
-        NSLayoutConstraint.activate([
-            betslipButtonView.widthAnchor.constraint(equalToConstant: 56),
-            betslipButtonView.widthAnchor.constraint(equalTo: betslipButtonView.heightAnchor),
-
-            iconImageView.widthAnchor.constraint(equalToConstant: 30),
-            iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
-            iconImageView.centerXAnchor.constraint(equalTo: betslipButtonView.centerXAnchor),
-            iconImageView.centerYAnchor.constraint(equalTo: betslipButtonView.centerYAnchor),
-        ])
-
-        return betslipButtonView
+    
+    private static func createFloatingShortcutsView() -> FloatingShortcutsView {
+        let floatingShortcutsView = FloatingShortcutsView()
+        floatingShortcutsView.translatesAutoresizingMaskIntoConstraints = false
+        return floatingShortcutsView
     }
-
-    private static func createBetslipCountLabel() -> UILabel {
-        let betslipCountLabel = UILabel()
-        betslipCountLabel.translatesAutoresizingMaskIntoConstraints = false
-        betslipCountLabel.textColor = UIColor.App.textPrimary
-        betslipCountLabel.backgroundColor = UIColor.App.bubblesPrimary
-        betslipCountLabel.font = AppFont.with(type: .semibold, size: 10)
-        betslipCountLabel.textAlignment = .center
-        betslipCountLabel.clipsToBounds = true
-        betslipCountLabel.layer.masksToBounds = true
-        betslipCountLabel.text = "0"
-        return betslipCountLabel
-    }
-
+    
     private static func createLoadingBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -591,6 +597,23 @@ extension OutrightMarketDetailsViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 12)
         label.text = "Loading"
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
+        return label
+    }
+    
+    private static func createUnavailableMarketsView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createUnavailableMarketsLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .semibold, size: 18)
+        label.numberOfLines = 2
+        label.textAlignment = .center
+        label.text = "This competition is no longer available for betting."
         return label
     }
 
@@ -600,6 +623,7 @@ extension OutrightMarketDetailsViewController {
         self.view.addSubview(self.navigationView)
 
         self.navigationView.addSubview(self.backButton)
+        self.navigationView.addSubview(self.flagImageView)
         self.navigationView.addSubview(self.titleLabel)
         self.navigationView.addSubview(self.moreOptionsButton)
         
@@ -616,13 +640,16 @@ extension OutrightMarketDetailsViewController {
 
         self.view.addSubview(self.tableView)
 
-        self.betslipButtonView.addSubview(self.betslipCountLabel)
-        self.view.addSubview(self.betslipButtonView)
+        self.view.addSubview(self.floatingShortcutsView)
         
         self.view.addSubview(self.loadingBaseView)
         self.view.addSubview(self.sharedGameCardView)
         self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
 
+        
+        self.view.addSubview(self.unavailableMarketsView)
+        self.unavailableMarketsView.addSubview(self.unavailableMarketsLabel)
+        
         self.initConstraints()
 
         self.view.setNeedsLayout()
@@ -644,23 +671,28 @@ extension OutrightMarketDetailsViewController {
             self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
             self.navigationView.heightAnchor.constraint(equalToConstant: 40),
 
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.backButton.trailingAnchor, constant: 8),
-            self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.accountValueView.leadingAnchor),
-
             self.backButton.widthAnchor.constraint(equalTo: self.backButton.heightAnchor),
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
             self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 8),
             
+            self.flagImageView.widthAnchor.constraint(equalTo: self.flagImageView.heightAnchor),
+            self.flagImageView.widthAnchor.constraint(equalToConstant: 18),
+            self.flagImageView.leadingAnchor.constraint(equalTo: self.backButton.trailingAnchor, constant: 1),
+            self.flagImageView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.flagImageView.trailingAnchor, constant: 6),
+            self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.accountValueView.leadingAnchor),
+
             self.moreOptionsButton.heightAnchor.constraint(equalToConstant: 40),
-            self.moreOptionsButton.widthAnchor.constraint(equalToConstant: 40),
+            self.moreOptionsButton.widthAnchor.constraint(equalToConstant: 36),
             self.moreOptionsButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             self.moreOptionsButton.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -8),
 
             self.accountValueView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             self.accountValueView.heightAnchor.constraint(equalToConstant: 24),
-            self.accountValueView.trailingAnchor.constraint(equalTo: self.moreOptionsButton.leadingAnchor, constant: -8),
+            self.accountValueView.trailingAnchor.constraint(equalTo: self.moreOptionsButton.leadingAnchor, constant: -3),
 
             self.accountPlusView.widthAnchor.constraint(equalTo: self.accountPlusView.heightAnchor),
             self.accountPlusView.leadingAnchor.constraint(equalTo: self.accountValueView.leadingAnchor, constant: 4),
@@ -705,14 +737,8 @@ extension OutrightMarketDetailsViewController {
         ])
 
         NSLayoutConstraint.activate([
-            self.betslipCountLabel.trailingAnchor.constraint(equalTo: self.betslipButtonView.trailingAnchor, constant: 2),
-            self.betslipCountLabel.topAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -3),
-
-            self.betslipButtonView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
-            self.betslipButtonView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
-
-            self.betslipCountLabel.widthAnchor.constraint(equalToConstant: 20),
-            self.betslipCountLabel.widthAnchor.constraint(equalTo: self.betslipCountLabel.heightAnchor),
+            self.floatingShortcutsView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
+            self.floatingShortcutsView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
         ])
 
         NSLayoutConstraint.activate([
@@ -733,5 +759,17 @@ extension OutrightMarketDetailsViewController {
             self.sharedGameCardView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             self.sharedGameCardView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
+        
+        NSLayoutConstraint.activate([
+            self.unavailableMarketsView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.unavailableMarketsView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.unavailableMarketsView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.unavailableMarketsView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
+            self.unavailableMarketsLabel.leadingAnchor.constraint(equalTo: self.unavailableMarketsView.leadingAnchor, constant: 24),
+            self.unavailableMarketsLabel.centerXAnchor.constraint(equalTo: self.unavailableMarketsView.centerXAnchor),
+            self.unavailableMarketsLabel.centerYAnchor.constraint(equalTo: self.unavailableMarketsView.centerYAnchor, constant: -32),
+        ])
+        
     }
 }

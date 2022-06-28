@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class PreviewChatTableViewCell: UITableViewCell {
 
@@ -16,7 +17,9 @@ class PreviewChatTableViewCell: UITableViewCell {
     private lazy var initialLabel: UILabel = Self.createInitialLabel()
     private lazy var nameLineStackView: UIStackView = Self.createNameLineStackView()
     private lazy var nameLabel: UILabel = Self.createNameLabel()
-    private lazy var numberMessagesLabel: UILabel = Self.createNumberMessagesLabel()
+    //private lazy var numberMessagesLabel: UILabel = Self.createNumberMessagesLabel()
+    private lazy var userStateBaseView: UIView = Self.createUserStateBaseView()
+    private lazy var userStateView: UIView = Self.createUserStateView()
     private lazy var messageLineStackView: UIStackView = Self.createMessageLineStackView()
     private lazy var feedbackImageView: UIImageView = Self.createFeedbackImageView()
     private lazy var messageLabel: UILabel = Self.createMessageLabel()
@@ -24,6 +27,7 @@ class PreviewChatTableViewCell: UITableViewCell {
     private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
 
     private var viewModel: PreviewChatCellViewModel?
+    private var cancellables = Set<AnyCancellable>()
 
     var didTapConversationAction: ((ConversationData) -> Void)?
     var removeChatroomAction: ((Int) -> Void)?
@@ -32,9 +36,15 @@ class PreviewChatTableViewCell: UITableViewCell {
         didSet {
             if isSeen {
                 self.dateLabel.textColor = UIColor.App.textSecondary
+                self.iconBaseView.layer.borderWidth = 2
+                self.iconBaseView.layer.borderColor = UIColor.App.backgroundOdds.cgColor
+                self.nameLabel.font = AppFont.with(type: .semibold, size: 16)
             }
             else {
                 self.dateLabel.textColor = UIColor.App.highlightPrimary
+                self.iconBaseView.layer.borderWidth = 2
+                self.iconBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+                self.nameLabel.font = AppFont.with(type: .bold, size: 16)
             }
 
             if self.messageLabel.text != "" {
@@ -44,20 +54,12 @@ class PreviewChatTableViewCell: UITableViewCell {
                 self.feedbackImageView.isHidden = true
             }
 
-            self.numberMessagesLabel.isHidden = isSeen
         }
     }
 
     var isOnline: Bool = false {
         didSet {
-            if isOnline {
-                self.iconBaseView.layer.borderWidth = 2
-                self.iconBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
-            }
-            else {
-                self.iconBaseView.layer.borderWidth = 2
-                self.iconBaseView.layer.borderColor = UIColor.App.backgroundOdds.cgColor
-            }
+            self.userStateBaseView.isHidden = !isOnline
         }
     }
 
@@ -108,6 +110,9 @@ class PreviewChatTableViewCell: UITableViewCell {
         self.iconInnerView.layer.cornerRadius = self.iconInnerView.frame.size.width / 2
 
         self.photoImageView.layer.cornerRadius = self.photoImageView.frame.size.width / 2
+
+        self.userStateView.layer.cornerRadius = self.userStateView.frame.height / 2
+
     }
 
     func setupWithTheme() {
@@ -129,7 +134,11 @@ class PreviewChatTableViewCell: UITableViewCell {
         self.nameLineStackView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.nameLabel.textColor = UIColor.App.textPrimary
-        self.numberMessagesLabel.textColor = UIColor.App.highlightPrimary
+
+        self.userStateBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.userStateView.backgroundColor = UIColor.App.alertSuccess
+
         self.messageLabel.textColor = UIColor.App.textPrimary
         self.dateLabel.textColor = UIColor.App.textSecondary
 
@@ -156,7 +165,13 @@ class PreviewChatTableViewCell: UITableViewCell {
 
         self.isSeen = viewModel.cellData.isLastMessageSeen
 
-        self.isOnline = false
+        // self.isOnline = false
+
+        viewModel.isOnlinePublisher
+            .sink(receiveValue: { [weak self] isOnline in
+                self?.isOnline = isOnline
+            })
+            .store(in: &cancellables)
 
     }
 
@@ -251,19 +266,22 @@ extension PreviewChatTableViewCell {
         let nameLabel = UILabel()
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.font = AppFont.with(type: .bold, size: 16)
-        nameLabel.text = "Suspendisse potenti. Cras a suscipit mi. Nam et mi ac ipsum luctus maximus."
+        nameLabel.text = "Username"
         nameLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return nameLabel
     }
 
-    private static func createNumberMessagesLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold, size: 16)
-        label.text = "(1)"
-        label.textAlignment = .left
-        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        return label
+    private static func createUserStateBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        return view
+    }
+
+    private static func createUserStateView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
 
     private static func createMessageLineStackView() -> UIStackView {
@@ -319,7 +337,9 @@ extension PreviewChatTableViewCell {
         self.baseView.addSubview(self.nameLineStackView)
 
         self.nameLineStackView.addArrangedSubview(self.nameLabel)
-        self.nameLineStackView.addArrangedSubview(self.numberMessagesLabel)
+        self.nameLineStackView.addArrangedSubview(self.userStateBaseView)
+
+        self.userStateBaseView.addSubview(self.userStateView)
 
         self.messageLineStackView.addArrangedSubview(self.feedbackImageView)
         self.messageLineStackView.addArrangedSubview(self.messageLabel)
@@ -366,6 +386,13 @@ extension PreviewChatTableViewCell {
 
             self.nameLineStackView.leadingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: 12),
             self.nameLineStackView.topAnchor.constraint(equalTo: self.iconBaseView.topAnchor, constant: 2),
+
+            self.userStateBaseView.widthAnchor.constraint(greaterThanOrEqualToConstant: 10),
+
+            self.userStateView.widthAnchor.constraint(equalToConstant: 8),
+            self.userStateView.heightAnchor.constraint(equalTo: self.userStateView.widthAnchor),
+            self.userStateView.leadingAnchor.constraint(equalTo: self.userStateBaseView.leadingAnchor),
+            self.userStateView.centerYAnchor.constraint(equalTo: self.userStateBaseView.centerYAnchor),
 
             self.dateLabel.leadingAnchor.constraint(equalTo: self.nameLineStackView.trailingAnchor, constant: 8),
             self.dateLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -24),

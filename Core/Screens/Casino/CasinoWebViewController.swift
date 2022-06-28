@@ -13,22 +13,23 @@ class CasinoWebViewController: UIViewController {
 
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
-    private lazy var navigationView: UIView = Self.createNavigationView()
-    private lazy var titleLabel: UILabel = Self.createTitleLabel()
-    private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var webView: WKWebView = Self.createWebView()
     private lazy var botttomSafeAreaView: UIView = Self.createBottomSafeAreaView()
-
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
     private var userId: String
     private var cancellables = Set<AnyCancellable>()
+    
+    private var noSessionUrlString: String = TargetVariables.casinoURL
+    
+    private var viewModel: CasinoViewModel
+    private let refreshControl = UIRefreshControl()
 
-    private var shouldShowBackButton: Bool = false
-
-    init(userId: String) {
+    init(userId: String, viewModel: CasinoViewModel = CasinoViewModel() ) {
         self.userId = userId
+        self.viewModel = viewModel
+        
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -45,29 +46,54 @@ class CasinoWebViewController: UIViewController {
 
         self.webView.uiDelegate = self
         self.webView.navigationDelegate = self
-
-        self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
-
-        self.showLoading()
-
-        self.loadInitialPage()
-    }
-
-    func loadInitialPage() {
-
-        Env.everyMatrixClient.getCMSSessionID()
+        
+        self.refreshControl.tintColor = UIColor.lightGray
+        self.refreshControl.addTarget(self, action: #selector(self.refreshWebView), for: .valueChanged)
+        self.webView.scrollView.refreshControl = self.refreshControl
+        
+        self.viewModel.isUserLoggedPublisher
             .receive(on: DispatchQueue.main)
-            .sink { _ in
-
-            } receiveValue: { cmsSessionInfo in
-                self.loadWebView(withID: cmsSessionInfo.id)
-            }
+            .dropFirst()
+            .sink(receiveValue: { [weak self] _ in
+                self?.refreshWebView()
+            })
             .store(in: &self.cancellables)
 
     }
 
-    func loadWebView(withID id: String) {
-        let urlString = "https://sportsbook-cms.gomagaming.com/casino/\(self.userId)/\(id)"
+    @objc func refreshWebView() {
+        self.userId = UserSessionStore.loggedUserSession()?.userId ?? ""
+        
+        self.showLoading()
+        self.loadInitialPage()
+    }
+    
+    func loadInitialPage() {
+
+        Env.everyMatrixClient.getCMSSessionID()
+            .receive(on: DispatchQueue.main)
+            .map { cmsSessionInfo in
+                let cmsSessionInfoId: String? = cmsSessionInfo.id
+                return cmsSessionInfoId
+            }
+            .replaceError(with: nil)
+            .sink(receiveValue: { [weak self] cmsSessionInfoId in
+                self?.loadWebView(withID: cmsSessionInfoId)
+            })
+            .store(in: &self.cancellables)
+
+    }
+
+    func loadWebView(withID id: String?) {
+        
+        var urlString = ""
+        if let cmsSessionInfoId = id, self.userId != "" {
+            urlString = "\(self.noSessionUrlString)\(self.userId)/\(cmsSessionInfoId)"
+        }
+        else {
+            urlString = self.noSessionUrlString
+        }
+        
         guard let url = URL(string: urlString) else {
             return
         }
@@ -76,17 +102,22 @@ class CasinoWebViewController: UIViewController {
     }
 
     func loadGameWebView(request: URLRequest) {
-
-        self.shouldShowBackButton = true
-        self.backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
-
-        self.webView.load(request)
+        
+        if self.userId == "" {
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.present(loginViewController, animated: true, completion: nil)
+        }
+        else {
+            let casinoGameDetailViewController = CasinoGameDetailViewController(url: request)
+            self.navigationController?.pushViewController(casinoGameDetailViewController, animated: true)
+        }
+        
     }
-
+    
     // MARK: - Layout and Theme
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-
+        self.hideLoading()
         self.setupWithTheme()
     }
 
@@ -97,16 +128,10 @@ class CasinoWebViewController: UIViewController {
         self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
         self.botttomSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
-
-        self.titleLabel.backgroundColor = .clear
-        self.titleLabel.textColor = UIColor.App.textPrimary
-
         self.webView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.loadingBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
         self.loadingActivityIndicatorView.color = UIColor.lightGray
-
     }
 
     private func showLoading() {
@@ -117,19 +142,6 @@ class CasinoWebViewController: UIViewController {
     private func hideLoading() {
         self.loadingBaseView.isHidden = true
         self.loadingActivityIndicatorView.stopAnimating()
-    }
-
-    @objc private func didTapBackButton() {
-        if self.shouldShowBackButton {
-            self.loadInitialPage()
-
-            self.shouldShowBackButton = false
-            self.backButton.setImage(UIImage(named: "arrow_close_icon"), for: .normal)
-
-        }
-        else {
-            self.presentingViewController?.dismiss(animated: true, completion: nil)
-        }
     }
 
 }
@@ -163,18 +175,31 @@ extension CasinoWebViewController: WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        decisionHandler(.allow)
+    
+        if self.userId == "" && navigationAction.sourceFrame != nil {
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.present(loginViewController, animated: true, completion: nil)
+            decisionHandler(.allow)
+        }
+        else {
+            decisionHandler(.allow)
+        }
     }
 
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        self.showLoading()
+        if self.userId != "" {
+            self.showLoading()
+            
+        }
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        self.refreshControl.endRefreshing()
         self.hideLoading()
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        self.refreshControl.endRefreshing()
         self.hideLoading()
     }
 }
@@ -185,30 +210,6 @@ extension CasinoWebViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
-    }
-
-    private static func createNavigationView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createTitleLabel() -> UILabel {
-        let titleLabel = UILabel()
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.textColor = UIColor.App.textPrimary
-        titleLabel.font = AppFont.with(type: .semibold, size: 14)
-        titleLabel.textAlignment = .center
-        titleLabel.text = "Casino"
-        return titleLabel
-    }
-
-    private static func createBackButton() -> UIButton {
-        let backButton = UIButton.init(type: .custom)
-        backButton.setImage(UIImage(named: "arrow_close_icon"), for: .normal)
-        backButton.setTitle(nil, for: .normal)
-        backButton.translatesAutoresizingMaskIntoConstraints = false
-        return backButton
     }
 
     private static func createWebView() -> WKWebView {
@@ -239,9 +240,6 @@ extension CasinoWebViewController {
 
     private func setupSubviews() {
         self.view.addSubview(self.topSafeAreaView)
-        self.view.addSubview(self.navigationView)
-        self.navigationView.addSubview(self.backButton)
-        self.navigationView.addSubview(self.titleLabel)
 
         self.view.addSubview(self.webView)
         self.view.addSubview(self.botttomSafeAreaView)
@@ -255,40 +253,10 @@ extension CasinoWebViewController {
     private func initConstraints() {
 
         NSLayoutConstraint.activate([
-            self.topSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.topSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.topSafeAreaView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.topSafeAreaView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor)
-        ])
-
-        NSLayoutConstraint.activate([
-            self.botttomSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.botttomSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.botttomSafeAreaView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-            self.botttomSafeAreaView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
-        ])
-
-        NSLayoutConstraint.activate([
-            self.navigationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
-            self.navigationView.heightAnchor.constraint(equalToConstant: 40),
-
-            self.titleLabel.centerXAnchor.constraint(equalTo: self.navigationView.centerXAnchor),
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 44),
-            self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-
-            self.backButton.widthAnchor.constraint(equalTo: self.backButton.heightAnchor),
-            self.backButton.widthAnchor.constraint(equalToConstant: 40),
-            self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 10),
-        ])
-
-        NSLayoutConstraint.activate([
             self.webView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.webView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.webView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
-            self.webView.bottomAnchor.constraint(equalTo: self.botttomSafeAreaView.topAnchor)
+            self.webView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.webView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
 
         NSLayoutConstraint.activate([
@@ -297,7 +265,7 @@ extension CasinoWebViewController {
 
             self.view.leadingAnchor.constraint(equalTo: self.loadingBaseView.leadingAnchor),
             self.view.trailingAnchor.constraint(equalTo: self.loadingBaseView.trailingAnchor),
-            self.navigationView.bottomAnchor.constraint(equalTo: self.loadingBaseView.topAnchor),
+            self.view.topAnchor.constraint(equalTo: self.loadingBaseView.topAnchor),
             self.view.bottomAnchor.constraint(equalTo: self.loadingBaseView.bottomAnchor)
         ])
 

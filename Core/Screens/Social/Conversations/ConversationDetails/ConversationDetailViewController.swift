@@ -82,7 +82,6 @@ class ConversationDetailViewController: UIViewController {
         self.tableView.register(SentTicketMessageTableViewCell.self,
                                 forCellReuseIdentifier: SentTicketMessageTableViewCell.identifier)
 
-        
         tableView.register(DateHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: DateHeaderFooterView.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
@@ -95,15 +94,6 @@ class ConversationDetailViewController: UIViewController {
         let contactTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapContactInfo))
         self.navigationView.addGestureRecognizer(contactTapGesture)
 
-        if self.viewModel.isChatOnline {
-            self.iconStateView.isHidden = false
-        }
-        else {
-            self.iconStateView.isHidden = true
-        }
-
-        self.isChatGroup = self.viewModel.isChatGroup
-
         self.bind(toViewModel: self.viewModel)
 
         self.setupPublishers()
@@ -112,12 +102,30 @@ class ConversationDetailViewController: UIViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
 
+        self.tableView.transform = CGAffineTransform(scaleX: 1, y: -1)
+        
+        self.tableView.isDirectionalLockEnabled = true 
+        self.tableView.alwaysBounceHorizontal = true
+        self.tableView.alwaysBounceVertical = false
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        Env.gomaSocialClient.showChatroomOnForeground(withId: String(self.viewModel.conversationId))
+    }
 
-        self.scrollToBottomTableView(animated: false)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        self.presentationController?.presentedView?.gestureRecognizers?.first?.isEnabled = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        Env.gomaSocialClient.hideChatroomOnForeground()
     }
 
     // MARK: - Layout and Theme
@@ -189,6 +197,12 @@ class ConversationDetailViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        viewModel.isChatGroupPublisher
+            .sink(receiveValue: { [weak self] isChatGroup in
+                self?.isChatGroup = isChatGroup
+            })
+            .store(in: &cancellables)
+
         viewModel.groupInitialsPublisher
             .sink(receiveValue: { [weak self] initials in
                 self?.iconIdentifierLabel.text = initials
@@ -205,9 +219,20 @@ class ConversationDetailViewController: UIViewController {
         viewModel.shouldScrollToLastMessage
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
-                self?.scrollToBottomTableView()
+                self?.scrollToTopTableView()
             })
             .store(in: &cancellables)
+
+        viewModel.isLoadingConversationPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                if isLoading {
+                    self?.showLoading()
+                }
+                else {
+                    self?.hideLoading()
+                }
+            }.store(in: &cancellables)
 
         viewModel.isLoadingSharedBetPublisher
             .receive(on: DispatchQueue.main)
@@ -225,6 +250,13 @@ class ConversationDetailViewController: UIViewController {
                 self?.showBetslipViewController()
             }
         }
+
+        viewModel.isChatOnlinePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isOnline in
+                self?.iconStateView.isHidden = !isOnline
+            })
+            .store(in: &cancellables)
         
     }
 
@@ -243,28 +275,30 @@ class ConversationDetailViewController: UIViewController {
 
     }
 
-    func scrollToBottomTableView(animated: Bool = true) {
-        DispatchQueue.main.async {
-            if self.viewModel.dateMessages.isNotEmpty {
-                let section = self.viewModel.dateMessages.count - 1
-                let row = self.viewModel.dateMessages[section].messages.count - 1
+    func scrollToTopTableView(animated: Bool = true) {
+        if self.viewModel.dateMessages.isNotEmpty {
+
+            let section = 0
+            let row = 0
+
+            if let dateMessages = self.viewModel.dateMessages[safe: section] {
 
                 let indexPath = IndexPath(row: row, section: section)
+
                 self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: animated)
+
             }
+
         }
+
     }
 
     private func showBetSelectionScreen() {
-        print("Show Bet Selection!")
-
-        let conversationData = self.viewModel.getConversationData()
-
-        let betSelectionViewModel = ConversationBetSelectionViewModel(conversationData: conversationData)
-
-        let betSelectionViewController = ConversationBetSelectionViewController(viewModel: betSelectionViewModel)
-
-        self.present(betSelectionViewController, animated: true, completion: nil)
+        if let conversationData = self.viewModel.getConversationData() {
+            let betSelectionViewModel = ConversationBetSelectionViewModel(conversationData: conversationData)
+            let betSelectionViewController = ConversationBetSelectionViewController(viewModel: betSelectionViewModel)
+            self.present(betSelectionViewController, animated: true, completion: nil)
+        }
     }
 
     private func addTicketToBetslip(ticket: BetHistoryEntry) {
@@ -275,8 +309,8 @@ class ConversationDetailViewController: UIViewController {
 
     // MARK: Actions
     @objc func didTapBackButton() {
-        
-        self.shouldReloadData?()
+
+        Env.gomaSocialClient.reloadChatroomsList.send()
 
         self.navigationController?.popToRootViewController(animated: true)
     }
@@ -306,42 +340,33 @@ class ConversationDetailViewController: UIViewController {
     }
 
     @objc func didTapContactInfo() {
-        if self.isChatGroup {
-
+        
+        guard
             let conversationData = self.viewModel.getConversationData()
-            
-            // print("GROUP USERS: \(conversationData)")
-
+        else {
+            return
+        }
+        
+        if self.isChatGroup {
             let editGroupViewModel = EditGroupViewModel(conversationData: conversationData)
-
             let editContactViewController = EditGroupViewController(viewModel: editGroupViewModel)
-
             editContactViewController.shouldCloseChat = { [weak self] in
                 self?.shouldCloseChat?()
             }
-
             editContactViewController.shouldReloadData = { [weak self] in
                 self?.shouldReloadData?()
             }
-
             editContactViewController.shouldUpdateGroupInfo = { [weak self] groupInfo in
                 self?.viewModel.updateConversationInfo(groupInfo: groupInfo)
             }
-
             self.navigationController?.pushViewController(editContactViewController, animated: true)
         }
         else {
-
-            let conversationData = self.viewModel.getConversationData()
-
             let editContactViewModel = EditContactViewModel(conversationData: conversationData)
-
             let editContactViewController = EditContactViewController(viewModel: editContactViewModel)
-
             editContactViewController.shouldCloseChat = { [weak self] in
                 self?.shouldCloseChat?()
             }
-
             self.navigationController?.pushViewController(editContactViewController, animated: true)
         }
     }
@@ -364,7 +389,7 @@ class ConversationDetailViewController: UIViewController {
     @objc func keyboardWillShow(notification: NSNotification) {
         self.messageInputKeyboardConstraint.isActive = false
         self.messageInputBottomConstraint.isActive = true
-        self.scrollToBottomTableView()
+        self.scrollToTopTableView()
 
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             let keyboardHeight = keyboardSize.height - self.bottomSafeAreaView.frame.height
@@ -415,6 +440,9 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
                     cell.didTapBetNowAction = { [weak self] viewModel in
                         self?.addTicketToBetslip(ticket: viewModel.ticket)
                     }
+
+                    cell.isReversedCell(isReversed: true)
+
                     return cell
                 }
                 else {
@@ -423,7 +451,11 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
                     else {
                         fatalError()
                     }
+
                     cell.setupMessage(messageData: messageData)
+
+                    cell.isReversedCell(isReversed: true)
+
                     return cell
                 }
             }
@@ -437,11 +469,14 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
                     }
                     if let userId = messageData.userId {
                         let username = self.viewModel.getUsername(userId: userId)
-                        cell.setupMessage(messageData: messageData, username: username)
+                        cell.setupMessage(messageData: messageData, username: username, chatroomId: self.viewModel.conversationId)
                         cell.didTapBetNowAction = { [weak self] viewModel in
                             self?.addTicketToBetslip(ticket: viewModel.ticket)
                         }
                     }
+
+                    cell.isReversedCell(isReversed: true)
+
                     return cell
                 }
                 else {
@@ -452,8 +487,11 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
                     }
                     if let userId = messageData.userId {
                         let username = self.viewModel.getUsername(userId: userId)
-                        cell.setupMessage(messageData: messageData, username: username)
+                        cell.setupMessage(messageData: messageData, username: username, chatroomId: self.viewModel.conversationId)
                     }
+
+                    cell.isReversedCell(isReversed: true)
+
                     return cell
                 }
             }
@@ -462,16 +500,33 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        guard
+//            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: DateHeaderFooterView.identifier) as? DateHeaderFooterView
+//        else {
+//            fatalError()
+//        }
+//
+//        let headerDate = self.viewModel.sectionTitle(forSectionIndex: section)
+//        headerView.configureHeader(title: headerDate)
+//
+//        return headerView
+        return UIView()
+    }
+
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         guard
-            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: DateHeaderFooterView.identifier) as? DateHeaderFooterView
+            let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: DateHeaderFooterView.identifier) as? DateHeaderFooterView
         else {
             fatalError()
         }
-        
-        let headerDate = self.viewModel.sectionTitle(forSectionIndex: section)
-        headerView.configureHeader(title: headerDate)
 
-        return headerView
+        let footerDate = self.viewModel.sectionTitle(forSectionIndex: section)
+
+        footerView.configureHeader(title: footerDate)
+
+        footerView.isReversedContent(isReversed: true)
+
+        return footerView
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -483,19 +538,30 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 20
+        // return 20
+        return 0.1
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        return 20
+        // return 20
+        return 0.1
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 0
+        return 20
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
-        return 0
+        return 20
+    }
+
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        isModalInPresentation = true
+
+    }
+
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        isModalInPresentation = false
     }
 }
 
@@ -811,5 +877,14 @@ extension ConversationDetailViewController {
 
         self.messageInputKeyboardConstraint.isActive = false
 
+    }
+}
+
+extension ConversationDetailViewController: UIAdaptivePresentationControllerDelegate {
+
+    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+
+        print("IS DISMISSING")
+        return false
     }
 }
