@@ -917,7 +917,6 @@ extension RootViewController {
         switch self.selectedTabItem {
         case .home:
             homeButtonBaseView.alpha = self.activeButtonAlpha
-
             homeTitleLabel.textColor = UIColor.App.highlightPrimary
             homeIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
             sportsTitleLabel.textColor = UIColor.App.iconSecondary
@@ -927,7 +926,6 @@ extension RootViewController {
            
         case .preLive:
             sportsButtonBaseView.alpha = self.activeButtonAlpha
-
             homeTitleLabel.textColor = UIColor.App.iconSecondary
             homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             sportsTitleLabel.textColor = UIColor.App.highlightPrimary
@@ -939,20 +937,20 @@ extension RootViewController {
             liveButtonBaseView.alpha = self.activeButtonAlpha
 
             homeTitleLabel.textColor = UIColor.App.iconSecondary
-            homeIconImageView.setImageColor(color: UIColor.App.textPrimary)
+            homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             sportsTitleLabel.textColor = UIColor.App.iconSecondary
-            sportsIconImageView.setImageColor(color: UIColor.App.textPrimary)
+            sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             liveTitleLabel.textColor = UIColor.App.highlightPrimary
             liveIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
             
         case .casino:
             
             homeTitleLabel.textColor = UIColor.App.iconSecondary
-            homeIconImageView.setImageColor(color: UIColor.App.textPrimary)
+            homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             sportsTitleLabel.textColor = UIColor.App.iconSecondary
-            sportsIconImageView.setImageColor(color: UIColor.App.textPrimary)
+            sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             liveTitleLabel.textColor = UIColor.App.iconSecondary
-            liveIconImageView.setImageColor(color: UIColor.App.textPrimary)
+            liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         }
 
     }
