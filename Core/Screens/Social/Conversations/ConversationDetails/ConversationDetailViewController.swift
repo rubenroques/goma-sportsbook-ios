@@ -186,24 +186,28 @@ class ConversationDetailViewController: UIViewController {
     private func bind(toViewModel viewModel: ConversationDetailViewModel) {
 
         viewModel.titlePublisher
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] title in
                 self?.titleLabel.text = title
             })
             .store(in: &cancellables)
 
         viewModel.usersPublisher
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] users in
                 self?.subtitleLabel.text = users
             })
             .store(in: &cancellables)
 
         viewModel.isChatGroupPublisher
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isChatGroup in
                 self?.isChatGroup = isChatGroup
             })
             .store(in: &cancellables)
 
         viewModel.groupInitialsPublisher
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] initials in
                 self?.iconIdentifierLabel.text = initials
             })
@@ -294,10 +298,18 @@ class ConversationDetailViewController: UIViewController {
     }
 
     private func showBetSelectionScreen() {
+//        if let conversationData = self.viewModel.getConversationData() {
+//            let betSelectionViewModel = ConversationBetSelectionViewModel(conversationData: conversationData)
+//            let betSelectionViewController = ConversationBetSelectionViewController(viewModel: betSelectionViewModel)
+//            self.present(betSelectionViewController, animated: true, completion: nil)
+//        }
+
         if let conversationData = self.viewModel.getConversationData() {
-            let betSelectionViewModel = ConversationBetSelectionViewModel(conversationData: conversationData)
-            let betSelectionViewController = ConversationBetSelectionViewController(viewModel: betSelectionViewModel)
-            self.present(betSelectionViewController, animated: true, completion: nil)
+            let conversationBetSelectionRootViewModel = ConversationBetSelectionRootViewModel(startTabIndex: 0, conversationData: conversationData)
+
+            let conversationBetSelectionRootViewController = ConversationBetSelectionRootViewController(viewModel: conversationBetSelectionRootViewModel)
+
+            self.present(conversationBetSelectionRootViewController, animated: true, completion: nil)
         }
     }
 
@@ -431,6 +443,7 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
         if let messageData = self.viewModel.messageData(forIndexPath: indexPath) {
             if messageData.type == .sentNotSeen || messageData.type == .sentSeen {
                 if messageData.attachment != nil {
+
                     guard
                         let cell = tableView.dequeueCellType(SentTicketMessageTableViewCell.self)
                     else {

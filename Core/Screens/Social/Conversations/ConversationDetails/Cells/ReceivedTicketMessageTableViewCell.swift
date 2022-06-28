@@ -26,6 +26,7 @@ class ReceivedTicketMessageTableViewCell: UITableViewCell {
     private lazy var topBubbleTailView: UIView = Self.createTopBubbleTailView()
 
     private var ticketInMessageView: ChatTicketInMessageView?
+    private var ticketStateInMessageView: ChatTicketStateInMessageView?
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -110,14 +111,22 @@ class ReceivedTicketMessageTableViewCell: UITableViewCell {
         if let attachment = messageData.attachment {
             let ticket = BetHistoryEntry(sharedBetTicket: attachment.content)
             let betSelectionCellViewModel = BetSelectionCellViewModel(ticket: ticket)
-            self.ticketInMessageView = ChatTicketInMessageView(betSelectionCellViewModel: betSelectionCellViewModel,
-                                                               shouldShowButton: true)
 
-            self.ticketInMessageView!.didTapBetNowAction = { [weak self] viewModel in
-                self?.didTapBetNowAction(viewModel)
+            if ticket.status == "OPEN" {
+                self.ticketInMessageView = ChatTicketInMessageView(betSelectionCellViewModel: betSelectionCellViewModel,
+                                                                   shouldShowButton: true)
+
+                self.ticketInMessageView!.didTapBetNowAction = { [weak self] viewModel in
+                    self?.didTapBetNowAction(viewModel)
+                }
+
+                self.ticketBaseStackView.addArrangedSubview(self.ticketInMessageView!)
             }
+            else {
+                self.ticketStateInMessageView = ChatTicketStateInMessageView(betSelectionCellViewModel: betSelectionCellViewModel)
 
-            self.ticketBaseStackView.addArrangedSubview(self.ticketInMessageView!)
+                self.ticketBaseStackView.addArrangedSubview(self.ticketStateInMessageView!)
+            }
         }
 
         self.ticketInMessageView?.cardBackgroundColor = UIColor.App.backgroundSecondary

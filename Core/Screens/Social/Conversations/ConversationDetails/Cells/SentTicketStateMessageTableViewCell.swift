@@ -1,28 +1,39 @@
 //
-//  SentTicketMessageTableViewCell.swift
+//  SentTicketStateMessageTableViewCell.swift
 //  Sportsbook
 //
-//  Created by Ruben Roques on 26/05/2022.
+//  Created by André Lascas on 28/06/2022.
 //
 
 import UIKit
 
-class SentTicketMessageTableViewCell: UITableViewCell {
-
-    var didTapBetNowAction: ((BetSelectionCellViewModel) -> Void) = { _ in }
+class SentTicketStateMessageTableViewCell: UITableViewCell {
 
     // MARK: Private Properties
     private lazy var messageContainerView: UIView = Self.createMessageContainerView()
+    private lazy var topStateView: UIView = Self.createTopStateView()
     private lazy var messageLabel: UILabel = Self.createMessageLabel()
     private lazy var ticketBaseStackView: UIStackView = Self.createTicketBaseStackView()
     private lazy var dateStackView: UIStackView = Self.createDateStackView()
+
+    private lazy var bottomStateView: UIView = Self.createBottomStateView()
+    private lazy var bottomTitlesStackView: UIStackView = Self.createBottomTitlesStackView()
+    private lazy var totalOddTitleLabel: UILabel = Self.createTotalOddTitleLabel()
+    private lazy var betAmountTitleLabel: UILabel = Self.createBetAmountTitleLabel()
+    private lazy var possibleWinningTitleLabel: UILabel = Self.createPossibleWinningTitleLabel()
+
+    private lazy var bottomValuesStackView: UIStackView = Self.createBottomValuesStackView()
+    private lazy var totalOddValueLabel: UILabel = Self.createTotalOddValueLabel()
+    private lazy var betAmountValueLabel: UILabel = Self.createBetAmountValueLabel()
+    private lazy var possibleWinningValueLabel: UILabel = Self.createPossibleWinningValueLabel()
+
     private lazy var messageDateLabel: UILabel = Self.createMessageDateLabel()
     private lazy var messageStateBaseView: UIView = Self.createMessageStateBaseView()
     private lazy var messageStateImageView: UIImageView = Self.createMessageStateImageView()
     private lazy var topBubbleTailView: UIView = Self.createTopBubbleTailView()
 
     private var ticketInMessageView: ChatTicketInMessageView?
-    private var ticketStateInMessageView: ChatTicketStateInMessageView?
+
     // MARK: Public Properties
     var isMessageSeen: Bool = false {
         didSet {
@@ -31,6 +42,22 @@ class SentTicketMessageTableViewCell: UITableViewCell {
             }
             else {
                 self.messageStateImageView.image = UIImage(named: "sent_message_icon")
+            }
+        }
+    }
+
+    var betState: BetState = .draw {
+        didSet {
+            switch betState {
+            case .won:
+                self.topStateView.backgroundColor = UIColor.App.myTicketsWon
+                self.bottomStateView.backgroundColor = UIColor.App.myTicketsWon
+            case .lost:
+                self.topStateView.backgroundColor = UIColor.App.myTicketsLost
+                self.bottomStateView.backgroundColor = UIColor.App.myTicketsLost
+            case .draw:
+                self.topStateView.backgroundColor = UIColor.App.myTicketsOther
+                self.bottomStateView.backgroundColor = UIColor.App.myTicketsOther
             }
         }
     }
@@ -89,6 +116,18 @@ class SentTicketMessageTableViewCell: UITableViewCell {
 
         self.ticketInMessageView?.setupWithTheme()
 
+        self.bottomStateView.backgroundColor = UIColor.App.backgroundSecondary
+
+        self.bottomTitlesStackView.backgroundColor = .clear
+        self.totalOddTitleLabel.textColor = UIColor.App.textPrimary
+        self.betAmountTitleLabel.textColor = UIColor.App.textPrimary
+        self.possibleWinningTitleLabel.textColor = UIColor.App.textPrimary
+
+        self.bottomValuesStackView.backgroundColor = .clear
+        self.totalOddValueLabel.textColor = UIColor.App.textPrimary
+        self.betAmountValueLabel.textColor = UIColor.App.textPrimary
+        self.possibleWinningValueLabel.textColor = UIColor.App.textPrimary
+
     }
 
     // MARK: Functions
@@ -109,22 +148,29 @@ class SentTicketMessageTableViewCell: UITableViewCell {
         if let attachment = messageData.attachment {
             let ticket = BetHistoryEntry(sharedBetTicket: attachment.content)
             let betSelectionCellViewModel = BetSelectionCellViewModel(ticket: ticket)
+            self.ticketInMessageView = ChatTicketInMessageView(betSelectionCellViewModel: betSelectionCellViewModel,
+                                                               shouldShowButton: false)
 
-            if ticket.status == "OPEN" {
-                self.ticketInMessageView = ChatTicketInMessageView(betSelectionCellViewModel: betSelectionCellViewModel,
-                                                                   shouldShowButton: false)
+//            self.ticketInMessageView!.didTapBetNowAction = { [weak self] viewModel in
+//                self?.didTapBetNowAction(viewModel)
+//            }
+            self.ticketBaseStackView.addArrangedSubview(self.ticketInMessageView!)
 
-                self.ticketInMessageView!.didTapBetNowAction = { [weak self] viewModel in
-                    self?.didTapBetNowAction(viewModel)
-                }
-                self.ticketBaseStackView.addArrangedSubview(self.ticketInMessageView!)
+            if attachment.content.status == "WON" {
+                self.betState = .won
+            }
+            else if attachment.content.status == "LOST" {
+                self.betState = .lost
             }
             else {
-                self.ticketStateInMessageView = ChatTicketStateInMessageView(betSelectionCellViewModel: betSelectionCellViewModel)
-
-                self.ticketBaseStackView.addArrangedSubview(self.ticketStateInMessageView!)
+                self.betState = .draw
             }
 
+            self.totalOddValueLabel.text = OddConverter.stringForValue(attachment.content.totalPriceValue ?? 0.0, format: UserDefaults.standard.userOddsFormat)
+
+            self.betAmountValueLabel.text = self.getCurrencyString(string: "\(attachment.content.totalBetAmount ?? 0.0)")
+
+            self.possibleWinningValueLabel.text = self.getCurrencyString(string: "\(attachment.content.maxWinning ?? 0.0)")
         }
 
         self.ticketInMessageView?.cardBackgroundColor = UIColor.App.backgroundSecondary
@@ -154,14 +200,27 @@ class SentTicketMessageTableViewCell: UITableViewCell {
         self.topBubbleTailView.layer.insertSublayer(shape, at: 0)
     }
 
+
+    func getCurrencyString(string: String) -> String {
+        let currencyFormatter = CurrencyFormater()
+        let stringAmount = currencyFormatter.currencyTypeFormatting(string: string)
+        return stringAmount
+    }
+
 }
 
-extension SentTicketMessageTableViewCell {
+extension SentTicketStateMessageTableViewCell {
 
     private static func createMessageContainerView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = CornerRadius.view
+        return view
+    }
+
+    private static func createTopStateView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
 
@@ -172,6 +231,90 @@ extension SentTicketMessageTableViewCell {
         stackView.spacing = 0
         stackView.distribution = .fill
         return stackView
+    }
+
+    private static func createBottomStateView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createBottomTitlesStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 4
+        return stackView
+    }
+
+    private static func createTotalOddTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Total Odd"
+        label.font = AppFont.with(type: .bold, size: 12)
+        label.numberOfLines = 1
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createBetAmountTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Bet Amount"
+        label.font = AppFont.with(type: .bold, size: 12)
+        label.numberOfLines = 1
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createPossibleWinningTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Possible Winning"
+        label.font = AppFont.with(type: .bold, size: 12)
+        label.numberOfLines = 1
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createBottomValuesStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 4
+        return stackView
+    }
+
+    private static func createTotalOddValueLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "--"
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.numberOfLines = 1
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createBetAmountValueLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "--"
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.numberOfLines = 1
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createPossibleWinningValueLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "--"
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.numberOfLines = 1
+        label.textAlignment = .center
+        return label
     }
 
     private static func createDateStackView() -> UIStackView {
