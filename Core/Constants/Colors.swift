@@ -72,6 +72,9 @@ extension UIColor {
 
         static let statsHome = UIColor(named: "statsHome")!
         static let statsAway = UIColor(named: "statsAway")!
+        
+        static let highlightPrimaryContrast = UIColor(named: "highlightPrimaryContrast")!
+        
 
     }
 

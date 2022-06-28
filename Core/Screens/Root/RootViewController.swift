@@ -38,9 +38,11 @@ class RootViewController: UIViewController {
     
     @IBOutlet private weak var casinoButtonBaseView: UIView!
     @IBOutlet private weak var casinoIconImageView: UIImageView!
+    @IBOutlet private weak var casinoTitleLabel: UILabel!
     
     @IBOutlet private weak var sportsbookButtonBaseView: UIView!
     @IBOutlet private weak var sportsbookIconImageView: UIImageView!
+    @IBOutlet private weak var sportsbookTitleLabel: UILabel!
     
     @IBOutlet private weak var profileBaseView: UIView!
     @IBOutlet private weak var profilePictureBaseView: UIView!
@@ -60,9 +62,6 @@ class RootViewController: UIViewController {
     @IBOutlet private var accountPlusView: UIView!
     @IBOutlet private var accountValueLabel: UILabel!
     @IBOutlet private var accountPlusImageView: UIImageView!
-    
-    @IBOutlet private weak var accountValueBaseViewConstant: NSLayoutConstraint!
-    
     //
     //
     private var pictureInPictureView: PictureInPictureView?
@@ -389,17 +388,19 @@ class RootViewController: UIViewController {
         self.homeTitleLabel.text = localized("home")
         self.sportsTitleLabel.text = localized("sports")
         self.liveTitleLabel.text = localized("live")
+        self.casinoTitleLabel.text = localized("casino")
+        self.sportsbookTitleLabel.text = localized("sportsbook")
+
         
         self.casinoBaseView.isHidden = true
         
-
         self.sportsbookButtonBaseView.isHidden = true
         self.casinoBottomView.backgroundColor = UIColor.App.backgroundPrimary
         self.casinoBottomView.isHidden = true
-        self.casinoButtonBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.casinoButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
         self.casinoButtonBaseView.layer.maskedCorners = [ .layerMinXMaxYCorner, .layerMinXMinYCorner]
         
-        self.sportsbookButtonBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.sportsbookButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
         self.sportsbookButtonBaseView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
         
         let homeTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapHomeTabItem))
@@ -443,11 +444,8 @@ class RootViewController: UIViewController {
         self.homeTitleLabel.textColor = UIColor.App.highlightPrimary
         self.liveTitleLabel.textColor = UIColor.App.highlightPrimary
         self.sportsTitleLabel.textColor = UIColor.App.highlightPrimary
-        
-        //self.sportsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
-        //self.homeIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
-        //self.liveIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
-        //self.casinoIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
+        self.casinoTitleLabel.textColor = UIColor.App.highlightPrimaryContrast
+        self.sportsbookTitleLabel.textColor = UIColor.App.highlightPrimaryContrast
         
         self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
         self.topBarView.backgroundColor = UIColor.App.backgroundPrimary
@@ -483,10 +481,10 @@ class RootViewController: UIViewController {
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
 
         self.casinoButtonBaseView.alpha = self.activeButtonAlpha
-        self.casinoIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+        self.casinoIconImageView.setImageColor(color: UIColor.App.highlightPrimaryContrast)
         
         self.sportsbookButtonBaseView.alpha = self.activeButtonAlpha
-        self.sportsbookIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+        self.sportsbookIconImageView.setImageColor(color: UIColor.App.highlightPrimaryContrast)
         
         self.redrawButtonButtons()
     }
@@ -678,11 +676,7 @@ extension RootViewController {
         
         if case .casino = tab, !casinoViewControllerLoaded {
             self.searchButton.isHidden = true
-            NSLayoutConstraint.activate([
-            
-                self.accountValueView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
-                
-                ])
+          
             self.casinoViewController.modalPresentationStyle = .fullScreen
             self.casinoViewController.navigationItem.hidesBackButton = true
             self.addChildViewController(self.casinoViewController, toView: self.casinoBaseView)
@@ -841,7 +835,7 @@ extension RootViewController {
         self.searchButton.isHidden = false
         self.casinoBottomView.isHidden = true
        
-        self.accountValueBaseViewConstant.isActive = true
+        
        
     }
     
@@ -850,12 +844,6 @@ extension RootViewController {
         self.tabBarView.isHidden = true
         self.searchButton.isHidden = true
         
-        self.accountValueBaseViewConstant =   self.accountValueView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12)
-        NSLayoutConstraint.activate([
-        
-            self.accountValueView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
-            
-            ])
         NSLayoutConstraint.activate([
             self.casinoBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
 
@@ -871,11 +859,7 @@ extension RootViewController {
         self.searchButton.isHidden = false
         self.selectedTabItem = .home
         self.casinoBottomView.isHidden = true
-        NSLayoutConstraint.deactivate([
         
-            self.accountValueView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -50),
-            
-            ])
         self.selectHomeTabBarItem()
     }
     

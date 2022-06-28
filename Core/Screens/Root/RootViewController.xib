@@ -23,7 +23,6 @@
                 <outlet property="accountPlusImageView" destination="bh5-DA-q2V" id="21r-Du-6fx"/>
                 <outlet property="accountPlusView" destination="iYA-bp-KRe" id="nII-Tt-fvU"/>
                 <outlet property="accountValueBaseView" destination="teU-V0-Kor" id="aIf-3X-9c4"/>
-                <outlet property="accountValueBaseViewConstant" destination="gIJ-Ss-ZxG" id="l6H-7V-xrG"/>
                 <outlet property="accountValueLabel" destination="pmm-Z8-DIa" id="8HD-gK-QDp"/>
                 <outlet property="accountValueView" destination="9cZ-8S-ynC" id="a58-yv-bNm"/>
                 <outlet property="bottomSafeAreaView" destination="fh2-pN-wGO" id="mH4-JS-0da"/>
@@ -31,6 +30,7 @@
                 <outlet property="casinoBottomView" destination="TwO-uo-g7m" id="ZLp-UG-4yE"/>
                 <outlet property="casinoButtonBaseView" destination="WaX-Xt-ClH" id="dTX-6J-5XO"/>
                 <outlet property="casinoIconImageView" destination="3bN-uV-pM1" id="Afb-3U-jgZ"/>
+                <outlet property="casinoTitleLabel" destination="Gac-XP-jms" id="pz5-6A-rFK"/>
                 <outlet property="contentView" destination="Su0-qa-MeF" id="HFX-VT-ZHn"/>
                 <outlet property="homeBaseView" destination="xew-dh-4hf" id="DMM-4L-5D9"/>
                 <outlet property="homeButtonBaseView" destination="4rF-OG-Pdw" id="pw0-Kh-2Ej"/>
@@ -55,6 +55,7 @@
                 <outlet property="sportsTitleLabel" destination="8B6-32-WvK" id="wC8-vd-YHb"/>
                 <outlet property="sportsbookButtonBaseView" destination="tbw-wl-ySe" id="rNa-cP-wJ3"/>
                 <outlet property="sportsbookIconImageView" destination="s7G-eA-zbU" id="Ajt-Bk-dqZ"/>
+                <outlet property="sportsbookTitleLabel" destination="NZt-HU-YeP" id="HgY-mk-AU1"/>
                 <outlet property="tabBarView" destination="KmS-Xh-sK7" id="RnU-Ur-YkT"/>
                 <outlet property="topBarView" destination="HKG-0A-qeh" id="9wS-YR-NNW"/>
                 <outlet property="topSafeAreaView" destination="7JK-Qm-Mkc" id="2cm-LF-N2q"/>
@@ -273,41 +274,60 @@
                     <rect key="frame" x="545" y="1100" width="65" height="48"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="casino_icon" translatesAutoresizingMaskIntoConstraints="NO" id="3bN-uV-pM1">
-                            <rect key="frame" x="17.5" y="9" width="30" height="30"/>
+                            <rect key="frame" x="21" y="9" width="23" height="23"/>
                             <color key="tintColor" name="iconSecondary"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="30" id="gjo-4P-dO7"/>
-                                <constraint firstAttribute="width" constant="30" id="p9g-vQ-SA2"/>
+                                <constraint firstAttribute="height" constant="23" id="Hyy-3h-R6x"/>
+                                <constraint firstAttribute="width" constant="23" id="dOe-Ug-fpy"/>
                             </constraints>
                         </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gac-XP-jms">
+                            <rect key="frame" x="0.0" y="34" width="65" height="11"/>
+                            <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" name="backgroundPrimary"/>
                     <constraints>
                         <constraint firstItem="3bN-uV-pM1" firstAttribute="centerX" secondItem="WaX-Xt-ClH" secondAttribute="centerX" id="I87-gg-H5m"/>
                         <constraint firstAttribute="width" constant="65" id="NU4-Rn-5Gt"/>
-                        <constraint firstItem="3bN-uV-pM1" firstAttribute="centerY" secondItem="WaX-Xt-ClH" secondAttribute="centerY" id="c9t-yr-tsa"/>
+                        <constraint firstAttribute="bottom" secondItem="Gac-XP-jms" secondAttribute="bottom" constant="3" id="SRl-pc-pP8"/>
+                        <constraint firstItem="Gac-XP-jms" firstAttribute="top" secondItem="3bN-uV-pM1" secondAttribute="bottom" constant="2" id="UvB-cM-1jb"/>
+                        <constraint firstAttribute="trailing" secondItem="Gac-XP-jms" secondAttribute="trailing" id="ovc-kD-UNk"/>
+                        <constraint firstItem="Gac-XP-jms" firstAttribute="leading" secondItem="WaX-Xt-ClH" secondAttribute="leading" id="y7h-as-Uqo"/>
+                        <constraint firstItem="Gac-XP-jms" firstAttribute="centerX" secondItem="WaX-Xt-ClH" secondAttribute="centerX" id="zsR-z0-GEG"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TwO-uo-g7m">
                     <rect key="frame" x="0.0" y="1098" width="610" height="52"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tbw-wl-ySe">
-                            <rect key="frame" x="0.0" y="2" width="65" height="48"/>
+                            <rect key="frame" x="0.0" y="2" width="75" height="48"/>
                             <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NZt-HU-YeP">
+                                    <rect key="frame" x="0.0" y="35" width="75" height="10"/>
+                                    <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="10"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sportsbook_icon" translatesAutoresizingMaskIntoConstraints="NO" id="s7G-eA-zbU">
-                                    <rect key="frame" x="17.5" y="9" width="30" height="30"/>
+                                    <rect key="frame" x="26" y="8.5" width="23" height="23"/>
                                     <color key="tintColor" name="iconSecondary"/>
                                     <constraints>
-                                        <constraint firstAttribute="width" constant="30" id="CM4-7r-y08"/>
-                                        <constraint firstAttribute="height" constant="30" id="wVe-XA-o7f"/>
+                                        <constraint firstAttribute="width" constant="23" id="CM4-7r-y08"/>
+                                        <constraint firstAttribute="height" constant="23" id="wVe-XA-o7f"/>
                                     </constraints>
                                 </imageView>
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBlueColor"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="65" id="Itc-8z-WAL"/>
+                                <constraint firstAttribute="width" constant="75" id="Itc-8z-WAL"/>
+                                <constraint firstAttribute="bottom" secondItem="NZt-HU-YeP" secondAttribute="bottom" constant="3" id="LFD-ui-bd3"/>
+                                <constraint firstItem="NZt-HU-YeP" firstAttribute="leading" secondItem="tbw-wl-ySe" secondAttribute="leading" id="PXZ-Kl-W7e"/>
                                 <constraint firstItem="s7G-eA-zbU" firstAttribute="centerX" secondItem="tbw-wl-ySe" secondAttribute="centerX" id="Rf5-Pf-763"/>
-                                <constraint firstItem="s7G-eA-zbU" firstAttribute="centerY" secondItem="tbw-wl-ySe" secondAttribute="centerY" id="oVk-kR-o3Z"/>
+                                <constraint firstItem="s7G-eA-zbU" firstAttribute="centerY" secondItem="tbw-wl-ySe" secondAttribute="centerY" constant="-4" id="oVk-kR-o3Z"/>
+                                <constraint firstAttribute="trailing" secondItem="NZt-HU-YeP" secondAttribute="trailing" id="yCZ-Fe-OlL"/>
                             </constraints>
                         </view>
                     </subviews>
@@ -460,7 +480,7 @@
         </view>
     </objects>
     <resources>
-        <image name="casino_icon" width="27" height="24"/>
+        <image name="casino_icon" width="10" height="10"/>
         <image name="empty_user_image" width="100" height="100"/>
         <image name="logo_horizontal_left" width="77" height="37"/>
         <image name="plus_small_icon" width="16" height="16"/>
@@ -476,7 +496,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="iconSecondary">
-            <color red="0.46274509803921571" green="0.5725490196078431" blue="0.63529411764705879" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.43137254901960786" green="0.45490196078431372" blue="0.52941176470588236" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
