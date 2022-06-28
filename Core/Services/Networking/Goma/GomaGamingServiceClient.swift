@@ -186,6 +186,12 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
+    func leaveGroup(deviceId: String, chatroomId: Int) -> AnyPublisher<NetworkResponse<[String]>, NetworkError> {
+        let endpoint = GomaGamingService.leaveGroup(chatroomId: chatroomId)
+        let requestPublisher: AnyPublisher<NetworkResponse<[String]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
     func lookupPhones(deviceId: String, phones: [String]) -> AnyPublisher<[GomaContact], NetworkError> {
         let endpoint = GomaGamingService.lookupPhone(phones: phones)
         let requestPublisher: AnyPublisher<[GomaContact], NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
@@ -216,7 +222,19 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
-    
+    func requestNotifications(deviceId: String, type: NotificationsType) -> AnyPublisher<NetworkResponse<[ChatNotification]>, NetworkError> {
+        let endpoint = GomaGamingService.getNotification(type: type.identifier)
+        let requestPublisher: AnyPublisher<NetworkResponse<[ChatNotification]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
+    func setNotificationRead(deviceId: String, notificationId: String) ->
+    AnyPublisher<NetworkResponse<[JSON]>, NetworkError> {
+        let endpoint = GomaGamingService.setNotificationRead(id: notificationId)
+        let requestPublisher: AnyPublisher<NetworkResponse<[JSON]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
     func sendSupportTicket(deviceId: String, title: String, message: String) -> AnyPublisher<SupportTicketResponse, NetworkError> {
         let endpoint = GomaGamingService.sendSupportTicket(title: title, message: message)
         let requestPublisher: AnyPublisher<SupportTicketResponse, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)

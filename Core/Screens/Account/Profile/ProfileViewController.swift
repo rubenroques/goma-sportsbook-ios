@@ -104,6 +104,15 @@ class ProfileViewController: UIViewController {
             let userCodeString = localized("user_code").replacingOccurrences(of: "%s", with: userCode)
             self.userIdLabel.text = userCodeString
         }
+        
+        Env.userSessionStore.userSessionPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] userSession in
+                if userSession == nil {
+                    self?.dismiss(animated: false, completion: nil)
+                }
+            }
+            .store(in: &cancellables)
 
         Env.everyMatrixClient.getProfileStatus()
             .receive(on: DispatchQueue.main)
@@ -298,7 +307,6 @@ class ProfileViewController: UIViewController {
                 }
                 else if alertType == ActivationAlertType.profile {
                     let fullRegisterViewController = FullRegisterPersonalInfoViewController()
-                    // self.present(fullRegisterViewController, animated: true, completion: nil)
                     self.navigationController?.pushViewController(fullRegisterViewController, animated: true)
                 }
             }
@@ -359,37 +367,6 @@ class ProfileViewController: UIViewController {
         logoutButton.setTitleColor( UIColor.App.textPrimary.withAlphaComponent(0.7), for: .highlighted)
         logoutButton.setTitleColor( UIColor.App.textPrimary.withAlphaComponent(0.4), for: .disabled)
         logoutButton.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
-
-        //
-//        personalInfoBaseView.backgroundColor = UIColor.App.backgroundSecondary
-//        personalInfoIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-//        personalInfoIconImageView.backgroundColor = .clear
-//        personalInfoLabel.textColor =  UIColor.App.textPrimary
-//
-//        favoritesBaseView.backgroundColor = UIColor.App.backgroundSecondary
-//        favoritesIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-//        favoritesIconImageView.backgroundColor = .clear
-//        favoritesLabel.textColor =  UIColor.App.textPrimary
-//
-//        historyBaseView.backgroundColor = UIColor.App.backgroundSecondary
-//        historyIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-//        historyIconImageView.backgroundColor = .clear
-//        historyLabel.textColor =  UIColor.App.textPrimary
-//
-//        bonusBaseView.backgroundColor = UIColor.App.backgroundSecondary
-//        bonusIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-//        bonusIconImageView.backgroundColor = .clear
-//        bonusLabel.textColor =  UIColor.App.textPrimary
-//
-//        appSettingsBaseView.backgroundColor = UIColor.App.backgroundSecondary
-//        appSettingsIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-//        appSettingsIconImageView.backgroundColor = .clear
-//        appSettingsLabel.textColor =  UIColor.App.textPrimary
-//
-//        supportBaseView.backgroundColor = UIColor.App.backgroundSecondary
-//        supportIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-//        supportIconImageView.backgroundColor = .clear
-//        supportLabel.textColor =  UIColor.App.textPrimary
 
         infoLabel.textColor = UIColor.App.textPrimary
         
@@ -489,7 +466,6 @@ extension ProfileViewController {
     @IBAction private func didTapLogoutButton() {
         AnalyticsClient.sendEvent(event: .userLogout)
         Env.userSessionStore.logout()
-        Env.favoritesManager.favoriteEventsIdPublisher.send([])
         self.didTapCloseButton()
     }
 }

@@ -501,3 +501,6 @@ Terms of use, Privacy Policy and EULA";
 
 "user_code" = "User code: %s";
 "user_code_copied" = "User Code %s copied.";
+
+"leave_group" = "Leave Group";
+"leave_group_message" = "Are you sure you want to leave the group?";

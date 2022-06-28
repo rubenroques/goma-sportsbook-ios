@@ -22,11 +22,20 @@ class OutrightMarketDetailsStore {
     private var bettingOutcomesForMarket: [String: Set<String>] = [:]
     private var marketOutcomeRelations: [String: EveryMatrix.MarketOutcomeRelation] = [:]
 
+    var locations: OrderedDictionary<String, EveryMatrix.Location> = [:]
+    
     // MARK: - Lifetime and Cycle
     init() {
 
     }
 
+    func storeLocations(locations: [EveryMatrix.Location]) {
+        self.locations = [:]
+        for location in locations {
+            self.locations[location.id] = location
+        }
+    }
+    
     func storeMarketGroupDetails(fromAggregator aggregator: EveryMatrix.Aggregator, onMarketGroup marketGroupKey: String) {
 
         for content in aggregator.content ?? [] {

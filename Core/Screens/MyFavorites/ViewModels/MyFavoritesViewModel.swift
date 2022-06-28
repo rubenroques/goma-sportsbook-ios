@@ -25,6 +25,7 @@ class MyFavoritesViewModel: NSObject {
     // MARK: Public Properties
     var favoriteMatchesDataPublisher: CurrentValueSubject<[Match], Never> = .init([])
     var favoriteCompetitionsDataPublisher: CurrentValueSubject<[Competition], Never> = .init([])
+    var favoriteOutrightCompetitionsDataPublisher: CurrentValueSubject<[Competition], Never> = .init([])
 
     var dataChangedPublisher = PassthroughSubject<Void, Never>.init()
     var favoriteListTypePublisher: CurrentValueSubject<FavoriteListType, Never> = .init(.favoriteGames)
@@ -230,7 +231,8 @@ class MyFavoritesViewModel: NSObject {
         self.favoriteMatchesDataPublisher.value = self.store.matchesForListType(.favoriteMatchEvents)
 
         if self.favoriteEventsIds.isNotEmpty {
-            self.fetchFavoriteCompetitionsMatchesWithIds(self.favoriteEventsIds)
+            self.fetchFavoriteCompetitionsWithIds(self.favoriteEventsIds)
+            
         }
         else {
             self.favoriteMatchesDataPublisher.value = []
@@ -245,6 +247,92 @@ class MyFavoritesViewModel: NSObject {
 
     }
 
+    func fetchFavoriteCompetitionsWithIds(_ ids: [String]) {
+
+        if let favoriteCompetitionsMatchesRegister = favoriteCompetitionsMatchesRegister {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteCompetitionsMatchesRegister)
+        }
+
+        let endpoint = TSRouter.eventsDetails(operatorId: Env.appSession.operatorId,
+                                                             language: "en",
+                                                             events: ids)
+
+        self.favoriteCompetitionsMatchesPublisher?.cancel()
+        self.favoriteCompetitionsMatchesPublisher = nil
+
+        // "157127366340038656", "168574328789585920", "157127226495651840", "174076994548453376"
+        
+        self.favoriteCompetitionsMatchesPublisher = Env.everyMatrixClient.manager.getModel(router: endpoint,
+                                                                                           decodingType: EveryMatrix.Aggregator.self )
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("Error retrieving data eventsDetails! \(error)")
+                case .finished:
+                    print("Data retrieved!")
+                }
+            }, receiveValue: { [weak self] response in
+                self?.setupFavoriteCompetitionsAggregatorProcessor(aggregator: response )
+            })
+    }
+    
+    func setupFavoriteCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        
+        self.fetchFavoriteCompetitionsMatchesWithIds(self.favoriteEventsIds)
+        
+        self.store.processAggregator(aggregator, withListType: .favoriteOutrightCompetitions, shouldClear: true)
+
+        let outrightCompetitionsIds = self.favoriteEventsIds
+        
+        var appMatches = self.store.matchesForListType(.favoriteCompetitionEvents)
+
+        // Sort competitions by sport type
+        appMatches.sort {
+            $0.sportType < $1.sportType
+        }
+
+        var competitionsMatches = OrderedDictionary<String, [Match]>()
+        for match in appMatches {
+            if let matchesForId = competitionsMatches[match.competitionId] {
+                var newMatchesForId = matchesForId
+                newMatchesForId.append(match)
+                competitionsMatches[match.competitionId] = newMatchesForId
+            }
+            else {
+                competitionsMatches[match.competitionId] = [match]
+            }
+        }
+        
+        var processedCompetitions: [Competition] = []
+        for competitionId in outrightCompetitionsIds {
+            if let rawCompetition = self.store.tournaments[competitionId] {
+                
+                if rawCompetition.numberOfOutrightMarkets ?? 0 == 0 {
+                    continue
+                }
+                
+                var location: Location?
+                if let rawLocation = self.store.location(forId: rawCompetition.venueId ?? "") {
+                    location = Location(id: rawLocation.id,
+                                    name: rawLocation.name ?? "",
+                                    isoCode: rawLocation.code ?? "")
+                }
+
+                let competition = Competition(id: competitionId,
+                                              name: rawCompetition.name ?? "",
+                                              matches: (competitionsMatches[competitionId] ?? []),
+                                              venue: location,
+                                              outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
+                processedCompetitions.append(competition)
+            }
+        }
+        
+        self.favoriteOutrightCompetitionsDataPublisher.value = processedCompetitions
+        self.updateContentList()
+        
+    }
+    
     func fetchFavoriteCompetitionsMatchesWithIds(_ ids: [String]) {
 
         if let favoriteCompetitionsMatchesRegister = favoriteCompetitionsMatchesRegister {
@@ -276,7 +364,7 @@ class MyFavoritesViewModel: NSObject {
                     self?.favoriteCompetitionsMatchesRegister = publisherIdentifiable
                 case .initialContent(let aggregator):
                     print("MyFavoritesViewModel favoriteCompetitionsMatchesPublisher initialContent")
-                    self?.setupFavoriteCompetitionsAggregatorProcessor(aggregator: aggregator)
+                    self?.setupFavoriteCompetitionsMatchesAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent(let aggregatorUpdates):
                     self?.updateFavoriteCompetitionsAggregatorProcessor(aggregator: aggregatorUpdates)
                     print("MyFavoritesViewModel favoriteCompetitionsMatchesPublisher updatedContent")
@@ -286,7 +374,7 @@ class MyFavoritesViewModel: NSObject {
             })
     }
 
-    private func setupFavoriteCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+    private func setupFavoriteCompetitionsMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
 
         self.store.processAggregator(aggregator, withListType: .favoriteCompetitionEvents, shouldClear: true)
 
@@ -344,7 +432,10 @@ class MyFavoritesViewModel: NSObject {
     private func updateContentList() {
 
         if UserSessionStore.isUserLogged() {
-            if self.favoriteMatchesDataPublisher.value.isEmpty && self.favoriteCompetitionsDataPublisher.value.isEmpty {
+            if self.favoriteMatchesDataPublisher.value.isEmpty &&
+                self.favoriteCompetitionsDataPublisher.value.isEmpty &&
+                self.favoriteOutrightCompetitionsDataPublisher.value.isEmpty {
+                
                 self.emptyStateStatusPublisher.send(.noFavorites)
             }
             else if self.favoriteMatchesDataPublisher.value.isNotEmpty && self.favoriteCompetitionsDataPublisher.value.isNotEmpty {
@@ -354,7 +445,8 @@ class MyFavoritesViewModel: NSObject {
                 if self.favoriteMatchesDataPublisher.value.isEmpty {
                     self.emptyStateStatusPublisher.send(.noGames)
                 }
-                else if self.favoriteCompetitionsDataPublisher.value.isEmpty {
+                else if self.favoriteCompetitionsDataPublisher.value.isEmpty &&
+                            self.favoriteOutrightCompetitionsDataPublisher.value.isEmpty {
                     self.emptyStateStatusPublisher.send(.noCompetitions)
                 }
             }

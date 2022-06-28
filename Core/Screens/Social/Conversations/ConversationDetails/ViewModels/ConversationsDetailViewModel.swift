@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import Kingfisher
+import OrderedCollections
 
 class ConversationDetailViewModel: NSObject {
 
@@ -16,7 +17,7 @@ class ConversationDetailViewModel: NSObject {
     var sectionMessages: [String: [MessageData]] = [:]
     var dateMessages: [DateMessages] = []
     var isChatOnlinePublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    var isChatGroup: Bool = false
+    var isChatGroupPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isInitialMessagesLoaded: Bool = false
     var titlePublisher: CurrentValueSubject<String, Never> = .init("")
     var usersPublisher: CurrentValueSubject<String, Never> = .init("")
@@ -44,14 +45,31 @@ class ConversationDetailViewModel: NSObject {
         self.conversationId = chatId
         
         super.init()
-        
-        Publishers.CombineLatest(Env.userSessionStore.hasGomaUserSessionPublisher, Env.gomaSocialClient.socketConnectedPublisher)
-            .sink { [weak self] hasGomaUserSession, socketConnected in
-                if hasGomaUserSession && socketConnected {
-                    self?.requestChatroomDetails(withId: String(chatId))
+
+//        self.fetchLocations()
+//            .sink { [weak self] locations in
+//                Env.gomaSocialClient.storeLocations(locations: locations)
+//            }
+//            .store(in: &cancellables)
+
+        self.fetchLocations()
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("Error getting locations: \(error)")
+                case .finished:
+                    ()
                 }
-            }
+
+                self?.isLoadingConversationPublisher.send(false)
+
+            }, receiveValue: { [weak self] locations in
+                Env.gomaSocialClient.storeLocations(locations: locations)
+
+                self?.setupPublishers()
+            })
             .store(in: &cancellables)
+
     }
     
     init(conversationData: ConversationData) {
@@ -62,13 +80,44 @@ class ConversationDetailViewModel: NSObject {
         
         super.init()
 
-        self.setupConversationInfo()
-        self.startSocketListening()
-        
-        self.isLoadingConversationPublisher.send(false)
+        self.fetchLocations()
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("Error getting locations: \(error)")
+                case .finished:
+                    ()
+                }
+
+                self?.isLoadingConversationPublisher.send(false)
+
+            }, receiveValue: { [weak self] locations in
+                Env.gomaSocialClient.storeLocations(locations: locations)
+
+                self?.setupConversationInfo()
+                self?.startSocketListening()
+
+                self?.isLoadingConversationPublisher.send(false)
+            })
+            .store(in: &cancellables)
+
     }
 
     // MARK: Functions
+    private func setupPublishers() {
+
+        Publishers.CombineLatest(Env.userSessionStore.hasGomaUserSessionPublisher, Env.gomaSocialClient.socketConnectedPublisher)
+            .sink { [weak self] hasGomaUserSession, socketConnected in
+                if hasGomaUserSession && socketConnected {
+
+                    if let chatId = self?.conversationId {
+                        self?.requestChatroomDetails(withId: String(chatId))
+                    }
+                }
+            }
+            .store(in: &cancellables)
+    }
+
     func requestChatroomDetails(withId id: String) {
            
         self.isLoadingConversationPublisher.send(true)
@@ -103,6 +152,7 @@ class ConversationDetailViewModel: NSObject {
                 
                 self?.setupConversationInfo()
                 self?.startSocketListening()
+
             })
             .store(in: &cancellables)
         
@@ -165,6 +215,17 @@ class ConversationDetailViewModel: NSObject {
 
     }
 
+    func fetchLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {
+
+        let router = TSRouter.getLocations(language: "en", sortByPopularity: false)
+        return Env.everyMatrixClient.manager.getModel(router: router, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
+            .map(\.records)
+            .compactMap({$0})
+            .replaceError(with: [EveryMatrix.Location]())
+            .eraseToAnyPublisher()
+
+    }
+
     private func setupMessagesPublishers() {
 
         if let chatroomMessagesPublisher = Env.gomaSocialClient.chatroomMessagesPublisher(forChatroomId: self.conversationId) {
@@ -224,7 +285,7 @@ class ConversationDetailViewModel: NSObject {
         
         if conversationData.conversationType == .user {
             self.usersPublisher.value = "\(conversationData.name.lowercased())"
-            self.isChatGroup = false
+            self.isChatGroupPublisher.send(false)
         }
         else {
             if let groupUsers = conversationData.groupUsers {
@@ -242,7 +303,7 @@ class ConversationDetailViewModel: NSObject {
 
                 self.groupInitialsPublisher.value = self.getGroupInitials(text: conversationData.name)
 
-                self.isChatGroup = true
+                self.isChatGroupPublisher.send(true)
             }
 
         }
@@ -314,7 +375,6 @@ class ConversationDetailViewModel: NSObject {
             self.sortAllMessages()
 
             self.dataNeedsReload.send()
-            //self.shouldScrollToLastMessage.send()
         }
 
     }
@@ -325,7 +385,7 @@ class ConversationDetailViewModel: NSObject {
         // in subsequent calls os the publisher
         var messages: [MessageData] = []
         
-        guard let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId else { return [] }
+        guard let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId else { return [] }
 
         for message in chatMessages {
             let formattedDate = self.getFormattedDate(date: message.date)
@@ -511,8 +571,7 @@ extension ConversationDetailViewModel {
 }
 
 extension ConversationDetailViewModel {
-    
-    
+
     private func createIndividualConversationData(fromChatroomData chatroomData: ChatroomData) -> ConversationData {
         var loggedUsername = ""
         var chatroomName = ""
@@ -677,7 +736,6 @@ extension ConversationDetailViewModel {
 
         return nil
     }
-
 
 }
 

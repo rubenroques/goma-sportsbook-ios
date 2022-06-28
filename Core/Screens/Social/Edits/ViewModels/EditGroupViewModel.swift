@@ -24,6 +24,7 @@ class EditGroupViewModel {
     var showErrorAlert: PassthroughSubject<Void, Never> = .init()
     var editGroupFinished: PassthroughSubject<Void, Never> = .init()
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var hasLeftGroupPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isGroupEdited: Bool = false
     var adminUserId: Int?
 
@@ -83,7 +84,6 @@ class EditGroupViewModel {
                 // self?.isLoadingPublisher.send(false)
 
             }, receiveValue: { [weak self] response in
-                print("EDIT GROUP GOMA: \(response)")
                 self?.groupNamePublisher.value = groupName
                 self?.isGroupEdited = true
                 self?.editGroupFinished.send()
@@ -106,7 +106,6 @@ class EditGroupViewModel {
                 }
 
             }, receiveValue: { [weak self] response in
-                print("REMOVE USER GROUP GOMA: \(response)")
                 self?.isGroupEdited = true
                 self?.users.remove(at: userIndex)
                 self?.cachedUserCellViewModels[userId] = nil
@@ -118,6 +117,24 @@ class EditGroupViewModel {
 
     func deleteGroup() {
         print("DELETE GROUP")
+    }
+
+    func leaveGroup() {
+
+        Env.gomaNetworkClient.leaveGroup(deviceId: Env.deviceId, chatroomId: self.getChatroomId())
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    print("LEAVE GROUP ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+            }, receiveValue: { [weak self] response in
+                print("LEAVE GROUP GOMA: \(response)")
+                self?.hasLeftGroupPublisher.send(true)
+            })
+            .store(in: &cancellables)
     }
 
     func getGroupInitials(text: String) -> String {
