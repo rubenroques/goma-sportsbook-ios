@@ -199,19 +199,21 @@ class SimpleRegisterDetailsViewController: UIViewController {
             .eraseToAnyPublisher()
             .sink { _ in
                 self.indicativeHeaderTextView.isUserInteractionEnabled = true
-            } receiveValue: { countries in
-                self.setupWithCountryCodes(countries)
+            } receiveValue: { [weak self] countries in
+                self?.setupWithCountryCodes(countries)
             }
             .store(in: &cancellables)
 
         self.usernameHeaderTextView.textPublisher
             .removeDuplicates()
-            .sink { _ in
-                self.hideUsernameError()
+            .receive(on: DispatchQueue.main)
+            .sink {  [weak self] _ in
+                self?.hideUsernameError()
             }
             .store(in: &cancellables)
 
         self.usernameHeaderTextView.textPublisher
+            .receive(on: DispatchQueue.main)
             .removeDuplicates()
             .compactMap { $0 }
             .filter { $0.count > 3 }
@@ -220,8 +222,8 @@ class SimpleRegisterDetailsViewController: UIViewController {
                 self?.loadingUsernameValidityView.startAnimating()
             })
             .eraseToAnyPublisher()
-            .sink(receiveValue: {
-                self.requestValidUsernameCheck($0)
+            .sink(receiveValue: { [weak self] username in
+                self?.requestValidUsernameCheck(username)
             })
             .store(in: &cancellables)
 
@@ -229,6 +231,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
                                  self.passwordHeaderTextView.textPublisher,
                                  self.confirmPasswordHeaderTextView.textPublisher,
                                  self.phoneHeaderTextView.textPublisher)
+            .receive(on: DispatchQueue.main)
             .map { username, password, passwordConf, phone in
 
                 if password != passwordConf {
@@ -240,7 +243,9 @@ class SimpleRegisterDetailsViewController: UIViewController {
                         (phone?.isNotEmpty ?? false)
 
             }
-            .assign(to: \.isEnabled, on: signUpButton)
+            .sink(receiveValue: { [weak self] valid in
+                self?.signUpButton.isEnabled = valid
+            })
             .store(in: &cancellables)
 
     }
@@ -281,20 +286,14 @@ class SimpleRegisterDetailsViewController: UIViewController {
 
         if password != confirmPassword {
             passwordHeaderTextView.showErrorOnField(text: localized("password_not_match"), color: UIColor.App.alertError)
-            validFields = false
+            return
         }
         else if password.count < 8 {
-            passwordHeaderTextView.showTip(text: localized("weak_password"))
-            validFields = false
+            passwordHeaderTextView.showTip(text: localized("password_too_weak"))
+            return
         }
 
-//        if dateHeaderTextView.text.isEmpty {
-//            dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App.alertError)
-//            validFields = false
-//        }
-        validFields = checkDateBirth()
-
-        guard validFields else {
+        if !checkDateBirth() {
             return
         }
 
@@ -390,20 +389,22 @@ extension SimpleRegisterDetailsViewController {
 extension SimpleRegisterDetailsViewController {
 
     func showUsernameTakenErrorStatus() {
-        self.usernameHeaderTextView
-            .showErrorOnField(text: localized("username_already_registered"), color: UIColor.App.alertError)
+        self.usernameHeaderTextView.showErrorOnField(text: localized("username_already_registered"),
+                                                     color: UIColor.App.alertError)
         self.disableSignUpButton()
     }
 
     func showEmailTakenErrorStatus() {
         self.usernameHeaderTextView
-            .showErrorOnField(text: localized("email_already_registered"), color: UIColor.App.alertError)
+            .showErrorOnField(text: localized("email_already_registered"),
+                              color: UIColor.App.alertError)
         self.disableSignUpButton()
     }
 
     func showPasswordTooWeakErrorStatus() {
         self.disableSignUpButton()
-        self.passwordHeaderTextView.showErrorOnField(text: localized("password_too_weak"), color: UIColor.App.alertError)
+        self.passwordHeaderTextView.showErrorOnField(text: localized("password_too_weak"),
+                                                     color: UIColor.App.alertError)
     }
 
     func showServerErrorStatus() {
@@ -421,47 +422,49 @@ extension SimpleRegisterDetailsViewController {
 extension SimpleRegisterDetailsViewController {
 
     private func registerUser(form: EveryMatrix.SimpleRegisterForm) {
+        
         Logger.log("Sent user register \(form.email)")
+        
         Env.userSessionStore.registerUser(form: form)
-            .breakpointOnError()
             .receive(on: DispatchQueue.main)
-            .sink { completion in
-                self.hideLoadingSpinner()
+            .sink { [weak self] completion in
+                self?.hideLoadingSpinner()
                 switch completion {
                 case .failure(let error):
                     switch error {
                     case let .requestError(message) where message.lowercased().contains("username is already taken"):
-                        self.showUsernameTakenErrorStatus()
+                        self?.showUsernameTakenErrorStatus()
                     case let .requestError(message) where message.lowercased().contains("email already exists"):
-                        self.showEmailTakenErrorStatus()
+                        self?.showEmailTakenErrorStatus()
                     case let .requestError(message) where message.lowercased().contains("your password is too simple"):
-                        self.showPasswordTooWeakErrorStatus()
+                        self?.showPasswordTooWeakErrorStatus()
                     default:
-                        self.showServerErrorStatus()
+                        self?.showServerErrorStatus()
                     }
                     AnalyticsClient.sendEvent(event: .userSignUpFail)
                 case .finished:
                     ()
                 }
-            } receiveValue: { _ in
+            } receiveValue: { [weak self] _ in
                 Logger.log("User registered \(form.email)")
                 AnalyticsClient.sendEvent(event: .userSignUpSuccess)
-                self.pushRegisterNextViewController(email: form.email)
+                self?.pushRegisterNextViewController(email: form.email)
             }
             .store(in: &cancellables)
+        
     }
 
     private func requestValidUsernameCheck(_ username: String) {
         Env.everyMatrixClient
             .validateUsername(username)
             .receive(on: DispatchQueue.main)
-            .sink { _ in
-                self.loadingUsernameValidityView.stopAnimating()
-            } receiveValue: { usernameAvailability in
+            .sink { [weak self] _ in
+                self?.loadingUsernameValidityView.stopAnimating()
+            } receiveValue: { [weak self] usernameAvailability in
                 if !usernameAvailability.isAvailable {
-                    self.showUsernameTakenErrorStatus()
+                    self?.showUsernameTakenErrorStatus()
                 }
-                self.loadingUsernameValidityView.stopAnimating()
+                self?.loadingUsernameValidityView.stopAnimating()
             }
             .store(in: &cancellables)
     }

@@ -36,7 +36,9 @@ class MyFavoritesViewController: UIViewController {
 
     // Data Sources
     private var myFavoriteMatchesDataSource = MyFavoriteMatchesDataSource(userFavoriteMatches: [], store: FavoritesAggregatorsRepository())
-    private var myFavoriteCompetitionsDataSource = MyFavoriteCompetitionsDataSource(favoriteCompetitions: [], store: FavoritesAggregatorsRepository())
+    private var myFavoriteCompetitionsDataSource = MyFavoriteCompetitionsDataSource(favoriteCompetitions: [],
+                                                                                    favoriteOutrightCompetitions: [],
+                                                                                    store: FavoritesAggregatorsRepository())
 
     // MARK: Public Properties
     var viewModel: MyFavoritesViewModel
@@ -90,6 +92,12 @@ class MyFavoritesViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
+        self.myFavoriteCompetitionsDataSource.didSelectCompetitionAction = { competition in
+            let viewModel = OutrightMarketDetailsViewModel(competition: competition, store: OutrightMarketDetailsStore())
+            let outrightMarketDetailsViewController = OutrightMarketDetailsViewController(viewModel: viewModel)
+            self.navigationController?.pushViewController(outrightMarketDetailsViewController, animated: true)
+        }
+        
         self.isEmptyState = false
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
@@ -282,7 +290,6 @@ class MyFavoritesViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        
         viewModel.isLoadingPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLoading in
@@ -328,6 +335,13 @@ class MyFavoritesViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        viewModel.favoriteOutrightCompetitionsDataPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] competitions in
+                self?.myFavoriteCompetitionsDataSource.outrightCompetitions = competitions
+            })
+            .store(in: &cancellables)
+        
     }
 
 }
@@ -728,10 +742,12 @@ extension MyFavoritesViewController {
         self.topSliderCollectionView.dataSource = self
 
         tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+        tableView.register(OutrightCompetitionLargeLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
         tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
         tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
         tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
+        
         tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
         tableView.register(EmptyCardTableViewCell.nib, forCellReuseIdentifier: EmptyCardTableViewCell.identifier)
 

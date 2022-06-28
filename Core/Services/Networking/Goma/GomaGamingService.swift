@@ -39,6 +39,7 @@ enum GomaGamingService {
     case searchUserCode(code: String)
     case getNotification(type: String)
     case setNotificationRead(id: String)
+    case sendSupportTicket(title: String, message: String)
 }
 
 extension GomaGamingService: Endpoint {
@@ -109,6 +110,8 @@ extension GomaGamingService: Endpoint {
             return "/api/notifications/\(apiVersion)"
         case .setNotificationRead(let id):
             return "/api/notifications/\(apiVersion)/\(id)/read"
+        case .sendSupportTicket:
+            return "/api/users/\(apiVersion)/contact"
         }
     }
 
@@ -120,7 +123,7 @@ extension GomaGamingService: Endpoint {
             return [URLQueryItem(name: "lat", value: latitude),
                     URLQueryItem(name: "lng", value: longitude)]
         case .settings, .simpleRegister, .modalPopUpDetails, .login,
-                .suggestedBets, .addFavorites, .matchStats, .userSettings, .sendUserSettings:
+                .suggestedBets, .addFavorites, .matchStats, .userSettings, .sendUserSettings, .sendSupportTicket:
             return nil
         case .removeFavorite(let favorite):
             return [URLQueryItem(name: "favorite_ids[]", value: favorite)]
@@ -192,7 +195,7 @@ extension GomaGamingService: Endpoint {
         case .geolocation, .settings, .modalPopUpDetails, .suggestedBets,
                 .matchStats, .userSettings:
             return .get
-        case .log, .simpleRegister, .login, .addFavorites, .sendUserSettings:
+        case .log, .simpleRegister, .login, .addFavorites, .sendUserSettings,  .sendSupportTicket:
             return .post
         case .removeFavorite:
             return .delete
@@ -249,6 +252,15 @@ extension GomaGamingService: Endpoint {
                     """
             let data = body.data(using: String.Encoding.utf8)!
             return data
+            
+        case .sendSupportTicket(let title, let message):
+            let body = """
+                       {"title": "\(title)",
+                        "message": "\(message)"}
+                       """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+            
         case .sendUserSettings(let userSettings):
             let body = """
                        {"odd_validation_type": "\(userSettings.oddValidationType)",

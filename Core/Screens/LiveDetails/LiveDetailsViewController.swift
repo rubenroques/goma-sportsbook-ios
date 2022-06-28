@@ -382,6 +382,7 @@ extension LiveDetailsViewController {
         titleLabel.font = AppFont.with(type: .semibold, size: 14)
         titleLabel.textAlignment = .left
         titleLabel.text = "Live Matches"
+        titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return titleLabel
     }
 

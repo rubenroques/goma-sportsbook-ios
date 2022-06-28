@@ -13,6 +13,7 @@ import OrderedCollections
 enum FavoritesAggregatorListType {
     case favoriteMatchEvents
     case favoriteCompetitionEvents
+    case favoriteOutrightCompetitions
 }
 
 class FavoritesAggregatorsRepository {
@@ -33,8 +34,6 @@ class FavoritesAggregatorsRepository {
 
     var locations: OrderedDictionary<String, EveryMatrix.Location> = [:]
 
-    var tournamentsForLocation: [String: [String] ] = [:]
-    var tournamentsForCategory: [String: [String] ] = [:]
     var tournaments: [String: EveryMatrix.Tournament] = [:]
 
     var matchesInfo: [String: EveryMatrix.MatchInfo] = [:]
