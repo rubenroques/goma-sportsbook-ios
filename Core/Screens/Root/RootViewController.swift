@@ -397,10 +397,11 @@ class RootViewController: UIViewController {
         self.sportsbookButtonBaseView.isHidden = true
         self.casinoBottomView.backgroundColor = UIColor.App.backgroundPrimary
         self.casinoBottomView.isHidden = true
-        self.casinoButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
+        
+        self.casinoButtonBaseView.backgroundColor = UIColor.App.backgroundCards
         self.casinoButtonBaseView.layer.maskedCorners = [ .layerMinXMaxYCorner, .layerMinXMinYCorner]
         
-        self.sportsbookButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
+        self.sportsbookButtonBaseView.backgroundColor = UIColor.App.backgroundCards
         self.sportsbookButtonBaseView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
         
         let homeTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapHomeTabItem))
@@ -444,8 +445,9 @@ class RootViewController: UIViewController {
         self.homeTitleLabel.textColor = UIColor.App.highlightPrimary
         self.liveTitleLabel.textColor = UIColor.App.highlightPrimary
         self.sportsTitleLabel.textColor = UIColor.App.highlightPrimary
-        self.casinoTitleLabel.textColor = UIColor.App.highlightPrimaryContrast
-        self.sportsbookTitleLabel.textColor = UIColor.App.highlightPrimaryContrast
+        
+        self.casinoTitleLabel.textColor = UIColor.App.textSecondary
+        self.sportsbookTitleLabel.textColor = UIColor.App.textSecondary
         
         self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
         self.topBarView.backgroundColor = UIColor.App.backgroundPrimary
@@ -481,10 +483,10 @@ class RootViewController: UIViewController {
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
 
         self.casinoButtonBaseView.alpha = self.activeButtonAlpha
-        self.casinoIconImageView.setImageColor(color: UIColor.App.highlightPrimaryContrast)
+        self.casinoIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         
         self.sportsbookButtonBaseView.alpha = self.activeButtonAlpha
-        self.sportsbookIconImageView.setImageColor(color: UIColor.App.highlightPrimaryContrast)
+        self.sportsbookIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         
         self.redrawButtonButtons()
     }
