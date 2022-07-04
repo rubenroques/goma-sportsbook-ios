@@ -93,6 +93,7 @@ class ChatNotificationsViewModel {
     }
 
     func markNotificationsAsRead() {
+        // TODO: Change endpoint
         for chatNotification in self.chatNotificationsPublisher.value {
 
             if let notificationRead = chatNotification.notificationUsers[safe: 0]?.read,
@@ -113,22 +114,7 @@ class ChatNotificationsViewModel {
                     .store(in: &cancellables)
             }
         }
-//        if let chatNotification = self.chatNotificationsPublisher.value[safe: 0] {
-//
-//        Env.gomaNetworkClient.setNotificationRead(deviceId: Env.deviceId, notificationId: "\(chatNotification.id)")
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                switch completion {
-//                case .failure(let error):
-//                    print("CHAT NOTIF ERROR: \(error)")
-//                case .finished:
-//                    ()
-//                }
-//            }, receiveValue: { [weak self] _ in
-//                print("CHAT NOTIF READ SUCCESS")
-//            })
-//            .store(in: &cancellables)
-//        }
+
     }
 
     private func setupFollowerViews() {

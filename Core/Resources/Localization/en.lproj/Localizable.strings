@@ -500,3 +500,7 @@ Terms of use, Privacy Policy and EULA";
 "share_my_tickets" = "Share my tickets";
 "not_bets_tickets_section" = "You don't have any bets for this section.";
 "share_ticket" = "Share ticket";
+
+"more" = "More";
+"copy_link" = "Copy link";
+"send_via" = "Send via...";

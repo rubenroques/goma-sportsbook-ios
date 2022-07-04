@@ -235,8 +235,13 @@ class MyTicketsViewController: UIViewController {
 //              }
 //              self.present(shareActivityViewController, animated: true, completion: nil)
 //          }
+          let clickedShareTicketInfo = ClickedShareTicketInfo(snapshot: self.viewModel.clickedCellSnapshot,
+                                                              betId: self.viewModel.clickedBetId,
+                                                              betStatus: self.viewModel.clickedBetStatus,
+                                                              betToken: self.viewModel.clickedBetTokenPublisher.value)
 
           let shareTicketChoiceViewModel = ShareTicketChoiceViewModel()
+          shareTicketChoiceViewModel.clickedShareTicketInfo = clickedShareTicketInfo
 
           let shareTicketChoiceViewController = ShareTicketChoiceViewController(viewModel: shareTicketChoiceViewModel)
           

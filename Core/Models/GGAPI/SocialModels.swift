@@ -75,7 +75,6 @@ struct SearchUser: Decodable {
     }
 }
 
-
 struct MessageData {
     var type: MessageType
     var text: String

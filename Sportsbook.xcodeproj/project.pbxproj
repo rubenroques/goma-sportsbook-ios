@@ -3784,6 +3784,13 @@
 		A9C18AA328661975009F0063 /* ConversationBetSelectionRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C18A9F28661975009F0063 /* ConversationBetSelectionRootViewController.swift */; };
 		A9C18AA428661975009F0063 /* ConversationBetSelectionRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C18A9F28661975009F0063 /* ConversationBetSelectionRootViewController.swift */; };
 		A9C18AA528661975009F0063 /* ConversationBetSelectionRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C18A9F28661975009F0063 /* ConversationBetSelectionRootViewController.swift */; };
+		A9C1C0972873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C1C0962873455000E9D6AC /* SocialAppItemCollectionViewCell.swift */; };
+		A9C1C0982873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C1C0962873455000E9D6AC /* SocialAppItemCollectionViewCell.swift */; };
+		A9C1C0992873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C1C0962873455000E9D6AC /* SocialAppItemCollectionViewCell.swift */; };
+		A9C1C09A2873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C1C0962873455000E9D6AC /* SocialAppItemCollectionViewCell.swift */; };
+		A9C1C09B2873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C1C0962873455000E9D6AC /* SocialAppItemCollectionViewCell.swift */; };
+		A9C1C09C2873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C1C0962873455000E9D6AC /* SocialAppItemCollectionViewCell.swift */; };
+		A9C1C09D2873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C1C0962873455000E9D6AC /* SocialAppItemCollectionViewCell.swift */; };
 		A9C6022B2716F13F00992E11 /* HomeFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C602292716F13F00992E11 /* HomeFilterViewController.swift */; };
 		A9C6022C2716F13F00992E11 /* HomeFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */; };
 		A9C6022D2716F40300992E11 /* HomeFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C602292716F13F00992E11 /* HomeFilterViewController.swift */; };
@@ -4552,6 +4559,7 @@
 		A9BCF45527554E88006DD528 /* CashoutSubmission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashoutSubmission.swift; sourceTree = "<group>"; };
 		A9C18A91285CDF0B009F0063 /* ToastCustom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastCustom.swift; sourceTree = "<group>"; };
 		A9C18A9F28661975009F0063 /* ConversationBetSelectionRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationBetSelectionRootViewController.swift; sourceTree = "<group>"; };
+		A9C1C0962873455000E9D6AC /* SocialAppItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialAppItemCollectionViewCell.swift; sourceTree = "<group>"; };
 		A9C602292716F13F00992E11 /* HomeFilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFilterViewController.swift; sourceTree = "<group>"; };
 		A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeFilterViewController.xib; sourceTree = "<group>"; };
 		A9C602342716F7BE00992E11 /* FilterCollapseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCollapseView.swift; sourceTree = "<group>"; };
@@ -6583,6 +6591,7 @@
 			isa = PBXGroup;
 			children = (
 				A9863EDB286F425400A4A1A2 /* SocialItemCollectionViewCell.swift */,
+				A9C1C0962873455000E9D6AC /* SocialAppItemCollectionViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -8610,6 +8619,7 @@
 				45AA91CA27C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift in Sources */,
 				A9C6023E2716FACB00992E11 /* RadioButton.swift in Sources */,
 				452047B62703656300B277B5 /* EventsStore.swift in Sources */,
+				A9C1C0972873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
 				456B342426C17E83009D7D27 /* Constants.swift in Sources */,
 				45166CFB26F3548D00E69D65 /* YieldSSWampMessage.swift in Sources */,
 				A9992FE728083C7C0098854C /* ConversationsDetailViewModel.swift in Sources */,
@@ -9072,6 +9082,7 @@
 			files = (
 				A9863EE2286F425400A4A1A2 /* SocialItemCollectionViewCell.swift in Sources */,
 				455A0C6B26BD902F00EC572D /* SportsbookTests.swift in Sources */,
+				A9C1C09D2873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
 				A9863ED9286F01E500A4A1A2 /* ShareTicketChoiceViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9134,6 +9145,7 @@
 				A90BC90627C3B3F500667616 /* OddsViewModel.swift in Sources */,
 				A98D3B2C27148589003BAE6F /* SportSelectionViewController.swift in Sources */,
 				45AA91CB27C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift in Sources */,
+				A9C1C0982873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
 				A9C6023F2716FACB00992E11 /* RadioButton.swift in Sources */,
 				452047B72703656300B277B5 /* EventsStore.swift in Sources */,
 				A9992FE828083C7C0098854C /* ConversationsDetailViewModel.swift in Sources */,
@@ -9648,6 +9660,7 @@
 				457CBA14282D27D000ED0F00 /* RadioButton.swift in Sources */,
 				457CBA15282D27D000ED0F00 /* EventsStore.swift in Sources */,
 				457CBA16282D27D000ED0F00 /* Constants.swift in Sources */,
+				A9C1C09B2873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
 				457CBA17282D27D000ED0F00 /* YieldSSWampMessage.swift in Sources */,
 				457CBA18282D27D000ED0F00 /* ConversationsDetailViewModel.swift in Sources */,
 				457CBA19282D27D000ED0F00 /* DocumentPickerView.swift in Sources */,
@@ -10162,6 +10175,7 @@
 				457CBCBA282D2CD100ED0F00 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
 				457CBCBB282D2CD100ED0F00 /* RadioButton.swift in Sources */,
 				457CBCBC282D2CD100ED0F00 /* EventsStore.swift in Sources */,
+				A9C1C09C2873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
 				457CBCBD282D2CD100ED0F00 /* Constants.swift in Sources */,
 				457CBCBE282D2CD100ED0F00 /* YieldSSWampMessage.swift in Sources */,
 				457CBCBF282D2CD100ED0F00 /* ConversationsDetailViewModel.swift in Sources */,
@@ -10676,6 +10690,7 @@
 				4589C7A0282024E400243547 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
 				4589C7A1282024E400243547 /* RadioButton.swift in Sources */,
 				4589C7A2282024E400243547 /* EventsStore.swift in Sources */,
+				A9C1C0992873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
 				4589C7A3282024E400243547 /* Constants.swift in Sources */,
 				4589C7A4282024E400243547 /* YieldSSWampMessage.swift in Sources */,
 				4589C7A5282024E400243547 /* ConversationsDetailViewModel.swift in Sources */,
@@ -11190,6 +11205,7 @@
 				45A6BBEB28246A7500D9B416 /* BonusProgressViewModel.swift in Sources */,
 				45A6BBEC28246A7500D9B416 /* SportSelectionViewController.swift in Sources */,
 				45A6BBED28246A7500D9B416 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
+				A9C1C09A2873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
 				45A6BBEE28246A7500D9B416 /* RadioButton.swift in Sources */,
 				45A6BBEF28246A7500D9B416 /* EventsStore.swift in Sources */,
 				45A6BBF028246A7500D9B416 /* Constants.swift in Sources */,
