@@ -54,6 +54,7 @@ class CasinoWebViewController: UIViewController {
         self.viewModel.isUserLoggedPublisher
             .receive(on: DispatchQueue.main)
             .dropFirst()
+            .removeDuplicates()
             .sink(receiveValue: { [weak self] _ in
                 self?.refreshWebView()
             })

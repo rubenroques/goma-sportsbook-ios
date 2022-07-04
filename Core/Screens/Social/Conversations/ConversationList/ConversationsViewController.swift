@@ -122,7 +122,8 @@ class ConversationsViewController: UIViewController {
 
     // MARK: Functions
     private func showConversationDetail(conversationData: ConversationData) {
-        let conversationDetailViewModel = ConversationDetailViewModel(conversationData: conversationData)
+        //let conversationDetailViewModel = ConversationDetailViewModel(conversationData: conversationData)
+        let conversationDetailViewModel = ConversationDetailViewModel(chatId: conversationData.id)
 
         let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
 

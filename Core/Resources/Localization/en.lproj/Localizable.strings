@@ -245,6 +245,7 @@ Terms of use, Privacy Policy and EULA";
 "sports" = "Sports";
 "live" = "Live";
 "casino" = "Casino";
+"sportsbook" = "Sportsbook";
 "my_tickets" = "My Tickets";
 "my_bets" = "My Bets";
 
@@ -493,3 +494,9 @@ Terms of use, Privacy Policy and EULA";
 
 "user_code" = "User code: %s";
 "user_code_copied" = "User Code %s copied.";
+
+"leave_group" = "Leave Group";
+"leave_group_message" = "Are you sure you want to leave the group?";
+
+"share_my_tickets" = "Share my tickets";
+"not_bets_tickets_section" = "You don't have any bets for this section.";

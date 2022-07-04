@@ -18,12 +18,23 @@ class ChatTicketSelectionView: UIView {
     private lazy var competitionLabel: UILabel = Self.createCompetitionLabel()
     private lazy var matchLabel: UILabel = Self.createMatchLabel()
     private lazy var marketLabel: UILabel = Self.createMarketLabel()
+    private lazy var betStatusView: UIView = Self.createBetStatusView()
+    private lazy var betStatusLabel: UILabel = Self.createBetStatusLabel()
 
     private var betHistoryEntrySelection: BetHistoryEntrySelection
 
+    var hasBetStatus: Bool = false {
+        didSet {
+            self.betStatusView.isHidden = !hasBetStatus
+            self.betStatusLabel.isHidden = !hasBetStatus
+        }
+    }
+
     // MARK: Lifetime and Cycle
-    init(betHistoryEntrySelection: BetHistoryEntrySelection) {
+    init(betHistoryEntrySelection: BetHistoryEntrySelection, hasBetStatus: Bool = false) {
         self.betHistoryEntrySelection = betHistoryEntrySelection
+
+        self.hasBetStatus = hasBetStatus
 
         super.init(frame: .zero)
 
@@ -57,9 +68,18 @@ class ChatTicketSelectionView: UIView {
             self.sportIconImageView.setImageColor(color: UIColor.App.textPrimary)
         }
 
-        if let venueId = self.betHistoryEntrySelection.venueId,
-            let image = UIImage(named: Assets.flagName(withCountryCode: venueId)) {
-            self.countryIconImageView.image = image
+        if let venueId = self.betHistoryEntrySelection.venueId {
+
+            if let venue = Env.gomaSocialClient.location(forId: venueId),
+               let venueCode = venue.code {
+                let image = UIImage(named: Assets.flagName(withCountryCode: venueCode))
+                self.countryIconImageView.image = image
+            }
+            else {
+                let image = UIImage(named: Assets.flagName(withCountryCode: venueId))
+                self.countryIconImageView.image = image
+            }
+
         }
         else {
             self.countryIconImageView.isHidden = true
@@ -74,12 +94,33 @@ class ChatTicketSelectionView: UIView {
         self.marketLabel.text = marketText
         self.matchLabel.text = participants
 
+        if hasBetStatus {
+            if self.betHistoryEntrySelection.status == "WON" || self.betHistoryEntrySelection.status == "HALF_WON" {
+                self.betStatusView.backgroundColor = UIColor.App.myTicketsWon
+                self.betStatusLabel.text = localized("won")
+            }
+            else if self.betHistoryEntrySelection.status == "LOST" || self.betHistoryEntrySelection.status == "HALF_LOST" {
+                self.betStatusView.backgroundColor = UIColor.App.myTicketsLost
+                self.betStatusLabel.text = localized("lost")
+            }
+            else if self.betHistoryEntrySelection.status == "DRAW" {
+                self.betStatusView.backgroundColor = UIColor.App.myTicketsOther
+                self.betStatusLabel.text = localized("draw")
+            }
+        }
+        else {
+            self.hasBetStatus = false
+        }
+
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
 
         self.countryIconImageView.layer.cornerRadius = self.countryIconImageView.frame.height / 2
+
+        self.betStatusView.layer.cornerRadius = self.betStatusView.frame.height / 2
+        self.betStatusView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
     }
 
     func setupWithTheme() {
@@ -97,6 +138,8 @@ class ChatTicketSelectionView: UIView {
         self.matchLabel.textColor = UIColor.App.textPrimary
 
         self.marketLabel.textColor = UIColor.App.textSecondary
+
+        self.betStatusLabel.textColor = UIColor.App.buttonTextPrimary
     }
 }
 
@@ -136,7 +179,7 @@ extension ChatTicketSelectionView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "country_flag_240")
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
     }
@@ -168,6 +211,21 @@ extension ChatTicketSelectionView {
         return label
     }
 
+    private static func createBetStatusView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createBetStatusLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
+        label.text = "Status"
+        label.font = AppFont.with(type: .semibold, size: 10)
+        return label
+    }
+
     private func setupSubviews() {
         self.addSubview(self.containerView)
 
@@ -182,6 +240,10 @@ extension ChatTicketSelectionView {
         self.containerView.addSubview(self.matchLabel)
 
         self.containerView.addSubview(self.marketLabel)
+
+        self.containerView.addSubview(self.betStatusView)
+
+        self.betStatusView.addSubview(self.betStatusLabel)
 
         self.initConstraints()
 
@@ -231,6 +293,14 @@ extension ChatTicketSelectionView {
             self.marketLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -5),
             self.marketLabel.topAnchor.constraint(equalTo: self.matchLabel.bottomAnchor),
             self.marketLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -2),
+
+            self.betStatusView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: 15),
+            self.betStatusView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 0),
+            self.betStatusView.heightAnchor.constraint(equalToConstant: 19),
+
+            self.betStatusLabel.leadingAnchor.constraint(equalTo: self.betStatusView.leadingAnchor, constant: 4),
+            self.betStatusLabel.trailingAnchor.constraint(equalTo: self.betStatusView.trailingAnchor, constant: -4),
+            self.betStatusLabel.centerYAnchor.constraint(equalTo: self.betStatusView.centerYAnchor)
         ])
 
     }

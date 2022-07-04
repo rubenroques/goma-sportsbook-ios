@@ -78,7 +78,7 @@ class ChatTicketInMessageView: UIView {
         self.baseView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.ticketsStackView.backgroundColor = .clear
-        self.separatorLineView.backgroundColor = UIColor.App.separatorLine
+        self.separatorLineView.backgroundColor = UIColor.App.buttonTextPrimary
 
         self.totalOddTitleLabel.textColor = UIColor.App.textSecondary
         self.totalOddValueLabel.textColor = UIColor.App.textPrimary
@@ -99,6 +99,8 @@ class ChatTicketInMessageView: UIView {
             let ticketView = ChatTicketSelectionView(betHistoryEntrySelection: selection)
             self.ticketsStackView.addArrangedSubview(ticketView)
         }
+
+        self.ticketsStackView.layoutIfNeeded()
     }
 
     @objc func didTapBetNowButton() {
@@ -234,4 +236,3 @@ extension ChatTicketInMessageView {
     }
 
 }
-

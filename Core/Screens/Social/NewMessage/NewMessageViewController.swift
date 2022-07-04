@@ -180,7 +180,9 @@ class NewMessageViewController: UIViewController {
 
     private func showConversationDetail(conversationData: ConversationData) {
 
-        let conversationDetailViewModel = ConversationDetailViewModel(conversationData: conversationData)
+        //let conversationDetailViewModel = ConversationDetailViewModel(conversationData: conversationData)
+
+        let conversationDetailViewModel = ConversationDetailViewModel(chatId: conversationData.id)
 
         let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
 
@@ -290,6 +292,7 @@ extension NewMessageViewController: UITableViewDataSource, UITableViewDelegate {
         }
 
         cell.shouldShowChatroomAction = { [weak self] conversationData in
+
             self?.showConversationDetail(conversationData: conversationData)
         }
 

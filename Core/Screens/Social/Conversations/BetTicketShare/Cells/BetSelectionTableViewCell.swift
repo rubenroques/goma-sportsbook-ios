@@ -31,10 +31,10 @@ class BetSelectionTableViewCell: UITableViewCell {
     var isCheckboxSelected: Bool = false {
         didSet {
             if isCheckboxSelected {
-                self.checkboxImageView.image = UIImage(named: "checkbox_selected_icon")
+                self.checkboxImageView.image = UIImage(named: "radio_selected_icon")
             }
             else {
-                self.checkboxImageView.image = UIImage(named: "checkbox_unselected_icon")
+                self.checkboxImageView.image = UIImage(named: "radio_unselected_icon")
             }
         }
     }
@@ -66,6 +66,9 @@ class BetSelectionTableViewCell: UITableViewCell {
         super.layoutSubviews()
 
         self.baseView.layer.cornerRadius = CornerRadius.view
+
+        self.ticketsStackView.layoutIfNeeded()
+        self.ticketsStackView.layoutSubviews()
     }
 
     // MARK: Layout and Theme
@@ -108,6 +111,8 @@ class BetSelectionTableViewCell: UITableViewCell {
                 self.ticketsStackView.addArrangedSubview(ticketView)
             }
         }
+
+        self.ticketsStackView.layoutIfNeeded()
     }
 
     // MARK: Actions
@@ -143,8 +148,8 @@ extension BetSelectionTableViewCell {
     private static func createCheckboxImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "checkbox_unselected_icon")
-        imageView.contentMode = .scaleToFill
+        imageView.image = UIImage(named: "radio_unselected_icon")
+        imageView.contentMode = .center
         return imageView
     }
 
@@ -214,7 +219,7 @@ extension BetSelectionTableViewCell {
             self.checkboxBaseView.widthAnchor.constraint(equalToConstant: 40),
             self.checkboxBaseView.heightAnchor.constraint(equalTo: self.checkboxBaseView.widthAnchor),
 
-            self.checkboxImageView.widthAnchor.constraint(equalToConstant: 20),
+            self.checkboxImageView.widthAnchor.constraint(equalToConstant: 40),
             self.checkboxImageView.heightAnchor.constraint(equalTo: self.checkboxImageView.widthAnchor),
             self.checkboxImageView.centerXAnchor.constraint(equalTo: self.checkboxBaseView.centerXAnchor),
             self.checkboxImageView.centerYAnchor.constraint(equalTo: self.checkboxBaseView.centerYAnchor),

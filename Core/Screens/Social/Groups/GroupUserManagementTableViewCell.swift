@@ -128,7 +128,6 @@ class GroupUserManagementTableViewCell: UITableViewCell {
 
     // MARK: Actions
     @objc func didTapDeleteButton() {
-        print("DELETE!")
         self.didTapDeleteAction?()
     }
 

@@ -121,6 +121,14 @@ Terms of use, Privacy Policy and EULA";
 "limits_management" = "Limits Management";
 "app_settings" = "App Settings";
 "support" = "Support";
+"subject" = "Subject";
+"description" = "Description";
+
+"supportSuccessTitle" = "Success";
+"supportSuccessSubtitle" = "Your message was successfully sent.";
+
+"supportErrorTitle" = "Error";
+"supportErrorSubtitle" = "We can't send your message at this moment. Please try again later.";
 
 "limits_management" = "Limits Management";
 "save" = "Save";
@@ -247,6 +255,7 @@ Terms of use, Privacy Policy and EULA";
 "casino" = "Casino";
 "my_tickets" = "My Tickets";
 "my_bets" = "My Bets";
+"sportsbook" = "Sportsbook";
 
 "logout" = "Logout";
 
@@ -493,3 +502,9 @@ Terms of use, Privacy Policy and EULA";
 
 "user_code" = "User code: %s";
 "user_code_copied" = "User Code %s copied.";
+
+"leave_group" = "Leave Group";
+"leave_group_message" = "Are you sure you want to leave the group?";
+
+"share_my_tickets" = "Share my tickets";
+"not_bets_tickets_section" = "You don't have any bets for this section.";

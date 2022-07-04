@@ -94,15 +94,6 @@ class ConversationDetailViewController: UIViewController {
         let contactTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapContactInfo))
         self.navigationView.addGestureRecognizer(contactTapGesture)
 
-//        if self.viewModel.isChatOnline {
-//            self.iconStateView.isHidden = false
-//        }
-//        else {
-//            self.iconStateView.isHidden = true
-//        }
-
-        self.isChatGroup = self.viewModel.isChatGroup
-
         self.bind(toViewModel: self.viewModel)
 
         self.setupPublishers()
@@ -112,7 +103,11 @@ class ConversationDetailViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
 
         self.tableView.transform = CGAffineTransform(scaleX: 1, y: -1)
-
+        
+        self.tableView.isDirectionalLockEnabled = true 
+        self.tableView.alwaysBounceHorizontal = true
+        self.tableView.alwaysBounceVertical = false
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -124,7 +119,7 @@ class ConversationDetailViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        // self.scrollToBottomTableView()
+        self.presentationController?.presentedView?.gestureRecognizers?.first?.isEnabled = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -191,18 +186,28 @@ class ConversationDetailViewController: UIViewController {
     private func bind(toViewModel viewModel: ConversationDetailViewModel) {
 
         viewModel.titlePublisher
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] title in
                 self?.titleLabel.text = title
             })
             .store(in: &cancellables)
 
         viewModel.usersPublisher
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] users in
                 self?.subtitleLabel.text = users
             })
             .store(in: &cancellables)
 
+        viewModel.isChatGroupPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isChatGroup in
+                self?.isChatGroup = isChatGroup
+            })
+            .store(in: &cancellables)
+
         viewModel.groupInitialsPublisher
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] initials in
                 self?.iconIdentifierLabel.text = initials
             })
@@ -293,10 +298,18 @@ class ConversationDetailViewController: UIViewController {
     }
 
     private func showBetSelectionScreen() {
+//        if let conversationData = self.viewModel.getConversationData() {
+//            let betSelectionViewModel = ConversationBetSelectionViewModel(conversationData: conversationData)
+//            let betSelectionViewController = ConversationBetSelectionViewController(viewModel: betSelectionViewModel)
+//            self.present(betSelectionViewController, animated: true, completion: nil)
+//        }
+
         if let conversationData = self.viewModel.getConversationData() {
-            let betSelectionViewModel = ConversationBetSelectionViewModel(conversationData: conversationData)
-            let betSelectionViewController = ConversationBetSelectionViewController(viewModel: betSelectionViewModel)
-            self.present(betSelectionViewController, animated: true, completion: nil)
+            let conversationBetSelectionRootViewModel = ConversationBetSelectionRootViewModel(startTabIndex: 0, conversationData: conversationData)
+
+            let conversationBetSelectionRootViewController = ConversationBetSelectionRootViewController(viewModel: conversationBetSelectionRootViewModel)
+
+            self.present(conversationBetSelectionRootViewController, animated: true, completion: nil)
         }
     }
 
@@ -308,8 +321,8 @@ class ConversationDetailViewController: UIViewController {
 
     // MARK: Actions
     @objc func didTapBackButton() {
-        
-        self.shouldReloadData?()
+
+        Env.gomaSocialClient.reloadChatroomsList.send()
 
         self.navigationController?.popToRootViewController(animated: true)
     }
@@ -388,7 +401,7 @@ class ConversationDetailViewController: UIViewController {
     @objc func keyboardWillShow(notification: NSNotification) {
         self.messageInputKeyboardConstraint.isActive = false
         self.messageInputBottomConstraint.isActive = true
-        //self.scrollToBottomTableView()
+        self.scrollToTopTableView()
 
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             let keyboardHeight = keyboardSize.height - self.bottomSafeAreaView.frame.height
@@ -430,6 +443,7 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
         if let messageData = self.viewModel.messageData(forIndexPath: indexPath) {
             if messageData.type == .sentNotSeen || messageData.type == .sentSeen {
                 if messageData.attachment != nil {
+
                     guard
                         let cell = tableView.dequeueCellType(SentTicketMessageTableViewCell.self)
                     else {
@@ -552,6 +566,15 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
 
     func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
         return 20
+    }
+
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        isModalInPresentation = true
+
+    }
+
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        isModalInPresentation = false
     }
 }
 
@@ -867,5 +890,14 @@ extension ConversationDetailViewController {
 
         self.messageInputKeyboardConstraint.isActive = false
 
+    }
+}
+
+extension ConversationDetailViewController: UIAdaptivePresentationControllerDelegate {
+
+    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+
+        print("IS DISMISSING")
+        return false
     }
 }

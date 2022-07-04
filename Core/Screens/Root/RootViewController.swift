@@ -22,7 +22,8 @@ class RootViewController: UIViewController {
     
     @IBOutlet private weak var tabBarView: UIView!
     @IBOutlet private weak var bottomSafeAreaView: UIView!
-
+    @IBOutlet private weak var casinoBottomView: UIView!
+    
     @IBOutlet private weak var sportsButtonBaseView: UIView!
     @IBOutlet private weak var sportsIconImageView: UIImageView!
     @IBOutlet private weak var sportsTitleLabel: UILabel!
@@ -37,9 +38,11 @@ class RootViewController: UIViewController {
     
     @IBOutlet private weak var casinoButtonBaseView: UIView!
     @IBOutlet private weak var casinoIconImageView: UIImageView!
+    @IBOutlet private weak var casinoTitleLabel: UILabel!
     
     @IBOutlet private weak var sportsbookButtonBaseView: UIView!
     @IBOutlet private weak var sportsbookIconImageView: UIImageView!
+    @IBOutlet private weak var sportsbookTitleLabel: UILabel!
     
     @IBOutlet private weak var profileBaseView: UIView!
     @IBOutlet private weak var profilePictureBaseView: UIView!
@@ -59,7 +62,6 @@ class RootViewController: UIViewController {
     @IBOutlet private var accountPlusView: UIView!
     @IBOutlet private var accountValueLabel: UILabel!
     @IBOutlet private var accountPlusImageView: UIImageView!
-
     //
     //
     private var pictureInPictureView: PictureInPictureView?
@@ -240,7 +242,7 @@ class RootViewController: UIViewController {
         self.setupWithTheme()
 
         Env.userSessionStore.userSessionPublisher
-            .receive(on: DispatchQueue.main)
+            .receive(on: DispatchQueue.main) 
             .sink { userSession in
                 if let userSession = userSession {
                     self.screenState = .logged(user: userSession)
@@ -386,16 +388,20 @@ class RootViewController: UIViewController {
         self.homeTitleLabel.text = localized("home")
         self.sportsTitleLabel.text = localized("sports")
         self.liveTitleLabel.text = localized("live")
+        self.casinoTitleLabel.text = localized("casino")
+        self.sportsbookTitleLabel.text = localized("sportsbook")
+
         
         self.casinoBaseView.isHidden = true
         
-
         self.sportsbookButtonBaseView.isHidden = true
+        self.casinoBottomView.backgroundColor = UIColor.App.backgroundPrimary
+        self.casinoBottomView.isHidden = true
         
-        self.casinoButtonBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.casinoButtonBaseView.backgroundColor = UIColor.App.backgroundCards
         self.casinoButtonBaseView.layer.maskedCorners = [ .layerMinXMaxYCorner, .layerMinXMinYCorner]
         
-        self.sportsbookButtonBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.sportsbookButtonBaseView.backgroundColor = UIColor.App.backgroundCards
         self.sportsbookButtonBaseView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
         
         let homeTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapHomeTabItem))
@@ -440,10 +446,8 @@ class RootViewController: UIViewController {
         self.liveTitleLabel.textColor = UIColor.App.highlightPrimary
         self.sportsTitleLabel.textColor = UIColor.App.highlightPrimary
         
-        self.sportsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
-        self.homeIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
-        self.liveIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
-        self.casinoIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
+        self.casinoTitleLabel.textColor = UIColor.App.textSecondary
+        self.sportsbookTitleLabel.textColor = UIColor.App.textSecondary
         
         self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
         self.topBarView.backgroundColor = UIColor.App.backgroundPrimary
@@ -461,9 +465,9 @@ class RootViewController: UIViewController {
         self.topBarView.layer.shadowColor = UIColor.black.cgColor
         self.topBarView.layer.shadowOpacity = 0.25
 
-        self.homeButtonBaseView.backgroundColor = .clear
-        self.sportsButtonBaseView.backgroundColor = .clear
-        self.liveButtonBaseView.backgroundColor = .clear
+        self.homeButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.sportsButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.liveButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.profilePictureBaseView.backgroundColor = UIColor.App.highlightPrimary
 
         self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
@@ -479,10 +483,10 @@ class RootViewController: UIViewController {
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
 
         self.casinoButtonBaseView.alpha = self.activeButtonAlpha
-        self.casinoIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        self.casinoIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         
         self.sportsbookButtonBaseView.alpha = self.activeButtonAlpha
-        self.sportsbookIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        self.sportsbookIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         
         self.redrawButtonButtons()
     }
@@ -493,13 +497,13 @@ class RootViewController: UIViewController {
             self.loginBaseView.isHidden = true
             self.profileBaseView.isHidden = false
             self.accountValueBaseView.isHidden = false
-            self.searchButton.isHidden = false
+            
             Env.userSessionStore.forceWalletUpdate()
         case .anonymous:
             self.loginBaseView.isHidden = false
             self.profileBaseView.isHidden = true
             self.accountValueBaseView.isHidden = true
-            self.searchButton.isHidden = false
+            
         }
     }
 
@@ -674,6 +678,7 @@ extension RootViewController {
         
         if case .casino = tab, !casinoViewControllerLoaded {
             self.searchButton.isHidden = true
+          
             self.casinoViewController.modalPresentationStyle = .fullScreen
             self.casinoViewController.navigationItem.hidesBackButton = true
             self.addChildViewController(self.casinoViewController, toView: self.casinoBaseView)
@@ -813,32 +818,41 @@ extension RootViewController {
         self.selectedTabItem = .home
         self.tabBarView.isHidden = false
         self.searchButton.isHidden = false
-      
+        self.casinoBottomView.isHidden = true
+    
     }
 
     @objc private func didTapSportsTabItem() {
         self.selectedTabItem = .preLive
         self.tabBarView.isHidden = false
         self.searchButton.isHidden = false
+        self.casinoBottomView.isHidden = true
      
+       
     }
 
     @objc private func didTapLiveTabItem() {
         self.selectedTabItem = .live
         self.tabBarView.isHidden = false
         self.searchButton.isHidden = false
-  
+        self.casinoBottomView.isHidden = true
+       
+        
+       
     }
     
     @objc private func didTapCasinoTabItem() {
         self.selectedTabItem = .casino
         self.tabBarView.isHidden = true
         self.searchButton.isHidden = true
+        
         NSLayoutConstraint.activate([
             self.casinoBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
 
             ])
         self.casinoButtonBaseView.isHidden = true
+        self.tabBarView.isHidden = true
+        self.casinoBottomView.isHidden = false
     }
     
     @objc private func didTapSportsbookIcon() {
@@ -846,6 +860,8 @@ extension RootViewController {
         self.tabBarView.isHidden = false
         self.searchButton.isHidden = false
         self.selectedTabItem = .home
+        self.casinoBottomView.isHidden = true
+        
         self.selectHomeTabBarItem()
     }
     
@@ -903,53 +919,40 @@ extension RootViewController {
         switch self.selectedTabItem {
         case .home:
             homeButtonBaseView.alpha = self.activeButtonAlpha
-            sportsButtonBaseView.alpha = self.idleButtonAlpha
-            liveButtonBaseView.alpha = self.idleButtonAlpha
-
             homeTitleLabel.textColor = UIColor.App.highlightPrimary
             homeIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
-            sportsTitleLabel.textColor = UIColor.App.textPrimary
-            sportsIconImageView.setImageColor(color: UIColor.App.textPrimary)
-            liveTitleLabel.textColor = UIColor.App.textPrimary
-            liveIconImageView.setImageColor(color: UIColor.App.textPrimary)
+            sportsTitleLabel.textColor = UIColor.App.iconSecondary
+            sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            liveTitleLabel.textColor = UIColor.App.iconSecondary
+            liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
            
-
         case .preLive:
-            homeButtonBaseView.alpha = self.idleButtonAlpha
             sportsButtonBaseView.alpha = self.activeButtonAlpha
-            liveButtonBaseView.alpha = self.idleButtonAlpha
-
-            homeTitleLabel.textColor = UIColor.App.textPrimary
-            homeIconImageView.setImageColor(color: UIColor.App.textPrimary)
+            homeTitleLabel.textColor = UIColor.App.iconSecondary
+            homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             sportsTitleLabel.textColor = UIColor.App.highlightPrimary
             sportsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
-            liveTitleLabel.textColor = UIColor.App.textPrimary
-            liveIconImageView.setImageColor(color: UIColor.App.textPrimary)
+            liveTitleLabel.textColor = UIColor.App.iconSecondary
+            liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
 
         case .live:
-            homeButtonBaseView.alpha = self.idleButtonAlpha
-            sportsButtonBaseView.alpha = self.idleButtonAlpha
             liveButtonBaseView.alpha = self.activeButtonAlpha
 
-            homeTitleLabel.textColor = UIColor.App.textPrimary
-            homeIconImageView.setImageColor(color: UIColor.App.textPrimary)
-            sportsTitleLabel.textColor = UIColor.App.textPrimary
-            sportsIconImageView.setImageColor(color: UIColor.App.textPrimary)
+            homeTitleLabel.textColor = UIColor.App.iconSecondary
+            homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            sportsTitleLabel.textColor = UIColor.App.iconSecondary
+            sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             liveTitleLabel.textColor = UIColor.App.highlightPrimary
             liveIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
             
         case .casino:
-            homeButtonBaseView.alpha = self.idleButtonAlpha
-            sportsButtonBaseView.alpha = self.idleButtonAlpha
-            liveButtonBaseView.alpha = self.idleButtonAlpha
             
-            
-            homeTitleLabel.textColor = UIColor.App.textPrimary
-            homeIconImageView.setImageColor(color: UIColor.App.textPrimary)
-            sportsTitleLabel.textColor = UIColor.App.textPrimary
-            sportsIconImageView.setImageColor(color: UIColor.App.textPrimary)
-            liveTitleLabel.textColor = UIColor.App.textPrimary
-            liveIconImageView.setImageColor(color: UIColor.App.textPrimary)
+            homeTitleLabel.textColor = UIColor.App.iconSecondary
+            homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            sportsTitleLabel.textColor = UIColor.App.iconSecondary
+            sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            liveTitleLabel.textColor = UIColor.App.iconSecondary
+            liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         }
 
     }

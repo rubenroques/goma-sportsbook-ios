@@ -122,19 +122,16 @@ class UserSessionStore {
         }
 
         UserDefaults.standard.userSession = nil
-        
-        self.userSessionPublisher.send(nil)
-        self.userBalanceWallet.send(nil)
-        
+                
         self.unsubscribeWalletUpdates()
 
         Env.favoritesManager.clearCachedFavorites()
+        Env.gomaSocialClient.clearUserChatroomsData()
 
         UserDefaults.standard.removeObject(forKey: "user_betslip_settings")
         
         Env.gomaNetworkClient.reconnectSession()
-        self.hasGomaUserSessionPublisher.send(false)
-        
+
         Env.everyMatrixClient
             .logout()
             .sink(receiveCompletion: { completion in
@@ -144,6 +141,11 @@ class UserSessionStore {
             })
             .store(in: &cancellables)
 
+        self.userSessionPublisher.send(nil)
+        self.userBalanceWallet.send(nil)
+        
+        self.hasGomaUserSessionPublisher.send(false)
+        
     }
 
     func loginUser(withUsername username: String, password: String) -> AnyPublisher<UserSession, UserSessionError> {

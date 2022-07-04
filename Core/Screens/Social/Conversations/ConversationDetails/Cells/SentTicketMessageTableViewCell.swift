@@ -22,7 +22,7 @@ class SentTicketMessageTableViewCell: UITableViewCell {
     private lazy var topBubbleTailView: UIView = Self.createTopBubbleTailView()
 
     private var ticketInMessageView: ChatTicketInMessageView?
-
+    private var ticketStateInMessageView: ChatTicketStateInMessageView?
     // MARK: Public Properties
     var isMessageSeen: Bool = false {
         didSet {
@@ -109,13 +109,22 @@ class SentTicketMessageTableViewCell: UITableViewCell {
         if let attachment = messageData.attachment {
             let ticket = BetHistoryEntry(sharedBetTicket: attachment.content)
             let betSelectionCellViewModel = BetSelectionCellViewModel(ticket: ticket)
-            self.ticketInMessageView = ChatTicketInMessageView(betSelectionCellViewModel: betSelectionCellViewModel,
-                                                               shouldShowButton: false)
 
-            self.ticketInMessageView!.didTapBetNowAction = { [weak self] viewModel in
-                self?.didTapBetNowAction(viewModel)
+            if ticket.status == "OPEN" {
+                self.ticketInMessageView = ChatTicketInMessageView(betSelectionCellViewModel: betSelectionCellViewModel,
+                                                                   shouldShowButton: false)
+
+                self.ticketInMessageView!.didTapBetNowAction = { [weak self] viewModel in
+                    self?.didTapBetNowAction(viewModel)
+                }
+                self.ticketBaseStackView.addArrangedSubview(self.ticketInMessageView!)
             }
-            self.ticketBaseStackView.addArrangedSubview(self.ticketInMessageView!)
+            else {
+                self.ticketStateInMessageView = ChatTicketStateInMessageView(betSelectionCellViewModel: betSelectionCellViewModel)
+
+                self.ticketBaseStackView.addArrangedSubview(self.ticketStateInMessageView!)
+            }
+
         }
 
         self.ticketInMessageView?.cardBackgroundColor = UIColor.App.backgroundSecondary
@@ -181,7 +190,7 @@ extension SentTicketMessageTableViewCell {
         label.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = AppFont.with(type: .medium, size: 14)
+        label.font = AppFont.with(type: .medium, size: 16)
         return label
     }
 
