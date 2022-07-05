@@ -61,16 +61,22 @@ extension UserDefaults {
     }
     
     var cachedBetslipTickets: [BettingTicket] {
+        
         get {
-            if let array = self.value(forKey: "cachedBetslipTickets") {
-                return array as! [BettingTicket]
-            }else{
-                return []
+            
+            let bettingTickets: [BettingTicket]? = self.codable(forKey: UserDefaultsKey.cachedBetslipTickets.rawValue)
+            
+            if let bettingTicketsValue = bettingTickets {
+                return bettingTicketsValue
             }
+            
+            self.set([], forKey: UserDefaultsKey.cachedBetslipTickets.rawValue)
+            return []
         }
         set {
-            self.setValue(newValue, forKey: "cachedBetslipTickets")
+            self.set(codable: newValue, forKey: UserDefaultsKey.cachedBetslipTickets.rawValue)
         }
+        
     }
 
     var userOddsFormat: OddsFormat {
