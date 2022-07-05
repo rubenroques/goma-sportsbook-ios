@@ -93,6 +93,9 @@ class SocialItemCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    var shouldOpenMoreOptions: (() -> Void)?
+    var shouldShareTicket: (() -> Void)?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -183,6 +186,11 @@ class SocialItemCollectionViewCell: UICollectionViewCell {
     @objc func didTapItem() {
         if let viewModel = self.viewModel {
             print("TAPPED SOCIAL CHAT: \(viewModel.getChatroomName())")
+            self.shouldShareTicket?()
+        }
+
+        if self.isMoreOptionTheme {
+            self.shouldOpenMoreOptions?()
         }
 
     }

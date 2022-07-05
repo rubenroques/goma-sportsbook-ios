@@ -15,6 +15,7 @@ class ShareTicketChoiceViewModel {
     var socialApps: CurrentValueSubject<[SocialApp], Never> = .init([])
     var shouldReloadData: PassthroughSubject<Void, Never> = .init()
     var clickedShareTicketInfo: ClickedShareTicketInfo?
+    var messageSentAction: (() -> Void)?
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -55,6 +56,65 @@ class ShareTicketChoiceViewModel {
 
         self.shouldReloadData.send()
     }
+
+    func sendTicketMessage(chatroomData: ChatroomData) {
+
+        guard
+            let ticket = self.clickedShareTicketInfo?.ticket
+        else {
+            return
+        }
+
+        let betTokenRoute = TSRouter.getSharedBetTokens(betId: ticket.betId)
+
+        Env.everyMatrixClient.manager.getModel(router: betTokenRoute, decodingType: SharedBetToken.self)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure:
+                    ()
+                    //self?.isLoadingSharedBetPublisher.send(false)
+                case .finished:
+                    ()
+                }
+            },
+            receiveValue: { [weak self] betToken in
+                guard let self = self else { return }
+
+                let attachment = self.generateAttachmentString(ticket: ticket,
+                                                               withToken: betToken.sharedBetTokens.betTokenWithAllInfo)
+
+                Env.gomaSocialClient.sendMessage(chatroomId: chatroomData.chatroom.id,
+                                                 message: "",
+                                                 attachment: attachment)
+
+                //self.isLoadingSharedBetPublisher.send(false)
+                self.messageSentAction?()
+            })
+            .store(in: &cancellables)
+
+    }
+
+    func generateAttachmentString(ticket: BetHistoryEntry, withToken betShareToken: String) -> [String: AnyObject]? {
+
+        guard let token = Env.gomaNetworkClient.getCurrentToken() else {
+            return nil
+        }
+
+        let attachment = SharedBetTicketAttachment(id: ticket.betId,
+                                                   type: "bet",
+                                                   fromUser: "\(token.userId)",
+                                                   content: SharedBetTicket(betHistoryEntry: ticket,
+                                                                            betShareToken: betShareToken))
+
+        if let jsonData = try? JSONEncoder().encode(attachment) {
+            let dictionary = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) as? [String: AnyObject]
+            return dictionary
+        }
+        else {
+            return nil
+        }
+    }
 }
 
 class ShareTicketChoiceViewController: UIViewController {
@@ -73,9 +133,17 @@ class ShareTicketChoiceViewController: UIViewController {
     private lazy var copyLinkButton: UIButton = Self.createCopyLinkButton()
     private lazy var sendViaButton: UIButton = Self.createSendViaButton()
     private lazy var socialAppsCollectionView: UICollectionView = Self.createSocialAppsCollectionView()
+    private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
+    private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
     private var cancellables = Set<AnyCancellable>()
 
     var viewModel: ShareTicketChoiceViewModel
+
+    var isLoading: Bool = false {
+        didSet {
+            self.loadingBaseView.isHidden = !isLoading
+        }
+    }
 
     // MARK: - Lifetime and Cycle
     init(viewModel: ShareTicketChoiceViewModel) {
@@ -111,13 +179,10 @@ class ShareTicketChoiceViewController: UIViewController {
 
         self.sendViaButton.addTarget(self, action: #selector(didTapSendViaButton), for: .primaryActionTriggered)
 
-    }
+        self.bind(toViewModel: self.viewModel)
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+        self.isLoading = false
 
-        self.chatCollectionView.reloadData()
-        self.socialAppsCollectionView.reloadData()
     }
 
     // MARK: - Layout and Theme
@@ -168,10 +233,11 @@ class ShareTicketChoiceViewController: UIViewController {
 
         self.socialAppsCollectionView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
         self.socialAppsCollectionView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
     }
 
     // MARK: Binding
-
     private func bind(toViewModel viewModel: ShareTicketChoiceViewModel) {
 
         viewModel.shouldReloadData
@@ -182,6 +248,32 @@ class ShareTicketChoiceViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        viewModel.messageSentAction = { [weak self] in
+            guard let self = self else {return}
+
+            if self.isModal {
+                self.dismiss(animated: true, completion: nil)
+            }
+            else {
+                self.navigationController?.popViewController(animated: true)
+            }
+        }
+
+    }
+
+    // MARK: Functions
+    private func openMoreOptions() {
+        if let sharedTicketInfo = self.viewModel.clickedShareTicketInfo {
+            let shareTicketFriendGroupViewModel = ShareTicketFriendGroupViewModel(sharedTicketInfo: sharedTicketInfo)
+
+            let shareTicketFriendGroupViewController = ShareTicketFriendGroupViewController(viewModel: shareTicketFriendGroupViewModel)
+
+            self.present(shareTicketFriendGroupViewController, animated: true)
+        }
+    }
+
+    private func shareTicketToChatroom(chatroomData: ChatroomData) {
+        self.viewModel.sendTicketMessage(chatroomData: chatroomData)
     }
 
     // MARK: Actions
@@ -200,7 +292,6 @@ class ShareTicketChoiceViewController: UIViewController {
     }
 
     @objc func didTapSendViaButton() {
-        print("SEND VIA")
 
         let metadata = LPLinkMetadata()
         let urlMobile = Env.urlMobileShares
@@ -229,6 +320,7 @@ class ShareTicketChoiceViewController: UIViewController {
                 popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
                 popoverController.permittedArrowDirections = []
             }
+
             self.present(shareActivityViewController, animated: true, completion: nil)
         }
         else {
@@ -239,6 +331,7 @@ class ShareTicketChoiceViewController: UIViewController {
                 popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
                 popoverController.permittedArrowDirections = []
             }
+
             self.present(shareActivityViewController, animated: true, completion: nil)
         }
     }
@@ -260,15 +353,26 @@ extension ShareTicketChoiceViewController: UICollectionViewDelegate, UICollectio
                 fatalError()
             }
 
-            if let chatroomData = self.viewModel.chatrooms.value[safe: indexPath.row] {
+            if indexPath.row < 4 {
+                if let chatroomData = self.viewModel.chatrooms.value[safe: indexPath.row] {
 
-                let cellViewModel = SocialItemCellViewModel(chatroomData: chatroomData)
+                    let cellViewModel = SocialItemCellViewModel(chatroomData: chatroomData)
 
-                cell.configure(withViewModel: cellViewModel)
+                    cell.configure(withViewModel: cellViewModel)
 
+                    cell.shouldShareTicket = {
+                        self.shareTicketToChatroom(chatroomData: chatroomData)
+
+                    }
+
+                }
             }
             else {
                 cell.simpleConfigure()
+
+                cell.shouldOpenMoreOptions = {
+                    self.openMoreOptions()
+                }
             }
 
             return cell
@@ -291,29 +395,33 @@ extension ShareTicketChoiceViewController: UICollectionViewDelegate, UICollectio
             return cell
         }
 
-        return UICollectionViewCell()
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == self.socialAppsCollectionView {
             return self.viewModel.socialApps.value.count
         }
+        else {
+            if self.viewModel.chatrooms.value.count <= 4 {
+                return self.viewModel.chatrooms.value.count
+            }
+            return 5
 
-        return self.viewModel.chatrooms.value.count + 1
+        }
 
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if collectionView == self.chatCollectionView {
-            let chatroom = self.viewModel.chatrooms.value[safe: indexPath.row]
-
-            print("CHATROOM: \(chatroom)")
-        }
-        else {
-            let socialApp = self.viewModel.socialApps.value[safe: indexPath.row]
-
-            print("SOCIAL APP: \(socialApp)")
-        }
+//        if collectionView == self.chatCollectionView {
+//            if let chatroom = self.viewModel.chatrooms.value[safe: indexPath.row] {
+//                self.shareTicketToChatroom(chatroomData: chatroom)
+//            }
+//
+//        }
+//        else {
+//            let socialApp = self.viewModel.socialApps.value[safe: indexPath.row]
+//
+//        }
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -451,6 +559,20 @@ extension ShareTicketChoiceViewController {
         return collectionView
     }
 
+    private static func createLoadingBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createActivityIndicatorView() -> UIActivityIndicatorView {
+        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.startAnimating()
+        return activityIndicatorView
+    }
+
     private func setupSubviews() {
         self.view.addSubview(self.topSafeAreaView)
 
@@ -473,6 +595,10 @@ extension ShareTicketChoiceViewController {
         self.generalOptionsView.addSubview(self.bottomSeparatorLineView)
 
         self.bottomShareView.addSubview(self.socialAppsCollectionView)
+
+        self.view.addSubview(self.loadingBaseView)
+
+        self.loadingBaseView.addSubview(self.activityIndicatorView)
 
         self.initConstraints()
     }
@@ -562,6 +688,17 @@ extension ShareTicketChoiceViewController {
             self.socialAppsCollectionView.topAnchor.constraint(equalTo: self.generalOptionsView.bottomAnchor, constant: 2),
             self.socialAppsCollectionView.bottomAnchor.constraint(equalTo: self.bottomShareView.bottomAnchor)
         ])
+
+        // Loading Screen
+        NSLayoutConstraint.activate([
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
+
+            self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
+            self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor)
+        ])
     }
 }
 
@@ -570,6 +707,7 @@ struct ClickedShareTicketInfo {
     var betId: String?
     var betStatus: String?
     var betToken: String
+    var ticket: BetHistoryEntry?
 }
 
 struct SocialApp {
