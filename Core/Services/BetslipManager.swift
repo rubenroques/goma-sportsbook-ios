@@ -19,31 +19,31 @@ class BetslipManager: NSObject {
 
     var newBetsPlacedPublisher = PassthroughSubject<Void, Never>.init()
     var bettingTicketsPublisher: CurrentValueSubject<[BettingTicket], Never>
-
     private var bettingTicketsDictionaryPublisher: CurrentValueSubject<OrderedDictionary<String, BettingTicket>, Never>
-
     private var bettingTicketPublisher: [String: CurrentValueSubject<BettingTicket, Never>]
 
     var simpleBetslipSelectionState: CurrentValueSubject<BetslipSelectionState?, Never>
     var multipleBetslipSelectionState: CurrentValueSubject<BetslipSelectionState?, Never>
     var systemBetslipSelectionState: CurrentValueSubject<BetslipSelectionState?, Never>
     var simpleBetslipSelectionStateList: CurrentValueSubject<[String: BetslipSelectionState], Never> = .init([:])
-
     var betPlacedDetailsErrorsPublisher: CurrentValueSubject<[BetPlacedDetails], Never>
     var betslipPlaceBetResponseErrorsPublisher: CurrentValueSubject<[BetslipPlaceBetResponse], Never>
-   
-
     private var bettingTicketRegisters: [String: EndpointPublisherIdentifiable] = [:]
     private var bettingTicketSubscribers: [String: AnyCancellable] = [:]
 
     private var cancellables: Set<AnyCancellable> = []
 
     override init() {
-
+        
         self.bettingTicketsPublisher = .init([])
-        self.bettingTicketsDictionaryPublisher = .init([:])
+        
+        var cachedBetslipTicketsDictionary: OrderedDictionary<String, BettingTicket> = [:]
+        for ticket in UserDefaults.standard.cachedBetslipTickets {
+                cachedBetslipTicketsDictionary[ticket.id] = ticket
+        }
+    
+        self.bettingTicketsDictionaryPublisher = .init(cachedBetslipTicketsDictionary)
         self.bettingTicketPublisher = [:]
-
         self.simpleBetslipSelectionState = .init(nil)
         self.multipleBetslipSelectionState = .init(nil)
         self.systemBetslipSelectionState = .init(nil)
@@ -51,7 +51,7 @@ class BetslipManager: NSObject {
         self.betslipPlaceBetResponseErrorsPublisher = .init([])
         
         super.init()
-
+        
         NotificationCenter.default.publisher(for: .socketConnected)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
@@ -66,15 +66,23 @@ class BetslipManager: NSObject {
                 return Array.init(dictionary.values)
             })
             .sink { [weak self] tickets in
+                
                 self?.bettingTicketsPublisher.send(tickets)
             }
             .store(in: &cancellables)
-
+        
+        bettingTicketsPublisher
+            .sink { tickets in
+                UserDefaults.standard.cachedBetslipTickets = tickets
+            }
+            .store(in: &cancellables)
+        
         bettingTicketsDictionaryPublisher
             .filter(\.isEmpty)
             .sink { [weak self] _ in
             self?.simpleBetslipSelectionState.send(nil)
             self?.multipleBetslipSelectionState.send(nil)
+            UserDefaults.standard.cachedBetslipTickets = []
         }
         .store(in: &cancellables)
 
@@ -89,9 +97,9 @@ class BetslipManager: NSObject {
             .sink { [weak self] in
                 self?.requestSimpleBetslipSelectionState()
                 self?.requestMultipleBetslipSelectionState()
+               
             }
             .store(in: &cancellables)
-
 
     }
 
@@ -126,9 +134,11 @@ class BetslipManager: NSObject {
     }
 
     private func reconnectBettingTicketsUpdates() {
-        for bettingTicket in self.bettingTicketsPublisher.value {
-            self.subscribeBettingTicketPublisher(bettingTicket: bettingTicket)
-        }
+        
+            for bettingTicket in self.bettingTicketsPublisher.value {
+                self.subscribeBettingTicketPublisher(bettingTicket: bettingTicket)
+            }
+        
     }
 
     private func unsubscribeBettingTicketPublisher(withId id: String) {
@@ -142,6 +152,7 @@ class BetslipManager: NSObject {
         }
 
         self.bettingTicketPublisher.removeValue(forKey: id)
+        
     }
 
     private func subscribeBettingTicketPublisher(bettingTicket: BettingTicket) {
@@ -293,7 +304,7 @@ extension BetslipManager {
                 .store(in: &cancellables)
 
         }
-
+        
     }
 
     func requestMultipleBetslipSelectionState(oddsBoostPercentage: Double? = nil) {
@@ -458,6 +469,7 @@ extension BetslipManager {
                 if betslipPlaceBetResponse.response.betSucceed ?? false {
                     //self.clearAllBettingTickets()
                     self.newBetsPlacedPublisher.send()
+                    
                 }
             })
             .eraseToAnyPublisher()
@@ -600,6 +612,7 @@ extension BetslipManager {
     }
 
 }
+
 
 struct BetslipError {
     var errorMessage: String
