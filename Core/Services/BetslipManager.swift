@@ -72,7 +72,7 @@ class BetslipManager: NSObject {
             .store(in: &cancellables)
         
         bettingTicketsPublisher
-            .sink { [weak self] tickets in
+            .sink { tickets in
                 UserDefaults.standard.cachedBetslipTickets = tickets
             }
             .store(in: &cancellables)
