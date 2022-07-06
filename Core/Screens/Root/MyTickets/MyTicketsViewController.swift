@@ -241,8 +241,8 @@ class MyTicketsViewController: UIViewController {
                                                               betToken: self.viewModel.clickedBetTokenPublisher.value,
                                                               ticket: self.viewModel.clickedBetHistory)
 
-          let shareTicketChoiceViewModel = ShareTicketChoiceViewModel()
-          shareTicketChoiceViewModel.clickedShareTicketInfo = clickedShareTicketInfo
+          let shareTicketChoiceViewModel = ShareTicketChoiceViewModel(clickedShareTicketInfo: clickedShareTicketInfo)
+          //shareTicketChoiceViewModel.clickedShareTicketInfo = clickedShareTicketInfo
 
           let shareTicketChoiceViewController = ShareTicketChoiceViewController(viewModel: shareTicketChoiceViewModel)
           

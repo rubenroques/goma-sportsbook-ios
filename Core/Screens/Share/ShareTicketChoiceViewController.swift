@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import LinkPresentation
+import Social
 
 class ShareTicketChoiceViewModel {
 
@@ -16,13 +17,18 @@ class ShareTicketChoiceViewModel {
     var shouldReloadData: PassthroughSubject<Void, Never> = .init()
     var clickedShareTicketInfo: ClickedShareTicketInfo?
     var messageSentAction: (() -> Void)?
+    var canCopyLinkPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     private var cancellables = Set<AnyCancellable>()
 
-    init() {
+    init(clickedShareTicketInfo: ClickedShareTicketInfo) {
+
+        self.clickedShareTicketInfo = clickedShareTicketInfo
 
         self.getChatrooms()
         self.getSocialApps()
+
+        self.checkCopyLink()
     }
 
     private func getChatrooms() {
@@ -47,14 +53,42 @@ class ShareTicketChoiceViewModel {
     }
 
     private func getSocialApps() {
-        var socialNames = ["Facebook", "Telegram", "Twitter", "Whatsapp"]
+        let socialNames = Env.gomaSocialClient.socialAppNamesSupported
+        let socialNamesSchemas = Env.gomaSocialClient.socialAppNamesSchemesSupported
+
         // TEST
-        for i in 0...3 {
-            let socialApp = SocialApp(id: "\(i)", name: socialNames[i], iconName: "\(socialNames[i].lowercased())_icon")
-            self.socialApps.value.append(socialApp)
+        for (index, socialSchema) in socialNamesSchemas.enumerated() {
+            let appScheme = "\(socialSchema)://"
+            let appUrl = URL(string: appScheme)
+
+            if UIApplication.shared.canOpenURL(appUrl! as URL) {
+
+                let socialApp = SocialApp(id: "\(index)", name: socialNames[index], iconName: "\(socialNames[index].lowercased())_icon", appScheme: appScheme)
+
+                self.socialApps.value.append(socialApp)
+
+                print("\(appScheme) detected")
+
+            }
+            else {
+                print("\(appScheme) not detected")
+            }
+//            let socialApp = SocialApp(id: "\(i)", name: socialNames[i], iconName: "\(socialNames[i].lowercased())_icon")
+//            self.socialApps.value.append(socialApp)
         }
 
         self.shouldReloadData.send()
+    }
+
+    private func checkCopyLink() {
+        if let betStatus = self.clickedShareTicketInfo?.betStatus {
+            if betStatus == "OPEN" {
+                self.canCopyLinkPublisher.send(true)
+            }
+            else {
+                self.canCopyLinkPublisher.send(false)
+            }
+        }
     }
 
     func sendTicketMessage(chatroomData: ChatroomData) {
@@ -81,11 +115,13 @@ class ShareTicketChoiceViewModel {
             receiveValue: { [weak self] betToken in
                 guard let self = self else { return }
 
+                let defaultMessage = localized("check_this_bet_made")
+
                 let attachment = self.generateAttachmentString(ticket: ticket,
                                                                withToken: betToken.sharedBetTokens.betTokenWithAllInfo)
 
                 Env.gomaSocialClient.sendMessage(chatroomId: chatroomData.chatroom.id,
-                                                 message: "",
+                                                 message: defaultMessage,
                                                  attachment: attachment)
 
                 //self.isLoadingSharedBetPublisher.send(false)
@@ -138,6 +174,7 @@ class ShareTicketChoiceViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
 
     var viewModel: ShareTicketChoiceViewModel
+    let pasteboard = UIPasteboard.general
 
     var isLoading: Bool = false {
         didSet {
@@ -225,11 +262,15 @@ class ShareTicketChoiceViewController: UIViewController {
 
         self.bottomSeparatorLineView.backgroundColor = UIColor.App.separatorLine
 
-        self.copyLinkButton.backgroundColor = .clear
-        self.copyLinkButton.titleLabel?.textColor = UIColor.App.textPrimary
+        self.copyLinkButton.setBackgroundColor(.clear, for: .normal)
+        self.copyLinkButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        self.copyLinkButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.copyLinkButton.setTitleColor(UIColor.App.buttonTextDisablePrimary.withAlphaComponent(0.39), for: .disabled)
 
-        self.sendViaButton.backgroundColor = .clear
-        self.sendViaButton.titleLabel?.textColor = UIColor.App.textPrimary
+        self.sendViaButton.setBackgroundColor(.clear, for: .normal)
+        self.sendViaButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        self.sendViaButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.sendViaButton.setTitleColor(UIColor.App.buttonTextDisablePrimary.withAlphaComponent(0.7), for: .disabled)
 
         self.socialAppsCollectionView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
         self.socialAppsCollectionView.backgroundColor = UIColor.App.backgroundPrimary
@@ -259,6 +300,13 @@ class ShareTicketChoiceViewController: UIViewController {
             }
         }
 
+        viewModel.canCopyLinkPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isEnabled in
+                self?.copyLinkButton.isEnabled = isEnabled
+            })
+            .store(in: &cancellables)
+
     }
 
     // MARK: Functions
@@ -268,12 +316,51 @@ class ShareTicketChoiceViewController: UIViewController {
 
             let shareTicketFriendGroupViewController = ShareTicketFriendGroupViewController(viewModel: shareTicketFriendGroupViewModel)
 
+            shareTicketFriendGroupViewController.shouldCloseParentViewController = { [weak self] in
+                self?.closeViewController()
+            }
+
             self.present(shareTicketFriendGroupViewController, animated: true)
         }
     }
 
     private func shareTicketToChatroom(chatroomData: ChatroomData) {
         self.viewModel.sendTicketMessage(chatroomData: chatroomData)
+    }
+
+    private func closeViewController() {
+        if self.isModal {
+            self.dismiss(animated: true, completion: nil)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
+    }
+
+    private func showSocialShareScreen(socialAppViewModel: SocialAppItemCellViewModel) {
+
+//        if socialAppViewModel.getSocialAppName() == "Facebook" {
+//            if let vc = SLComposeViewController(forServiceType: SLServiceTypeFacebook) {
+//                guard let clickedTicket = self.viewModel.clickedShareTicketInfo,
+//                let gameSnapshot = self.viewModel.clickedShareTicketInfo?.snapshot,
+//                let betStatus = self.viewModel.clickedShareTicketInfo?.betStatus
+//                else {
+//                    return
+//                }
+//
+//                vc.setInitialText(localized("look_bet_made"))
+//                vc.add(gameSnapshot)
+//                vc.add(URL(string: "https://www.hackingwithswift.com"))
+//                present(vc, animated: true)
+//            }
+//        }
+        let scheme = "discord://"
+        if let url = URL(string: scheme) {
+            UIApplication.shared.open(url, options: [:], completionHandler: {
+              (success) in
+              print("Open \(scheme): \(success)")
+            })
+          }
     }
 
     // MARK: Actions
@@ -289,6 +376,26 @@ class ShareTicketChoiceViewController: UIViewController {
 
     @objc func didTapCopyLinkButton() {
         print("COPY LINK")
+
+        if let betStatus = self.viewModel.clickedShareTicketInfo?.betStatus {
+
+            let urlMobile = Env.urlMobileShares
+
+            if betStatus == "OPEN",
+               let betToken = self.viewModel.clickedShareTicketInfo?.betToken {
+                let matchUrlString = "\(urlMobile)/bet/\(betToken)"
+
+                self.pasteboard.string = matchUrlString
+
+                let customUrlString = localized("ticket_url_pasteboard")
+
+                let customToast = ToastCustom.text(title: customUrlString)
+
+                customToast.show()
+            }
+
+        }
+
     }
 
     @objc func didTapSendViaButton() {
@@ -389,6 +496,10 @@ extension ShareTicketChoiceViewController: UICollectionViewDelegate, UICollectio
                 let cellViewModel = SocialAppItemCellViewModel(socialApp: socialApp)
 
                 cell.configure(withViewModel: cellViewModel)
+
+                cell.shouldShowSocialShare = { [weak self] in
+                    self?.showSocialShareScreen(socialAppViewModel: cellViewModel)
+                }
 
             }
 
@@ -711,7 +822,8 @@ struct ClickedShareTicketInfo {
 }
 
 struct SocialApp {
-    var id: String?
+    var id: String
     var name: String
-    var iconName: String?
+    var iconName: String
+    var appScheme: String
 }

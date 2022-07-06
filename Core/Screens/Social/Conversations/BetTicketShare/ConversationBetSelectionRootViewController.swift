@@ -392,7 +392,12 @@ class ConversationBetSelectionRootViewController: UIViewController {
     }
 
     @objc func didTapSendButton() {
-        let message = self.messageInputView.getTextViewValue()
+        var message = ""
+
+        if !self.messageInputView.showPlaceholder {
+            message = self.messageInputView.getTextViewValue()
+        }
+        
         self.viewModel.sendMessage(message: message)
     }
 

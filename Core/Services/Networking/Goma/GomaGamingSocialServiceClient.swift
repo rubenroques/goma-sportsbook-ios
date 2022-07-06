@@ -45,6 +45,8 @@ class GomaGamingSocialServiceClient {
     var chatPage: Int = 1
 
     var locations: OrderedDictionary<String, EveryMatrix.Location> = [:]
+    var socialAppNamesSupported: [String] = ["Facebook", "Telegram", "Twitter", "Whatsapp", "Discord", "Messenger"]
+    var socialAppNamesSchemesSupported: [String] = ["fb", "telegram", "twitter", "whatsapp", "discord", "fb-messenger"]
     
     // MARK: Private Properties
     private var manager: SocketManager?

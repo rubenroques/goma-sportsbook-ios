@@ -31,6 +31,7 @@ struct SocialAppItemCellViewModel {
 
 class SocialAppItemCollectionViewCell: UICollectionViewCell {
 
+    // MARK: Private properties
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var iconBaseView: UIView = Self.createIconBaseView()
     private lazy var iconImageView: UIImageView = Self.createIconImageView()
@@ -38,6 +39,9 @@ class SocialAppItemCollectionViewCell: UICollectionViewCell {
 
     private var viewModel: SocialAppItemCellViewModel?
 
+    // MARK: Public Properties
+    var shouldShowSocialShare: (() -> Void)?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -65,7 +69,6 @@ class SocialAppItemCollectionViewCell: UICollectionViewCell {
 
         self.iconBaseView.layer.cornerRadius = self.iconBaseView.frame.height / 2
         self.iconBaseView.layer.masksToBounds = true
-
 
         self.iconImageView.layer.cornerRadius = self.iconImageView.frame.height / 2
         self.iconImageView.layer.masksToBounds = true
@@ -105,6 +108,7 @@ class SocialAppItemCollectionViewCell: UICollectionViewCell {
     @objc func didTapItem() {
         if let viewModel = self.viewModel {
             print("TAPPED SOCIAL APP: \(viewModel.getSocialAppName())")
+            self.shouldShowSocialShare?()
         }
 
     }

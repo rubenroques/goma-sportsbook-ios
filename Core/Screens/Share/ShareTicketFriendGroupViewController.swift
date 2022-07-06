@@ -97,7 +97,7 @@ class ShareTicketFriendGroupViewModel {
 
     }
 
-    func sendTicketMessage() {
+    func sendTicketMessage(message: String) {
 
         if self.selectedChatrooms.isNotEmpty {
 
@@ -129,10 +129,9 @@ class ShareTicketFriendGroupViewModel {
                     for chatroomData in self.selectedChatrooms {
 
                         Env.gomaSocialClient.sendMessage(chatroomId: chatroomData.chatroom.id,
-                                                         message: "",
+                                                         message: message,
                                                          attachment: attachment)
                     }
-
 
                     //self.isLoadingSharedBetPublisher.send(false)
                     self.messageSentAction?()
@@ -206,7 +205,10 @@ class ShareTicketFriendGroupViewController: UIViewController {
         }
     }
 
+    var canCloseParentViewController: Bool = false
+
     var textPublisher: CurrentValueSubject<String, Never> = .init("")
+    var shouldCloseParentViewController: (() -> Void)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: ShareTicketFriendGroupViewModel) {
@@ -244,6 +246,8 @@ class ShareTicketFriendGroupViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
+        self.showPlaceholder = true
+
         // TableView top padding fix
         if #available(iOS 15.0, *) {
           tableView.sectionHeaderTopPadding = 0
@@ -254,8 +258,10 @@ class ShareTicketFriendGroupViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        self.presentingViewController?.dismiss(animated: animated)
+    override func viewDidDisappear(_ animated: Bool) {
+        if canCloseParentViewController{
+            self.shouldCloseParentViewController?()
+        }
     }
 
     // MARK: - Layout and Theme
@@ -342,6 +348,8 @@ class ShareTicketFriendGroupViewController: UIViewController {
         viewModel.messageSentAction = { [weak self] in
             guard let self = self else {return}
 
+            //self.shouldCloseParentViewController?()
+            self.canCloseParentViewController = true
             self.dismiss(animated: true, completion: nil)
 
         }
@@ -388,8 +396,13 @@ class ShareTicketFriendGroupViewController: UIViewController {
     }
 
     @objc func didTapSendButton() {
-        print("SEND!")
-        self.viewModel.sendTicketMessage()
+        if !self.showPlaceholder {
+            let comment = self.commentTextView.text ?? ""
+            self.viewModel.sendTicketMessage(message: comment)
+        }
+        else {
+            self.viewModel.sendTicketMessage(message: "")
+        }
     }
 
     @objc func didTapBackground() {
@@ -449,7 +462,6 @@ extension ShareTicketFriendGroupViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let recentSearch = searchBar.text {
 
-           // Do something if needed
         }
 
         self.searchBar.resignFirstResponder()
