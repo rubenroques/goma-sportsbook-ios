@@ -3159,6 +3159,12 @@
 		45BEA48E26F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BEA47E26F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.swift */; };
 		45BF4E6D270DC37D00785E79 /* FilterLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BF4E6C270DC37D00785E79 /* FilterLineView.swift */; };
 		45BF4E6E270DC37D00785E79 /* FilterLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BF4E6C270DC37D00785E79 /* FilterLineView.swift */; };
+		45C10E1E28759FEF00037BBE /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10E1D28759FEF00037BBE /* KDCircularProgress.swift */; };
+		45C10E1F28759FEF00037BBE /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10E1D28759FEF00037BBE /* KDCircularProgress.swift */; };
+		45C10E2028759FEF00037BBE /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10E1D28759FEF00037BBE /* KDCircularProgress.swift */; };
+		45C10E2128759FEF00037BBE /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10E1D28759FEF00037BBE /* KDCircularProgress.swift */; };
+		45C10E2228759FEF00037BBE /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10E1D28759FEF00037BBE /* KDCircularProgress.swift */; };
+		45C10E2328759FEF00037BBE /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10E1D28759FEF00037BBE /* KDCircularProgress.swift */; };
 		45C26DC827976A3900513D41 /* FavoriteCompetitionsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DC727976A3900513D41 /* FavoriteCompetitionsDataSource.swift */; };
 		45C26DC927976A3900513D41 /* FavoriteCompetitionsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DC727976A3900513D41 /* FavoriteCompetitionsDataSource.swift */; };
 		45C26DCB27976A7300513D41 /* FavoriteMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DCA27976A7300513D41 /* FavoriteMatchesDataSource.swift */; };
@@ -4262,6 +4268,7 @@
 		45BEA47D26F4DC9900680181 /* SimpleRegisterEmailSentViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SimpleRegisterEmailSentViewController.xib; sourceTree = "<group>"; };
 		45BEA47E26F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleRegisterSendEmailCodeViewController.swift; sourceTree = "<group>"; };
 		45BF4E6C270DC37D00785E79 /* FilterLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterLineView.swift; sourceTree = "<group>"; };
+		45C10E1D28759FEF00037BBE /* KDCircularProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KDCircularProgress.swift; sourceTree = "<group>"; };
 		45C26DC727976A3900513D41 /* FavoriteCompetitionsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCompetitionsDataSource.swift; sourceTree = "<group>"; };
 		45C26DCA27976A7300513D41 /* FavoriteMatchesDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteMatchesDataSource.swift; sourceTree = "<group>"; };
 		45C26DCD27976AA500513D41 /* CompetitionsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionsDataSource.swift; sourceTree = "<group>"; };
@@ -4788,6 +4795,7 @@
 				454E0AA62732C58D00794E0C /* Tabular */,
 				45B0BD2E271EE138009C41FA /* KeychainExtras */,
 				45166CAA26F3548D00E69D65 /* TSLibrary */,
+				45C10E2428759FF200037BBE /* KDCircularProgress */,
 			);
 			path = ExternalLibs;
 			sourceTree = "<group>";
@@ -6162,6 +6170,14 @@
 				A9A2E7E827F6000400D35A9D /* SimpleRegisterEmailCheckViewModel.swift */,
 			);
 			path = SimpleRegister;
+			sourceTree = "<group>";
+		};
+		45C10E2428759FF200037BBE /* KDCircularProgress */ = {
+			isa = PBXGroup;
+			children = (
+				45C10E1D28759FEF00037BBE /* KDCircularProgress.swift */,
+			);
+			path = KDCircularProgress;
 			sourceTree = "<group>";
 		};
 		45C26DC627976A1000513D41 /* DataSources */ = {
@@ -9010,6 +9026,7 @@
 				A90BC91A27CCE0B300667616 /* SharedGameCardView.swift in Sources */,
 				A9B841BF26EA5A1000269B05 /* Event.swift in Sources */,
 				45AA91CD27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift in Sources */,
+				45C10E1E28759FEF00037BBE /* KDCircularProgress.swift in Sources */,
 				F4A62A872850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				455A0D0426BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45166D0526F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */,
@@ -9530,6 +9547,7 @@
 				A90BC91B27CCE0B300667616 /* SharedGameCardView.swift in Sources */,
 				A9B841C026EA5A1000269B05 /* Event.swift in Sources */,
 				45AA91CE27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift in Sources */,
+				45C10E1F28759FEF00037BBE /* KDCircularProgress.swift in Sources */,
 				F4A62A882850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				455A0D0526BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45166D0626F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */,
@@ -10042,6 +10060,7 @@
 				457CBBA8282D27D000ED0F00 /* SharedGameCardView.swift in Sources */,
 				457CBBA9282D27D000ED0F00 /* Event.swift in Sources */,
 				457CBBAA282D27D000ED0F00 /* SportMatchSingleLineTableViewCell.swift in Sources */,
+				45C10E2228759FEF00037BBE /* KDCircularProgress.swift in Sources */,
 				F4A62A8B2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				457CBBAB282D27D000ED0F00 /* NibIdentifiable.swift in Sources */,
 				457CBBAC282D27D000ED0F00 /* UnregisteredSSWampMessage.swift in Sources */,
@@ -10554,6 +10573,7 @@
 				457CBE4F282D2CD100ED0F00 /* SharedGameCardView.swift in Sources */,
 				457CBE50282D2CD100ED0F00 /* Event.swift in Sources */,
 				457CBE51282D2CD100ED0F00 /* SportMatchSingleLineTableViewCell.swift in Sources */,
+				45C10E2328759FEF00037BBE /* KDCircularProgress.swift in Sources */,
 				F4A62A8C2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				457CBE52282D2CD100ED0F00 /* NibIdentifiable.swift in Sources */,
 				457CBE53282D2CD100ED0F00 /* UnregisteredSSWampMessage.swift in Sources */,
@@ -11066,6 +11086,7 @@
 				4589C928282024E400243547 /* SharedGameCardView.swift in Sources */,
 				4589C929282024E400243547 /* Event.swift in Sources */,
 				4589C92A282024E400243547 /* SportMatchSingleLineTableViewCell.swift in Sources */,
+				45C10E2028759FEF00037BBE /* KDCircularProgress.swift in Sources */,
 				F4A62A892850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				4589C92B282024E400243547 /* NibIdentifiable.swift in Sources */,
 				4589C92C282024E400243547 /* UnregisteredSSWampMessage.swift in Sources */,
@@ -11578,6 +11599,7 @@
 				45A6BD7F28246A7500D9B416 /* RecentSearchHeaderView.swift in Sources */,
 				45A6BD8028246A7500D9B416 /* SharedGameCardView.swift in Sources */,
 				45A6BD8128246A7500D9B416 /* Event.swift in Sources */,
+				45C10E2128759FEF00037BBE /* KDCircularProgress.swift in Sources */,
 				F4A62A8A2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				45A6BD8228246A7500D9B416 /* SportMatchSingleLineTableViewCell.swift in Sources */,
 				45A6BD8328246A7500D9B416 /* NibIdentifiable.swift in Sources */,
@@ -12040,7 +12062,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00571;
+				CURRENT_PROJECT_VERSION = 00575;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -12066,7 +12088,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00571;
+				CURRENT_PROJECT_VERSION = 00575;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
