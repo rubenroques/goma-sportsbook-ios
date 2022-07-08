@@ -18,17 +18,19 @@ class ShareTicketChoiceViewModel {
     var clickedShareTicketInfo: ClickedShareTicketInfo?
     var messageSentAction: (() -> Void)?
     var canCopyLinkPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-
+    var canShareLinkSocialApps: CurrentValueSubject<Bool, Never> = .init(false)
     private var cancellables = Set<AnyCancellable>()
 
     init(clickedShareTicketInfo: ClickedShareTicketInfo) {
 
         self.clickedShareTicketInfo = clickedShareTicketInfo
 
+        self.checkCopyLink()
+        self.checkSocialAppSharesAvailability()
+
         self.getChatrooms()
         self.getSocialApps()
 
-        self.checkCopyLink()
     }
 
     private func getChatrooms() {
@@ -53,28 +55,30 @@ class ShareTicketChoiceViewModel {
     }
 
     private func getSocialApps() {
-        let socialNames = Env.gomaSocialClient.socialAppNamesSupported
-        let socialNamesSchemas = Env.gomaSocialClient.socialAppNamesSchemesSupported
+        let socialAppsInfo = Env.gomaSocialClient.socialAppsInfo
 
-        // TEST
-        for (index, socialSchema) in socialNamesSchemas.enumerated() {
-            let appScheme = "\(socialSchema)://"
-            let appUrl = URL(string: appScheme)
+        // Verify if app is installed
+        for (index, socialAppInfo) in socialAppsInfo.enumerated() {
+
+            let appUrl = URL(string: socialAppInfo.urlScheme)
 
             if UIApplication.shared.canOpenURL(appUrl! as URL) {
 
-                let socialApp = SocialApp(id: "\(index)", name: socialNames[index], iconName: "\(socialNames[index].lowercased())_icon", appScheme: appScheme)
+                let socialApp = SocialApp(id: "\(index)",
+                                          name: socialAppInfo.name,
+                                          iconName: "\(socialAppInfo.name.lowercased())_icon",
+                                          appScheme: socialAppInfo.urlScheme,
+                                          urlShare: socialAppInfo.urlShare)
 
                 self.socialApps.value.append(socialApp)
 
-                print("\(appScheme) detected")
+                print("\(socialAppInfo.urlScheme) detected")
 
             }
             else {
-                print("\(appScheme) not detected")
+                print("\(socialAppInfo.urlScheme) not detected")
             }
-//            let socialApp = SocialApp(id: "\(i)", name: socialNames[i], iconName: "\(socialNames[i].lowercased())_icon")
-//            self.socialApps.value.append(socialApp)
+
         }
 
         self.shouldReloadData.send()
@@ -87,6 +91,17 @@ class ShareTicketChoiceViewModel {
             }
             else {
                 self.canCopyLinkPublisher.send(false)
+            }
+        }
+    }
+
+    private func checkSocialAppSharesAvailability() {
+        if let betStatus = self.clickedShareTicketInfo?.betStatus {
+            if betStatus == "OPEN" {
+                self.canShareLinkSocialApps.send(true)
+            }
+            else {
+                self.canShareLinkSocialApps.send(false)
             }
         }
     }
@@ -307,6 +322,13 @@ class ShareTicketChoiceViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        viewModel.canShareLinkSocialApps
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isEnabled in
+                self?.socialAppsCollectionView.isUserInteractionEnabled = isEnabled
+            })
+            .store(in: &cancellables)
+
     }
 
     // MARK: Functions
@@ -337,30 +359,33 @@ class ShareTicketChoiceViewController: UIViewController {
         }
     }
 
-    private func showSocialShareScreen(socialAppViewModel: SocialAppItemCellViewModel) {
+    private func showSocialShareScreen(socialApp: SocialApp) {
 
-//        if socialAppViewModel.getSocialAppName() == "Facebook" {
-//            if let vc = SLComposeViewController(forServiceType: SLServiceTypeFacebook) {
-//                guard let clickedTicket = self.viewModel.clickedShareTicketInfo,
-//                let gameSnapshot = self.viewModel.clickedShareTicketInfo?.snapshot,
-//                let betStatus = self.viewModel.clickedShareTicketInfo?.betStatus
-//                else {
-//                    return
-//                }
-//
-//                vc.setInitialText(localized("look_bet_made"))
-//                vc.add(gameSnapshot)
-//                vc.add(URL(string: "https://www.hackingwithswift.com"))
-//                present(vc, animated: true)
-//            }
-//        }
-        let scheme = "discord://"
-        if let url = URL(string: scheme) {
-            UIApplication.shared.open(url, options: [:], completionHandler: {
-              (success) in
-              print("Open \(scheme): \(success)")
-            })
-          }
+        if socialApp.urlShare != "" {
+            if let betStatus = self.viewModel.clickedShareTicketInfo?.betStatus {
+                let urlMobile = Env.urlMobileShares
+                if betStatus == "OPEN",
+                   let betToken = self.viewModel.clickedShareTicketInfo?.betToken {
+                    let matchUrlString = "\(urlMobile)/bet/\(betToken)"
+
+                    let socialAppUrlShareString = socialApp.urlShare.replacingOccurrences(of: "%url", with: matchUrlString)
+
+                    if let urlString = socialAppUrlShareString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                        if let socialShareUrl = URL(string: urlString) {
+                            if UIApplication.shared.canOpenURL(socialShareUrl) {
+                                UIApplication.shared.open(socialShareUrl, options: [:], completionHandler: nil)
+                            } else {
+                                print("Cannot share on \(socialApp.name)")
+                            }
+                         }
+                    }
+                }
+            }
+        }
+        else {
+            print("URL share on \(socialApp.name) not available")
+        }
+
     }
 
     // MARK: Actions
@@ -497,8 +522,17 @@ extension ShareTicketChoiceViewController: UICollectionViewDelegate, UICollectio
 
                 cell.configure(withViewModel: cellViewModel)
 
+                if let betStatus = self.viewModel.clickedShareTicketInfo?.betStatus {
+                    if betStatus != "OPEN" {
+                        cell.isItemDisabled = true
+                    }
+                    else {
+                        cell.isItemDisabled = false
+                    }
+                }
+
                 cell.shouldShowSocialShare = { [weak self] in
-                    self?.showSocialShareScreen(socialAppViewModel: cellViewModel)
+                    self?.showSocialShareScreen(socialApp: socialApp)
                 }
 
             }
@@ -826,4 +860,5 @@ struct SocialApp {
     var name: String
     var iconName: String
     var appScheme: String
+    var urlShare: String
 }

@@ -37,7 +37,7 @@ enum GomaGamingService {
     case removeUser(chatroomId: Int, userId: String)
     case addUserToGroup(chatroomId: Int, userIds: [String])
     case searchUserCode(code: String)
-    case getNotification(type: String)
+    case getNotification(type: String, page: Int)
     case setNotificationRead(id: String)
     case setAllNotificationRead(type: String)
     case sendSupportTicket(title: String, message: String)
@@ -168,8 +168,9 @@ extension GomaGamingService: Endpoint {
 
             print("ADD USER GROUP QUERY: \(queryItemsURL)")
             return queryItemsURL
-        case .getNotification(let type):
-            return [URLQueryItem(name: "type", value: type)]
+        case .getNotification(let type, let page):
+            return [URLQueryItem(name: "type", value: type),
+            URLQueryItem(name: "page", value: "\(page)")]
 
         }
     }

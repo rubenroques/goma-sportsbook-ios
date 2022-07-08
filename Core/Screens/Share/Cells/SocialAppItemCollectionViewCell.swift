@@ -36,12 +36,18 @@ class SocialAppItemCollectionViewCell: UICollectionViewCell {
     private lazy var iconBaseView: UIView = Self.createIconBaseView()
     private lazy var iconImageView: UIImageView = Self.createIconImageView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
-
+    private lazy var itemDisabledView: UIView = Self.createItemDisabledView()
     private var viewModel: SocialAppItemCellViewModel?
 
     // MARK: Public Properties
     var shouldShowSocialShare: (() -> Void)?
-    
+
+    var isItemDisabled: Bool = false {
+        didSet {
+            self.itemDisabledView.isHidden = !isItemDisabled
+        }
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -61,6 +67,8 @@ class SocialAppItemCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
 
         self.viewModel = nil
+
+        self.isItemDisabled = false
 
     }
 
@@ -91,6 +99,8 @@ class SocialAppItemCollectionViewCell: UICollectionViewCell {
         self.iconImageView.backgroundColor = .clear
 
         self.titleLabel.textColor = UIColor.App.textPrimary
+
+        self.itemDisabledView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
     }
 
     // MARK: Functions
@@ -146,6 +156,12 @@ extension SocialAppItemCollectionViewCell {
         return label
     }
 
+    private static func createItemDisabledView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
     private func setupSubviews() {
 
         self.contentView.addSubview(self.containerView)
@@ -155,6 +171,8 @@ extension SocialAppItemCollectionViewCell {
         self.iconBaseView.addSubview(self.iconImageView)
 
         self.containerView.addSubview(self.titleLabel)
+
+        self.containerView.addSubview(self.itemDisabledView)
 
         self.initConstraints()
 
@@ -183,6 +201,11 @@ extension SocialAppItemCollectionViewCell {
             self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 8),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -8),
             self.titleLabel.topAnchor.constraint(equalTo: self.iconBaseView.bottomAnchor, constant: 8),
+
+            self.itemDisabledView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.itemDisabledView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.itemDisabledView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
+            self.itemDisabledView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor)
 
         ])
     }
