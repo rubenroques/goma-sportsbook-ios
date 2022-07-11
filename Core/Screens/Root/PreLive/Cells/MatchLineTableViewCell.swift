@@ -44,6 +44,15 @@ class MatchLineTableViewCell: UITableViewCell {
         let cardHeight = StyleHelper.cardsStyleHeight()
         return cardHeight + cellInternSpace + cellInternSpace
     }
+    
+    private var selectedSeeMoreMarketsCollectionViewCell: SeeMoreMarketsCollectionViewCell? = nil {
+        willSet {
+            self.selectedSeeMoreMarketsCollectionViewCell?.transitionId = nil
+        }
+        didSet {
+            self.selectedSeeMoreMarketsCollectionViewCell?.transitionId = "SeeMoreToMatchDetails"
+        }
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -200,10 +209,14 @@ extension MatchLineTableViewCell: UIScrollViewDelegate {
         let pushScreenMargin = 100.0
         let bounceXPosition = ( (scrollView.contentOffset.x - scrollView.contentInset.left) + scrollView.frame.width) - scrollView.contentSize.width
         
+        var activeSeeMoreCell: SeeMoreMarketsCollectionViewCell?
+        
         if bounceXPosition >= 0 {
             for cell in self.collectionView.visibleCells {
                 if let seeMoreCell = cell as? SeeMoreMarketsCollectionViewCell {
                     seeMoreCell.setAnimationPercentage(bounceXPosition / Double(pushScreenMargin * 0.98))
+                    
+                    activeSeeMoreCell = seeMoreCell
                 }
             }
         }
@@ -215,6 +228,8 @@ extension MatchLineTableViewCell: UIScrollViewDelegate {
                 generator.prepare()
                 generator.impactOccurred()
 
+                self.selectedSeeMoreMarketsCollectionViewCell = activeSeeMoreCell
+                
                 self.tappedMatchLineAction?()
 
                 return
