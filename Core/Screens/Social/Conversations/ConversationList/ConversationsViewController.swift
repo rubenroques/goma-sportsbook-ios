@@ -347,7 +347,7 @@ extension ConversationsViewController {
 
     private static func createNewMessageButton() -> UIButton {
         let addFriendButton = UIButton(type: .custom)
-        addFriendButton.setTitle(localized("new_message"), for: .normal)
+        addFriendButton.setTitle(localized("add_friend"), for: .normal)
         addFriendButton.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         addFriendButton.translatesAutoresizingMaskIntoConstraints = false
         return addFriendButton
