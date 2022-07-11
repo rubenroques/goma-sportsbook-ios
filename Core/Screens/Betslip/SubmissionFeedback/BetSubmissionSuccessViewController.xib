@@ -40,6 +40,7 @@
                 <outlet property="possibleEarningsValueLabel" destination="71V-bW-NTn" id="tKz-2D-znK"/>
                 <outlet property="safeAreaBottomView" destination="rwT-YU-CvN" id="tVx-lc-Z2z"/>
                 <outlet property="scrollView" destination="32G-Lw-sfI" id="hhT-Ya-0vJ"/>
+                <outlet property="shareButton" destination="Wff-Tx-VLR" id="f2S-AH-MkN"/>
                 <outlet property="totalOddsLabel" destination="LGO-xa-Odt" id="dBp-bI-sSW"/>
                 <outlet property="totalOddsValueLabel" destination="pnR-Vk-bx0" id="ZJe-Ny-IfJ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -243,12 +244,26 @@
                                 <action selector="didTapBackButton" destination="-1" eventType="primaryActionTriggered" id="MQ2-kD-jwj"/>
                             </connections>
                         </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wff-Tx-VLR">
+                            <rect key="frame" x="422" y="2" width="40" height="40"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="40" id="VrJ-vR-DSN"/>
+                                <constraint firstAttribute="height" constant="40" id="tXL-HG-PrK"/>
+                            </constraints>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain" image="send_bet_icon"/>
+                            <connections>
+                                <action selector="didTapShareButton" destination="-1" eventType="touchUpInside" id="FNo-dy-scU"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
+                        <constraint firstItem="Wff-Tx-VLR" firstAttribute="centerY" secondItem="1Q9-3l-9er" secondAttribute="centerY" id="LdS-qL-yKH"/>
                         <constraint firstItem="0Xx-GG-CEj" firstAttribute="leading" secondItem="1Q9-3l-9er" secondAttribute="leading" id="Pae-Hu-3WP"/>
                         <constraint firstItem="0Xx-GG-CEj" firstAttribute="centerY" secondItem="1Q9-3l-9er" secondAttribute="centerY" id="X31-7J-EGq"/>
                         <constraint firstAttribute="height" constant="44" id="cxb-8n-XDO"/>
+                        <constraint firstAttribute="trailing" secondItem="Wff-Tx-VLR" secondAttribute="trailing" constant="8" id="fFZ-YY-znz"/>
                     </constraints>
                 </view>
             </subviews>
@@ -284,6 +299,7 @@
     <resources>
         <image name="arrow_back_icon" width="12" height="21"/>
         <image name="feedback_check_success_image" width="223" height="222"/>
+        <image name="send_bet_icon" width="20" height="20"/>
         <namedColor name="backgroundPrimary">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

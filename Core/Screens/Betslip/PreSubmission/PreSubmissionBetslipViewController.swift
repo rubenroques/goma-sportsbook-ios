@@ -314,7 +314,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.amountBaseView.addGestureRecognizer(amountBaseViewTapGesture)
         self.amountTextfield.isUserInteractionEnabled = false
 
-
         //
         //
         singleBettingTicketDataSource.didUpdateBettingValueAction = { [weak self] id, value in

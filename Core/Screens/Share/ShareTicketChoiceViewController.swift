@@ -430,8 +430,9 @@ class ShareTicketChoiceViewController: UIViewController {
 
         if let gameSnapshot = self.viewModel.clickedShareTicketInfo?.snapshot, let betStatus = self.viewModel.clickedShareTicketInfo?.betStatus {
 
-            if betStatus == "OPEN" {
-                let betToken = self.viewModel.clickedShareTicketInfo?.betToken
+            if betStatus == "OPEN",
+               let betToken = self.viewModel.clickedShareTicketInfo?.betToken{
+
                 let matchUrl = URL(string: "\(urlMobile)/bet/\(betToken)")
                 metadata.url = matchUrl
                 metadata.originalURL = metadata.url

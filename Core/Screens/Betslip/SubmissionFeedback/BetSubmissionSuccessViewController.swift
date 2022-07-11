@@ -6,11 +6,13 @@
 //
 
 import UIKit
+import Combine
 
 class BetSubmissionSuccessViewController: UIViewController {
 
     @IBOutlet private weak var navigationView: UIView!
     @IBOutlet private weak var backButton: UIButton!
+    @IBOutlet private weak var shareButton: UIButton!
     @IBOutlet private weak var scrollView: UIView!
     @IBOutlet private weak var checkmarkImageView: UIImageView!
     @IBOutlet private weak var messageTitleLabel: UILabel!
@@ -39,6 +41,12 @@ class BetSubmissionSuccessViewController: UIViewController {
     private var numberOfBets: Int
     private var isChecked: Bool = false
     private var betPlacedDetailsArray: [BetPlacedDetails]
+    private var betHistoryEntry: BetHistoryEntry?
+    private var sharedBetToken: String?
+    private var ticketSnapshot: UIImage?
+    private var cancellables = Set<AnyCancellable>()
+
+    private var canShareTicket: Bool = false
 
     var willDismissAction: (() -> Void)?
 
@@ -110,6 +118,8 @@ class BetSubmissionSuccessViewController: UIViewController {
         let checkboxTap = UITapGestureRecognizer(target: self, action: #selector(didTapCheckbox))
         self.checkboxView.addGestureRecognizer(checkboxTap)
 
+        self.loadOpenedTickets()
+
         self.setupWithTheme()
     }
 
@@ -128,6 +138,8 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.safeAreaBottomView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.shareButton.backgroundColor = .clear
         
         self.messageTitleLabel.textColor = UIColor.App.textPrimary
         self.messageSubtitleLabel.textColor = UIColor.App.textPrimary
@@ -144,6 +156,80 @@ class BetSubmissionSuccessViewController: UIViewController {
        
         self.checkboxLabel.backgroundColor = .clear
         self.checkboxLabel.textColor = UIColor.App.textSecondary
+    }
+
+    private func loadOpenedTickets(page: Int = 0) {
+
+        //self.isLoadingOpened.send(true)
+
+        let openedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.opened, records: 10, page: page)
+        Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let apiError):
+                    switch apiError {
+                    case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
+                        ()
+                        //self?.clearData()
+                    case .notConnected:
+                        //self?.clearData()
+                        ()
+                    default:
+                        ()
+                    }
+                case .finished:
+                    ()
+                }
+                //self?.isLoadingOpened.send(false)
+            },
+            receiveValue: { [weak self] betHistoryResponse in
+                //self?.openedMyTickets.value = betHistoryResponse.betList ?? []
+                if let betHistory = betHistoryResponse.betList?.first,
+                   let betPlacedDetails = self?.betPlacedDetailsArray {
+                    if betPlacedDetails[safe: 0]?.response.betId == betHistory.betId {
+                        self?.betHistoryEntry = betHistoryResponse.betList?.first
+                        //self?.canShareTicket = true
+                        self?.getSharedBetToken()
+
+                    }
+                }
+
+            })
+            .store(in: &cancellables)
+    }
+
+    private func getSharedBetToken() {
+        if let betHistoryEntry = self.betHistoryEntry {
+
+            let betTokenRoute = TSRouter.getSharedBetTokens(betId: betHistoryEntry.betId)
+
+            Env.everyMatrixClient.manager.getModel(router: betTokenRoute, decodingType: SharedBetToken.self)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                    case .failure(let apiError):
+                        switch apiError {
+                        case .requestError(let value):
+                            print("Bet token request error: \(value)")
+                        case .notConnected:
+                            ()
+                        default:
+                            ()
+                        }
+                    case .finished:
+                        ()
+                    }
+                },
+                receiveValue: { [weak self] betTokens in
+                    print("BET TOKEN: \(betTokens)")
+                    let betToken = betTokens.sharedBetTokens.betTokenWithAllInfo
+                    self?.sharedBetToken = betToken
+                    self?.canShareTicket = true
+
+                })
+                .store(in: &cancellables)
+        }
     }
 
     @IBAction private func didTapContinueButton() {
@@ -165,6 +251,33 @@ class BetSubmissionSuccessViewController: UIViewController {
         }
         
         self.navigationController?.popViewController(animated: true)
+    }
+
+    @IBAction func didTapShareButton() {
+
+        let renderer = UIGraphicsImageRenderer(size: self.scrollView.bounds.size)
+        let image = renderer.image { _ in
+            self.scrollView.drawHierarchy(in: self.scrollView.bounds, afterScreenUpdates: true)
+        }
+        self.ticketSnapshot = image
+
+        if self.canShareTicket,
+           let betHistoryEntry = self.betHistoryEntry,
+           let sharedBetToken = self.sharedBetToken,
+           let ticketSnapshot = self.ticketSnapshot {
+            let clickedShareTicketInfo = ClickedShareTicketInfo(snapshot: ticketSnapshot,
+                                                                betId: betHistoryEntry.betId,
+                                                                betStatus: betHistoryEntry.status ?? "",
+                                                                betToken: sharedBetToken,
+                                                                ticket: betHistoryEntry)
+
+            let shareTicketChoiceViewModel = ShareTicketChoiceViewModel(clickedShareTicketInfo: clickedShareTicketInfo)
+            //shareTicketChoiceViewModel.clickedShareTicketInfo = clickedShareTicketInfo
+
+            let shareTicketChoiceViewController = ShareTicketChoiceViewController(viewModel: shareTicketChoiceViewModel)
+
+            self.present(shareTicketChoiceViewController, animated: true, completion: nil)
+        }
     }
 
     @IBAction private func didTapCheckbox() {
