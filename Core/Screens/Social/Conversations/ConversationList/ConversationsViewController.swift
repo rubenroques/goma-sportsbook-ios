@@ -21,6 +21,7 @@ class ConversationsViewController: UIViewController {
     private lazy var emptyStateView: UIView = Self.createEmptyStateView()
     private lazy var emptyStateImageView: UIImageView = Self.createEmptyStateImageView()
     private lazy var emptyStateLabel: UILabel = Self.createEmptyStateLabel()
+    private lazy var emptyStateSubtitleLabel: UILabel = Self.createEmptyStateSubtitleLabel()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
 
@@ -31,6 +32,7 @@ class ConversationsViewController: UIViewController {
     var isEmptyState: Bool = false {
         didSet {
             self.emptyStateView.isHidden = !isEmptyState
+            self.headerSeparatorLineView.isHidden = isEmptyState
         }
     }
 
@@ -108,6 +110,7 @@ class ConversationsViewController: UIViewController {
         self.emptyStateView.backgroundColor = UIColor.App.backgroundPrimary
         self.emptyStateImageView.backgroundColor = .clear
         self.emptyStateLabel.textColor = UIColor.App.textPrimary
+        self.emptyStateSubtitleLabel.textColor = UIColor.App.textPrimary
 
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -347,7 +350,7 @@ extension ConversationsViewController {
 
     private static func createNewMessageButton() -> UIButton {
         let addFriendButton = UIButton(type: .custom)
-        addFriendButton.setTitle(localized("add_friend"), for: .normal)
+        addFriendButton.setTitle(localized("add_friends"), for: .normal)
         addFriendButton.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         addFriendButton.translatesAutoresizingMaskIntoConstraints = false
         return addFriendButton
@@ -376,7 +379,7 @@ extension ConversationsViewController {
     private static func createEmptyStateImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "no_content_icon")
+        imageView.image = UIImage(named: "add_friend_empty_icon")
         imageView.contentMode = .scaleAspectFit
         return imageView
     }
@@ -384,9 +387,19 @@ extension ConversationsViewController {
     private static func createEmptyStateLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("no_chatrooms")
+        label.text = localized("time_add_friends")
         label.numberOfLines = 0
-        label.font = AppFont.with(type: .bold, size: 18)
+        label.font = AppFont.with(type: .bold, size: 20)
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createEmptyStateSubtitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("add_some_friends_start_chatting")
+        label.numberOfLines = 0
+        label.font = AppFont.with(type: .semibold, size: 16)
         label.textAlignment = .center
         return label
     }
@@ -420,6 +433,7 @@ extension ConversationsViewController {
 
         self.emptyStateView.addSubview(self.emptyStateImageView)
         self.emptyStateView.addSubview(self.emptyStateLabel)
+        self.emptyStateView.addSubview(self.emptyStateSubtitleLabel)
 
         self.view.addSubview(self.loadingBaseView)
 
@@ -465,14 +479,18 @@ extension ConversationsViewController {
             self.emptyStateView.topAnchor.constraint(equalTo: self.tableViewHeader.bottomAnchor, constant: 8),
             self.emptyStateView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
-            self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyStateView.topAnchor, constant: 60),
-            self.emptyStateImageView.widthAnchor.constraint(equalToConstant: 120),
+            self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyStateView.topAnchor, constant: 20),
+            self.emptyStateImageView.widthAnchor.constraint(equalToConstant: 103),
             self.emptyStateImageView.heightAnchor.constraint(equalTo: self.emptyStateImageView.widthAnchor),
             self.emptyStateImageView.centerXAnchor.constraint(equalTo: self.emptyStateView.centerXAnchor),
 
-            self.emptyStateLabel.leadingAnchor.constraint(equalTo: self.emptyStateView.leadingAnchor, constant: 80),
-            self.emptyStateLabel.trailingAnchor.constraint(equalTo: self.emptyStateView.trailingAnchor, constant: -80),
-            self.emptyStateLabel.topAnchor.constraint(equalTo: self.emptyStateImageView.bottomAnchor, constant: 30)
+            self.emptyStateLabel.leadingAnchor.constraint(equalTo: self.emptyStateView.leadingAnchor, constant: 67),
+            self.emptyStateLabel.trailingAnchor.constraint(equalTo: self.emptyStateView.trailingAnchor, constant: -67),
+            self.emptyStateLabel.topAnchor.constraint(equalTo: self.emptyStateImageView.bottomAnchor, constant: 37),
+
+            self.emptyStateSubtitleLabel.leadingAnchor.constraint(equalTo: self.emptyStateView.leadingAnchor, constant: 67),
+            self.emptyStateSubtitleLabel.trailingAnchor.constraint(equalTo: self.emptyStateView.trailingAnchor, constant: -67),
+            self.emptyStateSubtitleLabel.topAnchor.constraint(equalTo: self.emptyStateLabel.bottomAnchor, constant: 16)
         ])
 
         // Loading Screen
