@@ -122,18 +122,18 @@ open class SSWampSession: SSWampTransportDelegate {
     fileprivate var sessionId: Int?
     fileprivate var routerSupportedRoles: [SSWampRole]?
 
-    fileprivate var callRequests: [Int: (callback: CallCallback, errorCallback: ErrorCallCallback)] = [:]
+    fileprivate var callRequests = ThreadSafeDictionary<Int, (callback: CallCallback, errorCallback: ErrorCallCallback)>()
 
-    fileprivate var subscribeRequests: [Int: (callback: SubscribeCallback, errorCallback: ErrorSubscribeCallback, eventCallback: EventCallback)] = [:]
-    fileprivate var subscriptions: [Int: Subscription] = [:]
-    fileprivate var unsubscribeRequests: [Int: (subscription: Int, callback: UnsubscribeCallback, errorCallback: ErrorUnsubscribeCallback)] = [:]
+    fileprivate var subscribeRequests = ThreadSafeDictionary<Int, (callback: SubscribeCallback, errorCallback: ErrorSubscribeCallback, eventCallback: EventCallback)>()
+    fileprivate var subscriptions = ThreadSafeDictionary<Int, Subscription>()
+    fileprivate var unsubscribeRequests = ThreadSafeDictionary<Int, (subscription: Int, callback: UnsubscribeCallback, errorCallback: ErrorUnsubscribeCallback)>()
 
-    fileprivate var registerRequests: [Int: (callback: RegisterCallback, errorCallback: ErrorRegisterCallback, eventCallback: EventCallback)] = [:]
-    fileprivate var registers: [Int: Registration] = [:]
-    fileprivate var unregisterRequests: [Int: (subscription: Int, callback: UnregisterCallback, errorCallback: ErrorUnregisterCallback)] = [:]
+    fileprivate var registerRequests = ThreadSafeDictionary<Int, (callback: RegisterCallback, errorCallback: ErrorRegisterCallback, eventCallback: EventCallback)>()
+    fileprivate var registers = ThreadSafeDictionary<Int, Registration>()
+    fileprivate var unregisterRequests = ThreadSafeDictionary<Int, (subscription: Int, callback: UnregisterCallback, errorCallback: ErrorUnregisterCallback)>()
 
-    fileprivate var publishRequests: [Int: (callback: PublishCallback, errorCallback: ErrorPublishCallback)] = [:]
-
+    fileprivate var publishRequests = ThreadSafeDictionary<Int, (callback: PublishCallback, errorCallback: ErrorPublishCallback)>()
+    
     init(realm: String, transport: SSWampTransport, authmethods: [String]?=nil, authid: String?=nil, authrole: String?=nil, authextra: [String: Any]?=nil) {
         self.realm = realm
         self.transport = transport
@@ -510,4 +510,66 @@ open class SSWampSession: SSWampTransportDelegate {
         self.currRequestId += 1
         return self.currRequestId
     }
+}
+
+fileprivate class ThreadSafeDictionary<V: Hashable,T>: Collection {
+    
+    private var dictionary: [V: T]
+    private let concurrentQueue = DispatchQueue(label: "Dictionary Barrier Queue",
+                                                attributes: .concurrent)
+    var startIndex: Dictionary<V, T>.Index {
+        self.concurrentQueue.sync {
+            return self.dictionary.startIndex
+        }
+    }
+
+    var endIndex: Dictionary<V, T>.Index {
+        self.concurrentQueue.sync {
+            return self.dictionary.endIndex
+        }
+    }
+
+    init(dict: [V: T] = [V:T]()) {
+        self.dictionary = dict
+    }
+    // this is because it is an apple protocol method
+    // swiftlint:disable identifier_name
+    func index(after i: Dictionary<V, T>.Index) -> Dictionary<V, T>.Index {
+        self.concurrentQueue.sync {
+            return self.dictionary.index(after: i)
+        }
+    }
+    // swiftlint:enable identifier_name
+    subscript(key: V) -> T? {
+        set(newValue) {
+            self.concurrentQueue.async(flags: .barrier) {[weak self] in
+                self?.dictionary[key] = newValue
+            }
+        }
+        get {
+            self.concurrentQueue.sync {
+                return self.dictionary[key]
+            }
+        }
+    }
+
+    // has implicity get
+    subscript(index: Dictionary<V, T>.Index) -> Dictionary<V, T>.Element {
+        self.concurrentQueue.sync {
+            return self.dictionary[index]
+        }
+    }
+    
+    func removeValue(forKey key: V) {
+        self.concurrentQueue.async(flags: .barrier) {[weak self] in
+            self?.dictionary.removeValue(forKey: key)
+        }
+    }
+
+    func removeAll() {
+        self.concurrentQueue.async(flags: .barrier) {[weak self] in
+            self?.dictionary.removeAll()
+        }
+    }
+
 }

@@ -33,6 +33,8 @@ class TopCompetitionLineTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
+        self.cachedCardsStyle = StyleHelper.cardsStyleActive()
+        
         self.setupSubviews()
         self.setupWithTheme()
 

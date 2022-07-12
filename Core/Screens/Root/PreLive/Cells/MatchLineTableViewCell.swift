@@ -50,6 +50,8 @@ class MatchLineTableViewCell: UITableViewCell {
 
         self.selectionStyle = .none
 
+        self.cachedCardsStyle = StyleHelper.cardsStyleActive()
+        
         self.debugLabel.isHidden = true
 
 //        #if DEBUG

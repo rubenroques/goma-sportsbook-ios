@@ -45,6 +45,8 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
+        self.cachedCardStyle = StyleHelper.cardsStyleActive()
+        
         self.setupSubviews()
         self.setupWithTheme()
 
