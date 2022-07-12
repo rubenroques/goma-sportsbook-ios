@@ -41,6 +41,7 @@
                 <outlet property="safeAreaBottomView" destination="rwT-YU-CvN" id="tVx-lc-Z2z"/>
                 <outlet property="scrollView" destination="32G-Lw-sfI" id="hhT-Ya-0vJ"/>
                 <outlet property="shareButton" destination="Wff-Tx-VLR" id="f2S-AH-MkN"/>
+                <outlet property="sharedTicketCardView" destination="r7a-AB-Ht9" id="c7Y-cJ-Kl9"/>
                 <outlet property="totalOddsLabel" destination="LGO-xa-Odt" id="dBp-bI-sSW"/>
                 <outlet property="totalOddsValueLabel" destination="pnR-Vk-bx0" id="ZJe-Ny-IfJ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -136,16 +137,22 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r7a-AB-Ht9" customClass="SharedTicketCardView" customModule="Crocobet" customModuleProvider="target">
+                            <rect key="frame" x="40" y="486" width="390" height="78"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        </view>
                     </subviews>
                     <viewLayoutGuide key="safeArea" id="hCC-By-kqu"/>
                     <constraints>
                         <constraint firstItem="iAM-bp-dFl" firstAttribute="trailing" secondItem="32G-Lw-sfI" secondAttribute="trailingMargin" id="0MX-cb-meA"/>
                         <constraint firstItem="LGO-xa-Odt" firstAttribute="centerY" secondItem="l3E-iS-2Wd" secondAttribute="centerY" id="0PT-xq-Iaa"/>
                         <constraint firstItem="AlW-md-Iz3" firstAttribute="centerX" secondItem="32G-Lw-sfI" secondAttribute="centerX" id="4FV-jP-Kxf"/>
+                        <constraint firstItem="Tlh-b5-uvT" firstAttribute="trailing" secondItem="r7a-AB-Ht9" secondAttribute="trailing" constant="40" id="4xU-zs-DYQ"/>
                         <constraint firstItem="l3E-iS-2Wd" firstAttribute="top" secondItem="71V-bW-NTn" secondAttribute="bottom" constant="30" id="5ao-Rw-b4A"/>
                         <constraint firstItem="71V-bW-NTn" firstAttribute="top" secondItem="8MJ-da-1dL" secondAttribute="bottom" constant="15" id="7rN-Xm-O7h"/>
                         <constraint firstItem="71V-bW-NTn" firstAttribute="centerX" secondItem="Tlh-b5-uvT" secondAttribute="centerX" id="DDi-kQ-Zzo"/>
                         <constraint firstItem="iAM-bp-dFl" firstAttribute="centerX" secondItem="WAb-qF-NQJ" secondAttribute="centerX" id="DLN-Av-qXc"/>
+                        <constraint firstItem="r7a-AB-Ht9" firstAttribute="top" secondItem="pnR-Vk-bx0" secondAttribute="bottom" constant="19.5" id="I5A-ld-OMT"/>
                         <constraint firstItem="l3E-iS-2Wd" firstAttribute="centerX" secondItem="Tlh-b5-uvT" secondAttribute="centerX" constant="50" id="LFe-6C-9wa"/>
                         <constraint firstItem="pnR-Vk-bx0" firstAttribute="centerY" secondItem="l3E-iS-2Wd" secondAttribute="centerY" id="LUP-tk-fET"/>
                         <constraint firstItem="pnR-Vk-bx0" firstAttribute="centerX" secondItem="Tlh-b5-uvT" secondAttribute="centerX" constant="-50" id="OEJ-JA-Vnw"/>
@@ -156,9 +163,11 @@
                         <constraint firstItem="AlW-md-Iz3" firstAttribute="top" secondItem="WAb-qF-NQJ" secondAttribute="bottom" constant="15" id="Uk7-iI-cZa"/>
                         <constraint firstItem="WAb-qF-NQJ" firstAttribute="centerX" secondItem="Tlh-b5-uvT" secondAttribute="centerX" id="WdS-nQ-ade"/>
                         <constraint firstItem="iAM-bp-dFl" firstAttribute="leading" secondItem="32G-Lw-sfI" secondAttribute="leadingMargin" id="Xat-L8-ti1"/>
+                        <constraint firstItem="r7a-AB-Ht9" firstAttribute="leading" secondItem="Tlh-b5-uvT" secondAttribute="leading" constant="40" id="f1a-HU-Rcv"/>
                         <constraint firstItem="8MJ-da-1dL" firstAttribute="top" secondItem="AlW-md-Iz3" secondAttribute="bottom" constant="30" id="g3t-TK-THN"/>
                         <constraint firstAttribute="bottom" secondItem="iAM-bp-dFl" secondAttribute="bottom" constant="352" id="h6D-ZA-qpo"/>
                         <constraint firstItem="nJt-ZS-h0O" firstAttribute="leading" secondItem="l3E-iS-2Wd" secondAttribute="trailing" constant="8" id="hPs-d7-l5r"/>
+                        <constraint firstItem="r7a-AB-Ht9" firstAttribute="bottom" secondItem="HiO-Xl-dyD" secondAttribute="bottom" constant="4" id="hTS-Ly-WgR"/>
                         <constraint firstItem="iAM-bp-dFl" firstAttribute="top" secondItem="HiO-Xl-dyD" secondAttribute="top" constant="30" id="lIt-Y3-wSz"/>
                         <constraint firstItem="AlW-md-Iz3" firstAttribute="leading" secondItem="Tlh-b5-uvT" secondAttribute="leading" constant="30" id="nAJ-iM-bA2"/>
                         <constraint firstItem="pnR-Vk-bx0" firstAttribute="leading" secondItem="LGO-xa-Odt" secondAttribute="trailing" constant="8" id="sJh-6r-cTj"/>

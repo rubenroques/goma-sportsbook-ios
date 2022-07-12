@@ -134,7 +134,8 @@ class ShareTicketChoiceViewModel {
 
                 let attachment = self.generateAttachmentString(ticket: ticket,
                                                                withToken: betToken.sharedBetTokens.betTokenWithAllInfo)
-
+                print("ATTACHMENT: \(attachment)")
+                
                 Env.gomaSocialClient.sendMessage(chatroomId: chatroomData.chatroom.id,
                                                  message: defaultMessage,
                                                  attachment: attachment)

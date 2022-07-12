@@ -36,6 +36,8 @@ class BetSubmissionSuccessViewController: UIViewController {
     @IBOutlet private weak var checkboxImage: UIImageView!
     @IBOutlet private weak var checkboxLabel: UILabel!
 
+    @IBOutlet private weak var sharedTicketCardView: SharedTicketCardView!
+
     private var totalOddsValue: String
     private var possibleEarningsValue: String
     private var numberOfBets: Int
@@ -44,6 +46,7 @@ class BetSubmissionSuccessViewController: UIViewController {
     private var betHistoryEntry: BetHistoryEntry?
     private var sharedBetToken: String?
     private var ticketSnapshot: UIImage?
+    private var locationsCodesDictionary: [String: String] = [:]
     private var cancellables = Set<AnyCancellable>()
 
     private var canShareTicket: Bool = false
@@ -89,6 +92,8 @@ class BetSubmissionSuccessViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.shareButton.setTitle("", for: .normal)
+
         self.possibleEarningsValueLabel.text = possibleEarningsValue
         self.totalOddsValueLabel.text = totalOddsValue
         self.betsMadeValueLabel.text = String(numberOfBets)
@@ -118,7 +123,8 @@ class BetSubmissionSuccessViewController: UIViewController {
         let checkboxTap = UITapGestureRecognizer(target: self, action: #selector(didTapCheckbox))
         self.checkboxView.addGestureRecognizer(checkboxTap)
 
-        self.loadOpenedTickets()
+        self.loadLocations()
+        //self.loadOpenedTickets()
 
         self.setupWithTheme()
     }
@@ -158,6 +164,24 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.checkboxLabel.textColor = UIColor.App.textSecondary
     }
 
+    private func loadLocations() {
+        let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
+        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
+            .sink(receiveCompletion: { _ in
+
+            },
+            receiveValue: { [weak self] response in
+                self?.locationsCodesDictionary = [:]
+                (response.records ?? []).forEach { location in
+                    if let code = location.code {
+                        self?.locationsCodesDictionary[location.id] = code
+                        self?.loadOpenedTickets()
+                    }
+                }
+            })
+            .store(in: &cancellables)
+    }
+
     private func loadOpenedTickets(page: Int = 0) {
 
         //self.isLoadingOpened.send(true)
@@ -190,6 +214,7 @@ class BetSubmissionSuccessViewController: UIViewController {
                     if betPlacedDetails[safe: 0]?.response.betId == betHistory.betId {
                         self?.betHistoryEntry = betHistoryResponse.betList?.first
                         //self?.canShareTicket = true
+                        self?.configureBetCards()
                         self?.getSharedBetToken()
 
                     }
@@ -230,6 +255,23 @@ class BetSubmissionSuccessViewController: UIViewController {
                 })
                 .store(in: &cancellables)
         }
+    }
+
+    private func configureBetCards() {
+
+        if let betHistoryEntry = self.betHistoryEntry {
+
+            let locationsCodes = (betHistoryEntry.selections ?? [])
+                .map({ event -> String in
+                    let id = event.venueId ?? ""
+                    return self.locationsCodesDictionary[id] ?? ""
+                })
+
+            let betCardViewModel = MyTicketCellViewModel(ticket: betHistoryEntry)
+
+            self.sharedTicketCardView.configure(withBetHistoryEntry: betHistoryEntry, countryCodes: locationsCodes, viewModel: betCardViewModel)
+        }
+
     }
 
     @IBAction private func didTapContinueButton() {

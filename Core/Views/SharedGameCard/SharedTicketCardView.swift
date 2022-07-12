@@ -12,7 +12,7 @@ class SharedTicketCardView: UIView {
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var headerBaseView: UIView = Self.createHeaderBaseView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
-    private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
+    // private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
     private lazy var betCardsBaseView: UIView = Self.createBetCardsBaseView()
     private lazy var betCardsStackView: UIStackView = Self.createBetCardsStackView()
     private lazy var bottomBaseView: UIView = Self.createBottomBaseView()
@@ -45,7 +45,7 @@ class SharedTicketCardView: UIView {
 
     func commonInit() {
 
-//        self.setupSubviews()
+        self.setupSubviews()
 //
 //        self.isLiveCard = false
 //        self.isTwoMarket = false
@@ -81,6 +81,56 @@ class SharedTicketCardView: UIView {
 
     }
 
+    func configure(withBetHistoryEntry betHistoryEntry: BetHistoryEntry, countryCodes: [String], viewModel: MyTicketCellViewModel) {
+
+        self.betHistoryEntry = betHistoryEntry
+        let ticketCellViewModel = viewModel
+
+        self.betCardsStackView.removeAllArrangedSubviews()
+
+        for (index, betHistoryEntrySelection) in (betHistoryEntry.selections ?? []).enumerated() {
+
+            let myTicketBetLineView = MyTicketBetLineView(betHistoryEntrySelection: betHistoryEntrySelection,
+                                                          countryCode: countryCodes[safe: index] ?? "",
+                                                          viewModel: ticketCellViewModel.selections[index])
+
+            self.betCardsStackView.addArrangedSubview(myTicketBetLineView)
+        }
+
+        //
+        if betHistoryEntry.type == "SINGLE" {
+            self.titleLabel.text = localized("single")+" Bet"
+        }
+        else if betHistoryEntry.type == "MULTIPLE" {
+            self.titleLabel.text = localized("multiple")+" Bet"
+        }
+        else if betHistoryEntry.type == "SYSTEM" {
+            self.titleLabel.text = localized("system")+" Bet"
+        }
+
+//        if let date = betHistoryEntry.placedDate {
+//            self.subtitleLabel.text = MyTicketTableViewCell.dateFormatter.string(from: date)
+//        }
+
+        if let oddValue = betHistoryEntry.totalPriceValue, betHistoryEntry.type != "SYSTEM" {
+            // let newOddValue = Double(floor(oddValue * 100)/100)
+            self.totalOddSubtitleLabel.text = OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
+        }
+
+        if let betAmount = betHistoryEntry.totalBetAmount,
+           let betAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betAmount)) {
+            self.betAmountSubtitleLabel.text = betAmountString
+        }
+
+        //
+        self.winningsTitleLabel.text = localized("possible_winnings")
+        if let maxWinnings = betHistoryEntry.maxWinning,
+           let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+            self.winningsSubtitleLabel.text = maxWinningsString
+        }
+
+    }
+
 }
 
 extension SharedTicketCardView {
@@ -104,13 +154,13 @@ extension SharedTicketCardView {
         return label
     }
 
-    private static func createSubtitleLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .semibold , size: 10)
-        label.text = "Subtitle"
-        return label
-    }
+//    private static func createSubtitleLabel() -> UILabel {
+//        let label = UILabel()
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//        label.font = AppFont.with(type: .semibold , size: 10)
+//        label.text = "Subtitle"
+//        return label
+//    }
 
     private static func createBetCardsBaseView() -> UIView {
         let view = UIView()
@@ -211,7 +261,7 @@ extension SharedTicketCardView {
         self.baseView.addSubview(self.headerBaseView)
 
         self.headerBaseView.addSubview(self.titleLabel)
-        self.headerBaseView.addSubview(self.subtitleLabel)
+        // self.headerBaseView.addSubview(self.subtitleLabel)
 
         self.baseView.addSubview(self.betCardsBaseView)
 
@@ -237,6 +287,52 @@ extension SharedTicketCardView {
     }
 
     private func initConstraints() {
+
+        NSLayoutConstraint.activate([
+            self.baseView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.baseView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            self.baseView.topAnchor.constraint(equalTo: self.topAnchor),
+            self.baseView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 10),
+            self.titleLabel.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 14),
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -14),
+
+            self.betCardsBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
+            self.betCardsBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            self.betCardsBaseView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 14),
+            self.betCardsBaseView.heightAnchor.constraint(greaterThanOrEqualToConstant: 90),
+
+            self.betCardsStackView.leadingAnchor.constraint(equalTo: self.betCardsBaseView.leadingAnchor),
+            self.betCardsStackView.trailingAnchor.constraint(equalTo: self.betCardsBaseView.trailingAnchor),
+            self.betCardsStackView.topAnchor.constraint(equalTo: self.betCardsBaseView.topAnchor),
+            self.betCardsStackView.bottomAnchor.constraint(equalTo: self.betCardsBaseView.bottomAnchor),
+
+            self.bottomBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
+            self.bottomBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            self.bottomBaseView.topAnchor.constraint(equalTo: self.betCardsBaseView.bottomAnchor, constant: 12),
+            self.bottomBaseView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -14),
+//            self.bottomBaseView.heightAnchor.constraint(equalToConstant: 55),
+
+            self.bottomTitlesStackView.leadingAnchor.constraint(equalTo: self.bottomBaseView.leadingAnchor),
+            self.bottomTitlesStackView.trailingAnchor.constraint(equalTo: self.bottomBaseView.trailingAnchor),
+            self.bottomTitlesStackView.topAnchor.constraint(equalTo: self.bottomBaseView.topAnchor, constant: 5),
+            self.bottomTitlesStackView.heightAnchor.constraint(equalToConstant: 25),
+
+            self.bottomSeparatorLineView.leadingAnchor.constraint(equalTo: self.bottomBaseView.leadingAnchor),
+            self.bottomSeparatorLineView.trailingAnchor.constraint(equalTo: self.bottomBaseView.trailingAnchor),
+            self.bottomSeparatorLineView.topAnchor.constraint(equalTo: self.bottomTitlesStackView.bottomAnchor, constant: 2),
+            self.bottomSeparatorLineView.heightAnchor.constraint(equalToConstant: 1),
+
+            self.bottomSubtitlesStackView.leadingAnchor.constraint(equalTo: self.bottomBaseView.leadingAnchor),
+            self.bottomSubtitlesStackView.trailingAnchor.constraint(equalTo: self.bottomBaseView.trailingAnchor),
+            self.bottomSubtitlesStackView.topAnchor.constraint(equalTo: self.bottomSeparatorLineView.bottomAnchor, constant: 2),
+            self.bottomSubtitlesStackView.bottomAnchor.constraint(equalTo: self.bottomBaseView.bottomAnchor, constant: -5),
+            self.bottomSubtitlesStackView.heightAnchor.constraint(equalToConstant: 25)
+
+        ])
+
+
 
     }
 }
