@@ -212,6 +212,7 @@ extension SharedTicketCardView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold , size: 12)
         label.text = "Total Odd"
+        label.textAlignment = .center
         return label
     }
 
@@ -220,6 +221,7 @@ extension SharedTicketCardView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold , size: 12)
         label.text = "-.--"
+        label.textAlignment = .center
         return label
     }
 
@@ -228,6 +230,7 @@ extension SharedTicketCardView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold , size: 12)
         label.text = "Bet Amount"
+        label.textAlignment = .center
         return label
     }
 
@@ -236,6 +239,7 @@ extension SharedTicketCardView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold , size: 12)
         label.text = "-.--"
+        label.textAlignment = .center
         return label
     }
 
@@ -244,6 +248,7 @@ extension SharedTicketCardView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold , size: 12)
         label.text = "Winnings"
+        label.textAlignment = .center
         return label
     }
 
@@ -252,6 +257,7 @@ extension SharedTicketCardView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold , size: 12)
         label.text = "-.--"
+        label.textAlignment = .center
         return label
     }
 
@@ -314,25 +320,23 @@ extension SharedTicketCardView {
             self.bottomBaseView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -14),
 //            self.bottomBaseView.heightAnchor.constraint(equalToConstant: 55),
 
-            self.bottomTitlesStackView.leadingAnchor.constraint(equalTo: self.bottomBaseView.leadingAnchor),
-            self.bottomTitlesStackView.trailingAnchor.constraint(equalTo: self.bottomBaseView.trailingAnchor),
+            self.bottomTitlesStackView.leadingAnchor.constraint(equalTo: self.bottomBaseView.leadingAnchor, constant: 10),
+            self.bottomTitlesStackView.trailingAnchor.constraint(equalTo: self.bottomBaseView.trailingAnchor, constant: -10),
             self.bottomTitlesStackView.topAnchor.constraint(equalTo: self.bottomBaseView.topAnchor, constant: 5),
             self.bottomTitlesStackView.heightAnchor.constraint(equalToConstant: 25),
 
-            self.bottomSeparatorLineView.leadingAnchor.constraint(equalTo: self.bottomBaseView.leadingAnchor),
-            self.bottomSeparatorLineView.trailingAnchor.constraint(equalTo: self.bottomBaseView.trailingAnchor),
+            self.bottomSeparatorLineView.leadingAnchor.constraint(equalTo: self.bottomBaseView.leadingAnchor, constant: 10),
+            self.bottomSeparatorLineView.trailingAnchor.constraint(equalTo: self.bottomBaseView.trailingAnchor, constant: -10),
             self.bottomSeparatorLineView.topAnchor.constraint(equalTo: self.bottomTitlesStackView.bottomAnchor, constant: 2),
             self.bottomSeparatorLineView.heightAnchor.constraint(equalToConstant: 1),
 
-            self.bottomSubtitlesStackView.leadingAnchor.constraint(equalTo: self.bottomBaseView.leadingAnchor),
-            self.bottomSubtitlesStackView.trailingAnchor.constraint(equalTo: self.bottomBaseView.trailingAnchor),
+            self.bottomSubtitlesStackView.leadingAnchor.constraint(equalTo: self.bottomBaseView.leadingAnchor, constant: 10),
+            self.bottomSubtitlesStackView.trailingAnchor.constraint(equalTo: self.bottomBaseView.trailingAnchor, constant: -10),
             self.bottomSubtitlesStackView.topAnchor.constraint(equalTo: self.bottomSeparatorLineView.bottomAnchor, constant: 2),
             self.bottomSubtitlesStackView.bottomAnchor.constraint(equalTo: self.bottomBaseView.bottomAnchor, constant: -5),
             self.bottomSubtitlesStackView.heightAnchor.constraint(equalToConstant: 25)
 
         ])
-
-
 
     }
 }

@@ -13,23 +13,17 @@ import Social
 class ShareTicketChoiceViewModel {
 
     var chatrooms: CurrentValueSubject<[ChatroomData], Never> = .init([])
-    var socialApps: CurrentValueSubject<[SocialApp], Never> = .init([])
     var shouldReloadData: PassthroughSubject<Void, Never> = .init()
     var clickedShareTicketInfo: ClickedShareTicketInfo?
     var messageSentAction: (() -> Void)?
-    var canCopyLinkPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    var canShareLinkSocialApps: CurrentValueSubject<Bool, Never> = .init(false)
+
     private var cancellables = Set<AnyCancellable>()
 
     init(clickedShareTicketInfo: ClickedShareTicketInfo) {
 
         self.clickedShareTicketInfo = clickedShareTicketInfo
 
-        self.checkCopyLink()
-        self.checkSocialAppSharesAvailability()
-
         self.getChatrooms()
-        self.getSocialApps()
 
     }
 
@@ -54,57 +48,35 @@ class ShareTicketChoiceViewModel {
             .store(in: &cancellables)
     }
 
-    private func getSocialApps() {
-        let socialAppsInfo = Env.gomaSocialClient.socialAppsInfo
-
-        // Verify if app is installed
-        for (index, socialAppInfo) in socialAppsInfo.enumerated() {
-
-            let appUrl = URL(string: socialAppInfo.urlScheme)
-
-            if UIApplication.shared.canOpenURL(appUrl! as URL) {
-
-                let socialApp = SocialApp(id: "\(index)",
-                                          name: socialAppInfo.name,
-                                          iconName: "\(socialAppInfo.name.lowercased())_icon",
-                                          appScheme: socialAppInfo.urlScheme,
-                                          urlShare: socialAppInfo.urlShare)
-
-                self.socialApps.value.append(socialApp)
-
-                print("\(socialAppInfo.urlScheme) detected")
-
-            }
-            else {
-                print("\(socialAppInfo.urlScheme) not detected")
-            }
-
-        }
-
-        self.shouldReloadData.send()
-    }
-
-    private func checkCopyLink() {
-        if let betStatus = self.clickedShareTicketInfo?.betStatus {
-            if betStatus == "OPEN" {
-                self.canCopyLinkPublisher.send(true)
-            }
-            else {
-                self.canCopyLinkPublisher.send(false)
-            }
-        }
-    }
-
-    private func checkSocialAppSharesAvailability() {
-        if let betStatus = self.clickedShareTicketInfo?.betStatus {
-            if betStatus == "OPEN" {
-                self.canShareLinkSocialApps.send(true)
-            }
-            else {
-                self.canShareLinkSocialApps.send(false)
-            }
-        }
-    }
+//    private func getSocialApps() {
+//        let socialAppsInfo = Env.gomaSocialClient.socialAppsInfo
+//
+//        // Verify if app is installed
+//        for (index, socialAppInfo) in socialAppsInfo.enumerated() {
+//
+//            let appUrl = URL(string: socialAppInfo.urlScheme)
+//
+//            if UIApplication.shared.canOpenURL(appUrl! as URL) {
+//
+//                let socialApp = SocialApp(id: "\(index)",
+//                                          name: socialAppInfo.name,
+//                                          iconName: "\(socialAppInfo.name.lowercased())_icon",
+//                                          appScheme: socialAppInfo.urlScheme,
+//                                          urlShare: socialAppInfo.urlShare)
+//
+//                self.socialApps.value.append(socialApp)
+//
+//                print("\(socialAppInfo.urlScheme) detected")
+//
+//            }
+//            else {
+//                print("\(socialAppInfo.urlScheme) not detected")
+//            }
+//
+//        }
+//
+//        self.shouldReloadData.send()
+//    }
 
     func sendTicketMessage(chatroomData: ChatroomData) {
 
@@ -134,8 +106,7 @@ class ShareTicketChoiceViewModel {
 
                 let attachment = self.generateAttachmentString(ticket: ticket,
                                                                withToken: betToken.sharedBetTokens.betTokenWithAllInfo)
-                print("ATTACHMENT: \(attachment)")
-                
+
                 Env.gomaSocialClient.sendMessage(chatroomId: chatroomData.chatroom.id,
                                                  message: defaultMessage,
                                                  attachment: attachment)
@@ -178,15 +149,17 @@ class ShareTicketChoiceViewController: UIViewController {
     private lazy var navigationView: UIView = Self.createNavigationView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var cancelButton: UIButton = Self.createCancelButton()
+    private lazy var chatTitleLabel: UILabel = Self.createChatTitleLabel()
     private lazy var chatCollectionView: UICollectionView = Self.createChatCollectionView()
-    private lazy var generalOptionsView: UIView = Self.createGeneralOptionsView()
-    private lazy var topSeparatorLineView: UIView = Self.createTopSeparatorLineView()
-    private lazy var bottomSeparatorLineView: UIView = Self.createBottomSeparatorLineView()
-    private lazy var copyLinkButton: UIButton = Self.createCopyLinkButton()
+    private lazy var separatorView: UIView = Self.createSeparatorView()
+    private lazy var leftSeparatorLineView: UIView = Self.createLeftSeparatorLineView()
+    private lazy var rightSeparatorLineView: UIView = Self.createRightSeparatorLineView()
+    private lazy var titleSeparatorLabel: UILabel = Self.createTitleSeparatorLabel()
     private lazy var sendViaButton: UIButton = Self.createSendViaButton()
-    private lazy var socialAppsCollectionView: UICollectionView = Self.createSocialAppsCollectionView()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
+    private lazy var emptyChatroomsView: UIView = Self.createEmptyChatroomsView()
+    private lazy var emptyChatroomsLabel: UILabel = Self.createEmptyChatroomsLabel()
     private var cancellables = Set<AnyCancellable>()
 
     var viewModel: ShareTicketChoiceViewModel
@@ -195,6 +168,13 @@ class ShareTicketChoiceViewController: UIViewController {
     var isLoading: Bool = false {
         didSet {
             self.loadingBaseView.isHidden = !isLoading
+        }
+    }
+
+    var isEmptyState: Bool = false {
+        didSet {
+            self.emptyChatroomsView.isHidden = !isEmptyState
+            self.chatCollectionView.isHidden = isEmptyState
         }
     }
 
@@ -222,20 +202,13 @@ class ShareTicketChoiceViewController: UIViewController {
         self.chatCollectionView.register(SocialItemCollectionViewCell.self,
                                         forCellWithReuseIdentifier: SocialItemCollectionViewCell.identifier)
 
-        self.socialAppsCollectionView.delegate = self
-        self.socialAppsCollectionView.dataSource = self
-
-        self.socialAppsCollectionView.register(SocialAppItemCollectionViewCell.self,
-                                        forCellWithReuseIdentifier: SocialAppItemCollectionViewCell.identifier)
-
-        self.copyLinkButton.addTarget(self, action: #selector(didTapCopyLinkButton), for: .primaryActionTriggered)
-
         self.sendViaButton.addTarget(self, action: #selector(didTapSendViaButton), for: .primaryActionTriggered)
 
         self.bind(toViewModel: self.viewModel)
 
         self.isLoading = false
 
+        self.isEmptyState = false
     }
 
     // MARK: - Layout and Theme
@@ -246,6 +219,9 @@ class ShareTicketChoiceViewController: UIViewController {
         self.bottomShareView.layer.cornerRadius = CornerRadius.view
         self.bottomShareView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         self.bottomShareView.clipsToBounds = true
+
+        self.sendViaButton.layer.cornerRadius = CornerRadius.button
+        self.sendViaButton.clipsToBounds = true
 
     }
 
@@ -272,26 +248,22 @@ class ShareTicketChoiceViewController: UIViewController {
         self.chatCollectionView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
         self.chatCollectionView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.generalOptionsView.backgroundColor = .clear
+        self.separatorView.backgroundColor = .clear
 
-        self.topSeparatorLineView.backgroundColor = UIColor.App.separatorLine
+        self.leftSeparatorLineView.backgroundColor = UIColor.App.separatorLine
 
-        self.bottomSeparatorLineView.backgroundColor = UIColor.App.separatorLine
+        self.rightSeparatorLineView.backgroundColor = UIColor.App.separatorLine
 
-        self.copyLinkButton.setBackgroundColor(.clear, for: .normal)
-        self.copyLinkButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
-        self.copyLinkButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        self.copyLinkButton.setTitleColor(UIColor.App.buttonTextDisablePrimary.withAlphaComponent(0.39), for: .disabled)
-
-        self.sendViaButton.setBackgroundColor(.clear, for: .normal)
+        self.sendViaButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
         self.sendViaButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         self.sendViaButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
         self.sendViaButton.setTitleColor(UIColor.App.buttonTextDisablePrimary.withAlphaComponent(0.7), for: .disabled)
 
-        self.socialAppsCollectionView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
-        self.socialAppsCollectionView.backgroundColor = UIColor.App.backgroundPrimary
-
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.emptyChatroomsView.backgroundColor = .clear
+
+        self.emptyChatroomsLabel.textColor = UIColor.App.textPrimary
     }
 
     // MARK: Binding
@@ -301,7 +273,6 @@ class ShareTicketChoiceViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.chatCollectionView.reloadData()
-                self?.socialAppsCollectionView.reloadData()
             })
             .store(in: &cancellables)
 
@@ -316,17 +287,11 @@ class ShareTicketChoiceViewController: UIViewController {
             }
         }
 
-        viewModel.canCopyLinkPublisher
+        viewModel.chatrooms
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] isEnabled in
-                self?.copyLinkButton.isEnabled = isEnabled
-            })
-            .store(in: &cancellables)
-
-        viewModel.canShareLinkSocialApps
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] isEnabled in
-                self?.socialAppsCollectionView.isUserInteractionEnabled = isEnabled
+            .dropFirst()
+            .sink(receiveValue: { [weak self] chatrooms in
+                self?.isEmptyState = chatrooms.isEmpty
             })
             .store(in: &cancellables)
 
@@ -480,81 +445,44 @@ extension ShareTicketChoiceViewController: UICollectionViewDelegate, UICollectio
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
-        if collectionView == self.chatCollectionView {
-            guard
-                let cell = collectionView.dequeueCellType(SocialItemCollectionViewCell.self, indexPath: indexPath)
-            else {
-                fatalError()
-            }
-
-            if indexPath.row < 4 {
-                if let chatroomData = self.viewModel.chatrooms.value[safe: indexPath.row] {
-
-                    let cellViewModel = SocialItemCellViewModel(chatroomData: chatroomData)
-
-                    cell.configure(withViewModel: cellViewModel)
-
-                    cell.shouldShareTicket = {
-                        self.shareTicketToChatroom(chatroomData: chatroomData)
-
-                    }
-
-                }
-            }
-            else {
-                cell.simpleConfigure()
-
-                cell.shouldOpenMoreOptions = {
-                    self.openMoreOptions()
-                }
-            }
-
-            return cell
-        }
+        guard
+            let cell = collectionView.dequeueCellType(SocialItemCollectionViewCell.self, indexPath: indexPath)
         else {
-            guard
-                let cell = collectionView.dequeueCellType(SocialAppItemCollectionViewCell.self, indexPath: indexPath)
-            else {
-                fatalError()
-            }
+            fatalError()
+        }
 
-            if let socialApp = self.viewModel.socialApps.value[safe: indexPath.row] {
+        if indexPath.row < 4 {
+            if let chatroomData = self.viewModel.chatrooms.value[safe: indexPath.row] {
 
-                let cellViewModel = SocialAppItemCellViewModel(socialApp: socialApp)
+                let cellViewModel = SocialItemCellViewModel(chatroomData: chatroomData)
 
                 cell.configure(withViewModel: cellViewModel)
 
-                if let betStatus = self.viewModel.clickedShareTicketInfo?.betStatus {
-                    if betStatus != "OPEN" {
-                        cell.isItemDisabled = true
-                    }
-                    else {
-                        cell.isItemDisabled = false
-                    }
-                }
+                cell.shouldShareTicket = {
+                    self.shareTicketToChatroom(chatroomData: chatroomData)
 
-                cell.shouldShowSocialShare = { [weak self] in
-                    self?.showSocialShareScreen(socialApp: socialApp)
                 }
 
             }
-
-            return cell
         }
+        else {
+            cell.simpleConfigure()
+
+            cell.shouldOpenMoreOptions = {
+                self.openMoreOptions()
+            }
+        }
+
+        return cell
 
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if collectionView == self.socialAppsCollectionView {
-            return self.viewModel.socialApps.value.count
-        }
-        else {
-            if self.viewModel.chatrooms.value.count <= 4 {
-                return self.viewModel.chatrooms.value.count
-            }
-            return 5
 
+        if self.viewModel.chatrooms.value.count <= 4 {
+            return self.viewModel.chatrooms.value.count
         }
+        return 5
 
     }
 
@@ -572,13 +500,6 @@ extension ShareTicketChoiceViewController: UICollectionViewDelegate, UICollectio
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        if collectionView == self.socialAppsCollectionView {
-            let padding: CGFloat =  30
-            let collectionViewWidth = collectionView.frame.size.width - padding
-            let collectionViewHeight = collectionView.frame.size.height - 8
-            return CGSize(width: collectionViewWidth/4, height: collectionViewHeight)
-        }
 
         let padding: CGFloat =  30
         let collectionViewWidth = collectionView.frame.size.width - padding
@@ -648,62 +569,63 @@ extension ShareTicketChoiceViewController {
         return collectionView
     }
 
-    private static func createGeneralOptionsView() -> UIView {
+    private static func createChatTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor.App.textPrimary
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.textAlignment = .left
+        label.numberOfLines = 1
+        label.text = localized("send_to_chat")
+        return label
+    }
+
+    private static func createSeparatorView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
 
-    private static func createTopSeparatorLineView() -> UIView {
+    private static func createLeftSeparatorLineView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return view
     }
 
-    private static func createBottomSeparatorLineView() -> UIView {
+    private static func createRightSeparatorLineView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return view
     }
 
-    private static func createCopyLinkButton() -> UIButton {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("copy_link"), for: .normal)
-        button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
-        button.setImage(UIImage(named: "link_icon"), for: .normal)
-        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
-        button.imageEdgeInsets = UIEdgeInsets(top: -2, left: -10, bottom: 0, right: 0)
-        button.setContentHuggingPriority(.required, for: .horizontal)
-        return button
+    private static func createTitleSeparatorLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor.App.buttonBackgroundSecondary
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.textAlignment = .left
+        label.numberOfLines = 1
+        label.text = localized("or")
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        return label
     }
 
     private static func createSendViaButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("send_via"), for: .normal)
-        button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
+        button.setTitle(localized("share_outside_via"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 14)
         button.setImage(UIImage(named: "send_via_icon"), for: .normal)
+        button.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        button.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        button.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
-        button.imageEdgeInsets = UIEdgeInsets(top: -8, left: -10, bottom: 0, right: 0)
+        button.imageEdgeInsets = UIEdgeInsets(top: -2, left: -10, bottom: 0, right: 0)
         button.setContentHuggingPriority(.required, for: .horizontal)
+        button.layer.cornerRadius = CornerRadius.button
         return button
-    }
-
-    private static func createSocialAppsCollectionView() -> UICollectionView {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.minimumInteritemSpacing = 8
-        layout.minimumLineSpacing = 8
-        let collectionView = UICollectionView.init(frame: .zero, collectionViewLayout: layout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.alwaysBounceHorizontal = true
-
-        collectionView.contentInset = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
-
-        return collectionView
     }
 
     private static func createLoadingBaseView() -> UIView {
@@ -720,6 +642,22 @@ extension ShareTicketChoiceViewController {
         return activityIndicatorView
     }
 
+    private static func createEmptyChatroomsView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createEmptyChatroomsLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor.App.buttonBackgroundSecondary
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        label.text = localized("empty_chatrooms")
+        return label
+    }
     private func setupSubviews() {
         self.view.addSubview(self.topSafeAreaView)
 
@@ -732,16 +670,21 @@ extension ShareTicketChoiceViewController {
         self.navigationView.addSubview(self.titleLabel)
         self.navigationView.addSubview(self.cancelButton)
 
+        self.bottomShareView.addSubview(self.chatTitleLabel)
+
+        self.bottomShareView.addSubview(self.emptyChatroomsView)
+
+        self.emptyChatroomsView.addSubview(self.emptyChatroomsLabel)
+
         self.bottomShareView.addSubview(self.chatCollectionView)
 
-        self.bottomShareView.addSubview(self.generalOptionsView)
+        self.bottomShareView.addSubview(self.separatorView)
 
-        self.generalOptionsView.addSubview(self.topSeparatorLineView)
-        self.generalOptionsView.addSubview(self.copyLinkButton)
-        self.generalOptionsView.addSubview(self.sendViaButton)
-        self.generalOptionsView.addSubview(self.bottomSeparatorLineView)
+        self.bottomShareView.addSubview(self.leftSeparatorLineView)
+        self.bottomShareView.addSubview(self.titleSeparatorLabel)
+        self.bottomShareView.addSubview(self.rightSeparatorLineView)
 
-        self.bottomShareView.addSubview(self.socialAppsCollectionView)
+        self.bottomShareView.addSubview(self.sendViaButton)
 
         self.view.addSubview(self.loadingBaseView)
 
@@ -791,49 +734,45 @@ extension ShareTicketChoiceViewController {
         // Chat collection view
         NSLayoutConstraint.activate([
 
+            self.chatTitleLabel.leadingAnchor.constraint(equalTo: self.bottomShareView.leadingAnchor, constant: 20),
+            self.chatTitleLabel.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 10),
+
             self.chatCollectionView.heightAnchor.constraint(equalToConstant: 105),
 
             self.chatCollectionView.leadingAnchor.constraint(equalTo: self.bottomShareView.leadingAnchor, constant: 15),
             self.chatCollectionView.trailingAnchor.constraint(equalTo: self.bottomShareView.trailingAnchor, constant: -15),
-            self.chatCollectionView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 2)
+            self.chatCollectionView.topAnchor.constraint(equalTo: self.chatTitleLabel.bottomAnchor, constant: 2)
         ])
 
-        // General options view
+        // Separator stack view
         NSLayoutConstraint.activate([
-            self.generalOptionsView.leadingAnchor.constraint(equalTo: self.bottomShareView.leadingAnchor, constant: 18),
-            self.generalOptionsView.trailingAnchor.constraint(equalTo: self.bottomShareView.trailingAnchor, constant: -18),
-            self.generalOptionsView.topAnchor.constraint(equalTo: self.chatCollectionView.bottomAnchor),
-            self.generalOptionsView.heightAnchor.constraint(equalToConstant: 64),
+            self.separatorView.leadingAnchor.constraint(equalTo: self.bottomShareView.leadingAnchor, constant: 18),
+            self.separatorView.trailingAnchor.constraint(equalTo: self.bottomShareView.trailingAnchor, constant: -18),
+            self.separatorView.topAnchor.constraint(equalTo: self.chatCollectionView.bottomAnchor, constant: 5),
+            self.separatorView.heightAnchor.constraint(equalToConstant: 20),
 
-            self.topSeparatorLineView.leadingAnchor.constraint(equalTo: self.generalOptionsView.leadingAnchor),
-            self.topSeparatorLineView.trailingAnchor.constraint(equalTo: self.generalOptionsView.trailingAnchor),
-            self.topSeparatorLineView.topAnchor.constraint(equalTo: self.generalOptionsView.topAnchor),
-            self.topSeparatorLineView.heightAnchor.constraint(equalToConstant: 1),
+            self.leftSeparatorLineView.leadingAnchor.constraint(equalTo: self.separatorView.leadingAnchor),
+            self.leftSeparatorLineView.heightAnchor.constraint(equalToConstant: 1),
+            self.leftSeparatorLineView.centerYAnchor.constraint(equalTo: self.separatorView.centerYAnchor),
 
-            self.bottomSeparatorLineView.leadingAnchor.constraint(equalTo: self.generalOptionsView.leadingAnchor),
-            self.bottomSeparatorLineView.trailingAnchor.constraint(equalTo: self.generalOptionsView.trailingAnchor),
-            self.bottomSeparatorLineView.bottomAnchor.constraint(equalTo: self.generalOptionsView.bottomAnchor),
-            self.bottomSeparatorLineView.heightAnchor.constraint(equalToConstant: 1),
+            self.titleSeparatorLabel.centerXAnchor.constraint(equalTo: self.separatorView.centerXAnchor),
+            self.titleSeparatorLabel.leadingAnchor.constraint(equalTo: self.leftSeparatorLineView.trailingAnchor, constant: 10),
+            self.titleSeparatorLabel.centerYAnchor.constraint(equalTo: self.separatorView.centerYAnchor),
 
-            self.copyLinkButton.leadingAnchor.constraint(equalTo: self.generalOptionsView.leadingAnchor, constant: 20),
-            self.copyLinkButton.heightAnchor.constraint(equalToConstant: 40),
-            self.copyLinkButton.centerYAnchor.constraint(equalTo: self.generalOptionsView.centerYAnchor),
-
-            self.sendViaButton.trailingAnchor.constraint(equalTo: self.generalOptionsView.trailingAnchor, constant: -20),
-            self.sendViaButton.heightAnchor.constraint(equalToConstant: 40),
-            self.sendViaButton.centerYAnchor.constraint(equalTo: self.generalOptionsView.centerYAnchor),
+            self.rightSeparatorLineView.heightAnchor.constraint(equalToConstant: 1),
+            self.rightSeparatorLineView.leadingAnchor.constraint(equalTo: self.titleSeparatorLabel.trailingAnchor, constant: 10),
+            self.rightSeparatorLineView.trailingAnchor.constraint(equalTo: self.separatorView.trailingAnchor),
+            self.rightSeparatorLineView.centerYAnchor.constraint(equalTo: self.separatorView.centerYAnchor),
 
         ])
 
-        // Social Apps collection view
+        // Send via button
         NSLayoutConstraint.activate([
-
-            self.socialAppsCollectionView.heightAnchor.constraint(equalToConstant: 105),
-
-            self.socialAppsCollectionView.leadingAnchor.constraint(equalTo: self.bottomShareView.leadingAnchor, constant: 15),
-            self.socialAppsCollectionView.trailingAnchor.constraint(equalTo: self.bottomShareView.trailingAnchor, constant: -15),
-            self.socialAppsCollectionView.topAnchor.constraint(equalTo: self.generalOptionsView.bottomAnchor, constant: 2),
-            self.socialAppsCollectionView.bottomAnchor.constraint(equalTo: self.bottomShareView.bottomAnchor)
+            self.sendViaButton.leadingAnchor.constraint(equalTo: self.bottomShareView.leadingAnchor, constant: 90),
+            self.sendViaButton.trailingAnchor.constraint(equalTo: self.bottomShareView.trailingAnchor, constant: -90),
+            self.sendViaButton.heightAnchor.constraint(equalToConstant: 31),
+            self.sendViaButton.topAnchor.constraint(equalTo: self.separatorView.bottomAnchor, constant: 15),
+            self.sendViaButton.bottomAnchor.constraint(equalTo: self.bottomShareView.bottomAnchor, constant: -15)
         ])
 
         // Loading Screen
@@ -845,6 +784,18 @@ extension ShareTicketChoiceViewController {
 
             self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
             self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor)
+        ])
+
+        // Empty chatrooms view
+        NSLayoutConstraint.activate([
+            self.emptyChatroomsView.leadingAnchor.constraint(equalTo: self.bottomShareView.leadingAnchor),
+            self.emptyChatroomsView.trailingAnchor.constraint(equalTo: self.bottomShareView.trailingAnchor),
+            self.emptyChatroomsView.topAnchor.constraint(equalTo: self.chatTitleLabel.bottomAnchor, constant: 2),
+            self.emptyChatroomsView.bottomAnchor.constraint(equalTo: self.separatorView.topAnchor, constant: -5),
+
+            self.emptyChatroomsLabel.leadingAnchor.constraint(equalTo: self.emptyChatroomsView.leadingAnchor, constant: 15),
+            self.emptyChatroomsLabel.trailingAnchor.constraint(equalTo: self.emptyChatroomsView.trailingAnchor, constant: -15),
+            self.emptyChatroomsLabel.centerYAnchor.constraint(equalTo: self.emptyChatroomsView.centerYAnchor)
         ])
     }
 }

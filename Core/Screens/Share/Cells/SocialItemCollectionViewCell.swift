@@ -239,6 +239,7 @@ extension SocialItemCollectionViewCell {
         label.textAlignment = .center
         label.text = "Social"
         label.font = AppFont.with(type: .semibold, size: 14)
+        label.numberOfLines = 0
         return label
     }
 

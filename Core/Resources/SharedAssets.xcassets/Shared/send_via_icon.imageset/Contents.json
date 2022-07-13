@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Export Copy.png",
+      "filename" : "sendexternal.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Export Copy@2x.png",
+      "filename" : "sendexternal@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Export Copy@3x.png",
+      "filename" : "sendexternal@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

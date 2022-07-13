@@ -12,25 +12,20 @@ class BetSubmissionSuccessViewController: UIViewController {
 
     @IBOutlet private weak var navigationView: UIView!
     @IBOutlet private weak var backButton: UIButton!
-    @IBOutlet private weak var shareButton: UIButton!
     @IBOutlet private weak var scrollView: UIView!
+    @IBOutlet private weak var scrollContentView: UIView!
+
+    @IBOutlet private weak var betSuccessView: UIView!
     @IBOutlet private weak var checkmarkImageView: UIImageView!
     @IBOutlet private weak var messageTitleLabel: UILabel!
     @IBOutlet private weak var messageSubtitleLabel: UILabel!
+    @IBOutlet private weak var shareButton: UIButton!
 
     @IBOutlet private weak var bottomView: UIView!
     @IBOutlet private weak var bottomSeparatorView: UIView!
     @IBOutlet private weak var continueButton: UIButton!
 
     @IBOutlet private weak var safeAreaBottomView: UIView!
-    
-    @IBOutlet private weak var possibleEarningsValueLabel: UILabel!
-    @IBOutlet private weak var totalOddsValueLabel: UILabel!
-    @IBOutlet private weak var betsMadeValueLabel: UILabel!
-    
-    @IBOutlet private weak var totalOddsLabel: UILabel!
-    @IBOutlet private weak var possibleEarningsLabel: UILabel!
-    @IBOutlet private weak var betsMadeLabel: UILabel!
 
     @IBOutlet private weak var checkboxView: UIView!
     @IBOutlet private weak var checkboxImage: UIImageView!
@@ -92,27 +87,23 @@ class BetSubmissionSuccessViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.shareButton.setTitle("", for: .normal)
+        self.checkmarkImageView.image = UIImage(named: "like_success_icon")
 
-        self.possibleEarningsValueLabel.text = possibleEarningsValue
-        self.totalOddsValueLabel.text = totalOddsValue
-        self.betsMadeValueLabel.text = String(numberOfBets)
-        
-        if let betType = betPlacedDetailsArray.first?.response.type {
-            if betType == "SYSTEM" {
-                self.totalOddsLabel.isHidden = true
-                self.totalOddsValueLabel.isHidden = true
-            }
-        }
+        self.messageTitleLabel.text = localized("bet_registered_success")
+        self.messageTitleLabel.font = AppFont.with(type: .semibold, size: 14)
 
-        self.messageTitleLabel.font = AppFont.with(type: .bold, size: 32)
-        self.messageSubtitleLabel.font = AppFont.with(type: .semibold, size: 24)
-        self.betsMadeLabel.font = AppFont.with(type: .semibold, size: 16)
-        self.betsMadeValueLabel.font = AppFont.with(type: .bold, size: 23)
-        self.totalOddsValueLabel.font = AppFont.with(type: .bold, size: 23)
-        self.totalOddsLabel.font = AppFont.with(type: .semibold, size: 16)
-        self.possibleEarningsLabel.font = AppFont.with(type: .semibold, size: 21)
-        self.possibleEarningsValueLabel.font = AppFont.with(type: .bold, size: 33)
+        self.messageSubtitleLabel.text = localized("good_luck")
+        self.messageSubtitleLabel.font = AppFont.with(type: .bold, size: 14)
+
+        self.shareButton.setTitle(localized("share_bet_now"), for: .normal)
+        self.shareButton.titleLabel?.font = AppFont.with(type: .bold, size: 14)
+        self.shareButton.setImage(UIImage(named: "send_bet_icon"), for: .normal)
+        self.shareButton.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        self.shareButton.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        self.shareButton.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        self.shareButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
+        self.shareButton.imageEdgeInsets = UIEdgeInsets(top: -2, left: -10, bottom: 0, right: 0)
+        self.shareButton.layer.cornerRadius = CornerRadius.button
 
         StyleHelper.styleButton(button: self.continueButton)
 
@@ -124,7 +115,6 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.checkboxView.addGestureRecognizer(checkboxTap)
 
         self.loadLocations()
-        //self.loadOpenedTickets()
 
         self.setupWithTheme()
     }
@@ -145,23 +135,20 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.shareButton.backgroundColor = .clear
-        
+        self.betSuccessView.backgroundColor = UIColor.App.backgroundPrimary
+
         self.messageTitleLabel.textColor = UIColor.App.textPrimary
         self.messageSubtitleLabel.textColor = UIColor.App.textPrimary
-        
-        self.betsMadeLabel.textColor = UIColor.App.textPrimary
-        self.betsMadeValueLabel.textColor = UIColor.App.textPrimary
-        
-        self.totalOddsValueLabel.textColor = UIColor.App.textPrimary
-        self.totalOddsLabel.textColor = UIColor.App.textPrimary
-        
-        self.possibleEarningsValueLabel.textColor = UIColor.App.textPrimary
 
-        self.possibleEarningsLabel.textColor = UIColor.App.textPrimary
-       
         self.checkboxLabel.backgroundColor = .clear
         self.checkboxLabel.textColor = UIColor.App.textSecondary
+
+        self.shareButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
+        self.shareButton.backgroundColor = UIColor.App.buttonBackgroundSecondary
+
+        self.shareButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+
+        self.scrollContentView.backgroundColor = .clear
     }
 
     private func loadLocations() {
@@ -215,7 +202,7 @@ class BetSubmissionSuccessViewController: UIViewController {
                         self?.betHistoryEntry = betHistoryResponse.betList?.first
                         //self?.canShareTicket = true
                         self?.configureBetCards()
-                        self?.getSharedBetToken()
+                        //self?.getSharedBetToken()
 
                     }
                 }
@@ -247,7 +234,6 @@ class BetSubmissionSuccessViewController: UIViewController {
                     }
                 },
                 receiveValue: { [weak self] betTokens in
-                    print("BET TOKEN: \(betTokens)")
                     let betToken = betTokens.sharedBetTokens.betTokenWithAllInfo
                     self?.sharedBetToken = betToken
                     self?.canShareTicket = true
