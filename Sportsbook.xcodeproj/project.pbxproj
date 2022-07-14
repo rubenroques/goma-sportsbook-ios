@@ -3523,6 +3523,12 @@
 		A98EFDA5287C66B000655A26 /* SharedTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98EFDA1287C66B000655A26 /* SharedTicketCardView.swift */; };
 		A98EFDA6287C66B000655A26 /* SharedTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98EFDA1287C66B000655A26 /* SharedTicketCardView.swift */; };
 		A98EFDA7287C66B000655A26 /* SharedTicketCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98EFDA1287C66B000655A26 /* SharedTicketCardView.swift */; };
+		A98EFDA928801DF300655A26 /* SharedTicketBetLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98EFDA828801DF300655A26 /* SharedTicketBetLineView.swift */; };
+		A98EFDAA28801DF300655A26 /* SharedTicketBetLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98EFDA828801DF300655A26 /* SharedTicketBetLineView.swift */; };
+		A98EFDAB28801DF300655A26 /* SharedTicketBetLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98EFDA828801DF300655A26 /* SharedTicketBetLineView.swift */; };
+		A98EFDAC28801DF300655A26 /* SharedTicketBetLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98EFDA828801DF300655A26 /* SharedTicketBetLineView.swift */; };
+		A98EFDAD28801DF300655A26 /* SharedTicketBetLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98EFDA828801DF300655A26 /* SharedTicketBetLineView.swift */; };
+		A98EFDAE28801DF300655A26 /* SharedTicketBetLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98EFDA828801DF300655A26 /* SharedTicketBetLineView.swift */; };
 		A98F3A562795C20F0029C3DB /* SuggestedBetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98F3A552795C20F0029C3DB /* SuggestedBetViewModel.swift */; };
 		A98F3A572795C20F0029C3DB /* SuggestedBetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98F3A552795C20F0029C3DB /* SuggestedBetViewModel.swift */; };
 		A995C195279991A100151462 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C193279991A100151462 /* SearchViewController.swift */; };
@@ -4460,6 +4466,7 @@
 		A98E6C5827B2B09800453CF9 /* UserSettingsGoma.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsGoma.swift; sourceTree = "<group>"; };
 		A98E6C5B27B2C33900453CF9 /* BetslipSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipSelection.swift; sourceTree = "<group>"; };
 		A98EFDA1287C66B000655A26 /* SharedTicketCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTicketCardView.swift; sourceTree = "<group>"; };
+		A98EFDA828801DF300655A26 /* SharedTicketBetLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTicketBetLineView.swift; sourceTree = "<group>"; };
 		A98F3A552795C20F0029C3DB /* SuggestedBetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedBetViewModel.swift; sourceTree = "<group>"; };
 		A995C193279991A100151462 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		A995C194279991A100151462 /* SearchViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchViewController.xib; sourceTree = "<group>"; };
@@ -6432,6 +6439,7 @@
 			children = (
 				A90BC91927CCE0B300667616 /* SharedGameCardView.swift */,
 				A98EFDA1287C66B000655A26 /* SharedTicketCardView.swift */,
+				A98EFDA828801DF300655A26 /* SharedTicketBetLineView.swift */,
 			);
 			path = SharedGameCard;
 			sourceTree = "<group>";
@@ -8960,6 +8968,7 @@
 				A9C6023B2716F99A00992E11 /* CheckboxButton.swift in Sources */,
 				454E090827EB831600391560 /* SocialViewController.swift in Sources */,
 				45D3DE36271492E000717124 /* BannerInfo.swift in Sources */,
+				A98EFDA928801DF300655A26 /* SharedTicketBetLineView.swift in Sources */,
 				A97D246C28180586003EEDEC /* SocialModels.swift in Sources */,
 				45726336272C0998002F2959 /* LiveEventsViewModel.swift in Sources */,
 				45166D1F26F3548D00E69D65 /* SSWampSession.swift in Sources */,
@@ -9491,6 +9500,7 @@
 				A9E7C69927B582DC00F784C9 /* SportSectionHeaderView.swift in Sources */,
 				454E090927EB831600391560 /* SocialViewController.swift in Sources */,
 				45C3D2BB2773C56F00B3EF44 /* MyTicketBetLineViewModel.swift in Sources */,
+				A98EFDAA28801DF300655A26 /* SharedTicketBetLineView.swift in Sources */,
 				A97D246D28180586003EEDEC /* SocialModels.swift in Sources */,
 				A9C6023C2716F99A00992E11 /* CheckboxButton.swift in Sources */,
 				45D3DE37271492E000717124 /* BannerInfo.swift in Sources */,
@@ -10009,6 +10019,7 @@
 				457CBB32282D27D000ED0F00 /* BannerInfo.swift in Sources */,
 				457CBB33282D27D000ED0F00 /* LiveEventsViewModel.swift in Sources */,
 				457CBB34282D27D000ED0F00 /* SSWampSession.swift in Sources */,
+				A98EFDAD28801DF300655A26 /* SharedTicketBetLineView.swift in Sources */,
 				457CBB35282D27D000ED0F00 /* SubmitedBetTableViewCellViewModel.swift in Sources */,
 				457CBB36282D27D000ED0F00 /* WithdrawViewController.swift in Sources */,
 				457CBB37282D27D000ED0F00 /* OutrightCompetitionLargeLineTableViewCell.swift in Sources */,
@@ -10527,6 +10538,7 @@
 				457CBDDA282D2CD100ED0F00 /* BannerInfo.swift in Sources */,
 				457CBDDB282D2CD100ED0F00 /* LiveEventsViewModel.swift in Sources */,
 				457CBDDC282D2CD100ED0F00 /* SSWampSession.swift in Sources */,
+				A98EFDAE28801DF300655A26 /* SharedTicketBetLineView.swift in Sources */,
 				457CBDDD282D2CD100ED0F00 /* SubmitedBetTableViewCellViewModel.swift in Sources */,
 				457CBDDE282D2CD100ED0F00 /* WithdrawViewController.swift in Sources */,
 				457CBDDF282D2CD100ED0F00 /* OutrightCompetitionLargeLineTableViewCell.swift in Sources */,
@@ -11045,6 +11057,7 @@
 				4589C8B5282024E400243547 /* BannerInfo.swift in Sources */,
 				4589C8B6282024E400243547 /* LiveEventsViewModel.swift in Sources */,
 				4589C8B7282024E400243547 /* SSWampSession.swift in Sources */,
+				A98EFDAB28801DF300655A26 /* SharedTicketBetLineView.swift in Sources */,
 				4589C8B8282024E400243547 /* SubmitedBetTableViewCellViewModel.swift in Sources */,
 				4589C8B9282024E400243547 /* WithdrawViewController.swift in Sources */,
 				4589C8BA282024E400243547 /* OutrightCompetitionLargeLineTableViewCell.swift in Sources */,
@@ -11563,6 +11576,7 @@
 				45A6BD0B28246A7500D9B416 /* SocialModels.swift in Sources */,
 				45A6BD0C28246A7500D9B416 /* LiveEventsViewModel.swift in Sources */,
 				45A6BD0D28246A7500D9B416 /* SSWampSession.swift in Sources */,
+				A98EFDAC28801DF300655A26 /* SharedTicketBetLineView.swift in Sources */,
 				45A6BD0E28246A7500D9B416 /* SubmitedBetTableViewCellViewModel.swift in Sources */,
 				45A6BD0F28246A7500D9B416 /* WithdrawViewController.swift in Sources */,
 				45A6BD1028246A7500D9B416 /* OutrightCompetitionLargeLineTableViewCell.swift in Sources */,

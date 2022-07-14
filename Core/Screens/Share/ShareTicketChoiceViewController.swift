@@ -94,7 +94,6 @@ class ShareTicketChoiceViewModel {
                 switch completion {
                 case .failure:
                     ()
-                    //self?.isLoadingSharedBetPublisher.send(false)
                 case .finished:
                     ()
                 }
@@ -308,7 +307,9 @@ class ShareTicketChoiceViewController: UIViewController {
                 self?.closeViewController()
             }
 
-            self.present(shareTicketFriendGroupViewController, animated: true)
+            let navigationViewController = Router.navigationController(with: shareTicketFriendGroupViewController)
+            self.present(navigationViewController, animated: true, completion: nil)
+            //self.present(shareTicketFriendGroupViewController, animated: true)
         }
     }
 

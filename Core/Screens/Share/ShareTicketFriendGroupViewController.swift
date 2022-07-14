@@ -78,6 +78,14 @@ class ShareTicketFriendGroupViewModel {
 
     }
 
+    func refetchChatrooms() {
+        self.initialChatrooms = []
+        self.chatroomsPublisher.value = []
+        self.cachedChatroomsCellsViewModels = [:]
+
+        self.getChatrooms()
+    }
+
     func checkSelectedChatrooms(cellViewModel: SelectChatroomCellViewModel) {
 
         if cellViewModel.isCheckboxSelected {
@@ -241,6 +249,8 @@ class ShareTicketFriendGroupViewController: UIViewController {
 
         self.sendButton.addTarget(self, action: #selector(didTapSendButton), for: .primaryActionTriggered)
 
+        self.newGroupButton.addTarget(self, action: #selector(didTapNewGroup), for: .primaryActionTriggered)
+
         let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(backgroundTapGesture)
 
@@ -401,8 +411,21 @@ class ShareTicketFriendGroupViewController: UIViewController {
             self.viewModel.sendTicketMessage(message: comment)
         }
         else {
-            self.viewModel.sendTicketMessage(message: "")
+            self.viewModel.sendTicketMessage(message: localized("check_this_bet_made"))
         }
+    }
+
+    @objc func didTapNewGroup() {
+        let newGroupViewModel = NewGroupViewModel()
+        let newGroupViewController = NewGroupViewController(viewModel: newGroupViewModel)
+
+        newGroupViewController.isSharedTicketNewGroup = true
+
+        newGroupViewController.shareChatroomsNeedReload = { [weak self] in
+            self?.viewModel.refetchChatrooms()
+        }
+
+        self.navigationController?.pushViewController(newGroupViewController, animated: true)
     }
 
     @objc func didTapBackground() {

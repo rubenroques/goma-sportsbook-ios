@@ -33,6 +33,8 @@ class BetSubmissionSuccessViewController: UIViewController {
 
     @IBOutlet private weak var sharedTicketCardView: SharedTicketCardView!
 
+    @IBOutlet private weak var loadingBaseView: UIView!
+
     private var totalOddsValue: String
     private var possibleEarningsValue: String
     private var numberOfBets: Int
@@ -47,6 +49,12 @@ class BetSubmissionSuccessViewController: UIViewController {
     private var canShareTicket: Bool = false
 
     var willDismissAction: (() -> Void)?
+
+    var isLoading: Bool = false {
+        didSet {
+            self.loadingBaseView.isHidden = !isLoading
+        }
+    }
 
     init(betPlacedDetailsArray: [BetPlacedDetails]) {
 
@@ -97,13 +105,14 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         self.shareButton.setTitle(localized("share_bet_now"), for: .normal)
         self.shareButton.titleLabel?.font = AppFont.with(type: .bold, size: 14)
-        self.shareButton.setImage(UIImage(named: "send_bet_icon"), for: .normal)
+        self.shareButton.setImage(UIImage(named: "share_bet_icon"), for: .normal)
+        self.shareButton.layer.cornerRadius = CornerRadius.button
+        self.shareButton.layer.masksToBounds = true
         self.shareButton.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         self.shareButton.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         self.shareButton.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        self.shareButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
-        self.shareButton.imageEdgeInsets = UIEdgeInsets(top: -2, left: -10, bottom: 0, right: 0)
-        self.shareButton.layer.cornerRadius = CornerRadius.button
+        self.shareButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 10)
+        self.shareButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
 
         StyleHelper.styleButton(button: self.continueButton)
 
@@ -117,6 +126,13 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.loadLocations()
 
         self.setupWithTheme()
+    }
+
+    override func viewDidLayoutSubviews() {
+        self.sharedTicketCardView.layoutIfNeeded()
+        self.sharedTicketCardView.layoutSubviews()
+
+        self.view.layoutIfNeeded()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -152,6 +168,8 @@ class BetSubmissionSuccessViewController: UIViewController {
     }
 
     private func loadLocations() {
+        self.isLoading = true
+
         let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
         Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
             .sink(receiveCompletion: { _ in
@@ -170,8 +188,6 @@ class BetSubmissionSuccessViewController: UIViewController {
     }
 
     private func loadOpenedTickets(page: Int = 0) {
-
-        //self.isLoadingOpened.send(true)
 
         let openedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.opened, records: 10, page: page)
         Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
@@ -192,17 +208,15 @@ class BetSubmissionSuccessViewController: UIViewController {
                 case .finished:
                     ()
                 }
-                //self?.isLoadingOpened.send(false)
+                self?.isLoading = false
             },
             receiveValue: { [weak self] betHistoryResponse in
-                //self?.openedMyTickets.value = betHistoryResponse.betList ?? []
                 if let betHistory = betHistoryResponse.betList?.first,
                    let betPlacedDetails = self?.betPlacedDetailsArray {
                     if betPlacedDetails[safe: 0]?.response.betId == betHistory.betId {
                         self?.betHistoryEntry = betHistoryResponse.betList?.first
-                        //self?.canShareTicket = true
                         self?.configureBetCards()
-                        //self?.getSharedBetToken()
+                        self?.getSharedBetToken()
 
                     }
                 }
