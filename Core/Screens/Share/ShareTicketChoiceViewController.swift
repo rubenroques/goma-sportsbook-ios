@@ -48,36 +48,6 @@ class ShareTicketChoiceViewModel {
             .store(in: &cancellables)
     }
 
-//    private func getSocialApps() {
-//        let socialAppsInfo = Env.gomaSocialClient.socialAppsInfo
-//
-//        // Verify if app is installed
-//        for (index, socialAppInfo) in socialAppsInfo.enumerated() {
-//
-//            let appUrl = URL(string: socialAppInfo.urlScheme)
-//
-//            if UIApplication.shared.canOpenURL(appUrl! as URL) {
-//
-//                let socialApp = SocialApp(id: "\(index)",
-//                                          name: socialAppInfo.name,
-//                                          iconName: "\(socialAppInfo.name.lowercased())_icon",
-//                                          appScheme: socialAppInfo.urlScheme,
-//                                          urlShare: socialAppInfo.urlShare)
-//
-//                self.socialApps.value.append(socialApp)
-//
-//                print("\(socialAppInfo.urlScheme) detected")
-//
-//            }
-//            else {
-//                print("\(socialAppInfo.urlScheme) not detected")
-//            }
-//
-//        }
-//
-//        self.shouldReloadData.send()
-//    }
-
     func sendTicketMessage(chatroomData: ChatroomData) {
 
         guard

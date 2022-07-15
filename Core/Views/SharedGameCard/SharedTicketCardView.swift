@@ -10,9 +10,8 @@ import UIKit
 class SharedTicketCardView: UIView {
 
     private lazy var baseView: UIView = Self.createBaseView()
-    private lazy var headerBaseView: UIView = Self.createHeaderBaseView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
-    // private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
+    private lazy var shareButton: UIButton = Self.createShareButton()
     private lazy var betCardsBaseView: UIView = Self.createBetCardsBaseView()
     private lazy var betCardsStackView: UIStackView = Self.createBetCardsStackView()
     private lazy var bottomBaseView: UIView = Self.createBottomBaseView()
@@ -27,6 +26,8 @@ class SharedTicketCardView: UIView {
     private lazy var winningsSubtitleLabel: UILabel = Self.createWinningsSubtitleLabel()
 
     private var betHistoryEntry: BetHistoryEntry?
+
+    var didTappedSharebet: ((UIImage?) -> Void)?
 
     // MARK: - Lifetime and Cycle
     override init(frame: CGRect) {
@@ -47,6 +48,7 @@ class SharedTicketCardView: UIView {
 
         self.setupSubviews()
 
+        self.shareButton.addTarget(self, action: #selector(didTapShareButton), for: .primaryActionTriggered)
     }
 
     override func layoutSubviews() {
@@ -62,7 +64,8 @@ class SharedTicketCardView: UIView {
 
         self.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.headerBaseView.backgroundColor = .clear
+        self.shareButton.backgroundColor = .clear
+
         self.baseView.backgroundColor = UIColor.App.backgroundSecondary
         self.betCardsBaseView.backgroundColor = .clear
         self.betCardsStackView.backgroundColor = .clear
@@ -128,6 +131,16 @@ class SharedTicketCardView: UIView {
 
     }
 
+    @objc func didTapShareButton() {
+        print("Tapped share")
+        let renderer = UIGraphicsImageRenderer(size: self.baseView.bounds.size)
+        let image = renderer.image { _ in
+            self.baseView.drawHierarchy(in: self.baseView.bounds, afterScreenUpdates: true)
+        }
+
+        didTappedSharebet?(image)
+    }
+
 }
 
 extension SharedTicketCardView {
@@ -149,6 +162,14 @@ extension SharedTicketCardView {
         label.font = AppFont.with(type: .bold, size: 16)
         label.text = "Title"
         return label
+    }
+
+    private static func createShareButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("", for: .normal)
+        button.setImage(UIImage(named: "send_bet_icon"), for: .normal)
+        return button
     }
 
     private static func createBetCardsBaseView() -> UIView {
@@ -256,10 +277,9 @@ extension SharedTicketCardView {
     private func setupSubviews() {
         self.addSubview(self.baseView)
 
-        self.baseView.addSubview(self.headerBaseView)
+        self.baseView.addSubview(self.titleLabel)
 
-        self.headerBaseView.addSubview(self.titleLabel)
-        // self.headerBaseView.addSubview(self.subtitleLabel)
+        self.baseView.addSubview(self.shareButton)
 
         self.baseView.addSubview(self.betCardsBaseView)
 
@@ -295,6 +315,11 @@ extension SharedTicketCardView {
             self.titleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 10),
             self.titleLabel.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 14),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -14),
+
+            self.shareButton.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: 0),
+            self.shareButton.widthAnchor.constraint(equalToConstant: 40),
+            self.shareButton.heightAnchor.constraint(equalTo: self.shareButton.widthAnchor),
+            self.shareButton.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
 
             self.betCardsBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 8),
             self.betCardsBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -8),
