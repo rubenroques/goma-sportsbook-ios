@@ -50,6 +50,8 @@ class MatchLineTableViewCell: UITableViewCell {
 
         self.selectionStyle = .none
 
+        self.cachedCardsStyle = StyleHelper.cardsStyleActive()
+        
         self.debugLabel.isHidden = true
 
 //        #if DEBUG
@@ -69,6 +71,8 @@ class MatchLineTableViewCell: UITableViewCell {
 
         self.collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "UICollectionViewCell")
 
+        self.collectionView.clipsToBounds = false
+        
         self.collectionView.showsVerticalScrollIndicator = false
         self.collectionView.showsHorizontalScrollIndicator = false
 
@@ -195,8 +199,19 @@ extension MatchLineTableViewCell: UIScrollViewDelegate {
         let screenWidth = UIScreen.main.bounds.size.width
         let width = screenWidth*0.6
 
+        let pushScreenMargin = 100.0
+        let bounceXPosition = ( (scrollView.contentOffset.x - scrollView.contentInset.left) + scrollView.frame.width) - scrollView.contentSize.width
+        
+        if bounceXPosition >= 0 {
+            for cell in self.collectionView.visibleCells {
+                if let seeMoreCell = cell as? SeeMoreMarketsCollectionViewCell {
+                    seeMoreCell.setAnimationPercentage(bounceXPosition / Double(pushScreenMargin * 0.98))
+                }
+            }
+        }
+        
         if scrollView.isTracking && scrollView.contentSize.width > screenWidth {
-            if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 100 {
+            if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + pushScreenMargin {
 
                 let generator = UIImpactFeedbackGenerator(style: .heavy)
                 generator.prepare()

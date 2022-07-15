@@ -14,6 +14,7 @@ enum UserDefaultsKey: String {
     case userBetslipSettings = "user_betslip_settings"
     case userOddsFormat = "userOddsFormat"
     case cardsStyle = "cardsStyleKey"
+    case cachedBetslipTickets = "cachedBetslipTickets"
 }
 
 extension UserDefaults {
@@ -57,6 +58,25 @@ extension UserDefaults {
         set {
             self.setValue(newValue, forKey: "user_betslip_settings")
         }
+    }
+    
+    var cachedBetslipTickets: [BettingTicket] {
+        
+        get {
+            
+            let bettingTickets: [BettingTicket]? = self.codable(forKey: UserDefaultsKey.cachedBetslipTickets.rawValue)
+            
+            if let bettingTicketsValue = bettingTickets {
+                return bettingTicketsValue
+            }
+            
+            self.set([], forKey: UserDefaultsKey.cachedBetslipTickets.rawValue)
+            return []
+        }
+        set {
+            self.set(codable: newValue, forKey: UserDefaultsKey.cachedBetslipTickets.rawValue)
+        }
+        
     }
 
     var userOddsFormat: OddsFormat {

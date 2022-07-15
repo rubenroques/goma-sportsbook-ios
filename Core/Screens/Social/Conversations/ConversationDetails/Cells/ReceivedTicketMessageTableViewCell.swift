@@ -116,7 +116,7 @@ class ReceivedTicketMessageTableViewCell: UITableViewCell {
                 self.ticketInMessageView = ChatTicketInMessageView(betSelectionCellViewModel: betSelectionCellViewModel,
                                                                    shouldShowButton: true)
 
-                self.ticketInMessageView!.didTapBetNowAction = { [weak self] viewModel in
+                self.ticketInMessageView!.didTapBetNowAction = { [weak self] viewModel in
                     self?.didTapBetNowAction(viewModel)
                 }
 

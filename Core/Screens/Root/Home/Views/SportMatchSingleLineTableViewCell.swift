@@ -45,6 +45,8 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
+        self.cachedCardStyle = StyleHelper.cardsStyleActive()
+        
         self.setupSubviews()
         self.setupWithTheme()
 
@@ -161,9 +163,21 @@ extension SportMatchSingleLineTableViewCell: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
         if scrollView == self.collectionView, let firstMatch = self.viewModel?.match(forLine: 0) {
+            
             let screenWidth = UIScreen.main.bounds.size.width
+            let pushScreenMargin = 100.0
+            let bounceXPosition = ( (scrollView.contentOffset.x - scrollView.contentInset.left) + scrollView.frame.width) - scrollView.contentSize.width
+            
+            if bounceXPosition >= 0 {
+                for cell in self.collectionView.visibleCells {
+                    if let seeMoreCell = cell as? SeeMoreMarketsCollectionViewCell {
+                        seeMoreCell.setAnimationPercentage(bounceXPosition / Double(pushScreenMargin * 0.98))
+                    }
+                }
+            }
+            
             if scrollView.isTracking && scrollView.contentSize.width > screenWidth {
-                if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 100 {
+                if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + pushScreenMargin {
                     let generator = UIImpactFeedbackGenerator(style: .heavy)
                     generator.prepare()
                     generator.impactOccurred()

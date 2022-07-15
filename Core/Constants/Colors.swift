@@ -37,6 +37,7 @@ extension UIColor {
         static let inputTextTitle = UIColor(named: "inputTextTitle")!
         static let inputText = UIColor(named: "inputText")!
         static let inputError = UIColor(named: "inputError")!
+        static let iconSecondary = UIColor(named: "iconSecondary")!
         
         static let backgroundDrop: UIColor = UIColor(named: "backgroundDrop")!
         static let borderDrop = UIColor(named: "borderDrop")!
@@ -71,6 +72,9 @@ extension UIColor {
 
         static let statsHome = UIColor(named: "statsHome")!
         static let statsAway = UIColor(named: "statsAway")!
+        
+        static let highlightPrimaryContrast = UIColor(named: "highlightPrimaryContrast")!
+        
 
     }
 

@@ -255,6 +255,7 @@ Terms of use, Privacy Policy and EULA";
 "casino" = "Casino";
 "my_tickets" = "My Tickets";
 "my_bets" = "My Bets";
+"sportsbook" = "Sportsbook";
 
 "logout" = "Logout";
 
@@ -429,6 +430,7 @@ Terms of use, Privacy Policy and EULA";
 "shared_tickets_to" = "You shared tickets to";
 
 "add_friend" = "Add Friend";
+"add_friends" = "Add Friends";
 "search_by_username" = "Search by username...";
 "add_from_contact_list" = "Add from contact list";
 "settings" = "Settings";
@@ -526,3 +528,6 @@ Terms of use, Privacy Policy and EULA";
 "bet_registered_success" = "Your bet was registered with success.";
 "good_luck" = "Good luck!";
 "share_bet_now" = "Share your bet now";
+
+"time_add_friends" = "Time to add friends!";
+"add_some_friends_start_chatting" = "Add some friends and start chatting now!";

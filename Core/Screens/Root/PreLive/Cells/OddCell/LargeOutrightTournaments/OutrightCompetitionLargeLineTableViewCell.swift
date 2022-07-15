@@ -117,9 +117,21 @@ extension OutrightCompetitionLargeLineTableViewCell: UIScrollViewDelegate {
 
         if scrollView == self.collectionView,
            let viewModel = self.viewModel {
+            
             let screenWidth = UIScreen.main.bounds.size.width
+            let pushScreenMargin = 100.0
+            let bounceXPosition = ( (scrollView.contentOffset.x - scrollView.contentInset.left) + scrollView.frame.width) - scrollView.contentSize.width
+            
+            if bounceXPosition >= 0 {
+                for cell in self.collectionView.visibleCells {
+                    if let seeMoreCell = cell as? SeeMoreMarketsCollectionViewCell {
+                        seeMoreCell.setAnimationPercentage(bounceXPosition / Double(pushScreenMargin * 0.98))
+                    }
+                }
+            }
+            
             if scrollView.isTracking && scrollView.contentSize.width > screenWidth {
-                if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 100 {
+                if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + pushScreenMargin {
                     let generator = UIImpactFeedbackGenerator(style: .heavy)
                     generator.prepare()
                     generator.impactOccurred()
