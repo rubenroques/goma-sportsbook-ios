@@ -31,14 +31,16 @@ class HistoryViewController: UIViewController {
     // Logic
     private var cancellables: Set<AnyCancellable> = []
     private let viewModel: HistoryViewModel
+    private let ticketsViewModel: MyTicketCellViewModel
     private var filterSelectedOption: Int = 0
     
+    private var locationsCodesDictionary: [String: String] = [:]
     private let rightGradientMaskLayer = CAGradientLayer()
     
     // MARK: - Lifetime and Cycle
-    init(viewModel: HistoryViewModel = HistoryViewModel(listType: .transactions)) {
+    init(viewModel: HistoryViewModel = HistoryViewModel(listType: .transactions), ticketsViewModel: MyTicketCellViewModel = MyTicketCellViewModel(ticket: <#BetHistoryEntry#>)) {
         self.viewModel = viewModel
-
+        self.ticketsViewModel = ticketsViewModel
         super.init(nibName: nil, bundle: nil)
 
         switch viewModel.listType {
@@ -72,7 +74,7 @@ class HistoryViewController: UIViewController {
 
         self.tableView.allowsSelection = false
         self.tableView.register(TransactionsTableViewCell.self, forCellReuseIdentifier: TransactionsTableViewCell.identifier)
-        self.tableView.register(BettingsTableViewCell.self, forCellReuseIdentifier: BettingsTableViewCell.identifier)
+        self.tableView.register(MyTicketTableViewCell.self, forCellReuseIdentifier: MyTicketTableViewCell.identifier)
         
         self.view.bringSubviewToFront(self.loadingBaseView.view)
         
@@ -251,14 +253,22 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
             }
             
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: BettingsTableViewCell.identifier, for: indexPath) as? BettingsTableViewCell,
+                let cell = tableView.dequeueReusableCell(withIdentifier: MyTicketTableViewCell.identifier, for: indexPath) as? MyTicketTableViewCell,
                 let ticketValue = ticket
             else {
                 fatalError("")
             }
             
-            cell.configure(withBetHistoryEntry: ticketValue)
+            let locationsCodes = (ticketValue.selections ?? [])
+                .map({ event -> String in
+                    let id = event.venueId ?? ""
+                    return self.locationsCodesDictionary[id] ?? ""
+                })
+
+            cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: ticketsViewModel)
+
             return cell
+            
             
         }
         

@@ -27,6 +27,7 @@ class BettingHistoryViewModel {
 
     // MARK: - Publishers
     var bettingTicketsType: BettingTicketsType = .opened
+    var cachedViewModels: [String: MyTicketCellViewModel] = [:]
 
     // MARK: - Publishers
     var titlePublisher: CurrentValueSubject<String, Never>
@@ -45,6 +46,10 @@ class BettingHistoryViewModel {
     // MARK: - Private Properties
 
     private let recordsPerPage = 80
+
+    private var resolvedPage = 0
+    private var openedPage = 0
+    private var wonPage = 0
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -213,7 +218,21 @@ class BettingHistoryViewModel {
             })
             .store(in: &cancellables)
     }
+    
+    func refresh() {
+        self.resolvedPage = 0
+        self.openedPage = 0
+        self.wonPage = 0
 
+        self.initialLoadMyTickets()
+    }
+
+    func initialLoadMyTickets() {
+        self.loadResolvedTickets(page: 0)
+        self.loadOpenedTickets(page: 0)
+        self.loadWonTickets(page: 0)
+    }
+    
     func loadWonTickets(page: Int) {
 
         self.listStatePublisher.send(.loading)
@@ -251,6 +270,37 @@ class BettingHistoryViewModel {
             })
             .store(in: &cancellables)
     }
+    
+    func viewModel(forIndex index: Int) -> MyTicketCellViewModel? {
+        let ticket: BetHistoryEntry?
+
+        switch bettingTicketsType {
+        case .resolved:
+            ticket = resolvedTickets.value[safe: index] ?? nil
+        case .opened:
+            ticket = openedTickets.value[safe: index] ?? nil
+        default:
+            ticket = wonTickets.value[safe: index] ?? nil
+        }
+
+        guard let ticket = ticket else {
+            return nil
+        }
+
+        if let viewModel = cachedViewModels[ticket.betId] {
+            return viewModel
+        }
+        else {
+            let viewModel =  MyTicketCellViewModel(ticket: ticket)
+            viewModel.requestDataRefreshAction = { [weak self] in
+                self?.refresh()
+            }
+            cachedViewModels[ticket.betId] = viewModel
+            return viewModel
+        }
+
+    }
+
 
 }
 

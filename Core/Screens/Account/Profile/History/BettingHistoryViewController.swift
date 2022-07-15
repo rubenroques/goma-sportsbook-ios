@@ -30,6 +30,11 @@ class BettingHistoryViewController: UIViewController {
     private var filterSelectedOption: Int = 0
 
     private let rightGradientMaskLayer = CAGradientLayer()
+    private var locationsCodesDictionary: [String: String] = [:]
+    
+    var redrawTableViewAction: (() -> Void)?
+    var tappedMatchDetail: ((String) -> Void)?
+    var requestShareActivityView: ((UIImage, String, String) -> Void)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: BettingHistoryViewModel = BettingHistoryViewModel(bettingTicketsType: .opened)) {
@@ -51,7 +56,7 @@ class BettingHistoryViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
-        self.tableView.register(BettingsTableViewCell.self, forCellReuseIdentifier: BettingsTableViewCell.identifier)
+        self.tableView.register(MyTicketTableViewCell.self, forCellReuseIdentifier: MyTicketTableViewCell.identifier)
 
         self.emptyStateButton.addTarget(self, action: #selector(self.didTapMakeDeposit), for: .primaryActionTriggered)
 
@@ -162,14 +167,65 @@ extension BettingHistoryViewController: UITableViewDelegate, UITableViewDataSour
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let ticket: BetHistoryEntry?
+
+        switch self.viewModel.bettingTicketsType {
+        case .resolved:
+            ticket =  self.viewModel.resolvedTickets.value[safe: indexPath.row] ?? nil
+        case .opened:
+            ticket =  self.viewModel.openedTickets.value[safe: indexPath.row] ?? nil
+        default:
+            ticket =  self.viewModel.resolvedTickets.value[safe: indexPath.row] ?? nil
+        
+        }
+
         guard
-            let cell = tableView.dequeueReusableCell(withIdentifier: BettingsTableViewCell.identifier, for: indexPath) as? BettingsTableViewCell,
+            let cell = tableView.dequeueCellType(MyTicketTableViewCell.self),
+            let viewModel = self.viewModel.viewModel(forIndex: indexPath.row),
+            let ticketValue = ticket
+        else {
+            fatalError("tableView.dequeueCellType(MyTicketTableViewCell.self)")
+        }
+
+        let locationsCodes = (ticketValue.selections ?? [])
+            .map({ event -> String in
+                let id = event.venueId ?? ""
+                return self.locationsCodesDictionary[id] ?? ""
+            })
+
+        cell.needsHeightRedraw = { [weak self] in
+            self?.redrawTableViewAction?()
+        }
+        cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
+
+        cell.tappedShareAction = { [weak self] in
+            if let cellSnapshot = cell.snapshot, let ticketStatus = ticketValue.status {
+                self?.requestShareActivityView?(cellSnapshot, ticketValue.betId, ticketStatus)
+            }
+        }
+    
+        cell.tappedMatchDetail = { [weak self] matchId in
+            self?.tappedMatchDetail?(matchId)
+
+        }
+        return cell
+        
+        
+        
+        
+        
+        
+        
+        /*
+        guard
+            let cell = tableView.dequeueReusableCell(withIdentifier: MyTicketTableViewCell.identifier, for: indexPath) as? MyTicketTableViewCell,
             let bettingTicketValue = self.viewModel.bettingTicketForRow(atIndex: indexPath.row)
         else {
             fatalError("")
         }
         cell.configure(withBetHistoryEntry: bettingTicketValue)
-        return cell
+        return cell*/
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
