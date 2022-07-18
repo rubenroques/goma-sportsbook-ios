@@ -17,8 +17,10 @@ class SharedTicketBetLineView: UIView {
     private lazy var homeTeamLabel: UILabel = Self.createHomeTeamLabel()
     private lazy var awayTeamLabel: UILabel = Self.createAwayTeamLabel()
     private lazy var separatorView: UIView = Self.createSeparatorView()
-    private lazy var marketLabel: UILabel = Self.createMarketLabel()
-    private lazy var oddsLabel: UILabel = Self.createOddsLabel()
+    private lazy var marketTitleLabel: UILabel = Self.createMarketTitleLabel()
+    private lazy var marketValueLabel: UILabel = Self.createMarketValueLabel()
+    private lazy var oddsTitleLabel: UILabel = Self.createOddsTitleLabel()
+    private lazy var oddsValueLabel: UILabel = Self.createOddsValueLabel()
 
     private var roundImageSize: CGFloat = 10
     var betHistoryEntrySelection: BetHistoryEntrySelection
@@ -81,18 +83,18 @@ class SharedTicketBetLineView: UIView {
         // Market
         let marketName = self.betHistoryEntrySelection.marketName ?? ""
         let outcomeName = self.betHistoryEntrySelection.betName ?? ""
-        let attributedMarket = NSMutableAttributedString(string: "\(marketName): ", attributes: [NSAttributedString.Key.foregroundColor: UIColor.App.textSecondary])
-        let attributedOutcome = NSMutableAttributedString(string: outcomeName, attributes: [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary])
-        attributedMarket.append(attributedOutcome)
-        self.marketLabel.attributedText = attributedMarket
+
+        self.marketTitleLabel.text = marketName
+
+        self.marketValueLabel.text = outcomeName
 
         // Odds
+        self.oddsTitleLabel.text = localized("odd")
+
         if let oddValue = self.betHistoryEntrySelection.priceValue {
             let oddString = OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
-            let attributedOdd = NSMutableAttributedString(string: "\(localized("odd")): ", attributes: [NSAttributedString.Key.foregroundColor: UIColor.App.textSecondary])
-            let attributedOddValue = NSMutableAttributedString(string: oddString, attributes: [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary])
-            attributedOdd.append(attributedOddValue)
-            self.oddsLabel.attributedText =  attributedOdd
+
+            self.oddsValueLabel.text = oddString
         }
 
     }
@@ -130,6 +132,14 @@ class SharedTicketBetLineView: UIView {
         self.awayTeamLabel.textColor = UIColor.App.textPrimary
 
         self.separatorView.backgroundColor = UIColor.App.separatorLine
+
+        self.marketTitleLabel.textColor = UIColor.App.textPrimary
+
+        self.marketValueLabel.textColor = UIColor.App.textPrimary
+
+        self.oddsTitleLabel.textColor = UIColor.App.textPrimary
+
+        self.oddsValueLabel.textColor = UIColor.App.textPrimary
 
     }
 }
@@ -199,7 +209,7 @@ extension SharedTicketBetLineView {
         return view
     }
 
-    private static func createMarketLabel() -> UILabel {
+    private static func createMarketTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 10)
@@ -209,12 +219,33 @@ extension SharedTicketBetLineView {
         return label
     }
 
-    private static func createOddsLabel() -> UILabel {
+    private static func createMarketValueLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .semibold, size: 10)
+        label.text = "Outcome"
+        label.textAlignment = .right
+        label.numberOfLines = 0
+        return label
+    }
+
+    private static func createOddsTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 10)
         label.text = "Odds"
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        return label
+    }
+
+    private static func createOddsValueLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .semibold, size: 10)
+        label.text = "-.--"
         label.textAlignment = .right
+        label.numberOfLines = 0
         return label
     }
 
@@ -228,8 +259,10 @@ extension SharedTicketBetLineView {
         self.baseView.addSubview(self.homeTeamLabel)
         self.baseView.addSubview(self.awayTeamLabel)
         self.baseView.addSubview(self.separatorView)
-        self.baseView.addSubview(self.marketLabel)
-        self.baseView.addSubview(self.oddsLabel)
+        self.baseView.addSubview(self.marketTitleLabel)
+        self.baseView.addSubview(self.marketValueLabel)
+        self.baseView.addSubview(self.oddsTitleLabel)
+        self.baseView.addSubview(self.oddsValueLabel)
 
         self.initConstraints()
 
@@ -285,14 +318,24 @@ extension SharedTicketBetLineView {
 
         // Bottom info
         NSLayoutConstraint.activate([
-            self.marketLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 8),
-            self.marketLabel.trailingAnchor.constraint(equalTo: self.baseView.centerXAnchor, constant: -2),
-            self.marketLabel.topAnchor.constraint(equalTo: self.separatorView.bottomAnchor, constant: 8),
-            self.marketLabel.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -8),
+            self.marketTitleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 8),
+            self.marketTitleLabel.trailingAnchor.constraint(equalTo: self.baseView.centerXAnchor, constant: -2),
+            self.marketTitleLabel.topAnchor.constraint(equalTo: self.separatorView.bottomAnchor, constant: 8),
 
-            self.oddsLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -8),
-            self.oddsLabel.leadingAnchor.constraint(equalTo: self.baseView.centerXAnchor, constant: 2),
-            self.oddsLabel.topAnchor.constraint(equalTo: self.separatorView.bottomAnchor, constant: 8),
+
+            self.marketValueLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -8),
+            self.marketValueLabel.leadingAnchor.constraint(equalTo: self.baseView.centerXAnchor, constant: 2),
+            self.marketValueLabel.topAnchor.constraint(equalTo: self.separatorView.bottomAnchor, constant: 8),
+
+            self.oddsTitleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 8),
+            self.oddsTitleLabel.trailingAnchor.constraint(equalTo: self.baseView.centerXAnchor, constant: -2),
+            self.oddsTitleLabel.topAnchor.constraint(equalTo: self.marketTitleLabel.bottomAnchor, constant: 7),
+            self.oddsTitleLabel.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -8),
+
+            self.oddsValueLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -8),
+            self.oddsValueLabel.leadingAnchor.constraint(equalTo: self.baseView.centerXAnchor, constant: 2),
+            self.oddsValueLabel.topAnchor.constraint(equalTo: self.marketValueLabel.bottomAnchor, constant: 7),
+            self.oddsValueLabel.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -8)
         ])
 
     }

@@ -11,6 +11,7 @@ class SharedTicketCardView: UIView {
 
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
+    private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
     private lazy var shareButton: UIButton = Self.createShareButton()
     private lazy var betCardsBaseView: UIView = Self.createBetCardsBaseView()
     private lazy var betCardsStackView: UIStackView = Self.createBetCardsStackView()
@@ -66,6 +67,10 @@ class SharedTicketCardView: UIView {
 
         self.shareButton.backgroundColor = .clear
 
+        self.titleLabel.textColor = UIColor.App.textPrimary
+
+        self.subtitleLabel.textColor = UIColor.App.textPrimary
+
         self.baseView.backgroundColor = UIColor.App.backgroundSecondary
         self.betCardsBaseView.backgroundColor = .clear
         self.betCardsStackView.backgroundColor = .clear
@@ -114,6 +119,10 @@ class SharedTicketCardView: UIView {
             self.titleLabel.text = localized("system")+" Bet"
         }
 
+        if let date = betHistoryEntry.placedDate {
+            self.subtitleLabel.text = MyTicketBetLineView.dateFormatter.string(from: date)
+        }
+
         if let oddValue = betHistoryEntry.totalPriceValue, betHistoryEntry.type != "SYSTEM" {
             self.totalOddSubtitleLabel.text = OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
         }
@@ -159,8 +168,16 @@ extension SharedTicketCardView {
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold, size: 16)
+        label.font = AppFont.with(type: .semibold, size: 14)
         label.text = "Title"
+        return label
+    }
+
+    private static func createSubtitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .semibold, size: 9)
+        label.text = "Subtitle"
         return label
     }
 
@@ -279,6 +296,8 @@ extension SharedTicketCardView {
 
         self.baseView.addSubview(self.titleLabel)
 
+        self.baseView.addSubview(self.subtitleLabel)
+
         self.baseView.addSubview(self.shareButton)
 
         self.baseView.addSubview(self.betCardsBaseView)
@@ -312,18 +331,22 @@ extension SharedTicketCardView {
             self.baseView.topAnchor.constraint(equalTo: self.topAnchor),
             self.baseView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
 
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 10),
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
             self.titleLabel.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 14),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -14),
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),
 
-            self.shareButton.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: 0),
+            self.subtitleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
+            self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 3),
+            self.subtitleLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),
+
+            self.shareButton.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -5),
             self.shareButton.widthAnchor.constraint(equalToConstant: 40),
             self.shareButton.heightAnchor.constraint(equalTo: self.shareButton.widthAnchor),
             self.shareButton.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
 
-            self.betCardsBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 8),
-            self.betCardsBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -8),
-            self.betCardsBaseView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 14),
+            self.betCardsBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
+            self.betCardsBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),
+            self.betCardsBaseView.topAnchor.constraint(equalTo: self.subtitleLabel.bottomAnchor, constant: 9),
             self.betCardsBaseView.heightAnchor.constraint(greaterThanOrEqualToConstant: 90),
 
             self.betCardsStackView.leadingAnchor.constraint(equalTo: self.betCardsBaseView.leadingAnchor),
@@ -337,18 +360,18 @@ extension SharedTicketCardView {
             self.bottomBaseView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -14),
 //            self.bottomBaseView.heightAnchor.constraint(equalToConstant: 55),
 
-            self.bottomTitlesStackView.leadingAnchor.constraint(equalTo: self.bottomBaseView.leadingAnchor, constant: 10),
-            self.bottomTitlesStackView.trailingAnchor.constraint(equalTo: self.bottomBaseView.trailingAnchor, constant: -10),
+            self.bottomTitlesStackView.leadingAnchor.constraint(equalTo: self.bottomBaseView.leadingAnchor, constant: 25),
+            self.bottomTitlesStackView.trailingAnchor.constraint(equalTo: self.bottomBaseView.trailingAnchor, constant: -25),
             self.bottomTitlesStackView.topAnchor.constraint(equalTo: self.bottomBaseView.topAnchor, constant: 0),
             self.bottomTitlesStackView.heightAnchor.constraint(equalToConstant: 25),
 
-            self.bottomSeparatorLineView.leadingAnchor.constraint(equalTo: self.bottomBaseView.leadingAnchor, constant: 10),
-            self.bottomSeparatorLineView.trailingAnchor.constraint(equalTo: self.bottomBaseView.trailingAnchor, constant: -10),
+            self.bottomSeparatorLineView.leadingAnchor.constraint(equalTo: self.bottomBaseView.leadingAnchor, constant: 25),
+            self.bottomSeparatorLineView.trailingAnchor.constraint(equalTo: self.bottomBaseView.trailingAnchor, constant: -25),
             self.bottomSeparatorLineView.topAnchor.constraint(equalTo: self.bottomTitlesStackView.bottomAnchor, constant: 2),
             self.bottomSeparatorLineView.heightAnchor.constraint(equalToConstant: 1),
 
-            self.bottomSubtitlesStackView.leadingAnchor.constraint(equalTo: self.bottomBaseView.leadingAnchor, constant: 10),
-            self.bottomSubtitlesStackView.trailingAnchor.constraint(equalTo: self.bottomBaseView.trailingAnchor, constant: -10),
+            self.bottomSubtitlesStackView.leadingAnchor.constraint(equalTo: self.bottomBaseView.leadingAnchor, constant: 25),
+            self.bottomSubtitlesStackView.trailingAnchor.constraint(equalTo: self.bottomBaseView.trailingAnchor, constant: -25),
             self.bottomSubtitlesStackView.topAnchor.constraint(equalTo: self.bottomSeparatorLineView.bottomAnchor, constant: 2),
             self.bottomSubtitlesStackView.bottomAnchor.constraint(equalTo: self.bottomBaseView.bottomAnchor, constant: 0),
             self.bottomSubtitlesStackView.heightAnchor.constraint(equalToConstant: 25)

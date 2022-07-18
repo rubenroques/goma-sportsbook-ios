@@ -108,15 +108,15 @@
                             <rect key="frame" x="0.0" y="0.0" width="470" height="464.5"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="6u7-WC-QK4">
-                                    <rect key="frame" x="40" y="8" width="390" height="448.5"/>
+                                    <rect key="frame" x="23" y="8" width="424" height="448.5"/>
                                 </stackView>
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
                                 <constraint firstItem="6u7-WC-QK4" firstAttribute="top" secondItem="JvP-Ps-E7u" secondAttribute="top" constant="8" id="B1A-0u-fkr"/>
-                                <constraint firstItem="6u7-WC-QK4" firstAttribute="leading" secondItem="JvP-Ps-E7u" secondAttribute="leading" constant="40" id="Pg4-Vf-5HI"/>
+                                <constraint firstItem="6u7-WC-QK4" firstAttribute="leading" secondItem="JvP-Ps-E7u" secondAttribute="leading" constant="23" id="Pg4-Vf-5HI"/>
                                 <constraint firstAttribute="bottom" secondItem="6u7-WC-QK4" secondAttribute="bottom" constant="8" id="TQG-bc-H4k"/>
-                                <constraint firstAttribute="trailing" secondItem="6u7-WC-QK4" secondAttribute="trailing" constant="40" id="Wqb-p6-oKG"/>
+                                <constraint firstAttribute="trailing" secondItem="6u7-WC-QK4" secondAttribute="trailing" constant="23" id="Wqb-p6-oKG"/>
                             </constraints>
                         </view>
                     </subviews>
