@@ -14,6 +14,8 @@ class ChatTicketInMessageView: UIView {
 
     // MARK: Private Properties
     private lazy var baseView: UIView = Self.createBaseView()
+    private lazy var titleLabel: UILabel = Self.createTitleLabel()
+    private lazy var titleSeparatorView: UIView = Self.createTitleSeparatorView()
     private lazy var ticketsStackView: UIStackView = Self.createTicketsStackView()
     private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
     private lazy var totalOddTitleLabel: UILabel = Self.createTotalOddTitleLabel()
@@ -56,6 +58,17 @@ class ChatTicketInMessageView: UIView {
 
         self.setupTicketStackView()
 
+        if self.betSelectionCellViewModel.ticket.type == "SINGLE" {
+            self.titleLabel.text = localized("single")+" - \(betStatusText(forCode: self.betSelectionCellViewModel.ticket.status?.uppercased() ?? "-"))"
+        }
+        else if self.betSelectionCellViewModel.ticket.type == "MULTIPLE" {
+            self.titleLabel.text = localized("multiple")+" - \(betStatusText(forCode: self.betSelectionCellViewModel.ticket.status?.uppercased() ?? "-"))"
+        }
+        else if self.betSelectionCellViewModel.ticket.type == "SYSTEM" {
+            self.titleLabel.text = localized("system") +
+            " - \(self.betSelectionCellViewModel.ticket.systemBetType?.capitalized ?? "") - \(betStatusText(forCode: self.betSelectionCellViewModel.ticket.status?.uppercased() ?? "-"))"
+        }
+
         self.betNowButton.addTarget(self, action: #selector(self.didTapBetNowButton), for: .primaryActionTriggered)
 
         self.totalOddValueLabel.text = self.betSelectionCellViewModel.oddValueString
@@ -76,6 +89,10 @@ class ChatTicketInMessageView: UIView {
         self.backgroundColor = .clear
 
         self.baseView.backgroundColor = UIColor.App.backgroundSecondary
+
+        self.titleLabel.textColor = UIColor.App.textPrimary
+
+        self.titleSeparatorView.backgroundColor = UIColor.App.buttonTextPrimary
 
         self.ticketsStackView.backgroundColor = .clear
         self.separatorLineView.backgroundColor = UIColor.App.buttonTextPrimary
@@ -103,6 +120,20 @@ class ChatTicketInMessageView: UIView {
         self.ticketsStackView.layoutIfNeeded()
     }
 
+    private func betStatusText(forCode code: String) -> String {
+        switch code {
+        case "OPEN": return localized("open")
+        case "DRAW": return localized("draw")
+        case "WON": return localized("won")
+        case "HALF_WON": return localized("half_won")
+        case "LOST": return localized("lost")
+        case "HALF_LOST": return localized("half_lost")
+        case "CANCELLED": return localized("cancelled")
+        case "CASHED_OUT": return localized("cashed_out")
+        default: return ""
+        }
+    }
+
     @objc func didTapBetNowButton() {
         self.didTapBetNowAction(self.betSelectionCellViewModel)
     }
@@ -118,6 +149,21 @@ extension ChatTicketInMessageView {
         baseView.layer.masksToBounds = true
         baseView.clipsToBounds = true
         return baseView
+    }
+
+    private static func createTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Title"
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.textAlignment = .left
+        return label
+    }
+
+    private static func createTitleSeparatorView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
 
     private static func createCheckboxBaseView() -> UIView {
@@ -185,6 +231,8 @@ extension ChatTicketInMessageView {
 
         self.addSubview(self.baseView)
 
+        self.baseView.addSubview(self.titleLabel)
+        self.baseView.addSubview(self.titleSeparatorView)
         self.baseView.addSubview(self.ticketsStackView)
         self.baseView.addSubview(self.separatorLineView)
         self.baseView.addSubview(self.totalOddTitleLabel)
@@ -202,13 +250,22 @@ extension ChatTicketInMessageView {
             self.baseView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15),
             self.baseView.topAnchor.constraint(equalTo: self.topAnchor, constant: 2),
             self.baseView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -2),
+
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 15),
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -15),
+            self.titleLabel.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 15),
+
+            self.titleSeparatorView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 15),
+            self.titleSeparatorView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -15),
+            self.titleSeparatorView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 8),
+            self.titleSeparatorView.heightAnchor.constraint(equalToConstant: 1)
         ])
 
         // Stackview
         NSLayoutConstraint.activate([
             self.ticketsStackView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 15),
             self.ticketsStackView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -15),
-            self.ticketsStackView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 15),
+            self.ticketsStackView.topAnchor.constraint(equalTo: self.titleSeparatorView.bottomAnchor, constant: 12),
             self.ticketsStackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 30)
         ])
 

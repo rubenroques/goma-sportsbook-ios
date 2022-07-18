@@ -13,6 +13,8 @@ class ChatTicketStateInMessageView: UIView {
     // MARK: Private Properties
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var topStateView: UIView = Self.createTopStateView()
+    private lazy var titleLabel: UILabel = Self.createTitleLabel()
+    private lazy var titleSeparatorView: UIView = Self.createTitleSeparatorView()
     private lazy var ticketsStackView: UIStackView = Self.createTicketsStackView()
     private lazy var bottomStateView: UIView = Self.createBottomStateView()
     private lazy var bottomTitlesStackView: UIStackView = Self.createBottomTitlesStackView()
@@ -78,6 +80,17 @@ class ChatTicketStateInMessageView: UIView {
 
         self.setupTicketStackView()
 
+        if self.betSelectionCellViewModel.ticket.type == "SINGLE" {
+            self.titleLabel.text = localized("single")+" - \(betStatusText(forCode: self.betSelectionCellViewModel.ticket.status?.uppercased() ?? "-"))"
+        }
+        else if self.betSelectionCellViewModel.ticket.type == "MULTIPLE" {
+            self.titleLabel.text = localized("multiple")+" - \(betStatusText(forCode: self.betSelectionCellViewModel.ticket.status?.uppercased() ?? "-"))"
+        }
+        else if self.betSelectionCellViewModel.ticket.type == "SYSTEM" {
+            self.titleLabel.text = localized("system") +
+            " - \(self.betSelectionCellViewModel.ticket.systemBetType?.capitalized ?? "") - \(betStatusText(forCode: self.betSelectionCellViewModel.ticket.status?.uppercased() ?? "-"))"
+        }
+
         if self.betSelectionCellViewModel.ticket.status == "WON" {
             self.betState = .won
         }
@@ -110,6 +123,10 @@ class ChatTicketStateInMessageView: UIView {
 
         self.topStateView.backgroundColor = UIColor.App.backgroundSecondary
 
+        self.titleLabel.textColor = UIColor.App.textPrimary
+
+        self.titleSeparatorView.backgroundColor = UIColor.App.buttonTextPrimary
+
         self.ticketsStackView.backgroundColor = .clear
         self.separatorLineView.backgroundColor = .white
 
@@ -138,6 +155,20 @@ class ChatTicketStateInMessageView: UIView {
         self.ticketsStackView.layoutIfNeeded()
     }
 
+    private func betStatusText(forCode code: String) -> String {
+        switch code {
+        case "OPEN": return localized("open")
+        case "DRAW": return localized("draw")
+        case "WON": return localized("won")
+        case "HALF_WON": return localized("half_won")
+        case "LOST": return localized("lost")
+        case "HALF_LOST": return localized("half_lost")
+        case "CANCELLED": return localized("cancelled")
+        case "CASHED_OUT": return localized("cashed_out")
+        default: return ""
+        }
+    }
+
 }
 
 extension ChatTicketStateInMessageView {
@@ -152,6 +183,21 @@ extension ChatTicketStateInMessageView {
     }
 
     private static func createTopStateView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Title"
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.textAlignment = .left
+        return label
+    }
+
+    private static func createTitleSeparatorView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -261,9 +307,9 @@ extension ChatTicketStateInMessageView {
         self.addSubview(self.baseView)
 
         self.baseView.addSubview(self.topStateView)
-
+        self.baseView.addSubview(self.titleLabel)
+        self.baseView.addSubview(self.titleSeparatorView)
         self.baseView.addSubview(self.ticketsStackView)
-
         self.baseView.addSubview(self.bottomStateView)
 
         self.bottomStateView.addSubview(self.bottomTitlesStackView)
@@ -272,7 +318,6 @@ extension ChatTicketStateInMessageView {
         self.bottomTitlesStackView.addArrangedSubview(self.possibleWinningTitleLabel)
 
         self.bottomStateView.addSubview(self.separatorLineView)
-
         self.bottomStateView.addSubview(self.bottomValuesStackView)
         self.bottomValuesStackView.addArrangedSubview(self.totalOddValueLabel)
         self.bottomValuesStackView.addArrangedSubview(self.betAmountValueLabel)
@@ -294,13 +339,22 @@ extension ChatTicketStateInMessageView {
             self.topStateView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
             self.topStateView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
             self.topStateView.heightAnchor.constraint(equalToConstant: 6),
+
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 15),
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -15),
+            self.titleLabel.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 15),
+
+            self.titleSeparatorView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 15),
+            self.titleSeparatorView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -15),
+            self.titleSeparatorView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 8),
+            self.titleSeparatorView.heightAnchor.constraint(equalToConstant: 1)
         ])
 
         // Stackview
         NSLayoutConstraint.activate([
             self.ticketsStackView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 15),
             self.ticketsStackView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -15),
-            self.ticketsStackView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 15),
+            self.ticketsStackView.topAnchor.constraint(equalTo: self.titleSeparatorView.bottomAnchor, constant: 12),
             self.ticketsStackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 30)
         ])
 
@@ -312,18 +366,18 @@ extension ChatTicketStateInMessageView {
             self.bottomStateView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
             self.bottomStateView.heightAnchor.constraint(equalToConstant: 60),
 
-            self.bottomTitlesStackView.leadingAnchor.constraint(equalTo: self.bottomStateView.leadingAnchor, constant: 10),
-            self.bottomTitlesStackView.trailingAnchor.constraint(equalTo: self.bottomStateView.trailingAnchor, constant: -10),
+            self.bottomTitlesStackView.leadingAnchor.constraint(equalTo: self.bottomStateView.leadingAnchor, constant: 15),
+            self.bottomTitlesStackView.trailingAnchor.constraint(equalTo: self.bottomStateView.trailingAnchor, constant: -15),
             self.bottomTitlesStackView.topAnchor.constraint(equalTo: self.bottomStateView.topAnchor),
             self.bottomTitlesStackView.heightAnchor.constraint(equalToConstant: 29),
 
-            self.separatorLineView.leadingAnchor.constraint(equalTo: self.bottomStateView.leadingAnchor, constant: 10),
-            self.separatorLineView.trailingAnchor.constraint(equalTo: self.bottomStateView.trailingAnchor, constant: -10),
+            self.separatorLineView.leadingAnchor.constraint(equalTo: self.bottomStateView.leadingAnchor, constant: 15),
+            self.separatorLineView.trailingAnchor.constraint(equalTo: self.bottomStateView.trailingAnchor, constant: -15),
             self.separatorLineView.heightAnchor.constraint(equalToConstant: 1),
             self.separatorLineView.topAnchor.constraint(equalTo: self.bottomTitlesStackView.bottomAnchor, constant: 1),
 
-            self.bottomValuesStackView.leadingAnchor.constraint(equalTo: self.bottomStateView.leadingAnchor, constant: 10),
-            self.bottomValuesStackView.trailingAnchor.constraint(equalTo: self.bottomStateView.trailingAnchor, constant: -10),
+            self.bottomValuesStackView.leadingAnchor.constraint(equalTo: self.bottomStateView.leadingAnchor, constant: 15),
+            self.bottomValuesStackView.trailingAnchor.constraint(equalTo: self.bottomStateView.trailingAnchor, constant: -15),
             self.bottomValuesStackView.topAnchor.constraint(equalTo: self.separatorLineView.bottomAnchor, constant: 1),
             self.bottomValuesStackView.heightAnchor.constraint(equalToConstant: 29)
         ])
