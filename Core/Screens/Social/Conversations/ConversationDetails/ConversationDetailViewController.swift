@@ -857,7 +857,8 @@ extension ConversationDetailViewController {
 
             self.messageInputView.leadingAnchor.constraint(equalTo: self.messageInputBaseView.leadingAnchor, constant: 15),
 //            self.messageInputView.trailingAnchor.constraint(equalTo: self.messageInputBaseView.trailingAnchor, constant: -70),
-            self.messageInputView.centerYAnchor.constraint(equalTo: self.messageInputBaseView.centerYAnchor),
+            //self.messageInputView.centerYAnchor.constraint(equalTo: self.messageInputBaseView.centerYAnchor),
+            self.messageInputView.bottomAnchor.constraint(equalTo: self.messageInputBaseView.bottomAnchor, constant: -10),
 
             self.sendButton.leadingAnchor.constraint(equalTo: self.messageInputView.trailingAnchor, constant: 16),
             self.sendButton.trailingAnchor.constraint(equalTo: self.messageInputBaseView.trailingAnchor, constant: -15),
