@@ -23,6 +23,7 @@ class FullRegisterAddressCountryViewController: UIViewController {
     @IBOutlet private var securityQuestionTextFieldView: HeaderTextFieldView!
     @IBOutlet private var securityAnswerHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var continueButton: RoundButton!
+    
     // Variables
     var cancellables = Set<AnyCancellable>()
     var registerForm: FullRegisterUserInfo
@@ -180,7 +181,6 @@ class FullRegisterAddressCountryViewController: UIViewController {
         securityQuestionTextFieldView.resignFirstResponder()
 
         securityAnswerHeaderTextFieldView.resignFirstResponder()
-
     }
 
     @objc func keyboardWillShow(notification: NSNotification) {

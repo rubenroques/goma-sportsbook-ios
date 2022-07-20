@@ -39,7 +39,6 @@ class TopCompetitionLineTableViewCell: UITableViewCell {
         self.setupWithTheme()
 
         //
-
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
 

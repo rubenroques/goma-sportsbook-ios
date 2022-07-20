@@ -402,7 +402,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.dateLabel.text = "\(viewModel.startDateString)"
         self.timeLabel.text = "\(viewModel.startTimeString)"
 
-       // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
         if viewModel.countryISOCode != "" {
             self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
         }
@@ -415,9 +414,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         else {
             return
         }
-
+        
         if let market = match.markets.first {
-
             if let marketPublisher = viewModel.store.marketPublisher(withId: market.id) {
                 self.marketSubscriber = marketPublisher
                     .receive(on: DispatchQueue.main)
@@ -435,22 +433,22 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                         }
                     }
             }
-
+            
             if let outcome = market.outcomes[safe: 0] {
-
+                
                 self.homeOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
                 self.leftOutcome = outcome
                 self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
                 self.homeOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
-
+                
                 self.leftOddButtonSubscriber = viewModel.store
                     .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
                     .sink(receiveValue: { [weak self] bettingOffer in
-
+                        
                         guard let weakSelf = self else { return }
-
+                        
                         if !bettingOffer.isOpen {
                             weakSelf.homeBaseView.isUserInteractionEnabled = false
                             weakSelf.homeBaseView.alpha = 0.5
@@ -459,13 +457,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                         else {
                             weakSelf.homeBaseView.isUserInteractionEnabled = true
                             weakSelf.homeBaseView.alpha = 1.0
-
+                            
                             guard
                                 let newOddValue = bettingOffer.oddsValue
                             else {
                                 return
                             }
-
+                            
                             if let currentOddValue = weakSelf.currentHomeOddValue {
                                 if newOddValue > currentOddValue {
                                     weakSelf.highlightOddChangeUp(animated: true,
@@ -482,24 +480,24 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                             weakSelf.homeOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                         }
                     })
-
+                
             }
-
+            
             if let outcome = market.outcomes[safe: 1] {
-
+                
                 self.drawOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
                 self.middleOutcome = outcome
                 self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
                 self.drawOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
-
+                
                 self.middleOddButtonSubscriber = viewModel.store
                     .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
                     .sink(receiveValue: { [weak self] bettingOffer in
-
+                        
                         guard let weakSelf = self else { return }
-
+                        
                         if !bettingOffer.isOpen {
                             weakSelf.drawBaseView.isUserInteractionEnabled = false
                             weakSelf.drawBaseView.alpha = 0.5
@@ -508,13 +506,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                         else {
                             weakSelf.drawBaseView.isUserInteractionEnabled = true
                             weakSelf.drawBaseView.alpha = 1.0
-
+                            
                             guard
                                 let newOddValue = bettingOffer.oddsValue
                             else {
                                 return
                             }
-
+                            
                             if let currentOddValue = weakSelf.currentDrawOddValue {
                                 if newOddValue > currentOddValue {
                                     weakSelf.highlightOddChangeUp(animated: true,
@@ -532,22 +530,22 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                         }
                     })
             }
-
+            
             if let outcome = market.outcomes[safe: 2] {
-
+                
                 self.awayOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
                 self.rightOutcome = outcome
                 self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
                 self.awayOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
-
+                
                 self.rightOddButtonSubscriber = viewModel.store
                     .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
                     .sink(receiveValue: { [weak self] bettingOffer in
-
+                        
                         guard let weakSelf = self else { return }
-
+                        
                         if !bettingOffer.isOpen {
                             weakSelf.awayBaseView.isUserInteractionEnabled = false
                             weakSelf.awayBaseView.alpha = 0.5
@@ -556,13 +554,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                         else {
                             weakSelf.awayBaseView.isUserInteractionEnabled = true
                             weakSelf.awayBaseView.alpha = 1.0
-
+                            
                             guard
                                 let newOddValue = bettingOffer.oddsValue
                             else {
                                 return
                             }
-
+                            
                             if let currentOddValue = weakSelf.currentAwayOddValue {
                                 if newOddValue > currentOddValue {
                                     weakSelf.highlightOddChangeUp(animated: true,
@@ -575,32 +573,29 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                                                                     baseView: weakSelf.awayBaseView)
                                 }
                             }
-
+                            
                             weakSelf.currentAwayOddValue = newOddValue
                             weakSelf.awayOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                         }
                     })
-
+                
             }
-
+            
             if market.outcomes.count == 2 {
                 awayBaseView.isHidden = true
             }
-
+            
         }
         else {
             Logger.log("No markets found")
             oddsStackView.alpha = 0.2
-
+            
             self.homeOddValueLabel.text = "-"
             self.drawOddValueLabel.text = "-"
             self.awayOddValueLabel.text = "-"
-
+            
         }
 
-//        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
-//            self.isFavorite = true
-//        }
         self.isFavorite = Env.favoritesManager.isEventFavorite(eventId: match.id)
     }
 

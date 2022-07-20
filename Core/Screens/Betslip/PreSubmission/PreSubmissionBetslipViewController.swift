@@ -119,6 +119,8 @@ class PreSubmissionBetslipViewController: UIViewController {
     private var selectedSingleFreebet: SingleBetslipFreebet?
     private var selectedSingleOddsBoost: SingleBetslipOddsBoost?
 
+    private var userSelectedSystemBet: Bool = false
+    
     var cancellables = Set<AnyCancellable>()
     var isSuggestedMultiple: Bool = false
 
@@ -364,20 +366,24 @@ class PreSubmissionBetslipViewController: UIViewController {
             .sink { [weak self] ticketsCount in
 
                 let oldSegmentIndex = self?.betTypeSegmentControlView?.selectedItemIndex
-
                 switch ticketsCount {
                 case 0...1:
                     self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 0, animated: true)
                     self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 0, isEnabled: true)
                     self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 1, isEnabled: false)
                     self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 2, isEnabled: false)
-                case 2...3:
+                case 2:
                     self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 1, animated: true)
                     self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 0, isEnabled: true)
                     self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 1, isEnabled: true)
                     self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 2, isEnabled: false)
-                case 4...8:
-                    self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 1, animated: true)
+                case 3...8:
+                    if self?.userSelectedSystemBet ?? false {
+                        self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 2, animated: true)
+                    }
+                    else {
+                        self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 1, animated: true)
+                    }
                     self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 0, isEnabled: true)
                     self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 1, isEnabled: true)
                     self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 2, isEnabled: true)
@@ -391,6 +397,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 if let newSegmentIndex = self?.betTypeSegmentControlView?.selectedItemIndex, newSegmentIndex != oldSegmentIndex {
                     self?.didChangeSelectedSegmentItem(toIndex: newSegmentIndex)
                 }
+                
             }
             .store(in: &cancellables)
 
@@ -1103,10 +1110,13 @@ class PreSubmissionBetslipViewController: UIViewController {
         switch index {
         case 0:
             self.listTypePublisher.value = .simple
+            self.userSelectedSystemBet = false
         case 1:
             self.listTypePublisher.value = .multiple
+            self.userSelectedSystemBet = false
         case 2:
             self.listTypePublisher.value = .system
+            self.userSelectedSystemBet = true
         default:
             ()
         }
