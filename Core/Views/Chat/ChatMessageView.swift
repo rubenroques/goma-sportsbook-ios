@@ -15,6 +15,9 @@ class ChatMessageView: UIView {
     private lazy var ticketButton: UIButton = Self.createTicketButton()
     private lazy var textHeightConstraint: NSLayoutConstraint = Self.createTextHeightConstraint()
     private lazy var viewHeightContraint: NSLayoutConstraint = Self.createViewHeightConstraint()
+
+    private var maxTextInputHeight: CGFloat = 210
+
     // MARK: Public Properties
     var textPublisher: CurrentValueSubject<String, Never> = .init("")
 
@@ -96,17 +99,29 @@ class ChatMessageView: UIView {
         return true
     }
 
-    func adjustTextViewHeight() {
+    private func adjustTextViewHeight() {
+
         let fixedTextWidth = self.inputTextView.frame.size.width
         let newTextSize = self.inputTextView.sizeThatFits(CGSize(width: fixedTextWidth, height: CGFloat.greatestFiniteMagnitude))
-        self.textHeightConstraint.constant = newTextSize.height
 
-        self.viewHeightContraint.constant = newTextSize.height + 14
-        let parentViewHeight = newTextSize.height + 34
+        if newTextSize.height <= self.maxTextInputHeight {
 
-        self.shouldResizeView?(parentViewHeight)
+            if self.inputTextView.isScrollEnabled {
+                self.inputTextView.isScrollEnabled = false
+            }
+            
+            self.textHeightConstraint.constant = newTextSize.height
 
-        self.containerView.layoutIfNeeded()
+            self.viewHeightContraint.constant = newTextSize.height + 14
+            let parentViewHeight = newTextSize.height + 34
+
+            self.shouldResizeView?(parentViewHeight)
+
+            self.containerView.layoutIfNeeded()
+        }
+        else {
+            self.inputTextView.isScrollEnabled = true
+        }
     }
 
     // MARK: Actions
