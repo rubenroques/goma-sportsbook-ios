@@ -36,6 +36,7 @@ class ConversationDetailViewController: UIViewController {
     // Constraints
     private lazy var messageInputBottomConstraint: NSLayoutConstraint = Self.createMessageInputBottomConstraint()
     private lazy var messageInputKeyboardConstraint: NSLayoutConstraint = Self.createMessageInputKeyboardConstraint()
+    private lazy var viewHeightConstraint: NSLayoutConstraint = Self.createViewHeightConstraint()
 
     private var viewModel: ConversationDetailViewModel
 
@@ -298,11 +299,6 @@ class ConversationDetailViewController: UIViewController {
     }
 
     private func showBetSelectionScreen() {
-//        if let conversationData = self.viewModel.getConversationData() {
-//            let betSelectionViewModel = ConversationBetSelectionViewModel(conversationData: conversationData)
-//            let betSelectionViewController = ConversationBetSelectionViewController(viewModel: betSelectionViewModel)
-//            self.present(betSelectionViewController, animated: true, completion: nil)
-//        }
 
         if let conversationData = self.viewModel.getConversationData() {
             let conversationBetSelectionRootViewModel = ConversationBetSelectionRootViewModel(startTabIndex: 0, conversationData: conversationData)
@@ -715,6 +711,11 @@ extension ConversationDetailViewController {
         return constraint
     }
 
+    private static func createViewHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
     private static func createLoadingBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -769,6 +770,11 @@ extension ConversationDetailViewController {
 
         self.messageInputView.shouldShowBetSelection = { [weak self] in
             self?.showBetSelectionScreen()
+        }
+
+        self.messageInputView.shouldResizeView = { [weak self] newHeight in
+            self?.viewHeightConstraint.constant = newHeight
+            self?.view.layoutIfNeeded()
         }
     }
 
@@ -847,8 +853,6 @@ extension ConversationDetailViewController {
             self.messageInputBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.messageInputBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.messageInputBaseView.topAnchor.constraint(equalTo: self.tableView.bottomAnchor),
-//            self.messageInputBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
-            self.messageInputBaseView.heightAnchor.constraint(equalToConstant: 70),
 
             self.messageInputLineSeparatorView.leadingAnchor.constraint(equalTo: self.messageInputBaseView.leadingAnchor),
             self.messageInputLineSeparatorView.trailingAnchor.constraint(equalTo: self.messageInputBaseView.trailingAnchor),
@@ -856,12 +860,11 @@ extension ConversationDetailViewController {
             self.messageInputLineSeparatorView.heightAnchor.constraint(equalToConstant: 1),
 
             self.messageInputView.leadingAnchor.constraint(equalTo: self.messageInputBaseView.leadingAnchor, constant: 15),
-//            self.messageInputView.trailingAnchor.constraint(equalTo: self.messageInputBaseView.trailingAnchor, constant: -70),
-            self.messageInputView.centerYAnchor.constraint(equalTo: self.messageInputBaseView.centerYAnchor),
+            self.messageInputView.bottomAnchor.constraint(equalTo: self.messageInputBaseView.bottomAnchor, constant: -10),
 
             self.sendButton.leadingAnchor.constraint(equalTo: self.messageInputView.trailingAnchor, constant: 16),
             self.sendButton.trailingAnchor.constraint(equalTo: self.messageInputBaseView.trailingAnchor, constant: -15),
-            self.sendButton.centerYAnchor.constraint(equalTo: self.messageInputBaseView.centerYAnchor),
+            self.sendButton.bottomAnchor.constraint(equalTo: self.messageInputBaseView.bottomAnchor, constant: -12),
             self.sendButton.widthAnchor.constraint(equalToConstant: 46),
             self.sendButton.heightAnchor.constraint(equalTo: self.sendButton.widthAnchor)
         ])
@@ -889,6 +892,9 @@ extension ConversationDetailViewController {
         self.messageInputBottomConstraint.isActive = true
 
         self.messageInputKeyboardConstraint.isActive = false
+
+        self.viewHeightConstraint = self.messageInputBaseView.heightAnchor.constraint(equalToConstant: 70)
+        self.viewHeightConstraint.isActive = true
 
     }
 }

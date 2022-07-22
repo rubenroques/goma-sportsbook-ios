@@ -47,6 +47,12 @@ class GroupUserManagementTableViewCell: UITableViewCell {
         }
     }
 
+    var canDeleteUser: Bool = true {
+        didSet {
+            self.deleteButton.isHidden = !canDeleteUser
+        }
+    }
+
     // MARK: Lifetime and Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -71,6 +77,8 @@ class GroupUserManagementTableViewCell: UITableViewCell {
         self.isOnline = false
 
         self.hasSeparatorLine = true
+
+        self.canDeleteUser = true
     }
 
     override func layoutSubviews() {

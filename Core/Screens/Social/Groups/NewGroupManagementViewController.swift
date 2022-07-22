@@ -33,6 +33,8 @@ class NewGroupManagementViewController: UIViewController {
     // MARK: Public Properties
     var viewModel: NewGroupManagementViewModel
     var chatListNeedReload: (() -> Void)?
+    var shareChatroomsNeedReload: (() -> Void)?
+    var isSharedTicketNewGroup: Bool = false
     var newChatroomId: Int = -1
     var newChatroomName: String = ""
 
@@ -194,8 +196,15 @@ class NewGroupManagementViewController: UIViewController {
                     self?.newChatroomName = groupName
 
                     Env.gomaSocialClient.forceRefresh()
-                    
-                    self?.showConversationDetail(chatroomId: chatroomId, groupName: groupName)
+
+                    if let isSharedTicket = self?.isSharedTicketNewGroup,
+                       !isSharedTicket {
+                        self?.showConversationDetail(chatroomId: chatroomId, groupName: groupName)
+                    }
+                    else {
+                        self?.shareChatroomsNeedReload?()
+                        self?.navigationController?.popToRootViewController(animated: true)
+                    }
                 }
             })
             .store(in: &cancellables)

@@ -222,8 +222,8 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
-    func requestNotifications(deviceId: String, type: NotificationsType) -> AnyPublisher<NetworkResponse<[ChatNotification]>, NetworkError> {
-        let endpoint = GomaGamingService.getNotification(type: type.identifier)
+    func requestNotifications(deviceId: String, type: NotificationsType, page: Int) -> AnyPublisher<NetworkResponse<[ChatNotification]>, NetworkError> {
+        let endpoint = GomaGamingService.getNotification(type: type.identifier, page: page)
         let requestPublisher: AnyPublisher<NetworkResponse<[ChatNotification]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
@@ -231,6 +231,13 @@ class GomaGamingServiceClient {
     func setNotificationRead(deviceId: String, notificationId: String) ->
     AnyPublisher<NetworkResponse<[JSON]>, NetworkError> {
         let endpoint = GomaGamingService.setNotificationRead(id: notificationId)
+        let requestPublisher: AnyPublisher<NetworkResponse<[JSON]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
+    func setAllNotificationRead(deviceId: String, notificationType: NotificationsType) ->
+    AnyPublisher<NetworkResponse<[JSON]>, NetworkError> {
+        let endpoint = GomaGamingService.setAllNotificationRead(type: notificationType.identifier)
         let requestPublisher: AnyPublisher<NetworkResponse<[JSON]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
