@@ -197,7 +197,6 @@ enum TSRouter {
         case .getMyTickets:
             return "/sports#betHistoryV2"
 
-
         case .searchV2:
             return "/sports#searchV2"
         case .getSharedBetTokens:

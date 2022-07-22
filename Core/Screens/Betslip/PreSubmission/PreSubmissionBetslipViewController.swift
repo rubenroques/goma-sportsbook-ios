@@ -680,42 +680,40 @@ class PreSubmissionBetslipViewController: UIViewController {
             .store(in: &cancellables)
 
         Env.betslipManager.multipleBetslipSelectionState
+            .compactMap({ $0 })
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] betslipState in
-                self?.maxStakeMultiple = betslipState?.maxStake
-                if let multipleBetslipState = betslipState {
-                    self?.checkForbiddenCombinationErrors(multipleBetslipState: multipleBetslipState)
-
-                    self?.multipleBettingTicketDataSource.bonusMultiple = []
-
-                    if multipleBetslipState.freeBets.isNotEmpty {
-
-                        for freeBet in multipleBetslipState.freeBets {
-                            if freeBet.validForSelectionOdds {
-                                let bonusMultiple = BonusMultipleBetslip(freeBet: freeBet, oddsBoost: nil)
-                                self?.multipleBettingTicketDataSource.bonusMultiple.append(bonusMultiple)
-                                // Only one freeBet to use at a time
-                                break
-                            }
-                        }
-                    }
-
-                    if multipleBetslipState.oddsBoosts.isNotEmpty {
-                        for oddsBoost in multipleBetslipState.oddsBoosts {
-                            if oddsBoost.validForSelectionOdds {
-                                let bonusMultiple = BonusMultipleBetslip(freeBet: nil, oddsBoost: oddsBoost)
-                                self?.multipleBettingTicketDataSource.bonusMultiple.append(bonusMultiple)
-                                // Only one oddsBoost to use at a time
-                                break
-                            }
-                        }
-                    }
-
-                    self?.tableView.reloadData()
+            .sink(receiveValue: { [weak self] multipleBetslipState in
+                if let maxStakeSystem = multipleBetslipState.maxStake {
+                    self?.maxStakeMultiple = floor(maxStakeSystem)
                 }
+                else {
+                    self?.maxStakeMultiple = nil
+                }
+                
+                self?.checkForbiddenCombinationErrors(multipleBetslipState: multipleBetslipState)
+                self?.multipleBettingTicketDataSource.bonusMultiple = []
+                
+                for freeBet in multipleBetslipState.freeBets {
+                    if freeBet.validForSelectionOdds {
+                        let bonusMultiple = BonusMultipleBetslip(freeBet: freeBet, oddsBoost: nil)
+                        self?.multipleBettingTicketDataSource.bonusMultiple.append(bonusMultiple)
+                        // Only one freeBet to use at a time
+                        break
+                    }
+                }
+                
+                for oddsBoost in multipleBetslipState.oddsBoosts {
+                    if oddsBoost.validForSelectionOdds {
+                        let bonusMultiple = BonusMultipleBetslip(freeBet: nil, oddsBoost: oddsBoost)
+                        self?.multipleBettingTicketDataSource.bonusMultiple.append(bonusMultiple)
+                        // Only one oddsBoost to use at a time
+                        break
+                    }
+                }
+                
+                self?.tableView.reloadData()
             })
             .store(in: &cancellables)
-
 
         Env.betslipManager.simpleBetslipSelectionStateList
             .receive(on: DispatchQueue.main)
