@@ -40,6 +40,7 @@ enum TSRouter {
     case getWithdrawCashier(currency: String, amount: String, gamingAccountId: String)
 
     case getMyTickets(language: String, ticketsType: EveryMatrix.MyTicketsType, records: Int, page: Int)
+    case getTicket(betId: String)
 
     case getSystemBetTypes(tickets: [EveryMatrix.BetslipTicketSelection])
     case getSystemBetSelectionInfo(language: String, stakeAmount: Double, systemBetType: SystemBetType, tickets: [EveryMatrix.BetslipTicketSelection])
@@ -196,7 +197,8 @@ enum TSRouter {
 
         case .getMyTickets:
             return "/sports#betHistoryV2"
-
+        case .getTicket:
+            return "/sports#betDetails"
 
         case .searchV2:
             return "/sports#searchV2"
@@ -397,10 +399,11 @@ enum TSRouter {
                     "birthDate": form.birthDate,
                     "mobilePrefix": form.mobilePrefix,
                     "mobile": form.mobileNumber,
-                    "country": "PT",
-                    "currency": "EUR",
+                    "country": form.countryCode,
+                    "currency": form.currencyCode,
                     "emailVerificationURL": form.emailVerificationURL,
                     "userConsents": ["termsandconditions": true, "sms": false]]
+            
         case .getMatchDetails(let language, let matchId):
             return ["lang": language,
                     "matchId": matchId]
@@ -423,7 +426,7 @@ enum TSRouter {
                     "mobile": form.mobile,
                     "phonePrefix": form.phonePrefix,
                     "phone": form.phone,
-                    "country": form.country,
+                    "nationality": form.country,
                     "address1": form.address1,
                     "address2": form.address2,
                     "city": form.city,
@@ -588,6 +591,9 @@ enum TSRouter {
                     "betStatuses": ticketsType.queryArray,
                     "nrOfRecords": records,
                     "page": page]
+            
+        case .getTicket(let betId):
+            return ["betId": betId]
 
         case .searchV2(let language, let limit, let query, let eventStatuses, let include, let bettingTypeIds, let sortBy, let includeVirtualSports):
             return ["lang": language,

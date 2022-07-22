@@ -366,7 +366,10 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
         if let contentType = self.viewModel.contentType(forIndexPath: indexPath) {
             switch contentType {
             case .outrightMarket:
-                return UITableView.automaticDimension
+                switch StyleHelper.cardsStyleActive() {
+                case .normal: return 145
+                case .small: return 110
+                }
             case .match:
                 return UITableView.automaticDimension
             }
@@ -383,7 +386,10 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
         if let contentType = self.viewModel.contentType(forIndexPath: indexPath) {
             switch contentType {
             case .outrightMarket:
-                return 145
+                switch StyleHelper.cardsStyleActive() {
+                case .normal: return 145
+                case .small: return 110
+                }
             case .match:
                 return StyleHelper.cardsStyleHeight() + 20
             }
@@ -476,7 +482,7 @@ extension CompetitionDetailsViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
-        tableView.contentInset = UIEdgeInsets(top: -20, left: 0, bottom: 0, right: 0)
+        // tableView.contentInset = UIEdgeInsets(top: -, left: 0, bottom: 0, right: 0)
         tableView.contentInsetAdjustmentBehavior = .never
         if #available(iOS 15.0, *) {
             tableView.sectionHeaderTopPadding = 0

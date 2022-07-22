@@ -34,7 +34,6 @@ class SuggestedBetLineTableViewCell: UITableViewCell {
         self.setupSubviews()
         self.setupWithTheme()
 
-
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
 

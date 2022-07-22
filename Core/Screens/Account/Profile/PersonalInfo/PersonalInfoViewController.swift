@@ -36,7 +36,7 @@ class PersonalInfoViewController: UIViewController {
 
     var cancellables = Set<AnyCancellable>()
     var userSession: UserSession?
-    var countries: EveryMatrix.CountryListing?
+    var countriesListing: EveryMatrix.CountryListing?
     var profile: EveryMatrix.UserProfile?
 
     init(userSession: UserSession?) {
@@ -221,9 +221,9 @@ class PersonalInfoViewController: UIViewController {
             .eraseToAnyPublisher()
             .sink { _ in
                 self.countryHeaderTextFieldView.isUserInteractionEnabled = true
-            } receiveValue: { countries in
-                self.countries = countries
-                self.setupWithCountryCodes(countries)
+            } receiveValue: { countriesListing in
+                self.countriesListing = countriesListing
+                self.setupWithCountryCodes(countriesListing)
             }
         .store(in: &cancellables)
 
@@ -234,7 +234,6 @@ class PersonalInfoViewController: UIViewController {
 
             } receiveValue: { profile in
                 self.setupProfile(profile: profile)
-                
             }
         .store(in: &cancellables)
 
@@ -402,15 +401,16 @@ extension PersonalInfoViewController {
 
     private func setupWithCountryCodes(_ listings: EveryMatrix.CountryListing) {
 
-        for country in listings.countries where country.isoCode == listings.currentIpCountry {
-            self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country), slideUp: true)
-        }
-
-        self.countryHeaderTextFieldView.isUserInteractionEnabled = true
-        self.countryHeaderTextFieldView.shouldBeginEditing = { [weak self] in
-            self?.showCountrySelector(listing: listings)
-            return false
-        }
+//        for country in listings.countries where country.isoCode == listings.currentIpCountry {
+//            self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country), slideUp: true)
+//        }
+//
+//        self.countryHeaderTextFieldView.isUserInteractionEnabled = true
+//        self.countryHeaderTextFieldView.shouldBeginEditing = { [weak self] in
+//            self?.showCountrySelector(listing: listings)
+//            return false
+//        }
+        
     }
 
     private func showCountrySelector(listing: EveryMatrix.CountryListing) {
@@ -477,8 +477,13 @@ extension PersonalInfoViewController {
         if !profile.isCountryUpdatable {
             self.countryHeaderTextFieldView.isDisabled = true
         }
-        for country in countries!.countries where country.isoCode == profile.fields.country {
-            self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country), slideUp: true)
+        
+        if let countriesListing = self.countriesListing,
+           let nationality = profile.fields.nationality?.lowercased() {
+            
+            for country in countriesListing.countries where country.name.lowercased() == nationality {
+                self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country), slideUp: true)
+            }
         }
 
         if !profile.isBirthDateUpdatable {

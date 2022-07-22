@@ -75,7 +75,6 @@ struct SearchUser: Decodable {
     }
 }
 
-
 struct MessageData {
     var type: MessageType
     var text: String
@@ -230,4 +229,11 @@ enum NotificationsType {
         case .custom: return "custom"
         }
     }
+}
+
+struct SocialAppInfo {
+    var name: String
+    var urlScheme: String
+    var urlShare: String
+
 }

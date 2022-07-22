@@ -314,7 +314,7 @@ class HistoryViewModel {
                 
                 self?.deposits.value = depositHistoryResponse.transactions ?? []
                 
-                
+    
             })
             .store(in: &cancellables)
 

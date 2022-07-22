@@ -422,6 +422,7 @@ Terms of use, Privacy Policy and EULA";
 "shared_tickets_to" = "You shared tickets to";
 
 "add_friend" = "Add Friend";
+"add_friends" = "Add Friends";
 "search_by_username" = "Search by username...";
 "add_from_contact_list" = "Add from contact list";
 "settings" = "Settings";
@@ -500,3 +501,25 @@ Terms of use, Privacy Policy and EULA";
 
 "share_my_tickets" = "Share my tickets";
 "not_bets_tickets_section" = "You don't have any bets for this section.";
+"share_ticket" = "Share ticket";
+
+"more" = "More";
+"copy_link" = "Copy link";
+"share_outside_via" = "Share outside via...";
+"comment" = "Comment";
+"send_friends_groups" = "Send to friends and groups";
+"send" = "Send";
+
+"check_this_bet_made" = "Check this bet I made!";
+"ticket_url_pasteboard" = "Ticket link was copied!";
+
+"send_to_chat" = "Send to chat";
+"or" = "or";
+"empty_chatrooms" = "There are no chatrooms available to share. Please add some friends and/or create chat groups.";
+
+"bet_registered_success" = "Your bet was registered with success.";
+"good_luck" = "Good luck!";
+"share_bet_now" = "Share your bet now";
+
+"time_add_friends" = "Time to add friends!";
+"add_some_friends_start_chatting" = "Add some friends and start chatting now!";
