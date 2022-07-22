@@ -104,10 +104,14 @@ class MyTicketBetLineView: NibView {
         self.homeTeamNameLabel.text = self.betHistoryEntrySelection.homeParticipantName ?? ""
         self.awayTeamNameLabel.text = self.betHistoryEntrySelection.awayParticipantName ?? ""
 
-        if let sportId = self.betHistoryEntrySelection.sportId {
-            self.sportTypeImageView.image = UIImage(named: "sport_type_icon_\(sportId)")
+        if let sportId = self.betHistoryEntrySelection.sportId, let image = UIImage(named: "sport_type_icon_\(sportId)") {
+            self.sportTypeImageView.image = image
         }
-
+        else {
+            self.sportTypeImageView.image = UIImage(named: "sport_type_icon_default")
+        }
+        self.sportTypeImageView.setImageColor(color: UIColor.App.textPrimary)
+        
         if let image = UIImage(named: Assets.flagName(withCountryCode: self.countryCode)) {
             self.locationImageView.image = image
         }
@@ -127,7 +131,6 @@ class MyTicketBetLineView: NibView {
 
         self.dateLabel.text = ""
         if let statusId = self.betHistoryEntrySelection.eventStatusId {
-
             if statusId == "2" {
                 self.dateLabel.isHidden = true
                 self.liveIconImage.isHidden = false
