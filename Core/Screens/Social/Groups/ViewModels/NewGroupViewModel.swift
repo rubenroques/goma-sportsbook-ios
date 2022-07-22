@@ -114,7 +114,7 @@ class NewGroupViewModel {
             self.selectedUsers = usersArray
         }
 
-        if self.selectedUsers.isEmpty {
+        if self.selectedUsers.isEmpty || self.selectedUsers.count < 2 {
             self.canAddFriendPublisher.send(false)
         }
         else {
