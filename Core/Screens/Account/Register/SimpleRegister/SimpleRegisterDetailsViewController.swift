@@ -37,8 +37,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
     
     // Variables
     var emailAddress: String
-
-    private var mobilePrefixTextual = ""
+    private var selectedCountry: EveryMatrix.Country?
 
     init(emailAddress: String) {
         self.emailAddress = emailAddress
@@ -105,7 +104,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
 
-        let maxDate = setCalendarMaxDate(legalAge: 18)
+        let maxDate = self.dateForMaxLegalAge(legalAge: 18)
         dateHeaderTextView.datePicker.maximumDate = maxDate
 
         self.quitButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
@@ -274,8 +273,6 @@ class SimpleRegisterDetailsViewController: UIViewController {
 
     @IBAction private func signUpAction() {
 
-        var validFields = true
-
         let username = usernameHeaderTextView.text
         let birthDate = dateHeaderTextView.text // Must be yyyy-MM-dd
         let mobile = phoneHeaderTextView.text
@@ -292,7 +289,16 @@ class SimpleRegisterDetailsViewController: UIViewController {
             passwordHeaderTextView.showTip(text: localized("password_too_weak"))
             return
         }
-
+        
+        guard
+            let selectedCountryISO = self.selectedCountry?.isoCode,
+            let mobilePrefixTextual = self.selectedCountry?.phonePrefix
+        else {
+            return
+        }
+        
+        let currency = Env.businessSettingsSocket.clientSettings?.locale?.currency ?? "EUR"
+        
         if !checkDateBirth() {
             return
         }
@@ -303,7 +309,10 @@ class SimpleRegisterDetailsViewController: UIViewController {
                                                   birthDate: birthDate,
                                                   mobilePrefix: mobilePrefixTextual,
                                                   mobileNumber: mobile,
-                                                  emailVerificationURL: emailVerificationURL)
+                                                  emailVerificationURL: emailVerificationURL,
+                                                  countryCode: selectedCountryISO,
+                                                  currencyCode: currency)
+        
         self.showLoadingSpinner()
         self.registerUser(form: form)
 
@@ -476,11 +485,7 @@ extension SimpleRegisterDetailsViewController {
     private func setupWithCountryCodes(_ listings: EveryMatrix.CountryListing) {
 
         for country in listings.countries where country.isoCode == listings.currentIpCountry {
-            self.mobilePrefixTextual = country.phonePrefix
-            self.indicativeHeaderTextView.setText( self.formatIndicativeCountry(country), slideUp: true)
-
-            let maxDate = setCalendarMaxDate(legalAge: country.legalAge)
-            dateHeaderTextView.datePicker.maximumDate = maxDate
+            self.setupWithSelectedCountry(country)
         }
 
         self.indicativeHeaderTextView.isUserInteractionEnabled = true
@@ -495,6 +500,7 @@ extension SimpleRegisterDetailsViewController {
         phonePrefixSelectorViewController.modalPresentationStyle = .overCurrentContext
         phonePrefixSelectorViewController.didSelectCountry = { [weak self] country in
             self?.setupWithSelectedCountry(country)
+            
             phonePrefixSelectorViewController.animateDismissView()
             self?.updateBirthAgeLimit(ageLimit: country.legalAge)
         }
@@ -502,8 +508,11 @@ extension SimpleRegisterDetailsViewController {
     }
 
     private func setupWithSelectedCountry(_ country: EveryMatrix.Country) {
-        self.mobilePrefixTextual = country.phonePrefix
-        self.indicativeHeaderTextView.setText(formatIndicativeCountry(country), slideUp: true)
+        self.selectedCountry = country
+        self.indicativeHeaderTextView.setText(self.formatIndicativeCountry(country), slideUp: true)
+
+        let maxDate = self.dateForMaxLegalAge(legalAge: country.legalAge)
+        self.dateHeaderTextView.datePicker.maximumDate = maxDate
     }
 
     private func formatIndicativeCountry(_ country: EveryMatrix.Country) -> String {
@@ -519,7 +528,7 @@ extension SimpleRegisterDetailsViewController {
 
     private func updateBirthAgeLimit(ageLimit: Int) {
 
-        let maxDate = setCalendarMaxDate(legalAge: ageLimit)
+        let maxDate = self.dateForMaxLegalAge(legalAge: ageLimit)
         // let fieldDate = dateHeaderTextView.datePicker.date
         let fieldDate = getDateFromTextFieldString(string: dateHeaderTextView.text)
         if fieldDate > maxDate {
@@ -528,7 +537,7 @@ extension SimpleRegisterDetailsViewController {
         }
     }
 
-    private func setCalendarMaxDate(legalAge: Int) -> Date {
+    private func dateForMaxLegalAge(legalAge: Int) -> Date {
         let calendar = Calendar(identifier: .gregorian)
         var components = DateComponents()
         components.calendar = calendar

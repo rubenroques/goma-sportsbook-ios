@@ -244,7 +244,6 @@ class FlipNumberStripView: UIView, UITableViewDelegate, UITableViewDataSource {
             self.bottomAnchor.constraint(equalTo: self.tableView.bottomAnchor)
         ])
         
-        
         self.tableView.setNeedsLayout()
         self.tableView.layoutIfNeeded()
         

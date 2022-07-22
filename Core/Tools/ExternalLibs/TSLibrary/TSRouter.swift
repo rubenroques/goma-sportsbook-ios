@@ -399,10 +399,11 @@ enum TSRouter {
                     "birthDate": form.birthDate,
                     "mobilePrefix": form.mobilePrefix,
                     "mobile": form.mobileNumber,
-                    "country": "PT",
-                    "currency": "EUR",
+                    "country": form.countryCode,
+                    "currency": form.currencyCode,
                     "emailVerificationURL": form.emailVerificationURL,
                     "userConsents": ["termsandconditions": true, "sms": false]]
+            
         case .getMatchDetails(let language, let matchId):
             return ["lang": language,
                     "matchId": matchId]
@@ -425,7 +426,7 @@ enum TSRouter {
                     "mobile": form.mobile,
                     "phonePrefix": form.phonePrefix,
                     "phone": form.phone,
-                    "country": form.country,
+                    "nationality": form.country,
                     "address1": form.address1,
                     "address2": form.address2,
                     "city": form.city,

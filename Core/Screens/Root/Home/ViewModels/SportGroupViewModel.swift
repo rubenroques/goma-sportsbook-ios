@@ -27,7 +27,7 @@ class SportGroupViewModel {
         self.sport = sport
         self.store = store
 
-        self.matchTypes = [.popular, .live, .topCompetition]
+        self.matchTypes = [.live, .popular, .topCompetition]
     }
 
     init(sport: Sport, contents: [SportSectionFeedContent], store: HomeStore) {

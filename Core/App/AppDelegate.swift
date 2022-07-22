@@ -31,6 +31,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         swiftyBeaverLog.addDestination(file)
         swiftyBeaverLog.addDestination(cloud)
 
+        /*
+         
+        // This is used to disable temporarly auto layout Unsatisfiable constraints logs
+        // This should be deleted, unsatisfiable constraints must be fixed
+        #if XCODE_ACTION_install
+            // Is archiving
+        #else
+            UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
+        #endif
+        
+        */
+
         Logger.log("App Started")
 
         // Store device id

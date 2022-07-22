@@ -35,8 +35,9 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     var buttonEnabled: Bool = false
     var cancellables = Set<AnyCancellable>()
     var countries: EveryMatrix.CountryListing?
-    var fullRegisterUserInfo: FullRegisterUserInfo?
     var isBackButtonDisabled: Bool
+    
+    private var selectedCountry: EveryMatrix.Country?
 
     init(isBackButtonDisabled: Bool = false) {
         self.isBackButtonDisabled = isBackButtonDisabled
@@ -91,7 +92,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         lastNameHeaderTextFieldView.setPlaceholderText(localized("last_name"))
         lastNameHeaderTextFieldView.showTipWithoutIcon(text: localized("names_match_id"), color: UIColor.App.inputTextTitle)
 
-        countryHeaderTextFieldView.setPlaceholderText(localized("country"))
+        countryHeaderTextFieldView.setPlaceholderText(localized("nationality"))
         countryHeaderTextFieldView.setSelectionPicker(["-----"], headerVisible: true)
         countryHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
         countryHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
@@ -192,11 +193,14 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         let address1Text = address1HeaderTextFieldView.text == "" ? false : true
         let cityText = cityHeaderTextFieldView.text == "" ? false : true
         let postalCodeText = postalCodeHeaderTextFieldView.text == "" ? false : true
-
-        if titleText && firstNameText && lastNameText && address1Text && cityText && postalCodeText {
+        
+        
+        if titleText && firstNameText && lastNameText && address1Text
+            && cityText && postalCodeText && self.selectedCountry != nil {
+            
             self.continueButton.isEnabled = true
             continueButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
-            self.setupFullRegisterUserInfoForm()
+            
         }
         else {
             self.continueButton.isEnabled = false
@@ -267,26 +271,22 @@ class FullRegisterPersonalInfoViewController: UIViewController {
             .store(in: &cancellables)
     }
 
-    func setupFullRegisterUserInfoForm() {
+    func createFullRegisterUserInfoForm() -> FullRegisterUserInfo {
+        
+        let countryName = self.selectedCountry?.name ?? ""
+        
         let titleText = titleHeaderTextFieldView.text
         let firstNameText = firstNameHeaderTextFieldView.text
         let lastNameText = lastNameHeaderTextFieldView.text
-        var countryText = ""
-        let countryNameEmojiless = countryHeaderTextFieldView.text.unicodeScalars
-            .filter { !$0.properties.isEmojiPresentation}
-            .reduce("") { $0 + String($1) }
-        let countryName = countryNameEmojiless.replacingOccurrences(of: " ", with: "")
-        for country in self.countries!.countries where country.name == countryName {
-            countryText = country.isoCode ?? ""
-        }
         let address1Text = address1HeaderTextFieldView.text
         let address2Text = address2HeaderTextFieldView.text
         let cityText = cityHeaderTextFieldView.text
         let postalCodeText = postalCodeHeaderTextFieldView.text
-        fullRegisterUserInfo = FullRegisterUserInfo(title: titleText,
+        
+        return FullRegisterUserInfo(title: titleText,
             firstName: firstNameText,
             lastName: lastNameText,
-            country: countryText,
+            country: countryName,
             address1: address1Text,
             address2: address2Text,
             city: cityText,
@@ -301,7 +301,9 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     }
 
     @IBAction private func continueAction() {
-        self.navigationController?.pushViewController(FullRegisterAddressCountryViewController(registerForm: self.fullRegisterUserInfo!), animated: true)
+        let fullRegisterUserInfoForm = self.createFullRegisterUserInfoForm()
+        let fullRegisterAddressCountryViewController = FullRegisterAddressCountryViewController(registerForm: fullRegisterUserInfoForm)
+        self.navigationController?.pushViewController(fullRegisterAddressCountryViewController, animated: true)
     }
 
     @IBAction private func closeAction() {
@@ -350,7 +352,8 @@ extension FullRegisterPersonalInfoViewController {
     private func setupWithCountryCodes(_ listings: EveryMatrix.CountryListing) {
 
         for country in listings.countries where country.isoCode == listings.currentIpCountry {
-            self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country), slideUp: true)
+            self.setupWithSelectedCountry(country)
+            break
         }
 
         self.countryHeaderTextFieldView.isUserInteractionEnabled = true
@@ -371,7 +374,8 @@ extension FullRegisterPersonalInfoViewController {
     }
 
     private func setupWithSelectedCountry(_ country: EveryMatrix.Country) {
-        self.countryHeaderTextFieldView.setText(formatIndicativeCountry(country), slideUp: true)
+        self.selectedCountry = country
+        self.countryHeaderTextFieldView.setText(self.formatIndicativeCountry(country), slideUp: true)
     }
 
     private func formatIndicativeCountry(_ country: EveryMatrix.Country) -> String {

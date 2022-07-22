@@ -97,7 +97,6 @@ class BetslipManager: NSObject {
             .sink { [weak self] in
                 self?.requestSimpleBetslipSelectionState()
                 self?.requestMultipleBetslipSelectionState()
-               
             }
             .store(in: &cancellables)
 
@@ -292,8 +291,8 @@ extension BetslipManager {
                     self.simpleBetslipSelectionState.send(betslipSelectionState)
                 })
                 .receive(on: DispatchQueue.main)
-                .sink { completion in
-                    print("completed simple: \(completion)")
+                .sink { _ in
+                    
                 } receiveValue: { betslipSelectionState in
                     self.simpleBetslipSelectionState.send(betslipSelectionState)
 
@@ -320,8 +319,8 @@ extension BetslipManager {
         Env.everyMatrixClient.manager
             .getModel(router: route, decodingType: BetslipSelectionState.self)
             .receive(on: DispatchQueue.main)
-            .sink { completion in
-                print("completed multi: \(completion)")
+            .sink { _ in
+                
             } receiveValue: { betslipSelectionState in
                 self.multipleBetslipSelectionState.send(betslipSelectionState)
             }
