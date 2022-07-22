@@ -110,6 +110,12 @@ class EditGroupViewController: UIViewController {
             .assign(to: \.isEnabled, on: self.editButton)
             .store(in: &cancellables)
 
+        if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId,
+           loggedUserId != self.viewModel.getAdminUserId() {
+            self.newGroupTextField.isUserInteractionEnabled = false
+            self.newGroupTextField.textColor = UIColor.App.textDisablePrimary
+        }
+
     }
 
     // MARK: - Layout and Theme
@@ -437,11 +443,7 @@ extension EditGroupViewController: UITableViewDataSource, UITableViewDelegate {
                 let adminUserId = self.viewModel.getAdminUserId()
 
                 if let cellViewModel = self.viewModel.cachedUserCellViewModels[userContact.id] {
-                    // TEST
-//                    if indexPath.row % 2 == 0 {
-//                        cellViewModel.isOnline = true
-//                    }
-//
+
                     if userContact.id == "\(adminUserId)" {
                         cellViewModel.isAdmin = true
                     }
@@ -452,11 +454,7 @@ extension EditGroupViewController: UITableViewDataSource, UITableViewDelegate {
                 else {
                     let cellViewModel = GroupUserManagementCellViewModel(userContact: userContact, chatroomId: self.viewModel.getChatroomId())
                     self.viewModel.cachedUserCellViewModels[userContact.id] = cellViewModel
-                    // TEST
-//                    if indexPath.row % 2 == 0 {
-//                        cellViewModel.isOnline = true
-//                    }
-//
+
                     if userContact.id == "\(adminUserId)" {
                         cellViewModel.isAdmin = true
                     }
@@ -465,9 +463,19 @@ extension EditGroupViewController: UITableViewDataSource, UITableViewDelegate {
 
                 }
 
-                cell.didTapDeleteAction = { [weak self] in
-                    self?.removeUser(userId: userContact.id, userIndex: indexPath.row)
+                if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId,
+                   loggedUserId == self.viewModel.getAdminUserId() {
+
+                    cell.didTapDeleteAction = { [weak self] in
+                        self?.removeUser(userId: userContact.id, userIndex: indexPath.row)
+                    }
+
+                    cell.canDeleteUser = true
                 }
+                else {
+                    cell.canDeleteUser = false
+                }
+
             }
 
             if indexPath.row == self.viewModel.users.count - 1 {

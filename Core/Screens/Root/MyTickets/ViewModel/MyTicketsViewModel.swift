@@ -25,6 +25,7 @@ class MyTicketsViewModel: NSObject {
     var clickedBetId: String?
     var clickedBetStatus: String?
     var clickedBetTokenPublisher: CurrentValueSubject<String, Never> = .init("")
+    var clickedBetHistory: BetHistoryEntry?
     
     var reloadTableViewAction: (() -> Void)?
     var redrawTableViewAction: (() -> Void)?
@@ -407,8 +408,10 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
         cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
 
         cell.tappedShareAction = { [weak self] in
-            if let cellSnapshot = cell.snapshot, let ticketStatus = ticketValue.status {
+            if let cellSnapshot = cell.snapshot,
+                let ticketStatus = ticketValue.status {
                 self?.requestShareActivityView?(cellSnapshot, ticketValue.betId, ticketStatus)
+                self?.clickedBetHistory = ticketValue
             }
         }
     

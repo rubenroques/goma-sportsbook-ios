@@ -45,7 +45,10 @@ class NewGroupViewController: UIViewController {
         }
     }
 
+    var isSharedTicketNewGroup: Bool = false
+
     var chatListNeedReload: (() -> Void)?
+    var shareChatroomsNeedReload: (() -> Void)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: NewGroupViewModel) {
@@ -232,6 +235,15 @@ class NewGroupViewController: UIViewController {
 
         newGroupManagementViewController.chatListNeedReload = { [weak self] in
             self?.chatListNeedReload?()
+        }
+
+        if self.isSharedTicketNewGroup {
+            
+            newGroupManagementViewController.isSharedTicketNewGroup = true
+
+            newGroupManagementViewController.shareChatroomsNeedReload = { [weak self] in
+                self?.shareChatroomsNeedReload?()
+            }
         }
 
         self.navigationController?.pushViewController(newGroupManagementViewController, animated: true)

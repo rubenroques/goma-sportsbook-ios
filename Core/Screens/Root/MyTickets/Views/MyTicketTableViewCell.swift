@@ -278,7 +278,20 @@ class MyTicketTableViewCell: UITableViewCell {
                 self.winningsTitleLabel.textColor = .white
                 self.winningsSubtitleLabel.textColor = .white
 
-            case "LOST", "HALF_LOST":
+            case "HALF_LOST":
+                self.highlightCard(withColor: UIColor.App.myTicketsLost)
+                self.winningsTitleLabel.text = localized("return") // Titulo
+                if let maxWinnings = betHistoryEntry.overallBetReturns, // Valor  - > maxWinning
+                   let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+                    self.winningsSubtitleLabel.text = maxWinningsString
+                }
+                self.totalOddTitleLabel.textColor = .white
+                self.totalOddSubtitleLabel.textColor = .white
+                self.betAmountTitleLabel.textColor = .white
+                self.betAmountSubtitleLabel.textColor = .white
+                self.winningsTitleLabel.textColor = .white
+                self.winningsSubtitleLabel.textColor = .white
+            case "LOST":
                 self.highlightCard(withColor: UIColor.App.myTicketsLost)
                 self.winningsTitleLabel.text = localized("possible_winnings") // Titulo
                 if let maxWinnings = betHistoryEntry.maxWinning, // Valor  - > maxWinning

@@ -45,6 +45,10 @@ class GomaGamingSocialServiceClient {
     var chatPage: Int = 1
 
     var locations: OrderedDictionary<String, EveryMatrix.Location> = [:]
+    var socialAppNamesSupported: [String] = ["Facebook", "Telegram", "Twitter", "Whatsapp", "Discord", "Messenger"]
+    var socialAppNamesSchemesSupported: [String] = ["fb://", "tg://", "twitter://", "whatsapp://", "discord://", "fb-messenger://"]
+    var socialAppSharesAvailable: [String] = ["https://www.facebook.com/sharer.php?u=%url", "tg://msg_url?url=%url", "https://twitter.com/intent/tweet?url=%url", "whatsapp://send/?text=%url", "", ""]
+    var socialAppsInfo: [SocialAppInfo] = []
     
     // MARK: Private Properties
     private var manager: SocketManager?
@@ -77,6 +81,21 @@ class GomaGamingSocialServiceClient {
                 self?.startOnlineUsersListener(chatroomIds: chatroomIds)
             })
             .store(in: &cancellables)
+
+    }
+
+    func storeSocialAppsInfo() {
+
+        for (index, socialApp) in self.socialAppNamesSupported.enumerated() {
+
+            if let socialAppUrlScheme = self.socialAppNamesSchemesSupported[safe: index],
+               let socialAppShareAvailable = self.socialAppSharesAvailable[safe: index] {
+
+                let socialAppInfo = SocialAppInfo(name: socialApp, urlScheme: socialAppUrlScheme, urlShare: socialAppShareAvailable)
+
+                self.socialAppsInfo.append(socialAppInfo)
+            }
+        }
     }
 
     func connectSocket() {
@@ -273,6 +292,10 @@ class GomaGamingSocialServiceClient {
     private func storeChatrooms(chatroomsData: [ChatroomData]) {
         let chatroomsIds = chatroomsData.map({ $0.chatroom.id })
         self.chatroomIdsPublisher.send(chatroomsIds)
+
+        // Store Social Apps Info
+        self.socialAppsInfo = []
+        self.storeSocialAppsInfo()
     }
     
     private func startLastMessagesListener(chatroomIds: [Int]) {
