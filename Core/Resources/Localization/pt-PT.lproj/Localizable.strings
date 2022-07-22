@@ -253,9 +253,11 @@ Terms of use, Privacy Policy and EULA";
 "sports" = "Sports";
 "live" = "Live";
 "casino" = "Casino";
+"sportsbook" = "Sportsbook";
 "my_tickets" = "My Tickets";
 "my_bets" = "My Bets";
-"sportsbook" = "Sportsbook";
+"bets" = "Bets";
+"betslip" = "Betslip";
 
 "logout" = "Logout";
 
