@@ -56,7 +56,7 @@ class BettingHistoryViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
-        self.tableView.register(MyTicketTableViewCell.self, forCellReuseIdentifier: MyTicketTableViewCell.identifier)
+        self.tableView.register(MyTicketTableViewCell.nib, forCellReuseIdentifier: MyTicketTableViewCell.identifier)
 
         self.emptyStateButton.addTarget(self, action: #selector(self.didTapMakeDeposit), for: .primaryActionTriggered)
 
@@ -176,7 +176,7 @@ extension BettingHistoryViewController: UITableViewDelegate, UITableViewDataSour
         case .opened:
             ticket =  self.viewModel.openedTickets.value[safe: indexPath.row] ?? nil
         default:
-            ticket =  self.viewModel.resolvedTickets.value[safe: indexPath.row] ?? nil
+            ticket =  self.viewModel.wonTickets.value[safe: indexPath.row] ?? nil
         
         }
 
@@ -211,27 +211,20 @@ extension BettingHistoryViewController: UITableViewDelegate, UITableViewDataSour
         }
         return cell
         
-        
-        
-        
-        
-        
-        
-        /*
-        guard
-            let cell = tableView.dequeueReusableCell(withIdentifier: MyTicketTableViewCell.identifier, for: indexPath) as? MyTicketTableViewCell,
-            let bettingTicketValue = self.viewModel.bettingTicketForRow(atIndex: indexPath.row)
-        else {
-            fatalError("")
+    }
+    
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        print(indexPath.section)
+        if indexPath.section == 1, self.viewModel.shouldShowLoadingCell() {
+            print(indexPath.section)
+            if let typedCell = cell as? LoadingMoreTableViewCell {
+                typedCell.startAnimating()
+            }
+            self.viewModel.requestNextPage()
+            
         }
-        cell.configure(withBetHistoryEntry: bettingTicketValue)
-        return cell*/
     }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 130
-    }
-
 }
 
 //

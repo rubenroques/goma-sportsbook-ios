@@ -31,16 +31,14 @@ class HistoryViewController: UIViewController {
     // Logic
     private var cancellables: Set<AnyCancellable> = []
     private let viewModel: HistoryViewModel
-    private let ticketsViewModel: MyTicketCellViewModel
     private var filterSelectedOption: Int = 0
     
     private var locationsCodesDictionary: [String: String] = [:]
     private let rightGradientMaskLayer = CAGradientLayer()
     
     // MARK: - Lifetime and Cycle
-    init(viewModel: HistoryViewModel = HistoryViewModel(listType: .transactions), ticketsViewModel: MyTicketCellViewModel = MyTicketCellViewModel(ticket: <#BetHistoryEntry#>)) {
+    init(viewModel: HistoryViewModel = HistoryViewModel(listType: .transactions)) {
         self.viewModel = viewModel
-        self.ticketsViewModel = ticketsViewModel
         super.init(nibName: nil, bundle: nil)
 
         switch viewModel.listType {
@@ -265,8 +263,7 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
                     return self.locationsCodesDictionary[id] ?? ""
                 })
 
-            cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: ticketsViewModel)
-
+          
             return cell
             
             

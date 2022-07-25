@@ -43,9 +43,16 @@ class BettingHistoryViewModel {
     var wonTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
     var cashoutTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
 
+    
+    private var matchesPublisher: AnyCancellable?
+    private var matchesRegister: EndpointPublisherIdentifiable?
+    
     // MARK: - Private Properties
 
-    private let recordsPerPage = 80
+    private var recordsPerPage = 10
+    
+    private var matchesHasNextPage = true
+    private var recordsPage = 1
 
     private var resolvedPage = 0
     private var openedPage = 0
@@ -101,6 +108,22 @@ class BettingHistoryViewModel {
     func refreshContent() {
         self.initialContentLoad()
     }
+    
+    func shouldShowLoadingCell() -> Bool {
+        switch self.bettingTicketsType {
+        case .opened:
+            return self.openedTickets.value.isNotEmpty && matchesHasNextPage
+        case .resolved:
+            return self.resolvedTickets.value.isNotEmpty && matchesHasNextPage
+        case .won:
+            return self.wonTickets.value.isNotEmpty && matchesHasNextPage
+        case .cashout:
+            return self.cashoutTickets.value.isNotEmpty && matchesHasNextPage
+        }
+        
+       
+    }
+
 
     func loadOpenedTickets(page: Int) {
 
@@ -233,6 +256,99 @@ class BettingHistoryViewModel {
         self.loadWonTickets(page: 0)
     }
     
+    func requestNextPage() {
+        switch bettingTicketsType {
+        case .opened:
+            openedPage += 1
+            self.loadOpenedTickets(page: openedPage)
+        case .resolved:
+            resolvedPage += 1
+            self.loadResolvedTickets(page: resolvedPage)
+        default:
+            wonPage += 1
+            self.loadWonTickets(page: wonPage)
+        }
+        self.fetchNextPage()
+    }
+    
+    private func resetPageCount() {
+        self.recordsPerPage = 10
+        self.recordsPage = 1
+        self.matchesHasNextPage = true
+    }
+
+    private func fetchNextPage() {
+        if !matchesHasNextPage {
+            return
+        }
+        self.recordsPage += 1
+        self.fetchTickets()
+    }
+
+    private func fetchTickets() {
+
+        if let matchesRegister = matchesRegister {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchesRegister)
+        }
+
+        switch bettingTicketsType {
+        case .opened:
+            let matchesCount = self.openedTickets.value.count * self.openedPage
+            loadOpenedTickets(page: self.openedPage)
+            if self.openedTickets.value.count < matchesCount * self.openedPage {
+                self.matchesHasNextPage = false
+            }
+            //self.matchesHasNextPage = false
+           // self.isLoading.send(false)
+           // self.refreshPublisher.send()
+            
+        case .resolved:
+            let matchesCount = self.resolvedTickets.value.count * self.resolvedPage
+            loadResolvedTickets(page: self.resolvedPage)
+            
+            print(self.resolvedTickets.value.count)
+            print(matchesCount)
+            print(self.resolvedPage)
+            if self.resolvedTickets.value.count < matchesCount * self.resolvedPage {
+                self.matchesHasNextPage = false
+            }
+            //self.matchesHasNextPage = false
+
+        default:
+            let matchesCount = self.wonTickets.value.count * self.wonPage
+            loadWonTickets(page: self.openedPage)
+            if self.wonTickets.value.count  < matchesCount * self.wonPage {
+                self.matchesHasNextPage = false
+            }
+
+        }
+        
+        
+       
+    }
+/*
+    private func storeAggregatorProcessor(_ aggregator: EveryMatrix.Aggregator) {
+        self.store.processAggregator(aggregator, withListType: .popularEvents,
+                                                 shouldClear: true)
+
+        let matches = self.store.matchesForListType(.popularEvents)
+        if matches.count < self.matchesCount * self.matchesPage {
+            self.matchesHasNextPage = false
+        }
+
+        self.matches = matches
+
+        self.isLoading.send(false)
+
+        self.refreshPublisher.send()
+    }
+
+    private func updateWithAggregatorProcessor(_ aggregator: EveryMatrix.Aggregator) {
+        self.store.processContentUpdateAggregator(aggregator)
+    }
+*/
+
+    
     func loadWonTickets(page: Int) {
 
         self.listStatePublisher.send(.loading)
@@ -307,7 +423,7 @@ class BettingHistoryViewModel {
 extension BettingHistoryViewModel {
 
     func numberOfSections() -> Int {
-        return 1
+        return 2
     }
 
     func numberOfRows() -> Int {

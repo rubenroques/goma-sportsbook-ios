@@ -52,8 +52,14 @@ class MyTicketTableViewCell: UITableViewCell {
     private var selectedMatch: String = ""
 
     private var cashoutValue: Double?
-    private var showCashoutButton: Bool = true
-  
+    private var showCashoutButton: Bool = false {
+        didSet {
+            self.cashoutBaseView.isHidden = !showCashoutButton
+            if showCashoutButton {
+                self.needsHeightRedraw?()
+            }
+        }
+    }
 
     var snapshot: UIImage?
 
@@ -209,9 +215,8 @@ class MyTicketTableViewCell: UITableViewCell {
                 self?.loadingView.isHidden = !isLoadingCellData
             })
 
-        //self.betCardsStackView.removeAllArrangedSubviews()
+        self.betCardsStackView.removeAllArrangedSubviews()
         
-
         for (index, betHistoryEntrySelection) in (betHistoryEntry.selections ?? []).enumerated() {
 
             let myTicketBetLineView = MyTicketBetLineView(betHistoryEntrySelection: betHistoryEntrySelection,
