@@ -54,7 +54,10 @@ class BettingHistoryRootViewController: UIViewController {
     private lazy var topBaseView: UIView = Self.createTopBaseView()
     private lazy var shortcutsCollectionView: UICollectionView = Self.createShortcutsCollectionView()
     private lazy var pagesBaseView: UIView = Self.createPagesBaseView()
-
+    
+    private lazy var filterBaseView: UIView = Self.createSimpleView()
+    private lazy var filtersButtonImage: UIImageView = Self.createFilterImageView()
+    
     private lazy var noLoginBaseView: UIView = Self.createNoLoginBaseView()
     private lazy var noLoginImageView: UIImageView = Self.createNoLoginImageView()
     private lazy var noLoginTitleLabel: UILabel = Self.createNoLoginTitleLabel()
@@ -110,6 +113,13 @@ class BettingHistoryRootViewController: UIViewController {
         self.shortcutsCollectionView.delegate = self
         self.shortcutsCollectionView.dataSource = self
 
+        self.filterBaseView.layer.cornerRadius = self.filterBaseView.frame.height / 2
+
+        let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
+        self.filterBaseView.addGestureRecognizer(tapFilterGesture)
+        self.filterBaseView.isUserInteractionEnabled = true
+        self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+        
         self.noLoginButton.addTarget(self, action: #selector(didTapLoginButton), for: .primaryActionTriggered)
 
         self.reloadCollectionView()
@@ -133,6 +143,8 @@ class BettingHistoryRootViewController: UIViewController {
         self.noLoginTitleLabel.textColor = UIColor.App.textPrimary
         self.noLoginSubtitleLabel.textColor = UIColor.App.textPrimary
 
+        self.filterBaseView.backgroundColor = UIColor.App.backgroundTertiary
+        
         StyleHelper.styleButton(button: self.noLoginButton)
    }
 
@@ -166,6 +178,12 @@ class BettingHistoryRootViewController: UIViewController {
     @objc func didTapLoginButton() {
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
+    }
+    
+    @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
+        // print("clicou nos filtros")
+        let filterHistoryViewController = FilterHistoryViewController()
+        self.present(filterHistoryViewController, animated: true, completion: nil)
     }
 
     // MARK: - Convenience
@@ -363,9 +381,27 @@ extension BettingHistoryRootViewController {
         return view
     }
 
+    private static func createSimpleView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
+    private static func createFilterImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        imageView.image = UIImage(named: "match_filters_icons")
+        
+        return imageView
+    }
+
+    
     private func setupSubviews() {
 
         self.topBaseView.addSubview(self.shortcutsCollectionView)
+        self.topBaseView.addSubview(self.filterBaseView)
+        self.filterBaseView.addSubview(self.filtersButtonImage)
 
         self.view.addSubview(self.topBaseView)
         self.view.addSubview(self.pagesBaseView)
@@ -391,6 +427,16 @@ extension BettingHistoryRootViewController {
             self.topBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.topBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.topBaseView.heightAnchor.constraint(equalToConstant: 70),
+            
+            self.filterBaseView.widthAnchor.constraint(equalToConstant: 40),
+            self.filterBaseView.heightAnchor.constraint(equalToConstant: 40),
+            self.filterBaseView.trailingAnchor.constraint(equalTo: self.topBaseView.trailingAnchor),
+            self.filterBaseView.centerYAnchor.constraint(equalTo: self.shortcutsCollectionView.centerYAnchor),
+            
+            self.filtersButtonImage.bottomAnchor.constraint(equalTo: self.filterBaseView.bottomAnchor, constant: -8),
+            self.filtersButtonImage.topAnchor.constraint(equalTo: self.filterBaseView.topAnchor, constant: 8),
+            self.filtersButtonImage.trailingAnchor.constraint(equalTo: self.filterBaseView.trailingAnchor, constant: -6),
+            self.filtersButtonImage.centerYAnchor.constraint(equalTo: self.filterBaseView.centerYAnchor)
         ])
 
         NSLayoutConstraint.activate([
