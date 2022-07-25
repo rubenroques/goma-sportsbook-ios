@@ -390,6 +390,12 @@ class ProfileViewController: UIViewController {
         let bonusTap = UITapGestureRecognizer(target: self, action: #selector(bonusViewTapped(sender:)))
         bonusView.addGestureRecognizer(bonusTap)
 
+        let messagesView = NavigationCardView()
+        messagesView.hasNotifications = true
+        messagesView.setupView(title: localized("messages"), iconTitle: "messages_profile_icon")
+        let messagesTap = UITapGestureRecognizer(target: self, action: #selector(messagesViewTapped(sender:)))
+        messagesView.addGestureRecognizer(messagesTap)
+
         let historyView = NavigationCardView()
         historyView.setupView(title: localized("history"), iconTitle: "history_profile_icon")
         let historyTap = UITapGestureRecognizer(target: self, action: #selector(historyViewTapped(sender:)))
@@ -408,6 +414,7 @@ class ProfileViewController: UIViewController {
         self.stackView.addArrangedSubview(myAccountView)
         self.stackView.addArrangedSubview(myFavoritesView)
         self.stackView.addArrangedSubview(bonusView)
+        self.stackView.addArrangedSubview(messagesView)
         self.stackView.addArrangedSubview(historyView)
         self.stackView.addArrangedSubview(settingsView)
         self.stackView.addArrangedSubview(supportView)
@@ -486,6 +493,11 @@ extension ProfileViewController {
     @objc func bonusViewTapped(sender: UITapGestureRecognizer) {
         let bonusRootViewController = BonusRootViewController(viewModel: BonusRootViewModel(startTabIndex: 0))
         self.navigationController?.pushViewController(bonusRootViewController, animated: true)
+    }
+
+    @objc func messagesViewTapped(sender: UITapGestureRecognizer) {
+        let messagesRootViewController = MessagesViewController()
+        self.navigationController?.pushViewController(messagesRootViewController, animated: true)
     }
 
     @objc func historyViewTapped(sender: UITapGestureRecognizer) {

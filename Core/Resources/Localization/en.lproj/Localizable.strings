@@ -525,3 +525,7 @@ Terms of use, Privacy Policy and EULA";
 
 "time_add_friends" = "Time to add friends!";
 "add_some_friends_start_chatting" = "Add some friends and start chatting now!";
+
+"messages" = "Messages";
+"mark_all_read" = "Mark all as read";
+"delete_all" = "Delete all";

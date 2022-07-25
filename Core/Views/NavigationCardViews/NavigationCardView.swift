@@ -14,7 +14,16 @@ class NavigationCardView: UIView {
     private lazy var iconBaseView: UIView = Self.createIconBaseView()
     private lazy var iconImageView: UIImageView = Self.createIconImageView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
+    private lazy var notificationView: UIView = Self.createNotificationView()
+    private lazy var notificationLabel: UILabel = Self.createNotificationLabel()
     private lazy var navigationImageView: UIImageView = Self.createNavigationImageView()
+
+    // MARK: Public Properties
+    var hasNotifications: Bool = false {
+        didSet {
+            self.notificationView.isHidden = !hasNotifications
+        }
+    }
 
     // MARK: Lifetime and Cycle
     override init(frame: CGRect) {
@@ -34,6 +43,15 @@ class NavigationCardView: UIView {
     }
 
     private func commonInit() {
+
+        self.hasNotifications = false
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        self.notificationView.layer.cornerRadius = self.notificationView.frame.width/2
+
     }
 
     private func setupWithTheme() {
@@ -47,12 +65,19 @@ class NavigationCardView: UIView {
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
+        self.notificationView.backgroundColor = UIColor.App.alertError
+
+        self.notificationLabel.textColor = UIColor.App.buttonTextPrimary
     }
 
     func setupView(title: String, iconTitle: String) {
         self.titleLabel.text = title
 
         self.iconImageView.image = UIImage(named: iconTitle)
+
+        if self.hasNotifications {
+            self.notificationLabel.text = "1"
+        }
     }
 
 }
@@ -94,6 +119,21 @@ extension NavigationCardView {
         return label
     }
 
+    private static func createNotificationView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createNotificationLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "0"
+        label.font = AppFont.with(type: .semibold, size: 12)
+        label.textAlignment = .center
+        return label
+    }
+
     private static func createNavigationImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -110,9 +150,17 @@ extension NavigationCardView {
         self.iconBaseView.addSubview(self.iconImageView)
 
         self.containerView.addSubview(self.titleLabel)
+
+        self.containerView.addSubview(self.notificationView)
+
+        self.notificationView.addSubview(self.notificationLabel)
+
         self.containerView.addSubview(self.navigationImageView)
 
         self.initConstraints()
+
+        self.layoutIfNeeded()
+        self.layoutSubviews()
     }
 
     private func initConstraints() {
@@ -137,6 +185,15 @@ extension NavigationCardView {
 
             self.titleLabel.leadingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: 20),
             self.titleLabel.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.navigationImageView.leadingAnchor, constant: -40),
+
+            self.notificationView.trailingAnchor.constraint(equalTo: self.navigationImageView.leadingAnchor, constant: -15),
+            self.notificationView.widthAnchor.constraint(equalToConstant: 18),
+            self.notificationView.heightAnchor.constraint(equalTo: self.notificationView.widthAnchor),
+            self.notificationView.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
+
+            self.notificationLabel.centerXAnchor.constraint(equalTo: self.notificationView.centerXAnchor),
+            self.notificationLabel.centerYAnchor.constraint(equalTo: self.notificationView.centerYAnchor),
 
             self.navigationImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -8),
             self.navigationImageView.widthAnchor.constraint(equalToConstant: 10),
