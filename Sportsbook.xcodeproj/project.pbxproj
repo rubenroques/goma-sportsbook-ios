@@ -3727,6 +3727,27 @@
 		A9B331C7288EFE0F00D097F0 /* InAppMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331C2288EFE0F00D097F0 /* InAppMessageTableViewCell.swift */; };
 		A9B331C8288EFE0F00D097F0 /* InAppMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331C2288EFE0F00D097F0 /* InAppMessageTableViewCell.swift */; };
 		A9B331C9288EFE0F00D097F0 /* InAppMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331C2288EFE0F00D097F0 /* InAppMessageTableViewCell.swift */; };
+		A9B331D3288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331D2288FFE6100D097F0 /* InAppMessageCellViewModel.swift */; };
+		A9B331D4288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331D2288FFE6100D097F0 /* InAppMessageCellViewModel.swift */; };
+		A9B331D5288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331D2288FFE6100D097F0 /* InAppMessageCellViewModel.swift */; };
+		A9B331D6288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331D2288FFE6100D097F0 /* InAppMessageCellViewModel.swift */; };
+		A9B331D7288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331D2288FFE6100D097F0 /* InAppMessageCellViewModel.swift */; };
+		A9B331D8288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331D2288FFE6100D097F0 /* InAppMessageCellViewModel.swift */; };
+		A9B331D9288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331D2288FFE6100D097F0 /* InAppMessageCellViewModel.swift */; };
+		A9B331DC288FFFE000D097F0 /* MessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331DB288FFFE000D097F0 /* MessagesViewModel.swift */; };
+		A9B331DD288FFFE000D097F0 /* MessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331DB288FFFE000D097F0 /* MessagesViewModel.swift */; };
+		A9B331DE288FFFE000D097F0 /* MessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331DB288FFFE000D097F0 /* MessagesViewModel.swift */; };
+		A9B331DF288FFFE000D097F0 /* MessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331DB288FFFE000D097F0 /* MessagesViewModel.swift */; };
+		A9B331E0288FFFE000D097F0 /* MessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331DB288FFFE000D097F0 /* MessagesViewModel.swift */; };
+		A9B331E1288FFFE000D097F0 /* MessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331DB288FFFE000D097F0 /* MessagesViewModel.swift */; };
+		A9B331E2288FFFE000D097F0 /* MessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331DB288FFFE000D097F0 /* MessagesViewModel.swift */; };
+		A9B331E428904F4800D097F0 /* MessageDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331E328904F4800D097F0 /* MessageDetailViewController.swift */; };
+		A9B331E528904F4800D097F0 /* MessageDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331E328904F4800D097F0 /* MessageDetailViewController.swift */; };
+		A9B331E628904F4800D097F0 /* MessageDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331E328904F4800D097F0 /* MessageDetailViewController.swift */; };
+		A9B331E728904F4800D097F0 /* MessageDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331E328904F4800D097F0 /* MessageDetailViewController.swift */; };
+		A9B331E828904F4800D097F0 /* MessageDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331E328904F4800D097F0 /* MessageDetailViewController.swift */; };
+		A9B331E928904F4800D097F0 /* MessageDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331E328904F4800D097F0 /* MessageDetailViewController.swift */; };
+		A9B331EA28904F4800D097F0 /* MessageDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331E328904F4800D097F0 /* MessageDetailViewController.swift */; };
 		A9B8407C26CA789A00269B05 /* VersionUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */; };
 		A9B8407D26CA789A00269B05 /* VersionUpdateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8407B26CA789A00269B05 /* VersionUpdateViewController.xib */; };
 		A9B8407E26CAAEB200269B05 /* VersionUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */; };
@@ -4584,6 +4605,9 @@
 		A9B058A6282975950089B0D7 /* EditGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditGroupViewModel.swift; sourceTree = "<group>"; };
 		A9B331B9288EF21300D097F0 /* MessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
 		A9B331C2288EFE0F00D097F0 /* InAppMessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppMessageTableViewCell.swift; sourceTree = "<group>"; };
+		A9B331D2288FFE6100D097F0 /* InAppMessageCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppMessageCellViewModel.swift; sourceTree = "<group>"; };
+		A9B331DB288FFFE000D097F0 /* MessagesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewModel.swift; sourceTree = "<group>"; };
+		A9B331E328904F4800D097F0 /* MessageDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDetailViewController.swift; sourceTree = "<group>"; };
 		A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionUpdateViewController.swift; sourceTree = "<group>"; };
 		A9B8407B26CA789A00269B05 /* VersionUpdateViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VersionUpdateViewController.xib; sourceTree = "<group>"; };
 		A9B8408026CFB49000269B05 /* DateUserLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUserLocation.swift; sourceTree = "<group>"; };
@@ -6999,8 +7023,10 @@
 		A9B331B8288EF1F800D097F0 /* Messages */ = {
 			isa = PBXGroup;
 			children = (
+				A9B331DA288FFFC900D097F0 /* ViewModels */,
 				A9B331C1288EFDD600D097F0 /* Cells */,
 				A9B331B9288EF21300D097F0 /* MessagesViewController.swift */,
+				A9B331E328904F4800D097F0 /* MessageDetailViewController.swift */,
 			);
 			path = Messages;
 			sourceTree = "<group>";
@@ -7009,8 +7035,17 @@
 			isa = PBXGroup;
 			children = (
 				A9B331C2288EFE0F00D097F0 /* InAppMessageTableViewCell.swift */,
+				A9B331D2288FFE6100D097F0 /* InAppMessageCellViewModel.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		A9B331DA288FFFC900D097F0 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				A9B331DB288FFFE000D097F0 /* MessagesViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		A9B8407926CA788000269B05 /* VersionUpdate */ = {
@@ -8771,6 +8806,7 @@
 				45166CF126F3548D00E69D65 /* UnsubscribeSSWampMessage.swift in Sources */,
 				455C676C27DF635300AAB2A5 /* PopularDetailsViewController.swift in Sources */,
 				45505F4D28058EB900D4B53E /* BonusRootViewController.swift in Sources */,
+				A9B331D3288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */,
 				455A0D2426BDE88D00EC572D /* Router.swift in Sources */,
 				45D3DE332714889200717124 /* Date+Extension.swift in Sources */,
 				455C676E27DFB12600AAB2A5 /* LiveDetailsViewController.swift in Sources */,
@@ -9165,6 +9201,7 @@
 				45322138280EFEDC0092CCB4 /* TransactionsHistoryViewController.swift in Sources */,
 				4589F41426BF0203005DF543 /* TitleTextFieldView.swift in Sources */,
 				A9627A11274553700001E1D5 /* ActivationAlert.swift in Sources */,
+				A9B331E428904F4800D097F0 /* MessageDetailViewController.swift in Sources */,
 				A9BA6D48280DCA3400E82724 /* AddFriendCellViewModel.swift in Sources */,
 				A97D247128183168003EEDEC /* FriendsListViewModel.swift in Sources */,
 				455A0D0E26BD9D9000EC572D /* Debounce.swift in Sources */,
@@ -9185,6 +9222,7 @@
 				A9B841BF26EA5A1000269B05 /* Event.swift in Sources */,
 				45AA91CD27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift in Sources */,
 				45C10E1E28759FEF00037BBE /* KDCircularProgress.swift in Sources */,
+				A9B331DC288FFFE000D097F0 /* MessagesViewModel.swift in Sources */,
 				F4A62A872850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				455A0D0426BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45166D0526F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */,
@@ -9212,12 +9250,15 @@
 				A9B331C0288EF21300D097F0 /* MessagesViewController.swift in Sources */,
 				A98EC7DA2889AF210044FC46 /* ShareTicketFriendGroupViewModel.swift in Sources */,
 				A98EC7D22889ADC30044FC46 /* ShareTicketChoiceViewModel.swift in Sources */,
+				A9B331D9288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */,
 				A9B331C9288EFE0F00D097F0 /* InAppMessageTableViewCell.swift in Sources */,
 				A9C1C0AD28747FC600E9D6AC /* SelectChatroomTableViewCell.swift in Sources */,
 				A9863EE2286F425400A4A1A2 /* SocialItemCollectionViewCell.swift in Sources */,
 				455A0C6B26BD902F00EC572D /* SportsbookTests.swift in Sources */,
+				A9B331E2288FFFE000D097F0 /* MessagesViewModel.swift in Sources */,
 				A9C1C0A52874404C00E9D6AC /* ShareTicketFriendGroupViewController.swift in Sources */,
 				A9C1C09D2873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
+				A9B331EA28904F4800D097F0 /* MessageDetailViewController.swift in Sources */,
 				A9863ED9286F01E500A4A1A2 /* ShareTicketChoiceViewController.swift in Sources */,
 				A98EC7E22889B0AA0044FC46 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 			);
@@ -9314,6 +9355,7 @@
 				45C26DD227976ADF00513D41 /* TodayMatchesDataSource.swift in Sources */,
 				A9E7C6A627BA779200F784C9 /* AggregatorRepositoryType.swift in Sources */,
 				45505F4E28058EB900D4B53E /* BonusRootViewController.swift in Sources */,
+				A9B331D4288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */,
 				45166CF226F3548D00E69D65 /* UnsubscribeSSWampMessage.swift in Sources */,
 				A978EBE827E4A1A400322F49 /* PopularDetailsViewController.swift in Sources */,
 				455A0D2526BDE88D00EC572D /* Router.swift in Sources */,
@@ -9708,6 +9750,7 @@
 				45322139280EFEDC0092CCB4 /* TransactionsHistoryViewController.swift in Sources */,
 				4589F41526BF0203005DF543 /* TitleTextFieldView.swift in Sources */,
 				A9627A12274553700001E1D5 /* ActivationAlert.swift in Sources */,
+				A9B331E528904F4800D097F0 /* MessageDetailViewController.swift in Sources */,
 				A9BA6D49280DCA3400E82724 /* AddFriendCellViewModel.swift in Sources */,
 				A97D247228183168003EEDEC /* FriendsListViewModel.swift in Sources */,
 				455A0D0F26BD9D9000EC572D /* Debounce.swift in Sources */,
@@ -9728,6 +9771,7 @@
 				A9B841C026EA5A1000269B05 /* Event.swift in Sources */,
 				45AA91CE27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift in Sources */,
 				45C10E1F28759FEF00037BBE /* KDCircularProgress.swift in Sources */,
+				A9B331DD288FFFE000D097F0 /* MessagesViewModel.swift in Sources */,
 				F4A62A882850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				455A0D0526BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45166D0626F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */,
@@ -9839,6 +9883,7 @@
 				457CBA2D282D27D000ED0F00 /* UnsubscribeSSWampMessage.swift in Sources */,
 				457CBA2E282D27D000ED0F00 /* PopularDetailsViewController.swift in Sources */,
 				457CBA2F282D27D000ED0F00 /* SocialModels.swift in Sources */,
+				A9B331D7288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */,
 				457CBA30282D27D000ED0F00 /* BonusRootViewController.swift in Sources */,
 				457CBA31282D27D000ED0F00 /* Router.swift in Sources */,
 				457CBA32282D27D000ED0F00 /* Date+Extension.swift in Sources */,
@@ -10233,6 +10278,7 @@
 				457CBB95282D27D000ED0F00 /* DepositWebViewController.swift in Sources */,
 				457CBB96282D27D000ED0F00 /* TransactionsHistoryViewController.swift in Sources */,
 				457CBB97282D27D000ED0F00 /* TitleTextFieldView.swift in Sources */,
+				A9B331E828904F4800D097F0 /* MessageDetailViewController.swift in Sources */,
 				457CBB98282D27D000ED0F00 /* ActivationAlert.swift in Sources */,
 				457CBB99282D27D000ED0F00 /* AddFriendCellViewModel.swift in Sources */,
 				457CBB9A282D27D000ED0F00 /* Debounce.swift in Sources */,
@@ -10253,6 +10299,7 @@
 				457CBBA9282D27D000ED0F00 /* Event.swift in Sources */,
 				457CBBAA282D27D000ED0F00 /* SportMatchSingleLineTableViewCell.swift in Sources */,
 				45C10E2228759FEF00037BBE /* KDCircularProgress.swift in Sources */,
+				A9B331E0288FFFE000D097F0 /* MessagesViewModel.swift in Sources */,
 				F4A62A8B2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				457CBBAB282D27D000ED0F00 /* NibIdentifiable.swift in Sources */,
 				457CBBAC282D27D000ED0F00 /* UnregisteredSSWampMessage.swift in Sources */,
@@ -10364,6 +10411,7 @@
 				457CBCD3282D2CD100ED0F00 /* AggregatorRepositoryType.swift in Sources */,
 				457CBCD4282D2CD100ED0F00 /* UnsubscribeSSWampMessage.swift in Sources */,
 				457CBCD5282D2CD100ED0F00 /* PopularDetailsViewController.swift in Sources */,
+				A9B331D8288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */,
 				457CBCD6282D2CD100ED0F00 /* SocialModels.swift in Sources */,
 				457CBCD7282D2CD100ED0F00 /* BonusRootViewController.swift in Sources */,
 				457CBCD8282D2CD100ED0F00 /* Router.swift in Sources */,
@@ -10758,6 +10806,7 @@
 				457CBE3D282D2CD100ED0F00 /* DepositWebViewController.swift in Sources */,
 				457CBE3E282D2CD100ED0F00 /* TransactionsHistoryViewController.swift in Sources */,
 				457CBE3F282D2CD100ED0F00 /* TitleTextFieldView.swift in Sources */,
+				A9B331E928904F4800D097F0 /* MessageDetailViewController.swift in Sources */,
 				457CBE40282D2CD100ED0F00 /* ActivationAlert.swift in Sources */,
 				457CBE41282D2CD100ED0F00 /* AddFriendCellViewModel.swift in Sources */,
 				457CBE42282D2CD100ED0F00 /* Debounce.swift in Sources */,
@@ -10778,6 +10827,7 @@
 				457CBE50282D2CD100ED0F00 /* Event.swift in Sources */,
 				457CBE51282D2CD100ED0F00 /* SportMatchSingleLineTableViewCell.swift in Sources */,
 				45C10E2328759FEF00037BBE /* KDCircularProgress.swift in Sources */,
+				A9B331E1288FFFE000D097F0 /* MessagesViewModel.swift in Sources */,
 				F4A62A8C2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				457CBE52282D2CD100ED0F00 /* NibIdentifiable.swift in Sources */,
 				457CBE53282D2CD100ED0F00 /* UnregisteredSSWampMessage.swift in Sources */,
@@ -10889,6 +10939,7 @@
 				4589C7B8282024E400243547 /* AggregatorRepositoryType.swift in Sources */,
 				4589C7B9282024E400243547 /* UnsubscribeSSWampMessage.swift in Sources */,
 				4589C7BA282024E400243547 /* PopularDetailsViewController.swift in Sources */,
+				A9B331D5288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */,
 				45A6BB7B28213FEA00D9B416 /* SocialModels.swift in Sources */,
 				4589C7BB282024E400243547 /* BonusRootViewController.swift in Sources */,
 				4589C7BC282024E400243547 /* Router.swift in Sources */,
@@ -11283,6 +11334,7 @@
 				4589C916282024E400243547 /* DepositWebViewController.swift in Sources */,
 				4589C917282024E400243547 /* TransactionsHistoryViewController.swift in Sources */,
 				4589C918282024E400243547 /* TitleTextFieldView.swift in Sources */,
+				A9B331E628904F4800D097F0 /* MessageDetailViewController.swift in Sources */,
 				4589C919282024E400243547 /* ActivationAlert.swift in Sources */,
 				4589C91A282024E400243547 /* AddFriendCellViewModel.swift in Sources */,
 				4589C91B282024E400243547 /* Debounce.swift in Sources */,
@@ -11303,6 +11355,7 @@
 				4589C929282024E400243547 /* Event.swift in Sources */,
 				4589C92A282024E400243547 /* SportMatchSingleLineTableViewCell.swift in Sources */,
 				45C10E2028759FEF00037BBE /* KDCircularProgress.swift in Sources */,
+				A9B331DE288FFFE000D097F0 /* MessagesViewModel.swift in Sources */,
 				F4A62A892850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				4589C92B282024E400243547 /* NibIdentifiable.swift in Sources */,
 				4589C92C282024E400243547 /* UnregisteredSSWampMessage.swift in Sources */,
@@ -11414,6 +11467,7 @@
 				45A6BC0428246A7500D9B416 /* StaticHomeViewTemplateDataSource.swift in Sources */,
 				45A6BC0528246A7500D9B416 /* TodayMatchesDataSource.swift in Sources */,
 				45A6BC0628246A7500D9B416 /* AggregatorRepositoryType.swift in Sources */,
+				A9B331D6288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */,
 				45A6BC0728246A7500D9B416 /* UnsubscribeSSWampMessage.swift in Sources */,
 				45A6BC0828246A7500D9B416 /* PopularDetailsViewController.swift in Sources */,
 				45A6BC0928246A7500D9B416 /* BonusRootViewController.swift in Sources */,
@@ -11808,6 +11862,7 @@
 				45A6BD6C28246A7500D9B416 /* TitleTabularDataSource.swift in Sources */,
 				45A6BD6D28246A7500D9B416 /* DepositWebViewController.swift in Sources */,
 				45A6BD6E28246A7500D9B416 /* TransactionsHistoryViewController.swift in Sources */,
+				A9B331E728904F4800D097F0 /* MessageDetailViewController.swift in Sources */,
 				45A6BD6F28246A7500D9B416 /* TitleTextFieldView.swift in Sources */,
 				45A6BD7028246A7500D9B416 /* ActivationAlert.swift in Sources */,
 				45A6BD7128246A7500D9B416 /* AddFriendCellViewModel.swift in Sources */,
@@ -11828,6 +11883,7 @@
 				45A6BD8028246A7500D9B416 /* SharedGameCardView.swift in Sources */,
 				45A6BD8128246A7500D9B416 /* Event.swift in Sources */,
 				45C10E2128759FEF00037BBE /* KDCircularProgress.swift in Sources */,
+				A9B331DF288FFFE000D097F0 /* MessagesViewModel.swift in Sources */,
 				F4A62A8A2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				45A6BD8228246A7500D9B416 /* SportMatchSingleLineTableViewCell.swift in Sources */,
 				45A6BD8328246A7500D9B416 /* NibIdentifiable.swift in Sources */,

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class MessagesViewController: UIViewController {
 
@@ -16,9 +17,24 @@ class MessagesViewController: UIViewController {
     private lazy var markAllReadButton: UIButton = Self.createMarkAllReadButton()
     private lazy var deleteAllButton: UIButton = Self.createDeleteAllButton()
     private lazy var tableView: UITableView = Self.createTableView()
+    private lazy var emptyStateView: UIView = Self.createEmptyStateView()
+    private lazy var emptyStateImageView: UIImageView = Self.createEmptyStateImageView()
+    private lazy var emptyStateLabel: UILabel = Self.createEmptyStateLabel()
+
+    private var viewModel: MessagesViewModel
+    private var cancellables = Set<AnyCancellable>()
+
+    // MARK: Public Properties
+    var isEmptyState: Bool = false {
+        didSet {
+            self.emptyStateView.isHidden = !isEmptyState
+        }
+    }
 
     // MARK: Lifetime and Cycle
-    init() {
+    init(viewModel: MessagesViewModel) {
+        self.viewModel = viewModel
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -44,6 +60,10 @@ class MessagesViewController: UIViewController {
 
         self.tableView.register(InAppMessageTableViewCell.self,
                                 forCellReuseIdentifier: InAppMessageTableViewCell.identifier)
+
+        self.bind(toViewModel: self.viewModel)
+
+        self.isEmptyState = false
     }
 
     // MARK: Layout and Theme
@@ -68,8 +88,40 @@ class MessagesViewController: UIViewController {
         self.deleteAllButton.backgroundColor = .clear
         self.deleteAllButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
 
-        self.tableView.backgroundColor = .red
+        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
 
+        self.emptyStateView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.emptyStateImageView.backgroundColor = .clear
+
+        self.emptyStateLabel.textColor = UIColor.App.textPrimary
+    }
+
+    // MARK: Functions
+    private func openMessageDetail(cellViewModel: InAppMessageCellViewModel) {
+
+        let messageDetailViewController = MessageDetailViewController()
+
+        self.navigationController?.pushViewController(messageDetailViewController, animated: true)
+    }
+
+    // MARK: Binding
+    private func bind(toViewModel viewModel: MessagesViewModel) {
+
+        viewModel.dataNeedsReload
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.tableView.reloadData()
+            })
+            .store(in: &cancellables)
+
+        viewModel.inAppMessagesPublisher
+            .receive(on: DispatchQueue.main)
+            .dropFirst()
+            .sink(receiveValue: { [weak self] inAppMessages in
+                self?.isEmptyState = inAppMessages.isEmpty
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Actions
@@ -83,6 +135,21 @@ class MessagesViewController: UIViewController {
 
     @objc private func didTapDeleteAllButton() {
         print("DELETE ALL")
+        self.viewModel.deleteAllMessages()
+    }
+
+    private func handleMarkReadAction(indexPath: IndexPath) {
+        print("Marked as read message!")
+        if let inAppMessage = self.viewModel.inAppMessagesPublisher.value[safe: indexPath.row] {
+            print("Cell VM: \(self.viewModel.cachedInAppMessagesViewModels[inAppMessage.id]?.inAppMessage.id)")
+        }
+
+    }
+
+    private func handleDeleteAction(indexPath: IndexPath) {
+        print("Delete message!")
+        self.viewModel.deleteMessage(index: indexPath.row)
+        self.tableView.deleteRows(at: [indexPath], with: .left)
     }
 }
 
@@ -93,7 +160,7 @@ extension MessagesViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return self.viewModel.inAppMessagesPublisher.value.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -102,8 +169,28 @@ extension MessagesViewController: UITableViewDataSource, UITableViewDelegate {
         else {
             fatalError()
         }
+        
+        if let inAppMessage = self.viewModel.inAppMessagesPublisher.value[safe: indexPath.row] {
 
-        cell.configure(cardType: .promo)
+            if let cellViewModel = self.viewModel.cachedInAppMessagesViewModels[inAppMessage.id] {
+
+                cell.configure(viewModel: cellViewModel)
+
+                cell.tappedContainer = { [weak self] in
+                    self?.openMessageDetail(cellViewModel: cellViewModel)
+                }
+            }
+            else {
+                let cellViewModel = InAppMessageCellViewModel(inAppMessage: inAppMessage)
+                self.viewModel.cachedInAppMessagesViewModels[inAppMessage.id] = cellViewModel
+
+                cell.configure(viewModel: cellViewModel)
+
+                cell.tappedContainer = { [weak self] in
+                    self?.openMessageDetail(cellViewModel: cellViewModel)
+                }
+            }
+        }
 
         return cell
     }
@@ -137,6 +224,38 @@ extension MessagesViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
         return 0.01
+    }
+
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+
+        let markReadAction = UIContextualAction(style: .normal,
+                                        title: "Mark as read") { [weak self] (action, view, completionHandler) in
+            self?.handleMarkReadAction(indexPath: indexPath)
+                                            completionHandler(true)
+        }
+
+        markReadAction.image = UIImage(named: "mark_read_grey_icon")
+        markReadAction.backgroundColor = UIColor.App.backgroundSecondary
+
+        let deleteAction = UIContextualAction(style: .normal,
+                                        title: "Delete") { [weak self] (action, view, completionHandler) in
+            self?.handleDeleteAction(indexPath: indexPath)
+                                            completionHandler(true)
+        }
+
+        deleteAction.image = UIImage(named: "delete_grey_icon")
+        deleteAction.backgroundColor = UIColor.App.backgroundSecondary
+
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction, markReadAction])
+
+        configuration.performsFirstActionWithFullSwipe = false
+
+        return configuration
+    }
+
+    func tableView(_ tableView: UITableView,
+                   editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .none
     }
 
 }
@@ -193,6 +312,29 @@ extension MessagesViewController {
         return tableView
     }
 
+    private static func createEmptyStateView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createEmptyStateImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "no_messages_star_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+
+    private static func createEmptyStateLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("no_messages_yet")
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.textAlignment = .center
+        return label
+    }
+
     private func setupSubviews() {
         self.view.addSubview(self.topView)
 
@@ -201,10 +343,12 @@ extension MessagesViewController {
         self.topView.bringSubviewToFront(self.topTitleLabel)
 
         self.view.addSubview(self.markAllReadButton)
-
         self.view.addSubview(self.deleteAllButton)
-
         self.view.addSubview(self.tableView)
+        self.view.addSubview(self.emptyStateView)
+
+        self.emptyStateView.addSubview(self.emptyStateImageView)
+        self.emptyStateView.addSubview(self.emptyStateLabel)
 
         self.initConstraints()
     }
@@ -245,6 +389,23 @@ extension MessagesViewController {
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -25),
             self.tableView.topAnchor.constraint(equalTo: self.markAllReadButton.bottomAnchor, constant: 10),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+
+        // Empty State
+        NSLayoutConstraint.activate([
+            self.emptyStateView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.emptyStateView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.emptyStateView.topAnchor.constraint(equalTo: self.topView.bottomAnchor),
+            self.emptyStateView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+
+            self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyStateView.topAnchor, constant: 40),
+            self.emptyStateImageView.widthAnchor.constraint(equalToConstant: 120),
+            self.emptyStateImageView.heightAnchor.constraint(equalToConstant: 90),
+            self.emptyStateImageView.centerXAnchor.constraint(equalTo: self.emptyStateView.centerXAnchor),
+
+            self.emptyStateLabel.leadingAnchor.constraint(equalTo: self.emptyStateView.leadingAnchor, constant: 50),
+            self.emptyStateLabel.trailingAnchor.constraint(equalTo: self.emptyStateView.trailingAnchor, constant: -50),
+            self.emptyStateLabel.topAnchor.constraint(equalTo: self.emptyStateImageView.bottomAnchor, constant: 25)
         ])
 
     }

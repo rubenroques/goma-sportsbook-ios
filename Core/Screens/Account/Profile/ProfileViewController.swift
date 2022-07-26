@@ -496,7 +496,10 @@ extension ProfileViewController {
     }
 
     @objc func messagesViewTapped(sender: UITapGestureRecognizer) {
-        let messagesRootViewController = MessagesViewController()
+        let messagesViewModel = MessagesViewModel()
+
+        let messagesRootViewController = MessagesViewController(viewModel: messagesViewModel)
+        
         self.navigationController?.pushViewController(messagesRootViewController, animated: true)
     }
 

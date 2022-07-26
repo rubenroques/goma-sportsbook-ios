@@ -13,6 +13,15 @@ class InAppMessageTableViewCell: UITableViewCell {
     // MARK: Private Properties
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var backgroundImageView: UIImageView = Self.createBackgroundImageView()
+    private lazy var unreadIndicatorView: UIView = Self.createUnreadIndicatorView()
+    private lazy var messageTypeLabel: UILabel = Self.createMessageTypeLabel()
+    private lazy var messageTitleLabel: UILabel = Self.createMessageTitleLabel()
+    private lazy var messageDescriptionLabel: UILabel = Self.createMessageDescriptionLabel()
+    private lazy var logoImageView: UIImageView = Self.createLogoImageView()
+    private lazy var gradientLayer: CAGradientLayer = Self.createGradientLayer()
+
+    private var cardHeight: CGFloat = 88
+    private var viewModel: InAppMessageCellViewModel?
 
     // MARK: Public Properties
     var hasBackgroundImage: Bool = false {
@@ -21,17 +30,37 @@ class InAppMessageTableViewCell: UITableViewCell {
         }
     }
 
+    var unreadMessage: Bool = false {
+        didSet {
+            self.unreadIndicatorView.isHidden = !unreadMessage
+        }
+    }
+
+    var hasLogoImage: Bool = false {
+        didSet {
+            self.logoImageView.isHidden = !hasLogoImage
+        }
+    }
+
+    var hasDescriptionLabel: Bool = false {
+        didSet {
+            self.messageDescriptionLabel.isHidden = !hasDescriptionLabel
+        }
+    }
+
+    var tappedContainer: (() -> Void)?
+
     // MARK: Lifetime and Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         self.setupSubviews()
+        self.commonInit()
         self.setupWithTheme()
 
         self.setNeedsLayout()
         self.layoutIfNeeded()
 
-        self.hasBackgroundImage = false
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -43,33 +72,95 @@ class InAppMessageTableViewCell: UITableViewCell {
 
         self.hasBackgroundImage = false
 
+        self.unreadMessage = false
+
+        self.hasLogoImage = false
+
+        self.hasDescriptionLabel = false
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
 
         self.containerView.layer.cornerRadius = CornerRadius.view
+        self.containerView.layer.masksToBounds = true
+
+        self.logoImageView.layer.cornerRadius = self.logoImageView.frame.width/2
+
+        self.gradientLayer.frame = CGRect(x: 0, y: 0, width: self.backgroundImageView.frame.width*0.7, height: self.cardHeight)
+        self.backgroundImageView.layer.insertSublayer(self.gradientLayer, at: 0)
+
     }
 
-    func setupWithTheme() {
+    private func commonInit() {
+        self.hasBackgroundImage = false
+
+        self.unreadMessage = false
+
+        self.hasLogoImage = false
+
+        self.hasDescriptionLabel = false
+
+        let containerGesture = UITapGestureRecognizer(target: self, action: #selector(didTapContainer))
+        self.containerView.addGestureRecognizer(containerGesture)
+
+    }
+
+    private func setupWithTheme() {
 
         self.contentView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.containerView.backgroundColor = UIColor.App.alertSuccess
+        self.containerView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.backgroundImageView.backgroundColor = .clear
 
+        self.unreadIndicatorView.backgroundColor = UIColor.App.highlightPrimary
+
+        self.messageTypeLabel.textColor = UIColor.App.textSecondary
+
+        self.messageTitleLabel.textColor = UIColor.App.textPrimary
+
+        self.messageDescriptionLabel.textColor = UIColor.App.textPrimary
+
+        self.logoImageView.backgroundColor = .clear
     }
 
-    func configure(cardType: MessageCardType) {
-        switch cardType {
+    func configure(viewModel: InAppMessageCellViewModel) {
+
+        self.viewModel = viewModel
+
+        self.messageTypeLabel.text = viewModel.inAppMessage.typeText
+
+        self.messageTitleLabel.text = viewModel.inAppMessage.title
+
+        switch viewModel.inAppMessage.messageType {
         case .promo:
-            self.backgroundImageView.image = UIImage(named: "mastercard_logo")
-            self.hasBackgroundImage = true
+            if let backgroundImage = viewModel.inAppMessage.backgroundBanner {
+                self.backgroundImageView.image = backgroundImage
+                self.hasBackgroundImage = true
+                // self.setupImageGradient()
+            }
         case .bettingNew:
-            ()
+            if let logoImage = viewModel.inAppMessage.logo {
+                self.logoImageView.image = logoImage
+                self.hasLogoImage = true
+            }
         case .maintenance:
-            ()
+            if let description = viewModel.inAppMessage.subtitle {
+                self.messageDescriptionLabel.text = description
+                self.hasDescriptionLabel = true
+            }
+        }
+
+        self.unreadMessage = viewModel.inAppMessage.unreadMessage
+
+    }
+
+    // MARK: Action
+    @objc func didTapContainer() {
+        if let viewModel = self.viewModel {
+            print("CELL ID: \(viewModel.inAppMessage.id)")
+            self.tappedContainer?()
         }
     }
 
@@ -86,8 +177,60 @@ extension InAppMessageTableViewCell {
     private static func createBackgroundImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }
+
+    private static func createUnreadIndicatorView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.masksToBounds = true
+        return view
+    }
+
+    private static func createMessageTypeLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Message Type"
+        label.font = AppFont.with(type: .medium, size: 11)
+        label.textAlignment = .left
+        return label
+    }
+
+    private static func createMessageTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Message TItle"
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.textAlignment = .left
+        return label
+    }
+
+    private static func createMessageDescriptionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Message Description"
+        label.font = AppFont.with(type: .medium, size: 12)
+        label.textAlignment = .left
+        return label
+    }
+
+    private static func createLogoImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "logo_horizontal_center")
         imageView.contentMode = .scaleAspectFit
         return imageView
+    }
+
+    private static func createGradientLayer() -> CAGradientLayer {
+        let gradient = CAGradientLayer()
+        let startColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.8).cgColor
+        let endColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0).cgColor
+        gradient.startPoint = CGPoint(x: 0.0, y: 0.5)
+        gradient.endPoint = CGPoint(x: 1.0, y: 0.5)
+        gradient.colors = [startColor, endColor]
+        return gradient
     }
 
     private func setupSubviews() {
@@ -95,6 +238,16 @@ extension InAppMessageTableViewCell {
         self.contentView.addSubview(self.containerView)
 
         self.containerView.addSubview(self.backgroundImageView)
+
+        self.containerView.addSubview(self.unreadIndicatorView)
+
+        self.containerView.addSubview(self.messageTypeLabel)
+
+        self.containerView.addSubview(self.messageTitleLabel)
+
+        self.containerView.addSubview(self.messageDescriptionLabel)
+
+        self.containerView.addSubview(self.logoImageView)
 
         self.initConstraints()
 
@@ -107,14 +260,40 @@ extension InAppMessageTableViewCell {
             self.containerView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 0),
             self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 4),
             self.containerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -4),
-            self.containerView.heightAnchor.constraint(equalToConstant: 88),
+            self.containerView.heightAnchor.constraint(equalToConstant: self.cardHeight),
 
             self.backgroundImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.backgroundImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
             self.backgroundImageView
                 .topAnchor.constraint(equalTo: self.containerView.topAnchor),
-            self.backgroundImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor)
+            self.backgroundImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
 
+            self.unreadIndicatorView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.unreadIndicatorView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
+            self.unreadIndicatorView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
+            self.unreadIndicatorView.widthAnchor.constraint(equalToConstant: 4)
+
+        ])
+
+        // Content
+        NSLayoutConstraint.activate([
+            self.messageTypeLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 20),
+            self.messageTypeLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -90),
+            self.messageTypeLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 15),
+
+            self.messageTitleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 20),
+            self.messageTitleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -90),
+            self.messageTitleLabel.topAnchor.constraint(equalTo: self.messageTypeLabel.bottomAnchor, constant: 8),
+
+            self.messageDescriptionLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 20),
+            self.messageDescriptionLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -90),
+            self.messageDescriptionLabel.topAnchor.constraint(equalTo: self.messageTitleLabel.bottomAnchor, constant: 8),
+            self.messageDescriptionLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -15),
+
+            self.logoImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -23),
+            self.logoImageView.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
+            self.logoImageView.widthAnchor.constraint(equalToConstant: 65),
+            self.logoImageView.heightAnchor.constraint(equalTo: self.logoImageView.widthAnchor)
         ])
 
     }
