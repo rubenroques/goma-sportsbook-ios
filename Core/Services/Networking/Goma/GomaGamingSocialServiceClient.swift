@@ -22,6 +22,8 @@ class GomaGamingSocialServiceClient {
     private var chatroomReadMessagesPublisher: CurrentValueSubject<[Int: ChatUsersResponse], Never> = .init([:])
     private var chatroomOnlineUsersPublisher: CurrentValueSubject<[Int: ChatOnlineUsersResponse], Never> = .init([:])
 
+    var inAppMessagesCounter: CurrentValueSubject<Int, Never> = .init(0)
+
     var unreadMessagesCountPublisher: AnyPublisher<Int, Never>{
         return chatroomReadMessagesPublisher
             .map { dictionary in
@@ -668,6 +670,23 @@ class GomaGamingSocialServiceClient {
 
     func location(forId id: String) -> EveryMatrix.Location? {
         return self.locations[id]
+    }
+
+    // Notifications
+    func getInAppMessagesCounter() {
+        Env.gomaNetworkClient.getNotificationCounter(deviceId: Env.deviceId, notificationType: .news)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("NOTIF COUNTER ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+            }, receiveValue: { [weak self] response in
+                print("NOTIF COUNTER RESPONSE: \(response)")
+            })
+            .store(in: &cancellables)
     }
 }
 

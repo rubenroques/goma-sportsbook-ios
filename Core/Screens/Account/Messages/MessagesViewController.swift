@@ -64,6 +64,9 @@ class MessagesViewController: UIViewController {
         self.bind(toViewModel: self.viewModel)
 
         self.isEmptyState = false
+
+        // TEMP
+        self.deleteAllButton.isHidden = true
     }
 
     // MARK: Layout and Theme
@@ -131,6 +134,7 @@ class MessagesViewController: UIViewController {
 
     @objc private func didTapMarkAllReadButton() {
         print("MARK ALL READ")
+        self.viewModel.markAllReadMessages()
     }
 
     @objc private func didTapDeleteAllButton() {
@@ -141,7 +145,7 @@ class MessagesViewController: UIViewController {
     private func handleMarkReadAction(indexPath: IndexPath) {
         print("Marked as read message!")
         if let inAppMessage = self.viewModel.inAppMessagesPublisher.value[safe: indexPath.row] {
-            print("Cell VM: \(self.viewModel.cachedInAppMessagesViewModels[inAppMessage.id]?.inAppMessage.id)")
+            self.viewModel.markReadMessage(index: indexPath.row)
         }
 
     }
@@ -237,16 +241,17 @@ extension MessagesViewController: UITableViewDataSource, UITableViewDelegate {
         markReadAction.image = UIImage(named: "mark_read_grey_icon")
         markReadAction.backgroundColor = UIColor.App.backgroundSecondary
 
-        let deleteAction = UIContextualAction(style: .normal,
-                                        title: "Delete") { [weak self] (action, view, completionHandler) in
-            self?.handleDeleteAction(indexPath: indexPath)
-                                            completionHandler(true)
-        }
+        // TEMP REMOVE
+//        let deleteAction = UIContextualAction(style: .normal,
+//                                        title: "Delete") { [weak self] (action, view, completionHandler) in
+//            self?.handleDeleteAction(indexPath: indexPath)
+//                                            completionHandler(true)
+//        }
+//
+//        deleteAction.image = UIImage(named: "delete_grey_icon")
+//        deleteAction.backgroundColor = UIColor.App.backgroundSecondary
 
-        deleteAction.image = UIImage(named: "delete_grey_icon")
-        deleteAction.backgroundColor = UIColor.App.backgroundSecondary
-
-        let configuration = UISwipeActionsConfiguration(actions: [deleteAction, markReadAction])
+        let configuration = UISwipeActionsConfiguration(actions: [markReadAction])
 
         configuration.performsFirstActionWithFullSwipe = false
 

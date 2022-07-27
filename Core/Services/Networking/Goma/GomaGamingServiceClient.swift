@@ -247,4 +247,10 @@ class GomaGamingServiceClient {
         let requestPublisher: AnyPublisher<SupportTicketResponse, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
+
+    func getNotificationCounter(deviceId: String, notificationType: NotificationsType) -> AnyPublisher<NetworkResponse<[JSON]>, NetworkError> {
+        let endpoint = GomaGamingService.notificationsCounter(type: notificationType.identifier)
+        let requestPublisher: AnyPublisher<NetworkResponse<[JSON]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
 }

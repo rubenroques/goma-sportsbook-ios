@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import SwiftUI
 
 class InAppMessageTableViewCell: UITableViewCell {
 
@@ -14,6 +15,7 @@ class InAppMessageTableViewCell: UITableViewCell {
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var backgroundImageView: UIImageView = Self.createBackgroundImageView()
     private lazy var unreadIndicatorView: UIView = Self.createUnreadIndicatorView()
+    private lazy var messageStackView: UIStackView = Self.createMessageStackView()
     private lazy var messageTypeLabel: UILabel = Self.createMessageTypeLabel()
     private lazy var messageTitleLabel: UILabel = Self.createMessageTitleLabel()
     private lazy var messageDescriptionLabel: UILabel = Self.createMessageDescriptionLabel()
@@ -22,6 +24,8 @@ class InAppMessageTableViewCell: UITableViewCell {
 
     private var cardHeight: CGFloat = 88
     private var viewModel: InAppMessageCellViewModel?
+
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
     var hasBackgroundImage: Bool = false {
@@ -116,6 +120,8 @@ class InAppMessageTableViewCell: UITableViewCell {
 
         self.unreadIndicatorView.backgroundColor = UIColor.App.highlightPrimary
 
+        self.messageStackView.backgroundColor = .clear
+
         self.messageTypeLabel.textColor = UIColor.App.textSecondary
 
         self.messageTitleLabel.textColor = UIColor.App.textPrimary
@@ -123,6 +129,19 @@ class InAppMessageTableViewCell: UITableViewCell {
         self.messageDescriptionLabel.textColor = UIColor.App.textPrimary
 
         self.logoImageView.backgroundColor = .clear
+    }
+
+    func setupPublishers() {
+
+        if let viewModel = self.viewModel {
+
+            viewModel.unreadMessagePublisher
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [weak self] unreadMessage in
+                    self?.unreadMessage = unreadMessage
+                })
+                .store(in: &cancellables)
+        }
     }
 
     func configure(viewModel: InAppMessageCellViewModel) {
@@ -152,7 +171,9 @@ class InAppMessageTableViewCell: UITableViewCell {
             }
         }
 
-        self.unreadMessage = viewModel.inAppMessage.unreadMessage
+        //self.unreadMessage = viewModel.inAppMessage.unreadMessage
+
+        self.setupPublishers()
 
     }
 
@@ -188,6 +209,15 @@ extension InAppMessageTableViewCell {
         return view
     }
 
+    private static func createMessageStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.spacing = 4
+        stackView.axis = .vertical
+        stackView.distribution = .equalSpacing
+        return stackView
+    }
+
     private static func createMessageTypeLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -203,6 +233,8 @@ extension InAppMessageTableViewCell {
         label.text = "Message TItle"
         label.font = AppFont.with(type: .bold, size: 14)
         label.textAlignment = .left
+        label.numberOfLines = 2
+        label.setLineSpacing(lineSpacing: 3)
         return label
     }
 
@@ -241,11 +273,11 @@ extension InAppMessageTableViewCell {
 
         self.containerView.addSubview(self.unreadIndicatorView)
 
-        self.containerView.addSubview(self.messageTypeLabel)
+        self.containerView.addSubview(self.messageStackView)
 
-        self.containerView.addSubview(self.messageTitleLabel)
-
-        self.containerView.addSubview(self.messageDescriptionLabel)
+        self.messageStackView.addArrangedSubview(self.messageTypeLabel)
+        self.messageStackView.addArrangedSubview(self.messageTitleLabel)
+        self.messageStackView.addArrangedSubview(self.messageDescriptionLabel)
 
         self.containerView.addSubview(self.logoImageView)
 
@@ -277,18 +309,23 @@ extension InAppMessageTableViewCell {
 
         // Content
         NSLayoutConstraint.activate([
-            self.messageTypeLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 20),
-            self.messageTypeLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -90),
-            self.messageTypeLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 15),
+            self.messageStackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 20),
+            self.messageStackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -110),
+            self.messageStackView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 15),
+            self.messageStackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -15),
 
-            self.messageTitleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 20),
-            self.messageTitleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -90),
-            self.messageTitleLabel.topAnchor.constraint(equalTo: self.messageTypeLabel.bottomAnchor, constant: 8),
-
-            self.messageDescriptionLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 20),
-            self.messageDescriptionLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -90),
-            self.messageDescriptionLabel.topAnchor.constraint(equalTo: self.messageTitleLabel.bottomAnchor, constant: 8),
-            self.messageDescriptionLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -15),
+//            self.messageTypeLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 20),
+//            self.messageTypeLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -90),
+//            self.messageTypeLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 15),
+//
+//            self.messageTitleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 20),
+//            self.messageTitleLabel.trailingAnchor.constraint(equalTo: self.containerView.centerXAnchor, constant: 30),
+//            self.messageTitleLabel.topAnchor.constraint(equalTo: self.messageTypeLabel.bottomAnchor, constant: 8),
+//
+//            self.messageDescriptionLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 20),
+//            self.messageDescriptionLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -90),
+//            self.messageDescriptionLabel.topAnchor.constraint(equalTo: self.messageTitleLabel.bottomAnchor, constant: 8),
+//            self.messageDescriptionLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -15),
 
             self.logoImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -23),
             self.logoImageView.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),

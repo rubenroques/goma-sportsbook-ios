@@ -13,10 +13,19 @@ class InAppMessageCellViewModel {
 
     // MARK: Public Properties
     var inAppMessage: InAppMessage
+    var unreadMessagePublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     // MARK: Lifetime and Cycle
     init(inAppMessage: InAppMessage) {
         self.inAppMessage = inAppMessage
+
+        self.unreadMessagePublisher.value = self.inAppMessage.unreadMessage
+    }
+
+    func changeReadStatus(isRead: Bool) {
+        self.inAppMessage.unreadMessage = !isRead
+
+        self.unreadMessagePublisher.send(!isRead)
     }
 }
 

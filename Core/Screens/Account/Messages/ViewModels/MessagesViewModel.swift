@@ -35,7 +35,7 @@ class MessagesViewModel {
         let message2 = InAppMessage(id: "456",
                                     messageType: .bettingNew,
                                     typeText: "Betting news | Today",
-                                    title: "Sports betting: portugal fans welcome a new… ",
+                                    title: "Sports betting: portugal fans welcome a new… Sports betting: portugal fans welcome a new… ",
                                     subtitle: nil,
                                     logo: UIImage(named: "logo_horizontal_center"),
                                     backgroundBanner: nil,
@@ -55,6 +55,26 @@ class MessagesViewModel {
         self.inAppMessagesPublisher.value.append(message3)
 
         self.dataNeedsReload.send()
+    }
+
+    func markReadMessage(index: Int) {
+        if let inAppMessage = self.inAppMessagesPublisher.value[safe: index],
+           let cellViewModel = self.cachedInAppMessagesViewModels[inAppMessage.id] {
+
+            cellViewModel.changeReadStatus(isRead: true)
+        }
+    }
+
+    func markAllReadMessages() {
+
+        for inAppMessage in self.inAppMessagesPublisher.value {
+
+            if let cellViewModel = self.cachedInAppMessagesViewModels[inAppMessage.id] {
+                if cellViewModel.unreadMessagePublisher.value == true {
+                    cellViewModel.changeReadStatus(isRead: true)
+                }
+            }
+        }
     }
 
     func deleteMessage(index: Int) {

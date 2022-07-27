@@ -220,13 +220,15 @@ enum NotificationsType {
     case event
     case chat
     case custom
+    case news
 
-    var identifier : String {
+    var identifier: String {
         switch self {
         case .bet: return "bet"
         case .event: return "event"
         case .chat: return "chat"
         case .custom: return "custom"
+        case .news: return "news"
         }
     }
 }
