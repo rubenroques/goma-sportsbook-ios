@@ -122,27 +122,6 @@ class ChatNotificationsViewModel {
     }
 
     func markNotificationsAsRead() {
-        // TODO: Change endpoint
-//        for chatNotification in self.chatNotificationsPublisher.value {
-//
-//            if let notificationRead = chatNotification.notificationUsers[safe: 0]?.read,
-//               notificationRead == 0 {
-//
-//                Env.gomaNetworkClient.setNotificationRead(deviceId: Env.deviceId, notificationId: "\(chatNotification.id)")
-//                    .receive(on: DispatchQueue.main)
-//                    .sink(receiveCompletion: { [weak self] completion in
-//                        switch completion {
-//                        case .failure(let error):
-//                            print("CHAT NOTIF ERROR: \(error)")
-//                        case .finished:
-//                            ()
-//                        }
-//                    }, receiveValue: { [weak self] _ in
-//                        print("CHAT NOTIF READ SUCCESS")
-//                    })
-//                    .store(in: &cancellables)
-//            }
-//        }
 
         Env.gomaNetworkClient.setAllNotificationRead(deviceId: Env.deviceId, notificationType: .chat)
             .receive(on: DispatchQueue.main)

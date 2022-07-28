@@ -14,12 +14,15 @@ class MessagesViewController: UIViewController {
     private lazy var topView: UIView = Self.createTopView()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var topTitleLabel: UILabel = Self.createTopTitleLabel()
+    private lazy var topCounterLabel: UILabel = Self.createTopCounterLabel()
     private lazy var markAllReadButton: UIButton = Self.createMarkAllReadButton()
     private lazy var deleteAllButton: UIButton = Self.createDeleteAllButton()
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var emptyStateView: UIView = Self.createEmptyStateView()
     private lazy var emptyStateImageView: UIImageView = Self.createEmptyStateImageView()
     private lazy var emptyStateLabel: UILabel = Self.createEmptyStateLabel()
+    private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
+    private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
 
     private var viewModel: MessagesViewModel
     private var cancellables = Set<AnyCancellable>()
@@ -28,6 +31,12 @@ class MessagesViewController: UIViewController {
     var isEmptyState: Bool = false {
         didSet {
             self.emptyStateView.isHidden = !isEmptyState
+        }
+    }
+
+    var isLoading: Bool = false {
+        didSet {
+            self.loadingBaseView.isHidden = !isLoading
         }
     }
 
@@ -61,7 +70,11 @@ class MessagesViewController: UIViewController {
         self.tableView.register(InAppMessageTableViewCell.self,
                                 forCellReuseIdentifier: InAppMessageTableViewCell.identifier)
 
+        self.topCounterLabel.isHidden = true
+
         self.bind(toViewModel: self.viewModel)
+
+        self.setupPublishers()
 
         self.isEmptyState = false
 
@@ -85,6 +98,8 @@ class MessagesViewController: UIViewController {
 
         self.topTitleLabel.textColor = UIColor.App.textPrimary
 
+        self.topCounterLabel.textColor = UIColor.App.highlightSecondary
+
         self.markAllReadButton.backgroundColor = .clear
         self.markAllReadButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
 
@@ -98,12 +113,43 @@ class MessagesViewController: UIViewController {
         self.emptyStateImageView.backgroundColor = .clear
 
         self.emptyStateLabel.textColor = UIColor.App.textPrimary
+
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
     }
 
     // MARK: Functions
+    private func setupPublishers() {
+
+        Env.gomaSocialClient.inAppMessagesCounter
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] unreadCounter in
+                if unreadCounter > 0 {
+
+                    let messageString = localized("message") + " (\(unreadCounter))"
+
+                    let counterString = "(\(unreadCounter))"
+
+                    let counterRange = (messageString as NSString).range(of: counterString)
+
+                    let mutableAttributedString = NSMutableAttributedString.init(string: messageString)
+
+                    mutableAttributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.highlightSecondary, range: counterRange)
+
+                    self?.topTitleLabel.attributedText = mutableAttributedString
+                }
+                else {
+                    self?.topTitleLabel.text = localized("message")
+                }
+            })
+            .store(in: &cancellables)
+    }
+
     private func openMessageDetail(cellViewModel: InAppMessageCellViewModel) {
 
-        let messageDetailViewController = MessageDetailViewController()
+        let messageDetailViewModel = MessageDetailViewModel(inAppMessage: cellViewModel.inAppMessage)
+
+        let messageDetailViewController = MessageDetailViewController(viewModel: messageDetailViewModel)
 
         self.navigationController?.pushViewController(messageDetailViewController, animated: true)
     }
@@ -125,6 +171,13 @@ class MessagesViewController: UIViewController {
                 self?.isEmptyState = inAppMessages.isEmpty
             })
             .store(in: &cancellables)
+
+        viewModel.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoading in
+                self?.isLoading = isLoading
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Actions
@@ -144,8 +197,11 @@ class MessagesViewController: UIViewController {
 
     private func handleMarkReadAction(indexPath: IndexPath) {
         print("Marked as read message!")
+        
         if let inAppMessage = self.viewModel.inAppMessagesPublisher.value[safe: indexPath.row] {
-            self.viewModel.markReadMessage(index: indexPath.row)
+
+            self.viewModel.markReadMessage(inAppMessage: inAppMessage)
+
         }
 
     }
@@ -293,6 +349,15 @@ extension MessagesViewController {
         return label
     }
 
+    private static func createTopCounterLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "(0)"
+        label.font = AppFont.with(type: .bold, size: 18)
+        label.textAlignment = .left
+        return label
+    }
+
     private static func createMarkAllReadButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -340,12 +405,26 @@ extension MessagesViewController {
         return label
     }
 
+    private static func createLoadingBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createActivityIndicatorView() -> UIActivityIndicatorView {
+        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.startAnimating()
+        return activityIndicatorView
+    }
+
     private func setupSubviews() {
         self.view.addSubview(self.topView)
 
         self.topView.addSubview(self.backButton)
         self.topView.addSubview(self.topTitleLabel)
-        self.topView.bringSubviewToFront(self.topTitleLabel)
+        // self.topView.addSubview(self.topCounterLabel)
 
         self.view.addSubview(self.markAllReadButton)
         self.view.addSubview(self.deleteAllButton)
@@ -354,6 +433,10 @@ extension MessagesViewController {
 
         self.emptyStateView.addSubview(self.emptyStateImageView)
         self.emptyStateView.addSubview(self.emptyStateLabel)
+
+        self.view.addSubview(self.loadingBaseView)
+
+        self.loadingBaseView.addSubview(self.activityIndicatorView)
 
         self.initConstraints()
     }
@@ -374,7 +457,10 @@ extension MessagesViewController {
 
             self.topTitleLabel.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 20),
             self.topTitleLabel.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor, constant: -20),
-            self.topTitleLabel.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor)
+            self.topTitleLabel.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
+
+//            self.topCounterLabel.leadingAnchor.constraint(equalTo: self.topTitleLabel.trailingAnchor),
+//            self.topCounterLabel.centerYAnchor.constraint(equalTo: self.topTitleLabel.centerYAnchor)
         ])
 
         // Action Buttons
@@ -411,6 +497,17 @@ extension MessagesViewController {
             self.emptyStateLabel.leadingAnchor.constraint(equalTo: self.emptyStateView.leadingAnchor, constant: 50),
             self.emptyStateLabel.trailingAnchor.constraint(equalTo: self.emptyStateView.trailingAnchor, constant: -50),
             self.emptyStateLabel.topAnchor.constraint(equalTo: self.emptyStateImageView.bottomAnchor, constant: 25)
+        ])
+
+        // Loading Screen
+        NSLayoutConstraint.activate([
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.topView.bottomAnchor),
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
+            self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor)
         ])
 
     }

@@ -6,7 +6,19 @@
 //
 
 import UIKit
+import Combine
 
+class MessageDetailViewModel {
+
+    var inAppMessage: InAppMessage
+
+    // MARK: Lifetime and Cycle
+    init(inAppMessage: InAppMessage) {
+        self.inAppMessage = inAppMessage
+
+    }
+
+}
 class MessageDetailViewController: UIViewController {
 
     // MARK: Private Properties
@@ -23,13 +35,36 @@ class MessageDetailViewController: UIViewController {
 
     private lazy var regularMessageHeaderView: UIView = Self.createRegularMessageHeaderView()
     private lazy var regularMessageTitleLabel: UILabel = Self.createRegularMessageTitleLabel()
+    private lazy var regularMessageStackView: UIStackView = Self.createRegularMessageStackView()
     private lazy var regularMessageSubtitleLabel: UILabel = Self.createRegularMessageSubtitleLabel()
     private lazy var regularMessageImageView: UIImageView = Self.createRegularMessageImageView()
 
     private lazy var messageDescriptionLabel: UILabel = Self.createMessageDescriptionLabel()
 
+    private lazy var messageImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createMessageImageViewFixedHeightConstraint()
+    private lazy var messageImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createMessageImageViewDynamicHeightConstraint()
+
+    private lazy var messageImageViewBottomConstraint: NSLayoutConstraint = Self.createMessageImageViewBottomConstraint()
+    private lazy var messageSubtitleLabelBottomConstraint: NSLayoutConstraint = Self.createMessageSubtitleLabelBottomConstraint()
+
+    private var aspectRatio: CGFloat = 1.0
+
+    private var viewModel: MessageDetailViewModel
+
+    static var normalDateFormatter: DateFormatter = {
+        var dateFormatter = Date.buildFormatter(locale: Env.locale)
+        return dateFormatter
+    }()
+
+    static var relativeDateFormatter: DateFormatter = {
+        var dateFormatter = Date.buildFormatter(locale: Env.locale, hasRelativeDate: true)
+        return dateFormatter
+    }()
+
     // MARK: Lifetime and Cycle
-    init() {
+    init(viewModel: MessageDetailViewModel) {
+
+        self.viewModel = viewModel
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -49,7 +84,7 @@ class MessageDetailViewController: UIViewController {
 
         self.deleteButton.addTarget(self, action: #selector(didTapDeleteButton), for: .primaryActionTriggered)
 
-        self.regularMessageImageView.image = UIImage(named: "goma_message_banner")
+        self.setupRegularHeaderInfo()
         //self.bind(toViewModel: self.viewModel)
 
         // TEMP
@@ -97,7 +132,83 @@ class MessageDetailViewController: UIViewController {
 
         self.regularMessageSubtitleLabel.textColor = UIColor.App.textSecondary
 
+        self.regularMessageStackView.backgroundColor = .clear
+
         self.messageDescriptionLabel.textColor = UIColor.App.textPrimary
+    }
+
+    // MARK: Functions
+    private func setupRegularHeaderInfo() {
+
+        self.headerTitleLabel.text = self.viewModel.inAppMessage.subtype.capitalized
+
+        self.regularMessageTitleLabel.text = self.viewModel.inAppMessage.title
+
+        let messageDateString = self.viewModel.inAppMessage.createdAt
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+
+        if let messageDate = dateFormatter.date(from: messageDateString) {
+
+            let relativeFormatter = MessageDetailViewController.relativeDateFormatter
+            let relativeDateString = relativeFormatter.string(from: messageDate)
+
+            let nonRelativeFormatter = MessageDetailViewController.normalDateFormatter
+            let normalDateString = nonRelativeFormatter.string(from: messageDate)
+
+            if relativeDateString == normalDateString {
+                self.regularMessageSubtitleLabel.text = "\(normalDateString)"
+            }
+            else {
+                self.regularMessageSubtitleLabel.text = "\(relativeDateString)"
+            }
+        }
+
+        if let imageUrlString = viewModel.inAppMessage.imageUrl {
+
+            let backgroundImageUrl = URL(string: imageUrlString)
+            self.regularMessageImageView.kf.setImage(with: backgroundImageUrl)
+
+            if let messageBannerImage = self.regularMessageImageView.image {
+                self.resizeBannerImageView(messageBanner: messageBannerImage)
+            }
+        }
+        else {
+            self.regularMessageImageView.isHidden = true
+        }
+
+        let htmlDescription = self.viewModel.inAppMessage.text
+        let data = Data(htmlDescription.utf8)
+        if let attributedString = try? NSMutableAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
+
+            let attributes: [NSAttributedString.Key: AnyObject] = [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary,
+             NSAttributedString.Key.backgroundColor: UIColor.App.backgroundPrimary,
+                                                                   NSAttributedString.Key.font: AppFont.with(type: .medium, size: 14)]
+
+            attributedString.addAttributes(attributes,
+                                           range: NSRange.init(location: 0, length: attributedString.length ))
+
+            self.messageDescriptionLabel.attributedText = attributedString
+        }
+    }
+
+    private func resizeBannerImageView(messageBanner: UIImage) {
+
+        self.aspectRatio = messageBanner.size.width/messageBanner.size.height
+
+        self.messageImageViewFixedHeightConstraint.isActive = false
+
+        self.messageImageViewDynamicHeightConstraint =
+        NSLayoutConstraint(item: self.regularMessageImageView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: self.regularMessageImageView,
+                           attribute: .width,
+                           multiplier: 1/self.aspectRatio,
+                           constant: 0)
+
+        self.messageImageViewDynamicHeightConstraint.isActive = true
     }
 
     // MARK: Actions
@@ -212,15 +323,43 @@ extension MessageDetailViewController {
         return imageView
     }
 
+    private static func createRegularMessageStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 25
+        stackView.distribution = .equalSpacing
+        return stackView
+    }
+
     private static func createMessageDescriptionLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        // swiftlint:disable line_length
-        label.text = "Sportsbook operator William Hill and Monumental Sports executives celebrated the opening of a 20,000-square-foot sportsbook inside Capital One Arena in Washington D.C.\nThe arena won the race last Wednesday to become the first U.S. pro sports venue containing a sportsbook.\n“I think we should be utilizing more of this space,” Leonsis said in a Washington Post story. “Because when you go into it, it looks and feels like what sports’ future should look and feel like: lots of data, lots of comfortable settings, lots of televisions, lots of ways to learn about gaming.”\nCities including Phoenix are following a similar plan, with a sportsbook inside Phoenix Suns Arena targeted to open this fall. And baseball’s Arizona Diamondbacks plan to partner with an operator to open a sportsbook downtown, across the street from their ballpark.\n“We really think this is going to be a model for these types of experiences inside professional sports arenas,” said Dan Shapiro, William Hill’s vice president of strategy and business development."
+        label.text = "Description"
         label.font = AppFont.with(type: .medium, size: 15)
         label.textAlignment = .left
         label.numberOfLines = 0
         return label
+    }
+
+    private static func createMessageImageViewFixedHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createMessageImageViewDynamicHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createMessageImageViewBottomConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createMessageSubtitleLabelBottomConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
     }
 
     private func setupSubviews() {
@@ -243,8 +382,10 @@ extension MessageDetailViewController {
         self.scrollContainerView.addSubview(self.regularMessageHeaderView)
 
         self.regularMessageHeaderView.addSubview(self.regularMessageTitleLabel)
-        self.regularMessageHeaderView.addSubview(self.regularMessageSubtitleLabel)
-        self.regularMessageHeaderView.addSubview(self.regularMessageImageView)
+        self.regularMessageHeaderView.addSubview(self.regularMessageStackView)
+
+        self.regularMessageStackView.addArrangedSubview(self.regularMessageSubtitleLabel)
+        self.regularMessageStackView.addArrangedSubview(self.regularMessageImageView)
 
         self.scrollContainerView.addSubview(self.messageDescriptionLabel)
 
@@ -314,14 +455,18 @@ extension MessageDetailViewController {
             self.regularMessageTitleLabel.trailingAnchor.constraint(equalTo: self.regularMessageHeaderView.trailingAnchor),
             self.regularMessageTitleLabel.topAnchor.constraint(equalTo: self.regularMessageHeaderView.topAnchor, constant: 10),
 
-            self.regularMessageSubtitleLabel.leadingAnchor.constraint(equalTo: self.regularMessageHeaderView.leadingAnchor),
-            self.regularMessageSubtitleLabel.trailingAnchor.constraint(equalTo: self.regularMessageHeaderView.trailingAnchor),
-            self.regularMessageSubtitleLabel.topAnchor.constraint(equalTo: self.regularMessageTitleLabel.bottomAnchor, constant: 20),
-
-            self.regularMessageImageView.leadingAnchor.constraint(equalTo: self.regularMessageHeaderView.leadingAnchor),
-            self.regularMessageImageView.trailingAnchor.constraint(equalTo: self.regularMessageHeaderView.trailingAnchor),
-            self.regularMessageImageView.topAnchor.constraint(equalTo: self.regularMessageSubtitleLabel.bottomAnchor, constant: 25),
-            self.regularMessageImageView.bottomAnchor.constraint(equalTo: self.regularMessageHeaderView.bottomAnchor, constant: -10)
+            self.regularMessageStackView.leadingAnchor.constraint(equalTo: self.regularMessageHeaderView.leadingAnchor),
+            self.regularMessageStackView.trailingAnchor.constraint(equalTo: self.regularMessageHeaderView.trailingAnchor),
+            self.regularMessageStackView.topAnchor.constraint(equalTo: self.regularMessageTitleLabel.bottomAnchor, constant: 20),
+            self.regularMessageStackView.bottomAnchor.constraint(equalTo: self.regularMessageHeaderView.bottomAnchor, constant: -10)
+//            self.regularMessageSubtitleLabel.leadingAnchor.constraint(equalTo: self.regularMessageHeaderView.leadingAnchor),
+//            self.regularMessageSubtitleLabel.trailingAnchor.constraint(equalTo: self.regularMessageHeaderView.trailingAnchor),
+//            self.regularMessageSubtitleLabel.topAnchor.constraint(equalTo: self.regularMessageTitleLabel.bottomAnchor, constant: 20),
+//
+//            self.regularMessageImageView.leadingAnchor.constraint(equalTo: self.regularMessageHeaderView.leadingAnchor),
+//            self.regularMessageImageView.trailingAnchor.constraint(equalTo: self.regularMessageHeaderView.trailingAnchor),
+//            self.regularMessageImageView.topAnchor.constraint(equalTo: self.regularMessageSubtitleLabel.bottomAnchor, constant: 25),
+//            self.regularMessageImageView.bottomAnchor.constraint(equalTo: self.regularMessageHeaderView.bottomAnchor, constant: -10)
         ])
 
         NSLayoutConstraint.activate([
@@ -331,6 +476,25 @@ extension MessageDetailViewController {
             self.messageDescriptionLabel.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -20)
         ])
 
+        self.messageImageViewFixedHeightConstraint =
+        NSLayoutConstraint(item: self.regularMessageImageView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: nil,
+                           attribute: .notAnAttribute,
+                           multiplier: 1,
+                           constant: 150)
+        self.messageImageViewFixedHeightConstraint.isActive = true
+
+        self.messageImageViewDynamicHeightConstraint =
+        NSLayoutConstraint(item: self.regularMessageImageView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: self.regularMessageImageView,
+                           attribute: .width,
+                           multiplier: 1/self.aspectRatio,
+                           constant: 0)
+        self.messageImageViewDynamicHeightConstraint.isActive = false
     }
 
 }

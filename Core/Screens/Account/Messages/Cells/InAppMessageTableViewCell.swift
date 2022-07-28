@@ -7,7 +7,6 @@
 
 import UIKit
 import Combine
-import SwiftUI
 
 class InAppMessageTableViewCell: UITableViewCell {
 
@@ -53,6 +52,16 @@ class InAppMessageTableViewCell: UITableViewCell {
     }
 
     var tappedContainer: (() -> Void)?
+
+    static var normalDateFormatter: DateFormatter = {
+        var dateFormatter = Date.buildFormatter(locale: Env.locale)
+        return dateFormatter
+    }()
+
+    static var relativeDateFormatter: DateFormatter = {
+        var dateFormatter = Date.buildFormatter(locale: Env.locale, hasRelativeDate: true)
+        return dateFormatter
+    }()
 
     // MARK: Lifetime and Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -148,30 +157,69 @@ class InAppMessageTableViewCell: UITableViewCell {
 
         self.viewModel = viewModel
 
-        self.messageTypeLabel.text = viewModel.inAppMessage.typeText
+        let messageDateString = viewModel.inAppMessage.createdAt
 
-        self.messageTitleLabel.text = viewModel.inAppMessage.title
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
 
-        switch viewModel.inAppMessage.messageType {
-        case .promo:
-            if let backgroundImage = viewModel.inAppMessage.backgroundBanner {
-                self.backgroundImageView.image = backgroundImage
-                self.hasBackgroundImage = true
-                // self.setupImageGradient()
+        if let messageDate = dateFormatter.date(from: messageDateString) {
+
+            let relativeFormatter = InAppMessageTableViewCell.relativeDateFormatter
+            let relativeDateString = relativeFormatter.string(from: messageDate)
+
+            let nonRelativeFormatter = InAppMessageTableViewCell.normalDateFormatter
+            let normalDateString = nonRelativeFormatter.string(from: messageDate)
+
+            if relativeDateString == normalDateString {
+                self.messageTypeLabel.text = "\(viewModel.inAppMessage.subtype.capitalized) | \(normalDateString)"
             }
-        case .bettingNew:
-            if let logoImage = viewModel.inAppMessage.logo {
-                self.logoImageView.image = logoImage
-                self.hasLogoImage = true
-            }
-        case .maintenance:
-            if let description = viewModel.inAppMessage.subtitle {
-                self.messageDescriptionLabel.text = description
-                self.hasDescriptionLabel = true
+            else {
+                self.messageTypeLabel.text = "\(viewModel.inAppMessage.subtype.capitalized) | \(relativeDateString)"
             }
         }
 
-        //self.unreadMessage = viewModel.inAppMessage.unreadMessage
+        self.messageTitleLabel.text = viewModel.inAppMessage.title
+
+        if viewModel.inAppMessage.subtype == MessageCardType.promo.identifier {
+            if let imageUrlString = viewModel.inAppMessage.imageUrl {
+                let backgroundImageUrl = URL(string: imageUrlString)
+                self.backgroundImageView.kf.setImage(with: backgroundImageUrl)
+                self.hasBackgroundImage = true
+            }
+
+        }
+        else if viewModel.inAppMessage.subtype == MessageCardType.news.identifier {
+
+            if let imageUrlString = viewModel.inAppMessage.imageUrl {
+
+                let backgroundImageUrl = URL(string: imageUrlString)
+                self.backgroundImageView.kf.setImage(with: backgroundImageUrl)
+                self.hasBackgroundImage = true
+
+                // self.logoImageView.image = UIImage(named: "logo_horizontal_center")
+                self.hasLogoImage = false
+            }
+        }
+        else if viewModel.inAppMessage.subtype == MessageCardType.information.identifier {
+
+            let htmlDescription = viewModel.inAppMessage.text
+            let data = Data(htmlDescription.utf8)
+
+            if let attributedString = try? NSMutableAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
+
+                let attributes: [NSAttributedString.Key: AnyObject] = [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary,
+                 NSAttributedString.Key.backgroundColor: UIColor.App.backgroundSecondary,
+                                                                       NSAttributedString.Key.font: AppFont.with(type: .medium, size: 14)]
+
+                attributedString.addAttributes(attributes,
+                                               range: NSRange.init(location: 0, length: attributedString.length ))
+
+            self.messageDescriptionLabel.attributedText = attributedString
+            }
+
+            self.hasDescriptionLabel = true
+
+        }
 
         self.setupPublishers()
 
@@ -338,6 +386,17 @@ extension InAppMessageTableViewCell {
 
 enum MessageCardType {
     case promo
-    case bettingNew
-    case maintenance
+    case news
+    case information
+
+    var identifier: String {
+        switch self {
+        case .promo:
+            return "promo"
+        case .news:
+            return "news"
+        case .information:
+            return "information"
+        }
+    }
 }

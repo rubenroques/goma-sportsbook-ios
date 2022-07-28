@@ -19,23 +19,42 @@ class InAppMessageCellViewModel {
     init(inAppMessage: InAppMessage) {
         self.inAppMessage = inAppMessage
 
-        self.unreadMessagePublisher.value = self.inAppMessage.unreadMessage
+        self.setupUnreadMessage()
+
+    }
+
+    private func setupUnreadMessage() {
+        if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+
+            for notificationUser in inAppMessage.notificationUsers {
+                if notificationUser.userId == loggedUserId {
+
+                    if notificationUser.read == 0 {
+                        self.unreadMessagePublisher.send(true)
+                    }
+                    else {
+                        self.unreadMessagePublisher.send(false)
+                    }
+
+                }
+            }
+        }
     }
 
     func changeReadStatus(isRead: Bool) {
-        self.inAppMessage.unreadMessage = !isRead
 
-        self.unreadMessagePublisher.send(!isRead)
+        if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+
+            for (index, notificationUser) in self.inAppMessage.notificationUsers.enumerated() {
+                if notificationUser.userId == loggedUserId {
+
+                    var newNotificationUser = notificationUser
+                    newNotificationUser.read = 1
+
+                    self.inAppMessage.notificationUsers[index] = newNotificationUser
+                }
+            }
+            self.unreadMessagePublisher.send(!isRead)
+        }
     }
-}
-
-struct InAppMessage {
-    var id: String
-    var messageType: MessageCardType
-    var typeText: String
-    var title: String
-    var subtitle: String?
-    var logo: UIImage?
-    var backgroundBanner: UIImage?
-    var unreadMessage: Bool
 }

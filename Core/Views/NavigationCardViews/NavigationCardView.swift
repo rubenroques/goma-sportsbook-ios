@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class NavigationCardView: UIView {
 
@@ -18,10 +19,14 @@ class NavigationCardView: UIView {
     private lazy var notificationLabel: UILabel = Self.createNotificationLabel()
     private lazy var navigationImageView: UIImageView = Self.createNavigationImageView()
 
+    private var cancellables = Set<AnyCancellable>()
+
     // MARK: Public Properties
-    var hasNotifications: Bool = false {
+    var hasNotifications: Bool = false
+
+    var shouldShowNotifications: Bool = false {
         didSet {
-            self.notificationView.isHidden = !hasNotifications
+            self.notificationView.isHidden = !shouldShowNotifications
         }
     }
 
@@ -45,6 +50,7 @@ class NavigationCardView: UIView {
     private func commonInit() {
 
         self.hasNotifications = false
+        self.shouldShowNotifications = false
     }
 
     override func layoutSubviews() {
@@ -65,7 +71,7 @@ class NavigationCardView: UIView {
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
-        self.notificationView.backgroundColor = UIColor.App.alertError
+        self.notificationView.backgroundColor = UIColor.App.bubblesPrimary
 
         self.notificationLabel.textColor = UIColor.App.buttonTextPrimary
     }
@@ -76,7 +82,19 @@ class NavigationCardView: UIView {
         self.iconImageView.image = UIImage(named: iconTitle)
 
         if self.hasNotifications {
-            self.notificationLabel.text = "1"
+
+            Env.gomaSocialClient.inAppMessagesCounter
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [weak self] notificationCounter in
+                    if notificationCounter > 0 {
+                        self?.shouldShowNotifications = true
+                        self?.notificationLabel.text = "\(notificationCounter)"
+                    }
+                    else {
+                        self?.shouldShowNotifications = false
+                    }
+                })
+                .store(in: &cancellables)
         }
     }
 

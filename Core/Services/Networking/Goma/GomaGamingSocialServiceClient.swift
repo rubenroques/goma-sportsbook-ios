@@ -685,6 +685,9 @@ class GomaGamingSocialServiceClient {
                 }
             }, receiveValue: { [weak self] response in
                 print("NOTIF COUNTER RESPONSE: \(response)")
+                if let notifCounter = response.data {
+                    self?.inAppMessagesCounter.send(notifCounter)
+                }
             })
             .store(in: &cancellables)
     }
