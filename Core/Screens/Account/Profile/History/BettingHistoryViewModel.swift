@@ -43,6 +43,7 @@ class BettingHistoryViewModel {
     var wonTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
     var cashoutTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
 
+   
     
     private var matchesPublisher: AnyCancellable?
     private var matchesRegister: EndpointPublisherIdentifiable?

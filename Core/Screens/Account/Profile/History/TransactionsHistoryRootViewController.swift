@@ -62,9 +62,12 @@ class TransactionsHistoryRootViewController: UIViewController {
 
     private var viewControllers = [UIViewController]()
     private var currentPageViewControllerIndex: Int = 0
+    private var filterHistoryViewController = FilterHistoryViewController()
 
     private var viewModel: TransactionsHistoryRootViewModel
-
+    var filterPublisher: CurrentValueSubject<FilterHistoryViewModel.FilterValue, Never> = .init(.past30Days)
+    var startTimeFilter = ""
+    var endTimeFilter = ""
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Lifetime and Cycle
@@ -92,10 +95,21 @@ class TransactionsHistoryRootViewController: UIViewController {
         self.setupWithTheme()
 
         self.viewControllers = [
-            TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .deposit)),
-            TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .withdraw)),
+            TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .deposit, filterApplied: .past30Days)),
+            TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .withdraw, filterApplied: .past30Days)),
         ]
-
+        
+        self.filterPublisher
+            .sink { [weak self] filterApplied in
+        
+                self?.viewControllers = [
+                    TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .deposit, filterApplied: filterApplied)),
+                    TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .withdraw, filterApplied: filterApplied)),
+                ]
+                self?.reloadCollectionView()
+            }
+            .store(in: &cancellables)
+        
         self.pagedViewController.delegate = self
         self.pagedViewController.dataSource = self
 
@@ -106,7 +120,7 @@ class TransactionsHistoryRootViewController: UIViewController {
         self.shortcutsCollectionView.dataSource = self
         
         self.filterBaseView.layer.cornerRadius = self.filterBaseView.frame.height / 2
-
+        
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         self.filterBaseView.addGestureRecognizer(tapFilterGesture)
         self.filterBaseView.isUserInteractionEnabled = true
@@ -115,6 +129,7 @@ class TransactionsHistoryRootViewController: UIViewController {
         self.noLoginButton.addTarget(self, action: #selector(didTapLoginButton), for: .primaryActionTriggered)
 
         self.reloadCollectionView()
+        self.viewDidLayoutSubviews()
         self.bind(toViewModel: self.viewModel)
     }
 
@@ -122,7 +137,7 @@ class TransactionsHistoryRootViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
+        self.filterBaseView.layer.cornerRadius = self.filterBaseView.frame.height / 2
         
     }
     
@@ -183,9 +198,17 @@ class TransactionsHistoryRootViewController: UIViewController {
         self.noLoginBaseView.isHidden = false
     }
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
-        // print("clicou nos filtros")
-        let filterHistoryViewController = FilterHistoryViewController()
-        self.present(filterHistoryViewController, animated: true, completion: nil)
+        
+       
+        self.present(self.filterHistoryViewController, animated: true, completion: nil)
+        self.startTimeFilter = self.filterHistoryViewController.viewModel.startTimeFilterPublisher.value
+        self.endTimeFilter = self.filterHistoryViewController.viewModel.endTimeFilterPublisher.value
+        
+        self.filterHistoryViewController.didSelectFilterAction = { [weak self ] opt in
+            self?.filterPublisher.send(opt)
+            print(opt)
+            
+        }
     }
 
     func hideNoLoginView() {

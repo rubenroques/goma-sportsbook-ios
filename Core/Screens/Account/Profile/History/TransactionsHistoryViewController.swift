@@ -32,8 +32,9 @@ class TransactionsHistoryViewController: UIViewController {
     private let rightGradientMaskLayer = CAGradientLayer()
 
     // MARK: - Lifetime and Cycle
-    init(viewModel: TransactionsHistoryViewModel = TransactionsHistoryViewModel(transactionsType: .deposit)) {
+    init(viewModel: TransactionsHistoryViewModel = TransactionsHistoryViewModel(transactionsType: .deposit, filterApplied: .past30Days)) {
         self.viewModel = viewModel
+        
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -44,10 +45,10 @@ class TransactionsHistoryViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.tableView.reloadData()
         self.setupSubviews()
         self.setupWithTheme()
-
+        
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
@@ -58,7 +59,33 @@ class TransactionsHistoryViewController: UIViewController {
         self.tableView.isHidden = false
         self.emptyStateBaseView.isHidden = true
 
-        self.hideLoading()
+        
+        self.viewModel.listStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] listStatePublisher in
+
+                switch listStatePublisher {
+                case .loading:
+                    self?.showLoading()
+                    self?.emptyStateBaseView.isHidden = true
+                case .empty:
+                    self?.hideLoading()
+                    self?.emptyStateBaseView.isHidden = false
+                    self?.tableView.isHidden = true
+                case .noUserFoundError:
+                    self?.hideLoading()
+                    self?.emptyStateBaseView.isHidden = false
+                case .serverError:
+                    self?.hideLoading()
+                    self?.emptyStateBaseView.isHidden = false
+                case .loaded:
+                    self?.hideLoading()
+                    self?.emptyStateBaseView.isHidden = true
+                    self?.tableView.reloadData()
+                }
+
+            })
+            .store(in: &self.cancellables)
 
         self.bind(toViewModel: self.viewModel)
     }
@@ -110,31 +137,7 @@ class TransactionsHistoryViewController: UIViewController {
             })
             .store(in: &self.cancellables)
 
-        viewModel.listStatePublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] listStatePublisher in
-
-                switch listStatePublisher {
-                case .loading:
-                    self?.showLoading()
-                    self?.emptyStateBaseView.isHidden = true
-                case .empty:
-                    self?.hideLoading()
-                    self?.emptyStateBaseView.isHidden = false
-                case .noUserFoundError:
-                    self?.hideLoading()
-                    self?.emptyStateBaseView.isHidden = false
-                case .serverError:
-                    self?.hideLoading()
-                    self?.emptyStateBaseView.isHidden = false
-                case .loaded:
-                    self?.hideLoading()
-                    self?.emptyStateBaseView.isHidden = true
-                    self?.tableView.reloadData()
-                }
-
-            })
-            .store(in: &self.cancellables)
+        
     }
 
     private func showLoading() {
@@ -183,10 +186,6 @@ extension TransactionsHistoryViewController: UITableViewDelegate, UITableViewDat
 // MARK: - Actions
 //
 extension TransactionsHistoryViewController {
-
-    @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
-        // print("clicou nos filtros")
-    }
 
     @objc func didTapMakeDeposit(sender: UITapGestureRecognizer) {
         let depositViewController = Router.navigationController(with: DepositViewController())

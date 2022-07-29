@@ -70,6 +70,7 @@ class BettingHistoryRootViewController: UIViewController {
     private var currentPageViewControllerIndex: Int = 0
 
     private var viewModel: BettingHistoryRootViewModel
+    private var filterViewModel: FilterHistoryViewModel = FilterHistoryViewModel()
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -184,6 +185,15 @@ class BettingHistoryRootViewController: UIViewController {
         // print("clicou nos filtros")
         let filterHistoryViewController = FilterHistoryViewController()
         self.present(filterHistoryViewController, animated: true, completion: nil)
+        
+        filterHistoryViewController.didSelectFilterAction = { [weak self ] opt in
+            
+            print("###")
+            print(opt)
+            
+            
+            
+        }
     }
 
     // MARK: - Convenience
@@ -227,7 +237,7 @@ extension BettingHistoryRootViewController: UIPageViewControllerDelegate, UIPage
 
     func selectTicketType(atIndex index: Int, animated: Bool = true) {
         self.viewModel.selectTicketType(atIndex: index)
-
+        
         self.shortcutsCollectionView.reloadData()
         self.shortcutsCollectionView.layoutIfNeeded()
         self.shortcutsCollectionView.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: animated)

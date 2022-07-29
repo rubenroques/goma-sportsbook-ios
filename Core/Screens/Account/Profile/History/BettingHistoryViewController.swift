@@ -27,6 +27,7 @@ class BettingHistoryViewController: UIViewController {
     // Logic
     private var cancellables: Set<AnyCancellable> = []
     private let viewModel: BettingHistoryViewModel
+ 
     private var filterSelectedOption: Int = 0
 
     private let rightGradientMaskLayer = CAGradientLayer()
@@ -232,9 +233,7 @@ extension BettingHistoryViewController: UITableViewDelegate, UITableViewDataSour
 //
 extension BettingHistoryViewController {
 
-    @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
-        // print("clicou nos filtros")
-    }
+   
 
     @objc func didTapMakeDeposit(sender: UITapGestureRecognizer) {
         let depositViewController = Router.navigationController(with: DepositViewController())
