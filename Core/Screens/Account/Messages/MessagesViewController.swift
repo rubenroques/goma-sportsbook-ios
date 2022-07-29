@@ -126,7 +126,7 @@ class MessagesViewController: UIViewController {
             .sink(receiveValue: { [weak self] unreadCounter in
                 if unreadCounter > 0 {
 
-                    let messageString = localized("message") + " (\(unreadCounter))"
+                    let messageString = localized("messages") + " (\(unreadCounter))"
 
                     let counterString = "(\(unreadCounter))"
 
@@ -139,7 +139,7 @@ class MessagesViewController: UIViewController {
                     self?.topTitleLabel.attributedText = mutableAttributedString
                 }
                 else {
-                    self?.topTitleLabel.text = localized("message")
+                    self?.topTitleLabel.text = localized("messages")
                 }
             })
             .store(in: &cancellables)
@@ -150,6 +150,10 @@ class MessagesViewController: UIViewController {
         let messageDetailViewModel = MessageDetailViewModel(inAppMessage: cellViewModel.inAppMessage)
 
         let messageDetailViewController = MessageDetailViewController(viewModel: messageDetailViewModel)
+
+        messageDetailViewController.shouldSetMessageRead = { inAppMessageId in
+            self.viewModel.setCellReadStatus(inAppMessageId: inAppMessageId)
+        }
 
         self.navigationController?.pushViewController(messageDetailViewController, animated: true)
     }
@@ -186,18 +190,15 @@ class MessagesViewController: UIViewController {
     }
 
     @objc private func didTapMarkAllReadButton() {
-        print("MARK ALL READ")
         self.viewModel.markAllReadMessages()
     }
 
     @objc private func didTapDeleteAllButton() {
-        print("DELETE ALL")
         self.viewModel.deleteAllMessages()
     }
 
     private func handleMarkReadAction(indexPath: IndexPath) {
-        print("Marked as read message!")
-        
+
         if let inAppMessage = self.viewModel.inAppMessagesPublisher.value[safe: indexPath.row] {
 
             self.viewModel.markReadMessage(inAppMessage: inAppMessage)
@@ -207,7 +208,6 @@ class MessagesViewController: UIViewController {
     }
 
     private func handleDeleteAction(indexPath: IndexPath) {
-        print("Delete message!")
         self.viewModel.deleteMessage(index: indexPath.row)
         self.tableView.deleteRows(at: [indexPath], with: .left)
     }
@@ -289,7 +289,7 @@ extension MessagesViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 
         let markReadAction = UIContextualAction(style: .normal,
-                                        title: "Mark as read") { [weak self] (action, view, completionHandler) in
+                                        title: localized("mark_as_read")) { [weak self] (action, view, completionHandler) in
             self?.handleMarkReadAction(indexPath: indexPath)
                                             completionHandler(true)
         }
@@ -459,8 +459,6 @@ extension MessagesViewController {
             self.topTitleLabel.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor, constant: -20),
             self.topTitleLabel.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
 
-//            self.topCounterLabel.leadingAnchor.constraint(equalTo: self.topTitleLabel.trailingAnchor),
-//            self.topCounterLabel.centerYAnchor.constraint(equalTo: self.topTitleLabel.centerYAnchor)
         ])
 
         // Action Buttons

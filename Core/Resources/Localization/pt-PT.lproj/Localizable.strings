@@ -537,5 +537,6 @@ Terms of use, Privacy Policy and EULA";
 "messages" = "Messages";
 "mark_all_read" = "Mark all as read";
 "delete_all" = "Delete all";
+"mark_as_read" = "Mark as read";
 
 "no_messages_yet" = "There’s no messages yet.";

@@ -36,6 +36,14 @@ class InAppMessageTableViewCell: UITableViewCell {
     var unreadMessage: Bool = false {
         didSet {
             self.unreadIndicatorView.isHidden = !unreadMessage
+
+            if !unreadMessage {
+                self.containerView.layer.borderWidth = 1
+                self.containerView.layer.borderColor =  UIColor.App.buttonBorderTertiary.cgColor
+            }
+            else {
+                self.containerView.layer.borderWidth = 0
+            }
         }
     }
 
@@ -228,7 +236,6 @@ class InAppMessageTableViewCell: UITableViewCell {
     // MARK: Action
     @objc func didTapContainer() {
         if let viewModel = self.viewModel {
-            print("CELL ID: \(viewModel.inAppMessage.id)")
             self.tappedContainer?()
         }
     }
@@ -361,19 +368,6 @@ extension InAppMessageTableViewCell {
             self.messageStackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -110),
             self.messageStackView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 15),
             self.messageStackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -15),
-
-//            self.messageTypeLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 20),
-//            self.messageTypeLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -90),
-//            self.messageTypeLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 15),
-//
-//            self.messageTitleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 20),
-//            self.messageTitleLabel.trailingAnchor.constraint(equalTo: self.containerView.centerXAnchor, constant: 30),
-//            self.messageTitleLabel.topAnchor.constraint(equalTo: self.messageTypeLabel.bottomAnchor, constant: 8),
-//
-//            self.messageDescriptionLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 20),
-//            self.messageDescriptionLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -90),
-//            self.messageDescriptionLabel.topAnchor.constraint(equalTo: self.messageTitleLabel.bottomAnchor, constant: 8),
-//            self.messageDescriptionLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -15),
 
             self.logoImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -23),
             self.logoImageView.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),

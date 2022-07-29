@@ -8,17 +8,6 @@
 import UIKit
 import Combine
 
-class MessageDetailViewModel {
-
-    var inAppMessage: InAppMessage
-
-    // MARK: Lifetime and Cycle
-    init(inAppMessage: InAppMessage) {
-        self.inAppMessage = inAppMessage
-
-    }
-
-}
 class MessageDetailViewController: UIViewController {
 
     // MARK: Private Properties
@@ -33,19 +22,25 @@ class MessageDetailViewController: UIViewController {
     private lazy var scrollView: UIScrollView = Self.createScrollView()
     private lazy var scrollContainerView: UIView = Self.createScrollContainerView()
 
+    private lazy var messageHeaderStackView: UIStackView = Self.createMessageHeaderStackView()
+
     private lazy var regularMessageHeaderView: UIView = Self.createRegularMessageHeaderView()
     private lazy var regularMessageTitleLabel: UILabel = Self.createRegularMessageTitleLabel()
     private lazy var regularMessageStackView: UIStackView = Self.createRegularMessageStackView()
     private lazy var regularMessageSubtitleLabel: UILabel = Self.createRegularMessageSubtitleLabel()
     private lazy var regularMessageImageView: UIImageView = Self.createRegularMessageImageView()
 
+    private lazy var promoMessageHeaderView: UIView = Self.createPromoMessageHeaderView()
+    private lazy var promoMessageTitleLabel: UILabel = Self.createPromoMessageTitleLabel()
+    private lazy var promoMessageSubtitleLabel: UILabel = Self.createPromoMessageSubtitleLabel()
+    private lazy var promoMessageImageView: UIImageView = Self.createPromoMessageImageView()
+    private lazy var promoGradientLayer: CAGradientLayer = Self.createGradientLayer()
+    private lazy var promoFlagView: UIView = Self.createPromoFlagView()
+    private lazy var promoFlagTitle: UILabel = Self.createPromoFlagTitle()
     private lazy var messageDescriptionLabel: UILabel = Self.createMessageDescriptionLabel()
 
     private lazy var messageImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createMessageImageViewFixedHeightConstraint()
     private lazy var messageImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createMessageImageViewDynamicHeightConstraint()
-
-    private lazy var messageImageViewBottomConstraint: NSLayoutConstraint = Self.createMessageImageViewBottomConstraint()
-    private lazy var messageSubtitleLabelBottomConstraint: NSLayoutConstraint = Self.createMessageSubtitleLabelBottomConstraint()
 
     private var aspectRatio: CGFloat = 1.0
 
@@ -60,6 +55,15 @@ class MessageDetailViewController: UIViewController {
         var dateFormatter = Date.buildFormatter(locale: Env.locale, hasRelativeDate: true)
         return dateFormatter
     }()
+
+    var isRegularHeader: Bool = true {
+        didSet {
+            self.regularMessageHeaderView.isHidden = !isRegularHeader
+            self.promoMessageHeaderView.isHidden = isRegularHeader
+        }
+    }
+
+    var shouldSetMessageRead: ((Int) -> Void)?
 
     // MARK: Lifetime and Cycle
     init(viewModel: MessageDetailViewModel) {
@@ -84,8 +88,9 @@ class MessageDetailViewController: UIViewController {
 
         self.deleteButton.addTarget(self, action: #selector(didTapDeleteButton), for: .primaryActionTriggered)
 
-        self.setupRegularHeaderInfo()
-        //self.bind(toViewModel: self.viewModel)
+        self.bind(toViewModel: self.viewModel)
+
+        self.viewModel.markReadMessage()
 
         // TEMP
         self.deleteButton.isHidden = true
@@ -96,6 +101,33 @@ class MessageDetailViewController: UIViewController {
         super.viewDidLayoutSubviews()
 
         self.regularMessageImageView.layer.masksToBounds = true
+
+        self.promoGradientLayer.frame = self.promoMessageImageView.bounds
+        self.promoMessageImageView.layer.insertSublayer(self.promoGradientLayer, at: 0)
+
+        // Flag shape
+        let path = UIBezierPath()
+        path.move(to: CGPoint(x: 0, y: 0))
+        path.addLine(to: CGPoint(x: self.promoFlagView.frame.size.width, y: 0))
+        path.addLine(to: CGPoint(x: self.promoFlagView.frame.size.width - 5, y: self.promoFlagView.frame.size.height/2))
+        path.addLine(to: CGPoint(x: self.promoFlagView.frame.size.width, y: self.promoFlagView.frame.size.height))
+        path.addLine(to: CGPoint(x: 0, y: self.promoFlagView.frame.size.height))
+        path.addLine(to: CGPoint(x: 0, y: 0))
+        path.close()
+        path.stroke()
+        // path.reversing()
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.frame = self.promoFlagView.bounds
+        shapeLayer.path = path.cgPath
+        shapeLayer.fillColor = UIColor.App.alertSuccess.cgColor
+        self.promoFlagView.layer.mask = shapeLayer
+        self.promoFlagView.layer.masksToBounds = true
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(true)
+        
+        self.shouldSetMessageRead?(self.viewModel.inAppMessage.id)
     }
 
     // MARK: Layout and Theme
@@ -133,6 +165,14 @@ class MessageDetailViewController: UIViewController {
         self.regularMessageSubtitleLabel.textColor = UIColor.App.textSecondary
 
         self.regularMessageStackView.backgroundColor = .clear
+
+        self.promoMessageTitleLabel.textColor = UIColor.App.textPrimary
+
+        self.promoMessageSubtitleLabel.textColor = UIColor.App.textSecondary
+
+        self.promoFlagView.backgroundColor = UIColor.App.bubblesPrimary
+
+        self.promoFlagTitle.textColor = UIColor.App.buttonTextPrimary
 
         self.messageDescriptionLabel.textColor = UIColor.App.textPrimary
     }
@@ -193,6 +233,55 @@ class MessageDetailViewController: UIViewController {
         }
     }
 
+    private func setupPromoHeaderInfo() {
+
+        self.headerTitleLabel.text = self.viewModel.inAppMessage.subtype.capitalized
+
+        self.promoMessageTitleLabel.text = self.viewModel.inAppMessage.title
+
+        let messageDateString = self.viewModel.inAppMessage.createdAt
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+
+        if let messageDate = dateFormatter.date(from: messageDateString) {
+
+            let relativeFormatter = MessageDetailViewController.relativeDateFormatter
+            let relativeDateString = relativeFormatter.string(from: messageDate)
+
+            let nonRelativeFormatter = MessageDetailViewController.normalDateFormatter
+            let normalDateString = nonRelativeFormatter.string(from: messageDate)
+
+            if relativeDateString == normalDateString {
+                self.promoMessageSubtitleLabel.text = "\(normalDateString)"
+            }
+            else {
+                self.promoMessageSubtitleLabel.text = "\(relativeDateString)"
+            }
+        }
+
+        if let imageUrlString = viewModel.inAppMessage.imageUrl {
+
+            let backgroundImageUrl = URL(string: imageUrlString)
+            self.promoMessageImageView.kf.setImage(with: backgroundImageUrl)
+
+        }
+
+        let htmlDescription = self.viewModel.inAppMessage.text
+        let data = Data(htmlDescription.utf8)
+        if let attributedString = try? NSMutableAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
+
+            let attributes: [NSAttributedString.Key: AnyObject] = [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary,
+             NSAttributedString.Key.backgroundColor: UIColor.App.backgroundPrimary,
+                                                                   NSAttributedString.Key.font: AppFont.with(type: .medium, size: 14)]
+
+            attributedString.addAttributes(attributes,
+                                           range: NSRange.init(location: 0, length: attributedString.length ))
+
+            self.messageDescriptionLabel.attributedText = attributedString
+        }
+    }
+
     private func resizeBannerImageView(messageBanner: UIImage) {
 
         self.aspectRatio = messageBanner.size.width/messageBanner.size.height
@@ -211,13 +300,29 @@ class MessageDetailViewController: UIViewController {
         self.messageImageViewDynamicHeightConstraint.isActive = true
     }
 
+    // MARK: Binding
+    private func bind(toViewModel viewModel: MessageDetailViewModel) {
+
+        let messageType = viewModel.getMessageType()
+
+        if messageType == .promo {
+            self.setupPromoHeaderInfo()
+            self.isRegularHeader = false
+        }
+        else {
+            self.setupRegularHeaderInfo()
+            self.isRegularHeader = true
+        }
+
+    }
+
     // MARK: Actions
     @objc private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
     }
 
     @objc private func didTapDeleteButton() {
-        print("Tapped Delete!")
+        // NOTE: Implement when backend has endpoint
     }
 }
 
@@ -243,7 +348,7 @@ extension MessageDetailViewController {
     private static func createTopTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("messages")
+        label.text = localized("message")
         label.font = AppFont.with(type: .bold, size: 18)
         label.textAlignment = .center
         return label
@@ -290,6 +395,15 @@ extension MessageDetailViewController {
         return view
     }
 
+    private static func createMessageHeaderStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 0
+        stackView.distribution = .fill
+        return stackView
+    }
+
     private static func createRegularMessageHeaderView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -332,6 +446,65 @@ extension MessageDetailViewController {
         return stackView
     }
 
+    private static func createPromoMessageHeaderView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createPromoMessageTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Message Title"
+        label.font = AppFont.with(type: .bold, size: 18)
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        label.setLineSpacing(lineSpacing: 3)
+        return label
+    }
+
+    private static func createPromoMessageSubtitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Message Subtitle"
+        label.font = AppFont.with(type: .semibold, size: 11)
+        label.textAlignment = .left
+        return label
+    }
+
+    private static func createPromoMessageImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.masksToBounds = true
+        return imageView
+    }
+
+    private static func createPromoFlagView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createPromoFlagTitle() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "BONUS"
+        label.font = AppFont.with(type: .bold, size: 10)
+        label.textAlignment = .left
+        return label
+    }
+
+    private static func createGradientLayer() -> CAGradientLayer {
+        let gradient = CAGradientLayer()
+        let startColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.8).cgColor
+        let endColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0).cgColor
+        gradient.startPoint = CGPoint(x: 0.0, y: 1.0)
+        gradient.endPoint = CGPoint(x: 0.0, y: 0.0)
+        gradient.colors = [startColor, endColor]
+        return gradient
+    }
+
     private static func createMessageDescriptionLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -352,12 +525,7 @@ extension MessageDetailViewController {
         return constraint
     }
 
-    private static func createMessageImageViewBottomConstraint() -> NSLayoutConstraint {
-        let constraint = NSLayoutConstraint()
-        return constraint
-    }
-
-    private static func createMessageSubtitleLabelBottomConstraint() -> NSLayoutConstraint {
+    private static func createMessageDescriptionTopConstraint() -> NSLayoutConstraint {
         let constraint = NSLayoutConstraint()
         return constraint
     }
@@ -379,13 +547,24 @@ extension MessageDetailViewController {
 
         self.scrollView.addSubview(self.scrollContainerView)
 
-        self.scrollContainerView.addSubview(self.regularMessageHeaderView)
+        self.scrollContainerView.addSubview(self.messageHeaderStackView)
+
+        self.messageHeaderStackView.addArrangedSubview(self.regularMessageHeaderView)
+        self.messageHeaderStackView.addArrangedSubview(self.promoMessageHeaderView)
 
         self.regularMessageHeaderView.addSubview(self.regularMessageTitleLabel)
         self.regularMessageHeaderView.addSubview(self.regularMessageStackView)
 
         self.regularMessageStackView.addArrangedSubview(self.regularMessageSubtitleLabel)
         self.regularMessageStackView.addArrangedSubview(self.regularMessageImageView)
+
+        self.promoMessageHeaderView.addSubview(self.promoMessageImageView)
+
+        self.promoMessageImageView.addSubview(self.promoMessageTitleLabel)
+        self.promoMessageHeaderView.addSubview(self.promoMessageSubtitleLabel)
+        self.promoMessageImageView.addSubview(self.promoFlagView)
+
+        self.promoFlagView.addSubview(self.promoFlagTitle)
 
         self.scrollContainerView.addSubview(self.messageDescriptionLabel)
 
@@ -435,21 +614,24 @@ extension MessageDetailViewController {
         NSLayoutConstraint.activate([
             self.scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.scrollView.topAnchor.constraint(equalTo: self.headerView.bottomAnchor, constant: 10),
+            self.scrollView.topAnchor.constraint(equalTo: self.headerView.bottomAnchor, constant: 15),
             self.scrollView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
 
             self.scrollContainerView.leadingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.leadingAnchor),
             self.scrollContainerView.trailingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.trailingAnchor),
             self.scrollContainerView.topAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.topAnchor),
             self.scrollContainerView.bottomAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.bottomAnchor),
-            self.scrollContainerView.widthAnchor.constraint(equalTo: self.scrollView.frameLayoutGuide.widthAnchor)
+            self.scrollContainerView.widthAnchor.constraint(equalTo: self.scrollView.frameLayoutGuide.widthAnchor),
+
+            self.messageHeaderStackView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor, constant: 25),
+            self.messageHeaderStackView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor, constant: -25),
+            self.messageHeaderStackView.topAnchor.constraint(equalTo: self.scrollContainerView.topAnchor)
         ])
 
         // Regular header view
         NSLayoutConstraint.activate([
-            self.regularMessageHeaderView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor, constant: 40),
-            self.regularMessageHeaderView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor, constant: -40),
-            self.regularMessageHeaderView.topAnchor.constraint(equalTo: self.scrollContainerView.topAnchor),
+            self.regularMessageHeaderView.leadingAnchor.constraint(equalTo: self.messageHeaderStackView.leadingAnchor, constant: 15),
+            self.regularMessageHeaderView.trailingAnchor.constraint(equalTo: self.messageHeaderStackView.trailingAnchor, constant: -15),
 
             self.regularMessageTitleLabel.leadingAnchor.constraint(equalTo: self.regularMessageHeaderView.leadingAnchor),
             self.regularMessageTitleLabel.trailingAnchor.constraint(equalTo: self.regularMessageHeaderView.trailingAnchor),
@@ -459,20 +641,41 @@ extension MessageDetailViewController {
             self.regularMessageStackView.trailingAnchor.constraint(equalTo: self.regularMessageHeaderView.trailingAnchor),
             self.regularMessageStackView.topAnchor.constraint(equalTo: self.regularMessageTitleLabel.bottomAnchor, constant: 20),
             self.regularMessageStackView.bottomAnchor.constraint(equalTo: self.regularMessageHeaderView.bottomAnchor, constant: -10)
-//            self.regularMessageSubtitleLabel.leadingAnchor.constraint(equalTo: self.regularMessageHeaderView.leadingAnchor),
-//            self.regularMessageSubtitleLabel.trailingAnchor.constraint(equalTo: self.regularMessageHeaderView.trailingAnchor),
-//            self.regularMessageSubtitleLabel.topAnchor.constraint(equalTo: self.regularMessageTitleLabel.bottomAnchor, constant: 20),
-//
-//            self.regularMessageImageView.leadingAnchor.constraint(equalTo: self.regularMessageHeaderView.leadingAnchor),
-//            self.regularMessageImageView.trailingAnchor.constraint(equalTo: self.regularMessageHeaderView.trailingAnchor),
-//            self.regularMessageImageView.topAnchor.constraint(equalTo: self.regularMessageSubtitleLabel.bottomAnchor, constant: 25),
-//            self.regularMessageImageView.bottomAnchor.constraint(equalTo: self.regularMessageHeaderView.bottomAnchor, constant: -10)
+        ])
+
+        // Promo header view
+        NSLayoutConstraint.activate([
+            self.promoMessageHeaderView.leadingAnchor.constraint(equalTo: self.messageHeaderStackView.leadingAnchor),
+            self.promoMessageHeaderView.trailingAnchor.constraint(equalTo: self.messageHeaderStackView.trailingAnchor),
+
+            self.promoMessageImageView.leadingAnchor.constraint(equalTo: self.promoMessageHeaderView.leadingAnchor),
+            self.promoMessageImageView.trailingAnchor.constraint(equalTo: self.promoMessageHeaderView.trailingAnchor),
+            self.promoMessageImageView.topAnchor.constraint(equalTo: self.promoMessageHeaderView.topAnchor),
+            self.promoMessageImageView.bottomAnchor.constraint(equalTo: self.promoMessageHeaderView.bottomAnchor),
+            self.promoMessageImageView.heightAnchor.constraint(equalToConstant: 279),
+
+            self.promoMessageTitleLabel.leadingAnchor.constraint(equalTo: self.promoMessageImageView.leadingAnchor, constant: 15),
+            self.promoMessageTitleLabel.trailingAnchor.constraint(equalTo: self.promoMessageImageView.trailingAnchor, constant: -15),
+            self.promoMessageTitleLabel.bottomAnchor.constraint(equalTo: self.promoMessageSubtitleLabel.topAnchor, constant: -7),
+
+            self.promoMessageSubtitleLabel.leadingAnchor.constraint(equalTo: self.promoMessageImageView.leadingAnchor, constant: 15),
+            self.promoMessageSubtitleLabel.trailingAnchor.constraint(equalTo: self.promoMessageImageView.trailingAnchor, constant: -15),
+            self.promoMessageSubtitleLabel.bottomAnchor.constraint(equalTo: self.promoMessageHeaderView.bottomAnchor, constant: -20),
+
+            self.promoFlagView.leadingAnchor.constraint(equalTo: self.promoMessageImageView.leadingAnchor),
+            self.promoFlagView.bottomAnchor.constraint(equalTo: self.promoMessageTitleLabel.topAnchor, constant: -15),
+            self.promoFlagView.widthAnchor.constraint(equalToConstant: 73),
+            self.promoFlagView.heightAnchor.constraint(equalToConstant: 25),
+
+            self.promoFlagTitle.leadingAnchor.constraint(equalTo: self.promoFlagView.leadingAnchor, constant: 15),
+            self.promoFlagTitle.centerYAnchor.constraint(equalTo: self.promoFlagView.centerYAnchor)
+
         ])
 
         NSLayoutConstraint.activate([
             self.messageDescriptionLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor, constant: 40),
             self.messageDescriptionLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor, constant: -40),
-            self.messageDescriptionLabel.topAnchor.constraint(equalTo: self.regularMessageHeaderView.bottomAnchor, constant: 30),
+            self.messageDescriptionLabel.topAnchor.constraint(equalTo: self.messageHeaderStackView.bottomAnchor, constant: 30),
             self.messageDescriptionLabel.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -20)
         ])
 
@@ -495,6 +698,7 @@ extension MessageDetailViewController {
                            multiplier: 1/self.aspectRatio,
                            constant: 0)
         self.messageImageViewDynamicHeightConstraint.isActive = false
+
     }
 
 }
