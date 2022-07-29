@@ -170,7 +170,6 @@ class MessagesViewController: UIViewController {
 
         viewModel.inAppMessagesPublisher
             .receive(on: DispatchQueue.main)
-            .dropFirst()
             .sink(receiveValue: { [weak self] inAppMessages in
                 self?.isEmptyState = inAppMessages.isEmpty
             })
