@@ -28,6 +28,7 @@
                 <outlet property="accountValueLabel" destination="Xa4-nk-Zrj" id="Pfv-lN-cem"/>
                 <outlet property="accountValueView" destination="xvA-vM-kST" id="hQR-VN-Ueh"/>
                 <outlet property="backButton" destination="Teg-lJ-kC3" id="wvg-8t-U5J"/>
+                <outlet property="headerButtonsBaseView" destination="W39-Mk-0Nu" id="g5Y-nQ-tcc"/>
                 <outlet property="headerCompetitionDetailView" destination="T39-hK-1ff" id="YUG-UL-jLa"/>
                 <outlet property="headerCompetitionImageView" destination="G4e-PL-QMg" id="EJG-sI-HXz"/>
                 <outlet property="headerCompetitionLabel" destination="GpS-CD-bRs" id="xAN-YZ-c0m"/>
@@ -692,7 +693,7 @@
         <image name="more_options_icon" width="6" height="22"/>
         <image name="plus_small_icon" width="16" height="16"/>
         <namedColor name="buttonBackgroundPrimary">
-            <color red="0.97254901960784312" green="0.9882352941176471" blue="0.0078431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.13725490196078433" green="0.69019607843137254" blue="0.30588235294117649" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

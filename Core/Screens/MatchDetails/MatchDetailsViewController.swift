@@ -39,6 +39,8 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var headerDetailLiveTopLabel: UILabel!
     @IBOutlet private var headerDetailLiveBottomLabel: UILabel!
 
+    @IBOutlet private var headerButtonsBaseView: UIView!
+    
     @IBOutlet private var accountValueView: UIView!
     @IBOutlet private var accountPlusView: UIView!
     @IBOutlet private var accountValueLabel: UILabel!
@@ -157,6 +159,8 @@ class MatchDetailsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.headerButtonsBaseView.isHidden = true
         
         //
         self.addChildViewController(marketGroupsPagedViewController, toView: marketGroupsPagedBaseView)
