@@ -422,6 +422,9 @@ extension UserSessionStore {
                 Env.gomaSocialClient.connectSocket()
                 
                 self?.hasGomaUserSessionPublisher.send(true)
+
+                Env.gomaSocialClient.getInAppMessagesCounter()
+
             })
             .store(in: &cancellables)
     }

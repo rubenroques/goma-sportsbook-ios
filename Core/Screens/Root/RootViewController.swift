@@ -67,7 +67,9 @@ class RootViewController: UIViewController {
     @IBOutlet private var accountPlusView: UIView!
     @IBOutlet private var accountValueLabel: UILabel!
     @IBOutlet private var accountPlusImageView: UIImageView!
-    
+
+    @IBOutlet private var notificationCounterView: UIView!
+    @IBOutlet private var notificationCounterLabel: UILabel!
     //
     //
     private var pictureInPictureView: PictureInPictureView?
@@ -210,7 +212,6 @@ class RootViewController: UIViewController {
 
         self.view.sendSubviewToBack(topBarView)
         self.view.sendSubviewToBack(tabBarView)
-        
 
         self.commonInit()
         self.loadChildViewControllerIfNeeded(tab: self.selectedTabItem)
@@ -302,6 +303,19 @@ class RootViewController: UIViewController {
         let debugTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLogoImageView))
         logoImageView.addGestureRecognizer(debugTapGesture)
         logoImageView.isUserInteractionEnabled = true
+
+        Env.gomaSocialClient.inAppMessagesCounter
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] notificationCounter in
+                if notificationCounter > 0 {
+                    self?.notificationCounterView.isHidden = false
+                    self?.notificationCounterLabel.text = "\(notificationCounter)"
+                }
+                else {
+                    self?.notificationCounterView.isHidden = true
+                }
+            })
+            .store(in: &cancellables)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -368,6 +382,8 @@ class RootViewController: UIViewController {
         self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         self.casinoButtonBaseView.layer.cornerRadius = self.casinoButtonBaseView.frame.height / 2
         self.sportsbookButtonBaseView.layer.cornerRadius = self.sportsbookButtonBaseView .frame.height / 2
+
+        self.notificationCounterView.layer.cornerRadius = self.notificationCounterView.frame.height/2
     }
 
     func commonInit() {
@@ -440,6 +456,8 @@ class RootViewController: UIViewController {
         loginButton.setTitle(localized("login"), for: .normal)
         loginButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 13)
 
+        self.notificationCounterLabel.font = AppFont.with(type: .semibold, size: 12)
+
     }
 
     func setupWithTheme() {
@@ -496,6 +514,8 @@ class RootViewController: UIViewController {
         self.sportsbookIconImageView.setImageColor(color: UIColor.App.iconSecondary)
         
         self.redrawButtonButtons()
+
+        self.notificationCounterLabel.textColor = UIColor.App.buttonTextPrimary
     }
 
     func setupWithState(_ state: ScreenState) {
