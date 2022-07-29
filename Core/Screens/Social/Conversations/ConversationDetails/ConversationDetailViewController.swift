@@ -108,6 +108,9 @@ class ConversationDetailViewController: UIViewController {
         self.tableView.isDirectionalLockEnabled = true 
         self.tableView.alwaysBounceHorizontal = true
         self.tableView.alwaysBounceVertical = false
+
+        // Delegate the interactivePopGesture for gesture verification
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
         
     }
 
@@ -571,6 +574,47 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         isModalInPresentation = false
+
+    }
+
+}
+
+extension ConversationDetailViewController: UIGestureRecognizerDelegate {
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+
+        // if interactivePopGesture should require the failure of the other gesture
+
+        if gestureRecognizer == self.navigationController?.interactivePopGestureRecognizer && otherGestureRecognizer == self.tableView.panGestureRecognizer {
+            // print("FIRST SHOULD NOT REQUIRE FAILURE OF SECOND")
+            return false
+        }
+
+       return false
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+
+        // If interactivePopGesture is recognized with another gesture
+
+        if gestureRecognizer == self.navigationController?.interactivePopGestureRecognizer && otherGestureRecognizer == self.tableView.panGestureRecognizer {
+            // print("FIRST RECOGNIZED SIMULTANEOUSLY WITH SECOND")
+            return true
+        }
+
+        return false
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+
+        // if interactivePopGesture fails because of another gesture
+
+        if gestureRecognizer == self.navigationController?.interactivePopGestureRecognizer && otherGestureRecognizer == self.tableView.panGestureRecognizer {
+            // print("FIRST FAILING BECAUSE OF SECOND")
+            return true
+        }
+
+        return false
     }
 }
 
@@ -903,7 +947,6 @@ extension ConversationDetailViewController: UIAdaptivePresentationControllerDele
 
     func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
 
-        print("IS DISMISSING")
         return false
     }
 }
