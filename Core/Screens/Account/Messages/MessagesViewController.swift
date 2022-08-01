@@ -52,6 +52,10 @@ class MessagesViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+            print("MessagesViewController deinit called")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

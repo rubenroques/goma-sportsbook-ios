@@ -7031,10 +7031,10 @@
 		A9B331B8288EF1F800D097F0 /* Messages */ = {
 			isa = PBXGroup;
 			children = (
-				A9B331DA288FFFC900D097F0 /* ViewModels */,
-				A9B331C1288EFDD600D097F0 /* Cells */,
 				A9B331B9288EF21300D097F0 /* MessagesViewController.swift */,
 				A9B331E328904F4800D097F0 /* MessageDetailViewController.swift */,
+				A9B331DA288FFFC900D097F0 /* ViewModels */,
+				A9B331C1288EFDD600D097F0 /* Cells */,
 			);
 			path = Messages;
 			sourceTree = "<group>";
@@ -12363,7 +12363,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00584;
+				CURRENT_PROJECT_VERSION = 00590;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -12389,7 +12389,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00584;
+				CURRENT_PROJECT_VERSION = 00590;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
