@@ -218,7 +218,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         super.init(nibName: "PreSubmissionBetslipViewController", bundle: nil)
 
-        self.title = "Betslip"
+        self.title = localized("betslip") // TODO: localization
     }
 
     @available(iOS, unavailable)
@@ -242,7 +242,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.view.bringSubviewToFront(emptyBetsBaseView)
         self.view.bringSubviewToFront(loadingBaseView)
 
-        self.betTypeSegmentControlView = SegmentControlView(options: ["Single", "Multiple", "System"])
+        self.betTypeSegmentControlView = SegmentControlView(options: ["Single", "Multiple", "System"]) // TODO: localization
         self.betTypeSegmentControlView?.translatesAutoresizingMaskIntoConstraints = false
         self.betTypeSegmentControlView?.didSelectItemAtIndexAction = self.didChangeSelectedSegmentItem
 
@@ -270,8 +270,11 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondaryPlaceBetButtonsSeparatorView.alpha = 0.5
 
         self.simpleWinningsValueLabel.text = "-.--€"
-        self.simpleOddsValueLabel.isHidden = true
-        self.simpleOddsTitleLabel.isHidden = true
+        self.simpleOddsTitleLabel.text = localized("bets") + ":"
+        self.simpleOddsValueLabel.text = "1"
+        
+        self.simpleOddsValueLabel.isHidden = false
+        self.simpleOddsTitleLabel.isHidden = false
 
         self.multipleWinningsValueLabel.text = "-.--€"
         self.multipleOddsValueLabel.text = "-.--"
@@ -353,6 +356,8 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                 self?.systemBetTypePickerView.reloadAllComponents()
 
+                self?.simpleOddsValueLabel.text = "\(tickets.count)"
+                
                 self?.tableView.reloadData()
             }
             .store(in: &cancellables)
@@ -459,6 +464,13 @@ class PreSubmissionBetslipViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] bettingTickets, _ in
                 self?.emptyBetsBaseView.isHidden = !bettingTickets.isEmpty
+            })
+            .store(in: &cancellables)
+
+        self.viewModel.isUnavailableBetSelection
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isUnavailable in
+                self?.suggestedBetsListViewController.isEmptySharedBet = isUnavailable
             })
             .store(in: &cancellables)
 
@@ -804,6 +816,24 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        Publishers.CombineLatest(self.viewModel.sharedBetsPublisher, self.viewModel.isPartialBetSelection)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] sharedBets, isPartialBetSelection in
+                switch sharedBets {
+                case .loaded:
+                    if isPartialBetSelection {
+                        self?.showErrorView(errorMessage: localized("bet_suffered_alterations"), isAlertLayout: true)
+                    }
+                case .idle:
+                    ()
+                case .loading:
+                    ()
+                case .failed:
+                    ()
+                }
+            })
+            .store(in: &cancellables)
+
         self.setupWithTheme()
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -849,11 +879,16 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
 
-    func showErrorView(errorMessage: String?) {
+    func showErrorView(errorMessage: String?, isAlertLayout: Bool = false) {
 
         let errorView = BetslipErrorView()
         errorView.alpha = 0
         errorView.setDescription(description: errorMessage ?? localized("error"))
+
+        if isAlertLayout {
+            errorView.setAlertLayout()
+        }
+
         errorView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(errorView)
 

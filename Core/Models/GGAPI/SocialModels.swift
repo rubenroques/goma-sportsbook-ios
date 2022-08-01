@@ -220,13 +220,15 @@ enum NotificationsType {
     case event
     case chat
     case custom
+    case news
 
-    var identifier : String {
+    var identifier: String {
         switch self {
         case .bet: return "bet"
         case .event: return "event"
         case .chat: return "chat"
         case .custom: return "custom"
+        case .news: return "news"
         }
     }
 }
@@ -236,4 +238,37 @@ struct SocialAppInfo {
     var urlScheme: String
     var urlShare: String
 
+}
+
+struct InAppMessage: Decodable {
+
+    var id: Int
+    var title: String
+    var titleSlug: String?
+    var text: String
+    var url: String
+    var imageUrl: String?
+    var type: String
+    var subtype: String
+    var instant: Int
+    var processed: Int
+    var createdAt: String
+    var updatedAt: String
+    var notificationUsers: [NotificationUser]
+
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case title = "title"
+        case titleSlug = "title_slug"
+        case text = "text"
+        case url = "url"
+        case imageUrl = "image_url"
+        case type = "type"
+        case subtype = "subtype"
+        case instant = "instant"
+        case processed = "processed"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case notificationUsers = "notification_users"
+    }
 }

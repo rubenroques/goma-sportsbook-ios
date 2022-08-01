@@ -85,11 +85,20 @@ class SuggestedBetsListViewController: UIViewController {
     private lazy var tableHeaderView: UIView = Self.createTableHeaderView()
     private lazy var headerTitleLabel: UILabel = Self.createHeaderTitleLabel()
     private lazy var headerSubtitleLabel: UILabel = Self.createHeaderSubtitleLabel()
+    private lazy var emptySharedBetView: BetslipErrorView = Self.createEmptySharedBetView()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
     private var viewModel: SuggestedBetsListViewModel
     private var cancellables = Set<AnyCancellable>()
+
+    var isEmptySharedBet: Bool = false {
+        didSet {
+            self.emptySharedBetView.isHidden = !isEmptySharedBet
+            self.headerTitleLabel.isHidden = isEmptySharedBet
+            self.headerSubtitleLabel.isHidden = isEmptySharedBet
+        }
+    }
 
     // MARK: - Lifetime and Cycle
     init(viewModel: SuggestedBetsListViewModel) {
@@ -180,7 +189,6 @@ class SuggestedBetsListViewController: UIViewController {
         self.loadingActivityIndicatorView.stopAnimating()
     }
 
-    
 }
 
 extension SuggestedBetsListViewController: UITableViewDelegate, UITableViewDataSource {
@@ -235,6 +243,14 @@ extension SuggestedBetsListViewController {
         return subtitleLabel
     }
 
+    private static func createEmptySharedBetView() -> BetslipErrorView {
+        let view = BetslipErrorView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.setDescription(description: localized("shared_bet_unavailable"))
+        view.setAlertLayout()
+        return view
+    }
+
     private static func createTableView() -> UITableView {
         let tableView = UITableView.init(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -263,6 +279,7 @@ extension SuggestedBetsListViewController {
 
         self.tableHeaderView.addSubview(self.headerTitleLabel)
         self.tableHeaderView.addSubview(self.headerSubtitleLabel)
+        self.tableHeaderView.addSubview(self.emptySharedBetView)
 
         self.tableView.tableHeaderView = self.tableHeaderView
 
@@ -284,6 +301,10 @@ extension SuggestedBetsListViewController {
             self.tableHeaderView.centerXAnchor.constraint(equalTo: self.headerSubtitleLabel.centerXAnchor),
             self.tableHeaderView.leadingAnchor.constraint(equalTo: self.headerSubtitleLabel.leadingAnchor, constant: -12),
             self.tableHeaderView.centerYAnchor.constraint(equalTo: self.headerSubtitleLabel.topAnchor, constant: -5),
+
+            self.emptySharedBetView.leadingAnchor.constraint(equalTo: self.tableHeaderView.leadingAnchor),
+            self.emptySharedBetView.trailingAnchor.constraint(equalTo: self.tableHeaderView.trailingAnchor),
+            self.emptySharedBetView.centerYAnchor.constraint(equalTo: self.tableHeaderView.centerYAnchor)
         ])
 
         NSLayoutConstraint.activate([
