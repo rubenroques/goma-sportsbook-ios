@@ -534,6 +534,10 @@ Terms of use, Privacy Policy and EULA";
 "time_add_friends" = "Time to add friends!";
 "add_some_friends_start_chatting" = "Add some friends and start chatting now!";
 
+"single_bet" = "Single Bet";
+"multiple_bet" = "Multiple Bet";
+"system_bet" = "System Bet";
+
 "bet_suffered_alterations" = "The bet suffered alterations because of a change in the game, check the new options.";
 "shared_bet_unavailable" = "The shared bet is not available anymore, check some new bet suggestions.";
 

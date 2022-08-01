@@ -538,3 +538,7 @@ Terms of use, Privacy Policy and EULA";
 "mark_as_read" = "Mark as read";
 
 "no_messages_yet" = "There’s no messages yet.";
+
+"single_bet" = "Single Bet";
+"multiple_bet" = "Multiple Bet";
+"system_bet" = "System Bet";
