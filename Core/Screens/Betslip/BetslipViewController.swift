@@ -96,8 +96,6 @@ class BetslipViewController: UIViewController {
 
         self.isModalInPresentation = false
 
-
-
         self.addChild(tabViewController)
         self.tabsBaseView.addSubview(tabViewController.view)
         self.tabViewController.view.translatesAutoresizingMaskIntoConstraints = false

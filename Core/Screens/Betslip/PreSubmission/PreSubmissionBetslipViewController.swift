@@ -467,6 +467,13 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        self.viewModel.isUnavailableBetSelection
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isUnavailable in
+                self?.suggestedBetsListViewController.isEmptySharedBet = isUnavailable
+            })
+            .store(in: &cancellables)
+
         self.listTypePublisher
             .receive(on: DispatchQueue.main)
             .map({ $0 == .simple })
@@ -809,6 +816,24 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        Publishers.CombineLatest(self.viewModel.sharedBetsPublisher, self.viewModel.isPartialBetSelection)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] sharedBets, isPartialBetSelection in
+                switch sharedBets {
+                case .loaded:
+                    if isPartialBetSelection {
+                        self?.showErrorView(errorMessage: localized("bet_suffered_alterations"), isAlertLayout: true)
+                    }
+                case .idle:
+                    ()
+                case .loading:
+                    ()
+                case .failed:
+                    ()
+                }
+            })
+            .store(in: &cancellables)
+
         self.setupWithTheme()
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -854,11 +879,16 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
 
-    func showErrorView(errorMessage: String?) {
+    func showErrorView(errorMessage: String?, isAlertLayout: Bool = false) {
 
         let errorView = BetslipErrorView()
         errorView.alpha = 0
         errorView.setDescription(description: errorMessage ?? localized("error"))
+
+        if isAlertLayout {
+            errorView.setAlertLayout()
+        }
+
         errorView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(errorView)
 

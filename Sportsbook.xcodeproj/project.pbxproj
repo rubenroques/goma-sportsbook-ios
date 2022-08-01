@@ -3556,6 +3556,13 @@
 		A98EFDAC28801DF300655A26 /* SharedTicketBetLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98EFDA828801DF300655A26 /* SharedTicketBetLineView.swift */; };
 		A98EFDAD28801DF300655A26 /* SharedTicketBetLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98EFDA828801DF300655A26 /* SharedTicketBetLineView.swift */; };
 		A98EFDAE28801DF300655A26 /* SharedTicketBetLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98EFDA828801DF300655A26 /* SharedTicketBetLineView.swift */; };
+		A98EC7E5288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98EC7E4288AF2C00044FC46 /* NewGroupHeaderFooterView.swift */; };
+		A98EC7E6288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98EC7E4288AF2C00044FC46 /* NewGroupHeaderFooterView.swift */; };
+		A98EC7E7288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98EC7E4288AF2C00044FC46 /* NewGroupHeaderFooterView.swift */; };
+		A98EC7E8288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98EC7E4288AF2C00044FC46 /* NewGroupHeaderFooterView.swift */; };
+		A98EC7E9288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98EC7E4288AF2C00044FC46 /* NewGroupHeaderFooterView.swift */; };
+		A98EC7EA288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98EC7E4288AF2C00044FC46 /* NewGroupHeaderFooterView.swift */; };
+		A98EC7EB288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98EC7E4288AF2C00044FC46 /* NewGroupHeaderFooterView.swift */; };
 		A98F3A562795C20F0029C3DB /* SuggestedBetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98F3A552795C20F0029C3DB /* SuggestedBetViewModel.swift */; };
 		A98F3A572795C20F0029C3DB /* SuggestedBetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98F3A552795C20F0029C3DB /* SuggestedBetViewModel.swift */; };
 		A995C195279991A100151462 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C193279991A100151462 /* SearchViewController.swift */; };
@@ -4540,6 +4547,7 @@
 		A98EC7DB2889B0AA0044FC46 /* ConversationBetSelectionRootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationBetSelectionRootViewModel.swift; sourceTree = "<group>"; };
 		A98EFDA1287C66B000655A26 /* SharedTicketCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTicketCardView.swift; sourceTree = "<group>"; };
 		A98EFDA828801DF300655A26 /* SharedTicketBetLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTicketBetLineView.swift; sourceTree = "<group>"; };
+		A98EC7E4288AF2C00044FC46 /* NewGroupHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupHeaderFooterView.swift; sourceTree = "<group>"; };
 		A98F3A552795C20F0029C3DB /* SuggestedBetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedBetViewModel.swift; sourceTree = "<group>"; };
 		A995C193279991A100151462 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		A995C194279991A100151462 /* SearchViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchViewController.xib; sourceTree = "<group>"; };
@@ -6770,6 +6778,14 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		A98EC7E3288AF2900044FC46 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A98EC7E4288AF2C00044FC46 /* NewGroupHeaderFooterView.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		A995C1922799917100151462 /* Search */ = {
 			isa = PBXGroup;
 			children = (
@@ -7237,6 +7253,7 @@
 		A9BA6D5D281179A700E82724 /* Groups */ = {
 			isa = PBXGroup;
 			children = (
+				A98EC7E3288AF2900044FC46 /* Cells */,
 				A9BA6D6128119EF200E82724 /* ViewModels */,
 				A9BA6D5E281179DA00E82724 /* NewGroupViewController.swift */,
 				A9F1041C2811BE420011AAAC /* NewGroupManagementViewController.swift */,
@@ -8922,6 +8939,7 @@
 				A9863ECB286B17A600A4A1A2 /* ChatTicketStateInMessageView.swift in Sources */,
 				A9BA6D5B281168AA00E82724 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
 				45A642D427985A96008EFD5B /* HeadToHeadCardStatsView.swift in Sources */,
+				A98EC7E5288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */,
 				A90BC90F27C3FF1000667616 /* AppearanceViewModel.swift in Sources */,
 				45166CFF26F3548D00E69D65 /* UnregisterSSWampMessage.swift in Sources */,
 				45B0BD37271F1007009C41FA /* CompetitionFilterTableViewCell.swift in Sources */,
@@ -9271,6 +9289,7 @@
 				A9B331EA28904F4800D097F0 /* MessageDetailViewController.swift in Sources */,
 				A9863ED9286F01E500A4A1A2 /* ShareTicketChoiceViewController.swift in Sources */,
 				A98EC7E22889B0AA0044FC46 /* ConversationBetSelectionRootViewModel.swift in Sources */,
+				A98EC7EB288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */,
 				A9B331F2289422FC00D097F0 /* MessageDetailViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9473,6 +9492,7 @@
 				A9863ECC286B17A600A4A1A2 /* ChatTicketStateInMessageView.swift in Sources */,
 				A9BA6D5C281168AA00E82724 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
 				45D728D82715F6DC00EFE04D /* AppModels.swift in Sources */,
+				A98EC7E6288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */,
 				45A642D527985A96008EFD5B /* HeadToHeadCardStatsView.swift in Sources */,
 				A90BC91027C3FF1000667616 /* AppearanceViewModel.swift in Sources */,
 				45166D0026F3548D00E69D65 /* UnregisterSSWampMessage.swift in Sources */,
@@ -10002,6 +10022,7 @@
 				A9863ECF286B17A600A4A1A2 /* ChatTicketStateInMessageView.swift in Sources */,
 				457CBA8D282D27D000ED0F00 /* AppModels.swift in Sources */,
 				457CBA8E282D27D000ED0F00 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
+				A98EC7E9288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */,
 				457CBA8F282D27D000ED0F00 /* HeadToHeadCardStatsView.swift in Sources */,
 				457CBA90282D27D000ED0F00 /* AppearanceViewModel.swift in Sources */,
 				457CBA91282D27D000ED0F00 /* UnregisterSSWampMessage.swift in Sources */,
@@ -10531,6 +10552,7 @@
 				A9863ED0286B17A600A4A1A2 /* ChatTicketStateInMessageView.swift in Sources */,
 				457CBD37282D2CD100ED0F00 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
 				457CBD38282D2CD100ED0F00 /* HeadToHeadCardStatsView.swift in Sources */,
+				A98EC7EA288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */,
 				457CBD39282D2CD100ED0F00 /* AppearanceViewModel.swift in Sources */,
 				457CBD3A282D2CD100ED0F00 /* UnregisterSSWampMessage.swift in Sources */,
 				457CBD3B282D2CD100ED0F00 /* CompetitionFilterTableViewCell.swift in Sources */,
@@ -11060,6 +11082,7 @@
 				A9863ECD286B17A600A4A1A2 /* ChatTicketStateInMessageView.swift in Sources */,
 				4589C81B282024E400243547 /* UnregisterSSWampMessage.swift in Sources */,
 				4589C81C282024E400243547 /* CompetitionFilterTableViewCell.swift in Sources */,
+				A98EC7E7288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */,
 				4589C81D282024E400243547 /* EmailVerificationViewController.swift in Sources */,
 				4589C81E282024E400243547 /* SuggestedBetTableViewCell.swift in Sources */,
 				4589C81F282024E400243547 /* Optional+Extensions.swift in Sources */,
@@ -11589,6 +11612,7 @@
 				A9863ECE286B17A600A4A1A2 /* ChatTicketStateInMessageView.swift in Sources */,
 				45A6BC6928246A7500D9B416 /* UnregisterSSWampMessage.swift in Sources */,
 				45A6BC6A28246A7500D9B416 /* CompetitionFilterTableViewCell.swift in Sources */,
+				A98EC7E8288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */,
 				45A6BC6B28246A7500D9B416 /* EmailVerificationViewController.swift in Sources */,
 				45A6BC6C28246A7500D9B416 /* SuggestedBetTableViewCell.swift in Sources */,
 				45A6BC6D28246A7500D9B416 /* Optional+Extensions.swift in Sources */,
