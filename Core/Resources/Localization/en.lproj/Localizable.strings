@@ -248,6 +248,8 @@ Terms of use, Privacy Policy and EULA";
 "sportsbook" = "Sportsbook";
 "my_tickets" = "My Tickets";
 "my_bets" = "My Bets";
+"bets" = "Bets";
+"betslip" = "Betslip";
 
 "logout" = "Logout";
 
@@ -529,3 +531,10 @@ Terms of use, Privacy Policy and EULA";
 
 "add_friends_group" = "Add friends to group";
 "select_atleast_two" = "Select at least 2 friends";
+
+"messages" = "Messages";
+"mark_all_read" = "Mark all as read";
+"delete_all" = "Delete all";
+"mark_as_read" = "Mark as read";
+
+"no_messages_yet" = "There’s no messages yet.";

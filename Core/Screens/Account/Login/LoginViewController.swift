@@ -322,6 +322,9 @@ class LoginViewController: UIViewController {
                 Env.gomaSocialClient.connectSocket()
 
                 Env.userSessionStore.hasGomaUserSessionPublisher.send(true)
+
+                Env.gomaSocialClient.getInAppMessagesCounter()
+
             })
             .store(in: &cancellables)
     }

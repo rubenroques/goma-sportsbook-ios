@@ -496,8 +496,6 @@ extension ChatNotificationsViewController {
             self.scrollView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
             self.scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: self.view.widthAnchor),
 
-
-
             self.chatNotificationsStackView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor, constant: 16),
             self.chatNotificationsStackView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor, constant: -16),
             self.chatNotificationsStackView.topAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.topAnchor),

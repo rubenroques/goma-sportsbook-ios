@@ -54,6 +54,8 @@ extension UIColor {
         static let buttonBackgroundSecondary = UIColor(named: "buttonBackgroundSecondary")!
         static let buttonActiveHoverSecondary = UIColor(named: "buttonActiveHoverSecondary")!
 
+        static let buttonBorderTertiary = UIColor(named: "buttonBorderTertiary")!
+
         static let bubblesPrimary = UIColor(named: "bubblesPrimary")!
         
         static let alertError = UIColor(named: "alertError")!

@@ -218,7 +218,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         super.init(nibName: "PreSubmissionBetslipViewController", bundle: nil)
 
-        self.title = "Betslip"
+        self.title = localized("betslip") // TODO: localization
     }
 
     @available(iOS, unavailable)
@@ -242,7 +242,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.view.bringSubviewToFront(emptyBetsBaseView)
         self.view.bringSubviewToFront(loadingBaseView)
 
-        self.betTypeSegmentControlView = SegmentControlView(options: ["Single", "Multiple", "System"])
+        self.betTypeSegmentControlView = SegmentControlView(options: ["Single", "Multiple", "System"]) // TODO: localization
         self.betTypeSegmentControlView?.translatesAutoresizingMaskIntoConstraints = false
         self.betTypeSegmentControlView?.didSelectItemAtIndexAction = self.didChangeSelectedSegmentItem
 
@@ -270,8 +270,11 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondaryPlaceBetButtonsSeparatorView.alpha = 0.5
 
         self.simpleWinningsValueLabel.text = "-.--€"
-        self.simpleOddsValueLabel.isHidden = true
-        self.simpleOddsTitleLabel.isHidden = true
+        self.simpleOddsTitleLabel.text = localized("bets") + ":"
+        self.simpleOddsValueLabel.text = "1"
+        
+        self.simpleOddsValueLabel.isHidden = false
+        self.simpleOddsTitleLabel.isHidden = false
 
         self.multipleWinningsValueLabel.text = "-.--€"
         self.multipleOddsValueLabel.text = "-.--"
@@ -353,6 +356,8 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                 self?.systemBetTypePickerView.reloadAllComponents()
 
+                self?.simpleOddsValueLabel.text = "\(tickets.count)"
+                
                 self?.tableView.reloadData()
             }
             .store(in: &cancellables)
