@@ -198,7 +198,7 @@ final class TSManager {
                             }
                         }
                         catch {
-                            //print("TSManager Decoding Error: \(error)")
+                            print("TSManager \(router) Decoding Error: \(error)")
                             promise(.failure( .decodingError(value: error.localizedDescription) ))
                         }
                     }, onError: { _, error, _, kwargs in

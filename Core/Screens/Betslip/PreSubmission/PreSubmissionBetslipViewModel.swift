@@ -13,6 +13,8 @@ class PreSubmissionBetslipViewModel {
     // MARK: Public Properties
     var bonusBetslipArrayPublisher: CurrentValueSubject<[BonusBetslip], Never> = .init([])
     var sharedBetsPublisher: CurrentValueSubject<LoadableContent<[BettingTicket]>, Never> = .init(LoadableContent.idle)
+    var isPartialBetSelection: CurrentValueSubject<Bool, Never> = .init(false)
+    var isUnavailableBetSelection: CurrentValueSubject<Bool, Never> = .init(false)
 
     // MARK: Private Properties
     private var sharedBetToken: String?
@@ -114,6 +116,14 @@ class PreSubmissionBetslipViewModel {
 
                 for ticket in validTickets {
                     Env.betslipManager.addBettingTicket(ticket)
+                }
+
+                if validTickets.count != betData.selections.count && validTickets.isNotEmpty {
+                    self?.isPartialBetSelection.send(true)
+                }
+
+                if validTickets.isEmpty {
+                    self?.isUnavailableBetSelection.send(true)
                 }
 
                 self?.sharedBetsPublisher.send(.loaded(validTickets))

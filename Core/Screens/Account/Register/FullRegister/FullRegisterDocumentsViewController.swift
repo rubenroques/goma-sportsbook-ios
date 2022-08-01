@@ -241,22 +241,29 @@ class FullRegisterDocumentsViewController: UIViewController {
     }
 
     @IBAction func submitAction() {
+        
+        guard let profile = profile else {
+            return
+        }
+        
         let gender = registerForm.title == "Mr." ? "M" : "F"
-        let form = EveryMatrix.ProfileForm(email: profile!.email,
+        let form = EveryMatrix.ProfileForm(email: profile.email,
                                            title: registerForm.title,
                                            gender: gender,
                                            firstname: registerForm.firstName,
                                            surname: registerForm.lastName,
-                                           birthDate: profile!.birthDate,
+                                           birthDate: profile.birthDate,
                                            country: registerForm.country,
                                            address1: registerForm.address1,
                                            address2: registerForm.address2,
                                            city: registerForm.city,
                                            postalCode: registerForm.postalCode,
-                                           mobile: profile!.mobile,
-                                           mobilePrefix: profile!.mobilePrefix,
-                                           phone: profile!.phone,
-                                           phonePrefix: profile!.phonePrefix, personalID: registerForm.personalID, securityQuestion: registerForm.securityQuestion,
+                                           mobile: profile.mobile,
+                                           mobilePrefix: profile.mobilePrefix,
+                                           phone: profile.phone,
+                                           phonePrefix: profile.phonePrefix,
+                                           personalID: registerForm.personalID,
+                                           securityQuestion: registerForm.securityQuestion,
                                            securityAnswer: registerForm.securityAnswer)
         self.fullRegisterProfile(form: form)
 
@@ -264,11 +271,11 @@ class FullRegisterDocumentsViewController: UIViewController {
 
     private func fullRegisterProfile(form: EveryMatrix.ProfileForm) {
         Env.everyMatrixClient.updateProfile(form: form)
-            .breakpointOnError()
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
                 case .failure(let error):
+                    print("fullRegisterProfile error: \(error)")
                     switch error {
                     case let .requestError(message):
                         self.showAlert(type: .error, text: message)
@@ -278,6 +285,9 @@ class FullRegisterDocumentsViewController: UIViewController {
                 case .finished:
                     ()
                 }
+                
+                print("fullRegisterProfile completion: \(completion)")
+                
             } receiveValue: { _ in
                 self.refreshUserProfileStatus()
                 self.showAlert(type: .success, text: localized("profile_updated_success"))
@@ -290,6 +300,7 @@ class FullRegisterDocumentsViewController: UIViewController {
         Env.userSessionStore.requestProfileStatus()
     }
 
+    
     @objc func didTapBackground() {
         self.resignFirstResponder()
 

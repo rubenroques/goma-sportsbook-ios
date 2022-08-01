@@ -53,6 +53,13 @@ class BetslipErrorView: NibView {
         self.descriptionLabel.text = description
     }
 
+    func setAlertLayout() {
+        self.containerView.layer.borderColor = UIColor.App.alertWarning.cgColor
+
+        self.logoImageView.image = UIImage(named: "info_alert_icon")
+
+    }
+
     override var intrinsicContentSize: CGSize {
         return CGSize(width: self.frame.width, height: descriptionLabel.frame.height)
     }

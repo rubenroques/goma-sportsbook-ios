@@ -39,6 +39,16 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var headerDetailLiveTopLabel: UILabel!
     @IBOutlet private var headerDetailLiveBottomLabel: UILabel!
 
+    @IBOutlet private var headerButtonsBaseView: UIView!
+    @IBOutlet private var headerButtonsStackView: UIStackView!
+    @IBOutlet private var headerLiveButtonBaseView: UIView!
+    @IBOutlet private var liveButtonLabel: UILabel!
+    @IBOutlet private var liveButtonImageView: UIImageView!
+    
+    @IBOutlet private var headerStatsButtonBaseView: UIView!
+    @IBOutlet private var statsButtonLabel: UILabel!
+    @IBOutlet private var statsButtonImageView: UIImageView!
+    
     @IBOutlet private var accountValueView: UIView!
     @IBOutlet private var accountPlusView: UIView!
     @IBOutlet private var accountValueLabel: UILabel!
@@ -48,17 +58,11 @@ class MatchDetailsViewController: UIViewController {
 
     @IBOutlet private var matchFieldBaseView: UIView!
     @IBOutlet private var matchFieldLoadingView: UIActivityIndicatorView!
-    @IBOutlet private var matchFieldToggleView: UIView!
-    @IBOutlet private var matchFieldTitleLabel: UILabel!
-    @IBOutlet private var matchFieldTitleArrowImageView: UIImageView!
+
     @IBOutlet private var matchFieldWebView: WKWebView!
     @IBOutlet private var matchFieldWebViewHeight: NSLayoutConstraint!
 
     @IBOutlet private var statsBaseView: UIView!
-    @IBOutlet private var statsToggleView: UIView!
-    @IBOutlet private var statsTitleLabel: UILabel!
-    @IBOutlet private var statsTitleArrowImageView: UIImageView!
-    @IBOutlet private var statsToggleSeparatorView: UIView!
     @IBOutlet private var statsCollectionBaseView: UIView!
     @IBOutlet private var statsCollectionView: UICollectionView!
     @IBOutlet private var statsCollectionViewHeight: NSLayoutConstraint!
@@ -96,11 +100,9 @@ class MatchDetailsViewController: UIViewController {
     private var isStatsViewExpanded: Bool = false {
         didSet {
             if isStatsViewExpanded {
-                self.statsTitleArrowImageView.image = UIImage(named: "arrow_collapse_icon")
                 self.statsCollectionViewHeight.constant = 148
             }
             else {
-                self.statsTitleArrowImageView.image = UIImage(named: "arrow_expand_icon")
                 self.statsCollectionViewHeight.constant = 0
             }
 
@@ -110,17 +112,43 @@ class MatchDetailsViewController: UIViewController {
             }
         }
     }
+    
+    // =========================================================================
+    // Header bar and buttons logic
+    // =========================================================================
 
-    private var shouldShowWebView = false
+    var isValidStatsSport: Bool {
+        guard let match = self.viewModel.match else {
+            return false
+        }
+        
+        let isValidStatsSportType = match.sportType == "1" || match.sportType == "3"
+        if isValidStatsSportType {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+    
+    private var shouldShowLiveFieldWebView = false {
+        didSet {
+            if self.shouldShowLiveFieldWebView {
+                self.headerLiveButtonBaseView.isHidden = false
+            }
+            else {
+                self.headerLiveButtonBaseView.isHidden = true
+            }
+        }
+    }
+    
     private var matchFielHeight: CGFloat = 0
     private var isMatchFieldExpanded: Bool = false {
         didSet {
-            if isMatchFieldExpanded {
-                self.matchFieldTitleArrowImageView.image = UIImage(named: "arrow_collapse_icon")
+            if self.isMatchFieldExpanded {
                 self.matchFieldWebViewHeight.constant = matchFielHeight
             }
             else {
-                self.matchFieldTitleArrowImageView.image = UIImage(named: "arrow_expand_icon")
                 self.matchFieldWebViewHeight.constant = 0
             }
 
@@ -131,6 +159,69 @@ class MatchDetailsViewController: UIViewController {
         }
     }
 
+    enum HeaderBarSelection {
+        case none
+        case live
+        case stats
+    }
+    
+    var headerBarSelection: HeaderBarSelection = .none {
+        didSet {
+            switch self.headerBarSelection {
+            case .none:
+                self.headerLiveButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
+                self.liveButtonLabel.textColor = UIColor.App.textSecondary
+                self.liveButtonImageView.setImageColor(color: UIColor.App.textSecondary)
+                //
+                self.headerStatsButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
+                self.statsButtonLabel.textColor = UIColor.App.textSecondary
+                self.statsButtonImageView.setImageColor(color: UIColor.App.textSecondary)
+                //
+                
+                self.isStatsViewExpanded = false
+                self.isMatchFieldExpanded = false
+                
+            case .live:
+                self.headerLiveButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
+                self.liveButtonLabel.textColor = UIColor.App.textPrimary
+                self.liveButtonImageView.setImageColor(color: UIColor.App.textPrimary)
+                //
+                self.headerStatsButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
+                self.statsButtonLabel.textColor = UIColor.App.textSecondary
+                self.statsButtonImageView.setImageColor(color: UIColor.App.textSecondary)
+                //
+                
+                self.isStatsViewExpanded = false
+                self.isMatchFieldExpanded = true
+                
+            case .stats:
+                self.headerLiveButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
+                self.liveButtonLabel.textColor = UIColor.App.textSecondary
+                self.liveButtonImageView.setImageColor(color: UIColor.App.textSecondary)
+                //
+                self.headerStatsButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
+                self.statsButtonLabel.textColor = UIColor.App.textPrimary
+                self.statsButtonImageView.setImageColor(color: UIColor.App.textPrimary)
+                
+                self.isStatsViewExpanded = true
+                self.isMatchFieldExpanded = false
+            }
+        }
+    }
+    
+    private var isLiveFieldReady: Bool = false {
+        didSet {
+            if isLiveFieldReady {
+                self.matchFieldLoadingView.stopAnimating()
+            }
+            else {
+                self.matchFieldLoadingView.startAnimating()
+            }
+        }
+    }
+    
+    // =========================================================================
+    
     private var marketGroupsViewControllers = [UIViewController]()
     private var currentPageViewControllerIndex: Int = 0
 
@@ -157,7 +248,7 @@ class MatchDetailsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         //
         self.addChildViewController(marketGroupsPagedViewController, toView: marketGroupsPagedBaseView)
 
@@ -167,6 +258,13 @@ class MatchDetailsViewController: UIViewController {
         //
         self.matchNotAvailableView.isHidden = true
 
+        self.matchFieldBaseView.isHidden = false
+        self.statsBaseView.isHidden = false
+        
+        //
+        self.isLiveFieldReady = false
+        self.shouldShowLiveFieldWebView = false
+        
         //
         self.loadingView.hidesWhenStopped = true
         self.loadingView.stopAnimating()
@@ -255,27 +353,17 @@ class MatchDetailsViewController: UIViewController {
 
         // matchFieldWebView
         //
-        self.matchFieldTitleArrowImageView.image = UIImage(named: "arrow_expand_icon")
-
-        self.matchFieldBaseView.isHidden = true
-
         self.matchFieldWebView.scrollView.alwaysBounceVertical = false
         self.matchFieldWebView.scrollView.bounces = false
         self.matchFieldWebView.navigationDelegate = self
+        
         self.matchFieldLoadingView.hidesWhenStopped = true
         self.matchFieldLoadingView.stopAnimating()
         self.matchFieldLoadingView.layer.anchorPoint = CGPoint(x: 1.0, y: 0.5)
         self.matchFieldLoadingView.transform = CGAffineTransform.init(scaleX: 0.6, y: 0.6)
-        self.matchFieldToggleView.isUserInteractionEnabled = false
-        self.matchFieldTitleArrowImageView.isHidden = true
-
+        
         //
         // stats
-        //
-        self.statsTitleArrowImageView.image = UIImage(named: "arrow_expand_icon")
-
-        self.statsBaseView.isHidden = true
-
         self.statsCollectionView.delegate = self
         self.statsCollectionView.dataSource = self
         self.statsCollectionView.allowsSelection = false
@@ -312,6 +400,14 @@ class MatchDetailsViewController: UIViewController {
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
 
+        let didTapLiveGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLiveButtonHeaderView))
+        self.headerLiveButtonBaseView.addGestureRecognizer(didTapLiveGesture)
+        
+        let didTapStatsGesture = UITapGestureRecognizer(target: self, action: #selector(didTapStatsButtonHeaderView))
+        self.headerStatsButtonBaseView.addGestureRecognizer(didTapStatsGesture)
+        
+        self.headerBarSelection = .none
+        
         self.setupWithTheme()
 
         self.bind(toViewModel: self.viewModel)
@@ -376,6 +472,11 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailLiveTopLabel.textColor = UIColor.App.textPrimary
         self.headerDetailLiveBottomLabel.textColor = UIColor.App.textPrimary.withAlphaComponent(0.5)
 
+        self.headerButtonsBaseView.backgroundColor = UIColor.App.separatorLine
+        self.headerButtonsStackView.backgroundColor = UIColor.App.backgroundPrimary
+        self.headerLiveButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
+        self.headerStatsButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
+        
         self.accountValueView.backgroundColor = UIColor.App.backgroundSecondary
         self.accountValueLabel.textColor = UIColor.App.textPrimary
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
@@ -388,25 +489,17 @@ class MatchDetailsViewController: UIViewController {
         self.tableView.backgroundColor = .clear
 
         self.matchFieldBaseView.backgroundColor = UIColor.App.backgroundTertiary
-        self.matchFieldToggleView.backgroundColor = UIColor.App.backgroundTertiary
         self.matchFieldWebView.backgroundColor = UIColor.App.backgroundTertiary
-
-        self.matchFieldTitleLabel.textColor = UIColor.App.textPrimary
 
         self.matchNotAvailableView.backgroundColor = UIColor.App.backgroundPrimary
         self.matchNotAvailableLabel.textColor = UIColor.App.textPrimary
         self.matchFieldLoadingView.tintColor = .gray
 
         self.statsBaseView.backgroundColor = UIColor.App.backgroundTertiary
-        self.statsToggleView.backgroundColor = UIColor.App.backgroundTertiary
-        self.statsTitleLabel.textColor = UIColor.App.textPrimary
-        self.statsTitleArrowImageView.backgroundColor = .clear
         self.statsCollectionBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.statsCollectionView.backgroundColor = UIColor.App.backgroundPrimary
-        self.statsToggleSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.statsBackSliderView.backgroundColor = UIColor.App.buttonBackgroundSecondary
         self.statsNotFoundLabel.textColor = UIColor.App.textPrimary
-        
     }
 
     // MARK: - Bindings
@@ -614,26 +707,16 @@ class MatchDetailsViewController: UIViewController {
         guard let match = self.viewModel.match else {
             return
         }
-
-        let validSportType = match.sportType == "1" || match.sportType == "3"
-        if self.viewModel.matchModePublisher.value == .live && validSportType {
-            self.matchFieldBaseView.isHidden = false
-            self.statsBaseView.isHidden = true
-
-            self.shouldShowWebView = true
-
-            self.matchFieldLoadingView.startAnimating()
-
+        
+        if self.viewModel.matchModePublisher.value == .live && self.isValidStatsSport {
+            self.shouldShowLiveFieldWebView = true
+            self.isLiveFieldReady = false
+            
             let request = URLRequest(url: URL(string: "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)")!)
             self.matchFieldWebView.load(request)
         }
         else if self.viewModel.matchModePublisher.value == .preLive {
-            self.statsBaseView.isHidden = false
-            self.matchFieldBaseView.isHidden = true
-        }
-        else {
-            self.statsBaseView.isHidden = true
-            self.matchFieldBaseView.isHidden = true
+            self.shouldShowLiveFieldWebView = false
         }
 
     }
@@ -732,6 +815,33 @@ class MatchDetailsViewController: UIViewController {
         }
     }
 
+    @objc func didTapLiveButtonHeaderView() {
+        
+        if !isLiveFieldReady {
+            return
+        }
+        
+        if !shouldShowLiveFieldWebView {
+            return
+        }
+        
+        switch self.headerBarSelection {
+        case .none, .stats:
+            self.headerBarSelection = .live
+        case .live:
+            self.headerBarSelection = .none
+        }
+    }
+    
+    @objc func didTapStatsButtonHeaderView() {        
+        switch self.headerBarSelection {
+        case .none, .live:
+            self.headerBarSelection = .stats
+        case .stats:
+            self.headerBarSelection = .none
+        }
+    }
+    
     func showMatchNotAvailableView() {
         self.shareButton.isHidden = true
 
@@ -775,14 +885,6 @@ class MatchDetailsViewController: UIViewController {
 
     @objc func didTapBackSliderButton() {
         self.statsCollectionView.setContentOffset(CGPoint(x: -self.statsCollectionView.contentInset.left, y: 1), animated: true)
-    }
-
-    @IBAction private func didTapFieldToogleView() {
-        self.isMatchFieldExpanded.toggle()
-    }
-
-    @IBAction private func didTapStatsToogleView() {
-        self.isStatsViewExpanded.toggle()
     }
 
     @IBAction private func didTapBackAction() {
@@ -935,17 +1037,7 @@ extension MatchDetailsViewController: WKNavigationDelegate {
     private func redrawWebView(withHeight heigth: CGFloat) {
         self.matchFielHeight = heigth
 
-        self.matchFieldLoadingView.stopAnimating()
-        self.matchFieldToggleView.isUserInteractionEnabled = true
-        self.matchFieldTitleArrowImageView.isHidden = false
-
-//        if self.shouldShowWebView {
-//            self.matchFieldBaseView.isHidden = false
-//            self.view.setNeedsLayout()
-//            self.view.layoutSubviews()
-//            self.reloadSelectedIndex()
-//        }
-
+        self.isLiveFieldReady = true
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {

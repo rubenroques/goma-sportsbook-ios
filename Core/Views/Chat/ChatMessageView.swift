@@ -13,6 +13,10 @@ class ChatMessageView: UIView {
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var inputTextView: UITextView = Self.createInputTextView()
     private lazy var ticketButton: UIButton = Self.createTicketButton()
+    private lazy var textHeightConstraint: NSLayoutConstraint = Self.createTextHeightConstraint()
+    private lazy var viewHeightContraint: NSLayoutConstraint = Self.createViewHeightConstraint()
+
+    private var maxTextInputHeight: CGFloat = 210
 
     // MARK: Public Properties
     var textPublisher: CurrentValueSubject<String, Never> = .init("")
@@ -35,7 +39,7 @@ class ChatMessageView: UIView {
     }
 
     var shouldShowBetSelection: (() -> Void)?
-
+    var shouldResizeView: ((CGFloat) -> Void)?
     // MARK: Lifetime and Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -95,6 +99,31 @@ class ChatMessageView: UIView {
         return true
     }
 
+    private func adjustTextViewHeight() {
+
+        let fixedTextWidth = self.inputTextView.frame.size.width
+        let newTextSize = self.inputTextView.sizeThatFits(CGSize(width: fixedTextWidth, height: CGFloat.greatestFiniteMagnitude))
+
+        if newTextSize.height <= self.maxTextInputHeight {
+
+            if self.inputTextView.isScrollEnabled {
+                self.inputTextView.isScrollEnabled = false
+            }
+            
+            self.textHeightConstraint.constant = newTextSize.height
+
+            self.viewHeightContraint.constant = newTextSize.height + 14
+            let parentViewHeight = newTextSize.height + 34
+
+            self.shouldResizeView?(parentViewHeight)
+
+            self.containerView.layoutIfNeeded()
+        }
+        else {
+            self.inputTextView.isScrollEnabled = true
+        }
+    }
+
     // MARK: Actions
     @objc private func didTapTicketButton() {
         self.shouldShowBetSelection?()
@@ -123,6 +152,7 @@ extension ChatMessageView: UITextViewDelegate {
             self.textPublisher.send(textView.text)
         }
 
+        self.adjustTextViewHeight()
     }
 }
 
@@ -144,6 +174,7 @@ extension ChatMessageView {
         textView.isEditable = true
         textView.font = AppFont.with(type: .semibold, size: 16)
         textView.text = localized("message")
+        textView.isScrollEnabled = false
         return textView
     }
 
@@ -152,6 +183,16 @@ extension ChatMessageView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(named: "chat_ticket_icon"), for: .normal)
         return button
+    }
+
+    private static func createTextHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createViewHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
     }
 
     private func setupSubviews() {
@@ -172,20 +213,22 @@ extension ChatMessageView {
             self.containerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             self.containerView.topAnchor.constraint(equalTo: self.topAnchor),
             self.containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            self.containerView.heightAnchor.constraint(equalToConstant: 50),
 
             self.inputTextView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 8),
-//            self.inputTextView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -30),
             self.inputTextView.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
-            self.inputTextView.heightAnchor.constraint(equalToConstant: 30),
 
             self.ticketButton.leadingAnchor.constraint(equalTo: self.inputTextView.trailingAnchor, constant: 16),
             self.ticketButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -16),
-            self.ticketButton.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
+            self.ticketButton.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -5),
             self.ticketButton.widthAnchor.constraint(equalToConstant: 40),
             self.ticketButton.heightAnchor.constraint(equalTo: self.ticketButton.widthAnchor)
         ])
 
+        self.textHeightConstraint = self.inputTextView.heightAnchor.constraint(equalToConstant: 36)
+        self.textHeightConstraint.isActive = true
+
+        self.viewHeightContraint = self.containerView.heightAnchor.constraint(equalToConstant: 50)
+        self.viewHeightContraint.isActive = true
     }
 
 }
