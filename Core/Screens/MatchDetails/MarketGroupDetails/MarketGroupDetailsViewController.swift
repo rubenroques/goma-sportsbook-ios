@@ -127,6 +127,10 @@ class MarketGroupDetailsViewController: UIViewController {
         self.loadingActivityIndicatorView.stopAnimating()
     }
 
+    func firstMarket() -> Market? {
+        return viewModel.firstMarket()
+    }
+    
 }
 
 // MARK: - TableView Protocols

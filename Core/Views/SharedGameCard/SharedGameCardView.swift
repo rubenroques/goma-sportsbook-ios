@@ -131,35 +131,26 @@ class SharedGameCardView: UIView {
 
     }
 
-    func setupSharedCardInfo(viewModel: MatchDetailsViewModel) {
-        if let match = viewModel.match {
-            self.competitionLabel.text = match.competitionName
-            if let venue = match.venue {
-                if venue.isoCode != "" {
-                    self.locationImageView.image = UIImage(named: Assets.flagName(withCountryCode: venue.isoCode))
-                }
-                else {
-                    self.locationImageView.image = UIImage(named: Assets.flagName(withCountryCode: venue.id))
-                }
-            }
-
-            self.homeLabel.text = match.homeParticipant.name
-            self.awayLabel.text = match.awayParticipant.name
-
-            // TODO: André - fix this with a  viewModel.isMAtchlive -> Bool
-            if let matchInfo = viewModel.store.matchesInfoForMatch[match.id] {
-                self.isLiveCard = true
-                self.setLiveCardDetails(viewModel: viewModel)
+    func setupSharedCardInfo(withMatch match: Match) {
+        
+        self.competitionLabel.text = match.competitionName
+        if let venue = match.venue {
+            if venue.isoCode != "" {
+                self.locationImageView.image = UIImage(named: Assets.flagName(withCountryCode: venue.isoCode))
             }
             else {
-                self.isLiveCard = false
-                self.setPreLiveCardDetails(match: match)
+                self.locationImageView.image = UIImage(named: Assets.flagName(withCountryCode: venue.id))
             }
-
-            self.setMainMarketOdds(viewModel: viewModel)
-
         }
-
+        
+        self.homeLabel.text = match.homeParticipant.name
+        self.awayLabel.text = match.awayParticipant.name
+        
+        self.isLiveCard = false
+        self.setPreLiveCardDetails(match: match)
+        
+        self.setMainMarketOdds(withMatch: match)
+        
     }
 
     func setPreLiveCardDetails(match: Match) {
@@ -248,8 +239,8 @@ class SharedGameCardView: UIView {
         }
     }
 
-    func setMainMarketOdds(viewModel: MatchDetailsViewModel) {
-        if let match = viewModel.match, let mainMarket = match.markets.first {
+    func setMainMarketOdds(withMatch match: Match) {
+        if let mainMarket = match.markets.first {
 
             if mainMarket.outcomes.count > 2 {
                 if let leftOdd = mainMarket.outcomes[safe: 0] {

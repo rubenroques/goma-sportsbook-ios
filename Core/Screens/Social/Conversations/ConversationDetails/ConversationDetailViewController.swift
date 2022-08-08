@@ -83,7 +83,8 @@ class ConversationDetailViewController: UIViewController {
         self.tableView.register(SentTicketMessageTableViewCell.self,
                                 forCellReuseIdentifier: SentTicketMessageTableViewCell.identifier)
 
-        tableView.register(DateHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: DateHeaderFooterView.identifier)
+        self.tableView.register(DateHeaderFooterView.self,
+                                forHeaderFooterViewReuseIdentifier: DateHeaderFooterView.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 

@@ -246,14 +246,14 @@ struct InAppMessage: Decodable {
     var title: String
     var titleSlug: String?
     var text: String
-    var url: String
+    var url: String?
     var imageUrl: String?
     var type: String
     var subtype: String
     var instant: Int
     var processed: Int
-    var createdAt: String
-    var updatedAt: String
+    var createdAtDateString: String
+    var openingType: String
     var notificationUsers: [NotificationUser]
 
     enum CodingKeys: String, CodingKey {
@@ -267,8 +267,8 @@ struct InAppMessage: Decodable {
         case subtype = "subtype"
         case instant = "instant"
         case processed = "processed"
-        case createdAt = "created_at"
-        case updatedAt = "updated_at"
         case notificationUsers = "notification_users"
+        case createdAtDateString = "created_at"
+        case openingType = "opening_type"
     }
 }

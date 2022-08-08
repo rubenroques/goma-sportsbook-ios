@@ -51,7 +51,9 @@ class SuggestedBetsListViewModel {
             },
             receiveValue: { [weak self] gomaBetsArray in
                 guard let betsArray = gomaBetsArray else { return }
-                self?.suggestedBetsSummaries = betsArray
+                self?.suggestedBetsSummaries = betsArray.filter({ suggestedBetSummary in
+                    suggestedBetSummary.count > 1
+                })
                 self?.needsReload.send()
                 self?.isLoadingPublisher.send(false)
             })

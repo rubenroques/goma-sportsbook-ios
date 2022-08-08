@@ -76,7 +76,6 @@ class ConversationBetSelectionRootViewController: UIViewController {
 //        ]
 
         let openConversationBetViewController = ConversationBetSelectionViewController(viewModel: ConversationBetSelectionViewModel(ticketType: .opened))
-
         openConversationBetViewController.selectedBetTicketPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] selectedTicket in
@@ -85,7 +84,6 @@ class ConversationBetSelectionRootViewController: UIViewController {
             .store(in: &cancellables)
 
         let resolvedConversationBetViewController = ConversationBetSelectionViewController(viewModel: ConversationBetSelectionViewModel(ticketType: .resolved))
-
         resolvedConversationBetViewController.selectedBetTicketPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] selectedTicket in
@@ -94,7 +92,6 @@ class ConversationBetSelectionRootViewController: UIViewController {
             .store(in: &cancellables)
 
         let wonConversationBetViewController = ConversationBetSelectionViewController(viewModel: ConversationBetSelectionViewModel(ticketType: .won))
-
         wonConversationBetViewController.selectedBetTicketPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] selectedTicket in
@@ -273,12 +270,7 @@ class ConversationBetSelectionRootViewController: UIViewController {
     }
 
     @objc func didTapSendButton() {
-        var message = ""
-
-        if !self.messageInputView.showPlaceholder {
-            message = self.messageInputView.getTextViewValue()
-        }
-        
+        let message = self.messageInputView.getTextViewValue()
         self.viewModel.sendMessage(message: message)
     }
 

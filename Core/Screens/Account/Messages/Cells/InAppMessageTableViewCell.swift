@@ -165,7 +165,7 @@ class InAppMessageTableViewCell: UITableViewCell {
 
         self.viewModel = viewModel
 
-        let messageDateString = viewModel.inAppMessage.createdAt
+        let messageDateString = viewModel.inAppMessage.createdAtDateString
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
@@ -210,23 +210,24 @@ class InAppMessageTableViewCell: UITableViewCell {
         }
         else if viewModel.inAppMessage.subtype == MessageCardType.information.identifier {
 
-            let htmlDescription = viewModel.inAppMessage.text
-            let data = Data(htmlDescription.utf8)
+//            let htmlDescription = viewModel.inAppMessage.text
+//            let data = Data(htmlDescription.utf8)
+//
+//            if let attributedString = try? NSMutableAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
+//
+//                let attributes: [NSAttributedString.Key: AnyObject] = [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary,
+//                 NSAttributedString.Key.backgroundColor: UIColor.App.backgroundSecondary,
+//                                                                       NSAttributedString.Key.font: AppFont.with(type: .medium, size: 14)]
+//
+//                attributedString.addAttributes(attributes,
+//                                               range: NSRange.init(location: 0, length: attributedString.length ))
+//
+//                self.messageDescriptionLabel.attributedText = attributedString
+//            }
 
-            if let attributedString = try? NSMutableAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
-
-                let attributes: [NSAttributedString.Key: AnyObject] = [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary,
-                 NSAttributedString.Key.backgroundColor: UIColor.App.backgroundSecondary,
-                                                                       NSAttributedString.Key.font: AppFont.with(type: .medium, size: 14)]
-
-                attributedString.addAttributes(attributes,
-                                               range: NSRange.init(location: 0, length: attributedString.length ))
-
-            self.messageDescriptionLabel.attributedText = attributedString
-            }
-
+            self.messageDescriptionLabel.text = viewModel.inAppMessage.text
+            
             self.hasDescriptionLabel = true
-
         }
 
         self.setupPublishers()
@@ -394,3 +395,4 @@ enum MessageCardType {
         }
     }
 }
+

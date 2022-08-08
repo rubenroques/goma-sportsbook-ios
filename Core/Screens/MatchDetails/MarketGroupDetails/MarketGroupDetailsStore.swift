@@ -13,7 +13,7 @@ class MarketGroupDetailsStore {
 
     var marketsPublishers: [String: CurrentValueSubject<EveryMatrix.Market, Never>] = [:]
 
-    private var marketsForGroup: [String: OrderedSet<String>] = [:]   // [Group ID: [Markets IDs] ]
+    var marketsForGroup: [String: OrderedSet<String>] = [:]   // [Group ID: [Markets IDs] ]
     private var betOutcomes: [String: EveryMatrix.BetOutcome] = [:]     // [Market: Content]
     private var bettingOffers: [String: EveryMatrix.BettingOffer] = [:] // [OutcomeId: Content]
 
@@ -21,6 +21,8 @@ class MarketGroupDetailsStore {
     private var bettingOutcomesForMarket: [String: Set<String>] = [:]
     private var marketOutcomeRelations: [String: EveryMatrix.MarketOutcomeRelation] = [:]
 
+    private var firstMarketCache: Market?
+    
     func storeMarketGroupDetails(fromAggregator aggregator: EveryMatrix.Aggregator, onMarketGroup marketGroupKey: String) {
 
         for content in aggregator.content ?? [] {
@@ -176,6 +178,10 @@ class MarketGroupDetailsStore {
                                 bettingTypeId: rawMarket.bettingTypeId,
                                 outcomes: sortedOutcomes)
 
+            if self.firstMarketCache == nil {
+                self.firstMarketCache = market
+            }
+                
             allMarkets[rawMarket.id] = market
             similarMarketsOrdered.append(similarMarketKey)
 
@@ -282,4 +288,8 @@ class MarketGroupDetailsStore {
         return marketGroupOrganizers
     }
 
+    func firstMarket() -> Market? {
+        return self.firstMarketCache
+    }
+    
 }

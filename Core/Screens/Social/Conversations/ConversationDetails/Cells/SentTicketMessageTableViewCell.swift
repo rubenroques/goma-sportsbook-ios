@@ -96,6 +96,10 @@ class SentTicketMessageTableViewCell: UITableViewCell {
     func setupMessage(messageData: MessageData) {
         self.messageLabel.text = messageData.text
 
+        if messageData.text.isEmpty {
+            self.messageLabel.text = localized("chat_empty_shared_ticket_self")
+        }
+        
         self.messageDateLabel.text = messageData.date
 
         if messageData.type == .sentNotSeen {

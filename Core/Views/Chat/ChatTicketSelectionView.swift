@@ -16,6 +16,8 @@ class ChatTicketSelectionView: UIView {
     private lazy var countryIconBaseView: UIView = Self.createCountryIconBaseView()
     private lazy var countryIconImageView: UIImageView = Self.createCountryIconImageView()
     private lazy var competitionLabel: UILabel = Self.createCompetitionLabel()
+    private lazy var labelsStackView: UIStackView = Self.createLabelsStackView()
+    
     private lazy var matchLabel: UILabel = Self.createMatchLabel()
     private lazy var marketLabel: UILabel = Self.createMarketLabel()
     private lazy var betStatusView: UIView = Self.createBetStatusView()
@@ -93,6 +95,12 @@ class ChatTicketSelectionView: UIView {
 
         self.marketLabel.text = marketText
         self.matchLabel.text = participants
+        
+        if participants.isEmpty {
+            self.marketLabel.text = ""
+            self.matchLabel.text = marketText
+            self.marketLabel.isHidden = true
+        }
 
         if hasBetStatus {
             if self.betHistoryEntrySelection.status == "WON" || self.betHistoryEntrySelection.status == "HALF_WON" {
@@ -193,6 +201,14 @@ extension ChatTicketSelectionView {
         return label
     }
 
+    private static func createLabelsStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.distribution = .fillEqually
+        stackView.axis = .vertical
+        return stackView
+    }
+    
     private static func createMatchLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -237,9 +253,10 @@ extension ChatTicketSelectionView {
 
         self.containerView.addSubview(self.competitionLabel)
 
-        self.containerView.addSubview(self.matchLabel)
+        self.containerView.addSubview(self.labelsStackView)
 
-        self.containerView.addSubview(self.marketLabel)
+        self.labelsStackView.addArrangedSubview(self.matchLabel)
+        self.labelsStackView.addArrangedSubview(self.marketLabel)
 
         self.containerView.addSubview(self.betStatusView)
 
@@ -284,15 +301,18 @@ extension ChatTicketSelectionView {
             self.competitionLabel.centerYAnchor.constraint(equalTo: self.countryIconBaseView.centerYAnchor),
 
             self.matchLabel.heightAnchor.constraint(equalToConstant: 20),
-            self.matchLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
-            self.matchLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -5),
-            self.matchLabel.topAnchor.constraint(equalTo: self.sportIconBaseView.bottomAnchor, constant: 8),
-
+            
             self.marketLabel.heightAnchor.constraint(equalToConstant: 20),
-            self.marketLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
-            self.marketLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -5),
-            self.marketLabel.topAnchor.constraint(equalTo: self.matchLabel.bottomAnchor),
-            self.marketLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -2),
+            
+            self.labelsStackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.labelsStackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -5),
+            self.labelsStackView.topAnchor.constraint(equalTo: self.sportIconBaseView.bottomAnchor, constant: 8),
+            self.labelsStackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -2),
+            
+//            self.marketLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+//            self.marketLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -5),
+//            self.marketLabel.topAnchor.constraint(equalTo: self.matchLabel.bottomAnchor),
+//            self.marketLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -2),
 
             self.betStatusView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: 15),
             self.betStatusView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 0),

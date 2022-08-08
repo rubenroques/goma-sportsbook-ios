@@ -1,13 +1,13 @@
-/* 
+/*
   Localizable.strings
   Sportsbook
 
   Created by Ruben Roques on 06/08/2021.
-  
+
 */
 
-"languange_code" = "en";
-"languange_code_complete" = "en-us";
+"languange_code" = "pt";
+"languange_code_complete" = "pt-pt";
 
 "update_available" = "Update available";
 "maintenance_mode" = "Temporarily Down For Maintenance";
@@ -121,6 +121,14 @@ Terms of use, Privacy Policy and EULA";
 "limits_management" = "Limits Management";
 "app_settings" = "App Settings";
 "support" = "Support";
+"subject" = "Subject";
+"description" = "Description";
+
+"supportSuccessTitle" = "Success";
+"supportSuccessSubtitle" = "Your message was successfully sent.";
+
+"supportErrorTitle" = "Error";
+"supportErrorSubtitle" = "We can't send your message at this moment. Please try again later.";
 
 "limits_management" = "Limits Management";
 "save" = "Save";
@@ -512,8 +520,8 @@ Terms of use, Privacy Policy and EULA";
 "send_friends_groups" = "Send to friends and groups";
 "send" = "Send";
 
-"check_this_bet_made" = "Check this bet I made!";
-"ticket_url_pasteboard" = "Ticket link was copied!";
+"check_this_bet_made" = "Check out this bet I just made!";
+"ticket_url_pasteboard" = "Ticket link was copied.";
 
 "send_to_chat" = "Send to chat";
 "or" = "or";
@@ -525,6 +533,10 @@ Terms of use, Privacy Policy and EULA";
 
 "time_add_friends" = "Time to add friends!";
 "add_some_friends_start_chatting" = "Add some friends and start chatting now!";
+
+"single_bet" = "Single Bet";
+"multiple_bet" = "Multiple Bet";
+"system_bet" = "System Bet";
 
 "bet_suffered_alterations" = "The bet suffered alterations because of a change in the game, check the new options.";
 "shared_bet_unavailable" = "The shared bet is not available anymore, check some new bet suggestions.";
@@ -539,6 +551,5 @@ Terms of use, Privacy Policy and EULA";
 
 "no_messages_yet" = "There’s no messages yet.";
 
-"single_bet" = "Single Bet";
-"multiple_bet" = "Multiple Bet";
-"system_bet" = "System Bet";
+"chat_empty_shared_ticket_self" = "You shared a ticket.";
+"chat_empty_shared_ticket_others" = "%s shared a ticket.";

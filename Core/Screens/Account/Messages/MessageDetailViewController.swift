@@ -77,7 +77,11 @@ class MessageDetailViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
+    deinit {
+        print("MessageDetailViewController deinit called")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -184,7 +188,7 @@ class MessageDetailViewController: UIViewController {
 
         self.regularMessageTitleLabel.text = self.viewModel.inAppMessage.title
 
-        let messageDateString = self.viewModel.inAppMessage.createdAt
+        let messageDateString = self.viewModel.inAppMessage.createdAtDateString
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
@@ -218,19 +222,20 @@ class MessageDetailViewController: UIViewController {
             self.regularMessageImageView.isHidden = true
         }
 
-        let htmlDescription = self.viewModel.inAppMessage.text
-        let data = Data(htmlDescription.utf8)
-        if let attributedString = try? NSMutableAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
-
-            let attributes: [NSAttributedString.Key: AnyObject] = [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary,
-             NSAttributedString.Key.backgroundColor: UIColor.App.backgroundPrimary,
-                                                                   NSAttributedString.Key.font: AppFont.with(type: .medium, size: 14)]
-
-            attributedString.addAttributes(attributes,
-                                           range: NSRange.init(location: 0, length: attributedString.length ))
-
-            self.messageDescriptionLabel.attributedText = attributedString
-        }
+        self.messageDescriptionLabel.text = self.viewModel.inAppMessage.text
+//        let htmlDescription = self.viewModel.inAppMessage.text
+//        let data = Data(htmlDescription.utf8)
+//        if let attributedString = try? NSMutableAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
+//
+//            let attributes: [NSAttributedString.Key: AnyObject] = [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary,
+//             NSAttributedString.Key.backgroundColor: UIColor.App.backgroundPrimary,
+//                                                                   NSAttributedString.Key.font: AppFont.with(type: .medium, size: 14)]
+//
+//            attributedString.addAttributes(attributes,
+//                                           range: NSRange.init(location: 0, length: attributedString.length ))
+//
+//            self.messageDescriptionLabel.attributedText = attributedString
+//        }
     }
 
     private func setupPromoHeaderInfo() {
@@ -239,7 +244,7 @@ class MessageDetailViewController: UIViewController {
 
         self.promoMessageTitleLabel.text = self.viewModel.inAppMessage.title
 
-        let messageDateString = self.viewModel.inAppMessage.createdAt
+        let messageDateString = self.viewModel.inAppMessage.createdAtDateString
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
@@ -267,19 +272,20 @@ class MessageDetailViewController: UIViewController {
 
         }
 
-        let htmlDescription = self.viewModel.inAppMessage.text
-        let data = Data(htmlDescription.utf8)
-        if let attributedString = try? NSMutableAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
-
-            let attributes: [NSAttributedString.Key: AnyObject] = [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary,
-             NSAttributedString.Key.backgroundColor: UIColor.App.backgroundPrimary,
-                                                                   NSAttributedString.Key.font: AppFont.with(type: .medium, size: 14)]
-
-            attributedString.addAttributes(attributes,
-                                           range: NSRange.init(location: 0, length: attributedString.length ))
-
-            self.messageDescriptionLabel.attributedText = attributedString
-        }
+        self.messageDescriptionLabel.text = self.viewModel.inAppMessage.text
+//        let htmlDescription = self.viewModel.inAppMessage.text
+//        let data = Data(htmlDescription.utf8)
+//        if let attributedString = try? NSMutableAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
+//
+//            let attributes: [NSAttributedString.Key: AnyObject] = [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary,
+//             NSAttributedString.Key.backgroundColor: UIColor.App.backgroundPrimary,
+//                                                                   NSAttributedString.Key.font: AppFont.with(type: .medium, size: 14)]
+//
+//            attributedString.addAttributes(attributes,
+//                                           range: NSRange.init(location: 0, length: attributedString.length ))
+//
+//            self.messageDescriptionLabel.attributedText = attributedString
+//        }
     }
 
     private func resizeBannerImageView(messageBanner: UIImage) {

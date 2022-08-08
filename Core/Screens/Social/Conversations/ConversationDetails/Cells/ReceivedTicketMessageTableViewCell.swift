@@ -96,14 +96,12 @@ class ReceivedTicketMessageTableViewCell: UITableViewCell {
     func setupMessage(messageData: MessageData, username: String, chatroomId: Int) {
         self.messageLabel.text = messageData.text
 
+        
+        if messageData.text.isEmpty {
+            self.messageLabel.text = localized("chat_empty_shared_ticket_others").replacingOccurrences(of: "%s", with: "\(username)")
+        }
+        
         self.messageDateLabel.text = messageData.date
-
-//        if messageData.type == .receivedOffline {
-//            self.showUserState = false
-//        }
-//        else if messageData.type == .receivedOnline {
-//            self.showUserState = true
-//        }
 
         self.usernameLabel.text = username
 

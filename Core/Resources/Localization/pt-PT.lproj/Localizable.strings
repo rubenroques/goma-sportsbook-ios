@@ -520,8 +520,8 @@ Terms of use, Privacy Policy and EULA";
 "send_friends_groups" = "Send to friends and groups";
 "send" = "Send";
 
-"check_this_bet_made" = "Vê esta aposta que fiz!";
-"ticket_url_pasteboard" = "Ticket link was copied!";
+"check_this_bet_made" = "Check out this bet I just made!";
+"ticket_url_pasteboard" = "Ticket link was copied.";
 
 "send_to_chat" = "Send to chat";
 "or" = "or";
@@ -550,3 +550,6 @@ Terms of use, Privacy Policy and EULA";
 "mark_as_read" = "Mark as read";
 
 "no_messages_yet" = "There’s no messages yet.";
+
+"chat_empty_shared_ticket_self" = "You shared a ticket.";
+"chat_empty_shared_ticket_others" = "%s shared a ticket.";

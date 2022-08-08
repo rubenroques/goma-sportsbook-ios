@@ -361,10 +361,10 @@
                                             <rect key="frame" x="0.0" y="0.0" width="206" height="38"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hU0-0T-amd">
-                                                    <rect key="frame" x="62" y="4.5" width="82" height="29"/>
+                                                    <rect key="frame" x="61" y="4.5" width="84.5" height="29"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Live field" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OMg-Uv-KyY">
-                                                            <rect key="frame" x="25" y="8" width="53" height="13"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Live Field" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OMg-Uv-KyY">
+                                                            <rect key="frame" x="25" y="8" width="55.5" height="13"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="13"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -388,7 +388,7 @@
                                                     </constraints>
                                                 </view>
                                                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="kvy-p9-fCM">
-                                                    <rect key="frame" x="146" y="9" width="20" height="20"/>
+                                                    <rect key="frame" x="147.5" y="9" width="20" height="20"/>
                                                 </activityIndicatorView>
                                             </subviews>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -403,10 +403,10 @@
                                             <rect key="frame" x="208" y="0.0" width="206" height="38"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xcX-uP-1Xa">
-                                                    <rect key="frame" x="42" y="4.5" width="122.5" height="29"/>
+                                                    <rect key="frame" x="40.5" y="4.5" width="125" height="29"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Match statistics" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ceB-Go-v11">
-                                                            <rect key="frame" x="24" y="8" width="94.5" height="13"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Teams Statistics" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ceB-Go-v11">
+                                                            <rect key="frame" x="24" y="8" width="97" height="13"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="13"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -620,7 +620,7 @@
         <image name="plus_small_icon" width="16" height="16"/>
         <image name="tabbar_live_icon" width="25" height="23"/>
         <namedColor name="buttonBackgroundPrimary">
-            <color red="0.97254901960784312" green="0.9882352941176471" blue="0.0078431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.13725490196078433" green="0.69019607843137254" blue="0.30588235294117649" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

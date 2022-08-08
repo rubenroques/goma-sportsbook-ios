@@ -53,7 +53,7 @@ class MessagesViewController: UIViewController {
     }
 
     deinit {
-            print("MessagesViewController deinit called")
+        print("MessagesViewController deinit called")
     }
     
     override func viewDidLoad() {
@@ -151,15 +151,22 @@ class MessagesViewController: UIViewController {
 
     private func openMessageDetail(cellViewModel: InAppMessageCellViewModel) {
 
-        let messageDetailViewModel = MessageDetailViewModel(inAppMessage: cellViewModel.inAppMessage)
-
-        let messageDetailViewController = MessageDetailViewController(viewModel: messageDetailViewModel)
-
-        messageDetailViewController.shouldSetMessageRead = { inAppMessageId in
-            self.viewModel.setCellReadStatus(inAppMessageId: inAppMessageId)
+        if cellViewModel.inAppMessage.openingType == "external", let urlString = cellViewModel.inAppMessage.url, let url = URL(string: urlString) {
+            let messageDetailWebViewController = MessageDetailWebViewController(url: url)
+            self.navigationController?.pushViewController(messageDetailWebViewController, animated: true)
         }
+        else {
+            let messageDetailViewModel = MessageDetailViewModel(inAppMessage: cellViewModel.inAppMessage)
 
-        self.navigationController?.pushViewController(messageDetailViewController, animated: true)
+            let messageDetailViewController = MessageDetailViewController(viewModel: messageDetailViewModel)
+
+            messageDetailViewController.shouldSetMessageRead = { inAppMessageId in
+                self.viewModel.setCellReadStatus(inAppMessageId: inAppMessageId)
+            }
+
+            self.navigationController?.pushViewController(messageDetailViewController, animated: true)
+        }
+        
     }
 
     // MARK: Binding

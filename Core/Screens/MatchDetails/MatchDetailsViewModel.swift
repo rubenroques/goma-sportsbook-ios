@@ -273,7 +273,7 @@ class MatchDetailsViewModel: NSObject {
     func selectMarketType(atIndex index: Int) {
         self.selectedMarketTypeIndexPublisher.send(index)
     }
-
+    
 }
 
 extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDelegate {

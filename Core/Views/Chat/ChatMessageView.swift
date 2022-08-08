@@ -21,10 +21,14 @@ class ChatMessageView: UIView {
     // MARK: Public Properties
     var textPublisher: CurrentValueSubject<String, Never> = .init("")
 
+    private var placeholderText: String {
+        return localized("message")
+    }
+    
     var showPlaceholder: Bool = false {
         didSet {
             if showPlaceholder {
-                self.inputTextView.text = localized("message")
+                self.inputTextView.text = self.placeholderText
             }
             else {
                 self.inputTextView.text = nil
@@ -83,8 +87,12 @@ class ChatMessageView: UIView {
     // MARK: Functions
 
     func getTextViewValue() -> String {
+        
+        if self.inputTextView.text == self.placeholderText {
+            return ""
+        }
+        
         let textViewValue = self.inputTextView.text ?? ""
-
         return textViewValue
     }
 

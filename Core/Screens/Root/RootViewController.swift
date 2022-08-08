@@ -354,6 +354,13 @@ class RootViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+    
+        executeDelayed(0.1) {
+            self.loadChildViewControllerIfNeeded(tab: .preLive)
+        }
+        executeDelayed(0.2) {
+            self.loadChildViewControllerIfNeeded(tab: .live)
+        }
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

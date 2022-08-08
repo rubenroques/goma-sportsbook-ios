@@ -90,8 +90,6 @@ class FlipNumberView: UIView {
             return 
         }
         
-        print("FlipperViewV will set new:[\(value)] from: [\(self.previousValue)]")
-        
         let number = NSNumber(value: value)
         let numberString = Self.numberFormatter.string(from: number) ?? ""
         
@@ -99,8 +97,6 @@ class FlipNumberView: UIView {
         let numberAsIntsArray: [Int] = Array(numberAsInts)
         
         let biggestDigitDifference = self.biggestDigitDifference(between: self.previousNumberAsIntsArray, new: numberAsIntsArray)
-        
-        print("FlipperViewV \(self.previousNumberAsIntsArray) \(numberAsIntsArray), diff: \(biggestDigitDifference) ")
         
         let slideUp = self.previousValue < value
         
@@ -132,7 +128,6 @@ class FlipNumberView: UIView {
             
             if let number = numberAsIntsArray[safe: key] {
                 
-                print("FlipperViewV flipping \(number) atIndex:\(key) multiplier:\(reversedMultiplier)")
                 
                 stripView.scrollToNumber(number, animated: animated, multiplier: reversedMultiplier, slideUp: slideUp)
                 
@@ -162,7 +157,6 @@ class FlipNumberView: UIView {
         self.previousNumberAsIntsArray = numberAsIntsArray
         self.previousValue = value
         
-        print("FlipperViewV ------------------------------------------------------- ")
     }
 
     private func biggestDigitDifference(between old: [Int], new: [Int]) -> Int {
@@ -244,12 +238,14 @@ class FlipNumberStripView: UIView, UITableViewDelegate, UITableViewDataSource {
             self.bottomAnchor.constraint(equalTo: self.tableView.bottomAnchor)
         ])
         
-        self.tableView.setNeedsLayout()
-        self.tableView.layoutIfNeeded()
+//        self.tableView.setNeedsLayout()
+//        self.tableView.layoutIfNeeded()
+
         
-        self.tableView.scrollToRow(at: IndexPath(row: infiniteSize/2, section: 0),
-                                   at: .middle,
-                                   animated: false)
+//        self.tableView.scrollToRow(at: IndexPath(row: infiniteSize/2, section: 0),
+//                                   at: .middle,
+//                                   animated: false)
+//
         
     }
 
@@ -278,7 +274,6 @@ class FlipNumberStripView: UIView, UITableViewDelegate, UITableViewDataSource {
 
         let numberShowing = values[centerRow % values.count]
         
-        print("FlipperViewStrip currentNumber:\(numberShowing) newNumber:\(newNumber) [\(slideUp)]")
         
         // let topDifference = number - numberShowing
         // let bottomDifference = number - numberShowing
@@ -294,7 +289,6 @@ class FlipNumberStripView: UIView, UITableViewDelegate, UITableViewDataSource {
             else {
                 difference = (newNumber+10) - numberShowing
             }
-            print("FlipperViewStrip \(difference) = abs(\(numberShowing) - \(newNumber)) ")
             newIndex = (centerRow + difference) + (multiplier * 10)
         }
         else {
@@ -306,13 +300,11 @@ class FlipNumberStripView: UIView, UITableViewDelegate, UITableViewDataSource {
             else {
                 difference = (numberShowing+10) - newNumber
             }
-            print("FlipperViewStrip \(difference) = abs(\(numberShowing) - \(newNumber)) ")
             newIndex = (centerRow - difference) - (multiplier * 10)
         }
         
         
         
-        print("FlipperViewStrip currentRow:\(centerRow) newRow: \(newIndex) ")
         
 //        self.tableView.contentOffset = CGPoint(x: 0, y: 10)
         
@@ -324,7 +316,6 @@ class FlipNumberStripView: UIView, UITableViewDelegate, UITableViewDataSource {
                                    animated: animated)
         }
         
-        print("FlipperViewStrip ----------------")
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {

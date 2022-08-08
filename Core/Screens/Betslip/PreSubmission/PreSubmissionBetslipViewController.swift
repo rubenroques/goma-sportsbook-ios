@@ -135,9 +135,9 @@ class PreSubmissionBetslipViewController: UIViewController {
     private var listTypePublisher: CurrentValueSubject<BetslipType, Never> = .init(.simple)
 
     // System Bets vars
-    var selectedSystemBet: SystemBetType? {
+    var selectedSystemBetType: SystemBetType? {
         didSet {
-            if let systemBetType = self.selectedSystemBet {
+            if let systemBetType = self.selectedSystemBetType {
                 self.systemBetTypeLabel.text = systemBetType.name ?? localized("system_bet")
             }
         }
@@ -345,23 +345,28 @@ class PreSubmissionBetslipViewController: UIViewController {
             .sink { [weak self] tickets in
                 self?.singleBettingTicketDataSource.bettingTickets = tickets
                 self?.multipleBettingTicketDataSource.bettingTickets = tickets
-                self?.systemBettingTicketDataSource.bettingTickets = tickets
-
-                self?.systemBetOptions = []
-                self?.selectedSystemBet = nil
-
-                if tickets.count >= 3 {
-                    self?.requestSystemBetsTypes()
-                }
-
-                self?.systemBetTypePickerView.reloadAllComponents()
-
+                
                 self?.simpleOddsValueLabel.text = "\(tickets.count)"
                 
                 self?.tableView.reloadData()
             }
             .store(in: &cancellables)
 
+        // Refresh System bet odds
+        Env.betslipManager.bettingTicketsPublisher
+            .receive(on: DispatchQueue.main)
+            .map(Array.init)
+            .filter({ tickets in
+                tickets.count >= 3
+            })
+            .sink { [weak self] tickets in
+                self?.systemBettingTicketDataSource.bettingTickets = tickets
+                self?.systemBetOptions = []
+                
+                self?.requestSystemBetsTypes()
+            }
+            .store(in: &cancellables)
+        
         Env.betslipManager.bettingTicketsPublisher
             .receive(on: DispatchQueue.main)
             .map(Array.init)
@@ -530,7 +535,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         Publishers.CombineLatest(self.listTypePublisher, self.realBetValuePublisher)
             .receive(on: DispatchQueue.main)
             .filter { [weak self] betslipType, _ in
-                betslipType == .system && self?.selectedSystemBet != nil
+                betslipType == .system && self?.selectedSystemBetType != nil
             }
             .map({ [weak self] _, bettingValue in
                 return bettingValue > 0 && bettingValue < (self?.maxBetValue ?? 0)
@@ -567,9 +572,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                         oddMultiplier += (oddMultiplier * oddsBoostSelected.oddsBoostPercent)
                     }
 
-                    var totalValue = oddMultiplier * betValue
+                    let totalValue = oddMultiplier * betValue
                     // totalValue = Double(floor(totalValue * 100)/100)
-
                     return CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalValue)) ?? "-.--€"
                 }
                 else {
@@ -878,7 +882,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.tableView.reloadData()
     }
 
-
     func showErrorView(errorMessage: String?, isAlertLayout: Bool = false) {
 
         let errorView = BetslipErrorView()
@@ -1177,8 +1180,6 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     func requestSystemBetsTypes() {
 
-        self.systemBetTypeLabel.text = ""
-
         self.systemBetTypeLoadingView.startAnimating()
 
         let tickets = self.systemBettingTicketDataSource.bettingTickets
@@ -1192,10 +1193,34 @@ class PreSubmissionBetslipViewController: UIViewController {
             .sink(receiveCompletion: { [weak self] _ in
                 self?.systemBetTypeLoadingView.stopAnimating()
             }, receiveValue: { [weak self] systemBetResponse in
-                self?.systemBetOptions = systemBetResponse.systemBets
-                self?.systemBetTypePickerView.reloadAllComponents()
-                self?.selectedSystemBet = self?.systemBetOptions.first
-                self?.requestSystemBetInfo()
+                
+                guard let weakSelf = self else { return }
+                
+                weakSelf.systemBetOptions = systemBetResponse.systemBets
+                
+                var containsOldSelection = false
+                var componentsIndex = 0
+                if let currentSelection = weakSelf.selectedSystemBetType {
+                    for (index, item) in weakSelf.systemBetOptions.enumerated() {
+                        if currentSelection.id == item.id {
+                            containsOldSelection = true
+                            componentsIndex = index
+                            break
+                        }
+                    }
+                }
+                
+                if weakSelf.selectedSystemBetType == nil || !containsOldSelection {
+                    weakSelf.selectedSystemBetType = weakSelf.systemBetOptions.first
+                }
+                else {
+                    
+                }
+                
+                weakSelf.systemBetTypePickerView.reloadAllComponents()
+                weakSelf.systemBetTypePickerView.selectRow(componentsIndex, inComponent: 0, animated: false)
+                 
+                weakSelf.requestSystemBetInfo()
             })
             .store(in: &cancellables)
     }
@@ -1204,7 +1229,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         guard
             // self.realBetValue != 0, NOTA: Tive de desactivar esta opção para conseguir ter o maxAmount da system bet e colocar 1 por default na chamada, como se faz na multipla
-            let selectedSystemBet = self.selectedSystemBet
+            let selectedSystemBetType = self.selectedSystemBetType
         else {
             return
         }
@@ -1216,7 +1241,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondarySystemWinningsValueLabel.text = "-.--€"
 
         Env.betslipManager
-            .requestSystemBetslipSelectionState(systemBetType: selectedSystemBet)
+            .requestSystemBetslipSelectionState(systemBetType: selectedSystemBetType)
             .receive(on: DispatchQueue.main)
             .sink { _ in
 
@@ -1229,10 +1254,6 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
     func configureWithSystemBetInfo(systemBetInfo: BetslipSelectionState) {
-
-        guard let selectedSystemBetWinnings = systemBetInfo.winnings else {
-            return
-        }
 
         if let priceValueFactor = systemBetInfo.priceValueFactor, self.realBetValue != 0 {
             let possibleWinnings = priceValueFactor * self.realBetValue
@@ -1247,7 +1268,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.secondarySystemWinningsValueLabel.text = "-.--€"
         }
 
-        if let numberOfBets = self.selectedSystemBet?.numberOfBets, self.realBetValue != 0 {
+        if let numberOfBets = self.selectedSystemBetType?.numberOfBets, self.realBetValue != 0 {
             let totalBetAmount = Double(numberOfBets) * self.realBetValue
 
             let totalBetAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalBetAmount)) ?? "-.--€"
@@ -1322,8 +1343,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                     .store(in: &cancellables)
             }
 
-            else if self.listTypePublisher.value == .system, let selectedSystemBet = self.selectedSystemBet {
-                Env.betslipManager.placeSystemBet(withSkateAmount: self.realBetValue, systemBetType: selectedSystemBet)
+            else if self.listTypePublisher.value == .system, let selectedSystemBetType = self.selectedSystemBetType {
+                Env.betslipManager.placeSystemBet(withSkateAmount: self.realBetValue, systemBetType: selectedSystemBetType)
                     .receive(on: DispatchQueue.main)
                     .sink { [weak self] _ in
                         self?.isLoading = false
@@ -1522,10 +1543,10 @@ extension PreSubmissionBetslipViewController: UIPickerViewDelegate, UIPickerView
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if pickerView.tag == 1 {
-            self.selectedSystemBet = self.systemBetOptions[safe: row]
+            self.selectedSystemBetType = self.systemBetOptions[safe: row]
         }
         else {
-            self.selectedBetslipSetting = Env.userBetslipSettingsSelectorList[safe:row]?.key
+            self.selectedBetslipSetting = Env.userBetslipSettingsSelectorList[safe: row]?.key
             self.setUserSettings()
         }
     }
@@ -1737,7 +1758,8 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
 
             return cell
         }
-        else if let cell = tableView.dequeueCellType(BonusSwitchTableViewCell.self), let bonusMultiple = self.bonusMultiple[safe: (indexPath.row - self.bettingTickets.count)] {
+        else if let cell = tableView.dequeueCellType(BonusSwitchTableViewCell.self),
+                    let bonusMultiple = self.bonusMultiple[safe: (indexPath.row - self.bettingTickets.count)] {
 
             if let freeBet = bonusMultiple.freeBet {
                 cell.setupBonusInfo(freeBet: freeBet, oddsBoost: nil, bonusType: .freeBet)
@@ -1827,7 +1849,7 @@ class SystemBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
     
 }
 
-
+//
 struct SingleBetslipFreebet {
     var bettingId: String
     var freeBet: BetslipFreebet

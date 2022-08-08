@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+
 class MessageDetailViewModel {
 
     // MARK: Private Properties
@@ -21,7 +22,11 @@ class MessageDetailViewModel {
         self.inAppMessage = inAppMessage
 
     }
-
+    
+    deinit {
+        print("MessageDetailViewModel deinit called")
+    }
+    
     // MARK: Functions
     func getMessageType() -> MessageCardType {
 

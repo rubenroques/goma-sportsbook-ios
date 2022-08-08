@@ -23,8 +23,11 @@ class MessagesViewModel {
 
     // MARK: Lifetime and Cycle
     init() {
-
         self.getInAppMessages()
+    }
+    
+    deinit {
+        print("MessagesViewModel deinit called")
     }
 
     // MARK: Functions
@@ -78,11 +81,9 @@ class MessagesViewModel {
                         ()
                     }
                 }, receiveValue: { [weak self] _ in
-
                     if cellViewModel.unreadMessagePublisher.value == true {
                         cellViewModel.changeReadStatus(isRead: true)
                     }
-
                     Env.gomaSocialClient.getInAppMessagesCounter()
 
                 })

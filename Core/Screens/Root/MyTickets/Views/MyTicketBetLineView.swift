@@ -206,19 +206,33 @@ class MyTicketBetLineView: NibView {
     func configureFromStatus() {
         if let status = self.betHistoryEntrySelection.status?.uppercased() {
             switch status {
-            case "WON", "HALF_WON":
+            case "WON":
                 self.indicatorBaseView.isHidden = false
                 self.dateLabel.isHidden = true
                 self.indicatorInternalBaseView.backgroundColor = UIColor.App.myTicketsWon
                 self.indicatorLabel.text = localized("won")
                 self.bottomBaseView.backgroundColor = .clear
                 self.separatorView.isHidden = false
-            case "LOST", "HALF_LOST":
+            case "HALF_WON":
+                self.indicatorBaseView.isHidden = false
+                self.dateLabel.isHidden = true
+                self.indicatorInternalBaseView.backgroundColor = UIColor.App.myTicketsWon
+                self.indicatorLabel.text = localized("half_won")
+                self.bottomBaseView.backgroundColor = .clear
+                self.separatorView.isHidden = false
+            case "LOST":
                 self.indicatorBaseView.isHidden = false
                 self.dateLabel.isHidden = true
                 self.indicatorInternalBaseView.backgroundColor = UIColor.App.myTicketsLost
                 self.bottomBaseView.backgroundColor = .clear
                 self.indicatorLabel.text = localized("lost")
+                self.separatorView.isHidden = false
+            case "HALF_LOST":
+                self.indicatorBaseView.isHidden = false
+                self.dateLabel.isHidden = true
+                self.indicatorInternalBaseView.backgroundColor = UIColor.App.myTicketsLost
+                self.bottomBaseView.backgroundColor = .clear
+                self.indicatorLabel.text = localized("half_lost")
                 self.separatorView.isHidden = false
             case "DRAW":
                 self.indicatorBaseView.isHidden = false
