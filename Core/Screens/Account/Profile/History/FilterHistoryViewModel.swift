@@ -81,7 +81,6 @@ class FilterHistoryViewModel {
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        print(dateFormatter.date(from: dateString))
         return dateFormatter.date(from: dateString)
     }
                             

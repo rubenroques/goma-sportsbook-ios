@@ -206,7 +206,6 @@ class TransactionsHistoryRootViewController: UIViewController {
         
         self.filterHistoryViewController.didSelectFilterAction = { [weak self ] opt in
             self?.filterPublisher.send(opt)
-            print(opt)
             
         }
     }

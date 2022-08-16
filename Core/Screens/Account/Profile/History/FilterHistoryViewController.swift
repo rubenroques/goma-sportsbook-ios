@@ -251,8 +251,6 @@ class FilterHistoryViewController: UIViewController {
     @IBAction private func applyAction() {
         
         if self.viewModel.selectedFilterPublisher.value.identifier == 2 {
-            print(self.startTimeHeaderTextView.text)
-            print(self.endTimeHeaderTextView.text)
             if self.startTimeHeaderTextView.text != "" && self.endTimeHeaderTextView.text != "" {
                 
                 self.didSelectFilterAction?(self.viewModel.selectedFilterPublisher.value)
