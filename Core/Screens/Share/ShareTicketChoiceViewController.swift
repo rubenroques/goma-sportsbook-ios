@@ -64,6 +64,13 @@ class ShareTicketChoiceViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
+        if Env.appSession.businessModulesManager.isSocialFeaturesEnabled {
+            self.sendViaButton.isHidden = false
+        }
+        else {
+            self.sendViaButton.isHidden = true
+        }
+
         self.cancelButton.addTarget(self, action: #selector(didTapCancelButton), for: .primaryActionTriggered)
 
         self.chatCollectionView.delegate = self

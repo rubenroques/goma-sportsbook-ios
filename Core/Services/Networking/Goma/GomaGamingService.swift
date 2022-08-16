@@ -12,6 +12,7 @@ enum GomaGamingService {
     case log(type: String, message: String)
     case geolocation(latitude: String, longitude: String)
     case settings
+    case modules
     case simpleRegister(username: String, email: String, phoneCountryCode: String, phone: String, birthDate: String, userProviderId: String, deviceToken: String)
     case modalPopUpDetails
     case login(username: String, password: String, deviceToken: String)
@@ -63,6 +64,8 @@ extension GomaGamingService: Endpoint {
             return "/api/settings/\(apiVersion)/geolocation"
         case .settings:
             return "/api/\(apiVersion)/modules"
+        case .modules:
+            return "/api/settings/\(apiVersion)/modules"
         case .simpleRegister:
             return "/api/users/\(apiVersion)/register"
         case .modalPopUpDetails:
@@ -128,8 +131,10 @@ extension GomaGamingService: Endpoint {
         case .geolocation(let latitude, let longitude):
             return [URLQueryItem(name: "lat", value: latitude),
                     URLQueryItem(name: "lng", value: longitude)]
-        case .settings, .simpleRegister, .modalPopUpDetails, .login,
+        case .simpleRegister, .modalPopUpDetails, .login,
                 .suggestedBets, .addFavorites, .matchStats, .userSettings, .sendUserSettings, .sendSupportTicket:
+            return nil
+        case  .settings, .modules:
             return nil
         case .removeFavorite(let favorite):
             return [URLQueryItem(name: "favorite_ids[]", value: favorite)]
@@ -201,9 +206,9 @@ extension GomaGamingService: Endpoint {
         case .test:
             return .get
         case .geolocation, .settings, .modalPopUpDetails, .suggestedBets,
-                .matchStats, .userSettings:
+                .matchStats, .userSettings, .modules:
             return .get
-        case .log, .simpleRegister, .login, .addFavorites, .sendUserSettings,  .sendSupportTicket:
+        case .log, .simpleRegister, .login, .addFavorites, .sendUserSettings, .sendSupportTicket:
             return .post
         case .removeFavorite:
             return .delete

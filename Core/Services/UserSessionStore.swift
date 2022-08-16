@@ -369,6 +369,7 @@ extension UserSessionStore {
 
 }
 
+
 extension UserSessionStore {
 
     func startUserSessionIfNeeded() {
@@ -429,4 +430,12 @@ extension UserSessionStore {
             .store(in: &cancellables)
     }
 
+}
+
+extension UserSessionStore {
+    
+    func shouldRequestFaceId() -> Bool {
+        return UserSessionStore.isUserLogged()
+    }
+    
 }

@@ -49,6 +49,13 @@ class SharedTicketCardView: UIView {
 
         self.setupSubviews()
 
+        if Env.appSession.businessModulesManager.isSocialFeaturesEnabled {
+            self.shareButton.isHidden = false
+        }
+        else {
+            self.shareButton.isHidden = true
+        }
+        
         self.shareButton.addTarget(self, action: #selector(didTapShareButton), for: .primaryActionTriggered)
     }
 

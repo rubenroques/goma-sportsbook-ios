@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import WebKit
+import LocalAuthentication
 
 class RootViewController: UIViewController {
 
@@ -70,6 +71,10 @@ class RootViewController: UIViewController {
 
     @IBOutlet private var notificationCounterView: UIView!
     @IBOutlet private var notificationCounterLabel: UILabel!
+    
+    @IBOutlet private var localAuthenticationBaseView: UIView!
+    @IBOutlet private var unlockAppButton: UIButton!
+    
     //
     //
     private var pictureInPictureView: PictureInPictureView?
@@ -79,7 +84,36 @@ class RootViewController: UIViewController {
         overlayWindow.windowLevel = .alert
         return overlayWindow
     }()
-
+    
+    //
+    //
+    var isLocalAuthenticationCoveringView: Bool = true {
+        didSet {
+            if isLocalAuthenticationCoveringView {
+                self.localAuthenticationBaseView.alpha = 1.0
+//                UIView.animate(withDuration: 0.2,
+//                               delay: 0.0,
+//                               options: .curveEaseIn,
+//                               animations: {
+//                    self.localAuthenticationBaseView.alpha = 1.0
+//                }, completion: { _ in
+//
+//                })
+            }
+            else {
+                self.localAuthenticationBaseView.alpha = 0.0
+//                UIView.animate(withDuration: 0.2,
+//                               delay: 0.0,
+//                               options: .curveEaseOut,
+//                               animations: {
+//                    self.localAuthenticationBaseView.alpha = 0.0
+//                }, completion: { _ in
+//
+//                })
+            }
+        }
+    }
+    
     //
     let activeButtonAlpha = 1.0
     let idleButtonAlpha = 0.52
@@ -230,7 +264,30 @@ class RootViewController: UIViewController {
                                                selector: #selector(self.windowDidBecomeKeyNotification(_:)),
                                                name: UIWindow.didBecomeKeyNotification,
                                                object: nil)
+        
+        //
+        // UIApplication States
+        //
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.appWillEnterForeground),
+                                               name: UIApplication.willEnterForegroundNotification,
+                                               object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.appDidEnterBackground),
+                                               name: UIApplication.didEnterBackgroundNotification,
+                                               object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.appWillResignActive),
+                                               name: UIApplication.willResignActiveNotification,
+                                               object: nil)
 
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.appDidBecomeActive),
+                                               name: UIApplication.didBecomeActiveNotification,
+                                               object: nil)
+        
 //        NotificationCenter.default.addObserver(
 //            forName: UIWindow.didResignKeyNotification,
 //            object: self.overlayWindow,
@@ -316,6 +373,30 @@ class RootViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+        
+        //Add blur effect
+        self.localAuthenticationBaseView.backgroundColor = .clear
+        
+        let blurEffect = UIBlurEffect(style: .regular)
+        
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.translatesAutoresizingMaskIntoConstraints = false
+        
+        //if you have more UIViews, use an insertSubview API to place it where needed
+        self.localAuthenticationBaseView.insertSubview(blurEffectView, at: 0)
+
+        NSLayoutConstraint.activate([
+            blurEffectView.leadingAnchor.constraint(equalTo: self.localAuthenticationBaseView.leadingAnchor),
+            blurEffectView.trailingAnchor.constraint(equalTo: self.localAuthenticationBaseView.trailingAnchor),
+            blurEffectView.topAnchor.constraint(equalTo: self.localAuthenticationBaseView.topAnchor),
+            blurEffectView.bottomAnchor.constraint(equalTo: self.localAuthenticationBaseView.bottomAnchor),
+        ])
+        
+        self.localAuthenticationBaseView.alpha = 0.0
+        self.showLocalAuthenticationCoveringViewIfNeeded()
+        
+        self.authenticateUser()
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -358,9 +439,11 @@ class RootViewController: UIViewController {
         executeDelayed(0.1) {
             self.loadChildViewControllerIfNeeded(tab: .preLive)
         }
+        
         executeDelayed(0.2) {
             self.loadChildViewControllerIfNeeded(tab: .live)
         }
+        
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -908,7 +991,6 @@ extension RootViewController {
         self.liveBaseView.isHidden = false
 
         self.redrawButtonButtons()
-
     }
     
     func selectCasinoTabBarItem() {
@@ -1008,6 +1090,109 @@ extension RootViewController {
             
         }, completion: nil)
         
+    }
+    
+}
+
+extension RootViewController {
+    
+    func showLocalAuthenticationCoveringViewIfNeeded() {
+        if Env.userSessionStore.shouldRequestFaceId() {
+            self.isLocalAuthenticationCoveringView = true
+        }
+    }
+    
+    @IBAction private func didTapUnlockButton() {
+        self.authenticateUser()
+    }
+    
+    @objc func appWillEnterForeground() {
+        self.authenticateUser()
+        print("LocalAuth Foreground")
+    }
+    
+    @objc func appDidEnterBackground() {
+        self.showLocalAuthenticationCoveringViewIfNeeded()
+        print("LocalAuth Background")
+    }
+
+    @objc func appDidBecomeActive() {
+        // self.authenticateUser()
+        print("LocalAuth Active")
+    }
+    
+    @objc func appWillResignActive() {
+        //  self.isLocalAuthenticationCoveringView = true
+        print("LocalAuth Inactive")
+    }
+    
+    func authenticateUser() {
+    
+        if !Env.userSessionStore.shouldRequestFaceId() {
+            return
+        }
+        
+        let context = LAContext()
+        
+        var error: NSError?
+        if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthentication, error: &error) {
+            
+            // Device can use biometric authentication
+            context.evaluatePolicy(
+                LAPolicy.deviceOwnerAuthentication,
+                localizedReason: "Access requires authentication",
+                reply: { success, error in
+                    
+                    DispatchQueue.main.async {
+                        if let err = error {
+                            switch err._code {
+                            case LAError.Code.systemCancel.rawValue:
+                                self.notifyUser("Session cancelled", err: err.localizedDescription)
+                            case LAError.Code.userCancel.rawValue:
+                                self.notifyUser("Please try again", err: err.localizedDescription)
+                            case LAError.Code.userFallback.rawValue:
+                                self.notifyUser("Authentication", err: "Password option selected")
+                            default:
+                                self.notifyUser("Authentication failed", err: err.localizedDescription)
+                            }
+                        }
+                        else {
+                            // Unlock the app
+                            self.isLocalAuthenticationCoveringView = false
+                        }
+                    }
+            })
+            
+        }
+        else {
+            // Device cannot use biometric authentication
+            if let err = error {
+                switch err.code {
+                case LAError.Code.biometryNotEnrolled.rawValue:
+                    notifyUser("User is not enrolled", err: err.localizedDescription)
+                case LAError.Code.passcodeNotSet.rawValue:
+                    notifyUser("A passcode has not been set", err: err.localizedDescription)
+                case LAError.Code.biometryNotAvailable.rawValue:
+                    notifyUser("Biometric authentication not available", err: err.localizedDescription)
+                default:
+                    notifyUser("Unknown error", err: err.localizedDescription)
+                }
+            }
+        }
+        
+    }
+    
+    func notifyUser(_ msg: String, err: String?) {
+        let alert = UIAlertController(title: msg,
+                                      message: err,
+                                      preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: "OK",
+                                         style: .cancel, handler: nil)
+        
+        alert.addAction(cancelAction)
+        self.present(alert, animated: true,
+                     completion: nil)
     }
     
 }

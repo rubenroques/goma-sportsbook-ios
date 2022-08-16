@@ -17,6 +17,7 @@ class AppSession {
     var isLoadingAppSettingsPublisher = CurrentValueSubject<Bool, Never>(true)
 
     var homeFeedTemplate: HomeFeedTemplate?
+    var businessModulesManager = BusinessModulesManager(businessModules: [])
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -39,14 +40,38 @@ class AppSession {
     func requestAppClientSettings() {
         self.isLoadingAppSettingsPublisher.send(true)
 
-        Env.gomaNetworkClient.requestBusinessInstanceSettings(deviceId: Env.deviceId)
+        let businessModulesPublisher = Env.gomaNetworkClient.requestBusinessModules(deviceId: Env.deviceId)
+        let instanceSettingsPublisher = Env.gomaNetworkClient.requestBusinessInstanceSettings(deviceId: Env.deviceId)
+            
+        Publishers.CombineLatest(instanceSettingsPublisher, businessModulesPublisher)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] _ in
-
                 self?.isLoadingAppSettingsPublisher.send(false)
-            }, receiveValue: { [weak self] value in
-                self?.homeFeedTemplate = value.homeFeedTemplate
+            }, receiveValue: { [weak self] instanceSettings, businessModulesManager in
+                self?.businessModulesManager = BusinessModulesManager(businessModules: businessModulesManager)
+                self?.homeFeedTemplate = instanceSettings.homeFeedTemplate
             })
             .store(in: &cancellables)
     }
+    
+}
 
+struct BusinessModulesManager {
+    
+    private var businessModules: BusinessModules
+    
+    init(businessModules: BusinessModules) {
+        self.businessModules = businessModules
+    }
+    
+    var isSocialFeaturesEnabled: Bool {
+        return true
+        
+        //
+        for module in businessModules where module.name.lowercased() == "social features" {
+            return module.enabled
+        }
+        return false
+    }
+    
 }

@@ -3340,6 +3340,12 @@
 		45CD7B59271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CD7B56271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.swift */; };
 		45CD7B5A271738C8003044C5 /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
 		45CD7B5B271738C8003044C5 /* SeeMoreMarketsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */; };
+		45D1ED5B28A150C2001E18E5 /* BusinessModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */; };
+		45D1ED5C28A150C2001E18E5 /* BusinessModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */; };
+		45D1ED5D28A150C2001E18E5 /* BusinessModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */; };
+		45D1ED5E28A150C2001E18E5 /* BusinessModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */; };
+		45D1ED5F28A150C2001E18E5 /* BusinessModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */; };
+		45D1ED6028A150C2001E18E5 /* BusinessModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */; };
 		45D3DE332714889200717124 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D3DE322714889200717124 /* Date+Extension.swift */; };
 		45D3DE342714889200717124 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D3DE322714889200717124 /* Date+Extension.swift */; };
 		45D3DE36271492E000717124 /* BannerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D3DE35271492E000717124 /* BannerInfo.swift */; };
@@ -4560,6 +4566,7 @@
 		45CD7B4D2716F5CB003044C5 /* OddTripleCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OddTripleCollectionViewCell.xib; sourceTree = "<group>"; };
 		45CD7B56271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeeMoreMarketsCollectionViewCell.swift; sourceTree = "<group>"; };
 		45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SeeMoreMarketsCollectionViewCell.xib; sourceTree = "<group>"; };
+		45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessModules.swift; sourceTree = "<group>"; };
 		45D3DE322714889200717124 /* Date+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		45D3DE35271492E000717124 /* BannerInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerInfo.swift; sourceTree = "<group>"; };
 		45D3DE38271499DB00717124 /* BannerScrollTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerScrollTableViewCell.swift; sourceTree = "<group>"; };
@@ -6903,6 +6910,7 @@
 				A97D246B28180586003EEDEC /* SocialModels.swift */,
 				45B6E20F283F7D1F001B570C /* SharedBetTicket.swift */,
 				451B0A44286AFDC700005FA5 /* SupportTicketResponse.swift */,
+				45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */,
 			);
 			path = GGAPI;
 			sourceTree = "<group>";
@@ -9395,6 +9403,7 @@
 				A9A2E7E327F5BC5C00D35A9D /* WithdrawViewModel.swift in Sources */,
 				A9C82FB026F3A37F00059DCD /* String+Extensions.swift in Sources */,
 				45BEA48126F4DC9900680181 /* SimpleRegisterEmailCheckViewController.swift in Sources */,
+				45D1ED5B28A150C2001E18E5 /* BusinessModules.swift in Sources */,
 				45166CE526F3548D00E69D65 /* SSWampMessage.swift in Sources */,
 				455A0CF626BD9D9000EC572D /* NSObject+Extension.swift in Sources */,
 				456B342726C18257009D7D27 /* Logger.swift in Sources */,
@@ -9971,6 +9980,7 @@
 				A9A2E7E427F5BC5C00D35A9D /* WithdrawViewModel.swift in Sources */,
 				A9B840C826E1285200269B05 /* Discipline.swift in Sources */,
 				455A0D0926BD9D9000EC572D /* CenterCellCollectionViewFlowLayout.swift in Sources */,
+				45D1ED5C28A150C2001E18E5 /* BusinessModules.swift in Sources */,
 				A9C82FB126F3A37F00059DCD /* String+Extensions.swift in Sources */,
 				45BEA48226F4DC9900680181 /* SimpleRegisterEmailCheckViewController.swift in Sources */,
 				45166CE626F3548D00E69D65 /* SSWampMessage.swift in Sources */,
@@ -10523,6 +10533,7 @@
 				457CBB59282D27D000ED0F00 /* String+Extensions.swift in Sources */,
 				457CBB5A282D27D000ED0F00 /* SimpleRegisterEmailCheckViewController.swift in Sources */,
 				457CBB5B282D27D000ED0F00 /* SSWampMessage.swift in Sources */,
+				45D1ED5F28A150C2001E18E5 /* BusinessModules.swift in Sources */,
 				457CBB5C282D27D000ED0F00 /* NSObject+Extension.swift in Sources */,
 				457CBB5D282D27D000ED0F00 /* Logger.swift in Sources */,
 				457CBB5E282D27D000ED0F00 /* GamesNotificationViewModel.swift in Sources */,
@@ -11075,6 +11086,7 @@
 				457CBE01282D2CD100ED0F00 /* String+Extensions.swift in Sources */,
 				457CBE02282D2CD100ED0F00 /* SimpleRegisterEmailCheckViewController.swift in Sources */,
 				457CBE03282D2CD100ED0F00 /* SSWampMessage.swift in Sources */,
+				45D1ED6028A150C2001E18E5 /* BusinessModules.swift in Sources */,
 				457CBE04282D2CD100ED0F00 /* NSObject+Extension.swift in Sources */,
 				457CBE05282D2CD100ED0F00 /* Logger.swift in Sources */,
 				457CBE06282D2CD100ED0F00 /* GamesNotificationViewModel.swift in Sources */,
@@ -11627,6 +11639,7 @@
 				45B6E233284151E0001B570C /* EditGroupViewController.swift in Sources */,
 				4589C8DB282024E400243547 /* String+Extensions.swift in Sources */,
 				4589C8DC282024E400243547 /* SimpleRegisterEmailCheckViewController.swift in Sources */,
+				45D1ED5D28A150C2001E18E5 /* BusinessModules.swift in Sources */,
 				4589C8DD282024E400243547 /* SSWampMessage.swift in Sources */,
 				4589C8DE282024E400243547 /* NSObject+Extension.swift in Sources */,
 				4589C8DF282024E400243547 /* Logger.swift in Sources */,
@@ -12179,6 +12192,7 @@
 				45A6BD3028246A7500D9B416 /* CenterCellCollectionViewFlowLayout.swift in Sources */,
 				45A6BD3128246A7500D9B416 /* WithdrawViewModel.swift in Sources */,
 				45A6BD3228246A7500D9B416 /* String+Extensions.swift in Sources */,
+				45D1ED5E28A150C2001E18E5 /* BusinessModules.swift in Sources */,
 				45A6BD3328246A7500D9B416 /* SimpleRegisterEmailCheckViewController.swift in Sources */,
 				45A6BD3428246A7500D9B416 /* SSWampMessage.swift in Sources */,
 				45A6BD3528246A7500D9B416 /* NSObject+Extension.swift in Sources */,
@@ -12737,7 +12751,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00594;
+				CURRENT_PROJECT_VERSION = 00597;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -12763,7 +12777,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00594;
+				CURRENT_PROJECT_VERSION = 00597;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

@@ -131,6 +131,12 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
+    func requestBusinessModules(deviceId: String) -> AnyPublisher<BusinessModules, NetworkError> {
+        let endpoint = GomaGamingService.modules
+        let requestPublisher: AnyPublisher<BusinessModules, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
     func requestBusinessInstanceSettings(deviceId: String) -> AnyPublisher<BusinessInstanceSettingsResponse, NetworkError> {
         let endpoint = GomaGamingService.userSettings
         let requestPublisher: AnyPublisher<BusinessInstanceSettingsResponse, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)

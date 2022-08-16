@@ -43,6 +43,8 @@
 	<true/>
 	<key>NSContactsUsageDescription</key>
 	<string>The app needs permission to use your contacs</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>User Authentication</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>The app needs permission to use your location</string>
 	<key>NSLocationAlwaysUsageDescription</key>

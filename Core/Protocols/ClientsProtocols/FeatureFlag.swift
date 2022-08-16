@@ -8,6 +8,7 @@
 import Foundation
 
 protocol FeatureFlags {
+    static var chatEnabled: Bool { get }
     static var showNewCheckout: Bool { get }
     static var showNewLoginScreen: Bool { get }
     static var limitCheckoutItems: Int { get }

@@ -38,6 +38,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     struct TargetFeatureFlags: FeatureFlags {
+        static var chatEnabled: Bool { true }
         static var showNewCheckout: Bool { true }
         static var showNewLoginScreen: Bool { true }
         static var limitCheckoutItems: Int { 100 }
