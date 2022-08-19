@@ -17,8 +17,9 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
 
     var tappedMatchLineAction: ((Match) -> Void)?
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
-    
+
     var didTapFavoriteMatchAction: ((Match) -> Void)?
+    var didLongPressOdd: ((BettingTicket) -> Void)?
 
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var linesStackView: UIStackView = Self.createLinesStackView()
@@ -416,6 +417,10 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                 cell.configure(withViewModel: cellViewModel)
                 cell.tappedMatchWidgetAction = { [weak self] in
                     self?.tappedMatchLineAction?(match)
+                }
+
+                cell.didLongPressOdd = { bettingTicket in
+                    self.didLongPressOdd?(bettingTicket)
                 }
 //                cell.didTapFavoriteMatchAction = { [weak self] match in
 //                    self?.didTapFavoriteMatchAction?(match)

@@ -20,6 +20,8 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
     
     var didTapFavoriteMatchAction: ((Match) -> Void)?
 
+    var didLongPressOdd: ((BettingTicket) -> Void)?
+
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var linesStackView: UIStackView = Self.createLinesStackView()
     private lazy var collectionView: UICollectionView = Self.createCollectionView()
@@ -331,6 +333,11 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
 //                cell.didTapFavoriteMatchAction = { [weak self] match in
 //                    self?.didTapFavoriteMatchAction?(match)
 //                }
+
+                cell.didLongPressOdd = { [weak self] bettingTicket in
+                    self?.didLongPressOdd?(bettingTicket)
+                }
+
                 cell.shouldShowCountryFlag(true)
                 return cell
             }

@@ -37,6 +37,7 @@ class MatchLineTableViewCell: UITableViewCell {
     var tappedMatchLineAction: (() -> Void)?
     var matchWentLive: (() -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
+    var didLongPressOdd: ((BettingTicket) -> Void)?
 
     private let cellInternSpace: CGFloat = 2.0
 
@@ -333,6 +334,10 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
 
                     cell.tappedMatchWidgetAction = {
                         self.tappedMatchLineAction?()
+                    }
+
+                    cell.didLongPressOdd = { bettingTicket in
+                        self.didLongPressOdd?(bettingTicket)
                     }
                 }
                 cell.shouldShowCountryFlag(self.shouldShowCountryFlag)

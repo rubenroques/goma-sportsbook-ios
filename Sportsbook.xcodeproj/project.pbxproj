@@ -3431,6 +3431,13 @@
 		45F8B154274BC3B60087652B /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 45F8B153274BC3B60087652B /* FirebaseMessaging */; };
 		45F8B157274BFF710087652B /* SystemBetResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F8B156274BFF710087652B /* SystemBetResponse.swift */; };
 		45F8B158274BFF710087652B /* SystemBetResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F8B156274BFF710087652B /* SystemBetResponse.swift */; };
+		A90229A028AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
+		A90229A128AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
+		A90229A228AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
+		A90229A328AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
+		A90229A428AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
+		A90229A528AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
+		A90229A628AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
 		A90BC90227C3A8EF00667616 /* NotificationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BC90127C3A8EF00667616 /* NotificationsViewModel.swift */; };
 		A90BC90327C3A8EF00667616 /* NotificationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BC90127C3A8EF00667616 /* NotificationsViewModel.swift */; };
 		A90BC90527C3B3F500667616 /* OddsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BC90427C3B3F500667616 /* OddsViewModel.swift */; };
@@ -4605,6 +4612,7 @@
 		45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchFiltersViewController.xib; sourceTree = "<group>"; };
 		45EF543A270C664100D1E13E /* CollapsibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleView.swift; sourceTree = "<group>"; };
 		45F8B156274BFF710087652B /* SystemBetResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemBetResponse.swift; sourceTree = "<group>"; };
+		A902299F28AFD41100972863 /* QuickBetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickBetViewController.swift; sourceTree = "<group>"; };
 		A90BC90127C3A8EF00667616 /* NotificationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsViewModel.swift; sourceTree = "<group>"; };
 		A90BC90427C3B3F500667616 /* OddsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddsViewModel.swift; sourceTree = "<group>"; };
 		A90BC90727C3B99500667616 /* GamesNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesNotificationViewModel.swift; sourceTree = "<group>"; };
@@ -6077,6 +6085,7 @@
 		4589F3E926BF0160005DF543 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				A902299E28AFD3F400972863 /* Quickbet */,
 				A9863ED1286F01C400A4A1A2 /* Share */,
 				455C962526FE11B300456F30 /* Root */,
 				A995C1922799917100151462 /* Search */,
@@ -6736,6 +6745,14 @@
 				45BF4E6C270DC37D00785E79 /* FilterLineView.swift */,
 			);
 			path = Filters;
+			sourceTree = "<group>";
+		};
+		A902299E28AFD3F400972863 /* Quickbet */ = {
+			isa = PBXGroup;
+			children = (
+				A902299F28AFD41100972863 /* QuickBetViewController.swift */,
+			);
+			path = Quickbet;
 			sourceTree = "<group>";
 		};
 		A90BC90D27C3FE9900667616 /* ViewModels */ = {
@@ -9454,6 +9471,7 @@
 				45D527DC2720534600744D34 /* CompetitionsFiltersView.swift in Sources */,
 				A98EC7DC2889B0AA0044FC46 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				4503E79D27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift in Sources */,
+				A90229A028AFD41100972863 /* QuickBetViewController.swift in Sources */,
 				455A0CA226BD96BF00EC572D /* SportsbookTarget.swift in Sources */,
 				454E0A8E2731B01F00794E0C /* FailableDecodable.swift in Sources */,
 				45BF4E6D270DC37D00785E79 /* FilterLineView.swift in Sources */,
@@ -9527,6 +9545,7 @@
 				A98EC7DA2889AF210044FC46 /* ShareTicketFriendGroupViewModel.swift in Sources */,
 				A98EC7D22889ADC30044FC46 /* ShareTicketChoiceViewModel.swift in Sources */,
 				A9B331D9288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */,
+				A90229A628AFD41100972863 /* QuickBetViewController.swift in Sources */,
 				A9B331C9288EFE0F00D097F0 /* InAppMessageTableViewCell.swift in Sources */,
 				A9C1C0AD28747FC600E9D6AC /* SelectChatroomTableViewCell.swift in Sources */,
 				A9863EE2286F425400A4A1A2 /* SocialItemCollectionViewCell.swift in Sources */,
@@ -10031,6 +10050,7 @@
 				455A0CF126BD9D9000EC572D /* UIViewController+Extensions.swift in Sources */,
 				A98EC7DD2889B0AA0044FC46 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				45D527DD2720534600744D34 /* CompetitionsFiltersView.swift in Sources */,
+				A90229A128AFD41100972863 /* QuickBetViewController.swift in Sources */,
 				4503E79E27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift in Sources */,
 				455A0C8626BD904300EC572D /* AppDelegate.swift in Sources */,
 				454E0A8F2731B01F00794E0C /* FailableDecodable.swift in Sources */,
@@ -10584,6 +10604,7 @@
 				457CBB86282D27D000ED0F00 /* CompetitionDetailsViewModel.swift in Sources */,
 				A98EC7E02889B0AA0044FC46 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				A98295A2283BA0AF0014066A /* BetSelectionTableViewCell.swift in Sources */,
+				A90229A428AFD41100972863 /* QuickBetViewController.swift in Sources */,
 				457CBB87282D27D000ED0F00 /* SportsbookTarget.swift in Sources */,
 				457CBB88282D27D000ED0F00 /* FailableDecodable.swift in Sources */,
 				45B6E2412841525E001B570C /* NewMessageViewController.swift in Sources */,
@@ -11137,6 +11158,7 @@
 				457CBE2E282D2CD100ED0F00 /* CompetitionDetailsViewModel.swift in Sources */,
 				A98EC7E12889B0AA0044FC46 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				A98295A3283BA0AF0014066A /* BetSelectionTableViewCell.swift in Sources */,
+				A90229A528AFD41100972863 /* QuickBetViewController.swift in Sources */,
 				457CBE2F282D2CD100ED0F00 /* SportsbookTarget.swift in Sources */,
 				457CBE30282D2CD100ED0F00 /* FailableDecodable.swift in Sources */,
 				45B6E2402841525D001B570C /* NewMessageViewController.swift in Sources */,
@@ -11690,6 +11712,7 @@
 				4589C905282024E400243547 /* UIViewController+Extensions.swift in Sources */,
 				A98EC7DE2889B0AA0044FC46 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				4589C906282024E400243547 /* CompetitionsFiltersView.swift in Sources */,
+				A90229A228AFD41100972863 /* QuickBetViewController.swift in Sources */,
 				4589C907282024E400243547 /* CompetitionDetailsViewModel.swift in Sources */,
 				4589C908282024E400243547 /* SportsbookTarget.swift in Sources */,
 				4589C909282024E400243547 /* FailableDecodable.swift in Sources */,
@@ -12243,6 +12266,7 @@
 				45A6BD5B28246A7500D9B416 /* DebugViewController.swift in Sources */,
 				A98EC7DF2889B0AA0044FC46 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				45A6BD5C28246A7500D9B416 /* UIViewController+Extensions.swift in Sources */,
+				A90229A328AFD41100972863 /* QuickBetViewController.swift in Sources */,
 				45A6BD5D28246A7500D9B416 /* CompetitionsFiltersView.swift in Sources */,
 				45A6BD5E28246A7500D9B416 /* CompetitionDetailsViewModel.swift in Sources */,
 				45A6BD5F28246A7500D9B416 /* SportsbookTarget.swift in Sources */,
