@@ -25,6 +25,8 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
     var market: Market?
     var competitionName: String?
 
+    var didLongPressOdd: ((BettingTicket) -> Void)?
+
     private let lineHeight: CGFloat = 56
 
     override func awakeFromNib() {
@@ -170,6 +172,10 @@ extension SimpleListMarketDetailTableViewCell: UICollectionViewDelegate, UIColle
         cell.match = self.match
         cell.market = self.market
         cell.configureWith(outcome: outcomeItem)
+
+        cell.didLongPressOdd = { [weak self] bettingTicket in
+            self?.didLongPressOdd?(bettingTicket)
+        }
 
         return cell
     }

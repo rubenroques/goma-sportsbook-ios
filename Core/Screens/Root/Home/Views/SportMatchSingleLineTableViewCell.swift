@@ -362,6 +362,10 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                         cell.tappedMatchWidgetAction = { [weak self] in
                             self?.tappedMatchLineAction?(match)
                         }
+
+                        cell.didLongPressOdd = { bettingTicket in
+                            self.didLongPressOdd?(bettingTicket)
+                        }
                         
                         return cell
                     }
@@ -380,6 +384,11 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                         cell.tappedMatchWidgetAction = { [weak self] in
                             self?.tappedMatchLineAction?(match)
                         }
+
+                        cell.didLongPressOdd = { bettingTicket in
+                            self.didLongPressOdd?(bettingTicket)
+                        }
+                        
                         return cell
                     }
                 }

@@ -881,6 +881,15 @@ class MatchDetailsViewController: UIViewController {
             self.present(loginViewController, animated: true, completion: nil)
         }
     }
+
+    private func openQuickbet(_ bettingTicket: BettingTicket) {
+
+        let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
+
+        let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)
+
+        self.present(quickbetViewController, animated: true)
+    }
     
     @objc private func didTapAccountValue() {
         let depositViewController = DepositViewController()

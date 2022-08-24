@@ -359,6 +359,10 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                     cell.tappedMatchWidgetAction = {
                         self.tappedMatchLineAction?()
                     }
+
+                    cell.didLongPressOdd = { bettingTicket in
+                        self.didLongPressOdd?(bettingTicket)
+                    }
                 }
                 cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
                 return cell
@@ -379,6 +383,11 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                         cell.tappedMatchWidgetAction = {
                             self.tappedMatchLineAction?()
                         }
+
+                        cell.didLongPressOdd = { bettingTicket in
+                            self.didLongPressOdd?(bettingTicket)
+                        }
+
                         return cell
                     }
                 }
@@ -391,6 +400,11 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                         cell.tappedMatchWidgetAction = {
                             self.tappedMatchLineAction?()
                         }
+
+                        cell.didLongPressOdd = { bettingTicket in
+                            self.didLongPressOdd?(bettingTicket)
+                        }
+                        
                         return cell
                     }
                 }

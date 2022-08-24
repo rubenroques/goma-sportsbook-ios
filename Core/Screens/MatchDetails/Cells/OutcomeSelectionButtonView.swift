@@ -31,6 +31,8 @@ class OutcomeSelectionButtonView: NibView {
 
     var debouncerSubscription: Debouncer?
 
+    var didLongPressOdd: ((BettingTicket) -> Void)?
+
     private var isOutcomeButtonSelected: Bool = false {
         didSet {
             self.isOutcomeButtonSelected ? self.selectButton() : self.deselectButton()
@@ -70,6 +72,9 @@ class OutcomeSelectionButtonView: NibView {
 
         let tapOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapOddButton))
         self.containerView.addGestureRecognizer(tapOddButton)
+
+        let longPressOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressOddButton))
+        self.containerView.addGestureRecognizer(longPressOddButton)
 
         self.setupWithTheme()
     }
@@ -272,6 +277,67 @@ class OutcomeSelectionButtonView: NibView {
         else {
             Env.betslipManager.addBettingTicket(bettingTicket)
             self.isOutcomeButtonSelected = true
+        }
+    }
+
+    @objc func didLongPressOddButton(_ sender: Any) {
+
+        guard let longPressGesture = sender as? UILongPressGestureRecognizer else {return}
+
+        // Triggers function only once instead of rapid fire event
+        if longPressGesture.state == .began {
+            print("LONG PRESS ODD!")
+
+            guard
+                let outcome = self.outcome,
+                let marketId = outcome.marketId
+            else {
+                return
+            }
+
+            var bettingTicket: BettingTicket
+
+            if let match = self.match {
+                let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
+                let marketDescription = outcome.marketName ?? ""
+                let outcomeDescription = outcome.translatedName
+
+                bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
+                                              outcomeId: outcome.id,
+                                              marketId: marketId,
+                                              matchId: match.id,
+                                              value: outcome.bettingOffer.value,
+                                              isAvailable: outcome.bettingOffer.isAvailable,
+                                              statusId: "1",
+                                              matchDescription: matchDescription,
+                                              marketDescription: marketDescription,
+                                              outcomeDescription: outcomeDescription)
+            }
+            else {
+                let marketName = outcome.marketName ?? ""
+                var matchDescription: String
+                if let competitionName = self.competitionName {
+                    matchDescription = competitionName
+                }
+                else {
+                    matchDescription =  marketName.isNotEmpty ? "\(outcome.translatedName), \(marketName)" : "\(outcome.translatedName)"
+                }
+                let marketDescription = outcome.marketName ?? ""
+                let outcomeDescription = outcome.translatedName
+
+                bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
+                                              outcomeId: outcome.id,
+                                              marketId: marketId,
+                                              matchId: "",
+                                              value: outcome.bettingOffer.value,
+                                              isAvailable: outcome.bettingOffer.isAvailable,
+                                              statusId: "1",
+                                              matchDescription: matchDescription,
+                                              marketDescription: marketDescription,
+                                              outcomeDescription: outcomeDescription)
+            }
+
+            self.didLongPressOdd?(bettingTicket)
         }
     }
 

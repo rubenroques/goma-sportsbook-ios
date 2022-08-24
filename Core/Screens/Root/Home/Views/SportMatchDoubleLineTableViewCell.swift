@@ -400,6 +400,10 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
 //                cell.didTapFavoriteMatchAction = { [weak self] match in
 //                    self?.didTapFavoriteMatchAction?(match)
 //                }
+
+                cell.didLongPressOdd = { bettingTicket in
+                    self.didLongPressOdd?(bettingTicket)
+                }
              
                 cell.shouldShowCountryFlag(true)
                 return cell
@@ -449,6 +453,11 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                         cell.tappedMatchWidgetAction = {
                             self.tappedMatchLineAction?(match)
                         }
+
+                        cell.didLongPressOdd = { bettingTicket in
+                            self.didLongPressOdd?(bettingTicket)
+                        }
+
                         return cell
                     }
                 }
@@ -465,6 +474,12 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                         cell.tappedMatchWidgetAction = {
                             self.tappedMatchLineAction?(match)
                         }
+
+                        cell.didLongPressOdd = { bettingTicket in
+                            self.didLongPressOdd?(bettingTicket)
+                        }
+
+                        
                         return cell
                     }
                 }

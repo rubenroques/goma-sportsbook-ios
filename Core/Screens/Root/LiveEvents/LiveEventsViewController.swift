@@ -115,9 +115,12 @@ class LiveEventsViewController: UIViewController {
 //                self.tableView.reloadData()
 //            }
 //        }
+
+        self.viewModel.didLongPressOdd = { [weak self] bettingTicket in
+            self?.openQuickbet(bettingTicket)
+        }
     }
 
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
@@ -125,7 +128,6 @@ class LiveEventsViewController: UIViewController {
         self.setHomeFilters(homeFilters: self.viewModel.homeFilterOptions)
     }
 
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -367,6 +369,15 @@ class LiveEventsViewController: UIViewController {
     func changedSport(_ sport: Sport) {
         self.selectedSport = sport
         self.didChangeSport?(sport)
+    }
+
+    private func openQuickbet(_ bettingTicket: BettingTicket) {
+
+        let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
+
+        let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)
+
+        self.present(quickbetViewController, animated: true)
     }
 
     @objc func handleSportsSelectionTap() {

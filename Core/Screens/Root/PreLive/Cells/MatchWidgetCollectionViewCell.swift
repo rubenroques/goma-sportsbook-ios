@@ -188,7 +188,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.addGestureRecognizer(tapMatchView)
 
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressCard))
-        self.addGestureRecognizer(longPressGestureRecognizer)
+        self.participantsBaseView.addGestureRecognizer(longPressGestureRecognizer)
 
         self.adjustDesignToCardStyle()
         self.setupWithTheme()
@@ -751,8 +751,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
 
             let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
-
-            print("BETTING TICKET: \(bettingTicket)")
 
             self.didLongPressOdd?(bettingTicket)
         }

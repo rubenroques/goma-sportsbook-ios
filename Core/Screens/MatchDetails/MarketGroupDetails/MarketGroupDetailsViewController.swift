@@ -130,7 +130,15 @@ class MarketGroupDetailsViewController: UIViewController {
     func firstMarket() -> Market? {
         return viewModel.firstMarket()
     }
-    
+
+    private func openQuickbet(_ bettingTicket: BettingTicket) {
+
+        let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
+
+        let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)
+
+        self.present(quickbetViewController, animated: true)
+    }
 }
 
 // MARK: - TableView Protocols
@@ -171,6 +179,11 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
                 self?.reloadTableView()
             }
             cell.configure(withMarketGroupOrganizer: marketGroupOrganizer, isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId))
+
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.openQuickbet(bettingTicket)
+            }
+
             return cell
         }
         else if marketGroupOrganizer.numberOfColumns == 2 {
@@ -191,6 +204,11 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
                 self?.reloadTableView()
             }
             cell.configure(withMarketGroupOrganizer: marketGroupOrganizer, isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId))
+
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.openQuickbet(bettingTicket)
+            }
+
             return cell
         }
         else if marketGroupOrganizer.numberOfColumns == 1 {
@@ -211,6 +229,10 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
                 self?.reloadTableView()
             }
             cell.configure(withMarketGroupOrganizer: marketGroupOrganizer, isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId))
+
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.openQuickbet(bettingTicket)
+            }
             return cell
         }
         else {
@@ -221,6 +243,11 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
             }
             cell.match = self.viewModel.match
             cell.configure(withMarketGroupOrganizer: marketGroupOrganizer)
+
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.openQuickbet(bettingTicket)
+            }
+
             return cell
         }
 

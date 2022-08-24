@@ -274,6 +274,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     }
                 }
             }
+
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.openQuickbet(bettingTicket)
+            }
             
             return cell
 

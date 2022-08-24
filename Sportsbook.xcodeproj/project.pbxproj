@@ -3438,6 +3438,13 @@
 		A90229A428AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
 		A90229A528AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
 		A90229A628AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
+		A90229B128B6892300972863 /* QuickBetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90229B028B6892300972863 /* QuickBetViewModel.swift */; };
+		A90229B228B6892300972863 /* QuickBetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90229B028B6892300972863 /* QuickBetViewModel.swift */; };
+		A90229B328B6892300972863 /* QuickBetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90229B028B6892300972863 /* QuickBetViewModel.swift */; };
+		A90229B428B6892300972863 /* QuickBetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90229B028B6892300972863 /* QuickBetViewModel.swift */; };
+		A90229B528B6892300972863 /* QuickBetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90229B028B6892300972863 /* QuickBetViewModel.swift */; };
+		A90229B628B6892300972863 /* QuickBetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90229B028B6892300972863 /* QuickBetViewModel.swift */; };
+		A90229B728B6892300972863 /* QuickBetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90229B028B6892300972863 /* QuickBetViewModel.swift */; };
 		A90BC90227C3A8EF00667616 /* NotificationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BC90127C3A8EF00667616 /* NotificationsViewModel.swift */; };
 		A90BC90327C3A8EF00667616 /* NotificationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BC90127C3A8EF00667616 /* NotificationsViewModel.swift */; };
 		A90BC90527C3B3F500667616 /* OddsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BC90427C3B3F500667616 /* OddsViewModel.swift */; };
@@ -4613,6 +4620,7 @@
 		45EF543A270C664100D1E13E /* CollapsibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleView.swift; sourceTree = "<group>"; };
 		45F8B156274BFF710087652B /* SystemBetResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemBetResponse.swift; sourceTree = "<group>"; };
 		A902299F28AFD41100972863 /* QuickBetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickBetViewController.swift; sourceTree = "<group>"; };
+		A90229B028B6892300972863 /* QuickBetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickBetViewModel.swift; sourceTree = "<group>"; };
 		A90BC90127C3A8EF00667616 /* NotificationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsViewModel.swift; sourceTree = "<group>"; };
 		A90BC90427C3B3F500667616 /* OddsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddsViewModel.swift; sourceTree = "<group>"; };
 		A90BC90727C3B99500667616 /* GamesNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesNotificationViewModel.swift; sourceTree = "<group>"; };
@@ -6750,9 +6758,18 @@
 		A902299E28AFD3F400972863 /* Quickbet */ = {
 			isa = PBXGroup;
 			children = (
+				A90229AF28B6890C00972863 /* ViewModels */,
 				A902299F28AFD41100972863 /* QuickBetViewController.swift */,
 			);
 			path = Quickbet;
+			sourceTree = "<group>";
+		};
+		A90229AF28B6890C00972863 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				A90229B028B6892300972863 /* QuickBetViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		A90BC90D27C3FE9900667616 /* ViewModels */ = {
@@ -9108,6 +9125,7 @@
 				45166D1B26F3548D00E69D65 /* JSONSSWampSerializer.swift in Sources */,
 				A99FD504282D489B00275509 /* EditGroupAddUserViewController.swift in Sources */,
 				45BEA48D26F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.swift in Sources */,
+				A90229B128B6892300972863 /* QuickBetViewModel.swift in Sources */,
 				A99F7A0227D0E92B008BAF41 /* BonusActiveTableViewCell.swift in Sources */,
 				45A2898326C3EA6C00BCD5DA /* GomaGamingService.swift in Sources */,
 				A9B8408126CFB49000269B05 /* DateUserLocation.swift in Sources */,
@@ -9558,6 +9576,7 @@
 				A98EC7E22889B0AA0044FC46 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				A98EC7EB288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */,
 				456D6FCF289ACE5600B7E542 /* MessageDetailWebViewController.swift in Sources */,
+				A90229B728B6892300972863 /* QuickBetViewModel.swift in Sources */,
 				A9B331F2289422FC00D097F0 /* MessageDetailViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9687,6 +9706,7 @@
 				A9C6022D2716F40300992E11 /* HomeFilterViewController.swift in Sources */,
 				A99FD505282D489B00275509 /* EditGroupAddUserViewController.swift in Sources */,
 				45166CA726F28D2E00E69D65 /* Bootstrap.swift in Sources */,
+				A90229B228B6892300972863 /* QuickBetViewModel.swift in Sources */,
 				45166D1C26F3548D00E69D65 /* JSONSSWampSerializer.swift in Sources */,
 				45BEA48E26F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.swift in Sources */,
 				A99F7A0327D0E92B008BAF41 /* BonusActiveTableViewCell.swift in Sources */,
@@ -10241,6 +10261,7 @@
 				457CBA49282D27D000ED0F00 /* Bootstrap.swift in Sources */,
 				457CBA4A282D27D000ED0F00 /* JSONSSWampSerializer.swift in Sources */,
 				457CBA4B282D27D000ED0F00 /* SimpleRegisterSendEmailCodeViewController.swift in Sources */,
+				A90229B528B6892300972863 /* QuickBetViewModel.swift in Sources */,
 				457CBA4C282D27D000ED0F00 /* BonusActiveTableViewCell.swift in Sources */,
 				457CBA4D282D27D000ED0F00 /* GomaGamingService.swift in Sources */,
 				457CBA4E282D27D000ED0F00 /* DateUserLocation.swift in Sources */,
@@ -10795,6 +10816,7 @@
 				457CBCEF282D2CD100ED0F00 /* HomeFilterViewController.swift in Sources */,
 				457CBCF0282D2CD100ED0F00 /* Bootstrap.swift in Sources */,
 				457CBCF1282D2CD100ED0F00 /* JSONSSWampSerializer.swift in Sources */,
+				A90229B628B6892300972863 /* QuickBetViewModel.swift in Sources */,
 				457CBCF2282D2CD100ED0F00 /* SimpleRegisterSendEmailCodeViewController.swift in Sources */,
 				457CBCF3282D2CD100ED0F00 /* BonusActiveTableViewCell.swift in Sources */,
 				457CBCF4282D2CD100ED0F00 /* GomaGamingService.swift in Sources */,
@@ -11349,6 +11371,7 @@
 				4589C7D5282024E400243547 /* Bootstrap.swift in Sources */,
 				4589C7D6282024E400243547 /* JSONSSWampSerializer.swift in Sources */,
 				4589C7D7282024E400243547 /* SimpleRegisterSendEmailCodeViewController.swift in Sources */,
+				A90229B328B6892300972863 /* QuickBetViewModel.swift in Sources */,
 				4589C7D8282024E400243547 /* BonusActiveTableViewCell.swift in Sources */,
 				4589C7D9282024E400243547 /* GomaGamingService.swift in Sources */,
 				4589C7DA282024E400243547 /* DateUserLocation.swift in Sources */,
@@ -11903,6 +11926,7 @@
 				45A6BC2228246A7500D9B416 /* HomeFilterViewController.swift in Sources */,
 				45A6BC2328246A7500D9B416 /* Bootstrap.swift in Sources */,
 				45A6BC2428246A7500D9B416 /* JSONSSWampSerializer.swift in Sources */,
+				A90229B428B6892300972863 /* QuickBetViewModel.swift in Sources */,
 				45A6BC2528246A7500D9B416 /* SimpleRegisterSendEmailCodeViewController.swift in Sources */,
 				45A6BC2628246A7500D9B416 /* BonusActiveTableViewCell.swift in Sources */,
 				45A6BC2728246A7500D9B416 /* GomaGamingService.swift in Sources */,

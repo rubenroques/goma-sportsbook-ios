@@ -301,6 +301,15 @@ class SearchViewController: UIViewController {
         self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
     }
 
+    private func openQuickbet(_ bettingTicket: BettingTicket) {
+
+        let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
+
+        let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)
+
+        self.present(quickbetViewController, animated: true)
+    }
+
     @IBAction private func didTapCancelButton() {
         self.dismiss(animated: true, completion: nil)
     }
@@ -426,6 +435,10 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                         self?.didTapFavoriteMatchAction?(match)
                     }
                     cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
+
+                    cell.didLongPressOdd = { [weak self] bettingTicket in
+                        self?.openQuickbet(bettingTicket)
+                    }
                     
                     return cell
                 }

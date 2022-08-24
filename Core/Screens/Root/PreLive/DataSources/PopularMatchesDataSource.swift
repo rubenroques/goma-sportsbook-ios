@@ -19,7 +19,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     var didSelectMatchAction: ((Match) -> Void)?
     var didSelectCompetitionAction: ((Competition) -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
-    var didSelectOddAction: ((BettingTicket) -> Void)?
+    var didLongPressOdd: ((BettingTicket) -> Void)?
 
     init(matches: [Match], outrightCompetitions: [Competition]? = nil) {
         self.matches = matches
@@ -88,8 +88,8 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
                     self.didSelectMatchAction?(match)
                 }
 
-                cell.didLongPressOdd = { bettingTicket in
-                    self.didSelectOddAction?(bettingTicket)
+                cell.didLongPressOdd = { [weak self] bettingTicket in
+                    self?.didLongPressOdd?(bettingTicket)
                 }
                 
 //                cell.didTapFavoriteMatchAction = { [weak self] match in
