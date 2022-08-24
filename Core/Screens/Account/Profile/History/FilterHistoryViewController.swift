@@ -170,6 +170,7 @@ class FilterHistoryViewController: UIViewController {
             .map(toDate)
             .compactMap({ $0 })
             .sink(receiveValue: { [weak self] startDate in
+          
                 self?.startDate = startDate
                 if let endDate = self?.endDate,
                    endDate <= startDate,
@@ -179,12 +180,12 @@ class FilterHistoryViewController: UIViewController {
 
                     self?.endDate = afterStartDateValue
                     self?.endTimeHeaderTextView.setText(newEndDateString)
-                    self?.viewModel.setStartTime(dateString: "\(startDate)")
-                    self?.viewModel.setEndTime(dateString: "\(endDate)")
+                    self?.viewModel.setStartTime(dateString: startDate)
+                    self?.viewModel.setEndTime(dateString: endDate)
                     
                 }
                 else {
-                    self?.viewModel.setStartTime(dateString: "\(startDate)")
+                    self?.viewModel.setStartTime(dateString: startDate)
                 }
             })
             .store(in: &cancellables)
@@ -204,12 +205,12 @@ class FilterHistoryViewController: UIViewController {
                     self?.startDate = beforeEndDateValue
                     self?.startTimeHeaderTextView.setText(newStartDateString)
                     
-                    self?.viewModel.setStartTime(dateString: "\(startDate)")
-                    self?.viewModel.setEndTime(dateString: "\(endDate)")
+                    self?.viewModel.setStartTime(dateString: startDate)
+                    self?.viewModel.setEndTime(dateString: endDate)
                                                
                 }
                 else {
-                    self?.viewModel.setEndTime(dateString: "\(endDate)")
+                    self?.viewModel.setEndTime(dateString: endDate)
                 }
             })
             .store(in: &cancellables)
@@ -231,6 +232,7 @@ class FilterHistoryViewController: UIViewController {
         self.dateRangeStackView.isHidden = true
         self.viewModel.didSelectFilter(atIndex: defaultFilter.identifier)
     }
+    
 
     func checkMarketRadioOptions(views: [FilterRowView], viewTapped: FilterRowView) {
         for view in views {

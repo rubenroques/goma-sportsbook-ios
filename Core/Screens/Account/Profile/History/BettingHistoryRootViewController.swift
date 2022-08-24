@@ -71,7 +71,11 @@ class BettingHistoryRootViewController: UIViewController {
 
     private var viewModel: BettingHistoryRootViewModel
     private var filterViewModel: FilterHistoryViewModel = FilterHistoryViewModel()
-
+    var filterPublisher: CurrentValueSubject<FilterHistoryViewModel.FilterValue, Never> = .init(.past30Days)
+    
+    private var filterHistoryViewController = FilterHistoryViewController()
+    var startTimeFilter = Date()
+    var endTimeFilter = Date()
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Lifetime and Cycle
@@ -98,13 +102,19 @@ class BettingHistoryRootViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.viewControllers = [
-            BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .opened)),
-            BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .resolved)),
-            BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .won)),
-            BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .cashout)),
-        ]
-
+        self.filterPublisher
+            .sink { [weak self] filterApplied in
+        
+                self?.viewControllers = [
+                    BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .opened, filterApplied: filterApplied)),
+                    BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .resolved, filterApplied: filterApplied)),
+                    BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .won, filterApplied: filterApplied)),
+                    BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .cashout, filterApplied: filterApplied)),
+                ]
+                self?.reloadCollectionView()
+            }
+            .store(in: &cancellables)
+        
         self.pagedViewController.delegate = self
         self.pagedViewController.dataSource = self
 
@@ -182,16 +192,12 @@ class BettingHistoryRootViewController: UIViewController {
     }
     
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
-        // print("clicou nos filtros")
-        let filterHistoryViewController = FilterHistoryViewController()
-        self.present(filterHistoryViewController, animated: true, completion: nil)
-        
-        filterHistoryViewController.didSelectFilterAction = { [weak self ] opt in
-            
-            print("###")
-            print(opt)
-            
-            
+         self.present(self.filterHistoryViewController, animated: true, completion: nil)
+         self.startTimeFilter = self.filterHistoryViewController.viewModel.startTimeFilterPublisher.value
+         self.endTimeFilter = self.filterHistoryViewController.viewModel.endTimeFilterPublisher.value
+         
+        self.filterHistoryViewController.didSelectFilterAction = { [weak self ] opt in
+            self?.filterPublisher.send(opt)
             
         }
     }

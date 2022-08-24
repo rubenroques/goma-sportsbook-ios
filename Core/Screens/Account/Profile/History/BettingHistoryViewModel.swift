@@ -28,7 +28,8 @@ class BettingHistoryViewModel {
     // MARK: - Publishers
     var bettingTicketsType: BettingTicketsType = .opened
     var cachedViewModels: [String: MyTicketCellViewModel] = [:]
-
+    var filterApplied: FilterHistoryViewModel.FilterValue = .past30Days
+    
     // MARK: - Publishers
     var titlePublisher: CurrentValueSubject<String, Never>
     var listStatePublisher: CurrentValueSubject<ListState, Never> = .init(.loading)
@@ -36,15 +37,16 @@ class BettingHistoryViewModel {
 
     var isTicketsEmptyPublisher: AnyPublisher<Bool, Never>?
     var isTransactionsEmptyPublisher: AnyPublisher<Bool, Never>?
-
+    
+    var startDatePublisher: CurrentValueSubject<Date, Never> = .init(Date())
+    var endDatePublisher: CurrentValueSubject<Date, Never> = .init(Date())
+    
     // MARK: - data
     var resolvedTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
     var openedTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
     var wonTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
     var cashoutTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
 
-   
-    
     private var matchesPublisher: AnyCancellable?
     private var matchesRegister: EndpointPublisherIdentifiable?
     
@@ -62,10 +64,11 @@ class BettingHistoryViewModel {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Life Cycle
-    init(bettingTicketsType: BettingTicketsType) {
+    init(bettingTicketsType: BettingTicketsType, filterApplied: FilterHistoryViewModel.FilterValue) {
 
         self.bettingTicketsType = bettingTicketsType
-
+        self.filterApplied = filterApplied
+        
         switch bettingTicketsType {
         case .opened:
             self.titlePublisher = .init("Open")
@@ -77,6 +80,8 @@ class BettingHistoryViewModel {
             self.titlePublisher = .init("Cashout")
         }
 
+        self.calculateDate(filterApplied: filterApplied)
+   
         Env.everyMatrixClient.serviceStatusPublisher
             .sink { serviceStatus in
                 if serviceStatus == .connected {
@@ -84,6 +89,7 @@ class BettingHistoryViewModel {
                 }
             }
             .store(in: &cancellables)
+        
     }
 
     func initialContentLoad() {
@@ -96,18 +102,36 @@ class BettingHistoryViewModel {
 
         switch self.bettingTicketsType {
         case .opened:
-            self.loadOpenedTickets(page: 0)
+            self.loadOpenedTickets(page: 1)
         case .resolved:
-            self.loadResolvedTickets(page: 0)
+            self.loadResolvedTickets(page: 1)
         case .won:
-            self.loadWonTickets(page: 0)
+            self.loadWonTickets(page: 1)
         case .cashout:
-            self.loadCashoutTickets(page: 0)
+            self.loadCashoutTickets(page: 1)
         }
     }
 
     func refreshContent() {
         self.initialContentLoad()
+    }
+    func calculateDate(filterApplied: FilterHistoryViewModel.FilterValue) {
+        
+        self.endDatePublisher.send(Date())
+
+        switch filterApplied {
+        case .dateRange(let startTime, let endTime):
+            self.startDatePublisher.send(startTime)
+            self.endDatePublisher.send(endTime)
+        case .past30Days:
+            if let startDate = Calendar.current.date(byAdding: .day, value: -30, to: Date()) {
+                self.startDatePublisher.send(startDate)
+            }
+        default :
+            if let startDate = Calendar.current.date(byAdding: .day, value: -90, to: Date()) {
+                self.startDatePublisher.send(startDate)
+            }
+        }
     }
     
     func shouldShowLoadingCell() -> Bool {
@@ -122,9 +146,12 @@ class BettingHistoryViewModel {
             return self.cashoutTickets.value.isNotEmpty && matchesHasNextPage
         }
         
-       
     }
-
+    func convertDateToString(date: Date) -> String {
+        let auxDate = "\(date)"
+        let dateSplited = auxDate.split(separator: " ")
+        return "\(dateSplited[0])"
+    }
 
     func loadOpenedTickets(page: Int) {
 
@@ -133,8 +160,10 @@ class BettingHistoryViewModel {
         let openedRoute = TSRouter.getMyTickets(language: "en",
                                                 ticketsType: EveryMatrix.MyTicketsType.opened,
                                                 records: recordsPerPage,
-                                                page: page)
-
+                                                page: page,
+                                                startDate: convertDateToString(date: self.startDatePublisher.value),
+                                                endDate: convertDateToString(date: self.endDatePublisher.value))
+        
         Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -171,7 +200,9 @@ class BettingHistoryViewModel {
         let openedRoute = TSRouter.getMyTickets(language: "en",
                                                 ticketsType: EveryMatrix.MyTicketsType.resolved,
                                                 records: recordsPerPage,
-                                                page: page)
+                                                page: page,
+                                                startDate: convertDateToString(date: self.startDatePublisher.value),
+                                                endDate: convertDateToString(date: self.endDatePublisher.value))
 
         Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
             .sink(receiveCompletion: { [weak self] completion in
@@ -209,7 +240,9 @@ class BettingHistoryViewModel {
         let openedRoute = TSRouter.getMyTickets(language: "en",
                                                 ticketsType: EveryMatrix.MyTicketsType.resolved,
                                                 records: recordsPerPage,
-                                                page: page)
+                                                page: page,
+                                                startDate: convertDateToString(date: self.startDatePublisher.value),
+                                                endDate: convertDateToString(date: self.endDatePublisher.value))
 
         Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
             .sink(receiveCompletion: { [weak self] completion in
@@ -306,10 +339,6 @@ class BettingHistoryViewModel {
         case .resolved:
             let matchesCount = self.resolvedTickets.value.count * self.resolvedPage
             loadResolvedTickets(page: self.resolvedPage)
-            
-            print(self.resolvedTickets.value.count)
-            print(matchesCount)
-            print(self.resolvedPage)
             if self.resolvedTickets.value.count < matchesCount * self.resolvedPage {
                 self.matchesHasNextPage = false
             }
@@ -357,7 +386,9 @@ class BettingHistoryViewModel {
         let openedRoute = TSRouter.getMyTickets(language: "en",
                                                 ticketsType: EveryMatrix.MyTicketsType.won,
                                                 records: recordsPerPage,
-                                                page: page)
+                                                page: page,
+                                                startDate: convertDateToString(date: self.startDatePublisher.value),
+                                                endDate: convertDateToString(date: self.endDatePublisher.value))
 
         Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
             .sink(receiveCompletion: { [weak self] completion in

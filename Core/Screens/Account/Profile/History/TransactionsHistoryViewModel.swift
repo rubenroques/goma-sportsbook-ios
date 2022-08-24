@@ -31,8 +31,8 @@ class TransactionsHistoryViewModel {
     var titlePublisher: CurrentValueSubject<String, Never>
     var listStatePublisher: CurrentValueSubject<ListState, Never> = .init(.loading)
     var transactionTypePublisher: CurrentValueSubject<TransactionsType, Never> = .init(.deposit)
-    var startDate: CurrentValueSubject<String, Never> = .init("2000-01-01T12:00:00Z")
-    var endDate: CurrentValueSubject<String, Never> = .init("2022-01-01T12:00:00Z")
+    var startDatePublisher: CurrentValueSubject<Date, Never> = .init(Date())
+    var endDatePublisher: CurrentValueSubject<Date, Never> = .init(Date())
     var transactionsPublisher: CurrentValueSubject<[EveryMatrix.TransactionHistory], Never> = .init([])
 
     // MARK: - Private Properties
@@ -53,14 +53,7 @@ class TransactionsHistoryViewModel {
             self.titlePublisher = .init("Withdraws")
         }
         self.calculateDate(filterApplied: filterApplied)
-        self.transactionTypePublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { _ in
-                self.initialContentLoad()
-
-            })
-            .store(in: &self.cancellables)
-    
+   
         Env.everyMatrixClient.serviceStatusPublisher
             .sink { serviceStatus in
                 if serviceStatus == .connected {
@@ -68,21 +61,7 @@ class TransactionsHistoryViewModel {
                 }
             }
             .store(in: &cancellables)
-        
-        self.startDate
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { _ in
-                self.initialContentLoad()
-            })
-            .store(in: &self.cancellables)
-        
-        self.endDate
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { _ in
-                self.initialContentLoad()
-            })
-            .store(in: &self.cancellables)
-        
+       
     }
 
     func initialContentLoad() {
@@ -103,21 +82,20 @@ class TransactionsHistoryViewModel {
     }
     
     func calculateDate(filterApplied: FilterHistoryViewModel.FilterValue) {
-        
-        self.endDate.send("\("\(Date())".split(separator: " ")[0])T\("\(Date())".split(separator: " ")[1])Z")
 
-        
+        self.endDatePublisher.send(Date())
+
         switch filterApplied {
         case .dateRange(let startTime, let endTime):
-            self.startDate.send("\("\(startTime)".split(separator: " ")[0])T\("\(startTime)".split(separator: " ")[1])Z")
-            self.endDate.send("\("\(endTime)".split(separator: " ")[0])T\("\(endTime)".split(separator: " ")[1])Z")
+            self.startDatePublisher.send(startTime)
+            self.endDatePublisher.send(endTime)
         case .past30Days:
-            if let date = Calendar.current.date(byAdding: .day, value: -30, to: Date()) {
-                self.startDate.send("\("\(date)".split(separator: " ")[0])T\("\(date)".split(separator: " ")[1])Z")
+            if let startDate = Calendar.current.date(byAdding: .day, value: -30, to: Date()) {
+                self.startDatePublisher.send(startDate)
             }
         default :
-            if let date = Calendar.current.date(byAdding: .day, value: -90, to: Date()) {
-                self.startDate.send("\("\(date)".split(separator: " ")[0])T\("\(date)".split(separator: " ")[1])Z")
+            if let startDate = Calendar.current.date(byAdding: .day, value: -90, to: Date()) {
+                self.startDatePublisher.send(startDate)
             }
         }
     }
@@ -125,8 +103,8 @@ class TransactionsHistoryViewModel {
     func loadDeposits(page: Int) {
         self.listStatePublisher.send(.loading)
         let depositsRoute = TSRouter.getTransactionHistory(type: "Deposit",
-                                                           startTime: self.startDate.value,
-                                                           endTime: self.endDate.value,
+                                                           startTime: convertDateToString(date: self.startDatePublisher.value),
+                                                           endTime: convertDateToString(date: self.endDatePublisher.value),
                                                            pageIndex: page,
                                                            pageSize: recordsPerPage)
         Env.everyMatrixClient.manager.getModel(router: depositsRoute, decodingType: EveryMatrix.TransactionsHistoryResponse.self)
@@ -158,13 +136,17 @@ class TransactionsHistoryViewModel {
             })
             .store(in: &cancellables)
     }
+    
+    func convertDateToString(date: Date) -> String{
+        return "\(date)"
+    }
 
     func loadWithdraws(page: Int) {
         self.listStatePublisher.send(.loading)
 
         let withdrawsRoute = TSRouter.getTransactionHistory(type: "Withdraw",
-                                                            startTime: self.startDate.value,
-                                                            endTime: self.endDate.value,
+                                                            startTime: convertDateToString(date: self.startDatePublisher.value),
+                                                            endTime: convertDateToString(date: self.endDatePublisher.value),
                                                             pageIndex: page,
                                                             pageSize: recordsPerPage)
         Env.everyMatrixClient.manager.getModel(router: withdrawsRoute, decodingType: EveryMatrix.TransactionsHistoryResponse.self)

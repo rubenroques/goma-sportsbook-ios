@@ -59,7 +59,6 @@ class TransactionsHistoryViewController: UIViewController {
         self.tableView.isHidden = false
         self.emptyStateBaseView.isHidden = true
 
-        
         self.viewModel.listStatePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] listStatePublisher in

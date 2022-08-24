@@ -66,8 +66,8 @@ class TransactionsHistoryRootViewController: UIViewController {
 
     private var viewModel: TransactionsHistoryRootViewModel
     var filterPublisher: CurrentValueSubject<FilterHistoryViewModel.FilterValue, Never> = .init(.past30Days)
-    var startTimeFilter = ""
-    var endTimeFilter = ""
+    var startTimeFilter = Date()
+    var endTimeFilter = Date()
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Lifetime and Cycle
@@ -94,11 +94,6 @@ class TransactionsHistoryRootViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.viewControllers = [
-            TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .deposit, filterApplied: .past30Days)),
-            TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .withdraw, filterApplied: .past30Days)),
-        ]
-        
         self.filterPublisher
             .sink { [weak self] filterApplied in
         
@@ -199,7 +194,6 @@ class TransactionsHistoryRootViewController: UIViewController {
     }
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
         
-       
         self.present(self.filterHistoryViewController, animated: true, completion: nil)
         self.startTimeFilter = self.filterHistoryViewController.viewModel.startTimeFilterPublisher.value
         self.endTimeFilter = self.filterHistoryViewController.viewModel.endTimeFilterPublisher.value

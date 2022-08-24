@@ -38,7 +38,7 @@ class BettingHistoryViewController: UIViewController {
     var requestShareActivityView: ((UIImage, String, String) -> Void)?
 
     // MARK: - Lifetime and Cycle
-    init(viewModel: BettingHistoryViewModel = BettingHistoryViewModel(bettingTicketsType: .opened)) {
+    init(viewModel: BettingHistoryViewModel = BettingHistoryViewModel(bettingTicketsType: .opened, filterApplied: .past30Days)) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -50,10 +50,10 @@ class BettingHistoryViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.tableView.reloadData()
         self.setupSubviews()
         self.setupWithTheme()
-
+        
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
@@ -64,9 +64,36 @@ class BettingHistoryViewController: UIViewController {
         self.tableView.isHidden = false
         self.emptyStateBaseView.isHidden = true
 
-        self.hideLoading()
+        self.viewModel.listStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] listStatePublisher in
+
+                switch listStatePublisher {
+                case .loading:
+                    self?.showLoading()
+                    self?.emptyStateBaseView.isHidden = true
+                case .empty:
+                    self?.hideLoading()
+                    self?.emptyStateBaseView.isHidden = false
+                    self?.tableView.isHidden = true
+                case .noUserFoundError:
+                    self?.hideLoading()
+                    self?.emptyStateBaseView.isHidden = false
+                case .serverError:
+                    self?.hideLoading()
+                    self?.emptyStateBaseView.isHidden = false
+                case .loaded:
+                    self?.hideLoading()
+                    self?.emptyStateBaseView.isHidden = true
+                    self?.tableView.reloadData()
+                }
+
+            })
+            .store(in: &self.cancellables)
 
         self.bind(toViewModel: self.viewModel)
+        
+        
     }
 
     // MARK: - Layout and Theme
@@ -198,8 +225,9 @@ extension BettingHistoryViewController: UITableViewDelegate, UITableViewDataSour
         cell.needsHeightRedraw = { [weak self] in
             self?.redrawTableViewAction?()
         }
+        
         cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
-
+        cell.configureCashoutButton(withState: .hidden)
         cell.tappedShareAction = { [weak self] in
             if let cellSnapshot = cell.snapshot, let ticketStatus = ticketValue.status {
                 self?.requestShareActivityView?(cellSnapshot, ticketValue.betId, ticketStatus)
@@ -216,9 +244,7 @@ extension BettingHistoryViewController: UITableViewDelegate, UITableViewDataSour
     
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        print(indexPath.section)
         if indexPath.section == 1, self.viewModel.shouldShowLoadingCell() {
-            print(indexPath.section)
             if let typedCell = cell as? LoadingMoreTableViewCell {
                 typedCell.startAnimating()
             }

@@ -79,7 +79,8 @@ class HistoryViewController: UIViewController {
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         self.filterBaseView.addGestureRecognizer(tapFilterGesture)
         self.filterBaseView.isUserInteractionEnabled = true
-        self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+       // self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+       
 
         let tapDepositGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapMakeDeposit))
         self.emptyStateButton.isUserInteractionEnabled = true
@@ -111,7 +112,6 @@ class HistoryViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         self.filterBaseView.layer.cornerRadius = self.filterBaseView.frame.height / 2
-        
         self.rightGradientMaskLayer.frame = self.rightGradientBaseView.bounds
         
     }

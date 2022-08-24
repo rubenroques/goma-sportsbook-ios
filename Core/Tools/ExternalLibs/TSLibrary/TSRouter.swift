@@ -39,7 +39,7 @@ enum TSRouter {
     case getDepositCashier(currency: String, amount: String, gamingAccountId: String)
     case getWithdrawCashier(currency: String, amount: String, gamingAccountId: String)
 
-    case getMyTickets(language: String, ticketsType: EveryMatrix.MyTicketsType, records: Int, page: Int)
+    case getMyTickets(language: String, ticketsType: EveryMatrix.MyTicketsType, records: Int, page: Int, startDate: String = "", endDate: String = "")
 
     case getSystemBetTypes(tickets: [EveryMatrix.BetslipTicketSelection])
     case getSystemBetSelectionInfo(language: String, stakeAmount: Double, systemBetType: SystemBetType, tickets: [EveryMatrix.BetslipTicketSelection])
@@ -583,11 +583,13 @@ enum TSRouter {
                     "ubsWalletId": ubsWalletId]
             return params
 
-        case .getMyTickets(let language,let ticketsType, let records, let page):
+        case .getMyTickets(let language,let ticketsType, let records, let page, let startDate, let endDate ):
             return ["lang": language,
                     "betStatuses": ticketsType.queryArray,
                     "nrOfRecords": records,
-                    "page": page]
+                    "page": page,
+                    "startDate": startDate,
+                    "endDate": endDate ]
 
         case .searchV2(let language, let limit, let query, let eventStatuses, let include, let bettingTypeIds, let sortBy, let includeVirtualSports):
             return ["lang": language,

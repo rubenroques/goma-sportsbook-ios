@@ -15,7 +15,7 @@ class FilterHistoryViewModel {
 
         case past30Days
         case past90Days
-        case dateRange (startTime: String =  "2022-01-01T12:00:00Z", endTime: String =  "2022-01-01T12:00:00Z")
+        case dateRange (startTime: Date =  Date(), endTime: Date =  Date())
         
         var identifier: Int {
             switch self {
@@ -44,12 +44,11 @@ class FilterHistoryViewModel {
     // MARK: - Publishers
     var selectedFilterPublisher: CurrentValueSubject<FilterValue, Never> = .init(.past30Days)
     private var cancellables = Set<AnyCancellable>()
-    var startTimeFilterPublisher: CurrentValueSubject<String, Never> = .init("\(Date())")
-    var endTimeFilterPublisher: CurrentValueSubject<String, Never> = .init("\(Date())")
+    var startTimeFilterPublisher: CurrentValueSubject<Date, Never> = .init(Date())
+    var endTimeFilterPublisher: CurrentValueSubject<Date, Never> = .init(Date())
     
     // MARK: - Life Cycle
      init() {
-         print(self.selectedFilterPublisher.value)
       
              Publishers.CombineLatest(self.startTimeFilterPublisher, self.endTimeFilterPublisher)
                   .receive(on: DispatchQueue.main)
@@ -67,12 +66,12 @@ class FilterHistoryViewModel {
         }
     }
     
-    func setStartTime(dateString: String) {
+    func setStartTime(dateString: Date) {
         self.startTimeFilterPublisher.send(dateString)
         
     }
     
-    func setEndTime(dateString: String) {
+    func setEndTime(dateString: Date) {
         self.endTimeFilterPublisher.send(dateString)
         
     }
