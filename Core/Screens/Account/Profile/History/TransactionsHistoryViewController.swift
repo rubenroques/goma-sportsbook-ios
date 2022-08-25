@@ -149,6 +149,11 @@ class TransactionsHistoryViewController: UIViewController {
         self.loadingActivityIndicatorView.stopAnimating()
     }
 
+    func reloadDataWithFilter(newFilter: FilterHistoryViewModel.FilterValue) {
+        self.viewModel.filterApplied = newFilter
+        self.viewModel.refreshContent()
+    }
+
 }
 
 //
@@ -161,22 +166,51 @@ extension TransactionsHistoryViewController: UITableViewDelegate, UITableViewDat
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.numberOfRows()
+        //return self.viewModel.numberOfRows()
+        switch section {
+        case 0:
+            return self.viewModel.numberOfRows()
+        case 1:
+            return self.viewModel.shouldShowLoadingCell() ? 1 : 0
+        default:
+            return 0
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard
-            let cell = tableView.dequeueReusableCell(withIdentifier: TransactionsTableViewCell.identifier, for: indexPath) as? TransactionsTableViewCell,
-            let transaction = self.viewModel.transactionForRow(atIndex: indexPath.row)
-        else {
-            fatalError("")
+        switch indexPath.section {
+        case 0:
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: TransactionsTableViewCell.identifier, for: indexPath) as? TransactionsTableViewCell,
+                let transaction = self.viewModel.transactionForRow(atIndex: indexPath.row)
+            else {
+                fatalError("")
+            }
+            cell.configure(withTransactionHistoryEntry: transaction, transactionType: viewModel.transactionsType)
+            return cell
+        case 1:
+            if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
+                return cell
+            }
+
+        default:
+            fatalError()
         }
-        cell.configure(withTransactionHistoryEntry: transaction, transactionType: viewModel.transactionsType)
-        return cell
+        return UITableViewCell()
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
+    }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.section == 1, self.viewModel.shouldShowLoadingCell() {
+            if let typedCell = cell as? LoadingMoreTableViewCell {
+                typedCell.startAnimating()
+            }
+            self.viewModel.requestNextPage()
+
+        }
     }
 
 }

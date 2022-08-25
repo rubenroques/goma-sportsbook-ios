@@ -104,13 +104,26 @@ class BettingHistoryRootViewController: UIViewController {
 
         self.filterPublisher
             .sink { [weak self] filterApplied in
-        
-                self?.viewControllers = [
-                    BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .opened, filterApplied: filterApplied)),
-                    BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .resolved, filterApplied: filterApplied)),
-                    BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .won, filterApplied: filterApplied)),
-                    BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .cashout, filterApplied: filterApplied)),
-                ]
+                print("BETTING FILTER: \(filterApplied)")
+
+                if let viewControllers = self?.viewControllers {
+                    if viewControllers.isEmpty {
+                        self?.viewControllers = [
+                            BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .opened, filterApplied: filterApplied)),
+                            BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .resolved, filterApplied: filterApplied)),
+                            BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .won, filterApplied: filterApplied)),
+                            BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .cashout, filterApplied: filterApplied)),
+                        ]
+                    }
+                    else {
+                        for viewController in viewControllers {
+                            let bettingHistoryViewController = viewController as? BettingHistoryViewController
+
+                            bettingHistoryViewController?.reloadDataWithFilter(newFilter: filterApplied)
+                        }
+                    }
+                }
+
                 self?.reloadCollectionView()
             }
             .store(in: &cancellables)
@@ -158,7 +171,6 @@ class BettingHistoryRootViewController: UIViewController {
         
         StyleHelper.styleButton(button: self.noLoginButton)
    }
-
 
     // MARK: - Bindings
     private func bind(toViewModel viewModel: BettingHistoryRootViewModel) {

@@ -96,12 +96,26 @@ class TransactionsHistoryRootViewController: UIViewController {
 
         self.filterPublisher
             .sink { [weak self] filterApplied in
-        
-                self?.viewControllers = [
-                    TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .deposit, filterApplied: filterApplied)),
-                    TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .withdraw, filterApplied: filterApplied)),
-                ]
+                print("TRANSACTION FILTER: \(filterApplied)")
+
+                if let viewControllers = self?.viewControllers {
+                    if viewControllers.isEmpty {
+                        self?.viewControllers = [
+                            TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .deposit, filterApplied: filterApplied)),
+                            TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .withdraw, filterApplied: filterApplied)),
+                        ]
+                    }
+                    else {
+                        for viewController in viewControllers {
+                            let transactionHistoryViewController = viewController as? TransactionsHistoryViewController
+
+                            transactionHistoryViewController?.reloadDataWithFilter(newFilter: filterApplied)
+                        }
+                    }
+                }
+
                 self?.reloadCollectionView()
+
             }
             .store(in: &cancellables)
         
@@ -192,6 +206,7 @@ class TransactionsHistoryRootViewController: UIViewController {
     func showNoLoginView() {
         self.noLoginBaseView.isHidden = false
     }
+
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
         
         self.present(self.filterHistoryViewController, animated: true, completion: nil)

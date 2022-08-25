@@ -35,9 +35,16 @@ class TransactionsHistoryViewModel {
     var endDatePublisher: CurrentValueSubject<Date, Never> = .init(Date())
     var transactionsPublisher: CurrentValueSubject<[EveryMatrix.TransactionHistory], Never> = .init([])
 
+    var depositTransactions: CurrentValueSubject<[EveryMatrix.TransactionHistory], Never> = .init([])
+    var withdrawTransactions: CurrentValueSubject<[EveryMatrix.TransactionHistory], Never> = .init([])
+
     // MARK: - Private Properties
+    private var depositPage = 0
+    private var withdrawPage = 0
     private let recordsPerPage = 80
     private var cancellables = Set<AnyCancellable>()
+
+    private var transactionsHasNextPage = true
 
     // MARK: - Life Cycle
     init(transactionsType: TransactionsType, filterApplied: FilterHistoryViewModel.FilterValue) {
@@ -67,6 +74,8 @@ class TransactionsHistoryViewModel {
     func initialContentLoad() {
         self.listStatePublisher.send(.loading)
         self.transactionsPublisher.send([])
+        self.depositTransactions.send([])
+        self.withdrawTransactions.send([])
 
         switch self.transactionsType {
         case .deposit:
@@ -78,6 +87,8 @@ class TransactionsHistoryViewModel {
     }
 
     func refreshContent() {
+        self.transactionsHasNextPage = true
+        self.calculateDate(filterApplied: filterApplied)
         self.initialContentLoad()
     }
     
@@ -100,6 +111,16 @@ class TransactionsHistoryViewModel {
         }
     }
 
+    func shouldShowLoadingCell() -> Bool {
+        switch self.transactionsType {
+        case .deposit:
+            return self.depositTransactions.value.isNotEmpty && transactionsHasNextPage
+        case .withdraw:
+            return self.withdrawTransactions.value.isNotEmpty && transactionsHasNextPage
+        }
+
+    }
+
     func loadDeposits(page: Int) {
         self.listStatePublisher.send(.loading)
         let depositsRoute = TSRouter.getTransactionHistory(type: "Deposit",
@@ -107,6 +128,7 @@ class TransactionsHistoryViewModel {
                                                            endTime: convertDateToString(date: self.endDatePublisher.value),
                                                            pageIndex: page,
                                                            pageSize: recordsPerPage)
+
         Env.everyMatrixClient.manager.getModel(router: depositsRoute, decodingType: EveryMatrix.TransactionsHistoryResponse.self)
             .map(\.transactions)
             .receive(on: DispatchQueue.main)
@@ -126,7 +148,9 @@ class TransactionsHistoryViewModel {
                     ()
                 }
             }, receiveValue: { [weak self] depositsTransactions in
-                self?.transactionsPublisher.send(depositsTransactions)
+                let deposits = depositsTransactions
+                self?.depositTransactions.send(depositsTransactions)
+                //self?.transactionsPublisher.send(depositsTransactions)
                 if depositsTransactions.isEmpty {
                     self?.listStatePublisher.send(.empty)
                 }
@@ -138,7 +162,10 @@ class TransactionsHistoryViewModel {
     }
     
     func convertDateToString(date: Date) -> String{
-        return "\(date)"
+        let auxDate = "\(date)"
+        let dateSplited = auxDate.split(separator: " ")
+        return "\(dateSplited[0])"
+        
     }
 
     func loadWithdraws(page: Int) {
@@ -168,7 +195,8 @@ class TransactionsHistoryViewModel {
                     ()
                 }
             }, receiveValue: { [weak self] withdrawsTransactions in
-                self?.transactionsPublisher.send(withdrawsTransactions)
+                self?.withdrawTransactions.send(withdrawsTransactions)
+                //self?.transactionsPublisher.send(withdrawsTransactions)
                 if withdrawsTransactions.isEmpty {
                     self?.listStatePublisher.send(.empty)
                 }
@@ -177,6 +205,27 @@ class TransactionsHistoryViewModel {
                 }
             })
             .store(in: &cancellables)
+    }
+
+    func requestNextPage() {
+
+        switch self.transactionsType {
+        case .deposit:
+            if self.depositTransactions.value.count < self.recordsPerPage * (self.depositPage + 1) {
+                self.transactionsHasNextPage = false
+                return
+            }
+            depositPage += 1
+            self.loadDeposits(page: depositPage)
+        case .withdraw:
+            if self.withdrawTransactions.value.count < self.recordsPerPage * (self.withdrawPage + 1) {
+                self.transactionsHasNextPage = false
+                return
+            }
+            withdrawPage += 1
+            self.loadWithdraws(page: withdrawPage)
+        }
+        //self.fetchNextPage()
     }
 
 }
@@ -188,11 +237,24 @@ extension TransactionsHistoryViewModel {
     }
 
     func numberOfRows() -> Int {
-        return self.transactionsPublisher.value.count
+        switch self.transactionsType {
+        case .deposit:
+            return self.depositTransactions.value.count
+        case .withdraw:
+            return self.withdrawTransactions.value.count
+        }
+        //return self.transactionsPublisher.value.count
     }
 
     func transactionForRow(atIndex index: Int) -> EveryMatrix.TransactionHistory? {
-        return self.transactionsPublisher.value[safe: index]
+        switch self.transactionsType {
+        case .deposit:
+            return self.depositTransactions.value[safe: index]
+        case .withdraw:
+            return self.withdrawTransactions.value[safe: index]
+
+        }
+        //return self.transactionsPublisher.value[safe: index]
     }
 
 }
