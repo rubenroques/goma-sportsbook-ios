@@ -81,11 +81,10 @@ extension UserDefaults {
 
     var userOddsFormat: OddsFormat {
         get {
-            register(defaults: [UserDefaultsKey.userOddsFormat.rawValue: OddsFormat.europe.rawValue])
             return OddsFormat(rawValue: integer(forKey: UserDefaultsKey.userOddsFormat.rawValue)) ?? .europe
         }
         set {
-            set(newValue.rawValue, forKey: UserDefaultsKey.userOddsFormat.rawValue)
+            self.set(newValue.rawValue, forKey: UserDefaultsKey.userOddsFormat.rawValue)
         }
     }
 

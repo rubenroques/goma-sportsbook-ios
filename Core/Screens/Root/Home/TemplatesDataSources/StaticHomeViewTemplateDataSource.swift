@@ -336,9 +336,12 @@ class StaticHomeViewTemplateDataSource {
                 for betGroup in betGroupsArray {
                     cardsSummaryArray.append(SuggestedBetCardSummary.init(bets: betGroup))
                 }
-                return cardsSummaryArray
+                return cardsSummaryArray.filter { suggestedBetCardSummary in
+                    suggestedBetCardSummary.bets.count > 1
+                }
             })
             .sink(receiveCompletion: { _ in
+                
             },
             receiveValue: { [weak self] suggestedBets in
                 self?.suggestedBets = suggestedBets

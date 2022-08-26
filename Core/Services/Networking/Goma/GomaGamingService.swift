@@ -12,6 +12,7 @@ enum GomaGamingService {
     case log(type: String, message: String)
     case geolocation(latitude: String, longitude: String)
     case settings
+    case modules
     case simpleRegister(username: String, email: String, phoneCountryCode: String, phone: String, birthDate: String, userProviderId: String, deviceToken: String)
     case modalPopUpDetails
     case login(username: String, password: String, deviceToken: String)
@@ -37,9 +38,11 @@ enum GomaGamingService {
     case removeUser(chatroomId: Int, userId: String)
     case addUserToGroup(chatroomId: Int, userIds: [String])
     case searchUserCode(code: String)
-    case getNotification(type: String)
+    case getNotification(type: String, page: Int)
     case setNotificationRead(id: String)
+    case setAllNotificationRead(type: String)
     case sendSupportTicket(title: String, message: String)
+    case notificationsCounter(type: String)
 }
 
 extension GomaGamingService: Endpoint {
@@ -61,6 +64,8 @@ extension GomaGamingService: Endpoint {
             return "/api/settings/\(apiVersion)/geolocation"
         case .settings:
             return "/api/\(apiVersion)/modules"
+        case .modules:
+            return "/api/settings/\(apiVersion)/modules"
         case .simpleRegister:
             return "/api/users/\(apiVersion)/register"
         case .modalPopUpDetails:
@@ -110,8 +115,12 @@ extension GomaGamingService: Endpoint {
             return "/api/notifications/\(apiVersion)"
         case .setNotificationRead(let id):
             return "/api/notifications/\(apiVersion)/\(id)/read"
+        case .setAllNotificationRead:
+            return "/api/notifications/\(apiVersion)/read-all"
         case .sendSupportTicket:
             return "/api/users/\(apiVersion)/contact"
+        case .notificationsCounter:
+            return "/api/notifications/\(apiVersion)/count"
         }
     }
 
@@ -122,13 +131,15 @@ extension GomaGamingService: Endpoint {
         case .geolocation(let latitude, let longitude):
             return [URLQueryItem(name: "lat", value: latitude),
                     URLQueryItem(name: "lng", value: longitude)]
-        case .settings, .simpleRegister, .modalPopUpDetails, .login,
+        case .simpleRegister, .modalPopUpDetails, .login,
                 .suggestedBets, .addFavorites, .matchStats, .userSettings, .sendUserSettings, .sendSupportTicket:
+            return nil
+        case  .settings, .modules:
             return nil
         case .removeFavorite(let favorite):
             return [URLQueryItem(name: "favorite_ids[]", value: favorite)]
         // Social
-        case .addFriend, .deleteFriend, .listFriends, .inviteFriend, .addGroup, .deleteGroup, .leaveGroup, .searchUserCode, .lookupPhone, .setNotificationRead:
+        case .addFriend, .deleteFriend, .listFriends, .inviteFriend, .addGroup, .deleteGroup, .leaveGroup, .searchUserCode, .lookupPhone, .setNotificationRead, .setAllNotificationRead:
             return nil
         case .chatrooms(let page):
             return [URLQueryItem(name: "page", value: page)]
@@ -165,9 +176,11 @@ extension GomaGamingService: Endpoint {
 
             print("ADD USER GROUP QUERY: \(queryItemsURL)")
             return queryItemsURL
-        case .getNotification(let type):
-            return [URLQueryItem(name: "type", value: type)]
-
+        case .getNotification(let type, let page):
+            return [URLQueryItem(name: "type", value: type),
+            URLQueryItem(name: "page", value: "\(page)")]
+        case .notificationsCounter(let type):
+            return[URLQueryItem(name: "type", value: type)]
         }
     }
 
@@ -193,16 +206,16 @@ extension GomaGamingService: Endpoint {
         case .test:
             return .get
         case .geolocation, .settings, .modalPopUpDetails, .suggestedBets,
-                .matchStats, .userSettings:
+                .matchStats, .userSettings, .modules:
             return .get
-        case .log, .simpleRegister, .login, .addFavorites, .sendUserSettings,  .sendSupportTicket:
+        case .log, .simpleRegister, .login, .addFavorites, .sendUserSettings, .sendSupportTicket:
             return .post
         case .removeFavorite:
             return .delete
         // Social
-        case .addFriend, .inviteFriend, .addGroup, .addUserToGroup, .lookupPhone, .setNotificationRead:
+        case .addFriend, .inviteFriend, .addGroup, .addUserToGroup, .lookupPhone, .setNotificationRead, .setAllNotificationRead:
             return .post
-        case .listFriends, .chatrooms, .searchUserCode, .getNotification:
+        case .listFriends, .chatrooms, .searchUserCode, .getNotification, .notificationsCounter:
             return .get
         case .deleteGroup, .leaveGroup, .deleteFriend, .removeUser:
             return .delete
@@ -309,7 +322,15 @@ extension GomaGamingService: Endpoint {
                     \(phones)
                     }
                     """
-            print("CONTACTS BODY: \(body)")
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+        case .setAllNotificationRead(let type):
+            let body = """
+                    {"type":
+                    \(type)
+                    }
+                    """
+            print("ALL NOTIFS BODY: \(body)")
             let data = body.data(using: String.Encoding.utf8)!
             return data
         default:

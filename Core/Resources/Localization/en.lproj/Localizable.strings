@@ -1,13 +1,13 @@
-/* 
+/*
   Localizable.strings
   Sportsbook
 
   Created by Ruben Roques on 06/08/2021.
-  
+
 */
 
-"languange_code" = "en";
-"languange_code_complete" = "en-us";
+"languange_code" = "pt";
+"languange_code_complete" = "pt-pt";
 
 "update_available" = "Update available";
 "maintenance_mode" = "Temporarily Down For Maintenance";
@@ -121,6 +121,14 @@ Terms of use, Privacy Policy and EULA";
 "limits_management" = "Limits Management";
 "app_settings" = "App Settings";
 "support" = "Support";
+"subject" = "Subject";
+"description" = "Description";
+
+"supportSuccessTitle" = "Success";
+"supportSuccessSubtitle" = "Your message was successfully sent.";
+
+"supportErrorTitle" = "Error";
+"supportErrorSubtitle" = "We can't send your message at this moment. Please try again later.";
 
 "limits_management" = "Limits Management";
 "save" = "Save";
@@ -248,6 +256,8 @@ Terms of use, Privacy Policy and EULA";
 "sportsbook" = "Sportsbook";
 "my_tickets" = "My Tickets";
 "my_bets" = "My Bets";
+"bets" = "Bets";
+"betslip" = "Betslip";
 
 "logout" = "Logout";
 
@@ -424,6 +434,7 @@ Terms of use, Privacy Policy and EULA";
 "shared_tickets_to" = "You shared tickets to";
 
 "add_friend" = "Add Friend";
+"add_friends" = "Add Friends";
 "search_by_username" = "Search by username...";
 "add_from_contact_list" = "Add from contact list";
 "settings" = "Settings";
@@ -502,3 +513,45 @@ Terms of use, Privacy Policy and EULA";
 
 "share_my_tickets" = "Share my tickets";
 "not_bets_tickets_section" = "You don't have any bets for this section.";
+"share_ticket" = "Share ticket";
+
+"more" = "More";
+"copy_link" = "Copy link";
+"share_outside_via" = "Share outside via...";
+"comment" = "Comment";
+"send_friends_groups" = "Send to friends and groups";
+"send" = "Send";
+
+"check_this_bet_made" = "Check out this bet I just made!";
+"ticket_url_pasteboard" = "Ticket link was copied.";
+
+"send_to_chat" = "Send to chat";
+"or" = "or";
+"empty_chatrooms" = "There are no chatrooms available to share. Please add some friends and/or create chat groups.";
+
+"bet_registered_success" = "Your bet was registered with success.";
+"good_luck" = "Good luck!";
+"share_bet_now" = "Share your bet now";
+
+"time_add_friends" = "Time to add friends!";
+"add_some_friends_start_chatting" = "Add some friends and start chatting now!";
+
+"single_bet" = "Single Bet";
+"multiple_bet" = "Multiple Bet";
+"system_bet" = "System Bet";
+
+"bet_suffered_alterations" = "The bet suffered alterations because of a change in the game, check the new options.";
+"shared_bet_unavailable" = "The shared bet is not available anymore, check some new bet suggestions.";
+
+"add_friends_group" = "Add friends to group";
+"select_atleast_two" = "Select at least 2 friends";
+
+"messages" = "Messages";
+"mark_all_read" = "Mark all as read";
+"delete_all" = "Delete all";
+"mark_as_read" = "Mark as read";
+
+"no_messages_yet" = "There’s no messages yet.";
+
+"chat_empty_shared_ticket_self" = "You shared a ticket.";
+"chat_empty_shared_ticket_others" = "%s shared a ticket.";

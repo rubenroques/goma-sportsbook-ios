@@ -53,7 +53,7 @@ class MyTicketsRootViewController: UIViewController {
         self.ticketTypePagedViewController  = UIPageViewController(transitionStyle: .scroll,
                                                                    navigationOrientation: .horizontal,
                                                                    options: nil)
-
+        
         super.init(nibName: nil, bundle: nil)
 
         self.title = localized("my_bets")

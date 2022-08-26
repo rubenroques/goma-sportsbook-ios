@@ -36,6 +36,7 @@ class ConversationDetailViewController: UIViewController {
     // Constraints
     private lazy var messageInputBottomConstraint: NSLayoutConstraint = Self.createMessageInputBottomConstraint()
     private lazy var messageInputKeyboardConstraint: NSLayoutConstraint = Self.createMessageInputKeyboardConstraint()
+    private lazy var viewHeightConstraint: NSLayoutConstraint = Self.createViewHeightConstraint()
 
     private var viewModel: ConversationDetailViewModel
 
@@ -82,7 +83,8 @@ class ConversationDetailViewController: UIViewController {
         self.tableView.register(SentTicketMessageTableViewCell.self,
                                 forCellReuseIdentifier: SentTicketMessageTableViewCell.identifier)
 
-        tableView.register(DateHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: DateHeaderFooterView.identifier)
+        self.tableView.register(DateHeaderFooterView.self,
+                                forHeaderFooterViewReuseIdentifier: DateHeaderFooterView.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
@@ -107,6 +109,9 @@ class ConversationDetailViewController: UIViewController {
         self.tableView.isDirectionalLockEnabled = true 
         self.tableView.alwaysBounceHorizontal = true
         self.tableView.alwaysBounceVertical = false
+
+        // Delegate the interactivePopGesture for gesture verification
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
         
     }
 
@@ -298,11 +303,6 @@ class ConversationDetailViewController: UIViewController {
     }
 
     private func showBetSelectionScreen() {
-//        if let conversationData = self.viewModel.getConversationData() {
-//            let betSelectionViewModel = ConversationBetSelectionViewModel(conversationData: conversationData)
-//            let betSelectionViewController = ConversationBetSelectionViewController(viewModel: betSelectionViewModel)
-//            self.present(betSelectionViewController, animated: true, completion: nil)
-//        }
 
         if let conversationData = self.viewModel.getConversationData() {
             let conversationBetSelectionRootViewModel = ConversationBetSelectionRootViewModel(startTabIndex: 0, conversationData: conversationData)
@@ -575,6 +575,47 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         isModalInPresentation = false
+
+    }
+
+}
+
+extension ConversationDetailViewController: UIGestureRecognizerDelegate {
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+
+        // if interactivePopGesture should require the failure of the other gesture
+
+        if gestureRecognizer == self.navigationController?.interactivePopGestureRecognizer && otherGestureRecognizer == self.tableView.panGestureRecognizer {
+            // print("FIRST SHOULD NOT REQUIRE FAILURE OF SECOND")
+            return false
+        }
+
+       return false
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+
+        // If interactivePopGesture is recognized with another gesture
+
+        if gestureRecognizer == self.navigationController?.interactivePopGestureRecognizer && otherGestureRecognizer == self.tableView.panGestureRecognizer {
+            // print("FIRST RECOGNIZED SIMULTANEOUSLY WITH SECOND")
+            return true
+        }
+
+        return false
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+
+        // if interactivePopGesture fails because of another gesture
+
+        if gestureRecognizer == self.navigationController?.interactivePopGestureRecognizer && otherGestureRecognizer == self.tableView.panGestureRecognizer {
+            // print("FIRST FAILING BECAUSE OF SECOND")
+            return true
+        }
+
+        return false
     }
 }
 
@@ -715,6 +756,11 @@ extension ConversationDetailViewController {
         return constraint
     }
 
+    private static func createViewHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
     private static func createLoadingBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -769,6 +815,11 @@ extension ConversationDetailViewController {
 
         self.messageInputView.shouldShowBetSelection = { [weak self] in
             self?.showBetSelectionScreen()
+        }
+
+        self.messageInputView.shouldResizeView = { [weak self] newHeight in
+            self?.viewHeightConstraint.constant = newHeight
+            self?.view.layoutIfNeeded()
         }
     }
 
@@ -847,8 +898,6 @@ extension ConversationDetailViewController {
             self.messageInputBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.messageInputBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.messageInputBaseView.topAnchor.constraint(equalTo: self.tableView.bottomAnchor),
-//            self.messageInputBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
-            self.messageInputBaseView.heightAnchor.constraint(equalToConstant: 70),
 
             self.messageInputLineSeparatorView.leadingAnchor.constraint(equalTo: self.messageInputBaseView.leadingAnchor),
             self.messageInputLineSeparatorView.trailingAnchor.constraint(equalTo: self.messageInputBaseView.trailingAnchor),
@@ -856,12 +905,11 @@ extension ConversationDetailViewController {
             self.messageInputLineSeparatorView.heightAnchor.constraint(equalToConstant: 1),
 
             self.messageInputView.leadingAnchor.constraint(equalTo: self.messageInputBaseView.leadingAnchor, constant: 15),
-//            self.messageInputView.trailingAnchor.constraint(equalTo: self.messageInputBaseView.trailingAnchor, constant: -70),
-            self.messageInputView.centerYAnchor.constraint(equalTo: self.messageInputBaseView.centerYAnchor),
+            self.messageInputView.bottomAnchor.constraint(equalTo: self.messageInputBaseView.bottomAnchor, constant: -10),
 
             self.sendButton.leadingAnchor.constraint(equalTo: self.messageInputView.trailingAnchor, constant: 16),
             self.sendButton.trailingAnchor.constraint(equalTo: self.messageInputBaseView.trailingAnchor, constant: -15),
-            self.sendButton.centerYAnchor.constraint(equalTo: self.messageInputBaseView.centerYAnchor),
+            self.sendButton.bottomAnchor.constraint(equalTo: self.messageInputBaseView.bottomAnchor, constant: -12),
             self.sendButton.widthAnchor.constraint(equalToConstant: 46),
             self.sendButton.heightAnchor.constraint(equalTo: self.sendButton.widthAnchor)
         ])
@@ -890,6 +938,9 @@ extension ConversationDetailViewController {
 
         self.messageInputKeyboardConstraint.isActive = false
 
+        self.viewHeightConstraint = self.messageInputBaseView.heightAnchor.constraint(equalToConstant: 70)
+        self.viewHeightConstraint.isActive = true
+
     }
 }
 
@@ -897,7 +948,6 @@ extension ConversationDetailViewController: UIAdaptivePresentationControllerDele
 
     func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
 
-        print("IS DISMISSING")
         return false
     }
 }

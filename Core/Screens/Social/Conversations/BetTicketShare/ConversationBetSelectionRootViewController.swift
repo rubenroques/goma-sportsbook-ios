@@ -8,128 +8,6 @@
 import UIKit
 import Combine
 
-class ConversationBetSelectionRootViewModel {
-
-    var cachedCellViewModels: [String: BetSelectionCellViewModel] = [:]
-    var chatTitlePublisher: CurrentValueSubject<String, Never> = .init("")
-    var selectedTicketTypeIndexPublisher: CurrentValueSubject<Int?, Never> = .init(nil)
-    var hasTicketSelectedPublisher: CurrentValueSubject<Bool, Never> = .init(true)
-    var openSelectedTicket: BetSelectionCellViewModel?
-    var resolvedSelectedTicket: BetSelectionCellViewModel?
-    var wonSelectedTicket: BetSelectionCellViewModel?
-    
-    var messageSentAction: (() -> Void)?
-    var isLoadingSharedBetPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-
-    private var conversationData: ConversationData
-    private var startTabIndex: Int
-    private var cancellables = Set<AnyCancellable>()
-
-    init(startTabIndex: Int, conversationData: ConversationData) {
-        self.conversationData = conversationData
-
-        self.startTabIndex = startTabIndex
-        self.selectedTicketTypeIndexPublisher.send(startTabIndex)
-
-        self.setupConversationInfo()
-
-    }
-
-    // MARK: Functions
-    func selectTicketType(atIndex index: Int) {
-        self.selectedTicketTypeIndexPublisher.send(index)
-    }
-
-    private func setupConversationInfo() {
-
-        self.chatTitlePublisher.value = "\(self.conversationData.name)"
-
-    }
-
-    func sendMessage(message: String) {
-
-        var selectedBetSelectionCellViewModel: BetSelectionCellViewModel? = nil
-
-//        for cellViewModel in self.cachedCellViewModels.values {
-//            if cellViewModel.isCheckboxSelectedPublisher.value {
-//                selectedBetSelectionCellViewModel = cellViewModel
-//
-//            }
-//        }
-
-        if let ticketTypeIndex = self.selectedTicketTypeIndexPublisher.value {
-            if ticketTypeIndex == 0 && self.openSelectedTicket != nil {
-                selectedBetSelectionCellViewModel = self.openSelectedTicket
-            }
-            else if ticketTypeIndex == 1 && self.resolvedSelectedTicket != nil {
-                selectedBetSelectionCellViewModel = self.resolvedSelectedTicket
-            }
-            else if ticketTypeIndex == 2 && self.wonSelectedTicket != nil {
-                selectedBetSelectionCellViewModel = self.wonSelectedTicket
-            }
-        }
-
-        guard
-            let viewModelValue = selectedBetSelectionCellViewModel
-        else {
-            return
-        }
-
-        self.isLoadingSharedBetPublisher.send(true)
-
-        let betTokenRoute = TSRouter.getSharedBetTokens(betId: viewModelValue.id)
-
-        Env.everyMatrixClient.manager.getModel(router: betTokenRoute, decodingType: SharedBetToken.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure:
-                    ()
-                    self?.isLoadingSharedBetPublisher.send(false)
-                case .finished:
-                    ()
-                }
-            },
-            receiveValue: { [weak self] betToken in
-                guard let self = self else { return }
-
-                let attachment = self.generateAttachmentString(viewModel: viewModelValue,
-                                                               withToken: betToken.sharedBetTokens.betTokenWithAllInfo)
-
-                Env.gomaSocialClient.sendMessage(chatroomId: self.conversationData.id,
-                                                 message: message,
-                                                 attachment: attachment)
-
-                self.isLoadingSharedBetPublisher.send(false)
-                self.messageSentAction?()
-            })
-            .store(in: &cancellables)
-
-    }
-
-    func generateAttachmentString(viewModel: BetSelectionCellViewModel, withToken betShareToken: String) -> [String: AnyObject]? {
-
-        guard let token = Env.gomaNetworkClient.getCurrentToken() else {
-            return nil
-        }
-
-        let attachment = SharedBetTicketAttachment(id: viewModel.id,
-                                                   type: "bet",
-                                                   fromUser: "\(token.userId)",
-                                                   content: SharedBetTicket(betHistoryEntry: viewModel.ticket,
-                                                                            betShareToken: betShareToken))
-
-        if let jsonData = try? JSONEncoder().encode(attachment) {
-            let dictionary = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) as? [String: AnyObject]
-            return dictionary
-        }
-        else {
-            return nil
-        }
-    }
-
-}
-
 class ConversationBetSelectionRootViewController: UIViewController {
 
     // MARK: Private Properties
@@ -152,6 +30,9 @@ class ConversationBetSelectionRootViewController: UIViewController {
 
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
+
+    // Constraints
+    private lazy var viewHeightConstraint: NSLayoutConstraint = Self.createViewHeightConstraint()
 
     // Constraints
     private lazy var messageInputBottomConstraint: NSLayoutConstraint = Self.createMessageInputBottomConstraint()
@@ -195,7 +76,6 @@ class ConversationBetSelectionRootViewController: UIViewController {
 //        ]
 
         let openConversationBetViewController = ConversationBetSelectionViewController(viewModel: ConversationBetSelectionViewModel(ticketType: .opened))
-
         openConversationBetViewController.selectedBetTicketPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] selectedTicket in
@@ -204,7 +84,6 @@ class ConversationBetSelectionRootViewController: UIViewController {
             .store(in: &cancellables)
 
         let resolvedConversationBetViewController = ConversationBetSelectionViewController(viewModel: ConversationBetSelectionViewModel(ticketType: .resolved))
-
         resolvedConversationBetViewController.selectedBetTicketPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] selectedTicket in
@@ -213,7 +92,6 @@ class ConversationBetSelectionRootViewController: UIViewController {
             .store(in: &cancellables)
 
         let wonConversationBetViewController = ConversationBetSelectionViewController(viewModel: ConversationBetSelectionViewModel(ticketType: .won))
-
         wonConversationBetViewController.selectedBetTicketPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] selectedTicket in
@@ -683,6 +561,11 @@ extension ConversationBetSelectionRootViewController {
         return constraint
     }
 
+    private static func createViewHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
     private static func createLoadingBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -730,6 +613,11 @@ extension ConversationBetSelectionRootViewController {
 
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
+
+        self.messageInputView.shouldResizeView = { [weak self] newHeight in
+            self?.viewHeightConstraint.constant = newHeight
+            self?.view.layoutIfNeeded()
+        }
 
     }
 
@@ -796,7 +684,7 @@ extension ConversationBetSelectionRootViewController {
             self.messageInputBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.messageInputBaseView.topAnchor.constraint(equalTo: self.pagesBaseView.bottomAnchor),
 //            self.messageInputBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
-            self.messageInputBaseView.heightAnchor.constraint(equalToConstant: 70),
+            //self.messageInputBaseView.heightAnchor.constraint(equalToConstant: 70),
 
             self.messageInputLineSeparatorView.leadingAnchor.constraint(equalTo: self.messageInputBaseView.leadingAnchor),
             self.messageInputLineSeparatorView.trailingAnchor.constraint(equalTo: self.messageInputBaseView.trailingAnchor),
@@ -804,12 +692,11 @@ extension ConversationBetSelectionRootViewController {
             self.messageInputLineSeparatorView.heightAnchor.constraint(equalToConstant: 1),
 
             self.messageInputView.leadingAnchor.constraint(equalTo: self.messageInputBaseView.leadingAnchor, constant: 15),
-//            self.messageInputView.trailingAnchor.constraint(equalTo: self.messageInputBaseView.trailingAnchor, constant: -70),
-            self.messageInputView.centerYAnchor.constraint(equalTo: self.messageInputBaseView.centerYAnchor),
+            self.messageInputView.bottomAnchor.constraint(equalTo: self.messageInputBaseView.bottomAnchor, constant: -10),
 
             self.sendButton.leadingAnchor.constraint(equalTo: self.messageInputView.trailingAnchor, constant: 16),
             self.sendButton.trailingAnchor.constraint(equalTo: self.messageInputBaseView.trailingAnchor, constant: -15),
-            self.sendButton.centerYAnchor.constraint(equalTo: self.messageInputBaseView.centerYAnchor),
+            self.sendButton.bottomAnchor.constraint(equalTo: self.messageInputBaseView.bottomAnchor, constant: -12),
             self.sendButton.widthAnchor.constraint(equalToConstant: 46),
             self.sendButton.heightAnchor.constraint(equalTo: self.sendButton.widthAnchor)
         ])
@@ -838,5 +725,7 @@ extension ConversationBetSelectionRootViewController {
 
         self.messageInputKeyboardConstraint.isActive = false
 
+        self.viewHeightConstraint = self.messageInputBaseView.heightAnchor.constraint(equalToConstant: 70)
+        self.viewHeightConstraint.isActive = true
     }
 }

@@ -144,12 +144,12 @@ class ChatNotificationsViewController: UIViewController {
 
         viewModel.chatNotificationsPublisher
             .receive(on: DispatchQueue.main)
+            .dropFirst()
             .sink(receiveValue: { [weak self] chatNotifications in
                 if chatNotifications.isEmpty {
                     self?.chatNotificationsStackView.isHidden = true
                 }
                 else {
-                    self?.setupChatNotificationsStackView()
                     self?.chatNotificationsStackView.isHidden = false
                 }
             })
@@ -157,12 +157,14 @@ class ChatNotificationsViewController: UIViewController {
 
         viewModel.chatNotificationViewsPublisher
             .receive(on: DispatchQueue.main)
+            .dropFirst()
             .sink(receiveValue: { [weak self] chatViews in
                 if chatViews.isEmpty {
                     self?.chatNotificationsStackView.removeAllArrangedSubviews()
                     self?.isEmptyState = true
                 }
                 else {
+                    self?.setupChatNotificationsStackView()
                     self?.isEmptyState = false
                 }
             })
@@ -175,44 +177,11 @@ class ChatNotificationsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-//        Publishers.CombineLatest(viewModel.followerViewsPublisher, viewModel.sharedTicketViewsPublisher)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] followersViews, sharedTicketViews in
-//
-//                if followersViews.isEmpty {
-//                    self?.followersStackView.isHidden = true
-//                }
-//                else {
-//                    self?.followersStackView.isHidden = false
-//                }
-//
-//                if sharedTicketViews.isEmpty {
-//                    self?.sharedTicketsStackView.isHidden = true
-//                }
-//                else {
-//                    self?.sharedTicketsStackView.isHidden = false
-//                }
-//
-//                if followersViews.isEmpty && sharedTicketViews.isEmpty {
-//                    self?.isEmptyState = true
-//                }
-//                else {
-//                    self?.isEmptyState = false
-//                }
-//            })
-//            .store(in: &cancellables)
     }
 
     // MARK: Functions
 
     private func setupChatNotificationsStackView() {
-
-        self.chatNotificationsStackView.removeAllArrangedSubviews()
-
-//        let titleView = TitleView()
-//        titleView.setTitle(title: localized("chat_notifications"))
-//
-//        self.chatNotificationsStackView.addArrangedSubview(titleView)
 
         for (index, userActionView) in self.viewModel.chatNotificationViewsPublisher.value.enumerated() {
 
@@ -222,25 +191,6 @@ class ChatNotificationsViewController: UIViewController {
 
             self.chatNotificationsStackView.addArrangedSubview(userActionView)
         }
-    }
-
-    private func setupSharedTicketsStackView() {
-
-        let titleView = TitleView()
-        titleView.setTitle(title: localized("shared_tickets_to"))
-        self.sharedTicketsStackView.addArrangedSubview(titleView)
-
-        for (index, userActionView) in self.viewModel.sharedTicketViewsPublisher.value.enumerated() {
-
-            if index == self.viewModel.followerViewsPublisher.value.count - 1 {
-                userActionView.hasLineSeparator = false
-            }
-
-            userActionView.setActionButtonColor(color: UIColor.App.highlightSecondary)
-
-            self.sharedTicketsStackView.addArrangedSubview(userActionView)
-        }
-
     }
 
     // MARK: Actions
@@ -548,7 +498,8 @@ extension ChatNotificationsViewController {
 
             self.chatNotificationsStackView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor, constant: 16),
             self.chatNotificationsStackView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor, constant: -16),
-            self.chatNotificationsStackView.topAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.topAnchor, constant: 0),
+            self.chatNotificationsStackView.topAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.topAnchor),
+            self.chatNotificationsStackView.bottomAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.bottomAnchor)
 
 //            self.sharedTicketsStackView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor, constant: 16),
 //            self.sharedTicketsStackView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor, constant: -16),

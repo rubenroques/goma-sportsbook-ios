@@ -369,6 +369,7 @@ extension UserSessionStore {
 
 }
 
+
 extension UserSessionStore {
 
     func startUserSessionIfNeeded() {
@@ -422,8 +423,19 @@ extension UserSessionStore {
                 Env.gomaSocialClient.connectSocket()
                 
                 self?.hasGomaUserSessionPublisher.send(true)
+
+                Env.gomaSocialClient.getInAppMessagesCounter()
+
             })
             .store(in: &cancellables)
     }
 
+}
+
+extension UserSessionStore {
+    
+    func shouldRequestFaceId() -> Bool {
+        return UserSessionStore.isUserLogged()
+    }
+    
 }

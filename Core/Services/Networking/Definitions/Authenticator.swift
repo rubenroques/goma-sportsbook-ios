@@ -84,6 +84,7 @@ class Authenticator {
             let body = """
                        {"username": "\(loggedUser.username)",
                         "password": "\(loggedUser.password)",
+                        "device_type": "ios",
                         "device_token": "\(loggedUser.deviceToken)"}
                        """
             let data = body.data(using: String.Encoding.utf8)!

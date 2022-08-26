@@ -79,6 +79,10 @@ class MarketGroupDetailsViewModel {
         self.store.updateMarketGroupDetails(fromAggregator: aggregator)
     }
 
+    func firstMarket() -> Market? {
+        return self.store.firstMarket()
+    }
+    
 }
 
 extension MarketGroupDetailsViewModel {

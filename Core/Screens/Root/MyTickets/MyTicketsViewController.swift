@@ -196,47 +196,59 @@ class MyTicketsViewController: UIViewController {
     
       private func shareBet() {
 
-          let metadata = LPLinkMetadata()
-          let urlMobile = Env.urlMobileShares
+//          let metadata = LPLinkMetadata()
+//          let urlMobile = Env.urlMobileShares
+//
+//          if let gameSnapshot = self.viewModel.clickedCellSnapshot, let betStatus = self.viewModel.clickedBetStatus {
+//
+//              if betStatus == "OPEN" {
+//                  let betToken = self.viewModel.clickedBetTokenPublisher.value
+//                  let matchUrl = URL(string: "\(urlMobile)/bet/\(betToken)")
+//                  metadata.url = matchUrl
+//                  metadata.originalURL = metadata.url
+//              }
+//
+//              let imageProvider = NSItemProvider(object: gameSnapshot)
+//              metadata.imageProvider = imageProvider
+//              metadata.title = localized("look_bet_made")
+//          }
+//
+//          let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
+//
+//          if let betStatus = self.viewModel.clickedBetStatus, betStatus == "OPEN" {
+//              let shareActivityViewController = UIActivityViewController(activityItems: [metadataItemSource, self.viewModel.clickedCellSnapshot],
+//                                                   applicationActivities: nil)
+//              if let popoverController = shareActivityViewController.popoverPresentationController {
+//                  popoverController.sourceView = self.view
+//                  popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+//                  popoverController.permittedArrowDirections = []
+//              }
+//              self.present(shareActivityViewController, animated: true, completion: nil)
+//          }
+//          else {
+//              let shareActivityViewController = UIActivityViewController(activityItems: [self.viewModel.clickedCellSnapshot],
+//                                                   applicationActivities: nil)
+//              if let popoverController = shareActivityViewController.popoverPresentationController {
+//                  popoverController.sourceView = self.view
+//                  popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+//                  popoverController.permittedArrowDirections = []
+//              }
+//              self.present(shareActivityViewController, animated: true, completion: nil)
+//          }
+          let clickedShareTicketInfo = ClickedShareTicketInfo(snapshot: self.viewModel.clickedCellSnapshot,
+                                                              betId: self.viewModel.clickedBetId,
+                                                              betStatus: self.viewModel.clickedBetStatus,
+                                                              betToken: self.viewModel.clickedBetTokenPublisher.value,
+                                                              ticket: self.viewModel.clickedBetHistory)
 
-          if let gameSnapshot = self.viewModel.clickedCellSnapshot, let betStatus = self.viewModel.clickedBetStatus {
+          let shareTicketChoiceViewModel = ShareTicketChoiceViewModel(clickedShareTicketInfo: clickedShareTicketInfo)
+          //shareTicketChoiceViewModel.clickedShareTicketInfo = clickedShareTicketInfo
 
-              if betStatus == "OPEN" {
-                  let betToken = self.viewModel.clickedBetTokenPublisher.value
-                  let matchUrl = URL(string: "\(urlMobile)/bet/\(betToken)")
-                  metadata.url = matchUrl
-                  metadata.originalURL = metadata.url
-              }
+          let shareTicketChoiceViewController = ShareTicketChoiceViewController(viewModel: shareTicketChoiceViewModel)
+          
+          self.present(shareTicketChoiceViewController, animated: true, completion: nil)
 
-              let imageProvider = NSItemProvider(object: gameSnapshot)
-              metadata.imageProvider = imageProvider
-              metadata.title = localized("look_bet_made")
-          }
-
-          let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
-
-          if let betStatus = self.viewModel.clickedBetStatus, betStatus == "OPEN" {
-              let shareActivityViewController = UIActivityViewController(activityItems: [metadataItemSource, self.viewModel.clickedCellSnapshot],
-                                                   applicationActivities: nil)
-              if let popoverController = shareActivityViewController.popoverPresentationController {
-                  popoverController.sourceView = self.view
-                  popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-                  popoverController.permittedArrowDirections = []
-              }
-              self.present(shareActivityViewController, animated: true, completion: nil)
-          }
-          else {
-              let shareActivityViewController = UIActivityViewController(activityItems: [self.viewModel.clickedCellSnapshot],
-                                                   applicationActivities: nil)
-              if let popoverController = shareActivityViewController.popoverPresentationController {
-                  popoverController.sourceView = self.view
-                  popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-                  popoverController.permittedArrowDirections = []
-              }
-              self.present(shareActivityViewController, animated: true, completion: nil)
-          }
-
-          self.isLoading = false
+          //self.isLoading = false
     }
 
 }

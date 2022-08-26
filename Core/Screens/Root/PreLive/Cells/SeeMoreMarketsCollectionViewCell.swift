@@ -11,10 +11,17 @@ class SeeMoreMarketsCollectionViewCell: UICollectionViewCell {
 
     lazy var circularProgressView: KDCircularProgress = {
         let circularProgressView = KDCircularProgress(frame: CGRect(x: 0, y: 0, width: 47, height: 47))
+        circularProgressView.translatesAutoresizingMaskIntoConstraints = false
         circularProgressView.startAngle = -90
         circularProgressView.progressThickness = 0.5
         circularProgressView.trackThickness = 0.5
         circularProgressView.clockwise = true
+        
+        NSLayoutConstraint.activate([
+            circularProgressView.heightAnchor.constraint(equalToConstant: 47),
+            circularProgressView.widthAnchor.constraint(equalToConstant: 47)
+        ])
+        
         return circularProgressView
     }()
     @IBOutlet private weak var baseView: UIView!
@@ -59,6 +66,11 @@ class SeeMoreMarketsCollectionViewCell: UICollectionViewCell {
 
         self.baseView.addSubview(self.circularProgressView)
                 
+        NSLayoutConstraint.activate([
+            self.circularProgressView.centerXAnchor.constraint(equalTo: self.arrowImageView.centerXAnchor),
+            self.circularProgressView.centerYAnchor.constraint(equalTo: self.arrowImageView.centerYAnchor),
+        ])
+        
         self.titleLabel.text = localized("see_all")
         self.setupWithTheme()
 
@@ -66,18 +78,14 @@ class SeeMoreMarketsCollectionViewCell: UICollectionViewCell {
         self.addGestureRecognizer(tapMatchView)
 
     }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        self.circularProgressView.center = self.arrowImageView.center
-    }
 
     override func prepareForReuse() {
         super.prepareForReuse()
 
         self.subtitleLabel.isHidden = false
         self.subtitleLabel.text = ""
+        
+        self.setupWithTheme()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

@@ -65,6 +65,17 @@ class FloatingShortcutsView: UIView {
         let tapChatView = UITapGestureRecognizer(target: self, action: #selector(didTapChatView))
         self.chatButtonView.addGestureRecognizer(tapChatView)
         
+        if Env.appSession.businessModulesManager.isSocialFeaturesEnabled {
+            self.chatButtonView.isHidden = false
+        }
+        else {
+            NSLayoutConstraint.activate([
+                self.containerView.topAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -1),
+                self.containerView.leadingAnchor.constraint(equalTo: self.betslipButtonView.leadingAnchor, constant: -1),
+            ])
+            self.chatButtonView.isHidden = true
+        }
+        
         self.flipNumberView.alpha = 0.0
 
         self.betslipCountBaseView.isUserInteractionEnabled = false

@@ -45,7 +45,10 @@ class NewGroupViewController: UIViewController {
         }
     }
 
+    var isSharedTicketNewGroup: Bool = false
+
     var chatListNeedReload: (() -> Void)?
+    var shareChatroomsNeedReload: (() -> Void)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: NewGroupViewModel) {
@@ -69,7 +72,7 @@ class NewGroupViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
-        self.tableView.register(ResultsHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: ResultsHeaderFooterView.identifier)
+        self.tableView.register(NewGroupHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: NewGroupHeaderFooterView.identifier)
         self.tableView.register(AddFriendTableViewCell.self,
                                 forCellReuseIdentifier: AddFriendTableViewCell.identifier)
 
@@ -234,6 +237,15 @@ class NewGroupViewController: UIViewController {
             self?.chatListNeedReload?()
         }
 
+        if self.isSharedTicketNewGroup {
+            
+            newGroupManagementViewController.isSharedTicketNewGroup = true
+
+            newGroupManagementViewController.shareChatroomsNeedReload = { [weak self] in
+                self?.shareChatroomsNeedReload?()
+            }
+        }
+
         self.navigationController?.pushViewController(newGroupManagementViewController, animated: true)
     }
 
@@ -337,14 +349,13 @@ extension NewGroupViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
         guard
-            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ResultsHeaderFooterView.identifier) as? ResultsHeaderFooterView
+            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: NewGroupHeaderFooterView.identifier) as? NewGroupHeaderFooterView
         else {
             fatalError()
         }
 
-        let resultsLabel = localized("select_friends_add")
-
-        headerView.configureHeader(title: resultsLabel)
+        headerView.configureHeader(title: localized("add_friends_group"),
+                                   subtitle: localized("select_atleast_two"))
 
         return headerView
 
@@ -364,13 +375,13 @@ extension NewGroupViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 
-        return 30
+        return UITableView.automaticDimension
 
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
 
-       return 30
+       return 40
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -586,7 +597,7 @@ extension NewGroupViewController {
 
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.tableView.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 16),
+            self.tableView.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 4),
             self.tableView.bottomAnchor.constraint(equalTo: self.nextBaseView.topAnchor)
         ])
 

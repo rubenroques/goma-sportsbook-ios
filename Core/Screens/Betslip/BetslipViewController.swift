@@ -47,14 +47,17 @@ class BetslipViewController: UIViewController {
 
         self.startScreen = startScreen
 
-//        switch startScreen {
-//        case .myTickets(let type, let value):
-//            self.myTicketsViewController = MyTicketsViewController(viewModel: MyTicketsViewModel(myTicketType: type, highlightTicket: value))
-//        default:
-//            self.myTicketsViewController = MyTicketsViewController()
-//        }
-
-        self.myTicketsRootViewController = MyTicketsRootViewController(viewModel: MyTicketsRootViewModel(startTabIndex: 0))
+        switch startScreen {
+        case .myTickets(let type, _):
+            switch type {
+            case .opened, .won:
+                self.myTicketsRootViewController = MyTicketsRootViewController(viewModel: MyTicketsRootViewModel(startTabIndex: 0))
+            case .resolved:
+                self.myTicketsRootViewController = MyTicketsRootViewController(viewModel: MyTicketsRootViewModel(startTabIndex: 1))
+            }
+        default:
+            self.myTicketsRootViewController = MyTicketsRootViewController(viewModel: MyTicketsRootViewModel(startTabIndex: 0))
+        }
 
         switch startScreen {
         case .sharedBet(let token):
@@ -92,8 +95,6 @@ class BetslipViewController: UIViewController {
         super.viewDidLoad()
 
         self.isModalInPresentation = false
-
-
 
         self.addChild(tabViewController)
         self.tabsBaseView.addSubview(tabViewController.view)

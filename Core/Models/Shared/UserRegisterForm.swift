@@ -41,6 +41,8 @@ extension EveryMatrix {
         let mobilePrefix: String
         let mobileNumber: String
         let emailVerificationURL: String
+        let countryCode: String
+        let currencyCode: String
     }
 
     struct BetslipTicketSelection: Decodable {
@@ -209,7 +211,8 @@ extension EveryMatrix {
         var personalID: String
         var securityQuestion: String
         var securityAnswer: String
-
+        var nationality: String?
+        
         enum CodingKeys: String, CodingKey {
             case username = "username"
             case email = "email"
@@ -229,6 +232,7 @@ extension EveryMatrix {
             case personalID = "personalID"
             case securityQuestion = "securityQuestion"
             case securityAnswer = "securityAnswer"
+            case nationality = "nationality"
         }
     }
 
