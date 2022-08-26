@@ -103,7 +103,6 @@ class BettingHistoryRootViewController: UIViewController {
 
         self.filterPublisher
             .sink { [weak self] filterApplied in
-                print("BETTING FILTER: \(filterApplied)")
 
                 if let viewControllers = self?.viewControllers {
                     if viewControllers.isEmpty {
@@ -136,7 +135,6 @@ class BettingHistoryRootViewController: UIViewController {
         self.shortcutsCollectionView.delegate = self
         self.shortcutsCollectionView.dataSource = self
 
-        self.filterBaseView.layer.cornerRadius = self.filterBaseView.frame.height / 2
 
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         self.filterBaseView.addGestureRecognizer(tapFilterGesture)
@@ -171,6 +169,18 @@ class BettingHistoryRootViewController: UIViewController {
         StyleHelper.styleButton(button: self.noLoginButton)
    }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+//        self.topBaseView.layer.masksToBounds = true
+//        self.topBaseView.clipsToBounds = true
+
+        self.filterBaseView.layer.cornerRadius = self.filterBaseView.frame.height / 2
+        self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+
+        self.filterBaseView.layer.masksToBounds = true
+
+    }
     // MARK: - Bindings
     private func bind(toViewModel viewModel: BettingHistoryRootViewModel) {
 
@@ -445,6 +455,9 @@ extension BettingHistoryRootViewController {
         self.addChildViewController(self.pagedViewController, toView: self.pagesBaseView)
 
         self.initConstraints()
+        // NOTE: Force layout pending
+        self.view.layoutSubviews()
+        self.view.layoutIfNeeded()
     }
 
     private func initConstraints() {

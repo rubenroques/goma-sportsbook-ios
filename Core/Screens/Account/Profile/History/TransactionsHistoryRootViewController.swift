@@ -96,7 +96,6 @@ class TransactionsHistoryRootViewController: UIViewController {
 
         self.filterPublisher
             .sink { [weak self] filterApplied in
-                print("TRANSACTION FILTER: \(filterApplied)")
 
                 if let viewControllers = self?.viewControllers {
                     if viewControllers.isEmpty {
@@ -127,9 +126,6 @@ class TransactionsHistoryRootViewController: UIViewController {
 
         self.shortcutsCollectionView.delegate = self
         self.shortcutsCollectionView.dataSource = self
-        
-//        self.filterBaseView.layer.cornerRadius = self.filterBaseView.frame.height / 2
-//        self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
 
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         self.filterBaseView.addGestureRecognizer(tapFilterGesture)

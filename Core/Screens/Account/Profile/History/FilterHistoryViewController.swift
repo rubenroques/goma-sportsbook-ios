@@ -25,6 +25,7 @@ class FilterHistoryViewController: UIViewController {
     private lazy var dateRangeBaseView: UIView = Self.createBottomView()
     private lazy var bottomSeparatorView: UIView = Self.createSimpleView()
     private lazy var dateRangeStackView: UIStackView = Self.createHorizontalStackView()
+    private lazy var dateRangeVerticalStackView: UIStackView = Self.createVerticalStackView()
     private lazy var startTimeHeaderTextView: HeaderTextFieldView = HeaderTextFieldView()
     private lazy var endTimeHeaderTextView: HeaderTextFieldView = HeaderTextFieldView()
 
@@ -77,6 +78,8 @@ class FilterHistoryViewController: UIViewController {
         self.dateRangeStackView.bringSubviewToFront(self.startTimeHeaderTextView)
         self.dateRangeStackView.bringSubviewToFront(self.endTimeHeaderTextView)
         
+        
+        
         let tapCancelButton = UITapGestureRecognizer(target: self, action: #selector(self.cancelAction))
         cancelButton.isUserInteractionEnabled = true
         cancelButton.addGestureRecognizer(tapCancelButton)
@@ -126,7 +129,6 @@ class FilterHistoryViewController: UIViewController {
         self.filterCollapseView.backgroundColor = UIColor.App.backgroundSecondary
         self.resetButton.textColor = UIColor.App.highlightPrimary
         self.cancelButton.textColor = UIColor.App.highlightPrimary
-        self.dateRangeBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.startTimeHeaderTextView.backgroundColor = .clear
         self.startTimeHeaderTextView.setViewColor(UIColor.App.backgroundTertiary)
         self.endTimeHeaderTextView.backgroundColor = .clear
@@ -185,7 +187,10 @@ class FilterHistoryViewController: UIViewController {
                     
                 }
                 else {
-                    self?.viewModel.setStartTime(dateString: startDate)
+                    if let afterStartDateValue = Calendar.current.date(byAdding: .day, value: 1, to: startDate) {
+                        self?.viewModel.setStartTime(dateString: afterStartDateValue)
+                    }
+                    
                 }
             })
             .store(in: &cancellables)
@@ -210,7 +215,9 @@ class FilterHistoryViewController: UIViewController {
                                                
                 }
                 else {
-                    self?.viewModel.setEndTime(dateString: endDate)
+                    if let beforeEndDateValue = Calendar.current.date(byAdding: .day, value: 1, to: endDate) {
+                        self?.viewModel.setEndTime(dateString: beforeEndDateValue)
+                    }
                 }
             })
             .store(in: &cancellables)
@@ -259,7 +266,7 @@ class FilterHistoryViewController: UIViewController {
                 self.dismiss(animated: true, completion: nil)
             }
             else {
-                print("")
+                print("invalid dates")
             }
         }
         else {
@@ -332,6 +339,7 @@ extension FilterHistoryViewController {
         if let dateStringValue = dateString {
             date = dateFormatter.date(from: dateStringValue)
         }
+        
         return date
     }
 }
@@ -380,6 +388,17 @@ extension FilterHistoryViewController {
         let stack = UIStackView()
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
+        stack.distribution = .fillEqually
+        stack.alignment = .center
+        stack.spacing = 8
+        
+        return stack
+    }
+    
+    private static func createVerticalStackView() -> UIStackView {
+        let stack = UIStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
         stack.distribution = .fillEqually
         stack.alignment = .center
         stack.spacing = 8
@@ -518,7 +537,7 @@ extension FilterHistoryViewController {
             self.filterBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
             self.filterBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
             self.filterBaseView.topAnchor.constraint(equalTo: self.navigationBaseView.bottomAnchor, constant: 30),
-            self.filterBaseView.bottomAnchor.constraint(equalTo: self.dateRangeStackView.bottomAnchor),
+            //self.filterBaseView.bottomAnchor.constraint(equalTo: self.dateRangeStackView.bottomAnchor),
             
             self.filterCollapseView.leadingAnchor.constraint(equalTo: self.filterBaseView.leadingAnchor, constant: 2),
             self.filterCollapseView.trailingAnchor.constraint(equalTo: self.filterBaseView.trailingAnchor, constant: -2),
@@ -532,12 +551,14 @@ extension FilterHistoryViewController {
             self.dateRangeBaseView.topAnchor.constraint(equalTo: self.filterCollapseView.bottomAnchor),
             self.dateRangeBaseView.bottomAnchor.constraint(equalTo: self.filterBaseView.bottomAnchor),
             
-            self.dateRangeStackView.leadingAnchor.constraint(equalTo: self.dateRangeBaseView.leadingAnchor, constant: 16),
-            self.dateRangeStackView.trailingAnchor.constraint(equalTo: self.dateRangeBaseView.trailingAnchor, constant: -16),
+            self.dateRangeStackView.leadingAnchor.constraint(equalTo: self.dateRangeBaseView.leadingAnchor),
+            self.dateRangeStackView.trailingAnchor.constraint(equalTo: self.dateRangeBaseView.trailingAnchor),
             self.dateRangeStackView.topAnchor.constraint(equalTo: self.dateRangeBaseView.topAnchor),
             
-            self.endTimeHeaderTextView.heightAnchor.constraint(equalToConstant: 90),
-            self.startTimeHeaderTextView.heightAnchor.constraint(equalToConstant: 90),
+            self.endTimeHeaderTextView.heightAnchor.constraint(equalToConstant: 80),
+            self.startTimeHeaderTextView.leadingAnchor.constraint(equalTo: self.dateRangeStackView.leadingAnchor, constant: 16),
+            self.endTimeHeaderTextView.trailingAnchor.constraint(equalTo: self.dateRangeStackView.trailingAnchor, constant: -16),
+            self.startTimeHeaderTextView.heightAnchor.constraint(equalToConstant: 80),
         ])
         
         NSLayoutConstraint.activate([

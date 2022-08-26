@@ -393,17 +393,6 @@ class BettingHistoryViewModel {
                 }
             },
             receiveValue: { [weak self] betHistoryResponse in
-//                let cashoutTickets = (betHistoryResponse.betList ?? []).filter { ticket in
-//                    ticket.status == "CASHED_OUT"
-//                }
-//                self?.cashoutTickets.send(cashoutTickets)
-//                if cashoutTickets.isEmpty {
-//                    self?.listStatePublisher.send(.empty)
-//                }
-//                else {
-//                    self?.listStatePublisher.send(.loaded)
-//                }
-
                 guard let self = self else {return}
 
                 let cashoutTickets = (betHistoryResponse.betList ?? []).filter { ticket in

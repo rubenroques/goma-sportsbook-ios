@@ -81,7 +81,6 @@ class HistoryViewController: UIViewController {
         self.filterBaseView.isUserInteractionEnabled = true
        // self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
        
-
         let tapDepositGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapMakeDeposit))
         self.emptyStateButton.isUserInteractionEnabled = true
         self.emptyStateButton.addGestureRecognizer(tapDepositGestureRecognizer)
