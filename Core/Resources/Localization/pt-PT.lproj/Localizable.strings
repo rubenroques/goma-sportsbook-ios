@@ -336,6 +336,8 @@ Terms of use, Privacy Policy and EULA";
 "suspended_market" = "Suspended";
 "closed_market" = "Closed";
 
+"filter_date"= "Filter by date";
+
 "home" = "Home";
 
 "app_settings" = "App Settings";
