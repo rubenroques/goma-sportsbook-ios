@@ -128,17 +128,17 @@ class TransactionsHistoryRootViewController: UIViewController {
         self.shortcutsCollectionView.delegate = self
         self.shortcutsCollectionView.dataSource = self
         
-        self.filterBaseView.layer.cornerRadius = self.filterBaseView.frame.height / 2
-        
+//        self.filterBaseView.layer.cornerRadius = self.filterBaseView.frame.height / 2
+//        self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         self.filterBaseView.addGestureRecognizer(tapFilterGesture)
         self.filterBaseView.isUserInteractionEnabled = true
-        self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+
         
         self.noLoginButton.addTarget(self, action: #selector(didTapLoginButton), for: .primaryActionTriggered)
 
         self.reloadCollectionView()
-        self.viewDidLayoutSubviews()
         self.bind(toViewModel: self.viewModel)
     }
 
@@ -146,8 +146,15 @@ class TransactionsHistoryRootViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+
+//        self.topBaseView.layer.masksToBounds = true
+//        self.topBaseView.clipsToBounds = true
+
         self.filterBaseView.layer.cornerRadius = self.filterBaseView.frame.height / 2
-        
+        self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+
+        self.filterBaseView.layer.masksToBounds = true
+
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -445,6 +452,10 @@ extension TransactionsHistoryRootViewController {
         self.addChildViewController(self.pagedViewController, toView: self.pagesBaseView)
 
         self.initConstraints()
+
+        // NOTE: Force layout pending
+        self.view.layoutSubviews()
+        self.view.layoutIfNeeded()
     }
 
     private func initConstraints() {

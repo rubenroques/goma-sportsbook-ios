@@ -209,6 +209,8 @@ class BettingHistoryViewModel {
                     var newOpenTickets = self.openedTickets.value
                     newOpenTickets.append(contentsOf: betHistoryResponse.betList ?? [])
 
+                    self.openedTickets.send(newOpenTickets)
+
                     self.listStatePublisher.send(.loaded)
 
                     if self.openedTickets.value.count < self.recordsPerPage * (self.openedPage + 1) {
@@ -348,6 +350,8 @@ class BettingHistoryViewModel {
                     var newWonTickets = self.wonTickets.value
                     newWonTickets.append(contentsOf: betHistoryResponse.betList ?? [])
 
+                    self.wonTickets.send(newWonTickets)
+
                     self.listStatePublisher.send(.loaded)
 
                     if self.wonTickets.value.count < self.recordsPerPage * (self.wonPage + 1) {
@@ -425,6 +429,8 @@ class BettingHistoryViewModel {
                 else {
                     var newCashoutTickets = self.cashoutTickets.value
                     newCashoutTickets.append(contentsOf: cashoutTickets)
+
+                    self.cashoutTickets.send(newCashoutTickets)
 
                     self.listStatePublisher.send(.loaded)
 

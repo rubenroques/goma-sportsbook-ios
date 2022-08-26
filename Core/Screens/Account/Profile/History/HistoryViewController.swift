@@ -111,7 +111,9 @@ class HistoryViewController: UIViewController {
     // MARK: - Layout and Theme
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+
         self.filterBaseView.layer.cornerRadius = self.filterBaseView.frame.height / 2
+
         self.rightGradientMaskLayer.frame = self.rightGradientBaseView.bounds
         
     }

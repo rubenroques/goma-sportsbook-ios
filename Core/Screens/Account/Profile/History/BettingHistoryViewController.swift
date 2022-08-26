@@ -75,7 +75,7 @@ class BettingHistoryViewController: UIViewController {
                 case .empty:
                     self?.hideLoading()
                     self?.emptyStateBaseView.isHidden = false
-                    //self?.tableView.isHidden = true
+                    // self?.tableView.isHidden = true
                 case .noUserFoundError:
                     self?.hideLoading()
                     self?.emptyStateBaseView.isHidden = false
