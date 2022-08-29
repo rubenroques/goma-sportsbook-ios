@@ -55,12 +55,10 @@ class MessageDetailViewModel {
                     ()
                 }
             }, receiveValue: { [weak self] _ in
-
                 Env.gomaSocialClient.getInAppMessagesCounter()
 
             })
             .store(in: &cancellables)
     }
-
 
 }

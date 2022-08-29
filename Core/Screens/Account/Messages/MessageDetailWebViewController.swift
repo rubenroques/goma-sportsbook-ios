@@ -8,6 +8,36 @@
 import Foundation
 import UIKit
 import WebKit
+import Combine
+
+class MessageDetailWebViewModel {
+
+    var inAppMessage: InAppMessage
+    private var cancellables = Set<AnyCancellable>()
+
+    init(inAppMessage: InAppMessage) {
+
+        self.inAppMessage = inAppMessage
+    }
+
+    func markReadMessage() {
+
+        Env.gomaNetworkClient.setNotificationRead(deviceId: Env.deviceId, notificationId: "\(self.inAppMessage.id)")
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("NEWS SINGLE NOTIF ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+            }, receiveValue: { [weak self] _ in
+                Env.gomaSocialClient.getInAppMessagesCounter()
+
+            })
+            .store(in: &cancellables)
+    }
+}
 
 class MessageDetailWebViewController: UIViewController {
     
@@ -23,11 +53,17 @@ class MessageDetailWebViewController: UIViewController {
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
     private var url: URL
+    private var viewModel: MessageDetailWebViewModel
 
     private var shouldShowBackButton: Bool = false
 
-    init(url: URL) {
+    var shouldSetMessageRead: ((Int) -> Void)?
+
+    init(url: URL, viewModel: MessageDetailWebViewModel) {
+
         self.url = url
+        self.viewModel = viewModel
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -49,6 +85,14 @@ class MessageDetailWebViewController: UIViewController {
         self.showLoading()
 
         self.webView.load(URLRequest(url: url))
+
+        self.viewModel.markReadMessage()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(true)
+
+        self.shouldSetMessageRead?(self.viewModel.inAppMessage.id)
     }
 
     // MARK: - Layout and Theme

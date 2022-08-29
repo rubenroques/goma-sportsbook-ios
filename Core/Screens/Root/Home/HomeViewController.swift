@@ -219,6 +219,9 @@ class HomeViewController: UIViewController {
 
         let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)
 
+        quickbetViewController.modalPresentationStyle = .overCurrentContext
+        quickbetViewController.modalTransitionStyle = .crossDissolve
+
         self.present(quickbetViewController, animated: true)
     }
 }
