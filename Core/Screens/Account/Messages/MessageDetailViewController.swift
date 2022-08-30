@@ -223,19 +223,19 @@ class MessageDetailViewController: UIViewController {
         }
 
         self.messageDescriptionLabel.text = self.viewModel.inAppMessage.text
-//        let htmlDescription = self.viewModel.inAppMessage.text
-//        let data = Data(htmlDescription.utf8)
-//        if let attributedString = try? NSMutableAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
-//
-//            let attributes: [NSAttributedString.Key: AnyObject] = [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary,
-//             NSAttributedString.Key.backgroundColor: UIColor.App.backgroundPrimary,
-//                                                                   NSAttributedString.Key.font: AppFont.with(type: .medium, size: 14)]
-//
-//            attributedString.addAttributes(attributes,
-//                                           range: NSRange.init(location: 0, length: attributedString.length ))
-//
-//            self.messageDescriptionLabel.attributedText = attributedString
-//        }
+        let htmlDescription = self.viewModel.inAppMessage.text
+        let data = Data(htmlDescription.utf8)
+        if let attributedString = try? NSMutableAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
+
+            let attributes: [NSAttributedString.Key: AnyObject] = [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary,
+             NSAttributedString.Key.backgroundColor: UIColor.App.backgroundPrimary,
+                                                                   NSAttributedString.Key.font: AppFont.with(type: .medium, size: 14)]
+
+            attributedString.addAttributes(attributes,
+                                           range: NSRange.init(location: 0, length: attributedString.length ))
+
+            self.messageDescriptionLabel.attributedText = attributedString
+        }
     }
 
     private func setupPromoHeaderInfo() {
@@ -273,19 +273,19 @@ class MessageDetailViewController: UIViewController {
         }
 
         self.messageDescriptionLabel.text = self.viewModel.inAppMessage.text
-//        let htmlDescription = self.viewModel.inAppMessage.text
-//        let data = Data(htmlDescription.utf8)
-//        if let attributedString = try? NSMutableAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
-//
-//            let attributes: [NSAttributedString.Key: AnyObject] = [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary,
-//             NSAttributedString.Key.backgroundColor: UIColor.App.backgroundPrimary,
-//                                                                   NSAttributedString.Key.font: AppFont.with(type: .medium, size: 14)]
-//
-//            attributedString.addAttributes(attributes,
-//                                           range: NSRange.init(location: 0, length: attributedString.length ))
-//
-//            self.messageDescriptionLabel.attributedText = attributedString
-//        }
+        let htmlDescription = self.viewModel.inAppMessage.text
+        let data = Data(htmlDescription.utf8)
+        if let attributedString = try? NSMutableAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
+
+            let attributes: [NSAttributedString.Key: AnyObject] = [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary,
+             NSAttributedString.Key.backgroundColor: UIColor.App.backgroundPrimary,
+                                                                   NSAttributedString.Key.font: AppFont.with(type: .medium, size: 14)]
+
+            attributedString.addAttributes(attributes,
+                                           range: NSRange.init(location: 0, length: attributedString.length ))
+
+            self.messageDescriptionLabel.attributedText = attributedString
+        }
     }
 
     private func resizeBannerImageView(messageBanner: UIImage) {
