@@ -138,8 +138,8 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         let longPressRightOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressRightOddButton))
         self.awayBaseView.addGestureRecognizer(longPressRightOddButton)
 
-        let tapBannerBaseView = UITapGestureRecognizer(target: self, action: #selector(didTapBannerView))
-        self.participantsBaseView.addGestureRecognizer(tapBannerBaseView)
+//        let tapBannerBaseView = UITapGestureRecognizer(target: self, action: #selector(didTapBannerView))
+//        self.participantsBaseView.addGestureRecognizer(tapBannerBaseView)
 
         self.setupWithTheme()
     }
@@ -296,11 +296,17 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
                 }
                 .store(in: &cancellables)
 
+            let tapBannerBaseView = UITapGestureRecognizer(target: self, action: #selector(didTapBannerView))
+            self.participantsBaseView.addGestureRecognizer(tapBannerBaseView)
+
         case .image:
             self.imageView.isHidden = false
             if let url = viewModel.imageURL {
                 self.imageView.kf.setImage(with: url)
             }
+
+            let tapBannerBaseView = UITapGestureRecognizer(target: self, action: #selector(didTapBannerView))
+            self.baseView.addGestureRecognizer(tapBannerBaseView)
             
         case .externalStream:
             self.imageView.isHidden = false
@@ -308,11 +314,17 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
                 self.imageView.kf.setImage(with: url)
             }
 
+            let tapBannerBaseView = UITapGestureRecognizer(target: self, action: #selector(didTapBannerView))
+            self.baseView.addGestureRecognizer(tapBannerBaseView)
+
         case .externalLink:
             self.imageView.isHidden = false
             if let url = viewModel.imageURL {
                 self.imageView.kf.setImage(with: url)
             }
+
+            let tapBannerBaseView = UITapGestureRecognizer(target: self, action: #selector(didTapBannerView))
+            self.baseView.addGestureRecognizer(tapBannerBaseView)
 
         case .externalMatch:
             self.imageView.isHidden = false
@@ -333,6 +345,9 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
                     self?.setupWithMatch(completeMatch)
                 }
                 .store(in: &cancellables)
+
+            let tapBannerBaseView = UITapGestureRecognizer(target: self, action: #selector(didTapBannerView))
+            self.participantsBaseView.addGestureRecognizer(tapBannerBaseView)
         }
 
     }

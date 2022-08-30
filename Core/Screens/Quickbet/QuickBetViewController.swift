@@ -162,6 +162,10 @@ class QuickBetViewController: UIViewController {
 
         self.successContainerView.layer.cornerRadius = CornerRadius.view
         self.successContainerView.clipsToBounds = true
+
+        self.loadingBaseView.layer.cornerRadius = CornerRadius.view
+        self.loadingBaseView.layer.masksToBounds = true
+        self.loadingBaseView.clipsToBounds = true
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -171,13 +175,16 @@ class QuickBetViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.5)
+        //self.view.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.8)
+        self.view.backgroundColor = UIColor.App.backgroundPopup
 
         self.topSafeAreaView.backgroundColor = .clear
 
         self.bottomSafeAreaView.backgroundColor = .clear
 
         self.containerView.backgroundColor = UIColor.App.backgroundSecondary
+//        self.containerStackView.layer.borderWidth = 1
+//        self.containerStackView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
 
         self.outcomeLabel.textColor = UIColor.App.textPrimary
 
@@ -197,17 +204,17 @@ class QuickBetViewController: UIViewController {
 
         self.returnLabel.textColor = UIColor.App.textPrimary
 
-        self.betAmountView.backgroundColor = UIColor.App.inputBackground
+        self.betAmountView.backgroundColor = UIColor.App.backgroundTertiary
 
         self.betAmountTextField.textColor = UIColor.App.textPrimary
 
-        self.addOneButton.setBackgroundColor(UIColor.App.inputBackground, for: .normal)
+        self.addOneButton.setBackgroundColor(UIColor.App.backgroundTertiary, for: .normal)
         self.addOneButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
 
-        self.addFiveButton.setBackgroundColor(UIColor.App.inputBackground, for: .normal)
+        self.addFiveButton.setBackgroundColor(UIColor.App.backgroundTertiary, for: .normal)
         self.addFiveButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
 
-        self.addMaxButton.setBackgroundColor(UIColor.App.inputBackground, for: .normal)
+        self.addMaxButton.setBackgroundColor(UIColor.App.backgroundTertiary, for: .normal)
         self.addMaxButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
 
         StyleHelper.styleButton(button: self.finalBetButton)
@@ -528,7 +535,7 @@ extension QuickBetViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("", for: .normal)
-        button.setImage(UIImage(named: "small_close_cross_light_icon"), for: .normal)
+        button.setImage(UIImage(named: "thin_close_cross_icon"), for: .normal)
         return button
     }
 
@@ -652,7 +659,7 @@ extension QuickBetViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("", for: .normal)
-        button.setImage(UIImage(named: "small_close_cross_light_icon"), for: .normal)
+        button.setImage(UIImage(named: "thin_close_cross_icon"), for: .normal)
         return button
     }
 
