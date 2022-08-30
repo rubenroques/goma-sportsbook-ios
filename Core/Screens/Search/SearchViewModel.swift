@@ -37,9 +37,8 @@ class SearchViewModel: NSObject {
     var mainMarketsOrder: OrderedSet<String> = []
 
     var includeSettings: [String] = ["BETTING_OFFERS", "EVENT_INFO"]
-    var bettingTypeIdsSettings: [String] = ["69", "466", "112", "76", "9"]
+    var bettingTypeIdsSettings: [Int] = [69, 466, 112, 76, 9]
     var eventStatuses: [Int] = [1, 2]
-    var sortBy: [String] = ["START_TIME"]
 
     private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
 
@@ -128,14 +127,15 @@ class SearchViewModel: NSObject {
         self.clearData()
         self.isEmptySearch = false
 
+        
         let searchRoute = TSRouter.searchV2(language: "en",
                                             limit: 20,
                                             query: searchQuery,
                                             eventStatuses: eventStatuses,
                                             include: includeSettings,
                                             bettingTypeIds: bettingTypeIdsSettings,
-                                            sortBy: sortBy,
-                                            includeVirtualSports: false )
+                                            includeVirtualSports: true,
+                                            dataWithoutOdds: false)
 
         Env.everyMatrixClient.manager.getModel(router: searchRoute, decodingType: SearchV2Response.self)
             .receive(on: DispatchQueue.main)
