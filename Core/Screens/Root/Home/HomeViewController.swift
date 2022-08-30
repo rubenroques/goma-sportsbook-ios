@@ -65,6 +65,7 @@ class HomeViewController: UIViewController {
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
         self.tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
         self.tableView.register(VideoPreviewLineTableViewCell.self, forCellReuseIdentifier: VideoPreviewLineTableViewCell.identifier)
+        self.tableView.register(FeaturedTipLineTableViewCell.self, forCellReuseIdentifier: FeaturedTipLineTableViewCell.identifier)
 
         self.refreshControl.tintColor = UIColor.lightGray
         self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
@@ -284,7 +285,19 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
            
             return cell
+        case .featuredTips:
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: FeaturedTipLineTableViewCell.identifier) as? FeaturedTipLineTableViewCell
+//                let featuredBetLineViewModel = FeaturedTipLineViewModel()
+            else {
+                fatalError()
+            }
+            
+            let featuredBetLineViewModel = FeaturedTipLineViewModel()
 
+            cell.configure(withViewModel: featuredBetLineViewModel)
+
+            return cell
         case .suggestedBets:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: SuggestedBetLineTableViewCell.identifier) as? SuggestedBetLineTableViewCell,
@@ -425,6 +438,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return 180
         case .userFavorites:
             return UITableView.automaticDimension
+        case .featuredTips:
+            return 150
         case .suggestedBets:
             return 336
         case .sport:
@@ -469,6 +484,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return 180
         case .userFavorites:
             return StyleHelper.cardsStyleHeight() + 20
+        case .featuredTips:
+            return 150
         case .suggestedBets:
             return 336
         case .sport:
@@ -604,6 +621,8 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
             case .bannerLine:
                 _ = self.viewModel.bannerLineViewModel()
             case .userFavorites:
+                ()
+            case .featuredTips:
                 ()
             case .suggestedBets:
                 _ = self.viewModel.suggestedBetLineViewModel()

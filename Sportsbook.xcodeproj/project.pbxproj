@@ -3951,6 +3951,18 @@
 		A9B841C026EA5A1000269B05 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841BE26EA5A1000269B05 /* Event.swift */; };
 		A9B841C226EB5D5900269B05 /* Odd.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841C126EB5D5900269B05 /* Odd.swift */; };
 		A9B841C326EB5D5900269B05 /* Odd.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841C126EB5D5900269B05 /* Odd.swift */; };
+		A9B946A628BE67770091296E /* FeaturedTipLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946A528BE67770091296E /* FeaturedTipLineTableViewCell.swift */; };
+		A9B946A728BE67770091296E /* FeaturedTipLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946A528BE67770091296E /* FeaturedTipLineTableViewCell.swift */; };
+		A9B946A828BE67770091296E /* FeaturedTipLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946A528BE67770091296E /* FeaturedTipLineTableViewCell.swift */; };
+		A9B946A928BE67770091296E /* FeaturedTipLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946A528BE67770091296E /* FeaturedTipLineTableViewCell.swift */; };
+		A9B946AA28BE67770091296E /* FeaturedTipLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946A528BE67770091296E /* FeaturedTipLineTableViewCell.swift */; };
+		A9B946AB28BE67770091296E /* FeaturedTipLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946A528BE67770091296E /* FeaturedTipLineTableViewCell.swift */; };
+		A9B946AE28BE6D520091296E /* FeaturedTipCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946AD28BE6D520091296E /* FeaturedTipCollectionViewCell.swift */; };
+		A9B946AF28BE6D520091296E /* FeaturedTipCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946AD28BE6D520091296E /* FeaturedTipCollectionViewCell.swift */; };
+		A9B946B028BE6D520091296E /* FeaturedTipCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946AD28BE6D520091296E /* FeaturedTipCollectionViewCell.swift */; };
+		A9B946B128BE6D520091296E /* FeaturedTipCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946AD28BE6D520091296E /* FeaturedTipCollectionViewCell.swift */; };
+		A9B946B228BE6D520091296E /* FeaturedTipCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946AD28BE6D520091296E /* FeaturedTipCollectionViewCell.swift */; };
+		A9B946B328BE6D520091296E /* FeaturedTipCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946AD28BE6D520091296E /* FeaturedTipCollectionViewCell.swift */; };
 		A9BA6D3D280DB18900E82724 /* AddFriendViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D3C280DB18900E82724 /* AddFriendViewModel.swift */; };
 		A9BA6D3E280DB18900E82724 /* AddFriendViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D3C280DB18900E82724 /* AddFriendViewModel.swift */; };
 		A9BA6D40280DB7D500E82724 /* AddFriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D3F280DB7D500E82724 /* AddFriendTableViewCell.swift */; };
@@ -4810,6 +4822,8 @@
 		A9B841BA26EA1A7600269B05 /* MarketOutcomeRelation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketOutcomeRelation.swift; sourceTree = "<group>"; };
 		A9B841BE26EA5A1000269B05 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		A9B841C126EB5D5900269B05 /* Odd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Odd.swift; sourceTree = "<group>"; };
+		A9B946A528BE67770091296E /* FeaturedTipLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedTipLineTableViewCell.swift; sourceTree = "<group>"; };
+		A9B946AD28BE6D520091296E /* FeaturedTipCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedTipCollectionViewCell.swift; sourceTree = "<group>"; };
 		A9BA6D3C280DB18900E82724 /* AddFriendViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendViewModel.swift; sourceTree = "<group>"; };
 		A9BA6D3F280DB7D500E82724 /* AddFriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendTableViewCell.swift; sourceTree = "<group>"; };
 		A9BA6D43280DC81B00E82724 /* ResultsHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsHeaderFooterView.swift; sourceTree = "<group>"; };
@@ -6682,6 +6696,7 @@
 		45D8C9D627BD484F00C131E6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A9B946AC28BE6D210091296E /* Cells */,
 				45AA91C927C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift */,
 				45AA91CC27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift */,
 				45AA91CF27C16B1F00F8BFDD /* TopCompetitionLineTableViewCell.swift */,
@@ -6689,6 +6704,7 @@
 				45628E7F27BFBE4900AAB160 /* CompetitionWidgetCollectionViewCell.swift */,
 				45A6BB962822FF4200D9B416 /* VideoPreviewLineTableViewCell.swift */,
 				45A6BB9A2823D1B300D9B416 /* VideoPreviewCollectionViewCell.swift */,
+				A9B946A528BE67770091296E /* FeaturedTipLineTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -7445,6 +7461,14 @@
 				A9B841BE26EA5A1000269B05 /* Event.swift */,
 			);
 			path = Events;
+			sourceTree = "<group>";
+		};
+		A9B946AC28BE6D210091296E /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A9B946AD28BE6D520091296E /* FeaturedTipCollectionViewCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		A9BA6D42280DC7D800E82724 /* Cells */ = {
@@ -9066,6 +9090,7 @@
 				454A7A5F26D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */,
 				457BD61727BBAF6100E5612E /* ContainerViewController.swift in Sources */,
 				A99F7A1627D256D0008BAF41 /* ActionTextFieldView.swift in Sources */,
+				A9B946A628BE67770091296E /* FeaturedTipLineTableViewCell.swift in Sources */,
 				45166D1326F3548D00E69D65 /* GoodbyeSSWampMessage.swift in Sources */,
 				45C10F8E28772DA700037BBE /* Animator.swift in Sources */,
 				454990CF27163D3200D57CE2 /* CollapsibleGroupView.swift in Sources */,
@@ -9379,6 +9404,7 @@
 				45CD7B502716F5CB003044C5 /* OddDoubleCollectionViewCell.swift in Sources */,
 				A99F7A0C27D1168C008BAF41 /* BonusActiveDataSource.swift in Sources */,
 				A99F7A2327DA5F61008BAF41 /* BonusSwitchTableViewCell.swift in Sources */,
+				A9B946AE28BE6D520091296E /* FeaturedTipCollectionViewCell.swift in Sources */,
 				45D527E22720575000744D34 /* CompetitionFilterRowViewModel.swift in Sources */,
 				4515638126BEDA6200690896 /* FeatureFlag.swift in Sources */,
 				45936CB3270EF02200E8260E /* SearchTextField.swift in Sources */,
@@ -9643,6 +9669,7 @@
 				45D3DE342714889200717124 /* Date+Extension.swift in Sources */,
 				A978EBE927E4A1AC00322F49 /* LiveDetailsViewController.swift in Sources */,
 				454A7A6026D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */,
+				A9B946A728BE67770091296E /* FeaturedTipLineTableViewCell.swift in Sources */,
 				457BD61827BBAF6100E5612E /* ContainerViewController.swift in Sources */,
 				45C10F8F28772DA700037BBE /* Animator.swift in Sources */,
 				A99F7A1727D256D0008BAF41 /* ActionTextFieldView.swift in Sources */,
@@ -9956,6 +9983,7 @@
 				454E0AB52732C58D00794E0C /* TabularBarButton.swift in Sources */,
 				454E0AB12732C58D00794E0C /* TabularBarDelegate.swift in Sources */,
 				45CD7B512716F5CB003044C5 /* OddDoubleCollectionViewCell.swift in Sources */,
+				A9B946AF28BE6D520091296E /* FeaturedTipCollectionViewCell.swift in Sources */,
 				A99F7A0D27D1168C008BAF41 /* BonusActiveDataSource.swift in Sources */,
 				A99F7A2427DA5F61008BAF41 /* BonusSwitchTableViewCell.swift in Sources */,
 				45D527E32720575000744D34 /* CompetitionFilterRowViewModel.swift in Sources */,
@@ -10196,6 +10224,7 @@
 				457CBA33282D27D000ED0F00 /* LiveDetailsViewController.swift in Sources */,
 				457CBA34282D27D000ED0F00 /* GomaGamingServiceClient.swift in Sources */,
 				457CBA35282D27D000ED0F00 /* ContainerViewController.swift in Sources */,
+				A9B946AA28BE67770091296E /* FeaturedTipLineTableViewCell.swift in Sources */,
 				457CBA36282D27D000ED0F00 /* ActionTextFieldView.swift in Sources */,
 				45C10F9228772DA700037BBE /* Animator.swift in Sources */,
 				457CBA37282D27D000ED0F00 /* GoodbyeSSWampMessage.swift in Sources */,
@@ -10509,6 +10538,7 @@
 				457CBB45282D27D000ED0F00 /* FeatureFlag.swift in Sources */,
 				457CBB46282D27D000ED0F00 /* SearchTextField.swift in Sources */,
 				457CBB47282D27D000ED0F00 /* BettingHistoryViewModel.swift in Sources */,
+				A9B946B228BE6D520091296E /* FeaturedTipCollectionViewCell.swift in Sources */,
 				457CBB48282D27D000ED0F00 /* RefusedAccessViewController.swift in Sources */,
 				457CBB49282D27D000ED0F00 /* PublishedSSWampMessage.swift in Sources */,
 				457CBB4A282D27D000ED0F00 /* UnsubscribedSSWampMessage.swift in Sources */,
@@ -10749,6 +10779,7 @@
 				457CBCD9282D2CD100ED0F00 /* Date+Extension.swift in Sources */,
 				457CBCDA282D2CD100ED0F00 /* LiveDetailsViewController.swift in Sources */,
 				457CBCDB282D2CD100ED0F00 /* GomaGamingServiceClient.swift in Sources */,
+				A9B946AB28BE67770091296E /* FeaturedTipLineTableViewCell.swift in Sources */,
 				457CBCDC282D2CD100ED0F00 /* ContainerViewController.swift in Sources */,
 				45C10F9328772DA700037BBE /* Animator.swift in Sources */,
 				457CBCDD282D2CD100ED0F00 /* ActionTextFieldView.swift in Sources */,
@@ -11062,6 +11093,7 @@
 				457CBDED282D2CD100ED0F00 /* FeatureFlag.swift in Sources */,
 				457CBDEE282D2CD100ED0F00 /* SearchTextField.swift in Sources */,
 				457CBDEF282D2CD100ED0F00 /* BettingHistoryViewModel.swift in Sources */,
+				A9B946B328BE6D520091296E /* FeaturedTipCollectionViewCell.swift in Sources */,
 				457CBDF0282D2CD100ED0F00 /* RefusedAccessViewController.swift in Sources */,
 				457CBDF1282D2CD100ED0F00 /* PublishedSSWampMessage.swift in Sources */,
 				457CBDF2282D2CD100ED0F00 /* UnsubscribedSSWampMessage.swift in Sources */,
@@ -11302,6 +11334,7 @@
 				4589C7BD282024E400243547 /* Date+Extension.swift in Sources */,
 				4589C7BE282024E400243547 /* LiveDetailsViewController.swift in Sources */,
 				4589C7BF282024E400243547 /* GomaGamingServiceClient.swift in Sources */,
+				A9B946A828BE67770091296E /* FeaturedTipLineTableViewCell.swift in Sources */,
 				4589C7C0282024E400243547 /* ContainerViewController.swift in Sources */,
 				45C10F9028772DA700037BBE /* Animator.swift in Sources */,
 				4589C7C1282024E400243547 /* ActionTextFieldView.swift in Sources */,
@@ -11615,6 +11648,7 @@
 				4589C8C6282024E400243547 /* CompetitionFilterRowViewModel.swift in Sources */,
 				4589C8C7282024E400243547 /* FeatureFlag.swift in Sources */,
 				4589C8C8282024E400243547 /* SearchTextField.swift in Sources */,
+				A9B946B028BE6D520091296E /* FeaturedTipCollectionViewCell.swift in Sources */,
 				4589C8C9282024E400243547 /* BettingHistoryViewModel.swift in Sources */,
 				4589C8CA282024E400243547 /* RefusedAccessViewController.swift in Sources */,
 				45B6E227283FD08C001B570C /* ChatTicketInMessageView.swift in Sources */,
@@ -11855,6 +11889,7 @@
 				45A6BC0A28246A7500D9B416 /* Router.swift in Sources */,
 				45A6BC0B28246A7500D9B416 /* Date+Extension.swift in Sources */,
 				45A6BC0C28246A7500D9B416 /* LiveDetailsViewController.swift in Sources */,
+				A9B946A928BE67770091296E /* FeaturedTipLineTableViewCell.swift in Sources */,
 				45A6BC0D28246A7500D9B416 /* GomaGamingServiceClient.swift in Sources */,
 				45C10F9128772DA700037BBE /* Animator.swift in Sources */,
 				45A6BC0E28246A7500D9B416 /* ContainerViewController.swift in Sources */,
@@ -12168,6 +12203,7 @@
 				45A6BD1C28246A7500D9B416 /* BonusSwitchTableViewCell.swift in Sources */,
 				45A6BD1D28246A7500D9B416 /* CompetitionFilterRowViewModel.swift in Sources */,
 				45A6BD1E28246A7500D9B416 /* FeatureFlag.swift in Sources */,
+				A9B946B128BE6D520091296E /* FeaturedTipCollectionViewCell.swift in Sources */,
 				45A6BD1F28246A7500D9B416 /* SearchTextField.swift in Sources */,
 				45B6E228283FD08C001B570C /* ChatTicketInMessageView.swift in Sources */,
 				A98295A8283BA1420014066A /* BetSelectionCellViewModel.swift in Sources */,
