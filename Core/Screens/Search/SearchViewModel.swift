@@ -134,7 +134,6 @@ class SearchViewModel: NSObject {
                                             eventStatuses: eventStatuses,
                                             include: includeSettings,
                                             bettingTypeIds: bettingTypeIdsSettings,
-                                            includeVirtualSports: true,
                                             dataWithoutOdds: false)
 
         Env.everyMatrixClient.manager.getModel(router: searchRoute, decodingType: SearchV2Response.self)
