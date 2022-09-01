@@ -294,13 +294,19 @@ class FullRegisterDocumentsViewController: UIViewController {
                 self.navigationController?.popToRootViewController(animated: true)
             }
             .store(in: &cancellables)
+        
+        Env.gomaNetworkClient.requestUpdateNameProfile(name: "\(form.firstname) \(form.surname)")
+                    .replaceError(with: MessageNetworkResponse.failed)
+                    .sink { [weak self] response in
+                        print("update OnGomaAPI \(response)")
+                    }
+                    .store(in: &cancellables)
     }
 
     private func refreshUserProfileStatus() {
         Env.userSessionStore.requestProfileStatus()
     }
 
-    
     @objc func didTapBackground() {
         self.resignFirstResponder()
 

@@ -14,6 +14,7 @@ enum GomaGamingService {
     case settings
     case modules
     case simpleRegister(username: String, email: String, phoneCountryCode: String, phone: String, birthDate: String, userProviderId: String, deviceToken: String)
+    case updateProfile(name: String)
     case modalPopUpDetails
     case login(username: String, password: String, deviceToken: String)
     case suggestedBets
@@ -68,6 +69,8 @@ extension GomaGamingService: Endpoint {
             return "/api/settings/\(apiVersion)/modules"
         case .simpleRegister:
             return "/api/users/\(apiVersion)/register"
+        case .updateProfile:
+                    return "/api/users/\(apiVersion)/profile"
         case .modalPopUpDetails:
             return "/api/settings/\(apiVersion)/info-popup"
         case .login:
@@ -131,7 +134,7 @@ extension GomaGamingService: Endpoint {
         case .geolocation(let latitude, let longitude):
             return [URLQueryItem(name: "lat", value: latitude),
                     URLQueryItem(name: "lng", value: longitude)]
-        case .simpleRegister, .modalPopUpDetails, .login,
+        case .simpleRegister, .updateProfile, .modalPopUpDetails, .login,
                 .suggestedBets, .addFavorites, .matchStats, .userSettings, .sendUserSettings, .sendSupportTicket:
             return nil
         case  .settings, .modules:
@@ -208,7 +211,7 @@ extension GomaGamingService: Endpoint {
         case .geolocation, .settings, .modalPopUpDetails, .suggestedBets,
                 .matchStats, .userSettings, .modules:
             return .get
-        case .log, .simpleRegister, .login, .addFavorites, .sendUserSettings, .sendSupportTicket:
+        case .log, .simpleRegister, .updateProfile, .login, .addFavorites, .sendUserSettings, .sendSupportTicket:
             return .post
         case .removeFavorite:
             return .delete
@@ -247,6 +250,16 @@ extension GomaGamingService: Endpoint {
                        """
             let data = body.data(using: String.Encoding.utf8)!
             return data
+            
+        case .updateProfile(let name):
+            let body = """
+                       {
+                        "name": "\(name)"
+                       }
+                       """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+            
         case .login(let username, let password, let deviceToken):
             let body = """
                        {"username": "\(username)",
