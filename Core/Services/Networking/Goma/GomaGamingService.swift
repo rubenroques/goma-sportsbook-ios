@@ -43,6 +43,8 @@ enum GomaGamingService {
     case setAllNotificationRead(type: String)
     case sendSupportTicket(title: String, message: String)
     case notificationsCounter(type: String)
+    case featuredTips(betType: String? = nil, totalOddsMin: String? = nil, totalOddsMax: String? = nil)
+
 }
 
 extension GomaGamingService: Endpoint {
@@ -121,6 +123,8 @@ extension GomaGamingService: Endpoint {
             return "/api/users/\(apiVersion)/contact"
         case .notificationsCounter:
             return "/api/notifications/\(apiVersion)/count"
+        case .featuredTips:
+            return "/api/betting/\(apiVersion)/tips"
         }
     }
 
@@ -181,6 +185,29 @@ extension GomaGamingService: Endpoint {
             URLQueryItem(name: "page", value: "\(page)")]
         case .notificationsCounter(let type):
             return[URLQueryItem(name: "type", value: type)]
+        case .featuredTips(let betType, let totalOddsMin, let totalOddsMax):
+            var queryItemsURL: [URLQueryItem] = []
+
+            if betType != nil {
+                let queryItem = URLQueryItem(name: "bet_type", value: betType)
+                queryItemsURL.append(queryItem)
+            }
+
+            if totalOddsMin != nil {
+                let queryItem = URLQueryItem(name: "total_odds_min", value: totalOddsMin)
+                queryItemsURL.append(queryItem)
+            }
+
+            if totalOddsMax != nil {
+                let queryItem = URLQueryItem(name: "total_odds_max", value: totalOddsMax)
+                queryItemsURL.append(queryItem)
+            }
+
+            if queryItemsURL.isNotEmpty {
+                return queryItemsURL
+            }
+
+            return nil
         }
     }
 
@@ -215,7 +242,7 @@ extension GomaGamingService: Endpoint {
         // Social
         case .addFriend, .inviteFriend, .addGroup, .addUserToGroup, .lookupPhone, .setNotificationRead, .setAllNotificationRead:
             return .post
-        case .listFriends, .chatrooms, .searchUserCode, .getNotification, .notificationsCounter:
+        case .listFriends, .chatrooms, .searchUserCode, .getNotification, .notificationsCounter, .featuredTips:
             return .get
         case .deleteGroup, .leaveGroup, .deleteFriend, .removeUser:
             return .delete

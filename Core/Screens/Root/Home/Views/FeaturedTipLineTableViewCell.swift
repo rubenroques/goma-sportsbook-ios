@@ -10,14 +10,34 @@ import Combine
 
 class FeaturedTipLineViewModel {
 
-    var featuredTipsCards: [String] = []
+    var featuredTips: [FeaturedTip] = []
+    var featuredTipCollectionCacheViewModel: [Int: FeaturedTipCollectionViewModel] = [:]
 
-    init() {
-        self.featuredTipsCards = ["Tip1", "Tip2"]
+    init(featuredTips: [FeaturedTip]) {
+        self.featuredTips = featuredTips
     }
 
     func numberOfItems() -> Int {
-        return featuredTipsCards.count
+        return featuredTips.count
+    }
+
+    func viewModel(forIndex index: Int) -> FeaturedTipCollectionViewModel? {
+        guard
+            let featuredTip = self.featuredTips[safe: index]
+        else {
+            return nil
+        }
+
+        let tipId = featuredTip.id
+
+        if let featuredTipCollectionViewModel = featuredTipCollectionCacheViewModel[tipId] {
+            return featuredTipCollectionViewModel
+        }
+        else {
+            let featuredTipCollectionViewModel = FeaturedTipCollectionViewModel(featuredTip: featuredTip)
+            self.featuredTipCollectionCacheViewModel[tipId] = featuredTipCollectionViewModel
+            return featuredTipCollectionViewModel
+        }
     }
 }
 
@@ -104,11 +124,13 @@ extension FeaturedTipLineTableViewCell: UICollectionViewDelegate, UICollectionVi
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
-            let cell = collectionView.dequeueCellType(FeaturedTipCollectionViewCell.self, indexPath: indexPath)
-//            let viewModel = self.viewModel?.viewModel(forIndex: indexPath.row)
+            let cell = collectionView.dequeueCellType(FeaturedTipCollectionViewCell.self, indexPath: indexPath),
+            let viewModel = self.viewModel?.viewModel(forIndex: indexPath.row)
         else {
             fatalError()
         }
+
+        cell.configure(viewModel: viewModel, hasCounter: false)
 
         return cell
     }
@@ -116,7 +138,7 @@ extension FeaturedTipLineTableViewCell: UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: Double(collectionView.frame.size.width)*0.85, height: 130)
+        return CGSize(width: Double(collectionView.frame.size.width)*0.85, height: 380)
     }
 
 }

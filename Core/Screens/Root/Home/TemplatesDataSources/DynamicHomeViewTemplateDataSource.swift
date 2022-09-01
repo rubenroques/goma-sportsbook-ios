@@ -40,7 +40,12 @@ class DynamicHomeViewTemplateDataSource {
     private var favoriteMatchesPublisher: AnyCancellable?
 
     //
-    private var featuredTips: [String] = []
+    private var featuredTips: [FeaturedTip] = []
+    private var cachedFeaturedTipLineViewModel: FeaturedTipLineViewModel? {
+        didSet {
+            self.refreshPublisher.send()
+        }
+    }
 
     //
     private var suggestedBets: [SuggestedBetCardSummary] = []
@@ -437,6 +442,21 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     func favoriteMatch(forIndex index: Int) -> Match? {
         return self.favoriteMatches[safe: index]
+    }
+
+    func featuredTipLineViewModel() -> FeaturedTipLineViewModel? {
+        if self.featuredTips.isEmpty {
+            return nil
+        }
+
+        if let featuredTipLineViewModel = self.cachedFeaturedTipLineViewModel {
+            return featuredTipLineViewModel
+        }
+        else {
+            self.cachedFeaturedTipLineViewModel = FeaturedTipLineViewModel(featuredTips: self.featuredTips)
+            return self.cachedFeaturedTipLineViewModel
+        }
+
     }
 
     func suggestedBetLineViewModel() -> SuggestedBetLineViewModel? {

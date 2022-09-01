@@ -77,8 +77,12 @@ class StaticHomeViewTemplateDataSource {
     }
 
     //
-    private var featuredTips: [String] = []
-
+    private var featuredTips: [FeaturedTip] = []
+    private var cachedFeaturedTipLineViewModel: FeaturedTipLineViewModel? {
+        didSet {
+            self.refreshPublisher.send()
+        }
+    }
     //
     private var suggestedBets: [SuggestedBetCardSummary] = []
     private var cachedSuggestedBetLineViewModel: SuggestedBetLineViewModel? {
@@ -332,9 +336,27 @@ class StaticHomeViewTemplateDataSource {
 
     // Tips TEST
     func fetchTips() {
-        let tips = ["Tip1", "Tip2"]
+//        let tips = ["Tip1", "Tip2"]
+//
+//        self.featuredTips = tips
 
-        self.featuredTips = tips
+        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE")
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("FEATURED TIPS ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+            }, receiveValue: { [weak self] response in
+                print("FEATURED TIPS RESPONSE: \(response)")
+
+                if let featuredTips = response.data {
+                    self?.featuredTips = featuredTips
+                }
+            })
+            .store(in: &cancellables)
     }
 
     // Suggested Bets
@@ -520,7 +542,20 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return self.favoriteMatches[safe: index]
     }
 
-    //TODO: Tips viewModels if needed
+    func featuredTipLineViewModel() -> FeaturedTipLineViewModel? {
+        if self.featuredTips.isEmpty {
+            return nil
+        }
+
+        if let featuredTipLineViewModel = self.cachedFeaturedTipLineViewModel {
+            return featuredTipLineViewModel
+        }
+        else {
+            self.cachedFeaturedTipLineViewModel = FeaturedTipLineViewModel(featuredTips: self.featuredTips)
+            return self.cachedFeaturedTipLineViewModel
+        }
+
+    }
 
     func suggestedBetLineViewModel() -> SuggestedBetLineViewModel? {
 

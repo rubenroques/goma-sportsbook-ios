@@ -553,3 +553,9 @@ Terms of use, Privacy Policy and EULA";
 
 "chat_empty_shared_ticket_self" = "You shared a ticket.";
 "chat_empty_shared_ticket_others" = "%s shared a ticket.";
+
+"follow" = "Follow";
+"total_odds" = "Total Odds";
+"number_selections" = "Number of selections";
+"bet_same" = "Bet the same";
+"show_full_tip" = "Show full tip";

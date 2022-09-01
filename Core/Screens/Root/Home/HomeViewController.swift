@@ -287,13 +287,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         case .featuredTips:
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: FeaturedTipLineTableViewCell.identifier) as? FeaturedTipLineTableViewCell
-//                let featuredBetLineViewModel = FeaturedTipLineViewModel()
+                let cell = tableView.dequeueReusableCell(withIdentifier: FeaturedTipLineTableViewCell.identifier) as? FeaturedTipLineTableViewCell,
+                    let featuredBetLineViewModel = self.viewModel.featuredTipLineViewModel()
             else {
                 fatalError()
             }
-            
-            let featuredBetLineViewModel = FeaturedTipLineViewModel()
 
             cell.configure(withViewModel: featuredBetLineViewModel)
 
@@ -439,7 +437,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .userFavorites:
             return UITableView.automaticDimension
         case .featuredTips:
-            return 150
+            return 400
         case .suggestedBets:
             return 336
         case .sport:
@@ -485,7 +483,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .userFavorites:
             return StyleHelper.cardsStyleHeight() + 20
         case .featuredTips:
-            return 150
+            return 400
         case .suggestedBets:
             return 336
         case .sport:
