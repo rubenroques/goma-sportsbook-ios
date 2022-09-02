@@ -51,6 +51,24 @@ class MyTicketsViewModel: NSObject {
     private var resolvedPage = 0
     private var openedPage = 0
     private var wonPage = 0
+    
+    private var resolvedTicketsHasNextPage = true {
+        didSet {
+
+        }
+    }
+    
+    private var openedTicketsHasNextPage = true {
+        didSet {
+
+        }
+    }
+    
+    private var wonTicketsHasNextPage = true {
+        didSet {
+
+        }
+    }
 
     // Cached view models
     var cachedViewModels: [String: MyTicketCellViewModel] = [:]
@@ -370,6 +388,10 @@ class MyTicketsViewModel: NSObject {
 }
 
 extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.numberOfRows()
@@ -377,49 +399,88 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let ticket: BetHistoryEntry?
+        switch indexPath.section {
+        case 0:
+            let ticket: BetHistoryEntry?
 
-        switch myTicketsTypePublisher.value {
-        case .resolved:
-            ticket = resolvedMyTickets.value[safe: indexPath.row] ?? nil
-        case .opened:
-            ticket =  openedMyTickets.value[safe: indexPath.row] ?? nil
-        case .won:
-            ticket =  wonMyTickets.value[safe: indexPath.row] ?? nil
-        }
-
-        guard
-            let cell = tableView.dequeueCellType(MyTicketTableViewCell.self),
-            let viewModel = self.viewModel(forIndex: indexPath.row),
-            let ticketValue = ticket
-        else {
-            fatalError("tableView.dequeueCellType(MyTicketTableViewCell.self)")
-        }
-
-        let locationsCodes = (ticketValue.selections ?? [])
-            .map({ event -> String in
-                let id = event.venueId ?? ""
-                return self.locationsCodesDictionary[id] ?? ""
-            })
-
-        cell.needsHeightRedraw = { [weak self] in
-            self?.redrawTableViewAction?()
-        }
-        cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
-
-        cell.tappedShareAction = { [weak self] in
-            if let cellSnapshot = cell.snapshot,
-                let ticketStatus = ticketValue.status {
-                self?.requestShareActivityView?(cellSnapshot, ticketValue.betId, ticketStatus)
-                self?.clickedBetHistory = ticketValue
+            switch myTicketsTypePublisher.value {
+            case .resolved:
+                ticket = resolvedMyTickets.value[safe: indexPath.row] ?? nil
+            case .opened:
+                ticket =  openedMyTickets.value[safe: indexPath.row] ?? nil
+            case .won:
+                ticket =  wonMyTickets.value[safe: indexPath.row] ?? nil
             }
-        }
-    
-        cell.tappedMatchDetail = { [weak self] matchId in
-            self?.tappedMatchDetail?(matchId)
 
+            guard
+                let cell = tableView.dequeueCellType(MyTicketTableViewCell.self),
+                let viewModel = self.viewModel(forIndex: indexPath.row),
+                let ticketValue = ticket
+            else {
+                fatalError("tableView.dequeueCellType(MyTicketTableViewCell.self)")
+            }
+
+            let locationsCodes = (ticketValue.selections ?? [])
+                .map({ event -> String in
+                    let id = event.venueId ?? ""
+                    return self.locationsCodesDictionary[id] ?? ""
+                })
+
+            cell.needsHeightRedraw = { [weak self] in
+                self?.redrawTableViewAction?()
+            }
+            cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
+
+            cell.tappedShareAction = { [weak self] in
+                if let cellSnapshot = cell.snapshot,
+                    let ticketStatus = ticketValue.status {
+                    self?.requestShareActivityView?(cellSnapshot, ticketValue.betId, ticketStatus)
+                    self?.clickedBetHistory = ticketValue
+                }
+            }
+        
+            cell.tappedMatchDetail = { [weak self] matchId in
+                self?.tappedMatchDetail?(matchId)
+
+            }
+            return cell
+            
+        case 1:
+            if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
+                return cell
+            }
+        default:
+            fatalError()
         }
-        return cell
+        return UITableViewCell()
     }
 
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+        switch myTicketsTypePublisher.value{
+        case .opened:
+            if indexPath.section == 1, self.openedMyTickets.value.isNotEmpty {
+                if let typedCell = cell as? LoadingMoreTableViewCell {
+                    typedCell.startAnimating()
+                }
+                self.requestNextPage()
+            }
+        case .resolved:
+            if indexPath.section == 1, self.resolvedMyTickets.value.isNotEmpty {
+                if let typedCell = cell as? LoadingMoreTableViewCell {
+                    typedCell.startAnimating()
+                }
+                self.requestNextPage()
+            }
+        case .won:
+            if indexPath.section == 1, self.wonMyTickets.value.isNotEmpty {
+                if let typedCell = cell as? LoadingMoreTableViewCell {
+                    typedCell.startAnimating()
+                }
+                self.requestNextPage()
+            }
+            
+        }
+        
+    }
 }
