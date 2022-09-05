@@ -25,6 +25,7 @@ class RootViewController: UIViewController {
     @IBOutlet private var homeBaseView: UIView!
     @IBOutlet private var preLiveBaseView: UIView!
     @IBOutlet private var liveBaseView: UIView!
+    @IBOutlet private var tipsBaseView: UIView!
     @IBOutlet private var casinoBaseView: UIView!
     
     @IBOutlet private var tabBarView: UIView!
@@ -42,6 +43,10 @@ class RootViewController: UIViewController {
     @IBOutlet private var liveButtonBaseView: UIView!
     @IBOutlet private var liveIconImageView: UIImageView!
     @IBOutlet private var liveTitleLabel: UILabel!
+
+    @IBOutlet private var tipsButtonBaseView: UIView!
+    @IBOutlet private var tipsIconImageView: UIImageView!
+    @IBOutlet private var tipsTitleLabel: UILabel!
     
     @IBOutlet private var casinoButtonBaseView: UIView!
     @IBOutlet private var casinoIconImageView: UIImageView!
@@ -162,6 +167,7 @@ class RootViewController: UIViewController {
         case home
         case preLive
         case live
+        case tips
         case casino
     }
     var selectedTabItem: TabItem {
@@ -173,6 +179,8 @@ class RootViewController: UIViewController {
                 self.selectSportsTabBarItem()
             case .live:
                 self.selectLiveTabBarItem()
+            case .tips:
+                self.selectTipsTabBarItem()
             case .casino:
                 self.selectCasinoTabBarItem()
             }
@@ -555,6 +563,7 @@ class RootViewController: UIViewController {
         self.homeBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.preLiveBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.liveBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.tipsBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.casinoBaseView.backgroundColor = UIColor.App.backgroundPrimary
         
         self.homeTitleLabel.textColor = UIColor.App.highlightPrimary
@@ -792,6 +801,21 @@ extension RootViewController {
             }
             liveEventsViewControllerLoaded = true
         }
+
+        if case .tips = tab, !preLiveViewControllerLoaded {
+            self.addChildViewController(self.preLiveViewController, toView: self.preLiveBaseView)
+            self.preLiveViewController.selectedSport = self.currentSport
+            self.preLiveViewController.didChangeSport = { [weak self] newSport in
+                self?.didChangedPreLiveSport(newSport)
+            }
+            self.preLiveViewController.didTapChatButtonAction = { [weak self] in
+                self?.openChatModal()
+            }
+            self.preLiveViewController.didTapBetslipButtonAction = { [weak self] in
+                self?.openBetslipModal()
+            }
+            preLiveViewControllerLoaded = true
+        }
         
         if case .casino = tab, !casinoViewControllerLoaded {
             self.searchButton.isHidden = true
@@ -969,6 +993,7 @@ extension RootViewController {
         self.homeBaseView.isHidden = false
         self.preLiveBaseView.isHidden = true
         self.liveBaseView.isHidden = true
+        self.tipsBaseView.isHidden = true
 
         self.redrawButtonButtons()
     }
@@ -979,6 +1004,7 @@ extension RootViewController {
         self.homeBaseView.isHidden = true
         self.preLiveBaseView.isHidden = false
         self.liveBaseView.isHidden = true
+        self.tipsBaseView.isHidden = true
 
         self.redrawButtonButtons()
     }
@@ -989,7 +1015,18 @@ extension RootViewController {
         self.homeBaseView.isHidden = true
         self.preLiveBaseView.isHidden = true
         self.liveBaseView.isHidden = false
+        self.tipsBaseView.isHidden = true
 
+        self.redrawButtonButtons()
+    }
+
+    func selectTipsTabBarItem() {
+        self.loadChildViewControllerIfNeeded(tab: .tips)
+
+        self.homeBaseView.isHidden = true
+        self.preLiveBaseView.isHidden = true
+        self.liveBaseView.isHidden = true
+        self.tipsBaseView.isHidden = false
         self.redrawButtonButtons()
     }
     
@@ -1022,6 +1059,15 @@ extension RootViewController {
 
         case .live:
             liveButtonBaseView.alpha = self.activeButtonAlpha
+            homeTitleLabel.textColor = UIColor.App.iconSecondary
+            homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            sportsTitleLabel.textColor = UIColor.App.iconSecondary
+            sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            liveTitleLabel.textColor = UIColor.App.highlightPrimary
+            liveIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
+
+        case .tips:
+            tipsButtonBaseView.alpha = self.activeButtonAlpha
             homeTitleLabel.textColor = UIColor.App.iconSecondary
             homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             sportsTitleLabel.textColor = UIColor.App.iconSecondary

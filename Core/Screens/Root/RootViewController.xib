@@ -63,6 +63,10 @@
                 <outlet property="sportsbookIconImageView" destination="s7G-eA-zbU" id="Ajt-Bk-dqZ"/>
                 <outlet property="sportsbookTitleLabel" destination="NZt-HU-YeP" id="HgY-mk-AU1"/>
                 <outlet property="tabBarView" destination="KmS-Xh-sK7" id="RnU-Ur-YkT"/>
+                <outlet property="tipsBaseView" destination="wEK-PC-Y6d" id="6KQ-QO-YJZ"/>
+                <outlet property="tipsButtonBaseView" destination="Wao-as-qb6" id="5sN-iH-NAN"/>
+                <outlet property="tipsIconImageView" destination="HPd-kB-5DR" id="Obk-Ng-bMD"/>
+                <outlet property="tipsTitleLabel" destination="r8X-CO-dLy" id="lRc-36-gjv"/>
                 <outlet property="topBarView" destination="HKG-0A-qeh" id="9wS-YR-NNW"/>
                 <outlet property="topSafeAreaView" destination="7JK-Qm-Mkc" id="2cm-LF-N2q"/>
                 <outlet property="unlockAppButton" destination="WtU-rI-FNG" id="I6l-pZ-1gb"/>
@@ -330,6 +334,11 @@
                                             <rect key="frame" x="0.0" y="0.0" width="515" height="677"/>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         </view>
+                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wEK-PC-Y6d">
+                                            <rect key="frame" x="0.0" y="0.0" width="515" height="677"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        </view>
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="bottom" secondItem="Fxl-nZ-JeH" secondAttribute="bottom" id="2Ev-bb-VF8"/>
@@ -353,10 +362,10 @@
                                             <rect key="frame" x="0.0" y="0.0" width="442" height="52"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4rF-OG-Pdw">
-                                                    <rect key="frame" x="0.0" y="0.0" width="136.5" height="52"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="98.5" height="52"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_home_icon" translatesAutoresizingMaskIntoConstraints="NO" id="Iba-we-Ish">
-                                                            <rect key="frame" x="58.5" y="8" width="20" height="20"/>
+                                                            <rect key="frame" x="39.5" y="8" width="20" height="20"/>
                                                             <color key="tintColor" name="iconSecondary"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="Iba-we-Ish" secondAttribute="height" id="GEk-3a-JGs"/>
@@ -364,7 +373,7 @@
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Home" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eiC-RB-6o0">
-                                                            <rect key="frame" x="4" y="30" width="128.5" height="19"/>
+                                                            <rect key="frame" x="4" y="30" width="90.5" height="19"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="19" id="MkI-Ry-rGG"/>
                                                             </constraints>
@@ -378,16 +387,15 @@
                                                         <constraint firstItem="eiC-RB-6o0" firstAttribute="centerX" secondItem="4rF-OG-Pdw" secondAttribute="centerX" id="7ah-Dk-Rwn"/>
                                                         <constraint firstItem="Iba-we-Ish" firstAttribute="bottom" secondItem="4rF-OG-Pdw" secondAttribute="centerY" constant="2" id="9od-Xs-exT"/>
                                                         <constraint firstItem="eiC-RB-6o0" firstAttribute="leading" secondItem="4rF-OG-Pdw" secondAttribute="leading" constant="4" id="dmd-bD-ye0"/>
-                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="vpb-q0-nzd"/>
                                                         <constraint firstAttribute="bottom" secondItem="eiC-RB-6o0" secondAttribute="bottom" constant="3" id="ydr-hY-Zjj"/>
                                                         <constraint firstItem="Iba-we-Ish" firstAttribute="centerX" secondItem="4rF-OG-Pdw" secondAttribute="centerX" id="z6a-IQ-iuR"/>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0dg-mr-47t">
-                                                    <rect key="frame" x="152.5" y="0.0" width="137" height="52"/>
+                                                    <rect key="frame" x="114.5" y="0.0" width="98.5" height="52"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_sports_icon" translatesAutoresizingMaskIntoConstraints="NO" id="jq1-az-paT">
-                                                            <rect key="frame" x="58.5" y="8" width="20" height="20"/>
+                                                            <rect key="frame" x="39.5" y="8" width="20" height="20"/>
                                                             <color key="tintColor" name="iconSecondary"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="jq1-az-paT" secondAttribute="height" id="LyC-rB-lHg"/>
@@ -395,7 +403,7 @@
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sports" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8B6-32-WvK">
-                                                            <rect key="frame" x="4" y="30" width="129" height="20"/>
+                                                            <rect key="frame" x="4" y="30" width="90.5" height="20"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -404,17 +412,16 @@
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstItem="8B6-32-WvK" firstAttribute="centerX" secondItem="0dg-mr-47t" secondAttribute="centerX" id="BDF-Ww-H39"/>
-                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="Kmz-cf-wwQ"/>
                                                         <constraint firstItem="jq1-az-paT" firstAttribute="centerX" secondItem="0dg-mr-47t" secondAttribute="centerX" id="MTK-xx-k8f"/>
                                                         <constraint firstAttribute="bottom" secondItem="8B6-32-WvK" secondAttribute="bottom" constant="2" id="pVI-Hf-3e3"/>
                                                         <constraint firstItem="8B6-32-WvK" firstAttribute="leading" secondItem="0dg-mr-47t" secondAttribute="leading" constant="4" id="tDN-60-OJI"/>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F4I-4h-jeW">
-                                                    <rect key="frame" x="305.5" y="0.0" width="136.5" height="52"/>
+                                                    <rect key="frame" x="229" y="0.0" width="98.5" height="52"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_live_icon" translatesAutoresizingMaskIntoConstraints="NO" id="OrN-gr-CSa">
-                                                            <rect key="frame" x="58" y="8" width="20" height="20"/>
+                                                            <rect key="frame" x="39.5" y="8" width="20" height="20"/>
                                                             <color key="tintColor" name="iconSecondary"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="20" id="IK8-f9-5ky"/>
@@ -422,7 +429,7 @@
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Live" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0RE-N3-etL">
-                                                            <rect key="frame" x="4" y="30" width="128.5" height="20"/>
+                                                            <rect key="frame" x="4" y="30" width="90.5" height="20"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -434,6 +441,32 @@
                                                         <constraint firstItem="OrN-gr-CSa" firstAttribute="centerX" secondItem="F4I-4h-jeW" secondAttribute="centerX" id="Foc-tR-58E"/>
                                                         <constraint firstItem="0RE-N3-etL" firstAttribute="centerX" secondItem="F4I-4h-jeW" secondAttribute="centerX" id="V4k-EY-380"/>
                                                         <constraint firstAttribute="bottom" secondItem="0RE-N3-etL" secondAttribute="bottom" constant="2" id="vpC-dO-jCy"/>
+                                                    </constraints>
+                                                </view>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wao-as-qb6">
+                                                    <rect key="frame" x="343.5" y="0.0" width="98.5" height="52"/>
+                                                    <subviews>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="tabbar_live_icon" translatesAutoresizingMaskIntoConstraints="NO" id="HPd-kB-5DR">
+                                                            <rect key="frame" x="39.5" y="8" width="20" height="20"/>
+                                                            <color key="tintColor" name="iconSecondary"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" secondItem="HPd-kB-5DR" secondAttribute="height" multiplier="1:1" id="F4t-lV-Y03"/>
+                                                                <constraint firstAttribute="width" constant="20" id="kSU-A1-jwV"/>
+                                                            </constraints>
+                                                        </imageView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tips" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r8X-CO-dLy">
+                                                            <rect key="frame" x="4" y="39" width="90.5" height="11"/>
+                                                            <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstItem="HPd-kB-5DR" firstAttribute="centerX" secondItem="Wao-as-qb6" secondAttribute="centerX" id="2nE-WK-Lgi"/>
+                                                        <constraint firstItem="r8X-CO-dLy" firstAttribute="leading" secondItem="Wao-as-qb6" secondAttribute="leading" constant="4" id="D0I-5f-XZE"/>
+                                                        <constraint firstItem="r8X-CO-dLy" firstAttribute="centerX" secondItem="Wao-as-qb6" secondAttribute="centerX" id="PBA-EZ-lCx"/>
+                                                        <constraint firstAttribute="bottom" secondItem="r8X-CO-dLy" secondAttribute="bottom" constant="2" id="hg5-qD-FQZ"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -588,7 +621,7 @@
             <color red="0.92941176470588238" green="0.30980392156862746" blue="0.38823529411764707" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="iconSecondary">
-            <color red="0.58039215686274515" green="0.62352941176470589" blue="0.67843137254901964" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.41176470588235292" green="0.41176470588235292" blue="0.41176470588235292" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
