@@ -734,13 +734,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     }
 
-    @objc func didLongPressLeftOddButton(_ sender: Any) {
+    @objc func didLongPressLeftOddButton(_ sender: UILongPressGestureRecognizer) {
 
-        guard let longPressGesture = sender as? UILongPressGestureRecognizer else {return}
+        let longPressGesture = sender
 
         // Triggers function only once instead of rapid fire event
         if longPressGesture.state == .began {
-            print("LONG PRESS LEFT ODD!")
 
             guard
                 let match = self.viewModel?.match,
@@ -790,13 +789,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    @objc func didLongPressMiddleOddButton(_ sender: Any) {
+    @objc func didLongPressMiddleOddButton(_ sender: UILongPressGestureRecognizer) {
 
-        guard let longPressGesture = sender as? UILongPressGestureRecognizer else {return}
+        let longPressGesture = sender
 
         // Triggers function only once instead of rapid fire event
         if longPressGesture.state == .began {
-            print("LONG PRESS MIDDLE ODD!")
 
             guard
                 let match = self.viewModel?.match,
@@ -807,8 +805,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
 
             let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
-
-            print("BETTING TICKET: \(bettingTicket)")
 
             self.didLongPressOdd?(bettingTicket)
 
@@ -849,13 +845,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    @objc func didLongPressRightOddButton(_ sender: Any) {
+    @objc func didLongPressRightOddButton(_ sender: UILongPressGestureRecognizer) {
 
-        guard let longPressGesture = sender as? UILongPressGestureRecognizer else {return}
+        let longPressGesture = sender
 
         // Triggers function only once instead of rapid fire event
         if longPressGesture.state == .began {
-            print("LONG PRESS RIGHT ODD!")
 
             guard
                 let match = self.viewModel?.match,
@@ -866,8 +861,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
 
             let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
-
-            print("BETTING TICKET: \(bettingTicket)")
 
             self.didLongPressOdd?(bettingTicket)
 

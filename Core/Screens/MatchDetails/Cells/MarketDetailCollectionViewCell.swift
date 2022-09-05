@@ -225,13 +225,12 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    @objc func didLongPressOddButton(_ sender: Any) {
+    @objc func didLongPressOddButton(_ sender: UILongPressGestureRecognizer) {
 
-        guard let longPressGesture = sender as? UILongPressGestureRecognizer else {return}
+        let longPressGesture = sender
 
         // Triggers function only once instead of rapid fire event
         if longPressGesture.state == .began {
-            print("LONG PRESS ODD!")
 
             guard
                 let match = self.match,

@@ -174,16 +174,6 @@ class MessagesViewController: UIViewController {
 
             self.navigationController?.pushViewController(messageDetailViewController, animated: true)
         }
-
-//        let messageDetailViewModel = MessageDetailViewModel(inAppMessage: cellViewModel.inAppMessage)
-//
-//        let messageDetailViewController = MessageDetailViewController(viewModel: messageDetailViewModel)
-//
-//        messageDetailViewController.shouldSetMessageRead = { inAppMessageId in
-//            self.viewModel.setCellReadStatus(inAppMessageId: inAppMessageId)
-//        }
-//
-//        self.navigationController?.pushViewController(messageDetailViewController, animated: true)
         
     }
 
