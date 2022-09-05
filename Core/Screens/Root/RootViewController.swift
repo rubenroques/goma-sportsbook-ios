@@ -533,6 +533,9 @@ class RootViewController: UIViewController {
 
         let liveTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLiveTabItem))
         liveButtonBaseView.addGestureRecognizer(liveTapGesture)
+
+        let tipsTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapTipsTabItem))
+        tipsButtonBaseView.addGestureRecognizer(tipsTapGesture)
         
         let casinoTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapCasinoTabItem))
         casinoButtonBaseView.addGestureRecognizer(casinoTapGesture)
@@ -972,6 +975,13 @@ extension RootViewController {
         
         self.selectedTabItem = .live
     }
+
+    @objc private func didTapTipsTabItem() {
+
+        self.flipToSportsbookIfNeeded()
+
+        self.selectedTabItem = .tips
+    }
     
     @objc private func didTapCasinoTabItem() {
         self.flipToCasinoIfNeeded()
@@ -1047,6 +1057,8 @@ extension RootViewController {
             sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             liveTitleLabel.textColor = UIColor.App.iconSecondary
             liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            tipsTitleLabel.textColor = UIColor.App.iconSecondary
+            tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
            
         case .preLive:
             sportsButtonBaseView.alpha = self.activeButtonAlpha
@@ -1056,6 +1068,8 @@ extension RootViewController {
             sportsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
             liveTitleLabel.textColor = UIColor.App.iconSecondary
             liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            tipsTitleLabel.textColor = UIColor.App.iconSecondary
+            tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
 
         case .live:
             liveButtonBaseView.alpha = self.activeButtonAlpha
@@ -1065,6 +1079,8 @@ extension RootViewController {
             sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             liveTitleLabel.textColor = UIColor.App.highlightPrimary
             liveIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
+            tipsTitleLabel.textColor = UIColor.App.iconSecondary
+            tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
 
         case .tips:
             tipsButtonBaseView.alpha = self.activeButtonAlpha
@@ -1072,8 +1088,10 @@ extension RootViewController {
             homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             sportsTitleLabel.textColor = UIColor.App.iconSecondary
             sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
-            liveTitleLabel.textColor = UIColor.App.highlightPrimary
-            liveIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
+            liveTitleLabel.textColor = UIColor.App.iconSecondary
+            liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            tipsTitleLabel.textColor = UIColor.App.highlightPrimary
+            tipsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
             
         case .casino:
             homeTitleLabel.textColor = UIColor.App.iconSecondary
