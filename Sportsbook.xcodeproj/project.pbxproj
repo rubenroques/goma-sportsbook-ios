@@ -3975,6 +3975,13 @@
 		A9B946C128C0F7F00091296E /* FeaturedTipCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946BD28C0F7F00091296E /* FeaturedTipCollectionViewModel.swift */; };
 		A9B946C228C0F7F00091296E /* FeaturedTipCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946BD28C0F7F00091296E /* FeaturedTipCollectionViewModel.swift */; };
 		A9B946C328C0F7F00091296E /* FeaturedTipCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946BD28C0F7F00091296E /* FeaturedTipCollectionViewModel.swift */; };
+		A9B946C628C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946C528C21C800091296E /* FeaturedTipDetailsViewController.swift */; };
+		A9B946C728C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946C528C21C800091296E /* FeaturedTipDetailsViewController.swift */; };
+		A9B946C828C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946C528C21C800091296E /* FeaturedTipDetailsViewController.swift */; };
+		A9B946C928C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946C528C21C800091296E /* FeaturedTipDetailsViewController.swift */; };
+		A9B946CA28C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946C528C21C800091296E /* FeaturedTipDetailsViewController.swift */; };
+		A9B946CB28C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946C528C21C800091296E /* FeaturedTipDetailsViewController.swift */; };
+		A9B946CC28C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B946C528C21C800091296E /* FeaturedTipDetailsViewController.swift */; };
 		A9BA6D3D280DB18900E82724 /* AddFriendViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D3C280DB18900E82724 /* AddFriendViewModel.swift */; };
 		A9BA6D3E280DB18900E82724 /* AddFriendViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D3C280DB18900E82724 /* AddFriendViewModel.swift */; };
 		A9BA6D40280DB7D500E82724 /* AddFriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D3F280DB7D500E82724 /* AddFriendTableViewCell.swift */; };
@@ -4838,6 +4845,7 @@
 		A9B946AD28BE6D520091296E /* FeaturedTipCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedTipCollectionViewCell.swift; sourceTree = "<group>"; };
 		A9B946B528BFAA3E0091296E /* FeaturedTipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedTipView.swift; sourceTree = "<group>"; };
 		A9B946BD28C0F7F00091296E /* FeaturedTipCollectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedTipCollectionViewModel.swift; sourceTree = "<group>"; };
+		A9B946C528C21C800091296E /* FeaturedTipDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedTipDetailsViewController.swift; sourceTree = "<group>"; };
 		A9BA6D3C280DB18900E82724 /* AddFriendViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendViewModel.swift; sourceTree = "<group>"; };
 		A9BA6D3F280DB7D500E82724 /* AddFriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendTableViewCell.swift; sourceTree = "<group>"; };
 		A9BA6D43280DC81B00E82724 /* ResultsHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsHeaderFooterView.swift; sourceTree = "<group>"; };
@@ -6105,6 +6113,7 @@
 		4589F3E926BF0160005DF543 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				A9B946C428C21C560091296E /* FeaturedTips */,
 				A9863ED1286F01C400A4A1A2 /* Share */,
 				455C962526FE11B300456F30 /* Root */,
 				A995C1922799917100151462 /* Search */,
@@ -7501,6 +7510,14 @@
 				A9B946BD28C0F7F00091296E /* FeaturedTipCollectionViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		A9B946C428C21C560091296E /* FeaturedTips */ = {
+			isa = PBXGroup;
+			children = (
+				A9B946C528C21C800091296E /* FeaturedTipDetailsViewController.swift */,
+			);
+			path = FeaturedTips;
 			sourceTree = "<group>";
 		};
 		A9BA6D42280DC7D800E82724 /* Cells */ = {
@@ -9207,6 +9224,7 @@
 				A9A207DA283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift in Sources */,
 				455A0CE026BD9D9000EC572D /* Throttler.swift in Sources */,
 				A90BC91327C54D6000667616 /* LimitsResponse.swift in Sources */,
+				A9B946C628C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */,
 				458F4C962712B6B800AC13DB /* AggregatorsRepository.swift in Sources */,
 				A9863EBD286A09B900A4A1A2 /* BetSelectionStateTableViewCell.swift in Sources */,
 				45C10F6A28772DA700037BBE /* CALayer+Shift.swift in Sources */,
@@ -9600,6 +9618,7 @@
 				A98EC7EB288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */,
 				456D6FCF289ACE5600B7E542 /* MessageDetailWebViewController.swift in Sources */,
 				A9B331F2289422FC00D097F0 /* MessageDetailViewModel.swift in Sources */,
+				A9B946CC28C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9788,6 +9807,7 @@
 				A9A207DB283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift in Sources */,
 				454E0ACD2734386A00794E0C /* MultipleBettingTicketTableViewCell.swift in Sources */,
 				455A0CE126BD9D9000EC572D /* Throttler.swift in Sources */,
+				A9B946C728C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */,
 				A90BC91427C54D6000667616 /* LimitsResponse.swift in Sources */,
 				A9863EBE286A09B900A4A1A2 /* BetSelectionStateTableViewCell.swift in Sources */,
 				45C10F6B28772DA700037BBE /* CALayer+Shift.swift in Sources */,
@@ -10345,6 +10365,7 @@
 				457CBA7D282D27D000ED0F00 /* MultipleBettingTicketTableViewCell.swift in Sources */,
 				457CBA7E282D27D000ED0F00 /* Throttler.swift in Sources */,
 				457CBA7F282D27D000ED0F00 /* LimitsResponse.swift in Sources */,
+				A9B946CA28C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */,
 				457CBA80282D27D000ED0F00 /* AggregatorsRepository.swift in Sources */,
 				A9863EC1286A09B900A4A1A2 /* BetSelectionStateTableViewCell.swift in Sources */,
 				45C10F6E28772DA700037BBE /* CALayer+Shift.swift in Sources */,
@@ -10902,6 +10923,7 @@
 				457CBD27282D2CD100ED0F00 /* Throttler.swift in Sources */,
 				457CBD28282D2CD100ED0F00 /* LimitsResponse.swift in Sources */,
 				457CBD29282D2CD100ED0F00 /* AggregatorsRepository.swift in Sources */,
+				A9B946CB28C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */,
 				457CBD2A282D2CD100ED0F00 /* LoginAccount.swift in Sources */,
 				A9863EC2286A09B900A4A1A2 /* BetSelectionStateTableViewCell.swift in Sources */,
 				45C10F6F28772DA700037BBE /* CALayer+Shift.swift in Sources */,
@@ -11459,6 +11481,7 @@
 				4589C80A282024E400243547 /* AggregatorsRepository.swift in Sources */,
 				4589C80B282024E400243547 /* LoginAccount.swift in Sources */,
 				4589C80C282024E400243547 /* PopularDetailsViewModel.swift in Sources */,
+				A9B946C828C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */,
 				4589C80D282024E400243547 /* BonusHistoryTableViewCell.swift in Sources */,
 				A9863EBF286A09B900A4A1A2 /* BetSelectionStateTableViewCell.swift in Sources */,
 				45C10F6C28772DA700037BBE /* CALayer+Shift.swift in Sources */,
@@ -12016,6 +12039,7 @@
 				45A6BC5828246A7500D9B416 /* AggregatorsRepository.swift in Sources */,
 				45A6BC5928246A7500D9B416 /* LoginAccount.swift in Sources */,
 				45A6BC5A28246A7500D9B416 /* PopularDetailsViewModel.swift in Sources */,
+				A9B946C928C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */,
 				45A6BC5B28246A7500D9B416 /* BonusHistoryTableViewCell.swift in Sources */,
 				A9863EC0286A09B900A4A1A2 /* BetSelectionStateTableViewCell.swift in Sources */,
 				45C10F6D28772DA700037BBE /* CALayer+Shift.swift in Sources */,

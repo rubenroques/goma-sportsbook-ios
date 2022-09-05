@@ -48,6 +48,8 @@ class FeaturedTipLineTableViewCell: UITableViewCell {
     private var viewModel: FeaturedTipLineViewModel?
     private var cancellables: Set<AnyCancellable> = []
 
+    var shouldOpenFeaturedTipDetail: ((FeaturedTip) -> Void)?
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
@@ -131,6 +133,10 @@ extension FeaturedTipLineTableViewCell: UICollectionViewDelegate, UICollectionVi
         }
 
         cell.configure(viewModel: viewModel, hasCounter: false)
+
+        cell.shouldOpenFeaturedTipDetail = { [weak self] featuredTip in
+            self?.shouldOpenFeaturedTipDetail?(featuredTip)
+        }
 
         return cell
     }

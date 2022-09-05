@@ -44,6 +44,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
     var viewModel: FeaturedTipCollectionViewModel?
 
+    var shouldOpenFeaturedTipDetail: ((FeaturedTip) -> Void)?
     var shouldReloadData: (() -> Void)?
 
     // MARK: - Lifetime and Cycle
@@ -58,6 +59,10 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         self.showFullTipButton = false
 
         self.followButton.addTarget(self, action: #selector(didTapFollowButton), for: .primaryActionTriggered)
+
+        self.betButton.addTarget(self, action: #selector(didTapBetButton), for: .primaryActionTriggered)
+
+        self.fullTipButton.addTarget(self, action: #selector(didTapShowFullTipButton), for: .primaryActionTriggered)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -189,7 +194,18 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
     // MARK: Actions
     @objc func didTapFollowButton() {
-        print("TAPPED FOLLOW")
+        print("TAPPED FOLLOW: \(self.viewModel?.getUsername())")
+    }
+
+    @objc func didTapBetButton() {
+        print("TAPPED BET: \(self.viewModel?.featuredTip.omBetId)")
+    }
+
+    @objc func didTapShowFullTipButton() {
+        print("SHOW FULL TIP")
+        if let featuredTip = self.viewModel?.featuredTip {
+            self.shouldOpenFeaturedTipDetail?(featuredTip)
+        }
     }
 }
 
