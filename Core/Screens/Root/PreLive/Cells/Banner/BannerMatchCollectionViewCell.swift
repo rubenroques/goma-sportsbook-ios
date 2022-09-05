@@ -534,10 +534,8 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
     @objc func didLongPressLeftOddButton(_ sender: UILongPressGestureRecognizer) {
 
-        let longPressGesture = sender
-
         // Triggers function only once instead of rapid fire event
-        if longPressGesture.state == .began {
+        if sender.state == .began {
 
             guard
                 let match = self.completeMatch,
@@ -587,10 +585,8 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
     @objc func didLongPressMiddleOddButton(_ sender: UILongPressGestureRecognizer) {
 
-        let longPressGesture = sender
-
         // Triggers function only once instead of rapid fire event
-        if longPressGesture.state == .began {
+        if sender.state == .began {
 
             guard
                 let match = self.completeMatch,
@@ -640,10 +636,8 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
     @objc func didLongPressRightOddButton(_ sender: UILongPressGestureRecognizer) {
 
-        let longPressGesture = sender
-
         // Triggers function only once instead of rapid fire event
-        if longPressGesture.state == .began {
+        if sender.state == .began {
 
             guard
                 let match = self.completeMatch,

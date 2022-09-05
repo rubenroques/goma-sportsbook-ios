@@ -825,10 +825,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
     @objc func didLongPressLeftOddButton(_ sender: UILongPressGestureRecognizer) {
 
-        let longPressGesture = sender
-
         // Triggers function only once instead of rapid fire event
-        if longPressGesture.state == .began {
+        if sender.state == .began {
 
             guard
                 let match = self.viewModel?.match,
@@ -882,10 +880,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
     @objc func didLongPressMiddleOddButton(_ sender: UILongPressGestureRecognizer) {
 
-        let longPressGesture = sender
-
         // Triggers function only once instead of rapid fire event
-        if longPressGesture.state == .began {
+        if sender.state == .began {
 
             guard
                 let match = self.viewModel?.match,
@@ -939,10 +935,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
     @objc func didLongPressRightOddButton(_ sender: UILongPressGestureRecognizer) {
 
-        let longPressGesture = sender
-
         // Triggers function only once instead of rapid fire event
-        if longPressGesture.state == .began {
+        if sender.state == .began {
 
             guard
                 let match = self.viewModel?.match,

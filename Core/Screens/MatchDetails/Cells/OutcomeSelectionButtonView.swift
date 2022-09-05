@@ -282,11 +282,8 @@ class OutcomeSelectionButtonView: NibView {
 
     @objc func didLongPressOddButton(_ sender: UILongPressGestureRecognizer) {
 
-        let longPressGesture = sender
-
         // Triggers function only once instead of rapid fire event
-        if longPressGesture.state == .began {
-            print("LONG PRESS ODD!")
+        if sender.state == .began {
 
             guard
                 let outcome = self.outcome,
