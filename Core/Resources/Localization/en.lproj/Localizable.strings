@@ -560,3 +560,7 @@ Terms of use, Privacy Policy and EULA";
 "bet_same" = "Bet the same";
 "show_full_tip" = "Show full tip";
 "featured_tips" = "Featured Tips";
+"tips" = "Tips";
+
+"no_login_tips" = "You need to be logged in to be able to see tips";
+"no_login_rankings" = "You need to be logged in to be able to see rankings";

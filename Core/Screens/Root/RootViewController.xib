@@ -334,15 +334,15 @@
                                             <rect key="frame" x="0.0" y="0.0" width="515" height="677"/>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         </view>
-                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wEK-PC-Y6d">
+                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wEK-PC-Y6d">
                                             <rect key="frame" x="0.0" y="0.0" width="515" height="677"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         </view>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="wEK-PC-Y6d" firstAttribute="top" secondItem="Su0-qa-MeF" secondAttribute="top" id="29U-sD-Rqn"/>
                                         <constraint firstAttribute="bottom" secondItem="Fxl-nZ-JeH" secondAttribute="bottom" id="2Ev-bb-VF8"/>
                                         <constraint firstItem="Fxl-nZ-JeH" firstAttribute="top" secondItem="Su0-qa-MeF" secondAttribute="top" id="7ft-1n-StH"/>
+                                        <constraint firstItem="wEK-PC-Y6d" firstAttribute="leading" secondItem="Su0-qa-MeF" secondAttribute="leading" id="Bgj-9z-hMx"/>
                                         <constraint firstAttribute="trailing" secondItem="kSr-MY-svK" secondAttribute="trailing" id="E0G-Og-73N"/>
                                         <constraint firstAttribute="trailing" secondItem="Fxl-nZ-JeH" secondAttribute="trailing" id="JYS-oM-HNz"/>
                                         <constraint firstItem="kSr-MY-svK" firstAttribute="leading" secondItem="Su0-qa-MeF" secondAttribute="leading" id="KYy-WJ-WRc"/>
@@ -351,8 +351,10 @@
                                         <constraint firstAttribute="bottom" secondItem="kSr-MY-svK" secondAttribute="bottom" id="Tg8-qk-S6L"/>
                                         <constraint firstItem="xew-dh-4hf" firstAttribute="top" secondItem="Su0-qa-MeF" secondAttribute="top" id="dao-AU-Jt9"/>
                                         <constraint firstAttribute="bottom" secondItem="xew-dh-4hf" secondAttribute="bottom" id="lSF-YZ-d89"/>
+                                        <constraint firstAttribute="trailing" secondItem="wEK-PC-Y6d" secondAttribute="trailing" id="m9z-id-Qu7"/>
                                         <constraint firstItem="xew-dh-4hf" firstAttribute="leading" secondItem="Su0-qa-MeF" secondAttribute="leading" id="oMR-GQ-j2W"/>
                                         <constraint firstItem="Fxl-nZ-JeH" firstAttribute="leading" secondItem="Su0-qa-MeF" secondAttribute="leading" id="qfO-fX-D6I"/>
+                                        <constraint firstAttribute="bottom" secondItem="wEK-PC-Y6d" secondAttribute="bottom" id="vSw-Bx-2zw"/>
                                     </constraints>
                                 </view>
                                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KmS-Xh-sK7">
@@ -446,7 +448,7 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wao-as-qb6">
                                                     <rect key="frame" x="343.5" y="0.0" width="98.5" height="52"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="tabbar_live_icon" translatesAutoresizingMaskIntoConstraints="NO" id="HPd-kB-5DR">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_tips_icon" translatesAutoresizingMaskIntoConstraints="NO" id="HPd-kB-5DR">
                                                             <rect key="frame" x="39.5" y="8" width="20" height="20"/>
                                                             <color key="tintColor" name="iconSecondary"/>
                                                             <constraints>
@@ -455,7 +457,7 @@
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tips" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r8X-CO-dLy">
-                                                            <rect key="frame" x="4" y="39" width="90.5" height="11"/>
+                                                            <rect key="frame" x="4" y="30" width="90.5" height="20"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -471,10 +473,12 @@
                                                 </view>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="HPd-kB-5DR" firstAttribute="centerY" secondItem="Iba-we-Ish" secondAttribute="centerY" id="Hle-oO-Qya"/>
                                                 <constraint firstItem="jq1-az-paT" firstAttribute="centerY" secondItem="Iba-we-Ish" secondAttribute="centerY" id="Qdv-un-hqO"/>
                                                 <constraint firstItem="OrN-gr-CSa" firstAttribute="centerY" secondItem="Iba-we-Ish" secondAttribute="centerY" id="Rlx-VM-xQM"/>
                                                 <constraint firstItem="0RE-N3-etL" firstAttribute="top" secondItem="eiC-RB-6o0" secondAttribute="top" id="ZAH-QJ-PyE"/>
                                                 <constraint firstItem="8B6-32-WvK" firstAttribute="top" secondItem="eiC-RB-6o0" secondAttribute="top" id="g9n-Pl-AOD"/>
+                                                <constraint firstItem="r8X-CO-dLy" firstAttribute="top" secondItem="eiC-RB-6o0" secondAttribute="top" id="t6g-LW-EI5"/>
                                             </constraints>
                                         </stackView>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WaX-Xt-ClH">
@@ -611,6 +615,7 @@
         <image name="tabbar_home_icon" width="25" height="25"/>
         <image name="tabbar_live_icon" width="25" height="23"/>
         <image name="tabbar_sports_icon" width="28" height="23"/>
+        <image name="tabbar_tips_icon" width="22" height="22"/>
         <namedColor name="alertError">
             <color red="0.92941176470588238" green="0.30980392156862746" blue="0.38823529411764707" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -621,7 +626,7 @@
             <color red="0.92941176470588238" green="0.30980392156862746" blue="0.38823529411764707" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="iconSecondary">
-            <color red="0.41176470588235292" green="0.41176470588235292" blue="0.41176470588235292" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.46274509803921571" green="0.5725490196078431" blue="0.63529411764705879" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

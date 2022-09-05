@@ -144,13 +144,14 @@ class RootViewController: UIViewController {
     lazy var homeViewController = HomeViewController()
     lazy var preLiveViewController = PreLiveEventsViewController(selectedSportType: Sport.football)
     lazy var liveEventsViewController = LiveEventsViewController()
-    
+    lazy var tipsRootViewController = TipsHomeRootViewController()
     lazy var casinoViewController = CasinoWebViewController(userId: self.userId)
 
     // Loaded view controllers
     var homeViewControllerLoaded = false
     var preLiveViewControllerLoaded = false
     var liveEventsViewControllerLoaded = false
+    var tipsRootViewControllerLoaded = false
     var casinoViewControllerLoaded = false
 
     var currentSport: Sport
@@ -516,6 +517,7 @@ class RootViewController: UIViewController {
         self.liveTitleLabel.text = localized("live")
         self.casinoTitleLabel.text = localized("casino")
         self.sportsbookTitleLabel.text = localized("sportsbook")
+        self.tipsTitleLabel.text = localized("tips")
         
         self.casinoBottomView.backgroundColor = UIColor.App.backgroundPrimary
         
@@ -572,7 +574,7 @@ class RootViewController: UIViewController {
         self.homeTitleLabel.textColor = UIColor.App.highlightPrimary
         self.liveTitleLabel.textColor = UIColor.App.highlightPrimary
         self.sportsTitleLabel.textColor = UIColor.App.highlightPrimary
-        
+        self.tipsTitleLabel.textColor = UIColor.App.highlightPrimary
         self.casinoTitleLabel.textColor = UIColor.App.textSecondary
         self.sportsbookTitleLabel.textColor = UIColor.App.textSecondary
         
@@ -595,6 +597,7 @@ class RootViewController: UIViewController {
         self.homeButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.sportsButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.liveButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.tipsButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.profilePictureBaseView.backgroundColor = UIColor.App.highlightPrimary
 
         self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
@@ -805,19 +808,10 @@ extension RootViewController {
             liveEventsViewControllerLoaded = true
         }
 
-        if case .tips = tab, !preLiveViewControllerLoaded {
-            self.addChildViewController(self.preLiveViewController, toView: self.preLiveBaseView)
-            self.preLiveViewController.selectedSport = self.currentSport
-            self.preLiveViewController.didChangeSport = { [weak self] newSport in
-                self?.didChangedPreLiveSport(newSport)
-            }
-            self.preLiveViewController.didTapChatButtonAction = { [weak self] in
-                self?.openChatModal()
-            }
-            self.preLiveViewController.didTapBetslipButtonAction = { [weak self] in
-                self?.openBetslipModal()
-            }
-            preLiveViewControllerLoaded = true
+        if case .tips = tab, !tipsRootViewControllerLoaded {
+            self.addChildViewController(self.tipsRootViewController, toView: self.tipsBaseView)
+
+            tipsRootViewControllerLoaded = true
         }
         
         if case .casino = tab, !casinoViewControllerLoaded {
@@ -1037,6 +1031,7 @@ extension RootViewController {
         self.preLiveBaseView.isHidden = true
         self.liveBaseView.isHidden = true
         self.tipsBaseView.isHidden = false
+
         self.redrawButtonButtons()
     }
     

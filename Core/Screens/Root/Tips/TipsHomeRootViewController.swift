@@ -1,0 +1,133 @@
+//
+//  TipsRootViewController.swift
+//  Sportsbook
+//
+//  Created by André Lascas on 05/09/2022.
+//
+
+import UIKit
+
+class TipsHomeRootViewController: UIViewController {
+
+    // MARK: Private properties
+    private lazy var containerBaseView: UIView = Self.createContainerView()
+
+    private var tabViewController: TabularViewController
+    private var viewControllerTabDataSource: TitleTabularDataSource
+    private var viewControllers: [UIViewController] = []
+
+    private var tipsRootViewController: TipsRootViewController
+    private var rankingRootViewController: RankingsRootViewController
+
+    // MARK: - Lifetime and Cycle
+    init() {
+
+        self.tipsRootViewController = TipsRootViewController()
+        self.rankingRootViewController = RankingsRootViewController()
+
+        self.viewControllers = [self.tipsRootViewController, self.rankingRootViewController]
+        self.viewControllerTabDataSource = TitleTabularDataSource(with: viewControllers)
+
+        self.viewControllerTabDataSource.initialPage = 0
+
+        self.tabViewController = TabularViewController(dataSource: viewControllerTabDataSource)
+
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.setupSubviews()
+
+        self.addChildViewController(tabViewController, toView: self.containerBaseView)
+        self.tabViewController.textFont = AppFont.with(type: .bold, size: 16)
+        self.tabViewController.setBarDistribution(.parent)
+
+        //self.backButton.addTarget(self, action: #selector(self.didTapBackButton), for: .primaryActionTriggered)
+
+        self.setupWithTheme()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
+    }
+
+    // MARK: - Layout and Theme
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        self.setupWithTheme()
+    }
+
+    private func setupWithTheme() {
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.tabViewController.sliderBarColor = UIColor.App.highlightSecondary
+        self.tabViewController.barColor = UIColor.App.backgroundPrimary
+        self.tabViewController.textColor = UIColor.App.textPrimary
+        self.tabViewController.separatorBarColor = UIColor.App.separatorLine
+
+        self.containerBaseView.backgroundColor = UIColor.App.backgroundPrimary
+    }
+}
+
+extension TipsHomeRootViewController: UIGestureRecognizerDelegate {
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return false
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+
+}
+
+extension TipsHomeRootViewController {
+
+    private static func createContainerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private func setupSubviews() {
+
+        self.view.addSubview(self.containerBaseView)
+
+        self.initConstraints()
+    }
+
+    private func initConstraints() {
+
+        NSLayoutConstraint.activate([
+
+            self.containerBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.containerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.containerBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.containerBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+        ])
+    }
+}
