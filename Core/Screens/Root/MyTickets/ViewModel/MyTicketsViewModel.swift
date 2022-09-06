@@ -205,6 +205,34 @@ class MyTicketsViewModel: NSObject {
             },
             receiveValue: { [weak self] betHistoryResponse in
                 self?.resolvedMyTickets.value = betHistoryResponse.betList ?? []
+                
+                if ((self?.resolvedMyTickets.value.isEmpty) != nil) {
+                    self?.resolvedMyTickets.value = betHistoryResponse.betList ?? []
+
+                              
+                   if let betHistory = betHistoryResponse.betList {
+                       if betHistory.count < self!.recordsPerPage {
+                           self?.resolvedTicketsHasNextPage = false
+                       }else{
+                           self?.resolvedTicketsHasNextPage = true
+                       }
+                   }
+               }
+               else {
+                
+                   self?.resolvedMyTickets.value = betHistoryResponse.betList ?? []
+
+                   
+                   if ((self?.resolvedMyTickets.value.count)!) < self!.recordsPerPage * (self!.resolvedPage + 1) {
+                       self?.resolvedTicketsHasNextPage = false
+                   }
+                   else {
+                       self?.resolvedTicketsHasNextPage = true
+                   }
+               }
+                
+                self?.reloadTableView()
+                
                 if case .resolved = self?.myTicketsTypePublisher.value {
                     self?.reloadTableView()
                 }
@@ -237,6 +265,32 @@ class MyTicketsViewModel: NSObject {
             },
             receiveValue: { [weak self] betHistoryResponse in
                 self?.openedMyTickets.value = betHistoryResponse.betList ?? []
+                
+                if ((self?.openedMyTickets.value.isEmpty) != nil) {
+                    self?.openedMyTickets.value = betHistoryResponse.betList ?? []
+
+                              
+                   if let betHistory = betHistoryResponse.betList {
+                       if betHistory.count < self!.recordsPerPage {
+                           self?.openedTicketsHasNextPage = false
+                       }
+                   }
+               }
+               else {
+                
+                   self?.openedMyTickets.value = betHistoryResponse.betList ?? []
+
+                   
+                   if ((self?.openedMyTickets.value.count)!) < self!.recordsPerPage * (self!.openedPage + 1) {
+                       self?.openedTicketsHasNextPage = false
+                   }
+                   else {
+                       self?.openedTicketsHasNextPage = true
+                   }
+               }
+                
+                self?.reloadTableView()
+                
                 if case .opened = self?.myTicketsTypePublisher.value {
                     self?.reloadTableView()
                 }
@@ -269,15 +323,42 @@ class MyTicketsViewModel: NSObject {
             },
             receiveValue: { [weak self] betHistoryResponse in
                 self?.wonMyTickets.value = betHistoryResponse.betList ?? []
+                
+                
+                
+                if ((self?.wonMyTickets.value.isEmpty) != nil) {
+                    self?.wonMyTickets.value = betHistoryResponse.betList ?? []
+
+                              
+                   if let betHistory = betHistoryResponse.betList {
+                       if betHistory.count < self!.recordsPerPage {
+                           self?.wonTicketsHasNextPage = false
+                       }
+                   }
+               }
+               else {
+                
+                   self?.wonMyTickets.value = betHistoryResponse.betList ?? []
+
+                   
+                   if ((self?.wonMyTickets.value.count)!) < self!.recordsPerPage * (self!.wonPage + 1) {
+                       self?.wonTicketsHasNextPage = false
+                   }
+                   else {
+                       self?.wonTicketsHasNextPage = true
+                   }
+               }
+                
                 if case .won = self?.myTicketsTypePublisher.value {
                     self?.reloadTableView()
                 }
+                
             })
             .store(in: &cancellables)
 
     }
 
-    func requestNextPage() {
+   /* func requestNextPage() {
         switch myTicketsTypePublisher.value {
         case .resolved:
             resolvedPage += 1
@@ -289,7 +370,7 @@ class MyTicketsViewModel: NSObject {
             wonPage += 1
             self.loadWonTickets(page: wonPage)
         }
-    }
+    }*/
 
     func refresh() {
         self.resolvedPage = 0
@@ -384,6 +465,67 @@ class MyTicketsViewModel: NSObject {
                 .store(in: &cancellables)
         }
     }
+    
+    func shouldShowLoadingCell() -> Bool {
+        switch self.myTicketsTypePublisher.value {
+           case .opened:
+               return self.openedMyTickets.value.isNotEmpty && openedTicketsHasNextPage
+           case .resolved:
+               return self.resolvedMyTickets.value.isNotEmpty
+           case .won:
+               return self.wonMyTickets.value.isNotEmpty && wonTicketsHasNextPage
+         
+           
+       }
+    }
+    
+    func requestNextPage() {
+           
+        switch myTicketsTypePublisher.value {
+            case .opened:
+               if self.openedMyTickets.value.count < self.recordsPerPage * (self.openedPage + 1) {
+                   self.openedTicketsHasNextPage = false
+                   return
+               }
+               openedPage += 1
+               self.loadOpenedTickets(page: openedPage)
+            case .resolved:
+                /*print("---------")
+                print(self.resolvedMyTickets.value.count)
+                print(self.recordsPerPage)
+                print(self.resolvedPage + 1)
+                print(self.recordsPerPage * (self.resolvedPage + 1))
+            
+                if self.resolvedMyTickets.value.count < self.recordsPerPage * (self.resolvedPage + 1) {
+                    self.resolvedTicketsHasNextPage = false
+                    return
+                }
+                self.resolvedPage += 1
+                self.resolvedTicketsHasNextPage = true*/
+                self.loadResolvedTickets(page: resolvedPage)
+            
+            case .won:
+               if self.wonMyTickets.value.count < self.recordsPerPage * (self.wonPage + 1) {
+                   self.wonTicketsHasNextPage = false
+                   return
+               }
+               wonPage += 1
+               self.loadWonTickets(page: wonPage)
+        
+           //self.fetchNextPage()
+       }
+
+    
+     func resetPageCount() {
+        self.resolvedPage = 1
+        self.wonPage = 1
+        self.openedPage = 1
+        self.resolvedTicketsHasNextPage = true
+        self.openedTicketsHasNextPage = true
+        self.wonTicketsHasNextPage = true
+       }
+    }
+     
 
 }
 
@@ -457,6 +599,8 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
+        
+        
         switch myTicketsTypePublisher.value{
         case .opened:
             if indexPath.section == 1, self.openedMyTickets.value.isNotEmpty {
@@ -483,4 +627,16 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
         }
         
     }
+
+    
+    /*
+           if indexPath.section == 1, self.shouldShowLoadingCell() {
+               if let typedCell = cell as? LoadingMoreTableViewCell {
+                   typedCell.startAnimating()
+               }
+               self.requestNextPage()
+               
+           }
+       }*/
+
 }
