@@ -17,10 +17,19 @@ class TipsViewModel {
         case followers = 3
     }
 
+    var tipsPublisher: CurrentValueSubject<[FeaturedTip], Never> = .init([])
     var tipsType: TipsType = .all
 
     init(tipsType: TipsType) {
         self.tipsType = tipsType
+    }
+
+    func numberOfSections() -> Int {
+        return 1
+    }
+
+    func numberOfRows() -> Int {
+        return self.tipsPublisher.value.count
     }
 }
 
@@ -75,6 +84,11 @@ class TipsViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+
+        self.tableView.register(TransactionsTableViewCell.self, forCellReuseIdentifier: TransactionsTableViewCell.identifier)
+
         self.tableView.isHidden = false
         self.emptyStateBaseView.isHidden = true
 
@@ -109,6 +123,30 @@ class TipsViewController: UIViewController {
         self.loadingBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
         self.loadingActivityIndicatorView.color = UIColor.lightGray
 
+    }
+
+}
+
+//
+// MARK: - TableView Protocols
+//
+extension TipsViewController: UITableViewDelegate, UITableViewDataSource {
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return self.viewModel.numberOfSections()
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.viewModel.numberOfRows()
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        return UITableViewCell()
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
     }
 
 }
