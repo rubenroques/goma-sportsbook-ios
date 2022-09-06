@@ -92,6 +92,33 @@ class MyTicketsViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+        
+        
+        self.viewModel.listStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] listStatePublisher in
+
+                
+                switch listStatePublisher {
+                case .loading:
+                    self?.isLoading = true
+                    self?.emptyBaseView.isHidden = true
+                case .empty:
+                    self?.isLoading = false
+                    self?.emptyBaseView.isHidden = false
+                case .noUserFoundError:
+                    self?.isLoading = false
+                    self?.emptyBaseView.isHidden = false
+                case .serverError:
+                    self?.isLoading = false
+                    self?.emptyBaseView.isHidden = false
+                case .loaded:
+                    self?.isLoading = false
+                    self?.emptyBaseView.isHidden = true
+                    self?.ticketsTableView.reloadData()
+                }
+            })
+            .store(in: &self.cancellables)
 
         Publishers.CombineLatest(Env.userSessionStore.userSessionPublisher, self.viewModel.isTicketsEmptyPublisher)
             .receive(on: DispatchQueue.main)
