@@ -266,8 +266,12 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
-    func requestFeaturedTips(deviceId: String, betType: String? = nil, totalOddsMin: String? = nil, totalOddsMax: String? = nil) -> AnyPublisher<NetworkResponse<[FeaturedTip]>, NetworkError> {
-        let endpoint = GomaGamingService.featuredTips(betType: betType, totalOddsMin: totalOddsMin, totalOddsMax: totalOddsMax)
+    func requestFeaturedTips(deviceId: String,
+                             betType: String? = nil,
+                             totalOddsMin: String? = nil,
+                             totalOddsMax: String? = nil,
+                             friends: Bool? = nil) -> AnyPublisher<NetworkResponse<[FeaturedTip]>, NetworkError> {
+        let endpoint = GomaGamingService.featuredTips(betType: betType, totalOddsMin: totalOddsMin, totalOddsMax: totalOddsMax, friends: friends)
         let requestPublisher: AnyPublisher<NetworkResponse<[FeaturedTip]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TipsHomeRootViewController: UIViewController {
+class TipsRootViewController: UIViewController {
 
     // MARK: Private properties
     private lazy var containerBaseView: UIView = Self.createContainerView()
@@ -16,16 +16,16 @@ class TipsHomeRootViewController: UIViewController {
     private var viewControllerTabDataSource: TitleTabularDataSource
     private var viewControllers: [UIViewController] = []
 
-    private var tipsRootViewController: TipsRootViewController
-    private var rankingRootViewController: RankingsRootViewController
+    private var tipsViewController: TipsViewController
+    private var rankingsViewController: RankingsViewController
 
     // MARK: - Lifetime and Cycle
     init() {
 
-        self.tipsRootViewController = TipsRootViewController()
-        self.rankingRootViewController = RankingsRootViewController()
+        self.tipsViewController = TipsViewController()
+        self.rankingsViewController = RankingsViewController()
 
-        self.viewControllers = [self.tipsRootViewController, self.rankingRootViewController]
+        self.viewControllers = [self.tipsViewController, self.rankingsViewController]
         self.viewControllerTabDataSource = TitleTabularDataSource(with: viewControllers)
 
         self.viewControllerTabDataSource.initialPage = 0
@@ -89,7 +89,7 @@ class TipsHomeRootViewController: UIViewController {
     }
 }
 
-extension TipsHomeRootViewController: UIGestureRecognizerDelegate {
+extension TipsRootViewController: UIGestureRecognizerDelegate {
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
@@ -105,7 +105,7 @@ extension TipsHomeRootViewController: UIGestureRecognizerDelegate {
 
 }
 
-extension TipsHomeRootViewController {
+extension TipsRootViewController {
 
     private static func createContainerView() -> UIView {
         let view = UIView()

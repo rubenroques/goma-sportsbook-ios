@@ -21,7 +21,8 @@ class FeaturedTipDetailsViewModel {
     }
 
     func getTotalOdds() -> String {
-        return "\(self.featuredTip.totalOdds)"
+        let oddFormatted = OddFormatter.formatOdd(withValue: self.featuredTip.totalOdds)
+        return "\(oddFormatted)"
     }
 
     func getNumberSelections() -> String {

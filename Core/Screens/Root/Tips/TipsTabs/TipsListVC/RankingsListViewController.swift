@@ -1,5 +1,5 @@
 //
-//  TipsViewController.swift
+//  RankingsViewController.swift
 //  Sportsbook
 //
 //  Created by André Lascas on 05/09/2022.
@@ -8,32 +8,23 @@
 import UIKit
 import Combine
 
-class TipsViewModel {
+class RankingsListViewModel {
 
-    enum TipsType: Int {
+    enum RankingsType: Int {
         case all = 0
-        case topTips = 1
+        case topTipsters = 1
         case friends = 2
         case followers = 3
     }
 
-    var tipsPublisher: CurrentValueSubject<[FeaturedTip], Never> = .init([])
-    var tipsType: TipsType = .all
+    var rankingsType: RankingsType = .all
 
-    init(tipsType: TipsType) {
-        self.tipsType = tipsType
-    }
-
-    func numberOfSections() -> Int {
-        return 1
-    }
-
-    func numberOfRows() -> Int {
-        return self.tipsPublisher.value.count
+    init(rankingsType: RankingsType) {
+        self.rankingsType = rankingsType
     }
 }
 
-class TipsViewController: UIViewController {
+class RankingsListViewController: UIViewController {
 
     // MARK: Private properties
     private lazy var tableView: UITableView = Self.createTableView()
@@ -45,7 +36,7 @@ class TipsViewController: UIViewController {
     private lazy var emptyStateSecondaryLabel: UILabel = Self.createEmptyStateSecondaryLabel()
 
     private var cancellables: Set<AnyCancellable> = []
-    private let viewModel: TipsViewModel
+    private let viewModel: RankingsListViewModel
     private var filterSelectedOption: Int = 0
 
     var isLoading: Bool = false {
@@ -68,7 +59,7 @@ class TipsViewController: UIViewController {
     }
 
     // MARK: - Lifetime and Cycle
-    init(viewModel: TipsViewModel = TipsViewModel(tipsType: .all)) {
+    init(viewModel: RankingsListViewModel = RankingsListViewModel(rankingsType: .all)) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -83,11 +74,6 @@ class TipsViewController: UIViewController {
 
         self.setupSubviews()
         self.setupWithTheme()
-
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-
-        self.tableView.register(TransactionsTableViewCell.self, forCellReuseIdentifier: TransactionsTableViewCell.identifier)
 
         self.tableView.isHidden = false
         self.emptyStateBaseView.isHidden = true
@@ -128,33 +114,9 @@ class TipsViewController: UIViewController {
 }
 
 //
-// MARK: - TableView Protocols
-//
-extension TipsViewController: UITableViewDelegate, UITableViewDataSource {
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return self.viewModel.numberOfSections()
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.numberOfRows()
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        return UITableViewCell()
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
-    }
-
-}
-
-//
 // MARK: - Subviews Initialization and Setup
 //
-extension TipsViewController {
+extension RankingsListViewController {
 
     private static func createTableView() -> UITableView {
         let tableView = UITableView.init(frame: .zero, style: .plain)
@@ -184,7 +146,7 @@ extension TipsViewController {
         label.font = AppFont.with(type: .bold, size: 22)
         label.numberOfLines = 4
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "There’s no tips here!"
+        label.text = "There’s no rankings here!"
         return label
     }
 
@@ -194,7 +156,7 @@ extension TipsViewController {
         label.font = AppFont.with(type: .bold, size: 16)
         label.numberOfLines = 4
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "There are no tips currently to be displayed."
+        label.text = "There are no rankings currently to be displayed."
         return label
     }
 
@@ -270,3 +232,4 @@ extension TipsViewController {
     }
 
 }
+

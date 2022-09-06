@@ -1,13 +1,41 @@
 //
-//  FeaturedTipCollectionViewCell.swift
+//  TipsTableViewCell.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 30/08/2022.
+//  Created by André Lascas on 06/09/2022.
 //
 
 import UIKit
+import Combine
 
-class FeaturedTipCollectionViewCell: UICollectionViewCell {
+class TipsCellViewModel {
+
+    var featuredTip: FeaturedTip
+
+    init(featuredTip: FeaturedTip) {
+        self.featuredTip = featuredTip
+
+    }
+
+    func getUsername() -> String {
+        return self.featuredTip.username
+    }
+
+    func getTotalOdds() -> String {
+        let oddFormatted = OddFormatter.formatOdd(withValue: self.featuredTip.totalOdds)
+        return "\(oddFormatted)"
+    }
+
+    func getNumberSelections() -> String {
+        if let numberSelections = self.featuredTip.betSelections?.count {
+            return "\(numberSelections)"
+        }
+
+        return ""
+    }
+}
+
+class TipsTableViewCell: UITableViewCell {
 
     // MARK: Private Properties
     private lazy var containerView: UIView = Self.createContainerView()
@@ -19,9 +47,9 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     private lazy var userImageView: UIImageView = Self.createUserImageView()
     private lazy var usernameLabel: UILabel = Self.createUsernameLabel()
     private lazy var followButton: UIButton = Self.createFollowButton()
-    private lazy var tipsContainerView: UIView = Self.createTipsContainerView()
+    // private lazy var tipsContainerView: UIView = Self.createTipsContainerView()
     private lazy var tipsStackView: UIStackView = Self.createTipsStackView()
-    private lazy var fullTipButton: UIButton = Self.createFullTipButton()
+    //private lazy var fullTipButton: UIButton = Self.createFullTipButton()
     private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
     private lazy var totalOddsLabel: UILabel = Self.createTotalOddsLabel()
     private lazy var totalOddsValueLabel: UILabel = Self.createTotalOddsValueLabel()
@@ -36,36 +64,33 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    var showFullTipButton: Bool = false {
+    var hasFollow: Bool = false {
         didSet {
-            self.fullTipButton.isHidden = !showFullTipButton
+            self.followButton.isHidden = !hasFollow
         }
     }
 
-    var viewModel: FeaturedTipCollectionViewModel?
+    var viewModel: TipsCellViewModel?
 
-    var shouldOpenFeaturedTipDetail: ((FeaturedTip) -> Void)?
-    var shouldReloadData: (() -> Void)?
 
     // MARK: - Lifetime and Cycle
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         self.setupSubviews()
         self.setupWithTheme()
 
         self.hasCounter = false
 
-        self.showFullTipButton = false
+        self.hasFollow = false
 
         self.followButton.addTarget(self, action: #selector(didTapFollowButton), for: .primaryActionTriggered)
 
         self.betButton.addTarget(self, action: #selector(didTapBetButton), for: .primaryActionTriggered)
 
-        self.fullTipButton.addTarget(self, action: #selector(didTapShowFullTipButton), for: .primaryActionTriggered)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -76,11 +101,11 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
         self.hasCounter = false
 
-        self.showFullTipButton = false
+        self.hasFollow = false
 
     }
 
-    // MARK: - Theme and Layout
+    // MARK: - Layout and Theme
     override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -104,9 +129,8 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         self.setupWithTheme()
     }
 
-    func setupWithTheme() {
-
-        self.contentView.backgroundColor = .clear
+    private func setupWithTheme() {
+        self.contentView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.containerView.backgroundColor = UIColor.App.backgroundSecondary
 
@@ -128,12 +152,9 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         self.followButton.backgroundColor = .clear
         self.followButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
 
-        self.tipsContainerView.backgroundColor = .clear
+        // self.tipsContainerView.backgroundColor = .clear
 
         self.tipsStackView.backgroundColor = .clear
-
-        self.fullTipButton.backgroundColor = .clear
-        self.fullTipButton.setTitleColor(UIColor.App.textSecondary, for: .normal)
 
         self.separatorLineView.backgroundColor = UIColor.App.separatorLine
 
@@ -150,8 +171,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     }
 
     // MARK: Function
-
-    func configure(viewModel: FeaturedTipCollectionViewModel ,hasCounter: Bool) {
+    func configure(viewModel: TipsCellViewModel ,hasCounter: Bool) {
 
         self.viewModel = viewModel
 
@@ -161,27 +181,20 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
             for i in (0..<numberTips) {
 
-                if i < 3 {
-                    let tipView = FeaturedTipView()
+                let tipView = FeaturedTipView()
 
-                    if let featuredTipSelection = self.viewModel?.featuredTip.betSelections?[safe: i] {
+                if let featuredTipSelection = self.viewModel?.featuredTip.betSelections?[safe: i] {
 
-                        tipView.configure(featuredTipSelection: featuredTipSelection)
+                    tipView.configure(featuredTipSelection: featuredTipSelection)
 
-                        self.tipsStackView.addArrangedSubview(tipView)
+                    self.tipsStackView.addArrangedSubview(tipView)
 
-                        tipView.layoutSubviews()
-                        tipView.layoutIfNeeded()
-                    }
-
-                }
-                else {
-                    break
+                    tipView.layoutSubviews()
+                    tipView.layoutIfNeeded()
                 }
 
             }
 
-            self.showFullTipButton = numberTips > 3 ? true : false
         }
 
         self.usernameLabel.text = viewModel.getUsername()
@@ -201,15 +214,9 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         print("TAPPED BET: \(self.viewModel?.featuredTip.omBetId)")
     }
 
-    @objc func didTapShowFullTipButton() {
-        print("SHOW FULL TIP")
-        if let featuredTip = self.viewModel?.featuredTip {
-            self.shouldOpenFeaturedTipDetail?(featuredTip)
-        }
-    }
 }
 
-extension FeaturedTipCollectionViewCell {
+extension TipsTableViewCell {
 
     private static func createContainerView() -> UIView {
         let view = UIView()
@@ -280,12 +287,6 @@ extension FeaturedTipCollectionViewCell {
         return button
     }
 
-    private static func createTipsContainerView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
     private static func createTipsStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -293,21 +294,6 @@ extension FeaturedTipCollectionViewCell {
         stackView.spacing = 10
         stackView.distribution = .equalSpacing
         return stackView
-    }
-
-    private static func createFullTipButton() -> UIButton {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("show_full_tip"), for: .normal)
-        button.setImage(UIImage(named: "arrow_right_gray_icon"), for: .normal)
-        button.titleLabel?.font = AppFont.with(type: .bold, size: 12)
-        // Transform
-        button.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        button.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        button.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
-        return button
     }
 
     private static func createSeparatorLineView() -> UIView {
@@ -373,10 +359,7 @@ extension FeaturedTipCollectionViewCell {
 
         self.containerView.addSubview(self.followButton)
 
-        self.containerView.addSubview(self.tipsContainerView)
-
-        self.tipsContainerView.addSubview(self.tipsStackView)
-        self.tipsContainerView.addSubview(self.fullTipButton)
+        self.containerView.addSubview(self.tipsStackView)
 
         self.containerView.addSubview(self.separatorLineView)
 
@@ -397,10 +380,10 @@ extension FeaturedTipCollectionViewCell {
     private func initConstraints() {
 
         NSLayoutConstraint.activate([
-            self.containerView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-            self.containerView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-            self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            self.containerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
+            self.containerView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 15),
+            self.containerView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -15),
+            self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 5),
+            self.containerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -5)
         ])
 
         // Top Info stackview
@@ -436,20 +419,10 @@ extension FeaturedTipCollectionViewCell {
         // Tips stackview
         NSLayoutConstraint.activate([
 
-            self.tipsContainerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 10),
-            self.tipsContainerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -10),
-            self.tipsContainerView.topAnchor.constraint(equalTo: self.topInfoStackView.bottomAnchor, constant: 10),
-            self.tipsContainerView.bottomAnchor.constraint(equalTo: self.separatorLineView.topAnchor, constant: -5),
-
-            self.tipsStackView.leadingAnchor.constraint(equalTo: self.tipsContainerView.leadingAnchor),
-            self.tipsStackView.trailingAnchor.constraint(equalTo: self.tipsContainerView.trailingAnchor),
-            self.tipsStackView.topAnchor.constraint(equalTo: self.tipsContainerView.topAnchor),
-            //self.tipsStackView.heightAnchor.constraint(equalToConstant: 260)
-            //self.tipsStackView.bottomAnchor.constraint(equalTo: self.separatorLineView.topAnchor, constant: -10)
-
-            self.fullTipButton.bottomAnchor.constraint(equalTo: self.tipsContainerView.bottomAnchor),
-            self.fullTipButton.heightAnchor.constraint(equalToConstant: 25),
-            self.fullTipButton.centerXAnchor.constraint(equalTo: self.tipsContainerView.centerXAnchor)
+            self.tipsStackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 10),
+            self.tipsStackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -10),
+            self.tipsStackView.topAnchor.constraint(equalTo: self.topInfoStackView.bottomAnchor, constant: 10),
+            self.tipsStackView.bottomAnchor.constraint(equalTo: self.separatorLineView.topAnchor, constant: -5)
         ])
 
         // Bottom info

@@ -144,7 +144,7 @@ class RootViewController: UIViewController {
     lazy var homeViewController = HomeViewController()
     lazy var preLiveViewController = PreLiveEventsViewController(selectedSportType: Sport.football)
     lazy var liveEventsViewController = LiveEventsViewController()
-    lazy var tipsRootViewController = TipsHomeRootViewController()
+    lazy var tipsRootViewController = TipsRootViewController()
     lazy var casinoViewController = CasinoWebViewController(userId: self.userId)
 
     // Loaded view controllers

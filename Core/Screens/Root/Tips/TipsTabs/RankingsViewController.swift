@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-class RankingsRootViewModel {
+class RankingsViewModel {
 
     var selectedIndexPublisher: CurrentValueSubject<Int?, Never> = .init(nil)
 
@@ -48,7 +48,7 @@ class RankingsRootViewModel {
 
 }
 
-class RankingsRootViewController: UIViewController {
+class RankingsViewController: UIViewController {
 
     // MARK: Private properties
     private lazy var topBaseView: UIView = Self.createTopBaseView()
@@ -65,7 +65,7 @@ class RankingsRootViewController: UIViewController {
     private var viewControllers = [UIViewController]()
     private var currentPageViewControllerIndex: Int = 0
 
-    private var viewModel: RankingsRootViewModel
+    private var viewModel: RankingsViewModel
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -77,7 +77,7 @@ class RankingsRootViewController: UIViewController {
     }
 
     // MARK: - Lifetime and Cycle
-    init(viewModel: RankingsRootViewModel = RankingsRootViewModel()) {
+    init(viewModel: RankingsViewModel = RankingsViewModel()) {
         self.viewModel = viewModel
 
         self.pagedViewController = UIPageViewController(transitionStyle: .scroll,
@@ -102,10 +102,10 @@ class RankingsRootViewController: UIViewController {
         self.setupWithTheme()
 
         self.viewControllers = [
-            RankingsViewController(viewModel: RankingsViewModel(rankingsType: .all)),
-            RankingsViewController(viewModel: RankingsViewModel(rankingsType: .topTipsters)),
-            RankingsViewController(viewModel: RankingsViewModel(rankingsType: .friends)),
-            RankingsViewController(viewModel: RankingsViewModel(rankingsType: .followers))
+            RankingsListViewController(viewModel: RankingsListViewModel(rankingsType: .all)),
+            RankingsListViewController(viewModel: RankingsListViewModel(rankingsType: .topTipsters)),
+            RankingsListViewController(viewModel: RankingsListViewModel(rankingsType: .friends)),
+            RankingsListViewController(viewModel: RankingsListViewModel(rankingsType: .followers))
         ]
 
         self.pagedViewController.delegate = self
@@ -147,7 +147,7 @@ class RankingsRootViewController: UIViewController {
     }
 
     // MARK: - Bindings
-    private func bind(toViewModel viewModel: RankingsRootViewModel) {
+    private func bind(toViewModel viewModel: RankingsViewModel) {
 
         self.viewModel.selectedIndexPublisher
             .removeDuplicates()
@@ -207,7 +207,7 @@ class RankingsRootViewController: UIViewController {
 
 }
 
-extension RankingsRootViewController: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
+extension RankingsViewController: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
 
     func selectTicketType(atIndex index: Int, animated: Bool = true) {
         self.viewModel.selectTicketType(atIndex: index)
@@ -255,7 +255,7 @@ extension RankingsRootViewController: UIPageViewControllerDelegate, UIPageViewCo
 
 }
 
-extension RankingsRootViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension RankingsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return self.viewModel.numberOfShortcutsSections()
@@ -295,7 +295,7 @@ extension RankingsRootViewController: UICollectionViewDelegate, UICollectionView
 
 }
 
-extension RankingsRootViewController {
+extension RankingsViewController {
 
     private static func createTopBaseView() -> UIView {
         let view = UIView()

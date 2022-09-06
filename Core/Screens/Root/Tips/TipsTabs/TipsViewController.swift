@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-class TipsRootViewModel {
+class TipsViewModel {
 
     var selectedIndexPublisher: CurrentValueSubject<Int?, Never> = .init(nil)
 
@@ -48,7 +48,7 @@ class TipsRootViewModel {
 
 }
 
-class TipsRootViewController: UIViewController {
+class TipsViewController: UIViewController {
 
     // MARK: Private properties
     private lazy var topBaseView: UIView = Self.createTopBaseView()
@@ -65,7 +65,7 @@ class TipsRootViewController: UIViewController {
     private var viewControllers = [UIViewController]()
     private var currentPageViewControllerIndex: Int = 0
 
-    private var viewModel: TipsRootViewModel
+    private var viewModel: TipsViewModel
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -77,7 +77,7 @@ class TipsRootViewController: UIViewController {
     }
 
     // MARK: - Lifetime and Cycle
-    init(viewModel: TipsRootViewModel = TipsRootViewModel()) {
+    init(viewModel: TipsViewModel = TipsViewModel()) {
         self.viewModel = viewModel
 
         self.pagedViewController = UIPageViewController(transitionStyle: .scroll,
@@ -102,10 +102,10 @@ class TipsRootViewController: UIViewController {
         self.setupWithTheme()
 
         self.viewControllers = [
-            TipsViewController(viewModel: TipsViewModel(tipsType: .all)),
-            TipsViewController(viewModel: TipsViewModel(tipsType: .topTips)),
-            TipsViewController(viewModel: TipsViewModel(tipsType: .friends)),
-            TipsViewController(viewModel: TipsViewModel(tipsType: .followers))
+            TipsListViewController(viewModel: TipsListViewModel(tipsType: .all)),
+            TipsListViewController(viewModel: TipsListViewModel(tipsType: .topTips)),
+            TipsListViewController(viewModel: TipsListViewModel(tipsType: .friends)),
+            TipsListViewController(viewModel: TipsListViewModel(tipsType: .followers))
         ]
 
         self.pagedViewController.delegate = self
@@ -148,7 +148,7 @@ class TipsRootViewController: UIViewController {
     }
 
     // MARK: - Bindings
-    private func bind(toViewModel viewModel: TipsRootViewModel) {
+    private func bind(toViewModel viewModel: TipsViewModel) {
 
         self.viewModel.selectedIndexPublisher
             .removeDuplicates()
@@ -208,7 +208,7 @@ class TipsRootViewController: UIViewController {
 
 }
 
-extension TipsRootViewController: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
+extension TipsViewController: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
 
     func selectTicketType(atIndex index: Int, animated: Bool = true) {
         self.viewModel.selectTicketType(atIndex: index)
@@ -256,7 +256,7 @@ extension TipsRootViewController: UIPageViewControllerDelegate, UIPageViewContro
 
 }
 
-extension TipsRootViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension TipsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return self.viewModel.numberOfShortcutsSections()
@@ -296,7 +296,7 @@ extension TipsRootViewController: UICollectionViewDelegate, UICollectionViewData
 
 }
 
-extension TipsRootViewController {
+extension TipsViewController {
 
     private static func createTopBaseView() -> UIView {
         let view = UIView()
