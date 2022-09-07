@@ -512,17 +512,7 @@ class MyTicketsViewModel: NSObject {
         
        }
     }
-     
-    func numberOfItems(forSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return self.recordsPerPage
-        case 1:
-            return self.shouldShowLoadingCell() ? 1 : 0
-        default:
-            return 0
-        }
-    }
+
     
 }
 
@@ -596,29 +586,11 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
-        switch myTicketsTypePublisher.value{
-        case .opened:
-            if indexPath.section == 1, self.shouldShowLoadingCell() {
-                if let typedCell = cell as? LoadingMoreTableViewCell {
-                    typedCell.startAnimating()
-                }
-                self.requestNextPage()
+        if indexPath.section == 1, self.shouldShowLoadingCell() {
+            if let typedCell = cell as? LoadingMoreTableViewCell {
+                typedCell.startAnimating()
             }
-        case .resolved:
-            if indexPath.section == 1, self.shouldShowLoadingCell() {
-                if let typedCell = cell as? LoadingMoreTableViewCell {
-                    typedCell.startAnimating()
-                }
-                self.requestNextPage()
-            }
-        case .won:
-            if indexPath.section == 1, self.shouldShowLoadingCell() {
-                if let typedCell = cell as? LoadingMoreTableViewCell {
-                    typedCell.startAnimating()
-                }
-                self.requestNextPage()
-            }
-            
+            self.requestNextPage()
         }
         
     }
