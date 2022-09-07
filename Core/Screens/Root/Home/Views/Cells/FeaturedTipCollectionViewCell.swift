@@ -149,8 +149,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         self.betButton.setInsets(forContentPadding: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10), imageTitlePadding: CGFloat(0))
     }
 
-    // MARK: Function
-
+    // MARK: Functions
     func configure(viewModel: FeaturedTipCollectionViewModel ,hasCounter: Bool) {
 
         self.viewModel = viewModel

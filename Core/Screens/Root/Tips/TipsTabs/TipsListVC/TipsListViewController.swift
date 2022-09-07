@@ -85,6 +85,7 @@ class TipsListViewModel {
                         self?.hasFriendsPublisher.send(false)
                     }
                     else {
+                        self?.hasFriendsPublisher.send(true)
                         self?.loadFriendsTips()
                     }
                 }
@@ -190,7 +191,6 @@ class TipsListViewController: UIViewController {
 
     var isEmptyFriends: Bool = false {
         didSet {
-            self.emptyStateBaseView.isHidden = isEmptyFriends
             self.emptyFriendsBaseView.isHidden = !isEmptyFriends
         }
     }
@@ -216,9 +216,6 @@ class TipsListViewController: UIViewController {
         self.tableView.dataSource = self
 
         self.tableView.register(TipsTableViewCell.self, forCellReuseIdentifier: TipsTableViewCell.identifier)
-
-        self.tableView.isHidden = false
-        self.emptyStateBaseView.isHidden = true
 
         self.isLoading = false
 

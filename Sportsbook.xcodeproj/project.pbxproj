@@ -3643,6 +3643,13 @@
 		A986D33628C7609800AF95D7 /* TipsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D33128C7609800AF95D7 /* TipsTableViewCell.swift */; };
 		A986D33728C7609800AF95D7 /* TipsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D33128C7609800AF95D7 /* TipsTableViewCell.swift */; };
 		A986D33828C7609800AF95D7 /* TipsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D33128C7609800AF95D7 /* TipsTableViewCell.swift */; };
+		A986D33A28C8A17000AF95D7 /* RankingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D33928C8A17000AF95D7 /* RankingTableViewCell.swift */; };
+		A986D33B28C8A17000AF95D7 /* RankingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D33928C8A17000AF95D7 /* RankingTableViewCell.swift */; };
+		A986D33C28C8A17000AF95D7 /* RankingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D33928C8A17000AF95D7 /* RankingTableViewCell.swift */; };
+		A986D33D28C8A17000AF95D7 /* RankingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D33928C8A17000AF95D7 /* RankingTableViewCell.swift */; };
+		A986D33E28C8A17000AF95D7 /* RankingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D33928C8A17000AF95D7 /* RankingTableViewCell.swift */; };
+		A986D33F28C8A17000AF95D7 /* RankingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D33928C8A17000AF95D7 /* RankingTableViewCell.swift */; };
+		A986D34028C8A17000AF95D7 /* RankingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D33928C8A17000AF95D7 /* RankingTableViewCell.swift */; };
 		A9875795276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
 		A9875796276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
 		A9875797276CA50F0099990D /* DepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9875794276CA50F0099990D /* DepositViewController.xib */; };
@@ -4765,6 +4772,7 @@
 		A9863ED2286F01E500A4A1A2 /* ShareTicketChoiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareTicketChoiceViewController.swift; sourceTree = "<group>"; };
 		A9863EDB286F425400A4A1A2 /* SocialItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialItemCollectionViewCell.swift; sourceTree = "<group>"; };
 		A986D33128C7609800AF95D7 /* TipsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsTableViewCell.swift; sourceTree = "<group>"; };
+		A986D33928C8A17000AF95D7 /* RankingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingTableViewCell.swift; sourceTree = "<group>"; };
 		A9875793276CA50F0099990D /* DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewController.swift; sourceTree = "<group>"; };
 		A9875794276CA50F0099990D /* DepositViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositViewController.xib; sourceTree = "<group>"; };
 		A9875799276CD3660099990D /* DepositWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositWebViewController.swift; sourceTree = "<group>"; };
@@ -7048,6 +7056,7 @@
 			isa = PBXGroup;
 			children = (
 				A986D33128C7609800AF95D7 /* TipsTableViewCell.swift */,
+				A986D33928C8A17000AF95D7 /* RankingTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -9617,6 +9626,7 @@
 				45166D2526F3548D00E69D65 /* TSManager.swift in Sources */,
 				45CD7B522716F5CB003044C5 /* OddTripleCollectionViewCell.swift in Sources */,
 				455A0D1E26BDE7AE00EC572D /* DebugViewController.swift in Sources */,
+				A986D33A28C8A17000AF95D7 /* RankingTableViewCell.swift in Sources */,
 				455A0CF026BD9D9000EC572D /* UIViewController+Extensions.swift in Sources */,
 				A9A31455282AA6A0004F7E77 /* ActionButtonTableViewCell.swift in Sources */,
 				45D527DC2720534600744D34 /* CompetitionsFiltersView.swift in Sources */,
@@ -9707,6 +9717,7 @@
 				A9B331E2288FFFE000D097F0 /* MessagesViewModel.swift in Sources */,
 				A9C1C0A52874404C00E9D6AC /* ShareTicketFriendGroupViewController.swift in Sources */,
 				A9FB6D5028C642AD00E3FE58 /* TipsViewController.swift in Sources */,
+				A986D34028C8A17000AF95D7 /* RankingTableViewCell.swift in Sources */,
 				A9C1C09D2873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
 				A9B331EA28904F4800D097F0 /* MessageDetailViewController.swift in Sources */,
 				A9863ED9286F01E500A4A1A2 /* ShareTicketChoiceViewController.swift in Sources */,
@@ -10212,6 +10223,7 @@
 				A99A971D26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift in Sources */,
 				45166D2626F3548D00E69D65 /* TSManager.swift in Sources */,
 				45CD7B532716F5CB003044C5 /* OddTripleCollectionViewCell.swift in Sources */,
+				A986D33B28C8A17000AF95D7 /* RankingTableViewCell.swift in Sources */,
 				455A0D1F26BDE7AE00EC572D /* DebugViewController.swift in Sources */,
 				A9A31456282AA6A0004F7E77 /* ActionButtonTableViewCell.swift in Sources */,
 				455A0CF126BD9D9000EC572D /* UIViewController+Extensions.swift in Sources */,
@@ -10776,6 +10788,7 @@
 				457CBB82282D27D000ED0F00 /* DebugViewController.swift in Sources */,
 				457CBB83282D27D000ED0F00 /* UIViewController+Extensions.swift in Sources */,
 				457CBB84282D27D000ED0F00 /* CompetitionsFiltersView.swift in Sources */,
+				A986D33E28C8A17000AF95D7 /* RankingTableViewCell.swift in Sources */,
 				457CBB85282D27D000ED0F00 /* PreviewChatTableViewCell.swift in Sources */,
 				45B6E229283FD08C001B570C /* ChatTicketInMessageView.swift in Sources */,
 				457CBB86282D27D000ED0F00 /* CompetitionDetailsViewModel.swift in Sources */,
@@ -11340,6 +11353,7 @@
 				457CBE2A282D2CD100ED0F00 /* DebugViewController.swift in Sources */,
 				457CBE2B282D2CD100ED0F00 /* UIViewController+Extensions.swift in Sources */,
 				457CBE2C282D2CD100ED0F00 /* CompetitionsFiltersView.swift in Sources */,
+				A986D33F28C8A17000AF95D7 /* RankingTableViewCell.swift in Sources */,
 				457CBE2D282D2CD100ED0F00 /* PreviewChatTableViewCell.swift in Sources */,
 				45B6E22A283FD08C001B570C /* ChatTicketInMessageView.swift in Sources */,
 				457CBE2E282D2CD100ED0F00 /* CompetitionDetailsViewModel.swift in Sources */,
@@ -11904,6 +11918,7 @@
 				4589C901282024E400243547 /* MarketGroupDetailsViewController.swift in Sources */,
 				4589C902282024E400243547 /* TSManager.swift in Sources */,
 				A9A207DC283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift in Sources */,
+				A986D33C28C8A17000AF95D7 /* RankingTableViewCell.swift in Sources */,
 				4589C903282024E400243547 /* OddTripleCollectionViewCell.swift in Sources */,
 				4589C904282024E400243547 /* DebugViewController.swift in Sources */,
 				4589C905282024E400243547 /* UIViewController+Extensions.swift in Sources */,
@@ -12468,6 +12483,7 @@
 				45A6BD5728246A7500D9B416 /* FullRegisterPersonalInfoViewController.swift in Sources */,
 				A9A207DD283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift in Sources */,
 				45A6BD5828246A7500D9B416 /* MarketGroupDetailsViewController.swift in Sources */,
+				A986D33D28C8A17000AF95D7 /* RankingTableViewCell.swift in Sources */,
 				45A6BD5928246A7500D9B416 /* TSManager.swift in Sources */,
 				45A6BD5A28246A7500D9B416 /* OddTripleCollectionViewCell.swift in Sources */,
 				45A6BD5B28246A7500D9B416 /* DebugViewController.swift in Sources */,

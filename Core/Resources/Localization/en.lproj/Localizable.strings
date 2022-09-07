@@ -566,3 +566,5 @@ Terms of use, Privacy Policy and EULA";
 "no_login_rankings" = "You need to be logged in to be able to see rankings";
 
 "add_friends_tip" = "You need to add some friends to see what kind of tips they share.";
+"select" = "Select";
+"follow_user" = "Follow user";
