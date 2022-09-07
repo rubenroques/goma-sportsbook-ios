@@ -12,7 +12,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "match_filters_icons.png",
+      "filename" : "Sliders-1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -28,7 +28,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "match_filters_icons@2x.png",
+      "filename" : "Sliders@2x-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "match_filters_icons@3x.png",
+      "filename" : "Sliders@3x-1.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
