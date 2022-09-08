@@ -426,8 +426,7 @@ class MatchDetailsViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        
+                
         // betslip
         //
         self.view.addSubview(self.floatingShortcutsView)
@@ -911,8 +910,6 @@ class MatchDetailsViewController: UIViewController {
             self.navigationController?.popViewController(animated: true)
         }
     }
-    
-  
     
     @IBAction private func didTapMoreOptionsButton() {
         
