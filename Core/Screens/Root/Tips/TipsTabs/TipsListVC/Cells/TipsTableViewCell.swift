@@ -8,33 +8,6 @@
 import UIKit
 import Combine
 
-class TipsCellViewModel {
-
-    var featuredTip: FeaturedTip
-
-    init(featuredTip: FeaturedTip) {
-        self.featuredTip = featuredTip
-
-    }
-
-    func getUsername() -> String {
-        return self.featuredTip.username
-    }
-
-    func getTotalOdds() -> String {
-        let oddFormatted = OddFormatter.formatOdd(withValue: self.featuredTip.totalOdds)
-        return "\(oddFormatted)"
-    }
-
-    func getNumberSelections() -> String {
-        if let numberSelections = self.featuredTip.betSelections?.count {
-            return "\(numberSelections)"
-        }
-
-        return ""
-    }
-}
-
 class TipsTableViewCell: UITableViewCell {
 
     // MARK: Private Properties
@@ -47,9 +20,7 @@ class TipsTableViewCell: UITableViewCell {
     private lazy var userImageView: UIImageView = Self.createUserImageView()
     private lazy var usernameLabel: UILabel = Self.createUsernameLabel()
     private lazy var followButton: UIButton = Self.createFollowButton()
-    // private lazy var tipsContainerView: UIView = Self.createTipsContainerView()
     private lazy var tipsStackView: UIStackView = Self.createTipsStackView()
-    //private lazy var fullTipButton: UIButton = Self.createFullTipButton()
     private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
     private lazy var totalOddsLabel: UILabel = Self.createTotalOddsLabel()
     private lazy var totalOddsValueLabel: UILabel = Self.createTotalOddsValueLabel()
@@ -71,7 +42,6 @@ class TipsTableViewCell: UITableViewCell {
     }
 
     var viewModel: TipsCellViewModel?
-
 
     // MARK: - Lifetime and Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -152,8 +122,6 @@ class TipsTableViewCell: UITableViewCell {
         self.followButton.backgroundColor = .clear
         self.followButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
 
-        // self.tipsContainerView.backgroundColor = .clear
-
         self.tipsStackView.backgroundColor = .clear
 
         self.separatorLineView.backgroundColor = UIColor.App.separatorLine
@@ -171,11 +139,13 @@ class TipsTableViewCell: UITableViewCell {
     }
 
     // MARK: Function
-    func configure(viewModel: TipsCellViewModel ,hasCounter: Bool) {
+    func configure(viewModel: TipsCellViewModel) {
 
         self.viewModel = viewModel
 
-        self.hasCounter = hasCounter
+        self.hasCounter = false
+
+        self.hasFollow = viewModel.hasFollowEnabled()
 
         if let numberTips = viewModel.featuredTip.betSelections?.count {
 
@@ -207,11 +177,17 @@ class TipsTableViewCell: UITableViewCell {
 
     // MARK: Actions
     @objc func didTapFollowButton() {
-        print("TAPPED FOLLOW: \(self.viewModel?.getUsername())")
+        if let viewModel = self.viewModel {
+            print("TAPPED FOLLOW: \(viewModel.getUsername()) - \(viewModel.getUserId())")
+
+        }
     }
 
     @objc func didTapBetButton() {
-        print("TAPPED BET: \(self.viewModel?.featuredTip.omBetId)")
+        if let viewModel = self.viewModel {
+            print("TAPPED BET: \(viewModel.getOMBetId())")
+
+        }
     }
 
 }
@@ -422,7 +398,7 @@ extension TipsTableViewCell {
             self.tipsStackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 10),
             self.tipsStackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -10),
             self.tipsStackView.topAnchor.constraint(equalTo: self.topInfoStackView.bottomAnchor, constant: 10),
-            self.tipsStackView.bottomAnchor.constraint(equalTo: self.separatorLineView.topAnchor, constant: -5)
+            self.tipsStackView.bottomAnchor.constraint(equalTo: self.separatorLineView.topAnchor, constant: -10)
         ])
 
         // Bottom info
