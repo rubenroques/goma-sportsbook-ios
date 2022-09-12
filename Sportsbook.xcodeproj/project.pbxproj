@@ -3636,6 +3636,12 @@
 		A9863EE0286F425400A4A1A2 /* SocialItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9863EDB286F425400A4A1A2 /* SocialItemCollectionViewCell.swift */; };
 		A9863EE1286F425400A4A1A2 /* SocialItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9863EDB286F425400A4A1A2 /* SocialItemCollectionViewCell.swift */; };
 		A9863EE2286F425400A4A1A2 /* SocialItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9863EDB286F425400A4A1A2 /* SocialItemCollectionViewCell.swift */; };
+		A986D35D28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */; };
+		A986D35E28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */; };
+		A986D35F28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */; };
+		A986D36028CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */; };
+		A986D36128CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */; };
+		A986D36228CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */; };
 		A9875795276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
 		A9875796276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
 		A9875797276CA50F0099990D /* DepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9875794276CA50F0099990D /* DepositViewController.xib */; };
@@ -4691,6 +4697,7 @@
 		A9863ECA286B17A600A4A1A2 /* ChatTicketStateInMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTicketStateInMessageView.swift; sourceTree = "<group>"; };
 		A9863ED2286F01E500A4A1A2 /* ShareTicketChoiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareTicketChoiceViewController.swift; sourceTree = "<group>"; };
 		A9863EDB286F425400A4A1A2 /* SocialItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialItemCollectionViewCell.swift; sourceTree = "<group>"; };
+		A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteContactTableViewCell.swift; sourceTree = "<group>"; };
 		A9875793276CA50F0099990D /* DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewController.swift; sourceTree = "<group>"; };
 		A9875794276CA50F0099990D /* DepositViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositViewController.xib; sourceTree = "<group>"; };
 		A9875799276CD3660099990D /* DepositWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositWebViewController.swift; sourceTree = "<group>"; };
@@ -7452,6 +7459,7 @@
 			children = (
 				A9BA6D43280DC81B00E82724 /* ResultsHeaderFooterView.swift */,
 				A9BA6D572810644D00E82724 /* AddUnregisteredFriendTableViewCell.swift */,
+				A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -9200,6 +9208,7 @@
 				455C677727E256A700AAB2A5 /* MarketGroupDetailsViewModel.swift in Sources */,
 				45936CAD270E537E00E8260E /* UIViewController+SwiftUI.swift in Sources */,
 				45C10F4C28772DA700037BBE /* ModalTransitionPresenting.swift in Sources */,
+				A986D35D28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */,
 				45C10F2828772DA700037BBE /* Animations.swift in Sources */,
 				A96CA7C327F4AB7A00022DB2 /* BonusDetailViewModel.swift in Sources */,
 				A90BC90B27C3F65D00667616 /* BettingNotificationViewModel.swift in Sources */,
@@ -9777,6 +9786,7 @@
 				45166CF626F3548D00E69D65 /* SubscribedSSWampMessage.swift in Sources */,
 				A91F4B3D27BFE269008C7510 /* GamesNotificationViewController.swift in Sources */,
 				45C10F4D28772DA700037BBE /* ModalTransitionPresenting.swift in Sources */,
+				A986D35E28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */,
 				45C10F2928772DA700037BBE /* Animations.swift in Sources */,
 				A96CA7C427F4AB7A00022DB2 /* BonusDetailViewModel.swift in Sources */,
 				45936CAE270E537E00E8260E /* UIViewController+SwiftUI.swift in Sources */,
@@ -10330,6 +10340,7 @@
 				45B6E20C283E3FA8001B570C /* FriendProfileViewController.swift in Sources */,
 				457CBAA6282D27D000ED0F00 /* MarketGroupDetailsViewModel.swift in Sources */,
 				45C10F5028772DA700037BBE /* ModalTransitionPresenting.swift in Sources */,
+				A986D36128CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */,
 				45C10F2C28772DA700037BBE /* Animations.swift in Sources */,
 				457CBAA7282D27D000ED0F00 /* UIViewController+SwiftUI.swift in Sources */,
 				457CBAA8282D27D000ED0F00 /* BonusDetailViewModel.swift in Sources */,
@@ -10883,6 +10894,7 @@
 				45B6E20B283E3FA7001B570C /* FriendProfileViewController.swift in Sources */,
 				457CBD50282D2CD100ED0F00 /* UIViewController+SwiftUI.swift in Sources */,
 				45C10F5128772DA700037BBE /* ModalTransitionPresenting.swift in Sources */,
+				A986D36228CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */,
 				45C10F2D28772DA700037BBE /* Animations.swift in Sources */,
 				457CBD51282D2CD100ED0F00 /* BonusDetailViewModel.swift in Sources */,
 				457CBD52282D2CD100ED0F00 /* BettingNotificationViewModel.swift in Sources */,
@@ -11436,6 +11448,7 @@
 				4589C834282024E400243547 /* Sport.swift in Sources */,
 				4589C835282024E400243547 /* NotificationsViewModel.swift in Sources */,
 				45C10F4E28772DA700037BBE /* ModalTransitionPresenting.swift in Sources */,
+				A986D35F28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */,
 				45C10F2A28772DA700037BBE /* Animations.swift in Sources */,
 				4589C836282024E400243547 /* UserSessionStore.swift in Sources */,
 				45B6E23B284151F9001B570C /* ActionButtonTableViewCell.swift in Sources */,
@@ -11989,6 +12002,7 @@
 				45A6BC8328246A7500D9B416 /* BettingNotificationViewModel.swift in Sources */,
 				45A6BC8428246A7500D9B416 /* Sport.swift in Sources */,
 				45C10F4F28772DA700037BBE /* ModalTransitionPresenting.swift in Sources */,
+				A986D36028CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */,
 				45C10F2B28772DA700037BBE /* Animations.swift in Sources */,
 				45A6BC8528246A7500D9B416 /* NotificationsViewModel.swift in Sources */,
 				45B6E23A284151F8001B570C /* ActionButtonTableViewCell.swift in Sources */,
