@@ -49,6 +49,8 @@ class TransactionsHistoryRootViewController: UIViewController {
     private lazy var topBaseView: UIView = Self.createTopBaseView()
     private lazy var shortcutsCollectionView: UICollectionView = Self.createShortcutsCollectionView()
     private lazy var pagesBaseView: UIView = Self.createPagesBaseView()
+    private lazy var filterBaseView: UIView = Self.createSimpleView()
+    private lazy var filtersButtonImage: UIImageView = Self.createFilterImageView()
 
     private lazy var noLoginBaseView: UIView = Self.createNoLoginBaseView()
     private lazy var noLoginImageView: UIImageView = Self.createNoLoginImageView()
@@ -60,9 +62,12 @@ class TransactionsHistoryRootViewController: UIViewController {
 
     private var viewControllers = [UIViewController]()
     private var currentPageViewControllerIndex: Int = 0
+    private var filterHistoryViewController = FilterHistoryViewController()
 
     private var viewModel: TransactionsHistoryRootViewModel
-
+    var filterPublisher: CurrentValueSubject<FilterHistoryViewModel.FilterValue, Never> = .init(.past30Days)
+    var startTimeFilter = Date()
+    var endTimeFilter = Date()
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Lifetime and Cycle
@@ -89,11 +94,30 @@ class TransactionsHistoryRootViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.viewControllers = [
-            TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .deposit)),
-            TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .withdraw)),
-        ]
+        self.filterPublisher
+            .sink { [weak self] filterApplied in
 
+                if let viewControllers = self?.viewControllers {
+                    if viewControllers.isEmpty {
+                        self?.viewControllers = [
+                            TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .deposit, filterApplied: filterApplied)),
+                            TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .withdraw, filterApplied: filterApplied)),
+                        ]
+                    }
+                    else {
+                        for viewController in viewControllers {
+                            let transactionHistoryViewController = viewController as? TransactionsHistoryViewController
+
+                            transactionHistoryViewController?.reloadDataWithFilter(newFilter: filterApplied)
+                        }
+                    }
+                }
+
+                self?.reloadCollectionView()
+
+            }
+            .store(in: &cancellables)
+        
         self.pagedViewController.delegate = self
         self.pagedViewController.dataSource = self
 
@@ -103,6 +127,11 @@ class TransactionsHistoryRootViewController: UIViewController {
         self.shortcutsCollectionView.delegate = self
         self.shortcutsCollectionView.dataSource = self
 
+        let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
+        self.filterBaseView.addGestureRecognizer(tapFilterGesture)
+        self.filterBaseView.isUserInteractionEnabled = true
+
+        
         self.noLoginButton.addTarget(self, action: #selector(didTapLoginButton), for: .primaryActionTriggered)
 
         self.reloadCollectionView()
@@ -110,6 +139,20 @@ class TransactionsHistoryRootViewController: UIViewController {
     }
 
     // MARK: - Layout and Theme
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+//        self.topBaseView.layer.masksToBounds = true
+//        self.topBaseView.clipsToBounds = true
+
+        self.filterBaseView.layer.cornerRadius = self.filterBaseView.frame.height / 2
+        self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+
+        self.filterBaseView.layer.masksToBounds = true
+
+    }
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -125,10 +168,11 @@ class TransactionsHistoryRootViewController: UIViewController {
         self.noLoginBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.noLoginTitleLabel.textColor = UIColor.App.textPrimary
         self.noLoginSubtitleLabel.textColor = UIColor.App.textPrimary
+        
+        self.filterBaseView.backgroundColor = UIColor.App.backgroundTertiary
 
         StyleHelper.styleButton(button: self.noLoginButton)
     }
-
 
     // MARK: - Bindings
     private func bind(toViewModel viewModel: TransactionsHistoryRootViewModel) {
@@ -164,6 +208,18 @@ class TransactionsHistoryRootViewController: UIViewController {
     // MARK: - Convenience
     func showNoLoginView() {
         self.noLoginBaseView.isHidden = false
+    }
+
+    @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
+        
+        self.present(self.filterHistoryViewController, animated: true, completion: nil)
+        self.startTimeFilter = self.filterHistoryViewController.viewModel.startTimeFilterPublisher.value
+        self.endTimeFilter = self.filterHistoryViewController.viewModel.endTimeFilterPublisher.value
+        
+        self.filterHistoryViewController.didSelectFilterAction = { [weak self ] opt in
+            self?.filterPublisher.send(opt)
+            
+        }
     }
 
     func hideNoLoginView() {
@@ -355,11 +411,28 @@ extension TransactionsHistoryRootViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
+    
+    private static func createSimpleView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
+    private static func createFilterImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        imageView.image = UIImage(named: "match_filters_icons")
+        
+        return imageView
+    }
 
     private func setupSubviews() {
 
         self.topBaseView.addSubview(self.shortcutsCollectionView)
-
+        self.topBaseView.addSubview(self.filterBaseView)
+        self.filterBaseView.addSubview(self.filtersButtonImage)
+        
         self.view.addSubview(self.topBaseView)
         self.view.addSubview(self.pagesBaseView)
 
@@ -375,6 +448,10 @@ extension TransactionsHistoryRootViewController {
         self.addChildViewController(self.pagedViewController, toView: self.pagesBaseView)
 
         self.initConstraints()
+
+        // NOTE: Force layout pending
+        self.view.layoutSubviews()
+        self.view.layoutIfNeeded()
     }
 
     private func initConstraints() {
@@ -390,7 +467,18 @@ extension TransactionsHistoryRootViewController {
             self.shortcutsCollectionView.leadingAnchor.constraint(equalTo: self.topBaseView.leadingAnchor),
             self.shortcutsCollectionView.trailingAnchor.constraint(equalTo: self.topBaseView.trailingAnchor),
             self.shortcutsCollectionView.topAnchor.constraint(equalTo: self.topBaseView.topAnchor),
-            self.shortcutsCollectionView.bottomAnchor.constraint(equalTo: self.topBaseView.bottomAnchor)
+            self.shortcutsCollectionView.bottomAnchor.constraint(equalTo: self.topBaseView.bottomAnchor),
+            
+            self.filterBaseView.widthAnchor.constraint(equalToConstant: 40),
+            self.filterBaseView.heightAnchor.constraint(equalToConstant: 40),
+            self.filterBaseView.trailingAnchor.constraint(equalTo: self.topBaseView.trailingAnchor),
+            self.filterBaseView.centerYAnchor.constraint(equalTo: self.shortcutsCollectionView.centerYAnchor),
+            
+            self.filtersButtonImage.bottomAnchor.constraint(equalTo: self.filterBaseView.bottomAnchor, constant: -8),
+            self.filtersButtonImage.topAnchor.constraint(equalTo: self.filterBaseView.topAnchor, constant: 8),
+            self.filtersButtonImage.trailingAnchor.constraint(equalTo: self.filterBaseView.trailingAnchor, constant: -6),
+            self.filtersButtonImage.centerYAnchor.constraint(equalTo: self.filterBaseView.centerYAnchor),
+            
         ])
 
         NSLayoutConstraint.activate([
