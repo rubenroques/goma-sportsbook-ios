@@ -557,3 +557,4 @@ Terms of use, Privacy Policy and EULA";
 "invite_friends_via" = "Invite friends via...";
 "invite_more_friends" = "Invite more friends from your contact list to join the sportsbook";
 "no_user_contact_registered" = "You don't have any users from your contact list using the Sportsbook yet. Invite them now!";
+"no_other_users_registered" = "There are currently no other users on your contact list using the Sportsbook. Invite more friends now!";

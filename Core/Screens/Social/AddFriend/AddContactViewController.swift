@@ -398,11 +398,16 @@ extension AddContactViewController: UITableViewDataSource, UITableViewDelegate {
                 headerView.configureHeader(title: resultsLabel)
             }
             else {
-                if self.viewModel.hasRegisteredFriends {
+                if self.viewModel.hasRegisteredFriends && self.viewModel.sectionUsers[UserContactType.registered.identifier] != nil {
                     let resultsLabel = localized("invite_more_friends")
 
                     headerView.configureHeader(title: resultsLabel)
                 }
+                else if self.viewModel.hasRegisteredFriends && self.viewModel.sectionUsers[UserContactType.registered.identifier] == nil {
+
+                    let resultsLabel = localized("no_other_users_registered")
+
+                    headerView.configureHeader(title: resultsLabel)                }
                 else {
                     let resultsLabel = localized("no_user_contact_registered")
 
