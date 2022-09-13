@@ -17,7 +17,7 @@ class MatchDetailsViewModel: NSObject {
     }
 
     var matchId: String
-    var homeRedCardsScorePublisher: CurrentValueSubject<String, Never> = .init("SEM VALUES")
+    var homeRedCardsScorePublisher: CurrentValueSubject<String, Never> = .init("0")
     var awayRedCardsScorePublisher: CurrentValueSubject<String, Never> = .init("SEM VALUES")
 
     var store: MatchDetailsAggregatorRepository
@@ -426,7 +426,7 @@ extension MatchDetailsViewModel {
                     for content in (aggregator.content ?? []) {
                        switch content {
                         case .eventPartScore(let eventPartScore):
-                            if let eventInfoTypeId = eventPartScore.eventInfoTypeID, eventInfoTypeId == "2" {
+                            if let eventInfoTypeId = eventPartScore.eventInfoTypeID, eventInfoTypeId == "4" {
                                 if let homeScore = eventPartScore.homeScore {
                                     self?.homeRedCardsScorePublisher.send(homeScore)
                                     

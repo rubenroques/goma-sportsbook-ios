@@ -82,6 +82,8 @@ class MatchDetailsViewController: UIViewController {
     
     @IBOutlet private weak var homeRedCardImage: UIImageView!
     @IBOutlet private weak var awayRedCardImage: UIImageView!
+    @IBOutlet private weak var homeRedCardLabel: UILabel!
+    @IBOutlet private weak var awayRedCardsLabel: UILabel!
     
     
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
@@ -638,9 +640,12 @@ class MatchDetailsViewController: UIViewController {
                 
                 if homeScoreValue != "0" {
                     self?.homeRedCardImage.isHidden = false
+                    self?.homeRedCardLabel.text = homeScoreValue
+                    self?.homeRedCardLabel.isHidden = false
                 }
                else {
                     self?.homeRedCardImage.isHidden = true
+                   self?.homeRedCardLabel.isHidden = true
                 }
             })
             .store(in: &cancellables)
@@ -651,9 +656,12 @@ class MatchDetailsViewController: UIViewController {
                 
                 if awayScoreValue != "0" {
                     self?.awayRedCardImage.isHidden = false
+                    self?.awayRedCardsLabel.text = awayScoreValue
+                    self?.awayRedCardsLabel.isHidden = false
                 }
                 else {
                     self?.awayRedCardImage.isHidden = true
+                    self?.awayRedCardsLabel.isHidden = true
                 }
                   
             })
