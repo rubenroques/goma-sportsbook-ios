@@ -29,6 +29,7 @@ protocol HomeViewTemplateDataSource {
     func bannerLineViewModel() -> BannerLineCellViewModel?
     func sportGroupViewModel(forSection section: Int) -> SportGroupViewModel?
     func favoriteMatch(forIndex index: Int) -> Match?
+    func featuredTipLineViewModel() -> FeaturedTipLineViewModel?
     func suggestedBetLineViewModel() -> SuggestedBetLineViewModel?
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel
 

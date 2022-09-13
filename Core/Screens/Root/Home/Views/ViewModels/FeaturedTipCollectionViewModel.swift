@@ -1,0 +1,47 @@
+//
+//  FeaturedTipCollectionViewModel.swift
+//  Sportsbook
+//
+//  Created by André Lascas on 01/09/2022.
+//
+
+import Foundation
+import Combine
+
+class FeaturedTipCollectionViewModel {
+
+    var featuredTip: FeaturedTip
+    
+    enum SizeType {
+        case small
+        case fullscreen
+    }
+    
+    var sizeType: SizeType
+    
+    init(featuredTip: FeaturedTip, sizeType: SizeType) {
+        self.featuredTip = featuredTip
+        self.sizeType = sizeType
+    }
+
+    var shouldCropList: Bool {
+        return self.sizeType == .small
+    }
+    
+    func getUsername() -> String {
+        return self.featuredTip.username
+    }
+
+    func getTotalOdds() -> String {
+        let oddFormatted = OddFormatter.formatOdd(withValue: self.featuredTip.totalOdds)
+        return "\(oddFormatted)"
+    }
+
+    func getNumberSelections() -> String {
+        if let numberSelections = self.featuredTip.betSelections?.count {
+            return "\(numberSelections)"
+        }
+
+        return ""
+    }
+}

@@ -103,6 +103,7 @@ enum HomeFeedContent: Decodable {
     case suggestedBets
     case userMessageAlerts
     case sport(id: String, name: String, sections: [SportSectionFeedContent])
+    case featuredTips
     case unknown
 
     private enum CodingKeys: String, CodingKey {
@@ -127,6 +128,8 @@ enum HomeFeedContent: Decodable {
             self = .banners(items: contentsRaw.compactMap({ $0.base }))
         case "favorites":
             self = .favorites
+        case "tips":
+            self = .featuredTips
         case "suggested":
             self = .suggestedBets
         case "user_alert_messages":

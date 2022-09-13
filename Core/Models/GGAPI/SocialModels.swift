@@ -272,3 +272,61 @@ struct InAppMessage: Decodable {
         case openingType = "opening_type"
     }
 }
+
+struct FeaturedTip: Decodable {
+    var id: Int
+    var status: String
+    var name: String?
+    var username: String
+    var userId: String?
+    var userProviderId: Int?
+    var stake: Double?
+    var maxWinning: Double
+    var possibleProfit: Double
+    var totalOdds: Double
+    var betSelections: [FeaturedTipSelection]?
+    var omBetId: String?
+    var omRequestId: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case status = "status"
+        case name = "name"
+        case username = "user_name"
+        case userId = "user_id"
+        case userProviderId = "user_provider_id"
+        case stake = "stake"
+        case maxWinning = "max_winning"
+        case possibleProfit = "possible_profit"
+        case totalOdds = "total_odds"
+        case betSelections = "bet_selections"
+        case omBetId = "om_bet_id"
+        case omRequestId = "om_request_id"
+    }
+}
+
+class FeaturedTipSelection: Decodable {
+    var id: Int
+    var betId: Int
+    var status: String
+    var eventName: String
+    var eventId: String
+    var locationId: String
+    var sportId: String
+    var outcomeName: String
+    var live: Int?
+    var odds: Double
+
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case betId = "bet_id"
+        case status = "status"
+        case eventName = "event_name"
+        case eventId = "event_id"
+        case locationId = "location_id"
+        case sportId = "sport_id"
+        case outcomeName = "outcome_name"
+        case live = "live"
+        case odds = "odds"
+    }
+}
