@@ -44,10 +44,7 @@ class FeaturedTipView: UIView {
         self.containerView.layer.cornerRadius = CornerRadius.button
 
         self.sportIconImageView.layer.cornerRadius = self.sportIconImageView.frame.height / 2
-        self.sportIconImageView.layer.masksToBounds = true
-
         self.countryIconImageView.layer.cornerRadius = self.countryIconImageView.frame.height / 2
-        self.countryIconImageView.layer.masksToBounds = true
     }
 
     func setupWithTheme() {
@@ -120,6 +117,8 @@ extension FeaturedTipView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "sport_type_mono_icon_default")
         imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.layer.masksToBounds = true
         return imageView
     }
 
@@ -128,6 +127,8 @@ extension FeaturedTipView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "country_flag_240")
         imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.masksToBounds = true
         return imageView
     }
 
@@ -160,13 +161,9 @@ extension FeaturedTipView {
         self.addSubview(self.containerView)
 
         self.containerView.addSubview(self.sportIconImageView)
-
         self.containerView.addSubview(self.countryIconImageView)
-
         self.containerView.addSubview(self.tournamentLabel)
-
         self.containerView.addSubview(self.outcomeLabel)
-
         self.containerView.addSubview(self.matchLabel)
 
         self.initConstraints()
@@ -181,30 +178,29 @@ extension FeaturedTipView {
             self.containerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             self.containerView.topAnchor.constraint(equalTo: self.topAnchor),
             self.containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            //self.containerView.heightAnchor.constraint(equalToConstant: 68),
 
             self.sportIconImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 8),
-            self.sportIconImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 4),
+            self.sportIconImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 8),
             self.sportIconImageView.widthAnchor.constraint(equalToConstant: 16),
             self.sportIconImageView.heightAnchor.constraint(equalTo: self.sportIconImageView.widthAnchor),
 
-            self.countryIconImageView.leadingAnchor.constraint(equalTo: self.sportIconImageView.trailingAnchor, constant: 4),
+            self.countryIconImageView.leadingAnchor.constraint(equalTo: self.sportIconImageView.trailingAnchor, constant: 6),
             self.countryIconImageView.centerYAnchor.constraint(equalTo: self.sportIconImageView.centerYAnchor),
             self.countryIconImageView.widthAnchor.constraint(equalToConstant: 16),
             self.countryIconImageView.heightAnchor.constraint(equalTo: self.countryIconImageView.widthAnchor),
 
-            self.tournamentLabel.leadingAnchor.constraint(equalTo: self.countryIconImageView.trailingAnchor, constant: 4),
+            self.tournamentLabel.leadingAnchor.constraint(equalTo: self.countryIconImageView.trailingAnchor, constant: 6),
             self.tournamentLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -8),
             self.tournamentLabel.centerYAnchor.constraint(equalTo: self.countryIconImageView.centerYAnchor),
 
             self.outcomeLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 8),
             self.outcomeLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -8),
-            self.outcomeLabel.topAnchor.constraint(equalTo: self.sportIconImageView.bottomAnchor, constant: 8),
+            self.outcomeLabel.topAnchor.constraint(equalTo: self.sportIconImageView.bottomAnchor, constant: 9),
 
             self.matchLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 8),
             self.matchLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -8),
-            self.matchLabel.topAnchor.constraint(equalTo: self.outcomeLabel.bottomAnchor, constant: 8),
-            self.matchLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -7)
+            self.matchLabel.topAnchor.constraint(equalTo: self.outcomeLabel.bottomAnchor, constant: 9),
+            self.matchLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -8)
 
         ])
     }
