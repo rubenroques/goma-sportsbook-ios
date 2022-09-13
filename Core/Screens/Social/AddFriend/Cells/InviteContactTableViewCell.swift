@@ -41,14 +41,19 @@ class InviteContactTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
 
+        self.inviteButton.layer.cornerRadius = CornerRadius.button
+        self.inviteButton.layer.masksToBounds = true
+
     }
 
     func setupWithTheme() {
 
         self.contentView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.inviteButton.backgroundColor = UIColor.App.buttonBackgroundSecondary
-        self.inviteButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        self.inviteButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
+        self.inviteButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        self.inviteButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.inviteButton.setTitleColor(UIColor.App.buttonTextDisablePrimary.withAlphaComponent(0.7), for: .disabled)
 
     }
 
@@ -68,9 +73,14 @@ extension InviteContactTableViewCell {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(localized("invite_friends_via"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 14)
-        button.layer.cornerRadius = CornerRadius.button
-        // button.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: 5.0, bottom: 0.0, right: 5.0)
+        button.setImage(UIImage(named: "send_via_icon"), for: .normal)
+        button.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        button.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        button.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
+        button.imageEdgeInsets = UIEdgeInsets(top: -2, left: -10, bottom: 0, right: 0)
         button.setInsets(forContentPadding: UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 30), imageTitlePadding: CGFloat(0))
+        button.layer.cornerRadius = CornerRadius.button
         return button
     }
 
@@ -79,6 +89,9 @@ extension InviteContactTableViewCell {
         self.contentView.addSubview(self.inviteButton)
 
         self.initConstraints()
+
+        self.contentView.layoutSubviews()
+        self.contentView.layoutIfNeeded()
 
     }
 
