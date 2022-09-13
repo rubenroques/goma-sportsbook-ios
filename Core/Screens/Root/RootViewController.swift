@@ -25,6 +25,7 @@ class RootViewController: UIViewController {
     @IBOutlet private var homeBaseView: UIView!
     @IBOutlet private var preLiveBaseView: UIView!
     @IBOutlet private var liveBaseView: UIView!
+    @IBOutlet private var tipsBaseView: UIView!
     @IBOutlet private var casinoBaseView: UIView!
     
     @IBOutlet private var tabBarView: UIView!
@@ -42,6 +43,10 @@ class RootViewController: UIViewController {
     @IBOutlet private var liveButtonBaseView: UIView!
     @IBOutlet private var liveIconImageView: UIImageView!
     @IBOutlet private var liveTitleLabel: UILabel!
+
+    @IBOutlet private var tipsButtonBaseView: UIView!
+    @IBOutlet private var tipsIconImageView: UIImageView!
+    @IBOutlet private var tipsTitleLabel: UILabel!
     
     @IBOutlet private var casinoButtonBaseView: UIView!
     @IBOutlet private var casinoIconImageView: UIImageView!
@@ -91,25 +96,9 @@ class RootViewController: UIViewController {
         didSet {
             if isLocalAuthenticationCoveringView {
                 self.localAuthenticationBaseView.alpha = 1.0
-//                UIView.animate(withDuration: 0.2,
-//                               delay: 0.0,
-//                               options: .curveEaseIn,
-//                               animations: {
-//                    self.localAuthenticationBaseView.alpha = 1.0
-//                }, completion: { _ in
-//
-//                })
             }
             else {
                 self.localAuthenticationBaseView.alpha = 0.0
-//                UIView.animate(withDuration: 0.2,
-//                               delay: 0.0,
-//                               options: .curveEaseOut,
-//                               animations: {
-//                    self.localAuthenticationBaseView.alpha = 0.0
-//                }, completion: { _ in
-//
-//                })
             }
         }
     }
@@ -139,13 +128,14 @@ class RootViewController: UIViewController {
     lazy var homeViewController = HomeViewController()
     lazy var preLiveViewController = PreLiveEventsViewController(selectedSportType: Sport.football)
     lazy var liveEventsViewController = LiveEventsViewController()
-    
+    lazy var tipsRootViewController = TipsRootViewController()
     lazy var casinoViewController = CasinoWebViewController(userId: self.userId)
 
     // Loaded view controllers
     var homeViewControllerLoaded = false
     var preLiveViewControllerLoaded = false
     var liveEventsViewControllerLoaded = false
+    var tipsRootViewControllerLoaded = false
     var casinoViewControllerLoaded = false
 
     var currentSport: Sport
@@ -162,6 +152,7 @@ class RootViewController: UIViewController {
         case home
         case preLive
         case live
+        case tips
         case casino
     }
     var selectedTabItem: TabItem {
@@ -173,6 +164,8 @@ class RootViewController: UIViewController {
                 self.selectSportsTabBarItem()
             case .live:
                 self.selectLiveTabBarItem()
+            case .tips:
+                self.selectTipsTabBarItem()
             case .casino:
                 self.selectCasinoTabBarItem()
             }
@@ -508,6 +501,7 @@ class RootViewController: UIViewController {
         self.liveTitleLabel.text = localized("live")
         self.casinoTitleLabel.text = localized("casino")
         self.sportsbookTitleLabel.text = localized("sportsbook")
+        self.tipsTitleLabel.text = localized("tips")
         
         self.casinoBottomView.backgroundColor = UIColor.App.backgroundPrimary
         
@@ -525,6 +519,9 @@ class RootViewController: UIViewController {
 
         let liveTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLiveTabItem))
         liveButtonBaseView.addGestureRecognizer(liveTapGesture)
+
+        let tipsTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapTipsTabItem))
+        tipsButtonBaseView.addGestureRecognizer(tipsTapGesture)
         
         let casinoTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapCasinoTabItem))
         casinoButtonBaseView.addGestureRecognizer(casinoTapGesture)
@@ -555,12 +552,13 @@ class RootViewController: UIViewController {
         self.homeBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.preLiveBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.liveBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.tipsBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.casinoBaseView.backgroundColor = UIColor.App.backgroundPrimary
         
         self.homeTitleLabel.textColor = UIColor.App.highlightPrimary
         self.liveTitleLabel.textColor = UIColor.App.highlightPrimary
         self.sportsTitleLabel.textColor = UIColor.App.highlightPrimary
-        
+        self.tipsTitleLabel.textColor = UIColor.App.highlightPrimary
         self.casinoTitleLabel.textColor = UIColor.App.textSecondary
         self.sportsbookTitleLabel.textColor = UIColor.App.textSecondary
         
@@ -583,6 +581,7 @@ class RootViewController: UIViewController {
         self.homeButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.sportsButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.liveButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.tipsButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.profilePictureBaseView.backgroundColor = UIColor.App.highlightPrimary
 
         self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
@@ -792,6 +791,12 @@ extension RootViewController {
             }
             liveEventsViewControllerLoaded = true
         }
+
+        if case .tips = tab, !tipsRootViewControllerLoaded {
+            self.addChildViewController(self.tipsRootViewController, toView: self.tipsBaseView)
+
+            tipsRootViewControllerLoaded = true
+        }
         
         if case .casino = tab, !casinoViewControllerLoaded {
             self.searchButton.isHidden = true
@@ -948,6 +953,13 @@ extension RootViewController {
         
         self.selectedTabItem = .live
     }
+
+    @objc private func didTapTipsTabItem() {
+
+        self.flipToSportsbookIfNeeded()
+
+        self.selectedTabItem = .tips
+    }
     
     @objc private func didTapCasinoTabItem() {
         self.flipToCasinoIfNeeded()
@@ -969,6 +981,7 @@ extension RootViewController {
         self.homeBaseView.isHidden = false
         self.preLiveBaseView.isHidden = true
         self.liveBaseView.isHidden = true
+        self.tipsBaseView.isHidden = true
 
         self.redrawButtonButtons()
     }
@@ -979,6 +992,7 @@ extension RootViewController {
         self.homeBaseView.isHidden = true
         self.preLiveBaseView.isHidden = false
         self.liveBaseView.isHidden = true
+        self.tipsBaseView.isHidden = true
 
         self.redrawButtonButtons()
     }
@@ -989,6 +1003,18 @@ extension RootViewController {
         self.homeBaseView.isHidden = true
         self.preLiveBaseView.isHidden = true
         self.liveBaseView.isHidden = false
+        self.tipsBaseView.isHidden = true
+
+        self.redrawButtonButtons()
+    }
+
+    func selectTipsTabBarItem() {
+        self.loadChildViewControllerIfNeeded(tab: .tips)
+
+        self.homeBaseView.isHidden = true
+        self.preLiveBaseView.isHidden = true
+        self.liveBaseView.isHidden = true
+        self.tipsBaseView.isHidden = false
 
         self.redrawButtonButtons()
     }
@@ -1010,6 +1036,8 @@ extension RootViewController {
             sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             liveTitleLabel.textColor = UIColor.App.iconSecondary
             liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            tipsTitleLabel.textColor = UIColor.App.iconSecondary
+            tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
            
         case .preLive:
             sportsButtonBaseView.alpha = self.activeButtonAlpha
@@ -1019,6 +1047,8 @@ extension RootViewController {
             sportsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
             liveTitleLabel.textColor = UIColor.App.iconSecondary
             liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            tipsTitleLabel.textColor = UIColor.App.iconSecondary
+            tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
 
         case .live:
             liveButtonBaseView.alpha = self.activeButtonAlpha
@@ -1028,6 +1058,19 @@ extension RootViewController {
             sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             liveTitleLabel.textColor = UIColor.App.highlightPrimary
             liveIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
+            tipsTitleLabel.textColor = UIColor.App.iconSecondary
+            tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+
+        case .tips:
+            tipsButtonBaseView.alpha = self.activeButtonAlpha
+            homeTitleLabel.textColor = UIColor.App.iconSecondary
+            homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            sportsTitleLabel.textColor = UIColor.App.iconSecondary
+            sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            liveTitleLabel.textColor = UIColor.App.iconSecondary
+            liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            tipsTitleLabel.textColor = UIColor.App.highlightPrimary
+            tipsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
             
         case .casino:
             homeTitleLabel.textColor = UIColor.App.iconSecondary
@@ -1097,6 +1140,12 @@ extension RootViewController {
 extension RootViewController {
     
     func showLocalAuthenticationCoveringViewIfNeeded() {
+        
+        #if DEBUG
+        self.isLocalAuthenticationCoveringView = false
+        return
+        #endif
+        
         if Env.userSessionStore.shouldRequestFaceId() {
             self.isLocalAuthenticationCoveringView = true
         }
@@ -1128,6 +1177,10 @@ extension RootViewController {
     
     func authenticateUser() {
     
+        #if DEBUG
+        return
+        #endif
+        
         if !Env.userSessionStore.shouldRequestFaceId() {
             return
         }

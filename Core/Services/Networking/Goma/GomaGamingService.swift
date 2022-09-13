@@ -14,6 +14,7 @@ enum GomaGamingService {
     case settings
     case modules
     case simpleRegister(username: String, email: String, phoneCountryCode: String, phone: String, birthDate: String, userProviderId: String, deviceToken: String)
+    case updateProfile(name: String)
     case modalPopUpDetails
     case login(username: String, password: String, deviceToken: String)
     case suggestedBets
@@ -43,6 +44,8 @@ enum GomaGamingService {
     case setAllNotificationRead(type: String)
     case sendSupportTicket(title: String, message: String)
     case notificationsCounter(type: String)
+    case featuredTips(betType: String? = nil, totalOddsMin: String? = nil, totalOddsMax: String? = nil, friends: Bool? = nil)
+
 }
 
 extension GomaGamingService: Endpoint {
@@ -68,6 +71,8 @@ extension GomaGamingService: Endpoint {
             return "/api/settings/\(apiVersion)/modules"
         case .simpleRegister:
             return "/api/users/\(apiVersion)/register"
+        case .updateProfile:
+                    return "/api/users/\(apiVersion)/profile"
         case .modalPopUpDetails:
             return "/api/settings/\(apiVersion)/info-popup"
         case .login:
@@ -121,6 +126,8 @@ extension GomaGamingService: Endpoint {
             return "/api/users/\(apiVersion)/contact"
         case .notificationsCounter:
             return "/api/notifications/\(apiVersion)/count"
+        case .featuredTips:
+            return "/api/betting/\(apiVersion)/tips"
         }
     }
 
@@ -131,7 +138,7 @@ extension GomaGamingService: Endpoint {
         case .geolocation(let latitude, let longitude):
             return [URLQueryItem(name: "lat", value: latitude),
                     URLQueryItem(name: "lng", value: longitude)]
-        case .simpleRegister, .modalPopUpDetails, .login,
+        case .simpleRegister, .updateProfile, .modalPopUpDetails, .login,
                 .suggestedBets, .addFavorites, .matchStats, .userSettings, .sendUserSettings, .sendSupportTicket:
             return nil
         case  .settings, .modules:
@@ -148,13 +155,9 @@ extension GomaGamingService: Endpoint {
 
             let groupNameQuery = URLQueryItem(name: "name", value: groupName)
             queryItemsURL.append(groupNameQuery)
-
-//            for user in userIds {
-//                let queryItem = URLQueryItem(name: "user_ids[]", value: "\(user)")
-//                queryItemsURL.append(queryItem)
-//            }
             print("EDIT GROUP QUERY: \(queryItemsURL)")
             return queryItemsURL
+            
 //        case .lookupPhone(let phones):
 //            var queryItemsURL: [URLQueryItem] = []
 //
@@ -164,6 +167,7 @@ extension GomaGamingService: Endpoint {
 //            }
 //            print("PHONE QUERY: \(queryItemsURL)")
 //            return queryItemsURL
+            
         case .removeUser(_, let userId):
             return [URLQueryItem(name: "users_ids[]", value: userId)]
         case .addUserToGroup(_, let userIds):
@@ -181,6 +185,36 @@ extension GomaGamingService: Endpoint {
             URLQueryItem(name: "page", value: "\(page)")]
         case .notificationsCounter(let type):
             return[URLQueryItem(name: "type", value: type)]
+        case .featuredTips(let betType, let totalOddsMin, let totalOddsMax, let friends):
+            var queryItemsURL: [URLQueryItem] = []
+
+            if betType != nil {
+                let queryItem = URLQueryItem(name: "bet_type", value: betType)
+                queryItemsURL.append(queryItem)
+            }
+
+            if totalOddsMin != nil {
+                let queryItem = URLQueryItem(name: "total_odds_min", value: totalOddsMin)
+                queryItemsURL.append(queryItem)
+            }
+
+            if totalOddsMax != nil {
+                let queryItem = URLQueryItem(name: "total_odds_max", value: totalOddsMax)
+                queryItemsURL.append(queryItem)
+            }
+
+            if friends != nil {
+                if let friendsValue = friends {
+                    let queryItem = URLQueryItem(name: "friends", value: "\(friendsValue)")
+                    queryItemsURL.append(queryItem)
+                }
+            }
+
+            if queryItemsURL.isNotEmpty {
+                return queryItemsURL
+            }
+
+            return nil
         }
     }
 
@@ -208,14 +242,14 @@ extension GomaGamingService: Endpoint {
         case .geolocation, .settings, .modalPopUpDetails, .suggestedBets,
                 .matchStats, .userSettings, .modules:
             return .get
-        case .log, .simpleRegister, .login, .addFavorites, .sendUserSettings, .sendSupportTicket:
+        case .log, .simpleRegister, .updateProfile, .login, .addFavorites, .sendUserSettings, .sendSupportTicket:
             return .post
         case .removeFavorite:
             return .delete
         // Social
         case .addFriend, .inviteFriend, .addGroup, .addUserToGroup, .lookupPhone, .setNotificationRead, .setAllNotificationRead:
             return .post
-        case .listFriends, .chatrooms, .searchUserCode, .getNotification, .notificationsCounter:
+        case .listFriends, .chatrooms, .searchUserCode, .getNotification, .notificationsCounter, .featuredTips:
             return .get
         case .deleteGroup, .leaveGroup, .deleteFriend, .removeUser:
             return .delete
@@ -247,6 +281,16 @@ extension GomaGamingService: Endpoint {
                        """
             let data = body.data(using: String.Encoding.utf8)!
             return data
+            
+        case .updateProfile(let name):
+            let body = """
+                       {
+                        "name": "\(name)"
+                       }
+                       """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+            
         case .login(let username, let password, let deviceToken):
             let body = """
                        {"username": "\(username)",

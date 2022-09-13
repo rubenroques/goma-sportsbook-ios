@@ -555,3 +555,16 @@ Terms of use, Privacy Policy and EULA";
 "chat_empty_shared_ticket_others" = "%s shared a ticket.";
 
 "bet" = "Bet";
+
+"follow" = "Follow";
+"total_odds" = "Total Odds";
+"number_selections" = "Number of selections";
+"bet_same" = "Bet the same";
+"show_full_tip" = "Show full tip";
+"featured_tips" = "Featured Tips";
+"tips" = "Tips";
+
+"no_login_tips" = "You need to be logged in to be able to see tips";
+"no_login_rankings" = "You need to be logged in to be able to see rankings";
+
+"add_friends_tip" = "You need to add some friends to see what kind of tips they share.";

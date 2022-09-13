@@ -65,6 +65,7 @@ class HomeViewController: UIViewController {
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
         self.tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
         self.tableView.register(VideoPreviewLineTableViewCell.self, forCellReuseIdentifier: VideoPreviewLineTableViewCell.identifier)
+        self.tableView.register(FeaturedTipLineTableViewCell.self, forCellReuseIdentifier: FeaturedTipLineTableViewCell.identifier)
 
         self.refreshControl.tintColor = UIColor.lightGray
         self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
@@ -204,6 +205,23 @@ class HomeViewController: UIViewController {
         self.navigationController?.pushViewController(bonusRootViewController, animated: true)
     }
 
+    private func openFeaturedTipSlider(featuredTips: [FeaturedTip]) {
+
+        let tipsSliderViewController = TipsSliderViewController(viewModel: TipsSliderViewModel(featuredTips: featuredTips))
+        tipsSliderViewController.modalPresentationStyle = .overCurrentContext
+        self.present(tipsSliderViewController, animated: true)
+        
+        /*
+        let featuredTipDetailsViewModel = FeaturedTipDetailsViewModel(featuredTip: featuredTip)
+        let featuredTipDetailsViewController = FeaturedTipDetailsViewController(viewModel: featuredTipDetailsViewModel)
+
+        featuredTipDetailsViewController.modalPresentationStyle = .overCurrentContext
+        featuredTipDetailsViewController.modalTransitionStyle = .crossDissolve
+
+        self.present(featuredTipDetailsViewController, animated: true)
+        */
+    }
+
     @objc private func didTapOpenFavorites() {
         self.openFavorites()
     }
@@ -304,7 +322,21 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
            
             return cell
+        case .featuredTips:
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: FeaturedTipLineTableViewCell.identifier) as? FeaturedTipLineTableViewCell,
+                    let featuredBetLineViewModel = self.viewModel.featuredTipLineViewModel()
+            else {
+                fatalError()
+            }
 
+            cell.openFeaturedTipDetailAction = { [weak self] featuredTip in
+                self?.openFeaturedTipSlider(featuredTips: featuredBetLineViewModel.featuredTips)
+            }
+
+            cell.configure(withViewModel: featuredBetLineViewModel)
+
+            return cell
         case .suggestedBets:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: SuggestedBetLineTableViewCell.identifier) as? SuggestedBetLineTableViewCell,
@@ -453,6 +485,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return 180
         case .userFavorites:
             return UITableView.automaticDimension
+        case .featuredTips:
+            return 400
         case .suggestedBets:
             return 336
         case .sport:
@@ -497,6 +531,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return 180
         case .userFavorites:
             return StyleHelper.cardsStyleHeight() + 20
+        case .featuredTips:
+            return 400
         case .suggestedBets:
             return 336
         case .sport:
@@ -632,6 +668,8 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
             case .bannerLine:
                 _ = self.viewModel.bannerLineViewModel()
             case .userFavorites:
+                ()
+            case .featuredTips:
                 ()
             case .suggestedBets:
                 _ = self.viewModel.suggestedBetLineViewModel()

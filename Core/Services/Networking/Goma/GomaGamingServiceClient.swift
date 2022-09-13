@@ -99,6 +99,13 @@ class GomaGamingServiceClient {
         let requestPublisher: AnyPublisher<AuthToken, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
+    
+    func requestUpdateNameProfile(name: String) -> AnyPublisher<MessageNetworkResponse, NetworkError> {
+          let endpoint = GomaGamingService.updateProfile(name: name)
+
+          let requestPublisher: AnyPublisher<MessageNetworkResponse, NetworkError> = networkClient.requestEndpoint(deviceId: name, endpoint: endpoint)
+          return requestPublisher
+      }
 
     // TODO: Code Review -
     func requestSuggestedBets(deviceId: String) -> AnyPublisher<[[SuggestedBetSummary]]?, NetworkError> {
@@ -263,6 +270,16 @@ class GomaGamingServiceClient {
     func requestNewsNotifications(deviceId: String, page: Int) -> AnyPublisher<NetworkResponse<[InAppMessage]>, NetworkError> {
         let endpoint = GomaGamingService.getNotification(type: NotificationsType.news.identifier, page: page)
         let requestPublisher: AnyPublisher<NetworkResponse<[InAppMessage]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
+    func requestFeaturedTips(deviceId: String,
+                             betType: String? = nil,
+                             totalOddsMin: String? = nil,
+                             totalOddsMax: String? = nil,
+                             friends: Bool? = nil) -> AnyPublisher<NetworkResponse<[FeaturedTip]>, NetworkError> {
+        let endpoint = GomaGamingService.featuredTips(betType: betType, totalOddsMin: totalOddsMin, totalOddsMax: totalOddsMax, friends: friends)
+        let requestPublisher: AnyPublisher<NetworkResponse<[FeaturedTip]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
 }
