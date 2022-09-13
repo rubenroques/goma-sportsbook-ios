@@ -338,6 +338,8 @@ class MatchDetailsViewController: UIViewController {
         let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
         accountValueView.addGestureRecognizer(accountValueTapGesture)
         
+        let competitionDetailTapGesture = UITapGestureRecognizer(target: self, action: #selector(openCompetitionsDetails))
+        headerCompetitionDetailView.addGestureRecognizer(competitionDetailTapGesture)
         
         // matchFieldWebView
         //
@@ -424,8 +426,7 @@ class MatchDetailsViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        
+                
         // betslip
         //
         self.view.addSubview(self.floatingShortcutsView)
@@ -865,6 +866,15 @@ class MatchDetailsViewController: UIViewController {
             self?.reloadMarketGroupDetailsContent()
         }
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
+    }
+    
+    @objc private func openCompetitionsDetails() {
+        if let match = self.viewModel.match {
+            let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [match.competitionId], sport: Sport(id: match.sportType), store: AggregatorsRepository())
+            let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
+            self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
+        }
+        
     }
     
     @objc func didTapChatView() {
