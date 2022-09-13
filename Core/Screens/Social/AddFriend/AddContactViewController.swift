@@ -196,12 +196,6 @@ class AddContactViewController: UIViewController {
         }
     }
 
-    private func sendUserInvite(phoneNumber: String) {
-        // Send invite here
-        print("Send invite to: \(phoneNumber)")
-        self.viewModel.inviteFriendRequest(phoneNumber: phoneNumber)
-    }
-
     private func shareAppInvite() {
 
         let metadata = LPLinkMetadata()
@@ -229,7 +223,6 @@ class AddContactViewController: UIViewController {
         }
 
         self.present(shareActivityViewController, animated: true, completion: nil)
-
 
     }
 
@@ -270,8 +263,6 @@ class AddContactViewController: UIViewController {
     }
 
     @objc func didTapAddFriendButton() {
-
-        print("FRIENDS SELECTED: \(self.viewModel.selectedUsers)")
 
         self.viewModel.sendFriendRequest()
     }

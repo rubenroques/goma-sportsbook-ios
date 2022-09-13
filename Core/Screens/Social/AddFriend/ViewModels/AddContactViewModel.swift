@@ -22,7 +22,6 @@ class AddContactViewModel {
     var initialFullUsers: [UserContact] = []
     var contactsData: [ContactsData] = []
     var cachedFriendCellViewModels: [String: AddFriendCellViewModel] = [:]
-    //var cachedUnregisteredFriendCellViewModels: [String: AddUnregisteredFriendCellViewModel] = [:]
     var hasDoneSearch: Bool = false
     var hasRegisteredFriends: Bool = false
     var selectedUsers: [UserContact] = []
@@ -83,25 +82,10 @@ class AddContactViewModel {
 
     }
 
-    func getUsers() {
-        // TEST
-        if self.users.isEmpty {
-            for i in 0...20 {
-                let user = UserContact(id: "\(i)", username: "@GOMA_User", phones: ["+351 999 888 777"])
-                self.users.append(user)
-
-            }
-
-            self.isEmptySearchPublisher.send(false)
-        }
-        self.dataNeedsReload.send()
-    }
-
     func clearUsers() {
         self.users = []
         self.selectedUsers = []
         self.cachedFriendCellViewModels = [:]
-        // self.cachedUnregisteredFriendCellViewModels = [:]
         self.isEmptySearchPublisher.send(true)
         self.canAddFriendPublisher.send(false)
         self.dataNeedsReload.send()
@@ -151,7 +135,6 @@ class AddContactViewModel {
             }, receiveValue: { response in
                 if let friends = response.data {
                     self.friendsList = friends
-                    print("LIST FRIEND: \(friends)")
                 }
             })
             .store(in: &cancellables)
@@ -217,7 +200,6 @@ class AddContactViewModel {
                 }
 
             }, receiveValue: { [weak self] registeredUsers in
-                print("PHONES GOMA: \(registeredUsers)")
                 self?.registeredUsers = registeredUsers
                 self?.populateContactsData()
 
@@ -319,18 +301,7 @@ class AddContactViewModel {
                 }
             }
         }
-//        else {
-//
-//            self.users.append(userContact)
-//
-//            if self.sectionUsers[UserContactType.unregistered.identifier] != nil {
-//
-//                self.sectionUsers[UserContactType.unregistered.identifier]?.append(userContact)
-//            }
-//            else {
-//                self.sectionUsers[UserContactType.unregistered.identifier] = [userContact]
-//            }
-//        }
+
     }
 
     func sendFriendRequest() {
@@ -353,7 +324,6 @@ class AddContactViewModel {
 
                 self?.shouldShowAlert.send(true)
             }, receiveValue: { [weak self] response in
-                print("ADD FRIEND GOMA: \(response)")
                 self?.friendAlertType = .success
             })
             .store(in: &cancellables)
