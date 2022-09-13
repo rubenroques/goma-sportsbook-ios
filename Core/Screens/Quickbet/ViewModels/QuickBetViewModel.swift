@@ -197,7 +197,6 @@ class QuickBetViewModel {
     private func updateBettingOffer(value: Double?, isAvailable: Bool?, statusId: String?) {
 
         let isOddAvailable = (statusId ?? "1") == "1" && isAvailable ?? true
-        print("IS ODD AVAILABLE: \(isOddAvailable)")
 
         if isOddAvailable {
             self.isAvailableOdd.send(true)
