@@ -49,6 +49,7 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
 
     var didExpandCellAction: ((String) -> Void)?
     var didColapseCellAction: ((String) -> Void)?
+    var didLongPressOdd: ((BettingTicket) -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -138,6 +139,11 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
                         outcomeSelectionButtonView.competitionName = self.competitionName
                         outcomeSelectionButtonView.marketId = self.marketId
                         outcomeSelectionButtonView.configureWith(outcome: outcomeValue)
+
+                        outcomeSelectionButtonView.didLongPressOdd = { [weak self] bettingTicket in
+                            self?.didLongPressOdd?(bettingTicket)
+                        }
+
                         stackView.addArrangedSubview(outcomeSelectionButtonView)
                     }
                     else {

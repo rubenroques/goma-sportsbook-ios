@@ -101,6 +101,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
     }
 
     var tappedMatchWidgetAction: (() -> Void)?
+    var didLongPressOdd: ((BettingTicket) -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -147,11 +148,20 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
         self.leftBaseView.addGestureRecognizer(tapLeftOddButton)
 
+        let longPressLeftOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressLeftOddButton))
+        self.leftBaseView.addGestureRecognizer(longPressLeftOddButton)
+
         let tapMiddleOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapMiddleOddButton))
         self.middleBaseView.addGestureRecognizer(tapMiddleOddButton)
 
+        let longPressMiddleOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressMiddleOddButton))
+        self.middleBaseView.addGestureRecognizer(longPressMiddleOddButton)
+
         let tapRightOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapRightOddButton))
         self.rightBaseView.addGestureRecognizer(tapRightOddButton)
+
+        let longPressRightOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressRightOddButton))
+        self.rightBaseView.addGestureRecognizer(longPressRightOddButton)
 
         let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
         self.addGestureRecognizer(tapMatchView)
@@ -640,6 +650,25 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
     }
 
+    @objc func didLongPressLeftOddButton(_ sender: UILongPressGestureRecognizer) {
+
+        // Triggers function only once instead of rapid fire event
+        if sender.state == .began {
+
+            guard
+                let match = self.match,
+                let market = self.market,
+                let outcome = self.leftOutcome
+            else {
+                return
+            }
+
+            let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
+
+            self.didLongPressOdd?(bettingTicket)
+        }
+    }
+
     func selectMiddleOddButton() {
         self.middleBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
         self.middleOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
@@ -671,6 +700,25 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    @objc func didLongPressMiddleOddButton(_ sender: UILongPressGestureRecognizer) {
+
+        // Triggers function only once instead of rapid fire event
+        if sender.state == .began {
+
+            guard
+                let match = self.match,
+                let market = self.market,
+                let outcome = self.middleOutcome
+            else {
+                return
+            }
+
+            let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
+
+            self.didLongPressOdd?(bettingTicket)
+        }
+    }
+
     func selectRightOddButton() {
         self.rightBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
         self.rightOddValueLabel.textColor = UIColor.App.buttonTextPrimary
@@ -699,6 +747,25 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         else {
             Env.betslipManager.addBettingTicket(bettingTicket)
             self.isRightOutcomeButtonSelected = true
+        }
+    }
+
+    @objc func didLongPressRightOddButton(_ sender: UILongPressGestureRecognizer) {
+
+        // Triggers function only once instead of rapid fire event
+        if sender.state == .began {
+
+            guard
+                let match = self.match,
+                let market = self.market,
+                let outcome = self.rightOutcome
+            else {
+                return
+            }
+
+            let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
+
+            self.didLongPressOdd?(bettingTicket)
         }
     }
     

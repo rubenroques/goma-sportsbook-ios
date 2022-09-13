@@ -30,6 +30,17 @@ class InAppMessageTableViewCell: UITableViewCell {
     var hasBackgroundImage: Bool = false {
         didSet {
             self.backgroundImageView.isHidden = !hasBackgroundImage
+
+            if hasBackgroundImage {
+                self.messageTitleLabel.textColor = UIColor.App.buttonTextPrimary
+
+                self.messageDescriptionLabel.textColor = UIColor.App.buttonTextPrimary
+            }
+            else {
+                self.messageTitleLabel.textColor = UIColor.App.textPrimary
+
+                self.messageDescriptionLabel.textColor = UIColor.App.textPrimary
+            }
         }
     }
 

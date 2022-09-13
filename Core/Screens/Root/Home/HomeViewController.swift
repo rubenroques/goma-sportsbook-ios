@@ -230,6 +230,18 @@ class HomeViewController: UIViewController {
         let myFavoritesViewController = MyFavoritesViewController()
         self.navigationController?.pushViewController(myFavoritesViewController, animated: true)
     }
+
+    private func openQuickbet(_ bettingTicket: BettingTicket) {
+
+        let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
+
+        let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)
+
+        quickbetViewController.modalPresentationStyle = .overCurrentContext
+        quickbetViewController.modalTransitionStyle = .crossDissolve
+
+        self.present(quickbetViewController, animated: true)
+    }
 }
 
 //
@@ -283,6 +295,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     }
                 }
             }
+
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.openQuickbet(bettingTicket)
+            }
             
             return cell
 
@@ -299,6 +315,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.setupFavoriteMatchInfoPublisher(match: match)
             cell.tappedMatchLineAction = { [weak self] in
                 self?.openMatchDetails(matchId: match.id)
+            }
+
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.openQuickbet(bettingTicket)
             }
            
             return cell
@@ -372,6 +392,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     self?.openOutrightCompetition(competition: competition)
                 }
 
+                cell.didLongPressOdd = { [weak self] bettingTicket in
+                    self?.openQuickbet(bettingTicket)
+                }
+
                 return cell
 
             case .singleLine:
@@ -395,6 +419,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 cell.didSelectSeeAllCompetitionAction = { [weak self] competition in
                     self?.openOutrightCompetition(competition: competition)
+                }
+
+                cell.didLongPressOdd = { [weak self] bettingTicket in
+                    self?.openQuickbet(bettingTicket)
                 }
 
                 return cell

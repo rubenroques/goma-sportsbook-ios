@@ -17,6 +17,7 @@ class BannerScrollTableViewCell: UITableViewCell {
 
     var viewModel: BannerLineCellViewModel?
     var didTapBannerViewAction: ((BannerCellViewModel.PresentationType) -> Void)?
+    var didLongPressOdd: ((BettingTicket) -> Void)?
 
     private var carouselCounter: Int = 0
     private weak var timer: Timer?
@@ -149,6 +150,10 @@ extension BannerScrollTableViewCell: UICollectionViewDelegate, UICollectionViewD
 
         cell.didTapBannerViewAction = { [weak self] presentationType in
             self?.didTapBannerViewAction?(presentationType)
+        }
+
+        cell.didLongPressOdd = { [weak self] bettingTicket in
+            self?.didLongPressOdd?(bettingTicket)
         }
 
         return cell
