@@ -205,16 +205,21 @@ class HomeViewController: UIViewController {
         self.navigationController?.pushViewController(bonusRootViewController, animated: true)
     }
 
-    private func openFeaturedTipDetails(featuredTip: FeaturedTip) {
+    private func openFeaturedTipSlider(featuredTips: [FeaturedTip]) {
 
+        let tipsSliderViewController = TipsSliderViewController(viewModel: TipsSliderViewModel(featuredTips: featuredTips))
+        tipsSliderViewController.modalPresentationStyle = .overCurrentContext
+        self.present(tipsSliderViewController, animated: true)
+        
+        /*
         let featuredTipDetailsViewModel = FeaturedTipDetailsViewModel(featuredTip: featuredTip)
-
         let featuredTipDetailsViewController = FeaturedTipDetailsViewController(viewModel: featuredTipDetailsViewModel)
 
         featuredTipDetailsViewController.modalPresentationStyle = .overCurrentContext
         featuredTipDetailsViewController.modalTransitionStyle = .crossDissolve
 
         self.present(featuredTipDetailsViewController, animated: true)
+        */
     }
 
     @objc private func didTapOpenFavorites() {
@@ -305,8 +310,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 fatalError()
             }
 
-            cell.shouldOpenFeaturedTipDetail = { [weak self] featuredTip in
-                self?.openFeaturedTipDetails(featuredTip: featuredTip)
+            cell.openFeaturedTipDetailAction = { [weak self] featuredTip in
+                self?.openFeaturedTipSlider(featuredTips: featuredBetLineViewModel.featuredTips)
             }
 
             cell.configure(withViewModel: featuredBetLineViewModel)

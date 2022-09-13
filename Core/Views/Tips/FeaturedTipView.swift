@@ -48,11 +48,10 @@ class FeaturedTipView: UIView {
 
         self.countryIconImageView.layer.cornerRadius = self.countryIconImageView.frame.height / 2
         self.countryIconImageView.layer.masksToBounds = true
-
     }
 
     func setupWithTheme() {
-        self.containerView.backgroundColor = UIColor.App.backgroundCards
+        self.containerView.backgroundColor = UIColor.App.backgroundTertiary
 
         self.sportIconImageView.backgroundColor = .clear
 

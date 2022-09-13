@@ -152,13 +152,9 @@ extension GomaGamingService: Endpoint {
 
             let groupNameQuery = URLQueryItem(name: "name", value: groupName)
             queryItemsURL.append(groupNameQuery)
-
-//            for user in userIds {
-//                let queryItem = URLQueryItem(name: "user_ids[]", value: "\(user)")
-//                queryItemsURL.append(queryItem)
-//            }
             print("EDIT GROUP QUERY: \(queryItemsURL)")
             return queryItemsURL
+            
 //        case .lookupPhone(let phones):
 //            var queryItemsURL: [URLQueryItem] = []
 //
@@ -168,6 +164,7 @@ extension GomaGamingService: Endpoint {
 //            }
 //            print("PHONE QUERY: \(queryItemsURL)")
 //            return queryItemsURL
+            
         case .removeUser(_, let userId):
             return [URLQueryItem(name: "users_ids[]", value: userId)]
         case .addUserToGroup(_, let userIds):
