@@ -17,6 +17,8 @@ class MatchDetailsViewModel: NSObject {
     }
 
     var matchId: String
+    var homeRedCardsScorePublisher: CurrentValueSubject<String, Never> = .init("SEM VALUES")
+    var awayRedCardsScorePublisher: CurrentValueSubject<String, Never> = .init("SEM VALUES")
 
     var store: MatchDetailsAggregatorRepository
 
@@ -29,6 +31,9 @@ class MatchDetailsViewModel: NSObject {
     var selectedMarketTypeIndexPublisher: CurrentValueSubject<Int?, Never> = .init(nil)
 
     var matchStatsUpdatedPublisher = PassthroughSubject<Void, Never>.init()
+ 
+    private var goalsRegister: EndpointPublisherIdentifiable?
+    private var goalsSubscription: AnyCancellable?
 
     var match: Match? {
         switch matchPublisher.value {
@@ -64,6 +69,7 @@ class MatchDetailsViewModel: NSObject {
         super.init()
 
         self.connectPublishers()
+        self.requestRedCards(forMatchWithId: match.id)
     }
 
     init(matchMode: MatchMode = .preLive, matchId: String) {
@@ -78,6 +84,9 @@ class MatchDetailsViewModel: NSObject {
         super.init()
 
         self.connectPublishers()
+        
+        self.requestRedCards(forMatchWithId: matchId)
+        
     }
 
     deinit {
@@ -377,7 +386,6 @@ extension MatchDetailsViewModel {
         else {
             return nil
         }
-
         if let eventPartsArray =  json["event_parts"].array,
            let partDict = eventPartsArray[safe: indexPath.section],
            let bettintTypesArray = partDict["betting_types"].array,
@@ -387,6 +395,55 @@ extension MatchDetailsViewModel {
 
         return nil
     }
+    
+    func requestRedCards(forMatchWithId id: String) {
+        
+        self.goalsSubscription?.cancel()
+        self.goalsSubscription = nil
 
+        if let goalsRegister = goalsRegister {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: goalsRegister)
+        }
+        
+        let endpoint = TSRouter.eventPartScoresPublisher(operatorId: Env.appSession.operatorId, language: "en", matchId: id)
+        
+        self.goalsSubscription = Env.everyMatrixClient.manager
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure:
+                    print("Error retrieving data!")
+                case .finished:
+                    print("Data retrieved!")
+                }
+            }, receiveValue: { [weak self] state in
+                switch state {
+                case .connect(let publisherIdentifiable):
+                    print("%%\(publisherIdentifiable)")
+                    self?.goalsRegister = publisherIdentifiable
+                case .initialContent(let aggregator):
+                    print("MyBets cashoutPublisher initialContent")
+                    for content in (aggregator.content ?? []) {
+                       switch content {
+                        case .eventPartScore(let eventPartScore):
+                            if let eventInfoTypeId = eventPartScore.eventInfoTypeID, eventInfoTypeId == "2" {
+                                if let homeScore = eventPartScore.homeScore {
+                                    self?.homeRedCardsScorePublisher.send(homeScore)
+                                    
+                                }
+                                if let awayscore = eventPartScore.awayScore {
+                                    self?.awayRedCardsScorePublisher.send(awayscore)
+                                    
+                                }
+                            }
+                        default: ()
+                        }
+                    }
+                case .updatedContent(let aggregatorUpdates):
+                    print("MyBets cashoutPublisher updatedContent")
+                case .disconnect:
+                    print("MyBets cashoutPublisher disconnect")
+                }
+            })
+    }
 }
-

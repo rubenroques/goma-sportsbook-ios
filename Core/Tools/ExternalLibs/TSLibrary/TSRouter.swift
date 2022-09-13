@@ -262,7 +262,7 @@ enum TSRouter {
             return "/sports/\(operatorId)/\(language)/tournaments/\(sportId)"
 
         case .eventPartScoresPublisher(let operatorId, let language, let matchId):
-            return "/sports/\(operatorId)/\(language)/\(matchId)/eventPartScores/small"
+            return "/sports/\(operatorId)/\(language)/\(matchId)/eventPartScores/large"
 
         case .sportsListPublisher(let operatorId, let language):
             return "/sports/\(operatorId)/\(language)/disciplines/LIVE/BOTH"

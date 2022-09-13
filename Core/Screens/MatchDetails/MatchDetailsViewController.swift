@@ -80,6 +80,10 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var matchNotAvailableView: UIView!
     @IBOutlet private var matchNotAvailableLabel: UILabel!
     
+    @IBOutlet private weak var homeRedCardImage: UIImageView!
+    @IBOutlet private weak var awayRedCardImage: UIImageView!
+    
+    
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
     private static func createFloatingShortcutsView() -> FloatingShortcutsView {
         let floatingShortcutsView = FloatingShortcutsView()
@@ -625,6 +629,33 @@ class MatchDetailsViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
                 self?.reloadStatsCollectionView()
+            })
+            .store(in: &cancellables)
+        
+        self.viewModel.homeRedCardsScorePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] homeScoreValue in
+                
+                if homeScoreValue != "0" {
+                    self?.homeRedCardImage.isHidden = false
+                }
+               else {
+                    self?.homeRedCardImage.isHidden = true
+                }
+            })
+            .store(in: &cancellables)
+        
+        self.viewModel.awayRedCardsScorePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] awayScoreValue in
+                
+                if awayScoreValue != "0" {
+                    self?.awayRedCardImage.isHidden = false
+                }
+                else {
+                    self?.awayRedCardImage.isHidden = true
+                }
+                  
             })
             .store(in: &cancellables)
     }
