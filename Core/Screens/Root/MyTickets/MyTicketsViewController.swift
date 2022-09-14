@@ -79,7 +79,7 @@ class MyTicketsViewController: UIViewController {
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
 
-        self.viewModel.isLoading
+        self.viewModel.isLoadingTickets
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLoading in
                 if !isLoading {
