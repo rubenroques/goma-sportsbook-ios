@@ -280,6 +280,7 @@ class GomaGamingServiceClient {
                              friends: Bool? = nil) -> AnyPublisher<NetworkResponse<[FeaturedTip]>, NetworkError> {
         let endpoint = GomaGamingService.featuredTips(betType: betType, totalOddsMin: totalOddsMin, totalOddsMax: totalOddsMax, friends: friends)
         let requestPublisher: AnyPublisher<NetworkResponse<[FeaturedTip]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+                
         return requestPublisher
     }
 }

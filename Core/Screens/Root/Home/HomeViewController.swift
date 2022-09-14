@@ -205,9 +205,9 @@ class HomeViewController: UIViewController {
         self.navigationController?.pushViewController(bonusRootViewController, animated: true)
     }
 
-    private func openFeaturedTipSlider(featuredTips: [FeaturedTip]) {
+    private func openFeaturedTipSlider(featuredTips: [FeaturedTip], atIndex index: Int = 0) {
 
-        let tipsSliderViewController = TipsSliderViewController(viewModel: TipsSliderViewModel(featuredTips: featuredTips))
+        let tipsSliderViewController = TipsSliderViewController(viewModel: TipsSliderViewModel(featuredTips: featuredTips, startIndex: index))
         tipsSliderViewController.modalPresentationStyle = .overCurrentContext
         self.present(tipsSliderViewController, animated: true)
         
@@ -331,7 +331,12 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             cell.openFeaturedTipDetailAction = { [weak self] featuredTip in
-                self?.openFeaturedTipSlider(featuredTips: featuredBetLineViewModel.featuredTips)
+                let firstIndex = featuredBetLineViewModel.featuredTips.firstIndex(where: { tipIterator in
+                    tipIterator.id == featuredTip.id
+                })
+                let firstIndexValue: Int = Int(firstIndex ?? 0)
+                
+                self?.openFeaturedTipSlider(featuredTips: featuredBetLineViewModel.featuredTips, atIndex: firstIndexValue)
             }
 
             cell.configure(withViewModel: featuredBetLineViewModel)
@@ -486,7 +491,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .userFavorites:
             return UITableView.automaticDimension
         case .featuredTips:
-            return 400
+            return 420
         case .suggestedBets:
             return 336
         case .sport:
@@ -532,7 +537,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .userFavorites:
             return StyleHelper.cardsStyleHeight() + 20
         case .featuredTips:
-            return 400
+            return 420
         case .suggestedBets:
             return 336
         case .sport:

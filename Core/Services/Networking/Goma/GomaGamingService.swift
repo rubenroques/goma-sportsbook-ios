@@ -145,7 +145,8 @@ extension GomaGamingService: Endpoint {
             return nil
         case .removeFavorite(let favorite):
             return [URLQueryItem(name: "favorite_ids[]", value: favorite)]
-        // Social
+        
+            // Social
         case .addFriend, .deleteFriend, .listFriends, .inviteFriend, .addGroup, .deleteGroup, .leaveGroup, .searchUserCode, .lookupPhone, .setNotificationRead, .setAllNotificationRead:
             return nil
         case .chatrooms(let page):
@@ -158,27 +159,15 @@ extension GomaGamingService: Endpoint {
             print("EDIT GROUP QUERY: \(queryItemsURL)")
             return queryItemsURL
             
-//        case .lookupPhone(let phones):
-//            var queryItemsURL: [URLQueryItem] = []
-//
-//            for phone in phones {
-//                let queryItem = URLQueryItem(name: "phone_numbers[]", value: "\(phone)")
-//                queryItemsURL.append(queryItem)
-//            }
-//            print("PHONE QUERY: \(queryItemsURL)")
-//            return queryItemsURL
-            
         case .removeUser(_, let userId):
             return [URLQueryItem(name: "users_ids[]", value: userId)]
+
         case .addUserToGroup(_, let userIds):
             var queryItemsURL: [URLQueryItem] = []
-
             for user in userIds {
                 let queryItem = URLQueryItem(name: "users_ids[]", value: "\(user)")
                 queryItemsURL.append(queryItem)
             }
-
-            print("ADD USER GROUP QUERY: \(queryItemsURL)")
             return queryItemsURL
         case .getNotification(let type, let page):
             return [URLQueryItem(name: "type", value: type),
