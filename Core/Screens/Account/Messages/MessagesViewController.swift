@@ -152,7 +152,15 @@ class MessagesViewController: UIViewController {
     private func openMessageDetail(cellViewModel: InAppMessageCellViewModel) {
 
         if cellViewModel.inAppMessage.openingType == "external", let urlString = cellViewModel.inAppMessage.url, let url = URL(string: urlString) {
-            let messageDetailWebViewController = MessageDetailWebViewController(url: url)
+
+            let messageDetailWebViewModel = MessageDetailWebViewModel(inAppMessage: cellViewModel.inAppMessage)
+
+            let messageDetailWebViewController = MessageDetailWebViewController(url: url, viewModel: messageDetailWebViewModel)
+
+            messageDetailWebViewController.shouldSetMessageRead = { inAppMessageId in
+                self.viewModel.setCellReadStatus(inAppMessageId: inAppMessageId)
+            }
+
             self.navigationController?.pushViewController(messageDetailWebViewController, animated: true)
         }
         else {

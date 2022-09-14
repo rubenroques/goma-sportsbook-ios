@@ -27,7 +27,9 @@ class BettingHistoryViewModel {
 
     // MARK: - Publishers
     var bettingTicketsType: BettingTicketsType = .opened
-
+    var cachedViewModels: [String: MyTicketCellViewModel] = [:]
+    var filterApplied: FilterHistoryViewModel.FilterValue = .past30Days
+    
     // MARK: - Publishers
     var titlePublisher: CurrentValueSubject<String, Never>
     var listStatePublisher: CurrentValueSubject<ListState, Never> = .init(.loading)
@@ -35,24 +37,39 @@ class BettingHistoryViewModel {
 
     var isTicketsEmptyPublisher: AnyPublisher<Bool, Never>?
     var isTransactionsEmptyPublisher: AnyPublisher<Bool, Never>?
-
+    
+    var startDatePublisher: CurrentValueSubject<Date, Never> = .init(Date())
+    var endDatePublisher: CurrentValueSubject<Date, Never> = .init(Date())
+    
     // MARK: - data
     var resolvedTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
     var openedTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
     var wonTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
     var cashoutTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
 
+    private var matchesPublisher: AnyCancellable?
+    private var matchesRegister: EndpointPublisherIdentifiable?
+    
     // MARK: - Private Properties
 
-    private let recordsPerPage = 80
+    private var recordsPerPage = 10
+    
+    private var ticketsHasNextPage = true
+    private var recordsPage = 1
+
+    private var resolvedPage = 0
+    private var openedPage = 0
+    private var wonPage = 0
+    private var cashoutPage = 0
 
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Life Cycle
-    init(bettingTicketsType: BettingTicketsType) {
+    init(bettingTicketsType: BettingTicketsType, filterApplied: FilterHistoryViewModel.FilterValue) {
 
         self.bettingTicketsType = bettingTicketsType
-
+        self.filterApplied = filterApplied
+        
         switch bettingTicketsType {
         case .opened:
             self.titlePublisher = .init("Open")
@@ -64,6 +81,8 @@ class BettingHistoryViewModel {
             self.titlePublisher = .init("Cashout")
         }
 
+        self.calculateDate(filterApplied: filterApplied)
+   
         Env.everyMatrixClient.serviceStatusPublisher
             .sink { serviceStatus in
                 if serviceStatus == .connected {
@@ -71,6 +90,7 @@ class BettingHistoryViewModel {
                 }
             }
             .store(in: &cancellables)
+        
     }
 
     func initialContentLoad() {
@@ -94,7 +114,47 @@ class BettingHistoryViewModel {
     }
 
     func refreshContent() {
+        self.ticketsHasNextPage = true
+        self.calculateDate(filterApplied: filterApplied)
         self.initialContentLoad()
+    }
+
+    func calculateDate(filterApplied: FilterHistoryViewModel.FilterValue) {
+        
+        self.endDatePublisher.send(Date())
+
+        switch filterApplied {
+        case .dateRange(let startTime, let endTime):
+            self.startDatePublisher.send(startTime)
+            self.endDatePublisher.send(endTime)
+        case .past30Days:
+            if let startDate = Calendar.current.date(byAdding: .day, value: -30, to: Date()) {
+                self.startDatePublisher.send(startDate)
+            }
+        default :
+            if let startDate = Calendar.current.date(byAdding: .day, value: -90, to: Date()) {
+                self.startDatePublisher.send(startDate)
+            }
+        }
+    }
+    
+    func shouldShowLoadingCell() -> Bool {
+        switch self.bettingTicketsType {
+        case .opened:
+            return self.openedTickets.value.isNotEmpty && ticketsHasNextPage
+        case .resolved:
+            return self.resolvedTickets.value.isNotEmpty && ticketsHasNextPage
+        case .won:
+            return self.wonTickets.value.isNotEmpty && ticketsHasNextPage
+        case .cashout:
+            return self.cashoutTickets.value.isNotEmpty && ticketsHasNextPage
+        }
+        
+    }
+    func convertDateToString(date: Date) -> String {
+        let auxDate = "\(date)"
+        let dateSplited = auxDate.split(separator: " ")
+        return "\(dateSplited[0])"
     }
 
     func loadOpenedTickets(page: Int) {
@@ -104,8 +164,10 @@ class BettingHistoryViewModel {
         let openedRoute = TSRouter.getMyTickets(language: "en",
                                                 ticketsType: EveryMatrix.MyTicketsType.opened,
                                                 records: recordsPerPage,
-                                                page: page)
-
+                                                page: page,
+                                                startDate: convertDateToString(date: self.startDatePublisher.value),
+                                                endDate: convertDateToString(date: self.endDatePublisher.value))
+        
         Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -124,13 +186,41 @@ class BettingHistoryViewModel {
                 }
             },
             receiveValue: { [weak self] betHistoryResponse in
-                self?.openedTickets.send(betHistoryResponse.betList ?? [])
-                if (betHistoryResponse.betList ?? []).isEmpty {
-                    self?.listStatePublisher.send(.empty)
+                guard let self = self else {return}
+                let betHistory = betHistoryResponse
+
+                if self.openedTickets.value.isEmpty {
+                    self.openedTickets.send(betHistoryResponse.betList ?? [])
+
+                    if (betHistoryResponse.betList ?? []).isEmpty {
+                        self.listStatePublisher.send(.empty)
+                    }
+                    else {
+                        self.listStatePublisher.send(.loaded)
+                    }
+
+                    if let betHistory = betHistoryResponse.betList {
+                        if betHistory.count < self.recordsPerPage {
+                            self.ticketsHasNextPage = false
+                        }
+                    }
                 }
                 else {
-                    self?.listStatePublisher.send(.loaded)
+                    var newOpenTickets = self.openedTickets.value
+                    newOpenTickets.append(contentsOf: betHistoryResponse.betList ?? [])
+
+                    self.openedTickets.send(newOpenTickets)
+
+                    self.listStatePublisher.send(.loaded)
+
+                    if self.openedTickets.value.count < self.recordsPerPage * (self.openedPage + 1) {
+                        self.ticketsHasNextPage = false
+                    }
+                    else {
+                        self.ticketsHasNextPage = true
+                    }
                 }
+
             })
             .store(in: &cancellables)
     }
@@ -142,7 +232,9 @@ class BettingHistoryViewModel {
         let openedRoute = TSRouter.getMyTickets(language: "en",
                                                 ticketsType: EveryMatrix.MyTicketsType.resolved,
                                                 records: recordsPerPage,
-                                                page: page)
+                                                page: page,
+                                                startDate: convertDateToString(date: self.startDatePublisher.value),
+                                                endDate: convertDateToString(date: self.endDatePublisher.value))
 
         Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
             .sink(receiveCompletion: { [weak self] completion in
@@ -162,54 +254,40 @@ class BettingHistoryViewModel {
                 }
             },
             receiveValue: { [weak self] betHistoryResponse in
-                self?.resolvedTickets.send(betHistoryResponse.betList ?? [])
-                if (betHistoryResponse.betList ?? []).isEmpty {
-                    self?.listStatePublisher.send(.empty)
-                }
-                else {
-                    self?.listStatePublisher.send(.loaded)
-                }
-            })
-            .store(in: &cancellables)
-    }
+                guard let self = self else {return}
 
-    func loadCashoutTickets(page: Int) {
+                if self.resolvedTickets.value.isEmpty {
+                    self.resolvedTickets.send(betHistoryResponse.betList ?? [])
 
-        self.listStatePublisher.send(.loading)
-
-        let openedRoute = TSRouter.getMyTickets(language: "en",
-                                                ticketsType: EveryMatrix.MyTicketsType.resolved,
-                                                records: recordsPerPage,
-                                                page: page)
-
-        Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let apiError):
-                    self?.cashoutTickets.send([])
-                    switch apiError {
-                    case .requestError(let value) where value.lowercased().contains("must be logged in to perform this action"):
-                        self?.listStatePublisher.send(.noUserFoundError)
-                    case .notConnected:
-                        self?.listStatePublisher.send(.noUserFoundError)
-                    default:
-                        self?.listStatePublisher.send(.serverError)
+                    if (betHistoryResponse.betList ?? []).isEmpty {
+                        self.listStatePublisher.send(.empty)
                     }
-                case .finished:
-                    ()
-                }
-            },
-            receiveValue: { [weak self] betHistoryResponse in
-                let cashoutTickets = (betHistoryResponse.betList ?? []).filter { ticket in
-                    ticket.status == "CASHED_OUT"
-                }
-                self?.cashoutTickets.send(cashoutTickets)
-                if cashoutTickets.isEmpty {
-                    self?.listStatePublisher.send(.empty)
+                    else {
+                        self.listStatePublisher.send(.loaded)
+                    }
+
+                    if let betHistory = betHistoryResponse.betList {
+                        if betHistory.count < self.recordsPerPage {
+                            self.ticketsHasNextPage = false
+                        }
+                    }
                 }
                 else {
-                    self?.listStatePublisher.send(.loaded)
+                    var newResolvedTickets = self.resolvedTickets.value
+                    newResolvedTickets.append(contentsOf: betHistoryResponse.betList ?? [])
+
+                    self.resolvedTickets.send(newResolvedTickets)
+
+                    self.listStatePublisher.send(.loaded)
+
+                    if self.resolvedTickets.value.count < self.recordsPerPage * (self.resolvedPage + 1) {
+                        self.ticketsHasNextPage = false
+                    }
+                    else {
+                        self.ticketsHasNextPage = true
+                    }
                 }
+
             })
             .store(in: &cancellables)
     }
@@ -221,7 +299,9 @@ class BettingHistoryViewModel {
         let openedRoute = TSRouter.getMyTickets(language: "en",
                                                 ticketsType: EveryMatrix.MyTicketsType.won,
                                                 records: recordsPerPage,
-                                                page: page)
+                                                page: page,
+                                                startDate: convertDateToString(date: self.startDatePublisher.value),
+                                                endDate: convertDateToString(date: self.endDatePublisher.value))
 
         Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
             .sink(receiveCompletion: { [weak self] completion in
@@ -241,15 +321,271 @@ class BettingHistoryViewModel {
                 }
             },
             receiveValue: { [weak self] betHistoryResponse in
-                self?.wonTickets.send(betHistoryResponse.betList ?? [])
-                if (betHistoryResponse.betList ?? []).isEmpty {
-                    self?.listStatePublisher.send(.empty)
+//                self?.wonTickets.send(betHistoryResponse.betList ?? [])
+//                if (betHistoryResponse.betList ?? []).isEmpty {
+//                    self?.listStatePublisher.send(.empty)
+//                }
+//                else {
+//                    self?.listStatePublisher.send(.loaded)
+//                }
+                guard let self = self else {return}
+
+                if self.wonTickets.value.isEmpty {
+                    self.wonTickets.send(betHistoryResponse.betList ?? [])
+
+                    if (betHistoryResponse.betList ?? []).isEmpty {
+                        self.listStatePublisher.send(.empty)
+                    }
+                    else {
+                        self.listStatePublisher.send(.loaded)
+                    }
+
+                    if let betHistory = betHistoryResponse.betList {
+                        if betHistory.count < self.recordsPerPage {
+                            self.ticketsHasNextPage = false
+                        }
+                    }
                 }
                 else {
-                    self?.listStatePublisher.send(.loaded)
+                    var newWonTickets = self.wonTickets.value
+                    newWonTickets.append(contentsOf: betHistoryResponse.betList ?? [])
+
+                    self.wonTickets.send(newWonTickets)
+
+                    self.listStatePublisher.send(.loaded)
+
+                    if self.wonTickets.value.count < self.recordsPerPage * (self.wonPage + 1) {
+                        self.ticketsHasNextPage = false
+                    }
+                    else {
+                        self.ticketsHasNextPage = true
+                    }
                 }
             })
             .store(in: &cancellables)
+    }
+    func loadCashoutTickets(page: Int) {
+
+        self.listStatePublisher.send(.loading)
+
+        let openedRoute = TSRouter.getMyTickets(language: "en",
+                                                ticketsType: EveryMatrix.MyTicketsType.resolved,
+                                                records: recordsPerPage,
+                                                page: page,
+                                                startDate: convertDateToString(date: self.startDatePublisher.value),
+                                                endDate: convertDateToString(date: self.endDatePublisher.value))
+
+        Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let apiError):
+                    self?.cashoutTickets.send([])
+                    switch apiError {
+                    case .requestError(let value) where value.lowercased().contains("must be logged in to perform this action"):
+                        self?.listStatePublisher.send(.noUserFoundError)
+                    case .notConnected:
+                        self?.listStatePublisher.send(.noUserFoundError)
+                    default:
+                        self?.listStatePublisher.send(.serverError)
+                    }
+                case .finished:
+                    ()
+                }
+            },
+            receiveValue: { [weak self] betHistoryResponse in
+                guard let self = self else {return}
+
+                let cashoutTickets = (betHistoryResponse.betList ?? []).filter { ticket in
+                    ticket.status == "CASHED_OUT"
+                }
+
+                if self.cashoutTickets.value.isEmpty {
+
+                    self.cashoutTickets.send(cashoutTickets)
+
+                    if cashoutTickets.isEmpty {
+                        self.listStatePublisher.send(.empty)
+                    }
+                    else {
+                        self.listStatePublisher.send(.loaded)
+                    }
+
+                    if cashoutTickets.count < self.recordsPerPage {
+                        self.ticketsHasNextPage = false
+                    }
+
+                }
+                else {
+                    var newCashoutTickets = self.cashoutTickets.value
+                    newCashoutTickets.append(contentsOf: cashoutTickets)
+
+                    self.cashoutTickets.send(newCashoutTickets)
+
+                    self.listStatePublisher.send(.loaded)
+
+                    if self.cashoutTickets.value.count < self.recordsPerPage * (self.cashoutPage + 1) {
+                        self.ticketsHasNextPage = false
+                    }
+                    else {
+                        self.ticketsHasNextPage = true
+                    }
+                }
+            })
+            .store(in: &cancellables)
+    }
+    
+    func refresh() {
+        self.resolvedPage = 0
+        self.openedPage = 0
+        self.wonPage = 0
+
+        self.initialLoadMyTickets()
+    }
+
+    func initialLoadMyTickets() {
+        self.loadResolvedTickets(page: 0)
+        self.loadOpenedTickets(page: 0)
+        self.loadWonTickets(page: 0)
+    }
+    
+    func requestNextPage() {
+        
+        switch bettingTicketsType {
+        case .opened:
+            if self.openedTickets.value.count < self.recordsPerPage * (self.openedPage + 1) {
+                self.ticketsHasNextPage = false
+                return
+            }
+            openedPage += 1
+            self.loadOpenedTickets(page: openedPage)
+        case .resolved:
+            if self.resolvedTickets.value.count < self.recordsPerPage * (self.resolvedPage + 1) {
+                self.ticketsHasNextPage = false
+                return
+            }
+            resolvedPage += 1
+            self.loadResolvedTickets(page: resolvedPage)
+        case .won:
+            if self.wonTickets.value.count < self.recordsPerPage * (self.wonPage + 1) {
+                self.ticketsHasNextPage = false
+                return
+            }
+            wonPage += 1
+            self.loadWonTickets(page: wonPage)
+        case .cashout:
+            if self.cashoutTickets.value.count < self.recordsPerPage * (self.cashoutPage + 1) {
+                self.ticketsHasNextPage = false
+                return
+            }
+            cashoutPage += 1
+            self.loadCashoutTickets(page: cashoutPage)
+        }
+        //self.fetchNextPage()
+    }
+    
+    private func resetPageCount() {
+        self.recordsPerPage = 10
+        self.recordsPage = 1
+        self.ticketsHasNextPage = true
+    }
+
+    private func fetchNextPage() {
+        if !ticketsHasNextPage {
+            return
+        }
+        self.recordsPage += 1
+        //self.fetchTickets()
+    }
+
+//    private func fetchTickets() {
+//
+//        if let matchesRegister = matchesRegister {
+//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchesRegister)
+//        }
+//
+//        switch bettingTicketsType {
+//        case .opened:
+//            let matchesCount = self.openedTickets.value.count * self.openedPage
+//            loadOpenedTickets(page: self.openedPage)
+//            if self.openedTickets.value.count < matchesCount * self.openedPage {
+//                self.ticketsHasNextPage = false
+//            }
+//            //self.ticketsHasNextPage = false
+//           // self.isLoading.send(false)
+//           // self.refreshPublisher.send()
+//
+//        case .resolved:
+//            let matchesCount = self.resolvedTickets.value.count * self.resolvedPage
+//            loadResolvedTickets(page: self.resolvedPage)
+//            if self.resolvedTickets.value.count < matchesCount * self.resolvedPage {
+//                self.ticketsHasNextPage = false
+//            }
+//            //self.ticketsHasNextPage = false
+//
+//        default:
+//            let matchesCount = self.wonTickets.value.count * self.wonPage
+//            loadWonTickets(page: self.openedPage)
+//            if self.wonTickets.value.count  < matchesCount * self.wonPage {
+//                self.ticketsHasNextPage = false
+//            }
+//
+//        }
+//
+//
+//
+//    }
+/*
+    private func storeAggregatorProcessor(_ aggregator: EveryMatrix.Aggregator) {
+        self.store.processAggregator(aggregator, withListType: .popularEvents,
+                                                 shouldClear: true)
+
+        let matches = self.store.matchesForListType(.popularEvents)
+        if matches.count < self.matchesCount * self.matchesPage {
+            self.ticketsHasNextPage = false
+        }
+
+        self.matches = matches
+
+        self.isLoading.send(false)
+
+        self.refreshPublisher.send()
+    }
+
+    private func updateWithAggregatorProcessor(_ aggregator: EveryMatrix.Aggregator) {
+        self.store.processContentUpdateAggregator(aggregator)
+    }
+*/
+    
+    func viewModel(forIndex index: Int) -> MyTicketCellViewModel? {
+        let ticket: BetHistoryEntry?
+
+        switch bettingTicketsType {
+        case .resolved:
+            ticket = resolvedTickets.value[safe: index] ?? nil
+        case .opened:
+            ticket = openedTickets.value[safe: index] ?? nil
+        case .won:
+            ticket = wonTickets.value[safe: index] ?? nil
+        case .cashout:
+            ticket = cashoutTickets.value[safe: index] ?? nil
+        }
+
+        guard let ticket = ticket else {
+            return nil
+        }
+
+        if let viewModel = cachedViewModels[ticket.betId] {
+            return viewModel
+        }
+        else {
+            let viewModel =  MyTicketCellViewModel(ticket: ticket)
+            viewModel.requestDataRefreshAction = { [weak self] in
+                self?.refresh()
+            }
+            cachedViewModels[ticket.betId] = viewModel
+            return viewModel
+        }
+
     }
 
 }
@@ -257,7 +593,7 @@ class BettingHistoryViewModel {
 extension BettingHistoryViewModel {
 
     func numberOfSections() -> Int {
-        return 1
+        return 2
     }
 
     func numberOfRows() -> Int {

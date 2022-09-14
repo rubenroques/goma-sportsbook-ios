@@ -338,6 +338,8 @@ Terms of use, Privacy Policy and EULA";
 
 "home" = "Home";
 
+"filter_date"= "Filter by date";
+
 "app_settings" = "App Settings";
 "notifications" = "Notifications";
 "appearance" = "Appearance";
@@ -558,3 +560,18 @@ Terms of use, Privacy Policy and EULA";
 "invite_more_friends" = "Invite more friends from your contact list to join the sportsbook";
 "no_user_contact_registered" = "You don't have any users from your contact list using the Sportsbook yet. Invite them now!";
 "no_other_users_registered" = "There are currently no other users on your contact list using the Sportsbook. Invite more friends now!";
+
+"bet" = "Bet";
+
+"follow" = "Follow";
+"total_odds" = "Total Odds";
+"number_selections" = "Number of selections";
+"bet_same" = "Bet the same";
+"show_full_tip" = "Show full tip";
+"featured_tips" = "Featured Tips";
+"tips" = "Tips";
+
+"no_login_tips" = "You need to be logged in to be able to see tips";
+"no_login_rankings" = "You need to be logged in to be able to see rankings";
+
+"add_friends_tip" = "You need to add some friends to see what kind of tips they share.";

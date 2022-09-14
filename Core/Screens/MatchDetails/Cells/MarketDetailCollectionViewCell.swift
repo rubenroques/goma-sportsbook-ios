@@ -24,6 +24,7 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
 
     var oddValue: Double?
     var isAvailableForBet: Bool?
+    var didLongPressOdd: ((BettingTicket) -> Void)?
 
     private var isOutcomeButtonSelected: Bool = false {
         didSet {
@@ -45,6 +46,9 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
 
         let tapOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapOddButton))
         self.containerView.addGestureRecognizer(tapOddButton)
+
+        let longPressOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressOddButton))
+        self.containerView.addGestureRecognizer(longPressOddButton)
 
         self.setupWithTheme()
     }
@@ -218,6 +222,25 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         else {
             Env.betslipManager.addBettingTicket(bettingTicket)
             self.isOutcomeButtonSelected = true
+        }
+    }
+
+    @objc func didLongPressOddButton(_ sender: UILongPressGestureRecognizer) {
+
+        // Triggers function only once instead of rapid fire event
+        if sender.state == .began {
+
+            guard
+                let match = self.match,
+                let market = self.market,
+                let outcome = self.outcome
+            else {
+                return
+            }
+
+            let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
+
+            self.didLongPressOdd?(bettingTicket)
         }
     }
 

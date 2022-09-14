@@ -27,12 +27,18 @@ class BettingHistoryViewController: UIViewController {
     // Logic
     private var cancellables: Set<AnyCancellable> = []
     private let viewModel: BettingHistoryViewModel
+ 
     private var filterSelectedOption: Int = 0
 
     private let rightGradientMaskLayer = CAGradientLayer()
+    private var locationsCodesDictionary: [String: String] = [:]
+    
+    var redrawTableViewAction: (() -> Void)?
+    var tappedMatchDetail: ((String) -> Void)?
+    var requestShareActivityView: ((UIImage, String, String) -> Void)?
 
     // MARK: - Lifetime and Cycle
-    init(viewModel: BettingHistoryViewModel = BettingHistoryViewModel(bettingTicketsType: .opened)) {
+    init(viewModel: BettingHistoryViewModel = BettingHistoryViewModel(bettingTicketsType: .opened, filterApplied: .past30Days)) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -44,23 +50,49 @@ class BettingHistoryViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.tableView.reloadData()
         self.setupSubviews()
         self.setupWithTheme()
-
+        
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
-        self.tableView.register(BettingsTableViewCell.self, forCellReuseIdentifier: BettingsTableViewCell.identifier)
+        self.tableView.register(MyTicketTableViewCell.nib, forCellReuseIdentifier: MyTicketTableViewCell.identifier)
 
         self.emptyStateButton.addTarget(self, action: #selector(self.didTapMakeDeposit), for: .primaryActionTriggered)
 
         self.tableView.isHidden = false
         self.emptyStateBaseView.isHidden = true
 
-        self.hideLoading()
+        self.viewModel.listStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] listStatePublisher in
+
+                switch listStatePublisher {
+                case .loading:
+                    self?.showLoading()
+                    self?.emptyStateBaseView.isHidden = true
+                case .empty:
+                    self?.hideLoading()
+                    self?.emptyStateBaseView.isHidden = false
+                    // self?.tableView.isHidden = true
+                case .noUserFoundError:
+                    self?.hideLoading()
+                    self?.emptyStateBaseView.isHidden = false
+                case .serverError:
+                    self?.hideLoading()
+                    self?.emptyStateBaseView.isHidden = false
+                case .loaded:
+                    self?.hideLoading()
+                    self?.emptyStateBaseView.isHidden = true
+                    self?.tableView.reloadData()
+                }
+
+            })
+            .store(in: &self.cancellables)
 
         self.bind(toViewModel: self.viewModel)
+        
     }
 
     // MARK: - Layout and Theme
@@ -146,6 +178,11 @@ class BettingHistoryViewController: UIViewController {
         self.loadingActivityIndicatorView.stopAnimating()
     }
 
+    func reloadDataWithFilter(newFilter: FilterHistoryViewModel.FilterValue) {
+        self.viewModel.filterApplied = newFilter
+        self.viewModel.refreshContent()
+    }
+
 }
 
 //
@@ -158,34 +195,90 @@ extension BettingHistoryViewController: UITableViewDelegate, UITableViewDataSour
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.numberOfRows()
+        switch section {
+        case 0:
+            return self.viewModel.numberOfRows()
+        case 1:
+            return self.viewModel.shouldShowLoadingCell() ? 1 : 0
+        default:
+            return 0
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard
-            let cell = tableView.dequeueReusableCell(withIdentifier: BettingsTableViewCell.identifier, for: indexPath) as? BettingsTableViewCell,
-            let bettingTicketValue = self.viewModel.bettingTicketForRow(atIndex: indexPath.row)
-        else {
-            fatalError("")
+        switch indexPath.section {
+        case 0:
+            let ticket: BetHistoryEntry?
+
+            switch self.viewModel.bettingTicketsType {
+            case .resolved:
+                ticket =  self.viewModel.resolvedTickets.value[safe: indexPath.row] ?? nil
+            case .opened:
+                ticket =  self.viewModel.openedTickets.value[safe: indexPath.row] ?? nil
+            case .won:
+                ticket =  self.viewModel.wonTickets.value[safe: indexPath.row] ?? nil
+            case .cashout:
+                ticket = self.viewModel.cashoutTickets.value[safe: indexPath.row] ?? nil
+            }
+
+            guard
+                let cell = tableView.dequeueCellType(MyTicketTableViewCell.self),
+                let viewModel = self.viewModel.viewModel(forIndex: indexPath.row),
+                let ticketValue = ticket
+            else {
+                fatalError("tableView.dequeueCellType(MyTicketTableViewCell.self)")
+            }
+
+            let locationsCodes = (ticketValue.selections ?? [])
+                .map({ event -> String in
+                    let id = event.venueId ?? ""
+                    return self.locationsCodesDictionary[id] ?? ""
+                })
+
+            cell.needsHeightRedraw = { [weak self] in
+                self?.redrawTableViewAction?()
+            }
+
+            cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
+            //cell.configureCashoutButton(withState: .hidden)
+
+            cell.tappedShareAction = { [weak self] in
+                if let cellSnapshot = cell.snapshot, let ticketStatus = ticketValue.status {
+                    self?.requestShareActivityView?(cellSnapshot, ticketValue.betId, ticketStatus)
+                }
+            }
+
+            cell.tappedMatchDetail = { [weak self] matchId in
+                self?.tappedMatchDetail?(matchId)
+
+            }
+            return cell
+        case 1:
+            if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
+                return cell
+            }
+        default:
+            fatalError()
         }
-        cell.configure(withBetHistoryEntry: bettingTicketValue)
-        return cell
+        return UITableViewCell()
+        
     }
 
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 130
-    }
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.section == 1, self.viewModel.shouldShowLoadingCell() {
+            if let typedCell = cell as? LoadingMoreTableViewCell {
+                typedCell.startAnimating()
+            }
+            self.viewModel.requestNextPage()
 
+        }
+    }
 }
 
 //
 // MARK: - Actions
 //
 extension BettingHistoryViewController {
-
-    @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
-        // print("clicou nos filtros")
-    }
 
     @objc func didTapMakeDeposit(sender: UITapGestureRecognizer) {
         let depositViewController = Router.navigationController(with: DepositViewController())

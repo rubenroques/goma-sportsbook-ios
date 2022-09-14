@@ -44,6 +44,7 @@ class LiveEventsViewModel: NSObject {
     var updateNumberOfLiveEventsAction: (() -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var currentLiveSportsPublisher: AnyCancellable?
+    var didLongPressOdd: ((BettingTicket) -> Void)?
 
     var didChangeSportType = false
     var selectedSport: Sport {
@@ -105,6 +106,10 @@ class LiveEventsViewModel: NSObject {
             })
             .store(in: &self.cancellables)
         self.getSportsLive()
+
+        self.allMatchesViewModelDataSource.didLongPressOdd = {[weak self] bettingTicket in
+            self?.didLongPressOdd?(bettingTicket)
+        }
     }
 
     func fetchData() {
@@ -441,6 +446,7 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
     var requestNextPage: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
     var didTapFavoriteAction: ((Match) -> Void)?
+    var didLongPressOdd: ((BettingTicket) -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
@@ -488,6 +494,10 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
 //                cell.didTapFavoriteMatchAction = { [weak self] match in
 //                    self?.didTapFavoriteAction?(match)
 //                }
+
+                cell.didLongPressOdd = { bettingTicket in
+                    self.didLongPressOdd?(bettingTicket)
+                }
                 
                 return cell
             }

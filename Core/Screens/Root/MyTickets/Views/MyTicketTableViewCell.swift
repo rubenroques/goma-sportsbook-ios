@@ -223,7 +223,7 @@ class MyTicketTableViewCell: UITableViewCell {
             })
 
         self.betCardsStackView.removeAllArrangedSubviews()
-
+        
         for (index, betHistoryEntrySelection) in (betHistoryEntry.selections ?? []).enumerated() {
 
             let myTicketBetLineView = MyTicketBetLineView(betHistoryEntrySelection: betHistoryEntrySelection,

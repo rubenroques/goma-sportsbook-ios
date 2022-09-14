@@ -166,6 +166,10 @@ class PreLiveEventsViewController: UIViewController {
 //                }
 //            })
 //            .store(in: &self.cancellables)
+
+        self.viewModel.didLongPressOdd = { [weak self] bettingTicket in
+            self?.openQuickbet(bettingTicket)
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -624,6 +628,18 @@ class PreLiveEventsViewController: UIViewController {
 
             self.view.layoutIfNeeded()
         }, completion: nil)
+    }
+
+    private func openQuickbet(_ bettingTicket: BettingTicket) {
+
+        let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
+
+        let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)
+
+        quickbetViewController.modalPresentationStyle = .overCurrentContext
+        quickbetViewController.modalTransitionStyle = .crossDissolve
+
+        self.present(quickbetViewController, animated: true)
     }
 
     @objc func didTapBetslipView() {

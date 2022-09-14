@@ -87,6 +87,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     }
 
     var tappedMatchWidgetAction: (() -> Void)?
+    var didLongPressOdd: ((BettingTicket) -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -125,8 +126,14 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
         self.leftBaseView.addGestureRecognizer(tapLeftOddButton)
 
+        let longPressLeftOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressLeftOddButton))
+        self.leftBaseView.addGestureRecognizer(longPressLeftOddButton)
+
         let tapRightOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapRightOddButton))
         self.rightBaseView.addGestureRecognizer(tapRightOddButton)
+
+        let longPressRightOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressRightOddButton))
+        self.rightBaseView.addGestureRecognizer(longPressRightOddButton)
 
         let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
         self.addGestureRecognizer(tapMatchView)
@@ -536,6 +543,25 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    @objc func didLongPressLeftOddButton(_ sender: UILongPressGestureRecognizer) {
+
+        // Triggers function only once instead of rapid fire event
+        if sender.state == .began {
+
+            guard
+                let match = self.match,
+                let market = self.market,
+                let outcome = self.leftOutcome
+            else {
+                return
+            }
+
+            let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
+
+            self.didLongPressOdd?(bettingTicket)
+        }
+    }
+
     func selectRightOddButton() {
         self.rightBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
         self.rightOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
@@ -565,6 +591,25 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         else {
             Env.betslipManager.addBettingTicket(bettingTicket)
             self.isRightOutcomeButtonSelected = true
+        }
+    }
+
+    @objc func didLongPressRightOddButton(_ sender: UILongPressGestureRecognizer) {
+
+        // Triggers function only once instead of rapid fire event
+        if sender.state == .began {
+
+            guard
+                let match = self.match,
+                let market = self.market,
+                let outcome = self.rightOutcome
+            else {
+                return
+            }
+
+            let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
+
+            self.didLongPressOdd?(bettingTicket)
         }
     }
 

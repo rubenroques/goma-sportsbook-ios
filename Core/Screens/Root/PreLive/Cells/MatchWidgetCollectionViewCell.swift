@@ -88,6 +88,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     var tappedMatchWidgetAction: (() -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
+    var didLongPressOdd: ((BettingTicket) -> Void)?
 
     private var leftOddButtonSubscriber: AnyCancellable?
     private var middleOddButtonSubscriber: AnyCancellable?
@@ -168,17 +169,26 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
         self.homeBaseView.addGestureRecognizer(tapLeftOddButton)
 
+        let longPressLeftOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressLeftOddButton))
+        self.homeBaseView.addGestureRecognizer(longPressLeftOddButton)
+
         let tapMiddleOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapMiddleOddButton))
         self.drawBaseView.addGestureRecognizer(tapMiddleOddButton)
 
+        let longPressMiddleOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressMiddleOddButton))
+        self.drawBaseView.addGestureRecognizer(longPressMiddleOddButton)
+
         let tapRightOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapRightOddButton))
         self.awayBaseView.addGestureRecognizer(tapRightOddButton)
+
+        let longPressRightOddButton = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressRightOddButton))
+        self.awayBaseView.addGestureRecognizer(longPressRightOddButton)
 
         let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
         self.addGestureRecognizer(tapMatchView)
 
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressCard))
-        self.baseView.addGestureRecognizer(longPressGestureRecognizer)
+        self.participantsBaseView.addGestureRecognizer(longPressGestureRecognizer)
 
         self.adjustDesignToCardStyle()
         self.setupWithTheme()
@@ -724,6 +734,25 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     }
 
+    @objc func didLongPressLeftOddButton(_ sender: UILongPressGestureRecognizer) {
+
+        // Triggers function only once instead of rapid fire event
+        if sender.state == .began {
+
+            guard
+                let match = self.viewModel?.match,
+                let market = match.markets.first,
+                let outcome = self.leftOutcome
+            else {
+                return
+            }
+
+            let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
+
+            self.didLongPressOdd?(bettingTicket)
+        }
+    }
+
     //
     func selectMiddleOddButton() {
         self.drawBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
@@ -758,6 +787,26 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    @objc func didLongPressMiddleOddButton(_ sender: UILongPressGestureRecognizer) {
+
+        // Triggers function only once instead of rapid fire event
+        if sender.state == .began {
+
+            guard
+                let match = self.viewModel?.match,
+                let market = match.markets.first,
+                let outcome = self.middleOutcome
+            else {
+                return
+            }
+
+            let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
+
+            self.didLongPressOdd?(bettingTicket)
+
+        }
+    }
+
     //
     func selectRightOddButton() {
         self.awayBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
@@ -789,6 +838,26 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         else {
             Env.betslipManager.addBettingTicket(bettingTicket)
             self.isRightOutcomeButtonSelected = true
+        }
+    }
+
+    @objc func didLongPressRightOddButton(_ sender: UILongPressGestureRecognizer) {
+
+        // Triggers function only once instead of rapid fire event
+        if sender.state == .began {
+
+            guard
+                let match = self.viewModel?.match,
+                let market = match.markets.first,
+                let outcome = self.rightOutcome
+            else {
+                return
+            }
+
+            let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
+
+            self.didLongPressOdd?(bettingTicket)
+
         }
     }
 

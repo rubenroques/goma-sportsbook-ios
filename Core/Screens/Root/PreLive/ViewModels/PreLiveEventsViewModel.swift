@@ -62,7 +62,7 @@ class PreLiveEventsViewModel: NSObject {
     var didSelectMatchAction: ((Match) -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didSelectCompetitionAction: ((Competition) -> Void)?
-
+    var didLongPressOdd: ((BettingTicket) -> Void)?
 
     //
     // Private vars
@@ -245,6 +245,15 @@ class PreLiveEventsViewModel: NSObject {
         }
         self.popularMatchesDataSource.didTapFavoriteMatchAction = { [weak self] match in
             self?.didTapFavoriteMatchAction?(match)
+        }
+
+        // Did select odd
+        self.popularMatchesDataSource.didLongPressOdd = { [weak self] bettingTicket in
+            self?.didLongPressOdd?(bettingTicket)
+        }
+
+        self.todayMatchesDataSource.didLongPressOdd = { [weak self] bettingTicket in
+            self?.didLongPressOdd?(bettingTicket)
         }
 
     }

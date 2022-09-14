@@ -9,40 +9,44 @@ import Foundation
 import Combine
 import UIKit
 
-class FilterHistoryViewController: UIViewController{
+class FilterHistoryViewController: UIViewController {
 
     // MARK: - Private Properties
     // Sub Views
     private lazy var navigationBaseView: UIView = Self.createNavigationView()
-    private lazy var backImage: UIImageView = Self.createImageView()
-    private lazy var optionSegmentControlBaseView: UIView = Self.createSimpleView()
-    private lazy var optionSegmentControl: UISegmentedControl = Self.createSegmentedControl()
+    private lazy var filterCollapseView: FilterCollapseView = FilterCollapseView()
+    private lazy var resetButton: UILabel = Self.createTopLabel()
+    private lazy var filterBaseView: UIView = Self.createBaseView()
+    private lazy var cancelButton: UILabel = Self.createTopLabel()
     private lazy var topLabel: UILabel = Self.createTopLabel()
-    private lazy var topSliderSeparatorView: UIView = Self.createSimpleView()
-    private lazy var topSliderView: UIView = Self.createSimpleView()
-    private lazy var topSliderCollectionView: UICollectionView = Self.createTopSliderCollectionView()
-    private lazy var filterBaseView : UIView = Self.createSimpleView()
-    private lazy var filtersButtonImage: UIImageView = Self.createFilterImageView()
-    private lazy var tableView: UITableView = Self.createTableView()
-    private lazy var loadingBaseView: SpinnerViewController = SpinnerViewController()
-    private lazy var emptyStateBaseView: UIView = Self.createEmptyStateView()
-    private lazy var emptyStateImageView: UIImageView = Self.createImageView()
-    private lazy var emptyStateLabel: UILabel = Self.createTopLabel()
-    private lazy var emptyStateSecondaryLabel: UILabel = Self.createTopLabel()
-    private lazy var emptyStateButton: RoundButton = RoundButton()
-    
-    private lazy var leftGradientBaseView: UIView = Self.createSimpleView()
-    private lazy var rightGradientBaseView: UIView = Self.createSimpleView()
+    private lazy var dateRangeView: UILabel = Self.createTopLabel()
+    private lazy var bottomBaseView: UIView = Self.createBottomView()
+    private lazy var applyButton: UIButton = Self.createButton()
+    private lazy var dateRangeBaseView: UIView = Self.createBottomView()
+    private lazy var bottomSeparatorView: UIView = Self.createSimpleView()
+    private lazy var dateRangeStackView: UIStackView = Self.createHorizontalStackView()
+    private lazy var dateRangeVerticalStackView: UIStackView = Self.createVerticalStackView()
+    private lazy var startTimeHeaderTextView: HeaderTextFieldView = HeaderTextFieldView()
+    private lazy var endTimeHeaderTextView: HeaderTextFieldView = HeaderTextFieldView()
+
+    var filterHistoryViewModel = FilterHistoryViewModel()
+    var filterRowViews: [FilterRowView] = []
+
+    var defaultFilter = FilterHistoryViewModel.FilterValue.past30Days
 
     // Logic
     private var cancellables: Set<AnyCancellable> = []
-    private let viewModel: HistoryViewModel
     private var filterSelectedOption: Int = 0
-    
-    // MARK: - Lifetime and Cycle
-    init(viewModel: HistoryViewModel = HistoryViewModel(listType: .transactions)) {
-        self.viewModel = viewModel
 
+    private var startDate: Date?
+    private var endDate: Date?
+
+    var viewModel: FilterHistoryViewModel
+    var didSelectFilterAction: ((FilterHistoryViewModel.FilterValue) -> Void)?
+
+    // MARK: - Lifetime and Cycle
+    init(viewModel: FilterHistoryViewModel = FilterHistoryViewModel()) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -53,73 +57,60 @@ class FilterHistoryViewController: UIViewController{
 
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+
         self.setupSubviews()
         self.setupWithTheme()
+        
+        self.startTimeHeaderTextView.setPlaceholderText("From")
+        self.startTimeHeaderTextView.setImageTextField(UIImage(named: "calendar_regular_icon")!)
+        self.startTimeHeaderTextView.isDisabled = false
+        self.startTimeHeaderTextView.setDatePickerMode()
+        
+        self.endTimeHeaderTextView.setPlaceholderText("To")
+        self.endTimeHeaderTextView.setImageTextField(UIImage(named: "calendar_regular_icon")!)
+        self.endTimeHeaderTextView.isDisabled = false
+        self.endTimeHeaderTextView.setDatePickerMode()
+
+        self.resetButton.text = localized("Reset")
+        self.cancelButton.text = localized("Cancel")
+        
+        self.view.bringSubviewToFront(self.dateRangeStackView)
+        self.dateRangeStackView.bringSubviewToFront(self.startTimeHeaderTextView)
+        self.dateRangeStackView.bringSubviewToFront(self.endTimeHeaderTextView)
+        
+        
+        
+        let tapCancelButton = UITapGestureRecognizer(target: self, action: #selector(self.cancelAction))
+        cancelButton.isUserInteractionEnabled = true
+        cancelButton.addGestureRecognizer(tapCancelButton)
+
+        let tapResetButton = UITapGestureRecognizer(target: self, action: #selector(self.resetAction))
+        resetButton.isUserInteractionEnabled = true
+        resetButton.addGestureRecognizer(tapResetButton)
+        
+        let tapApplyButton = UITapGestureRecognizer(target: self, action: #selector(self.applyAction))
+        applyButton.isUserInteractionEnabled = true
+        applyButton.addGestureRecognizer(tapApplyButton)
+
+        self.dateRangeStackView.isHidden = true
+        self.setupAvailableFilterOptionsSection()
+        
+        self.applyButton.setTitle(localized("apply"), for: .normal)
+        StyleHelper.styleButton(button: self.applyButton)
+
+        self.checkMarketRadioOptions(views: filterRowViews, viewTapped: filterRowViews[self.defaultFilter.identifier])
+        self.bindToPublisher()
+    }
     
-        // Configure post-loading and self-dependent properties
-        self.topSliderCollectionView.delegate = self
-        self.topSliderCollectionView.dataSource = self
-
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-        self.tableView.contentInset.bottom = 12
-     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
-        self.topSliderCollectionView.register(ListTypeCollectionViewCell.nib, forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
-        
-        
-        self.tableView.register(TransactionsTableViewCell.self, forCellReuseIdentifier: TransactionsTableViewCell.identifier)
-        self.tableView.register(BettingsTableViewCell.self, forCellReuseIdentifier: BettingsTableViewCell.identifier)
-
-        self.view.bringSubviewToFront(self.loadingBaseView.view)
-        
-        let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
-        self.filterBaseView.addGestureRecognizer(tapFilterGesture)
-        self.filterBaseView.isUserInteractionEnabled = true
-        self.filterBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
-        let tapBackGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
-        backImage.isUserInteractionEnabled = true
-        backImage.addGestureRecognizer(tapBackGestureRecognizer)
-        
-        optionSegmentControl.addTarget(self, action: #selector(self.didChangeSegmentValue(_:)), for: .valueChanged)
-      
-        if filterSelectedOption == 0 {
-            self.viewModel.ticketsTypePublisher.send(.resolved)
-           
-        }
-        
-        self.loadingBaseView.view.isHidden = true
-        self.tableView.isHidden = false
-        self.emptyStateBaseView.isHidden = true
-        self.bind(toViewModel: viewModel)
-        let color = UIColor.App.backgroundPrimary
-        
-        self.leftGradientBaseView.backgroundColor = color
-        let leftGradientMaskLayer = CAGradientLayer()
-        leftGradientMaskLayer.frame = self.leftGradientBaseView.bounds
-        leftGradientMaskLayer.colors = [UIColor.white.cgColor, UIColor.white.cgColor, UIColor.clear.cgColor]
-        leftGradientMaskLayer.locations = [0, 0.55, 1]
-        leftGradientMaskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-        leftGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-        self.leftGradientBaseView.layer.mask = leftGradientMaskLayer
-
-        //
-        self.rightGradientBaseView.backgroundColor = color
-        let rightGradientMaskLayer = CAGradientLayer()
-        rightGradientMaskLayer.frame = self.rightGradientBaseView.bounds
-        rightGradientMaskLayer.colors = [UIColor.clear.cgColor, UIColor.white.cgColor, UIColor.white.cgColor]
-        rightGradientMaskLayer.locations = [0, 0.45, 1]
-        rightGradientMaskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-        rightGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-        self.rightGradientBaseView.layer.mask = rightGradientMaskLayer
+        self.checkMarketRadioOptions(views: filterRowViews, viewTapped: filterRowViews[self.viewModel.selectedFilterPublisher.value.identifier])
     }
 
     // MARK: - Layout and Theme
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.filterBaseView.layer.cornerRadius = self.filterBaseView.frame.height / 2
 
     }
     
@@ -130,307 +121,228 @@ class FilterHistoryViewController: UIViewController{
     }
 
     private func setupWithTheme() {
+        
         self.view.backgroundColor = UIColor.App.backgroundPrimary
-        self.leftGradientBaseView.backgroundColor = UIColor.systemPink
-        self.rightGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.bottomSeparatorView.backgroundColor = UIColor.App.separatorLine
+        self.bottomBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.dateRangeStackView.backgroundColor = UIColor.App.backgroundSecondary
+        self.filterCollapseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.resetButton.textColor = UIColor.App.highlightPrimary
+        self.cancelButton.textColor = UIColor.App.highlightPrimary
+        self.startTimeHeaderTextView.backgroundColor = .clear
+        self.startTimeHeaderTextView.setViewColor(UIColor.App.backgroundTertiary)
+        self.endTimeHeaderTextView.backgroundColor = .clear
+        self.endTimeHeaderTextView.setViewColor(UIColor.App.backgroundTertiary)
+        self.startTimeHeaderTextView.setViewBorderColor(UIColor.App.backgroundBorder)
+        self.endTimeHeaderTextView.setViewBorderColor(UIColor.App.backgroundBorder)
+        self.filterBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        
+        self.startTimeHeaderTextView.setTextFieldColor(UIColor.App.textPrimary)
+        self.endTimeHeaderTextView.setTextFieldColor(UIColor.App.textPrimary)
 
-        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
-        self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
-
-        self.navigationBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        self.topSliderSeparatorView.backgroundColor = UIColor.App.separatorLine
-
-        self.backImage.image = UIImage(named: "arrow_back_icon")
-    
-        self.topSliderCollectionView.backgroundView?.backgroundColor = .clear
-        self.topSliderCollectionView.backgroundColor = UIColor.App.backgroundTertiary
-        
-        self.topLabel.textColor = UIColor.App.textPrimary
-        
-        //self.loadingBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
-       // self.loadingActivityIndicatorView.tintColor = UIColor.systemPink
-        //self.loadingActivityIndicatorView.backgroundColor = UIColor.yellow
-        
-        self.filterBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        self.optionSegmentControl.setTitleTextAttributes([
-            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.buttonTextPrimary
-        ], for: .selected)
-        self.optionSegmentControl.setTitleTextAttributes([
-            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary
-        ], for: .normal)
-        self.optionSegmentControl.setTitleTextAttributes([
-            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary.withAlphaComponent(0.5)
-        ], for: .disabled)
-
-        self.optionSegmentControl.selectedSegmentTintColor = UIColor.App.highlightPrimary
-        self.optionSegmentControl.backgroundColor = UIColor.App.backgroundTertiary
-        
-        
-        self.emptyStateBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        self.emptyStateImageView.image = UIImage(named: "no_content_icon")
-   
-        self.emptyStateLabel.font = AppFont.with(type: .bold, size: 22)
-        self.emptyStateSecondaryLabel.font = AppFont.with(type: .bold, size: 16)
-        
-        self.emptyStateLabel.textColor = UIColor.App.textPrimary
-        self.emptyStateSecondaryLabel.textColor = UIColor.App.textPrimary
-        
-        self.emptyStateLabel.numberOfLines = 4
-        self.emptyStateSecondaryLabel.numberOfLines = 4
-        
-        self.emptyStateLabel.textAlignment = .center
-        self.emptyStateSecondaryLabel.textAlignment = .center
-        
-        
-        self.emptyStateButton.titleLabel?.font = AppFont.with(type: .bold, size: 17)
-        
-        
+        self.startTimeHeaderTextView.setPlaceholderColor(UIColor.App.textPrimary)
+        self.endTimeHeaderTextView.setPlaceholderColor(UIColor.App.textPrimary)
     }
 
     // MARK: - Bindings
-    private func bind(toViewModel viewModel: HistoryViewModel) {
-
-        viewModel.isLoading
+    func bindToPublisher() {
+  
+        Publishers.CombineLatest3(self.startTimeHeaderTextView.textPublisher,
+                                  self.endTimeHeaderTextView.textPublisher,
+                                  self.viewModel.selectedFilterPublisher)
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] isLoading in
-                
-                if isLoading{
-                    self?.emptyStateBaseView.isHidden = true
-                    self?.loadingBaseView.view.isHidden = false
-                    self?.tableView.isHidden = true
+            .map({ startTime, endTime, selectedFilterType -> Bool in
+                switch selectedFilterType {
+                case .dateRange:
+                    if startTime != nil && endTime != nil {
+                        return true
+                    }
+                    return false
+                default:
+                    return true
+                }
+            })
+            .sink(receiveValue: { isEnabled in
+                self.applyButton.isEnabled = isEnabled
+            })
+            .store(in: &cancellables)
+
+        self.startTimeHeaderTextView.textPublisher 
+            .receive(on: DispatchQueue.main)
+            .map(toDate)
+            .compactMap({ $0 })
+            .sink(receiveValue: { [weak self] startDate in
+          
+                self?.startDate = startDate
+                if let endDate = self?.endDate,
+                   endDate <= startDate,
+                   let afterStartDateValue = Calendar.current.date(byAdding: .day, value: 1, to: startDate) {
+
+                    let newEndDateString = afterStartDateValue.toString(formatString: "yyyy-MM-dd")
+
+                    self?.endDate = afterStartDateValue
+                    self?.endTimeHeaderTextView.setText(newEndDateString)
+                    self?.viewModel.setStartTime(dateString: startDate)
+                    self?.viewModel.setEndTime(dateString: endDate)
+                    
                 }
                 else {
-                    self?.viewModel.transactionsTypePublisher.send(.deposit)
-                    if let numberOfRows = self?.viewModel.numberOfRowsInTable()  {
-                        if numberOfRows == 0 {
-                            self?.loadingBaseView.view.isHidden = true
-                            self?.emptyStateBaseView.isHidden = false
-                        }else{
-                            self?.loadingBaseView.view.isHidden = true
-                            self?.tableView.isHidden = false
-                            self?.emptyStateBaseView.isHidden = true
-                            self?.tableView.reloadData()
-                        }
+                    if let afterStartDateValue = Calendar.current.date(byAdding: .day, value: 1, to: startDate) {
+                        self?.viewModel.setStartTime(dateString: afterStartDateValue)
+                    }
+                    
+                }
+            })
+            .store(in: &cancellables)
+
+        self.endTimeHeaderTextView.textPublisher
+            .receive(on: DispatchQueue.main)
+            .map(toDate)
+            .compactMap({ $0 })
+            .sink(receiveValue: { [weak self] endDate in
+                self?.endDate = endDate
+                if let startDate = self?.startDate,
+                   startDate >= endDate,
+                   let beforeEndDateValue = Calendar.current.date(byAdding: .day, value: -1, to: endDate) {
+
+                    let newStartDateString = beforeEndDateValue.toString(formatString: "yyyy-MM-dd")
+
+                    self?.startDate = beforeEndDateValue
+                    self?.startTimeHeaderTextView.setText(newStartDateString)
+                    
+                    self?.viewModel.setStartTime(dateString: startDate)
+                    self?.viewModel.setEndTime(dateString: endDate)
+                                               
+                }
+                else {
+                    if let beforeEndDateValue = Calendar.current.date(byAdding: .day, value: 1, to: endDate) {
+                        self?.viewModel.setEndTime(dateString: beforeEndDateValue)
                     }
                 }
             })
-            .store(in: &self.cancellables)
-        
+            .store(in: &cancellables)
+
     }
 
-}
-
-//
-// MARK: - TableView Protocols
-//
-extension FilterHistoryViewController: UITableViewDelegate, UITableViewDataSource {
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        
-        if self.viewModel.numberOfRowsInTable() == 0  {
-            self.emptyStateBaseView.isHidden = false
-            self.tableView.isHidden = true
-            
-            self.setupEmptyState()
-        }else{
-            self.tableView.isHidden = false
-        }
-        return self.viewModel.numberOfSections()
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.numberOfRowsInTable()
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        switch self.viewModel.listType {
-        case .transactions:
-            let ticket: EveryMatrix.TransactionHistory?
-            var transactionType = 0
-            switch self.viewModel.transactionsTypePublisher.value{
-                case .deposit:
-                    ticket = self.viewModel.deposits.value[safe: indexPath.row] ?? nil
-                transactionType = 0
-                case .withdraw:
-                    ticket = self.viewModel.deposits.value[safe: indexPath.row] ?? nil
-                transactionType = 1
+    // MARK: - Convenience
+    @IBAction private func resetAction() {
+        for view in self.filterRowViews {
+            view.isChecked = false
+            // Default filter selected
+            if view.viewId == defaultFilter.identifier {
+                view.isChecked = true
             }
-            guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: TransactionsTableViewCell.identifier, for: indexPath) as? TransactionsTableViewCell,
-                let ticketValue = ticket
             else {
-                fatalError("")
+                view.isChecked = false
             }
-            //cell.configure(withTransactionHistoryEntry: ticketValue , transactionType: viewModel.transactionsTypePublisher.value)
-            return cell
-
-        case .bettings:
-            let ticket: BetHistoryEntry?
-
-            switch self.viewModel.ticketsTypePublisher.value {
-
-                case .cashout:
-                    ticket =  self.viewModel.cashoutTickets.value[safe: indexPath.row] ?? nil
-                case .resolved:
-                    ticket = self.viewModel.resolvedTickets.value[safe: indexPath.row] ?? nil
-                case .opened:
-                    ticket =  self.viewModel.openedTickets.value[safe: indexPath.row] ?? nil
-                case .won:
-                    ticket =  self.viewModel.wonTickets.value[safe: indexPath.row] ?? nil
-
-             }
-             
-             guard
-                 let cell = tableView.dequeueReusableCell(withIdentifier: BettingsTableViewCell.identifier, for: indexPath) as? BettingsTableViewCell,
-                 let ticketValue = ticket
-             else {
-                 fatalError("")
-             }
-
-             cell.configure(withBetHistoryEntry: ticketValue)
-             return cell
-            
         }
-    
+        self.dateRangeStackView.isHidden = true
+        self.viewModel.didSelectFilter(atIndex: defaultFilter.identifier)
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
-        switch self.viewModel.listType {
-        case .transactions:
-            return 80
-        case .bettings:
-            return 130
+
+    func checkMarketRadioOptions(views: [FilterRowView], viewTapped: FilterRowView) {
+        for view in views {
+            view.isChecked = false
         }
-       
-    }
-
-}
-
-//
-// MARK: - CollectionView Protocols
-//
-
-extension FilterHistoryViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return self.viewModel.numberOfSections()
-    }
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.viewModel.numberOfShortcuts(forSection: section)
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard
-            let cell = collectionView.dequeueCellType(ListTypeCollectionViewCell.self, indexPath: indexPath)
-        else {
-            fatalError()
-        }
-        cell.setupWithTitle( self.viewModel.shortcutTitle(forIndex: indexPath.row) ?? "")
-        
-        
-        if filterSelectedOption == indexPath.row {
-            cell.setSelectedType(true)
+        viewTapped.isChecked = true
+        if viewTapped.viewId == 2 {
+            self.dateRangeStackView.isHidden = false
+            self.viewModel.didSelectFilter(atIndex: viewTapped.viewId)
         }
         else {
-            cell.setSelectedType(false)
+            self.dateRangeStackView.isHidden = true
+            self.viewModel.didSelectFilter(atIndex: viewTapped.viewId)
         }
-
-        return cell
         
     }
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.filterSelectedOption = indexPath.row
+    
+    @IBAction private func applyAction() {
         
-        if self.optionSegmentControl.selectedSegmentIndex == 0 {
-
-            if indexPath.row == 0 {
-                self.viewModel.transactionsTypePublisher.send(.deposit)
-            }else {
-                self.viewModel.transactionsTypePublisher.send(.withdraw)
-            }
-        }else{
-            if indexPath.row == 0 {
-               
-                self.viewModel.ticketsTypePublisher.send(.resolved)
-            }else if indexPath.row == 1 {
+        if self.viewModel.selectedFilterPublisher.value.identifier == 2 {
+            if self.startTimeHeaderTextView.text != "" && self.endTimeHeaderTextView.text != "" {
                 
-                self.viewModel.ticketsTypePublisher.send(.opened)
-                self.viewModel.loadOpenedTickets(page: 0)
-            }else if indexPath.row == 2 {
-               
-                self.viewModel.ticketsTypePublisher.send(.won)
-                self.viewModel.loadWonTickets(page: 0)
-            }else if indexPath.row == 3 {
-               
-                self.viewModel.ticketsTypePublisher.send(.cashout)
+                self.didSelectFilterAction?(self.viewModel.selectedFilterPublisher.value)
+                self.dismiss(animated: true, completion: nil)
+            }
+            else {
+                print("invalid dates")
             }
         }
-        
-        self.viewModel.didSelectShortcut(atSection: indexPath.section)
-        
-        self.topSliderCollectionView.reloadData()
-        self.tableView.reloadData()
-        self.topSliderCollectionView.layoutIfNeeded()
-        self.topSliderCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-
+        else {
+            
+            self.didSelectFilterAction?(self.viewModel.selectedFilterPublisher.value)
+            self.dismiss(animated: true, completion: nil)
+        }
     }
 
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 2, bottom: 0, right: 2)
+    @IBAction private func cancelAction() {
+        self.dismiss(animated: true, completion: nil)
     }
 
 }
-
-
-
-//
-// MARK: - Actions
-//
 
 extension FilterHistoryViewController {
-    /*
-    @objc func didTapBetslipView() {
-        self.didTapBetslipButtonAction?()
-    }*/
-     @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer)
-     {
-         self.dismiss(animated: true, completion: nil)
-     // Your action
-     }
 
-    @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
-        print("clicou nos filtros")
-    
-    }
+    private func setupAvailableFilterOptionsSection() {
+        self.filterCollapseView.hasCheckbox = false
 
-    
-    @objc func didChangeSegmentValue(_ sender: UISegmentedControl) {
-        if self.optionSegmentControl.selectedSegmentIndex == 0 {
-            self.viewModel.transactionsTypePublisher.send(.deposit)
-        }
-        else {
-            self.viewModel.ticketsTypePublisher.send(.resolved)
-            self.tableView.reloadData()
-        }
-    
-        self.filterSelectedOption = 0
-      
-        self.tableView.reloadData()
-        self.topSliderCollectionView.reloadData()
+        self.filterCollapseView.setTitle(title: localized("filter_date"))
         
+        for range in FilterHistoryViewModel.FilterValue.allCases {
+            let filterRowView = FilterRowView()
+            filterRowView.isChecked = false
+            filterRowView.buttonType = .radio
+            filterRowView.setTitle(title: range.key)
+            filterRowView.viewId = range.identifier
+            filterRowViews.append(filterRowView)
+            filterCollapseView.addViewtoStack(view: filterRowView)
+        }
+
+        // Set selected view
+        var viewInt = defaultFilter.identifier
+        
+        if self.viewModel.selectedFilterPublisher.value.identifier != viewInt {
+            viewInt = self.viewModel.selectedFilterPublisher.value.identifier
+        }
+        
+        for view in filterRowViews {
+            view.didTapView = { [weak self] _ in
+                self?.viewModel.didSelectFilter(atIndex: view.viewId)
+                self?.checkMarketRadioOptions(views: self?.filterRowViews ?? [], viewTapped: view)
+            }
+
+            // Default market selected
+            if view.viewId == viewInt {
+                view.isChecked = true
+            }
+        }
+        
+        filterCollapseView.didToggle = { value in
+            if value {
+                UIView.animate(withDuration: 0.2, delay: 0.2, options: .curveEaseIn, animations: {
+                    self.view.layoutIfNeeded()
+                }, completion: { _ in
+                })
+            }
+        }
+
     }
 
 }
 
+extension FilterHistoryViewController {
+    private func toDate(_ dateString: String?) -> Date? {
+        var date: Date?
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        if let dateStringValue = dateString {
+            date = dateFormatter.date(from: dateStringValue)
+        }
+        
+        return date
+    }
+}
 
 //
 // MARK: - Subviews Initialization and Setup
@@ -472,28 +384,68 @@ extension FilterHistoryViewController {
         return segment
     }
     
+    private static func createHorizontalStackView() -> UIStackView {
+        let stack = UIStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .horizontal
+        stack.distribution = .fillEqually
+        stack.alignment = .center
+        stack.spacing = 8
+        
+        return stack
+    }
+    
+    private static func createVerticalStackView() -> UIStackView {
+        let stack = UIStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
+        stack.distribution = .fillEqually
+        stack.alignment = .center
+        stack.spacing = 8
+        
+        return stack
+    }
+    
     private static func createTopLabel() -> UILabel {
         let label = UILabel()
-        label.text = localized("history")
+        label.text = localized("Filter")
         label.font = AppFont.with(type: .bold, size: 17)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }
+    
+    private static func createBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createBottomView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createTextField() -> UITextField {
+        let textField = UITextField()
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
+    }
 
     private static func createTopSliderCollectionView() -> UICollectionView {
-          let collectionLayout = UICollectionViewFlowLayout()
-          collectionLayout.scrollDirection = .horizontal
-          collectionLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        let collectionLayout = UICollectionViewFlowLayout()
+        collectionLayout.scrollDirection = .horizontal
+        collectionLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
 
-          let collectionView = UICollectionView.init(frame: .zero, collectionViewLayout: collectionLayout)
-          collectionView.translatesAutoresizingMaskIntoConstraints = false
-          collectionView.showsVerticalScrollIndicator = false
-          collectionView.showsHorizontalScrollIndicator = false
-          collectionView.alwaysBounceHorizontal = true
-          collectionView.contentInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
+        let collectionView = UICollectionView.init(frame: .zero, collectionViewLayout: collectionLayout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.alwaysBounceHorizontal = true
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
 
-          return collectionView
-      }
+        return collectionView
+    }
 
     private static func createTableView() -> UITableView {
         let tableView = UITableView.init(frame: .zero, style: .plain)
@@ -519,8 +471,7 @@ extension FilterHistoryViewController {
     private static func createButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.isEnabled = true
-        button.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        
         button.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         button.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
         button.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
@@ -536,61 +487,28 @@ extension FilterHistoryViewController {
         activityIndicatorView.stopAnimating()
         return activityIndicatorView
     }
-    
-    
-    private func setupEmptyState() {
-
-        switch self.viewModel.listType {
-        case .transactions:
-            self.emptyStateLabel.text = "There’s no transations here!"
-            self.emptyStateSecondaryLabel.text = "You haven’t made a transation yet, it’s time to deposit some money and start betting on your favourites."
-            self.emptyStateButton.setTitle("Make a deposit", for: .normal)
-            self.emptyStateButton.setTitle("Make a deposit", for: .disabled)
-        case .bettings:
-            self.emptyStateLabel.text = "There’s no bets here!"
-            self.emptyStateSecondaryLabel.text = "You haven’t made a bet yet, it’s time to bet on your favourites."
-
-            self.emptyStateButton.setTitle("Go to popular games", for: .normal)
-            self.emptyStateButton.setTitle("Go to popular games", for: .disabled)
-        }
-    
-    }
 
     private func setupSubviews() {
 
         // Add subviews to self.view or each other
+
         self.navigationBaseView.addSubview(self.topLabel)
-        self.navigationBaseView.addSubview(self.backImage)
-
+        self.navigationBaseView.addSubview(self.resetButton)
+        self.navigationBaseView.addSubview(self.cancelButton)
+        
+        self.bottomBaseView.addSubview(self.applyButton)
+        self.dateRangeBaseView.addSubview(self.dateRangeStackView)
+        
+        self.dateRangeStackView.addArrangedSubview(self.startTimeHeaderTextView)
+        self.dateRangeStackView.addArrangedSubview(self.endTimeHeaderTextView)
+        
+        self.filterBaseView.addSubview(self.filterCollapseView)
+        self.filterBaseView.addSubview(self.dateRangeBaseView)
+        
         self.view.addSubview(self.navigationBaseView)
-        
-        self.optionSegmentControlBaseView.addSubview(self.optionSegmentControl)
-        
-        self.view.addSubview(self.optionSegmentControlBaseView)
-        
-        self.topSliderView.addSubview(self.topSliderCollectionView)
-        self.topSliderView.addSubview(self.filterBaseView)
-        self.topSliderView.addSubview(self.rightGradientBaseView)
-        self.topSliderView.addSubview(self.leftGradientBaseView)
-        
-        self.filterBaseView.addSubview(self.filtersButtonImage)
-        
-        
-        
-        self.view.addSubview(self.topSliderView)
-
-        self.view.addSubview(self.tableView)
-        
-        
-       // self.loadingBaseView.addSubview(self.loadingActivityIndicatorView.view)
-
-        self.view.addSubview(self.loadingBaseView.view)
-        
-        self.emptyStateBaseView.addSubview(self.emptyStateImageView)
-        self.emptyStateBaseView.addSubview(self.emptyStateLabel)
-        self.emptyStateBaseView.addSubview(self.emptyStateSecondaryLabel)
-        self.emptyStateBaseView.addSubview(self.emptyStateButton)
-        self.view.addSubview(self.emptyStateBaseView)
+        self.view.addSubview(self.filterBaseView)
+        self.view.addSubview(self.bottomSeparatorView)
+        self.view.addSubview(self.bottomBaseView)
 
         // Initialize constraints
         self.initConstraints()
@@ -599,7 +517,6 @@ extension FilterHistoryViewController {
     private func initConstraints() {
 
         NSLayoutConstraint.activate([
-            
             self.navigationBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.navigationBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.navigationBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
@@ -607,113 +524,60 @@ extension FilterHistoryViewController {
             
             self.topLabel.heightAnchor.constraint(equalToConstant: 20),
             self.topLabel.centerXAnchor.constraint(equalTo: self.navigationBaseView.centerXAnchor),
-            self.topLabel.topAnchor.constraint(equalTo: self.navigationBaseView.topAnchor, constant: 30),
+            self.topLabel.topAnchor.constraint(equalTo: self.navigationBaseView.topAnchor, constant: 16),
             
-            self.backImage.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16 ),
-            self.backImage.heightAnchor.constraint(equalToConstant: 20),
-            self.backImage.centerYAnchor.constraint(equalTo: self.topLabel.centerYAnchor),
-            self.backImage.topAnchor.constraint(equalTo: self.navigationBaseView.topAnchor, constant: 30),
-            
+            self.resetButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16 ),
+            self.resetButton.topAnchor.constraint(equalTo: self.navigationBaseView.topAnchor, constant: 16),
 
+            self.cancelButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16 ),
+            self.cancelButton.topAnchor.constraint(equalTo: self.navigationBaseView.topAnchor, constant: 16),
+        ])
+
+        NSLayoutConstraint.activate([
+            self.filterBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
+            self.filterBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
+            self.filterBaseView.topAnchor.constraint(equalTo: self.navigationBaseView.bottomAnchor, constant: 30),
+            //self.filterBaseView.bottomAnchor.constraint(equalTo: self.dateRangeStackView.bottomAnchor),
+            
+            self.filterCollapseView.leadingAnchor.constraint(equalTo: self.filterBaseView.leadingAnchor, constant: 2),
+            self.filterCollapseView.trailingAnchor.constraint(equalTo: self.filterBaseView.trailingAnchor, constant: -2),
+            self.filterCollapseView.topAnchor.constraint(equalTo: self.filterBaseView.topAnchor, constant: 2),
         ])
 
         NSLayoutConstraint.activate([
             
-            self.optionSegmentControlBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.optionSegmentControlBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.optionSegmentControlBaseView.topAnchor.constraint(equalTo: self.navigationBaseView.bottomAnchor),
-            self.optionSegmentControlBaseView.heightAnchor.constraint(equalToConstant: 70),
+            self.dateRangeBaseView.leadingAnchor.constraint(equalTo: self.filterBaseView.leadingAnchor),
+            self.dateRangeBaseView.trailingAnchor.constraint(equalTo: self.filterBaseView.trailingAnchor),
+            self.dateRangeBaseView.topAnchor.constraint(equalTo: self.filterCollapseView.bottomAnchor),
+            self.dateRangeBaseView.bottomAnchor.constraint(equalTo: self.filterBaseView.bottomAnchor),
             
-            self.optionSegmentControl.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
-            self.optionSegmentControl.centerYAnchor.constraint(equalTo: self.optionSegmentControlBaseView.centerYAnchor),
-            self.optionSegmentControl.centerXAnchor.constraint(equalTo: self.optionSegmentControlBaseView.centerXAnchor),
-
+            self.dateRangeStackView.leadingAnchor.constraint(equalTo: self.dateRangeBaseView.leadingAnchor),
+            self.dateRangeStackView.trailingAnchor.constraint(equalTo: self.dateRangeBaseView.trailingAnchor),
+            self.dateRangeStackView.topAnchor.constraint(equalTo: self.dateRangeBaseView.topAnchor),
+            
+            self.endTimeHeaderTextView.heightAnchor.constraint(equalToConstant: 80),
+            self.startTimeHeaderTextView.leadingAnchor.constraint(equalTo: self.dateRangeStackView.leadingAnchor, constant: 16),
+            self.endTimeHeaderTextView.trailingAnchor.constraint(equalTo: self.dateRangeStackView.trailingAnchor, constant: -16),
+            self.startTimeHeaderTextView.heightAnchor.constraint(equalToConstant: 80),
         ])
-        
         
         NSLayoutConstraint.activate([
+            self.bottomSeparatorView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.bottomSeparatorView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.bottomSeparatorView.heightAnchor.constraint(equalToConstant: 1),
+            self.bottomSeparatorView.bottomAnchor.constraint(equalTo: self.bottomBaseView.topAnchor),
             
-            self.topSliderView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.topSliderView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.topSliderView.topAnchor.constraint(equalTo: self.optionSegmentControlBaseView.bottomAnchor),
-            self.topSliderView.heightAnchor.constraint(equalToConstant: 70),
+            self.bottomBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.bottomBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.bottomBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            self.bottomBaseView.heightAnchor.constraint(equalToConstant: 90),
             
-            self.topSliderCollectionView.leadingAnchor.constraint(equalTo: self.topSliderView.leadingAnchor),
-            self.topSliderCollectionView.trailingAnchor.constraint(equalTo: self.topSliderView.trailingAnchor),
-            self.topSliderCollectionView.topAnchor.constraint(equalTo: self.topSliderView.topAnchor),
-            self.topSliderCollectionView.bottomAnchor.constraint(equalTo: self.topSliderView.topAnchor, constant: 70),
-            
-            self.filterBaseView.widthAnchor.constraint(equalToConstant: 40),
-            self.filterBaseView.heightAnchor.constraint(equalToConstant: 40),
-            self.filterBaseView.trailingAnchor.constraint(equalTo: self.topSliderView.trailingAnchor),
-            self.filterBaseView.centerYAnchor.constraint(equalTo: self.topSliderCollectionView.centerYAnchor),
-            
-            self.filtersButtonImage.bottomAnchor.constraint(equalTo: self.filterBaseView.bottomAnchor, constant: -8),
-            self.filtersButtonImage.topAnchor.constraint(equalTo: self.filterBaseView.topAnchor, constant: 8),
-            self.filtersButtonImage.trailingAnchor.constraint(equalTo: self.filterBaseView.trailingAnchor, constant: -4),
-            self.filtersButtonImage.centerYAnchor.constraint(equalTo: self.filterBaseView.centerYAnchor),
-            //self.filtersButtonImage.centerXAnchor.constraint(equalTo: self.filterBaseView.centerXAnchor),
-            self.leftGradientBaseView.leadingAnchor.constraint(equalTo: self.topSliderView.leadingAnchor),
-            self.leftGradientBaseView.topAnchor.constraint(equalTo: self.topSliderView.topAnchor),
-            self.leftGradientBaseView.bottomAnchor.constraint(equalTo: self.topSliderView.bottomAnchor),
-            self.leftGradientBaseView.widthAnchor.constraint(equalToConstant: 40),
-            
-            
-            self.rightGradientBaseView.trailingAnchor.constraint(equalTo: self.topSliderView.trailingAnchor),
-            self.rightGradientBaseView.topAnchor.constraint(equalTo: self.topSliderView.bottomAnchor),
-            self.rightGradientBaseView.topAnchor.constraint(equalTo: self.topSliderView.bottomAnchor),
-            self.rightGradientBaseView.leadingAnchor.constraint(equalTo: self.filtersButtonImage.leadingAnchor),
-            
-        ])
-        
-        
-        NSLayoutConstraint.activate([
-            self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.tableView.topAnchor.constraint(equalTo: self.topSliderView.bottomAnchor, constant: 8),
-            self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            self.applyButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
+            self.applyButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
+            self.applyButton.centerYAnchor.constraint(equalTo: self.bottomBaseView.centerYAnchor),
+            self.applyButton.heightAnchor.constraint(equalToConstant: 50),
         ])
 
-     /*   NSLayoutConstraint.activate([
-           /* self.loadingBaseView.leadingAnchor.constraint(equalTo: self.topSliderView.leadingAnchor),
-            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.topSliderView.trailingAnchor),
-            self.loadingBaseView.topAnchor.constraint(equalTo: self.topSliderView.bottomAnchor, constant: 4),
-            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            
-            self.loadingActivityIndicatorView.view.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: -150),
-            self.loadingActivityIndicatorView.view.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-           */
-        ])*/
-        
-        NSLayoutConstraint.activate([
-            self.emptyStateBaseView.leadingAnchor.constraint(equalTo: self.topSliderView.leadingAnchor),
-            self.emptyStateBaseView.trailingAnchor.constraint(equalTo: self.topSliderView.trailingAnchor),
-            self.emptyStateBaseView.topAnchor.constraint(equalTo: self.topSliderView.bottomAnchor, constant: 4),
-            self.emptyStateBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            
-            self.emptyStateImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyStateBaseView.topAnchor, constant: 30),
-            self.emptyStateImageView.widthAnchor.constraint(equalToConstant: 120),
-            self.emptyStateImageView.heightAnchor.constraint(equalToConstant: 120),
-            
-            self.emptyStateLabel.centerXAnchor.constraint(equalTo: self.emptyStateBaseView.centerXAnchor),
-            self.emptyStateLabel.topAnchor.constraint(equalTo: self.emptyStateImageView.bottomAnchor, constant: 16),
-            
-            self.emptyStateSecondaryLabel.centerXAnchor.constraint(equalTo: self.emptyStateBaseView.centerXAnchor),
-            self.emptyStateSecondaryLabel.leadingAnchor.constraint(equalTo: self.topSliderView.leadingAnchor, constant: 16),
-            self.emptyStateSecondaryLabel.trailingAnchor.constraint(equalTo: self.topSliderView.trailingAnchor, constant: -16),
-            
-
-            self.emptyStateSecondaryLabel.topAnchor.constraint(equalTo: self.emptyStateLabel.bottomAnchor, constant: 16),
-            
-            self.emptyStateButton.centerXAnchor.constraint(equalTo: self.emptyStateBaseView.centerXAnchor),
-            self.emptyStateButton.heightAnchor.constraint(equalToConstant: 40),
-            self.emptyStateButton.widthAnchor.constraint(equalToConstant: 250),
-            self.emptyStateButton.topAnchor.constraint(equalTo: self.emptyStateSecondaryLabel.bottomAnchor, constant: 50),
-            
-        ])
     }
 
 }
-
-    

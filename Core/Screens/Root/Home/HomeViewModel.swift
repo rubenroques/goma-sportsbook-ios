@@ -18,6 +18,7 @@ class HomeViewModel {
         case suggestedBets
         case sport(Sport)
         case userProfile
+        case featuredTips
 
         var identifier: String {
             switch self {
@@ -27,6 +28,7 @@ class HomeViewModel {
             case .suggestedBets: return "suggestedBets"
             case .sport(let sport): return "sport[\(sport)]"
             case .userProfile: return "userProfile"
+            case .featuredTips: return "featuredTips"
             }
         }
     }
@@ -100,6 +102,11 @@ extension HomeViewModel {
     func favoriteMatch(forIndex index: Int) -> Match? {
         return self.homeViewTemplateDataSource.favoriteMatch(forIndex: index)
     }
+
+    func featuredTipLineViewModel() -> FeaturedTipLineViewModel? {
+        return self.homeViewTemplateDataSource.featuredTipLineViewModel()
+    }
+
     func suggestedBetLineViewModel() -> SuggestedBetLineViewModel? {
         return self.homeViewTemplateDataSource.suggestedBetLineViewModel()
     }
