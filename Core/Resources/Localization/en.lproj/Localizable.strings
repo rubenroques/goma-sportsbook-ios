@@ -570,3 +570,6 @@ Terms of use, Privacy Policy and EULA";
 "no_login_rankings" = "You need to be logged in to be able to see rankings";
 
 "add_friends_tip" = "You need to add some friends to see what kind of tips they share.";
+
+"remove_last_user_message" = "Removing the last user of this group will also delete this group! Are you sure you want to remove this user?";
+"remove_last_user" = "Remove Last User";
