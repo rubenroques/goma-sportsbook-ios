@@ -338,6 +338,8 @@ Terms of use, Privacy Policy and EULA";
 
 "home" = "Home";
 
+"filter_date"= "Filter by date";
+
 "app_settings" = "App Settings";
 "notifications" = "Notifications";
 "appearance" = "Appearance";

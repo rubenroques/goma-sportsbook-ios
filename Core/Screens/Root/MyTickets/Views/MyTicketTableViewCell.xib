@@ -268,7 +268,7 @@
                 <outlet property="betAmountSubtitleLabel" destination="OvZ-3E-5T1" id="o3l-8r-1jc"/>
                 <outlet property="betAmountTitleLabel" destination="vXt-7J-prf" id="fat-fs-Cc2"/>
                 <outlet property="betCardsBaseView" destination="kAq-e8-CXE" id="3Hi-nU-NoQ"/>
-                <outlet property="betCardsStackView" destination="g5w-be-8FE" id="1Jr-jO-eNH"/>
+                <outlet property="betCardsStackView" destination="g5w-be-8FE" id="PRp-vV-tMb"/>
                 <outlet property="bottomBaseView" destination="6dB-Ev-5zh" id="ZgF-yh-GHO"/>
                 <outlet property="bottomSeparatorLineView" destination="fKZ-IO-dTa" id="epf-1i-c8q"/>
                 <outlet property="bottomStackView" destination="od3-Q5-lI2" id="IEE-Mp-gXO"/>

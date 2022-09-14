@@ -4246,6 +4246,12 @@
 		F4CE68462742CD8A003413AE /* MultiSlider+Internal.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683F2742CD8A003413AE /* MultiSlider+Internal.swift */; };
 		F4CE68472742CD8A003413AE /* MultiSliderExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE68402742CD8A003413AE /* MultiSliderExtensions.swift */; };
 		F4CE68482742CD8A003413AE /* MultiSliderExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE68402742CD8A003413AE /* MultiSliderExtensions.swift */; };
+		F4DE47A7288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DE47A6288F620000CF30AA /* FilterHistoryViewModel.swift */; };
+		F4DE47A8288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DE47A6288F620000CF30AA /* FilterHistoryViewModel.swift */; };
+		F4DE47A9288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DE47A6288F620000CF30AA /* FilterHistoryViewModel.swift */; };
+		F4DE47AA288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DE47A6288F620000CF30AA /* FilterHistoryViewModel.swift */; };
+		F4DE47AB288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DE47A6288F620000CF30AA /* FilterHistoryViewModel.swift */; };
+		F4DE47AC288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DE47A6288F620000CF30AA /* FilterHistoryViewModel.swift */; };
 		F4E3B74D2742B47100855C58 /* MainMarketType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E3B74C2742B47100855C58 /* MainMarketType.swift */; };
 		F4E3B74E2742B48400855C58 /* MainMarketType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E3B74C2742B47100855C58 /* MainMarketType.swift */; };
 		F4E3B75E2742BF9C00855C58 /* SweeterSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F4E3B75D2742BF9C00855C58 /* SweeterSwift */; };
@@ -5008,6 +5014,7 @@
 		F4CE683E2742CD8A003413AE /* MultiSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSlider.swift; sourceTree = "<group>"; };
 		F4CE683F2742CD8A003413AE /* MultiSlider+Internal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MultiSlider+Internal.swift"; sourceTree = "<group>"; };
 		F4CE68402742CD8A003413AE /* MultiSliderExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSliderExtensions.swift; sourceTree = "<group>"; };
+		F4DE47A6288F620000CF30AA /* FilterHistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterHistoryViewModel.swift; sourceTree = "<group>"; };
 		F4E3B74C2742B47100855C58 /* MainMarketType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMarketType.swift; sourceTree = "<group>"; };
 		F4F8C9EE27BEBAF90082CC08 /* TransactionHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistory.swift; sourceTree = "<group>"; };
 		F4F8C9F127C0126D0082CC08 /* FilterHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterHistoryViewController.swift; sourceTree = "<group>"; };
@@ -7963,6 +7970,7 @@
 				45322141280F01530092CCB4 /* BettingHistoryViewModel.swift */,
 				F410E62727BC4F78005C1964 /* Cells */,
 				F4F8C9F127C0126D0082CC08 /* FilterHistoryViewController.swift */,
+				F4DE47A6288F620000CF30AA /* FilterHistoryViewModel.swift */,
 			);
 			path = History;
 			sourceTree = "<group>";
@@ -9576,6 +9584,7 @@
 				A99FD5112835479200275509 /* FriendProfileViewModel.swift in Sources */,
 				45D9CBDE270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
 				454F0A7D27C41C22003123DF /* OutrightMarketDetailsViewController.swift in Sources */,
+				F4DE47A7288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */,
 				A9E7C69B27B67D9800F784C9 /* MyFavoriteCompetitionsDataSource.swift in Sources */,
 				F4E3B74D2742B47100855C58 /* MainMarketType.swift in Sources */,
 				A9B946BE28C0F7F00091296E /* FeaturedTipCollectionViewModel.swift in Sources */,
@@ -10179,6 +10188,7 @@
 				A99FD5122835479200275509 /* FriendProfileViewModel.swift in Sources */,
 				A91F4B2B27BE918C008C7510 /* LinkPresentationItemSource.swift in Sources */,
 				A91F4B4327C002FA008C7510 /* OddsFormat.swift in Sources */,
+				F4DE47A8288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */,
 				A9B841BC26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,
 				45D9CBDF270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
 				A9B946BF28C0F7F00091296E /* FeaturedTipCollectionViewModel.swift in Sources */,
@@ -10748,6 +10758,7 @@
 				457CBB18282D27D000ED0F00 /* EveryMatrixModel.swift in Sources */,
 				457CBB19282D27D000ED0F00 /* OutrightMarketDetailsViewController.swift in Sources */,
 				457CBB1A282D27D000ED0F00 /* MyFavoriteCompetitionsDataSource.swift in Sources */,
+				F4DE47AB288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */,
 				457CBB1B282D27D000ED0F00 /* MainMarketType.swift in Sources */,
 				457CBB1C282D27D000ED0F00 /* Colors.swift in Sources */,
 				A9B946C228C0F7F00091296E /* FeaturedTipCollectionViewModel.swift in Sources */,
@@ -11315,6 +11326,7 @@
 				457CBDC0282D2CD100ED0F00 /* EveryMatrixModel.swift in Sources */,
 				457CBDC1282D2CD100ED0F00 /* OutrightMarketDetailsViewController.swift in Sources */,
 				457CBDC2282D2CD100ED0F00 /* MyFavoriteCompetitionsDataSource.swift in Sources */,
+				F4DE47AC288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */,
 				457CBDC3282D2CD100ED0F00 /* MainMarketType.swift in Sources */,
 				457CBDC4282D2CD100ED0F00 /* Colors.swift in Sources */,
 				A9B946C328C0F7F00091296E /* FeaturedTipCollectionViewModel.swift in Sources */,
@@ -11884,6 +11896,7 @@
 				4589C89C282024E400243547 /* OutrightMarketDetailsViewController.swift in Sources */,
 				4589C89D282024E400243547 /* MyFavoriteCompetitionsDataSource.swift in Sources */,
 				4589C89E282024E400243547 /* MainMarketType.swift in Sources */,
+				F4DE47A9288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */,
 				4589C89F282024E400243547 /* Colors.swift in Sources */,
 				4589C8A0282024E400243547 /* CashoutAggregator.swift in Sources */,
 				A9B946C028C0F7F00091296E /* FeaturedTipCollectionViewModel.swift in Sources */,
@@ -12453,6 +12466,7 @@
 				45A6BCF128246A7500D9B416 /* MainMarketType.swift in Sources */,
 				45A6BCF228246A7500D9B416 /* Colors.swift in Sources */,
 				45A6BCF328246A7500D9B416 /* CashoutAggregator.swift in Sources */,
+				F4DE47AA288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */,
 				45A6BCF428246A7500D9B416 /* ConversationsViewModel.swift in Sources */,
 				45A6BCF528246A7500D9B416 /* FilterRowView.swift in Sources */,
 				A9B946C128C0F7F00091296E /* FeaturedTipCollectionViewModel.swift in Sources */,
@@ -13095,7 +13109,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00597;
+				CURRENT_PROJECT_VERSION = 00600;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -13103,7 +13117,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.5;
+				MARKETING_VERSION = 0.0.6;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.goma;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -13121,7 +13135,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00597;
+				CURRENT_PROJECT_VERSION = 00600;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -13129,7 +13143,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.5;
+				MARKETING_VERSION = 0.0.6;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.goma;
 				PRODUCT_NAME = "$(TARGET_NAME)";
