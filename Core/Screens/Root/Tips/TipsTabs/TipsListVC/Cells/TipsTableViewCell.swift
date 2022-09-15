@@ -147,13 +147,13 @@ class TipsTableViewCell: UITableViewCell {
 
         self.hasFollow = viewModel.hasFollowEnabled()
 
-        if let numberTips = viewModel.featuredTip.betSelections?.count {
+        if let numberTips = viewModel.featuredTip.selections?.count {
 
             for i in (0..<numberTips) {
 
                 let tipView = FeaturedTipView()
 
-                if let featuredTipSelection = self.viewModel?.featuredTip.betSelections?[safe: i] {
+                if let featuredTipSelection = self.viewModel?.featuredTip.selections?[safe: i] {
 
                     tipView.configure(featuredTipSelection: featuredTipSelection)
 

@@ -150,20 +150,20 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     }
 
     // MARK: Functions
-    func configure(viewModel: FeaturedTipCollectionViewModel ,hasCounter: Bool) {
+    func configure(viewModel: FeaturedTipCollectionViewModel, hasCounter: Bool) {
 
         self.viewModel = viewModel
 
         self.hasCounter = hasCounter
 
-        if let numberTips = viewModel.featuredTip.betSelections?.count {
+        if let numberTips = viewModel.featuredTip.selections?.count {
 
             for i in (0..<numberTips) {
 
                 if i < 3 {
                     let tipView = FeaturedTipView()
 
-                    if let featuredTipSelection = self.viewModel?.featuredTip.betSelections?[safe: i] {
+                    if let featuredTipSelection = self.viewModel?.featuredTip.selections?[safe: i] {
 
                         tipView.configure(featuredTipSelection: featuredTipSelection)
 
@@ -197,7 +197,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     }
 
     @objc func didTapBetButton() {
-        print("TAPPED BET: \(self.viewModel?.featuredTip.omBetId)")
+        print("TAPPED BET: \(self.viewModel?.featuredTip.betId)")
     }
 
     @objc func didTapShowFullTipButton() {

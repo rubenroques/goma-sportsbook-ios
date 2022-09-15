@@ -18,16 +18,18 @@ class FeaturedTipCollectionViewModel {
     }
 
     func getUsername() -> String {
-        return self.featuredTip.username
+        // return self.featuredTip.username
+        return "USERNAME"
     }
 
     func getTotalOdds() -> String {
-        let oddFormatted = OddFormatter.formatOdd(withValue: self.featuredTip.totalOdds)
-        return "\(oddFormatted)"
+//        let oddFormatted = OddFormatter.formatOdd(withValue: self.featuredTip.totalOdds)
+//        return "\(oddFormatted)"
+        return "-.--"
     }
 
     func getNumberSelections() -> String {
-        if let numberSelections = self.featuredTip.betSelections?.count {
+        if let numberSelections = self.featuredTip.selections?.count {
             return "\(numberSelections)"
         }
 

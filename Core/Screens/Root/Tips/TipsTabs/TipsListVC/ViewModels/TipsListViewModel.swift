@@ -19,7 +19,7 @@ class TipsListViewModel {
 
     var tipsPublisher: CurrentValueSubject<[FeaturedTip], Never> = .init([])
     var tipsType: TipsType = .all
-    var tipsCacheCellViewModel: [Int: TipsCellViewModel] = [:]
+    var tipsCacheCellViewModel: [String: TipsCellViewModel] = [:]
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var hasFriendsPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
@@ -158,7 +158,7 @@ class TipsListViewModel {
             return nil
         }
 
-        let tipId = featuredTip.id
+        let tipId = featuredTip.betId
 
         if let tipsCellViewModel = tipsCacheCellViewModel[tipId] {
             return tipsCellViewModel

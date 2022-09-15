@@ -17,16 +17,18 @@ class FeaturedTipDetailsViewModel {
     }
 
     func getUsername() -> String {
-        return self.featuredTip.username
+        //return self.featuredTip.username
+        return "USERNAME"
     }
 
     func getTotalOdds() -> String {
-        let oddFormatted = OddFormatter.formatOdd(withValue: self.featuredTip.totalOdds)
-        return "\(oddFormatted)"
+//        let oddFormatted = OddFormatter.formatOdd(withValue: self.featuredTip.totalOdds)
+//        return "\(oddFormatted)"
+        return "-.--"
     }
 
     func getNumberSelections() -> String {
-        if let numberSelections = self.featuredTip.betSelections?.count {
+        if let numberSelections = self.featuredTip.selections?.count {
             return "\(numberSelections)"
         }
 
@@ -199,13 +201,13 @@ class FeaturedTipDetailsViewController: UIViewController {
 
         self.hasCounter = true
 
-        if let numberTips = self.viewModel.featuredTip.betSelections?.count {
+        if let numberTips = self.viewModel.featuredTip.selections?.count {
 
             for i in (0..<numberTips) {
 
                 let tipView = FeaturedTipView()
 
-                if let featuredTipSelection = self.viewModel.featuredTip.betSelections?[safe: i] {
+                if let featuredTipSelection = self.viewModel.featuredTip.selections?[safe: i] {
 
                     tipView.configure(featuredTipSelection: featuredTipSelection)
 
@@ -241,7 +243,7 @@ class FeaturedTipDetailsViewController: UIViewController {
     }
 
     @objc func didTapBetButton() {
-        print("TAPPED BET: \(self.viewModel.featuredTip.omBetId)")
+        print("TAPPED BET: \(self.viewModel.featuredTip.betId)")
     }
 
 }

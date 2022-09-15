@@ -17,20 +17,23 @@ class TipsCellViewModel {
     }
 
     func getUsername() -> String {
-        return self.featuredTip.username
+        // return self.featuredTip.username
+        return "USERNAME"
     }
 
     func getUserId() -> String {
-        return self.featuredTip.userId ?? ""
+        //return self.featuredTip.userId ?? ""
+        return ""
     }
 
     func getTotalOdds() -> String {
-        let oddFormatted = OddFormatter.formatOdd(withValue: self.featuredTip.totalOdds)
-        return "\(oddFormatted)"
+//        let oddFormatted = OddFormatter.formatOdd(withValue: self.featuredTip.totalOdds)
+//        return "\(oddFormatted)"
+        return "-.--"
     }
 
     func getNumberSelections() -> String {
-        if let numberSelections = self.featuredTip.betSelections?.count {
+        if let numberSelections = self.featuredTip.selections?.count {
             return "\(numberSelections)"
         }
 
@@ -38,14 +41,10 @@ class TipsCellViewModel {
     }
 
     func getOMBetId() -> String {
-        return self.featuredTip.omBetId ?? ""
+        return self.featuredTip.betId ?? ""
     }
 
     func hasFollowEnabled() -> Bool {
-        // TEST
-        if self.featuredTip.id % 2 == 0 {
-            return true
-        }
 
         return false
     }
