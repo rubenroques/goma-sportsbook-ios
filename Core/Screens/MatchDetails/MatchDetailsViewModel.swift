@@ -18,7 +18,7 @@ class MatchDetailsViewModel: NSObject {
 
     var matchId: String
     var homeRedCardsScorePublisher: CurrentValueSubject<String, Never> = .init("0")
-    var awayRedCardsScorePublisher: CurrentValueSubject<String, Never> = .init("SEM VALUES")
+    var awayRedCardsScorePublisher: CurrentValueSubject<String, Never> = .init("0")
 
     var store: MatchDetailsAggregatorRepository
 

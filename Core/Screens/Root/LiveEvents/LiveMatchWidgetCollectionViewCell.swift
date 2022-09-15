@@ -31,8 +31,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet private weak var resultLabel: UILabel!
     @IBOutlet private weak var matchTimeLabel: UILabel!
-    @IBOutlet private weak var liveIndicatorImageView: UIImageView!
-    @IBOutlet private weak var resultCenterStackView: UIStackView!
 
     @IBOutlet private weak var oddsStackView: UIStackView!
 
@@ -66,12 +64,19 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet private weak var headerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var teamsHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var resultCenterConstraint: NSLayoutConstraint!
     @IBOutlet private weak var buttonsHeightConstraint: NSLayoutConstraint!
-
+    
+    @IBOutlet private weak var homeRedCardView: UIView!
+    @IBOutlet private weak var homeRedCardLabel: UILabel!
+    @IBOutlet private weak var homeRedCardImage: UIImageView!
+    
+    @IBOutlet private weak var awayRedCardView: UIView!
+    @IBOutlet private weak var awayRedCardLabel: UILabel!
+    @IBOutlet private weak var awayRedCardImage: UIImageView!
+    
+    private var cancellables = Set<AnyCancellable>()
+    
     private var cachedCardsStyle: CardsStyle?
-    //
-
     var viewModel: MatchWidgetCellViewModel?
 
     static var cellHeight: CGFloat = 156
@@ -105,6 +110,14 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     private var currentHomeOddValue: Double?
     private var currentDrawOddValue: Double?
     private var currentAwayOddValue: Double?
+    
+    private var goalsRegister: EndpointPublisherIdentifiable?
+    private var goalsSubscription: AnyCancellable?
+    
+    
+    private var homeRedCardPublisher: CurrentValueSubject<String, Never> = .init("0")
+    private var awayRedCardPublisher: CurrentValueSubject<String, Never> = .init("0")
+    
 
     private var isLeftOutcomeButtonSelected: Bool = false {
         didSet {
@@ -169,7 +182,38 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.baseView.bringSubviewToFront(self.suspendedBaseView)
 
-        self.liveIndicatorImageView.image = UIImage(named: "icon_live")
+        self.homeRedCardPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] homeScoreValue in
+                
+                if homeScoreValue != "0" {
+                    self?.homeRedCardImage.isHidden = false
+                    self?.homeRedCardLabel.text = homeScoreValue
+                    self?.homeRedCardLabel.isHidden = false
+                }
+               else {
+                    self?.homeRedCardImage.isHidden = true
+                   self?.homeRedCardLabel.isHidden = true
+                }
+            })
+            .store(in: &cancellables)
+        
+        self.awayRedCardPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] awayScoreValue in
+                
+                if awayScoreValue != "0" {
+                    self?.awayRedCardImage.isHidden = false
+                    self?.awayRedCardLabel.text = awayScoreValue
+                    self?.awayRedCardLabel.isHidden = false
+                }
+                else {
+                    self?.awayRedCardImage.isHidden = true
+                    self?.awayRedCardLabel.isHidden = true
+                }
+                  
+            })
+            .store(in: &cancellables)
 
         let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
         self.homeBaseView.addGestureRecognizer(tapLeftOddButton)
@@ -273,6 +317,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.middleOutcomeDisabled = false
         self.rightOutcomeDisabled = false
         self.suspendedBaseView.isHidden = true
+        
 
         self.adjustDesignToCardStyle()
         self.setupWithTheme()
@@ -349,7 +394,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         case .normal:
             self.adjustDesignToNormalCardStyle()
         }
-
+       
+        
         self.setNeedsLayout()
         self.layoutIfNeeded()
     }
@@ -362,10 +408,10 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.headerHeightConstraint.constant = 12
         self.teamsHeightConstraint.constant = 26
-        self.resultCenterConstraint.constant = -2
+        //self.resultCenterConstraint.constant = -2
         self.buttonsHeightConstraint.constant = 27
 
-        self.resultCenterStackView.spacing = -1
+        //self.resultCenterStackView.spacing = -1
 
         self.eventNameLabel.font = AppFont.with(type: .semibold, size: 9)
         self.resultLabel.font = AppFont.with(type: .bold, size: 13)
@@ -389,10 +435,10 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.headerHeightConstraint.constant = 17
         self.teamsHeightConstraint.constant = 67
-        self.resultCenterConstraint.constant = 0
+        //self.resultCenterConstraint.constant = 0
         self.buttonsHeightConstraint.constant = 40
 
-        self.resultCenterStackView.spacing = 2
+       // self.resultCenterStackView.spacing = 2
 
         self.eventNameLabel.font = AppFont.with(type: .semibold, size: 11)
         self.resultLabel.font = AppFont.with(type: .bold, size: 16)
@@ -406,6 +452,58 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.homeOddValueLabel.font = AppFont.with(type: .bold, size: 13)
         self.drawOddValueLabel.font = AppFont.with(type: .bold, size: 13)
         self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 13)
+    }
+    
+    func requestRedCards(forMatchWithId id: String) {
+        
+        self.goalsSubscription?.cancel()
+        self.goalsSubscription = nil
+
+        if let goalsRegister = goalsRegister {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: goalsRegister)
+        }
+        
+        let endpoint = TSRouter.eventPartScoresPublisher(operatorId: Env.appSession.operatorId, language: "en", matchId: id)
+        
+        self.goalsSubscription = Env.everyMatrixClient.manager
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure:
+                    print("Error retrieving data!")
+                case .finished:
+                    print("Data retrieved!")
+                }
+            }, receiveValue: { [weak self] state in
+                switch state {
+                case .connect(let publisherIdentifiable):
+                    print("%%\(publisherIdentifiable)")
+                    self?.goalsRegister = publisherIdentifiable
+                case .initialContent(let aggregator):
+                    print("MyBets cashoutPublisher initialContent")
+                    for content in (aggregator.content ?? []) {
+                       switch content {
+                        case .eventPartScore(let eventPartScore):
+                            if let eventInfoTypeId = eventPartScore.eventInfoTypeID, eventInfoTypeId == "4" {
+                                if let homeScore = eventPartScore.homeScore {
+                                    self?.homeRedCardPublisher.send(homeScore)
+                                    
+                                }
+                                if let awayscore = eventPartScore.awayScore {
+                                    self?.awayRedCardPublisher.send(awayscore)
+                                  
+                                }
+                            }
+                        default: ()
+                        }
+                    }
+                case .updatedContent:
+                    print("MyBets cashoutPublisher updatedContent")
+                case .disconnect:
+                    print("MyBets cashoutPublisher disconnect")
+                }
+            })
+        
     }
 
     func configure(withViewModel viewModel: MatchWidgetCellViewModel) {
@@ -433,6 +531,13 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
             return
         }
 
+        if let matchId = viewModel.match {
+            self.requestRedCards(forMatchWithId: matchId.id)
+            
+        }
+        
+
+        
         if let market = match.markets.first {
 
             if let marketPublisher = viewModel.store.marketPublisher(withId: market.id) {
@@ -659,8 +764,12 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                         // Status
                         matchPart = eventPartName
                     }
+                    
+                   
+                    
                 }
             }
+           
         }
 
         if homeGoals.isNotEmpty && awayGoals.isNotEmpty {
