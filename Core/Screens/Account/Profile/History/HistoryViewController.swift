@@ -33,12 +33,12 @@ class HistoryViewController: UIViewController {
     private let viewModel: HistoryViewModel
     private var filterSelectedOption: Int = 0
     
+    private var locationsCodesDictionary: [String: String] = [:]
     private let rightGradientMaskLayer = CAGradientLayer()
     
     // MARK: - Lifetime and Cycle
     init(viewModel: HistoryViewModel = HistoryViewModel(listType: .transactions)) {
         self.viewModel = viewModel
-
         super.init(nibName: nil, bundle: nil)
 
         switch viewModel.listType {
@@ -72,15 +72,15 @@ class HistoryViewController: UIViewController {
 
         self.tableView.allowsSelection = false
         self.tableView.register(TransactionsTableViewCell.self, forCellReuseIdentifier: TransactionsTableViewCell.identifier)
-        self.tableView.register(BettingsTableViewCell.self, forCellReuseIdentifier: BettingsTableViewCell.identifier)
+        self.tableView.register(MyTicketTableViewCell.self, forCellReuseIdentifier: MyTicketTableViewCell.identifier)
         
         self.view.bringSubviewToFront(self.loadingBaseView.view)
         
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         self.filterBaseView.addGestureRecognizer(tapFilterGesture)
         self.filterBaseView.isUserInteractionEnabled = true
-        self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
-
+       // self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+       
         let tapDepositGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapMakeDeposit))
         self.emptyStateButton.isUserInteractionEnabled = true
         self.emptyStateButton.addGestureRecognizer(tapDepositGestureRecognizer)
@@ -110,8 +110,9 @@ class HistoryViewController: UIViewController {
     // MARK: - Layout and Theme
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+
         self.filterBaseView.layer.cornerRadius = self.filterBaseView.frame.height / 2
-        
+
         self.rightGradientMaskLayer.frame = self.rightGradientBaseView.bounds
         
     }
@@ -251,14 +252,21 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
             }
             
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: BettingsTableViewCell.identifier, for: indexPath) as? BettingsTableViewCell,
+                let cell = tableView.dequeueReusableCell(withIdentifier: MyTicketTableViewCell.identifier, for: indexPath) as? MyTicketTableViewCell,
                 let ticketValue = ticket
             else {
                 fatalError("")
             }
             
-            cell.configure(withBetHistoryEntry: ticketValue)
+            let locationsCodes = (ticketValue.selections ?? [])
+                .map({ event -> String in
+                    let id = event.venueId ?? ""
+                    return self.locationsCodesDictionary[id] ?? ""
+                })
+
+          
             return cell
+            
             
         }
         

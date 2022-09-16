@@ -96,25 +96,9 @@ class RootViewController: UIViewController {
         didSet {
             if isLocalAuthenticationCoveringView {
                 self.localAuthenticationBaseView.alpha = 1.0
-//                UIView.animate(withDuration: 0.2,
-//                               delay: 0.0,
-//                               options: .curveEaseIn,
-//                               animations: {
-//                    self.localAuthenticationBaseView.alpha = 1.0
-//                }, completion: { _ in
-//
-//                })
             }
             else {
                 self.localAuthenticationBaseView.alpha = 0.0
-//                UIView.animate(withDuration: 0.2,
-//                               delay: 0.0,
-//                               options: .curveEaseOut,
-//                               animations: {
-//                    self.localAuthenticationBaseView.alpha = 0.0
-//                }, completion: { _ in
-//
-//                })
             }
         }
     }
@@ -811,6 +795,13 @@ extension RootViewController {
         if case .tips = tab, !tipsRootViewControllerLoaded {
             self.addChildViewController(self.tipsRootViewController, toView: self.tipsBaseView)
 
+            self.tipsRootViewController.didTapBetslipButtonAction = { [weak self] in
+                self?.openBetslipModal()
+            }
+            self.tipsRootViewController.didTapChatButtonAction = { [weak self] in
+                self?.openChatModal()
+            }
+
             tipsRootViewControllerLoaded = true
         }
         
@@ -1156,6 +1147,12 @@ extension RootViewController {
 extension RootViewController {
     
     func showLocalAuthenticationCoveringViewIfNeeded() {
+        
+        #if DEBUG
+        self.isLocalAuthenticationCoveringView = false
+        return
+        #endif
+        
         if Env.userSessionStore.shouldRequestFaceId() {
             self.isLocalAuthenticationCoveringView = true
         }
@@ -1187,6 +1184,10 @@ extension RootViewController {
     
     func authenticateUser() {
     
+        #if DEBUG
+        return
+        #endif
+        
         if !Env.userSessionStore.shouldRequestFaceId() {
             return
         }

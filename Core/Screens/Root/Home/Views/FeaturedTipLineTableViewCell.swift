@@ -34,7 +34,7 @@ class FeaturedTipLineViewModel {
             return featuredTipCollectionViewModel
         }
         else {
-            let featuredTipCollectionViewModel = FeaturedTipCollectionViewModel(featuredTip: featuredTip)
+            let featuredTipCollectionViewModel = FeaturedTipCollectionViewModel(featuredTip: featuredTip, sizeType: .small)
             self.featuredTipCollectionCacheViewModel[tipId] = featuredTipCollectionViewModel
             return featuredTipCollectionViewModel
         }
@@ -48,7 +48,7 @@ class FeaturedTipLineTableViewCell: UITableViewCell {
     private var viewModel: FeaturedTipLineViewModel?
     private var cancellables: Set<AnyCancellable> = []
 
-    var shouldOpenFeaturedTipDetail: ((FeaturedTip) -> Void)?
+    var openFeaturedTipDetailAction: ((FeaturedTip) -> Void)?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -91,7 +91,8 @@ class FeaturedTipLineTableViewCell: UITableViewCell {
     func configure(withViewModel viewModel: FeaturedTipLineViewModel) {
 
         self.viewModel = viewModel
-
+        
+        
         self.reloadCollections()
     }
 
@@ -134,8 +135,8 @@ extension FeaturedTipLineTableViewCell: UICollectionViewDelegate, UICollectionVi
 
         cell.configure(viewModel: viewModel, hasCounter: false)
 
-        cell.shouldOpenFeaturedTipDetail = { [weak self] featuredTip in
-            self?.shouldOpenFeaturedTipDetail?(featuredTip)
+        cell.openFeaturedTipDetailAction = { [weak self] featuredTip in
+            self?.openFeaturedTipDetailAction?(featuredTip)
         }
 
         return cell

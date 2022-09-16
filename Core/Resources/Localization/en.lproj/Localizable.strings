@@ -338,6 +338,8 @@ Terms of use, Privacy Policy and EULA";
 
 "home" = "Home";
 
+"filter_date"= "Filter by date";
+
 "app_settings" = "App Settings";
 "notifications" = "Notifications";
 "appearance" = "Appearance";
@@ -553,6 +555,8 @@ Terms of use, Privacy Policy and EULA";
 
 "chat_empty_shared_ticket_self" = "You shared a ticket.";
 "chat_empty_shared_ticket_others" = "%s shared a ticket.";
+
+"bet" = "Bet";
 
 "follow" = "Follow";
 "total_odds" = "Total Odds";

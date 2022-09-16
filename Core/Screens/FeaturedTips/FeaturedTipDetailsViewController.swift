@@ -17,14 +17,15 @@ class FeaturedTipDetailsViewModel {
     }
 
     func getUsername() -> String {
-        //return self.featuredTip.username
-        return "USERNAME"
+        return self.featuredTip.username
     }
 
     func getTotalOdds() -> String {
-//        let oddFormatted = OddFormatter.formatOdd(withValue: self.featuredTip.totalOdds)
-//        return "\(oddFormatted)"
-        return "-.--"
+        if let oddsDouble = Double(self.featuredTip.totalOdds) {
+            let oddFormatted = OddFormatter.formatOdd(withValue: oddsDouble)
+            return "\(oddFormatted)"
+        }
+        return ""
     }
 
     func getNumberSelections() -> String {

@@ -205,16 +205,21 @@ class HomeViewController: UIViewController {
         self.navigationController?.pushViewController(bonusRootViewController, animated: true)
     }
 
-    private func openFeaturedTipDetails(featuredTip: FeaturedTip) {
+    private func openFeaturedTipSlider(featuredTips: [FeaturedTip]) {
 
+        let tipsSliderViewController = TipsSliderViewController(viewModel: TipsSliderViewModel(featuredTips: featuredTips))
+        tipsSliderViewController.modalPresentationStyle = .overCurrentContext
+        self.present(tipsSliderViewController, animated: true)
+        
+        /*
         let featuredTipDetailsViewModel = FeaturedTipDetailsViewModel(featuredTip: featuredTip)
-
         let featuredTipDetailsViewController = FeaturedTipDetailsViewController(viewModel: featuredTipDetailsViewModel)
 
         featuredTipDetailsViewController.modalPresentationStyle = .overCurrentContext
         featuredTipDetailsViewController.modalTransitionStyle = .crossDissolve
 
         self.present(featuredTipDetailsViewController, animated: true)
+        */
     }
 
     @objc private func didTapOpenFavorites() {
@@ -224,6 +229,18 @@ class HomeViewController: UIViewController {
     private func openFavorites() {
         let myFavoritesViewController = MyFavoritesViewController()
         self.navigationController?.pushViewController(myFavoritesViewController, animated: true)
+    }
+
+    private func openQuickbet(_ bettingTicket: BettingTicket) {
+
+        let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
+
+        let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)
+
+        quickbetViewController.modalPresentationStyle = .overCurrentContext
+        quickbetViewController.modalTransitionStyle = .crossDissolve
+
+        self.present(quickbetViewController, animated: true)
     }
 }
 
@@ -278,6 +295,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     }
                 }
             }
+
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.openQuickbet(bettingTicket)
+            }
             
             return cell
 
@@ -295,6 +316,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.tappedMatchLineAction = { [weak self] in
                 self?.openMatchDetails(matchId: match.id)
             }
+
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.openQuickbet(bettingTicket)
+            }
            
             return cell
         case .featuredTips:
@@ -305,8 +330,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 fatalError()
             }
 
-            cell.shouldOpenFeaturedTipDetail = { [weak self] featuredTip in
-                self?.openFeaturedTipDetails(featuredTip: featuredTip)
+            cell.openFeaturedTipDetailAction = { [weak self] featuredTip in
+                self?.openFeaturedTipSlider(featuredTips: featuredBetLineViewModel.featuredTips)
             }
 
             cell.configure(withViewModel: featuredBetLineViewModel)
@@ -367,6 +392,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     self?.openOutrightCompetition(competition: competition)
                 }
 
+                cell.didLongPressOdd = { [weak self] bettingTicket in
+                    self?.openQuickbet(bettingTicket)
+                }
+
                 return cell
 
             case .singleLine:
@@ -390,6 +419,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 cell.didSelectSeeAllCompetitionAction = { [weak self] competition in
                     self?.openOutrightCompetition(competition: competition)
+                }
+
+                cell.didLongPressOdd = { [weak self] bettingTicket in
+                    self?.openQuickbet(bettingTicket)
                 }
 
                 return cell

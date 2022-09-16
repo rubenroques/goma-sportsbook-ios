@@ -19,6 +19,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     private lazy var userImageView: UIImageView = Self.createUserImageView()
     private lazy var usernameLabel: UILabel = Self.createUsernameLabel()
     private lazy var followButton: UIButton = Self.createFollowButton()
+    private lazy var tipsBaseScrollView: UIScrollView = Self.createTipsBaseScrollView()
     private lazy var tipsContainerView: UIView = Self.createTipsContainerView()
     private lazy var tipsStackView: UIStackView = Self.createTipsStackView()
     private lazy var fullTipButton: UIButton = Self.createFullTipButton()
@@ -29,6 +30,9 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     private lazy var selectionsValueLabel: UILabel = Self.createSelectionsValueLabel()
     private lazy var betButton: UIButton = Self.createBetButton()
 
+    private var topContainerForCenteredConstraint: NSLayoutConstraint?
+    private var topContainerForFixedConstraint: NSLayoutConstraint?
+    
     // MARK: Public Properties
     var hasCounter: Bool = false {
         didSet {
@@ -44,7 +48,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
     var viewModel: FeaturedTipCollectionViewModel?
 
-    var shouldOpenFeaturedTipDetail: ((FeaturedTip) -> Void)?
+    var openFeaturedTipDetailAction: ((FeaturedTip) -> Void)?
     var shouldReloadData: (() -> Void)?
 
     // MARK: - Lifetime and Cycle
@@ -55,13 +59,10 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         self.setupWithTheme()
 
         self.hasCounter = false
-
         self.showFullTipButton = false
 
         self.followButton.addTarget(self, action: #selector(didTapFollowButton), for: .primaryActionTriggered)
-
         self.betButton.addTarget(self, action: #selector(didTapBetButton), for: .primaryActionTriggered)
-
         self.fullTipButton.addTarget(self, action: #selector(didTapShowFullTipButton), for: .primaryActionTriggered)
     }
 
@@ -72,30 +73,26 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        self.viewModel = nil
+        
+        self.usernameLabel.text = ""
+        self.totalOddsValueLabel.text = ""
+        self.selectionsValueLabel.text = ""
+        
         self.tipsStackView.removeAllArrangedSubviews()
 
         self.hasCounter = false
-
         self.showFullTipButton = false
-
     }
 
     // MARK: - Theme and Layout
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        self.contentView.layer.cornerRadius = CornerRadius.view
-        self.contentView.layer.masksToBounds = true
-
-        self.containerView.layer.cornerRadius = CornerRadius.view
-        self.containerView.layer.masksToBounds = true
-
+        self.contentView.layoutIfNeeded()
+        
         self.counterView.layer.cornerRadius = self.counterView.frame.height / 2
-        self.counterView.layer.masksToBounds = true
-
         self.userImageView.layer.cornerRadius = self.userImageView.frame.height / 2
-        self.userImageView.layer.masksToBounds = true
-
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -113,13 +110,10 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         self.topInfoStackView.backgroundColor = .clear
 
         self.counterBaseView.backgroundColor = .clear
-
         self.counterView.backgroundColor = UIColor.App.highlightSecondary
-
         self.counterLabel.textColor = UIColor.App.buttonTextPrimary
 
         self.userImageBaseView.backgroundColor = .clear
-
         self.userImageView.backgroundColor = .clear
         self.userImageView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
 
@@ -129,7 +123,6 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         self.followButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
 
         self.tipsContainerView.backgroundColor = .clear
-
         self.tipsStackView.backgroundColor = .clear
 
         self.fullTipButton.backgroundColor = .clear
@@ -138,57 +131,55 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         self.separatorLineView.backgroundColor = UIColor.App.separatorLine
 
         self.totalOddsLabel.textColor = UIColor.App.textPrimary
-
         self.totalOddsValueLabel.textColor = UIColor.App.textPrimary
 
         self.selectionsLabel.textColor = UIColor.App.textPrimary
-
         self.selectionsValueLabel.textColor = UIColor.App.textPrimary
 
         StyleHelper.styleButton(button: self.betButton)
+        
         self.betButton.setInsets(forContentPadding: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10), imageTitlePadding: CGFloat(0))
     }
 
-    // MARK: Functions
+    // MARK: Function
+
     func configure(viewModel: FeaturedTipCollectionViewModel, hasCounter: Bool) {
 
         self.viewModel = viewModel
 
         self.hasCounter = hasCounter
 
-        if let numberTips = viewModel.featuredTip.selections?.count {
-
-            for i in (0..<numberTips) {
-
-                if i < 3 {
-                    let tipView = FeaturedTipView()
-
-                    if let featuredTipSelection = self.viewModel?.featuredTip.selections?[safe: i] {
-
-                        tipView.configure(featuredTipSelection: featuredTipSelection)
-
-                        self.tipsStackView.addArrangedSubview(tipView)
-
-                        tipView.layoutSubviews()
-                        tipView.layoutIfNeeded()
-                    }
-
-                }
-                else {
-                    break
-                }
-
+        let tipsArray = viewModel.featuredTip.selections ?? []
+        
+        for (i, featuredTipSelection) in tipsArray.enumerated() {
+            if i > 2 && (self.viewModel?.shouldCropList ?? true) {
+                self.showFullTipButton = true
+                break
             }
-
-            self.showFullTipButton = numberTips > 3 ? true : false
+            else {
+                let tipView = FeaturedTipView()
+                tipView.configure(featuredTipSelection: featuredTipSelection)
+                self.tipsStackView.addArrangedSubview(tipView)
+                
+                self.showFullTipButton = false
+            }
         }
 
         self.usernameLabel.text = viewModel.getUsername()
-
         self.totalOddsValueLabel.text = viewModel.getTotalOdds()
-
         self.selectionsValueLabel.text = viewModel.getNumberSelections()
-
+        
+        if viewModel.sizeType == .small {
+            self.topContainerForFixedConstraint?.isActive = true
+            self.topContainerForCenteredConstraint?.isActive = false
+        }
+        else {
+            self.topContainerForFixedConstraint?.isActive = false
+            self.topContainerForCenteredConstraint?.isActive = true
+        }
+        
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
     }
 
     // MARK: Actions
@@ -198,12 +189,12 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
     @objc func didTapBetButton() {
         print("TAPPED BET: \(self.viewModel?.featuredTip.betId)")
+        self.viewModel?.createBetslipTicket()
     }
 
     @objc func didTapShowFullTipButton() {
-        print("SHOW FULL TIP")
         if let featuredTip = self.viewModel?.featuredTip {
-            self.shouldOpenFeaturedTipDetail?(featuredTip)
+            self.openFeaturedTipDetailAction?(featuredTip)
         }
     }
 }
@@ -213,6 +204,8 @@ extension FeaturedTipCollectionViewCell {
     private static func createContainerView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = CornerRadius.view
+        view.layer.masksToBounds = true
         return view
     }
 
@@ -235,6 +228,7 @@ extension FeaturedTipCollectionViewCell {
     private static func createCounterView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.masksToBounds = true
         return view
     }
 
@@ -260,6 +254,7 @@ extension FeaturedTipCollectionViewCell {
         imageView.image = UIImage(named: "my_account_profile_icon")
         imageView.contentMode = .scaleAspectFit
         imageView.layer.borderWidth = 2
+        imageView.layer.masksToBounds = true
         return imageView
     }
 
@@ -284,13 +279,19 @@ extension FeaturedTipCollectionViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
+    
+    private static func createTipsBaseScrollView() -> UIScrollView {
+        let view = UIScrollView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
 
     private static func createTipsStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.spacing = 10
-        stackView.distribution = .equalSpacing
+        stackView.distribution = .fill
         return stackView
     }
 
@@ -372,11 +373,14 @@ extension FeaturedTipCollectionViewCell {
 
         self.containerView.addSubview(self.followButton)
 
-        self.containerView.addSubview(self.tipsContainerView)
+        self.containerView.addSubview(self.tipsBaseScrollView)
 
+        self.tipsBaseScrollView.addSubview(self.tipsContainerView)
+        
         self.tipsContainerView.addSubview(self.tipsStackView)
-        self.tipsContainerView.addSubview(self.fullTipButton)
 
+        self.containerView.addSubview(self.fullTipButton)
+        
         self.containerView.addSubview(self.separatorLineView)
 
         self.containerView.addSubview(self.totalOddsLabel)
@@ -388,18 +392,18 @@ extension FeaturedTipCollectionViewCell {
         self.containerView.addSubview(self.betButton)
 
         self.initConstraints()
-
-        self.containerView.layoutIfNeeded()
-        self.containerView.layoutSubviews()
     }
 
     private func initConstraints() {
 
+        self.topContainerForCenteredConstraint = self.containerView.topAnchor.constraint(greaterThanOrEqualTo: self.contentView.topAnchor, constant: 1)
+        self.topContainerForFixedConstraint = self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor)
+        
         NSLayoutConstraint.activate([
             self.containerView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             self.containerView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-            self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            self.containerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
+            self.topContainerForCenteredConstraint!,
+            self.containerView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
         ])
 
         // Top Info stackview
@@ -433,29 +437,41 @@ extension FeaturedTipCollectionViewCell {
         ])
 
         // Tips stackview
+        let equalityConstraint = self.tipsBaseScrollView.heightAnchor.constraint(equalTo: self.tipsContainerView.heightAnchor)
+        equalityConstraint.priority = .defaultLow
+        
         NSLayoutConstraint.activate([
-
-            self.tipsContainerView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 10),
-            self.tipsContainerView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -10),
-            self.tipsContainerView.topAnchor.constraint(equalTo: self.topInfoStackView.bottomAnchor, constant: 10),
-            self.tipsContainerView.bottomAnchor.constraint(equalTo: self.separatorLineView.topAnchor, constant: -5),
-
+        
+            equalityConstraint,
+            
+            self.tipsBaseScrollView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 10),
+            self.tipsBaseScrollView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -10),
+            self.tipsBaseScrollView.topAnchor.constraint(equalTo: self.topInfoStackView.bottomAnchor, constant: 10),
+            self.tipsBaseScrollView.bottomAnchor.constraint(equalTo: self.separatorLineView.topAnchor, constant: -24),
+        
+            self.tipsContainerView.topAnchor.constraint(equalTo: self.tipsBaseScrollView.contentLayoutGuide.topAnchor),
+            self.tipsContainerView.bottomAnchor.constraint(equalTo: self.tipsBaseScrollView.contentLayoutGuide.bottomAnchor),
+            self.tipsContainerView.leadingAnchor.constraint(equalTo: self.tipsBaseScrollView.contentLayoutGuide.leadingAnchor),
+            self.tipsContainerView.trailingAnchor.constraint(equalTo: self.tipsBaseScrollView.contentLayoutGuide.trailingAnchor),
+            
+            self.tipsContainerView.widthAnchor.constraint(equalTo: self.tipsBaseScrollView.frameLayoutGuide.widthAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
             self.tipsStackView.leadingAnchor.constraint(equalTo: self.tipsContainerView.leadingAnchor),
             self.tipsStackView.trailingAnchor.constraint(equalTo: self.tipsContainerView.trailingAnchor),
             self.tipsStackView.topAnchor.constraint(equalTo: self.tipsContainerView.topAnchor),
-            //self.tipsStackView.heightAnchor.constraint(equalToConstant: 260)
-            //self.tipsStackView.bottomAnchor.constraint(equalTo: self.separatorLineView.topAnchor, constant: -10)
+            self.tipsStackView.bottomAnchor.constraint(equalTo: self.tipsContainerView.bottomAnchor),
 
-            self.fullTipButton.bottomAnchor.constraint(equalTo: self.tipsContainerView.bottomAnchor),
+            self.fullTipButton.bottomAnchor.constraint(equalTo: self.separatorLineView.topAnchor, constant: 0),
             self.fullTipButton.heightAnchor.constraint(equalToConstant: 25),
-            self.fullTipButton.centerXAnchor.constraint(equalTo: self.tipsContainerView.centerXAnchor)
+            self.fullTipButton.centerXAnchor.constraint(equalTo: self.separatorLineView.centerXAnchor)
         ])
 
         // Bottom info
         NSLayoutConstraint.activate([
             self.separatorLineView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 10),
             self.separatorLineView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -10),
-            //self.separatorLineView.topAnchor.constraint(equalTo: self.tipsStackView.bottomAnchor, constant: 10),
             self.separatorLineView.bottomAnchor.constraint(equalTo: self.totalOddsLabel.topAnchor, constant: -15),
             self.separatorLineView.heightAnchor.constraint(equalToConstant: 1),
 
@@ -466,7 +482,6 @@ extension FeaturedTipCollectionViewCell {
             self.totalOddsValueLabel.centerYAnchor.constraint(equalTo: self.totalOddsLabel.centerYAnchor),
 
             self.selectionsLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 10),
-            // self.selectionsLabel.topAnchor.constraint(equalTo: self.totalOddsLabel.bottomAnchor, constant: 10),
             self.selectionsLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -13),
 
             self.selectionsValueLabel.leadingAnchor.constraint(equalTo: self.selectionsLabel.trailingAnchor),

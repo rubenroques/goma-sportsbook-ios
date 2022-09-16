@@ -281,6 +281,9 @@ struct FeaturedTip: Decodable {
     var status: String
     var statusLabel: String
     var placedDate: String?
+    var userId: String
+    var username: String
+    var totalOdds: String
 
     enum CodingKeys: String, CodingKey {
 
@@ -291,6 +294,9 @@ struct FeaturedTip: Decodable {
         case status = "status"
         case statusLabel = "statusLabel"
         case placedDate = "placedDate"
+        case userId = "user_id"
+        case username = "user_name"
+        case totalOdds = "total_odds"
     }
 }
 
@@ -304,15 +310,16 @@ class FeaturedTipSelection: Decodable {
     var sportParentName: String
     var venueId: String
     var venueName: String
-    //var eventId: String
+    var eventId: String
     var eventName: String
     //var homeParticipantId: String
     //var awayParticipantId: String
-    //var bettingTypeId: String
+    var bettingTypeId: String
     var bettingTypeName: String
     var betName: String
+    var odds: String
     //var eventPartId: String
-    //var extraSelectionInfo: ExtraSelectionInfo?
+    var extraSelectionInfo: ExtraSelectionInfo
 
 //    var odds: Double?
 
@@ -326,15 +333,16 @@ class FeaturedTipSelection: Decodable {
         case sportParentName = "sportParentName"
         case venueId = "venueId"
         case venueName = "venueName"
-        //case eventId = "eventId"
+        case eventId = "eventId"
         case eventName = "eventName"
         //case homeParticipantId = "homeParticipantId"
         //case awayParticipantId = "awayParticipantId"
-        //case bettingTypeId = "bettingTypeId"
+        case bettingTypeId = "bettingTypeId"
         case bettingTypeName = "bettingTypeName"
         case betName = "betName"
+        case odds = "odds"
         //case eventPartId = "eventPartId"
-        //case extraSelectionInfo = "extraSelectionInfo"
+        case extraSelectionInfo = "extraSelectionInfo"
 
 //        case odds = "odds"
     }
@@ -343,28 +351,31 @@ class FeaturedTipSelection: Decodable {
 struct ExtraSelectionInfo: Decodable {
 
     var bettingOfferId: Int
-    var eventTypeId: Int
+//    var eventTypeId: Int
     var marketName: String
     var outcomeEntity: OutcomeEntity
-    var categoryId: Int
-    var categoryName: String
-    var creationTime: Int
+//    var categoryId: Int
+//    var categoryName: String
+//    var creationTime: Int
 
     enum CodingKeys: String, CodingKey {
         case bettingOfferId = "bettingOfferId"
-        case eventTypeId = "eventTypeId"
+//        case eventTypeId = "eventTypeId"
         case marketName = "marketName"
         case outcomeEntity = "outcomeEntity"
-        case categoryId = "categoryId"
-        case categoryName = "categoryName"
-        case creationTime = "creationTime"
+//        case categoryId = "categoryId"
+//        case categoryName = "categoryName"
+//        case creationTime = "creationTime"
     }
 }
 
 struct OutcomeEntity: Decodable {
+
     var id: Int
+    var statusId: Int
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
+        case statusId = "statusId"
     }
 }

@@ -185,8 +185,11 @@ class TipsTableViewCell: UITableViewCell {
 
     @objc func didTapBetButton() {
         if let viewModel = self.viewModel {
-            print("TAPPED BET: \(viewModel.getOMBetId())")
+            let betId = viewModel.getBetId()
+            print("TAPPED BET: \(betId)")
 
+            //viewModel.getBetData(betToken: betId)
+            viewModel.createBetslipTicket()
         }
     }
 

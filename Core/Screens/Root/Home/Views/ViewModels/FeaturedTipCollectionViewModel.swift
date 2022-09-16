@@ -11,21 +11,33 @@ import Combine
 class FeaturedTipCollectionViewModel {
 
     var featuredTip: FeaturedTip
-
-    init(featuredTip: FeaturedTip) {
+    
+    enum SizeType {
+        case small
+        case fullscreen
+    }
+    
+    var sizeType: SizeType
+    
+    init(featuredTip: FeaturedTip, sizeType: SizeType) {
         self.featuredTip = featuredTip
-
+        self.sizeType = sizeType
     }
 
+    var shouldCropList: Bool {
+        return self.sizeType == .small
+    }
+    
     func getUsername() -> String {
-        // return self.featuredTip.username
-        return "USERNAME"
+        return self.featuredTip.username
     }
 
     func getTotalOdds() -> String {
-//        let oddFormatted = OddFormatter.formatOdd(withValue: self.featuredTip.totalOdds)
-//        return "\(oddFormatted)"
-        return "-.--"
+        if let oddsDouble = Double(self.featuredTip.totalOdds) {
+            let oddFormatted = OddFormatter.formatOdd(withValue: oddsDouble)
+            return "\(oddFormatted)"
+        }
+        return ""
     }
 
     func getNumberSelections() -> String {
@@ -34,5 +46,31 @@ class FeaturedTipCollectionViewModel {
         }
 
         return ""
+    }
+
+    func createBetslipTicket() {
+
+        guard let selections = self.featuredTip.selections else {return}
+
+        for selection in selections {
+            let bettingOfferId = "\(selection.extraSelectionInfo.bettingOfferId)"
+            let ticket = BettingTicket(id: bettingOfferId,
+                                       outcomeId: selection.outcomeId,
+                                       marketId: selection.bettingTypeId,
+                                       matchId: selection.eventId,
+                                       value: Double(selection.odds) ?? 0.0,
+                                       isAvailable: true,
+                                       statusId: "\(selection.extraSelectionInfo.outcomeEntity.statusId)",
+                                       matchDescription: selection.eventName,
+                                       marketDescription: selection.extraSelectionInfo.marketName,
+                                       outcomeDescription: selection.betName)
+
+            if !Env.betslipManager.hasBettingTicket(withId: "\(selection.extraSelectionInfo.bettingOfferId)") {
+
+                Env.betslipManager.addBettingTicket(ticket)
+
+            }
+
+        }
     }
 }

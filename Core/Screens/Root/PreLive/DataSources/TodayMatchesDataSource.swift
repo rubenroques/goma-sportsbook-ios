@@ -17,7 +17,8 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     var requestNextPageAction: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
-    
+    var didLongPressOdd: ((BettingTicket) -> Void)?
+
     init(todayMatches: [Match]) {
         self.todayMatches = todayMatches
     }
@@ -60,6 +61,10 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 //                cell.didTapFavoriteMatchAction = { [weak self] match in
 //                    self?.didTapFavoriteMatchAction?(match)
 //                }
+
+                cell.didLongPressOdd = { [weak self] bettingTicket in
+                    self?.didLongPressOdd?(bettingTicket)
+                }
 
                 return cell
             }

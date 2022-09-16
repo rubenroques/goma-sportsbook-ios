@@ -336,6 +336,8 @@ Terms of use, Privacy Policy and EULA";
 "suspended_market" = "Suspended";
 "closed_market" = "Closed";
 
+"filter_date"= "Filter by date";
+
 "home" = "Home";
 
 "app_settings" = "App Settings";
@@ -553,6 +555,8 @@ Terms of use, Privacy Policy and EULA";
 
 "chat_empty_shared_ticket_self" = "You shared a ticket.";
 "chat_empty_shared_ticket_others" = "%s shared a ticket.";
+
+"bet" = "Bet";
 
 "follow" = "Follow";
 "total_odds" = "Total Odds";

@@ -99,6 +99,13 @@ class GomaGamingServiceClient {
         let requestPublisher: AnyPublisher<AuthToken, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
+    
+    func requestUpdateNameProfile(name: String) -> AnyPublisher<MessageNetworkResponse, NetworkError> {
+          let endpoint = GomaGamingService.updateProfile(name: name)
+
+          let requestPublisher: AnyPublisher<MessageNetworkResponse, NetworkError> = networkClient.requestEndpoint(deviceId: name, endpoint: endpoint)
+          return requestPublisher
+      }
 
     // TODO: Code Review -
     func requestSuggestedBets(deviceId: String) -> AnyPublisher<[[SuggestedBetSummary]]?, NetworkError> {
