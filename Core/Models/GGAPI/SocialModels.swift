@@ -379,3 +379,17 @@ struct OutcomeEntity: Decodable {
         case statusId = "statusId"
     }
 }
+
+struct RankingTip: Decodable {
+    var position: Int
+    var username: String
+    var userId: Int
+    var result: Double
+
+    enum CodingKeys: String, CodingKey {
+        case position = "position"
+        case username = "user_name"
+        case userId = "user_id"
+        case result = "result"
+    }
+}

@@ -283,4 +283,14 @@ class GomaGamingServiceClient {
                 
         return requestPublisher
     }
+
+    func requestRankingsTips(deviceId: String,
+                             type: String? = nil,
+                             friends: Bool? = nil,
+                             followers: Bool? = nil) -> AnyPublisher<NetworkResponse<[RankingTip]>, NetworkError> {
+        let endpoint = GomaGamingService.rankingsTips(type: type, friends: friends, followers: followers)
+        let requestPublisher: AnyPublisher<NetworkResponse<[RankingTip]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+
+        return requestPublisher
+    }
 }

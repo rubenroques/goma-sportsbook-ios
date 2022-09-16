@@ -29,6 +29,14 @@ class RankingsListViewModel {
             case .highestOdd: return "Highest Odd"
             }
         }
+
+        var urlType: String {
+            switch self {
+            case .accumulatedWinning: return "accumulated_wins"
+            case .consecutiveWins: return "consecutive_wins"
+            case .highestOdd: return "highest_odd"
+            }
+        }
     }
 
     enum ScreenState {
@@ -39,7 +47,7 @@ class RankingsListViewModel {
     }
 
     var rankingsType: RankingsType = .all
-    var rankingsPublisher: CurrentValueSubject<[Ranking], Never> = .init([])
+    var rankingsPublisher: CurrentValueSubject<[RankingTip], Never> = .init([])
     var rankingsCacheCellViewModel: [Int: RankingCellViewModel] = [:]
 
     var sortTypePublisher: CurrentValueSubject<SortType, Never> = .init(.accumulatedWinning)
@@ -78,18 +86,28 @@ class RankingsListViewModel {
 
     private func loadAllRankings() {
 
-        var rankings: [Ranking] = []
+        let sortType = self.sortTypePublisher.value.urlType
 
-        for i in 1...50 {
-            let ranking = Ranking(id: i, ranking: i, username: "Username_\(i)", score: Double(100-i))
+        Env.gomaNetworkClient.requestRankingsTips(deviceId: Env.deviceId, type: sortType)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("RANKINGS TIPS ERROR: \(error)")
+                case .finished:
+                    ()
+                }
 
-            rankings.append(ranking)
+                self?.isLoadingPublisher.send(false)
 
-        }
+            }, receiveValue: { [weak self] response in
+                print("RANKINGS TIPS RESPONSE: \(response)")
 
-        self.rankingsPublisher.value = rankings
-
-        self.isLoadingPublisher.send(false)
+                if let rankingsTips = response.data {
+                    self?.rankingsPublisher.value = rankingsTips
+                }
+            })
+            .store(in: &cancellables)
     }
 
     private func loadTopTipstersRankings() {
@@ -98,19 +116,29 @@ class RankingsListViewModel {
     }
 
     private func loadFriendsRankings() {
-        var rankings: [Ranking] = []
 
-        for i in 1...50 {
-            let ranking = Ranking(id: i, ranking: i, username: "Friend_Username_\(i)", score: Double(100-i))
+        let sortType = self.sortTypePublisher.value.urlType
 
-            rankings.append(ranking)
+        Env.gomaNetworkClient.requestRankingsTips(deviceId: Env.deviceId, type: sortType, friends: true)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("RANKINGS TIPS ERROR: \(error)")
+                case .finished:
+                    ()
+                }
 
-        }
+                self?.isLoadingPublisher.send(false)
 
-        self.rankingsPublisher.value = rankings
+            }, receiveValue: { [weak self] response in
+                print("RANKINGS TIPS RESPONSE: \(response)")
 
-        self.isLoadingPublisher.send(false)
-
+                if let rankingsTips = response.data {
+                    self?.rankingsPublisher.value = rankingsTips
+                }
+            })
+            .store(in: &cancellables)
     }
 
     private func loadFollowersRankings() {
@@ -147,6 +175,10 @@ class RankingsListViewModel {
 
     }
 
+    func reloadRankings() {
+        self.loadInitialRankings()
+    }
+
     func selectSortTypeForIndex(_ index: Int) {
         self.sortTypePublisher.send(SortType.allCases[index])
     }
@@ -166,14 +198,14 @@ class RankingsListViewModel {
             return nil
         }
 
-        let rankingId = ranking.id
+        let rankingUserId = ranking.userId
 
-        if let rankingsCellViewModel = rankingsCacheCellViewModel[rankingId] {
+        if let rankingsCellViewModel = rankingsCacheCellViewModel[rankingUserId] {
             return rankingsCellViewModel
         }
         else {
             let rankingsCellViewModel = RankingCellViewModel(ranking: ranking)
-            self.rankingsCacheCellViewModel[rankingId] = rankingsCellViewModel
+            self.rankingsCacheCellViewModel[rankingUserId] = rankingsCellViewModel
             return rankingsCellViewModel
         }
     }

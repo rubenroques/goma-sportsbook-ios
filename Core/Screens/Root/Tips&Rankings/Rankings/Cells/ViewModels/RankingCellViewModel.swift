@@ -8,14 +8,14 @@
 import Foundation
 
 class RankingCellViewModel {
-    private var ranking: Ranking
+    private var ranking: RankingTip
 
-    init(ranking: Ranking) {
+    init(ranking: RankingTip) {
         self.ranking = ranking
     }
 
     func getRanking() -> String {
-        return "\(self.ranking.ranking)"
+        return "\(self.ranking.position)"
     }
 
     func getUsername() -> String {
@@ -23,7 +23,7 @@ class RankingCellViewModel {
     }
 
     func getRankingScore() -> String {
-        return "\(self.ranking.score)"
+        return "\(self.ranking.result)"
     }
 }
 
