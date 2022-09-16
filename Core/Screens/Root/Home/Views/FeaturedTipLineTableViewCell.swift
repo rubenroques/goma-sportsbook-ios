@@ -11,7 +11,7 @@ import Combine
 class FeaturedTipLineViewModel {
 
     var featuredTips: [FeaturedTip] = []
-    var featuredTipCollectionCacheViewModel: [Int: FeaturedTipCollectionViewModel] = [:]
+    var featuredTipCollectionCacheViewModel: [String: FeaturedTipCollectionViewModel] = [:]
 
     init(featuredTips: [FeaturedTip]) {
         self.featuredTips = featuredTips
@@ -28,7 +28,7 @@ class FeaturedTipLineViewModel {
             return nil
         }
 
-        let tipId = featuredTip.id
+        let tipId = featuredTip.betId
 
         if let featuredTipCollectionViewModel = featuredTipCollectionCacheViewModel[tipId] {
             return featuredTipCollectionViewModel

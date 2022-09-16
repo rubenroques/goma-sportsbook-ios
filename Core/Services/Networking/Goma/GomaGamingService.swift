@@ -44,7 +44,7 @@ enum GomaGamingService {
     case setAllNotificationRead(type: String)
     case sendSupportTicket(title: String, message: String)
     case notificationsCounter(type: String)
-    case featuredTips(betType: String? = nil, totalOddsMin: String? = nil, totalOddsMax: String? = nil, friends: Bool? = nil)
+    case featuredTips(betType: String? = nil, totalOddsMin: String? = nil, totalOddsMax: String? = nil, friends: Bool? = nil, followers: Bool? = nil)
 
 }
 
@@ -174,7 +174,7 @@ extension GomaGamingService: Endpoint {
             URLQueryItem(name: "page", value: "\(page)")]
         case .notificationsCounter(let type):
             return[URLQueryItem(name: "type", value: type)]
-        case .featuredTips(let betType, let totalOddsMin, let totalOddsMax, let friends):
+        case .featuredTips(let betType, let totalOddsMin, let totalOddsMax, let friends, let followers):
             var queryItemsURL: [URLQueryItem] = []
 
             if betType != nil {
@@ -194,7 +194,14 @@ extension GomaGamingService: Endpoint {
 
             if friends != nil {
                 if let friendsValue = friends {
-                    let queryItem = URLQueryItem(name: "friends", value: "\(friendsValue)")
+                    let queryItem = URLQueryItem(name: "friends", value: "\(friendsValue == true ? 1 : 0)")
+                    queryItemsURL.append(queryItem)
+                }
+            }
+
+            if followers != nil {
+                if let followersValue = followers {
+                    let queryItem = URLQueryItem(name: "followers", value: "\(followersValue == true ? 1 : 0)")
                     queryItemsURL.append(queryItem)
                 }
             }

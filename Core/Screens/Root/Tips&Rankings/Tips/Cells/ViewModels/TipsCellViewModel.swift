@@ -1,35 +1,28 @@
 //
-//  FeaturedTipCollectionViewModel.swift
+//  TipsCellViewModel.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 01/09/2022.
+//  Created by André Lascas on 09/09/2022.
 //
 
 import Foundation
 import Combine
-
-class FeaturedTipCollectionViewModel {
+class TipsCellViewModel {
 
     var featuredTip: FeaturedTip
-    
-    enum SizeType {
-        case small
-        case fullscreen
-    }
-    
-    var sizeType: SizeType
-    
-    init(featuredTip: FeaturedTip, sizeType: SizeType) {
+    var cancellables = Set<AnyCancellable>()
+
+    init(featuredTip: FeaturedTip) {
         self.featuredTip = featuredTip
-        self.sizeType = sizeType
+
     }
 
-    var shouldCropList: Bool {
-        return self.sizeType == .small
-    }
-    
     func getUsername() -> String {
         return self.featuredTip.username
+    }
+
+    func getUserId() -> String {
+        return self.featuredTip.userId
     }
 
     func getTotalOdds() -> String {
@@ -46,6 +39,15 @@ class FeaturedTipCollectionViewModel {
         }
 
         return ""
+    }
+
+    func getBetId() -> String {
+        return self.featuredTip.betId
+    }
+
+    func hasFollowEnabled() -> Bool {
+
+        return false
     }
 
     func createBetslipTicket() {
@@ -68,7 +70,7 @@ class FeaturedTipCollectionViewModel {
             if !Env.betslipManager.hasBettingTicket(withId: "\(selection.extraSelectionInfo.bettingOfferId)") {
 
                 Env.betslipManager.addBettingTicket(ticket)
-
+                
             }
 
         }

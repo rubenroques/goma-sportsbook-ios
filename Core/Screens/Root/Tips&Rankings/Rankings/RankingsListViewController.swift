@@ -8,56 +8,6 @@
 import UIKit
 import Combine
 
-class RankingsListViewModel {
-
-    enum RankingsType: Int {
-        case all = 0
-        case topTipsters = 1
-        case friends = 2
-        case followers = 3
-    }
-    
-    enum SortType: CaseIterable {
-        case accumulatedWinning
-        case consecutiveWins
-        case highestOdd
-        
-        var title: String {
-            switch self {
-            case .accumulatedWinning: return "Accumulated Winning"
-            case .consecutiveWins: return "Consecutive Wins"
-            case .highestOdd: return "Highest Odd"
-            }
-        }
-    }
-    
-    enum ScreenState {
-        case loading
-        case loaded
-        case empty
-        case failed
-    }
-
-    var rankingsType: RankingsType = .all
-    
-    var sortTypePublisher: CurrentValueSubject<SortType, Never> = .init(.accumulatedWinning)
-    
-    var statePublisher: CurrentValueSubject<ScreenState, Never> = .init(.empty)
-    
-    init(rankingsType: RankingsType) {
-        self.rankingsType = rankingsType
-    }
-    
-    func loadRankings() {
-        self.statePublisher.send(.loading)
-    }
-    
-    func selectSortTypeForIndex(_ index: Int) {
-        self.sortTypePublisher.send(SortType.allCases[index])
-    }
-    
-}
-
 class RankingsListViewController: UIViewController {
 
     // MARK: Private properties
@@ -70,6 +20,12 @@ class RankingsListViewController: UIViewController {
     private lazy var emptyStateImageView: UIImageView = Self.createEmptyStateImageView()
     private lazy var emptyStateLabel: UILabel = Self.createEmptyStateLabel()
     private lazy var emptyStateSecondaryLabel: UILabel = Self.createEmptyStateSecondaryLabel()
+
+    private lazy var emptyFriendsBaseView: UIView = Self.createEmptyFriendsBaseView()
+    private lazy var emptyFriendsImageView: UIImageView = Self.createEmptyFriendsImageView()
+    private lazy var emptyFriendsTitleLabel: UILabel = Self.createEmptyFriendsTitleLabel()
+    private lazy var emptyFriendsSubtitleLabel: UILabel = Self.createEmptyFriendsSubtitleLabel()
+    private lazy var emptyFriendsButton: UIButton = Self.createEmptyFriendsButton()
 
     private lazy var pickerBaseView: UIView = Self.createPickerBaseView()
     private lazy var pickerDoneButton: UIButton = Self.createPickerDoneButton()
@@ -97,6 +53,12 @@ class RankingsListViewController: UIViewController {
     var isEmptyState: Bool = false {
         didSet {
             self.emptyStateBaseView.isHidden = !isEmptyState
+        }
+    }
+
+    var isEmptyFriends: Bool = false {
+        didSet {
+            self.emptyFriendsBaseView.isHidden = !isEmptyFriends
         }
     }
 
@@ -130,12 +92,15 @@ class RankingsListViewController: UIViewController {
 
         self.isLoading = false
         self.isEmptyState = false
-        
+        self.isEmptyFriends = false
+
         self.pickerView.delegate = self
         self.pickerView.dataSource = self
         self.pickerBaseView.alpha = 0.0
         
         self.configure(withViewModel: self.viewModel)
+
+        self.emptyFriendsButton.addTarget(self, action: #selector(didTapAddFriendButton), for: .primaryActionTriggered)
     }
 
     // MARK: - Layout and Theme
@@ -167,6 +132,14 @@ class RankingsListViewController: UIViewController {
         self.pickerView.backgroundColor = UIColor.App.backgroundSecondary
      
         StyleHelper.styleButton(button: self.pickerDoneButton)
+
+        self.emptyFriendsBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.emptyFriendsTitleLabel.textColor = UIColor.App.textPrimary
+
+        self.emptyFriendsSubtitleLabel.textColor = UIColor.App.textPrimary
+
+        StyleHelper.styleButton(button: self.emptyFriendsButton)
     }
 
     func configure(withViewModel viewModel: RankingsListViewModel) {
@@ -177,6 +150,40 @@ class RankingsListViewController: UIViewController {
                 self.tableView.reloadData()
             }
             .store(in: &cancellables)
+
+        viewModel.rankingsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] rankings in
+                self?.isEmptyState = rankings.isEmpty
+                self?.tableView.reloadData()
+            })
+            .store(in: &cancellables)
+
+        viewModel.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoading in
+                self?.isLoading = isLoading
+            })
+            .store(in: &cancellables)
+
+        viewModel.hasFriendsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] hasFriends in
+                if viewModel.rankingsType == .friends {
+                    self?.isEmptyFriends = !hasFriends
+                }
+            })
+            .store(in: &cancellables)
+    }
+
+    // MARK: Actions
+    @objc private func didTapAddFriendButton() {
+        let addFriendViewModel = AddFriendViewModel()
+
+        let addFriendViewController = AddFriendViewController(viewModel: addFriendViewModel)
+
+        self.navigationController?.pushViewController(addFriendViewController, animated: true)
+
     }
     
 }
@@ -187,19 +194,22 @@ class RankingsListViewController: UIViewController {
 extension RankingsListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return self.viewModel.numberOfSections()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 100
+        return self.viewModel.numberOfRows()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard
-            let cell = tableView.dequeueCellType(UserRankingPositionTableViewCell.self)
+            let cell = tableView.dequeueCellType(UserRankingPositionTableViewCell.self),
+            let cellViewModel = self.viewModel.viewModel(forIndex: indexPath.row)
         else {
             fatalError()
         }
+
+        cell.configure(viewModel: cellViewModel)
         
         return cell
     }
@@ -341,6 +351,48 @@ extension RankingsListViewController {
         return label
     }
 
+    private static func createEmptyFriendsBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createEmptyFriendsImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "add_friend_empty_icon")
+        return imageView
+    }
+
+    private static func createEmptyFriendsTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.font = AppFont.with(type: .bold, size: 20)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("time_add_friends")
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createEmptyFriendsSubtitleLabel() -> UILabel {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.font = AppFont.with(type: .semibold, size: 16)
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("add_friends_tip")
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createEmptyFriendsButton() -> UIButton {
+        let button = UIButton(type: .custom)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
+        button.setTitle(localized("add_friends"), for: .normal)
+        return button
+    }
+
     private static func createLoadingBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -388,6 +440,13 @@ extension RankingsListViewController {
         self.emptyStateBaseView.addSubview(self.emptyStateImageView)
         self.emptyStateBaseView.addSubview(self.emptyStateLabel)
         self.emptyStateBaseView.addSubview(self.emptyStateSecondaryLabel)
+
+        self.view.addSubview(self.emptyFriendsBaseView)
+
+        self.emptyFriendsBaseView.addSubview(self.emptyFriendsImageView)
+        self.emptyFriendsBaseView.addSubview(self.emptyFriendsTitleLabel)
+        self.emptyFriendsBaseView.addSubview(self.emptyFriendsSubtitleLabel)
+        self.emptyFriendsBaseView.addSubview(self.emptyFriendsButton)
 
         self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
         
@@ -459,9 +518,33 @@ extension RankingsListViewController {
             self.pickerView.bottomAnchor.constraint(equalTo: self.pickerDoneButton.topAnchor, constant: 8),
             */
         ])
-         
-        
+
+        // Empty friends view
+        NSLayoutConstraint.activate([
+            self.emptyFriendsBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.emptyFriendsBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.emptyFriendsBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.emptyFriendsBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.emptyFriendsImageView.centerXAnchor.constraint(equalTo: self.emptyFriendsBaseView.centerXAnchor),
+            self.emptyFriendsImageView.widthAnchor.constraint(equalToConstant: 112),
+            self.emptyFriendsImageView.heightAnchor.constraint(equalToConstant: 112),
+            self.emptyFriendsImageView.topAnchor.constraint(equalTo: self.emptyFriendsBaseView.topAnchor, constant: 45),
+
+            self.emptyFriendsTitleLabel.leadingAnchor.constraint(equalTo: self.emptyFriendsBaseView.leadingAnchor, constant: 35),
+            self.emptyFriendsTitleLabel.trailingAnchor.constraint(equalTo: self.emptyFriendsBaseView.trailingAnchor, constant: -35),
+            self.emptyFriendsTitleLabel.topAnchor.constraint(equalTo: self.emptyFriendsImageView.bottomAnchor, constant: 40),
+
+            self.emptyFriendsSubtitleLabel.leadingAnchor.constraint(equalTo: self.emptyFriendsBaseView.leadingAnchor, constant: 35),
+            self.emptyFriendsSubtitleLabel.trailingAnchor.constraint(equalTo: self.emptyFriendsBaseView.trailingAnchor, constant: -35),
+            self.emptyFriendsSubtitleLabel.topAnchor.constraint(equalTo: self.emptyFriendsTitleLabel.bottomAnchor, constant: 18),
+
+            self.emptyFriendsButton.leadingAnchor.constraint(equalTo: self.emptyFriendsBaseView.leadingAnchor, constant: 35),
+            self.emptyFriendsButton.trailingAnchor.constraint(equalTo: self.emptyFriendsBaseView.trailingAnchor, constant: -35),
+            self.emptyFriendsButton.topAnchor.constraint(equalTo: self.emptyFriendsSubtitleLabel.bottomAnchor, constant: 30),
+            self.emptyFriendsButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+
     }
 
 }
-

@@ -8,146 +8,6 @@
 import UIKit
 import Combine
 
-class TipsListViewModel {
-
-    enum TipsType: Int {
-        case all = 0
-        case topTips = 1
-        case friends = 2
-        case followers = 3
-    }
-
-    var tipsPublisher: CurrentValueSubject<[FeaturedTip], Never> = .init([])
-    var tipsType: TipsType = .all
-    var tipsCacheCellViewModel: [Int: TipsCellViewModel] = [:]
-    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    var hasFriendsPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-
-    private var cancellables = Set<AnyCancellable>()
-
-    init(tipsType: TipsType) {
-        self.tipsType = tipsType
-
-        switch self.tipsType {
-        case .all:
-            self.loadAllTips()
-        case .topTips:
-            ()
-        case .friends:
-            self.getFriends()
-        case .followers:
-            ()
-        }
-
-    }
-
-    private func loadAllTips() {
-        self.isLoadingPublisher.send(true)
-
-        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE")
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("TIPS ERROR: \(error)")
-                case .finished:
-                    ()
-                }
-
-                self?.isLoadingPublisher.send(false)
-
-            }, receiveValue: { [weak self] response in
-                print("TIPS RESPONSE: \(response)")
-
-                if let tips = response.data {
-                    self?.tipsPublisher.value = tips
-                }
-            })
-            .store(in: &cancellables)
-
-    }
-
-    private func getFriends() {
-
-        Env.gomaNetworkClient.requestFriends(deviceId: Env.deviceId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("FRIENDS ERROR: \(error)")
-                case .finished:
-                    print("FRIENDS FINISHED")
-                }
-            }, receiveValue: { [weak self] response in
-                print("FRIENDS GOMA: \(response)")
-                if let friends = response.data {
-                    if friends.isEmpty {
-                        self?.hasFriendsPublisher.send(false)
-                    }
-                    else {
-                        self?.loadFriendsTips()
-                    }
-                }
-            })
-            .store(in: &cancellables)
-
-    }
-
-    private func loadFriendsTips() {
-        self.hasFriendsPublisher.send(true)
-
-        self.isLoadingPublisher.send(true)
-
-        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE", friends: true)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("TIPS ERROR: \(error)")
-                case .finished:
-                    ()
-                }
-
-                self?.isLoadingPublisher.send(false)
-
-            }, receiveValue: { [weak self] response in
-                print("TIPS RESPONSE: \(response)")
-
-                if let tips = response.data {
-                    self?.tipsPublisher.value = tips
-                }
-            })
-            .store(in: &cancellables)
-    }
-
-    func numberOfSections() -> Int {
-        return 1
-    }
-
-    func numberOfRows() -> Int {
-        return self.tipsPublisher.value.count
-    }
-
-    func viewModel(forIndex index: Int) -> TipsCellViewModel? {
-        guard
-            let featuredTip = self.tipsPublisher.value[safe: index]
-        else {
-            return nil
-        }
-
-        let tipId = featuredTip.id
-
-        if let tipsCellViewModel = tipsCacheCellViewModel[tipId] {
-            return tipsCellViewModel
-        }
-        else {
-            let tipsCellViewModel = TipsCellViewModel(featuredTip: featuredTip)
-            self.tipsCacheCellViewModel[tipId] = tipsCellViewModel
-            return tipsCellViewModel
-        }
-    }
-}
-
 class TipsListViewController: UIViewController {
 
     // MARK: Private properties
@@ -190,7 +50,6 @@ class TipsListViewController: UIViewController {
 
     var isEmptyFriends: Bool = false {
         didSet {
-            self.emptyStateBaseView.isHidden = isEmptyFriends
             self.emptyFriendsBaseView.isHidden = !isEmptyFriends
         }
     }
@@ -216,9 +75,6 @@ class TipsListViewController: UIViewController {
         self.tableView.dataSource = self
 
         self.tableView.register(TipsTableViewCell.self, forCellReuseIdentifier: TipsTableViewCell.identifier)
-
-        self.tableView.isHidden = false
-        self.emptyStateBaseView.isHidden = true
 
         self.isLoading = false
 
@@ -325,14 +181,12 @@ extension TipsListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard
             let cell = tableView.dequeueReusableCell(withIdentifier: TipsTableViewCell.identifier, for: indexPath) as? TipsTableViewCell,
-            //let tips = self.viewModel.tipsForRow(atIndex: indexPath.row),
             let cellViewModel = self.viewModel.viewModel(forIndex: indexPath.row)
-
         else {
             fatalError("TipsTableViewCell not found")
         }
 
-        cell.configure(viewModel: cellViewModel, hasCounter: false)
+        cell.configure(viewModel: cellViewModel)
 
         return cell
     }

@@ -11,7 +11,7 @@ import UIKit
 class TipsSliderViewModel {
     
     var featuredTips: [FeaturedTip]
-    private var featuredTipCollectionCacheViewModel: [Int: FeaturedTipCollectionViewModel] = [:]
+    private var featuredTipCollectionCacheViewModel: [String: FeaturedTipCollectionViewModel] = [:]
     private var startIndex: Int
     
     init(featuredTips: [FeaturedTip], startIndex: Int) {
@@ -34,7 +34,7 @@ class TipsSliderViewModel {
             return nil
         }
 
-        let tipId = featuredTip.id
+        let tipId = featuredTip.betId
 
         if let featuredTipCollectionViewModel = featuredTipCollectionCacheViewModel[tipId] {
             return featuredTipCollectionViewModel

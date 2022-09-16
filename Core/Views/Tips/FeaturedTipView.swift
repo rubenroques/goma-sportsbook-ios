@@ -64,18 +64,20 @@ class FeaturedTipView: UIView {
     // MARK: Functions
     func configure(featuredTipSelection: FeaturedTipSelection) {
 
-        self.outcomeLabel.text = featuredTipSelection.outcomeName
+        self.outcomeLabel.text = featuredTipSelection.betName
 
         self.matchLabel.text = featuredTipSelection.eventName
 
         let matchSportId = featuredTipSelection.sportId
         self.sportIconImageView.image = UIImage(named: "sport_type_icon_\(matchSportId)")
 
-        if let matchLocation = Env.everyMatrixStorage.location(forId: featuredTipSelection.locationId),
+        if let matchLocation = Env.everyMatrixStorage.location(forId: featuredTipSelection.venueId),
            let countryIsoCode = matchLocation.code {
             self.setCountryFlag(isoCode: countryIsoCode, countryId: matchLocation.id)
 
         }
+
+        self.tournamentLabel.text = featuredTipSelection.sportParentName
 
     }
 

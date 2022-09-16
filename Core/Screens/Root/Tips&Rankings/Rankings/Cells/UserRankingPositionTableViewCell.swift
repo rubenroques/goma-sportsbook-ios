@@ -31,6 +31,8 @@ class UserRankingPositionTableViewCell: UITableViewCell {
     private lazy var swipeLabel: UILabel = Self.createSwipeLabel()
     
     private var baseViewInitialCenter: CGPoint = .zero
+
+    var viewModel: RankingCellViewModel?
     
     // MARK: Lifetime and Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -81,7 +83,20 @@ class UserRankingPositionTableViewCell: UITableViewCell {
         self.swipeBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.swipeLabel.textColor = UIColor.App.textSecondary
     }
-    
+
+    // MARK: Function
+    func configure(viewModel: RankingCellViewModel) {
+
+        self.viewModel = viewModel
+
+        self.positionLabel.text = viewModel.getRanking()
+
+        self.usernameLabel.text = viewModel.getUsername()
+
+        self.oddValueLabel.text = viewModel.getRankingScore()
+    }
+
+    // MARK: Actions
     @objc func didPanBaseView(_ sender: UIPanGestureRecognizer) {
         switch sender.state {
         case .began:

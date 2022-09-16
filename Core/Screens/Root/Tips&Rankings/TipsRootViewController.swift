@@ -19,6 +19,12 @@ class TipsRootViewController: UIViewController {
     private var tipsViewController: TipsViewController
     private var rankingsViewController: RankingsViewController
 
+    private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
+
+    // MARK: Public Properties
+    var didTapBetslipButtonAction: (() -> Void)?
+    var didTapChatButtonAction: (() -> Void)?
+
     // MARK: - Lifetime and Cycle
     init() {
 
@@ -52,6 +58,14 @@ class TipsRootViewController: UIViewController {
         //self.backButton.addTarget(self, action: #selector(self.didTapBackButton), for: .primaryActionTriggered)
 
         self.setupWithTheme()
+
+        self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in
+            self?.didTapBetslipView()
+        }
+
+        self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
+            self?.didTapChatView()
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -87,6 +101,15 @@ class TipsRootViewController: UIViewController {
 
         self.containerBaseView.backgroundColor = UIColor.App.backgroundPrimary
     }
+
+    // MARK: Actions
+    @objc func didTapBetslipView() {
+        self.didTapBetslipButtonAction?()
+    }
+
+    @objc func didTapChatView() {
+        self.didTapChatButtonAction?()
+    }
 }
 
 extension TipsRootViewController: UIGestureRecognizerDelegate {
@@ -113,9 +136,17 @@ extension TipsRootViewController {
         return view
     }
 
+    private static func createFloatingShortcutsView() -> FloatingShortcutsView {
+        let floatingShortcutsView = FloatingShortcutsView()
+        floatingShortcutsView.translatesAutoresizingMaskIntoConstraints = false
+        return floatingShortcutsView
+    }
+
     private func setupSubviews() {
 
         self.view.addSubview(self.containerBaseView)
+
+        self.view.addSubview(self.floatingShortcutsView)
 
         self.initConstraints()
     }
@@ -128,6 +159,11 @@ extension TipsRootViewController {
             self.containerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.containerBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.containerBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
+            self.floatingShortcutsView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
+            self.floatingShortcutsView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -12),
         ])
     }
 }

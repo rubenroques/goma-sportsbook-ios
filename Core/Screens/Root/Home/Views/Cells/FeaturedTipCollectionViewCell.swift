@@ -158,7 +158,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
         self.hasCounter = hasCounter
 
-        let tipsArray = viewModel.featuredTip.betSelections ?? []
+        let tipsArray = viewModel.featuredTip.selections ?? []
         
         for (i, featuredTipSelection) in tipsArray.enumerated() {
             if i > 2 && (self.viewModel?.shouldCropList ?? true) {
@@ -197,7 +197,8 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     }
 
     @objc func didTapBetButton() {
-        print("TAPPED BET: \(self.viewModel?.featuredTip)")
+        print("TAPPED BET: \(self.viewModel?.featuredTip.betId)")
+        self.viewModel?.createBetslipTicket()
     }
 
     @objc func didTapShowFullTipButton() {

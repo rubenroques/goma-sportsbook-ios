@@ -338,7 +338,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
             cell.openFeaturedTipDetailAction = { [weak self] featuredTip in
                 let firstIndex = featuredBetLineViewModel.featuredTips.firstIndex(where: { tipIterator in
-                    tipIterator.id == featuredTip.id
+                    tipIterator.betId == featuredTip.betId
                 })
                 let firstIndexValue: Int = Int(firstIndex ?? 0)
                 
