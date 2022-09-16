@@ -38,6 +38,7 @@ class Environment {
 
     let urlMobileShares: String = "https://sportsbook.gomagaming.com/mobile"
     let urlSchemaManager = URLSchemaManager()
+    let urlApp: String = "https://sportsbook.gomagaming.com/"
 
     var userBetslipSettingsSelectorList: [BetslipSelection] = [BetslipSelection(key: "ACCEPT_ANY",
                                                                                 description: localized("accept_any")),
