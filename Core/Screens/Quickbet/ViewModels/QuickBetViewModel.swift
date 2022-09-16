@@ -32,6 +32,7 @@ class QuickBetViewModel {
     var oddStatusPublisher: CurrentValueSubject<OddStatusType, Never> = .init(.same)
 
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var isAvailableOdd: CurrentValueSubject<Bool, Never> = .init(true)
 
     var shouldShowBetError: ((String) -> Void)?
     var shouldShowBetSuccess: (() -> Void)?
@@ -77,9 +78,10 @@ class QuickBetViewModel {
 
                     if let content = aggregator.content {
                         for contentType in content {
-                            if case let .bettingOffer(bettingOffer) = contentType, let oddsValue = bettingOffer.oddsValue {
+                            if case let .bettingOffer(bettingOffer) = contentType,
+                               let oddsValue = bettingOffer.oddsValue {
 
-                                self?.updateBettingOffer(value: oddsValue)
+                                self?.updateBettingOffer(value: oddsValue, isAvailable: bettingOffer.isAvailable, statusId: bettingOffer.statusId)
                                 break
                             }
                         }
@@ -90,10 +92,10 @@ class QuickBetViewModel {
                     if let content = aggregatorUpdates.contentUpdates {
                         for contentType in content {
                             if case let .bettingOfferUpdate(_, statusId, odd, _, isAvailable) = contentType {
+                                print("QUICKBET OFFER: \(statusId) - \(odd) - \(isAvailable)")
+                                self?.updateBettingOffer(value: odd, isAvailable: isAvailable,
+                                        statusId: statusId)
 
-                                if let newOddValue = odd {
-                                    self?.updateBettingOffer(value: newOddValue)
-                                }
                             }
                         }
                     }
@@ -102,6 +104,7 @@ class QuickBetViewModel {
                     ()
                 }
             })
+
     }
 
     func getOutcome() -> String {
@@ -191,31 +194,44 @@ class QuickBetViewModel {
             .store(in: &cancellables)
     }
 
-    private func updateBettingOffer(value: Double) {
-        let currentOddValue = self.priceValueFactor
+    private func updateBettingOffer(value: Double?, isAvailable: Bool?, statusId: String?) {
 
-        self.oddValuePublisher.value = OddConverter.stringForValue(value, format: UserDefaults.standard.userOddsFormat)
+        let isOddAvailable = (statusId ?? "1") == "1" && isAvailable ?? true
 
-        self.priceValueFactor = value
+        if isOddAvailable {
+            self.isAvailableOdd.send(true)
 
-        if currentAmountInteger != 0 {
+            if let newOddValue = value {
 
-            let returnAmount = self.finalBetAmountPublisher.value * value
+                let currentOddValue = self.priceValueFactor
 
-            self.returnAmountValue.send(returnAmount)
+                self.oddValuePublisher.value = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
 
+                self.priceValueFactor = newOddValue
+
+                if currentAmountInteger != 0 {
+
+                    let returnAmount = self.finalBetAmountPublisher.value * newOddValue
+
+                    self.returnAmountValue.send(returnAmount)
+
+                }
+
+                if currentOddValue != 0 {
+                    if newOddValue > currentOddValue {
+                        self.oddStatusPublisher.send(.up)
+                    }
+                    else if newOddValue < currentOddValue {
+                        self.oddStatusPublisher.send(.down)
+                    }
+                    else {
+                        self.oddStatusPublisher.send(.same)
+                    }
+                }
+            }
         }
-
-        if currentOddValue != 0 {
-            if value > currentOddValue {
-                self.oddStatusPublisher.send(.up)
-            }
-            else if value < currentOddValue {
-                self.oddStatusPublisher.send(.down)
-            }
-            else {
-                self.oddStatusPublisher.send(.same)
-            }
+        else {
+            self.isAvailableOdd.send(false)
         }
 
     }

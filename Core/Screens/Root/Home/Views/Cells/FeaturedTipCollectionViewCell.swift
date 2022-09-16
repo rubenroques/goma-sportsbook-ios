@@ -93,6 +93,15 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         
         self.counterView.layer.cornerRadius = self.counterView.frame.height / 2
         self.userImageView.layer.cornerRadius = self.userImageView.frame.height / 2
+        
+        self.tipsStackView.arrangedSubviews.forEach { view in
+            view.layoutSubviews()
+        }
+        
+        self.topInfoStackView.arrangedSubviews.forEach { view in
+            view.layoutSubviews()
+        }
+        
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

@@ -303,14 +303,20 @@ class SearchViewController: UIViewController {
 
     private func openQuickbet(_ bettingTicket: BettingTicket) {
 
-        let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
+        if let userSession = UserSessionStore.loggedUserSession() {
+            let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
 
-        let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)
+            let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)
 
-        quickbetViewController.modalPresentationStyle = .overCurrentContext
-        quickbetViewController.modalTransitionStyle = .crossDissolve
+            quickbetViewController.modalPresentationStyle = .overCurrentContext
+            quickbetViewController.modalTransitionStyle = .crossDissolve
 
-        self.present(quickbetViewController, animated: true)
+            self.present(quickbetViewController, animated: true)
+        }
+        else {
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.present(loginViewController, animated: true, completion: nil)
+        }
     }
 
     @IBAction private func didTapCancelButton() {

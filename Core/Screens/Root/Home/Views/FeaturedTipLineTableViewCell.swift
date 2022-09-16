@@ -145,7 +145,7 @@ extension FeaturedTipLineTableViewCell: UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: Double(collectionView.frame.size.width)*0.85, height: 380)
+        return CGSize(width: Double(collectionView.frame.size.width)*0.85, height: 400)
     }
 
 }
@@ -175,9 +175,6 @@ extension FeaturedTipLineTableViewCell {
 
     private func initConstraints() {
         NSLayoutConstraint.activate([
-
-            self.collectionView.heightAnchor.constraint(equalToConstant: 130),
-
             self.collectionView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 0),
             self.collectionView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 0),
             self.collectionView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 8),

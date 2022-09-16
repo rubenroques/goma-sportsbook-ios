@@ -17,7 +17,7 @@ class AddUnregisteredFriendTableViewCell: UITableViewCell {
     private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
 
     var viewModel: AddUnregisteredFriendCellViewModel?
-    var didTapInviteAction: ((String) -> Void)?
+    var didTapInviteAction: ((UserContact) -> Void)?
 
     // MARK: Public Properties
 
@@ -87,8 +87,11 @@ class AddUnregisteredFriendTableViewCell: UITableViewCell {
 
     // MARK: Actions
     @objc func didTapInviteButton() {
-        if let phoneNumber = self.viewModel?.phones.first {
-            self.didTapInviteAction?(phoneNumber)
+//        if let phoneNumber = self.viewModel?.phones.first {
+//            self.didTapInviteAction?(phoneNumber)
+//        }
+        if let userContact = self.viewModel?.userContact {
+            self.didTapInviteAction?(userContact)
         }
     }
 

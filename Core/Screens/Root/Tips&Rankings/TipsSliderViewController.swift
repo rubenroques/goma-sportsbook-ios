@@ -12,11 +12,17 @@ class TipsSliderViewModel {
     
     var featuredTips: [FeaturedTip]
     private var featuredTipCollectionCacheViewModel: [String: FeaturedTipCollectionViewModel] = [:]
-
-    init(featuredTips: [FeaturedTip]) {
+    private var startIndex: Int
+    
+    init(featuredTips: [FeaturedTip], startIndex: Int) {
         self.featuredTips = featuredTips
+        self.startIndex = startIndex
     }
 
+    func initialIndex() -> Int {
+        return self.startIndex
+    }
+    
     func numberOfItems() -> Int {
         return featuredTips.count
     }
@@ -88,6 +94,15 @@ class TipsSliderViewController: UIViewController {
         self.setupWithTheme()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    
+        self.collectionView.reloadData()
+        self.collectionView.scrollToItem(at: IndexPath(row: self.viewModel.initialIndex(), section: 0),
+                                         at: .centeredHorizontally,
+                                         animated: false)
+    }
+    
     // MARK: - Layout and Theme
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -117,7 +132,7 @@ extension TipsSliderViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return self.viewModel.numberOfItems()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
