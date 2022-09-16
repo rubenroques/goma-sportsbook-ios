@@ -11,7 +11,7 @@ import UIKit
 class TipsSliderViewModel {
     
     var featuredTips: [FeaturedTip]
-    private var featuredTipCollectionCacheViewModel: [String: FeaturedTipCollectionViewModel] = [:]
+    private var featuredTipCollectionCacheViewModel: [Int: FeaturedTipCollectionViewModel] = [:]
     private var startIndex: Int
     
     init(featuredTips: [FeaturedTip], startIndex: Int) {
