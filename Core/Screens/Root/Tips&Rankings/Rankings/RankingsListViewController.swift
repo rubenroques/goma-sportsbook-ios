@@ -146,8 +146,8 @@ class RankingsListViewController: UIViewController {
         
         viewModel
             .sortTypePublisher
-            .sink { newSort in
-                self.tableView.reloadData()
+            .sink {[weak self] _ in
+                self?.viewModel.reloadRankings()
             }
             .store(in: &cancellables)
 
