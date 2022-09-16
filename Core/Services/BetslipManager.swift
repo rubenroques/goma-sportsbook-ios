@@ -396,7 +396,7 @@ extension BetslipManager {
             bettingTicket.id == betTicketId
         }).map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
 
-        let userBetslipSetting = UserDefaults.standard.string(forKey: "user_betslip_settings")
+        let betslipOddValidationType = UserDefaults.standard.string(forKey: UserDefaultsKey.betslipOddValidationType.key) ?? "ACCEPT_ANY"
 
         var betAmount = amount
         var isFreeBet = false
@@ -415,7 +415,7 @@ extension BetslipManager {
         let route = TSRouter.placeBet(language: "en",
                                       amount: betAmount,
                                       betType: .single,
-                                      tickets: ticketSelections, oddsValidationType: userBetslipSetting ?? "ACCEPT_ANY",
+                                      tickets: ticketSelections, oddsValidationType: betslipOddValidationType,
                                       freeBet: isFreeBet,
                                       ubsWalletId: ubsWalletId)
 
@@ -436,7 +436,7 @@ extension BetslipManager {
         let updatedTicketSelections = self.bettingTicketsPublisher.value
         let ticketSelections = updatedTicketSelections
             .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
-        let userBetslipSetting = UserDefaults.standard.string(forKey: "user_betslip_settings")
+        let userBetslipSetting = UserDefaults.standard.string(forKey: "betslipOddValidationType")
 
         var betAmount = amount
         var isFreeBet = false
@@ -479,7 +479,7 @@ extension BetslipManager {
         let updatedTicketSelections = self.bettingTicketsPublisher.value
         let ticketSelections = updatedTicketSelections
             .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
-        let userBetslipSetting = UserDefaults.standard.string(forKey: "user_betslip_settings")
+        let userBetslipSetting = UserDefaults.standard.string(forKey: "betslipOddValidationType")
 
         var betAmount = amount
         var isFreeBet = false

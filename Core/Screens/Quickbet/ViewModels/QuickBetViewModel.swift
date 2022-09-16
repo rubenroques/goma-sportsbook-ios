@@ -228,7 +228,7 @@ class QuickBetViewModel {
 
         let ticketSelection = EveryMatrix.BetslipTicketSelection(id: self.bettingTicket.id, currentOdd: self.bettingTicket.value)
 
-        let userBetslipSetting = UserDefaults.standard.string(forKey: "user_betslip_settings")
+        let userBetslipSetting = UserDefaults.standard.string(forKey: "betslipOddValidationType")
 
         let route = TSRouter.placeBet(language: "en",
                                       amount: betAmount,

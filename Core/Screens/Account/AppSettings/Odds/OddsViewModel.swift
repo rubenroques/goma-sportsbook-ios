@@ -34,20 +34,18 @@ class OddsViewModel: NSObject {
         viewTapped.isChecked = true
 
         if viewTapped.viewId == 1 {
-            UserDefaults.standard.userBetslipSettings = "ACCEPT_HIGHER"
+            UserDefaults.standard.userBetslipSettings = .acceptHigher
         }
         else if viewTapped.viewId == 2 {
-            UserDefaults.standard.userBetslipSettings = "ACCEPT_ANY"
+            UserDefaults.standard.userBetslipSettings = .acceptAny
         }
-
-        self.userSettings?.oddValidationType = UserDefaults.standard.userBetslipSettings
 
         self.postOddsSettingsToGoma()
     }
 
     func setOddsVariationSelectedValues() {
         // Set selected view
-        let oddsVariationTypeString = UserDefaults.standard.userBetslipSettings
+        let oddsVariationTypeString = UserDefaults.standard.userBetslipSettings.rawValue
         let oddVariationId = getOddsVariationType(userBetslipSetting: oddsVariationTypeString)
 
         for view in self.oddsVariationRadioButtonViews {
@@ -111,11 +109,8 @@ class OddsViewModel: NSObject {
         if let data = UserDefaults.standard.data(forKey: "gomaUserSettings") {
             do {
                 let decoder = JSONDecoder()
-
                 let userSettings = try decoder.decode(UserSettingsGoma.self, from: data)
-
                 self.userSettings = userSettings
-
             }
             catch {
                 print("Unable to Decode UserSettings Goma (\(error))")
@@ -126,11 +121,8 @@ class OddsViewModel: NSObject {
     private func setUserSettings(userSettings: UserSettingsGoma) {
         do {
             let encoder = JSONEncoder()
-
             let data = try encoder.encode(userSettings)
-
             UserDefaults.standard.set(data, forKey: "gomaUserSettings")
-
         } catch {
             print("Unable to Encode User Settings Goma (\(error))")
         }
@@ -158,7 +150,6 @@ class OddsViewModel: NSObject {
                         print("GOMA SETTINGS: \(value)")
                     })
                     .store(in: &cancellables)
-
             }
             catch {
                 print("Unable to Decode UserSettings Goma (\(error))")

@@ -60,64 +60,23 @@ class GamesNotificationViewModel: NSObject {
         var switchState = false
 
         if let userSettings = self.userSettings {
-
             switch settingType {
             case .startGame:
-                if userSettings.notificationsStartgame == 1 {
-                    switchState = true
-                }
-                else {
-                    switchState = false
-                }
+                   switchState = userSettings.notificationsStartgame
             case .goals:
-                if userSettings.notificationGoal == 1 {
-                    switchState = true
-                }
-                else {
-                    switchState = false
-                }
+                   switchState = userSettings.notificationGoal
             case .halfTime:
-                if userSettings.notificationsHalftime == 1 {
-                    switchState = true
-                }
-                else {
-                    switchState = false
-                }
+                   switchState = userSettings.notificationsHalftime
             case .secondHalfTime:
-                if userSettings.notificationsSecondhalf == 1 {
-                    switchState = true
-                }
-                else {
-                    switchState = false
-                }
+                   switchState = userSettings.notificationsSecondhalf
             case .fullTime:
-                if userSettings.notificationsFulltime == 1 {
-                    switchState = true
-                }
-                else {
-                    switchState = false
-                }
+                   switchState = userSettings.notificationsFulltime
             case .redCard:
-                if userSettings.notificationsRedcard == 1 {
-                    switchState = true
-                }
-                else {
-                    switchState = false
-                }
+                   switchState = userSettings.notificationsRedcard
             case .gamesWatchList:
-                if userSettings.notificationGamesWatchlist == 1 {
-                    switchState = true
-                }
-                else {
-                    switchState = false
-                }
+                   switchState = userSettings.notificationGamesWatchlist
             case .competitionWatchList:
-                if userSettings.notificationsCompetitionsWatchlist == 1 {
-                    switchState = true
-                }
-                else {
-                    switchState = false
-                }
+                   switchState = userSettings.notificationsCompetitionsWatchlist
             }
         }
 
@@ -125,36 +84,25 @@ class GamesNotificationViewModel: NSObject {
     }
 
     func updateGamesSetting(isSettingEnabled: Bool, settingType: UserSettingOption) {
-        var settingIdentifier = 0
-
-        if isSettingEnabled {
-            settingIdentifier = 1
-        }
-        else {
-            settingIdentifier = 0
-        }
-
         switch settingType {
         case .startGame:
-            self.userSettings?.notificationsStartgame = settingIdentifier
+            self.userSettings?.notificationsStartgame = isSettingEnabled
         case .goals:
-            self.userSettings?.notificationGoal = settingIdentifier
+            self.userSettings?.notificationGoal = isSettingEnabled
         case .halfTime:
-            self.userSettings?.notificationsHalftime = settingIdentifier
+            self.userSettings?.notificationsHalftime = isSettingEnabled
         case .secondHalfTime:
-            self.userSettings?.notificationsSecondhalf = settingIdentifier
+            self.userSettings?.notificationsSecondhalf = isSettingEnabled
         case .fullTime:
-            self.userSettings?.notificationsFulltime = settingIdentifier
+            self.userSettings?.notificationsFulltime = isSettingEnabled
         case .redCard:
-            self.userSettings?.notificationsRedcard = settingIdentifier
+            self.userSettings?.notificationsRedcard = isSettingEnabled
         case .gamesWatchList:
-            self.userSettings?.notificationGamesWatchlist = settingIdentifier
+            self.userSettings?.notificationGamesWatchlist = isSettingEnabled
         case .competitionWatchList:
-            self.userSettings?.notificationsCompetitionsWatchlist = settingIdentifier
+            self.userSettings?.notificationsCompetitionsWatchlist = isSettingEnabled
         }
-
         self.shouldSendSettingsPublisher.send(true)
-
     }
 
     func checkNotificationSwitches() {

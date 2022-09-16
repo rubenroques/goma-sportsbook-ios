@@ -56,27 +56,15 @@ class NotificationsViewModel: NSObject {
         self.postOddsSettingsToGoma()
     }
 
-    func updateSmsSetting(isSettingEnabled: Bool) {
-        if isSettingEnabled {
-            self.userSettings?.notificationSms = 1
-        }
-        else {
-            self.userSettings?.notificationSms = 0
-        }
-
+    func updateSmsSetting(enabled: Bool) {
+        self.userSettings?.notificationSms = enabled
         if let userSettings = self.userSettings {
             self.setUserSettings(userSettings: userSettings)
         }
     }
 
-    func updateEmailSetting(isSettingEnabled: Bool) {
-        if isSettingEnabled {
-            self.userSettings?.notificationEmail = 1
-        }
-        else {
-            self.userSettings?.notificationEmail = 0
-        }
-
+    func updateEmailSetting(enabled: Bool) {
+        self.userSettings?.notificationEmail = enabled
         if let userSettings = self.userSettings {
             self.setUserSettings(userSettings: userSettings)
         }

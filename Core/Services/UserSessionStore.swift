@@ -54,6 +54,7 @@ class UserSessionStore {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.subscribeAccountBalanceWatcher()
+                
                 self?.requestUserSettings()
             }
             .store(in: &cancellables)
@@ -128,7 +129,7 @@ class UserSessionStore {
         Env.favoritesManager.clearCachedFavorites()
         Env.gomaSocialClient.clearUserChatroomsData()
 
-        UserDefaults.standard.removeObject(forKey: "user_betslip_settings")
+        UserDefaults.standard.removeObject(forKey: "betslipOddValidationType")
         
         Env.gomaNetworkClient.reconnectSession()
 
@@ -247,14 +248,14 @@ extension UserSessionStore {
 
     func setUserSettings(userSettings: String = "", defaultSettingsFallback: Bool = false) {
         if defaultSettingsFallback {
-            if !UserDefaults.standard.isKeyPresentInUserDefaults(key: "user_betslip_settings"),
+            if !UserDefaults.standard.isKeyPresentInUserDefaults(key: "betslipOddValidationType"),
                let defaultUserSetting = Env.userBetslipSettingsSelectorList[safe: 1]?.key {
-                UserDefaults.standard.set(defaultUserSetting, forKey: "user_betslip_settings")
+                UserDefaults.standard.set(defaultUserSetting, forKey: "betslipOddValidationType")
             }
         }
         else {
             let defaultUserSetting = userSettings
-            UserDefaults.standard.set(defaultUserSetting, forKey: "user_betslip_settings")
+            UserDefaults.standard.set(defaultUserSetting, forKey: "betslipOddValidationType")
         }
     }
 

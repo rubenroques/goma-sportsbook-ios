@@ -104,7 +104,7 @@ class NotificationsViewController: UIViewController {
         smsView.hasSwitchButton = true
 
         smsView.didTappedSwitch = {
-            self.viewModel.updateSmsSetting(isSettingEnabled: smsView.isSwitchOn)
+            self.viewModel.updateSmsSetting(enabled: smsView.isSwitchOn)
         }
 
         let emailView = SettingsRowView()
@@ -112,19 +112,19 @@ class NotificationsViewController: UIViewController {
         emailView.hasSwitchButton = true
 
         emailView.didTappedSwitch = {
-            self.viewModel.updateEmailSetting(isSettingEnabled: emailView.isSwitchOn)
+            self.viewModel.updateEmailSetting(enabled: emailView.isSwitchOn)
         }
 
         // Check options
         if let userSettings = self.viewModel.userSettings {
-            if userSettings.notificationSms == 1 {
+            if userSettings.notificationSms {
                 smsView.isSwitchOn = true
             }
             else {
                 smsView.isSwitchOn = false
             }
 
-            if userSettings.notificationEmail == 1 {
+            if userSettings.notificationEmail {
                 emailView.isSwitchOn = true
             }
             else {
@@ -135,7 +135,6 @@ class NotificationsViewController: UIViewController {
         self.bottomStackView.addArrangedSubview(allowSportsbookView)
         self.bottomStackView.addArrangedSubview(smsView)
         self.bottomStackView.addArrangedSubview(emailView)
-
     }
 
 }
