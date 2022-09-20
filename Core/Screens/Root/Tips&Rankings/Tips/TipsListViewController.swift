@@ -54,6 +54,8 @@ class TipsListViewController: UIViewController {
         }
     }
 
+    var shouldShowBetslip: (() -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(viewModel: TipsListViewModel = TipsListViewModel(tipsType: .all)) {
         self.viewModel = viewModel
@@ -151,6 +153,20 @@ class TipsListViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+        Env.gomaSocialClient.followingUsersPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.tableView.reloadData()
+            })
+            .store(in: &cancellables)
+    }
+
+    // MARK: Function
+    private func reloadFollowingUsers() {
+        Env.gomaSocialClient.getFollowingUsers()
+
+        //Env.gomaSocialClient.refetchFollowingUsersPublisher.send()
     }
 
     // MARK: Actions
@@ -186,7 +202,11 @@ extension TipsListViewController: UITableViewDelegate, UITableViewDataSource {
             fatalError("TipsTableViewCell not found")
         }
 
-        cell.configure(viewModel: cellViewModel)
+        cell.configure(viewModel: cellViewModel, followingUsers: Env.gomaSocialClient.followingUsersPublisher.value)
+
+        cell.shouldShowBetslip = { [weak self] in
+            self?.shouldShowBetslip?()
+        }
 
         return cell
     }

@@ -13,8 +13,11 @@ class FeaturedTipLineViewModel {
     var featuredTips: [FeaturedTip] = []
     var featuredTipCollectionCacheViewModel: [String: FeaturedTipCollectionViewModel] = [:]
 
+    private var cancellables = Set<AnyCancellable>()
+
     init(featuredTips: [FeaturedTip]) {
         self.featuredTips = featuredTips
+
     }
 
     func numberOfItems() -> Int {
@@ -49,6 +52,7 @@ class FeaturedTipLineTableViewCell: UITableViewCell {
     private var cancellables: Set<AnyCancellable> = []
 
     var openFeaturedTipDetailAction: ((FeaturedTip) -> Void)?
+    var shouldShowBetslip: (() -> Void)?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -91,8 +95,14 @@ class FeaturedTipLineTableViewCell: UITableViewCell {
     func configure(withViewModel viewModel: FeaturedTipLineViewModel) {
 
         self.viewModel = viewModel
-        
-        
+
+        Env.gomaSocialClient.followingUsersPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.reloadCollections()
+            })
+            .store(in: &cancellables)
+
         self.reloadCollections()
     }
 
@@ -128,15 +138,20 @@ extension FeaturedTipLineTableViewCell: UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
             let cell = collectionView.dequeueCellType(FeaturedTipCollectionViewCell.self, indexPath: indexPath),
-            let viewModel = self.viewModel?.viewModel(forIndex: indexPath.row)
+            let cellViewModel = self.viewModel?.viewModel(forIndex: indexPath.row),
+            let viewModel = self.viewModel
         else {
             fatalError()
         }
 
-        cell.configure(viewModel: viewModel, hasCounter: false)
+        cell.configure(viewModel: cellViewModel, hasCounter: false, followingUsers: Env.gomaSocialClient.followingUsersPublisher.value)
 
         cell.openFeaturedTipDetailAction = { [weak self] featuredTip in
             self?.openFeaturedTipDetailAction?(featuredTip)
+        }
+
+        cell.shouldShowBetslip = { [weak self] in
+            self?.shouldShowBetslip?()
         }
 
         return cell

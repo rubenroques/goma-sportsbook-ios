@@ -208,7 +208,13 @@ class HomeViewController: UIViewController {
     private func openFeaturedTipSlider(featuredTips: [FeaturedTip], atIndex index: Int = 0) {
 
         let tipsSliderViewController = TipsSliderViewController(viewModel: TipsSliderViewModel(featuredTips: featuredTips, startIndex: index))
+
         tipsSliderViewController.modalPresentationStyle = .overCurrentContext
+
+        tipsSliderViewController.shouldShowBetslip = { [weak self] in
+            self?.didTapBetslipButtonAction?()
+        }
+
         self.present(tipsSliderViewController, animated: true)
         
         /*
@@ -346,6 +352,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             cell.configure(withViewModel: featuredBetLineViewModel)
+
+            cell.shouldShowBetslip = { [weak self] in
+                self?.didTapBetslipButtonAction?()
+            }
 
             return cell
         case .suggestedBets:

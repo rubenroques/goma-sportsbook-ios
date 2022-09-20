@@ -393,3 +393,28 @@ struct RankingTip: Decodable {
         case result = "result"
     }
 }
+
+struct Follower: Decodable {
+    var id: Int
+    //var userId: Int
+    var name: String
+    //var userFollowerId: Int
+    //var nameFollower: String
+
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        //case userId = "user_id"
+        case name = "name"
+        //case userFollowerId = "user_follower_id"
+        //case nameFollower = "name_follower"
+    }
+
+}
+
+struct UsersFollowedResponse: Decodable {
+    var usersFollowedIds: [Int]
+
+    enum CodingKeys: String, CodingKey {
+        case usersFollowedIds = "users_followed_ids"
+    }
+}

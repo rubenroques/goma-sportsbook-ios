@@ -44,8 +44,14 @@ enum GomaGamingService {
     case setAllNotificationRead(type: String)
     case sendSupportTicket(title: String, message: String)
     case notificationsCounter(type: String)
-    case featuredTips(betType: String? = nil, totalOddsMin: String? = nil, totalOddsMax: String? = nil, friends: Bool? = nil, followers: Bool? = nil)
+    case featuredTips(betType: String? = nil,
+                      totalOddsMin: String? = nil, totalOddsMax: String? = nil,
+                      friends: Bool? = nil, followers: Bool? = nil,
+                      topTips: Bool? = nil)
     case rankingsTips(type: String? = nil, friends: Bool? = nil, followers: Bool? = nil)
+    case getFollowers
+    case getFollowingUsers
+    case followUser(userId: String)
 
 }
 
@@ -131,6 +137,12 @@ extension GomaGamingService: Endpoint {
             return "/api/betting/\(apiVersion)/tips"
         case .rankingsTips:
             return "/api/betting/\(apiVersion)/tips/rankings"
+        case .getFollowers:
+            return "/api/social/\(apiVersion)/followers"
+        case .getFollowingUsers:
+            return "/api/social/\(apiVersion)/following"
+        case .followUser:
+            return "/api/social/\(apiVersion)/followers"
         }
     }
 
@@ -150,7 +162,11 @@ extension GomaGamingService: Endpoint {
             return [URLQueryItem(name: "favorite_ids[]", value: favorite)]
         
             // Social
-        case .addFriend, .deleteFriend, .listFriends, .inviteFriend, .addGroup, .deleteGroup, .leaveGroup, .searchUserCode, .lookupPhone, .setNotificationRead, .setAllNotificationRead:
+        case .addFriend, .deleteFriend, .listFriends, .inviteFriend,
+                .addGroup, .deleteGroup, .leaveGroup,
+                .searchUserCode, .lookupPhone,
+                .setNotificationRead, .setAllNotificationRead,
+                .getFollowers, .getFollowingUsers:
             return nil
         case .chatrooms(let page):
             return [URLQueryItem(name: "page", value: page)]
@@ -177,7 +193,7 @@ extension GomaGamingService: Endpoint {
             URLQueryItem(name: "page", value: "\(page)")]
         case .notificationsCounter(let type):
             return[URLQueryItem(name: "type", value: type)]
-        case .featuredTips(let betType, let totalOddsMin, let totalOddsMax, let friends, let followers):
+        case .featuredTips(let betType, let totalOddsMin, let totalOddsMax, let friends, let followers, let topTips):
             var queryItemsURL: [URLQueryItem] = []
 
             if betType != nil {
@@ -205,6 +221,13 @@ extension GomaGamingService: Endpoint {
             if followers != nil {
                 if let followersValue = followers {
                     let queryItem = URLQueryItem(name: "followers", value: "\(followersValue == true ? 1 : 0)")
+                    queryItemsURL.append(queryItem)
+                }
+            }
+
+            if topTips != nil {
+                if let topTipsValue = topTips {
+                    let queryItem = URLQueryItem(name: "top", value: "\(topTipsValue == true ? 1 : 0)")
                     queryItemsURL.append(queryItem)
                 }
             }
@@ -241,6 +264,8 @@ extension GomaGamingService: Endpoint {
             }
 
             return nil
+        case .followUser(let userId):
+            return [URLQueryItem(name: "users_ids[]", value: userId)]
         }
     }
 
@@ -273,9 +298,9 @@ extension GomaGamingService: Endpoint {
         case .removeFavorite:
             return .delete
         // Social
-        case .addFriend, .inviteFriend, .addGroup, .addUserToGroup, .lookupPhone, .setNotificationRead, .setAllNotificationRead:
+        case .addFriend, .inviteFriend, .addGroup, .addUserToGroup, .lookupPhone, .setNotificationRead, .setAllNotificationRead, .followUser:
             return .post
-        case .listFriends, .chatrooms, .searchUserCode, .getNotification, .notificationsCounter, .featuredTips, .rankingsTips:
+        case .listFriends, .chatrooms, .searchUserCode, .getNotification, .notificationsCounter, .featuredTips, .rankingsTips, .getFollowers, .getFollowingUsers:
             return .get
         case .deleteGroup, .leaveGroup, .deleteFriend, .removeUser:
             return .delete

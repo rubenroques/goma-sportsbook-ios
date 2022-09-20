@@ -12,6 +12,8 @@ class TipsCellViewModel {
     var featuredTip: FeaturedTip
     var cancellables = Set<AnyCancellable>()
 
+    var shouldShowBetslip: (() -> Void)?
+
     init(featuredTip: FeaturedTip) {
         self.featuredTip = featuredTip
 
@@ -70,9 +72,28 @@ class TipsCellViewModel {
             if !Env.betslipManager.hasBettingTicket(withId: "\(selection.extraSelectionInfo.bettingOfferId)") {
 
                 Env.betslipManager.addBettingTicket(ticket)
-                
+
+                self.shouldShowBetslip?()
             }
 
         }
+    }
+
+    func followUser(userId: String) {
+
+        Env.gomaNetworkClient.followUser(deviceId: Env.deviceId, userId: userId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("FOLLOW USER ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+            }, receiveValue: { [weak self] response in
+                print("FOLLOW USER RESPONSE: \(response)")
+                Env.gomaSocialClient.getFollowingUsers()
+            })
+            .store(in: &cancellables)
     }
 }

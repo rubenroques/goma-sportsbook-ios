@@ -426,6 +426,8 @@ extension UserSessionStore {
 
                 Env.gomaSocialClient.getInAppMessagesCounter()
 
+                Env.gomaSocialClient.getFollowingUsers()
+
             })
             .store(in: &cancellables)
     }

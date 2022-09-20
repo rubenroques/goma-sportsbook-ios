@@ -277,8 +277,10 @@ class GomaGamingServiceClient {
                              betType: String? = nil,
                              totalOddsMin: String? = nil,
                              totalOddsMax: String? = nil,
-                             friends: Bool? = nil) -> AnyPublisher<NetworkResponse<[FeaturedTip]>, NetworkError> {
-        let endpoint = GomaGamingService.featuredTips(betType: betType, totalOddsMin: totalOddsMin, totalOddsMax: totalOddsMax, friends: friends)
+                             friends: Bool? = nil,
+                             followers: Bool? = nil,
+                             topTips: Bool? = nil) -> AnyPublisher<NetworkResponse<[FeaturedTip]>, NetworkError> {
+        let endpoint = GomaGamingService.featuredTips(betType: betType, totalOddsMin: totalOddsMin, totalOddsMax: totalOddsMax, friends: friends, followers: followers, topTips: topTips)
         let requestPublisher: AnyPublisher<NetworkResponse<[FeaturedTip]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
                 
         return requestPublisher
@@ -291,6 +293,25 @@ class GomaGamingServiceClient {
         let endpoint = GomaGamingService.rankingsTips(type: type, friends: friends, followers: followers)
         let requestPublisher: AnyPublisher<NetworkResponse<[RankingTip]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
 
+        return requestPublisher
+    }
+
+    func getFollowers(deviceId: String) -> AnyPublisher<NetworkResponse<[Follower]>, NetworkError> {
+        let endpoint = GomaGamingService.getFollowers
+        let requestPublisher: AnyPublisher<NetworkResponse<[Follower]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
+    func getFollowingUsers(deviceId: String) -> AnyPublisher<NetworkResponse<[Follower]>, NetworkError> {
+        let endpoint = GomaGamingService.getFollowingUsers
+        let requestPublisher: AnyPublisher<NetworkResponse<[Follower]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
+    func followUser(deviceId: String, userId: String) ->
+    AnyPublisher<NetworkResponse<UsersFollowedResponse>, NetworkError> {
+        let endpoint = GomaGamingService.followUser(userId: userId)
+        let requestPublisher: AnyPublisher<NetworkResponse<UsersFollowedResponse>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
 }

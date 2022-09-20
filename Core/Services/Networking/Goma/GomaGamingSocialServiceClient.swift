@@ -51,6 +51,10 @@ class GomaGamingSocialServiceClient {
     var socialAppNamesSchemesSupported: [String] = ["fb://", "tg://", "twitter://", "whatsapp://", "discord://", "fb-messenger://"]
     var socialAppSharesAvailable: [String] = ["https://www.facebook.com/sharer.php?u=%url", "tg://msg_url?url=%url", "https://twitter.com/intent/tweet?url=%url", "whatsapp://send/?text=%url", "", ""]
     var socialAppsInfo: [SocialAppInfo] = []
+
+    // Followers
+    var followingUsersPublisher: CurrentValueSubject<[Follower], Never> = .init([])
+    var refetchFollowingUsersPublisher: PassthroughSubject<Void, Never> = .init()
     
     // MARK: Private Properties
     private var manager: SocketManager?
@@ -84,6 +88,29 @@ class GomaGamingSocialServiceClient {
             })
             .store(in: &cancellables)
 
+    }
+
+    func getFollowingUsers() {
+
+        Env.gomaNetworkClient.getFollowingUsers(deviceId: Env.deviceId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("FOLLOWING USERS ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+
+            }, receiveValue: { [weak self] response in
+                print("FOLLOWING USERS RESPONSE: \(response)")
+
+                if let followers = response.data {
+                    self?.followingUsersPublisher.value = followers
+                }
+
+            })
+            .store(in: &cancellables)
     }
 
     func storeSocialAppsInfo() {

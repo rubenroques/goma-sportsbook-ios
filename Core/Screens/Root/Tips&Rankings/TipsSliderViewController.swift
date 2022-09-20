@@ -7,16 +7,19 @@
 
 import Foundation
 import UIKit
+import Combine
 
 class TipsSliderViewModel {
     
     var featuredTips: [FeaturedTip]
     private var featuredTipCollectionCacheViewModel: [String: FeaturedTipCollectionViewModel] = [:]
     private var startIndex: Int
+    private var cancellables = Set<AnyCancellable>()
     
     init(featuredTips: [FeaturedTip], startIndex: Int) {
         self.featuredTips = featuredTips
         self.startIndex = startIndex
+
     }
 
     func initialIndex() -> Int {
@@ -62,6 +65,10 @@ class TipsSliderViewController: UIViewController {
     private static let scrollViewMargin: CGFloat = 24
     
     private var viewModel: TipsSliderViewModel
+
+    private var cancellables = Set<AnyCancellable>()
+
+    var shouldShowBetslip: (() -> Void)?
     
     // MARK: - Lifetime and Cycle
     init(viewModel: TipsSliderViewModel) {
@@ -92,6 +99,8 @@ class TipsSliderViewController: UIViewController {
         
         self.setupSubviews()
         self.setupWithTheme()
+
+        self.setupPublishers()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -119,7 +128,20 @@ class TipsSliderViewController: UIViewController {
         self.closeButton.tintColor = .white
         self.baseView.backgroundColor = .clear
     }
-    
+
+    // MARK: Functions
+    private func setupPublishers() {
+
+        Env.gomaSocialClient.followingUsersPublisher
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.collectionView.reloadData()
+            })
+            .store(in: &cancellables)
+    }
+
+    // MARK: Actions
     @objc func didTapCloseButton() {
         self.dismiss(animated: true)
     }
@@ -138,11 +160,17 @@ extension TipsSliderViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
             let cell = collectionView.dequeueCellType(FeaturedTipCollectionViewCell.self, indexPath: indexPath),
-            let viewModel = self.viewModel.viewModel(forIndex: indexPath.row)
+            let cellViewModel = self.viewModel.viewModel(forIndex: indexPath.row)
         else {
             fatalError()
         }
-        cell.configure(viewModel: viewModel, hasCounter: false)
+        cell.configure(viewModel: cellViewModel, hasCounter: false, followingUsers: Env.gomaSocialClient.followingUsersPublisher.value)
+
+        cell.shouldShowBetslip = { [weak self] in
+            self?.shouldShowBetslip?()
+            self?.dismiss(animated: true)
+        }
+
         return cell
     }
     

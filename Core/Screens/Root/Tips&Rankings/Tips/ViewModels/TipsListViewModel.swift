@@ -78,8 +78,26 @@ class TipsListViewModel {
     }
 
     private func loadTopTips() {
-        self.isLoadingPublisher.send(false)
 
+        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE", topTips: true)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("TIPS TOP TIPS ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+
+                self?.isLoadingPublisher.send(false)
+
+            }, receiveValue: { [weak self] response in
+
+                if let tips = response.data {
+                    self?.tipsPublisher.value = tips
+                }
+            })
+            .store(in: &cancellables)
     }
 
     private func getFriends() {
@@ -96,7 +114,7 @@ class TipsListViewModel {
                 }
 
             }, receiveValue: { [weak self] response in
-                print("FRIENDS GOMA: \(response)")
+
                 if let friends = response.data {
                     if friends.isEmpty {
                         self?.hasFriendsPublisher.send(false)
@@ -121,7 +139,7 @@ class TipsListViewModel {
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
-                    print("TIPS ERROR: \(error)")
+                    print("TIPS FRIENDS ERROR: \(error)")
                 case .finished:
                     ()
                 }
@@ -129,7 +147,6 @@ class TipsListViewModel {
                 self?.isLoadingPublisher.send(false)
 
             }, receiveValue: { [weak self] response in
-                print("TIPS RESPONSE: \(response)")
 
                 if let tips = response.data {
                     self?.tipsPublisher.value = tips
@@ -139,7 +156,34 @@ class TipsListViewModel {
     }
 
     private func loadFollowersTips() {
-        self.isLoadingPublisher.send(false)
+
+        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE", followers: true)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("TIPS ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+
+                self?.isLoadingPublisher.send(false)
+
+            }, receiveValue: { [weak self] response in
+
+                if let tips = response.data {
+                    self?.tipsPublisher.value = tips
+                }
+            })
+            .store(in: &cancellables)
+
+        Env.gomaSocialClient.followingUsersPublisher
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.loadInitialTips()
+            })
+            .store(in: &cancellables)
 
     }
 

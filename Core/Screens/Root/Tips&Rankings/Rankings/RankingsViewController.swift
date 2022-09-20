@@ -62,7 +62,7 @@ class RankingsViewController: UIViewController {
         self.setupWithTheme()
 
         self.viewControllers = [
-            RankingsListViewController(viewModel: RankingsListViewModel(rankingsType: .all)),
+//            RankingsListViewController(viewModel: RankingsListViewModel(rankingsType: .all)),
             RankingsListViewController(viewModel: RankingsListViewModel(rankingsType: .topTipsters)),
             RankingsListViewController(viewModel: RankingsListViewModel(rankingsType: .friends)),
             RankingsListViewController(viewModel: RankingsListViewModel(rankingsType: .followers))

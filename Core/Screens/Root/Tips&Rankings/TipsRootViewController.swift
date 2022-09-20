@@ -66,6 +66,10 @@ class TipsRootViewController: UIViewController {
         self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
             self?.didTapChatView()
         }
+
+        self.tipsViewController.shouldShowBetslip = { [weak self] in
+            self?.didTapBetslipView()
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {

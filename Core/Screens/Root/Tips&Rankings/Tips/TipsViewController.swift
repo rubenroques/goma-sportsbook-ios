@@ -36,6 +36,8 @@ class TipsViewController: UIViewController {
         }
     }
 
+    var shouldShowBetslip: (() -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(viewModel: TipsViewModel = TipsViewModel()) {
         self.viewModel = viewModel
@@ -83,6 +85,8 @@ class TipsViewController: UIViewController {
 
         self.reloadCollectionView()
         self.bind(toViewModel: self.viewModel)
+
+        self.setupViewControllersCallbacks()
     }
 
     // MARK: - Layout and Theme
@@ -164,6 +168,18 @@ class TipsViewController: UIViewController {
         }
 
         self.currentPageViewControllerIndex = index
+    }
+
+    private func setupViewControllersCallbacks() {
+
+        for viewController in self.viewControllers {
+            if let tipsViewCoontroller = viewController as? TipsListViewController {
+
+                tipsViewCoontroller.shouldShowBetslip = { [weak self] in
+                    self?.shouldShowBetslip?()
+                }
+            }
+        }
     }
 
 }

@@ -63,7 +63,7 @@ class RankingsListViewController: UIViewController {
     }
 
     // MARK: - Lifetime and Cycle
-    init(viewModel: RankingsListViewModel = RankingsListViewModel(rankingsType: .all)) {
+    init(viewModel: RankingsListViewModel = RankingsListViewModel(rankingsType: .topTipsters)) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
