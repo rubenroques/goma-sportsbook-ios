@@ -20,6 +20,8 @@ class HomeViewController: UIViewController {
     var didSelectMatchAction: ((Match) -> Void)?
     var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
 
+    var didTapUserProfileAction: ((UserBasicInfo) -> Void)?
+
     // MARK: - Private Properties
     // Sub Views
     private lazy var tableView: UITableView = Self.createTableView()
@@ -355,6 +357,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
             cell.shouldShowBetslip = { [weak self] in
                 self?.didTapBetslipButtonAction?()
+            }
+
+            cell.shouldShowUserProfile = { [weak self] userBasicInfo in
+                self?.didTapUserProfileAction?(userBasicInfo)
             }
 
             return cell

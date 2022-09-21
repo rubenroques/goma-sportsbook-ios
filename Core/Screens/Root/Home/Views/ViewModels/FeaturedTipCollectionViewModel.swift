@@ -14,7 +14,7 @@ class FeaturedTipCollectionViewModel {
     var cancellables = Set<AnyCancellable>()
 
     var shouldShowBetslip: (() -> Void)?
-
+    
     enum SizeType {
         case small
         case fullscreen

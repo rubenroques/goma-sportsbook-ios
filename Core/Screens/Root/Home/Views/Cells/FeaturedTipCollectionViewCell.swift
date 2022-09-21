@@ -57,6 +57,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     var openFeaturedTipDetailAction: ((FeaturedTip) -> Void)?
     var shouldReloadData: (() -> Void)?
     var shouldShowBetslip: (() -> Void)?
+    var shouldShowUserProfile: ((UserBasicInfo) -> Void)?
 
     // MARK: - Lifetime and Cycle
     override init(frame: CGRect) {
@@ -71,6 +72,9 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         self.followButton.addTarget(self, action: #selector(didTapFollowButton), for: .primaryActionTriggered)
         self.betButton.addTarget(self, action: #selector(didTapBetButton), for: .primaryActionTriggered)
         self.fullTipButton.addTarget(self, action: #selector(didTapShowFullTipButton), for: .primaryActionTriggered)
+
+        let userTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapUser))
+        self.topInfoStackView.addGestureRecognizer(userTapGesture)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -242,6 +246,13 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         if let featuredTip = self.viewModel?.featuredTip {
             self.openFeaturedTipDetailAction?(featuredTip)
         }
+    }
+
+    @objc func didTapUser() {
+        print("TAPPED USER TIP")
+        let userBasicInfo = UserBasicInfo(userId: self.viewModel?.getUserId() ?? "0", username: self.viewModel?.getUsername() ?? "")
+        
+        self.shouldShowUserProfile?(userBasicInfo)
     }
 }
 
@@ -538,4 +549,9 @@ extension FeaturedTipCollectionViewCell {
             self.betButton.heightAnchor.constraint(equalToConstant: 35)
         ])
     }
+}
+
+struct UserBasicInfo {
+    var userId: String
+    var username: String
 }

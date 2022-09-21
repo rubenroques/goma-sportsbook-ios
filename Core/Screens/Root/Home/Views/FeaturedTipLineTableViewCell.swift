@@ -53,6 +53,7 @@ class FeaturedTipLineTableViewCell: UITableViewCell {
 
     var openFeaturedTipDetailAction: ((FeaturedTip) -> Void)?
     var shouldShowBetslip: (() -> Void)?
+    var shouldShowUserProfile: ((UserBasicInfo) -> Void)?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -152,6 +153,10 @@ extension FeaturedTipLineTableViewCell: UICollectionViewDelegate, UICollectionVi
 
         cell.shouldShowBetslip = { [weak self] in
             self?.shouldShowBetslip?()
+        }
+
+        cell.shouldShowUserProfile = { [weak self] userBasicInfo in
+            self?.shouldShowUserProfile?(userBasicInfo)
         }
 
         return cell

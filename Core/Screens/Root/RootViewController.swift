@@ -673,6 +673,15 @@ class RootViewController: UIViewController {
         self.present(navigationViewController, animated: true, completion: nil)
     }
 
+    func openUserProfile(userBasicInfo: UserBasicInfo) {
+        let userProfileViewModel = UserProfileViewModel(userBasicInfo: userBasicInfo)
+
+        let userProfileViewController = UserProfileViewController(viewModel: userProfileViewModel)
+
+        //self.present(userProfileViewController, animated: true, completion: nil)
+        self.navigationController?.pushViewController(userProfileViewController, animated: true)
+    }
+
     func reloadChildViewControllersData() {
         if preLiveViewControllerLoaded {
             self.preLiveViewController.reloadData()
@@ -757,6 +766,9 @@ extension RootViewController {
             }
             self.homeViewController.didTapExternalLinkAction = { [weak self] url in
                 self?.openInternalWebview(onURL: url)
+            }
+            self.homeViewController.didTapUserProfileAction = { [weak self] userBasicInfo in
+                self?.openUserProfile(userBasicInfo: userBasicInfo)
             }
             homeViewControllerLoaded = true
             
