@@ -25,14 +25,23 @@ class ConversationsViewModel {
 
     init() {
 
-        self.getConversations()
         self.setupPublishers()
+
+        self.getConversations()
+
     }
 
     private func setupPublishers() {
         Env.gomaSocialClient.reloadChatroomsList
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
+                self?.refetchConversations()
+            })
+            .store(in: &cancellables)
+
+        Env.gomaSocialClient.allDataSubscribed
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
                 self?.refetchConversations()
             })
             .store(in: &cancellables)
@@ -57,15 +66,29 @@ class ConversationsViewModel {
             }, receiveValue: { [weak self] response in
                 if let chatrooms = response.data {
 
-                    // Env.gomaSocialClient.verifyIfNewChat(chatrooms: chatrooms)
-
-                    self?.storeChatrooms(chatroomsData: chatrooms)
+                    self?.checkForNewChatrooms(chatroomsData: chatrooms)
+                    // self?.storeChatrooms(chatroomsData: chatrooms)
 
                     Env.gomaSocialClient.unreadMessagesState.send(false)
                 }
 
             })
             .store(in: &cancellables)
+    }
+
+    private func checkForNewChatrooms(chatroomsData: [ChatroomData]) {
+        let storedChatrooms = Env.gomaSocialClient.chatroomIdsPublisher.value
+
+        let missingChatroom = chatroomsData.filter({
+            !storedChatrooms.contains($0.chatroom.id)
+        })
+
+        if missingChatroom.isNotEmpty {
+            Env.gomaSocialClient.forceRefresh()
+        }
+        else {
+            self.storeChatrooms(chatroomsData: chatroomsData)
+        }
     }
 
     private func storeChatrooms(chatroomsData: [ChatroomData]) {
