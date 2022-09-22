@@ -200,7 +200,7 @@ class GamesNotificationViewController: UIViewController {
 //
 extension GamesNotificationViewController {
     @objc private func didTapBackButton() {
-        self.viewModel.setUserSettings()
+        self.viewModel.storeNotificationsUserSettings()
         self.navigationController?.popViewController(animated: true)
     }
 }

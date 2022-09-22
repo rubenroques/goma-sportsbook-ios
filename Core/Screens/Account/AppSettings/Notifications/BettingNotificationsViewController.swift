@@ -100,7 +100,7 @@ class BettingNotificationsViewController: UIViewController {
 //
 extension BettingNotificationsViewController {
     @objc private func didTapBackButton() {
-        self.viewModel.setUserSettings()
+        self.viewModel.storeNotificationsUserSettings()
         self.navigationController?.popViewController(animated: true)
     }
 }

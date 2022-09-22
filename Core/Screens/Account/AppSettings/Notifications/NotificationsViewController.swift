@@ -116,15 +116,15 @@ class NotificationsViewController: UIViewController {
         }
 
         // Check options
-        if let userSettings = self.viewModel.userSettings {
-            if userSettings.notificationSms {
+        if let notificationsUserSettings = self.viewModel.notificationsUserSettings {
+            if notificationsUserSettings.notificationsSms {
                 smsView.isSwitchOn = true
             }
             else {
                 smsView.isSwitchOn = false
             }
 
-            if userSettings.notificationEmail {
+            if notificationsUserSettings.notificationsEmail {
                 emailView.isSwitchOn = true
             }
             else {

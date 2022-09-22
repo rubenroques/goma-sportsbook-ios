@@ -7,70 +7,103 @@
 
 import Foundation
 
-struct UserSettingsGomaResponse: Codable {
-    var settings: UserSettingsGoma
 
-    enum CodingKeys: String, CodingKey {
-        case settings = "settings"
-    }
-}
-
-struct UserSettingsGoma: Codable {
+struct BettingUserSettings: Codable {
 
     var oddValidationType: String
+    var anonymousTips: Bool
     
-    var notifications: Bool
-    var notificationGamesWatchlist: Bool
-    var notificationsCompetitionsWatchlist: Bool
-    var notificationGoal: Bool
-    var notificationsStartgame: Bool
-    var notificationsHalftime: Bool
-    var notificationsFulltime: Bool
-    var notificationsSecondhalf: Bool
-    var notificationsRedcard: Bool
-    var notificationsBets: Bool
-    var notificationBetSelections: Bool
-    var notificationEmail: Bool
-    var notificationSms: Bool
-
     enum CodingKeys: String, CodingKey {
         case oddValidationType = "odd_validation_type"
-        
-        case notifications = "notifications"
-        case notificationGamesWatchlist = "notifications_games_watchlist"
-        case notificationsCompetitionsWatchlist = "notifications_competitions_watchlist"
-        case notificationGoal = "notifications_goal"
-        case notificationsStartgame = "notifications_startgame"
-        case notificationsHalftime = "notifications_halftime"
-        case notificationsFulltime = "notifications_fulltime"
-        case notificationsSecondhalf = "notifications_secondhalf"
-        case notificationsRedcard = "notifications_redcard"
-        case notificationsBets = "notifications_bets"
-        case notificationBetSelections = "notification_bet_selections"
-        case notificationEmail = "notification_email"
-        case notificationSms = "notification_sms"
+        case anonymousTips = "anonymous_tips"
     }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         self.oddValidationType = try container.decode(String.self, forKey: .oddValidationType)
+        self.anonymousTips = (try? container.decode(Int.self, forKey: .anonymousTips)) ?? 0 == 1
+    }
+    
+    init() {
+        self.anonymousTips = true
+        self.oddValidationType = "ACCEPT_ANY"
+    }
+    
+    static var defaultSettings: BettingUserSettings {
+        return BettingUserSettings()
+    }
+}
+
+struct NotificationsUserSettings: Codable {
+
+    var notifications: Bool
+    var notificationsGamesWatchlist: Bool
+    var notificationsCompetitionsWatchlist: Bool
+    var notificationsGoal: Bool
+    var notificationsStartgame: Bool
+    var notificationsHalftime: Bool
+    var notificationsFulltime: Bool
+    var notificationsSecondhalf: Bool
+    var notificationsRedcard: Bool
+    var notificationsBets: Bool
+    var notificationsBetSelections: Bool
+    var notificationsEmail: Bool
+    var notificationsSms: Bool
+
+    enum CodingKeys: String, CodingKey {
+        case notifications = "notifications"
+        case notificationsGamesWatchlist = "notifications_games_watchlist"
+        case notificationsCompetitionsWatchlist = "notifications_competitions_watchlist"
+        case notificationsGoal = "notifications_goal"
+        case notificationsStartgame = "notifications_startgame"
+        case notificationsHalftime = "notifications_halftime"
+        case notificationsFulltime = "notifications_fulltime"
+        case notificationsSecondhalf = "notifications_secondhalf"
+        case notificationsRedcard = "notifications_redcard"
+        case notificationsBets = "notifications_bets"
+        case notificationsBetSelections = "notifications_bet_selections"
+        case notificationsEmail = "notifications_email"
+        case notificationsSms = "notifications_sms"
+    }
+    
+    init() {
+        self.notifications = true
+        self.notificationsGamesWatchlist = true
+        self.notificationsCompetitionsWatchlist = true
+        self.notificationsGoal = true
+        self.notificationsStartgame = true
+        self.notificationsHalftime = true
+        self.notificationsFulltime = true
+        self.notificationsSecondhalf = true
+        self.notificationsRedcard = true
+        self.notificationsBets = true
+        self.notificationsBetSelections = true
+        self.notificationsEmail = true
+        self.notificationsSms = true
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
         
         self.notifications = (try? container.decode(Int.self, forKey: .notifications)) ?? 0 == 1
-        self.notificationGamesWatchlist = (try? container.decode(Int.self, forKey: .notificationGamesWatchlist)) ?? 0 == 1
+        self.notificationsGamesWatchlist = (try? container.decode(Int.self, forKey: .notificationsGamesWatchlist)) ?? 0 == 1
         self.notificationsCompetitionsWatchlist = (try? container.decode(Int.self, forKey: .notificationsCompetitionsWatchlist)) ?? 0 == 1
-        self.notificationGoal = (try? container.decode(Int.self, forKey: .notificationGoal)) ?? 0 == 1
+        self.notificationsGoal = (try? container.decode(Int.self, forKey: .notificationsGoal)) ?? 0 == 1
         self.notificationsStartgame = (try? container.decode(Int.self, forKey: .notificationsStartgame)) ?? 0 == 1
         self.notificationsHalftime = (try? container.decode(Int.self, forKey: .notificationsHalftime)) ?? 0 == 1
         self.notificationsFulltime = (try? container.decode(Int.self, forKey: .notificationsFulltime)) ?? 0 == 1
         self.notificationsSecondhalf = (try? container.decode(Int.self, forKey: .notificationsSecondhalf)) ?? 0 == 1
         self.notificationsRedcard = (try? container.decode(Int.self, forKey: .notificationsRedcard)) ?? 0 == 1
         self.notificationsBets = (try? container.decode(Int.self, forKey: .notificationsBets)) ?? 0 == 1
-        self.notificationBetSelections = (try? container.decode(Int.self, forKey: .notificationBetSelections)) ?? 0 == 1
-        self.notificationEmail = (try? container.decode(Int.self, forKey: .notificationEmail)) ?? 0 == 1
-        self.notificationSms = (try? container.decode(Int.self, forKey: .notificationSms)) ?? 0 == 1
-        
-        }
+        self.notificationsBetSelections = (try? container.decode(Int.self, forKey: .notificationsBetSelections)) ?? 0 == 1
+        self.notificationsEmail = (try? container.decode(Int.self, forKey: .notificationsEmail)) ?? 0 == 1
+        self.notificationsSms = (try? container.decode(Int.self, forKey: .notificationsSms)) ?? 0 == 1
+    }
+    
+    static var defaultSettings: NotificationsUserSettings {
+        return NotificationsUserSettings()
+    }
     
 }
 

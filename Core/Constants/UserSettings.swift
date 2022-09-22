@@ -10,11 +10,13 @@ import Foundation
 enum UserDefaultsKey: String {
     case theme = "appThemeKey"
     case userSession = "userSession"
-    case userSkippedLoginFlow = "userSkippedLoginFlow"
-    case betslipOddValidationType = "betslipOddValidationType"
+    case userSkippedLoginFlow = "userSkippedLoginFlow"    
     case userOddsFormat = "userOddsFormat"
     case cardsStyle = "cardsStyleKey"
     case cachedBetslipTickets = "cachedBetslipTickets"
+    
+    case bettingUserSettings = "bettingUserSettings"
+    case notificationsUserSettings = "notificationsUserSettings"
     
     var key: String {
         return self.rawValue
@@ -54,33 +56,13 @@ extension UserDefaults {
             self.setValue(newValue, forKey: UserDefaultsKey.userSkippedLoginFlow.key)
         }
     }
-
-    var userBetslipSettings: BetslipOddValidationType {
-        get {
-            let defaultValue = BetslipOddValidationType.defaultValue
-            if let type = self.value(forKey: UserDefaultsKey.betslipOddValidationType.key) as? String {
-                return BetslipOddValidationType(rawValue: type) ?? defaultValue // Has a previous stored value, use it
-            }
-            else {
-                self.setValue(defaultValue.rawValue, forKey: UserDefaultsKey.cardsStyle.key)
-                return defaultValue
-            }
-        }
-        set {
-            self.setValue(newValue.rawValue, forKey: UserDefaultsKey.betslipOddValidationType.key)
-        }
-    }
     
     var cachedBetslipTickets: [BettingTicket] {
-        
         get {
-            
             let bettingTickets: [BettingTicket]? = self.codable(forKey: UserDefaultsKey.cachedBetslipTickets.key)
-            
             if let bettingTicketsValue = bettingTickets {
                 return bettingTicketsValue
             }
-            
             self.set([], forKey: UserDefaultsKey.cachedBetslipTickets.key)
             return []
         }
@@ -99,6 +81,38 @@ extension UserDefaults {
         }
     }
 
+    var bettingUserSettings: BettingUserSettings {
+        get {
+            let defaultValue = BettingUserSettings.defaultSettings
+            if let bettingUserSettings: BettingUserSettings = self.codable(forKey: UserDefaultsKey.bettingUserSettings.key) {
+                return bettingUserSettings
+            }
+            else {
+                self.set(codable: defaultValue, forKey: UserDefaultsKey.bettingUserSettings.key)
+                return defaultValue
+            }
+        }
+        set {
+            self.set(codable: newValue, forKey: UserDefaultsKey.bettingUserSettings.key)
+        }
+    }
+    
+    var notificationsUserSettings: NotificationsUserSettings {
+        get {
+            let defaultValue = NotificationsUserSettings.defaultSettings
+            if let notificationsUserSettings: NotificationsUserSettings = self.codable(forKey: UserDefaultsKey.notificationsUserSettings.key) {
+                return notificationsUserSettings
+            }
+            else {
+                self.set(codable: defaultValue, forKey: UserDefaultsKey.notificationsUserSettings.key)
+                return defaultValue
+            }
+        }
+        set {
+            self.set(codable: newValue, forKey: UserDefaultsKey.notificationsUserSettings.key)
+        }
+    }
+    
     var cardsStyle: CardsStyle {
         get {
             let defaultValue = TargetVariables.defaultCardStyle

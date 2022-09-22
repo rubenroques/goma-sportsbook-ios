@@ -14,7 +14,7 @@ class NotificationsViewModel: NSObject {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
-    var userSettings: UserSettingsGoma?
+    var notificationsUserSettings: NotificationsUserSettings?
 
     // MARK: Lifetime and sCycle
     override init() {
@@ -25,76 +25,33 @@ class NotificationsViewModel: NSObject {
 
     // MARK: Setup and functions
     private func getUserSettings() {
-        // Read/Get Data
-        if let data = UserDefaults.standard.data(forKey: "gomaUserSettings") {
-            do {
-                let decoder = JSONDecoder()
-
-                let userSettings = try decoder.decode(UserSettingsGoma.self, from: data)
-
-                self.userSettings = userSettings
-
-            }
-            catch {
-                print("Unable to Decode UserSettings Goma (\(error))")
-            }
-        }
+        self.notificationsUserSettings = UserDefaults.standard.notificationsUserSettings
     }
 
-    private func setUserSettings(userSettings: UserSettingsGoma) {
-        do {
-            let encoder = JSONEncoder()
-
-            let data = try encoder.encode(userSettings)
-
-            UserDefaults.standard.set(data, forKey: "gomaUserSettings")
-        }
-        catch {
-            print("Unable to Encode User Settings Goma (\(error))")
-        }
-
+    private func storeNotificationsUserSettings(notificationsUserSettings: NotificationsUserSettings) {
+        UserDefaults.standard.notificationsUserSettings = notificationsUserSettings
         self.postOddsSettingsToGoma()
     }
 
     func updateSmsSetting(enabled: Bool) {
-        self.userSettings?.notificationSms = enabled
-        if let userSettings = self.userSettings {
-            self.setUserSettings(userSettings: userSettings)
+        self.notificationsUserSettings?.notificationsSms = enabled
+        if let notificationsUserSettings = self.notificationsUserSettings {
+            self.storeNotificationsUserSettings(notificationsUserSettings: notificationsUserSettings)
         }
     }
 
     func updateEmailSetting(enabled: Bool) {
-        self.userSettings?.notificationEmail = enabled
-        if let userSettings = self.userSettings {
-            self.setUserSettings(userSettings: userSettings)
+        self.notificationsUserSettings?.notificationsEmail = enabled
+        if let notificationsUserSettings = self.notificationsUserSettings {
+            self.storeNotificationsUserSettings(notificationsUserSettings: notificationsUserSettings)
         }
     }
 
     private func postOddsSettingsToGoma() {
-        if let data = UserDefaults.standard.data(forKey: "gomaUserSettings") {
-            do {
-                let decoder = JSONDecoder()
-
-                let userSettings = try decoder.decode(UserSettingsGoma.self, from: data)
-
-                Env.gomaNetworkClient.sendUserSettings(deviceId: Env.deviceId, userSettings: userSettings)
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { completion in
-                        switch completion {
-                        case .failure(let error):
-                            print("GOMA SETTINGS ERROR: \(error)")
-                        case .finished:
-                            print("Finished")
-                        }
-                    }, receiveValue: { value in
-                        print("GOMA SETTINGS: \(value)")
-                    })
-                    .store(in: &cancellables)
-
-            }
-            catch {
-                print("Unable to Decode UserSettings Goma (\(error))")
-            }
-        }
+        let notificationsUserSettings = UserDefaults.standard.notificationsUserSettings
+        Env.gomaNetworkClient.postNotificationsUserSettings(deviceId: Env.deviceId, notificationsUserSettings: notificationsUserSettings)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in }, receiveValue: { _ in })
+            .store(in: &cancellables)
     }
 }

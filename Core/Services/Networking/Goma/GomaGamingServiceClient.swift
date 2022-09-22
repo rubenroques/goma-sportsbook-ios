@@ -132,12 +132,30 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
-    func requestUserSettings(deviceId: String) -> AnyPublisher<UserSettingsGomaResponse, NetworkError> {
-        let endpoint = GomaGamingService.userSettings
-        let requestPublisher: AnyPublisher<UserSettingsGomaResponse, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+    func requestNotificationsUserSettings(deviceId: String) -> AnyPublisher<NotificationsUserSettings, NetworkError> {
+        let endpoint = GomaGamingService.getNotificationsUserSettings
+        let requestPublisher: AnyPublisher<NotificationsUserSettings, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
 
+    func postNotificationsUserSettings(deviceId: String, notificationsUserSettings: NotificationsUserSettings) -> AnyPublisher<JSON, NetworkError> {
+        let endpoint = GomaGamingService.postNotificationsUserSettings(notificationsUserSettings: notificationsUserSettings)
+        let requestPublisher: AnyPublisher<JSON, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+    
+    func requestBettingUserSettings(deviceId: String) -> AnyPublisher<BettingUserSettings, NetworkError> {
+        let endpoint = GomaGamingService.getBettingUserSettings
+        let requestPublisher: AnyPublisher<BettingUserSettings, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+    
+    func postBettingUserSettings(deviceId: String, bettingUserSettings: BettingUserSettings) -> AnyPublisher<BettingUserSettings, NetworkError> {
+        let endpoint = GomaGamingService.postBettingUserSettings(bettingUserSettings: bettingUserSettings)
+        let requestPublisher: AnyPublisher<BettingUserSettings, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+    
     func requestBusinessModules(deviceId: String) -> AnyPublisher<BusinessModules, NetworkError> {
         let endpoint = GomaGamingService.modules
         let requestPublisher: AnyPublisher<BusinessModules, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
@@ -145,14 +163,8 @@ class GomaGamingServiceClient {
     }
 
     func requestBusinessInstanceSettings(deviceId: String) -> AnyPublisher<BusinessInstanceSettingsResponse, NetworkError> {
-        let endpoint = GomaGamingService.userSettings
+        let endpoint = GomaGamingService.getClientSettings
         let requestPublisher: AnyPublisher<BusinessInstanceSettingsResponse, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
-        return requestPublisher
-    }
-
-    func sendUserSettings(deviceId: String, userSettings: UserSettingsGoma) -> AnyPublisher<JSON, NetworkError> {
-        let endpoint = GomaGamingService.sendUserSettings(userSettings: userSettings)
-        let requestPublisher: AnyPublisher<JSON, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
 

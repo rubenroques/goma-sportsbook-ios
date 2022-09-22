@@ -14,8 +14,7 @@ class BettingNotificationViewModel: NSObject {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
-    var userSettings: UserSettingsGoma?
-    var shouldSendSettingsPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var notificationsUserSettings: NotificationsUserSettings?
 
     // MARK: Lifetime and sCycle
     override init() {
@@ -26,77 +25,39 @@ class BettingNotificationViewModel: NSObject {
 
     // MARK: Setup and functions
     private func getUserSettings() {
-        // Read/Get Data
-        if let data = UserDefaults.standard.data(forKey: "gomaUserSettings") {
-            do {
-                let decoder = JSONDecoder()
-                let userSettings = try decoder.decode(UserSettingsGoma.self, from: data)
-                self.userSettings = userSettings
-            }
-            catch {
-                print("Unable to Decode UserSettings Goma (\(error))")
-            }
-        }
+        self.notificationsUserSettings = UserDefaults.standard.notificationsUserSettings
     }
 
-    func setUserSettings() {
-        if let userSettings = self.userSettings {
-            do {
-                let encoder = JSONEncoder()
-                let data = try encoder.encode(userSettings)
-                UserDefaults.standard.set(data, forKey: "gomaUserSettings")
-            }
-            catch {
-                print("Unable to Encode User Settings Goma (\(error))")
-            }
-
+    func storeNotificationsUserSettings() {
+        if let notificationsUserSettings = self.notificationsUserSettings {
+            UserDefaults.standard.notificationsUserSettings = notificationsUserSettings
             self.postSettingsToGoma()
         }
     }
 
     private func postSettingsToGoma() {
-        if let data = UserDefaults.standard.data(forKey: "gomaUserSettings") {
-            do {
-                let decoder = JSONDecoder()
-
-                let userSettings = try decoder.decode(UserSettingsGoma.self, from: data)
-
-                Env.gomaNetworkClient.sendUserSettings(deviceId: Env.deviceId, userSettings: userSettings)
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { completion in
-                        switch completion {
-                        case .failure(let error):
-                            print("GOMA SETTINGS ERROR: \(error)")
-                        case .finished:
-                            print("Finished")
-                        }
-                    }, receiveValue: {[weak self] value in
-                        print("GOMA SETTINGS: \(value)")
-                    })
-                    .store(in: &cancellables)
-
-            }
-            catch {
-                print("Unable to Decode UserSettings Goma (\(error))")
-            }
-        }
+        let notificationsUserSettings = UserDefaults.standard.notificationsUserSettings
+        Env.gomaNetworkClient.postNotificationsUserSettings(deviceId: Env.deviceId, notificationsUserSettings: notificationsUserSettings)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in }, receiveValue: { _ in })
+            .store(in: &cancellables)
     }
 
     func setBetsSelectedOption(view: SettingsRowView, settingType: UserBettingOption) {
         var switchState = false
 
-        if let userSettings = self.userSettings {
+        if let notificationsUserSettings = self.notificationsUserSettings {
 
             switch settingType {
             case .betFinal:
-                if userSettings.notificationsBets {
+                if notificationsUserSettings.notificationsBets {
                     switchState = true
                 }
                 else {
                     switchState = false
                 }
             case .betSelection:
-                if userSettings.notificationBetSelections {
+                if notificationsUserSettings.notificationsBetSelections {
                     switchState = true
                 }
                 else {
@@ -110,13 +71,15 @@ class BettingNotificationViewModel: NSObject {
     }
 
     func updateBetsSetting(isSettingEnabled: Bool, settingType: UserBettingOption) {
+        
         switch settingType {
         case .betFinal:
-            self.userSettings?.notificationsBets = isSettingEnabled
+            self.notificationsUserSettings?.notificationsBets = isSettingEnabled
         case .betSelection:
-            self.userSettings?.notificationBetSelections = isSettingEnabled
+            self.notificationsUserSettings?.notificationsBetSelections = isSettingEnabled
         }
-        self.shouldSendSettingsPublisher.send(true)
+        
+        self.storeNotificationsUserSettings()
     }
 }
 

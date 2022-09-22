@@ -396,7 +396,7 @@ extension BetslipManager {
             bettingTicket.id == betTicketId
         }).map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
 
-        let betslipOddValidationType = UserDefaults.standard.string(forKey: UserDefaultsKey.betslipOddValidationType.key) ?? "ACCEPT_ANY"
+        let betslipOddValidationType: String = UserDefaults.standard.bettingUserSettings.oddValidationType
 
         var betAmount = amount
         var isFreeBet = false
@@ -415,7 +415,8 @@ extension BetslipManager {
         let route = TSRouter.placeBet(language: "en",
                                       amount: betAmount,
                                       betType: .single,
-                                      tickets: ticketSelections, oddsValidationType: betslipOddValidationType,
+                                      tickets: ticketSelections,
+                                      oddsValidationType: betslipOddValidationType,
                                       freeBet: isFreeBet,
                                       ubsWalletId: ubsWalletId)
 
@@ -436,7 +437,8 @@ extension BetslipManager {
         let updatedTicketSelections = self.bettingTicketsPublisher.value
         let ticketSelections = updatedTicketSelections
             .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
-        let userBetslipSetting = UserDefaults.standard.string(forKey: "betslipOddValidationType")
+        
+        let betslipOddValidationType: String = UserDefaults.standard.bettingUserSettings.oddValidationType
 
         var betAmount = amount
         var isFreeBet = false
@@ -455,7 +457,8 @@ extension BetslipManager {
         let route = TSRouter.placeBet(language: "en",
                                       amount: betAmount,
                                       betType: .multiple,
-                                      tickets: ticketSelections, oddsValidationType: userBetslipSetting ?? "ACCEPT_ANY",
+                                      tickets: ticketSelections,
+                                      oddsValidationType: betslipOddValidationType,
                                       freeBet: isFreeBet,
                                       ubsWalletId: ubsWalletId)
 
@@ -478,8 +481,9 @@ extension BetslipManager {
         let updatedTicketSelections = self.bettingTicketsPublisher.value
         let ticketSelections = updatedTicketSelections
             .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
-        let userBetslipSetting = UserDefaults.standard.string(forKey: "betslipOddValidationType")
-
+        
+        let betslipOddValidationType: String = UserDefaults.standard.bettingUserSettings.oddValidationType
+        
         var betAmount = amount
         var isFreeBet = false
         var ubsWalletId = ""
@@ -492,7 +496,8 @@ extension BetslipManager {
         let route = TSRouter.placeSystemBet(language: "en",
                                             amount: betAmount,
                                             systemBetType: systemBetType,
-                                            tickets: ticketSelections, oddsValidationType: userBetslipSetting ?? "ACCEPT_ANY",
+                                            tickets: ticketSelections,
+                                            oddsValidationType: betslipOddValidationType,
                                             freeBet: isFreeBet,
                                             ubsWalletId: ubsWalletId)
 

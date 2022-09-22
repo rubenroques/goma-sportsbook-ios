@@ -55,7 +55,8 @@ class UserSessionStore {
             .sink { [weak self] _ in
                 self?.subscribeAccountBalanceWatcher()
                 
-                self?.requestUserSettings()
+                self?.requestNotificationsUserSettings()
+                self?.requestBettingUserSettings()
             }
             .store(in: &cancellables)
         
@@ -245,50 +246,63 @@ extension UserSessionStore {
             }
             .store(in: &cancellables)
     }
-
-    func setUserSettings(userSettings: String = "", defaultSettingsFallback: Bool = false) {
-        if defaultSettingsFallback {
-            if !UserDefaults.standard.isKeyPresentInUserDefaults(key: "betslipOddValidationType"),
-               let defaultUserSetting = Env.userBetslipSettingsSelectorList[safe: 1]?.key {
-                UserDefaults.standard.set(defaultUserSetting, forKey: "betslipOddValidationType")
-            }
-        }
-        else {
-            let defaultUserSetting = userSettings
-            UserDefaults.standard.set(defaultUserSetting, forKey: "betslipOddValidationType")
-        }
-    }
-
-    func requestUserSettings() {
-        Env.gomaNetworkClient.requestUserSettings(deviceId: Env.deviceId)
+    
+    // =====================================
+    //
+    func requestNotificationsUserSettings() {
+        Env.gomaNetworkClient.requestNotificationsUserSettings(deviceId: Env.deviceId)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
                     print("GOMA ERROR: \(error)")
-                    self?.setUserSettings(defaultSettingsFallback: true)
+                    self?.storeBettingUserSettings(bettingUserSettings: BettingUserSettings.defaultSettings)
                 case .finished:
                     ()
                 }
             },
-                  receiveValue: { [weak self] userSettings in
-                print("User Settings: \(userSettings)")
-                self?.setUserSettings(userSettings: userSettings.settings.oddValidationType)
-                self?.registerUserSettings(userSettings: userSettings.settings)
+            receiveValue: { [weak self] notificationsUserSettings in
+                self?.storeNotificationsUserSettings(notificationsUserSettings: notificationsUserSettings)
             })
             .store(in: &cancellables)
-
     }
 
-    private func registerUserSettings(userSettings: UserSettingsGoma) {
+    private func storeNotificationsUserSettings(notificationsUserSettings: NotificationsUserSettings) {
         do {
-            let encoder = JSONEncoder()
-            let data = try encoder.encode(userSettings)
-            UserDefaults.standard.set(data, forKey: "gomaUserSettings")
-        } catch {
-            print("Unable to Encode User Settings Goma (\(error))")
+            UserDefaults.standard.notificationsUserSettings = notificationsUserSettings
+        }
+        catch {
+            print("Unable to Encode NotificationsUserSettings Settings Goma (\(error))")
         }
     }
-
+    
+    
+    func requestBettingUserSettings() {
+        Env.gomaNetworkClient.requestBettingUserSettings(deviceId: Env.deviceId)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure:
+                    self?.storeBettingUserSettings(bettingUserSettings: BettingUserSettings.defaultSettings)
+                case .finished:
+                    ()
+                }
+            },
+            receiveValue: { [weak self] bettingUserSettings in
+                self?.storeBettingUserSettings(bettingUserSettings: bettingUserSettings)
+            })
+            .store(in: &cancellables)
+    }
+    
+    private func storeBettingUserSettings(bettingUserSettings: BettingUserSettings) {
+        do {
+            UserDefaults.standard.bettingUserSettings = bettingUserSettings
+        }
+        catch {
+            print("Unable to Encode BettingUserSettings Settings Goma (\(error))")
+        }
+    }
+    
+    // =====================================
+    //
     func subscribeAccountBalanceWatcher() {
         let route = TSRouter.getUserBalance
         Env.everyMatrixClient.manager.getModel(router: route, decodingType: EveryMatrix.UserBalance.self)
