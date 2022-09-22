@@ -218,7 +218,7 @@ class MyTicketsViewController: UIViewController {
     }
 
     @objc func refresh() {
-        self.shouldShowCenterLoadingView = false
+        self.shouldShowCenterLoadingView = true
         self.viewModel.refresh()
     }
     
