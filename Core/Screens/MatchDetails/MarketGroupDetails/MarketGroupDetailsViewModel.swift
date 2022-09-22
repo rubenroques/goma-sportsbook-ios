@@ -13,7 +13,13 @@ class MarketGroupDetailsViewModel {
     var match: Match
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(true)
     var marketGroupOrganizersPublisher: CurrentValueSubject<[MarketGroupOrganizer], Never>  = .init([])
+    
+    var grayedOutSelectionsPublisher: CurrentValueSubject<BetBuilderGrayoutsState, Never>  = .init(BetBuilderGrayoutsState.defaultState)
 
+    var isBetBuilder: Bool {
+        return marketGroupId == "Bet_Builder"
+    }
+    
     private var marketGroupId: String
 
     private var marketGroupsDetailsRegister: EndpointPublisherIdentifiable?
@@ -25,6 +31,20 @@ class MarketGroupDetailsViewModel {
         self.match = match
         self.marketGroupId = marketGroupId
         self.store = store
+    
+        // Listen to
+        Env.betslipManager.bettingTicketsPublisher
+            .receive(on: DispatchQueue.main)
+            .map(Array.init)
+            .removeDuplicates(by: { previous, current in
+                let result = previous.map(\.id).elementsEqual(current.map(\.id))
+                return result
+            })
+            .sink { [weak self] _ in
+                self?.fetchGrayedOutSelections()
+            }
+            .store(in: &cancellables)
+        
     }
 
     func fetchMarketGroupDetails() {
@@ -79,6 +99,35 @@ class MarketGroupDetailsViewModel {
         self.store.updateMarketGroupDetails(fromAggregator: aggregator)
     }
 
+    func fetchGrayedOutSelections() {
+        
+        if !self.isBetBuilder {
+            return
+        }
+        
+        let tickets = Env.betslipManager.bettingTicketsPublisher.value
+        let ticketSelections = tickets
+            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
+        
+        if ticketSelections.isEmpty {
+            self.grayedOutSelectionsPublisher.send(BetBuilderGrayoutsState.defaultState)
+            print("grayoutdebug no tickets, send empty")
+            return
+        }
+        
+        let route = TSRouter.getSelectionsGreyout(tickets: ticketSelections)
+        Env.everyMatrixClient.manager.getModel(router: route, decodingType: BetBuilderGrayoutsState.self)
+            .sink { completion in
+                print("GrayoutDebug \(completion)")
+                
+            } receiveValue: { [weak self] betBuilderGrayoutsState in
+                print("grayoutdebug getSelectionsGreyout response")
+                self?.grayedOutSelectionsPublisher.send(betBuilderGrayoutsState)
+            }
+            .store(in: &cancellables)
+
+    }
+    
     func firstMarket() -> Market? {
         return self.store.firstMarket()
     }

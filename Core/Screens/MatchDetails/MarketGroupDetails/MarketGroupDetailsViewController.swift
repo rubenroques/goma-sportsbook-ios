@@ -18,7 +18,8 @@ class MarketGroupDetailsViewController: UIViewController {
 
     private var expandedMarketGroupIds: Set<String> = []
     private var viewModel: MarketGroupDetailsViewModel
-
+    private var betBuilderGrayoutsState: BetBuilderGrayoutsState = BetBuilderGrayoutsState()
+    
     private var cancellables: Set<AnyCancellable> = []
 
     // MARK: - Lifetime and Cycle
@@ -104,6 +105,16 @@ class MarketGroupDetailsViewController: UIViewController {
             })
             .store(in: &cancellables)
         
+        viewModel.grayedOutSelectionsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { betBuilderGrayoutsState in
+                self.betBuilderGrayoutsState = betBuilderGrayoutsState
+                self.reloadTableView()
+                
+                print("grayoutdebug vc refreshing tableview")
+            }
+            .store(in: &cancellables)
+        
     }
 
     // MARK: - Actions
@@ -187,7 +198,9 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
                 self?.expandedMarketGroupIds.remove(marketGroupOrganizerId)
                 self?.reloadTableView()
             }
-            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer, isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId))
+            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer,
+                           isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId),
+                           betBuilderGrayoutsState: self.betBuilderGrayoutsState)
 
             cell.didLongPressOdd = { [weak self] bettingTicket in
                 self?.openQuickbet(bettingTicket)
@@ -212,7 +225,9 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
                 self?.expandedMarketGroupIds.remove(marketGroupOrganizerId)
                 self?.reloadTableView()
             }
-            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer, isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId))
+            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer,
+                           isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId),
+                           betBuilderGrayoutsState: self.betBuilderGrayoutsState)
 
             cell.didLongPressOdd = { [weak self] bettingTicket in
                 self?.openQuickbet(bettingTicket)
@@ -237,7 +252,9 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
                 self?.expandedMarketGroupIds.remove(marketGroupOrganizerId)
                 self?.reloadTableView()
             }
-            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer, isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId))
+            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer,
+                           isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId),
+                           betBuilderGrayoutsState: self.betBuilderGrayoutsState)
 
             cell.didLongPressOdd = { [weak self] bettingTicket in
                 self?.openQuickbet(bettingTicket)
