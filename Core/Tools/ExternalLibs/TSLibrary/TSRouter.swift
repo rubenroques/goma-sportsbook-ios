@@ -39,7 +39,7 @@ enum TSRouter {
     case getDepositCashier(currency: String, amount: String, gamingAccountId: String)
     case getWithdrawCashier(currency: String, amount: String, gamingAccountId: String)
 
-    case getMyTickets(language: String, ticketsType: EveryMatrix.MyTicketsType, records: Int, page: Int)
+    case getMyTickets(language: String, ticketsType: EveryMatrix.MyTicketsType, records: Int, page: Int, startDate: String? = nil, endDate: String? = nil)
     case getTicket(betId: String)
 
     case getSystemBetTypes(tickets: [EveryMatrix.BetslipTicketSelection])
@@ -52,12 +52,13 @@ enum TSRouter {
 
     case tournamentOddsPublisher(operatorId: String, language: String, eventId: String)
 
-    case searchV2(language: String, limit: Int, query: String, eventStatuses: [Int], include: [String], bettingTypeIds: [String], sortBy: [String], includeVirtualSports: Bool)
+    case searchV2(language: String, limit: Int, query: String, eventStatuses: [Int], include: [String], bettingTypeIds: [Int], dataWithoutOdds: Bool)
 
     case getSharedBetTokens(betId: String)
     case getSharedBetData(betToken: String)
 
     case getCMSSessionID
+    case getSelectionsGreyout(tickets: [EveryMatrix.BetslipTicketSelection])
 
     // EveryMatrix <-> GOMA  Subscriptions
     case sportsInitialDump(topic: String)
@@ -208,6 +209,8 @@ enum TSRouter {
             return "/sports#sharedBetData"
         case .getCMSSessionID:
             return "/user#getCmsSessionID"
+        case .getSelectionsGreyout:
+            return "/sports#selectionsGreyout"
 
         //
         // EM Subscription
@@ -586,7 +589,17 @@ enum TSRouter {
                     "ubsWalletId": ubsWalletId]
             return params
 
-        case .getMyTickets(let language,let ticketsType, let records, let page):
+        case .getMyTickets(let language,let ticketsType, let records, let page, let startDate, let endDate ):
+            if let startDate = startDate,
+               let endDate = endDate {
+                return ["lang": language,
+                        "betStatuses": ticketsType.queryArray,
+                        "nrOfRecords": records,
+                        "page": page,
+                        "startDate": startDate,
+                        "endDate": endDate ]
+            }
+
             return ["lang": language,
                     "betStatuses": ticketsType.queryArray,
                     "nrOfRecords": records,
@@ -595,15 +608,14 @@ enum TSRouter {
         case .getTicket(let betId):
             return ["betId": betId]
 
-        case .searchV2(let language, let limit, let query, let eventStatuses, let include, let bettingTypeIds, let sortBy, let includeVirtualSports):
+        case .searchV2(let language, let limit, let query, let eventStatuses, let include, let bettingTypeIds, let dataWithoutOdds):
             return ["lang": language,
                     "limit": limit,
                     "query": query,
                     "eventStatuses": eventStatuses,
                     "include": include,
                     "bettingTypeIds": bettingTypeIds,
-                    "sortBy": sortBy,
-                    "includeVirtualSports": includeVirtualSports]
+                    "dataWithoutOdds": dataWithoutOdds]
 
         case .getSharedBetTokens(let betId):
             return ["betId": betId]
@@ -614,6 +626,20 @@ enum TSRouter {
         case .eventsDetails(_, let language, let events):
             let data: [String: Any]? = ["lang": language, "eventIds": events]
             return data
+            
+        case .getSelectionsGreyout(let tickets):
+            var selection: [Any] = []
+            for ticket in tickets {
+                selection.append([
+                    "bettingOfferId": "\(ticket.id)",
+                    "priceValue": ticket.currentOdd
+                ])
+            }
+            let params: [String: Any] = [
+                    "selections": selection
+            ]
+            return params
+            
         //
         //
         //

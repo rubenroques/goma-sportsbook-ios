@@ -40,6 +40,14 @@ class DynamicHomeViewTemplateDataSource {
     private var favoriteMatchesPublisher: AnyCancellable?
 
     //
+    private var featuredTips: [FeaturedTip] = []
+    private var cachedFeaturedTipLineViewModel: FeaturedTipLineViewModel? {
+        didSet {
+            self.refreshPublisher.send()
+        }
+    }
+
+    //
     private var suggestedBets: [SuggestedBetCardSummary] = []
     private var cachedSuggestedBetLineViewModel: SuggestedBetLineViewModel? {
         didSet {
@@ -297,6 +305,8 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.alertsArray.isEmpty ? 0 : 1
         case .favorites:
             return self.favoriteMatches.count
+        case .featuredTips:
+            return self.featuredTips.isEmpty ? 0 : 1
         case .suggestedBets:
             return self.suggestedBets.isEmpty ? 0 : 1
         case .sport(_, _, let contents):
@@ -319,6 +329,8 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return nil
         case .favorites:
             return self.favoriteMatches.isNotEmpty ? "My Games" : nil
+        case .featuredTips:
+            return self.featuredTips.isNotEmpty ? "Featured Tips" : nil
         case .suggestedBets:
             return self.suggestedBets.isNotEmpty ? "Suggested Bets" : nil
         case .sport(_, let name, _):
@@ -355,6 +367,8 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return false
         case .favorites:
             return self.favoriteMatches.isNotEmpty
+        case .featuredTips:
+            return self.featuredTips.isNotEmpty
         case .suggestedBets:
             return self.suggestedBets.isNotEmpty
         case .sport:
@@ -382,6 +396,8 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return HomeViewModel.Content.userProfile
         case .favorites:
             return HomeViewModel.Content.userFavorites
+        case .featuredTips:
+            return HomeViewModel.Content.featuredTips
         case .suggestedBets:
             return HomeViewModel.Content.suggestedBets
         case .sport(let id, _, _):
@@ -426,6 +442,21 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     func favoriteMatch(forIndex index: Int) -> Match? {
         return self.favoriteMatches[safe: index]
+    }
+
+    func featuredTipLineViewModel() -> FeaturedTipLineViewModel? {
+        if self.featuredTips.isEmpty {
+            return nil
+        }
+
+        if let featuredTipLineViewModel = self.cachedFeaturedTipLineViewModel {
+            return featuredTipLineViewModel
+        }
+        else {
+            self.cachedFeaturedTipLineViewModel = FeaturedTipLineViewModel(featuredTips: self.featuredTips)
+            return self.cachedFeaturedTipLineViewModel
+        }
+
     }
 
     func suggestedBetLineViewModel() -> SuggestedBetLineViewModel? {

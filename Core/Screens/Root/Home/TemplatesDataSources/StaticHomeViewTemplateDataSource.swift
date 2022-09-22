@@ -27,7 +27,7 @@ class StaticHomeViewTemplateDataSource {
     // Updatable Storage
     var store: HomeStore
 
-    private let itemsBeforeSports = 6
+    private let itemsBeforeSports = 7
     private var userMessages: [String] = []
 
     //
@@ -76,6 +76,13 @@ class StaticHomeViewTemplateDataSource {
         }
     }
 
+    //
+    private var featuredTips: [FeaturedTip] = []
+    private var cachedFeaturedTipLineViewModel: FeaturedTipLineViewModel? {
+        didSet {
+            self.refreshPublisher.send()
+        }
+    }
     //
     private var suggestedBets: [SuggestedBetCardSummary] = []
     private var cachedSuggestedBetLineViewModel: SuggestedBetLineViewModel? {
@@ -160,6 +167,7 @@ class StaticHomeViewTemplateDataSource {
                 self?.requestSports()
                 self?.fetchBanners()
                 self?.fetchFavoriteMatches()
+                self?.fetchTips()
                 self?.fetchSuggestedBets()
                 self?.fetchAlerts()
             }
@@ -326,6 +334,28 @@ class StaticHomeViewTemplateDataSource {
         self.store.updateContent(fromAggregator: aggregator)
     }
 
+    // Tips TEST
+    func fetchTips() {
+
+        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE")
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("FEATURED TIPS ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+            }, receiveValue: { [weak self] response in
+                print("FEATURED TIPS RESPONSE: \(response)")
+
+                if let featuredTips = response.data {
+                    self?.featuredTips = featuredTips
+                }
+            })
+            .store(in: &cancellables)
+    }
+
     // Suggested Bets
     func fetchSuggestedBets() {
 
@@ -376,7 +406,8 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 2: return self.alertsArray.isEmpty ? 0 : 1
         case 3: return self.favoriteMatches.count
         // case 4 is the first sport from the sports list
-        case 5: return self.suggestedBets.isEmpty ? 0 : 1
+        case 5: return self.featuredTips.isEmpty ? 0 : 1
+        case 6: return self.suggestedBets.isEmpty ? 0 : 1
         default:
             if let sportGroupViewModel = self.sportGroupViewModel(forSection: section) {
                 return sportGroupViewModel.numberOfRows()
@@ -394,7 +425,8 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 2: return nil
         case 3: return self.favoriteMatches.isNotEmpty ? "My Games" : nil
         // case 4 is the first sport from the sports list
-        case 5: return self.suggestedBets.isNotEmpty ? "Suggested Bets" : nil
+        case 5: return self.featuredTips.isNotEmpty ? "Featured Tips" : nil
+        case 6: return self.suggestedBets.isNotEmpty ? "Suggested Bets" : nil
         default:
             if let sportForSection = self.sportForSection(section) {
                 return sportForSection.name
@@ -407,7 +439,7 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     func iconName(forSection section: Int) -> String? {
         switch section {
-        case 0, 1, 2, 3, 5: return nil
+        case 0, 1, 2, 3, 5, 6: return nil
         default:
             if let sportForSection = self.sportForSection(section) {
                 return sportForSection.id
@@ -425,7 +457,8 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 2: return false
         case 3: return self.favoriteMatches.isNotEmpty
         // case 4 is the first sport from the sports list
-        case 5: return self.suggestedBets.isNotEmpty
+        case 5: return self.featuredTips.isNotEmpty
+        case 6: return self.suggestedBets.isNotEmpty
         default:
             if self.sportForSection(section) != nil {
                 return true
@@ -444,6 +477,7 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 3: return false
         // case 4 is the first sport from the sports list
         case 5: return false
+        case 6: return false
         default:
             return false
         }
@@ -456,7 +490,8 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 2: return HomeViewModel.Content.userProfile
         case 3: return HomeViewModel.Content.userFavorites
         // case 4 is the first sport from the sports list
-        case 5: return HomeViewModel.Content.suggestedBets
+        case 5: return HomeViewModel.Content.featuredTips
+        case 6: return HomeViewModel.Content.suggestedBets
         default:
             if let sportForSection = self.sportForSection(section) {
                 return HomeViewModel.Content.sport(sportForSection)
@@ -504,6 +539,21 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return self.favoriteMatches[safe: index]
     }
 
+    func featuredTipLineViewModel() -> FeaturedTipLineViewModel? {
+        if self.featuredTips.isEmpty {
+            return nil
+        }
+
+        if let featuredTipLineViewModel = self.cachedFeaturedTipLineViewModel {
+            return featuredTipLineViewModel
+        }
+        else {
+            self.cachedFeaturedTipLineViewModel = FeaturedTipLineViewModel(featuredTips: self.featuredTips)
+            return self.cachedFeaturedTipLineViewModel
+        }
+
+    }
+
     func suggestedBetLineViewModel() -> SuggestedBetLineViewModel? {
 
         if self.suggestedBets.isEmpty {
@@ -529,7 +579,6 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return viewModel
         }
     }
-
 
     func isMatchLive(withMatchId matchId: String) -> Bool {
         return self.store.hasMatchesInfoForMatch(withId: matchId)

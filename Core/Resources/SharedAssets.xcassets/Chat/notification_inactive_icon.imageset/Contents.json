@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Group.png",
+      "filename" : "Bell-1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,7 +12,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Group-1.png",
+      "filename" : "Bell.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -28,7 +28,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Group@2x-1.png",
+      "filename" : "Bell@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Group@3x-1.png",
+      "filename" : "Bell@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

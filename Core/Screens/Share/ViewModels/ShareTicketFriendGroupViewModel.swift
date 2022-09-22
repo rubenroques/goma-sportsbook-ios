@@ -33,8 +33,22 @@ class ShareTicketFriendGroupViewModel {
     }
 
     func filterSearch(searchQuery: String) {
+        var filteredChatrooms: [ChatroomData] = []
 
-        let filteredChatrooms = self.initialChatrooms.filter({ $0.chatroom.name.localizedCaseInsensitiveContains(searchQuery)})
+        for chatroom in self.initialChatrooms {
+            if chatroom.chatroom.type == "individual" {
+                if let otherUser = chatroom.users[safe: 1]?.name {
+                    if otherUser.localizedCaseInsensitiveContains(searchQuery) {
+                        filteredChatrooms.append(chatroom)
+                    }
+                }
+            }
+            else {
+                if chatroom.chatroom.name.localizedCaseInsensitiveContains(searchQuery) {
+                    filteredChatrooms.append(chatroom)
+                }
+            }
+        }
 
         self.chatroomsPublisher.value = filteredChatrooms
 

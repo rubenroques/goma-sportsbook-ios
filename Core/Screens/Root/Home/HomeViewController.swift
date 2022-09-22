@@ -65,6 +65,7 @@ class HomeViewController: UIViewController {
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
         self.tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
         self.tableView.register(VideoPreviewLineTableViewCell.self, forCellReuseIdentifier: VideoPreviewLineTableViewCell.identifier)
+        self.tableView.register(FeaturedTipLineTableViewCell.self, forCellReuseIdentifier: FeaturedTipLineTableViewCell.identifier)
 
         self.refreshControl.tintColor = UIColor.lightGray
         self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
@@ -204,13 +205,42 @@ class HomeViewController: UIViewController {
         self.navigationController?.pushViewController(bonusRootViewController, animated: true)
     }
 
+    private func openFeaturedTipSlider(featuredTips: [FeaturedTip], atIndex index: Int = 0) {
+        let tipsSliderViewController = TipsSliderViewController(viewModel: TipsSliderViewModel(featuredTips: featuredTips, startIndex: index))
+        tipsSliderViewController.modalPresentationStyle = .overCurrentContext
+        self.present(tipsSliderViewController, animated: true)
+    }
+
     @objc private func didTapOpenFavorites() {
         self.openFavorites()
     }
 
+    @objc private func didTapOpenFeaturedTips() {
+        let tips = self.viewModel.featuredTipLineViewModel()?.featuredTips ?? []
+        self.openFeaturedTipSlider(featuredTips: tips)
+    }
+    
     private func openFavorites() {
         let myFavoritesViewController = MyFavoritesViewController()
         self.navigationController?.pushViewController(myFavoritesViewController, animated: true)
+    }
+
+    private func openQuickbet(_ bettingTicket: BettingTicket) {
+
+        if let userSession = UserSessionStore.loggedUserSession() {
+            let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
+
+            let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)
+
+            quickbetViewController.modalPresentationStyle = .overCurrentContext
+            quickbetViewController.modalTransitionStyle = .crossDissolve
+
+            self.present(quickbetViewController, animated: true)
+        }
+        else {
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.present(loginViewController, animated: true, completion: nil)
+        }
     }
 }
 
@@ -265,6 +295,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     }
                 }
             }
+
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.openQuickbet(bettingTicket)
+            }
             
             return cell
 
@@ -282,9 +316,32 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.tappedMatchLineAction = { [weak self] in
                 self?.openMatchDetails(matchId: match.id)
             }
+
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.openQuickbet(bettingTicket)
+            }
            
             return cell
+        case .featuredTips:
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: FeaturedTipLineTableViewCell.identifier) as? FeaturedTipLineTableViewCell,
+                    let featuredBetLineViewModel = self.viewModel.featuredTipLineViewModel()
+            else {
+                fatalError()
+            }
 
+            cell.openFeaturedTipDetailAction = { [weak self] featuredTip in
+                let firstIndex = featuredBetLineViewModel.featuredTips.firstIndex(where: { tipIterator in
+                    tipIterator.betId == featuredTip.betId
+                })
+                let firstIndexValue: Int = Int(firstIndex ?? 0)
+                
+                self?.openFeaturedTipSlider(featuredTips: featuredBetLineViewModel.featuredTips, atIndex: firstIndexValue)
+            }
+
+            cell.configure(withViewModel: featuredBetLineViewModel)
+
+            return cell
         case .suggestedBets:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: SuggestedBetLineTableViewCell.identifier) as? SuggestedBetLineTableViewCell,
@@ -340,6 +397,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     self?.openOutrightCompetition(competition: competition)
                 }
 
+                cell.didLongPressOdd = { [weak self] bettingTicket in
+                    self?.openQuickbet(bettingTicket)
+                }
+
                 return cell
 
             case .singleLine:
@@ -363,6 +424,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 cell.didSelectSeeAllCompetitionAction = { [weak self] competition in
                     self?.openOutrightCompetition(competition: competition)
+                }
+
+                cell.didLongPressOdd = { [weak self] bettingTicket in
+                    self?.openQuickbet(bettingTicket)
                 }
 
                 return cell
@@ -425,6 +490,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return 180
         case .userFavorites:
             return UITableView.automaticDimension
+        case .featuredTips:
+            return 420
         case .suggestedBets:
             return 336
         case .sport:
@@ -469,6 +536,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return 180
         case .userFavorites:
             return StyleHelper.cardsStyleHeight() + 20
+        case .featuredTips:
+            return 420
         case .suggestedBets:
             return 336
         case .sport:
@@ -558,6 +627,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         if case .userFavorites = self.viewModel.contentType(forSection: section) {
             seeAllLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFavorites)))
         }
+        else if case .featuredTips = self.viewModel.contentType(forSection: section) {
+            seeAllLabel.text = "Expand"
+            seeAllLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFeaturedTips)))
+        }
         else {
             seeAllLabel.isHidden = true
         }
@@ -604,6 +677,8 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
             case .bannerLine:
                 _ = self.viewModel.bannerLineViewModel()
             case .userFavorites:
+                ()
+            case .featuredTips:
                 ()
             case .suggestedBets:
                 _ = self.viewModel.suggestedBetLineViewModel()

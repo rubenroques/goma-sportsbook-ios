@@ -271,7 +271,14 @@ class ConversationBetSelectionRootViewController: UIViewController {
 
     @objc func didTapSendButton() {
         let message = self.messageInputView.getTextViewValue()
-        self.viewModel.sendMessage(message: message)
+
+        if message != "" {
+            self.viewModel.sendMessage(message: message)
+        }
+        else {
+            let defaultMessage = localized("check_this_bet_made")
+            self.viewModel.sendMessage(message: defaultMessage)
+        }
     }
 
     @objc func didTapBackground() {

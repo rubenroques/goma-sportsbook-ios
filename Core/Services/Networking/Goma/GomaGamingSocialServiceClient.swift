@@ -43,7 +43,8 @@ class GomaGamingSocialServiceClient {
     var hasMessagesFinishedLoading: CurrentValueSubject<Bool, Never> = .init(false)
     var areChatroomsRefreshed: CurrentValueSubject<Bool, Never> = .init(false)
     var reloadChatroomsList: PassthroughSubject<Void, Never> = .init()
-
+    var allChatroomIdsLastMessageSubscribed: CurrentValueSubject<[Int], Never> = .init([])
+    var allDataSubscribed: PassthroughSubject<Void, Never> = .init()
     var chatPage: Int = 1
 
     var locations: OrderedDictionary<String, EveryMatrix.Location> = [:]
@@ -84,6 +85,13 @@ class GomaGamingSocialServiceClient {
             })
             .store(in: &cancellables)
 
+    }
+
+    func checkAllLastMessagesSubscribed() {
+
+        if self.chatroomLastMessagePublisher.count == self.chatroomIdsPublisher.value.count && self.chatroomLastMessagePublisher.isNotEmpty {
+            self.allDataSubscribed.send()
+        }
     }
 
     func storeSocialAppsInfo() {
@@ -257,6 +265,8 @@ class GomaGamingSocialServiceClient {
         self.chatroomNewMessagePublisher = [:]
         self.chatroomReadMessagesPublisher.send([:])
         self.chatroomOnlineUsersPublisher.send([:])
+
+        self.allChatroomIdsLastMessageSubscribed.send([])
     }
     
     private func setupPostConnection() {
@@ -319,6 +329,10 @@ class GomaGamingSocialServiceClient {
                                 }
                                 else {
                                     self.chatroomLastMessagePublisher[chatroomId] = .init(lastMessage)
+
+                                    //self.allChatroomIdsLastMessageSubscribed.value.append(chatroomId)
+
+                                    self.checkAllLastMessagesSubscribed()
                                 }
 
                             }
@@ -391,7 +405,7 @@ class GomaGamingSocialServiceClient {
 
             self.chatroomLastMessagePublisher[chatroomId] = .init()
         }
-        
+
     }
 
     private func startChatMessagesListener(chatroomIds: [Int]) {

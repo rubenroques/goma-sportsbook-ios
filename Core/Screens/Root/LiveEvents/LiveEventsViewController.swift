@@ -92,16 +92,6 @@ class LiveEventsViewController: UIViewController {
             self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
         }
 
-        self.viewModel.updateNumberOfLiveEventsAction = {
-            if self.viewModel.selectedSportNumberofLiveEvents != 0 {
-
-                self.liveEventsCountView.isHidden = false
-                self.liveEventsCountLabel.text = "\(self.viewModel.selectedSportNumberofLiveEvents)"
-            }
-            else {
-                self.liveEventsCountView.isHidden = true
-            }
-        }
         
         self.tableView.isHidden = false
         self.emptyBaseView.isHidden = true
@@ -115,9 +105,12 @@ class LiveEventsViewController: UIViewController {
 //                self.tableView.reloadData()
 //            }
 //        }
+
+        self.viewModel.didLongPressOdd = { [weak self] bettingTicket in
+            self?.openQuickbet(bettingTicket)
+        }
     }
 
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
@@ -125,7 +118,6 @@ class LiveEventsViewController: UIViewController {
         self.setHomeFilters(homeFilters: self.viewModel.homeFilterOptions)
     }
 
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -263,6 +255,20 @@ class LiveEventsViewController: UIViewController {
             self.tableView.reloadData()
         }
         
+        self.viewModel.liveEventsCountPublisher
+            .receive(on: DispatchQueue.main)
+            .print("EventCounter VC sink", to: nil)
+            .sink { [weak self] liveEventsCount in
+                self?.liveEventsCountLabel.text = "\(liveEventsCount)"
+                if liveEventsCount != 0 {
+                    self?.liveEventsCountView.isHidden = false
+                }
+                else {
+                    self?.liveEventsCountView.isHidden = true
+                }
+            }
+            .store(in: &cancellables)
+        
         self.viewModel.screenStatePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] screenState in
@@ -284,20 +290,6 @@ class LiveEventsViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
-
-//        Env.gomaSocialClient.unreadMessagesCountPublisher
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] unreadCounter in
-//                print("UNREAD COUNT: \(unreadCounter)")
-//                if unreadCounter > 0 {
-//                    self?.chatCountLabel.text = "\(unreadCounter)"
-//                    self?.chatCountLabel.isHidden = false
-//                }
-//                else {
-//                    self?.chatCountLabel.isHidden = true
-//                }
-//            })
-//            .store(in: &cancellables)
 
     }
 
@@ -367,6 +359,24 @@ class LiveEventsViewController: UIViewController {
     func changedSport(_ sport: Sport) {
         self.selectedSport = sport
         self.didChangeSport?(sport)
+    }
+    
+    private func openQuickbet(_ bettingTicket: BettingTicket) {
+
+        if let userSession = UserSessionStore.loggedUserSession() {
+            let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
+
+            let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)
+
+            quickbetViewController.modalPresentationStyle = .overCurrentContext
+            quickbetViewController.modalTransitionStyle = .crossDissolve
+
+            self.present(quickbetViewController, animated: true)
+        }
+        else {
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.present(loginViewController, animated: true, completion: nil)
+        }
     }
 
     @objc func handleSportsSelectionTap() {

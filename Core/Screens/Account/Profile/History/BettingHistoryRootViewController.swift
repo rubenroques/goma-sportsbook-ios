@@ -5,7 +5,6 @@
 //  Created by Ruben Roques on 27/04/2022.
 //
 
-
 import UIKit
 import Combine
 
@@ -54,7 +53,10 @@ class BettingHistoryRootViewController: UIViewController {
     private lazy var topBaseView: UIView = Self.createTopBaseView()
     private lazy var shortcutsCollectionView: UICollectionView = Self.createShortcutsCollectionView()
     private lazy var pagesBaseView: UIView = Self.createPagesBaseView()
-
+    
+    private lazy var filterBaseView: UIView = Self.createSimpleView()
+    private lazy var filtersButtonImage: UIImageView = Self.createFilterImageView()
+    
     private lazy var noLoginBaseView: UIView = Self.createNoLoginBaseView()
     private lazy var noLoginImageView: UIImageView = Self.createNoLoginImageView()
     private lazy var noLoginTitleLabel: UILabel = Self.createNoLoginTitleLabel()
@@ -67,7 +69,12 @@ class BettingHistoryRootViewController: UIViewController {
     private var currentPageViewControllerIndex: Int = 0
 
     private var viewModel: BettingHistoryRootViewModel
-
+    private var filterViewModel: FilterHistoryViewModel = FilterHistoryViewModel()
+    var filterPublisher: CurrentValueSubject<FilterHistoryViewModel.FilterValue, Never> = .init(.past30Days)
+    
+    private var filterHistoryViewController = FilterHistoryViewController()
+    var startTimeFilter = Date()
+    var endTimeFilter = Date()
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Lifetime and Cycle
@@ -94,13 +101,31 @@ class BettingHistoryRootViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.viewControllers = [
-            BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .opened)),
-            BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .resolved)),
-            BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .won)),
-            BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .cashout)),
-        ]
+        self.filterPublisher
+            .sink { [weak self] filterApplied in
 
+                if let viewControllers = self?.viewControllers {
+                    if viewControllers.isEmpty {
+                        self?.viewControllers = [
+                            BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .opened, filterApplied: filterApplied)),
+                            BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .resolved, filterApplied: filterApplied)),
+                            BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .won, filterApplied: filterApplied)),
+                            BettingHistoryViewController(viewModel: BettingHistoryViewModel(bettingTicketsType: .cashout, filterApplied: filterApplied)),
+                        ]
+                    }
+                    else {
+                        for viewController in viewControllers {
+                            let bettingHistoryViewController = viewController as? BettingHistoryViewController
+
+                            bettingHistoryViewController?.reloadDataWithFilter(newFilter: filterApplied)
+                        }
+                    }
+                }
+
+                self?.reloadCollectionView()
+            }
+            .store(in: &cancellables)
+        
         self.pagedViewController.delegate = self
         self.pagedViewController.dataSource = self
 
@@ -110,6 +135,12 @@ class BettingHistoryRootViewController: UIViewController {
         self.shortcutsCollectionView.delegate = self
         self.shortcutsCollectionView.dataSource = self
 
+
+        let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
+        self.filterBaseView.addGestureRecognizer(tapFilterGesture)
+        self.filterBaseView.isUserInteractionEnabled = true
+        self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+        
         self.noLoginButton.addTarget(self, action: #selector(didTapLoginButton), for: .primaryActionTriggered)
 
         self.reloadCollectionView()
@@ -133,10 +164,23 @@ class BettingHistoryRootViewController: UIViewController {
         self.noLoginTitleLabel.textColor = UIColor.App.textPrimary
         self.noLoginSubtitleLabel.textColor = UIColor.App.textPrimary
 
+        self.filterBaseView.backgroundColor = UIColor.App.backgroundTertiary
+        
         StyleHelper.styleButton(button: self.noLoginButton)
    }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
 
+//        self.topBaseView.layer.masksToBounds = true
+//        self.topBaseView.clipsToBounds = true
+
+        self.filterBaseView.layer.cornerRadius = self.filterBaseView.frame.height / 2
+        self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+
+        self.filterBaseView.layer.masksToBounds = true
+
+    }
     // MARK: - Bindings
     private func bind(toViewModel viewModel: BettingHistoryRootViewModel) {
 
@@ -166,6 +210,17 @@ class BettingHistoryRootViewController: UIViewController {
     @objc func didTapLoginButton() {
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
+    }
+    
+    @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
+         self.present(self.filterHistoryViewController, animated: true, completion: nil)
+         self.startTimeFilter = self.filterHistoryViewController.viewModel.startTimeFilterPublisher.value
+         self.endTimeFilter = self.filterHistoryViewController.viewModel.endTimeFilterPublisher.value
+         
+        self.filterHistoryViewController.didSelectFilterAction = { [weak self ] opt in
+            self?.filterPublisher.send(opt)
+            
+        }
     }
 
     // MARK: - Convenience
@@ -209,7 +264,7 @@ extension BettingHistoryRootViewController: UIPageViewControllerDelegate, UIPage
 
     func selectTicketType(atIndex index: Int, animated: Bool = true) {
         self.viewModel.selectTicketType(atIndex: index)
-
+        
         self.shortcutsCollectionView.reloadData()
         self.shortcutsCollectionView.layoutIfNeeded()
         self.shortcutsCollectionView.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: animated)
@@ -363,9 +418,27 @@ extension BettingHistoryRootViewController {
         return view
     }
 
+    private static func createSimpleView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
+    private static func createFilterImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        imageView.image = UIImage(named: "match_filters_icons")
+        
+        return imageView
+    }
+
+    
     private func setupSubviews() {
 
         self.topBaseView.addSubview(self.shortcutsCollectionView)
+        self.topBaseView.addSubview(self.filterBaseView)
+        self.filterBaseView.addSubview(self.filtersButtonImage)
 
         self.view.addSubview(self.topBaseView)
         self.view.addSubview(self.pagesBaseView)
@@ -382,6 +455,9 @@ extension BettingHistoryRootViewController {
         self.addChildViewController(self.pagedViewController, toView: self.pagesBaseView)
 
         self.initConstraints()
+        // NOTE: Force layout pending
+        self.view.layoutSubviews()
+        self.view.layoutIfNeeded()
     }
 
     private func initConstraints() {
@@ -391,6 +467,16 @@ extension BettingHistoryRootViewController {
             self.topBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.topBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.topBaseView.heightAnchor.constraint(equalToConstant: 70),
+            
+            self.filterBaseView.widthAnchor.constraint(equalToConstant: 40),
+            self.filterBaseView.heightAnchor.constraint(equalToConstant: 40),
+            self.filterBaseView.trailingAnchor.constraint(equalTo: self.topBaseView.trailingAnchor),
+            self.filterBaseView.centerYAnchor.constraint(equalTo: self.shortcutsCollectionView.centerYAnchor),
+            
+            self.filtersButtonImage.bottomAnchor.constraint(equalTo: self.filterBaseView.bottomAnchor, constant: -8),
+            self.filtersButtonImage.topAnchor.constraint(equalTo: self.filterBaseView.topAnchor, constant: 8),
+            self.filtersButtonImage.trailingAnchor.constraint(equalTo: self.filterBaseView.trailingAnchor, constant: -6),
+            self.filtersButtonImage.centerYAnchor.constraint(equalTo: self.filterBaseView.centerYAnchor)
         ])
 
         NSLayoutConstraint.activate([

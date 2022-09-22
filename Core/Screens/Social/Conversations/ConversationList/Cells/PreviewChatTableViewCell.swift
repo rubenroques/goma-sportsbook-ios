@@ -37,7 +37,7 @@ class PreviewChatTableViewCell: UITableViewCell {
             if isSeen {
                 self.dateLabel.textColor = UIColor.App.textSecondary
                 self.iconBaseView.layer.borderWidth = 2
-                self.iconBaseView.layer.borderColor = UIColor.App.backgroundOdds.cgColor
+                self.iconBaseView.layer.borderColor = UIColor.App.buttonBackgroundSecondary.cgColor
                 self.nameLabel.font = AppFont.with(type: .semibold, size: 16)
             }
             else {

@@ -24,6 +24,10 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
     var match: Match?
     var market: Market?
     var competitionName: String?
+    
+    var betBuilderGrayoutsState = BetBuilderGrayoutsState.defaultState
+
+    var didLongPressOdd: ((BettingTicket) -> Void)?
 
     private let lineHeight: CGFloat = 56
 
@@ -56,6 +60,8 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
         self.match = nil
         self.market = nil
         self.competitionName = nil
+        
+        self.betBuilderGrayoutsState = BetBuilderGrayoutsState.defaultState
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -76,7 +82,9 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
         self.collectionView.backgroundColor = .clear
     }
 
-    func configure(withMarket market: Market) {
+    func configure(withMarket market: Market,
+                   betBuilderGrayoutsState: BetBuilderGrayoutsState) {
+        
         self.market = market
 
         self.titleLabel.text = market.name
@@ -170,6 +178,10 @@ extension SimpleListMarketDetailTableViewCell: UICollectionViewDelegate, UIColle
         cell.match = self.match
         cell.market = self.market
         cell.configureWith(outcome: outcomeItem)
+
+        cell.didLongPressOdd = { [weak self] bettingTicket in
+            self?.didLongPressOdd?(bettingTicket)
+        }
 
         return cell
     }

@@ -19,14 +19,14 @@ class LiveEventsViewModel: NSObject {
         case allMatches
     }
 
-    enum screenState {
+    enum ScreenState {
         case emptyAndFilter
         case emptyNoFilter
         case noEmptyNoFilter
         case noEmptyAndFilter
     }
     
-    var screenStatePublisher: CurrentValueSubject<screenState, Never> = .init(.noEmptyNoFilter)
+    var screenStatePublisher: CurrentValueSubject<ScreenState, Never> = .init(.noEmptyNoFilter)
     
     private var allMatchesViewModelDataSource = AllMatchesViewModelDataSource(matches: [])
 
@@ -38,12 +38,13 @@ class LiveEventsViewModel: NSObject {
     var isUserLoggedPublisher: CurrentValueSubject<Bool, Never> = .init(true)
 
     var sportsRepository: SportsAggregatorRepository = SportsAggregatorRepository()
-    var selectedSportNumberofLiveEvents: Int = 0
+    var liveEventsCountPublisher: CurrentValueSubject<Int, Never> = .init(0)
     var liveSportsPublisher: AnyCancellable?
     var liveSportsRegister: EndpointPublisherIdentifiable?
-    var updateNumberOfLiveEventsAction: (() -> Void)?
+
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var currentLiveSportsPublisher: AnyCancellable?
+    var didLongPressOdd: ((BettingTicket) -> Void)?
 
     var didChangeSportType = false
     var selectedSport: Sport {
@@ -104,7 +105,12 @@ class LiveEventsViewModel: NSObject {
                 self?.isUserLoggedPublisher.send(isLogged)
             })
             .store(in: &self.cancellables)
+        
         self.getSportsLive()
+
+        self.allMatchesViewModelDataSource.didLongPressOdd = {[weak self] bettingTicket in
+            self?.didLongPressOdd?(bettingTicket)
+        }
     }
 
     func fetchData() {
@@ -116,13 +122,21 @@ class LiveEventsViewModel: NSObject {
         self.fetchAllMatches()
 
         if let sportPublisher = sportsRepository.sportsLivePublisher[self.selectedSport.id] {
-
+            
+            self.currentLiveSportsPublisher?.cancel()
+            self.currentLiveSportsPublisher = nil
+            
             self.currentLiveSportsPublisher = sportPublisher
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: {[weak self] sport in
-                    self?.selectedSportNumberofLiveEvents = sport.numberOfLiveEvents ?? 0
-                    self?.updateNumberOfLiveEventsAction?()
+                    self?.liveEventsCountPublisher.send(sport.numberOfLiveEvents ?? 0)
                 })
+        }
+        else {
+            self.currentLiveSportsPublisher?.cancel()
+            self.currentLiveSportsPublisher = nil
+            
+            self.liveEventsCountPublisher.send(0)
         }
     }
 
@@ -167,13 +181,21 @@ class LiveEventsViewModel: NSObject {
         sportsRepository.processSportsAggregator(aggregator)
 
         if let sportPublisher = sportsRepository.sportsLivePublisher[self.selectedSport.id] {
-
+            
+            self.currentLiveSportsPublisher?.cancel()
+            self.currentLiveSportsPublisher = nil
+            
             self.currentLiveSportsPublisher = sportPublisher
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: {[weak self] sport in
-                    self?.selectedSportNumberofLiveEvents = sport.numberOfLiveEvents ?? 0
-                    self?.updateNumberOfLiveEventsAction?()
+                    self?.liveEventsCountPublisher.send(sport.numberOfLiveEvents ?? 0)
                 })
+        }
+        else {
+            self.currentLiveSportsPublisher?.cancel()
+            self.currentLiveSportsPublisher = nil
+            
+            self.liveEventsCountPublisher.send(0)
         }
     }
 
@@ -441,6 +463,7 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
     var requestNextPage: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
     var didTapFavoriteAction: ((Match) -> Void)?
+    var didLongPressOdd: ((BettingTicket) -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
@@ -488,6 +511,10 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
 //                cell.didTapFavoriteMatchAction = { [weak self] match in
 //                    self?.didTapFavoriteAction?(match)
 //                }
+
+                cell.didLongPressOdd = { bettingTicket in
+                    self.didLongPressOdd?(bettingTicket)
+                }
                 
                 return cell
             }
