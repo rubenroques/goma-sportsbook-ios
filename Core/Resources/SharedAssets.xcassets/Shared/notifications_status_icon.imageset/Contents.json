@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "BellSlash Copy 5.png",
+      "filename" : "BellSlash.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "BellSlash Copy 5@2x.png",
+      "filename" : "BellSlash@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "BellSlash Copy 5@3x.png",
+      "filename" : "BellSlash@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
