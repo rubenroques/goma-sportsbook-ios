@@ -274,59 +274,122 @@ struct InAppMessage: Decodable {
 }
 
 struct FeaturedTip: Decodable {
-    var id: Int
+    var betId: String
+    var selections: [FeaturedTipSelection]?
+    var type: String
+    var systemBetType: String?
     var status: String
-    var name: String?
+    var statusLabel: String
+    var placedDate: String?
+    var userId: String
     var username: String
-    var userId: String?
-    var userProviderId: Int?
-    var stake: Double?
-    var maxWinning: Double
-    var possibleProfit: Double
-    var totalOdds: Double
-    var betSelections: [FeaturedTipSelection]?
-    var omBetId: String?
-    var omRequestId: String?
+    var totalOdds: String
 
     enum CodingKeys: String, CodingKey {
-        case id = "id"
+
+        case betId = "betId"
+        case selections = "selections"
+        case type = "type"
+        case systemBetType = "systemBetType"
         case status = "status"
-        case name = "name"
-        case username = "user_name"
+        case statusLabel = "statusLabel"
+        case placedDate = "placedDate"
         case userId = "user_id"
-        case userProviderId = "user_provider_id"
-        case stake = "stake"
-        case maxWinning = "max_winning"
-        case possibleProfit = "possible_profit"
+        case username = "user_name"
         case totalOdds = "total_odds"
-        case betSelections = "bet_selections"
-        case omBetId = "om_bet_id"
-        case omRequestId = "om_request_id"
     }
 }
 
 class FeaturedTipSelection: Decodable {
-    var id: Int
-    var betId: Int
+    var outcomeId: String
     var status: String
-    var eventName: String
-    var eventId: String
-    var locationId: String
+    //var statusLabel: String
     var sportId: String
-    var outcomeName: String
-    var live: Int?
-    var odds: Double
+    var sportName: String
+    //var sportParentId: String
+    var sportParentName: String
+    var venueId: String
+    var venueName: String
+    var eventId: String
+    var eventName: String
+    //var homeParticipantId: String
+    //var awayParticipantId: String
+    var bettingTypeId: String
+    var bettingTypeName: String
+    var betName: String
+    var odds: String
+    //var eventPartId: String
+    var extraSelectionInfo: ExtraSelectionInfo
+
+//    var odds: Double?
+
+    enum CodingKeys: String, CodingKey {
+        case outcomeId = "outcomeId"
+        case status = "status"
+        //case statusLabel = "statusLabel"
+        case sportId = "sportId"
+        case sportName = "sportName"
+        //case sportParentId = "sportParentId"
+        case sportParentName = "sportParentName"
+        case venueId = "venueId"
+        case venueName = "venueName"
+        case eventId = "eventId"
+        case eventName = "eventName"
+        //case homeParticipantId = "homeParticipantId"
+        //case awayParticipantId = "awayParticipantId"
+        case bettingTypeId = "bettingTypeId"
+        case bettingTypeName = "bettingTypeName"
+        case betName = "betName"
+        case odds = "odds"
+        //case eventPartId = "eventPartId"
+        case extraSelectionInfo = "extraSelectionInfo"
+
+//        case odds = "odds"
+    }
+}
+
+struct ExtraSelectionInfo: Decodable {
+
+    var bettingOfferId: Int
+//    var eventTypeId: Int
+    var marketName: String
+    var outcomeEntity: OutcomeEntity
+//    var categoryId: Int
+//    var categoryName: String
+//    var creationTime: Int
+
+    enum CodingKeys: String, CodingKey {
+        case bettingOfferId = "bettingOfferId"
+//        case eventTypeId = "eventTypeId"
+        case marketName = "marketName"
+        case outcomeEntity = "outcomeEntity"
+//        case categoryId = "categoryId"
+//        case categoryName = "categoryName"
+//        case creationTime = "creationTime"
+    }
+}
+
+struct OutcomeEntity: Decodable {
+
+    var id: Int
+    var statusId: Int
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
-        case betId = "bet_id"
-        case status = "status"
-        case eventName = "event_name"
-        case eventId = "event_id"
-        case locationId = "location_id"
-        case sportId = "sport_id"
-        case outcomeName = "outcome_name"
-        case live = "live"
-        case odds = "odds"
+        case statusId = "statusId"
+    }
+}
+
+struct RankingTip: Decodable {
+    var position: Int
+    var username: String
+    var userId: Int
+    var result: Double
+
+    enum CodingKeys: String, CodingKey {
+        case position = "position"
+        case username = "user_name"
+        case userId = "user_id"
+        case result = "result"
     }
 }

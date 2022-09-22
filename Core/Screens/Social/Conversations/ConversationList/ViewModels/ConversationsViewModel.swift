@@ -189,11 +189,13 @@ class ConversationsViewModel {
         }
 
         for user in chatroomData.users {
-            if let loggedUser = UserSessionStore.loggedUserSession() {
-                if user.username != loggedUser.username {
+            if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+                if user.id != loggedUserId {
                     chatroomName = user.username
                 }
-                loggedUsername = loggedUser.username
+                else {
+                    loggedUsername = user.username
+                }
             }
         }
 

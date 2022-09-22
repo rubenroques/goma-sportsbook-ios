@@ -22,8 +22,8 @@ class AddContactViewModel {
     var initialFullUsers: [UserContact] = []
     var contactsData: [ContactsData] = []
     var cachedFriendCellViewModels: [String: AddFriendCellViewModel] = [:]
-    var cachedUnregisteredFriendCellViewModels: [String: AddUnregisteredFriendCellViewModel] = [:]
     var hasDoneSearch: Bool = false
+    var hasRegisteredFriends: Bool = false
     var selectedUsers: [UserContact] = []
     var isEmptySearchPublisher: CurrentValueSubject<Bool, Never> = .init(true)
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
@@ -41,48 +41,51 @@ class AddContactViewModel {
 
     func filterSearch(searchQuery: String) {
 
-        var filterUserSections = self.initialFullSectionUsers.filter {
-            $0.userContacts.contains(where: {
-                $0.username.localizedCaseInsensitiveContains(searchQuery)
+        var filteredSectionUsers: [UserContactSectionData] = []
+
+        var registeredSection = self.initialFullSectionUsers.filter({
+            $0.contactType == .registered
+        })
+
+        let unregisteredSection = self.initialFullSectionUsers.filter({
+            $0.contactType == .unregistered
+        })
+
+        if registeredSection.isNotEmpty {
+
+            var filteredRegisteredSection = registeredSection.filter({
+                $0.userContacts.contains(where: {
+                    $0.username.localizedCaseInsensitiveContains(searchQuery)
+                })
             })
 
-        }
+            for (index, filteredRegister) in filteredRegisteredSection.enumerated() {
 
-        for (index, filterUserSection) in filterUserSections.enumerated() {
+                let filterUserContacts = filteredRegister.userContacts.filter({
+                    $0.username.localizedCaseInsensitiveContains(searchQuery)
+                })
 
-           let filterUserContacts = filterUserSection.userContacts.filter({
-               $0.username.localizedCaseInsensitiveContains(searchQuery)
-           })
-
-            filterUserSections[index].userContacts = filterUserContacts
-
-        }
-
-        self.sectionUsersArray = filterUserSections
-
-        self.dataNeedsReload.send()
-
-    }
-
-    func getUsers() {
-        // TEST
-        if self.users.isEmpty {
-            for i in 0...20 {
-                let user = UserContact(id: "\(i)", username: "@GOMA_User", phones: ["+351 999 888 777"])
-                self.users.append(user)
+                filteredRegisteredSection[index].userContacts = filterUserContacts
 
             }
 
-            self.isEmptySearchPublisher.send(false)
+            registeredSection = filteredRegisteredSection
+
+            filteredSectionUsers.append(contentsOf: registeredSection)
         }
+
+        filteredSectionUsers.append(contentsOf: unregisteredSection)
+
+        self.sectionUsersArray = filteredSectionUsers
+
         self.dataNeedsReload.send()
+
     }
 
     func clearUsers() {
         self.users = []
         self.selectedUsers = []
         self.cachedFriendCellViewModels = [:]
-        self.cachedUnregisteredFriendCellViewModels = [:]
         self.isEmptySearchPublisher.send(true)
         self.canAddFriendPublisher.send(false)
         self.dataNeedsReload.send()
@@ -132,7 +135,6 @@ class AddContactViewModel {
             }, receiveValue: { response in
                 if let friends = response.data {
                     self.friendsList = friends
-                    print("LIST FRIEND: \(friends)")
                 }
             })
             .store(in: &cancellables)
@@ -184,8 +186,6 @@ class AddContactViewModel {
             }
         }
 
-        print("PHONES TO LOOK: \(phones)")
-
         Env.gomaNetworkClient.lookupPhones(deviceId: Env.deviceId, phones: phones)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -200,7 +200,6 @@ class AddContactViewModel {
                 }
 
             }, receiveValue: { [weak self] registeredUsers in
-                print("PHONES GOMA: \(registeredUsers)")
                 self?.registeredUsers = registeredUsers
                 self?.populateContactsData()
 
@@ -218,6 +217,10 @@ class AddContactViewModel {
 
             }
         }
+
+        // Unregistered always visible
+        let emptyUserContact = UserContact(id: "", username: "", phones: [])
+        self.sectionUsers[UserContactType.unregistered.identifier] = [emptyUserContact]
 
         // Sort contacts for registered/unregistered sections
         for (key, userContact) in self.sectionUsers {
@@ -247,7 +250,7 @@ class AddContactViewModel {
 
         if contactData.phoneNumber.count >= 1 {
 
-            let userContact = UserContact(id: contactData.identifier, username: username, phones: contactData.phoneNumber)
+            let userContact = UserContact(id: contactData.identifier, username: username, phones: contactData.phoneNumber, emails: [contactData.emailAddress])
 
             self.verifyUserRegister(userContact: userContact)
         }
@@ -275,6 +278,8 @@ class AddContactViewModel {
 
         if isRegistered {
 
+            self.hasRegisteredFriends = true
+
             var newId = 0
 
             if let registerUser = self.registeredUsers.first(where: { $0.phoneNumber == registeredPhone}) {
@@ -296,18 +301,7 @@ class AddContactViewModel {
                 }
             }
         }
-        else {
 
-            self.users.append(userContact)
-
-            if self.sectionUsers[UserContactType.unregistered.identifier] != nil {
-
-                self.sectionUsers[UserContactType.unregistered.identifier]?.append(userContact)
-            }
-            else {
-                self.sectionUsers[UserContactType.unregistered.identifier] = [userContact]
-            }
-        }
     }
 
     func sendFriendRequest() {
@@ -330,7 +324,6 @@ class AddContactViewModel {
 
                 self?.shouldShowAlert.send(true)
             }, receiveValue: { [weak self] response in
-                print("ADD FRIEND GOMA: \(response)")
                 self?.friendAlertType = .success
             })
             .store(in: &cancellables)

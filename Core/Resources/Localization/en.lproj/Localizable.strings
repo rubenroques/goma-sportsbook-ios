@@ -449,7 +449,7 @@ Terms of use, Privacy Policy and EULA";
 "add_contact" = "Add Contact";
 "search_by_contact" = "Search by contact name...";
 "invite" = "Invite";
-"unregistered_contacts_invite" = "We found these contacts that don’t have Sportsbook yet, invite them";
+"unregistered_contacts_invite" = "You have contacts that don’t have Sportsbook yet, invite them";
 
 "new_group" = "New Group";
 "select_friends_add" = "Select friends to add";
@@ -556,6 +556,11 @@ Terms of use, Privacy Policy and EULA";
 "chat_empty_shared_ticket_self" = "You shared a ticket.";
 "chat_empty_shared_ticket_others" = "%s shared a ticket.";
 
+"invite_friends_via" = "Invite friends via...";
+"invite_more_friends" = "Invite more friends from your contact list to join the sportsbook";
+"no_user_contact_registered" = "You don't have any users from your contact list using the Sportsbook yet. Invite them now!";
+"no_other_users_registered" = "There are currently no other users on your contact list using the Sportsbook. Invite more friends now!";
+
 "bet" = "Bet";
 
 "follow" = "Follow";
@@ -570,6 +575,8 @@ Terms of use, Privacy Policy and EULA";
 "no_login_rankings" = "You need to be logged in to be able to see rankings";
 
 "add_friends_tip" = "You need to add some friends to see what kind of tips they share.";
+"select" = "Select";
+"follow_user" = "Follow user";
 
 "remove_last_user_message" = "Removing the last user of this group will also delete this group! Are you sure you want to remove this user?";
 "remove_last_user" = "Remove Last User";
