@@ -167,6 +167,15 @@ class AddContactViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+        // Close screen after chatroom list and last message are updated
+        Env.gomaSocialClient.allDataSubscribed
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+
+                self?.navigationController?.popToRootViewController(animated: true)
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Functions
@@ -232,9 +241,9 @@ class AddContactViewController: UIViewController {
             
             Env.gomaSocialClient.forceRefresh()
 
-            self.chatListNeedsReload?()
-
-            self.navigationController?.popToRootViewController(animated: true)
+//            self.chatListNeedsReload?()
+//
+//            self.navigationController?.popToRootViewController(animated: true)
         case .error:
             let errorFriendAlert = UIAlertController(title: localized("friend_added_error"),
                                                        message: localized("friend_added_message_error"),
