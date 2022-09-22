@@ -264,7 +264,7 @@ class EditGroupViewController: UIViewController {
 
     private func removeUser(userId: String, userIndex: Int) {
 
-        if self.viewModel.users.count > 3 {
+        if self.viewModel.users.count > 1 {
             let removeAlert = UIAlertController(title: localized("remove_user"),
                                                 message: localized("remove_user_message"),
                                                 preferredStyle: UIAlertController.Style.alert)
@@ -280,13 +280,19 @@ class EditGroupViewController: UIViewController {
             self.present(removeAlert, animated: true, completion: nil)
         }
         else {
-            let notAllowedAlert = UIAlertController(title: localized("not_allowed"),
-                                                message: localized("minimum_users_message"),
+            let removeAlert = UIAlertController(title: localized("remove_last_user"),
+                                                message: localized("remove_last_user_message"),
                                                 preferredStyle: UIAlertController.Style.alert)
 
-            notAllowedAlert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+            removeAlert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
 
-            self.present(notAllowedAlert, animated: true, completion: nil)
+                self?.viewModel.removeUser(userId: userId, userIndex: userIndex)
+
+            }))
+
+            removeAlert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel))
+
+            self.present(removeAlert, animated: true, completion: nil)
         }
 
     }

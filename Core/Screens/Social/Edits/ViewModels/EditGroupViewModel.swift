@@ -109,7 +109,14 @@ class EditGroupViewModel {
                 self?.isGroupEdited = true
                 self?.users.remove(at: userIndex)
                 self?.cachedUserCellViewModels[userId] = nil
-                self?.needReloadData.send()
+
+                if let users = self?.users,
+                   users.isEmpty {
+                    self?.shouldCloseChat.send(true)
+                }
+                else {
+                    self?.needReloadData.send()
+                }
             })
             .store(in: &cancellables)
 
