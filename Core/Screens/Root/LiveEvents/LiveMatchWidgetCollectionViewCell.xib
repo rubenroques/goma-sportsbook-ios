@@ -499,7 +499,7 @@
         <image name="odd_down_icon" width="10" height="5"/>
         <image name="odd_up_icon" width="10" height="5"/>
         <image name="red_card_image" width="9" height="14"/>
-        <image name="unselected_favorite_icon" width="16" height="15"/>
+        <image name="unselected_favorite_icon" width="19" height="18"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

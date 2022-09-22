@@ -74,6 +74,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var awayRedCardLabel: UILabel!
     @IBOutlet private weak var awayRedCardImage: UIImageView!
     
+    
     private var cancellables = Set<AnyCancellable>()
     
     private var cachedCardsStyle: CardsStyle?
