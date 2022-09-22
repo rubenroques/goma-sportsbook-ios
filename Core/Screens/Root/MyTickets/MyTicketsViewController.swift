@@ -25,7 +25,7 @@ class MyTicketsViewController: UIViewController {
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
 
     private let refreshControl = UIRefreshControl()
-    private var shouldShowCenterLoadingView = true
+    private var shouldShowCenterLoadingView = false
     private var viewModel: MyTicketsViewModel
 
     private var cancellables = Set<AnyCancellable>()
@@ -68,6 +68,7 @@ class MyTicketsViewController: UIViewController {
         self.ticketsTableView.delegate = self.viewModel
         self.ticketsTableView.dataSource = self.viewModel
         self.ticketsTableView.register(MyTicketTableViewCell.nib, forCellReuseIdentifier: MyTicketTableViewCell.identifier)
+        self.ticketsTableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         self.ticketsTableView.separatorStyle = .none
 
         self.refreshControl.tintColor = UIColor.lightGray
@@ -85,7 +86,7 @@ class MyTicketsViewController: UIViewController {
                 if !isLoading {
                     self?.loadingIndicatorView.stopAnimating()
                     self?.refreshControl.endRefreshing()
-                    self?.shouldShowCenterLoadingView = true
+                    self?.shouldShowCenterLoadingView = false
                 }
                 else if self?.shouldShowCenterLoadingView ?? false {
                     self?.loadingIndicatorView.startAnimating()
