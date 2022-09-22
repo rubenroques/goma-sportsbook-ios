@@ -100,7 +100,9 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
         
     }
 
-    func configure(withMarketGroupOrganizer marketGroupOrganizer: MarketGroupOrganizer, isExpanded: Bool) {
+    func configure(withMarketGroupOrganizer marketGroupOrganizer: MarketGroupOrganizer,
+                   isExpanded: Bool,
+                   betBuilderGrayoutsState: BetBuilderGrayoutsState) {
 
         self.marketGroupOrganizer = marketGroupOrganizer
         self.isExpanded = isExpanded
@@ -138,12 +140,16 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
                         outcomeSelectionButtonView.match = self.match
                         outcomeSelectionButtonView.competitionName = self.competitionName
                         outcomeSelectionButtonView.marketId = self.marketId
-                        outcomeSelectionButtonView.configureWith(outcome: outcomeValue)
-
+                        
                         outcomeSelectionButtonView.didLongPressOdd = { [weak self] bettingTicket in
                             self?.didLongPressOdd?(bettingTicket)
                         }
-
+                        
+                        outcomeSelectionButtonView.configureWith(outcome: outcomeValue)
+                        if betBuilderGrayoutsState.shouldGrayoutOutcome(withId: outcomeValue.id) {
+                            outcomeSelectionButtonView.blockOutcomeInteraction()
+                        }
+                        
                         stackView.addArrangedSubview(outcomeSelectionButtonView)
                     }
                     else {

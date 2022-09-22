@@ -3694,6 +3694,12 @@
 		A986D35928CB48F100AF95D7 /* TipsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35428CB48F100AF95D7 /* TipsListViewModel.swift */; };
 		A986D35A28CB48F100AF95D7 /* TipsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35428CB48F100AF95D7 /* TipsListViewModel.swift */; };
 		A986D35B28CB48F100AF95D7 /* TipsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35428CB48F100AF95D7 /* TipsListViewModel.swift */; };
+		A986D35D28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */; };
+		A986D35E28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */; };
+		A986D35F28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */; };
+		A986D36028CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */; };
+		A986D36128CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */; };
+		A986D36228CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */; };
 		A98708A228D3441800F27348 /* RankingCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98708A128D3441800F27348 /* RankingCellViewModel.swift */; };
 		A98708A328D3441800F27348 /* RankingCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98708A128D3441800F27348 /* RankingCellViewModel.swift */; };
 		A98708A428D3441800F27348 /* RankingCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98708A128D3441800F27348 /* RankingCellViewModel.swift */; };
@@ -3715,12 +3721,6 @@
 		A98708B628D3455300F27348 /* RankingsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98708B128D3455300F27348 /* RankingsListViewModel.swift */; };
 		A98708B728D3455300F27348 /* RankingsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98708B128D3455300F27348 /* RankingsListViewModel.swift */; };
 		A98708B828D3455300F27348 /* RankingsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98708B128D3455300F27348 /* RankingsListViewModel.swift */; };
-		A986D35D28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */; };
-		A986D35E28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */; };
-		A986D35F28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */; };
-		A986D36028CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */; };
-		A986D36128CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */; };
-		A986D36228CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */; };
 		A9875795276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
 		A9875796276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
 		A9875797276CA50F0099990D /* DepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9875794276CA50F0099990D /* DepositViewController.xib */; };
@@ -4857,10 +4857,10 @@
 		A986D34228CB473700AF95D7 /* TipsCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsCellViewModel.swift; sourceTree = "<group>"; };
 		A986D34B28CB47A900AF95D7 /* TipsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsViewModel.swift; sourceTree = "<group>"; };
 		A986D35428CB48F100AF95D7 /* TipsListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsListViewModel.swift; sourceTree = "<group>"; };
+		A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteContactTableViewCell.swift; sourceTree = "<group>"; };
 		A98708A128D3441800F27348 /* RankingCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingCellViewModel.swift; sourceTree = "<group>"; };
 		A98708A928D3451C00F27348 /* RankingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsViewModel.swift; sourceTree = "<group>"; };
 		A98708B128D3455300F27348 /* RankingsListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsListViewModel.swift; sourceTree = "<group>"; };
-		A986D35C28CF4C5C00AF95D7 /* InviteContactTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteContactTableViewCell.swift; sourceTree = "<group>"; };
 		A9875793276CA50F0099990D /* DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewController.swift; sourceTree = "<group>"; };
 		A9875794276CA50F0099990D /* DepositViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositViewController.xib; sourceTree = "<group>"; };
 		A9875799276CD3660099990D /* DepositWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositWebViewController.swift; sourceTree = "<group>"; };
@@ -13240,7 +13240,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00600;
+				CURRENT_PROJECT_VERSION = 00605;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -13266,7 +13266,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00600;
+				CURRENT_PROJECT_VERSION = 00605;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

@@ -117,8 +117,8 @@ class OutcomeSelectionButtonView: NibView {
         self.marketTypeLabel.text = outcome.translatedName
 
         self.updateBettingOffer(value: outcome.bettingOffer.value,
-                                statusId: outcome.bettingOffer.statusId ?? "1",
-                                isAvailableForBetting: outcome.bettingOffer.isAvailable ?? true)
+                                statusId: outcome.bettingOffer.statusId,
+                                isAvailableForBetting: outcome.bettingOffer.isAvailable)
 
         self.isOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
@@ -196,13 +196,13 @@ class OutcomeSelectionButtonView: NibView {
         self.isAvailableForBet = isAvailable
 
         if isAvailable && OddFormatter.isValidOdd(withValue: oddValue) {
-            self.isUserInteractionEnabled = true
+            self.containerView.isUserInteractionEnabled = true
             self.containerView.alpha = 1.0
-            //self.marketOddLabel.text = OddFormatter.formatOdd(withValue: oddValue)
+            // self.marketOddLabel.text = OddFormatter.formatOdd(withValue: oddValue)
             self.marketOddLabel.text = OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
         }
         else {
-            self.isUserInteractionEnabled = false
+            self.containerView.isUserInteractionEnabled = false
             self.containerView.alpha = 0.4
             self.marketOddLabel.text = "-"
         }
@@ -214,11 +214,13 @@ class OutcomeSelectionButtonView: NibView {
         self.marketOddLabel.textColor = UIColor.App.buttonTextPrimary
         self.marketTypeLabel.textColor = UIColor.App.buttonTextPrimary
     }
+    
     func deselectButton() {
         self.containerView.backgroundColor = UIColor.App.backgroundOdds
         self.marketOddLabel.textColor = UIColor.App.textPrimary
         self.marketTypeLabel.textColor = UIColor.App.textPrimary
     }
+    
     @objc func didTapOddButton() {
 
         guard
@@ -280,6 +282,17 @@ class OutcomeSelectionButtonView: NibView {
         }
     }
 
+    func blockOutcomeInteraction() {
+        if self.isOutcomeButtonSelected {
+            self.alpha = 1.0
+            self.isUserInteractionEnabled = true
+        }
+        else {
+            self.alpha = 0.25
+            self.isUserInteractionEnabled = false
+        }
+    }
+    
     @objc func didLongPressOddButton(_ sender: UILongPressGestureRecognizer) {
 
         // Triggers function only once instead of rapid fire event

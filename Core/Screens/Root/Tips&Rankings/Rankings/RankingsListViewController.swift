@@ -264,7 +264,7 @@ extension RankingsListViewController: UIPickerViewDelegate, UIPickerViewDataSour
         
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.hideFilterOptions))
-        doneButton.tintColor = UIColor.white
+        doneButton.tintColor = UIColor.App.textPrimary
 
         pickerAccessory.items = [flexSpace, doneButton]
                                          
