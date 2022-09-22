@@ -1337,7 +1337,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                     .sink { [weak self] _ in
                         self?.isLoading = false
                     } receiveValue: { [weak self] betPlacedDetails in
-                        self?.isLoading = false
                         self?.betPlacedAction?([betPlacedDetails])
                     }
                     .store(in: &cancellables)
@@ -1349,7 +1348,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                     .sink { [weak self] _ in
                         self?.isLoading = false
                     } receiveValue: { [weak self] betPlacedDetails in
-                        self?.isLoading = false
                         self?.betPlacedAction?([betPlacedDetails])
                     }
                     .store(in: &cancellables)

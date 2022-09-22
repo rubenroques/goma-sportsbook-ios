@@ -795,6 +795,13 @@ extension RootViewController {
         if case .tips = tab, !tipsRootViewControllerLoaded {
             self.addChildViewController(self.tipsRootViewController, toView: self.tipsBaseView)
 
+            self.tipsRootViewController.didTapBetslipButtonAction = { [weak self] in
+                self?.openBetslipModal()
+            }
+            self.tipsRootViewController.didTapChatButtonAction = { [weak self] in
+                self?.openChatModal()
+            }
+
             tipsRootViewControllerLoaded = true
         }
         

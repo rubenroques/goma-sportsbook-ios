@@ -250,6 +250,7 @@ struct UserContact {
     var id: String
     var username: String
     var phones: [String]
+    var emails: [String]?
 }
 
 enum ContactSectionType {

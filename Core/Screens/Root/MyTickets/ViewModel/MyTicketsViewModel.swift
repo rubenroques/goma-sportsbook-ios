@@ -47,29 +47,19 @@ class MyTicketsViewModel: NSObject {
     private var openedMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
     private var wonMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
 
-    private var isLoadingResolved: CurrentValueSubject<Bool, Never> = .init(true)
-    private var isLoadingOpened: CurrentValueSubject<Bool, Never> = .init(true)
-    private var isLoadingWon: CurrentValueSubject<Bool, Never> = .init(true)
-
+    var isLoadingTickets: CurrentValueSubject<Bool, Never> = .init(true)
     private var locationsCodesDictionary: [String: String] = [:]
-
-    var isLoading: AnyPublisher<Bool, Never>
-
-    private let recordsPerPage = 5
-
+    
+    private let recordsPerPage = 30
+    
     private var resolvedPage = 0
     private var openedPage = 0
     private var wonPage = 0
     
-    private var resolvedTicketsHasNextPage = true
-    
-    private var openedTicketsHasNextPage = true
-    
-    private var wonTicketsHasNextPage = true
+    private var hasNextPage = true
 
     // Cached view models
     var cachedViewModels: [String: MyTicketCellViewModel] = [:]
-
     //
     private var cancellables = Set<AnyCancellable>()
 
@@ -80,27 +70,21 @@ class MyTicketsViewModel: NSObject {
         self.myTicketsTypePublisher.send(myTicketType)
         self.highlightTicket = highlightTicket
 
-        self.isLoading = Publishers.CombineLatest3(isLoadingResolved, isLoadingOpened, isLoadingWon)
-            .map({ isLoadingResolved, isLoadingOpened, isLoadingWon in
-                return isLoadingResolved || isLoadingOpened || isLoadingWon
-            })
-            .eraseToAnyPublisher()
-
         self.isTicketsEmptyPublisher = CurrentValueSubject<Bool, Never>.init(false).eraseToAnyPublisher()
 
         super.init()
 
-        self.isTicketsEmptyPublisher = Publishers.CombineLatest4(myTicketsTypePublisher, isLoadingResolved, isLoadingOpened, isLoadingWon)
-            .map { [weak self] myTicketsType, isLoadingResolved, isLoadingOpened, isLoadingWon in
+        self.isTicketsEmptyPublisher = Publishers.CombineLatest(myTicketsTypePublisher, isLoadingTickets)
+            .map { [weak self] myTicketsType, isLoadingTickets in
                 switch myTicketsType {
                 case .resolved:
-                    if isLoadingResolved { return false }
+                    if isLoadingTickets { return false }
                     return self?.resolvedMyTickets.value.isEmpty ?? false
                 case .opened:
-                    if isLoadingOpened { return false }
+                    if isLoadingTickets { return false }
                     return self?.openedMyTickets.value.isEmpty ?? false
                 case .won:
-                    if isLoadingWon { return false }
+                    if isLoadingTickets { return false }
                     return self?.wonMyTickets.value.isEmpty ?? false
                 }
             }
@@ -129,7 +113,6 @@ class MyTicketsViewModel: NSObject {
             .store(in: &cancellables)
 
         self.loadLocations()
-        self.initialLoadMyTickets()
 
     }
 
@@ -145,7 +128,6 @@ class MyTicketsViewModel: NSObject {
         return index == selectedMyTicketsTypeIndex
     }
 
-    //
     //
     func loadLocations() {
         let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
@@ -164,12 +146,6 @@ class MyTicketsViewModel: NSObject {
             .store(in: &cancellables)
     }
 
-    func initialLoadMyTickets() {
-        self.loadResolvedTickets(page: 0)
-        self.loadOpenedTickets(page: 0)
-        self.loadWonTickets(page: 0)
-    }
-
     func clearData() {
         self.resolvedMyTickets.value = []
         self.openedMyTickets.value = []
@@ -179,7 +155,7 @@ class MyTicketsViewModel: NSObject {
 
     func loadResolvedTickets(page: Int) {
 
-        self.isLoadingResolved.send(true)
+        self.isLoadingTickets.send(true)
 
         let resolvedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.resolved, records: recordsPerPage, page: page)
         Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: BetHistoryResponse.self)
@@ -198,7 +174,7 @@ class MyTicketsViewModel: NSObject {
                 case .finished:
                     ()
                 }
-                self?.isLoadingResolved.send(false)
+                self?.isLoadingTickets.send(false)
             },
             receiveValue: { [weak self] betHistoryResponse in
                 guard let self = self else {return}
@@ -215,7 +191,7 @@ class MyTicketsViewModel: NSObject {
                     
                     if let betHistory = betHistoryResponse.betList {
                         if betHistory.count < self.recordsPerPage {
-                            self.resolvedTicketsHasNextPage = false
+                            self.hasNextPage = false
                         }
                     }
                 }
@@ -228,10 +204,10 @@ class MyTicketsViewModel: NSObject {
                     self.listStatePublisher.send(.loaded)
 
                     if self.resolvedMyTickets.value.count < self.recordsPerPage * (self.resolvedPage + 1) {
-                        self.resolvedTicketsHasNextPage = false
+                        self.hasNextPage = false
                     }
                     else {
-                        self.resolvedTicketsHasNextPage = true
+                        self.hasNextPage = true
                     }
                 }
             })
@@ -240,7 +216,7 @@ class MyTicketsViewModel: NSObject {
 
     func loadOpenedTickets(page: Int) {
 
-        self.isLoadingOpened.send(true)
+        self.isLoadingTickets.send(true)
 
         let openedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.opened, records: recordsPerPage, page: page)
         Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
@@ -259,7 +235,7 @@ class MyTicketsViewModel: NSObject {
                 case .finished:
                     ()
                 }
-                self?.isLoadingOpened.send(false)
+                self?.isLoadingTickets.send(false)
             },
             receiveValue: { [weak self] betHistoryResponse in
                 guard let self = self else {return}
@@ -276,7 +252,7 @@ class MyTicketsViewModel: NSObject {
                     
                     if let betHistory = betHistoryResponse.betList {
                         if betHistory.count < self.recordsPerPage {
-                            self.openedTicketsHasNextPage = false
+                            self.hasNextPage = false
                         }
                     }
                 }
@@ -289,10 +265,10 @@ class MyTicketsViewModel: NSObject {
                     self.listStatePublisher.send(.loaded)
 
                     if self.openedMyTickets.value.count < self.recordsPerPage * (self.openedPage + 1) {
-                        self.openedTicketsHasNextPage = false
+                        self.hasNextPage = false
                     }
                     else {
-                        self.openedTicketsHasNextPage = true
+                        self.hasNextPage = true
                     }
                 }
               
@@ -302,7 +278,7 @@ class MyTicketsViewModel: NSObject {
 
     func loadWonTickets(page: Int) {
 
-        self.isLoadingWon.send(true)
+        self.isLoadingTickets.send(true)
 
         let wonRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.won, records: recordsPerPage, page: page)
         Env.everyMatrixClient.manager.getModel(router: wonRoute, decodingType: BetHistoryResponse.self)
@@ -321,7 +297,7 @@ class MyTicketsViewModel: NSObject {
                 case .finished:
                     ()
                 }
-                self?.isLoadingWon.send(false)
+                self?.isLoadingTickets.send(false)
             },
             receiveValue: { [weak self] betHistoryResponse in
                 guard let self = self else {return}
@@ -338,7 +314,7 @@ class MyTicketsViewModel: NSObject {
                     
                     if let betHistory = betHistoryResponse.betList {
                         if betHistory.count < self.recordsPerPage {
-                            self.wonTicketsHasNextPage = false
+                            self.hasNextPage = false
                         }
                     }
                 }
@@ -351,10 +327,10 @@ class MyTicketsViewModel: NSObject {
                     self.listStatePublisher.send(.loaded)
 
                     if self.wonMyTickets.value.count < self.recordsPerPage * (self.wonPage + 1) {
-                        self.wonTicketsHasNextPage = false
+                        self.hasNextPage = false
                     }
                     else {
-                        self.wonTicketsHasNextPage = true
+                        self.hasNextPage = true
                     }
                 }
             })
@@ -366,10 +342,18 @@ class MyTicketsViewModel: NSObject {
         self.resolvedPage = 0
         self.openedPage = 0
         self.wonPage = 0
-
-        self.initialLoadMyTickets()
+        
+        switch self.myTicketsTypePublisher.value {
+        case .opened:
+                self.loadOpenedTickets(page: self.openedPage)
+        case .resolved:
+                self.loadResolvedTickets(page: self.resolvedPage)
+        case .won:
+                self.loadWonTickets(page: self.wonPage)
+           
+        }
     }
-
+        
     func reloadTableView() {
         self.reloadTableViewAction?()
     }
@@ -419,6 +403,7 @@ class MyTicketsViewModel: NSObject {
             let viewModel =  MyTicketCellViewModel(ticket: ticket)
             viewModel.requestDataRefreshAction = { [weak self] in
                 self?.refresh()
+                
             }
             cachedViewModels[ticket.betId] = viewModel
             return viewModel
@@ -459,11 +444,11 @@ class MyTicketsViewModel: NSObject {
     func shouldShowLoadingCell() -> Bool {
         switch self.myTicketsTypePublisher.value {
         case .opened:
-            return self.openedMyTickets.value.isNotEmpty && openedTicketsHasNextPage
+            return self.openedMyTickets.value.isNotEmpty && hasNextPage
         case .resolved:
-            return self.resolvedMyTickets.value.isNotEmpty && resolvedTicketsHasNextPage
+            return self.resolvedMyTickets.value.isNotEmpty && hasNextPage
         case .won:
-            return self.wonMyTickets.value.isNotEmpty && wonTicketsHasNextPage
+            return self.wonMyTickets.value.isNotEmpty && hasNextPage
          
        }
     }
@@ -473,7 +458,7 @@ class MyTicketsViewModel: NSObject {
         switch myTicketsTypePublisher.value {
         case .opened:
            if self.openedMyTickets.value.count < self.recordsPerPage * (self.openedPage + 1) {
-               self.openedTicketsHasNextPage = false
+               self.hasNextPage = false
                self.listStatePublisher.send(.loaded)
                return
             }
@@ -481,7 +466,7 @@ class MyTicketsViewModel: NSObject {
             self.loadOpenedTickets(page: openedPage)
         case .resolved :
             if self.resolvedMyTickets.value.count < self.recordsPerPage * (self.resolvedPage + 1) {
-                self.resolvedTicketsHasNextPage = false
+                self.hasNextPage = false
                 self.listStatePublisher.send(.loaded)
                 return
             }
@@ -489,7 +474,7 @@ class MyTicketsViewModel: NSObject {
             self.loadResolvedTickets(page: resolvedPage)
         case .won :
             if self.wonMyTickets.value.count < self.recordsPerPage * (self.wonPage + 1) {
-               self.wonTicketsHasNextPage = false
+               self.hasNextPage = false
                self.listStatePublisher.send(.loaded)
                return
             }
@@ -506,63 +491,78 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.numberOfRows()
+        switch section {
+        case 0:
+            return self.numberOfRows()
+        case 1:
+            return self.shouldShowLoadingCell() ? 1 : 0
+        default:
+            return 0
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let ticket: BetHistoryEntry?
+        switch indexPath.section {
+        case 0:
+            
+            let ticket: BetHistoryEntry?
 
-        switch myTicketsTypePublisher.value {
-        case .resolved:
-            ticket = resolvedMyTickets.value[safe: indexPath.row] ?? nil
-        case .opened:
-            ticket =  openedMyTickets.value[safe: indexPath.row] ?? nil
-        case .won:
-            ticket =  wonMyTickets.value[safe: indexPath.row] ?? nil
-        }
-
-        guard
-            let cell = tableView.dequeueCellType(MyTicketTableViewCell.self),
-            let viewModel = self.viewModel(forIndex: indexPath.row),
-            let ticketValue = ticket
-        else {
-            fatalError("tableView.dequeueCellType(MyTicketTableViewCell.self)")
-        }
-
-        let locationsCodes = (ticketValue.selections ?? [])
-            .map({ event -> String in
-                let id = event.venueId ?? ""
-                return self.locationsCodesDictionary[id] ?? ""
-            })
-
-        cell.needsHeightRedraw = { [weak self] in
-            self?.redrawTableViewAction?()
-        }
-        cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
-
-        cell.tappedShareAction = { [weak self] in
-            if let cellSnapshot = cell.snapshot,
-                let ticketStatus = ticketValue.status {
-                self?.requestShareActivityView?(cellSnapshot, ticketValue.betId, ticketStatus)
-                self?.clickedBetHistory = ticketValue
+            switch myTicketsTypePublisher.value {
+            case .resolved:
+                ticket = resolvedMyTickets.value[safe: indexPath.row] ?? nil
+            case .opened:
+                ticket =  openedMyTickets.value[safe: indexPath.row] ?? nil
+            case .won:
+                ticket =  wonMyTickets.value[safe: indexPath.row] ?? nil
             }
-        }
-    
-        cell.tappedMatchDetail = { [weak self] matchId in
-            self?.tappedMatchDetail?(matchId)
 
-        }
-        return cell
+            guard
+                let cell = tableView.dequeueCellType(MyTicketTableViewCell.self),
+                let viewModel = self.viewModel(forIndex: indexPath.row),
+                let ticketValue = ticket
+            else {
+                fatalError("tableView.dequeueCellType(MyTicketTableViewCell.self)")
+            }
+
+            let locationsCodes = (ticketValue.selections ?? [])
+                .map({ event -> String in
+                    let id = event.venueId ?? ""
+                    return self.locationsCodesDictionary[id] ?? ""
+                })
+
+            cell.needsHeightRedraw = { [weak self] in
+                self?.redrawTableViewAction?()
+            }
+            cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
+
+            cell.tappedShareAction = { [weak self] in
+                if let cellSnapshot = cell.snapshot,
+                    let ticketStatus = ticketValue.status {
+                    self?.requestShareActivityView?(cellSnapshot, ticketValue.betId, ticketStatus)
+                    self?.clickedBetHistory = ticketValue
+                }
+            }
         
-    }
+            cell.tappedMatchDetail = { [weak self] matchId in
+                self?.tappedMatchDetail?(matchId)
+
+            }
+            return cell
+            
+        case 1:
+           if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
+               return cell
+           }
+            
+        default:
+           fatalError()
+       }
+       return UITableViewCell()
+   }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
         if indexPath.section == 1, self.shouldShowLoadingCell() {
-            if let typedCell = cell as? LoadingMoreTableViewCell {
-                typedCell.startAnimating()
-            }
             self.requestNextPage()
         }
         

@@ -206,26 +206,20 @@ class HomeViewController: UIViewController {
     }
 
     private func openFeaturedTipSlider(featuredTips: [FeaturedTip], atIndex index: Int = 0) {
-
         let tipsSliderViewController = TipsSliderViewController(viewModel: TipsSliderViewModel(featuredTips: featuredTips, startIndex: index))
         tipsSliderViewController.modalPresentationStyle = .overCurrentContext
         self.present(tipsSliderViewController, animated: true)
-        
-        /*
-        let featuredTipDetailsViewModel = FeaturedTipDetailsViewModel(featuredTip: featuredTip)
-        let featuredTipDetailsViewController = FeaturedTipDetailsViewController(viewModel: featuredTipDetailsViewModel)
-
-        featuredTipDetailsViewController.modalPresentationStyle = .overCurrentContext
-        featuredTipDetailsViewController.modalTransitionStyle = .crossDissolve
-
-        self.present(featuredTipDetailsViewController, animated: true)
-        */
     }
 
     @objc private func didTapOpenFavorites() {
         self.openFavorites()
     }
 
+    @objc private func didTapOpenFeaturedTips() {
+        let tips = self.viewModel.featuredTipLineViewModel()?.featuredTips ?? []
+        self.openFeaturedTipSlider(featuredTips: tips)
+    }
+    
     private func openFavorites() {
         let myFavoritesViewController = MyFavoritesViewController()
         self.navigationController?.pushViewController(myFavoritesViewController, animated: true)
@@ -233,14 +227,20 @@ class HomeViewController: UIViewController {
 
     private func openQuickbet(_ bettingTicket: BettingTicket) {
 
-        let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
+        if let userSession = UserSessionStore.loggedUserSession() {
+            let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
 
-        let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)
+            let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)
 
-        quickbetViewController.modalPresentationStyle = .overCurrentContext
-        quickbetViewController.modalTransitionStyle = .crossDissolve
+            quickbetViewController.modalPresentationStyle = .overCurrentContext
+            quickbetViewController.modalTransitionStyle = .crossDissolve
 
-        self.present(quickbetViewController, animated: true)
+            self.present(quickbetViewController, animated: true)
+        }
+        else {
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.present(loginViewController, animated: true, completion: nil)
+        }
     }
 }
 
@@ -332,7 +332,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
             cell.openFeaturedTipDetailAction = { [weak self] featuredTip in
                 let firstIndex = featuredBetLineViewModel.featuredTips.firstIndex(where: { tipIterator in
-                    tipIterator.id == featuredTip.id
+                    tipIterator.betId == featuredTip.betId
                 })
                 let firstIndexValue: Int = Int(firstIndex ?? 0)
                 
@@ -626,6 +626,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
         if case .userFavorites = self.viewModel.contentType(forSection: section) {
             seeAllLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFavorites)))
+        }
+        else if case .featuredTips = self.viewModel.contentType(forSection: section) {
+            seeAllLabel.text = "Expand"
+            seeAllLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFeaturedTips)))
         }
         else {
             seeAllLabel.isHidden = true

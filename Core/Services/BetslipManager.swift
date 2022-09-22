@@ -466,9 +466,8 @@ extension BetslipManager {
             .map({ return BetPlacedDetails.init(response: $0, tickets: updatedTicketSelections) })
             .handleEvents(receiveOutput: { betslipPlaceBetResponse in
                 if betslipPlaceBetResponse.response.betSucceed ?? false {
-                    //self.clearAllBettingTickets()
+                    // self.clearAllBettingTickets()
                     self.newBetsPlacedPublisher.send()
-                    
                 }
             })
             .eraseToAnyPublisher()

@@ -48,6 +48,8 @@ class QuickBetViewController: UIViewController {
     private lazy var continueButton: UIButton = Self.createContinueButton()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
+    private lazy var suspendedOddBaseView: UIView = Self.createSuspendedOddBaseView()
+    private lazy var suspendedOddLabel: UILabel = Self.createSuspendedOddLabel()
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -82,6 +84,12 @@ class QuickBetViewController: UIViewController {
     var oddStatus: OddStatusType = .same {
         didSet {
             self.updateOddStatus(oddStatusType: oddStatus)
+        }
+    }
+
+    var isAvailableOdd: Bool = true {
+        didSet {
+            self.suspendedOddBaseView.isHidden = isAvailableOdd
         }
     }
 
@@ -175,7 +183,6 @@ class QuickBetViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        //self.view.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.8)
         self.view.backgroundColor = UIColor.App.backgroundPopup
 
         self.topSafeAreaView.backgroundColor = .clear
@@ -183,8 +190,6 @@ class QuickBetViewController: UIViewController {
         self.bottomSafeAreaView.backgroundColor = .clear
 
         self.containerView.backgroundColor = UIColor.App.backgroundSecondary
-//        self.containerStackView.layer.borderWidth = 1
-//        self.containerStackView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
 
         self.outcomeLabel.textColor = UIColor.App.textPrimary
 
@@ -242,6 +247,10 @@ class QuickBetViewController: UIViewController {
         StyleHelper.styleButton(button: self.continueButton)
 
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundSecondary.withAlphaComponent(0.8)
+
+        self.suspendedOddBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.9)
+
+        self.suspendedOddLabel.textColor = UIColor.App.textPrimary
     }
 
     // MARK: Binding
@@ -294,6 +303,13 @@ class QuickBetViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] oddStatus in
                 self?.oddStatus = oddStatus
+            })
+            .store(in: &cancellables)
+
+        viewModel.isAvailableOdd
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isAvailable in
+                self?.isAvailableOdd = isAvailable
             })
             .store(in: &cancellables)
 
@@ -751,6 +767,21 @@ extension QuickBetViewController {
         return activityIndicatorView
     }
 
+    private static func createSuspendedOddBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createSuspendedOddLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Suspended"
+        label.font = AppFont.with(type: .bold, size: 18)
+        label.textAlignment = .center
+        return label
+    }
+
     private func setupSubviews() {
         self.view.addSubview(self.topSafeAreaView)
 
@@ -794,6 +825,10 @@ extension QuickBetViewController {
 
         self.containerView.addSubview(self.lateralErrorView)
 
+        self.containerView.addSubview(self.suspendedOddBaseView)
+
+        self.suspendedOddBaseView.addSubview(self.suspendedOddLabel)
+
         self.containerStackView.addArrangedSubview(self.bottomErrorView)
 
         self.bottomErrorView.addSubview(self.iconErrorImageView)
@@ -809,10 +844,6 @@ extension QuickBetViewController {
         self.successContainerView.addSubview(self.possibleWinningsTitleLabel)
         self.successContainerView.addSubview(self.possibleWinningsValueLabel)
         self.successContainerView.addSubview(self.continueButton)
-
-        self.view.addSubview(self.loadingBaseView)
-
-        self.loadingBaseView.addSubview(self.activityIndicatorView)
 
         self.view.addSubview(self.loadingBaseView)
 
@@ -983,6 +1014,18 @@ extension QuickBetViewController {
             self.continueButton.topAnchor.constraint(equalTo: self.possibleWinningsValueLabel.bottomAnchor, constant: 20),
             self.continueButton.bottomAnchor.constraint(equalTo: self.successContainerView.bottomAnchor, constant: -22)
 
+        ])
+
+        // Suspended view
+        NSLayoutConstraint.activate([
+            self.suspendedOddBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.suspendedOddBaseView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.suspendedOddBaseView.topAnchor.constraint(equalTo: self.separatorView.bottomAnchor),
+            self.suspendedOddBaseView.bottomAnchor.constraint(equalTo: self.containerStackView.bottomAnchor),
+
+            self.suspendedOddLabel.leadingAnchor.constraint(equalTo: self.suspendedOddBaseView.leadingAnchor),
+            self.suspendedOddLabel.trailingAnchor.constraint(equalTo: self.suspendedOddBaseView.trailingAnchor),
+            self.suspendedOddLabel.centerYAnchor.constraint(equalTo: self.suspendedOddBaseView.centerYAnchor)
         ])
 
         // Loading Screen

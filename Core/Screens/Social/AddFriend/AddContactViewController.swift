@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import LinkPresentation
 
 class AddContactViewController: UIViewController {
     // MARK: Private Properties
@@ -68,8 +69,8 @@ class AddContactViewController: UIViewController {
         self.tableView.register(ResultsHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: ResultsHeaderFooterView.identifier)
         self.tableView.register(AddFriendTableViewCell.self,
                                 forCellReuseIdentifier: AddFriendTableViewCell.identifier)
-        self.tableView.register(AddUnregisteredFriendTableViewCell.self,
-                                forCellReuseIdentifier: AddUnregisteredFriendTableViewCell.identifier)
+        self.tableView.register(InviteContactTableViewCell.self,
+                                forCellReuseIdentifier: InviteContactTableViewCell.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
@@ -166,6 +167,15 @@ class AddContactViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+        // Close screen after chatroom list and last message are updated
+        Env.gomaSocialClient.allDataSubscribed
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+
+                self?.navigationController?.popToRootViewController(animated: true)
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Functions
@@ -195,10 +205,34 @@ class AddContactViewController: UIViewController {
         }
     }
 
-    private func sendUserInvite(phoneNumber: String) {
-        // Send invite here
-        print("Send invite to: \(phoneNumber)")
-        self.viewModel.inviteFriendRequest(phoneNumber: phoneNumber)
+    private func shareAppInvite() {
+
+        let metadata = LPLinkMetadata()
+        let urlMobile = Env.urlApp
+
+        metadata.url = URL(string: urlMobile)
+        metadata.originalURL = metadata.url
+        var text = ""
+        if let loggedUser = UserSessionStore.loggedUserSession(),
+           let userCode = Env.gomaNetworkClient.getCurrentToken()?.code {
+            metadata.title = "The user \(loggedUser.username) has invited you to Sportsbook!"
+            text = "The user \(loggedUser.username) has invited you to Sportsbook! Join him and add him as a friend by searching this code in the app: \(userCode)"
+        }
+
+        let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
+
+        let shareActivityViewController = UIActivityViewController(activityItems: [metadataItemSource, text], applicationActivities: nil)
+
+        shareActivityViewController.setValue("Sportsbook App Invite!", forKey: "subject")
+
+        if let popoverController = shareActivityViewController.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+
+        self.present(shareActivityViewController, animated: true, completion: nil)
+
     }
 
     private func showAddFriendAlert(friendAlertType: FriendAlertType) {
@@ -207,9 +241,9 @@ class AddContactViewController: UIViewController {
             
             Env.gomaSocialClient.forceRefresh()
 
-            self.chatListNeedsReload?()
-
-            self.navigationController?.popToRootViewController(animated: true)
+//            self.chatListNeedsReload?()
+//
+//            self.navigationController?.popToRootViewController(animated: true)
         case .error:
             let errorFriendAlert = UIAlertController(title: localized("friend_added_error"),
                                                        message: localized("friend_added_message_error"),
@@ -238,8 +272,6 @@ class AddContactViewController: UIViewController {
     }
 
     @objc func didTapAddFriendButton() {
-
-        print("FRIENDS SELECTED: \(self.viewModel.selectedUsers)")
 
         self.viewModel.sendFriendRequest()
     }
@@ -337,33 +369,14 @@ extension AddContactViewController: UITableViewDataSource, UITableViewDelegate {
             return cell
         }
         else {
-            guard let cell = tableView.dequeueCellType(AddUnregisteredFriendTableViewCell.self)
+            guard let cell = tableView.dequeueCellType(InviteContactTableViewCell.self)
             else {
                 fatalError()
             }
 
-            if let userContact = self.viewModel.sectionUsersArray[safe: indexPath.section]?.userContacts[safe: indexPath.row] {
-
-                if let cellViewModel = self.viewModel.cachedUnregisteredFriendCellViewModels[userContact.id] {
-                    cell.configure(viewModel: cellViewModel)
-
+            cell.didTapInviteAction = { [weak self] in
+                    self?.shareAppInvite()
                 }
-                else {
-                    let cellViewModel = AddUnregisteredFriendCellViewModel(userContact: userContact)
-                    self.viewModel.cachedUnregisteredFriendCellViewModels[userContact.id] = cellViewModel
-                    cell.configure(viewModel: cellViewModel)
-
-                }
-
-                cell.didTapInviteAction = { [weak self] phoneNumber in
-                    self?.sendUserInvite(phoneNumber: phoneNumber)
-                }
-            }
-
-            if let sectionUsersCount = self.viewModel.sectionUsersArray[safe: indexPath.section]?.userContacts.count, indexPath.row == sectionUsersCount - 1 {
-
-                cell.hasSeparatorLine = false
-            }
 
             return cell
         }
@@ -385,9 +398,22 @@ extension AddContactViewController: UITableViewDataSource, UITableViewDelegate {
                 headerView.configureHeader(title: resultsLabel)
             }
             else {
-                let resultsLabel = localized("unregistered_contacts_invite")
+                if self.viewModel.hasRegisteredFriends && self.viewModel.sectionUsers[UserContactType.registered.identifier] != nil {
+                    let resultsLabel = localized("invite_more_friends")
 
-                headerView.configureHeader(title: resultsLabel)
+                    headerView.configureHeader(title: resultsLabel)
+                }
+                else if self.viewModel.hasRegisteredFriends && self.viewModel.sectionUsers[UserContactType.registered.identifier] == nil {
+
+                    let resultsLabel = localized("no_other_users_registered")
+
+                    headerView.configureHeader(title: resultsLabel)                }
+                else {
+                    let resultsLabel = localized("no_user_contact_registered")
+
+                    headerView.configureHeader(title: resultsLabel)
+                }
+
             }
 
             return headerView
@@ -400,7 +426,7 @@ extension AddContactViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
         if !self.viewModel.isEmptySearchPublisher.value {
-            return 70
+            return UITableView.automaticDimension
         }
         else {
             return 0

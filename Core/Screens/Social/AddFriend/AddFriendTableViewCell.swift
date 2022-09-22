@@ -11,6 +11,7 @@ import Combine
 class AddFriendTableViewCell: UITableViewCell {
 
     // MARK: Private Properties
+    private lazy var containerView: UIView = Self.createContainerView()
     private lazy var iconBaseView: UIView = Self.createIconBaseView()
     private lazy var iconImageView: UIImageView = Self.createIconImageView()
     private lazy var userInfoStackView: UIStackView = Self.createUserInfoStackView()
@@ -94,6 +95,8 @@ class AddFriendTableViewCell: UITableViewCell {
 
         self.contentView.backgroundColor = UIColor.App.backgroundPrimary
 
+        self.containerView.backgroundColor = UIColor.App.backgroundPrimary
+
         self.iconBaseView.backgroundColor = UIColor.App.backgroundTertiary
 
         self.iconImageView.backgroundColor = UIColor.App.backgroundTertiary
@@ -143,6 +146,12 @@ class AddFriendTableViewCell: UITableViewCell {
 }
 
 extension AddFriendTableViewCell {
+
+    private static func createContainerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
 
     private static func createIconBaseView() -> UIView {
         let view = UIView()
@@ -212,11 +221,13 @@ extension AddFriendTableViewCell {
 
     private func setupSubviews() {
 
-        self.contentView.addSubview(self.iconBaseView)
+        self.contentView.addSubview(self.containerView)
+
+        self.containerView.addSubview(self.iconBaseView)
 
         self.iconBaseView.addSubview(self.iconImageView)
 
-        self.contentView.addSubview(self.userInfoStackView)
+        self.containerView.addSubview(self.userInfoStackView)
 
         self.userInfoStackView.addArrangedSubview(self.titleLabel)
         self.userInfoStackView.addArrangedSubview(self.userStateBaseView)
@@ -225,11 +236,11 @@ extension AddFriendTableViewCell {
 
         // self.contentView.addSubview(self.titleLabel)
 
-        self.contentView.addSubview(self.checkboxBaseView)
+        self.containerView.addSubview(self.checkboxBaseView)
 
         self.checkboxBaseView.addSubview(self.checkboxImageView)
 
-        self.contentView.addSubview(self.separatorLineView)
+        self.containerView.addSubview(self.separatorLineView)
 
         self.initConstraints()
 
@@ -241,10 +252,16 @@ extension AddFriendTableViewCell {
     private func initConstraints() {
 
         NSLayoutConstraint.activate([
-            self.iconBaseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 25),
+            self.containerView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
+            self.containerView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+            self.containerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+            self.containerView.heightAnchor.constraint(equalToConstant: 70),
+
+            self.iconBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 25),
             self.iconBaseView.widthAnchor.constraint(equalToConstant: 40),
             self.iconBaseView.heightAnchor.constraint(equalTo: self.iconBaseView.widthAnchor),
-            self.iconBaseView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
+            self.iconBaseView.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
 
             self.iconImageView.widthAnchor.constraint(equalToConstant: 30),
             self.iconImageView.heightAnchor.constraint(equalTo: self.iconImageView.widthAnchor),
@@ -255,8 +272,8 @@ extension AddFriendTableViewCell {
 //            self.titleLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 
             self.checkboxBaseView.leadingAnchor.constraint(equalTo: self.userInfoStackView.trailingAnchor, constant: 20),
-            self.checkboxBaseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -15),
-            self.checkboxBaseView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
+            self.checkboxBaseView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
+            self.checkboxBaseView.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
             self.checkboxBaseView.widthAnchor.constraint(equalToConstant: 40),
             self.checkboxBaseView.heightAnchor.constraint(equalTo: self.checkboxBaseView.widthAnchor),
 
@@ -267,7 +284,7 @@ extension AddFriendTableViewCell {
 
             self.separatorLineView.leadingAnchor.constraint(equalTo: self.iconBaseView.leadingAnchor),
             self.separatorLineView.trailingAnchor.constraint(equalTo: self.checkboxBaseView.trailingAnchor, constant: -10),
-            self.separatorLineView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+            self.separatorLineView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
             self.separatorLineView.heightAnchor.constraint(equalToConstant: 1)
 
         ])
@@ -275,7 +292,7 @@ extension AddFriendTableViewCell {
         // Stackview
         NSLayoutConstraint.activate([
             self.userInfoStackView.leadingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: 15),
-            self.userInfoStackView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
+            self.userInfoStackView.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
             self.userInfoStackView.heightAnchor.constraint(equalToConstant: 30),
 
             self.userStateBaseView.widthAnchor.constraint(greaterThanOrEqualToConstant: 10),

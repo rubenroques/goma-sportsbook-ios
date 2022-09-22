@@ -336,9 +336,6 @@ class StaticHomeViewTemplateDataSource {
 
     // Tips TEST
     func fetchTips() {
-//        let tips = ["Tip1", "Tip2"]
-//
-//        self.featuredTips = tips
 
         Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE")
             .receive(on: DispatchQueue.main)

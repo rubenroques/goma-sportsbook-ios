@@ -12,6 +12,7 @@ class AddUnregisteredFriendCellViewModel {
     var userContact: UserContact
     var username: String
     var phones: [String]
+    var emails: [String]?
 
     init(userContact: UserContact) {
         self.userContact = userContact
@@ -19,6 +20,8 @@ class AddUnregisteredFriendCellViewModel {
         self.username = userContact.username
 
         self.phones = userContact.phones
+
+        self.emails = userContact.emails
 
     }
 }

@@ -60,6 +60,9 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
         self.hasCounter = false
         self.showFullTipButton = false
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapCellContentView))
+        self.contentView.addGestureRecognizer(tapGestureRecognizer)
 
         self.followButton.addTarget(self, action: #selector(didTapFollowButton), for: .primaryActionTriggered)
         self.betButton.addTarget(self, action: #selector(didTapBetButton), for: .primaryActionTriggered)
@@ -158,7 +161,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
         self.hasCounter = hasCounter
 
-        let tipsArray = viewModel.featuredTip.betSelections ?? []
+        let tipsArray = viewModel.featuredTip.selections ?? []
         
         for (i, featuredTipSelection) in tipsArray.enumerated() {
             if i > 2 && (self.viewModel?.shouldCropList ?? true) {
@@ -193,13 +196,17 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
     // MARK: Actions
     @objc func didTapFollowButton() {
-        print("TAPPED FOLLOW: \(self.viewModel?.getUsername())")
+        
     }
 
     @objc func didTapBetButton() {
-        print("TAPPED BET: \(self.viewModel?.featuredTip)")
+        self.viewModel?.createBetslipTicket()
     }
 
+    @objc func didTapCellContentView() {
+        self.didTapShowFullTipButton()
+    }
+    
     @objc func didTapShowFullTipButton() {
         if let featuredTip = self.viewModel?.featuredTip {
             self.openFeaturedTipDetailAction?(featuredTip)
