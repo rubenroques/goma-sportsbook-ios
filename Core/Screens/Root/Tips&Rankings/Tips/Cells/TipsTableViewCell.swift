@@ -44,6 +44,7 @@ class TipsTableViewCell: UITableViewCell {
     var viewModel: TipsCellViewModel?
 
     var shouldShowBetslip: (() -> Void)?
+    var shouldShowUserProfile: ((UserBasicInfo) -> Void)?
 
     // MARK: - Lifetime and Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -60,6 +61,8 @@ class TipsTableViewCell: UITableViewCell {
 
         self.betButton.addTarget(self, action: #selector(didTapBetButton), for: .primaryActionTriggered)
 
+        let userTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapUser))
+        self.topInfoStackView.addGestureRecognizer(userTapGesture)
     }
 
     required init?(coder: NSCoder) {
@@ -213,6 +216,13 @@ class TipsTableViewCell: UITableViewCell {
 
             viewModel.createBetslipTicket()
         }
+    }
+
+    @objc func didTapUser() {
+        print("TAPPED USER TIP")
+        let userBasicInfo = UserBasicInfo(userId: self.viewModel?.getUserId() ?? "0", username: self.viewModel?.getUsername() ?? "")
+
+        self.shouldShowUserProfile?(userBasicInfo)
     }
 
 }

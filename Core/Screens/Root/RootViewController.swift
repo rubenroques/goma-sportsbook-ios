@@ -678,7 +678,6 @@ class RootViewController: UIViewController {
 
         let userProfileViewController = UserProfileViewController(viewModel: userProfileViewModel)
 
-        //self.present(userProfileViewController, animated: true, completion: nil)
         self.navigationController?.pushViewController(userProfileViewController, animated: true)
     }
 
@@ -812,6 +811,9 @@ extension RootViewController {
             }
             self.tipsRootViewController.didTapChatButtonAction = { [weak self] in
                 self?.openChatModal()
+            }
+            self.tipsRootViewController.shouldShowUserProfile = { [weak self] userBasicInfo in
+                self?.openUserProfile(userBasicInfo: userBasicInfo)
             }
 
             tipsRootViewControllerLoaded = true

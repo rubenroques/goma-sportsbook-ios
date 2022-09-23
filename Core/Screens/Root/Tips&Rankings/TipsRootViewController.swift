@@ -24,6 +24,7 @@ class TipsRootViewController: UIViewController {
     // MARK: Public Properties
     var didTapBetslipButtonAction: (() -> Void)?
     var didTapChatButtonAction: (() -> Void)?
+    var shouldShowUserProfile: ((UserBasicInfo) -> Void)?
 
     // MARK: - Lifetime and Cycle
     init() {
@@ -70,6 +71,10 @@ class TipsRootViewController: UIViewController {
         self.tipsViewController.shouldShowBetslip = { [weak self] in
             self?.didTapBetslipView()
         }
+
+        self.tipsViewController.shouldShowUserProfile = { [weak self] userBasicInfo in
+            self?.shouldShowUserProfile?(userBasicInfo)
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -114,6 +119,7 @@ class TipsRootViewController: UIViewController {
     @objc func didTapChatView() {
         self.didTapChatButtonAction?()
     }
+
 }
 
 extension TipsRootViewController: UIGestureRecognizerDelegate {

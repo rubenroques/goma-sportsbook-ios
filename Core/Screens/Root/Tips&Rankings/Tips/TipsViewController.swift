@@ -37,6 +37,7 @@ class TipsViewController: UIViewController {
     }
 
     var shouldShowBetslip: (() -> Void)?
+    var shouldShowUserProfile: ((UserBasicInfo) -> Void)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: TipsViewModel = TipsViewModel()) {
@@ -177,6 +178,10 @@ class TipsViewController: UIViewController {
 
                 tipsViewCoontroller.shouldShowBetslip = { [weak self] in
                     self?.shouldShowBetslip?()
+                }
+
+                tipsViewCoontroller.shouldShowUserProfile = { [weak self] userBasicInfo in
+                    self?.shouldShowUserProfile?(userBasicInfo)
                 }
             }
         }

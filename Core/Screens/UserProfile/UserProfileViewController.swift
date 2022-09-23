@@ -15,6 +15,8 @@ class UserProfileViewModel {
     var isFriendUser: CurrentValueSubject<Bool, Never> = .init(false)
     var followersCountPublisher: CurrentValueSubject<String, Never> = .init("0")
     var followingCountPublisher: CurrentValueSubject<String, Never> = .init("0")
+    var userProfileInfo: UserProfileInfo?
+    var userProfileInfoStatePublisher: CurrentValueSubject<UserProfileState, Never> = .init(.loading)
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -25,7 +27,7 @@ class UserProfileViewModel {
 
         self.checkFriendUser()
 
-        // self.getFollowingTotalUsers()
+        self.getUserProfileInfo()
     }
 
     private func checkFollowingUser() {
@@ -81,26 +83,45 @@ class UserProfileViewModel {
 
     }
 
-    private func getFollowingTotalUsers() {
+    private func getUserProfileInfo() {
+        let userId = self.userBasicInfo.userId
 
-        Env.gomaNetworkClient.getFollowingTotalUsers(deviceId: Env.deviceId)
+        Env.gomaNetworkClient.getUserProfileInfo(deviceId: Env.deviceId, userId: userId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
-                    print("FOLLOWING TOTAL ERROR: \(error)")
+                    print("USER PROFILE ERROR: \(error)")
+                    self?.userProfileInfoStatePublisher.send(.failed)
                 case .finished:
-                    print("FOLLOWING TOTAL FINISHED")
+                    print("USER PROFILE FINISHED")
                 }
 
-            }, receiveValue: { [weak self] response in
+            }, receiveValue: { [weak self] userProfileInfo in
 
-                print("FOLLOWING TOTAL RESPONSE: \(response)")
-                if let followingTotalUsers = response.data {
-                    self?.followingCountPublisher.send(followingTotalUsers)
-                }
+                print("USER PROFILE RESPONSE: \(userProfileInfo)")
+                self?.userProfileInfo = userProfileInfo
+                
+                self?.configureUserProfileInfo(userProfileInfo: userProfileInfo)
+
+                self?.userProfileInfoStatePublisher.send(.loaded)
+
             })
             .store(in: &cancellables)
+    }
+
+    private func configureUserProfileInfo(userProfileInfo: UserProfileInfo) {
+        let followers = "\(userProfileInfo.followers)"
+        let following = "\(userProfileInfo.following)"
+
+        self.followersCountPublisher.send(followers)
+
+        self.followingCountPublisher.send(following)
+
+    }
+
+    func getUserId() -> String {
+        return self.userBasicInfo.userId
     }
 }
 
@@ -158,8 +179,8 @@ class UserProfileViewController: UIViewController {
 
         self.viewModel = viewModel
 
-        self.userInfoViewController = UserProfileInfoViewController()
-        self.userTipsViewController = UserProfileTipsViewController()
+        self.userInfoViewController = UserProfileInfoViewController(viewModel: UserProfileInfoViewModel(userId: self.viewModel.getUserId()))
+        self.userTipsViewController = UserProfileTipsViewController(viewModel: UserProfileTipsViewModel(userId: self.viewModel.getUserId()))
 
         self.viewControllers = [self.userInfoViewController, self.userTipsViewController]
         self.viewControllerTabDataSource = TitleTabularDataSource(with: viewControllers)
@@ -322,6 +343,25 @@ class UserProfileViewController: UIViewController {
                 self?.followersValueLabel.text = followersCount
             })
             .store(in: &cancellables)
+
+        viewModel.userProfileInfoStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] userProfileInfoState in
+
+                switch userProfileInfoState {
+                case .loaded:
+                    if let userProfileInfo = viewModel.userProfileInfo {
+
+                        self?.userInfoViewController.getViewModel().setUserProfileInfoState(userProfileState: .loaded, userProfileInfo: userProfileInfo)
+                    }
+                case .failed:
+                    self?.userInfoViewController.getViewModel().setUserProfileInfoState(userProfileState: .failed)
+                case .loading:
+                    self?.userInfoViewController.getViewModel().setUserProfileInfoState(userProfileState: .loading)
+                }
+
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Actions
@@ -433,7 +473,7 @@ extension UserProfileViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("", for: .normal)
-        button.setImage(UIImage(named: "add_friend_icon"), for: .normal)
+        button.setImage(UIImage(named: "user_add_friend_icon"), for: .normal)
         button.contentMode = .scaleAspectFill
         return button
     }
@@ -442,7 +482,7 @@ extension UserProfileViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("", for: .normal)
-        button.setImage(UIImage(named: "chat_settings_icon"), for: .normal)
+        button.setImage(UIImage(named: "user_chat_icon"), for: .normal)
         button.contentMode = .scaleAspectFill
         return button
     }
@@ -638,4 +678,10 @@ extension UserProfileViewController {
             self.userInfoTabsContainerView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor)
         ])
     }
+}
+
+enum UserProfileState {
+    case loading
+    case loaded
+    case failed
 }

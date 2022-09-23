@@ -47,12 +47,14 @@ enum GomaGamingService {
     case featuredTips(betType: String? = nil,
                       totalOddsMin: String? = nil, totalOddsMax: String? = nil,
                       friends: Bool? = nil, followers: Bool? = nil,
-                      topTips: Bool? = nil)
+                      topTips: Bool? = nil,
+                      userIds: [String]? = nil)
     case rankingsTips(type: String? = nil, friends: Bool? = nil, followers: Bool? = nil)
     case getFollowers
     case getFollowingUsers
     case followUser(userId: String)
     case getFollowingTotalUsers
+    case getUserProfileInfo(userId: String)
 
 }
 
@@ -146,6 +148,8 @@ extension GomaGamingService: Endpoint {
             return "/api/social/\(apiVersion)/followers"
         case .getFollowingTotalUsers:
             return "/api/social/\(apiVersion)/following/total"
+        case .getUserProfileInfo(let userId):
+            return "/api/betting/\(apiVersion)/user/profile/\(userId)"
         }
     }
 
@@ -169,7 +173,8 @@ extension GomaGamingService: Endpoint {
                 .addGroup, .deleteGroup, .leaveGroup,
                 .searchUserCode, .lookupPhone,
                 .setNotificationRead, .setAllNotificationRead,
-                .getFollowers, .getFollowingUsers, .getFollowingTotalUsers:
+                .getFollowers, .getFollowingUsers, .getFollowingTotalUsers,
+                .getUserProfileInfo:
             return nil
         case .chatrooms(let page):
             return [URLQueryItem(name: "page", value: page)]
@@ -196,7 +201,10 @@ extension GomaGamingService: Endpoint {
             URLQueryItem(name: "page", value: "\(page)")]
         case .notificationsCounter(let type):
             return[URLQueryItem(name: "type", value: type)]
-        case .featuredTips(let betType, let totalOddsMin, let totalOddsMax, let friends, let followers, let topTips):
+        case .featuredTips(let betType,
+                           let totalOddsMin, let totalOddsMax,
+                           let friends, let followers, let topTips,
+                           let userIds):
             var queryItemsURL: [URLQueryItem] = []
 
             if betType != nil {
@@ -232,6 +240,15 @@ extension GomaGamingService: Endpoint {
                 if let topTipsValue = topTips {
                     let queryItem = URLQueryItem(name: "top", value: "\(topTipsValue == true ? 1 : 0)")
                     queryItemsURL.append(queryItem)
+                }
+            }
+
+            if userIds != nil {
+                if let userIdsValue = userIds {
+                    for user in userIdsValue {
+                        let queryItem = URLQueryItem(name: "users_ids[]", value: "\(user)")
+                        queryItemsURL.append(queryItem)
+                    }
                 }
             }
 
@@ -307,7 +324,8 @@ extension GomaGamingService: Endpoint {
                 .searchUserCode,
                 .getNotification, .notificationsCounter,
                 .featuredTips, .rankingsTips,
-                .getFollowers, .getFollowingUsers, .getFollowingTotalUsers:
+                .getFollowers, .getFollowingUsers, .getFollowingTotalUsers,
+                .getUserProfileInfo:
             return .get
         case .deleteGroup, .leaveGroup, .deleteFriend, .removeUser:
             return .delete

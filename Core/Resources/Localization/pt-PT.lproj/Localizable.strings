@@ -579,3 +579,8 @@ Terms of use, Privacy Policy and EULA";
 "follow_user" = "Follow user";
 
 "unfollow" = "Unfollow";
+
+"accumulated_odds_winning" = "Accumulated odd of winning";
+"best_consecutive_wins" = "Best number of consecutive wins";
+"highest_odd" = "Highest odd";
+"percentage_sports" = "Percentage of bets per sport";

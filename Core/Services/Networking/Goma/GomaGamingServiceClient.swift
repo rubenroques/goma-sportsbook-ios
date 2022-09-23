@@ -279,8 +279,11 @@ class GomaGamingServiceClient {
                              totalOddsMax: String? = nil,
                              friends: Bool? = nil,
                              followers: Bool? = nil,
-                             topTips: Bool? = nil) -> AnyPublisher<NetworkResponse<[FeaturedTip]>, NetworkError> {
-        let endpoint = GomaGamingService.featuredTips(betType: betType, totalOddsMin: totalOddsMin, totalOddsMax: totalOddsMax, friends: friends, followers: followers, topTips: topTips)
+                             topTips: Bool? = nil,
+                             userIds: [String]? = nil) -> AnyPublisher<NetworkResponse<[FeaturedTip]>, NetworkError> {
+        let endpoint = GomaGamingService.featuredTips(betType: betType, totalOddsMin: totalOddsMin, totalOddsMax: totalOddsMax,
+                                                      friends: friends, followers: followers, topTips: topTips,
+                                                      userIds: userIds)
         let requestPublisher: AnyPublisher<NetworkResponse<[FeaturedTip]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
                 
         return requestPublisher
@@ -318,6 +321,12 @@ class GomaGamingServiceClient {
     func getFollowingTotalUsers(deviceId: String) -> AnyPublisher<NetworkResponse<String>, NetworkError> {
         let endpoint = GomaGamingService.getFollowingTotalUsers
         let requestPublisher: AnyPublisher<NetworkResponse<String>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
+    func getUserProfileInfo(deviceId: String, userId: String) -> AnyPublisher<UserProfileInfo, NetworkError> {
+        let endpoint = GomaGamingService.getUserProfileInfo(userId: userId)
+        let requestPublisher: AnyPublisher<UserProfileInfo, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
 }
