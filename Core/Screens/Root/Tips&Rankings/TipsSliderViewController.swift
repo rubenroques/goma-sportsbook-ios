@@ -103,6 +103,9 @@ class TipsSliderViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
+        self.arrowRightImageView.alpha = 0.0
+        self.arrowLeftImageView.alpha = 0.0
+        
         self.setupPublishers()
     }
 
@@ -123,10 +126,15 @@ class TipsSliderViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        UIView.animate(withDuration: 0.2, delay: 0.6, options: .curveEaseOut, animations: {
-            self.arrowRightImageView.alpha = 0.0
-            self.arrowLeftImageView.alpha = 0.0
-        }, completion: nil )
+        UIView.animate(withDuration: 0.19, delay: 0.0, options: .curveEaseIn, animations: {
+            self.arrowRightImageView.alpha = 1.0
+            self.arrowLeftImageView.alpha = 1.0
+        }, completion: { _ in
+            UIView.animate(withDuration: 0.19, delay: 0.42, options: .curveEaseOut, animations: {
+                self.arrowRightImageView.alpha = 0.0
+                self.arrowLeftImageView.alpha = 0.0
+            }, completion: nil)
+        })
     }
     
     // MARK: - Layout and Theme
