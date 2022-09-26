@@ -10,97 +10,137 @@ import Foundation
 enum UserDefaultsKey: String {
     case theme = "appThemeKey"
     case userSession = "userSession"
-    case userSkippedLoginFlow = "userSkippedLoginFlow"
-    case userBetslipSettings = "user_betslip_settings"
+    case userSkippedLoginFlow = "userSkippedLoginFlow"    
     case userOddsFormat = "userOddsFormat"
     case cardsStyle = "cardsStyleKey"
     case cachedBetslipTickets = "cachedBetslipTickets"
+    
+    case bettingUserSettings = "bettingUserSettings"
+    case notificationsUserSettings = "notificationsUserSettings"
+    
+    var key: String {
+        return self.rawValue
+    }
 }
 
 extension UserDefaults {
 
     var theme: Theme {
         get {
-            self.register(defaults: [UserDefaultsKey.theme.rawValue: Theme.device.rawValue])
-            return Theme(rawValue: self.integer(forKey: UserDefaultsKey.theme.rawValue)) ?? .device
+            self.register(defaults: [UserDefaultsKey.theme.key: Theme.device.rawValue])
+            return Theme(rawValue: self.integer(forKey: UserDefaultsKey.theme.key)) ?? .device
         }
         set {
-            self.set(newValue.rawValue, forKey: UserDefaultsKey.theme.rawValue)
+            self.set(newValue.rawValue, forKey: UserDefaultsKey.theme.key)
+            self.synchronize()
         }
     }
 
     var userSession: UserSession? {
         get {
-            return self.codable(forKey: UserDefaultsKey.userSession.rawValue)
+            return self.codable(forKey: UserDefaultsKey.userSession.key)
         }
         set {
-            self.set(codable: newValue, forKey: UserDefaultsKey.userSession.rawValue)
+            self.set(codable: newValue, forKey: UserDefaultsKey.userSession.key)
+            self.synchronize()
         }
     }
 
     var userSkippedLoginFlow: Bool {
         get {
-            if let skipped = self.value(forKey: UserDefaultsKey.userSkippedLoginFlow.rawValue) as? Bool {
+            if let skipped = self.value(forKey: UserDefaultsKey.userSkippedLoginFlow.key) as? Bool {
                 return skipped
             }
-            self.setValue(false, forKey: UserDefaultsKey.userSkippedLoginFlow.rawValue)
+            self.setValue(false, forKey: UserDefaultsKey.userSkippedLoginFlow.key)
+            self.synchronize()
             return false
         }
         set {
-            self.setValue(newValue, forKey: UserDefaultsKey.userSkippedLoginFlow.rawValue)
-        }
-    }
-
-    var userBetslipSettings: String {
-        get {
-            return self.string(forKey: "user_betslip_settings") ?? ""
-        }
-        set {
-            self.setValue(newValue, forKey: "user_betslip_settings")
+            self.setValue(newValue, forKey: UserDefaultsKey.userSkippedLoginFlow.key)
+            self.synchronize()
         }
     }
     
     var cachedBetslipTickets: [BettingTicket] {
-        
         get {
-            
-            let bettingTickets: [BettingTicket]? = self.codable(forKey: UserDefaultsKey.cachedBetslipTickets.rawValue)
-            
+            let bettingTickets: [BettingTicket]? = self.codable(forKey: UserDefaultsKey.cachedBetslipTickets.key)
             if let bettingTicketsValue = bettingTickets {
                 return bettingTicketsValue
             }
-            
-            self.set([], forKey: UserDefaultsKey.cachedBetslipTickets.rawValue)
+            self.set([], forKey: UserDefaultsKey.cachedBetslipTickets.key)
+            self.synchronize()
             return []
         }
         set {
-            self.set(codable: newValue, forKey: UserDefaultsKey.cachedBetslipTickets.rawValue)
+            self.set(codable: newValue, forKey: UserDefaultsKey.cachedBetslipTickets.key)
+            self.synchronize()
         }
         
     }
 
     var userOddsFormat: OddsFormat {
         get {
-            return OddsFormat(rawValue: integer(forKey: UserDefaultsKey.userOddsFormat.rawValue)) ?? .europe
+            return OddsFormat(rawValue: integer(forKey: UserDefaultsKey.userOddsFormat.key)) ?? .europe
         }
         set {
-            self.set(newValue.rawValue, forKey: UserDefaultsKey.userOddsFormat.rawValue)
+            self.set(newValue.rawValue, forKey: UserDefaultsKey.userOddsFormat.key)
+            self.synchronize()
         }
     }
 
-    var cardsStyle: CardsStyle {
+    var bettingUserSettings: BettingUserSettings {
         get {
-            let defaultValue = TargetVariables.defaultCardStyle
-            if let skipped = self.value(forKey: UserDefaultsKey.cardsStyle.rawValue) as? Int {
-                return CardsStyle(rawValue: skipped) ?? defaultValue // Has a previous stored value, use it
+            let defaultValue = BettingUserSettings.defaultSettings
+            let bettingUserSettings: BettingUserSettings? = self.codable(forKey: UserDefaultsKey.bettingUserSettings.key)
+            
+            if let bettingUserSettingsValue = bettingUserSettings {
+                return bettingUserSettingsValue
             }
             else {
-                self.setValue(defaultValue.rawValue, forKey: UserDefaultsKey.cardsStyle.rawValue)
+                self.set(codable: defaultValue, forKey: UserDefaultsKey.bettingUserSettings.key)
+                self.synchronize()
                 return defaultValue
             }
         }
         set {
-            self.setValue(newValue.rawValue, forKey: UserDefaultsKey.cardsStyle.rawValue)
+            self.set(codable: newValue, forKey: UserDefaultsKey.bettingUserSettings.key)
+            self.synchronize()
+        }
+    }
+    
+    var notificationsUserSettings: NotificationsUserSettings {
+        get {
+            let defaultValue = NotificationsUserSettings.defaultSettings
+            let notificationsUserSettings: NotificationsUserSettings? = self.codable(forKey: UserDefaultsKey.notificationsUserSettings.key)
+            
+            if let notificationsUserSettingsValue = notificationsUserSettings {
+                return notificationsUserSettingsValue
+            }
+            else {
+                self.set(codable: defaultValue, forKey: UserDefaultsKey.notificationsUserSettings.key)
+                self.synchronize()
+                return defaultValue
+            }
+        }
+        set {
+            self.set(codable: newValue, forKey: UserDefaultsKey.notificationsUserSettings.key)
+            self.synchronize()
+        }
+    }
+    
+    var cardsStyle: CardsStyle {
+        get {
+            let defaultValue = TargetVariables.defaultCardStyle
+            if let skipped = self.value(forKey: UserDefaultsKey.cardsStyle.key) as? Int {
+                return CardsStyle(rawValue: skipped) ?? defaultValue // Has a previous stored value, use it
+            }
+            else {
+                self.setValue(defaultValue.rawValue, forKey: UserDefaultsKey.cardsStyle.key)
+                return defaultValue
+            }
+        }
+        set {
+            self.setValue(newValue.rawValue, forKey: UserDefaultsKey.cardsStyle.key)
             self.synchronize()
         }
     }
@@ -114,13 +154,20 @@ extension UserDefaults {
 
 extension UserDefaults {
     func set<Element: Codable>(codable value: Element, forKey key: String) {
-        let data = try? JSONEncoder().encode(value)
-        UserDefaults.standard.setValue(data, forKey: key)
+        let encodedData = try? JSONEncoder().encode(value)
+        UserDefaults.standard.setValue(encodedData, forKey: key)
+        UserDefaults.standard.synchronize()
     }
     func codable<Element: Codable>(forKey key: String) -> Element? {
-        guard let data = UserDefaults.standard.data(forKey: key) else { return nil }
-        let element = try? JSONDecoder().decode(Element.self, from: data)
-        return element
+        guard let decodedData = UserDefaults.standard.data(forKey: key) else { return nil }
+        do {
+            let decodedObject = try JSONDecoder().decode(Element.self, from: decodedData)
+            return decodedObject
+        }
+        catch {
+            return nil
+        }
+        
     }
 }
 
@@ -128,3 +175,13 @@ enum CardsStyle: Int {
     case small = 3
     case normal = 5
 }
+
+enum BetslipOddValidationType: String {
+    case acceptAny = "ACCEPT_ANY"
+    case acceptHigher = "ACCEPT_HIGHER"
+    
+    static var defaultValue: BetslipOddValidationType {
+        return .acceptAny
+    }
+}
+ 

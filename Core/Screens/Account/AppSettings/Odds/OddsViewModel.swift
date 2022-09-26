@@ -12,7 +12,7 @@ import Combine
 class OddsViewModel: NSObject {
 
     // MARK: Private Properties
-    private var userSettings: UserSettingsGoma?
+    private var bettingUserSettings: BettingUserSettings?
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
@@ -23,7 +23,7 @@ class OddsViewModel: NSObject {
     override init() {
         super.init()
 
-        self.getUserSettings()
+        self.getBettingUserSettings()
     }
 
     // MARK: Setup and functions
@@ -34,20 +34,18 @@ class OddsViewModel: NSObject {
         viewTapped.isChecked = true
 
         if viewTapped.viewId == 1 {
-            UserDefaults.standard.userBetslipSettings = "ACCEPT_HIGHER"
+            self.bettingUserSettings?.oddValidationType = BetslipOddValidationType.acceptHigher.rawValue
         }
         else if viewTapped.viewId == 2 {
-            UserDefaults.standard.userBetslipSettings = "ACCEPT_ANY"
+            self.bettingUserSettings?.oddValidationType = BetslipOddValidationType.acceptAny.rawValue
         }
 
-        self.userSettings?.oddValidationType = UserDefaults.standard.userBetslipSettings
-
-        self.postOddsSettingsToGoma()
+        self.storeBettingUserSettings()
     }
 
     func setOddsVariationSelectedValues() {
         // Set selected view
-        let oddsVariationTypeString = UserDefaults.standard.userBetslipSettings
+        let oddsVariationTypeString = UserDefaults.standard.bettingUserSettings.oddValidationType
         let oddVariationId = getOddsVariationType(userBetslipSetting: oddsVariationTypeString)
 
         for view in self.oddsVariationRadioButtonViews {
@@ -94,7 +92,6 @@ class OddsViewModel: NSObject {
         }
     }
 
-
     private func getOddsVariationType(userBetslipSetting: String) -> Int {
         if userBetslipSetting == "ACCEPT_HIGHER" {
             return 1
@@ -102,67 +99,24 @@ class OddsViewModel: NSObject {
         else if userBetslipSetting == "ACCEPT_ANY" {
             return 2
         }
-
         return 0
     }
 
-    private func getUserSettings() {
-        // Read/Get Data
-        if let data = UserDefaults.standard.data(forKey: "gomaUserSettings") {
-            do {
-                let decoder = JSONDecoder()
+    private func getBettingUserSettings() {
+        self.bettingUserSettings = UserDefaults.standard.bettingUserSettings
+    }
 
-                let userSettings = try decoder.decode(UserSettingsGoma.self, from: data)
-
-                self.userSettings = userSettings
-
-            }
-            catch {
-                print("Unable to Decode UserSettings Goma (\(error))")
-            }
+    func storeBettingUserSettings() {
+        if let bettingUserSettings = self.bettingUserSettings {
+            UserDefaults.standard.bettingUserSettings = bettingUserSettings
+            self.postBettingUserSettings()
         }
     }
 
-    private func setUserSettings(userSettings: UserSettingsGoma) {
-        do {
-            let encoder = JSONEncoder()
-
-            let data = try encoder.encode(userSettings)
-
-            UserDefaults.standard.set(data, forKey: "gomaUserSettings")
-
-        } catch {
-            print("Unable to Encode User Settings Goma (\(error))")
-        }
-
-        self.postOddsSettingsToGoma()
-    }
-
-    private func postOddsSettingsToGoma() {
-        if let data = UserDefaults.standard.data(forKey: "gomaUserSettings") {
-            do {
-                let decoder = JSONDecoder()
-
-                let userSettings = try decoder.decode(UserSettingsGoma.self, from: data)
-
-                Env.gomaNetworkClient.sendUserSettings(deviceId: Env.deviceId, userSettings: userSettings)
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { completion in
-                        switch completion {
-                        case .failure(let error):
-                            print("GOMA SETTINGS ERROR: \(error)")
-                        case .finished:
-                            print("Finished")
-                        }
-                    }, receiveValue: { value in
-                        print("GOMA SETTINGS: \(value)")
-                    })
-                    .store(in: &cancellables)
-
-            }
-            catch {
-                print("Unable to Decode UserSettings Goma (\(error))")
-            }
-        }
+    private func postBettingUserSettings() {let bettingUserSettings = UserDefaults.standard.bettingUserSettings
+        Env.gomaNetworkClient.postBettingUserSettings(deviceId: Env.deviceId, bettingUserSettings: bettingUserSettings)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in }, receiveValue: { _ in })
+            .store(in: &cancellables)
     }
 }

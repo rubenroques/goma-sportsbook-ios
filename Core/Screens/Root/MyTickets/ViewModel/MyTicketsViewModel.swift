@@ -551,6 +551,7 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
             
         case 1:
            if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
+               cell.startAnimating()
                return cell
            }
             

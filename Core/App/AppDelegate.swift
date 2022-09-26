@@ -42,7 +42,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         #endif
         
         
-
         Logger.log("App Started")
 
         // Store device id
