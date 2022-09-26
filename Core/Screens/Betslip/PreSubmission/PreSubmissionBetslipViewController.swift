@@ -864,7 +864,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     func getUserSettings() {
 
-        if let userSetting = UserDefaults.standard.string(forKey: "user_betslip_settings"),
+        if let userSetting = UserDefaults.standard.string(forKey: "betslipOddValidationType"),
            let userSettingIndex = Env.userBetslipSettingsSelectorList.firstIndex(where: { $0.key == userSetting }) {
 
             self.settingsPickerView.selectRow(userSettingIndex, inComponent: 0, animated: true)
@@ -874,7 +874,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
     
     func setUserSettings() {
-        UserDefaults.standard.set(self.selectedBetslipSetting, forKey: "user_betslip_settings")
+        UserDefaults.standard.set(self.selectedBetslipSetting, forKey: "betslipOddValidationType")
     }
 
     func checkForbiddenCombinationErrors(multipleBetslipState: BetslipSelectionState) {

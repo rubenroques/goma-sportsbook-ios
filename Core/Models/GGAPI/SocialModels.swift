@@ -393,3 +393,56 @@ struct RankingTip: Decodable {
         case result = "result"
     }
 }
+
+struct Follower: Decodable {
+    var id: Int
+    //var userId: Int
+    var name: String
+    //var userFollowerId: Int
+    //var nameFollower: String
+
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        //case userId = "user_id"
+        case name = "name"
+        //case userFollowerId = "user_follower_id"
+        //case nameFollower = "name_follower"
+    }
+
+}
+
+struct UsersFollowedResponse: Decodable {
+    var usersFollowedIds: [Int]
+
+    enum CodingKeys: String, CodingKey {
+        case usersFollowedIds = "users_followed_ids"
+    }
+}
+
+struct UserProfileInfo: Decodable {
+
+    var following: Int
+    var followers: Int
+    var rankings: UserProfileRanking
+    // var sportsPerc: String
+
+    enum CodingKeys: String, CodingKey {
+        case following = "following"
+        case followers = "followers"
+        case rankings = "rankings"
+        // case sportsPerc = "sports_perc"
+    }
+}
+
+struct UserProfileRanking: Decodable {
+
+    var consecutiveWins: Int
+    var accumulatedWins: Double
+    var highestOdd: Double
+
+    enum CodingKeys: String, CodingKey {
+        case consecutiveWins = "consecutive_wins"
+        case accumulatedWins = "accumulated_wins"
+        case highestOdd = "highest_odd"
+    }
+}

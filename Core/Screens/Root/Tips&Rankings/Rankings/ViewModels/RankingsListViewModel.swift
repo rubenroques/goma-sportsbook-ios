@@ -11,10 +11,10 @@ import Combine
 class RankingsListViewModel {
 
     enum RankingsType: Int {
-        case all = 0
-        case topTipsters = 1
-        case friends = 2
-        case followers = 3
+        // case all = 0
+        case topTipsters = 0
+        case friends = 1
+        case followers = 2
     }
 
     enum SortType: CaseIterable {
@@ -46,7 +46,7 @@ class RankingsListViewModel {
         case failed
     }
 
-    var rankingsType: RankingsType = .all
+    var rankingsType: RankingsType = .topTipsters
     var rankingsPublisher: CurrentValueSubject<[RankingTip], Never> = .init([])
     var rankingsCacheCellViewModel: [Int: RankingCellViewModel] = [:]
 
@@ -73,8 +73,8 @@ class RankingsListViewModel {
         self.rankingsCacheCellViewModel = [:]
 
         switch self.rankingsType {
-        case .all:
-            self.loadAllRankings()
+//        case .all:
+//            self.loadAllRankings()
         case .topTipsters:
             self.loadTopTipstersRankings()
         case .friends:
@@ -101,7 +101,6 @@ class RankingsListViewModel {
                 self?.isLoadingPublisher.send(false)
 
             }, receiveValue: { [weak self] response in
-                print("RANKINGS TIPS RESPONSE: \(response)")
 
                 if let rankingsTips = response.data {
                     self?.rankingsPublisher.value = rankingsTips
@@ -111,8 +110,28 @@ class RankingsListViewModel {
     }
 
     private func loadTopTipstersRankings() {
-        self.isLoadingPublisher.send(false)
 
+        let sortType = self.sortTypePublisher.value.urlType
+
+        Env.gomaNetworkClient.requestRankingsTips(deviceId: Env.deviceId, type: sortType)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("RANKINGS TIPS TOPTIPSTERS ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+
+                self?.isLoadingPublisher.send(false)
+
+            }, receiveValue: { [weak self] response in
+
+                if let rankingsTips = response.data {
+                    self?.rankingsPublisher.value = rankingsTips
+                }
+            })
+            .store(in: &cancellables)
     }
 
     private func loadFriendsRankings() {
@@ -132,7 +151,7 @@ class RankingsListViewModel {
                 self?.isLoadingPublisher.send(false)
 
             }, receiveValue: { [weak self] response in
-                print("RANKINGS TIPS RESPONSE: \(response)")
+                print("RANKINGS TIPS FRIENDS RESPONSE: \(response)")
 
                 if let rankingsTips = response.data {
                     self?.rankingsPublisher.value = rankingsTips
@@ -142,8 +161,28 @@ class RankingsListViewModel {
     }
 
     private func loadFollowersRankings() {
-        self.isLoadingPublisher.send(false)
 
+        let sortType = self.sortTypePublisher.value.urlType
+
+        Env.gomaNetworkClient.requestRankingsTips(deviceId: Env.deviceId, type: sortType, followers: true)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("RANKINGS TIPS FOLLOWERS ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+
+                self?.isLoadingPublisher.send(false)
+
+            }, receiveValue: { [weak self] response in
+
+                if let rankingsTips = response.data {
+                    self?.rankingsPublisher.value = rankingsTips
+                }
+            })
+            .store(in: &cancellables)
     }
 
     private func getFriends() {

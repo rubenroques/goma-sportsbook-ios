@@ -64,7 +64,7 @@ class FeaturedTipView: UIView {
     // MARK: Functions
     func configure(featuredTipSelection: FeaturedTipSelection) {
 
-        self.outcomeLabel.text = featuredTipSelection.betName
+        self.outcomeLabel.text = "\(featuredTipSelection.betName) (\(featuredTipSelection.bettingTypeName))"
 
         self.matchLabel.text = featuredTipSelection.eventName
 

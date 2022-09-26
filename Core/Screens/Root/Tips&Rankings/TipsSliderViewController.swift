@@ -7,16 +7,19 @@
 
 import Foundation
 import UIKit
+import Combine
 
 class TipsSliderViewModel {
     
     var featuredTips: [FeaturedTip]
     private var featuredTipCollectionCacheViewModel: [String: FeaturedTipCollectionViewModel] = [:]
     private var startIndex: Int
+    private var cancellables = Set<AnyCancellable>()
     
     init(featuredTips: [FeaturedTip], startIndex: Int) {
         self.featuredTips = featuredTips
         self.startIndex = startIndex
+
     }
 
     func initialIndex() -> Int {
@@ -54,14 +57,21 @@ class TipsSliderViewController: UIViewController {
     
     // MARK: Private properties
     private lazy var baseView: UIView = Self.createBaseView()
-    
-    private lazy var titleLabel: UIView = Self.createTitleLabel()
+    private lazy var blurEffectView: UIVisualEffectView = Self.createBlurEffectView()
+    private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var collectionView: UICollectionView = Self.createCollectionView()
     private lazy var closeButton: UIButton = Self.createCloseButton()
     
-    private static let scrollViewMargin: CGFloat = 24
+    private lazy var arrowRightImageView: UIImageView = Self.createArrowRightImageView()
+    private lazy var arrowLeftImageView: UIImageView = Self.createArrowLeftImageView()
+    
+    private static let scrollViewMargin: CGFloat = 28
     
     private var viewModel: TipsSliderViewModel
+
+    private var cancellables = Set<AnyCancellable>()
+
+    var shouldShowBetslip: (() -> Void)?
     
     // MARK: - Lifetime and Cycle
     init(viewModel: TipsSliderViewModel) {
@@ -92,16 +102,31 @@ class TipsSliderViewController: UIViewController {
         
         self.setupSubviews()
         self.setupWithTheme()
+
+        self.setupPublishers()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     
+//        UIView.animate(withDuration: 1) {
+//            self.blurEffectView.effect = UIBlurEffect(style: UIBlurEffect.Style.prominent)
+//        }
+        
         self.collectionView.reloadData()
         self.collectionView.layoutIfNeeded()
         self.collectionView.scrollToItem(at: IndexPath(row: self.viewModel.initialIndex(), section: 0),
                                          at: .centeredHorizontally,
                                          animated: false)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        UIView.animate(withDuration: 0.2, delay: 0.6, options: .curveEaseOut, animations: {
+            self.arrowRightImageView.alpha = 0.0
+            self.arrowLeftImageView.alpha = 0.0
+        }, completion: nil )
     }
     
     // MARK: - Layout and Theme
@@ -117,10 +142,29 @@ class TipsSliderViewController: UIViewController {
         self.collectionView.backgroundView?.backgroundColor = .clear
         self.collectionView.backgroundColor = .clear
         
-        self.closeButton.tintColor = .white
-        self.baseView.backgroundColor = .clear
+        self.closeButton.tintColor = UIColor.App.textPrimary
+        
+        self.titleLabel.textColor = UIColor.App.textPrimary
+        
+        self.arrowRightImageView.tintColor = UIColor.App.textPrimary
+        self.arrowLeftImageView.tintColor = UIColor.App.textPrimary
+        
+        self.baseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.96) // .clear
     }
-    
+
+    // MARK: Functions
+    private func setupPublishers() {
+
+        Env.gomaSocialClient.followingUsersPublisher
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.collectionView.reloadData()
+            })
+            .store(in: &cancellables)
+    }
+
+    // MARK: Actions
     @objc func didTapCloseButton() {
         self.dismiss(animated: true)
     }
@@ -139,11 +183,18 @@ extension TipsSliderViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
             let cell = collectionView.dequeueCellType(FeaturedTipCollectionViewCell.self, indexPath: indexPath),
-            let viewModel = self.viewModel.viewModel(forIndex: indexPath.row)
+            let cellViewModel = self.viewModel.viewModel(forIndex: indexPath.row)
         else {
             fatalError()
         }
-        cell.configure(viewModel: viewModel, hasCounter: false)
+        cell.configure(viewModel: cellViewModel, hasCounter: false, followingUsers: Env.gomaSocialClient.followingUsersPublisher.value)
+
+        cell.shouldShowBetslip = { [weak self] in
+            self?.shouldShowBetslip?()
+            self?.dismiss(animated: true)
+        }
+        cell.configureAnimationId("FeaturedTipCell\(indexPath.row)")
+
         return cell
     }
     
@@ -158,25 +209,18 @@ extension TipsSliderViewController {
     private static func createBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        
+        return view
+    }
+
+    private static func createBlurEffectView() -> UIVisualEffectView {
+
         let blurEffect = UIBlurEffect(style: .regular)
         
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.translatesAutoresizingMaskIntoConstraints = false
         
-        // If you have more UIViews, use an insertSubview API to place it where needed
-        view.insertSubview(blurEffectView, at: 0)
-
-        NSLayoutConstraint.activate([
-            blurEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            blurEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            blurEffectView.topAnchor.constraint(equalTo: view.topAnchor),
-            blurEffectView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
-        
-        return view
+        return blurEffectView
     }
-
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.font = AppFont.with(type: .bold, size: 20)
@@ -223,13 +267,41 @@ extension TipsSliderViewController {
         return button
     }
     
+    private static func createArrowRightImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium, scale: .default)
+        let image = UIImage(systemName: "chevron.right", withConfiguration: config)
+        
+        imageView.image = image
+        imageView.alpha = 0.8
+        return imageView
+    }
+
+    private static func createArrowLeftImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium, scale: .default)
+        let image = UIImage(systemName: "chevron.left", withConfiguration: config)
+        
+        imageView.image = image
+        imageView.alpha = 0.8
+        return imageView
+    }
+    
     private func setupSubviews() {
         
         self.view.addSubview(self.baseView)
         
+        self.baseView.addSubview(self.blurEffectView)
         self.baseView.addSubview(self.titleLabel)
         self.baseView.addSubview(self.collectionView)
         self.baseView.addSubview(self.closeButton)
+        
+        self.baseView.addSubview(self.arrowLeftImageView)
+        self.baseView.addSubview(self.arrowRightImageView)
         
         self.initConstraints()
     }
@@ -244,9 +316,21 @@ extension TipsSliderViewController {
         ])
         
         NSLayoutConstraint.activate([
+            self.blurEffectView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
+            self.blurEffectView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            self.blurEffectView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
+            self.blurEffectView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
             self.titleLabel.centerXAnchor.constraint(equalTo: self.baseView.centerXAnchor),
             self.titleLabel.topAnchor.constraint(equalTo: self.baseView.safeAreaLayoutGuide.topAnchor, constant: 16),
-            self.titleLabel.heightAnchor.constraint(equalToConstant: 40)
+            self.titleLabel.heightAnchor.constraint(equalToConstant: 40),
+            
+            self.arrowLeftImageView.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor),
+            self.arrowLeftImageView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 8),
+            self.arrowRightImageView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -8),
+            self.arrowRightImageView.centerYAnchor.constraint(equalTo: self.arrowLeftImageView.centerYAnchor),
         ])
         
         NSLayoutConstraint.activate([

@@ -46,10 +46,18 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    var hasFollow: Bool = true {
+        didSet {
+            self.followButton.isHidden = !hasFollow
+        }
+    }
+
     var viewModel: FeaturedTipCollectionViewModel?
 
     var openFeaturedTipDetailAction: ((FeaturedTip) -> Void)?
     var shouldReloadData: (() -> Void)?
+    var shouldShowBetslip: (() -> Void)?
+    var shouldShowUserProfile: ((UserBasicInfo) -> Void)?
 
     // MARK: - Lifetime and Cycle
     override init(frame: CGRect) {
@@ -67,6 +75,9 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         self.followButton.addTarget(self, action: #selector(didTapFollowButton), for: .primaryActionTriggered)
         self.betButton.addTarget(self, action: #selector(didTapBetButton), for: .primaryActionTriggered)
         self.fullTipButton.addTarget(self, action: #selector(didTapShowFullTipButton), for: .primaryActionTriggered)
+
+        let userTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapUser))
+        self.topInfoStackView.addGestureRecognizer(userTapGesture)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -155,11 +166,30 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
     // MARK: Function
 
-    func configure(viewModel: FeaturedTipCollectionViewModel, hasCounter: Bool) {
+    func configure(viewModel: FeaturedTipCollectionViewModel, hasCounter: Bool, followingUsers: [Follower]) {
 
         self.viewModel = viewModel
 
         self.hasCounter = hasCounter
+
+        let tipUserId = viewModel.getUserId()
+
+        let followUserId = followingUsers.filter({
+            "\($0.id)" == tipUserId
+        })
+
+        if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+
+            if followUserId.isNotEmpty || tipUserId == "\(loggedUserId)" {
+                self.hasFollow = false
+            }
+            else {
+                self.hasFollow = true
+            }
+        }
+        else {
+            self.hasFollow = false
+        }
 
         let tipsArray = viewModel.featuredTip.selections ?? []
         
@@ -189,6 +219,10 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
             self.topContainerForFixedConstraint?.isActive = false
             self.topContainerForCenteredConstraint?.isActive = true
         }
+
+        viewModel.shouldShowBetslip = { [weak self] in
+            self?.shouldShowBetslip?()
+        }
         
         self.setNeedsLayout()
         self.layoutIfNeeded()
@@ -196,7 +230,14 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
     // MARK: Actions
     @objc func didTapFollowButton() {
-        
+        if let viewModel = self.viewModel {
+            let userId = viewModel.getUserId()
+
+            print("TAPPED FOLLOW: \(viewModel.getUsername()) - \(viewModel.getUserId())")
+
+            viewModel.followUser(userId: userId)
+        }
+
     }
 
     @objc func didTapBetButton() {
@@ -212,6 +253,16 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
             self.openFeaturedTipDetailAction?(featuredTip)
         }
     }
+
+    @objc func didTapUser() {
+        let userBasicInfo = UserBasicInfo(userId: self.viewModel?.getUserId() ?? "0", username: self.viewModel?.getUsername() ?? "")        
+        self.shouldShowUserProfile?(userBasicInfo)
+    }
+    
+    func configureAnimationId(_ id: String) {
+        self.containerView.shift.id = id
+    }
+    
 }
 
 extension FeaturedTipCollectionViewCell {
@@ -507,4 +558,9 @@ extension FeaturedTipCollectionViewCell {
             self.betButton.heightAnchor.constraint(equalToConstant: 35)
         ])
     }
+}
+
+struct UserBasicInfo {
+    var userId: String
+    var username: String
 }

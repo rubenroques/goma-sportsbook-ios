@@ -54,6 +54,9 @@ class TipsListViewController: UIViewController {
         }
     }
 
+    var shouldShowBetslip: (() -> Void)?
+    var shouldShowUserProfile: ((UserBasicInfo) -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(viewModel: TipsListViewModel = TipsListViewModel(tipsType: .all)) {
         self.viewModel = viewModel
@@ -151,6 +154,20 @@ class TipsListViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+        Env.gomaSocialClient.followingUsersPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.tableView.reloadData()
+            })
+            .store(in: &cancellables)
+    }
+
+    // MARK: Function
+    private func reloadFollowingUsers() {
+        Env.gomaSocialClient.getFollowingUsers()
+
+        //Env.gomaSocialClient.refetchFollowingUsersPublisher.send()
     }
 
     // MARK: Actions
@@ -186,7 +203,15 @@ extension TipsListViewController: UITableViewDelegate, UITableViewDataSource {
             fatalError("TipsTableViewCell not found")
         }
 
-        cell.configure(viewModel: cellViewModel)
+        cell.configure(viewModel: cellViewModel, followingUsers: Env.gomaSocialClient.followingUsersPublisher.value)
+
+        cell.shouldShowBetslip = { [weak self] in
+            self?.shouldShowBetslip?()
+        }
+
+        cell.shouldShowUserProfile = { [weak self] userBasicInfo in
+            self?.shouldShowUserProfile?(userBasicInfo)
+        }
 
         return cell
     }
@@ -343,17 +368,14 @@ extension TipsListViewController {
             self.emptyStateBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
             self.emptyStateImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyFriendsBaseView.topAnchor, constant: 45),
+            self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyStateBaseView.topAnchor, constant: 45),
             self.emptyStateImageView.widthAnchor.constraint(equalToConstant: 120),
             self.emptyStateImageView.heightAnchor.constraint(equalToConstant: 120),
 
-            // self.emptyStateLabel.centerXAnchor.constraint(equalTo: self.emptyStateBaseView.centerXAnchor),
             self.emptyStateLabel.leadingAnchor.constraint(equalTo: self.emptyStateBaseView.leadingAnchor, constant: 35),
             self.emptyStateLabel.trailingAnchor.constraint(equalTo: self.emptyStateBaseView.trailingAnchor, constant: -35),
             self.emptyStateLabel.topAnchor.constraint(equalTo: self.emptyStateImageView.bottomAnchor, constant: 24),
 
-            // self.emptyStateSecondaryLabel.centerYAnchor.constraint(equalTo: self.emptyStateBaseView.centerYAnchor),
-            // self.emptyStateSecondaryLabel.centerXAnchor.constraint(equalTo: self.emptyStateBaseView.centerXAnchor),
             self.emptyStateSecondaryLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 35),
             self.emptyStateSecondaryLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -35),
             self.emptyStateSecondaryLabel.topAnchor.constraint(equalTo: self.emptyStateLabel.bottomAnchor, constant: 16)

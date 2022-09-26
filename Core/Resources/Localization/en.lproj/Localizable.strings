@@ -541,7 +541,7 @@ Terms of use, Privacy Policy and EULA";
 "send_friends_groups" = "Send to friends and groups";
 "send" = "Send";
 
-"check_this_bet_made" = "Check out this bet I just made!";
+"check_this_bet_made" = "Check out this bet I made!";
 "ticket_url_pasteboard" = "Ticket link was copied.";
 
 "send_to_chat" = "Send to chat";
@@ -583,24 +583,15 @@ Terms of use, Privacy Policy and EULA";
 "bet" = "Bet";
 
 "follow" = "Follow";
-"following" = "Following";
 "total_odds" = "Total Odds";
 "number_selections" = "Number of selections";
 "bet_same" = "Bet the same";
 "show_full_tip" = "Show full tip";
 "featured_tips" = "Featured Tips";
 "tips" = "Tips";
-"no_tips" = "There’s no tips here!";
-"no_tips_to_display" = "There are no tips currently to be displayed.";
-
-"rankings" = "Rankings";
-"top_tipsters" = "Top Tipsters";
-"top_tips" = "Top Tips";
 
 "no_login_tips" = "You need to be logged in to be able to see tips";
 "no_login_rankings" = "You need to be logged in to be able to see rankings";
-"no_rankings" = "There’s no rankings here!";
-"no_rankings_to_display" = "There are no rankings currently to be displayed.";
 
 "add_friends_tip" = "You need to add some friends to see what kind of tips they share.";
 "select" = "Select";

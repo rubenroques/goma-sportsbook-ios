@@ -45,6 +45,12 @@ class BettingNotificationsViewController: UIViewController {
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
     }
 
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        // self.viewModel.storeNotificationsUserSettings()
+    }
+    
     // MARK: Layout and Theme
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -91,6 +97,12 @@ class BettingNotificationsViewController: UIViewController {
         self.topStackView.addArrangedSubview(betsFinalView)
         self.topStackView.addArrangedSubview(betsOptionsView)
 
+        // Check options
+        if let notificationsUserSettings = self.viewModel.notificationsUserSettings {
+            betsFinalView.isSwitchOn = notificationsUserSettings.notificationsBets
+            betsOptionsView.isSwitchOn = notificationsUserSettings.notificationsBetSelections
+        }
+        
     }
 
 }
@@ -100,7 +112,6 @@ class BettingNotificationsViewController: UIViewController {
 //
 extension BettingNotificationsViewController {
     @objc private func didTapBackButton() {
-        self.viewModel.setUserSettings()
         self.navigationController?.popViewController(animated: true)
     }
 }

@@ -21,6 +21,7 @@ class GomaGamingSocialServiceClient {
     private var chatroomNewMessagePublisher: [Int: CurrentValueSubject<ChatMessage?, Never>] = [:]
     private var chatroomReadMessagesPublisher: CurrentValueSubject<[Int: ChatUsersResponse], Never> = .init([:])
     private var chatroomOnlineUsersPublisher: CurrentValueSubject<[Int: ChatOnlineUsersResponse], Never> = .init([:])
+    var individualChatroomsData: CurrentValueSubject<[ChatroomData], Never> = .init([])
 
     var inAppMessagesCounter: CurrentValueSubject<Int, Never> = .init(0)
 
@@ -52,6 +53,10 @@ class GomaGamingSocialServiceClient {
     var socialAppNamesSchemesSupported: [String] = ["fb://", "tg://", "twitter://", "whatsapp://", "discord://", "fb-messenger://"]
     var socialAppSharesAvailable: [String] = ["https://www.facebook.com/sharer.php?u=%url", "tg://msg_url?url=%url", "https://twitter.com/intent/tweet?url=%url", "whatsapp://send/?text=%url", "", ""]
     var socialAppsInfo: [SocialAppInfo] = []
+
+    // Followers
+    var followingUsersPublisher: CurrentValueSubject<[Follower], Never> = .init([])
+    var refetchFollowingUsersPublisher: PassthroughSubject<Void, Never> = .init()
     
     // MARK: Private Properties
     private var manager: SocketManager?
@@ -92,6 +97,29 @@ class GomaGamingSocialServiceClient {
         if self.chatroomLastMessagePublisher.count == self.chatroomIdsPublisher.value.count && self.chatroomLastMessagePublisher.isNotEmpty {
             self.allDataSubscribed.send()
         }
+    }
+
+    func getFollowingUsers() {
+
+        Env.gomaNetworkClient.getFollowingUsers(deviceId: Env.deviceId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("FOLLOWING USERS ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+
+            }, receiveValue: { [weak self] response in
+                print("FOLLOWING USERS RESPONSE: \(response)")
+
+                if let followers = response.data {
+                    self?.followingUsersPublisher.value = followers
+                }
+
+            })
+            .store(in: &cancellables)
     }
 
     func storeSocialAppsInfo() {
@@ -267,6 +295,8 @@ class GomaGamingSocialServiceClient {
         self.chatroomOnlineUsersPublisher.send([:])
 
         self.allChatroomIdsLastMessageSubscribed.send([])
+
+        self.individualChatroomsData.send([])
     }
     
     private func setupPostConnection() {
@@ -304,6 +334,12 @@ class GomaGamingSocialServiceClient {
     private func storeChatrooms(chatroomsData: [ChatroomData]) {
         let chatroomsIds = chatroomsData.map({ $0.chatroom.id })
         self.chatroomIdsPublisher.send(chatroomsIds)
+
+        let individualChatrooms = chatroomsData.filter({
+            $0.chatroom.type == "individual"
+        })
+
+        self.individualChatroomsData.send(individualChatrooms)
 
         // Store Social Apps Info
         self.socialAppsInfo = []

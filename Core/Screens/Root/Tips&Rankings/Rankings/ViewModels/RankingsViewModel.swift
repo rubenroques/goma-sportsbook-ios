@@ -28,18 +28,16 @@ class RankingsViewModel {
     }
 
     func numberOfShortcuts(forSection section: Int) -> Int {
-        return 4
+        return 3
     }
 
     func shortcutTitle(forIndex index: Int) -> String {
         switch index {
         case 0:
-            return localized("all")
-        case 1:
             return localized("top_tipsters")
-        case 2:
+        case 1:
             return localized("friends")
-        case 3:
+        case 2:
             return localized("following")
         default:
             return localized("empty_value")

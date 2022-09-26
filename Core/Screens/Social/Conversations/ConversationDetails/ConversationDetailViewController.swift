@@ -52,6 +52,7 @@ class ConversationDetailViewController: UIViewController {
     // MARK: Public Properties
     var shouldCloseChat: (() -> Void)?
     var shouldReloadData: (() -> Void)?
+    var cameFromProfile: Bool = false
 
     // MARK: - Lifetime and Cycle
     init(viewModel: ConversationDetailViewModel) {
@@ -322,9 +323,15 @@ class ConversationDetailViewController: UIViewController {
     // MARK: Actions
     @objc func didTapBackButton() {
 
-        Env.gomaSocialClient.reloadChatroomsList.send()
+        if !self.cameFromProfile {
+            Env.gomaSocialClient.reloadChatroomsList.send()
 
-        self.navigationController?.popToRootViewController(animated: true)
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
+
     }
 
     @objc func didTapSendButton() {

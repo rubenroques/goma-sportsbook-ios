@@ -42,6 +42,12 @@ class NotificationsViewController: UIViewController {
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
     }
 
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        // self.viewModel.storeNotificationsUserSettings()
+    }
+    
     // MARK: Layout and Theme
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -61,8 +67,6 @@ class NotificationsViewController: UIViewController {
         self.topStackView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.bottomStackView.backgroundColor = UIColor.App.backgroundSecondary
-
-//        self.deviceSettingsView.backgroundColor = UIColor.App.backgroundSecondary
 
     }
 
@@ -104,7 +108,7 @@ class NotificationsViewController: UIViewController {
         smsView.hasSwitchButton = true
 
         smsView.didTappedSwitch = {
-            self.viewModel.updateSmsSetting(isSettingEnabled: smsView.isSwitchOn)
+            self.viewModel.updateSmsSetting(enabled: smsView.isSwitchOn)
         }
 
         let emailView = SettingsRowView()
@@ -112,19 +116,19 @@ class NotificationsViewController: UIViewController {
         emailView.hasSwitchButton = true
 
         emailView.didTappedSwitch = {
-            self.viewModel.updateEmailSetting(isSettingEnabled: emailView.isSwitchOn)
+            self.viewModel.updateEmailSetting(enabled: emailView.isSwitchOn)
         }
 
         // Check options
-        if let userSettings = self.viewModel.userSettings {
-            if userSettings.notificationSms == 1 {
+        if let notificationsUserSettings = self.viewModel.notificationsUserSettings {
+            if notificationsUserSettings.notificationsSms {
                 smsView.isSwitchOn = true
             }
             else {
                 smsView.isSwitchOn = false
             }
 
-            if userSettings.notificationEmail == 1 {
+            if notificationsUserSettings.notificationsEmail {
                 emailView.isSwitchOn = true
             }
             else {
@@ -135,7 +139,6 @@ class NotificationsViewController: UIViewController {
         self.bottomStackView.addArrangedSubview(allowSportsbookView)
         self.bottomStackView.addArrangedSubview(smsView)
         self.bottomStackView.addArrangedSubview(emailView)
-
     }
 
 }
