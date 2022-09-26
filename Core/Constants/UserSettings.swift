@@ -32,6 +32,7 @@ extension UserDefaults {
         }
         set {
             self.set(newValue.rawValue, forKey: UserDefaultsKey.theme.key)
+            self.synchronize()
         }
     }
 
@@ -41,6 +42,7 @@ extension UserDefaults {
         }
         set {
             self.set(codable: newValue, forKey: UserDefaultsKey.userSession.key)
+            self.synchronize()
         }
     }
 
@@ -50,10 +52,12 @@ extension UserDefaults {
                 return skipped
             }
             self.setValue(false, forKey: UserDefaultsKey.userSkippedLoginFlow.key)
+            self.synchronize()
             return false
         }
         set {
             self.setValue(newValue, forKey: UserDefaultsKey.userSkippedLoginFlow.key)
+            self.synchronize()
         }
     }
     
@@ -64,10 +68,12 @@ extension UserDefaults {
                 return bettingTicketsValue
             }
             self.set([], forKey: UserDefaultsKey.cachedBetslipTickets.key)
+            self.synchronize()
             return []
         }
         set {
             self.set(codable: newValue, forKey: UserDefaultsKey.cachedBetslipTickets.key)
+            self.synchronize()
         }
         
     }
@@ -78,38 +84,47 @@ extension UserDefaults {
         }
         set {
             self.set(newValue.rawValue, forKey: UserDefaultsKey.userOddsFormat.key)
+            self.synchronize()
         }
     }
 
     var bettingUserSettings: BettingUserSettings {
         get {
             let defaultValue = BettingUserSettings.defaultSettings
-            if let bettingUserSettings: BettingUserSettings = self.codable(forKey: UserDefaultsKey.bettingUserSettings.key) {
-                return bettingUserSettings
+            let bettingUserSettings: BettingUserSettings? = self.codable(forKey: UserDefaultsKey.bettingUserSettings.key)
+            
+            if let bettingUserSettingsValue = bettingUserSettings {
+                return bettingUserSettingsValue
             }
             else {
                 self.set(codable: defaultValue, forKey: UserDefaultsKey.bettingUserSettings.key)
+                self.synchronize()
                 return defaultValue
             }
         }
         set {
             self.set(codable: newValue, forKey: UserDefaultsKey.bettingUserSettings.key)
+            self.synchronize()
         }
     }
     
     var notificationsUserSettings: NotificationsUserSettings {
         get {
             let defaultValue = NotificationsUserSettings.defaultSettings
-            if let notificationsUserSettings: NotificationsUserSettings = self.codable(forKey: UserDefaultsKey.notificationsUserSettings.key) {
-                return notificationsUserSettings
+            let notificationsUserSettings: NotificationsUserSettings? = self.codable(forKey: UserDefaultsKey.notificationsUserSettings.key)
+            
+            if let notificationsUserSettingsValue = notificationsUserSettings {
+                return notificationsUserSettingsValue
             }
             else {
                 self.set(codable: defaultValue, forKey: UserDefaultsKey.notificationsUserSettings.key)
+                self.synchronize()
                 return defaultValue
             }
         }
         set {
             self.set(codable: newValue, forKey: UserDefaultsKey.notificationsUserSettings.key)
+            self.synchronize()
         }
     }
     
@@ -139,13 +154,20 @@ extension UserDefaults {
 
 extension UserDefaults {
     func set<Element: Codable>(codable value: Element, forKey key: String) {
-        let data = try? JSONEncoder().encode(value)
-        UserDefaults.standard.setValue(data, forKey: key)
+        let encodedData = try? JSONEncoder().encode(value)
+        UserDefaults.standard.setValue(encodedData, forKey: key)
+        UserDefaults.standard.synchronize()
     }
     func codable<Element: Codable>(forKey key: String) -> Element? {
-        guard let data = UserDefaults.standard.data(forKey: key) else { return nil }
-        let element = try? JSONDecoder().decode(Element.self, from: data)
-        return element
+        guard let decodedData = UserDefaults.standard.data(forKey: key) else { return nil }
+        do {
+            let decodedObject = try JSONDecoder().decode(Element.self, from: decodedData)
+            return decodedObject
+        }
+        catch {
+            return nil
+        }
+        
     }
 }
 

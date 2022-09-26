@@ -63,7 +63,6 @@ class BettingNotificationViewModel: NSObject {
                 else {
                     switchState = false
                 }
-
             }
         }
 
@@ -71,14 +70,12 @@ class BettingNotificationViewModel: NSObject {
     }
 
     func updateBetsSetting(isSettingEnabled: Bool, settingType: UserBettingOption) {
-        
         switch settingType {
         case .betFinal:
             self.notificationsUserSettings?.notificationsBets = isSettingEnabled
         case .betSelection:
             self.notificationsUserSettings?.notificationsBetSelections = isSettingEnabled
         }
-        
         self.storeNotificationsUserSettings()
     }
 }

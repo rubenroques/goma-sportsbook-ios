@@ -42,6 +42,12 @@ class NotificationsViewController: UIViewController {
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
     }
 
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        // self.viewModel.storeNotificationsUserSettings()
+    }
+    
     // MARK: Layout and Theme
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -61,8 +67,6 @@ class NotificationsViewController: UIViewController {
         self.topStackView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.bottomStackView.backgroundColor = UIColor.App.backgroundSecondary
-
-//        self.deviceSettingsView.backgroundColor = UIColor.App.backgroundSecondary
 
     }
 

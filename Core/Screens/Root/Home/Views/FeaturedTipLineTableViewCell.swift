@@ -49,7 +49,9 @@ class FeaturedTipLineTableViewCell: UITableViewCell {
     private var cancellables: Set<AnyCancellable> = []
 
     var openFeaturedTipDetailAction: ((FeaturedTip) -> Void)?
-
+    var currentIndex = -1
+    var currentIndexChangedAction: ((Int) -> Void) = { _ in }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
@@ -134,11 +136,10 @@ extension FeaturedTipLineTableViewCell: UICollectionViewDelegate, UICollectionVi
         }
 
         cell.configure(viewModel: viewModel, hasCounter: false)
-
         cell.openFeaturedTipDetailAction = { [weak self] featuredTip in
             self?.openFeaturedTipDetailAction?(featuredTip)
         }
-
+        cell.configureAnimationId("FeaturedTipCell\(indexPath.row)")
         return cell
     }
 
@@ -148,6 +149,26 @@ extension FeaturedTipLineTableViewCell: UICollectionViewDelegate, UICollectionVi
         return CGSize(width: Double(collectionView.frame.size.width)*0.85, height: 400)
     }
 
+}
+
+extension FeaturedTipLineTableViewCell: UIScrollViewDelegate {
+    
+    func calculteCenterCell() {
+        let centerPoint = CGPoint(x: self.collectionView.center.x + self.collectionView.contentOffset.x,
+                                  y: self.collectionView.center.y + self.collectionView.contentOffset.y)
+
+        let index = collectionView.indexPathForItem(at: centerPoint)?.row ?? 0
+        self.currentIndexChangedAction(index)
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        self.calculteCenterCell()
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        self.calculteCenterCell()
+    }
+    
 }
 
 extension FeaturedTipLineTableViewCell {

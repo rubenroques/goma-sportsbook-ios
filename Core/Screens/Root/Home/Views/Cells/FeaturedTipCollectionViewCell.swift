@@ -212,6 +212,11 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
             self.openFeaturedTipDetailAction?(featuredTip)
         }
     }
+    
+    func configureAnimationId(_ id: String) {
+        self.containerView.shift.id = id
+    }
+    
 }
 
 extension FeaturedTipCollectionViewCell {

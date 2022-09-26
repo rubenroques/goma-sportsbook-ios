@@ -28,30 +28,32 @@ class NotificationsViewModel: NSObject {
         self.notificationsUserSettings = UserDefaults.standard.notificationsUserSettings
     }
 
-    private func storeNotificationsUserSettings(notificationsUserSettings: NotificationsUserSettings) {
-        UserDefaults.standard.notificationsUserSettings = notificationsUserSettings
-        self.postOddsSettingsToGoma()
+    func storeNotificationsUserSettings() {
+        if let notificationsUserSettings = self.notificationsUserSettings {
+            UserDefaults.standard.notificationsUserSettings = notificationsUserSettings
+            self.postOddsSettingsToGoma()
+        }
     }
 
     func updateSmsSetting(enabled: Bool) {
         self.notificationsUserSettings?.notificationsSms = enabled
-        if let notificationsUserSettings = self.notificationsUserSettings {
-            self.storeNotificationsUserSettings(notificationsUserSettings: notificationsUserSettings)
-        }
+        self.storeNotificationsUserSettings()
     }
 
     func updateEmailSetting(enabled: Bool) {
         self.notificationsUserSettings?.notificationsEmail = enabled
-        if let notificationsUserSettings = self.notificationsUserSettings {
-            self.storeNotificationsUserSettings(notificationsUserSettings: notificationsUserSettings)
-        }
+        self.storeNotificationsUserSettings()
     }
 
     private func postOddsSettingsToGoma() {
         let notificationsUserSettings = UserDefaults.standard.notificationsUserSettings
         Env.gomaNetworkClient.postNotificationsUserSettings(deviceId: Env.deviceId, notificationsUserSettings: notificationsUserSettings)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in }, receiveValue: { _ in })
+            .sink(receiveCompletion: { completion in
+                print("PostSettings completion \(completion)")
+            }, receiveValue: { response in
+                print("PostSettings response \(response)")
+            })
             .store(in: &cancellables)
     }
 }

@@ -84,32 +84,26 @@ class GamesNotificationViewModel: NSObject {
         case .competitionWatchList:
             self.notificationsUserSettings?.notificationsCompetitionsWatchlist = isSettingEnabled
         }
-        
         self.storeNotificationsUserSettings()
     }
 
     func checkNotificationSwitches() {
         var disabledStackView = true
-
         for view in self.notificationsEnabledViews {
             if view.isSwitchOn {
                 disabledStackView = false
             }
         }
-
         self.isStackViewDisabledPublisher.send(disabledStackView)
     }
 
     func checkBottomStackViewDisableState() {
         var disabledStackView = true
-
         for view in self.notificationsEnabledViews {
             if view.isSwitchOn {
                 disabledStackView = false
             }
-
         }
-
         self.isStackViewDisabledPublisher.send(disabledStackView)
     }
 
@@ -123,7 +117,6 @@ class GamesNotificationViewModel: NSObject {
 }
 
 // MARK: Helpers
-
 enum UserSettingOption {
     case startGame
     case goals

@@ -138,6 +138,13 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
+    
+    func requestNotificationsUserSettingsJSON(deviceId: String) -> AnyPublisher<JSON, NetworkError> {
+        let endpoint = GomaGamingService.getNotificationsUserSettings
+        let requestPublisher: AnyPublisher<JSON, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+    
     func postNotificationsUserSettings(deviceId: String, notificationsUserSettings: NotificationsUserSettings) -> AnyPublisher<JSON, NetworkError> {
         let endpoint = GomaGamingService.postNotificationsUserSettings(notificationsUserSettings: notificationsUserSettings)
         let requestPublisher: AnyPublisher<JSON, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
@@ -150,9 +157,9 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
     
-    func postBettingUserSettings(deviceId: String, bettingUserSettings: BettingUserSettings) -> AnyPublisher<BettingUserSettings, NetworkError> {
+    func postBettingUserSettings(deviceId: String, bettingUserSettings: BettingUserSettings) -> AnyPublisher<JSON, NetworkError> {
         let endpoint = GomaGamingService.postBettingUserSettings(bettingUserSettings: bettingUserSettings)
-        let requestPublisher: AnyPublisher<BettingUserSettings, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        let requestPublisher: AnyPublisher<JSON, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
     

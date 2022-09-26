@@ -255,7 +255,7 @@ extension UserSessionStore {
                 switch completion {
                 case .failure(let error):
                     print("GOMA ERROR: \(error)")
-                    self?.storeBettingUserSettings(bettingUserSettings: BettingUserSettings.defaultSettings)
+                    self?.storeNotificationsUserSettings(notificationsUserSettings: NotificationsUserSettings.defaultSettings)
                 case .finished:
                     ()
                 }
@@ -267,14 +267,8 @@ extension UserSessionStore {
     }
 
     private func storeNotificationsUserSettings(notificationsUserSettings: NotificationsUserSettings) {
-        do {
-            UserDefaults.standard.notificationsUserSettings = notificationsUserSettings
-        }
-        catch {
-            print("Unable to Encode NotificationsUserSettings Settings Goma (\(error))")
-        }
+        UserDefaults.standard.notificationsUserSettings = notificationsUserSettings
     }
-    
     
     func requestBettingUserSettings() {
         Env.gomaNetworkClient.requestBettingUserSettings(deviceId: Env.deviceId)
@@ -293,12 +287,7 @@ extension UserSessionStore {
     }
     
     private func storeBettingUserSettings(bettingUserSettings: BettingUserSettings) {
-        do {
-            UserDefaults.standard.bettingUserSettings = bettingUserSettings
-        }
-        catch {
-            print("Unable to Encode BettingUserSettings Settings Goma (\(error))")
-        }
+        UserDefaults.standard.bettingUserSettings = bettingUserSettings
     }
     
     // =====================================
