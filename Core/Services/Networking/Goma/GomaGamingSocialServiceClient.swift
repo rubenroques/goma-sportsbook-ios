@@ -21,6 +21,7 @@ class GomaGamingSocialServiceClient {
     private var chatroomNewMessagePublisher: [Int: CurrentValueSubject<ChatMessage?, Never>] = [:]
     private var chatroomReadMessagesPublisher: CurrentValueSubject<[Int: ChatUsersResponse], Never> = .init([:])
     private var chatroomOnlineUsersPublisher: CurrentValueSubject<[Int: ChatOnlineUsersResponse], Never> = .init([:])
+    var individualChatroomsData: CurrentValueSubject<[ChatroomData], Never> = .init([])
 
     var inAppMessagesCounter: CurrentValueSubject<Int, Never> = .init(0)
 
@@ -284,6 +285,8 @@ class GomaGamingSocialServiceClient {
         self.chatroomNewMessagePublisher = [:]
         self.chatroomReadMessagesPublisher.send([:])
         self.chatroomOnlineUsersPublisher.send([:])
+
+        self.individualChatroomsData.send([])
     }
     
     private func setupPostConnection() {
@@ -321,6 +324,12 @@ class GomaGamingSocialServiceClient {
     private func storeChatrooms(chatroomsData: [ChatroomData]) {
         let chatroomsIds = chatroomsData.map({ $0.chatroom.id })
         self.chatroomIdsPublisher.send(chatroomsIds)
+
+        let individualChatrooms = chatroomsData.filter({
+            $0.chatroom.type == "individual"
+        })
+
+        self.individualChatroomsData.send(individualChatrooms)
 
         // Store Social Apps Info
         self.socialAppsInfo = []

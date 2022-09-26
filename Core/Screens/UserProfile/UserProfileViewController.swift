@@ -17,23 +17,57 @@ class UserProfileViewModel {
     var followingCountPublisher: CurrentValueSubject<String, Never> = .init("0")
     var userProfileInfo: UserProfileInfo?
     var userProfileInfoStatePublisher: CurrentValueSubject<UserProfileState, Never> = .init(.loading)
+    var chatroomId: Int?
 
     private var cancellables = Set<AnyCancellable>()
 
     init(userBasicInfo: UserBasicInfo) {
         self.userBasicInfo = userBasicInfo
 
-        self.checkFollowingUser()
+        self.setupPublishers()
 
         self.checkFriendUser()
 
         self.getUserProfileInfo()
     }
 
-    private func checkFollowingUser() {
+    private func setupPublishers() {
+
+        Env.gomaSocialClient.followingUsersPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] followingUsers in
+                self?.checkFollowingUser(followingUsers: followingUsers)
+            })
+            .store(in: &cancellables)
+
+        Env.gomaSocialClient.individualChatroomsData
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] chatroomsData in
+                print("USERS CHATROOMS: \(chatroomsData)")
+                self?.checkUserChatroom(chatroomsData: chatroomsData)
+            })
+            .store(in: &cancellables)
+    }
+
+    private func checkUserChatroom(chatroomsData: [ChatroomData]) {
+
         let userId = self.userBasicInfo.userId
 
-        let followUserId = Env.gomaSocialClient.followingUsersPublisher.value.filter({
+        let userChatroom = chatroomsData.filter({
+            $0.users.contains(where: {
+                "\($0.id)" == userId
+            })
+        })
+
+        if let userChatroomId = userChatroom[safe: 0]?.chatroom.id {
+            self.chatroomId = userChatroomId
+        }
+    }
+
+    private func checkFollowingUser(followingUsers: [Follower]) {
+        let userId = self.userBasicInfo.userId
+
+        let followUserId = followingUsers.filter({
             "\($0.id)" == userId
         })
 
@@ -106,6 +140,46 @@ class UserProfileViewModel {
 
                 self?.userProfileInfoStatePublisher.send(.loaded)
 
+            })
+            .store(in: &cancellables)
+    }
+
+    func followUser() {
+
+        let userId = self.userBasicInfo.userId
+
+        Env.gomaNetworkClient.followUser(deviceId: Env.deviceId, userId: userId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("FOLLOW USER ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+            }, receiveValue: { [weak self] response in
+                print("FOLLOW USER RESPONSE: \(response)")
+                Env.gomaSocialClient.getFollowingUsers()
+            })
+            .store(in: &cancellables)
+    }
+
+    func deleteFollowUser() {
+
+        let userId = self.userBasicInfo.userId
+
+        Env.gomaNetworkClient.deleteFollowUser(deviceId: Env.deviceId, userId: userId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("DELETE FOLLOW USER ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+            }, receiveValue: { [weak self] response in
+                print("DELETE FOLLOW USER RESPONSE: \(response)")
+                Env.gomaSocialClient.getFollowingUsers()
             })
             .store(in: &cancellables)
     }
@@ -371,10 +445,12 @@ class UserProfileViewController: UIViewController {
 
     @objc func didTapFollowButton() {
         print("FOLLOW USER!")
+        self.viewModel.followUser()
     }
 
     @objc func didTapUnfollowButton() {
         print("UNFOLLOW USER!")
+        self.viewModel.deleteFollowUser()
     }
 
     @objc func didTapAddFriendButton() {
@@ -383,11 +459,50 @@ class UserProfileViewController: UIViewController {
 
     @objc func didTapChatButton() {
         print("CHAT USER!")
+
+        if let chatId = self.viewModel.chatroomId {
+            let conversationDetailViewModel = ConversationDetailViewModel(chatId: chatId)
+
+            let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
+
+            conversationDetailViewController.cameFromProfile = true
+
+            self.navigationController?.pushViewController(conversationDetailViewController, animated: true)
+
+        }
     }
 
     @objc func didTapMoreOptionsButton() {
-        self.hasFriendOption = !self.hasFriendOption
-        self.hasFollowOption = !self.hasFollowOption
+
+        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        if self.viewModel.isFriendUser.value {
+            let unfriendUserAction: UIAlertAction = UIAlertAction(title: "Unfriend", style: .default) { _ -> Void in
+                // NOT YET AVAILABLE
+            }
+            actionSheetController.addAction(unfriendUserAction)
+        }
+
+        let blockUserAction: UIAlertAction = UIAlertAction(title: "Block User", style: .default) { _ -> Void in
+            // NOT YET AVAILABLE
+        }
+        actionSheetController.addAction(blockUserAction)
+
+        let reportUserAction: UIAlertAction = UIAlertAction(title: "Report", style: .default) { _ -> Void in
+            // NOT YET AVAILABLE
+        }
+        actionSheetController.addAction(reportUserAction)
+
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { _ -> Void in }
+        actionSheetController.addAction(cancelAction)
+
+        if let popoverController = actionSheetController.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+
+        self.present(actionSheetController, animated: true, completion: nil)
     }
 
 }

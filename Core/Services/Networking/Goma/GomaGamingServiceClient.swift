@@ -318,6 +318,12 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
+    func deleteFollowUser(deviceId: String, userId: String) -> AnyPublisher<NetworkResponse<[String]?>, NetworkError> {
+        let endpoint = GomaGamingService.deleteFollowUser(userId: userId)
+        let requestPublisher: AnyPublisher<NetworkResponse<[String]?>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
     func getFollowingTotalUsers(deviceId: String) -> AnyPublisher<NetworkResponse<String>, NetworkError> {
         let endpoint = GomaGamingService.getFollowingTotalUsers
         let requestPublisher: AnyPublisher<NetworkResponse<String>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
