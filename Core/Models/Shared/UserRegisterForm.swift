@@ -59,7 +59,7 @@ extension EveryMatrix {
             case currentOdd = "priceValue"
         }
     }
-
+    
     enum BetslipSubmitionType {
         case single
         case multiple
@@ -94,11 +94,11 @@ extension EveryMatrix {
         var queryArray: [String] {
             switch self {
             case .resolved:
-                return ["WON","HALF_WON","LOST","HALF_LOST","DRAW","CASHED_OUT","CANCELLED"]
+                return ["WON", "HALF_WON", "LOST", "HALF_LOST", "DRAW", "CASHED_OUT", "CANCELLED"]
             case .opened:
                 return ["OPEN"]
             case .won:
-                return ["WON","HALF_WON"]
+                return ["WON", "HALF_WON"]
             }
         }
     }
@@ -304,5 +304,71 @@ extension EveryMatrix {
             case isProfileIncomplete = "isProfileIncomplete"
         }
     }
+    
+}
 
+struct BetBuilderGrayoutsState: Decodable {
+    
+    var blockedSelections: [String: BetslipTicketPointer]
+    var errorMessage: String?
+    var errorCode: String?
+    var cannotCombineMoreSelections: Bool
+    
+    enum CodingKeys: String, CodingKey {
+        case selectionsDictionary = "selectionsToGreyOut"
+        case errorMessage = "errorMessage"
+        case cannotCombineMoreSelections = "cannotCombineMoreSelections"
+        case errorCode = "errorCode"
+    }
+    
+    init() {
+        self.blockedSelections = [:]
+        self.errorMessage = nil
+        self.errorCode = nil
+        self.cannotCombineMoreSelections = false
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let selectionsArray: [FailableDecodable<BetslipTicketPointer>] = (try? container.decode([FailableDecodable<BetslipTicketPointer>].self, forKey: .selectionsDictionary)) ?? []
+        
+        var selections: [String: BetslipTicketPointer] = [:]
+        
+        for item in selectionsArray.compactMap({ $0.base }) {
+            selections[item.outcomeId] = item
+        }
+        self.blockedSelections = selections
+        
+        self.cannotCombineMoreSelections = (try? container.decode(Bool.self, forKey: .cannotCombineMoreSelections)) ?? false
+        self.errorCode = try container.decodeIfPresent(String.self, forKey: .errorCode)
+        self.errorMessage = try container.decodeIfPresent(String.self, forKey: .errorMessage)
+    }
+    
+    static var defaultState: BetBuilderGrayoutsState {
+        return BetBuilderGrayoutsState()
+    }
+    
+    func shouldGrayoutOutcome(withId outcomeId: String) -> Bool {
+        if self.cannotCombineMoreSelections {
+            return true
+        }
+        if blockedSelections[outcomeId] != nil {
+            return true
+        }
+        return false
+    }
+    
+}
+
+struct BetslipTicketPointer: Decodable {
+
+    var outcomeId: String
+    var bettingOfferId: String
+    var bettingTypeId: String
+    
+    enum CodingKeys: String, CodingKey {
+        case outcomeId = "outcomeId"
+        case bettingOfferId = "bettingOfferId"
+        case bettingTypeId = "bettingTypeId"
+    }
 }

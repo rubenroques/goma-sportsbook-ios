@@ -208,7 +208,6 @@ class HomeViewController: UIViewController {
     }
 
     private func openFeaturedTipSlider(featuredTips: [FeaturedTip], atIndex index: Int = 0) {
-
         let tipsSliderViewController = TipsSliderViewController(viewModel: TipsSliderViewModel(featuredTips: featuredTips, startIndex: index))
 
         tipsSliderViewController.modalPresentationStyle = .overCurrentContext
@@ -218,22 +217,17 @@ class HomeViewController: UIViewController {
         }
 
         self.present(tipsSliderViewController, animated: true)
-        
-        /*
-        let featuredTipDetailsViewModel = FeaturedTipDetailsViewModel(featuredTip: featuredTip)
-        let featuredTipDetailsViewController = FeaturedTipDetailsViewController(viewModel: featuredTipDetailsViewModel)
-
-        featuredTipDetailsViewController.modalPresentationStyle = .overCurrentContext
-        featuredTipDetailsViewController.modalTransitionStyle = .crossDissolve
-
-        self.present(featuredTipDetailsViewController, animated: true)
-        */
     }
 
     @objc private func didTapOpenFavorites() {
         self.openFavorites()
     }
 
+    @objc private func didTapOpenFeaturedTips() {
+        let tips = self.viewModel.featuredTipLineViewModel()?.featuredTips ?? []
+        self.openFeaturedTipSlider(featuredTips: tips)
+    }
+    
     private func openFavorites() {
         let myFavoritesViewController = MyFavoritesViewController()
         self.navigationController?.pushViewController(myFavoritesViewController, animated: true)
@@ -648,6 +642,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
         if case .userFavorites = self.viewModel.contentType(forSection: section) {
             seeAllLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFavorites)))
+        }
+        else if case .featuredTips = self.viewModel.contentType(forSection: section) {
+            seeAllLabel.text = "Expand"
+            seeAllLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFeaturedTips)))
         }
         else {
             seeAllLabel.isHidden = true

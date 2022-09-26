@@ -58,6 +58,7 @@ enum TSRouter {
     case getSharedBetData(betToken: String)
 
     case getCMSSessionID
+    case getSelectionsGreyout(tickets: [EveryMatrix.BetslipTicketSelection])
 
     // EveryMatrix <-> GOMA  Subscriptions
     case sportsInitialDump(topic: String)
@@ -208,6 +209,8 @@ enum TSRouter {
             return "/sports#sharedBetData"
         case .getCMSSessionID:
             return "/user#getCmsSessionID"
+        case .getSelectionsGreyout:
+            return "/sports#selectionsGreyout"
 
         //
         // EM Subscription
@@ -623,6 +626,20 @@ enum TSRouter {
         case .eventsDetails(_, let language, let events):
             let data: [String: Any]? = ["lang": language, "eventIds": events]
             return data
+            
+        case .getSelectionsGreyout(let tickets):
+            var selection: [Any] = []
+            for ticket in tickets {
+                selection.append([
+                    "bettingOfferId": "\(ticket.id)",
+                    "priceValue": ticket.currentOdd
+                ])
+            }
+            let params: [String: Any] = [
+                    "selections": selection
+            ]
+            return params
+            
         //
         //
         //

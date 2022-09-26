@@ -107,6 +107,7 @@ class TipsSliderViewController: UIViewController {
         super.viewWillAppear(animated)
     
         self.collectionView.reloadData()
+        self.collectionView.layoutIfNeeded()
         self.collectionView.scrollToItem(at: IndexPath(row: self.viewModel.initialIndex(), section: 0),
                                          at: .centeredHorizontally,
                                          animated: false)

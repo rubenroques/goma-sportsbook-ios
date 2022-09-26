@@ -41,9 +41,9 @@ class UserRankingPositionTableViewCell: UITableViewCell {
         self.setupSubviews()
         self.setupWithTheme()
 
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.didPanBaseView(_:)))
-        self.baseView.addGestureRecognizer(panGestureRecognizer)
-        
+//        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.didPanBaseView(_:)))
+//        self.baseView.addGestureRecognizer(panGestureRecognizer)
+//        
         self.setNeedsLayout()
         self.layoutIfNeeded()
     }

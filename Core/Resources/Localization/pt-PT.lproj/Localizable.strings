@@ -578,6 +578,9 @@ Terms of use, Privacy Policy and EULA";
 "select" = "Select";
 "follow_user" = "Follow user";
 
+"remove_last_user_message" = "Removing the last user of this group will also delete this group! Are you sure you want to remove this user?";
+"remove_last_user" = "Remove Last User";
+
 "unfollow" = "Unfollow";
 
 "accumulated_odds_winning" = "Accumulated odd of winning";

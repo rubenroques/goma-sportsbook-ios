@@ -386,7 +386,9 @@ extension OutrightMarketDetailsViewController: UITableViewDelegate, UITableViewD
                 self.expandedMarketGroupIds.remove(marketGroupOrganizerId)
                 self.reloadTableView()
             }
-            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer, isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId))
+            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer,
+                           isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId),
+                           betBuilderGrayoutsState: BetBuilderGrayoutsState())
             return cell
         }
         else if marketGroupOrganizer.numberOfColumns == 2 {
@@ -405,7 +407,9 @@ extension OutrightMarketDetailsViewController: UITableViewDelegate, UITableViewD
                 self.expandedMarketGroupIds.remove(marketGroupOrganizerId)
                 self.reloadTableView()
             }
-            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer, isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId))
+            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer,
+                           isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId),
+                           betBuilderGrayoutsState: BetBuilderGrayoutsState())
             return cell
         }
         else if marketGroupOrganizer.numberOfColumns == 1 {
@@ -424,7 +428,9 @@ extension OutrightMarketDetailsViewController: UITableViewDelegate, UITableViewD
                 self.expandedMarketGroupIds.remove(marketGroupOrganizerId)
                 self.reloadTableView()
             }
-            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer, isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId))
+            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer,
+                           isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId),
+                           betBuilderGrayoutsState: BetBuilderGrayoutsState())
             return cell
         }
         else {

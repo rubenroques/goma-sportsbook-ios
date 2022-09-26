@@ -12,7 +12,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "tabbar_sports_icon.png",
+      "filename" : "Group-1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -28,7 +28,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "tabbar_sports_icon@2x.png",
+      "filename" : "Group@2x-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "tabbar_sports_icon@3x.png",
+      "filename" : "Group@3x-1.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
