@@ -90,9 +90,9 @@ class MyTicketTableViewCell: UITableViewCell {
         
         self.baseView.layer.masksToBounds = true
 
-        self.totalOddSubtitleLabel.text = "-"
-        self.betAmountSubtitleLabel.text = "-"
-        self.winningsSubtitleLabel.text = "-"
+        self.totalOddSubtitleLabel.text = localized("empty")
+        self.betAmountSubtitleLabel.text = localized("empty")
+        self.winningsSubtitleLabel.text = localized("empty")
 
         self.setupWithTheme()
     }
@@ -114,16 +114,16 @@ class MyTicketTableViewCell: UITableViewCell {
         self.isLoadingCellDataSubscription?.cancel()
         self.isLoadingCellDataSubscription = nil
 
-        self.titleLabel.text = ""
-        self.subtitleLabel.text = ""
+        self.titleLabel.text = localized("empty_value")
+        self.subtitleLabel.text = localized("empty_value")
 
         self.totalOddTitleLabel.text = localized("total_odd")
         self.betAmountTitleLabel.text = localized("bet_amount")
         self.winningsTitleLabel.text = localized("return")
 
-        self.totalOddSubtitleLabel.text = "-"
-        self.betAmountSubtitleLabel.text = "-"
-        self.winningsSubtitleLabel.text = "-"
+        self.totalOddSubtitleLabel.text = localized("empty")
+        self.betAmountSubtitleLabel.text = localized("empty")
+        self.winningsSubtitleLabel.text = localized("empty")
     }
 
     override func layoutSubviews() {

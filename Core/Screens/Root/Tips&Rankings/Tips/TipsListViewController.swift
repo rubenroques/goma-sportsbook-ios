@@ -229,7 +229,7 @@ extension TipsListViewController {
         label.textAlignment = .center
         label.font = AppFont.with(type: .bold, size: 22)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "There’s no tips here!"
+        label.text = localized("no_tips")
         label.textAlignment = .center
         return label
     }
@@ -240,7 +240,7 @@ extension TipsListViewController {
         label.font = AppFont.with(type: .bold, size: 16)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "There are no tips currently to be displayed."
+        label.text = localized("no_tips_to_display") 
         label.textAlignment = .center
         return label
     }

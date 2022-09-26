@@ -34,9 +34,9 @@ class TransactionsHistoryRootViewModel {
     func shortcutTitle(forIndex index: Int) -> String {
         switch index {
         case 0:
-            return "Deposits"
+            return localized("deposits")
         case 1:
-            return "Withdraws"
+            return localized("withdraws")
         default:
             return ""
         }
@@ -80,7 +80,7 @@ class TransactionsHistoryRootViewController: UIViewController {
 
         super.init(nibName: nil, bundle: nil)
 
-        self.title = "Transactions"
+        self.title = localized("transactions")
     }
 
     @available(iOS, unavailable)

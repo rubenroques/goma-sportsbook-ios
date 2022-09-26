@@ -62,7 +62,7 @@ class TopCompetitionLineTableViewCell: UITableViewCell {
         super.prepareForReuse()
 
         self.viewModel = nil
-        self.titleLabel.text = ""
+        self.titleLabel.text = localized("empty_value")
 
         self.collectionView.setContentOffset(CGPoint(x: -8, y: 0), animated: false)
 
@@ -279,7 +279,7 @@ extension TopCompetitionLineTableViewCell {
     private static func createTitleLabel() -> UILabel {
         let titleLabel = UILabel()
         titleLabel.numberOfLines = 1
-        titleLabel.text = ""
+        titleLabel.text = localized("empty_value")
         titleLabel.font = AppFont.with(type: .semibold, size: 13)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         return titleLabel

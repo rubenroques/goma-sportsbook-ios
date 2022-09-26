@@ -426,7 +426,7 @@ extension PopularDetailsViewController {
         titleLabel.textColor = UIColor.App.textPrimary
         titleLabel.font = AppFont.with(type: .semibold, size: 14)
         titleLabel.textAlignment = .left
-        titleLabel.text = "Popular Matches"
+        titleLabel.text = localized("popular_matches")
         titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return titleLabel
     }
@@ -508,7 +508,7 @@ extension PopularDetailsViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 12)
-        label.text = "Loading"
+        label.text = localized("loading")
         return label
     }
 

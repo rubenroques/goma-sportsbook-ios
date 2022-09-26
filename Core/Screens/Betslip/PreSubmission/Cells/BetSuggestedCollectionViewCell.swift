@@ -33,8 +33,8 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        self.totalOddValueLabel.text = ""
-        self.numberOfSelectionsValueLabel.text = ""
+        self.totalOddValueLabel.text = localized("empty_value")
+        self.numberOfSelectionsValueLabel.text = localized("empty_value")
 
         self.setupWithTheme()
 
@@ -46,8 +46,8 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
 
         self.betsStackView.removeAllArrangedSubviews()
-        self.totalOddValueLabel.text = ""
-        self.numberOfSelectionsValueLabel.text = ""
+        self.totalOddValueLabel.text = localized("empty_value")
+        self.numberOfSelectionsValueLabel.text = localized("empty_value")
 
         self.viewModel = nil
 

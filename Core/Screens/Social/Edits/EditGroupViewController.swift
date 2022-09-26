@@ -368,7 +368,7 @@ class EditGroupViewController: UIViewController {
                     self.isNotificationMuted = true
             }))
             alert.addAction(UIAlertAction(
-                title: "Cancel",
+                title: localized("cancel"),
                 style: .cancel,
                 handler: { _ in
                 print("CANCEL")

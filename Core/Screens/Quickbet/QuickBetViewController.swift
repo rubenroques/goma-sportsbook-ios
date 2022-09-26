@@ -510,7 +510,7 @@ extension QuickBetViewController {
     private static func createOutcomeLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Outcome"
+        label.text = localized("outcome")
         label.font = AppFont.with(type: .bold, size: 15)
         label.numberOfLines = 0
         return label
@@ -564,7 +564,7 @@ extension QuickBetViewController {
     private static func createMarketLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Market"
+        label.text = localized("market")
         label.font = AppFont.with(type: .bold, size: 14)
         return label
     }
@@ -572,7 +572,7 @@ extension QuickBetViewController {
     private static func createMatchLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Match"
+        label.text = localized("match")
         label.font = AppFont.with(type: .semibold, size: 12)
         return label
     }
@@ -665,7 +665,7 @@ extension QuickBetViewController {
     private static func createErrorLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Error"
+        label.text = localized("error")
         label.font = AppFont.with(type: .semibold, size: 12)
         label.numberOfLines = 0
         return label
@@ -776,7 +776,7 @@ extension QuickBetViewController {
     private static func createSuspendedOddLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Suspended"
+        label.text = localized("suspended_market")
         label.font = AppFont.with(type: .bold, size: 18)
         label.textAlignment = .center
         return label

@@ -127,7 +127,7 @@ extension SettingsRadioRowView {
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Title"
+        label.text = localized("title")
         label.font = AppFont.with(type: .bold, size: 16)
         return label
     }

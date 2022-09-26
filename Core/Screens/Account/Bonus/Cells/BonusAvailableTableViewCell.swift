@@ -74,9 +74,9 @@ class BonusAvailableTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        self.titleLabel.text = ""
+        self.titleLabel.text = localized("empty_value")
 
-        self.subtitleLabel.text = ""
+        self.subtitleLabel.text = localized("empty_value")
 
         self.bannerImageView.image = nil
 

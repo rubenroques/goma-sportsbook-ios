@@ -63,7 +63,7 @@ extension NewGroupHeaderFooterView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
-        label.text = "Title"
+        label.text = localized("title")
         label.font = AppFont.with(type: .bold, size: 14)
         label.textAlignment = .left
         return label

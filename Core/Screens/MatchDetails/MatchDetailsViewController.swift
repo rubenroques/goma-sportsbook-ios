@@ -276,7 +276,7 @@ class MatchDetailsViewController: UIViewController {
         self.shareButton.setTitle("", for: .normal)
         self.shareButton.setImage(UIImage(named: "more_options_icon"), for: .normal)
         
-        self.headerCompetitionLabel.text = ""
+        self.headerCompetitionLabel.text = localized("empty_value")
         self.headerCompetitionLabel.font = AppFont.with(type: .semibold, size: 11)
         
         self.headerCompetitionImageView.image = nil
@@ -941,18 +941,18 @@ class MatchDetailsViewController: UIViewController {
                 actionSheetController.addAction(favoriteAction)
             }
             else {
-                let favoriteAction: UIAlertAction = UIAlertAction(title: "Add to favorites", style: .default) { _ -> Void in
+                let favoriteAction: UIAlertAction = UIAlertAction(title: localized("add_to_favorites"), style: .default) { _ -> Void in
                     Env.favoritesManager.addFavorite(eventId: self.viewModel.matchId, favoriteType: .match)
                 }
                 actionSheetController.addAction(favoriteAction)
             }
             
-            let shareAction: UIAlertAction = UIAlertAction(title: "Share event", style: .default) { [weak self] _ -> Void in
+            let shareAction: UIAlertAction = UIAlertAction(title: localized("share_event"), style: .default) { [weak self] _ -> Void in
                 self?.didTapShareButton()
             }
             actionSheetController.addAction(shareAction)
             
-            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { _ -> Void in }
+            let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ -> Void in }
             actionSheetController.addAction(cancelAction)
             
             if let popoverController = actionSheetController.popoverPresentationController {

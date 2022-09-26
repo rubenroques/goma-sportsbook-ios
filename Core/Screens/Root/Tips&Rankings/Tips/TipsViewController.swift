@@ -46,7 +46,7 @@ class TipsViewController: UIViewController {
 
         super.init(nibName: nil, bundle: nil)
 
-        self.title = "Tips"
+        self.title = localized("tips")
 
     }
 

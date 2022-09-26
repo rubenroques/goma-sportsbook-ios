@@ -34,16 +34,18 @@ class BettingHistoryRootViewModel {
     func shortcutTitle(forIndex index: Int) -> String {
         switch index {
         case 0:
-            return "Open"
+            return localized("open")
         case 1:
-            return "Resolved"
+            return localized("resolved")
         case 2:
-            return "Won"
+            return localized("won")
         case 3:
-            return "Cashout"
+            return localized("cashout")
         default:
             return ""
         }
+        
+        
     }
 
 }
@@ -87,7 +89,7 @@ class BettingHistoryRootViewController: UIViewController {
 
         super.init(nibName: nil, bundle: nil)
 
-        self.title = "Betting"
+        self.title = localized("betting") 
     }
 
     @available(iOS, unavailable)

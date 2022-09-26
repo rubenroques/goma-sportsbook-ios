@@ -325,7 +325,7 @@ extension SharedGameCardView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
-        label.text = "Home"
+        label.text = localized("home")
         label.textAlignment = .right
         label.font = AppFont.with(type: .bold, size: 14)
         return label
@@ -341,7 +341,7 @@ extension SharedGameCardView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
-        label.text = "Away"
+        label.text = localized("away")
         label.textAlignment = .left
         label.font = AppFont.with(type: .bold, size: 14)
         return label

@@ -43,9 +43,9 @@ class HistoryViewController: UIViewController {
 
         switch viewModel.listType {
         case .transactions:
-            self.title = "Transactions"
+            self.title = localized("transactions")
         case .bettings:
-            self.title = "Betting"
+            self.title = localized("bettings")
         }
     }
     
@@ -432,7 +432,7 @@ extension HistoryViewController {
     }
     
     private static func createSegmentedControl() -> UISegmentedControl {
-        let segment = UISegmentedControl(items: ["Transactions", "Betting"])
+        let segment = UISegmentedControl(items: [localized("transactions"), localized("betting")])
         segment.translatesAutoresizingMaskIntoConstraints = false
         segment.selectedSegmentIndex = 0
         return segment

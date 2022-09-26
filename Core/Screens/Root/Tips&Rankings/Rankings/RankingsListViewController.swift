@@ -337,7 +337,7 @@ extension RankingsListViewController {
         label.font = AppFont.with(type: .bold, size: 22)
         label.numberOfLines = 4
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "There’s no rankings here!"
+        label.text = localized("no_rankings")
         return label
     }
 
@@ -347,7 +347,7 @@ extension RankingsListViewController {
         label.font = AppFont.with(type: .bold, size: 16)
         label.numberOfLines = 4
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "There are no rankings currently to be displayed."
+        label.text = localized("no_rankings_to_display")
         return label
     }
 

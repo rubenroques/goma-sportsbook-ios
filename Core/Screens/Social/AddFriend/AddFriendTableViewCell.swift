@@ -74,7 +74,7 @@ class AddFriendTableViewCell: UITableViewCell {
 
         self.isCheckboxSelected = false
 
-        self.titleLabel.text = ""
+        self.titleLabel.text = localized("empty_value")
 
         self.isOnline = false
 

@@ -246,7 +246,7 @@ class SubmitedBetslipViewController: UIViewController {
                 .store(in: &self.cancellables)
         }))
 
-        submitCashoutAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        submitCashoutAlert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel))
 
         present(submitCashoutAlert, animated: true, completion: nil)
 

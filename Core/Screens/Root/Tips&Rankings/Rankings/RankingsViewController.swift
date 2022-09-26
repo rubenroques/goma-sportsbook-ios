@@ -46,7 +46,7 @@ class RankingsViewController: UIViewController {
 
         super.init(nibName: nil, bundle: nil)
 
-        self.title = "Rankings"
+        self.title = localized("rankings")
 
     }
 

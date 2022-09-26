@@ -31,7 +31,7 @@ class RecentSearchRowView: NibView {
     }
 
     override func commonInit() {
-        self.titleLabel.text = "Title"
+        self.titleLabel.text = localized("title")
         self.titleLabel.font = AppFont.with(type: .semibold, size: 14)
 
         self.clearButton.setTitle("", for: .normal)

@@ -27,12 +27,12 @@ class RecentSearchTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        self.titleLabel.text = ""
+        self.titleLabel.text = localized("empty_value")
         self.separatorLineView.isHidden = false
     }
 
     func commonInit() {
-        self.titleLabel.text = "Title"
+        self.titleLabel.text = localized("title")
         self.titleLabel.font = AppFont.with(type: .semibold, size: 14)
 
         self.clearButton.setTitle("", for: .normal)

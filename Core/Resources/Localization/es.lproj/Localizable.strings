@@ -1,0 +1,611 @@
+/*
+  Localizable.strings
+  Sportsbook
+
+  Created by Ruben Roques on 06/08/2021.
+
+*/
+
+"languange_code" = "placeholder";
+"languange_code_complete" = "placeholder";
+
+"update_available" = "placeholder";
+"maintenance_mode" = "placeholder";
+"update_available_title" = "placeholder";
+"update_available_text" = "placeholder";
+"update_app" = "placeholder";
+"dismiss_title" = "placeholder";
+"update_required_title" = "placeholder";
+"update_required_text" = "placeholder";
+"access_forbidden" = "placeholder";
+"refused_location" = "placeholder";
+"refused_location_subtitle" = "placeholder";
+"enable_location" = "placeholder";
+"success_location" = "placeholder";
+"permission_location" = "placeholder";
+"permission_location_text" = "placeholder";
+"permission_location_subtitle" = "placeholder";
+"skip" = "placeholder";
+"login" = "placeholder";
+"ok" = "placeholder";
+
+"get_started" = "placeholder";
+
+"login_error_title" = "placeholder";
+"login_error_message" = "placeholder";
+
+"server_error_title" = "placeholder";
+"server_error_message" = "placeholder";
+
+"register_error_title" = "placeholder";
+"invalid_email" = "placeholder";
+"email_already_registered" = "placeholder";
+"username_already_registered" = "placeholder";
+"forgot" = "placeholder";
+
+"new_create_account" = "placeholder";
+"create_account" = "placeholder";
+"agree_terms_conditions" = "placeholder";
+"terms" = "Tplaceholder";
+"privacy_policy" = "placeholder";
+"eula" = "placeholder";
+"show" = "placeholder";
+"hide" = "placeholder";
+"remember" = "placeholder";
+"signup" = "placeholder";
+"done" = "placeholder";
+"password" = "placeholder";
+"confirm_password" = "placeholder";
+"phone_prefix" = "placeholder";
+"phone_number" = "placeholder";
+"birth_date" = "placeholder";
+"username" = "placeholder";
+"email" = "placeholder";
+"weak_password" = "placeholder";
+"password_not_match" = "placeholder";
+"check_email" = "placeholder";
+"check_email_text1" = "placeholder";
+"check_email_text2" = "placeholder";
+"open_email_app" = "placeholder";
+"insert_email_code" = "placeholder";
+"resend_email" = "placeholder";
+"code" = "placeholder";
+"enter_code" = "placeholder";
+"enter_code_text" = "placeholder";
+"paste_clipboard" = "placeholder";
+"edit" = "placeholder";
+"save" = "placeholder";
+"personal_info" = "placeholder";
+"first_name" = "placeholder";
+"names_match_id" = "placeholder";
+"last_name" = "placeholder";
+"nationality" = "placeholder";
+"address_1" = "placeholder";
+"address_2" = "placeholder";
+"city" = "placeholder";
+"postal_code" = "placeholder";
+"id_number" = "placeholder";
+"bank_id" = "placeholder";
+"success" = "placeholder";
+"error" = "placeholder";
+"error_edit" = "placeholder";
+"success_edit" = "placeholder";
+"see_promo" = "placeholder";
+"not_now" = "placeholder";
+
+"cancel" = "placeholder";
+"search_field" = "placeholder";
+"search_field_competitions" = "placeholder";
+"invalid_birthDate" = "placeholder";
+
+"update_password" = "placeholder";
+"old_password" = "placeholder";
+"new_password" = "placeholder";
+"old_password_error" = "placeholder";
+"password_too_weak" = "placeholder";
+"error_edit_password" = "placeholder";
+"success_edit_password" = "placeholder";
+"invalid_email" = "placeholder";
+
+"wallet" = "placeholder";
+"documents" = "placeholder";
+"bonus" = "placeholder";
+"history" = "placeholder";
+"limits_management" = "placeholder";
+"support" = "placeholder";
+"subject" = "placeholder";
+"description" = "placeholder";
+
+"supportSuccessTitle" = "placeholder";
+"supportSuccessSubtitle" = "placeholder";
+
+"supportErrorTitle" = "placeholder";
+"supportErrorSubtitle" = "placeholder";
+
+"betting_limit" = "placeholder";
+"auto_exclusion" = "placeholder";
+"info" = "placeholder";
+"info_text" = "placeholder";
+"personal_information" = "placeholder";
+"continue_" = "placeholder";
+"complete_signup" = "placeholder";
+"close" = "placeholder";
+"address_country" = "placeholder";
+
+"choose_sport" = "placeholder";
+"reset" = "placeholder";
+"filters" = "placeholder";
+"sort_by" = "placeholder";
+"starting_soon" = "placeholder";
+"by_competition" = "placeholder";
+"lowest_odds" = "placeholder";
+"highest_odds" = "placeholder";
+"available_markets" = "placeholder";
+"apply" = "placeholder";
+"time_range" = "placeholder";
+"required_field" = "placeholder";
+"profile_updated_success" = "placeholder";
+"security_question" = "placeholder";
+"security_answer" = "placeholder";
+"account_security" = "placeholder";
+"documents_id" = "placeholder";
+"add_file" = "placeholder";
+"submit" = "placeholder";
+"upload_complete" = "placeholder";
+
+"odds_filter" = "placeholder";
+"from" = "placeholder";
+"to" = "placeholder";
+"time_today_only" = "placeholder";
+"default_market" = "placeholder";
+
+"verify_email" = "placeholder";
+"app_full_potential" = "placeholder";
+"verify_my_account" = "placeholder";
+"email_verification" = "placeholder";
+"verify_email_description" = "placeholder";
+"activate_account" = "placeholder";
+"choose_email" = "placeholder";
+"complete_your_profile" = "placeholder";
+"complete_profile_description" = "placeholder";
+"finish_up_profile" = "placeholder";
+
+"cashout_available" = "placeholder";
+"cashout" = "placeholder";
+"return_money" = "placeholder";
+"cashout_verification" = "placeholder";
+"cashout_info" = "placeholder";
+
+"country" = "placeholder";
+
+"deposit" = "placeholder";
+"deposits" = "placeholder";
+"how_much_deposit" = "placeholder";
+"deposit_value" = "placeholder";
+"minimum_deposit_value" = "placeholder";
+"payments_available" = "placeholder";
+"next" = "placeholder";
+
+"betting" = "placeholder";
+"transactions" = "placeholder";
+
+"responsible_gaming" = "placeholder";
+"responsible_gaming_clickable" = "placeholder";
+
+"faq" = "placeholder";
+"faq_clickable" = "placeholder";
+"contact_us" = "placeholder";
+
+"withdraw" = "placeholder";
+"withdraws" = "placeholder";
+"how_much_withdraw" = "placeholder";
+"withdraw_value" = "placeholder";
+"minimum_withdraw_value" = "placeholder";
+
+"empty_my_games" = "placeholder";
+"second_empty_my_games" = "placeholder";
+"empty_my_competitions" = "placeholder";
+"second_empty_my_competitions" = "placeholder";
+"competition_no_longer"= "placeholder";
+
+"empty_no_login" = "placeholder";
+"second_empty_no_login" = "placeholder";
+
+"second_empty_no_login_to_bet" = "placeholder";
+
+"empty_list" = "placeholder";
+"second_empty_list" = "placeholder";
+
+"empty_list_with_filters" = "placeholder";
+"second_empty_list_with_filters" = "placeholder";
+
+"empty_no_transactions" = "placeholder";
+"second_empty_no_transactions" = "placeholder";
+
+"empty_no_bets" = "placeholder";
+"second_empty_no_bets" = "placeholder";
+
+"my_games" = "placeholder";
+"my_competitions" = "placeholder";
+"popular" = "placeholder";
+"upcoming" = "placeholder";
+"competitions" = "placeholder";
+
+"amount" = "placeholder";
+
+"profile_incomplete" = "placeholder";
+"profile_incomplete_deposit" = "placeholder";
+"profile_incomplete_withdraw" = "placeholder";
+
+"all" = "placeholder";
+"loading" = "placeholder";
+"title" = "placeholder";
+"subtitle" = "placeholder";
+"match" = "placeholder";
+"outcome" = "placeholder";
+"tournament" = "placeholder";
+"date" = "placeholder";
+
+"home_label_default" = "placeholder";
+"away_label_default" = "placeholder";
+
+"away" = "placeholder";
+"match_label_default" = "placeholder";
+"time_label_default" = "placeholder";
+"score_label_default" = "placeholder";
+"match_start_label_default" = "placeholder";
+
+"sports" = "placeholder";
+"live" = "placeholder";
+"live_matches" = "placeholder";
+"popular_matches" = "placeholder";
+"competition_details" = "placeholder";
+"open_competition_details" = "placeholder";
+"competition_markets" = "placeholder";
+"view_competition_markets" = "placeholder";
+"outrights" = "placeholder";
+"casino" = "placeholder";
+"sportsbook" = "placeholder";
+"my_tickets" = "placeholder";
+"my_bets" = "placeholder";
+"bets" = "placeholder";
+"betslip" = "placeholder";
+"place_bet" = "placeholder";
+
+"logout" = "placeholder";
+
+"resolved" = "placeholder";
+"opened" = "placeholder";
+"won" = "placeholder";
+"draw" = "placeholder";
+"lost" = "placeholder";
+"open" = "placeholder";
+"half_won" = "placeholder";
+"half_lost" = "placeholder";
+"cancelled" = "placeholder";
+"cashed_out" = "placeholder";
+
+"total_odd" = "placeholder";
+"bet_amount" = "placeholder";
+"total_bet_amount" = "placeholder";
+"return" = "placeholder";
+
+"single" = "placeholder";
+"multiple" = "placeholder";
+"system" = "placeholder";
+"possible_winnings" = "placeholder";
+"winnings" = "placeholder";
+
+"market" = "placeholder";
+"all_live_events" = "placeholder";
+"upcoming_highlights" = "placeholder";
+"choose_competitions" = "placeholder";
+"popular_competitions" = "placeholder";
+"popular_games" = "placeholder";
+
+"sport" = "placeholder";
+"number_of_markets" = "placeholder";
+"number_of_market_singular" = "placeholder";
+"see_all" = "placeholder";
+"expand" = "placeholder";
+"see_less" = "placeholder";
+"now" = "placeholder";
+"odd" = "placeholder";
+"wallet_error" = "placeholder";
+"wallet_error_message" = "placeholder";
+"email_address_or_username" = "placeholder";
+"app_version_profile" = "placeholder";
+"daily" = "placeholder";
+"weekly" = "placeholder";
+"monthly" = "placeholder";
+"anual" = "placeholder";
+"active" = "placeholder";
+"limited" = "placeholder";
+"permanent" = "placeholder";
+"suggested_country" = "placeholder";
+"available_countries" = "placeholder";
+"suggested_bets" = "placeholder";
+"not_bets_tickets_section_yet" = "placeholder";
+
+"profile_incomplete_2" = "placeholder";
+"error_placing_bet" = "placeholder";
+"need_login_tickets" = "placeholder";
+"you_not_logged_in" = "placeholder";
+"cashout_prompt_message" = "placeholder";
+
+"search_for_teams_competitions" = "placeholder";
+"no_recent_searches" = "placeholder";
+"recent_searches" = "placeholder";
+"results_count" = "placeholder";
+"results_count_singular" = "placeholder";
+
+"sport_id_competition_name" = "placeholder";
+"clear_all" = "placeholder";
+"no_results_for" = "placeholder";
+
+"selections_not_combinable" = "placeholder";
+"check_this_game" = "placeholder";
+"look_bet_made" = "placeholder";
+
+"accept_any" = "placeholder";
+"accept_higher" = "placeholder";
+"suspended_market" = "placeholder";
+"closed_market" = "placeholder";
+
+"home" = "placeholder";
+
+"filter_date"= "placeholder";
+
+"app_settings" = "placeholder";
+"notifications" = "placeholder";
+"appearance" = "placeholder";
+"odds" = "placeholder";
+
+"fingerprint_login" = "placeholder";
+"face_id_login" = "placeholder";
+"device_settings" = "placeholder";
+"games_notification_defaults" = "placeholder";
+"betting_notification_defaults" = "placeholder";
+"sms" = "placeholder";
+"allow_sportsbook_contact" = "placeholder";
+"theme_color" = "placeholder";
+"dark_mode" = "placeholder";
+"light_mode" = "placeholder";
+"sync_mode" = "placeholder";
+"odds_format" = "placeholder";
+"eu_odd" = "placeholder";
+"uk_odd" = "placeholder";
+"us_odd" = "placeholder";
+"odds_variation" = "placeholder";
+"allow_mygames_notifications" = "placeholder";
+"allow_mycompetitions_notifications" = "placeholder";
+"notify_me_about" = "placeholder";
+"start_of_game" = "placeholder";
+"goals" = "placeholder";
+"half_time" = "placeholder";
+"second_half_time" = "placeholder";
+"full_time" = "placeholder";
+"red_cards" = "placeholder";
+"games_notifications" = "placeholder";
+"betting_notifications" = "placeholder";
+"notify_bets_final_result" = "placeholder";
+"notify_bets_options_results" = "placeholder";
+
+"add_promo_code" = "placeholder";
+"bonus_code" = "placeholder";
+
+"more_info" = "placeholder";
+"get_bonus" = "placeholder";
+
+"available" = "placeholder";
+"no_bonus" = "placeholder";
+
+"bonus_applied_success" = "placeholder";
+
+"expire_date" = "placeholder";
+"start_date" = "placeholder";
+"add" = "placeholder";
+"invalid_bonus_code" = "placeholder";
+"error_bonus_code" = "placeholder";
+"terms_conditions" = "placeholder";
+
+"use_freebet" = "placeholder";
+"use_boosted_odds" = "placeholder";
+
+"deposit_limit" = "placeholder";
+"loss_limit" = "placeholder";
+"deposit_limit_set" = "placeholder";
+"betting_limit_set" = "placeholder";
+"loss_limit_set" = "placeholder";
+"deposit_limit_locked" = "placeholder";
+"betting_limit_locked" = "placeholder";
+"loss_limit_locked" = "placeholder";
+
+"deposit_error" = "placeholder";
+"deposit_error_message" = "placeholder";
+
+"need_login_favorites" = "placeholder";
+
+"my_favorites" = "placeholder";
+"add_to_favorites" = "placeholder";
+"share_event" = "placeholder";
+
+"keep_bet_checkbox" = "placeholder";
+
+"available_balance" = "placeholder";
+"my_account" = "placeholder";
+"total" = "placeholder";
+
+"quit" = "placeholder";
+"quit_register" = "placeholder";
+"quit_register_message" = "placeholder";
+
+"remaining_total_bonus" = "placeholder";
+"remaining_total_wager" = "placeholder";
+
+"bonus_amount" = "placeholder";
+"wager_amount" = "placeholder";
+
+"users_followed_you" = "placeholder";
+"shared_tickets_to" = "placeholder";
+
+"add_friend" = "placeholder";
+"add_friends" = "placeholder";
+"friends" = "placeholder";
+"search_by_username" = "placeholder";
+"add_from_contact_list" = "placeholder";
+"settings" = "placeholder";
+
+"who_send_messages" = "placeholder";
+"who_add_groups" = "placeholder";
+"only_friends" = "placeholder";
+"everyone" = "placeholder";
+"only_people_follow" = "placeholder";
+"no_notifications" = "placeholder";
+
+"add_contact" = "placeholder";
+"search_by_contact" = "placeholder";
+"invite" = "placeholder";
+"unregistered_contacts_invite" = "placeholder";
+
+"new_group" = "placeholder";
+"select_friends_add" = "placeholder";
+"start_group_chat" = "placeholder";
+"group_name" = "placeholder";
+"select_a_friend" = "placeholder";
+
+"my_friends" = "placeholder";
+"search_friend" = "placeholder";
+"no_friends" = "placeholder";
+"no_chatrooms" = "placeholder";
+"search_friend_code" = "placeholder";
+"friend_code" = "placeholder";
+"search" = "placeholder";
+"invalid_friend_code" = "placeholder";
+
+"chat" = "placeholder";
+"message" = "placeholder";
+
+"chat_group_users_details" = "placeholder";
+"invalid_code" = "placeholder";
+"invalid_code_message" = "placeholder";
+
+"friend_added" = "placeholder";
+"friend_added_message" = "placeholder";
+
+"friend_added_error" = "placeholder";
+"friend_added_message_error" = "placeholder";
+
+"new_message" = "placeholder";
+"edit_contact" = "placeholder";
+"delete" = "placeholder";
+"block_contact" = "placeholder";
+"report" = "placeholder";
+
+"delete_contact" = "placeholder";
+"delete_contact_message" = "placeholder";
+
+"edit_group" = "placeholder";
+"add_more_friends" = "placeholder";
+
+"remove_user" = "placeholder";
+"remove_user_message" = "placeholder";
+
+"not_allowed" = "placeholder";
+"minimum_users_message" = "placeholder";
+
+"group_name_changed" = "placeholder";
+"group_name_changed_message" = "placeholder";
+
+"mute" = "placeholder";
+"unmute" = "placeholder";
+"unfriend" = "placeholder";
+
+"user_code" = "placeholder";
+"user_code_copied" = "placeholder";
+
+"leave_group" = "placeholder";
+"leave_group_message" = "placeholder";
+
+"share_my_tickets" = "placeholder";
+"not_bets_tickets_section" = "placeholder";
+"share_ticket" = "placeholder";
+
+"more" = "placeholder";
+"copy_link" = "placeholder";
+"share_outside_via" = "placeholder";
+"comment" = "placeholder";
+"send_friends_groups" = "placeholder";
+"send" = "placeholder";
+
+"check_this_bet_made" = "placeholder";
+"ticket_url_pasteboard" = "placeholder";
+
+"send_to_chat" = "placeholder";
+"or" = "placeholder";
+"empty_chatrooms" = "placeholder";
+
+"bet_registered_success" = "placeholder";
+"good_luck" = "placeholder";
+"share_bet_now" = "placeholder";
+
+"time_add_friends" = "placeholder";
+"add_some_friends_start_chatting" = "placeholder";
+
+"single_bet" = "placeholder";
+"multiple_bet" = "placeholder";
+"system_bet" = "Splaceholder";
+
+"bet_suffered_alterations" = "placeholder";
+"shared_bet_unavailable" = "placeholder";
+
+"add_friends_group" = "placeholder";
+"select_atleast_two" = "placeholder";
+
+"messages" = "placeholder";
+"mark_all_read" = "placeholder";
+"delete_all" = "placeholder";
+"mark_as_read" = "placeholder";
+
+"no_messages_yet" = "placeholder";
+
+"chat_empty_shared_ticket_self" = "placeholder";
+"chat_empty_shared_ticket_others" = "placeholder";
+
+"invite_friends_via" = "placeholder";
+"invite_more_friends" = "placeholder";
+"no_user_contact_registered" = "placeholder";
+"no_other_users_registered" = "placeholder";
+
+"bet" = "placeholder";
+
+"follow" = "placeholder";
+"following" = "placeholder";
+"total_odds" = "placeholder";
+"number_selections" = "placeholder";
+"bet_same" = "placeholder";
+"show_full_tip" = "placeholder";
+"featured_tips" = "placeholder";
+"tips" = "placeholder";
+"no_tips" = "placeholder";
+"no_tips_to_display" = "placeholder";
+
+"rankings" = "placeholder";
+"top_tipsters" = "placeholder";
+"top_tips" = "placeholder";
+
+"no_login_tips" = "placeholder";
+"no_login_rankings" = "placeholder";
+"no_rankings" = "placeholder";
+"no_rankings_to_display" = "placeholder";
+
+"add_friends_tip" = "placeholder";
+"select" = "placeholder";
+"follow_user" = "placeholder";
+
+"remove_last_user_message" = "placeholder";
+"remove_last_user" = "placeholder";
+
+"no_value" = "placeholder";
+"empty_value" = "placeholder";
+"empty" = "placeholder";
