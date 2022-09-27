@@ -14,7 +14,7 @@ class NotificationsViewModel: NSObject {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
-    var userSettings: UserSettingsGoma?
+    var notificationsUserSettings: NotificationsUserSettings?
 
     // MARK: Lifetime and sCycle
     override init() {
@@ -25,88 +25,35 @@ class NotificationsViewModel: NSObject {
 
     // MARK: Setup and functions
     private func getUserSettings() {
-        // Read/Get Data
-        if let data = UserDefaults.standard.data(forKey: "gomaUserSettings") {
-            do {
-                let decoder = JSONDecoder()
+        self.notificationsUserSettings = UserDefaults.standard.notificationsUserSettings
+    }
 
-                let userSettings = try decoder.decode(UserSettingsGoma.self, from: data)
-
-                self.userSettings = userSettings
-
-            }
-            catch {
-                print("Unable to Decode UserSettings Goma (\(error))")
-            }
+    func storeNotificationsUserSettings() {
+        if let notificationsUserSettings = self.notificationsUserSettings {
+            UserDefaults.standard.notificationsUserSettings = notificationsUserSettings
+            self.postOddsSettingsToGoma()
         }
     }
 
-    private func setUserSettings(userSettings: UserSettingsGoma) {
-        do {
-            let encoder = JSONEncoder()
-
-            let data = try encoder.encode(userSettings)
-
-            UserDefaults.standard.set(data, forKey: "gomaUserSettings")
-        }
-        catch {
-            print("Unable to Encode User Settings Goma (\(error))")
-        }
-
-        self.postOddsSettingsToGoma()
+    func updateSmsSetting(enabled: Bool) {
+        self.notificationsUserSettings?.notificationsSms = enabled
+        self.storeNotificationsUserSettings()
     }
 
-    func updateSmsSetting(isSettingEnabled: Bool) {
-        if isSettingEnabled {
-            self.userSettings?.notificationSms = 1
-        }
-        else {
-            self.userSettings?.notificationSms = 0
-        }
-
-        if let userSettings = self.userSettings {
-            self.setUserSettings(userSettings: userSettings)
-        }
-    }
-
-    func updateEmailSetting(isSettingEnabled: Bool) {
-        if isSettingEnabled {
-            self.userSettings?.notificationEmail = 1
-        }
-        else {
-            self.userSettings?.notificationEmail = 0
-        }
-
-        if let userSettings = self.userSettings {
-            self.setUserSettings(userSettings: userSettings)
-        }
+    func updateEmailSetting(enabled: Bool) {
+        self.notificationsUserSettings?.notificationsEmail = enabled
+        self.storeNotificationsUserSettings()
     }
 
     private func postOddsSettingsToGoma() {
-        if let data = UserDefaults.standard.data(forKey: "gomaUserSettings") {
-            do {
-                let decoder = JSONDecoder()
-
-                let userSettings = try decoder.decode(UserSettingsGoma.self, from: data)
-
-                Env.gomaNetworkClient.sendUserSettings(deviceId: Env.deviceId, userSettings: userSettings)
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { completion in
-                        switch completion {
-                        case .failure(let error):
-                            print("GOMA SETTINGS ERROR: \(error)")
-                        case .finished:
-                            print("Finished")
-                        }
-                    }, receiveValue: { value in
-                        print("GOMA SETTINGS: \(value)")
-                    })
-                    .store(in: &cancellables)
-
-            }
-            catch {
-                print("Unable to Decode UserSettings Goma (\(error))")
-            }
-        }
+        let notificationsUserSettings = UserDefaults.standard.notificationsUserSettings
+        Env.gomaNetworkClient.postNotificationsUserSettings(deviceId: Env.deviceId, notificationsUserSettings: notificationsUserSettings)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                print("PostSettings completion \(completion)")
+            }, receiveValue: { response in
+                print("PostSettings response \(response)")
+            })
+            .store(in: &cancellables)
     }
 }

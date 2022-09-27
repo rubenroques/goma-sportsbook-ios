@@ -38,6 +38,8 @@ class HomeViewController: UIViewController {
 
     private var shortcutSelectedOption: Int = -1
     
+    private var featuredTipsCenterIndex: Int = 0
+    
     // MARK: - Lifetime and Cycle
     init(viewModel: HomeViewModel = HomeViewModel()) {
         self.viewModel = viewModel
@@ -209,12 +211,8 @@ class HomeViewController: UIViewController {
 
     private func openFeaturedTipSlider(featuredTips: [FeaturedTip], atIndex index: Int = 0) {
         let tipsSliderViewController = TipsSliderViewController(viewModel: TipsSliderViewModel(featuredTips: featuredTips, startIndex: index))
-
-        tipsSliderViewController.modalPresentationStyle = .overCurrentContext
-
-        tipsSliderViewController.shouldShowBetslip = { [weak self] in
-            self?.didTapBetslipButtonAction?()
-        }
+        
+        tipsSliderViewController.shift.enable()
 
         self.present(tipsSliderViewController, animated: true)
     }
@@ -225,7 +223,7 @@ class HomeViewController: UIViewController {
 
     @objc private func didTapOpenFeaturedTips() {
         let tips = self.viewModel.featuredTipLineViewModel()?.featuredTips ?? []
-        self.openFeaturedTipSlider(featuredTips: tips)
+        self.openFeaturedTipSlider(featuredTips: tips, atIndex: self.featuredTipsCenterIndex)
     }
     
     private func openFavorites() {
@@ -347,6 +345,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 self?.openFeaturedTipSlider(featuredTips: featuredBetLineViewModel.featuredTips, atIndex: firstIndexValue)
             }
 
+            cell.currentIndexChangedAction = { [weak self] newIndex in
+                self?.featuredTipsCenterIndex = newIndex
+            }
             cell.configure(withViewModel: featuredBetLineViewModel)
 
             cell.shouldShowBetslip = { [weak self] in

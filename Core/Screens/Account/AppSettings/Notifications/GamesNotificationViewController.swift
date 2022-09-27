@@ -59,6 +59,12 @@ class GamesNotificationViewController: UIViewController {
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        // self.viewModel.storeNotificationsUserSettings()
+    }
 
     // MARK: Layout and Theme
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -200,7 +206,6 @@ class GamesNotificationViewController: UIViewController {
 //
 extension GamesNotificationViewController {
     @objc private func didTapBackButton() {
-        self.viewModel.setUserSettings()
         self.navigationController?.popViewController(animated: true)
     }
 }

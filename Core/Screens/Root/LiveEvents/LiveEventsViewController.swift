@@ -257,7 +257,6 @@ class LiveEventsViewController: UIViewController {
         
         self.viewModel.liveEventsCountPublisher
             .receive(on: DispatchQueue.main)
-            .print("EventCounter VC sink", to: nil)
             .sink { [weak self] liveEventsCount in
                 self?.liveEventsCountLabel.text = "\(liveEventsCount)"
                 if liveEventsCount != 0 {
@@ -284,7 +283,8 @@ class LiveEventsViewController: UIViewController {
                     self?.emptyBaseView.isHidden = true
                     self?.tableView.isHidden = false
                 case .emptyAndFilter:
-                    self?.setEmptyStateBaseView(firstLabelText: localized("empty_list_with_filters"), secondLabelText: localized("second_empty_list_with_filters"), isUserLoggedIn: true)
+                    self?.setEmptyStateBaseView(firstLabelText: localized("empty_list_with_filters"),
+                                                secondLabelText: localized("second_empty_list_with_filters"), isUserLoggedIn: true)
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
                 }

@@ -44,6 +44,11 @@ class OddsViewController: UIViewController {
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
     }
 
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        self.viewModel.storeBettingUserSettings()
+    }
     // MARK: Layout and Theme
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)

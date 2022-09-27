@@ -255,11 +255,14 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     }
 
     @objc func didTapUser() {
-        print("TAPPED USER TIP")
-        let userBasicInfo = UserBasicInfo(userId: self.viewModel?.getUserId() ?? "0", username: self.viewModel?.getUsername() ?? "")
-        
+        let userBasicInfo = UserBasicInfo(userId: self.viewModel?.getUserId() ?? "0", username: self.viewModel?.getUsername() ?? "")        
         self.shouldShowUserProfile?(userBasicInfo)
     }
+    
+    func configureAnimationId(_ id: String) {
+        self.containerView.shift.id = id
+    }
+    
 }
 
 extension FeaturedTipCollectionViewCell {
