@@ -13,6 +13,8 @@ class UserProfileTipsViewModel {
     var userTipsPublisher: CurrentValueSubject<[FeaturedTip], Never> = .init([])
     var userTipsCacheCellViewModel: [String: TipsCellViewModel] = [:]
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var page: Int = 1
+    var tipsHasNextPage: Bool = false
 
     private var userId: String
     private var cancellables = Set<AnyCancellable>()
@@ -28,7 +30,7 @@ class UserProfileTipsViewModel {
 
         self.isLoadingPublisher.send(true)
 
-        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE", userIds: [userId])
+        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE", userIds: [userId], page: self.page)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -45,13 +47,60 @@ class UserProfileTipsViewModel {
 
                 if let tips = response.data {
                     self?.userTipsPublisher.value = tips
+
+                    if tips.count < 10 {
+                        self?.tipsHasNextPage = false
+                    }
+                    else {
+                        self?.tipsHasNextPage = true
+                    }
                 }
             })
             .store(in: &cancellables)
     }
 
+    private func loadNextUserTips() {
+
+        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE", userIds: [userId], page: self.page)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("USER TIPS ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+
+                self?.isLoadingPublisher.send(false)
+
+            }, receiveValue: { [weak self] response in
+                print("USER TIPS RESPONSE: \(response)")
+
+                if let tips = response.data {
+                    self?.userTipsPublisher.value.append(contentsOf: tips)
+
+                    if tips.count < 10 {
+                        self?.tipsHasNextPage = false
+                    }
+                    else {
+                        self?.tipsHasNextPage = true
+                    }
+                }
+            })
+            .store(in: &cancellables)
+
+    }
+
+    func requestNextPageTips() {
+        if !self.tipsHasNextPage {
+            return
+        }
+        self.page += 1
+        self.loadNextUserTips()
+    }
+
     func numberOfSections() -> Int {
-        return 1
+        return 2
     }
 
     func numberOfRows() -> Int {
@@ -138,6 +187,7 @@ class UserProfileTipsViewController: UIViewController {
         self.tableView.dataSource = self
 
         self.tableView.register(TipsTableViewCell.self, forCellReuseIdentifier: TipsTableViewCell.identifier)
+        self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
 
         self.isLoading = false
 
@@ -203,6 +253,14 @@ class UserProfileTipsViewController: UIViewController {
             .store(in: &cancellables)
     }
 
+    // MARK: Functions
+    private func showBetslip() {
+        let betslipViewController = BetslipViewController()
+        let navigationViewController = Router.navigationController(with: betslipViewController)
+
+        self.navigationController?.present(navigationViewController, animated: true, completion: nil)
+    }
+
 }
 
 //
@@ -215,28 +273,65 @@ extension UserProfileTipsViewController: UITableViewDelegate, UITableViewDataSou
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.numberOfRows()
+        switch section {
+        case 0:
+            return self.viewModel.numberOfRows()
+        case 1:
+            return self.viewModel.tipsHasNextPage ? 1 : 0
+        default:
+            return 0
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard
-            let cell = tableView.dequeueReusableCell(withIdentifier: TipsTableViewCell.identifier, for: indexPath) as? TipsTableViewCell,
-            let cellViewModel = self.viewModel.viewModel(forIndex: indexPath.row)
-        else {
-            fatalError("TipsTableViewCell not found")
+        switch indexPath.section {
+        case 0:
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: TipsTableViewCell.identifier, for: indexPath) as? TipsTableViewCell,
+                let cellViewModel = self.viewModel.viewModel(forIndex: indexPath.row)
+            else {
+                fatalError("TipsTableViewCell not found")
+            }
+
+            cell.configure(viewModel: cellViewModel, followingUsers: Env.gomaSocialClient.followingUsersPublisher.value)
+
+            cell.shouldShowBetslip = { [weak self] in
+                //self?.shouldShowBetslip?()
+                self?.showBetslip()
+            }
+
+            return cell
+        case 1:
+            guard
+                let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self)
+            else {
+                fatalError("LoadingMoreTableViewCell not found")
+            }
+            return cell
+        default:
+            fatalError()
         }
 
-        cell.configure(viewModel: cellViewModel, followingUsers: Env.gomaSocialClient.followingUsersPublisher.value)
-
-//        cell.shouldShowBetslip = { [weak self] in
-//            self?.shouldShowBetslip?()
-//        }
-
-        return cell
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+        switch indexPath.section {
+        case 0:
+            return UITableView.automaticDimension
+        case 1:
+            return 70
+        default:
+            return UITableView.automaticDimension
+        }
+    }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.section == 1, self.viewModel.userTipsPublisher.value.isNotEmpty {
+            if let typedCell = cell as? LoadingMoreTableViewCell {
+                typedCell.startAnimating()
+            }
+            self.viewModel.requestNextPageTips()
+        }
     }
 
 }

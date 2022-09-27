@@ -163,6 +163,12 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
+    func addFriendRequest(deviceId: String, userIds: [String], request: Bool) -> AnyPublisher<NetworkResponse<[String?]>, NetworkError> {
+        let endpoint = GomaGamingService.addFriendRequest(userIds: userIds, request: request)
+        let requestPublisher: AnyPublisher<NetworkResponse<[String?]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
     func deleteFriend(deviceId: String, userId: Int) -> AnyPublisher<NetworkResponse<[String]>, NetworkError> {
         let endpoint = GomaGamingService.deleteFriend(userId: userId)
         let requestPublisher: AnyPublisher<NetworkResponse<[String]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
@@ -280,10 +286,12 @@ class GomaGamingServiceClient {
                              friends: Bool? = nil,
                              followers: Bool? = nil,
                              topTips: Bool? = nil,
-                             userIds: [String]? = nil) -> AnyPublisher<NetworkResponse<[FeaturedTip]>, NetworkError> {
+                             userIds: [String]? = nil,
+                             page: Int? = nil) -> AnyPublisher<NetworkResponse<[FeaturedTip]>, NetworkError> {
         let endpoint = GomaGamingService.featuredTips(betType: betType, totalOddsMin: totalOddsMin, totalOddsMax: totalOddsMax,
                                                       friends: friends, followers: followers, topTips: topTips,
-                                                      userIds: userIds)
+                                                      userIds: userIds,
+                                                      page: page)
         let requestPublisher: AnyPublisher<NetworkResponse<[FeaturedTip]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
                 
         return requestPublisher

@@ -159,14 +159,19 @@ class UserProfileInfoViewController: UIViewController {
 
             let highestOddCardView = UserInfoSimpleCardView()
             highestOddCardView.configure(title: localized("highest_odd"), value: "\(userProfileInfo.rankings.highestOdd)", iconType: .highest)
-
-            let sportsPercentageCardView = UserInfoMultipleCardView()
-            sportsPercentageCardView.configure(title: localized("percentage_sports"), iconType: .percentage)
             
             self.simpleCardsStackView.addArrangedSubview(accumulatedCardView)
             self.simpleCardsStackView.addArrangedSubview(winsCardView)
             self.simpleCardsStackView.addArrangedSubview(highestOddCardView)
-            self.simpleCardsStackView.addArrangedSubview(sportsPercentageCardView)
+
+            if userProfileInfo.sportsPerc.isNotEmpty {
+
+                let sportsPercentageCardView = UserInfoMultipleCardView()
+                sportsPercentageCardView.configure(title: localized("percentage_sports"), iconType: .percentage, sportsData: userProfileInfo.sportsPerc)
+
+                self.simpleCardsStackView.addArrangedSubview(sportsPercentageCardView)
+
+            }
         }
 
     }
