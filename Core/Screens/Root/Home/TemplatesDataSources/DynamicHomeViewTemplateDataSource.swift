@@ -328,11 +328,11 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case .userMessageAlerts:
             return nil
         case .favorites:
-            return self.favoriteMatches.isNotEmpty ? "My Games" : nil
+            return self.favoriteMatches.isNotEmpty ? localized("my_games") : nil
         case .featuredTips:
-            return self.featuredTips.isNotEmpty ? "Featured Tips" : nil
+            return self.featuredTips.isNotEmpty ? localized("featured_tips") : nil
         case .suggestedBets:
-            return self.suggestedBets.isNotEmpty ? "Suggested Bets" : nil
+            return self.suggestedBets.isNotEmpty ? localized("suggested_bets") : nil
         case .sport(_, let name, _):
             return name.capitalized
         case .unknown:

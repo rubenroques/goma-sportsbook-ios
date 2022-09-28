@@ -25,6 +25,8 @@ class TipsListViewController: UIViewController {
     private lazy var emptyFriendsSubtitleLabel: UILabel = Self.createEmptyFriendsSubtitleLabel()
     private lazy var emptyFriendsButton: UIButton = Self.createEmptyFriendsButton()
 
+    private let refreshControl = UIRefreshControl()
+
     private var cancellables: Set<AnyCancellable> = []
     private let viewModel: TipsListViewModel
     private var filterSelectedOption: Int = 0
@@ -79,6 +81,10 @@ class TipsListViewController: UIViewController {
 
         self.tableView.register(TipsTableViewCell.self, forCellReuseIdentifier: TipsTableViewCell.identifier)
         self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
+
+        self.refreshControl.tintColor = UIColor.lightGray
+        self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
+        self.tableView.addSubview(self.refreshControl)
 
         self.isLoading = false
 
@@ -144,6 +150,9 @@ class TipsListViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLoading in
                 self?.isLoading = isLoading
+                if !isLoading {
+                    self?.refreshControl.endRefreshing()
+                }
             })
             .store(in: &cancellables)
 
@@ -168,7 +177,6 @@ class TipsListViewController: UIViewController {
     private func reloadFollowingUsers() {
         Env.gomaSocialClient.getFollowingUsers()
 
-        //Env.gomaSocialClient.refetchFollowingUsersPublisher.send()
     }
 
     // MARK: Actions
@@ -179,6 +187,10 @@ class TipsListViewController: UIViewController {
 
         self.navigationController?.pushViewController(addFriendViewController, animated: true)
 
+    }
+
+    @objc func refreshControllPulled() {
+        self.viewModel.loadInitialTips()
     }
 
 }

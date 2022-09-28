@@ -16,7 +16,6 @@ class UserInfoMultipleCardView: UIView {
     private lazy var leftCardsStackView: UIStackView = Self.createLeftCardsStackView()
     private lazy var rightCardsStackView: UIStackView = Self.createRightCardsStackView()
 
-
     // MARK: - Lifetime and Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)

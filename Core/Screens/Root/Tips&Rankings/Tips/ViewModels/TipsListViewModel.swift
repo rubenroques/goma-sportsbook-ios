@@ -56,7 +56,7 @@ class TipsListViewModel {
     private func loadAllTips() {
         // self.isLoadingPublisher.send(true)
 
-        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE", page: self.page)
+        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, page: self.page)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -69,7 +69,6 @@ class TipsListViewModel {
                 self?.isLoadingPublisher.send(false)
 
             }, receiveValue: { [weak self] response in
-                print("TIPS RESPONSE: \(response)")
 
                 if let tips = response.data {
                     self?.tipsPublisher.value = tips
@@ -88,7 +87,7 @@ class TipsListViewModel {
 
     private func loadTopTips() {
 
-        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE", topTips: true)
+        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, topTips: true)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -141,9 +140,7 @@ class TipsListViewModel {
     private func loadFriendsTips() {
         self.hasFriendsPublisher.send(true)
 
-        // self.isLoadingPublisher.send(true)
-
-        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE", friends: true)
+        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, friends: true)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -173,7 +170,7 @@ class TipsListViewModel {
 
     private func loadFollowersTips() {
 
-        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE", followers: true)
+        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, followers: true)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -214,7 +211,7 @@ class TipsListViewModel {
 
         switch self.tipsType {
         case .all:
-            Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE", page: self.page)
+            Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, page: self.page)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
                     switch completion {
@@ -225,7 +222,6 @@ class TipsListViewModel {
                     }
 
                 }, receiveValue: { [weak self] response in
-                    print("TIPS NEXT RESPONSE: \(response)")
 
                     if let tips = response.data {
                         self?.tipsPublisher.value.append(contentsOf: tips)
@@ -240,7 +236,7 @@ class TipsListViewModel {
                 })
                 .store(in: &cancellables)
         case .topTips:
-            Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE", topTips: true, page: self.page)
+            Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, topTips: true, page: self.page)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
                     switch completion {
@@ -251,7 +247,6 @@ class TipsListViewModel {
                     }
 
                 }, receiveValue: { [weak self] response in
-                    print("TIPS NEXT RESPONSE: \(response)")
 
                     if let tips = response.data {
                         self?.tipsPublisher.value.append(contentsOf: tips)
@@ -266,7 +261,7 @@ class TipsListViewModel {
                 })
                 .store(in: &cancellables)
         case .friends:
-            Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE", friends: true, page: self.page)
+            Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, friends: true, page: self.page)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
                     switch completion {
@@ -277,7 +272,6 @@ class TipsListViewModel {
                     }
 
                 }, receiveValue: { [weak self] response in
-                    print("TIPS NEXT RESPONSE: \(response)")
 
                     if let tips = response.data {
                         self?.tipsPublisher.value.append(contentsOf: tips)
@@ -292,7 +286,7 @@ class TipsListViewModel {
                 })
                 .store(in: &cancellables)
         case .followers:
-            Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE", followers: true, page: self.page)
+            Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, followers: true, page: self.page)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
                     switch completion {
@@ -303,7 +297,6 @@ class TipsListViewModel {
                     }
 
                 }, receiveValue: { [weak self] response in
-                    print("TIPS NEXT RESPONSE: \(response)")
 
                     if let tips = response.data {
                         self?.tipsPublisher.value.append(contentsOf: tips)
