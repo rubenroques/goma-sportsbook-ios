@@ -13,25 +13,49 @@ class ChatNotificationsViewModel {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
-    var followerViewsPublisher: CurrentValueSubject<[UserActionView], Never> = .init([])
-    var sharedTicketViewsPublisher: CurrentValueSubject<[UserActionView], Never> = .init([])
-    var chatNotificationViewsPublisher: CurrentValueSubject<[UserActionView], Never> = .init([])
-    var chatNotificationViewsArray: [UserActionView] = []
+    var friendRequestsPublisher: CurrentValueSubject<[FriendRequest], Never> = .init([])
     var chatNotificationsPublisher: CurrentValueSubject<[ChatNotification], Never> = .init([])
+
     var chatNotificationsArray: [ChatNotification] = []
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
-    var shouldRemoveFollowerView: ((UserActionView) -> Void)?
-    var shouldRemoveSharedTicketView: ((UserActionView) -> Void)?
-    var shouldRemoveChatNotificationView: ((UserActionView) -> Void)?
+    var shouldRemoveFriendRequestView: ((UserActionView) -> Void)?
     var isEmptyStatePublisher: CurrentValueSubject<Bool, Never> = .init(false)
+
+    var friendRequestCacheCellViewModel: [Int: UserNotificationInviteCellViewModel] = [:]
+    var notificationsCacheCellViewModel: [Int: UserNotificationCellViewModel] = [:]
 
     var page: Int = 1
 
     init() {
-        //self.setupFollowerViews()
-        //self.setupSharedTicketViews()
+        self.getFriendRequests()
         self.getChatNotifications()
+    }
+
+    private func getFriendRequests() {
+        self.isLoadingPublisher.send(true)
+
+        Env.gomaNetworkClient.getFriendsRequests(deviceId: Env.deviceId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("FRIEND REQUEST ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+
+                self?.isLoadingPublisher.send(false)
+
+            }, receiveValue: { [weak self] response in
+                print("FRIEND REQUEST RESPONSE: \(response)")
+
+                if let friendRequests = response.data {
+                    self?.friendRequestsPublisher.value = friendRequests
+                }
+
+            })
+            .store(in: &cancellables)
     }
 
     private func getChatNotifications() {
@@ -51,75 +75,74 @@ class ChatNotificationsViewModel {
 
             }, receiveValue: { [weak self] response in
                 if let chatNotifications = response.data {
-                    if chatNotifications.isNotEmpty {
-                        self?.setupChatNotificationViews(chatNotifications: chatNotifications)
-                    }
+
+                    self?.chatNotificationsPublisher.value = chatNotifications
                 }
             })
             .store(in: &cancellables)
     }
 
-    private func setupChatNotificationViews(chatNotifications: [ChatNotification]) {
-
-        for (index, chatNotification) in chatNotifications.enumerated() {
-
-            let chatNotificationView = UserActionView()
-
-            chatNotificationView.identifier = chatNotification.id
-
-            if index == chatNotifications.count - 1 {
-                chatNotificationView.hasLineSeparator = false
-            }
-
-            chatNotificationView.setupViewInfoSimple(title: chatNotification.text, readState: chatNotification.notificationUsers[safe: 0]?.read ?? -1)
-
-            chatNotificationView.tappedCloseButtonAction = { [weak self] in
-                if let viewIdentifier = chatNotificationView.identifier {
-                    self?.shouldRemoveChatNotificationView?(chatNotificationView)
-                    chatNotificationView.removeFromSuperview()
-
-                    if let chatNotificationsView = self?.chatNotificationViewsPublisher.value {
-                        for (index, view) in chatNotificationsView.enumerated() {
-                            if view.identifier == viewIdentifier {
-                                self?.chatNotificationViewsPublisher.value.remove(at: index)
-                            }
-                        }
-                    }
-                }
-            }
-
-            if self.chatNotificationViewsArray.isEmpty {
-                self.chatNotificationViewsArray.append(chatNotificationView)
-            }
-            else {
-                var newChatNotificationViewsArray = self.chatNotificationViewsArray
-                newChatNotificationViewsArray.append(chatNotificationView)
-                self.chatNotificationViewsArray = newChatNotificationViewsArray
-            }
-        }
-
-        if self.chatNotificationsArray.isEmpty {
-            self.chatNotificationsArray = chatNotifications
-        }
-        else {
-            var newChatNotificationArray = self.chatNotificationsArray
-            newChatNotificationArray.append(contentsOf: chatNotifications)
-            self.chatNotificationsArray = newChatNotificationArray
-        }
-
-        if self.chatNotificationsArray.count/self.page == 10 {
-            self.page += 1
-            self.getChatNotifications()
-        }
-        else {
-            self.chatNotificationsPublisher.send(self.chatNotificationsArray)
-            self.chatNotificationViewsPublisher.send(self.chatNotificationViewsArray)
-
-            self.isLoadingPublisher.send(false)
-            self.markNotificationsAsRead()
-        }
-
-    }
+//    private func setupChatNotificationViews(chatNotifications: [ChatNotification]) {
+//
+//        for (index, chatNotification) in chatNotifications.enumerated() {
+//
+//            let chatNotificationView = UserActionView()
+//
+//            chatNotificationView.identifier = chatNotification.id
+//
+//            if index == chatNotifications.count - 1 {
+//                chatNotificationView.hasLineSeparator = false
+//            }
+//
+//            chatNotificationView.setupViewInfoSimple(title: chatNotification.text, readState: chatNotification.notificationUsers[safe: 0]?.read ?? -1)
+//
+//            chatNotificationView.tappedCloseButtonAction = { [weak self] in
+//                if let viewIdentifier = chatNotificationView.identifier {
+//                    self?.shouldRemoveChatNotificationView?(chatNotificationView)
+//                    chatNotificationView.removeFromSuperview()
+//
+//                    if let chatNotificationsView = self?.chatNotificationViewsPublisher.value {
+//                        for (index, view) in chatNotificationsView.enumerated() {
+//                            if view.identifier == viewIdentifier {
+//                                self?.chatNotificationViewsPublisher.value.remove(at: index)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//
+//            if self.chatNotificationViewsArray.isEmpty {
+//                self.chatNotificationViewsArray.append(chatNotificationView)
+//            }
+//            else {
+//                var newChatNotificationViewsArray = self.chatNotificationViewsArray
+//                newChatNotificationViewsArray.append(chatNotificationView)
+//                self.chatNotificationViewsArray = newChatNotificationViewsArray
+//            }
+//        }
+//
+//        if self.chatNotificationsArray.isEmpty {
+//            self.chatNotificationsArray = chatNotifications
+//        }
+//        else {
+//            var newChatNotificationArray = self.chatNotificationsArray
+//            newChatNotificationArray.append(contentsOf: chatNotifications)
+//            self.chatNotificationsArray = newChatNotificationArray
+//        }
+//
+//        if self.chatNotificationsArray.count/self.page == 10 {
+//            self.page += 1
+//            self.getChatNotifications()
+//        }
+//        else {
+//            self.chatNotificationsPublisher.send(self.chatNotificationsArray)
+//            self.chatNotificationViewsPublisher.send(self.chatNotificationViewsArray)
+//
+//            self.isLoadingPublisher.send(false)
+//            self.markNotificationsAsRead()
+//        }
+//
+//    }
 
     func markNotificationsAsRead() {
 
@@ -139,90 +162,52 @@ class ChatNotificationsViewModel {
 
     }
 
-    private func setupFollowerViews() {
-        // TESTING
-        for i in 1...8 {
-            let followerView = UserActionView()
+    func updateFriendRequests(friendRequestId: Int) {
 
-            followerView.identifier = i
+        self.friendRequestCacheCellViewModel.removeValue(forKey: friendRequestId)
 
-            if i % 2 == 0 {
-                followerView.isOnline = true
-            }
+        let friendRequestsUpdated = self.friendRequestsPublisher.value.filter({
+            $0.id != friendRequestId
+        })
 
-            if i == 8 {
-                followerView.hasLineSeparator = false
-            }
-
-            followerView.setupViewInfo(title: "@GOMA_User", actionTitle: "FOLLOW")
-
-            followerView.tappedCloseButtonAction = { [weak self] in
-                if let viewIdentifier = followerView.identifier {
-                    print("REMOVED!")
-                    self?.shouldRemoveFollowerView?(followerView)
-                    followerView.removeFromSuperview()
-
-                    if let followersViews = self?.followerViewsPublisher.value {
-                        for (index, view) in followersViews.enumerated() {
-                            if view.identifier == viewIdentifier {
-                                self?.followerViewsPublisher.value.remove(at: index)
-                            }
-                        }
-                    }
-                }
-            }
-
-            followerView.tappedActionButtonAction = {
-                print("FOLLOW USER!")
-            }
-            self.followerViewsPublisher.value.append(followerView)
-        }
-
-        self.isEmptyStatePublisher.send(false)
+        self.friendRequestsPublisher.send(friendRequestsUpdated)
     }
 
-    private func setupSharedTicketViews() {
-        // TESTING
-        for i in 1...8 {
-            let sharedTicketView = UserActionView()
-
-            sharedTicketView.identifier = i
-
-            if i % 2 == 0 {
-                sharedTicketView.isOnline = true
-            }
-
-            if i == 8 {
-                sharedTicketView.hasLineSeparator = false
-            }
-
-            sharedTicketView.setupViewInfo(title: "@GOMA_User", actionTitle: "OPEN")
-
-            sharedTicketView.tappedCloseButtonAction = { [weak self] in
-                if let viewIdentifier = sharedTicketView.identifier {
-                    print("REMOVED!")
-                    self?.shouldRemoveSharedTicketView?(sharedTicketView)
-                    sharedTicketView.removeFromSuperview()
-
-                    if let sharedTicketViews = self?.sharedTicketViewsPublisher.value {
-                        for (index, view) in sharedTicketViews.enumerated() {
-                            if view.identifier == viewIdentifier {
-                                self?.sharedTicketViewsPublisher.value.remove(at: index)
-                            }
-                        }
-                    }
-                }
-            }
-
-            sharedTicketView.tappedActionButtonAction = {
-                print("SHARE TICKET!")
-            }
-
-            self.sharedTicketViewsPublisher.value.append(sharedTicketView)
-
+    func notificationViewModel(forIndex index: Int) -> UserNotificationCellViewModel? {
+        guard
+            let notification = self.chatNotificationsPublisher.value[safe: index]
+        else {
+            return nil
         }
 
-        self.isEmptyStatePublisher.send(false)
+        let notificationId = notification.id
 
+        if let notificationCellViewModel = notificationsCacheCellViewModel[notificationId] {
+            return notificationCellViewModel
+        }
+        else {
+            let notificationCellViewModel = UserNotificationCellViewModel(notification: notification)
+            self.notificationsCacheCellViewModel[notificationId] = notificationCellViewModel
+            return notificationCellViewModel
+        }
+    }
+
+    func friendRequestViewModel(forIndex index: Int) -> UserNotificationInviteCellViewModel? {
+        guard
+            let friendRequest = self.friendRequestsPublisher.value[safe: index]
+        else {
+            return nil
+        }
+
+        let friendRequestId = friendRequest.id
+
+        if let friendRequestCellViewModel = friendRequestCacheCellViewModel[friendRequestId] {
+            return friendRequestCellViewModel
+        }
+        else {
+            let friendRequestCellViewModel = UserNotificationInviteCellViewModel(friendRequest: friendRequest)
+            self.friendRequestCacheCellViewModel[friendRequestId] = friendRequestCellViewModel
+            return friendRequestCellViewModel
+        }
     }
 }

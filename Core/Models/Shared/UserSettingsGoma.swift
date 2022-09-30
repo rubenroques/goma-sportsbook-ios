@@ -52,6 +52,7 @@ struct NotificationsUserSettings: Codable {
     var notificationsSms: Bool
     var notificationsNews: Bool
     var notificationsChats: Bool
+    var anonymousTips: Bool
 
     enum CodingKeys: String, CodingKey {
         case notifications = "notifications"
@@ -69,6 +70,7 @@ struct NotificationsUserSettings: Codable {
         case notificationsSms = "notifications_sms"
         case notificationsNews = "notifications_news"
         case notificationsChats = "notifications_chats"
+        case anonymousTips = "anonymous_tips"
     }
     
     init() {
@@ -87,6 +89,7 @@ struct NotificationsUserSettings: Codable {
         self.notificationsSms = true
         self.notificationsNews = true
         self.notificationsChats = true
+        self.anonymousTips = false
     }
     
     init(from decoder: Decoder) throws {
@@ -243,9 +246,15 @@ struct NotificationsUserSettings: Codable {
             self.notificationsChats = false
         }
         
-        
-        
-        
+        if let anonymousTipsBool = try? container.decode(Bool.self, forKey: .anonymousTips) {
+            self.anonymousTips = anonymousTipsBool
+        }
+        else if let anonymousTipsInt = try? container.decode(Int.self, forKey: .anonymousTips) {
+            self.anonymousTips = anonymousTipsInt == 1
+        }
+        else {
+            self.anonymousTips = false
+        }
         
 //        
 //        

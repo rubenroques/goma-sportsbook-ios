@@ -173,7 +173,7 @@ class UserProfileViewController: UIViewController {
         self.followButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
 
         self.unfollowButton.backgroundColor = .clear
-        self.unfollowButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        self.unfollowButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
         self.unfollowButton.layer.borderColor = UIColor.App.buttonBackgroundSecondary.cgColor
 
         self.friendActionsStackView.backgroundColor = .clear
@@ -222,6 +222,8 @@ class UserProfileViewController: UIViewController {
         let customToast = ToastCustom.text(title: localized("friend_request_sent"))
 
         customToast.show()
+
+        self.addFriendButton.isEnabled = false
     }
 
     private func closeUserProfile() {
@@ -450,7 +452,7 @@ extension UserProfileViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("", for: .normal)
         button.setImage(UIImage(named: "user_add_friend_icon"), for: .normal)
-        button.contentMode = .scaleAspectFill
+        button.contentMode = .scaleAspectFit
         return button
     }
 
@@ -459,7 +461,7 @@ extension UserProfileViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("", for: .normal)
         button.setImage(UIImage(named: "user_chat_icon"), for: .normal)
-        button.contentMode = .scaleAspectFill
+        button.contentMode = .scaleAspectFit
         return button
     }
 
@@ -599,17 +601,11 @@ extension UserProfileViewController {
             self.userProfileActionsStackView.trailingAnchor.constraint(equalTo: self.moreOptionsButton.leadingAnchor, constant: -15),
             self.userProfileActionsStackView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
 
-//            self.followActionsStackView.trailingAnchor.constraint(equalTo: self.friendActionsStackView.leadingAnchor, constant: -15),
-//            self.followActionsStackView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-
             self.followButton.widthAnchor.constraint(equalToConstant: 81),
             self.followButton.heightAnchor.constraint(equalToConstant: 29),
 
             self.unfollowButton.widthAnchor.constraint(equalToConstant: 81),
             self.unfollowButton.heightAnchor.constraint(equalToConstant: 29),
-
-//            self.friendActionsStackView.trailingAnchor.constraint(equalTo: self.moreOptionsButton.leadingAnchor, constant: -15),
-//            self.friendActionsStackView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
 
             self.addFriendButton.widthAnchor.constraint(equalToConstant: 32),
             self.addFriendButton.heightAnchor.constraint(equalToConstant: 32),

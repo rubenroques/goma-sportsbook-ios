@@ -51,7 +51,7 @@ class FeaturedTipCollectionViewModel {
         return ""
     }
 
-    func getUserId() -> String {
+    func getUserId() -> String? {
         return self.featuredTip.userId
     }
 

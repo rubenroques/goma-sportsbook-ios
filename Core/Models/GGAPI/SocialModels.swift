@@ -170,7 +170,8 @@ struct ChatNotification: Decodable {
     var title: String
     var text: String
     var type: String
-    var typeId: Int
+    var typeId: Int?
+    var subType: String
     var processed: Int
     var createdAt: String?
     var updatedAt: String?
@@ -186,6 +187,7 @@ struct ChatNotification: Decodable {
         case text = "text"
         case type = "type"
         case typeId = "type_id"
+        case subType = "subtype"
         case processed = "processed"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
@@ -281,7 +283,7 @@ struct FeaturedTip: Decodable {
     var status: String
     var statusLabel: String
     var placedDate: String?
-    var userId: String
+    var userId: String?
     var username: String
     var totalOdds: String
 
@@ -454,5 +456,17 @@ struct UserProfileSportsData: Decodable {
     enum CodingKeys: String, CodingKey {
         case sportId = "sport_id"
         case percentage = "percentage"
+    }
+}
+
+struct FriendRequest: Decodable {
+    var id: Int
+    var name: String
+    var username: String
+
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case name = "name"
+        case username = "username"
     }
 }

@@ -138,7 +138,6 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
-    
     func requestNotificationsUserSettingsJSON(deviceId: String) -> AnyPublisher<JSON, NetworkError> {
         let endpoint = GomaGamingService.getNotificationsUserSettings
         let requestPublisher: AnyPublisher<JSON, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
@@ -197,6 +196,12 @@ class GomaGamingServiceClient {
     func requestFriends(deviceId: String) -> AnyPublisher<NetworkResponse<[GomaFriend]>, NetworkError> {
         let endpoint = GomaGamingService.listFriends
         let requestPublisher: AnyPublisher<NetworkResponse<[GomaFriend]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
+    func getFriendsRequests(deviceId: String) -> AnyPublisher<NetworkResponse<[FriendRequest]>, NetworkError> {
+        let endpoint = GomaGamingService.getFriendRequests
+        let requestPublisher: AnyPublisher<NetworkResponse<[FriendRequest]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
 

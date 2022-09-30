@@ -23,7 +23,7 @@ class TipsCellViewModel {
         return self.featuredTip.username
     }
 
-    func getUserId() -> String {
+    func getUserId() -> String? {
         return self.featuredTip.userId
     }
 

@@ -36,6 +36,7 @@ enum GomaGamingService {
     case deleteFriend(userId: Int)
     case listFriends
     case inviteFriend(phone: String)
+    case getFriendRequests
     case chatrooms(page: String)
     case addGroup(userIds: [String], groupName: String)
     case deleteGroup(chatroomId: Int)
@@ -129,6 +130,8 @@ extension GomaGamingService: Endpoint {
             return "/api/social/\(apiVersion)/friends"
         case .inviteFriend:
             return "/api/social/\(apiVersion)/friends/invite"
+        case .getFriendRequests:
+            return "/api/social/\(apiVersion)/friends/pending"
         case .chatrooms:
             return "/api/social/\(apiVersion)/chatrooms"
         case .addGroup:
@@ -198,7 +201,7 @@ extension GomaGamingService: Endpoint {
             return [URLQueryItem(name: "favorite_ids[]", value: favorite)]
         
             // Social
-        case .addFriend, .addFriendRequest, .deleteFriend, .listFriends, .inviteFriend,
+        case .addFriend, .addFriendRequest, .deleteFriend, .listFriends, .inviteFriend, .getFriendRequests,
                 .addGroup, .deleteGroup, .leaveGroup,
                 .searchUserCode, .lookupPhone,
                 .setNotificationRead, .setAllNotificationRead,
@@ -368,7 +371,7 @@ extension GomaGamingService: Endpoint {
         // Social
         case .addFriend, .addFriendRequest, .inviteFriend, .addGroup, .addUserToGroup, .lookupPhone, .setNotificationRead, .setAllNotificationRead, .followUser:
             return .post
-        case .listFriends, .chatrooms,
+        case .listFriends, .getFriendRequests, .chatrooms,
                 .searchUserCode,
                 .getNotification, .notificationsCounter,
                 .featuredTips, .rankingsTips,
