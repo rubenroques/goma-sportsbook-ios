@@ -166,7 +166,6 @@ extension AppSettingsViewController {
     }
 
     @objc private func didTapTipsView() {
-        print("TAP TIPS SETTINGS")
         let tipsSettingsViewModel = TipsSettingsViewModel()
 
         let tipsSettingsViewController = TipsSettingsViewController(viewModel: tipsSettingsViewModel)

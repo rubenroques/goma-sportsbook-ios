@@ -14,7 +14,7 @@ class TipsSettingsViewModel {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
-    var notificationsUserSettings: NotificationsUserSettings?
+    var bettingUserSettings: BettingUserSettings?
 
     init() {
 
@@ -23,29 +23,30 @@ class TipsSettingsViewModel {
 
     // MARK: Setup and functions
     private func getUserSettings() {
-        self.notificationsUserSettings = UserDefaults.standard.notificationsUserSettings
+        self.bettingUserSettings = UserDefaults.standard.bettingUserSettings
     }
 
-    func storeNotificationsUserSettings() {
-        if let notificationsUserSettings = self.notificationsUserSettings {
-            UserDefaults.standard.notificationsUserSettings = notificationsUserSettings
+    func storeBettingUserSettings() {
+        if let bettingUserSettings = self.bettingUserSettings {
+            UserDefaults.standard.bettingUserSettings = bettingUserSettings
+            let newBetting = UserDefaults.standard.bettingUserSettings
             self.postOddsSettingsToGoma()
         }
     }
 
     func updateAnonymousTipsSetting(enabled: Bool) {
-        self.notificationsUserSettings?.anonymousTips = enabled
-        self.storeNotificationsUserSettings()
+        self.bettingUserSettings?.anonymousTips = enabled
+        self.storeBettingUserSettings()
     }
 
     private func postOddsSettingsToGoma() {
-        let notificationsUserSettings = UserDefaults.standard.notificationsUserSettings
-        Env.gomaNetworkClient.postNotificationsUserSettings(deviceId: Env.deviceId, notificationsUserSettings: notificationsUserSettings)
+        let bettingUserSettings = UserDefaults.standard.bettingUserSettings
+        Env.gomaNetworkClient.postBettingUserSettings(deviceId: Env.deviceId, bettingUserSettings: bettingUserSettings)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
-                print("PostSettings completion \(completion)")
+                print("PostSettings Betting completion \(completion)")
             }, receiveValue: { response in
-                print("PostSettings response \(response)")
+                print("PostSettings Betting response \(response)")
             })
             .store(in: &cancellables)
     }
@@ -131,7 +132,7 @@ class TipsSettingsViewController: UIViewController {
         }
 
         // Check options
-        if let tipsUserSettings = self.viewModel.notificationsUserSettings {
+        if let tipsUserSettings = self.viewModel.bettingUserSettings {
 
             if tipsUserSettings.anonymousTips {
                 anonymousTipsView.isSwitchOn = true

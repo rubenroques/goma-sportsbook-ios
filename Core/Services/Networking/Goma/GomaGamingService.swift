@@ -37,6 +37,8 @@ enum GomaGamingService {
     case listFriends
     case inviteFriend(phone: String)
     case getFriendRequests
+    case approveFriendRequest(userId: String)
+    case rejectFriendRequest(userId: String)
     case chatrooms(page: String)
     case addGroup(userIds: [String], groupName: String)
     case deleteGroup(chatroomId: Int)
@@ -132,6 +134,10 @@ extension GomaGamingService: Endpoint {
             return "/api/social/\(apiVersion)/friends/invite"
         case .getFriendRequests:
             return "/api/social/\(apiVersion)/friends/pending"
+        case .approveFriendRequest(let userId):
+            return "/api/social/\(apiVersion)/friends/\(userId)/approve"
+        case .rejectFriendRequest(let userId):
+            return "/api/social/\(apiVersion)/friends/\(userId)/reject"
         case .chatrooms:
             return "/api/social/\(apiVersion)/chatrooms"
         case .addGroup:
@@ -202,6 +208,7 @@ extension GomaGamingService: Endpoint {
         
             // Social
         case .addFriend, .addFriendRequest, .deleteFriend, .listFriends, .inviteFriend, .getFriendRequests,
+                .approveFriendRequest, .rejectFriendRequest,
                 .addGroup, .deleteGroup, .leaveGroup,
                 .searchUserCode, .lookupPhone,
                 .setNotificationRead, .setAllNotificationRead,
@@ -369,7 +376,9 @@ extension GomaGamingService: Endpoint {
             return .post
             
         // Social
-        case .addFriend, .addFriendRequest, .inviteFriend, .addGroup, .addUserToGroup, .lookupPhone, .setNotificationRead, .setAllNotificationRead, .followUser:
+        case .addFriend, .addFriendRequest, .inviteFriend, .approveFriendRequest,
+                .addGroup, .addUserToGroup, .lookupPhone,
+                .setNotificationRead, .setAllNotificationRead, .followUser:
             return .post
         case .listFriends, .getFriendRequests, .chatrooms,
                 .searchUserCode,
@@ -378,7 +387,8 @@ extension GomaGamingService: Endpoint {
                 .getFollowers, .getFollowingUsers, .getFollowingTotalUsers,
                 .getUserProfileInfo:
             return .get
-        case .deleteGroup, .leaveGroup, .deleteFriend, .removeUser, .deleteFollowUser:
+        case .deleteGroup, .leaveGroup, .deleteFriend, .rejectFriendRequest,
+                .removeUser, .deleteFollowUser:
             return .delete
         case .editGroup:
             return .put

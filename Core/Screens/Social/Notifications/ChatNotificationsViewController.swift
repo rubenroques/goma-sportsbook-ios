@@ -322,11 +322,13 @@ extension ChatNotificationsViewController: UITableViewDataSource, UITableViewDel
                 cell.configure(viewModel: cellViewModel)
 
                 cell.tappedAcceptAction = { [weak self] friendRequestId in
-                    self?.viewModel.updateFriendRequests(friendRequestId: friendRequestId)
+                    //self?.viewModel.updateFriendRequests(friendRequestId: friendRequestId)
+                    self?.viewModel.approveFriendRequest(friendRequestId: friendRequestId)
                 }
 
                 cell.tappedRejectAction = { [weak self] friendRequestId in
-                    self?.viewModel.updateFriendRequests(friendRequestId: friendRequestId)
+                    //self?.viewModel.updateFriendRequests(friendRequestId: friendRequestId)
+                    self?.viewModel.rejectFriendRequest(friendRequestId: friendRequestId)
                 }
 
                 return cell

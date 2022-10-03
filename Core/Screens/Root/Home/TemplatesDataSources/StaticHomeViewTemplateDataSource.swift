@@ -160,6 +160,11 @@ class StaticHomeViewTemplateDataSource {
 
     func refresh() {
 
+        self.cachedMatchStatsViewModels = [:]
+        self.cachedSuggestedBetLineViewModel = nil
+        self.sportGroupViewModelCache = [:]
+        self.cachedFeaturedTipLineViewModel = nil
+
         self.fetchLocations()
             .sink { [weak self] locations in
                 self?.store.storeLocations(locations: locations)

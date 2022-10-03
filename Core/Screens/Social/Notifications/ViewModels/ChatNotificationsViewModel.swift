@@ -162,6 +162,46 @@ class ChatNotificationsViewModel {
 
     }
 
+    func approveFriendRequest(friendRequestId: Int) {
+
+        Env.gomaNetworkClient.approveFriendRequest(deviceId: Env.deviceId, userId: "\(friendRequestId)")
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("APPROVE FRIEND REQUEST ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+            }, receiveValue: { [weak self] response in
+                print("APPROVE FRIEND REQUEST SUCCESS: \(response)")
+                self?.updateFriendRequests(friendRequestId: friendRequestId)
+                Env.gomaSocialClient.forceRefresh()
+
+            })
+            .store(in: &cancellables)
+
+    }
+
+    func rejectFriendRequest(friendRequestId: Int) {
+
+        Env.gomaNetworkClient.rejectFriendRequest(deviceId: Env.deviceId, userId: "\(friendRequestId)")
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("REJECT FRIEND REQUEST ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+            }, receiveValue: { [weak self] response in
+                print("REJECT FRIEND REQUEST SUCCESS: \(response)")
+                self?.updateFriendRequests(friendRequestId: friendRequestId)
+            })
+            .store(in: &cancellables)
+
+    }
+
     func updateFriendRequests(friendRequestId: Int) {
 
         self.friendRequestCacheCellViewModel.removeValue(forKey: friendRequestId)

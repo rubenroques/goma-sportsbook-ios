@@ -43,6 +43,7 @@ class UserProfileViewController: UIViewController {
 
     private var cancellables = Set<AnyCancellable>()
 
+
     // MARK: Public properties
     var hasFollowOption: Bool = true {
         didSet {
@@ -72,6 +73,7 @@ class UserProfileViewController: UIViewController {
     }
 
     var shouldCloseChat: (() -> Void)?
+    var shouldReloadChatList: (() -> Void)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: UserProfileViewModel) {
@@ -290,9 +292,11 @@ class UserProfileViewController: UIViewController {
             guard let self = self else {return}
             if self.isChatProfile {
                 self.shouldCloseChat?()
+                self.navigationController?.popToRootViewController(animated: true)
             }
             self.closeUserProfile()
         }
+
     }
 
     // MARK: Actions

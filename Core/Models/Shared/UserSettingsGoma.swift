@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 struct BettingUserSettings: Codable {
 
     var oddValidationType: String
@@ -22,7 +21,18 @@ struct BettingUserSettings: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         self.oddValidationType = try container.decode(String.self, forKey: .oddValidationType)
-        self.anonymousTips = (try? container.decode(Int.self, forKey: .anonymousTips)) ?? 0 == 1
+
+//        self.anonymousTips = (try? container.decode(Int.self, forKey: .anonymousTips)) ?? 0 == 1
+
+        if let anonymousTipsBool = try? container.decode(Bool.self, forKey: .anonymousTips) {
+            self.anonymousTips = anonymousTipsBool
+        }
+        else if let anonymousTipsInt = try? container.decode(Int.self, forKey: .anonymousTips) {
+            self.anonymousTips = anonymousTipsInt == 1
+        }
+        else {
+            self.anonymousTips = false
+        }
     }
     
     init() {
@@ -52,7 +62,6 @@ struct NotificationsUserSettings: Codable {
     var notificationsSms: Bool
     var notificationsNews: Bool
     var notificationsChats: Bool
-    var anonymousTips: Bool
 
     enum CodingKeys: String, CodingKey {
         case notifications = "notifications"
@@ -70,7 +79,6 @@ struct NotificationsUserSettings: Codable {
         case notificationsSms = "notifications_sms"
         case notificationsNews = "notifications_news"
         case notificationsChats = "notifications_chats"
-        case anonymousTips = "anonymous_tips"
     }
     
     init() {
@@ -89,7 +97,6 @@ struct NotificationsUserSettings: Codable {
         self.notificationsSms = true
         self.notificationsNews = true
         self.notificationsChats = true
-        self.anonymousTips = false
     }
     
     init(from decoder: Decoder) throws {
@@ -244,16 +251,6 @@ struct NotificationsUserSettings: Codable {
         }
         else {
             self.notificationsChats = false
-        }
-        
-        if let anonymousTipsBool = try? container.decode(Bool.self, forKey: .anonymousTips) {
-            self.anonymousTips = anonymousTipsBool
-        }
-        else if let anonymousTipsInt = try? container.decode(Int.self, forKey: .anonymousTips) {
-            self.anonymousTips = anonymousTipsInt == 1
-        }
-        else {
-            self.anonymousTips = false
         }
         
 //        
