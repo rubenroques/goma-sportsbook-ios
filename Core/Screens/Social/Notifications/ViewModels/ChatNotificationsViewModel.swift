@@ -21,11 +21,13 @@ class ChatNotificationsViewModel {
 
     var shouldRemoveFriendRequestView: ((UserActionView) -> Void)?
     var isEmptyStatePublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var shouldReloadData: (() -> Void)?
 
     var friendRequestCacheCellViewModel: [Int: UserNotificationInviteCellViewModel] = [:]
     var notificationsCacheCellViewModel: [Int: UserNotificationCellViewModel] = [:]
 
     var page: Int = 1
+    var notificationsHasNextPage: Bool = false
 
     init() {
         self.getFriendRequests()
@@ -48,8 +50,6 @@ class ChatNotificationsViewModel {
                 self?.isLoadingPublisher.send(false)
 
             }, receiveValue: { [weak self] response in
-                print("FRIEND REQUEST RESPONSE: \(response)")
-
                 if let friendRequests = response.data {
                     self?.friendRequestsPublisher.value = friendRequests
                 }
@@ -77,72 +77,17 @@ class ChatNotificationsViewModel {
                 if let chatNotifications = response.data {
 
                     self?.chatNotificationsPublisher.value = chatNotifications
+
+                    if chatNotifications.count < 10 {
+                        self?.notificationsHasNextPage = false
+                    }
+                    else {
+                        self?.notificationsHasNextPage = true
+                    }
                 }
             })
             .store(in: &cancellables)
     }
-
-//    private func setupChatNotificationViews(chatNotifications: [ChatNotification]) {
-//
-//        for (index, chatNotification) in chatNotifications.enumerated() {
-//
-//            let chatNotificationView = UserActionView()
-//
-//            chatNotificationView.identifier = chatNotification.id
-//
-//            if index == chatNotifications.count - 1 {
-//                chatNotificationView.hasLineSeparator = false
-//            }
-//
-//            chatNotificationView.setupViewInfoSimple(title: chatNotification.text, readState: chatNotification.notificationUsers[safe: 0]?.read ?? -1)
-//
-//            chatNotificationView.tappedCloseButtonAction = { [weak self] in
-//                if let viewIdentifier = chatNotificationView.identifier {
-//                    self?.shouldRemoveChatNotificationView?(chatNotificationView)
-//                    chatNotificationView.removeFromSuperview()
-//
-//                    if let chatNotificationsView = self?.chatNotificationViewsPublisher.value {
-//                        for (index, view) in chatNotificationsView.enumerated() {
-//                            if view.identifier == viewIdentifier {
-//                                self?.chatNotificationViewsPublisher.value.remove(at: index)
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//
-//            if self.chatNotificationViewsArray.isEmpty {
-//                self.chatNotificationViewsArray.append(chatNotificationView)
-//            }
-//            else {
-//                var newChatNotificationViewsArray = self.chatNotificationViewsArray
-//                newChatNotificationViewsArray.append(chatNotificationView)
-//                self.chatNotificationViewsArray = newChatNotificationViewsArray
-//            }
-//        }
-//
-//        if self.chatNotificationsArray.isEmpty {
-//            self.chatNotificationsArray = chatNotifications
-//        }
-//        else {
-//            var newChatNotificationArray = self.chatNotificationsArray
-//            newChatNotificationArray.append(contentsOf: chatNotifications)
-//            self.chatNotificationsArray = newChatNotificationArray
-//        }
-//
-//        if self.chatNotificationsArray.count/self.page == 10 {
-//            self.page += 1
-//            self.getChatNotifications()
-//        }
-//        else {
-//            self.chatNotificationsPublisher.send(self.chatNotificationsArray)
-//            self.chatNotificationViewsPublisher.send(self.chatNotificationViewsArray)
-//
-//            self.isLoadingPublisher.send(false)
-//            self.markNotificationsAsRead()
-//        }
-//
-//    }
 
     func markNotificationsAsRead() {
 
@@ -156,7 +101,7 @@ class ChatNotificationsViewModel {
                     ()
                 }
             }, receiveValue: { [weak self] _ in
-                print("CHAT NOTIF READ SUCCESS")
+                self?.updateChatNotificationsStatus()
             })
             .store(in: &cancellables)
 
@@ -174,7 +119,6 @@ class ChatNotificationsViewModel {
                     ()
                 }
             }, receiveValue: { [weak self] response in
-                print("APPROVE FRIEND REQUEST SUCCESS: \(response)")
                 self?.updateFriendRequests(friendRequestId: friendRequestId)
                 Env.gomaSocialClient.forceRefresh()
 
@@ -195,11 +139,69 @@ class ChatNotificationsViewModel {
                     ()
                 }
             }, receiveValue: { [weak self] response in
-                print("REJECT FRIEND REQUEST SUCCESS: \(response)")
                 self?.updateFriendRequests(friendRequestId: friendRequestId)
             })
             .store(in: &cancellables)
 
+    }
+
+    private func loadNextNotifications() {
+
+        Env.gomaNetworkClient.requestNotifications(deviceId: Env.deviceId, type: .chat, page: self.page)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("CHAT NOTIFICATIONS ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+
+                self?.isLoadingPublisher.send(false)
+
+            }, receiveValue: { [weak self] response in
+                if let chatNotifications = response.data {
+
+                    self?.chatNotificationsPublisher.value.append(contentsOf: chatNotifications)
+
+                    if chatNotifications.count < 10 {
+                        self?.notificationsHasNextPage = false
+                    }
+                    else {
+                        self?.notificationsHasNextPage = true
+                    }
+                }
+            })
+            .store(in: &cancellables)
+    }
+
+    func requestNextNotifications() {
+        if !self.notificationsHasNextPage {
+            return
+        }
+        self.page += 1
+        self.loadNextNotifications()
+    }
+
+    func updateChatNotificationsStatus() {
+
+        for notificationCacheCellViewModel in self.notificationsCacheCellViewModel {
+
+            if notificationCacheCellViewModel.value.notification.notificationUsers[safe: 0]?.read == 0 {
+                var newNotificationCacheCellViewModel = notificationCacheCellViewModel
+                var newNotificationUsers = newNotificationCacheCellViewModel.value.notification.notificationUsers
+
+                if var newNotificationUser = newNotificationUsers[safe: 0] {
+                    newNotificationUser.read = 1
+                    newNotificationUsers = [newNotificationUser]
+                    newNotificationCacheCellViewModel.value.notification.notificationUsers = newNotificationUsers
+
+                    self.notificationsCacheCellViewModel[notificationCacheCellViewModel.value.notification.id] = newNotificationCacheCellViewModel.value
+                }
+            }
+        }
+
+        self.shouldReloadData?()
     }
 
     func updateFriendRequests(friendRequestId: Int) {

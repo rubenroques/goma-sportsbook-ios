@@ -18,11 +18,7 @@ class ChatNotificationsViewController: UIViewController {
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var notificationsButton: UIButton = Self.createNotificationsButton()
     private lazy var closeButton: UIButton = Self.createCloseButton()
-//    private lazy var readAllButon: UIButton = Self.createReadAllButton()
     private lazy var tableView: UITableView = Self.createTableView()
-//    private lazy var scrollView: UIScrollView = Self.createScrollView()
-//    private lazy var chatNotificationsStackView: UIStackView = Self.createChatNotificationsStackView()
-//    private lazy var sharedTicketsStackView: UIStackView = Self.createSharedTicketsStackView()
     private lazy var emptyStateView: UIView = Self.createEmptyStateView()
     private lazy var emptyStateImageView: UIImageView = Self.createEmptyStateImageView()
     private lazy var emptyStateLabel: UILabel = Self.createEmptyStateLabel()
@@ -83,13 +79,13 @@ class ChatNotificationsViewController: UIViewController {
         self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         self.tableView.register(ListTitleHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: ListTitleHeaderFooterView.identifier)
         self.tableView.register(ListActionHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: ListActionHeaderFooterView.identifier)
-        
+        self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
+
         self.bind(toViewModel: self.viewModel)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
         self.notificationsButton.addTarget(self, action: #selector(didTapNotificationButton), for: .primaryActionTriggered)
-//        self.readAllButon.addTarget(self, action: #selector(didTapReadAllButton), for: .primaryActionTriggered)
 
         self.isNotificationMuted = false
 
@@ -129,15 +125,7 @@ class ChatNotificationsViewController: UIViewController {
         self.closeButton.backgroundColor = .clear
         self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
-//        self.readAllButon.backgroundColor = .clear
-//        self.readAllButon.setTitleColor(UIColor.App.textSecondary, for: .normal)
-
         self.tableView.backgroundColor = .clear
-
-//        self.scrollView.backgroundColor = .clear
-//
-//        self.chatNotificationsStackView.backgroundColor = UIColor.App.backgroundSecondary
-//        self.sharedTicketsStackView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.emptyStateView.backgroundColor = UIColor.App.backgroundPrimary
         self.emptyStateImageView.backgroundColor = .clear
@@ -148,13 +136,6 @@ class ChatNotificationsViewController: UIViewController {
 
     // MARK: Binding
     func bind(toViewModel viewModel: ChatNotificationsViewModel) {
-
-//        viewModel.isEmptyStatePublisher
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] isEmptyState in
-//                self?.isEmptyState = isEmptyState
-//            })
-//            .store(in: &cancellables)
 
         Publishers.CombineLatest(viewModel.friendRequestsPublisher, viewModel.chatNotificationsPublisher)
             .receive(on: DispatchQueue.main)
@@ -171,23 +152,16 @@ class ChatNotificationsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-//        viewModel.chatNotificationsPublisher
-//            .receive(on: DispatchQueue.main)
-//            .dropFirst()
-//            .sink(receiveValue: { [weak self] chatNotifications in
-//
-//                self?.isEmptyState = chatNotifications.isEmpty
-//                self?.tableView.reloadData()
-//
-//            })
-//            .store(in: &cancellables)
-
         viewModel.isLoadingPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLoading in
                 self?.isLoading = isLoading
             })
             .store(in: &cancellables)
+
+        viewModel.shouldReloadData = { [weak self] in
+            self?.tableView.reloadData()
+        }
 
     }
 
@@ -270,9 +244,8 @@ class ChatNotificationsViewController: UIViewController {
     }
 
     @objc func didTapReadAllButton() {
-        //self.chatNotificationsStackView.removeAllArrangedSubviews()
-        // self.sharedTicketsStackView.removeAllArrangedSubviews()
-        //self.isEmptyState = true
+        self.viewModel.markNotificationsAsRead()
+
     }
 
 }
@@ -281,10 +254,10 @@ extension ChatNotificationsViewController: UITableViewDataSource, UITableViewDel
 
     func numberOfSections(in tableView: UITableView) -> Int {
         if self.viewModel.friendRequestsPublisher.value.isEmpty || self.viewModel.chatNotificationsPublisher.value.isEmpty {
-            return 1
+            return 2
         }
         else {
-            return 2
+            return 3
         }
     }
 
@@ -302,7 +275,9 @@ extension ChatNotificationsViewController: UITableViewDataSource, UITableViewDel
                 return self.viewModel.chatNotificationsPublisher.value.count
 
             }
-            return 0
+            return self.viewModel.notificationsHasNextPage ? 1 : 0
+        case 2:
+            return self.viewModel.notificationsHasNextPage ? 1 : 0
         default:
             return 0
         }
@@ -322,12 +297,10 @@ extension ChatNotificationsViewController: UITableViewDataSource, UITableViewDel
                 cell.configure(viewModel: cellViewModel)
 
                 cell.tappedAcceptAction = { [weak self] friendRequestId in
-                    //self?.viewModel.updateFriendRequests(friendRequestId: friendRequestId)
                     self?.viewModel.approveFriendRequest(friendRequestId: friendRequestId)
                 }
 
                 cell.tappedRejectAction = { [weak self] friendRequestId in
-                    //self?.viewModel.updateFriendRequests(friendRequestId: friendRequestId)
                     self?.viewModel.rejectFriendRequest(friendRequestId: friendRequestId)
                 }
 
@@ -358,35 +331,23 @@ extension ChatNotificationsViewController: UITableViewDataSource, UITableViewDel
                 return cell
             }
             else {
-                return UITableViewCell()
+                guard
+                    let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self)
+                else {
+                    fatalError("LoadingMoreTableViewCell not found")
+                }
+                return cell
             }
+        case 2:
+            guard
+                let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self)
+            else {
+                fatalError("LoadingMoreTableViewCell not found")
+            }
+            return cell
         default:
             return UITableViewCell()
         }
-
-//        guard let cellViewModel = self.viewModel.viewModel(forIndex: indexPath.row)
-//        else {
-//            fatalError()
-//        }
-//
-//        if cellViewModel.notification.subType == "user_invitation" {
-//            if let cell = tableView.dequeueCellType(UserNotificationInviteTableViewCell.self) {
-//                cell.configure(viewModel: cellViewModel)
-//
-//                return cell
-//            }
-//        }
-//        else {
-//
-//            if let cell = tableView.dequeueCellType(UserNotificationTableViewCell.self) {
-//                cell.configure(viewModel: cellViewModel)
-//
-//                return cell
-//            }
-//
-//        }
-//
-//        return UITableViewCell()
 
     }
 
@@ -429,7 +390,7 @@ extension ChatNotificationsViewController: UITableViewDataSource, UITableViewDel
             headerView.configureHeader(title: "Social Notifications", actionTitle: localized("read_all"))
 
             headerView.tappedActionButton = { [weak self] in
-                print("TAPPED READ ALL!")
+                self?.didTapReadAllButton()
             }
 
             return headerView
@@ -444,7 +405,7 @@ extension ChatNotificationsViewController: UITableViewDataSource, UITableViewDel
                 headerView.configureHeader(title: "Social Notifications", actionTitle: localized("read_all"))
 
                 headerView.tappedActionButton = { [weak self] in
-                    print("TAPPED READ ALL!")
+                    self?.didTapReadAllButton()
                 }
 
                 return headerView
@@ -474,7 +435,7 @@ extension ChatNotificationsViewController: UITableViewDataSource, UITableViewDel
                 return UITableView.automaticDimension
 
             }
-            return 0
+            return 70
         default:
             return 0
         }
@@ -496,22 +457,34 @@ extension ChatNotificationsViewController: UITableViewDataSource, UITableViewDel
                 return 40
 
             }
-            return 0
+            return 70
         default:
             return 0
         }
     }
 
-//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        if indexPath.section == 1, self.viewModel.chatNotificationsPublisher.value.isNotEmpty {
-//            if let typedCell = cell as? LoadingMoreTableViewCell {
-//                typedCell.startAnimating()
-//            }
-//
-//            self.viewModel.requestNextTips()
-//
-//        }
-//    }
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if self.viewModel.friendRequestsPublisher.value.isNotEmpty {
+            if indexPath.section == 2, self.viewModel.chatNotificationsPublisher.value.isNotEmpty {
+                if let typedCell = cell as? LoadingMoreTableViewCell {
+                    typedCell.startAnimating()
+                }
+
+                self.viewModel.requestNextNotifications()
+
+            }
+        }
+        else {
+            if indexPath.section == 1, self.viewModel.chatNotificationsPublisher.value.isNotEmpty {
+                if let typedCell = cell as? LoadingMoreTableViewCell {
+                    typedCell.startAnimating()
+                }
+
+                self.viewModel.requestNextNotifications()
+
+            }
+        }
+    }
 
 }
 
@@ -639,14 +612,7 @@ extension ChatNotificationsViewController {
         self.navigationView.addSubview(self.titleLabel)
         self.navigationView.addSubview(self.closeButton)
 
-//        self.view.addSubview(self.readAllButon)
-
         self.view.addSubview(self.tableView)
-
-//        self.view.addSubview(self.scrollView)
-//
-//        self.scrollView.addSubview(self.chatNotificationsStackView)
-        //self.scrollView.addSubview(self.sharedTicketsStackView)
 
         self.view.addSubview(self.emptyStateView)
 
@@ -702,36 +668,12 @@ extension ChatNotificationsViewController {
             self.closeButton.heightAnchor.constraint(equalToConstant: 40)
         ])
 
-//        NSLayoutConstraint.activate([
-//            self.readAllButon.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
-//            self.readAllButon.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 0),
-//            self.readAllButon.heightAnchor.constraint(equalToConstant: 40)
-//        ])
-
         NSLayoutConstraint.activate([
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.tableView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
             self.tableView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor)
         ])
-
-//        NSLayoutConstraint.activate([
-//            self.scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-//            self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-//            self.scrollView.topAnchor.constraint(equalTo: self.clearAllButon.bottomAnchor, constant: 0),
-//            self.scrollView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
-//            self.scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: self.view.widthAnchor),
-//
-//            self.chatNotificationsStackView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor, constant: 16),
-//            self.chatNotificationsStackView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor, constant: -16),
-//            self.chatNotificationsStackView.topAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.topAnchor),
-//            self.chatNotificationsStackView.bottomAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.bottomAnchor)
-//
-//            self.sharedTicketsStackView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor, constant: 16),
-//            self.sharedTicketsStackView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor, constant: -16),
-//            self.sharedTicketsStackView.topAnchor.constraint(equalTo: self.chatNotificationsStackView.bottomAnchor, constant: 30),
-//            self.sharedTicketsStackView.bottomAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.bottomAnchor)
-//        ])
 
         NSLayoutConstraint.activate([
             self.emptyStateView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
