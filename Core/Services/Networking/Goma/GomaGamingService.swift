@@ -67,7 +67,7 @@ enum GomaGamingService {
     case deleteFollowUser(userId: String)
     case getFollowingTotalUsers
     case getUserProfileInfo(userId: String)
-
+    case getUserConnections(userId: String)
 }
 
 extension GomaGamingService: Endpoint {
@@ -182,6 +182,8 @@ extension GomaGamingService: Endpoint {
             return "/api/social/\(apiVersion)/following/total"
         case .getUserProfileInfo(let userId):
             return "/api/betting/\(apiVersion)/user/profile/\(userId)"
+        case .getUserConnections(let userId):
+            return "/api/social/\(apiVersion)/user/connections/\(userId)"
         }
     }
 
@@ -213,7 +215,7 @@ extension GomaGamingService: Endpoint {
                 .searchUserCode, .lookupPhone,
                 .setNotificationRead, .setAllNotificationRead,
                 .getFollowers, .getFollowingUsers, .getFollowingTotalUsers, .deleteFollowUser,
-                .getUserProfileInfo:
+                .getUserProfileInfo, .getUserConnections:
             return nil
         case .chatrooms(let page):
             return [URLQueryItem(name: "page", value: page)]
@@ -385,7 +387,7 @@ extension GomaGamingService: Endpoint {
                 .getNotification, .notificationsCounter,
                 .featuredTips, .rankingsTips,
                 .getFollowers, .getFollowingUsers, .getFollowingTotalUsers,
-                .getUserProfileInfo:
+                .getUserProfileInfo, .getUserConnections:
             return .get
         case .deleteGroup, .leaveGroup, .deleteFriend, .rejectFriendRequest,
                 .removeUser, .deleteFollowUser:

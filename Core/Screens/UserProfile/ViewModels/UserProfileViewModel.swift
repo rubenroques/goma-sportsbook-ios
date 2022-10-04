@@ -13,11 +13,12 @@ class UserProfileViewModel {
     var userBasicInfo: UserBasicInfo
     var isFollowingUser: CurrentValueSubject<Bool, Never> = .init(false)
     var isFriendUser: CurrentValueSubject<Bool, Never> = .init(false)
+    var isFriendRequestPending: CurrentValueSubject<Bool, Never> = .init(false)
     var followersCountPublisher: CurrentValueSubject<String, Never> = .init("0")
     var followingCountPublisher: CurrentValueSubject<String, Never> = .init("0")
     var userProfileInfo: UserProfileInfo?
     var userProfileInfoStatePublisher: CurrentValueSubject<UserProfileState, Never> = .init(.loading)
-    var chatroomId: Int?
+    var userConnection: UserConnection?
 
     var showFriendRequestAlert: (() -> Void)?
     var shouldCloseUserProfile: (() -> Void)?
@@ -29,9 +30,9 @@ class UserProfileViewModel {
 
         self.setupPublishers()
 
-        self.checkFriendUser()
-
         self.getUserProfileInfo()
+
+        self.getUserConnections()
     }
 
     private func setupPublishers() {
@@ -43,28 +44,6 @@ class UserProfileViewModel {
             })
             .store(in: &cancellables)
 
-        Env.gomaSocialClient.individualChatroomsData
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] chatroomsData in
-                print("USERS CHATROOMS: \(chatroomsData)")
-                self?.checkUserChatroom(chatroomsData: chatroomsData)
-            })
-            .store(in: &cancellables)
-    }
-
-    private func checkUserChatroom(chatroomsData: [ChatroomData]) {
-
-        let userId = self.userBasicInfo.userId
-
-        let userChatroom = chatroomsData.filter({
-            $0.users.contains(where: {
-                "\($0.id)" == userId
-            })
-        })
-
-        if let userChatroomId = userChatroom[safe: 0]?.chatroom.id {
-            self.chatroomId = userChatroomId
-        }
     }
 
     private func checkFollowingUser(followingUsers: [Follower]) {
@@ -136,7 +115,6 @@ class UserProfileViewModel {
 
             }, receiveValue: { [weak self] userProfileInfo in
 
-                print("USER PROFILE RESPONSE: \(userProfileInfo)")
                 self?.userProfileInfo = userProfileInfo
 
                 self?.configureUserProfileInfo(userProfileInfo: userProfileInfo)
@@ -161,7 +139,6 @@ class UserProfileViewModel {
                     ()
                 }
             }, receiveValue: { [weak self] response in
-                print("FOLLOW USER RESPONSE: \(response)")
                 Env.gomaSocialClient.getFollowingUsers()
             })
             .store(in: &cancellables)
@@ -181,7 +158,6 @@ class UserProfileViewModel {
                     ()
                 }
             }, receiveValue: { [weak self] response in
-                print("DELETE FOLLOW USER RESPONSE: \(response)")
                 Env.gomaSocialClient.getFollowingUsers()
             })
             .store(in: &cancellables)
@@ -201,7 +177,6 @@ class UserProfileViewModel {
                 }
 
             }, receiveValue: { [weak self] response in
-                print("ADD FRIEND REQUEST GOMA: \(response)")
                 self?.showFriendRequestAlert?()
             })
             .store(in: &cancellables)
@@ -221,11 +196,33 @@ class UserProfileViewModel {
                     }
 
                 }, receiveValue: { [weak self] response in
-                    print("DELETE FRIEND RESPONSE: \(response)")
                     self?.shouldCloseUserProfile?()
                 })
                 .store(in: &cancellables)
         }
+
+    }
+
+    private func getUserConnections() {
+        let userId = self.userBasicInfo.userId
+
+        Env.gomaNetworkClient.getUserConnections(deviceId: Env.deviceId, userId: userId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("USER CONNECTIONS ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+
+            }, receiveValue: { [weak self] response in
+                if let userConnection = response.data {
+                    self?.userConnection = userConnection
+                    self?.configureUserConnections(userConnection: userConnection)
+                }
+            })
+            .store(in: &cancellables)
 
     }
 
@@ -237,6 +234,15 @@ class UserProfileViewModel {
 
         self.followingCountPublisher.send(following)
 
+    }
+
+    private func configureUserConnections(userConnection: UserConnection) {
+
+        let isFriend = userConnection.friends == 1 ? true : false
+        self.isFriendUser.send(isFriend)
+
+        let isFriendRequestPending = userConnection.friendRequest == 1 ? true : false
+        self.isFriendRequestPending.send(isFriendRequestPending)
     }
 
     func getUserId() -> String {

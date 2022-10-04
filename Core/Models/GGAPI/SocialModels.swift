@@ -470,3 +470,17 @@ struct FriendRequest: Decodable {
         case username = "username"
     }
 }
+
+struct UserConnection: Decodable {
+    var friends: Int
+    var friendRequest: Int
+    var following: Int
+    var chatRoomId: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case friends = "friends"
+        case friendRequest = "friend_request"
+        case following = "following"
+        case chatRoomId = "chatRoomId"
+    }
+}

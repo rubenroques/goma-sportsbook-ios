@@ -249,6 +249,13 @@ class UserProfileViewController: UIViewController {
                     self?.hasFriendOption = !isFriend
                 })
                 .store(in: &cancellables)
+
+            viewModel.isFriendRequestPending
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [weak self] isFriendRequestPending in
+                    self?.addFriendButton.isEnabled = !isFriendRequestPending
+                })
+                .store(in: &cancellables)
         }
 
         viewModel.followingCountPublisher
@@ -318,7 +325,7 @@ class UserProfileViewController: UIViewController {
 
     @objc func didTapChatButton() {
 
-        if let chatId = self.viewModel.chatroomId {
+        if let chatId = self.viewModel.userConnection?.chatRoomId {
             let conversationDetailViewModel = ConversationDetailViewModel(chatId: chatId)
 
             let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)

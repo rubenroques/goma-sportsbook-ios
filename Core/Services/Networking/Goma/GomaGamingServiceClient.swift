@@ -379,4 +379,10 @@ class GomaGamingServiceClient {
         let requestPublisher: AnyPublisher<UserProfileInfo, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
+
+    func getUserConnections(deviceId: String, userId: String) -> AnyPublisher<NetworkResponse<UserConnection>, NetworkError> {
+        let endpoint = GomaGamingService.getUserConnections(userId: userId)
+        let requestPublisher: AnyPublisher<NetworkResponse<UserConnection>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
 }
