@@ -8,197 +8,6 @@
 import UIKit
 import Combine
 
-class UserProfileViewModel {
-
-    var userBasicInfo: UserBasicInfo
-    var isFollowingUser: CurrentValueSubject<Bool, Never> = .init(false)
-    var isFriendUser: CurrentValueSubject<Bool, Never> = .init(false)
-    var followersCountPublisher: CurrentValueSubject<String, Never> = .init("0")
-    var followingCountPublisher: CurrentValueSubject<String, Never> = .init("0")
-    var userProfileInfo: UserProfileInfo?
-    var userProfileInfoStatePublisher: CurrentValueSubject<UserProfileState, Never> = .init(.loading)
-    var chatroomId: Int?
-
-    private var cancellables = Set<AnyCancellable>()
-
-    init(userBasicInfo: UserBasicInfo) {
-        self.userBasicInfo = userBasicInfo
-
-        self.setupPublishers()
-
-        self.checkFriendUser()
-
-        self.getUserProfileInfo()
-    }
-
-    private func setupPublishers() {
-
-        Env.gomaSocialClient.followingUsersPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] followingUsers in
-                self?.checkFollowingUser(followingUsers: followingUsers)
-            })
-            .store(in: &cancellables)
-
-        Env.gomaSocialClient.individualChatroomsData
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] chatroomsData in
-                print("USERS CHATROOMS: \(chatroomsData)")
-                self?.checkUserChatroom(chatroomsData: chatroomsData)
-            })
-            .store(in: &cancellables)
-    }
-
-    private func checkUserChatroom(chatroomsData: [ChatroomData]) {
-
-        let userId = self.userBasicInfo.userId
-
-        let userChatroom = chatroomsData.filter({
-            $0.users.contains(where: {
-                "\($0.id)" == userId
-            })
-        })
-
-        if let userChatroomId = userChatroom[safe: 0]?.chatroom.id {
-            self.chatroomId = userChatroomId
-        }
-    }
-
-    private func checkFollowingUser(followingUsers: [Follower]) {
-        let userId = self.userBasicInfo.userId
-
-        let followUserId = followingUsers.filter({
-            "\($0.id)" == userId
-        })
-
-        if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
-
-            if followUserId.isNotEmpty || userId == "\(loggedUserId)" {
-                self.isFollowingUser.send(true)
-            }
-            else {
-                self.isFollowingUser.send(false)
-            }
-        }
-        else {
-            self.isFollowingUser.send(false)
-        }
-    }
-
-    private func checkFriendUser() {
-        let userId = self.userBasicInfo.userId
-
-        Env.gomaNetworkClient.requestFriends(deviceId: Env.deviceId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("FRIENDS ERROR: \(error)")
-                case .finished:
-                    print("FRIENDS FINISHED")
-                }
-
-            }, receiveValue: { [weak self] response in
-
-                if let friends = response.data {
-                    let friendUserId = friends.filter({
-                        "\($0.id)" == userId
-                    })
-
-                    if friendUserId.isNotEmpty {
-                        self?.isFriendUser.send(true)
-                    }
-                    else {
-                        self?.isFriendUser.send(false)
-                    }
-                }
-            })
-            .store(in: &cancellables)
-
-    }
-
-    private func getUserProfileInfo() {
-        let userId = self.userBasicInfo.userId
-
-        Env.gomaNetworkClient.getUserProfileInfo(deviceId: Env.deviceId, userId: userId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("USER PROFILE ERROR: \(error)")
-                    self?.userProfileInfoStatePublisher.send(.failed)
-                case .finished:
-                    print("USER PROFILE FINISHED")
-                }
-
-            }, receiveValue: { [weak self] userProfileInfo in
-
-                print("USER PROFILE RESPONSE: \(userProfileInfo)")
-                self?.userProfileInfo = userProfileInfo
-                
-                self?.configureUserProfileInfo(userProfileInfo: userProfileInfo)
-
-                self?.userProfileInfoStatePublisher.send(.loaded)
-
-            })
-            .store(in: &cancellables)
-    }
-
-    func followUser() {
-
-        let userId = self.userBasicInfo.userId
-
-        Env.gomaNetworkClient.followUser(deviceId: Env.deviceId, userId: userId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("FOLLOW USER ERROR: \(error)")
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { [weak self] response in
-                print("FOLLOW USER RESPONSE: \(response)")
-                Env.gomaSocialClient.getFollowingUsers()
-            })
-            .store(in: &cancellables)
-    }
-
-    func deleteFollowUser() {
-
-        let userId = self.userBasicInfo.userId
-
-        Env.gomaNetworkClient.deleteFollowUser(deviceId: Env.deviceId, userId: userId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("DELETE FOLLOW USER ERROR: \(error)")
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { [weak self] response in
-                print("DELETE FOLLOW USER RESPONSE: \(response)")
-                Env.gomaSocialClient.getFollowingUsers()
-            })
-            .store(in: &cancellables)
-    }
-
-    private func configureUserProfileInfo(userProfileInfo: UserProfileInfo) {
-        let followers = "\(userProfileInfo.followers)"
-        let following = "\(userProfileInfo.following)"
-
-        self.followersCountPublisher.send(followers)
-
-        self.followingCountPublisher.send(following)
-
-    }
-
-    func getUserId() -> String {
-        return self.userBasicInfo.userId
-    }
-}
-
 class UserProfileViewController: UIViewController {
 
     // MARK: Private properties
@@ -206,6 +15,7 @@ class UserProfileViewController: UIViewController {
     private lazy var bottomSafeAreaView: UIView = Self.createBottomSafeAreaView()
     private lazy var navigationView: UIView = Self.createNavigationView()
     private lazy var backButton: UIButton = Self.createBackButton()
+    private lazy var userProfileActionsStackView: UIStackView = Self.createUserProfileActionsStackView()
     private lazy var followActionsStackView: UIStackView = Self.createFollowActionsStackView()
     private lazy var followButton: UIButton = Self.createFollowButton()
     private lazy var unfollowButton: UIButton = Self.createUnfollowButton()
@@ -247,6 +57,21 @@ class UserProfileViewController: UIViewController {
             self.chatButton.isHidden = hasFriendOption
         }
     }
+
+    var isChatProfile: Bool = false {
+        didSet {
+            self.friendActionsStackView.isHidden = isChatProfile
+        }
+    }
+
+    var isLoggedUser: Bool = false {
+        didSet {
+            self.userProfileActionsStackView.isHidden = isLoggedUser
+            self.moreOptionsButton.isHidden = isLoggedUser
+        }
+    }
+
+    var shouldCloseChat: (() -> Void)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: UserProfileViewModel) {
@@ -340,6 +165,8 @@ class UserProfileViewController: UIViewController {
 
         self.backButton.backgroundColor = .clear
 
+        self.userProfileActionsStackView.backgroundColor = .clear
+
         self.followActionsStackView.backgroundColor = .clear
 
         self.followButton.backgroundColor = UIColor.App.buttonBackgroundSecondary
@@ -385,6 +212,20 @@ class UserProfileViewController: UIViewController {
     private func configure() {
         self.usernameLabel.text = self.viewModel.userBasicInfo.username
 
+        if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId,
+           "\(loggedUserId)" == self.viewModel.userBasicInfo.userId {
+            self.isLoggedUser = true
+        }
+    }
+
+    private func showFriendRequestAlert() {
+        let customToast = ToastCustom.text(title: localized("friend_request_sent"))
+
+        customToast.show()
+    }
+
+    private func closeUserProfile() {
+        self.navigationController?.popViewController(animated: true)
     }
 
     // MARK: Binding
@@ -397,12 +238,14 @@ class UserProfileViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        viewModel.isFriendUser
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] isFriend in
-                self?.hasFriendOption = !isFriend
-            })
-            .store(in: &cancellables)
+        if !self.isChatProfile {
+            viewModel.isFriendUser
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [weak self] isFriend in
+                    self?.hasFriendOption = !isFriend
+                })
+                .store(in: &cancellables)
+        }
 
         viewModel.followingCountPublisher
             .receive(on: DispatchQueue.main)
@@ -436,6 +279,18 @@ class UserProfileViewController: UIViewController {
 
             })
             .store(in: &cancellables)
+
+        viewModel.showFriendRequestAlert = { [weak self] in
+            self?.showFriendRequestAlert()
+        }
+
+        viewModel.shouldCloseUserProfile = { [weak self] in
+            guard let self = self else {return}
+            if self.isChatProfile {
+                self.shouldCloseChat?()
+            }
+            self.closeUserProfile()
+        }
     }
 
     // MARK: Actions
@@ -444,21 +299,18 @@ class UserProfileViewController: UIViewController {
     }
 
     @objc func didTapFollowButton() {
-        print("FOLLOW USER!")
         self.viewModel.followUser()
     }
 
     @objc func didTapUnfollowButton() {
-        print("UNFOLLOW USER!")
         self.viewModel.deleteFollowUser()
     }
 
     @objc func didTapAddFriendButton() {
-        print("ADD FRIEND USER!")
+        self.viewModel.addFriendRequest()
     }
 
     @objc func didTapChatButton() {
-        print("CHAT USER!")
 
         if let chatId = self.viewModel.chatroomId {
             let conversationDetailViewModel = ConversationDetailViewModel(chatId: chatId)
@@ -477,23 +329,23 @@ class UserProfileViewController: UIViewController {
         let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
         if self.viewModel.isFriendUser.value {
-            let unfriendUserAction: UIAlertAction = UIAlertAction(title: "Unfriend", style: .default) { _ -> Void in
-                // NOT YET AVAILABLE
+            let unfriendUserAction: UIAlertAction = UIAlertAction(title: localized("unfriend"), style: .default) { [weak self] _ -> Void in
+                self?.viewModel.unfriendUser()
             }
             actionSheetController.addAction(unfriendUserAction)
         }
 
-        let blockUserAction: UIAlertAction = UIAlertAction(title: "Block User", style: .default) { _ -> Void in
+        let blockUserAction: UIAlertAction = UIAlertAction(title: localized("block_user"), style: .default) { _ -> Void in
             // NOT YET AVAILABLE
         }
         actionSheetController.addAction(blockUserAction)
 
-        let reportUserAction: UIAlertAction = UIAlertAction(title: "Report", style: .default) { _ -> Void in
+        let reportUserAction: UIAlertAction = UIAlertAction(title: localized("report"), style: .default) { _ -> Void in
             // NOT YET AVAILABLE
         }
         actionSheetController.addAction(reportUserAction)
 
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { _ -> Void in }
+        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ -> Void in }
         actionSheetController.addAction(cancelAction)
 
         if let popoverController = actionSheetController.popoverPresentationController {
@@ -549,6 +401,15 @@ extension UserProfileViewController {
         button.setTitle("", for: .normal)
         button.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
         return button
+    }
+
+    private static func createUserProfileActionsStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 20
+        return stackView
     }
 
     private static func createFollowActionsStackView() -> UIStackView {
@@ -681,12 +542,14 @@ extension UserProfileViewController {
 
         self.navigationView.addSubview(self.backButton)
 
-        self.navigationView.addSubview(self.followActionsStackView)
+        self.navigationView.addSubview(self.userProfileActionsStackView)
+
+        self.userProfileActionsStackView.addArrangedSubview(self.followActionsStackView)
 
         self.followActionsStackView.addArrangedSubview(self.followButton)
         self.followActionsStackView.addArrangedSubview(self.unfollowButton)
 
-        self.navigationView.addSubview(self.friendActionsStackView)
+        self.userProfileActionsStackView.addArrangedSubview(self.friendActionsStackView)
 
         self.friendActionsStackView.addArrangedSubview(self.addFriendButton)
         self.friendActionsStackView.addArrangedSubview(self.chatButton)
@@ -733,8 +596,11 @@ extension UserProfileViewController {
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
             self.backButton.heightAnchor.constraint(equalToConstant: 44),
 
-            self.followActionsStackView.trailingAnchor.constraint(equalTo: self.friendActionsStackView.leadingAnchor, constant: -15),
-            self.followActionsStackView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+            self.userProfileActionsStackView.trailingAnchor.constraint(equalTo: self.moreOptionsButton.leadingAnchor, constant: -15),
+            self.userProfileActionsStackView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+
+//            self.followActionsStackView.trailingAnchor.constraint(equalTo: self.friendActionsStackView.leadingAnchor, constant: -15),
+//            self.followActionsStackView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
 
             self.followButton.widthAnchor.constraint(equalToConstant: 81),
             self.followButton.heightAnchor.constraint(equalToConstant: 29),
@@ -742,8 +608,8 @@ extension UserProfileViewController {
             self.unfollowButton.widthAnchor.constraint(equalToConstant: 81),
             self.unfollowButton.heightAnchor.constraint(equalToConstant: 29),
 
-            self.friendActionsStackView.trailingAnchor.constraint(equalTo: self.moreOptionsButton.leadingAnchor, constant: -15),
-            self.friendActionsStackView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+//            self.friendActionsStackView.trailingAnchor.constraint(equalTo: self.moreOptionsButton.leadingAnchor, constant: -15),
+//            self.friendActionsStackView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
 
             self.addFriendButton.widthAnchor.constraint(equalToConstant: 32),
             self.addFriendButton.heightAnchor.constraint(equalToConstant: 32),

@@ -424,13 +424,13 @@ struct UserProfileInfo: Decodable {
     var following: Int
     var followers: Int
     var rankings: UserProfileRanking
-    // var sportsPerc: String
+    var sportsPerc: [UserProfileSportsData]
 
     enum CodingKeys: String, CodingKey {
         case following = "following"
         case followers = "followers"
         case rankings = "rankings"
-        // case sportsPerc = "sports_perc"
+        case sportsPerc = "sports_perc"
     }
 }
 
@@ -444,5 +444,15 @@ struct UserProfileRanking: Decodable {
         case consecutiveWins = "consecutive_wins"
         case accumulatedWins = "accumulated_wins"
         case highestOdd = "highest_odd"
+    }
+}
+
+struct UserProfileSportsData: Decodable {
+    var sportId: Int
+    var percentage: Double
+
+    enum CodingKeys: String, CodingKey {
+        case sportId = "sport_id"
+        case percentage = "percentage"
     }
 }

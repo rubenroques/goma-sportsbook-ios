@@ -8,35 +8,6 @@
 import UIKit
 import Combine
 
-class FeaturedTipDetailsViewModel {
-
-    var featuredTip: FeaturedTip
-
-    init(featuredTip: FeaturedTip) {
-        self.featuredTip = featuredTip
-    }
-
-    func getUsername() -> String {
-        return self.featuredTip.username
-    }
-
-    func getTotalOdds() -> String {
-        if let oddsDouble = Double(self.featuredTip.totalOdds) {
-            let oddFormatted = OddFormatter.formatOdd(withValue: oddsDouble)
-            return "\(oddFormatted)"
-        }
-        return ""
-    }
-
-    func getNumberSelections() -> String {
-        if let numberSelections = self.featuredTip.selections?.count {
-            return "\(numberSelections)"
-        }
-
-        return ""
-    }
-}
-
 class FeaturedTipDetailsViewController: UIViewController {
 
     // MARK: Private properties

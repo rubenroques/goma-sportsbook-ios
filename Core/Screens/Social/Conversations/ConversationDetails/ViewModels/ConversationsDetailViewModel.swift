@@ -16,6 +16,7 @@ class ConversationDetailViewModel: NSObject {
     var messages: [MessageData] = []
     var sectionMessages: [String: [MessageData]] = [:]
     var dateMessages: [DateMessages] = []
+    var userBasicInfo: UserBasicInfo?
     var isChatOnlinePublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isChatGroupPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isInitialMessagesLoaded: Bool = false
@@ -576,6 +577,7 @@ extension ConversationDetailViewModel {
         var loggedUsername = ""
         var chatroomName = ""
         var chatroomUsers: [GomaFriend] = []
+        var userId = ""
 
         for user in chatroomData.users {
             chatroomUsers.append(user)
@@ -585,12 +587,15 @@ extension ConversationDetailViewModel {
             if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
                 if user.id != loggedUserId {
                     chatroomName = user.username
+                    userId = "\(user.id)"
                 }
                 else {
                     loggedUsername = user.username
                 }
             }
         }
+
+        self.userBasicInfo = UserBasicInfo(userId: userId, username: chatroomName)
 
         let conversationData = ConversationData(id: chatroomData.chatroom.id,
                                                 conversationType: .user,

@@ -32,6 +32,7 @@ enum GomaGamingService {
 
     // Social Endpoits
     case addFriend(userIds: [String])
+    case addFriendRequest(userIds: [String], request: Bool)
     case deleteFriend(userId: Int)
     case listFriends
     case inviteFriend(phone: String)
@@ -49,11 +50,13 @@ enum GomaGamingService {
     case setAllNotificationRead(type: String)
     case sendSupportTicket(title: String, message: String)
     case notificationsCounter(type: String)
+    // swiftlint:disable enum_case_associated_values_count
     case featuredTips(betType: String? = nil,
                       totalOddsMin: String? = nil, totalOddsMax: String? = nil,
                       friends: Bool? = nil, followers: Bool? = nil,
                       topTips: Bool? = nil,
-                      userIds: [String]? = nil)
+                      userIds: [String]? = nil,
+                      page: Int? = nil)
     case rankingsTips(type: String? = nil, friends: Bool? = nil, followers: Bool? = nil)
     case getFollowers
     case getFollowingUsers
@@ -117,6 +120,8 @@ extension GomaGamingService: Endpoint {
             
         // Social
         case .addFriend:
+            return "/api/social/\(apiVersion)/friends"
+        case .addFriendRequest:
             return "/api/social/\(apiVersion)/friends"
         case .deleteFriend(let userId):
             return "/api/social/\(apiVersion)/friends/\(userId)"
@@ -193,7 +198,7 @@ extension GomaGamingService: Endpoint {
             return [URLQueryItem(name: "favorite_ids[]", value: favorite)]
         
             // Social
-        case .addFriend, .deleteFriend, .listFriends, .inviteFriend,
+        case .addFriend, .addFriendRequest, .deleteFriend, .listFriends, .inviteFriend,
                 .addGroup, .deleteGroup, .leaveGroup,
                 .searchUserCode, .lookupPhone,
                 .setNotificationRead, .setAllNotificationRead,
@@ -228,7 +233,8 @@ extension GomaGamingService: Endpoint {
         case .featuredTips(let betType,
                            let totalOddsMin, let totalOddsMax,
                            let friends, let followers, let topTips,
-                           let userIds):
+                           let userIds,
+                           let page):
             var queryItemsURL: [URLQueryItem] = []
 
             if betType != nil {
@@ -273,6 +279,13 @@ extension GomaGamingService: Endpoint {
                         let queryItem = URLQueryItem(name: "users_ids[]", value: "\(user)")
                         queryItemsURL.append(queryItem)
                     }
+                }
+            }
+
+            if page != nil {
+                if let pageValue = page {
+                    let queryItem = URLQueryItem(name: "page", value: "\(pageValue)")
+                    queryItemsURL.append(queryItem)
                 }
             }
 
@@ -353,7 +366,7 @@ extension GomaGamingService: Endpoint {
             return .post
             
         // Social
-        case .addFriend, .inviteFriend, .addGroup, .addUserToGroup, .lookupPhone, .setNotificationRead, .setAllNotificationRead, .followUser:
+        case .addFriend, .addFriendRequest, .inviteFriend, .addGroup, .addUserToGroup, .lookupPhone, .setNotificationRead, .setAllNotificationRead, .followUser:
             return .post
         case .listFriends, .chatrooms,
                 .searchUserCode,
@@ -466,6 +479,14 @@ extension GomaGamingService: Endpoint {
             let body = """
                     {"users_ids":
                     \(userIds)
+                    }
+                    """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+        case .addFriendRequest(let userIds, let request):
+            let body = """
+                    {"users_ids": \(userIds),
+                    "request": \(request ? 1 : 0)
                     }
                     """
             let data = body.data(using: String.Encoding.utf8)!
