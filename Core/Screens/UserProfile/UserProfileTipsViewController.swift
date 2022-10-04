@@ -8,76 +8,6 @@
 import UIKit
 import Combine
 
-class UserProfileTipsViewModel {
-
-    var userTipsPublisher: CurrentValueSubject<[FeaturedTip], Never> = .init([])
-    var userTipsCacheCellViewModel: [String: TipsCellViewModel] = [:]
-    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-
-    private var userId: String
-    private var cancellables = Set<AnyCancellable>()
-
-    init(userId: String) {
-
-        self.userId = userId
-
-        self.loadUserTips()
-    }
-
-    private func loadUserTips() {
-
-        self.isLoadingPublisher.send(true)
-
-        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE", userIds: [userId])
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("USER TIPS ERROR: \(error)")
-                case .finished:
-                    ()
-                }
-
-                self?.isLoadingPublisher.send(false)
-
-            }, receiveValue: { [weak self] response in
-                print("USER TIPS RESPONSE: \(response)")
-
-                if let tips = response.data {
-                    self?.userTipsPublisher.value = tips
-                }
-            })
-            .store(in: &cancellables)
-    }
-
-    func numberOfSections() -> Int {
-        return 1
-    }
-
-    func numberOfRows() -> Int {
-        return self.userTipsPublisher.value.count
-    }
-
-    func viewModel(forIndex index: Int) -> TipsCellViewModel? {
-        guard
-            let featuredTip = self.userTipsPublisher.value[safe: index]
-        else {
-            return nil
-        }
-
-        let tipId = featuredTip.betId
-
-        if let tipsCellViewModel = userTipsCacheCellViewModel[tipId] {
-            return tipsCellViewModel
-        }
-        else {
-            let tipsCellViewModel = TipsCellViewModel(featuredTip: featuredTip)
-            self.userTipsCacheCellViewModel[tipId] = tipsCellViewModel
-            return tipsCellViewModel
-        }
-    }
-}
-
 class UserProfileTipsViewController: UIViewController {
 
     // MARK: Private properties
@@ -119,7 +49,7 @@ class UserProfileTipsViewController: UIViewController {
 
         super.init(nibName: nil, bundle: nil)
 
-        self.title = "Latest Tips"
+        self.title = localized("latest_tips")
 
     }
 
@@ -138,6 +68,7 @@ class UserProfileTipsViewController: UIViewController {
         self.tableView.dataSource = self
 
         self.tableView.register(TipsTableViewCell.self, forCellReuseIdentifier: TipsTableViewCell.identifier)
+        self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
 
         self.isLoading = false
 
@@ -203,6 +134,14 @@ class UserProfileTipsViewController: UIViewController {
             .store(in: &cancellables)
     }
 
+    // MARK: Functions
+    private func showBetslip() {
+        let betslipViewController = BetslipViewController()
+        let navigationViewController = Router.navigationController(with: betslipViewController)
+
+        self.navigationController?.present(navigationViewController, animated: true, completion: nil)
+    }
+
 }
 
 //
@@ -215,28 +154,65 @@ extension UserProfileTipsViewController: UITableViewDelegate, UITableViewDataSou
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.numberOfRows()
+        switch section {
+        case 0:
+            return self.viewModel.numberOfRows()
+        case 1:
+            return self.viewModel.tipsHasNextPage ? 1 : 0
+        default:
+            return 0
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard
-            let cell = tableView.dequeueReusableCell(withIdentifier: TipsTableViewCell.identifier, for: indexPath) as? TipsTableViewCell,
-            let cellViewModel = self.viewModel.viewModel(forIndex: indexPath.row)
-        else {
-            fatalError("TipsTableViewCell not found")
+        switch indexPath.section {
+        case 0:
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: TipsTableViewCell.identifier, for: indexPath) as? TipsTableViewCell,
+                let cellViewModel = self.viewModel.viewModel(forIndex: indexPath.row)
+            else {
+                fatalError("TipsTableViewCell not found")
+            }
+
+            cell.configure(viewModel: cellViewModel, followingUsers: Env.gomaSocialClient.followingUsersPublisher.value)
+
+            cell.shouldShowBetslip = { [weak self] in
+                //self?.shouldShowBetslip?()
+                self?.showBetslip()
+            }
+
+            return cell
+        case 1:
+            guard
+                let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self)
+            else {
+                fatalError("LoadingMoreTableViewCell not found")
+            }
+            return cell
+        default:
+            fatalError()
         }
 
-        cell.configure(viewModel: cellViewModel, followingUsers: Env.gomaSocialClient.followingUsersPublisher.value)
-
-//        cell.shouldShowBetslip = { [weak self] in
-//            self?.shouldShowBetslip?()
-//        }
-
-        return cell
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+        switch indexPath.section {
+        case 0:
+            return UITableView.automaticDimension
+        case 1:
+            return 70
+        default:
+            return UITableView.automaticDimension
+        }
+    }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.section == 1, self.viewModel.userTipsPublisher.value.isNotEmpty {
+            if let typedCell = cell as? LoadingMoreTableViewCell {
+                typedCell.startAnimating()
+            }
+            self.viewModel.requestNextPageTips()
+        }
     }
 
 }

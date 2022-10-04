@@ -65,9 +65,12 @@ class SportStatisticView: UIView {
             self.iconImageView.image = UIImage(named: "sport_type_icon_default")
         }
 
-        self.progressBarView.progress = sportPercentage
+        self.progressBarView.progress = sportPercentage/100
 
-        let valueString = "\(Int(100 * sportPercentage))%"
+        let percentageIsInteger = floor(sportPercentage) == sportPercentage
+
+        let valueString = percentageIsInteger ? "\(Int(sportPercentage))%" : "\(sportPercentage)%"
+        
         self.valueLabel.text = valueString
     }
 }
@@ -135,11 +138,12 @@ extension SportStatisticView {
             self.iconImageView.heightAnchor.constraint(equalTo: self.iconImageView.widthAnchor),
 
             self.progressBarView.leadingAnchor.constraint(equalTo: self.iconImageView.trailingAnchor, constant: 10),
+            self.progressBarView.widthAnchor.constraint(equalToConstant: 78),
             self.progressBarView.heightAnchor.constraint(equalToConstant: 5),
             self.progressBarView.centerYAnchor.constraint(equalTo: self.iconImageView.centerYAnchor),
 
             self.valueLabel.leadingAnchor.constraint(equalTo: self.progressBarView.trailingAnchor, constant: 5),
-            self.valueLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -4),
+            self.valueLabel.trailingAnchor.constraint(greaterThanOrEqualTo: self.containerView.trailingAnchor, constant: -4),
             self.valueLabel.centerYAnchor.constraint(equalTo: self.iconImageView.centerYAnchor)
 
         ])

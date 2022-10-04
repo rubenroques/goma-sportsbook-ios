@@ -147,19 +147,22 @@ class TipsTableViewCell: UITableViewCell {
 
         self.hasCounter = false
 
-        let tipUserId = viewModel.getUserId()
+        if let tipUserId = viewModel.getUserId() {
+            let followUserId = followingUsers.filter({
+                "\($0.id)" == tipUserId
+            })
 
-        let followUserId = followingUsers.filter({
-            "\($0.id)" == tipUserId
-        })
+            if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
 
-        if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
-
-            if followUserId.isNotEmpty || tipUserId == "\(loggedUserId)" {
-                self.hasFollow = false
+                if followUserId.isNotEmpty || tipUserId == "\(loggedUserId)" {
+                    self.hasFollow = false
+                }
+                else {
+                    self.hasFollow = true
+                }
             }
             else {
-                self.hasFollow = true
+                self.hasFollow = false
             }
         }
         else {
@@ -200,10 +203,8 @@ class TipsTableViewCell: UITableViewCell {
 
     // MARK: Actions
     @objc func didTapFollowButton() {
-        if let viewModel = self.viewModel {
-            let userId = viewModel.getUserId()
-
-            print("TAPPED FOLLOW: \(viewModel.getUsername()) - \(viewModel.getUserId())")
+        if let viewModel = self.viewModel,
+           let userId = viewModel.getUserId() {
 
             viewModel.followUser(userId: userId)
         }
@@ -212,17 +213,19 @@ class TipsTableViewCell: UITableViewCell {
     @objc func didTapBetButton() {
         if let viewModel = self.viewModel {
             let betId = viewModel.getBetId()
-            print("TAPPED BET: \(betId)")
 
             viewModel.createBetslipTicket()
         }
     }
 
     @objc func didTapUser() {
-        print("TAPPED USER TIP")
-        let userBasicInfo = UserBasicInfo(userId: self.viewModel?.getUserId() ?? "0", username: self.viewModel?.getUsername() ?? "")
+        if let userId = self.viewModel?.getUserId() {
+            
+            let userBasicInfo = UserBasicInfo(userId: userId, username: self.viewModel?.getUsername() ?? "")
 
-        self.shouldShowUserProfile?(userBasicInfo)
+            self.shouldShowUserProfile?(userBasicInfo)
+        }
+
     }
 
 }

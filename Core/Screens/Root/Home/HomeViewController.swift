@@ -214,6 +214,10 @@ class HomeViewController: UIViewController {
         
         tipsSliderViewController.shift.enable()
 
+        tipsSliderViewController.shouldShowBetslip = { [weak self] in
+            self?.didTapBetslipButtonAction?()
+        }
+
         self.present(tipsSliderViewController, animated: true)
     }
 

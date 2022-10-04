@@ -9,48 +9,6 @@ import Foundation
 import UIKit
 import Combine
 
-class TipsSliderViewModel {
-    
-    var featuredTips: [FeaturedTip]
-    private var featuredTipCollectionCacheViewModel: [String: FeaturedTipCollectionViewModel] = [:]
-    private var startIndex: Int
-    private var cancellables = Set<AnyCancellable>()
-    
-    init(featuredTips: [FeaturedTip], startIndex: Int) {
-        self.featuredTips = featuredTips
-        self.startIndex = startIndex
-
-    }
-
-    func initialIndex() -> Int {
-        return self.startIndex
-    }
-    
-    func numberOfItems() -> Int {
-        return featuredTips.count
-    }
-
-    func viewModel(forIndex index: Int) -> FeaturedTipCollectionViewModel? {
-        guard
-            let featuredTip = self.featuredTips[safe: index]
-        else {
-            return nil
-        }
-
-        let tipId = featuredTip.betId
-
-        if let featuredTipCollectionViewModel = featuredTipCollectionCacheViewModel[tipId] {
-            return featuredTipCollectionViewModel
-        }
-        else {
-            let featuredTipCollectionViewModel = FeaturedTipCollectionViewModel(featuredTip: featuredTip, sizeType: .fullscreen)
-            self.featuredTipCollectionCacheViewModel[tipId] = featuredTipCollectionViewModel
-            return featuredTipCollectionViewModel
-        }
-    }
-    
-}
-
 class TipsSliderViewController: UIViewController {
     
     // MARK: Public properties
@@ -234,7 +192,7 @@ extension TipsSliderViewController {
         label.font = AppFont.with(type: .bold, size: 20)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Featured Tips"
+        label.text = localized("featured_tips")
         label.numberOfLines = 2
         return label
     }
@@ -356,4 +314,3 @@ extension TipsSliderViewController {
     }
     
 }
-

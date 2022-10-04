@@ -170,7 +170,8 @@ struct ChatNotification: Decodable {
     var title: String
     var text: String
     var type: String
-    var typeId: Int
+    var typeId: Int?
+    var subType: String
     var processed: Int
     var createdAt: String?
     var updatedAt: String?
@@ -186,6 +187,7 @@ struct ChatNotification: Decodable {
         case text = "text"
         case type = "type"
         case typeId = "type_id"
+        case subType = "subtype"
         case processed = "processed"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
@@ -281,7 +283,7 @@ struct FeaturedTip: Decodable {
     var status: String
     var statusLabel: String
     var placedDate: String?
-    var userId: String
+    var userId: String?
     var username: String
     var totalOdds: String
 
@@ -424,13 +426,13 @@ struct UserProfileInfo: Decodable {
     var following: Int
     var followers: Int
     var rankings: UserProfileRanking
-    // var sportsPerc: String
+    var sportsPerc: [UserProfileSportsData]
 
     enum CodingKeys: String, CodingKey {
         case following = "following"
         case followers = "followers"
         case rankings = "rankings"
-        // case sportsPerc = "sports_perc"
+        case sportsPerc = "sports_perc"
     }
 }
 
@@ -444,5 +446,41 @@ struct UserProfileRanking: Decodable {
         case consecutiveWins = "consecutive_wins"
         case accumulatedWins = "accumulated_wins"
         case highestOdd = "highest_odd"
+    }
+}
+
+struct UserProfileSportsData: Decodable {
+    var sportId: Int
+    var percentage: Double
+
+    enum CodingKeys: String, CodingKey {
+        case sportId = "sport_id"
+        case percentage = "percentage"
+    }
+}
+
+struct FriendRequest: Decodable {
+    var id: Int
+    var name: String
+    var username: String
+
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case name = "name"
+        case username = "username"
+    }
+}
+
+struct UserConnection: Decodable {
+    var friends: Int
+    var friendRequest: Int
+    var following: Int
+    var chatRoomId: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case friends = "friends"
+        case friendRequest = "friend_request"
+        case following = "following"
+        case chatRoomId = "chatRoomId"
     }
 }
