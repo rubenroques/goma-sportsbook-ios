@@ -10,6 +10,7 @@ import Firebase
 import FirebaseMessaging
 import SwiftyBeaver
 import SwiftUI
+import ServiceProvider
 
 let swiftyBeaverLog = SwiftyBeaver.self
 
@@ -31,8 +32,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         swiftyBeaverLog.addDestination(file)
         swiftyBeaverLog.addDestination(cloud)
 
-        
-         
         // This is used to disable temporarly auto layout Unsatisfiable constraints logs
         // This should be deleted, unsatisfiable constraints must be fixed
         #if XCODE_ACTION_install
@@ -40,7 +39,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         #else
             // UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
         #endif
-        
         
         Logger.log("App Started")
 

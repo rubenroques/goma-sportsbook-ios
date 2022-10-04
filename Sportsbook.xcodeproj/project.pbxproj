@@ -3146,6 +3146,12 @@
 		45B6E24528415268001B570C /* SelectFriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B0589128252FEA0089B0D7 /* SelectFriendTableViewCell.swift */; };
 		45B6E24628415269001B570C /* SelectFriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B0589128252FEA0089B0D7 /* SelectFriendTableViewCell.swift */; };
 		45B6E24728415269001B570C /* SelectFriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B0589128252FEA0089B0D7 /* SelectFriendTableViewCell.swift */; };
+		45B7BD4C28E5B077007832C2 /* ServiceProvider in Frameworks */ = {isa = PBXBuildFile; productRef = 45B7BD4B28E5B077007832C2 /* ServiceProvider */; };
+		45B7BD4E28E5B07C007832C2 /* ServiceProvider in Frameworks */ = {isa = PBXBuildFile; productRef = 45B7BD4D28E5B07C007832C2 /* ServiceProvider */; };
+		45B7BD5028E5B080007832C2 /* ServiceProvider in Frameworks */ = {isa = PBXBuildFile; productRef = 45B7BD4F28E5B080007832C2 /* ServiceProvider */; };
+		45B7BD5228E5B084007832C2 /* ServiceProvider in Frameworks */ = {isa = PBXBuildFile; productRef = 45B7BD5128E5B084007832C2 /* ServiceProvider */; };
+		45B7BD5428E5B088007832C2 /* ServiceProvider in Frameworks */ = {isa = PBXBuildFile; productRef = 45B7BD5328E5B088007832C2 /* ServiceProvider */; };
+		45B7BD5628E5B08C007832C2 /* ServiceProvider in Frameworks */ = {isa = PBXBuildFile; productRef = 45B7BD5528E5B08C007832C2 /* ServiceProvider */; };
 		45B7DADB26F8FF130032C1C3 /* PopUpDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B7DADA26F8FF130032C1C3 /* PopUpDetails.swift */; };
 		45B7DADC26F8FF130032C1C3 /* PopUpDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B7DADA26F8FF130032C1C3 /* PopUpDetails.swift */; };
 		45B7DADF26F92CE40032C1C3 /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B7DADE26F92CE40032C1C3 /* UserSession.swift */; };
@@ -4712,6 +4718,7 @@
 		45B6E216283FCF7D001B570C /* SentTicketMessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentTicketMessageTableViewCell.swift; sourceTree = "<group>"; };
 		45B6E21D283FCFDC001B570C /* ReceivedTicketMessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedTicketMessageTableViewCell.swift; sourceTree = "<group>"; };
 		45B6E224283FD08C001B570C /* ChatTicketInMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTicketInMessageView.swift; sourceTree = "<group>"; };
+		45B7BD4A28E5AD73007832C2 /* ServiceProvider */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ServiceProvider; sourceTree = "<group>"; };
 		45B7DADA26F8FF130032C1C3 /* PopUpDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpDetails.swift; sourceTree = "<group>"; };
 		45B7DADE26F92CE40032C1C3 /* UserSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSession.swift; sourceTree = "<group>"; };
 		45B7DAE126F92CF30032C1C3 /* UserRegisterForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegisterForm.swift; sourceTree = "<group>"; };
@@ -5127,6 +5134,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45B7BD4C28E5B077007832C2 /* ServiceProvider in Frameworks */,
 				45F8B154274BC3B60087652B /* FirebaseMessaging in Frameworks */,
 				452047B32703597500B277B5 /* FirebaseDatabase in Frameworks */,
 				F4E3B7612742BFB100855C58 /* AvailableHapticFeedback in Frameworks */,
@@ -5176,6 +5184,7 @@
 				45D871CA271076B800F5B87B /* OrderedCollections in Frameworks */,
 				F4E3B7632742BFE300855C58 /* SweeterSwift in Frameworks */,
 				45EF5426270C5F8100D1E13E /* FirebaseAuth in Frameworks */,
+				45B7BD4E28E5B07C007832C2 /* ServiceProvider in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5183,6 +5192,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45B7BD5428E5B088007832C2 /* ServiceProvider in Frameworks */,
 				457CBBBC282D27D000ED0F00 /* FirebaseMessaging in Frameworks */,
 				457CBBBD282D27D000ED0F00 /* FirebaseDatabase in Frameworks */,
 				457CBBBE282D27D000ED0F00 /* AvailableHapticFeedback in Frameworks */,
@@ -5208,6 +5218,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45B7BD5628E5B08C007832C2 /* ServiceProvider in Frameworks */,
 				457CBE63282D2CD100ED0F00 /* FirebaseMessaging in Frameworks */,
 				457CBE64282D2CD100ED0F00 /* FirebaseDatabase in Frameworks */,
 				457CBE65282D2CD100ED0F00 /* AvailableHapticFeedback in Frameworks */,
@@ -5233,6 +5244,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45B7BD5028E5B080007832C2 /* ServiceProvider in Frameworks */,
 				4589C93B282024E400243547 /* FirebaseMessaging in Frameworks */,
 				4589C93C282024E400243547 /* FirebaseDatabase in Frameworks */,
 				4589C93D282024E400243547 /* AvailableHapticFeedback in Frameworks */,
@@ -5258,6 +5270,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45B7BD5228E5B084007832C2 /* ServiceProvider in Frameworks */,
 				45A6BD9328246A7500D9B416 /* FirebaseMessaging in Frameworks */,
 				45A6BD9428246A7500D9B416 /* FirebaseDatabase in Frameworks */,
 				45A6BD9528246A7500D9B416 /* AvailableHapticFeedback in Frameworks */,
@@ -5690,6 +5703,7 @@
 		455A0C4726BD902C00EC572D = {
 			isa = PBXGroup;
 			children = (
+				45B7BD4928E5AD48007832C2 /* ServiceProvider */,
 				455A0C5226BD902C00EC572D /* Core */,
 				455A0C9226BD906700EC572D /* Clients */,
 				455A0C5126BD902C00EC572D /* Products */,
@@ -6306,11 +6320,12 @@
 		4589F3E926BF0160005DF543 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				452047BE27036D4600B277B5 /* Splash */,
+				455C962526FE11B300456F30 /* Root */,
 				A98708B928DA011200F27348 /* UserProfile */,
 				A902299E28AFD3F400972863 /* Quickbet */,
 				A9B946C428C21C560091296E /* FeaturedTips */,
 				A9863ED1286F01C400A4A1A2 /* Share */,
-				455C962526FE11B300456F30 /* Root */,
 				A995C1922799917100151462 /* Search */,
 				A9BCF438274FB558006DD528 /* MatchDetails */,
 				455C676A27DF5C9900AAB2A5 /* LiveDetails */,
@@ -6322,7 +6337,6 @@
 				454E090627EB82F200391560 /* Social */,
 				4589F3EA26BF017A005DF543 /* Account */,
 				A9E7C68A27B526C500F784C9 /* MyFavorites */,
-				452047BE27036D4600B277B5 /* Splash */,
 				4523AECE27FB282800C5BF4E /* Casino */,
 				A9A836AF26C6AC5D00508923 /* Maintenance */,
 				A9B8407926CA788000269B05 /* VersionUpdate */,
@@ -6645,6 +6659,14 @@
 				45761A062844E8AF00A40826 /* Cells */,
 			);
 			path = BetTicketShare;
+			sourceTree = "<group>";
+		};
+		45B7BD4928E5AD48007832C2 /* ServiceProvider */ = {
+			isa = PBXGroup;
+			children = (
+				45B7BD4A28E5AD73007832C2 /* ServiceProvider */,
+			);
+			path = ServiceProvider;
 			sourceTree = "<group>";
 		};
 		45B7DADD26F92CC30032C1C3 /* Shared */ = {
@@ -8194,6 +8216,7 @@
 				457EDAC22791D39B00DDCD83 /* SwiftyBeaver */,
 				45EF50E6282E6AA4008180CA /* SocketIO */,
 				45EF50E9282E6AD7008180CA /* Starscream */,
+				45B7BD4B28E5B077007832C2 /* ServiceProvider */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C5026BD902C00EC572D /* ShowcaseProd.app */;
@@ -8250,6 +8273,7 @@
 				A96B70B82739891200FEF07D /* FirebaseMessaging */,
 				457EDAC42791D3AC00DDCD83 /* SwiftyBeaver */,
 				A99FD509282EA0BB00275509 /* SocketIO */,
+				45B7BD4D28E5B07C007832C2 /* ServiceProvider */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C9026BD904300EC572D /* ShowcaseBeta.app */;
@@ -8288,6 +8312,7 @@
 				457CB9E0282D27D000ED0F00 /* FirebaseMessaging */,
 				457CB9E1282D27D000ED0F00 /* SwiftyBeaver */,
 				457CB9E3282D27D000ED0F00 /* SocketIO */,
+				45B7BD5328E5B088007832C2 /* ServiceProvider */,
 			);
 			productName = Sportsbook;
 			productReference = 457CBC4E282D27D000ED0F00 /* EveryMatrix.app */;
@@ -8326,6 +8351,7 @@
 				457CBC87282D2CD100ED0F00 /* FirebaseMessaging */,
 				457CBC88282D2CD100ED0F00 /* SwiftyBeaver */,
 				457CBC8A282D2CD100ED0F00 /* SocketIO */,
+				45B7BD5528E5B08C007832C2 /* ServiceProvider */,
 			);
 			productName = Sportsbook;
 			productReference = 457CBEF6282D2CD100ED0F00 /* Crocobet.app */;
@@ -8364,6 +8390,7 @@
 				4589C771282024E400243547 /* FirebaseMessaging */,
 				4589C772282024E400243547 /* SwiftyBeaver */,
 				45A6BB80282140D100D9B416 /* SocketIO */,
+				45B7BD4F28E5B080007832C2 /* ServiceProvider */,
 			);
 			productName = Sportsbook;
 			productReference = 4589C9CD282024E400243547 /* GOMASports.app */;
@@ -8402,6 +8429,7 @@
 				45A6BBB928246A7400D9B416 /* FirebaseMessaging */,
 				45A6BBBA28246A7400D9B416 /* SwiftyBeaver */,
 				45A6BBBC28246A7400D9B416 /* SocketIO */,
+				45B7BD5128E5B084007832C2 /* ServiceProvider */,
 			);
 			productName = Sportsbook;
 			productReference = 45A6BE2628246A7500D9B416 /* DAZN.app */;
@@ -14479,6 +14507,30 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 45A6BBBD28246A7400D9B416 /* XCRemoteSwiftPackageReference "socket" */;
 			productName = SocketIO;
+		};
+		45B7BD4B28E5B077007832C2 /* ServiceProvider */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ServiceProvider;
+		};
+		45B7BD4D28E5B07C007832C2 /* ServiceProvider */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ServiceProvider;
+		};
+		45B7BD4F28E5B080007832C2 /* ServiceProvider */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ServiceProvider;
+		};
+		45B7BD5128E5B084007832C2 /* ServiceProvider */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ServiceProvider;
+		};
+		45B7BD5328E5B088007832C2 /* ServiceProvider */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ServiceProvider;
+		};
+		45B7BD5528E5B08C007832C2 /* ServiceProvider */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ServiceProvider;
 		};
 		45D871C12710769600F5B87B /* Collections */ = {
 			isa = XCSwiftPackageProductDependency;

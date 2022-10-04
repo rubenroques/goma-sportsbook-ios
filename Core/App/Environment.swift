@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ServiceProvider
 
 let Env = Environment() // swiftlint:disable:this identifier_name
 
@@ -17,6 +18,20 @@ class Environment {
     let everyMatrixClient = EveryMatrixServiceClient()
     let everyMatrixStorage = AggregatorsRepository()
 
+    // let serviceProvider = ServiceProvider()
+    lazy var serviceProvider: ServiceProvider = {
+        
+        return ServiceProvider(providerType: .sportsradar)
+        
+        let provider = TargetVariables.defaultCardStyle
+        switch provider {
+        case .normal:
+            return ServiceProvider(providerType: .everymatrix)
+        case .small:
+            return ServiceProvider(providerType: .sportsradar)
+        }
+    }()
+    
     let betslipManager = BetslipManager()
 
     let userSessionStore = UserSessionStore()
