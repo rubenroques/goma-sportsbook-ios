@@ -598,3 +598,10 @@ Terms of use, Privacy Policy and EULA";
 "following" = "Following";
 "top_tipsters" = "Top Tipsters";
 "suggested_bets" = "Suggested Bets";
+
+"anonymous_tips_info" = "Anonymous Tips (Your bets will be shared as an anonymous user)";
+"anonymous_tips" = "Anonymous Tips";
+
+"accept" = "Accept";
+"reject" = "Reject";
+"read_all" = "Read all";

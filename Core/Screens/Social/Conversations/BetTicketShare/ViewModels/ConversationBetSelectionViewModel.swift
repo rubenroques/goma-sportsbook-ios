@@ -418,10 +418,6 @@ class ConversationBetSelectionViewModel {
 
 extension ConversationBetSelectionViewModel {
 
-}
-
-extension ConversationBetSelectionViewModel {
-
     func numberOfSections() -> Int {
         return 1
     }

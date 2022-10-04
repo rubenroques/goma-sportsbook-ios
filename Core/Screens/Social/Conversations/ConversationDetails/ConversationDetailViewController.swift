@@ -395,6 +395,10 @@ class ConversationDetailViewController: UIViewController {
 
                 userProfileViewController.isChatProfile = true
 
+                userProfileViewController.shouldCloseChat = { [weak self] in
+                    self?.shouldCloseChat?()
+                }
+
                 self.navigationController?.pushViewController(userProfileViewController, animated: true)
             }
 

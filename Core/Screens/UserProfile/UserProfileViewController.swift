@@ -43,6 +43,7 @@ class UserProfileViewController: UIViewController {
 
     private var cancellables = Set<AnyCancellable>()
 
+
     // MARK: Public properties
     var hasFollowOption: Bool = true {
         didSet {
@@ -72,6 +73,7 @@ class UserProfileViewController: UIViewController {
     }
 
     var shouldCloseChat: (() -> Void)?
+    var shouldReloadChatList: (() -> Void)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: UserProfileViewModel) {
@@ -173,7 +175,7 @@ class UserProfileViewController: UIViewController {
         self.followButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
 
         self.unfollowButton.backgroundColor = .clear
-        self.unfollowButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        self.unfollowButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
         self.unfollowButton.layer.borderColor = UIColor.App.buttonBackgroundSecondary.cgColor
 
         self.friendActionsStackView.backgroundColor = .clear
@@ -222,6 +224,8 @@ class UserProfileViewController: UIViewController {
         let customToast = ToastCustom.text(title: localized("friend_request_sent"))
 
         customToast.show()
+
+        self.addFriendButton.isEnabled = false
     }
 
     private func closeUserProfile() {
@@ -243,6 +247,13 @@ class UserProfileViewController: UIViewController {
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { [weak self] isFriend in
                     self?.hasFriendOption = !isFriend
+                })
+                .store(in: &cancellables)
+
+            viewModel.isFriendRequestPending
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [weak self] isFriendRequestPending in
+                    self?.addFriendButton.isEnabled = !isFriendRequestPending
                 })
                 .store(in: &cancellables)
         }
@@ -288,9 +299,11 @@ class UserProfileViewController: UIViewController {
             guard let self = self else {return}
             if self.isChatProfile {
                 self.shouldCloseChat?()
+                self.navigationController?.popToRootViewController(animated: true)
             }
             self.closeUserProfile()
         }
+
     }
 
     // MARK: Actions
@@ -312,7 +325,7 @@ class UserProfileViewController: UIViewController {
 
     @objc func didTapChatButton() {
 
-        if let chatId = self.viewModel.chatroomId {
+        if let chatId = self.viewModel.userConnection?.chatRoomId {
             let conversationDetailViewModel = ConversationDetailViewModel(chatId: chatId)
 
             let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
@@ -450,7 +463,7 @@ extension UserProfileViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("", for: .normal)
         button.setImage(UIImage(named: "user_add_friend_icon"), for: .normal)
-        button.contentMode = .scaleAspectFill
+        button.contentMode = .scaleAspectFit
         return button
     }
 
@@ -459,7 +472,7 @@ extension UserProfileViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("", for: .normal)
         button.setImage(UIImage(named: "user_chat_icon"), for: .normal)
-        button.contentMode = .scaleAspectFill
+        button.contentMode = .scaleAspectFit
         return button
     }
 
@@ -599,17 +612,11 @@ extension UserProfileViewController {
             self.userProfileActionsStackView.trailingAnchor.constraint(equalTo: self.moreOptionsButton.leadingAnchor, constant: -15),
             self.userProfileActionsStackView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
 
-//            self.followActionsStackView.trailingAnchor.constraint(equalTo: self.friendActionsStackView.leadingAnchor, constant: -15),
-//            self.followActionsStackView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-
             self.followButton.widthAnchor.constraint(equalToConstant: 81),
             self.followButton.heightAnchor.constraint(equalToConstant: 29),
 
             self.unfollowButton.widthAnchor.constraint(equalToConstant: 81),
             self.unfollowButton.heightAnchor.constraint(equalToConstant: 29),
-
-//            self.friendActionsStackView.trailingAnchor.constraint(equalTo: self.moreOptionsButton.leadingAnchor, constant: -15),
-//            self.friendActionsStackView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
 
             self.addFriendButton.widthAnchor.constraint(equalToConstant: 32),
             self.addFriendButton.heightAnchor.constraint(equalToConstant: 32),
