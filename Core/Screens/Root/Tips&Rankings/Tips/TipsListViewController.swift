@@ -82,9 +82,7 @@ class TipsListViewController: UIViewController {
         self.tableView.register(TipsTableViewCell.self, forCellReuseIdentifier: TipsTableViewCell.identifier)
         self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
 
-        self.refreshControl.tintColor = UIColor.lightGray
         self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
-        self.tableView.addSubview(self.refreshControl)
 
         self.isLoading = false
 
@@ -132,6 +130,8 @@ class TipsListViewController: UIViewController {
         self.emptyFriendsSubtitleLabel.textColor = UIColor.App.textPrimary
 
         StyleHelper.styleButton(button: self.emptyFriendsButton)
+
+        self.refreshControl.tintColor = UIColor.lightGray
 
     }
 
@@ -395,6 +395,8 @@ extension TipsListViewController {
         self.view.addSubview(self.loadingBaseView)
 
         self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
+
+        self.tableView.addSubview(self.refreshControl)
 
         self.initConstraints()
     }

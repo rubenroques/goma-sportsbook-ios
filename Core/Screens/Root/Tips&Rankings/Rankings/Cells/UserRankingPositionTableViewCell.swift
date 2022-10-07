@@ -12,6 +12,7 @@ class UserRankingPositionTableViewCell: UITableViewCell {
     
     var tapAction: () -> Void = { }
     var swipeViewAction: () -> Void = { }
+    var shouldShowUserProfile: ((UserBasicInfo) -> Void)?
     
     // MARK: Private Properties
     private lazy var baseView: UIView = Self.createBaseView()
@@ -43,7 +44,10 @@ class UserRankingPositionTableViewCell: UITableViewCell {
 
 //        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.didPanBaseView(_:)))
 //        self.baseView.addGestureRecognizer(panGestureRecognizer)
-//        
+//
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapBaseView))
+        self.baseView.addGestureRecognizer(tapGestureRecognizer)
+
         self.setNeedsLayout()
         self.layoutIfNeeded()
     }
@@ -106,6 +110,15 @@ class UserRankingPositionTableViewCell: UITableViewCell {
             baseView.center = CGPoint(x: baseViewInitialCenter.x + translation.x, y: self.baseView.center.y)
         default:
             break
+        }
+    }
+
+    @objc func didTapBaseView() {
+
+        if let viewModel = self.viewModel {
+            let userBasicInfo = UserBasicInfo(userId: viewModel.getUserId(), username: viewModel.getUsername())
+
+            self.shouldShowUserProfile?(userBasicInfo)
         }
     }
     

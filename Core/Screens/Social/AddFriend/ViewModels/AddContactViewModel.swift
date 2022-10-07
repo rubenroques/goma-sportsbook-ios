@@ -31,6 +31,7 @@ class AddContactViewModel {
     var canAddFriendPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var shouldShowAlert: CurrentValueSubject<Bool, Never> = .init(false)
     var friendAlertType: FriendAlertType?
+    var chatroomsResponse: [Int] = []
 
     init() {
         self.canAddFriendPublisher.send(false)
@@ -260,7 +261,6 @@ class AddContactViewModel {
     private func verifyUserRegister(userContact: UserContact) {
         // TEST PHONE
 
-        var isRegistered = false
         var registeredPhone = ""
 
         for phone in userContact.phones {
@@ -268,38 +268,34 @@ class AddContactViewModel {
 
             if self.registeredUsers.isNotEmpty, self.registeredUsers.contains(where: {
                 $0.phoneNumber == userContactPhone }) {
-                isRegistered = true
+
                 registeredPhone = userContactPhone
-            }
-            else {
-                isRegistered = false
-            }
-        }
 
-        if isRegistered {
+                self.hasRegisteredFriends = true
 
-            self.hasRegisteredFriends = true
+                var newId = 0
 
-            var newId = 0
-
-            if let registerUser = self.registeredUsers.first(where: { $0.phoneNumber == registeredPhone}) {
-                newId = registerUser.id
-            }
-
-            if !self.friendsList.contains(where: { $0.id == newId }) {
-
-                let newUserContact = UserContact(id: "\(newId)", username: userContact.username, phones: userContact.phones)
-
-                self.users.append(newUserContact)
-
-                if self.sectionUsers[UserContactType.registered.identifier] != nil {
-
-                    self.sectionUsers[UserContactType.registered.identifier]?.append(newUserContact)
+                if let registerUser = self.registeredUsers.first(where: { $0.phoneNumber == registeredPhone}) {
+                    newId = registerUser.id
                 }
-                else {
-                    self.sectionUsers[UserContactType.registered.identifier] = [newUserContact]
+
+                if !self.friendsList.contains(where: { $0.id == newId }) {
+
+                    let newUserContact = UserContact(id: "\(newId)", username: userContact.username, phones: userContact.phones)
+
+                    self.users.append(newUserContact)
+
+                    if self.sectionUsers[UserContactType.registered.identifier] != nil {
+
+                        self.sectionUsers[UserContactType.registered.identifier]?.append(newUserContact)
+
+                    }
+                    else {
+                        self.sectionUsers[UserContactType.registered.identifier] = [newUserContact]
+                    }
                 }
             }
+
         }
 
     }
@@ -324,6 +320,11 @@ class AddContactViewModel {
 
                 self?.shouldShowAlert.send(true)
             }, receiveValue: { [weak self] response in
+
+                if let chatroomIdsData = response.data?.chatroomIds {
+                    self?.chatroomsResponse = chatroomIdsData
+                }
+
                 self?.friendAlertType = .success
             })
             .store(in: &cancellables)

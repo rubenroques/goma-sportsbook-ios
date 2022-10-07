@@ -19,6 +19,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     private lazy var userImageView: UIImageView = Self.createUserImageView()
     private lazy var usernameLabel: UILabel = Self.createUsernameLabel()
     private lazy var followButton: UIButton = Self.createFollowButton()
+    private lazy var unfollowButton: UIButton = Self.createUnfollowButton()
     private lazy var tipsBaseScrollView: UIScrollView = Self.createTipsBaseScrollView()
     private lazy var tipsContainerView: UIView = Self.createTipsContainerView()
     private lazy var tipsStackView: UIStackView = Self.createTipsStackView()
@@ -49,6 +50,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     var hasFollow: Bool = true {
         didSet {
             self.followButton.isHidden = !hasFollow
+            self.unfollowButton.isHidden = hasFollow
         }
     }
 
@@ -73,6 +75,7 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
         self.contentView.addGestureRecognizer(tapGestureRecognizer)
 
         self.followButton.addTarget(self, action: #selector(didTapFollowButton), for: .primaryActionTriggered)
+        self.unfollowButton.addTarget(self, action: #selector(didTapUnfollowButton), for: .primaryActionTriggered)
         self.betButton.addTarget(self, action: #selector(didTapBetButton), for: .primaryActionTriggered)
         self.fullTipButton.addTarget(self, action: #selector(didTapShowFullTipButton), for: .primaryActionTriggered)
 
@@ -144,6 +147,9 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
         self.followButton.backgroundColor = .clear
         self.followButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
+
+        self.unfollowButton.backgroundColor = .clear
+        self.unfollowButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
 
         self.tipsContainerView.backgroundColor = .clear
         self.tipsStackView.backgroundColor = .clear
@@ -237,6 +243,15 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
         }
 
+    }
+
+    @objc func didTapUnfollowButton() {
+        if let viewModel = self.viewModel,
+           let userId = viewModel.getUserId() {
+
+            viewModel.unfollowUser(userId: userId)
+
+        }
     }
 
     @objc func didTapBetButton() {
@@ -343,6 +358,14 @@ extension FeaturedTipCollectionViewCell {
         return button
     }
 
+    private static func createUnfollowButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(localized("unfollow"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .semibold, size: 12)
+        return button
+    }
+
     private static func createTipsContainerView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -442,6 +465,8 @@ extension FeaturedTipCollectionViewCell {
 
         self.containerView.addSubview(self.followButton)
 
+        self.containerView.addSubview(self.unfollowButton)
+
         self.containerView.addSubview(self.tipsBaseScrollView)
 
         self.tipsBaseScrollView.addSubview(self.tipsContainerView)
@@ -502,7 +527,11 @@ extension FeaturedTipCollectionViewCell {
 
             self.followButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -10),
             self.followButton.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 5),
-            self.followButton.heightAnchor.constraint(equalToConstant: 40)
+            self.followButton.heightAnchor.constraint(equalToConstant: 40),
+
+            self.unfollowButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -10),
+            self.unfollowButton.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 5),
+            self.unfollowButton.heightAnchor.constraint(equalToConstant: 40)
         ])
 
         // Tips stackview
