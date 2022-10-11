@@ -451,7 +451,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 case .loaded:
                     self?.isLoading = false
                 case .failed:
-                    ()
+                    self?.isLoading = false
                 }
             }
             .store(in: &cancellables)
@@ -476,6 +476,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isUnavailable in
                 self?.suggestedBetsListViewController.isEmptySharedBet = isUnavailable
+                self?.suggestedBetsListViewController.reloadTableView()
             })
             .store(in: &cancellables)
 

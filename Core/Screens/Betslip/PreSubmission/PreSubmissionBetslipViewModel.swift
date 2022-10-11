@@ -94,8 +94,32 @@ class PreSubmissionBetslipViewModel {
         let betDataRoute = TSRouter.getSharedBetData(betToken: betToken)
         Env.everyMatrixClient.manager.getModel(router: betDataRoute, decodingType: SharedBetDataResponse.self)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("SHARED BET DATA ERROR: \(error)")
+                    switch error {
 
+                    case .decodingError(value: let value):
+                        self?.isUnavailableBetSelection.send(true)
+                    case .httpError(_):
+                        ()
+                    case .unknown:
+                        self?.isUnavailableBetSelection.send(true)
+                    case .missingTransportSessionID:
+                        ()
+                    case .notConnected:
+                        ()
+                    case .noResultsReceived:
+                        self?.isUnavailableBetSelection.send(true)
+                    case .requestError(value: let value):
+                        self?.isUnavailableBetSelection.send(true)
+                    }
+
+                    self?.sharedBetsPublisher.send(.failed)
+                case .finished:
+                    print("SHARED BET DATA FINISHED")
+                }
             },
             receiveValue: { [weak self] betDataResponse in
                 self?.addBetDataTickets(betData: betDataResponse.sharedBetData)
@@ -124,6 +148,9 @@ class PreSubmissionBetslipViewModel {
 
                 if validTickets.isEmpty {
                     self?.isUnavailableBetSelection.send(true)
+                }
+                else {
+                    self?.isUnavailableBetSelection.send(false)
                 }
 
                 self?.sharedBetsPublisher.send(.loaded(validTickets))

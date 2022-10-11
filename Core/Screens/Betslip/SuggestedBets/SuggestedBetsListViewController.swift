@@ -64,7 +64,7 @@ class SuggestedBetsListViewModel {
         return self.suggestedBetsSummaries.count
     }
 
-    func viewModeForRow(_ row: Int) -> SuggestedBetViewModel {
+    func viewModelForRow(_ row: Int) -> SuggestedBetViewModel {
         if let cachedViewModel = self.cachedSuggestedBetViewModels[row].value {
             return cachedViewModel
         }
@@ -177,7 +177,7 @@ class SuggestedBetsListViewController: UIViewController {
         self.viewModel.refreshSuggestedBets()
     }
 
-    private func reloadTableView() {
+    func reloadTableView() {
         self.tableView.reloadData()
     }
 
@@ -205,7 +205,7 @@ extension SuggestedBetsListViewController: UITableViewDelegate, UITableViewDataS
         else {
             fatalError()
         }
-        cell.setupWithViewModel(viewModel: self.viewModel.viewModeForRow(indexPath.row))
+        cell.setupWithViewModel(viewModel: self.viewModel.viewModelForRow(indexPath.row))
         return cell
     }
 
