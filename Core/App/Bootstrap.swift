@@ -26,7 +26,8 @@ struct Bootstrap {
             Env.locationManager.startGeoLocationUpdates()
         }
 
-        _ = Env.serviceProvider
+        let serviceProvider = Env.serviceProvider
+        serviceProvider.connect()
         
     }
 

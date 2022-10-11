@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import OrderedCollections
+import ServiceProvider
 
 class LiveEventsViewModel: NSObject {
 
@@ -70,6 +71,8 @@ class LiveEventsViewModel: NSObject {
     private var sportsCancellables = Set<AnyCancellable>()
     private var allMatchesPublisher: AnyCancellable?
     private var bannersInfoPublisher: AnyCancellable?
+    
+    private var providerLiveMatchesSubscriber: AnyCancellable?
 
     private var allMatchesRegister: EndpointPublisherIdentifiable?
     private var bannersInfoRegister: EndpointPublisherIdentifiable?
@@ -119,8 +122,50 @@ class LiveEventsViewModel: NSObject {
         self.allMatchesPage = 1
         self.allMatchesHasMorePages = true
 
+        self.providerLiveMatchesSubscriber?.cancel()
+        
+        print("subscribeLiveMatches fetchData called")
+        
+        self.providerLiveMatchesSubscriber = Env.serviceProvider.subscribeLiveMatches(forSportType: ServiceProvider.SportType.football)?
+            .sink(receiveCompletion: { completion in
+                print("done \(completion)")
+            }, receiveValue: { (subscribableContent: SubscribableContent<[EventsGroup]>) in
+                print("subscribeLiveMatches \(subscribableContent)")
+                
+                switch subscribableContent {
+                case .connected:
+                    print("Connected to ws")
+                case .content(let eventsGroups):
+                    
+                    var matches = [Match]()
+                    for eventsGroup in eventsGroups {
+                        for event in eventsGroup.events {
+                            matches.append(Match(id: event.id,
+                                  competitionId: event.competitionId,
+                                  competitionName: event.competitionName,
+                                  homeParticipant: Participant(id: "", name: event.homeTeamName),
+                                  awayParticipant: Participant(id: "", name: event.awayTeamName),
+                                  sportType: event.sportTypeName,
+                                  numberTotalOfMarkets: 1,
+                                  markets: [],
+                                  rootPartId: ""))
+                        }
+                    }
+                    
+                    self.isLoadingAllEventsList.send(false)
+                    self.allMatches = matches
+                    
+                    self.updateContentList()
+                    
+                case .disconnected:
+                    print("Disconnected from ws")
+                }
+            })
+        
+        /*
+         
         self.fetchAllMatches()
-
+         
         if let sportPublisher = sportsRepository.sportsLivePublisher[self.selectedSport.id] {
             
             self.currentLiveSportsPublisher?.cancel()
@@ -138,6 +183,7 @@ class LiveEventsViewModel: NSObject {
             
             self.liveEventsCountPublisher.send(0)
         }
+        */
     }
 
     func getSportsLive() {

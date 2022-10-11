@@ -6,7 +6,10 @@
 //
 
 import Foundation
+import Combine
 
 protocol EventsProvider {
-    func connect() 
+
+    func subscribeLiveMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
+    
 }

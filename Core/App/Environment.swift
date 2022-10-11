@@ -19,16 +19,16 @@ class Environment {
     let everyMatrixStorage = AggregatorsRepository()
 
     // let serviceProvider = ServiceProvider()
-    lazy var serviceProvider: ServiceProvider = {
+    lazy var serviceProvider: ServiceProviderClient = {
         
-        return ServiceProvider(providerType: .sportsradar)
+        return ServiceProviderClient(providerType: .sportradar)
         
         let provider = TargetVariables.defaultCardStyle
         switch provider {
         case .normal:
-            return ServiceProvider(providerType: .everymatrix)
+            return ServiceProviderClient(providerType: .everymatrix)
         case .small:
-            return ServiceProvider(providerType: .sportsradar)
+            return ServiceProviderClient(providerType: .sportradar)
         }
     }()
     

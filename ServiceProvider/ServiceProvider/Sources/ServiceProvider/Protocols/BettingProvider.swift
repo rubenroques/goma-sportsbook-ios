@@ -6,7 +6,10 @@
 //
 
 import Foundation
+import Combine
 
 protocol BettingProvider {
+    
+    init(connector: any Connector)
     
 }

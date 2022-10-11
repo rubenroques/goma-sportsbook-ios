@@ -341,10 +341,10 @@ class StaticHomeViewTemplateDataSource {
 
     // Tips TEST
     func fetchTips() {
-
+        // TODO: Usar enum no betType, 
         Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE")
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
                     print("FEATURED TIPS ERROR: \(error)")
@@ -352,8 +352,6 @@ class StaticHomeViewTemplateDataSource {
                     ()
                 }
             }, receiveValue: { [weak self] response in
-                print("FEATURED TIPS RESPONSE: \(response)")
-
                 if let featuredTips = response.data {
                     self?.featuredTips = featuredTips
                 }

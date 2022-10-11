@@ -10,17 +10,17 @@ import Foundation
 class EverymatrixProvider {
     
 }
-
-extension EverymatrixProvider: PrivilegedAccessManager {
-    
-}
-
-extension EverymatrixProvider: BettingProvider {
-    
-}
-
-extension EverymatrixProvider: EventsProvider {
-    func connect() {
-        
-    }
-}
+//
+//extension EverymatrixProvider: PrivilegedAccessManager {
+//
+//}
+//
+//extension EverymatrixProvider: BettingProvider {
+//
+//}
+//
+//extension EverymatrixProvider: EventsProvider {
+//    func connect() {
+//
+//    }
+//}

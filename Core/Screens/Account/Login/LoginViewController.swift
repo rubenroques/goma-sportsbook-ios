@@ -65,6 +65,19 @@ class LoginViewController: UIViewController {
 
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if self.isModal {
+            self.skipButton.isHidden = true
+            self.dismissButton.isHidden = false
+        }
+        else {
+            self.skipButton.isHidden = false
+            self.dismissButton.isHidden = true
+        }
+    }
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -143,14 +156,6 @@ class LoginViewController: UIViewController {
 
         checkPolicyLinks()
 
-        if self.isModal {
-            self.skipButton.isHidden = true
-            self.dismissButton.isHidden = false
-        }
-        else {
-            self.skipButton.isHidden = false
-            self.dismissButton.isHidden = true
-        }
 
         #if DEBUG
         let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))

@@ -17,6 +17,12 @@
 		4503E79E27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4503E79C27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift */; };
 		45085660284A640D00F4FB52 /* FriendProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99FD5102835479200275509 /* FriendProfileViewModel.swift */; };
 		45085661284A640D00F4FB52 /* FriendProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99FD5102835479200275509 /* FriendProfileViewModel.swift */; };
+		450B781D28F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450B781C28F56BA5009229E3 /* ServiceProviderModelMapper.swift */; };
+		450B781E28F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450B781C28F56BA5009229E3 /* ServiceProviderModelMapper.swift */; };
+		450B781F28F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450B781C28F56BA5009229E3 /* ServiceProviderModelMapper.swift */; };
+		450B782028F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450B781C28F56BA5009229E3 /* ServiceProviderModelMapper.swift */; };
+		450B782128F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450B781C28F56BA5009229E3 /* ServiceProviderModelMapper.swift */; };
+		450B782228F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450B781C28F56BA5009229E3 /* ServiceProviderModelMapper.swift */; };
 		45109A662799C83700E4AC2E /* MatchStatsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45109A652799C83700E4AC2E /* MatchStatsViewModel.swift */; };
 		45109A672799C83700E4AC2E /* MatchStatsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45109A652799C83700E4AC2E /* MatchStatsViewModel.swift */; };
 		4515635F26BE032E00690896 /* AnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515635E26BE032E00690896 /* AnalyticsClient.swift */; };
@@ -4451,6 +4457,7 @@
 		4502BF392798713C00F5B0CD /* HomeAwayCardStatsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeAwayCardStatsView.xib; sourceTree = "<group>"; };
 		4503E79927D0E89600077CD2 /* CompetitionDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionDetailsViewController.swift; sourceTree = "<group>"; };
 		4503E79C27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionDetailsViewModel.swift; sourceTree = "<group>"; };
+		450B781C28F56BA5009229E3 /* ServiceProviderModelMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceProviderModelMapper.swift; sourceTree = "<group>"; };
 		45109A652799C83700E4AC2E /* MatchStatsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchStatsViewModel.swift; sourceTree = "<group>"; };
 		4515635E26BE032E00690896 /* AnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsClient.swift; sourceTree = "<group>"; };
 		4515636726BE0AB200690896 /* ClientVariables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientVariables.swift; sourceTree = "<group>"; };
@@ -7052,6 +7059,7 @@
 				454E0AC72733FBF200794E0C /* StyleHelpers.swift */,
 				454E0AD02734A39800794E0C /* CurrencyHelper.swift */,
 				45626E33275530990069B89B /* OddFormatter.swift */,
+				450B781C28F56BA5009229E3 /* ServiceProviderModelMapper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -10001,6 +10009,7 @@
 				A90BC90827C3B99500667616 /* GamesNotificationViewModel.swift in Sources */,
 				A995C1AC279B10B600151462 /* SearchTitleSectionHeaderView.swift in Sources */,
 				45C10F8828772DA700037BBE /* ShiftViewOptions.swift in Sources */,
+				450B781D28F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */,
 				F4B32D992790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */,
 				45166CE726F3548D00E69D65 /* AuthenticateSSWampMessage.swift in Sources */,
 				A9992FEF280888FA0098854C /* AddFriendViewController.swift in Sources */,
@@ -10650,6 +10659,7 @@
 				455A0CF726BD9D9000EC572D /* NSObject+Extension.swift in Sources */,
 				456B342826C18257009D7D27 /* Logger.swift in Sources */,
 				45C10F8928772DA700037BBE /* ShiftViewOptions.swift in Sources */,
+				450B781E28F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */,
 				A90BC90927C3B99500667616 /* GamesNotificationViewModel.swift in Sources */,
 				A995C1AD279B10B600151462 /* SearchTitleSectionHeaderView.swift in Sources */,
 				A9992FF0280888FA0098854C /* AddFriendViewController.swift in Sources */,
@@ -11243,6 +11253,7 @@
 				457CBB5F282D27D000ED0F00 /* SearchTitleSectionHeaderView.swift in Sources */,
 				457CBB60282D27D000ED0F00 /* EmptyCardTableViewCell.swift in Sources */,
 				45C10F8C28772DA700037BBE /* ShiftViewOptions.swift in Sources */,
+				450B782128F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */,
 				457CBB61282D27D000ED0F00 /* AuthenticateSSWampMessage.swift in Sources */,
 				457CBB62282D27D000ED0F00 /* AddFriendViewController.swift in Sources */,
 				457CBB63282D27D000ED0F00 /* GroupUserManagementCellViewModel.swift in Sources */,
@@ -11507,6 +11518,7 @@
 				457CBD00282D2CD100ED0F00 /* TSRouter.swift in Sources */,
 				45C10F7B28772DA700037BBE /* CGPoint+Shift.swift in Sources */,
 				457CBD01282D2CD100ED0F00 /* UILabel+Extensions.swift in Sources */,
+				450B782228F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */,
 				457CBD02282D2CD100ED0F00 /* WelcomeViewController.swift in Sources */,
 				457CBD03282D2CD100ED0F00 /* TSParams.swift in Sources */,
 				457CBD04282D2CD100ED0F00 /* UserSettings.swift in Sources */,
@@ -12427,6 +12439,7 @@
 				4589C8E0282024E400243547 /* GamesNotificationViewModel.swift in Sources */,
 				45B6E206283E3F21001B570C /* EditContactViewModel.swift in Sources */,
 				45C10F8A28772DA700037BBE /* ShiftViewOptions.swift in Sources */,
+				450B781F28F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */,
 				4589C8E1282024E400243547 /* SearchTitleSectionHeaderView.swift in Sources */,
 				4589C8E2282024E400243547 /* EmptyCardTableViewCell.swift in Sources */,
 				4589C8E3282024E400243547 /* AuthenticateSSWampMessage.swift in Sources */,
@@ -13020,6 +13033,7 @@
 				45B6E205283E3F21001B570C /* EditContactViewModel.swift in Sources */,
 				45A6BD3628246A7500D9B416 /* Logger.swift in Sources */,
 				45C10F8B28772DA700037BBE /* ShiftViewOptions.swift in Sources */,
+				450B782028F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */,
 				45A6BD3728246A7500D9B416 /* GamesNotificationViewModel.swift in Sources */,
 				45A6BD3828246A7500D9B416 /* SearchTitleSectionHeaderView.swift in Sources */,
 				45A6BD3928246A7500D9B416 /* EmptyCardTableViewCell.swift in Sources */,
