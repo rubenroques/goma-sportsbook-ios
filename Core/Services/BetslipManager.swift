@@ -30,6 +30,7 @@ class BetslipManager: NSObject {
     var betslipPlaceBetResponseErrorsPublisher: CurrentValueSubject<[BetslipPlaceBetResponse], Never>
     private var bettingTicketRegisters: [String: EndpointPublisherIdentifiable] = [:]
     private var bettingTicketSubscribers: [String: AnyCancellable] = [:]
+    var betBuilderOddPublisher: CurrentValueSubject<Double?, Never> = .init(nil)
 
     private var cancellables: Set<AnyCancellable> = []
 
@@ -321,8 +322,17 @@ extension BetslipManager {
             .receive(on: DispatchQueue.main)
             .sink { _ in
                 
-            } receiveValue: { betslipSelectionState in
-                self.multipleBetslipSelectionState.send(betslipSelectionState)
+            } receiveValue: { [weak self] betslipSelectionState in
+                print("BETSLIP SELECTION: \(betslipSelectionState)")
+                self?.multipleBetslipSelectionState.send(betslipSelectionState)
+
+                if let betBuilder = betslipSelectionState.betBuilder,
+                   let betBuilderOdds = betBuilder[safe: 0]?.betBuilderOdds {
+                    self?.betBuilderOddPublisher.send(betBuilderOdds)
+                }
+                else {
+                    self?.betBuilderOddPublisher.send(nil)
+                }
             }
             .store(in: &cancellables)
 
@@ -443,6 +453,7 @@ extension BetslipManager {
         var betAmount = amount
         var isFreeBet = false
         var ubsWalletId = ""
+        var betBuilderPriceValue: Double? = nil
 
         if let freeBet = freeBet {
             betAmount = freeBet.freeBetAmount
@@ -454,13 +465,18 @@ extension BetslipManager {
             ubsWalletId = oddsBoost.walletId
         }
 
+        if let betBuilderOdds = self.multipleBetslipSelectionState.value?.betBuilder?[safe: 0]?.betBuilderOdds {
+            betBuilderPriceValue = betBuilderOdds
+        }
+
         let route = TSRouter.placeBet(language: "en",
                                       amount: betAmount,
                                       betType: .multiple,
                                       tickets: ticketSelections,
                                       oddsValidationType: betslipOddValidationType,
                                       freeBet: isFreeBet,
-                                      ubsWalletId: ubsWalletId)
+                                      ubsWalletId: ubsWalletId,
+                                      betBuilderPriceValue: betBuilderPriceValue)
 
         Logger.log("BetslipManager - Submitting multiple bet: \(route)")
 
