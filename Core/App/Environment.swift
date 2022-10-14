@@ -40,9 +40,9 @@ class Environment {
     let urlSchemaManager = URLSchemaManager()
     let urlApp: String = "https://sportsbook.gomagaming.com/"
 
-    var userBetslipSettingsSelectorList: [BetslipSelection] = [BetslipSelection(key: "ACCEPT_ANY",
+    var userBetslipSettingsSelectorList: [BetslipSelection] = [BetslipSelection(key: BetslipOddValidationType.acceptAny.rawValue,
                                                                                 description: localized("accept_any")),
-                                                               BetslipSelection(key: "ACCEPT_HIGHER",
+                                                               BetslipSelection(key: BetslipOddValidationType.acceptHigher.rawValue,
                                                                                 description: localized("accept_higher"))]
 
 }

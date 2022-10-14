@@ -24,6 +24,7 @@ class TipsRootViewController: UIViewController {
     // MARK: Public Properties
     var didTapBetslipButtonAction: (() -> Void)?
     var didTapChatButtonAction: (() -> Void)?
+    var shouldShowUserProfile: ((UserBasicInfo) -> Void)?
 
     // MARK: - Lifetime and Cycle
     init() {
@@ -55,8 +56,6 @@ class TipsRootViewController: UIViewController {
         self.tabViewController.textFont = AppFont.with(type: .bold, size: 16)
         self.tabViewController.setBarDistribution(.parent)
 
-        //self.backButton.addTarget(self, action: #selector(self.didTapBackButton), for: .primaryActionTriggered)
-
         self.setupWithTheme()
 
         self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in
@@ -65,6 +64,14 @@ class TipsRootViewController: UIViewController {
 
         self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
             self?.didTapChatView()
+        }
+
+        self.tipsViewController.shouldShowBetslip = { [weak self] in
+            self?.didTapBetslipView()
+        }
+
+        self.tipsViewController.shouldShowUserProfile = { [weak self] userBasicInfo in
+            self?.shouldShowUserProfile?(userBasicInfo)
         }
     }
 
@@ -110,6 +117,7 @@ class TipsRootViewController: UIViewController {
     @objc func didTapChatView() {
         self.didTapChatButtonAction?()
     }
+
 }
 
 extension TipsRootViewController: UIGestureRecognizerDelegate {

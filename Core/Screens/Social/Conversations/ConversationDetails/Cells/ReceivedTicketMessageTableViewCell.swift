@@ -96,7 +96,6 @@ class ReceivedTicketMessageTableViewCell: UITableViewCell {
     func setupMessage(messageData: MessageData, username: String, chatroomId: Int) {
         self.messageLabel.text = messageData.text
 
-        
         if messageData.text.isEmpty {
             self.messageLabel.text = localized("chat_empty_shared_ticket_others").replacingOccurrences(of: "%s", with: "\(username)")
         }

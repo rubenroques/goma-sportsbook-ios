@@ -11,6 +11,9 @@ import Combine
 class FeaturedTipCollectionViewModel {
 
     var featuredTip: FeaturedTip
+    var cancellables = Set<AnyCancellable>()
+
+    var shouldShowBetslip: (() -> Void)?
     
     enum SizeType {
         case small
@@ -18,7 +21,7 @@ class FeaturedTipCollectionViewModel {
     }
     
     var sizeType: SizeType
-    
+
     init(featuredTip: FeaturedTip, sizeType: SizeType) {
         self.featuredTip = featuredTip
         self.sizeType = sizeType
@@ -48,6 +51,10 @@ class FeaturedTipCollectionViewModel {
         return ""
     }
 
+    func getUserId() -> String? {
+        return self.featuredTip.userId
+    }
+
     func createBetslipTicket() {
 
         guard let selections = self.featuredTip.selections else {return}
@@ -69,8 +76,27 @@ class FeaturedTipCollectionViewModel {
 
                 Env.betslipManager.addBettingTicket(ticket)
 
+                self.shouldShowBetslip?()
             }
 
         }
+    }
+
+    func followUser(userId: String) {
+
+        Env.gomaNetworkClient.followUser(deviceId: Env.deviceId, userId: userId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("FOLLOW USER ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+            }, receiveValue: { [weak self] response in
+                print("FOLLOW USER RESPONSE: \(response)")
+                Env.gomaSocialClient.getFollowingUsers()
+            })
+            .store(in: &cancellables)
     }
 }

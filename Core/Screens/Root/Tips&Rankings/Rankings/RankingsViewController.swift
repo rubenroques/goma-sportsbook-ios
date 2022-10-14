@@ -46,7 +46,7 @@ class RankingsViewController: UIViewController {
 
         super.init(nibName: nil, bundle: nil)
 
-        self.title = "Rankings"
+        self.title = localized("rankings")
 
     }
 
@@ -62,7 +62,6 @@ class RankingsViewController: UIViewController {
         self.setupWithTheme()
 
         self.viewControllers = [
-            RankingsListViewController(viewModel: RankingsListViewModel(rankingsType: .all)),
             RankingsListViewController(viewModel: RankingsListViewModel(rankingsType: .topTipsters)),
             RankingsListViewController(viewModel: RankingsListViewModel(rankingsType: .friends)),
             RankingsListViewController(viewModel: RankingsListViewModel(rankingsType: .followers))

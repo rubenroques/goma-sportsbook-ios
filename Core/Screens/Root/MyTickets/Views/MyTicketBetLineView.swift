@@ -119,7 +119,7 @@ class MyTicketBetLineView: NibView {
             self.locationImageView.isHidden = true
         }
 
-        self.marketLabel.text = self.betHistoryEntrySelection.marketName ?? ""
+        self.marketLabel.text = "\(self.betHistoryEntrySelection.marketName ?? "") (\(self.betHistoryEntrySelection.bettingTypeEventPartName ?? ""))"
         self.outcomeLabel.text = self.betHistoryEntrySelection.betName ?? ""
         self.oddTitleLabel.text = localized("odd")
 

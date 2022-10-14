@@ -36,6 +36,9 @@ class TipsViewController: UIViewController {
         }
     }
 
+    var shouldShowBetslip: (() -> Void)?
+    var shouldShowUserProfile: ((UserBasicInfo) -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(viewModel: TipsViewModel = TipsViewModel()) {
         self.viewModel = viewModel
@@ -46,7 +49,7 @@ class TipsViewController: UIViewController {
 
         super.init(nibName: nil, bundle: nil)
 
-        self.title = "Tips"
+        self.title = localized("tips")
 
     }
 
@@ -83,6 +86,8 @@ class TipsViewController: UIViewController {
 
         self.reloadCollectionView()
         self.bind(toViewModel: self.viewModel)
+
+        self.setupViewControllersCallbacks()
     }
 
     // MARK: - Layout and Theme
@@ -164,6 +169,22 @@ class TipsViewController: UIViewController {
         }
 
         self.currentPageViewControllerIndex = index
+    }
+
+    private func setupViewControllersCallbacks() {
+
+        for viewController in self.viewControllers {
+            if let tipsViewCoontroller = viewController as? TipsListViewController {
+
+                tipsViewCoontroller.shouldShowBetslip = { [weak self] in
+                    self?.shouldShowBetslip?()
+                }
+
+                tipsViewCoontroller.shouldShowUserProfile = { [weak self] userBasicInfo in
+                    self?.shouldShowUserProfile?(userBasicInfo)
+                }
+            }
+        }
     }
 
 }

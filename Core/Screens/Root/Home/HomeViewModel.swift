@@ -106,7 +106,7 @@ extension HomeViewModel {
     func featuredTipLineViewModel() -> FeaturedTipLineViewModel? {
         return self.homeViewTemplateDataSource.featuredTipLineViewModel()
     }
-
+    
     func suggestedBetLineViewModel() -> SuggestedBetLineViewModel? {
         return self.homeViewTemplateDataSource.suggestedBetLineViewModel()
     }

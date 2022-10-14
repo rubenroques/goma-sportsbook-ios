@@ -13,8 +13,11 @@ class FeaturedTipLineViewModel {
     var featuredTips: [FeaturedTip] = []
     var featuredTipCollectionCacheViewModel: [String: FeaturedTipCollectionViewModel] = [:]
 
+    private var cancellables = Set<AnyCancellable>()
+
     init(featuredTips: [FeaturedTip]) {
         self.featuredTips = featuredTips
+
     }
 
     func numberOfItems() -> Int {
@@ -49,7 +52,13 @@ class FeaturedTipLineTableViewCell: UITableViewCell {
     private var cancellables: Set<AnyCancellable> = []
 
     var openFeaturedTipDetailAction: ((FeaturedTip) -> Void)?
+    
+    var shouldShowBetslip: (() -> Void)?
+    var shouldShowUserProfile: ((UserBasicInfo) -> Void)?
 
+    var currentIndex = -1
+    var currentIndexChangedAction: ((Int) -> Void) = { _ in }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
@@ -91,8 +100,14 @@ class FeaturedTipLineTableViewCell: UITableViewCell {
     func configure(withViewModel viewModel: FeaturedTipLineViewModel) {
 
         self.viewModel = viewModel
-        
-        
+
+        Env.gomaSocialClient.followingUsersPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.reloadCollections()
+            })
+            .store(in: &cancellables)
+
         self.reloadCollections()
     }
 
@@ -128,16 +143,27 @@ extension FeaturedTipLineTableViewCell: UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
             let cell = collectionView.dequeueCellType(FeaturedTipCollectionViewCell.self, indexPath: indexPath),
-            let viewModel = self.viewModel?.viewModel(forIndex: indexPath.row)
+            let cellViewModel = self.viewModel?.viewModel(forIndex: indexPath.row),
+            let viewModel = self.viewModel
         else {
             fatalError()
         }
 
-        cell.configure(viewModel: viewModel, hasCounter: false)
+        cell.configure(viewModel: cellViewModel, hasCounter: false, followingUsers: Env.gomaSocialClient.followingUsersPublisher.value)
 
         cell.openFeaturedTipDetailAction = { [weak self] featuredTip in
             self?.openFeaturedTipDetailAction?(featuredTip)
         }
+
+        cell.shouldShowBetslip = { [weak self] in
+            self?.shouldShowBetslip?()
+        }
+
+        cell.shouldShowUserProfile = { [weak self] userBasicInfo in
+            self?.shouldShowUserProfile?(userBasicInfo)
+        }
+
+        cell.configureAnimationId("FeaturedTipCell\(indexPath.row)")
 
         return cell
     }
@@ -148,6 +174,26 @@ extension FeaturedTipLineTableViewCell: UICollectionViewDelegate, UICollectionVi
         return CGSize(width: Double(collectionView.frame.size.width)*0.85, height: 400)
     }
 
+}
+
+extension FeaturedTipLineTableViewCell: UIScrollViewDelegate {
+    
+    func calculteCenterCell() {
+        let centerPoint = CGPoint(x: self.collectionView.center.x + self.collectionView.contentOffset.x,
+                                  y: self.collectionView.center.y + self.collectionView.contentOffset.y)
+
+        let index = collectionView.indexPathForItem(at: centerPoint)?.row ?? 0
+        self.currentIndexChangedAction(index)
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        self.calculteCenterCell()
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        self.calculteCenterCell()
+    }
+    
 }
 
 extension FeaturedTipLineTableViewCell {

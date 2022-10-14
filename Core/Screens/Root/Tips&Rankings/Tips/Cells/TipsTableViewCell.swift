@@ -43,6 +43,9 @@ class TipsTableViewCell: UITableViewCell {
 
     var viewModel: TipsCellViewModel?
 
+    var shouldShowBetslip: (() -> Void)?
+    var shouldShowUserProfile: ((UserBasicInfo) -> Void)?
+
     // MARK: - Lifetime and Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -58,6 +61,8 @@ class TipsTableViewCell: UITableViewCell {
 
         self.betButton.addTarget(self, action: #selector(didTapBetButton), for: .primaryActionTriggered)
 
+        let userTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapUser))
+        self.topInfoStackView.addGestureRecognizer(userTapGesture)
     }
 
     required init?(coder: NSCoder) {
@@ -78,9 +83,6 @@ class TipsTableViewCell: UITableViewCell {
     // MARK: - Layout and Theme
     override func layoutSubviews() {
         super.layoutSubviews()
-
-        self.contentView.layer.cornerRadius = CornerRadius.view
-        self.contentView.layer.masksToBounds = true
 
         self.containerView.layer.cornerRadius = CornerRadius.view
         self.containerView.layer.masksToBounds = true
@@ -139,13 +141,33 @@ class TipsTableViewCell: UITableViewCell {
     }
 
     // MARK: Function
-    func configure(viewModel: TipsCellViewModel) {
+    func configure(viewModel: TipsCellViewModel, followingUsers: [Follower]) {
 
         self.viewModel = viewModel
 
         self.hasCounter = false
 
-        self.hasFollow = viewModel.hasFollowEnabled()
+        if let tipUserId = viewModel.getUserId() {
+            let followUserId = followingUsers.filter({
+                "\($0.id)" == tipUserId
+            })
+
+            if let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
+
+                if followUserId.isNotEmpty || tipUserId == "\(loggedUserId)" {
+                    self.hasFollow = false
+                }
+                else {
+                    self.hasFollow = true
+                }
+            }
+            else {
+                self.hasFollow = false
+            }
+        }
+        else {
+            self.hasFollow = false
+        }
 
         if let numberTips = viewModel.featuredTip.selections?.count {
 
@@ -173,24 +195,37 @@ class TipsTableViewCell: UITableViewCell {
 
         self.selectionsValueLabel.text = viewModel.getNumberSelections()
 
+        viewModel.shouldShowBetslip = { [weak self] in
+            self?.shouldShowBetslip?()
+        }
+
     }
 
     // MARK: Actions
     @objc func didTapFollowButton() {
-        if let viewModel = self.viewModel {
-            print("TAPPED FOLLOW: \(viewModel.getUsername()) - \(viewModel.getUserId())")
+        if let viewModel = self.viewModel,
+           let userId = viewModel.getUserId() {
 
+            viewModel.followUser(userId: userId)
         }
     }
 
     @objc func didTapBetButton() {
         if let viewModel = self.viewModel {
             let betId = viewModel.getBetId()
-            print("TAPPED BET: \(betId)")
 
-            //viewModel.getBetData(betToken: betId)
             viewModel.createBetslipTicket()
         }
+    }
+
+    @objc func didTapUser() {
+        if let userId = self.viewModel?.getUserId() {
+            
+            let userBasicInfo = UserBasicInfo(userId: userId, username: self.viewModel?.getUsername() ?? "")
+
+            self.shouldShowUserProfile?(userBasicInfo)
+        }
+
     }
 
 }

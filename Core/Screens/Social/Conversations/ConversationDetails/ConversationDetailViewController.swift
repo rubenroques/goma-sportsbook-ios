@@ -52,6 +52,7 @@ class ConversationDetailViewController: UIViewController {
     // MARK: Public Properties
     var shouldCloseChat: (() -> Void)?
     var shouldReloadData: (() -> Void)?
+    var cameFromProfile: Bool = false
 
     // MARK: - Lifetime and Cycle
     init(viewModel: ConversationDetailViewModel) {
@@ -322,9 +323,15 @@ class ConversationDetailViewController: UIViewController {
     // MARK: Actions
     @objc func didTapBackButton() {
 
-        Env.gomaSocialClient.reloadChatroomsList.send()
+        if !self.cameFromProfile {
+            Env.gomaSocialClient.reloadChatroomsList.send()
 
-        self.navigationController?.popToRootViewController(animated: true)
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
+
     }
 
     @objc func didTapSendButton() {
@@ -374,12 +381,27 @@ class ConversationDetailViewController: UIViewController {
             self.navigationController?.pushViewController(editContactViewController, animated: true)
         }
         else {
-            let editContactViewModel = EditContactViewModel(conversationData: conversationData)
-            let editContactViewController = EditContactViewController(viewModel: editContactViewModel)
-            editContactViewController.shouldCloseChat = { [weak self] in
-                self?.shouldCloseChat?()
+//            let editContactViewModel = EditContactViewModel(conversationData: conversationData)
+//            let editContactViewController = EditContactViewController(viewModel: editContactViewModel)
+//            editContactViewController.shouldCloseChat = { [weak self] in
+//                self?.shouldCloseChat?()
+//            }
+
+            if let userBasicInfo = self.viewModel.userBasicInfo {
+
+                let userProfileViewModel = UserProfileViewModel(userBasicInfo: userBasicInfo)
+
+                let userProfileViewController = UserProfileViewController(viewModel: userProfileViewModel)
+
+                userProfileViewController.isChatProfile = true
+
+                userProfileViewController.shouldCloseChat = { [weak self] in
+                    self?.shouldCloseChat?()
+                }
+
+                self.navigationController?.pushViewController(userProfileViewController, animated: true)
             }
-            self.navigationController?.pushViewController(editContactViewController, animated: true)
+
         }
     }
 

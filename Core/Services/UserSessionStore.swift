@@ -54,7 +54,9 @@ class UserSessionStore {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.subscribeAccountBalanceWatcher()
-                self?.requestUserSettings()
+                
+                self?.requestNotificationsUserSettings()
+                self?.requestBettingUserSettings()
             }
             .store(in: &cancellables)
         
@@ -128,7 +130,7 @@ class UserSessionStore {
         Env.favoritesManager.clearCachedFavorites()
         Env.gomaSocialClient.clearUserChatroomsData()
 
-        UserDefaults.standard.removeObject(forKey: "user_betslip_settings")
+        UserDefaults.standard.removeObject(forKey: "betslipOddValidationType")
         
         Env.gomaNetworkClient.reconnectSession()
 
@@ -244,50 +246,53 @@ extension UserSessionStore {
             }
             .store(in: &cancellables)
     }
-
-    func setUserSettings(userSettings: String = "", defaultSettingsFallback: Bool = false) {
-        if defaultSettingsFallback {
-            if !UserDefaults.standard.isKeyPresentInUserDefaults(key: "user_betslip_settings"),
-               let defaultUserSetting = Env.userBetslipSettingsSelectorList[safe: 1]?.key {
-                UserDefaults.standard.set(defaultUserSetting, forKey: "user_betslip_settings")
-            }
-        }
-        else {
-            let defaultUserSetting = userSettings
-            UserDefaults.standard.set(defaultUserSetting, forKey: "user_betslip_settings")
-        }
-    }
-
-    func requestUserSettings() {
-        Env.gomaNetworkClient.requestUserSettings(deviceId: Env.deviceId)
+    
+    // =====================================
+    //
+    func requestNotificationsUserSettings() {
+        Env.gomaNetworkClient.requestNotificationsUserSettings(deviceId: Env.deviceId)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
-                    print("GOMA ERROR: \(error)")
-                    self?.setUserSettings(defaultSettingsFallback: true)
+                    print("GOMA SETTINGS ERROR: \(error)")
+                    self?.storeNotificationsUserSettings(notificationsUserSettings: NotificationsUserSettings.defaultSettings)
                 case .finished:
                     ()
                 }
             },
-                  receiveValue: { [weak self] userSettings in
-                print("User Settings: \(userSettings)")
-                self?.setUserSettings(userSettings: userSettings.settings.oddValidationType)
-                self?.registerUserSettings(userSettings: userSettings.settings)
+            receiveValue: { [weak self] notificationsUserSettings in
+                print("GOMA SETTINGS RESPONSE: \(notificationsUserSettings)")
+                self?.storeNotificationsUserSettings(notificationsUserSettings: notificationsUserSettings)
             })
             .store(in: &cancellables)
-
     }
 
-    private func registerUserSettings(userSettings: UserSettingsGoma) {
-        do {
-            let encoder = JSONEncoder()
-            let data = try encoder.encode(userSettings)
-            UserDefaults.standard.set(data, forKey: "gomaUserSettings")
-        } catch {
-            print("Unable to Encode User Settings Goma (\(error))")
-        }
+    private func storeNotificationsUserSettings(notificationsUserSettings: NotificationsUserSettings) {
+        UserDefaults.standard.notificationsUserSettings = notificationsUserSettings
     }
-
+    
+    func requestBettingUserSettings() {
+        Env.gomaNetworkClient.requestBettingUserSettings(deviceId: Env.deviceId)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure:
+                    self?.storeBettingUserSettings(bettingUserSettings: BettingUserSettings.defaultSettings)
+                case .finished:
+                    ()
+                }
+            },
+            receiveValue: { [weak self] bettingUserSettings in
+                self?.storeBettingUserSettings(bettingUserSettings: bettingUserSettings)
+            })
+            .store(in: &cancellables)
+    }
+    
+    private func storeBettingUserSettings(bettingUserSettings: BettingUserSettings) {
+        UserDefaults.standard.bettingUserSettings = bettingUserSettings
+    }
+    
+    // =====================================
+    //
     func subscribeAccountBalanceWatcher() {
         let route = TSRouter.getUserBalance
         Env.everyMatrixClient.manager.getModel(router: route, decodingType: EveryMatrix.UserBalance.self)
@@ -425,6 +430,8 @@ extension UserSessionStore {
                 self?.hasGomaUserSessionPublisher.send(true)
 
                 Env.gomaSocialClient.getInAppMessagesCounter()
+
+                Env.gomaSocialClient.getFollowingUsers()
 
             })
             .store(in: &cancellables)

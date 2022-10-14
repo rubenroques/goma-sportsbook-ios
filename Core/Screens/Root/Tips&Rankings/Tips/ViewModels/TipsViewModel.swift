@@ -34,13 +34,13 @@ class TipsViewModel {
     func shortcutTitle(forIndex index: Int) -> String {
         switch index {
         case 0:
-            return "All"
+            return localized("all")
         case 1:
-            return "Top Tips"
+            return localized("top_tips")
         case 2:
-            return "Friends"
+            return localized("friends")
         case 3:
-            return "Following"
+            return localized("following")
         default:
             return ""
         }

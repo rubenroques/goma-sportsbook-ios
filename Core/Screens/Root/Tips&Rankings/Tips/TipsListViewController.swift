@@ -25,6 +25,8 @@ class TipsListViewController: UIViewController {
     private lazy var emptyFriendsSubtitleLabel: UILabel = Self.createEmptyFriendsSubtitleLabel()
     private lazy var emptyFriendsButton: UIButton = Self.createEmptyFriendsButton()
 
+    private let refreshControl = UIRefreshControl()
+
     private var cancellables: Set<AnyCancellable> = []
     private let viewModel: TipsListViewModel
     private var filterSelectedOption: Int = 0
@@ -54,6 +56,9 @@ class TipsListViewController: UIViewController {
         }
     }
 
+    var shouldShowBetslip: (() -> Void)?
+    var shouldShowUserProfile: ((UserBasicInfo) -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(viewModel: TipsListViewModel = TipsListViewModel(tipsType: .all)) {
         self.viewModel = viewModel
@@ -75,6 +80,11 @@ class TipsListViewController: UIViewController {
         self.tableView.dataSource = self
 
         self.tableView.register(TipsTableViewCell.self, forCellReuseIdentifier: TipsTableViewCell.identifier)
+        self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
+
+        self.refreshControl.tintColor = UIColor.lightGray
+        self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
+        self.tableView.addSubview(self.refreshControl)
 
         self.isLoading = false
 
@@ -140,6 +150,9 @@ class TipsListViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLoading in
                 self?.isLoading = isLoading
+                if !isLoading {
+                    self?.refreshControl.endRefreshing()
+                }
             })
             .store(in: &cancellables)
 
@@ -151,6 +164,19 @@ class TipsListViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+        Env.gomaSocialClient.followingUsersPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.tableView.reloadData()
+            })
+            .store(in: &cancellables)
+    }
+
+    // MARK: Function
+    private func reloadFollowingUsers() {
+        Env.gomaSocialClient.getFollowingUsers()
+
     }
 
     // MARK: Actions
@@ -161,6 +187,10 @@ class TipsListViewController: UIViewController {
 
         self.navigationController?.pushViewController(addFriendViewController, animated: true)
 
+    }
+
+    @objc func refreshControllPulled() {
+        self.viewModel.loadInitialTips()
     }
 
 }
@@ -175,26 +205,70 @@ extension TipsListViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.numberOfRows()
+        switch section {
+        case 0:
+            return self.viewModel.numberOfRows()
+        case 1:
+            return self.viewModel.tipsHasNextPage ? 1 : 0
+        default:
+            return 0
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard
-            let cell = tableView.dequeueReusableCell(withIdentifier: TipsTableViewCell.identifier, for: indexPath) as? TipsTableViewCell,
-            let cellViewModel = self.viewModel.viewModel(forIndex: indexPath.row)
-        else {
-            fatalError("TipsTableViewCell not found")
+        switch indexPath.section {
+        case 0:
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: TipsTableViewCell.identifier, for: indexPath) as? TipsTableViewCell,
+                let cellViewModel = self.viewModel.viewModel(forIndex: indexPath.row)
+            else {
+                fatalError("TipsTableViewCell not found")
+            }
+
+            cell.configure(viewModel: cellViewModel, followingUsers: Env.gomaSocialClient.followingUsersPublisher.value)
+
+            cell.shouldShowBetslip = { [weak self] in
+                self?.shouldShowBetslip?()
+            }
+
+            cell.shouldShowUserProfile = { [weak self] userBasicInfo in
+                self?.shouldShowUserProfile?(userBasicInfo)
+            }
+
+            return cell
+        case 1:
+            guard
+                let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self)
+            else {
+                fatalError("LoadingMoreTableViewCell not found")
+            }
+            return cell
+        default:
+            fatalError()
         }
-
-        cell.configure(viewModel: cellViewModel)
-
-        return cell
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+        switch indexPath.section {
+        case 0:
+            return UITableView.automaticDimension
+        case 1:
+            return 70
+        default:
+            return UITableView.automaticDimension
+        }
     }
 
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.section == 1, self.viewModel.tipsPublisher.value.isNotEmpty {
+            if let typedCell = cell as? LoadingMoreTableViewCell {
+                typedCell.startAnimating()
+            }
+
+            self.viewModel.requestNextTips()
+
+        }
+    }
 }
 
 //
@@ -343,17 +417,14 @@ extension TipsListViewController {
             self.emptyStateBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
             self.emptyStateImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyFriendsBaseView.topAnchor, constant: 45),
+            self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyStateBaseView.topAnchor, constant: 45),
             self.emptyStateImageView.widthAnchor.constraint(equalToConstant: 120),
             self.emptyStateImageView.heightAnchor.constraint(equalToConstant: 120),
 
-            // self.emptyStateLabel.centerXAnchor.constraint(equalTo: self.emptyStateBaseView.centerXAnchor),
             self.emptyStateLabel.leadingAnchor.constraint(equalTo: self.emptyStateBaseView.leadingAnchor, constant: 35),
             self.emptyStateLabel.trailingAnchor.constraint(equalTo: self.emptyStateBaseView.trailingAnchor, constant: -35),
             self.emptyStateLabel.topAnchor.constraint(equalTo: self.emptyStateImageView.bottomAnchor, constant: 24),
 
-            // self.emptyStateSecondaryLabel.centerYAnchor.constraint(equalTo: self.emptyStateBaseView.centerYAnchor),
-            // self.emptyStateSecondaryLabel.centerXAnchor.constraint(equalTo: self.emptyStateBaseView.centerXAnchor),
             self.emptyStateSecondaryLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 35),
             self.emptyStateSecondaryLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -35),
             self.emptyStateSecondaryLabel.topAnchor.constraint(equalTo: self.emptyStateLabel.bottomAnchor, constant: 16)

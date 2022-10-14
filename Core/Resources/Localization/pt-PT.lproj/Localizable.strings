@@ -522,7 +522,7 @@ Terms of use, Privacy Policy and EULA";
 "send_friends_groups" = "Send to friends and groups";
 "send" = "Send";
 
-"check_this_bet_made" = "Check out this bet I just made!";
+"check_this_bet_made" = "Check out this bet I made!";
 "ticket_url_pasteboard" = "Ticket link was copied.";
 
 "send_to_chat" = "Send to chat";
@@ -580,3 +580,28 @@ Terms of use, Privacy Policy and EULA";
 
 "remove_last_user_message" = "Removing the last user of this group will also delete this group! Are you sure you want to remove this user?";
 "remove_last_user" = "Remove Last User";
+
+"unfollow" = "Unfollow";
+
+"accumulated_odds_winning" = "Accumulated odd of winning";
+"best_consecutive_wins" = "Best number of consecutive wins";
+"highest_odd" = "Highest odd";
+"percentage_sports" = "Percentage of bets per sport";
+
+"friend_request_sent" = "Friend Request Sent!";
+"block_user" = "Block User";
+
+"latest_tips" = "Latest Tips";
+"rankings" = "Rankings";
+"top_tips" = "Top Tips";
+"friends" = "Friends";
+"following" = "Following";
+"top_tipsters" = "Top Tipsters";
+"suggested_bets" = "Suggested Bets";
+
+"anonymous_tips_info" = "Anonymous Tips (Your bets will be shared as an anonymous user)";
+"anonymous_tips" = "Anonymous Tips";
+
+"accept" = "Accept";
+"reject" = "Reject";
+"read_all" = "Read all";

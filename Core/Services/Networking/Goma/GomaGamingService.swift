@@ -21,15 +21,24 @@ enum GomaGamingService {
     case addFavorites(favorites: String)
     case removeFavorite(favorite: String)
     case matchStats(matchId: String)
-    // case getActivateUserEmailCode(userEmail: String, activationCode: String) //example of request with params
-    case userSettings
-    case sendUserSettings(userSettings: UserSettingsGoma)
+
+    case getClientSettings
+    
+    case getNotificationsUserSettings
+    case postNotificationsUserSettings(notificationsUserSettings: NotificationsUserSettings)
+    
+    case getBettingUserSettings
+    case postBettingUserSettings(bettingUserSettings: BettingUserSettings)
 
     // Social Endpoits
     case addFriend(userIds: [String])
+    case addFriendRequest(userIds: [String], request: Bool)
     case deleteFriend(userId: Int)
     case listFriends
     case inviteFriend(phone: String)
+    case getFriendRequests
+    case approveFriendRequest(userId: String)
+    case rejectFriendRequest(userId: String)
     case chatrooms(page: String)
     case addGroup(userIds: [String], groupName: String)
     case deleteGroup(chatroomId: Int)
@@ -44,9 +53,21 @@ enum GomaGamingService {
     case setAllNotificationRead(type: String)
     case sendSupportTicket(title: String, message: String)
     case notificationsCounter(type: String)
-    case featuredTips(betType: String? = nil, totalOddsMin: String? = nil, totalOddsMax: String? = nil, friends: Bool? = nil, followers: Bool? = nil)
+    // swiftlint:disable enum_case_associated_values_count
+    case featuredTips(betType: String? = nil,
+                      totalOddsMin: String? = nil, totalOddsMax: String? = nil,
+                      friends: Bool? = nil, followers: Bool? = nil,
+                      topTips: Bool? = nil,
+                      userIds: [String]? = nil,
+                      page: Int? = nil)
     case rankingsTips(type: String? = nil, friends: Bool? = nil, followers: Bool? = nil)
-
+    case getFollowers
+    case getFollowingUsers
+    case followUser(userId: String)
+    case deleteFollowUser(userId: String)
+    case getFollowingTotalUsers
+    case getUserProfileInfo(userId: String)
+    case getUserConnections(userId: String)
 }
 
 extension GomaGamingService: Endpoint {
@@ -84,14 +105,26 @@ extension GomaGamingService: Endpoint {
             return "/api/favorites/\(apiVersion)"
         case .matchStats(let matchId):
             return "/api/betting/\(apiVersion)/events/\(matchId)/stats/detail"
-        case .userSettings:
-            return "/api/settings/\(apiVersion)/user"
         case .removeFavorite:
             return "/api/favorites/\(apiVersion)"
-        case .sendUserSettings:
+
+        case .getClientSettings:
             return "/api/settings/\(apiVersion)/user"
+            
+        case .getNotificationsUserSettings:
+            return "/api/notifications/\(apiVersion)/user/settings"
+        case .postNotificationsUserSettings:
+            return "/api/notifications/\(apiVersion)/user/settings"
+            
+        case .getBettingUserSettings:
+            return "/api/betting/\(apiVersion)/user/settings"
+        case .postBettingUserSettings:
+            return "/api/betting/\(apiVersion)/user/settings"
+            
         // Social
         case .addFriend:
+            return "/api/social/\(apiVersion)/friends"
+        case .addFriendRequest:
             return "/api/social/\(apiVersion)/friends"
         case .deleteFriend(let userId):
             return "/api/social/\(apiVersion)/friends/\(userId)"
@@ -99,6 +132,12 @@ extension GomaGamingService: Endpoint {
             return "/api/social/\(apiVersion)/friends"
         case .inviteFriend:
             return "/api/social/\(apiVersion)/friends/invite"
+        case .getFriendRequests:
+            return "/api/social/\(apiVersion)/friends/pending"
+        case .approveFriendRequest(let userId):
+            return "/api/social/\(apiVersion)/friends/\(userId)/approve"
+        case .rejectFriendRequest(let userId):
+            return "/api/social/\(apiVersion)/friends/\(userId)/reject"
         case .chatrooms:
             return "/api/social/\(apiVersion)/chatrooms"
         case .addGroup:
@@ -131,6 +170,20 @@ extension GomaGamingService: Endpoint {
             return "/api/betting/\(apiVersion)/tips"
         case .rankingsTips:
             return "/api/betting/\(apiVersion)/tips/rankings"
+        case .getFollowers:
+            return "/api/social/\(apiVersion)/followers"
+        case .getFollowingUsers:
+            return "/api/social/\(apiVersion)/following"
+        case .followUser:
+            return "/api/social/\(apiVersion)/followers"
+        case .deleteFollowUser(let userId):
+            return "/api/social/\(apiVersion)/followers/\(userId)"
+        case .getFollowingTotalUsers:
+            return "/api/social/\(apiVersion)/following/total"
+        case .getUserProfileInfo(let userId):
+            return "/api/betting/\(apiVersion)/user/profile/\(userId)"
+        case .getUserConnections(let userId):
+            return "/api/social/\(apiVersion)/user/connections/\(userId)"
         }
     }
 
@@ -142,15 +195,27 @@ extension GomaGamingService: Endpoint {
             return [URLQueryItem(name: "lat", value: latitude),
                     URLQueryItem(name: "lng", value: longitude)]
         case .simpleRegister, .updateProfile, .modalPopUpDetails, .login,
-                .suggestedBets, .addFavorites, .matchStats, .userSettings, .sendUserSettings, .sendSupportTicket:
+                .suggestedBets, .addFavorites, .matchStats, .sendSupportTicket:
             return nil
+        
+        case .getClientSettings:
+            return nil
+        case  .getNotificationsUserSettings, .postNotificationsUserSettings, .getBettingUserSettings, .postBettingUserSettings:
+            return nil
+        
         case  .settings, .modules:
             return nil
         case .removeFavorite(let favorite):
             return [URLQueryItem(name: "favorite_ids[]", value: favorite)]
         
             // Social
-        case .addFriend, .deleteFriend, .listFriends, .inviteFriend, .addGroup, .deleteGroup, .leaveGroup, .searchUserCode, .lookupPhone, .setNotificationRead, .setAllNotificationRead:
+        case .addFriend, .addFriendRequest, .deleteFriend, .listFriends, .inviteFriend, .getFriendRequests,
+                .approveFriendRequest, .rejectFriendRequest,
+                .addGroup, .deleteGroup, .leaveGroup,
+                .searchUserCode, .lookupPhone,
+                .setNotificationRead, .setAllNotificationRead,
+                .getFollowers, .getFollowingUsers, .getFollowingTotalUsers, .deleteFollowUser,
+                .getUserProfileInfo, .getUserConnections:
             return nil
         case .chatrooms(let page):
             return [URLQueryItem(name: "page", value: page)]
@@ -177,7 +242,11 @@ extension GomaGamingService: Endpoint {
             URLQueryItem(name: "page", value: "\(page)")]
         case .notificationsCounter(let type):
             return[URLQueryItem(name: "type", value: type)]
-        case .featuredTips(let betType, let totalOddsMin, let totalOddsMax, let friends, let followers):
+        case .featuredTips(let betType,
+                           let totalOddsMin, let totalOddsMax,
+                           let friends, let followers, let topTips,
+                           let userIds,
+                           let page):
             var queryItemsURL: [URLQueryItem] = []
 
             if betType != nil {
@@ -205,6 +274,29 @@ extension GomaGamingService: Endpoint {
             if followers != nil {
                 if let followersValue = followers {
                     let queryItem = URLQueryItem(name: "followers", value: "\(followersValue == true ? 1 : 0)")
+                    queryItemsURL.append(queryItem)
+                }
+            }
+
+            if topTips != nil {
+                if let topTipsValue = topTips {
+                    let queryItem = URLQueryItem(name: "top", value: "\(topTipsValue == true ? 1 : 0)")
+                    queryItemsURL.append(queryItem)
+                }
+            }
+
+            if userIds != nil {
+                if let userIdsValue = userIds {
+                    for user in userIdsValue {
+                        let queryItem = URLQueryItem(name: "users_ids[]", value: "\(user)")
+                        queryItemsURL.append(queryItem)
+                    }
+                }
+            }
+
+            if page != nil {
+                if let pageValue = page {
+                    let queryItem = URLQueryItem(name: "page", value: "\(pageValue)")
                     queryItemsURL.append(queryItem)
                 }
             }
@@ -241,6 +333,8 @@ extension GomaGamingService: Endpoint {
             }
 
             return nil
+        case .followUser(let userId):
+            return [URLQueryItem(name: "users_ids[]", value: userId)]
         }
     }
 
@@ -266,18 +360,37 @@ extension GomaGamingService: Endpoint {
         case .test:
             return .get
         case .geolocation, .settings, .modalPopUpDetails, .suggestedBets,
-                .matchStats, .userSettings, .modules:
+                .matchStats, .modules:
             return .get
-        case .log, .simpleRegister, .updateProfile, .login, .addFavorites, .sendUserSettings, .sendSupportTicket:
+        case .log, .simpleRegister, .updateProfile, .login, .addFavorites, .sendSupportTicket:
             return .post
         case .removeFavorite:
             return .delete
-        // Social
-        case .addFriend, .inviteFriend, .addGroup, .addUserToGroup, .lookupPhone, .setNotificationRead, .setAllNotificationRead:
-            return .post
-        case .listFriends, .chatrooms, .searchUserCode, .getNotification, .notificationsCounter, .featuredTips, .rankingsTips:
+        
+        // Settings goma client
+        case .getClientSettings:
             return .get
-        case .deleteGroup, .leaveGroup, .deleteFriend, .removeUser:
+        
+        // Settings app user
+        case  .getNotificationsUserSettings, .getBettingUserSettings:
+            return .get
+        case  .postNotificationsUserSettings, .postBettingUserSettings:
+            return .post
+            
+        // Social
+        case .addFriend, .addFriendRequest, .inviteFriend, .approveFriendRequest,
+                .addGroup, .addUserToGroup, .lookupPhone,
+                .setNotificationRead, .setAllNotificationRead, .followUser:
+            return .post
+        case .listFriends, .getFriendRequests, .chatrooms,
+                .searchUserCode,
+                .getNotification, .notificationsCounter,
+                .featuredTips, .rankingsTips,
+                .getFollowers, .getFollowingUsers, .getFollowingTotalUsers,
+                .getUserProfileInfo, .getUserConnections:
+            return .get
+        case .deleteGroup, .leaveGroup, .deleteFriend, .rejectFriendRequest,
+                .removeUser, .deleteFollowUser:
             return .delete
         case .editGroup:
             return .put
@@ -343,31 +456,52 @@ extension GomaGamingService: Endpoint {
                        """
             let data = body.data(using: String.Encoding.utf8)!
             return data
-            
-        case .sendUserSettings(let userSettings):
+        
+        // Settings
+        //
+        case .postBettingUserSettings(let bettingUserSettings):
             let body = """
-                       {"odd_validation_type": "\(userSettings.oddValidationType)",
-                       "notifications": \(userSettings.notifications),
-                       "notifications_games_watchlist": \(userSettings.notificationGamesWatchlist),
-                       "notifications_competitions_watchlist": \(userSettings.notificationsCompetitionsWatchlist),
-                       "notifications_goal": \(userSettings.notificationGoal),
-                       "notifications_startgame": \(userSettings.notificationsStartgame),
-                       "notifications_halftime": \(userSettings.notificationsHalftime),
-                       "notifications_fulltime": \(userSettings.notificationsFulltime),
-                       "notifications_secondhalf": \(userSettings.notificationsSecondhalf),
-                       "notifications_redcard": \(userSettings.notificationsRedcard),
-                       "notifications_bets": \(userSettings.notificationsBets),
-                       "notification_bet_selections": \(userSettings.notificationBetSelections),
-                       "notification_email": \(userSettings.notificationEmail),
-                       "notification_sms": \(userSettings.notificationSms)}
+                       {
+                            "odd_validation_type": "\(bettingUserSettings.oddValidationType)",
+                            "anonymous_tips": \(bettingUserSettings.anonymousTips ? 1 : 0)
+                       }
                        """
             let data = body.data(using: String.Encoding.utf8)!
             return data
+        case .postNotificationsUserSettings(let notificationsUserSettings):
+            let body = """
+                       {
+                            "notifications": \(notificationsUserSettings.notifications ? 1 : 0),
+                            "notifications_games_watchlist": \(notificationsUserSettings.notificationsGamesWatchlist ? 1 : 0),
+                            "notifications_competitions_watchlist": \(notificationsUserSettings.notificationsCompetitionsWatchlist ? 1 : 0),
+                            "notifications_goal": \(notificationsUserSettings.notificationsGoal ? 1 : 0),
+                            "notifications_startgame": \(notificationsUserSettings.notificationsStartgame ? 1 : 0),
+                            "notifications_halftime": \(notificationsUserSettings.notificationsHalftime ? 1 : 0),
+                            "notifications_fulltime": \(notificationsUserSettings.notificationsFulltime ? 1 : 0),
+                            "notifications_secondhalf": \(notificationsUserSettings.notificationsSecondhalf ? 1 : 0),
+                            "notifications_redcard": \(notificationsUserSettings.notificationsRedcard ? 1 : 0),
+                            "notifications_bets": \(notificationsUserSettings.notificationsBets ? 1 : 0),
+                            "notifications_bet_selections": \(notificationsUserSettings.notificationsBetSelections ? 1 : 0),
+                            "notifications_email": \(notificationsUserSettings.notificationsEmail ? 1 : 0),
+                            "notifications_sms": \(notificationsUserSettings.notificationsSms ? 1 : 0)
+                       }
+                       """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+            
         // Social
         case .addFriend(let userIds):
             let body = """
                     {"users_ids":
                     \(userIds)
+                    }
+                    """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+        case .addFriendRequest(let userIds, let request):
+            let body = """
+                    {"users_ids": \(userIds),
+                    "request": \(request ? 1 : 0)
                     }
                     """
             let data = body.data(using: String.Encoding.utf8)!
