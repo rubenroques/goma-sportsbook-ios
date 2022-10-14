@@ -166,7 +166,15 @@ class BetSelectionStateTableViewCell: UITableViewCell {
 
         self.betAmountValueLabel.text = viewModel.betAmountString
 
-        self.possibleWinningValueLabel.text = viewModel.possibleWinningString
+        if viewModel.ticket.status == "WON" {
+            self.possibleWinningTitleLabel.text = localized("return")
+
+            self.possibleWinningValueLabel.text = viewModel.returnString
+
+        }
+        else {
+            self.possibleWinningValueLabel.text = viewModel.possibleWinningString
+        }
     }
 
     func setupTicketStackView() {

@@ -230,12 +230,11 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
     // MARK: Actions
     @objc func didTapFollowButton() {
-        if let viewModel = self.viewModel {
-            let userId = viewModel.getUserId()
-
-            print("TAPPED FOLLOW: \(viewModel.getUsername()) - \(viewModel.getUserId())")
+        if let viewModel = self.viewModel,
+           let userId = viewModel.getUserId() {
 
             viewModel.followUser(userId: userId)
+
         }
 
     }
@@ -255,8 +254,12 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     }
 
     @objc func didTapUser() {
-        let userBasicInfo = UserBasicInfo(userId: self.viewModel?.getUserId() ?? "0", username: self.viewModel?.getUsername() ?? "")        
-        self.shouldShowUserProfile?(userBasicInfo)
+        if let userId = self.viewModel?.getUserId() {
+            let userBasicInfo = UserBasicInfo(userId: userId, username: self.viewModel?.getUsername() ?? "")
+
+            self.shouldShowUserProfile?(userBasicInfo)
+        }
+
     }
     
     func configureAnimationId(_ id: String) {

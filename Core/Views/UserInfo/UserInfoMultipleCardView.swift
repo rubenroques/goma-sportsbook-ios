@@ -16,7 +16,6 @@ class UserInfoMultipleCardView: UIView {
     private lazy var leftCardsStackView: UIStackView = Self.createLeftCardsStackView()
     private lazy var rightCardsStackView: UIStackView = Self.createRightCardsStackView()
 
-
     // MARK: - Lifetime and Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -58,7 +57,7 @@ class UserInfoMultipleCardView: UIView {
     }
 
     // MARK: Functions
-    func configure(title: String, iconType: UserProfileCardIconType) {
+    func configure(title: String, iconType: UserProfileCardIconType, sportsData: [UserProfileSportsData]) {
 
         self.titleLabel.text = title
 
@@ -73,19 +72,32 @@ class UserInfoMultipleCardView: UIView {
             self.iconImageView.image = UIImage(named: "user_percentage_icon")
         }
 
-        for i in 1...5 {
+        for (key, sportData) in sportsData.enumerated() {
             let sportStatisticView = SportStatisticView()
 
-            sportStatisticView.configure(sportId: "\(i)", sportPercentage: 0.2)
+            sportStatisticView.configure(sportId: "\(sportData.sportId)", sportPercentage: Float(sportData.percentage))
 
-            if i % 2 == 0 {
-                self.rightCardsStackView.addArrangedSubview(sportStatisticView)
-            }
-            else {
+            if key % 2 == 0 {
                 self.leftCardsStackView.addArrangedSubview(sportStatisticView)
             }
-
+            else {
+                self.rightCardsStackView.addArrangedSubview(sportStatisticView)
+            }
         }
+
+//        for i in 1...5 {
+//            let sportStatisticView = SportStatisticView()
+//
+//            sportStatisticView.configure(sportId: "\(i)", sportPercentage: 0.2)
+//
+//            if i % 2 == 0 {
+//                self.rightCardsStackView.addArrangedSubview(sportStatisticView)
+//            }
+//            else {
+//                self.leftCardsStackView.addArrangedSubview(sportStatisticView)
+//            }
+//
+//        }
 
     }
 }

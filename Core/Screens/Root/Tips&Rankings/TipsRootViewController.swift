@@ -56,8 +56,6 @@ class TipsRootViewController: UIViewController {
         self.tabViewController.textFont = AppFont.with(type: .bold, size: 16)
         self.tabViewController.setBarDistribution(.parent)
 
-        //self.backButton.addTarget(self, action: #selector(self.didTapBackButton), for: .primaryActionTriggered)
-
         self.setupWithTheme()
 
         self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in

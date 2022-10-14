@@ -22,6 +22,8 @@ class TipsListViewModel {
     var tipsCacheCellViewModel: [String: TipsCellViewModel] = [:]
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var hasFriendsPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var page: Int = 1
+    var tipsHasNextPage: Bool = false
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -54,7 +56,7 @@ class TipsListViewModel {
     private func loadAllTips() {
         // self.isLoadingPublisher.send(true)
 
-        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE")
+        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, page: self.page)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -67,10 +69,16 @@ class TipsListViewModel {
                 self?.isLoadingPublisher.send(false)
 
             }, receiveValue: { [weak self] response in
-                print("TIPS RESPONSE: \(response)")
 
                 if let tips = response.data {
                     self?.tipsPublisher.value = tips
+
+                    if tips.count < 10 {
+                        self?.tipsHasNextPage = false
+                    }
+                    else {
+                        self?.tipsHasNextPage = true
+                    }
                 }
             })
             .store(in: &cancellables)
@@ -79,7 +87,7 @@ class TipsListViewModel {
 
     private func loadTopTips() {
 
-        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE", topTips: true)
+        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, topTips: true)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -132,9 +140,7 @@ class TipsListViewModel {
     private func loadFriendsTips() {
         self.hasFriendsPublisher.send(true)
 
-        // self.isLoadingPublisher.send(true)
-
-        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE", friends: true)
+        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, friends: true)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -150,6 +156,13 @@ class TipsListViewModel {
 
                 if let tips = response.data {
                     self?.tipsPublisher.value = tips
+
+                    if tips.count < 10 {
+                        self?.tipsHasNextPage = false
+                    }
+                    else {
+                        self?.tipsHasNextPage = true
+                    }
                 }
             })
             .store(in: &cancellables)
@@ -157,7 +170,7 @@ class TipsListViewModel {
 
     private func loadFollowersTips() {
 
-        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE", followers: true)
+        Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, followers: true)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -173,6 +186,13 @@ class TipsListViewModel {
 
                 if let tips = response.data {
                     self?.tipsPublisher.value = tips
+
+                    if tips.count < 10 {
+                        self?.tipsHasNextPage = false
+                    }
+                    else {
+                        self?.tipsHasNextPage = true
+                    }
                 }
             })
             .store(in: &cancellables)
@@ -187,8 +207,123 @@ class TipsListViewModel {
 
     }
 
+    private func loadNextTips() {
+
+        switch self.tipsType {
+        case .all:
+            Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, page: self.page)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+                    switch completion {
+                    case .failure(let error):
+                        print("TIPS NEXT ERROR: \(error)")
+                    case .finished:
+                        ()
+                    }
+
+                }, receiveValue: { [weak self] response in
+
+                    if let tips = response.data {
+                        self?.tipsPublisher.value.append(contentsOf: tips)
+
+                        if tips.count < 10 {
+                            self?.tipsHasNextPage = false
+                        }
+                        else {
+                            self?.tipsHasNextPage = true
+                        }
+                    }
+                })
+                .store(in: &cancellables)
+        case .topTips:
+            Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, topTips: true, page: self.page)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+                    switch completion {
+                    case .failure(let error):
+                        print("TIPS NEXT ERROR: \(error)")
+                    case .finished:
+                        ()
+                    }
+
+                }, receiveValue: { [weak self] response in
+
+                    if let tips = response.data {
+                        self?.tipsPublisher.value.append(contentsOf: tips)
+
+                        if tips.count < 10 {
+                            self?.tipsHasNextPage = false
+                        }
+                        else {
+                            self?.tipsHasNextPage = true
+                        }
+                    }
+                })
+                .store(in: &cancellables)
+        case .friends:
+            Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, friends: true, page: self.page)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+                    switch completion {
+                    case .failure(let error):
+                        print("TIPS NEXT ERROR: \(error)")
+                    case .finished:
+                        ()
+                    }
+
+                }, receiveValue: { [weak self] response in
+
+                    if let tips = response.data {
+                        self?.tipsPublisher.value.append(contentsOf: tips)
+
+                        if tips.count < 10 {
+                            self?.tipsHasNextPage = false
+                        }
+                        else {
+                            self?.tipsHasNextPage = true
+                        }
+                    }
+                })
+                .store(in: &cancellables)
+        case .followers:
+            Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, followers: true, page: self.page)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+                    switch completion {
+                    case .failure(let error):
+                        print("TIPS NEXT ERROR: \(error)")
+                    case .finished:
+                        ()
+                    }
+
+                }, receiveValue: { [weak self] response in
+
+                    if let tips = response.data {
+                        self?.tipsPublisher.value.append(contentsOf: tips)
+
+                        if tips.count < 10 {
+                            self?.tipsHasNextPage = false
+                        }
+                        else {
+                            self?.tipsHasNextPage = true
+                        }
+                    }
+                })
+                .store(in: &cancellables)
+        }
+
+    }
+
+    func requestNextTips() {
+        if !self.tipsHasNextPage {
+            return
+        }
+        self.page += 1
+        self.loadNextTips()
+    }
+
     func numberOfSections() -> Int {
-        return 1
+        return 2
     }
 
     func numberOfRows() -> Int {

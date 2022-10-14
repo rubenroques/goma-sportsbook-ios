@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 struct BettingUserSettings: Codable {
 
     var oddValidationType: String
@@ -22,7 +21,18 @@ struct BettingUserSettings: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         self.oddValidationType = try container.decode(String.self, forKey: .oddValidationType)
-        self.anonymousTips = (try? container.decode(Int.self, forKey: .anonymousTips)) ?? 0 == 1
+
+//        self.anonymousTips = (try? container.decode(Int.self, forKey: .anonymousTips)) ?? 0 == 1
+
+        if let anonymousTipsBool = try? container.decode(Bool.self, forKey: .anonymousTips) {
+            self.anonymousTips = anonymousTipsBool
+        }
+        else if let anonymousTipsInt = try? container.decode(Int.self, forKey: .anonymousTips) {
+            self.anonymousTips = anonymousTipsInt == 1
+        }
+        else {
+            self.anonymousTips = false
+        }
     }
     
     init() {
@@ -242,10 +252,6 @@ struct NotificationsUserSettings: Codable {
         else {
             self.notificationsChats = false
         }
-        
-        
-        
-        
         
 //        
 //        

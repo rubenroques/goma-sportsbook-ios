@@ -254,13 +254,14 @@ extension UserSessionStore {
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
-                    print("GOMA ERROR: \(error)")
+                    print("GOMA SETTINGS ERROR: \(error)")
                     self?.storeNotificationsUserSettings(notificationsUserSettings: NotificationsUserSettings.defaultSettings)
                 case .finished:
                     ()
                 }
             },
             receiveValue: { [weak self] notificationsUserSettings in
+                print("GOMA SETTINGS RESPONSE: \(notificationsUserSettings)")
                 self?.storeNotificationsUserSettings(notificationsUserSettings: notificationsUserSettings)
             })
             .store(in: &cancellables)

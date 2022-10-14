@@ -88,9 +88,16 @@ class AppSettingsViewController: UIViewController {
 
         let chatView = SettingsRowView()
         chatView.setTitle(title: localized("chat"))
+        chatView.hasSeparatorLineView = true
         chatView.hasNavigationImageView = true
         let chatTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapChatView))
         chatView.addGestureRecognizer(chatTap)
+
+        let tipsView = SettingsRowView()
+        tipsView.setTitle(title: localized("tips"))
+        tipsView.hasNavigationImageView = true
+        let tipsTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapTipsView))
+        tipsView.addGestureRecognizer(tipsTap)
 
         self.topStackView.addArrangedSubview(notificationView)
 
@@ -101,6 +108,8 @@ class AppSettingsViewController: UIViewController {
         self.topStackView.addArrangedSubview(oddsView)
 
         self.topStackView.addArrangedSubview(chatView)
+
+        self.topStackView.addArrangedSubview(tipsView)
 
     }
 
@@ -154,6 +163,14 @@ extension AppSettingsViewController {
         let chatSettingsViewController = ChatSettingsViewController(viewModel: chatSettingsViewModel)
 
         self.navigationController?.pushViewController(chatSettingsViewController, animated: true)
+    }
+
+    @objc private func didTapTipsView() {
+        let tipsSettingsViewModel = TipsSettingsViewModel()
+
+        let tipsSettingsViewController = TipsSettingsViewController(viewModel: tipsSettingsViewModel)
+
+        self.navigationController?.pushViewController(tipsSettingsViewController, animated: true)
     }
 }
 

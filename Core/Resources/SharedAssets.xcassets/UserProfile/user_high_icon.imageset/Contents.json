@@ -1,16 +1,49 @@
 {
   "images" : [
     {
+      "filename" : "highBlack.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "filename" : "high.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "highBlack@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "filename" : "high@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "highBlack@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "filename" : "high@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
