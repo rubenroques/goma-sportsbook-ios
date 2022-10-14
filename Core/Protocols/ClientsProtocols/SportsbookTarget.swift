@@ -34,6 +34,8 @@ protocol SportsbookTarget {
 
     static var defaultCardStyle: CardsStyle { get }
     
+    static var serviceProviderType: ServiceProviderType { get }
+    
     static var casinoURL: String { get }
 
 }

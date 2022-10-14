@@ -29,14 +29,14 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>30</integer>
+			<integer>31</integer>
 		</dict>
 		<key>Promises (Playground) 2.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>31</integer>
+			<integer>32</integer>
 		</dict>
 		<key>Promises (Playground) 3.xcscheme</key>
 		<dict>
@@ -85,7 +85,7 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>29</integer>
+			<integer>30</integer>
 		</dict>
 		<key>ShowcaseBeta.xcscheme_^#shared#^_</key>
 		<dict>
@@ -96,6 +96,11 @@
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+		<key>SportRadar.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>6</integer>
 		</dict>
 		<key>TestingPlayground (Playground) 1.xcscheme</key>
 		<dict>

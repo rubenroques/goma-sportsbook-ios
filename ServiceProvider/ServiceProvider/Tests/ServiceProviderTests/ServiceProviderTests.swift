@@ -18,7 +18,7 @@ final class ServiceProviderTests: XCTestCase {
         
         print("\n\n")
         
-        let serviceProvider = ServiceProvider(providerType: .sportradar)
+        let serviceProvider = ServiceProviderClient(providerType: .sportradar)
         serviceProvider.connect()
         
         serviceProvider.eventsConnectionStatePublisher?.sink(receiveCompletion: { completion in

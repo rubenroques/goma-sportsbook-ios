@@ -7,10 +7,6 @@
 
 import Foundation
 
-enum SportRadarModels {
-    
-}
-
 extension SportRadarModels {
     
     enum NotificationType: Codable {
@@ -49,16 +45,24 @@ extension SportRadarModels {
                     let contentTypeContainer = try firstContentContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
                     
                     let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
-                    let contentId = (try? contentTypeContainer.decode(String.self, forKey: .contentId)) ?? ""
+                    let contentIdsArray = ((try? contentTypeContainer.decode(String.self, forKey: .contentId)) ?? "").components(separatedBy: "/")
                     
-                    let sportType = try SportRadarModels.SportType.init(id: contentId)
-
+                    var content: Content
+                    
                     switch contentType {
                     case .liveAdvancedList:
-                        // let changeType = (try? container.decode(String.self, forKey: .changeType)) ?? ""
                         let events: [SportRadarModels.Event] = try firstContentContainer.decode([SportRadarModels.Event].self, forKey: .change)
-                        self = .contentChanges(content: .liveAdvancedList(sportType: sportType, eventsList: events))
+                        guard let sportId = contentIdsArray.first else { throw SportRadarError.unkownContentId }
+                        
+                        let sportType = try SportRadarModels.SportType.init(id: sportId)
+                        
+                        content = .liveAdvancedList(sportType: sportType, events: events)
+                    case .inplaySportList:
+                        let sportsTypes: [SportRadarModels.SportTypeDetails] = try firstContentContainer.decode([SportRadarModels.SportTypeDetails].self, forKey: .change)
+                        
+                        content = .inplaySportList(sportsTypes: sportsTypes)
                     }
+                    self = .contentChanges(content: content)
                 }
                 catch {
                     print("Decoding error \(error)")
@@ -73,107 +77,6 @@ extension SportRadarModels {
             
         }
         
-    }
-    
-    
-    enum ContentType: String, Codable {
-        case liveAdvancedList = "liveDataSummaryAdvancedListBySportType"
-    }
-    
-    enum Content {
-        case liveAdvancedList(sportType: SportRadarModels.SportType, eventsList: [SportRadarModels.Event])
-        
-        var type: ContentType {
-            switch self {
-            case .liveAdvancedList:
-                return ContentType.liveAdvancedList
-            }
-        }
-        
-    }
-    
-    struct Event: Codable {
-        
-        var id: String
-        var homeName: String
-        var awayName: String
-        var sportTypeName: String
-        
-        var competitionId: String
-        var competitionName: String
-        
-        var markets: [Market]
-        
-        enum CodingKeys: String, CodingKey {
-            case id = "idfoevent"
-            case homeName = "participantname_home"
-            case awayName = "participantname_away"
-            case competitionId = "idfotournament"
-            case competitionName = "tournamentname"
-            case sportTypeName = "sporttypename"
-            case markets = "markets"
-        }
-        
-    }
-    
-    struct Market: Codable {
-        
-        var id: String
-        var name: String
-        var outcomes: [Outcome]
-        
-        enum CodingKeys: String, CodingKey {
-            case id = "idfomarket"
-            case name = "name"
-            case outcomes = "selections"
-        }
-        
-    }
-    
-    struct Outcome: Codable {
-        
-        var id: String
-        var name: String
-        var hashCode: String
-        
-        enum CodingKeys: String, CodingKey {
-            case id = "idfoselection"
-            case name = "name"
-            case hashCode = "selectionhashcode"
-        }
-        
-    }
-    
-}
-
-
-extension SportRadarModels {
-    
-    enum SportType {
-        case football
-        
-        init(id: String) throws {
-            switch id {
-            case "FBL/0":
-                self = .football
-            default:
-                throw SportRadarError.unkownSportId
-            }
-        }
-        
-//        var code: String {
-//            switch self {
-//            case .football:
-//                return "FBL"
-//            }
-//        }
-
-        var id: String {
-            switch self {
-            case .football:
-                return "FBL/0"
-            }
-        }
     }
     
 }

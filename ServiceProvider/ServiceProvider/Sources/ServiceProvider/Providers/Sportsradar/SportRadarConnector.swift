@@ -12,6 +12,7 @@ import Combine
 protocol SportRadarConnectorSubscriber {
 
     func liveAdvancedListUpdated(forSportType sportType: SportType, withEvents: [EventsGroup])
+    func inplaySportListUpdated(withSportTypesDetails: [SportTypeDetails])
     
 }
 
@@ -88,24 +89,34 @@ class SportRadarConnector: NSObject, Connector  {
 extension SportRadarConnector: WebSocketDelegate {
     
     internal func didReceive(event: WebSocketEvent, client: WebSocket) {
+        
+        // yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ
+        // 2022-07-05T09:51:00.000+02:00
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(dateFormatter)
+        
         switch event {
         case .connected(let headers):
             self.isConnected = true
             self.sendListeningStarted(toSocket: client)
             
-            print("websocket is connected: \(headers)")
+            print("SportRadarConnector websocket is connected: \(headers)")
         case .disconnected(let reason, let code):
             self.isConnected = false
-            print("websocket is disconnected: \(reason) with code: \(code)")
+            print("SportRadarConnector websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
-            print("Received text: \(string)")
+            print("SportRadarConnector websocket received text: \(string)")
             if let data = string.data(using: .utf8),
-               let sportRadarSocketResponse = try? JSONDecoder().decode(SportRadarModels.NotificationType.self, from: data) {
+               let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleResponse(sportRadarSocketResponse, data: data)
             }
         case .binary(let data):
-            print("Received data: \(data.count)")
-            if let sportRadarSocketResponse = try? JSONDecoder().decode(SportRadarModels.NotificationType.self, from: data) {
+            print("SportRadarConnector websocket Received data: \(data.count)")
+            
+            if let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleResponse(sportRadarSocketResponse, data: data)
             }
         case .ping(_):
@@ -133,11 +144,17 @@ extension SportRadarConnector: WebSocketDelegate {
             self.connectionStateSubject.send(.connected)
         case .contentChanges(let content):
             switch content {
-            case .liveAdvancedList(let sportType, let eventsList):
-                if let subscriber = self.subscriberForType[content.type] {
-                    let sport = SportRadarModelMapper.sportType(fromInternalSportType: sportType)
-                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: eventsList)
+            case .liveAdvancedList(let sportType, let events):
+                if let subscriber = self.subscriberForType[content.code],
+                   let sport = SportRadarModelMapper.sportType(fromInternalSportType: sportType)
+                {
+                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
                     subscriber.liveAdvancedListUpdated(forSportType: sport, withEvents: [eventsGroup])
+                }
+            case .inplaySportList(let sportsTypes):
+                if let subscriber = self.subscriberForType[content.code] {
+                    let mappedSportsTypes = sportsTypes.map(SportRadarModelMapper.sportTypeDetails(fromInternalSportTypeDetails:)).compactMap({ $0 })
+                    subscriber.inplaySportListUpdated(withSportTypesDetails: mappedSportsTypes)
                 }
             }
             

@@ -12,7 +12,7 @@ protocol SessionAccessToken {
     var hash: String { get }
 }
 
-enum ConnectorState {
+public enum ConnectorState {
     case connected
     case disconnected
 }

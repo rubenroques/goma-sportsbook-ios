@@ -56,9 +56,16 @@ class LiveEventsViewModel: NSObject {
         }
         didSet {
             self.fetchData()
+            self.configureWithSports(self.liveSports)
         }
     }
 
+    var liveSports: [Sport] = [] {
+        didSet {
+            self.configureWithSports(self.liveSports)
+        }
+    }
+    
     var homeFilterOptions: HomeFilterOptions? {
         didSet {
             self.updateContentList()
@@ -109,8 +116,23 @@ class LiveEventsViewModel: NSObject {
             })
             .store(in: &self.cancellables)
         
-        self.getSportsLive()
-
+        // self.getSportsLive()
+        // Subscribe live sports
+        self.liveSportsPublisher = Env.serviceProvider.liveSportTypes()?
+            .sink(receiveCompletion: { completion in
+                print("Env.serviceProvider.liveSportTypes completed \(completion)")
+            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportTypeDetails]>) in
+                switch subscribableContent {
+                case .connected:
+                    self?.liveSports = []
+                case .content(let sportTypeDetails):
+                    let sports = sportTypeDetails.map(ServiceProviderModelMapper.sport(fromServiceProviderSportTypeDetails:))
+                    self?.liveSports = sports
+                case .disconnected:
+                    self?.liveSports = []
+                }
+            })
+            
         self.allMatchesViewModelDataSource.didLongPressOdd = {[weak self] bettingTicket in
             self?.didLongPressOdd?(bettingTicket)
         }
@@ -124,46 +146,35 @@ class LiveEventsViewModel: NSObject {
 
         self.providerLiveMatchesSubscriber?.cancel()
         
+        guard
+            let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
+        else {
+            self.allMatches = []
+            self.isLoadingAllEventsList.send(false)
+            self.updateContentList()
+            return
+        }
+        
         print("subscribeLiveMatches fetchData called")
         
-        self.providerLiveMatchesSubscriber = Env.serviceProvider.subscribeLiveMatches(forSportType: ServiceProvider.SportType.football)?
+        self.providerLiveMatchesSubscriber = Env.serviceProvider.subscribeLiveMatches(forSportType: sportType)?
             .sink(receiveCompletion: { completion in
-                print("done \(completion)")
+                print("Env.serviceProvider.subscribeLiveMatches completed \(completion)")
             }, receiveValue: { (subscribableContent: SubscribableContent<[EventsGroup]>) in
-                print("subscribeLiveMatches \(subscribableContent)")
-                
+                print("Env.serviceProvider.subscribeLiveMatches value \(subscribableContent)")
                 switch subscribableContent {
                 case .connected:
                     print("Connected to ws")
                 case .content(let eventsGroups):
-                    
-                    var matches = [Match]()
-                    for eventsGroup in eventsGroups {
-                        for event in eventsGroup.events {
-                            matches.append(Match(id: event.id,
-                                  competitionId: event.competitionId,
-                                  competitionName: event.competitionName,
-                                  homeParticipant: Participant(id: "", name: event.homeTeamName),
-                                  awayParticipant: Participant(id: "", name: event.awayTeamName),
-                                  sportType: event.sportTypeName,
-                                  numberTotalOfMarkets: 1,
-                                  markets: [],
-                                  rootPartId: ""))
-                        }
-                    }
-                    
+                    self.allMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
                     self.isLoadingAllEventsList.send(false)
-                    self.allMatches = matches
-                    
                     self.updateContentList()
-                    
                 case .disconnected:
                     print("Disconnected from ws")
                 }
             })
         
         /*
-         
         self.fetchAllMatches()
          
         if let sportPublisher = sportsRepository.sportsLivePublisher[self.selectedSport.id] {
@@ -243,6 +254,17 @@ class LiveEventsViewModel: NSObject {
             
             self.liveEventsCountPublisher.send(0)
         }
+    }
+    
+    func configureWithSports(_ liveSports: [Sport]) {
+        var liveEventsCount: Int = 0
+        for sport in liveSports {
+            if sport.id == self.selectedSport.id {
+                liveEventsCount = sport.liveEventsCount
+                break
+            }
+        }
+        self.liveEventsCountPublisher.send(liveEventsCount)
     }
 
     func updateSportsAggregatorProcessor(aggregator: EveryMatrix.SportsAggregator) {

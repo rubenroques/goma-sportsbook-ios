@@ -10,9 +10,9 @@ public class ServiceProviderClient {
         case sportradar
     }
     
-    var privilegedAccessManagerConnectionStatePublisher: AnyPublisher<ConnectorState, Error>?
-    var eventsConnectionStatePublisher: AnyPublisher<ConnectorState, Error>?
-    var bettingConnectionStatePublisher: AnyPublisher<ConnectorState, Error>?
+    public var privilegedAccessManagerConnectionStatePublisher: AnyPublisher<ConnectorState, Error> = Just(ConnectorState.disconnected).setFailureType(to: Error.self).eraseToAnyPublisher()
+    public var eventsConnectionStatePublisher: AnyPublisher<ConnectorState, Error> = Just(ConnectorState.disconnected).setFailureType(to: Error.self).eraseToAnyPublisher()
+    public var bettingConnectionStatePublisher: AnyPublisher<ConnectorState, Error> = Just(ConnectorState.disconnected).setFailureType(to: Error.self).eraseToAnyPublisher()
     
     private var providerType: ProviderType = .everymatrix
     
@@ -40,17 +40,16 @@ public class ServiceProviderClient {
         // Debug only, delete later
         // self.connect()
         //
-        
     }
     
     public func connect() {
         switch self.providerType {
         case .everymatrix:
             fatalError()
-            //            let everymatrixProvider = EverymatrixProvider()
-            //            self.privilegedAccessManager = everymatrixProvider
-            //            self.bettingProvider = everymatrixProvider
-            //            self.eventsProvider = everymatrixProvider
+        // let everymatrixProvider = EverymatrixProvider()
+        // self.privilegedAccessManager = everymatrixProvider
+        // self.bettingProvider = everymatrixProvider
+        // self.eventsProvider = everymatrixProvider
         case .sportradar:
             let sportRadarConnector = SportRadarConnector()
             
@@ -58,11 +57,10 @@ public class ServiceProviderClient {
             
             sportRadarConnector.connect()
             
-            let sportRadarProvider = SportRadarProvider(connector: sportRadarConnector)
+            let sportRadarProvider = SportRadarEventsProvider(connector: sportRadarConnector)
             self.privilegedAccessManager = nil // sportsradarProvider
             self.bettingProvider = nil // sportsradarProvider
             self.eventsProvider = sportRadarProvider
-            
         }
     }
     
@@ -80,7 +78,26 @@ public class ServiceProviderClient {
         }.eraseToAnyPublisher()
     }
 
+    //
+    // Sports
+    //
+    public func allSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>? {
+        // TODO:
+        return Fail(error: ServiceProviderError.request).eraseToAnyPublisher()
+    }
     
+    public func liveSportTypes() -> AnyPublisher<SubscribableContent<[SportTypeDetails]>, ServiceProviderError>? {
+        return self.eventsProvider?.liveSportTypes() ?? nil
+    }
+    
+    public func popularSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>? {
+        // TODO:
+        return Fail(error: ServiceProviderError.request).eraseToAnyPublisher()
+    }
+    
+    //
+    // Events
+    //
     public func subscribeLiveMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
         return self.eventsProvider?.subscribeLiveMatches(forSportType: sportType) ?? nil
     }

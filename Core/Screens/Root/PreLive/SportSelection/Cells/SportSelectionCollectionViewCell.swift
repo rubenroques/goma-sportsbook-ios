@@ -64,7 +64,7 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
     
     func commonInit() {
 
-        //self.backgroundColor = UIColor.App.backgroundSecondary
+        // self.backgroundColor = UIColor.App.backgroundSecondary
 
         containerView.layer.cornerRadius = containerView.frame.size.height/2
         containerView.layer.borderWidth = 2
@@ -97,12 +97,23 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
             iconImageView.image = UIImage(named: "sport_type_icon_default")
         }
 
-        self.viewModel?.updateLiveEvents = {
+        viewModel.updateLiveEvents = {
             self.eventCountView.isHidden = false
-
             self.eventCountLabel.text = self.viewModel?.numberOfLiveEvents
-
         }
+        
+        if viewModel.isLive, let numberOfLiveEvents = viewModel.numberOfLiveEvents {
+            self.showEventCount(numberOfLiveEvents)
+        }
+    }
+    
+    func showEventCount(_ count: String) {
+        self.eventCountView.isHidden = false
+        self.eventCountLabel.text = count
+    }
+    
+    func hideEventCount() {
+        self.eventCountView.isHidden = true
     }
 
 }

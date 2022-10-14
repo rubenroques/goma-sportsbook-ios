@@ -20,6 +20,7 @@ public struct Event: Codable {
     
     public var competitionId: String
     public var competitionName: String
+    public var startDate: Date
     
     public var markets: [Market]
     
@@ -30,6 +31,7 @@ public struct Event: Codable {
         case competitionId = "competitionId"
         case competitionName = "competitionName"
         case sportTypeName = "sportTypeName"
+        case startDate = "startDate"
         case markets = "markets"
     }
     
