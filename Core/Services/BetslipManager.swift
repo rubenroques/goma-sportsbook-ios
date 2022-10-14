@@ -323,7 +323,6 @@ extension BetslipManager {
             .sink { _ in
                 
             } receiveValue: { [weak self] betslipSelectionState in
-                print("BETSLIP SELECTION: \(betslipSelectionState)")
                 self?.multipleBetslipSelectionState.send(betslipSelectionState)
 
                 if let betBuilder = betslipSelectionState.betBuilder,

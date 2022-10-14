@@ -219,7 +219,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         super.init(nibName: "PreSubmissionBetslipViewController", bundle: nil)
 
-        self.title = localized("betslip") // TODO: localization
+        self.title = localized("betslip")
     }
 
     @available(iOS, unavailable)
@@ -243,7 +243,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.view.bringSubviewToFront(emptyBetsBaseView)
         self.view.bringSubviewToFront(loadingBaseView)
 
-        self.betTypeSegmentControlView = SegmentControlView(options: ["Single", "Multiple", "System"]) // TODO: localization
+        self.betTypeSegmentControlView = SegmentControlView(options: [localized("single"), localized("multiple"), localized("system")])
         self.betTypeSegmentControlView?.translatesAutoresizingMaskIntoConstraints = false
         self.betTypeSegmentControlView?.didSelectItemAtIndexAction = self.didChangeSelectedSegmentItem
 
@@ -846,15 +846,9 @@ class PreSubmissionBetslipViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] betBuilderOdd in
                 if let betBuilderOdd = betBuilderOdd {
-                    //self?.isBetBuilderSelection = true
                     self?.updateOddsWithBetBuilder(betBuilderOdds: betBuilderOdd)
-
                 }
                 else {
-                    //self?.isBetBuilderSelection = false
-//                    if let multiplierValue = self?.multiplierPublisher.value {
-//                        self?.multiplierPublisher.send(multiplierValue)
-//                    }
                     self?.updateOddsWithBetBuilder()
                 }
             })
