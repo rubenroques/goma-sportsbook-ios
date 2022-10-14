@@ -907,9 +907,9 @@ class PreSubmissionBetslipViewController: UIViewController {
 
             self.multipleBettingTicketDataSource.isBetBuilderActive = true
 
-            self.multipleOddsValueLabel.text = "\(OddConverter.stringForValue(betBuilderOdds, format: UserDefaults.standard.userOddsFormat)) (BetBuilder Enabled)"
+            self.multipleOddsValueLabel.text = "\(OddConverter.stringForValue(betBuilderOdds, format: UserDefaults.standard.userOddsFormat)) (\(localized("betbuilder_enabled")))"
 
-            self.secondaryMultipleOddsValueLabel.text = "\(OddConverter.stringForValue(betBuilderOdds, format: UserDefaults.standard.userOddsFormat)) (BetBuilder Enabled)"
+            self.secondaryMultipleOddsValueLabel.text = "\(OddConverter.stringForValue(betBuilderOdds, format: UserDefaults.standard.userOddsFormat)) (\(localized("betbuilder_enabled")))"
 
             self.tableView.reloadData()
         }
