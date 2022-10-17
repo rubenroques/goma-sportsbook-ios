@@ -3310,7 +3310,6 @@
 		45C10FA928772DA700037BBE /* ViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F2728772DA700037BBE /* ViewState.swift */; };
 		45C10FAA28772DA700037BBE /* ViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F2728772DA700037BBE /* ViewState.swift */; };
 		45C10FAB28772DA700037BBE /* ViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F2728772DA700037BBE /* ViewState.swift */; };
-		45C1219528FADF4B00114A83 /* GOMASportRadar-Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A9C3438B28F9A7DC0055360B /* GOMASportRadar-Assets.xcassets */; };
 		45C26DC827976A3900513D41 /* FavoriteCompetitionsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DC727976A3900513D41 /* FavoriteCompetitionsDataSource.swift */; };
 		45C26DC927976A3900513D41 /* FavoriteCompetitionsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DC727976A3900513D41 /* FavoriteCompetitionsDataSource.swift */; };
 		45C26DCB27976A7300513D41 /* FavoriteMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DCA27976A7300513D41 /* FavoriteMatchesDataSource.swift */; };
@@ -4892,7 +4891,6 @@
 		A9C3437528F9A74A0055360B /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455C962726FE11CA00456F30 /* RootViewController.xib */; };
 		A9C3437628F9A74A0055360B /* MyTicketBetLineView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC802770EF53006C4BC7 /* MyTicketBetLineView.xib */; };
 		A9C3437728F9A74A0055360B /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4D2716F5CB003044C5 /* OddTripleCollectionViewCell.xib */; };
-		A9C3438E28F9A7DC0055360B /* LaunchScreen-GOMASportRadar.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9C3438028F9A7DC0055360B /* LaunchScreen-GOMASportRadar.storyboard */; };
 		A9C3439028F9A7DC0055360B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A9C3438628F9A7DC0055360B /* GoogleService-Info.plist */; };
 		A9C3439128F9A7DC0055360B /* GOMASportRadar-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A9C3438828F9A7DC0055360B /* GOMASportRadar-Info.plist */; };
 		A9C3439228F9A7DC0055360B /* TargetVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3438928F9A7DC0055360B /* TargetVariables.swift */; };
@@ -4930,6 +4928,8 @@
 		A9C82FD026F9E14800059DCD /* PopUpPromotionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */; };
 		A9C82FD126F9F16700059DCD /* PopUpPromotionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FCD26F9E0F900059DCD /* PopUpPromotionView.swift */; };
 		A9C82FD226F9F52E00059DCD /* PopUpPromotionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */; };
+		A9D5BB7028FD6769001B0E13 /* LaunchScreen-GOMASportRadar.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9C3438028F9A7DC0055360B /* LaunchScreen-GOMASportRadar.storyboard */; };
+		A9D5BB7228FD688F001B0E13 /* GOMASportRadar-Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A9C3438B28F9A7DC0055360B /* GOMASportRadar-Assets.xcassets */; };
 		A9DF8DF928DDC1D80083BF56 /* UserInfoSimpleCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DF8DF828DDC1D80083BF56 /* UserInfoSimpleCardView.swift */; };
 		A9DF8DFA28DDC1D80083BF56 /* UserInfoSimpleCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DF8DF828DDC1D80083BF56 /* UserInfoSimpleCardView.swift */; };
 		A9DF8DFB28DDC1D80083BF56 /* UserInfoSimpleCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DF8DF828DDC1D80083BF56 /* UserInfoSimpleCardView.swift */; };
@@ -10280,7 +10280,7 @@
 				A9C3432228F9A74A0055360B /* Gilroy-Light.ttf in Resources */,
 				A9C3432328F9A74A0055360B /* PreSubmissionBetslipViewController.xib in Resources */,
 				A9C3439028F9A7DC0055360B /* GoogleService-Info.plist in Resources */,
-				45C1219528FADF4B00114A83 /* GOMASportRadar-Assets.xcassets in Resources */,
+				A9D5BB7228FD688F001B0E13 /* GOMASportRadar-Assets.xcassets in Resources */,
 				A9C3432428F9A74A0055360B /* BannerScrollTableViewCell.xib in Resources */,
 				A9C3432528F9A74A0055360B /* BetslipViewController.xib in Resources */,
 				A9C3432728F9A74A0055360B /* MatchFiltersViewController.xib in Resources */,
@@ -10333,7 +10333,6 @@
 				A9C3435728F9A74A0055360B /* ActivationAlertView.xib in Resources */,
 				A9C3435828F9A74A0055360B /* SportSelectionCollectionViewCell.xib in Resources */,
 				A9C3435928F9A74A0055360B /* TestsViewController.xib in Resources */,
-				A9C3438E28F9A7DC0055360B /* LaunchScreen-GOMASportRadar.storyboard in Resources */,
 				A9C3435A28F9A74A0055360B /* PasswordUpdateViewController.xib in Resources */,
 				A9C3435B28F9A74A0055360B /* CheckboxToggleView.xib in Resources */,
 				A9C3435C28F9A74A0055360B /* MatchStatsCollectionViewCell.xib in Resources */,
@@ -10359,6 +10358,7 @@
 				A9C3437128F9A74A0055360B /* Inconsolata-Regular.ttf in Resources */,
 				A9C3437228F9A74A0055360B /* BetSuggestedCollectionViewCell.xib in Resources */,
 				A9C3437328F9A74A0055360B /* GameSuggestedView.xib in Resources */,
+				A9D5BB7028FD6769001B0E13 /* LaunchScreen-GOMASportRadar.storyboard in Resources */,
 				A9C3437428F9A74A0055360B /* OverUnderMarketDetailTableViewCell.xib in Resources */,
 				A9C3437528F9A74A0055360B /* RootViewController.xib in Resources */,
 				A9C3437628F9A74A0055360B /* MyTicketBetLineView.xib in Resources */,
@@ -15250,10 +15250,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-GOMASportRadar";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00700;
+				CURRENT_PROJECT_VERSION = 00701;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASportRadar/Misc/GOMASportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15276,10 +15277,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-GOMASportRadar";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00700;
+				CURRENT_PROJECT_VERSION = 00701;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASportRadar/Misc/GOMASportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

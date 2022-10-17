@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "icon goma-1.png",
+      "filename" : "sportradar splash logo.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +12,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "icon goma.png",
+      "filename" : "sportradar splash logo-1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "icon goma@2x-1.png",
+      "filename" : "sportradar splash logo@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,12 +28,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "icon goma@2x.png",
+      "filename" : "sportradar splash logo@2x-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "icon goma@3x-1.png",
+      "filename" : "sportradar splash logo@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "icon goma@3x.png",
+      "filename" : "sportradar splash logo@3x-1.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
