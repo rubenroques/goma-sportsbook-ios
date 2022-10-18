@@ -101,5 +101,24 @@ public class ServiceProviderClient {
     public func subscribeLiveMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
         return self.eventsProvider?.subscribeLiveMatches(forSportType: sportType) ?? nil
     }
-    
+
+    public func subscribePopularMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
+        return nil
+    }
+
+    public func subscribePopularOutrightCompetitionsMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
+        return nil
+    }
+
+    public func subscribeTodayMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
+        return nil
+    }
+
+    public func subscribeCompetitions(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
+        return nil
+    }
+
+    public func subscribeCompetitionMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
+        return nil
+    }
 }

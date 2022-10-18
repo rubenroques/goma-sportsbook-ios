@@ -10,7 +10,7 @@ import Foundation
 struct SportRadarModelMapper {
     
     static func eventsGroup(fromInternalEvents internalEvents: [SportRadarModels.Event]) -> EventsGroup {
-        let events = internalEvents.map({ event in
+        let events = internalEvents.map({ event -> Event in
             let markets = event.markets.map(Self.market(fromInternalMarket:))
             return Event(id: event.id,
                          homeTeamName: event.homeName,

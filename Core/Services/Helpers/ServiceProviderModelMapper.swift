@@ -67,5 +67,11 @@ struct ServiceProviderModelMapper {
                               bettingOffer: bettingOffer)
         return outcome
     }
+
+    static func competitions(fromEventsGroups eventsGroups: [EventsGroup]) -> [Competition] {
+        var competitions = [Competition]()
+
+        return competitions
+    }
     
 }
