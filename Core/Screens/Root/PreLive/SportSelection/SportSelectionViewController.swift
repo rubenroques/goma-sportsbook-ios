@@ -30,6 +30,9 @@ class SportSelectionViewController: UIViewController {
     var isLiveSport: Bool
     var sportsRepository: SportsAggregatorRepository
 
+    var allSportsPublisher: AnyCancellable?
+    var allSportsRegister: EndpointPublisherIdentifiable?
+
     var liveSportsPublisher: AnyCancellable?
     var liveSportsRegister: EndpointPublisherIdentifiable?
 
@@ -128,27 +131,53 @@ class SportSelectionViewController: UIViewController {
 
     func getSports() {
 
-        self.activityIndicatorView.isHidden = false
+//        let sports = Env.everyMatrixClient.getDisciplines(language: "en")
+//
+//        sports
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure:
+//                    print("Error retrieving data!")
+//                case .finished:
+//                    print("Data retrieved!")
+//                }
+//                self.activityIndicatorView.isHidden = true
+//            }, receiveValue: { value in
+//                self.sportsData = value.records ?? []
+//                self.fullSportsData = self.sportsData
+//                self.collectionView.reloadData()
+//            })
+//            .store(in: &self.cancellable)
 
-        let sports = Env.everyMatrixClient.getDisciplines(language: "en")
+        self.allSportsPublisher?.cancel()
+        self.allSportsPublisher = nil
 
-        sports
+        let dateRangeId = self.getDateRangeId()
+
+        self.allSportsPublisher = Env.serviceProvider.allSportTypes(dateRangeId: dateRangeId)?
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
-                case .finished:
-                    print("Data retrieved!")
+                print("Env.serviceProvider.allSportTypes completed \(completion)")
+            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
+                switch subscribableContent {
+                case .connected:
+                    print("Env.serviceProvider.allSportTypes connected")
+                    // self?.configureWithAllSports([])
+                case .content(let sportTypes):
+                    print("Env.serviceProvider.allSportTypes content")
+                    self?.configureWithAllSports(sportTypes)
+                case .disconnected:
+                    print("Env.serviceProvider.allSportTypes disconnected")
+                    //self?.configureWithAllSports([])
                 }
-                self.activityIndicatorView.isHidden = true
-            }, receiveValue: { value in
-                self.sportsData = value.records ?? []
-                self.fullSportsData = self.sportsData
-                self.collectionView.reloadData()
             })
-            .store(in: &self.cancellable)
 
+        // EM TEMP SHUTDOWN
+//        self.sportsData = []
+//        self.fullSportsData = []
+//        self.activityIndicatorView.isHidden = true
+//        self.collectionView.reloadData()
     }
 
     func getSportsLive() {
@@ -220,6 +249,57 @@ class SportSelectionViewController: UIViewController {
         self.fullSportsData = self.sportsData
 
         self.collectionView.reloadData()
+    }
+
+    func configureWithAllSports(_ sportTypes: [ServiceProvider.SportType]) {
+
+        // TODO: Remove [EveryMatrix.Discipline] logic from this ViewModel, should be using the ServiceProvider models
+        // or another independent one
+        let sportsTypes = sportTypes.map { sportType in
+            EveryMatrix.Discipline(type: sportType.id,
+                                   id: sportType.id,
+                                   name: sportType.name,
+                                   numberOfLiveEvents: 0,
+                                   showEventCategory: false)
+        }
+
+        let sortedArray = sportsTypes.sorted(by: {$0.id.localizedStandardCompare($1.id) == .orderedAscending})
+        self.sportsData = sortedArray
+
+        self.fullSportsData = self.sportsData
+
+        self.activityIndicatorView.isHidden = true
+
+        self.collectionView.reloadData()
+    }
+
+    private func getDateRangeId() -> String {
+        let calendar = Calendar.current
+
+        let todayDate = Date()
+        let todayDateComponents = calendar.dateComponents([.year, .month, .day], from: todayDate)
+
+        let maxDate = Calendar.current.date(byAdding: .day, value: 6, to: todayDate) ?? Date()
+        let maxDateComponents = calendar.dateComponents([.year, .month, .day], from: maxDate)
+
+        var todayDateId = ""
+        var maxDateId = ""
+
+        if let todayDateYear = todayDateComponents.year,
+           let todayDateMonth = todayDateComponents.month,
+           let todayDateDay = todayDateComponents.day {
+            todayDateId = "\(todayDateYear)\(todayDateMonth)\(todayDateDay)"
+        }
+
+        if let maxDateYear = maxDateComponents.year,
+           let maxDateMonth = maxDateComponents.month,
+           let maxDateDay = maxDateComponents.day {
+            maxDateId = "\(maxDateYear)\(maxDateMonth)\(maxDateDay)"
+        }
+
+        let dateRangeId = "\(todayDateId)0000/\(maxDateId)2359"
+
+        return dateRangeId
     }
 
     @IBAction private func cancelAction() {

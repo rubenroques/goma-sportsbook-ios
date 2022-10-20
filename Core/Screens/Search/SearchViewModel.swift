@@ -127,37 +127,39 @@ class SearchViewModel: NSObject {
         self.clearData()
         self.isEmptySearch = false
 
-        
-        let searchRoute = TSRouter.searchV2(language: "en",
-                                            limit: 20,
-                                            query: searchQuery,
-                                            eventStatuses: eventStatuses,
-                                            include: includeSettings,
-                                            bettingTypeIds: bettingTypeIdsSettings,
-                                            dataWithoutOdds: false)
+        // EM TEMP SHUTDOWN
+        self.hasDoneSearch = true
 
-        Env.everyMatrixClient.manager.getModel(router: searchRoute, decodingType: SearchV2Response.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure(let apiError):
-                    switch apiError {
-                    case .requestError(let value):
-                        print("Search request error: \(value)")
-                    case .notConnected:
-                        ()
-                    default:
-                        ()
-                    }
-                case .finished:
-                    ()
-                }
-            },
-            receiveValue: { [weak self] searchResponse in
-                self?.processSearchResponse(searchResponse: searchResponse)
-
-            })
-            .store(in: &cancellables)
+//        let searchRoute = TSRouter.searchV2(language: "en",
+//                                            limit: 20,
+//                                            query: searchQuery,
+//                                            eventStatuses: eventStatuses,
+//                                            include: includeSettings,
+//                                            bettingTypeIds: bettingTypeIdsSettings,
+//                                            dataWithoutOdds: false)
+//
+//        Env.everyMatrixClient.manager.getModel(router: searchRoute, decodingType: SearchV2Response.self)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure(let apiError):
+//                    switch apiError {
+//                    case .requestError(let value):
+//                        print("Search request error: \(value)")
+//                    case .notConnected:
+//                        ()
+//                    default:
+//                        ()
+//                    }
+//                case .finished:
+//                    ()
+//                }
+//            },
+//            receiveValue: { [weak self] searchResponse in
+//                self?.processSearchResponse(searchResponse: searchResponse)
+//
+//            })
+//            .store(in: &cancellables)
 
     }
 

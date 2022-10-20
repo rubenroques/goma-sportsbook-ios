@@ -449,7 +449,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.homeOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
                 self.leftOutcome = outcome
                 self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+
+                // Check for SportRadar invalid odd
+                if !outcome.bettingOffer.value.isNaN {
                 self.homeOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
+                }
+                else {
+                    self.homeBaseView.isUserInteractionEnabled = false
+                    self.homeBaseView.alpha = 0.5
+                    self.homeOddValueLabel.text = "-"
+                }
                 
                 self.leftOddButtonSubscriber = viewModel.store
                     .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
@@ -498,7 +507,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.drawOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
                 self.middleOutcome = outcome
                 self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-                self.drawOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
+
+                // Check for SportRadar invalid odd
+                if !outcome.bettingOffer.value.isNaN {
+                    self.drawOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
+                }
+                else {
+                    self.drawBaseView.isUserInteractionEnabled = false
+                    self.drawBaseView.alpha = 0.5
+                    self.drawOddValueLabel.text = "-"
+                }
                 
                 self.middleOddButtonSubscriber = viewModel.store
                     .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
@@ -546,8 +564,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.awayOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
                 self.rightOutcome = outcome
                 self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-                self.awayOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
-                
+                // Check for SportRadar invalid odd
+                if !outcome.bettingOffer.value.isNaN {
+                    self.awayOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
+                }
+                else {
+                    self.awayBaseView.isUserInteractionEnabled = false
+                    self.awayBaseView.alpha = 0.5
+                    self.awayOddValueLabel.text = "-"
+                }
+
                 self.rightOddButtonSubscriber = viewModel.store
                     .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                     .compactMap({ $0 })

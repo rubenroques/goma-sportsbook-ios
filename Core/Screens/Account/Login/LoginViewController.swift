@@ -56,12 +56,14 @@ class LoginViewController: UIViewController {
         // Default value
         Env.userSessionStore.shouldRecordUserSession = true
 
-        Publishers.CombineLatest(self.usernameHeaderTextFieldView.textPublisher, self.passwordHeaderTextFieldView.textPublisher)
-            .map { username, password in
-                return (username?.isNotEmpty ?? false) && (password?.isNotEmpty ?? false)
-            }
-            .assign(to: \.isEnabled, on: loginButton)
-            .store(in: &cancellables)
+        // TEMP EM SHUTDOWN
+//        Publishers.CombineLatest(self.usernameHeaderTextFieldView.textPublisher, self.passwordHeaderTextFieldView.textPublisher)
+//            .map { username, password in
+//                return (username?.isNotEmpty ?? false) && (password?.isNotEmpty ?? false)
+//            }
+//            .assign(to: \.isEnabled, on: loginButton)
+//            .store(in: &cancellables)
+        self.loginButton.isEnabled = false
 
     }
 

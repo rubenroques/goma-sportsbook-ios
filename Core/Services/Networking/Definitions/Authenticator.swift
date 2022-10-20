@@ -42,12 +42,14 @@ class Authenticator {
 
     func validToken(deviceId: String, forceRefresh: Bool = false, loggedUser: UserLoginForm?) -> AnyPublisher<AuthToken, Error> {
 
-        if let loggedUser = loggedUser {
-            return self.loggedUserValidToken(deviceId: deviceId, forceRefresh: forceRefresh, loggedUser: loggedUser)
-        }
-        else {
-            return self.anonymousValidToken(deviceId: deviceId, forceRefresh: forceRefresh)
-        }
+        // TEMP EM SHUTDOWN
+//        if let loggedUser = loggedUser {
+//            return self.loggedUserValidToken(deviceId: deviceId, forceRefresh: forceRefresh, loggedUser: loggedUser)
+//        }
+//        else {
+//            return self.anonymousValidToken(deviceId: deviceId, forceRefresh: forceRefresh)
+//        }
+        return self.anonymousValidToken(deviceId: deviceId, forceRefresh: forceRefresh)
 
     }
 

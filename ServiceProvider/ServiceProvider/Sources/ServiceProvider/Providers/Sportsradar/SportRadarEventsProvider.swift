@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 class SportRadarEventsProvider: EventsProvider {
-    
+
     var connector: SportRadarConnector
     
     required init(connector: SportRadarConnector) {
@@ -18,6 +18,9 @@ class SportRadarEventsProvider: EventsProvider {
     
     private var liveSportTypesPublisher: CurrentValueSubject<SubscribableContent<[SportTypeDetails]>, ServiceProviderError>?
     private var liveEventsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
+    private var allSportTypesPublisher: CurrentValueSubject<SubscribableContent<[SportType]>, ServiceProviderError>?
+    private var popularEventsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
+    private var upcomingEventsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
     
     func unsubscribeLiveMatches(forSportType sportType: SportType) {
         if let liveEventsPublisher = self.liveEventsPublisher {
@@ -114,11 +117,169 @@ class SportRadarEventsProvider: EventsProvider {
         return self.liveSportTypesPublisher?.eraseToAnyPublisher()
         
     }
+
+    func allSportTypes(dateRangeId: String) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>? {
+        if self.allSportTypesPublisher == nil {
+            self.allSportTypesPublisher = CurrentValueSubject<SubscribableContent<[SportType]>, ServiceProviderError>.init(.disconnected)
+        }
+        else {
+            return self.allSportTypesPublisher?.eraseToAnyPublisher()
+        }
+
+        guard let sessionToken = connector.token else { return nil }
+
+        let contentType = SportRadarModels.ContentType.sportTypeByDate
+
+        // Today sports ID
+        let contentId = dateRangeId
+
+        let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentId: contentId)
+        var request = self.createSubscribeRequest(withHTTPBody: bodyData)
+        let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                self.allSportTypesPublisher?.send(completion: .failure(ServiceProviderError.onSubscribe))
+                return
+            }
+            guard
+                let httpResponse = response as? HTTPURLResponse,
+                (200...299).contains(httpResponse.statusCode)
+            else {
+                self.allSportTypesPublisher?.send(completion: .failure(ServiceProviderError.onSubscribe))
+                return
+            }
+            self.allSportTypesPublisher?.send(.connected)
+        }
+        self.connector.subscribe(self, forContentType: .sportTypeByDate)
+        sessionDataTask.resume()
+        return self.allSportTypesPublisher?.eraseToAnyPublisher()
+
+    }
+
+//    func subscribeMatchesByDate(forSportType sportType: SportType, dateRangeId: String, sortType: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
+//
+//
+//    }
+
+    func subscribePopularMatches(forSportType sportType: SportType, dateRangeId: String, sortType: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
+
+        self.popularEventsPublisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
+
+        guard
+            let sportId = SportRadarModelMapper.internalSportType(fromSportType: sportType)?.id,
+            let sessionToken = connector.token
+        else {
+            return nil
+        }
+
+        let contentType = SportRadarModels.ContentType.eventListBySportTypeDate
+        let pageIndex = 0
+        let eventsNumber = 20
+        let contentId = "\(sportId)/\(dateRangeId)/\(pageIndex)/\(eventsNumber)/\(sortType)" // FBL/202210210000/202210212359/0/20/T: example content ID
+
+        let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentId: contentId)
+        var request = self.createSubscribeRequest(withHTTPBody: bodyData)
+        let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+
+            if let error = error {
+                print("URLSession shared dataTask error \(error)")
+                self.popularEventsPublisher?.send(completion: .failure(ServiceProviderError.onSubscribe))
+                return
+            }
+
+            guard
+                let httpResponse = response as? HTTPURLResponse,
+                (200...299).contains(httpResponse.statusCode)
+            else {
+                self.popularEventsPublisher?.send(completion: .failure(ServiceProviderError.onSubscribe))
+                return
+            }
+
+            print("eventListBySportTypeDate Popular - received")
+
+            self.popularEventsPublisher?.send(.connected)
+        }
+
+        self.connector.subscribe(self, forContentType: .eventListBySportTypeDate)
+
+        sessionDataTask.resume()
+
+        print("eventListBySportTypeDate Popular - requested")
+
+        return self.popularEventsPublisher?.eraseToAnyPublisher()
+    }
+
+    func unsubscribePopularMatches() {
+        self.connector.unsubscribe(forContentType: .eventListBySportTypeDate)
+
+        if let popularEventsPublisher = self.popularEventsPublisher {
+            popularEventsPublisher.send(.disconnected)
+        }
+
+        self.popularEventsPublisher = nil
+    }
+
+    func subscribeUpcomingMatches(forSportType sportType: SportType, dateRangeId: String, sortType: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
+
+        self.upcomingEventsPublisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
+
+        guard
+            let sportId = SportRadarModelMapper.internalSportType(fromSportType: sportType)?.id,
+            let sessionToken = connector.token
+        else {
+            return nil
+        }
+
+        let contentType = SportRadarModels.ContentType.eventListBySportTypeDate
+        let pageIndex = 0
+        let eventsNumber = 20
+        let contentId = "\(sportId)/\(dateRangeId)/\(pageIndex)/\(eventsNumber)/\(sortType)" // FBL/202210210000/202210212359/0/20/T: example content ID
+
+        let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentId: contentId)
+        var request = self.createSubscribeRequest(withHTTPBody: bodyData)
+        let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+
+            if let error = error {
+                print("URLSession shared dataTask error \(error)")
+                self.upcomingEventsPublisher?.send(completion: .failure(ServiceProviderError.onSubscribe))
+                return
+            }
+
+            guard
+                let httpResponse = response as? HTTPURLResponse,
+                (200...299).contains(httpResponse.statusCode)
+            else {
+                self.upcomingEventsPublisher?.send(completion: .failure(ServiceProviderError.onSubscribe))
+                return
+            }
+
+            print("eventListBySportTypeDate Upcoming - received")
+
+            self.upcomingEventsPublisher?.send(.connected)
+        }
+
+        self.connector.subscribe(self, forContentType: .eventListBySportTypeDate)
+
+        sessionDataTask.resume()
+
+        print("eventListBySportTypeDate Upcoming - requested")
+
+        return self.upcomingEventsPublisher?.eraseToAnyPublisher()
+    }
+
+    func unsubscribeUpcomingMatches() {
+        self.connector.unsubscribe(forContentType: .eventListBySportTypeDate)
+
+        if let upcomingEventsPublisher = self.upcomingEventsPublisher {
+            upcomingEventsPublisher.send(.disconnected)
+        }
+
+        self.upcomingEventsPublisher = nil
+    }
    
 }
 
 extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
-    
+
     func liveAdvancedListUpdated(forSportType sportType: SportType, withEvents events: [EventsGroup]) {
         if let liveEventsPublisher = self.liveEventsPublisher {
             liveEventsPublisher.send(.content(events))
@@ -128,6 +289,24 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
     func inplaySportListUpdated(withSportTypesDetails sportTypesDetails: [SportTypeDetails]) {
         if let liveSportTypesPublisher = self.liveSportTypesPublisher {
             liveSportTypesPublisher.send(.content(sportTypesDetails))
+        }
+    }
+
+    func sportTypeByDate(withSportTypes sportTypes: [SportType]) {
+        if let allSportTypesPublisher = self.allSportTypesPublisher {
+            allSportTypesPublisher.send(.content(sportTypes))
+        }
+    }
+
+    func popularEventListBySportTypeDate(forSportType sportType: SportType, withEvents events: [EventsGroup]) {
+        if let popularEventsByDatePublisher = self.popularEventsPublisher {
+            popularEventsByDatePublisher.send(.content(events))
+        }
+    }
+
+    func upcomingEventListBySportTypeDate(forSportType sportType: SportType, withEvents events: [EventsGroup]) {
+        if let upcomingEventsByDatePublisher = self.upcomingEventsPublisher {
+            upcomingEventsByDatePublisher.send(.content(events))
         }
     }
     

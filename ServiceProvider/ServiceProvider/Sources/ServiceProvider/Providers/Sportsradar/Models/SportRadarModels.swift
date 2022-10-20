@@ -18,17 +18,28 @@ extension SportRadarModels {
         case liveAdvancedList = "liveDataSummaryAdvancedListBySportType"
         case inplaySportList = "inplaySportListBySportType"
         // case sportTypeList = ""
+        case sportTypeByDate = "sportTypeByDate"
+        case eventListBySportTypeDate = "eventListBySportTypeDate"
+
     }
     
     enum Content {
         
         case liveAdvancedList(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
         case inplaySportList(sportsTypes: [SportRadarModels.SportTypeDetails])
+        case sportTypeByDate(sportsTypes: [SportRadarModels.SportType])
+        //case eventListBySportTypeDate(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
+        case popularEventListBySportTypeDate(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
+        case upcomingEventListBySportTypeDate(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
+
         
         var code: ContentType {
             switch self {
             case .liveAdvancedList: return .liveAdvancedList
             case .inplaySportList: return .inplaySportList
+            case .sportTypeByDate: return .sportTypeByDate
+            case .popularEventListBySportTypeDate: return .eventListBySportTypeDate
+            case .upcomingEventListBySportTypeDate: return .eventListBySportTypeDate
             }
         }
         
@@ -81,13 +92,14 @@ extension SportRadarModels {
         var hashCode: String
         
         var odd: Double {
-            let priceNumerator = Double(self.priceNumerator) ?? 1.0
-            let priceDenominator = Double(self.priceDenominator) ?? 1.0
+
+            let priceNumerator = Double(self.priceNumerator ?? "0.0") ?? 1.0
+            let priceDenominator = Double(self.priceDenominator ?? "0.0") ?? 1.0
             return (priceNumerator/priceDenominator) + 1.0
         }
         
-        private var priceNumerator: String
-        private var priceDenominator: String
+        private var priceNumerator: String?
+        private var priceDenominator: String?
         
         enum CodingKeys: String, CodingKey {
             case id = "idfoselection"

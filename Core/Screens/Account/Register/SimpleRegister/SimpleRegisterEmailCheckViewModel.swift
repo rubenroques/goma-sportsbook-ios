@@ -80,22 +80,25 @@ class SimpleRegisterEmailCheckViewModel: NSObject {
     }
 
     func requestValidEmailCheck(email: String) {
-        Env.everyMatrixClient.validateEmail(email)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.shouldAnimateEmailValidityView.send(false)
-            }
-            receiveValue: { [weak self] value in
-                if !value.isAvailable {
-                    self?.registerErrorTypePublisher.value = .usedEmail
-                    self?.isRegisterEnabled.send(false)
-                }
-                else {
-                    self?.isRegisterEnabled.send(true)
-                }
-                self?.shouldAnimateEmailValidityView.send(false)
-            }
-            .store(in: &cancellables)
+        // TEMP EM SHUTDOWN
+//        Env.everyMatrixClient.validateEmail(email)
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] _ in
+//                self?.shouldAnimateEmailValidityView.send(false)
+//            }
+//            receiveValue: { [weak self] value in
+//                if !value.isAvailable {
+//                    self?.registerErrorTypePublisher.value = .usedEmail
+//                    self?.isRegisterEnabled.send(false)
+//                }
+//                else {
+//                    self?.isRegisterEnabled.send(true)
+//                }
+//                self?.shouldAnimateEmailValidityView.send(false)
+//            }
+//            .store(in: &cancellables)
+        self.shouldAnimateEmailValidityView.send(false)
+        self.isRegisterEnabled.send(false)
     }
 }
 

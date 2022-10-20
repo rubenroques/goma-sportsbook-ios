@@ -361,13 +361,13 @@
                                     <rect key="frame" x="0.0" y="677" width="515" height="52"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="DgF-9v-Tmt">
-                                            <rect key="frame" x="0.0" y="0.0" width="442" height="52"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="515" height="52"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4rF-OG-Pdw">
-                                                    <rect key="frame" x="0.0" y="0.0" width="98.5" height="52"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="117" height="52"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_home_icon" translatesAutoresizingMaskIntoConstraints="NO" id="Iba-we-Ish">
-                                                            <rect key="frame" x="39.5" y="8" width="20" height="20"/>
+                                                            <rect key="frame" x="48.5" y="8" width="20" height="20"/>
                                                             <color key="tintColor" name="iconSecondary"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="Iba-we-Ish" secondAttribute="height" id="GEk-3a-JGs"/>
@@ -375,7 +375,7 @@
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Home" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eiC-RB-6o0">
-                                                            <rect key="frame" x="4" y="30" width="90.5" height="19"/>
+                                                            <rect key="frame" x="4" y="30" width="109" height="19"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="19" id="MkI-Ry-rGG"/>
                                                             </constraints>
@@ -394,10 +394,10 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0dg-mr-47t">
-                                                    <rect key="frame" x="114.5" y="0.0" width="98.5" height="52"/>
+                                                    <rect key="frame" x="133" y="0.0" width="116.5" height="52"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_sports_icon" translatesAutoresizingMaskIntoConstraints="NO" id="jq1-az-paT">
-                                                            <rect key="frame" x="39.5" y="8" width="20" height="20"/>
+                                                            <rect key="frame" x="48" y="8" width="20" height="20"/>
                                                             <color key="tintColor" name="iconSecondary"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="jq1-az-paT" secondAttribute="height" id="LyC-rB-lHg"/>
@@ -405,7 +405,7 @@
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sports" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8B6-32-WvK">
-                                                            <rect key="frame" x="4" y="30" width="90.5" height="20"/>
+                                                            <rect key="frame" x="4" y="30" width="108.5" height="20"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -420,10 +420,10 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F4I-4h-jeW">
-                                                    <rect key="frame" x="229" y="0.0" width="98.5" height="52"/>
+                                                    <rect key="frame" x="265.5" y="0.0" width="117" height="52"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_live_icon" translatesAutoresizingMaskIntoConstraints="NO" id="OrN-gr-CSa">
-                                                            <rect key="frame" x="39.5" y="8" width="20" height="20"/>
+                                                            <rect key="frame" x="48.5" y="8" width="20" height="20"/>
                                                             <color key="tintColor" name="iconSecondary"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="20" id="IK8-f9-5ky"/>
@@ -431,7 +431,7 @@
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Live" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0RE-N3-etL">
-                                                            <rect key="frame" x="4" y="30" width="90.5" height="20"/>
+                                                            <rect key="frame" x="4" y="30" width="109" height="20"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -446,10 +446,10 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wao-as-qb6">
-                                                    <rect key="frame" x="343.5" y="0.0" width="98.5" height="52"/>
+                                                    <rect key="frame" x="398.5" y="0.0" width="116.5" height="52"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_tips_icon" translatesAutoresizingMaskIntoConstraints="NO" id="HPd-kB-5DR">
-                                                            <rect key="frame" x="39.5" y="8" width="20" height="20"/>
+                                                            <rect key="frame" x="48" y="8" width="20" height="20"/>
                                                             <color key="tintColor" name="iconSecondary"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="HPd-kB-5DR" secondAttribute="height" multiplier="1:1" id="F4t-lV-Y03"/>
@@ -457,7 +457,7 @@
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tips" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r8X-CO-dLy">
-                                                            <rect key="frame" x="4" y="30" width="90.5" height="20"/>
+                                                            <rect key="frame" x="4" y="30" width="108.5" height="20"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -519,11 +519,17 @@
                                         <constraint firstItem="DgF-9v-Tmt" firstAttribute="top" secondItem="KmS-Xh-sK7" secondAttribute="top" id="QKb-dr-dlN"/>
                                         <constraint firstItem="DgF-9v-Tmt" firstAttribute="leading" secondItem="KmS-Xh-sK7" secondAttribute="leading" id="RZg-On-gEM"/>
                                         <constraint firstItem="3bN-uV-pM1" firstAttribute="top" secondItem="Iba-we-Ish" secondAttribute="top" id="cNb-58-89O"/>
+                                        <constraint firstAttribute="trailing" secondItem="DgF-9v-Tmt" secondAttribute="trailing" id="hAd-25-H8M"/>
                                         <constraint firstItem="WaX-Xt-ClH" firstAttribute="leading" secondItem="DgF-9v-Tmt" secondAttribute="trailing" constant="8" id="jKp-uy-9Sf"/>
                                         <constraint firstAttribute="height" constant="52" id="jY2-S0-YuM"/>
                                         <constraint firstItem="WaX-Xt-ClH" firstAttribute="top" secondItem="KmS-Xh-sK7" secondAttribute="top" constant="3" id="wHy-aS-0uN"/>
                                         <constraint firstItem="DgF-9v-Tmt" firstAttribute="centerY" secondItem="KmS-Xh-sK7" secondAttribute="centerY" id="xt4-Ak-h0V"/>
                                     </constraints>
+                                    <variation key="default">
+                                        <mask key="constraints">
+                                            <exclude reference="jKp-uy-9Sf"/>
+                                        </mask>
+                                    </variation>
                                 </view>
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -610,11 +616,11 @@
         <image name="empty_user_image" width="100" height="100"/>
         <image name="logo_horizontal_left" width="77" height="37"/>
         <image name="plus_small_icon" width="16" height="16"/>
-        <image name="search_bar_icon" width="24" height="24"/>
+        <image name="search_bar_icon" width="23" height="23"/>
         <image name="sportsbook_icon" width="28" height="28"/>
-        <image name="tabbar_home_icon" width="25" height="25"/>
+        <image name="tabbar_home_icon" width="23" height="24"/>
         <image name="tabbar_live_icon" width="25" height="23"/>
-        <image name="tabbar_sports_icon" width="28" height="23"/>
+        <image name="tabbar_sports_icon" width="23" height="19"/>
         <image name="tabbar_tips_icon" width="22" height="22"/>
         <namedColor name="alertError">
             <color red="0.92941176470588238" green="0.30980392156862746" blue="0.38823529411764707" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -626,7 +632,7 @@
             <color red="0.92941176470588238" green="0.30980392156862746" blue="0.38823529411764707" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="iconSecondary">
-            <color red="0.46274509803921571" green="0.5725490196078431" blue="0.63529411764705879" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.58039215686274515" green="0.62352941176470589" blue="0.67843137254901964" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

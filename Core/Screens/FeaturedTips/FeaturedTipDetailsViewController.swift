@@ -80,6 +80,8 @@ class FeaturedTipDetailsViewController: UIViewController {
 
         self.betButton.addTarget(self, action: #selector(didTapBetButton), for: .primaryActionTriggered)
 
+        // EM TEMP SHUTDOWN
+        self.betButton.isEnabled = false
     }
 
     override func viewDidLayoutSubviews() {
@@ -215,7 +217,8 @@ class FeaturedTipDetailsViewController: UIViewController {
     }
 
     @objc func didTapBetButton() {
-        print("TAPPED BET: \(self.viewModel.featuredTip.betId)")
+        // EM TEMP SHUTDOWN
+        // print("TAPPED BET: \(self.viewModel.featuredTip.betId)")
     }
 
 }

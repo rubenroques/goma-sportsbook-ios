@@ -199,39 +199,39 @@ class LiveEventsViewModel: NSObject {
 
     func getSportsLive() {
 
-        if let liveSportsRegister = liveSportsRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: liveSportsRegister)
-        }
-
-        let endpoint = TSRouter.sportsListPublisher(operatorId: Env.appSession.operatorId,
-                                                    language: "en")
-
-        self.liveSportsPublisher?.cancel()
-        self.liveSportsPublisher = nil
-
-        self.liveSportsPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.SportsAggregator.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving liveSportsPublisher data!")
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    self?.liveSportsRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    self?.setupSportsAggregatorProcessor(aggregator: aggregator)
-                case .updatedContent(let aggregatorUpdates):
-                    self?.updateSportsAggregatorProcessor(aggregator: aggregatorUpdates)
-                case .disconnect:
-                    ()
-                }
-
-            })
+//        if let liveSportsRegister = liveSportsRegister {
+//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: liveSportsRegister)
+//        }
+//
+//        let endpoint = TSRouter.sportsListPublisher(operatorId: Env.appSession.operatorId,
+//                                                    language: "en")
+//
+//        self.liveSportsPublisher?.cancel()
+//        self.liveSportsPublisher = nil
+//
+//        self.liveSportsPublisher = Env.everyMatrixClient.manager
+//            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.SportsAggregator.self)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure:
+//                    print("Error retrieving liveSportsPublisher data!")
+//                case .finished:
+//                    ()
+//                }
+//            }, receiveValue: { [weak self] state in
+//                switch state {
+//                case .connect(let publisherIdentifiable):
+//                    self?.liveSportsRegister = publisherIdentifiable
+//                case .initialContent(let aggregator):
+//                    self?.setupSportsAggregatorProcessor(aggregator: aggregator)
+//                case .updatedContent(let aggregatorUpdates):
+//                    self?.updateSportsAggregatorProcessor(aggregator: aggregatorUpdates)
+//                case .disconnect:
+//                    ()
+//                }
+//
+//            })
     }
 
     func setupSportsAggregatorProcessor(aggregator: EveryMatrix.SportsAggregator) {

@@ -374,7 +374,6 @@ extension UserSessionStore {
 
 }
 
-
 extension UserSessionStore {
 
     func startUserSessionIfNeeded() {
@@ -392,28 +391,31 @@ extension UserSessionStore {
 
         Logger.log("EMSessionLoginFLow - User Session found - login needed")
 
-        self.loadLoggedUser()
+        // TEMP EM SHUTDOWN
+        //self.loadLoggedUser()
 
-        Env.everyMatrixClient.login(username: user.username, password: userPassword)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                switch completion {
-                case .finished:
-                    Env.favoritesManager.getUserFavorites()
-                    self?.loginGomaAPI(username: user.username, password: user.userId)
-                case .failure(let error):
-                    if error.localizedDescription.lowercased().contains("you are already logged in") {
-                        Env.favoritesManager.getUserFavorites()
-                        self?.loginGomaAPI(username: user.username, password: user.userId)
-                    }
-                    print("error \(error)")
-                }
-                self?.isLoadingUserSessionPublisher.send(false)
-            } receiveValue: { account in
-                Env.userSessionStore.isUserProfileIncomplete.send(account.isProfileIncomplete)
-                Env.userSessionStore.isUserEmailVerified.send(account.isEmailVerified)
-            }
-            .store(in: &cancellables)
+        self.isLoadingUserSessionPublisher.send(false)
+
+//        Env.everyMatrixClient.login(username: user.username, password: userPassword)
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] completion in
+//                switch completion {
+//                case .finished:
+//                    Env.favoritesManager.getUserFavorites()
+//                    self?.loginGomaAPI(username: user.username, password: user.userId)
+//                case .failure(let error):
+//                    if error.localizedDescription.lowercased().contains("you are already logged in") {
+//                        Env.favoritesManager.getUserFavorites()
+//                        self?.loginGomaAPI(username: user.username, password: user.userId)
+//                    }
+//                    print("error \(error)")
+//                }
+//                self?.isLoadingUserSessionPublisher.send(false)
+//            } receiveValue: { account in
+//                Env.userSessionStore.isUserProfileIncomplete.send(account.isProfileIncomplete)
+//                Env.userSessionStore.isUserEmailVerified.send(account.isEmailVerified)
+//            }
+//            .store(in: &cancellables)
     }
 
     func loginGomaAPI(username: String, password: String) {
