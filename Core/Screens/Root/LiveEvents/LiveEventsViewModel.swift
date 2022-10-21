@@ -407,43 +407,44 @@ class LiveEventsViewModel: NSObject {
 
     private func fetchAllMatches() {
 
-        if let allMatchesRegister = allMatchesRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: allMatchesRegister)
-        }
-
-        let matchesCount = self.allMatchesCount * self.allMatchesPage
-
-        let endpoint = TSRouter.liveMatchesPublisher(operatorId: Env.appSession.operatorId,
-                                                     language: "en",
-                                                     sportId: self.selectedSport.id,
-                                                     matchesCount: matchesCount)
-
-        self.allMatchesPublisher?.cancel()
-        self.allMatchesPublisher = nil
-
-        self.allMatchesPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
-                case .finished:
-                    print("Data retrieved!")
-                }
-                self?.isLoadingAllEventsList.send(false)
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    self?.allMatchesRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    self?.setupAllMatchesAggregatorProcessor(aggregator: aggregator)
-                case .updatedContent(let aggregatorUpdates):
-                    self?.updateAllMatchesAggregatorProcessor(aggregator: aggregatorUpdates)
-                case .disconnect:
-                    ()
-                }
-            })
+        // EM TEMP SHUTDOWN
+//        if let allMatchesRegister = allMatchesRegister {
+//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: allMatchesRegister)
+//        }
+//
+//        let matchesCount = self.allMatchesCount * self.allMatchesPage
+//
+//        let endpoint = TSRouter.liveMatchesPublisher(operatorId: Env.appSession.operatorId,
+//                                                     language: "en",
+//                                                     sportId: self.selectedSport.id,
+//                                                     matchesCount: matchesCount)
+//
+//        self.allMatchesPublisher?.cancel()
+//        self.allMatchesPublisher = nil
+//
+//        self.allMatchesPublisher = Env.everyMatrixClient.manager
+//            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure:
+//                    print("Error retrieving data!")
+//                case .finished:
+//                    print("Data retrieved!")
+//                }
+//                self?.isLoadingAllEventsList.send(false)
+//            }, receiveValue: { [weak self] state in
+//                switch state {
+//                case .connect(let publisherIdentifiable):
+//                    self?.allMatchesRegister = publisherIdentifiable
+//                case .initialContent(let aggregator):
+//                    self?.setupAllMatchesAggregatorProcessor(aggregator: aggregator)
+//                case .updatedContent(let aggregatorUpdates):
+//                    self?.updateAllMatchesAggregatorProcessor(aggregator: aggregatorUpdates)
+//                case .disconnect:
+//                    ()
+//                }
+//            })
     }
 
 }
