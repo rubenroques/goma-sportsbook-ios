@@ -35,6 +35,7 @@ class PreLiveEventsViewModel: NSObject {
     //
     var isLoading: AnyPublisher<Bool, Never>
     var didChangeSport = false
+    var isLoadingEvents: CurrentValueSubject<Bool, Never> = .init(false)
 
     var selectedSport: Sport {
         willSet {
@@ -325,10 +326,12 @@ class PreLiveEventsViewModel: NSObject {
 
         // competitions:
             // EM TEMP SHUTDOWN
-            self.fetchCompetitionsFilters()
-            if self.lastCompetitionsMatchesRequested.isNotEmpty {
-                self.fetchCompetitionsMatchesWithIds(lastCompetitionsMatchesRequested)
-            }
+//            self.fetchCompetitionsFilters()
+//            if self.lastCompetitionsMatchesRequested.isNotEmpty {
+//                self.fetchCompetitionsMatchesWithIds(lastCompetitionsMatchesRequested)
+//            }
+
+        self.isLoadingEvents.send(true)
 
         switch self.matchListTypePublisher.value {
         case .popular:
@@ -337,6 +340,9 @@ class PreLiveEventsViewModel: NSObject {
             self.fetchTodayMatches()
         case .competitions:
             self.fetchCompetitionsFilters()
+            if self.lastCompetitionsMatchesRequested.isNotEmpty {
+                self.fetchCompetitionsMatchesWithIds(lastCompetitionsMatchesRequested)
+            }
         }
     }
     
@@ -595,6 +601,7 @@ class PreLiveEventsViewModel: NSObject {
     private func fetchPopularMatches() {
 
         self.isLoadingPopularList.send(true)
+        self.isLoadingEvents.send(true)
 
         guard
             let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
@@ -611,6 +618,7 @@ class PreLiveEventsViewModel: NSObject {
                 case .failure(let error):
                     self.popularMatches = []
                     self.isLoadingPopularList.send(false)
+                    self.isLoadingEvents.send(false)
                     self.updateContentList()
                     self.unsubscribePopularMatches()
                 }
@@ -622,11 +630,13 @@ class PreLiveEventsViewModel: NSObject {
                 case .content(let eventsGroups):
                     self.popularMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
                     self.isLoadingPopularList.send(false)
+                    self.isLoadingEvents.send(false)
                     self.updateContentList()
                 case .disconnected:
                     print("Disconnected from ws")
                     self.popularMatches = []
-                    self.isLoadingPopularList.send(false)
+                    //self.isLoadingPopularList.send(false)
+                    //self.isLoadingEvents.send(false)
                     self.updateContentList()
                     //self.unsubscribePopularMatches()
 
@@ -753,7 +763,8 @@ class PreLiveEventsViewModel: NSObject {
     private func fetchTodayMatches(withFilter: Bool = false, timeRange: String = "") {
 
         self.isLoadingTodayList.send(true)
-
+        self.isLoadingEvents.send(true)
+        
         guard
             let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
         else {return}
@@ -769,6 +780,7 @@ class PreLiveEventsViewModel: NSObject {
                 case .failure(let error):
                     self.todayMatches = []
                     self.isLoadingTodayList.send(false)
+                    self.isLoadingEvents.send(false)
                     self.updateContentList()
                 }
             }, receiveValue: { (subscribableContent: SubscribableContent<[EventsGroup]>) in
@@ -779,11 +791,13 @@ class PreLiveEventsViewModel: NSObject {
                 case .content(let eventsGroups):
                     self.todayMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
                     self.isLoadingTodayList.send(false)
+                    self.isLoadingEvents.send(false)
                     self.updateContentList()
                 case .disconnected:
                     print("Disconnected from ws")
                     self.todayMatches = []
-                    self.isLoadingTodayList.send(false)
+                    //self.isLoadingTodayList.send(false)
+                    //self.isLoadingEvents.send(false)
                     self.updateContentList()
                 }
             })
@@ -848,7 +862,10 @@ class PreLiveEventsViewModel: NSObject {
     func fetchCompetitionsFilters() {
 
         // EM TEMP SHUTDOWN
+        self.competitions = []
+        self.popularOutrightCompetitions = []
         self.isLoadingCompetitionGroups.send(false)
+        self.updateContentList()
 
 //        let language = "en"
 //        let sportId = self.selectedSport.id

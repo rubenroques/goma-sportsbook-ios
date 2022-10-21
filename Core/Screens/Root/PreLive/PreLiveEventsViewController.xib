@@ -47,8 +47,8 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kGb-Bw-Z5y">
                     <rect key="frame" x="0.0" y="70" width="346" height="723"/>
                     <subviews>
-                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="R1v-pN-KYj">
-                            <rect key="frame" x="163" y="351.5" width="20" height="20"/>
+                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="R1v-pN-KYj">
+                            <rect key="frame" x="154.5" y="343" width="37" height="37"/>
                         </activityIndicatorView>
                     </subviews>
                     <constraints>
@@ -267,7 +267,7 @@
     </objects>
     <resources>
         <image name="expand_top_down_arrows_icon" width="10" height="13"/>
-        <image name="match_filters_icons" width="21" height="22"/>
+        <image name="match_filters_icons" width="23" height="24"/>
         <image name="no_content_icon" width="161" height="161"/>
         <image name="sport_type_soccer_icon" width="23" height="23"/>
     </resources>
