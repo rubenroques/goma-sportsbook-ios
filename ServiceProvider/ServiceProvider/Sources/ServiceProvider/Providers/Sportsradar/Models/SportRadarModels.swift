@@ -28,9 +28,9 @@ extension SportRadarModels {
         case liveAdvancedList(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
         case inplaySportList(sportsTypes: [SportRadarModels.SportTypeDetails])
         case sportTypeByDate(sportsTypes: [SportRadarModels.SportType])
-        //case eventListBySportTypeDate(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
-        case popularEventListBySportTypeDate(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
-        case upcomingEventListBySportTypeDate(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
+        case eventListBySportTypeDate(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
+//        case popularEventListBySportTypeDate(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
+//        case upcomingEventListBySportTypeDate(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
 
         
         var code: ContentType {
@@ -38,8 +38,9 @@ extension SportRadarModels {
             case .liveAdvancedList: return .liveAdvancedList
             case .inplaySportList: return .inplaySportList
             case .sportTypeByDate: return .sportTypeByDate
-            case .popularEventListBySportTypeDate: return .eventListBySportTypeDate
-            case .upcomingEventListBySportTypeDate: return .eventListBySportTypeDate
+            case .eventListBySportTypeDate: return .eventListBySportTypeDate
+//            case .popularEventListBySportTypeDate: return .eventListBySportTypeDate
+//            case .upcomingEventListBySportTypeDate: return .eventListBySportTypeDate
             }
         }
         
@@ -48,15 +49,15 @@ extension SportRadarModels {
     struct Event: Codable {
         
         var id: String
-        var homeName: String
-        var awayName: String
-        var sportTypeName: String
+        var homeName: String?
+        var awayName: String?
+        var sportTypeName: String?
         
         var competitionId: String?
         var competitionName: String?
-        var startDate: Date
+        var startDate: Date?
         
-        var markets: [Market]
+        var markets: [Market]?
         
         enum CodingKeys: String, CodingKey {
             case id = "idfoevent"

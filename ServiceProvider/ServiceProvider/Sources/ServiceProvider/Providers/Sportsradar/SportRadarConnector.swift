@@ -14,9 +14,9 @@ protocol SportRadarConnectorSubscriber {
     func liveAdvancedListUpdated(forSportType sportType: SportType, withEvents: [EventsGroup])
     func inplaySportListUpdated(withSportTypesDetails: [SportTypeDetails])
     func sportTypeByDate(withSportTypes: [SportType])
-//    func eventListBySportTypeDate(forSportType sportType: SportType, withEvents: [EventsGroup])
-    func popularEventListBySportTypeDate(forSportType sportType: SportType, withEvents: [EventsGroup])
-    func upcomingEventListBySportTypeDate(forSportType sportType: SportType, withEvents: [EventsGroup])
+    func eventListBySportTypeDate(forSportType sportType: SportType, withEvents: [EventsGroup])
+//    func popularEventListBySportTypeDate(forSportType sportType: SportType, withEvents: [EventsGroup])
+//    func upcomingEventListBySportTypeDate(forSportType sportType: SportType, withEvents: [EventsGroup])
 }
 
 class SportRadarConnector: NSObject, Connector  {
@@ -136,10 +136,11 @@ extension SportRadarConnector: WebSocketDelegate {
             self.isConnected = false
             print("Socket Error \(error.debugDescription)")
             // TEMP SOCKET SHUTDOWN ERROR
-            if error.debugDescription.contains("Code=57") {
-                print("Socket Error DISCONNECTED")
-                self.refreshConnection()
-            }
+//            if error.debugDescription.contains("Code=57") {
+//                print("Socket Error DISCONNECTED")
+//                self.refreshConnection()
+//            }
+            self.refreshConnection()
         }
     }
     
@@ -169,27 +170,27 @@ extension SportRadarConnector: WebSocketDelegate {
                     let mappedSportsTypes = sportsTypes.map(SportRadarModelMapper.sportType(fromInternalSportType:)).compactMap({ $0 })
                     subscriber.sportTypeByDate(withSportTypes: mappedSportsTypes)
                 }
-            case .popularEventListBySportTypeDate(let sportType, let events):
-                if let subscriber = self.subscriberForType[content.code],
-                   let sport = SportRadarModelMapper.sportType(fromInternalSportType: sportType)
-                {
-                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-                    subscriber.popularEventListBySportTypeDate(forSportType: sport, withEvents: [eventsGroup])
-                }
-            case .upcomingEventListBySportTypeDate(let sportType, let events):
-                if let subscriber = self.subscriberForType[content.code],
-                   let sport = SportRadarModelMapper.sportType(fromInternalSportType: sportType)
-                {
-                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-                    subscriber.upcomingEventListBySportTypeDate(forSportType: sport, withEvents: [eventsGroup])
-                }
-//            case .eventListBySportTypeDate(let sportType, let events):
+//            case .popularEventListBySportTypeDate(let sportType, let events):
 //                if let subscriber = self.subscriberForType[content.code],
 //                   let sport = SportRadarModelMapper.sportType(fromInternalSportType: sportType)
 //                {
 //                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-//                    subscriber.eventListBySportTypeDate(forSportType: sport, withEvents: [eventsGroup])
+//                    subscriber.popularEventListBySportTypeDate(forSportType: sport, withEvents: [eventsGroup])
 //                }
+//            case .upcomingEventListBySportTypeDate(let sportType, let events):
+//                if let subscriber = self.subscriberForType[content.code],
+//                   let sport = SportRadarModelMapper.sportType(fromInternalSportType: sportType)
+//                {
+//                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
+//                    subscriber.upcomingEventListBySportTypeDate(forSportType: sport, withEvents: [eventsGroup])
+//                }
+            case .eventListBySportTypeDate(let sportType, let events):
+                if let subscriber = self.subscriberForType[content.code],
+                   let sport = SportRadarModelMapper.sportType(fromInternalSportType: sportType)
+                {
+                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
+                    subscriber.eventListBySportTypeDate(forSportType: sport, withEvents: [eventsGroup])
+                }
             }
             
         case .unknown:

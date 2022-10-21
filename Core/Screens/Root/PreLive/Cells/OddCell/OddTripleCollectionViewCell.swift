@@ -432,6 +432,16 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
             self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
+            // Check for SportRadar invalid odd
+            if !outcome.bettingOffer.value.isNaN {
+            self.leftOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
+            }
+            else {
+                self.leftBaseView.isUserInteractionEnabled = false
+                self.leftBaseView.alpha = 0.5
+                self.leftOddValueLabel.text = "-"
+            }
+
             self.leftOddButtonSubscriber = store.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                 .compactMap({ $0 })
                 .receive(on: DispatchQueue.main)
@@ -475,6 +485,16 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
             self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
+            // Check for SportRadar invalid odd
+            if !outcome.bettingOffer.value.isNaN {
+            self.middleOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
+            }
+            else {
+                self.middleBaseView.isUserInteractionEnabled = false
+                self.middleBaseView.alpha = 0.5
+                self.middleOddValueLabel.text = "-"
+            }
+
             self.middleOddButtonSubscriber = store.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                 .compactMap({ $0 })
                 .receive(on: DispatchQueue.main)
@@ -517,6 +537,16 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
             self.rightOutcome = outcome
 
             self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+
+            // Check for SportRadar invalid odd
+            if !outcome.bettingOffer.value.isNaN {
+            self.rightOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
+            }
+            else {
+                self.rightBaseView.isUserInteractionEnabled = false
+                self.rightBaseView.alpha = 0.5
+                self.rightOddValueLabel.text = "-"
+            }
 
             self.rightOddButtonSubscriber = store.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                 .compactMap({ $0 })

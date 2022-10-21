@@ -66,6 +66,11 @@ class SportSelectionViewController: UIViewController {
         self.setupWithTheme()
     }
 
+    deinit {
+        print("SPORT SELECTION DEINIT")
+        Env.serviceProvider.unsubscribeAllSportTypes()
+    }
+
     func commonInit() {
         
         self.activityIndicatorView.isHidden = true

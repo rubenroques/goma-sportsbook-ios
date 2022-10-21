@@ -602,7 +602,7 @@ class PreLiveEventsViewModel: NSObject {
 
         let dateRangeId = self.getDateRangeId()
 
-        self.popularMatchesPublisher = Env.serviceProvider.subscribePopularMatches(forSportType: sportType, dateRangeId: dateRangeId, sortType: "T")?
+        self.popularMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType, dateRangeId: dateRangeId, sortType: "T")?
             .sink(receiveCompletion: { completion in
                 print("Env.serviceProvider.subscribePopularMatches completed \(completion)")
                 switch completion {
@@ -675,7 +675,7 @@ class PreLiveEventsViewModel: NSObject {
     }
 
     private func unsubscribePopularMatches() {
-        Env.serviceProvider.unsubscribePopularMatches()
+        Env.serviceProvider.unsubscribePreLiveMatches()
     }
 
     private func fetchOutrightCompetitions() {
@@ -760,7 +760,7 @@ class PreLiveEventsViewModel: NSObject {
 
         let dateRangeId = self.getDateRangeId()
 
-        self.todayMatchesPublisher = Env.serviceProvider.subscribePopularMatches(forSportType: sportType, dateRangeId: dateRangeId, sortType: "D")?
+        self.todayMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType, dateRangeId: dateRangeId, sortType: "D")?
             .sink(receiveCompletion: { completion in
                 print("Env.serviceProvider.subscribeUpcomingMatches completed \(completion)")
                 switch completion {
@@ -842,7 +842,7 @@ class PreLiveEventsViewModel: NSObject {
 
     private func unsubscribeUpcomingMatches() {
 
-        Env.serviceProvider.unsubscribeUpcomingMatches()
+        Env.serviceProvider.unsubscribePreLiveMatches()
     }
 
     func fetchCompetitionsFilters() {

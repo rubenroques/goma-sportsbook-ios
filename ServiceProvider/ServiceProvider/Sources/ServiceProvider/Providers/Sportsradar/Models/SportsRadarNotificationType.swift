@@ -65,27 +65,27 @@ extension SportRadarModels {
                         let sportsTypes: [SportRadarModels.SportType] = try firstContentContainer.decode([SportRadarModels.SportType].self, forKey: .change)
 
                         content = .sportTypeByDate(sportsTypes: sportsTypes)
-//                    case .eventListBySportTypeDate:
+                    case .eventListBySportTypeDate:
+                        let events: [SportRadarModels.Event] = try firstContentContainer.decode([SportRadarModels.Event].self, forKey: .change)
+                        guard let sportId = contentIdsArray.first else { throw SportRadarError.unkownContentId }
+
+                        let sportType = try SportRadarModels.SportType.init(id: sportId)
+
+                        content = .eventListBySportTypeDate(sportType: sportType, events: events)
+//                    case .popularEventListBySportTypeDate:
 //                        let events: [SportRadarModels.Event] = try firstContentContainer.decode([SportRadarModels.Event].self, forKey: .change)
 //                        guard let sportId = contentIdsArray.first else { throw SportRadarError.unkownContentId }
 //
 //                        let sportType = try SportRadarModels.SportType.init(id: sportId)
 //
-//                        content = .eventListBySportTypeDate(sportType: sportType, events: events)
-                    case .popularEventListBySportTypeDate:
-                        let events: [SportRadarModels.Event] = try firstContentContainer.decode([SportRadarModels.Event].self, forKey: .change)
-                        guard let sportId = contentIdsArray.first else { throw SportRadarError.unkownContentId }
-
-                        let sportType = try SportRadarModels.SportType.init(id: sportId)
-
-                        content = .popularEventListBySportTypeDate(sportType: sportType, events: events)
-                    case .upcomingEventListBySportTypeDate:
-                        let events: [SportRadarModels.Event] = try firstContentContainer.decode([SportRadarModels.Event].self, forKey: .change)
-                        guard let sportId = contentIdsArray.first else { throw SportRadarError.unkownContentId }
-
-                        let sportType = try SportRadarModels.SportType.init(id: sportId)
-
-                        content = .upcomingEventListBySportTypeDate(sportType: sportType, events: events)
+//                        content = .popularEventListBySportTypeDate(sportType: sportType, events: events)
+//                    case .upcomingEventListBySportTypeDate:
+//                        let events: [SportRadarModels.Event] = try firstContentContainer.decode([SportRadarModels.Event].self, forKey: .change)
+//                        guard let sportId = contentIdsArray.first else { throw SportRadarError.unkownContentId }
+//
+//                        let sportType = try SportRadarModels.SportType.init(id: sportId)
+//
+//                        content = .upcomingEventListBySportTypeDate(sportType: sportType, events: events)
                     }
                     self = .contentChanges(content: content)
                 }
