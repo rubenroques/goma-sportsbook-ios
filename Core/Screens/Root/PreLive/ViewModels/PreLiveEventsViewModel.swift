@@ -270,6 +270,7 @@ class PreLiveEventsViewModel: NSObject {
             })
             .store(in: &cancellables)
 
+
     }
 
     func fetchData() {
@@ -601,7 +602,6 @@ class PreLiveEventsViewModel: NSObject {
     private func fetchPopularMatches() {
 
         self.isLoadingPopularList.send(true)
-        self.isLoadingEvents.send(true)
 
         guard
             let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
@@ -627,6 +627,7 @@ class PreLiveEventsViewModel: NSObject {
                 switch subscribableContent {
                 case .connected:
                     print("Connected to ws")
+                    self.isLoadingEvents.send(true)
                 case .content(let eventsGroups):
                     self.popularMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
                     self.isLoadingPopularList.send(false)
@@ -763,8 +764,7 @@ class PreLiveEventsViewModel: NSObject {
     private func fetchTodayMatches(withFilter: Bool = false, timeRange: String = "") {
 
         self.isLoadingTodayList.send(true)
-        self.isLoadingEvents.send(true)
-        
+
         guard
             let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
         else {return}
@@ -788,6 +788,8 @@ class PreLiveEventsViewModel: NSObject {
                 switch subscribableContent {
                 case .connected:
                     print("Connected to ws")
+                    self.isLoadingEvents.send(true)
+
                 case .content(let eventsGroups):
                     self.todayMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
                     self.isLoadingTodayList.send(false)
