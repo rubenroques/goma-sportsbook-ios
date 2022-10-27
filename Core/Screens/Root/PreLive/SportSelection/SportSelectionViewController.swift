@@ -293,13 +293,23 @@ class SportSelectionViewController: UIViewController {
         if let todayDateYear = todayDateComponents.year,
            let todayDateMonth = todayDateComponents.month,
            let todayDateDay = todayDateComponents.day {
-            todayDateId = "\(todayDateYear)\(todayDateMonth)\(todayDateDay)"
+            if todayDateDay < 10 {
+                todayDateId = "\(todayDateYear)\(todayDateMonth)\(String(format: "%02d", todayDateDay))"
+            }
+            else {
+                todayDateId = "\(todayDateYear)\(todayDateMonth)\(todayDateDay)"
+            }
         }
 
         if let maxDateYear = maxDateComponents.year,
            let maxDateMonth = maxDateComponents.month,
            let maxDateDay = maxDateComponents.day {
-            maxDateId = "\(maxDateYear)\(maxDateMonth)\(maxDateDay)"
+            if maxDateDay < 10 {
+                maxDateId = "\(maxDateYear)\(maxDateMonth)\(String(format: "%02d", maxDateDay))"
+            }
+            else {
+                maxDateId = "\(maxDateYear)\(maxDateMonth)\(maxDateDay)"
+            }
         }
 
         let dateRangeId = "\(todayDateId)0000/\(maxDateId)2359"

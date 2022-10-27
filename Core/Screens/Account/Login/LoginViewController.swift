@@ -65,6 +65,31 @@ class LoginViewController: UIViewController {
 //            .store(in: &cancellables)
         self.loginButton.isEnabled = false
 
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapLoginLogo))
+        self.logoImageView.isUserInteractionEnabled = true
+        self.logoImageView.addGestureRecognizer(tapGestureRecognizer)
+
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressLoginLogo))
+        self.logoImageView.addGestureRecognizer(longPressGestureRecognizer)
+
+    }
+
+    @objc func didTapLoginLogo() {
+        let emailVerificationCodeViewModel = EmailVerificationCodeViewModel()
+
+        let emailVerificationCodeViewController = EmailVerificationCodeViewController(viewModel: emailVerificationCodeViewModel)
+
+        self.navigationController?.pushViewController(emailVerificationCodeViewController, animated: true)
+    }
+
+    @objc func didLongPressLoginLogo(_ sender: UILongPressGestureRecognizer) {
+        if sender.state == .began {
+            let smsVerificationCodeViewModel = CodeVerificationViewModel(email: "geral@gomadevelopment.pt")
+
+            let smsVerificationCodeViewController = CodeVerificationViewController(viewModel: smsVerificationCodeViewModel)
+
+            self.navigationController?.pushViewController(smsVerificationCodeViewController, animated: true)
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
