@@ -18,10 +18,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_horizontal_center" translatesAutoresizingMaskIntoConstraints="NO" id="8gj-oC-TVC">
-                                <rect key="frame" x="127" y="348" width="160" height="160"/>
+                                <rect key="frame" x="135.66666666666666" y="356.66666666666669" width="142.99999999999997" height="143"/>
                                 <constraints>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="1000" id="Pki-7r-qsz"/>
                                     <constraint firstAttribute="width" secondItem="8gj-oC-TVC" secondAttribute="height" multiplier="15:15" id="Q4A-tx-fqE"/>
-                                    <constraint firstAttribute="width" constant="160" id="SqJ-Xm-LNE"/>
                                 </constraints>
                             </imageView>
                         </subviews>
@@ -30,6 +30,7 @@
                         <constraints>
                             <constraint firstItem="8gj-oC-TVC" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Q8X-4Y-yQK"/>
                             <constraint firstItem="8gj-oC-TVC" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-20" id="VqU-HY-Rie"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="8gj-oC-TVC" secondAttribute="trailing" constant="50" id="qK4-Ef-GEe"/>
                         </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
