@@ -11,6 +11,7 @@ import ServiceProvider
 
 enum UserSessionError: Error {
     case invalidEmailPassword
+    case restrictedCountry(errorMessage: String)
     case serverError
     case quickSignUpIncomplete
 }
