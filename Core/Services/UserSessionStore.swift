@@ -10,6 +10,7 @@ import Combine
 
 enum UserSessionError: Error {
     case invalidEmailPassword
+    case restrictedCountry(errorMessage: String)
     case serverError
 }
 
@@ -158,6 +159,8 @@ class UserSessionStore {
                 switch error {
                 case let .requestError(message) where message.contains("check your username and password"):
                     return .invalidEmailPassword
+                case let .requestError(message) where message.contains("not allowed to login"):
+                    return .restrictedCountry(errorMessage: message)
                 default:
                     return .serverError
                 }

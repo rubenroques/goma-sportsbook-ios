@@ -279,10 +279,14 @@ class LoginViewController: UIViewController {
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
-                    if case error = UserSessionError.invalidEmailPassword {
+
+                    switch error {
+                    case .invalidEmailPassword:
                         self.showWrongPasswordStatus()
-                    }
-                    else {
+
+                    case .restrictedCountry(let errorMessage):
+                        self.showServerErrorStatus(errorMessage: errorMessage)
+                    case .serverError:
                         self.showServerErrorStatus()
                     }
                 case .finished:
@@ -368,12 +372,22 @@ class LoginViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    private func showServerErrorStatus() {
-        let alert = UIAlertController(title: localized("login_error_title"),
-                                      message: localized("server_error_message"),
-                                      preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+    private func showServerErrorStatus(errorMessage: String? = nil) {
+        if let errorMessage = errorMessage {
+            let alert = UIAlertController(title: localized("login_error_title"),
+                                          message: errorMessage,
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else {
+            let alert = UIAlertController(title: localized("login_error_title"),
+                                          message: localized("server_error_message"),
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+
     }
 
     @IBAction private func didTapRecoverPassword() {
