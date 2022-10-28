@@ -158,9 +158,7 @@ class SportSelectionViewController: UIViewController {
         self.allSportsPublisher?.cancel()
         self.allSportsPublisher = nil
 
-        let dateRangeId = self.getDateRangeId()
-
-        self.allSportsPublisher = Env.serviceProvider.allSportTypes(dateRangeId: dateRangeId)?
+        self.allSportsPublisher = Env.serviceProvider.allSportTypes()?
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 print("Env.serviceProvider.allSportTypes completed \(completion)")
@@ -276,45 +274,6 @@ class SportSelectionViewController: UIViewController {
         self.activityIndicatorView.isHidden = true
 
         self.collectionView.reloadData()
-    }
-
-    private func getDateRangeId() -> String {
-        let calendar = Calendar.current
-
-        let todayDate = Date()
-        let todayDateComponents = calendar.dateComponents([.year, .month, .day], from: todayDate)
-
-        let maxDate = Calendar.current.date(byAdding: .day, value: 6, to: todayDate) ?? Date()
-        let maxDateComponents = calendar.dateComponents([.year, .month, .day], from: maxDate)
-
-        var todayDateId = ""
-        var maxDateId = ""
-
-        if let todayDateYear = todayDateComponents.year,
-           let todayDateMonth = todayDateComponents.month,
-           let todayDateDay = todayDateComponents.day {
-            if todayDateDay < 10 {
-                todayDateId = "\(todayDateYear)\(todayDateMonth)\(String(format: "%02d", todayDateDay))"
-            }
-            else {
-                todayDateId = "\(todayDateYear)\(todayDateMonth)\(todayDateDay)"
-            }
-        }
-
-        if let maxDateYear = maxDateComponents.year,
-           let maxDateMonth = maxDateComponents.month,
-           let maxDateDay = maxDateComponents.day {
-            if maxDateDay < 10 {
-                maxDateId = "\(maxDateYear)\(maxDateMonth)\(String(format: "%02d", maxDateDay))"
-            }
-            else {
-                maxDateId = "\(maxDateYear)\(maxDateMonth)\(maxDateDay)"
-            }
-        }
-
-        let dateRangeId = "\(todayDateId)0000/\(maxDateId)2359"
-
-        return dateRangeId
     }
 
     @IBAction private func cancelAction() {
