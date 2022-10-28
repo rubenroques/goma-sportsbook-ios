@@ -605,3 +605,5 @@ Terms of use, Privacy Policy and EULA";
 "accept" = "Accept";
 "reject" = "Reject";
 "read_all" = "Read all";
+
+"email_verification" = "Email Verification";
