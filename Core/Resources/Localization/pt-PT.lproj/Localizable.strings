@@ -42,6 +42,7 @@
 "invalid_email" = "This email format appears to be invalid.";
 "email_already_registered" = "This email address is already registered.";
 "username_already_registered" = "This username is already registered.";
+"invalid_username" = "This email format appears to be invalid.";
 "forgot" = "Forgot Password?";
 "continue_" = "Continue";
 
@@ -300,6 +301,7 @@ Terms of use, Privacy Policy and EULA";
 "wallet_error" = "Wallet Error";
 "wallet_error_message" = "There was an error trying to get your wallet settings. Try again later.";
 "email_address_or_username" = "Email or Username";
+"email_address_placeholder" = "Email";
 "app_version_profile" = "App Version %s (%s)\nSportsbook® All Rights Reserved";
 "daily" = "Daily";
 "weekly" = "Weekly";

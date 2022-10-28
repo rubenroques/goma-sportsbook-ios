@@ -15,7 +15,7 @@ enum GomaGamingService {
     case modules
     
     case login(username: String, password: String, deviceToken: String)
-    case simpleRegister(username: String, email: String, phoneCountryCode: String, phone: String, birthDate: String, userProviderId: String, deviceToken: String)
+    case simpleRegister(username: String, email: String, phoneCountryCode: String, phone: String, birthDate: Date, userProviderId: String, deviceToken: String)
     
     case updateProfile(name: String)
     case modalPopUpDetails

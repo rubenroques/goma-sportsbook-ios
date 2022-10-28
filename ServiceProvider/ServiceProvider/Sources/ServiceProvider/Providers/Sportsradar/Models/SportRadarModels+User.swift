@@ -110,28 +110,6 @@ extension SportRadarModels {
             self.fieldExist = fieldExist
         }
     }
-    
-    // MARK: - QuickSignUpResponse
-    struct QuickSignUpResponse: Codable {
-        let status: String
-        let errors: [ValidationError]?
-
-        enum CodingKeys: String, CodingKey {
-            case status = "status"
-            case errors = "errors"
-        }
-    }
-
-    // MARK: - Error
-    struct ValidationError: Codable {
-        let field: String
-        let error: String
-
-        enum CodingKeys: String, CodingKey {
-            case field = "field"
-            case error = "error"
-        }
-    }
 
     struct GetCountriesResponse: Codable {
         let status: String
@@ -166,4 +144,27 @@ extension SportRadarModels {
         }
     }
 
+}
+
+extension SportRadarModels {
+    
+    struct StatusResponse: Codable {
+        let status: String
+        let errors: [FieldError]?
+
+        enum CodingKeys: String, CodingKey {
+            case status = "status"
+            case errors = "errors"
+        }
+    }
+
+    struct FieldError: Codable {
+        let field: String
+        let error: String
+
+        enum CodingKeys: String, CodingKey {
+            case field = "field"
+            case error = "error"
+        }
+    }
 }

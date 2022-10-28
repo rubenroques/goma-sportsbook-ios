@@ -325,7 +325,10 @@ class SimpleRegisterDetailsViewController: UIViewController {
     @IBAction private func signUpAction() {
 
         let username = usernameHeaderTextView.text
-        let birthDate = dateHeaderTextView.text // Must be yyyy-MM-dd
+        
+        let birthDateString = dateHeaderTextView.text // Must be yyyy-MM-dd
+        let birthDate = self.getDateFromTextFieldString(string: birthDateString)
+        
         let mobile = phoneHeaderTextView.text
         let email = emailHeaderTextView.text
         let password = passwordHeaderTextView.text
@@ -353,19 +356,62 @@ class SimpleRegisterDetailsViewController: UIViewController {
         if !checkDateBirth() {
             return
         }
+//
+//        let form = EveryMatrix.SimpleRegisterForm(email: email,
+//                                                  username: username,
+//                                                  password: password,
+//                                                  birthDate: birthDate,
+//                                                  mobilePrefix: mobilePrefixTextual,
+//                                                  mobileNumber: mobile,
+//                                                  emailVerificationURL: emailVerificationURL,
+//                                                  countryCode: selectedCountryISO,
+//                                                  currencyCode: currency)
 
-        let form = EveryMatrix.SimpleRegisterForm(email: email,
-                                                  username: username,
-                                                  password: password,
-                                                  birthDate: birthDate,
-                                                  mobilePrefix: mobilePrefixTextual,
-                                                  mobileNumber: mobile,
-                                                  emailVerificationURL: emailVerificationURL,
-                                                  countryCode: selectedCountryISO,
-                                                  currencyCode: currency)
+        let form = ServiceProvider.SimpleSignUpForm.init(email: email,
+                                                         username: username,
+                                                         password: password,
+                                                         birthDate: birthDate,
+                                                         mobilePrefix: mobilePrefixTextual,
+                                                         mobileNumber: mobile,
+                                                         countryIsoCode: selectedCountryISO,
+                                                         currencyCode: currency)
         
         self.showLoadingSpinner()
-        self.registerUser(form: form)
+
+        Env.userSessionStore.registerUser(form: form)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                self?.hideLoadingSpinner()
+                switch completion {
+                case .failure(let error):
+                    switch error {
+                    case .usernameInvalid:
+                        self?.showUsernameInvalidErrorStatus()
+                    case .emailInvalid:
+                        self?.showEmailInavalidErrorStatus()
+                    case .passwordInvalid:
+                        self?.showServerErrorStatus()
+                    case .usernameAlreadyUsed:
+                        self?.showUsernameTakenErrorStatus()
+                    case .emailAlreadyUsed:
+                        self?.showEmailTakenErrorStatus()
+                    case .passwordWeak:
+                        self?.showPasswordTooWeakErrorStatus()
+                    case .serverError:
+                        self?.showServerErrorStatus()
+                    }
+                    AnalyticsClient.sendEvent(event: .userSignUpFail)
+                case .finished:
+                    ()
+                }
+            } receiveValue: { [weak self] userCreated in
+                if userCreated {
+                    Logger.log("User registered \(form.email)")
+                    AnalyticsClient.sendEvent(event: .userSignUpSuccess)
+                    self?.pushRegisterNextViewController(email: form.email)
+                }
+            }
+            .store(in: &cancellables)
 
     }
 
@@ -396,9 +442,8 @@ class SimpleRegisterDetailsViewController: UIViewController {
     }
 
     func pushRegisterNextViewController(email: String) {
-        let simpleRegisterEmailSentViewController = SimpleRegisterEmailSentViewController()
-        simpleRegisterEmailSentViewController.emailUser = email
-        self.navigationController?.pushViewController(simpleRegisterEmailSentViewController, animated: true)
+        let codeVerificationViewController = CodeVerificationViewController(viewModel: CodeVerificationViewModel(email: email))
+        self.navigationController?.pushViewController(codeVerificationViewController, animated: true)
     }
 
     @objc func didTapBackground() {
@@ -454,9 +499,22 @@ extension SimpleRegisterDetailsViewController {
         self.disableSignUpButton()
     }
 
+    func showUsernameInvalidErrorStatus() {
+        self.usernameHeaderTextView.showErrorOnField(text: localized("invalid_username"),
+                                                     color: UIColor.App.alertError)
+        self.disableSignUpButton()
+    }
+    
     func showEmailTakenErrorStatus() {
         self.usernameHeaderTextView
             .showErrorOnField(text: localized("email_already_registered"),
+                              color: UIColor.App.alertError)
+        self.disableSignUpButton()
+    }
+    
+    func showEmailInavalidErrorStatus() {
+        self.usernameHeaderTextView
+            .showErrorOnField(text: localized("invalid_email"),
                               color: UIColor.App.alertError)
         self.disableSignUpButton()
     }
@@ -480,39 +538,6 @@ extension SimpleRegisterDetailsViewController {
 
 // Network Requests
 extension SimpleRegisterDetailsViewController {
-
-    private func registerUser(form: EveryMatrix.SimpleRegisterForm) {
-        
-        Logger.log("Sent user register \(form.email)")
-        
-        Env.userSessionStore.registerUser(form: form)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                self?.hideLoadingSpinner()
-                switch completion {
-                case .failure(let error):
-                    switch error {
-                    case let .requestError(message) where message.lowercased().contains("username is already taken"):
-                        self?.showUsernameTakenErrorStatus()
-                    case let .requestError(message) where message.lowercased().contains("email already exists"):
-                        self?.showEmailTakenErrorStatus()
-                    case let .requestError(message) where message.lowercased().contains("your password is too simple"):
-                        self?.showPasswordTooWeakErrorStatus()
-                    default:
-                        self?.showServerErrorStatus()
-                    }
-                    AnalyticsClient.sendEvent(event: .userSignUpFail)
-                case .finished:
-                    ()
-                }
-            } receiveValue: { [weak self] _ in
-                Logger.log("User registered \(form.email)")
-                AnalyticsClient.sendEvent(event: .userSignUpSuccess)
-                self?.pushRegisterNextViewController(email: form.email)
-            }
-            .store(in: &cancellables)
-        
-    }
 
     private func requestValidUsernameCheck(_ username: String) {
         Env.everyMatrixClient

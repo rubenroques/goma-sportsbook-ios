@@ -109,12 +109,24 @@ public extension UserProfile {
 }
 
 public struct SimpleSignUpForm {
-    let email: String
-    let username: String
-    let password: String
-    let birthDate: Date
-    let mobilePrefix: String
-    let mobileNumber: String
-    let countryIsoCode: String
-    let currencyCode: String
+    public var email: String
+    public var username: String
+    public var password: String
+    public var birthDate: Date
+    public var mobilePrefix: String
+    public var mobileNumber: String
+    public var countryIsoCode: String
+    public var currencyCode: String
+    
+    public init(email: String, username: String, password: String, birthDate: Date, mobilePrefix: String, mobileNumber: String, countryIsoCode: String, currencyCode: String) {
+        self.email = email
+        self.username = username
+        self.password = password
+        self.birthDate = birthDate
+        self.mobilePrefix = mobilePrefix
+        self.mobileNumber = mobileNumber
+        self.countryIsoCode = countryIsoCode
+        self.currencyCode = currencyCode
+    }
+    
 }

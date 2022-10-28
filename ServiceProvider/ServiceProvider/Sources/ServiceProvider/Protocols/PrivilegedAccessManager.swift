@@ -30,10 +30,6 @@ protocol PrivilegedAccessManager {
     func getCountries() -> AnyPublisher<[Country], ServiceProviderError>
     func getCurrentCountry() -> AnyPublisher<Country?, ServiceProviderError>
         
-//    func register()
-//    func recoverPassword()
-//    func changePassword()
-//    func getUserProfile() -> AnyPublisher<UserProfile, ServiceProviderError>
-//    func getProfileStatus()
+    func signupConfirmation(_ email: String, confirmationCode: String) -> AnyPublisher<Bool, ServiceProviderError>
 
 }

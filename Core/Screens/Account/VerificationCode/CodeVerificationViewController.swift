@@ -7,19 +7,22 @@
 
 import UIKit
 import Combine
+import ServiceProvider
 
 class CodeVerificationViewModel {
 
     var email: String
-
+    
+    private var cancellables = Set<AnyCancellable>()
+    
     init(email: String) {
         self.email = email
     }
 
-    func submitVerificationCode(code: String) {
-        // TO-DO: Process submit code
-        print("SUBMIT: \(self.email) - \(code)")
+    func submitVerificationCode(code: String) -> AnyPublisher<Bool, ServiceProviderError> {
+        return Env.serviceProvider.signupConfirmation(self.email, confirmationCode: code)
     }
+    
 }
 
 class CodeVerificationViewController: UIViewController {
@@ -126,7 +129,6 @@ class CodeVerificationViewController: UIViewController {
         self.codeTextField.textPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] codeText in
-
                 if codeText != "" {
                     self?.doneButton.isEnabled = true
                 }
@@ -143,15 +145,26 @@ class CodeVerificationViewController: UIViewController {
     }
 
     @objc func didTapDoneButton() {
-        print("SUBMIT CODE!")
-
+        self.doneButton.isEnabled = false
         let code = self.codeTextField.text
 
         self.viewModel.submitVerificationCode(code: code)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                print("submitVerificationCode ", completion)
+                if case .failure = completion {
+                    self?.doneButton.isEnabled = false
+                }
+            } receiveValue: { [weak self] success in
+                if success {
+                    self?.triggerPendingLogin()
+                }
+            }
+            .store(in: &cancellables)
     }
 
     @objc func didTapResendButton() {
-        print("RESEND EMAIL")
+        
     }
 
     @objc func didTapBackground() {
@@ -159,6 +172,31 @@ class CodeVerificationViewController: UIViewController {
 
         self.codeTextField.resignFirstResponder()
     }
+    
+    func triggerPendingLogin() {
+        Env.userSessionStore.triggerPendingLoginAfterRegister()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                print("triggerPendingLoginAfterRegister ", completion)
+                self?.doneButton.isEnabled = false
+            } receiveValue: { [weak self] success in
+                if success {
+                    self?.pushNextViewController()
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    func pushNextViewController() {
+        if self.isModal {
+            self.dismiss(animated: true, completion: nil)
+        }
+        else {
+            let mainScreenViewController = Router.mainScreenViewController()
+            self.navigationController?.pushViewController(mainScreenViewController, animated: true)
+        }
+    }
+    
 }
 
 extension CodeVerificationViewController {
@@ -235,7 +273,7 @@ extension CodeVerificationViewController {
         let textField = HeaderTextFieldView()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.setSecureField(false)
-        textField.setKeyboardType(.default)
+        textField.setKeyboardType(.numberPad)
         textField.setPlaceholderText(localized("code"))
         textField.headerLabel.font = AppFont.with(type: .semibold, size: 16)
         return textField

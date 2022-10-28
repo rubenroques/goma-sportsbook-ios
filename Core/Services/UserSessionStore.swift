@@ -15,6 +15,16 @@ enum UserSessionError: Error {
     case quickSignUpIncomplete
 }
 
+enum RegisterUserError: Error {
+    case usernameInvalid
+    case emailInvalid
+    case passwordInvalid
+    case usernameAlreadyUsed
+    case emailAlreadyUsed
+    case passwordWeak
+    case serverError
+}
+
 class UserSessionStore {
 
     var cancellables = Set<AnyCancellable>()
@@ -32,6 +42,8 @@ class UserSessionStore {
     var isUserProfileIncomplete = CurrentValueSubject<Bool, Never>(true)
     var isUserEmailVerified = CurrentValueSubject<Bool, Never>(false)
 
+    private var pendingSignUpUserForm: ServiceProvider.SimpleSignUpForm?
+    
     init() {
 
         NotificationCenter.default.publisher(for: .socketConnected)
@@ -185,33 +197,74 @@ class UserSessionStore {
         return publisher
     }
     
-    func registerUser(form: EveryMatrix.SimpleRegisterForm) -> AnyPublisher<Bool, EveryMatrix.APIError> {
-        return Env.everyMatrixClient
-            .simpleRegister(form: form)
-            .map { _ in return true }
-            .handleEvents(receiveOutput: { registered in
-                if registered {
-                    self.triggerLoginOnRegister(form: form)
+    func registerUser(form: ServiceProvider.SimpleSignUpForm) -> AnyPublisher<Bool, RegisterUserError> {
+        return Env.serviceProvider.simpleSignUp(form: form)
+            .mapError { (error: ServiceProviderError) -> RegisterUserError in
+                switch error {
+                case ServiceProviderError.invalidSignUpUsername:
+                    return RegisterUserError.usernameInvalid
+                case ServiceProviderError.invalidSignUpEmail:
+                    return RegisterUserError.emailInvalid
+                case ServiceProviderError.invalidSignUpPassword:
+                    return RegisterUserError.passwordInvalid
+                case ServiceProviderError.invalidResponse:
+                    return RegisterUserError.serverError
+                default:
+                    return RegisterUserError.serverError
                 }
-            })
-            .eraseToAnyPublisher()
+            }
+            .handleEvents(receiveOutput: { [weak self] registered in
+                self?.pendingSignUpUserForm = form
+            }).eraseToAnyPublisher()
+        
+//        Env.everyMatrixClient
+//            .simpleRegister(form: form)
+//            .map { _ in return true }
+//            .handleEvents(receiveOutput: { registered in
+//                if registered {
+//                    self.triggerLoginOnRegister(form: form)
+//                }
+//            })
+//            .eraseToAnyPublisher()
     }
 
-    private func triggerLoginOnRegister(form: EveryMatrix.SimpleRegisterForm) {
-        self.login(withUsername: form.username, password: form.password)
-            .map { String($0.userId) }
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    self?.logout()
-                case .finished:
-                    ()
+    func triggerPendingLoginAfterRegister() -> AnyPublisher<Bool, UserSessionError> {
+        if let pendingSignUpUserForm = self.pendingSignUpUserForm {
+            return self.login(withUsername: pendingSignUpUserForm.username, password: pendingSignUpUserForm.password)
+                .handleEvents(receiveOutput: { userSession in
+                    self.signUpSimpleGomaAPI(form: pendingSignUpUserForm, userId: userSession.userId)
+                }, receiveCompletion: { [weak self] completion in
+                    switch completion {
+                    case .failure:
+                        self?.logout()
+                    case .finished:
+                        ()
+                    }
+                })
+                .flatMap { (userSession: UserSession) -> AnyPublisher<Bool, UserSessionError> in
+                    return Just(true).setFailureType(to: UserSessionError.self).eraseToAnyPublisher()
                 }
-            }, receiveValue: { userId in
-                self.registrationOnGomaAPI(form: form, userId: userId)
-            })
-            .store(in: &cancellables)
+                .eraseToAnyPublisher()
+        }
+        else {
+            return Just(false).setFailureType(to: UserSessionError.self).eraseToAnyPublisher()
+        }
     }
+//    private func triggerLoginAfterRegister(form: ServiceProvider.SimpleSignUpForm) {
+//        self.login(withUsername: form.username, password: form.password)
+//            .map { String($0.userId) }
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure:
+//                    self?.logout()
+//                case .finished:
+//                    ()
+//                }
+//            }, receiveValue: { userId in
+//                self.signUpSimpleGomaAPI(form: form, userId: userId)
+//            })
+//            .store(in: &cancellables)
+//    }
 
 }
 
@@ -446,7 +499,7 @@ extension UserSessionStore {
             .store(in: &cancellables)
     }
 
-    func registrationOnGomaAPI(form: EveryMatrix.SimpleRegisterForm, userId: String) {
+    func signUpSimpleGomaAPI(form: ServiceProvider.SimpleSignUpForm, userId: String) {
         let deviceId = Env.deviceId
         let userRegisterForm = UserRegisterForm(username: form.username,
                                                 email: form.email,
@@ -460,7 +513,7 @@ extension UserSessionStore {
             .replaceError(with: MessageNetworkResponse.failed)
             .sink { [weak self] response in
                 self?.loginGomaAPI(username: form.username, password: userId)
-                print("registrationOnGomaAPI \(response)")
+                print("signUpSimpleGomaAPI \(response)")
             }
             .store(in: &cancellables)
     }

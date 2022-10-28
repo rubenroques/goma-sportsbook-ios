@@ -5683,6 +5683,8 @@
 		A9C82FD026F9E14800059DCD /* PopUpPromotionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */; };
 		A9C82FD126F9F16700059DCD /* PopUpPromotionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FCD26F9E0F900059DCD /* PopUpPromotionView.swift */; };
 		A9C82FD226F9F52E00059DCD /* PopUpPromotionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */; };
+		A9D5BB7028FD6769001B0E13 /* LaunchScreen-GOMASportRadar.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9C3438028F9A7DC0055360B /* LaunchScreen-GOMASportRadar.storyboard */; };
+		A9D5BB7228FD688F001B0E13 /* GOMASportRadar-Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A9C3438B28F9A7DC0055360B /* GOMASportRadar-Assets.xcassets */; };
 		A9D5BB7F290A9CEC001B0E13 /* EmailVerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D5BB7E290A9CEC001B0E13 /* EmailVerificationCodeViewController.swift */; };
 		A9D5BB80290A9CEC001B0E13 /* EmailVerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D5BB7E290A9CEC001B0E13 /* EmailVerificationCodeViewController.swift */; };
 		A9D5BB81290A9CEC001B0E13 /* EmailVerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D5BB7E290A9CEC001B0E13 /* EmailVerificationCodeViewController.swift */; };
@@ -5699,8 +5701,6 @@
 		A9D5BB8D290AD0E1001B0E13 /* CodeVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D5BB87290AD0E1001B0E13 /* CodeVerificationViewController.swift */; };
 		A9D5BB8E290AD0E1001B0E13 /* CodeVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D5BB87290AD0E1001B0E13 /* CodeVerificationViewController.swift */; };
 		A9D5BB8F290AD0E1001B0E13 /* CodeVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D5BB87290AD0E1001B0E13 /* CodeVerificationViewController.swift */; };
-		A9D5BB7028FD6769001B0E13 /* LaunchScreen-GOMASportRadar.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9C3438028F9A7DC0055360B /* LaunchScreen-GOMASportRadar.storyboard */; };
-		A9D5BB7228FD688F001B0E13 /* GOMASportRadar-Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A9C3438B28F9A7DC0055360B /* GOMASportRadar-Assets.xcassets */; };
 		A9DF8DF928DDC1D80083BF56 /* UserInfoSimpleCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DF8DF828DDC1D80083BF56 /* UserInfoSimpleCardView.swift */; };
 		A9DF8DFA28DDC1D80083BF56 /* UserInfoSimpleCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DF8DF828DDC1D80083BF56 /* UserInfoSimpleCardView.swift */; };
 		A9DF8DFB28DDC1D80083BF56 /* UserInfoSimpleCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DF8DF828DDC1D80083BF56 /* UserInfoSimpleCardView.swift */; };
@@ -5951,7 +5951,7 @@
 		450B7B2A28F58625009229E3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/LaunchScreen-SportRadar.storyboard"; sourceTree = "<group>"; };
 		450B7B2B28F58625009229E3 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "pt-PT"; path = "pt-PT.lproj/LaunchScreen-SportRadar.storyboard"; sourceTree = "<group>"; };
 		450B7B2E28F58625009229E3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		450B7B2F28F58625009229E3 /* GOMASports.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = GOMASports.entitlements; sourceTree = "<group>"; };
+		450B7B2F28F58625009229E3 /* SportRadar.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = SportRadar.entitlements; sourceTree = "<group>"; };
 		450B7B3028F58625009229E3 /* TargetVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TargetVariables.swift; sourceTree = "<group>"; };
 		450B7B3228F58625009229E3 /* SportRadar-Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "SportRadar-Assets.xcassets"; sourceTree = "<group>"; };
 		450B7B3328F58625009229E3 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
@@ -6992,7 +6992,7 @@
 			children = (
 				450B7B3C28F586F3009229E3 /* SportRadar-Info.plist */,
 				450B7B2E28F58625009229E3 /* GoogleService-Info.plist */,
-				450B7B2F28F58625009229E3 /* GOMASports.entitlements */,
+				450B7B2F28F58625009229E3 /* SportRadar.entitlements */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -16487,7 +16487,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-SportRadar";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 00705;
@@ -16513,7 +16513,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-SportRadar";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 00705;
@@ -17019,7 +17019,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-GOMASportRadar";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Clients/GOMASportRadar/Misc/GOMASportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 00703;
@@ -17046,7 +17046,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-GOMASportRadar";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Clients/GOMASportRadar/Misc/GOMASportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 00703;

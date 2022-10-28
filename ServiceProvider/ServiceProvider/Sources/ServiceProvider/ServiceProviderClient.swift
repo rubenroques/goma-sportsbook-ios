@@ -125,10 +125,8 @@ extension ServiceProviderClient {
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(outputType: UserProfile.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
-        }
-        
+        }        
         return privilegedAccessManager.login(username: username, password: password)
-        
     }
     
     public func getProfile() -> AnyPublisher<UserProfile, ServiceProviderError> {
@@ -137,20 +135,37 @@ extension ServiceProviderClient {
         else {
             return Fail(outputType: UserProfile.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
         return privilegedAccessManager.getUserProfile()
     }
     
-    public func checkEmailRegistered(_ email: String) -> AnyPublisher<Bool, ServiceProviderError> {
-        
+    public func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(outputType: Bool.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
+        return privilegedAccessManager.simpleSignUp(form: form)
+    }
         
+    public func checkEmailRegistered(_ email: String) -> AnyPublisher<Bool, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
         return privilegedAccessManager.checkEmailRegistered(email)
     }
+  
+    public func signupConfirmation(_ email: String, confirmationCode: String) -> AnyPublisher<Bool, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.signupConfirmation(email, confirmationCode: confirmationCode)
+    }
+    
+
     
 }
 

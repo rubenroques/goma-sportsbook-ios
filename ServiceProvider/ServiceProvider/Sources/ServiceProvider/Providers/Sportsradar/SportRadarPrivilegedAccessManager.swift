@@ -117,13 +117,13 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
                                                   countryIsoCode: form.countryIsoCode,
                                                   currencyCode: form.currencyCode)
         
-        let publisher: AnyPublisher<SportRadarModels.QuickSignUpResponse, ServiceProviderError> = self.networkManager.request(endpoint)
+        let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.networkManager.request(endpoint)
         
-        return publisher.flatMap({ quickSignUpResponse -> AnyPublisher<Bool, ServiceProviderError> in
-            if quickSignUpResponse.status == "SUCCESS" {
+        return publisher.flatMap({ statusResponse -> AnyPublisher<Bool, ServiceProviderError> in
+            if statusResponse.status == "SUCCESS" {
                 return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
-            else if let errors = quickSignUpResponse.errors {
+            else if let errors = statusResponse.errors {
                 if errors.contains(where: { $0.field == "username" }) {
                     return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidSignUpUsername).eraseToAnyPublisher()
                 }
@@ -137,9 +137,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
         })
         .eraseToAnyPublisher()
-        
     }
- 
     
     
     public func getCountries() -> AnyPublisher<[Country], ServiceProviderError> {
@@ -177,5 +175,18 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         }).eraseToAnyPublisher()
     }
     
-    
+    func signupConfirmation(_ email: String, confirmationCode: String) -> AnyPublisher<Bool, ServiceProviderError> {
+        let endpoint = OmegaAPIClient.signupConfirmation(email: email, confirmationCode: confirmationCode)
+        let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.networkManager.request(endpoint)
+        
+        return publisher.flatMap({ statusResponse -> AnyPublisher<Bool, ServiceProviderError> in
+            if statusResponse.status == "SUCCESS" {
+                return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+        
+    }
+
 }

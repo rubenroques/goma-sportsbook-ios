@@ -147,7 +147,7 @@ class LoginViewController: UIViewController {
         loginLabel.font = AppFont.with(type: AppFont.AppFontType.bold, size: 26)
         loginLabel.text = localized("login")
 
-        self.usernameHeaderTextFieldView.setPlaceholderText(localized("email_address_or_username"))
+        self.usernameHeaderTextFieldView.setPlaceholderText(localized("email_address_placeholder"))
         self.passwordHeaderTextFieldView.setPlaceholderText(localized("password"))
 
         self.usernameHeaderTextFieldView.highlightColor = .white
@@ -182,57 +182,56 @@ class LoginViewController: UIViewController {
         self.dismissButton.setTitle(localized("close"), for: .normal)
         self.dismissButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
-        checkPolicyLinks()
-
+        self.checkPolicyLinks()
 
         #if DEBUG
         let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
         debugLogoImageViewTap.numberOfTapsRequired = 3
-        logoImageView.isUserInteractionEnabled = true
-        logoImageView.addGestureRecognizer(debugLogoImageViewTap)
+        self.logoImageView.isUserInteractionEnabled = true
+        self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
         #endif
     }
 
     func setupWithTheme() {
         
         self.view.backgroundColor = UIColor.App.backgroundPrimary
-        skipView.backgroundColor = UIColor.App.backgroundPrimary
+        self.skipView.backgroundColor = UIColor.App.backgroundPrimary
 
-        skipButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
-        skipButton.backgroundColor = .clear
+        self.skipButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+        self.skipButton.backgroundColor = .clear
 
-        loginLabel.textColor = UIColor.App.textHeadlinePrimary
+        self.loginLabel.textColor = UIColor.App.textHeadlinePrimary
 
-        usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
-        usernameHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
+        self.usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        self.usernameHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
     
-        passwordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
-        passwordHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
+        self.passwordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        self.passwordHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
 
-        rememberView.backgroundColor = .clear
-        rememberLabel.textColor = UIColor.App.textPrimary
+        self.rememberView.backgroundColor = .clear
+        self.rememberLabel.textColor = UIColor.App.textPrimary
 
-        rememberImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        self.rememberImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
 
         if self.shouldRememberUser {
-            rememberToggleView.backgroundColor =  UIColor.App.buttonBackgroundPrimary
+            self.rememberToggleView.backgroundColor =  UIColor.App.buttonBackgroundPrimary
         }
         else {
-            rememberToggleView.backgroundColor =  UIColor.App.buttonBackgroundPrimary
+            self.rememberToggleView.backgroundColor =  UIColor.App.buttonBackgroundPrimary
         }
 
-        forgotButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+        self.forgotButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
-        loginButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
-        loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
-        loginButton.backgroundColor = .clear
-        loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
-        loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
-        loginButton.layer.cornerRadius = CornerRadius.button
-        loginButton.layer.masksToBounds = true
+        self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
+        self.loginButton.backgroundColor = .clear
+        self.loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        self.loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
+        self.loginButton.layer.cornerRadius = CornerRadius.button
+        self.loginButton.layer.masksToBounds = true
 
-        registerLabel.highlightTextLabel(fullString: localized("new_create_account"), highlightString: localized("create_account"))
+        self.registerLabel.highlightTextLabel(fullString: localized("new_create_account"), highlightString: localized("create_account"))
     }
 
     func checkPolicyLinks() {
