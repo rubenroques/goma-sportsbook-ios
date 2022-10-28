@@ -270,7 +270,6 @@ class PreLiveEventsViewModel: NSObject {
             })
             .store(in: &cancellables)
 
-
     }
 
     func fetchData() {
@@ -608,9 +607,7 @@ class PreLiveEventsViewModel: NSObject {
             let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
         else {return}
 
-        let dateRangeId = self.getDateRangeId()
-
-        self.popularMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType, dateRangeId: dateRangeId, sortType: "T")?
+        self.popularMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType, sortType: "T")?
             .sink(receiveCompletion: { completion in
                 print("Env.serviceProvider.subscribePopularMatches completed \(completion)")
                 switch completion {
@@ -770,9 +767,7 @@ class PreLiveEventsViewModel: NSObject {
             let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
         else {return}
 
-        let dateRangeId = self.getDateRangeId()
-
-        self.todayMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType, dateRangeId: dateRangeId, sortType: "D")?
+        self.todayMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType, sortType: "D")?
             .sink(receiveCompletion: { completion in
                 print("Env.serviceProvider.subscribeUpcomingMatches completed \(completion)")
                 switch completion {
@@ -1381,45 +1376,6 @@ class PreLiveEventsViewModel: NSObject {
 
     private func updateFavoriteCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
-    }
-
-    private func getDateRangeId() -> String {
-        let calendar = Calendar.current
-
-        let todayDate = Date()
-        let todayDateComponents = calendar.dateComponents([.year, .month, .day], from: todayDate)
-
-        let maxDate = Calendar.current.date(byAdding: .day, value: 6, to: todayDate) ?? Date()
-        let maxDateComponents = calendar.dateComponents([.year, .month, .day], from: maxDate)
-
-        var todayDateId = ""
-        var maxDateId = ""
-
-        if let todayDateYear = todayDateComponents.year,
-           let todayDateMonth = todayDateComponents.month,
-           let todayDateDay = todayDateComponents.day {
-            if todayDateDay < 10 {
-                todayDateId = "\(todayDateYear)\(todayDateMonth)\(String(format: "%02d", todayDateDay))"
-            }
-            else {
-                todayDateId = "\(todayDateYear)\(todayDateMonth)\(todayDateDay)"
-            }
-        }
-
-        if let maxDateYear = maxDateComponents.year,
-           let maxDateMonth = maxDateComponents.month,
-           let maxDateDay = maxDateComponents.day {
-            if maxDateDay < 10 {
-                maxDateId = "\(maxDateYear)\(maxDateMonth)\(String(format: "%02d", maxDateDay))"
-            }
-            else {
-                maxDateId = "\(maxDateYear)\(maxDateMonth)\(maxDateDay)"
-            }
-        }
-
-        let dateRangeId = "\(todayDateId)0000/\(maxDateId)2359"
-
-        return dateRangeId
     }
 
 }

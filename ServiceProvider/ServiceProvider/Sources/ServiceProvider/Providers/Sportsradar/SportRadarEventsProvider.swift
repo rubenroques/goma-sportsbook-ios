@@ -119,7 +119,7 @@ class SportRadarEventsProvider: EventsProvider {
         
     }
 
-    func allSportTypes(dateRangeId: String) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>? {
+    func allSportTypes(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>? {
         if self.allSportTypesPublisher == nil {
             self.allSportTypesPublisher = CurrentValueSubject<SubscribableContent<[SportType]>, ServiceProviderError>.init(.disconnected)
         }
@@ -132,7 +132,12 @@ class SportRadarEventsProvider: EventsProvider {
         let contentType = SportRadarModels.ContentType.sportTypeByDate
 
         // Today sports ID
-        let contentId = dateRangeId
+        var contentId = self.getDateRangeId()
+
+        if let initialDate = initialDate,
+        let endDate = endDate {
+            contentId = self.getDateRangeId(initialDate: initialDate, endDate: endDate)
+        }
 
         let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentId: contentId)
         var request = self.createSubscribeRequest(withHTTPBody: bodyData)
@@ -171,7 +176,7 @@ class SportRadarEventsProvider: EventsProvider {
 //
 //    }
 
-    func subscribePreLiveMatches(forSportType sportType: SportType, dateRangeId: String, sortType: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
+    func subscribePreLiveMatches(forSportType sportType: SportType, initialDate: Date? = nil, endDate: Date? = nil, sortType: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
 
         self.preLiveEventsPublisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
 
@@ -185,6 +190,14 @@ class SportRadarEventsProvider: EventsProvider {
         let contentType = SportRadarModels.ContentType.eventListBySportTypeDate
         let pageIndex = 0
         let eventsNumber = 20
+
+        var dateRangeId = self.getDateRangeId()
+
+        if let initialDate = initialDate,
+        let endDate = endDate {
+            dateRangeId = self.getDateRangeId(initialDate: initialDate, endDate: endDate)
+        }
+
         let contentId = "\(sportId)/\(dateRangeId)/\(pageIndex)/\(eventsNumber)/\(sortType)" // FBL/202210210000/202210212359/0/20/T: example content ID
 
         let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentId: contentId)
@@ -286,7 +299,29 @@ class SportRadarEventsProvider: EventsProvider {
 //
 //        self.upcomingEventsPublisher = nil
 //    }
-   
+
+    func getDateRangeId(initialDate: Date? = nil, endDate: Date? = nil) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+
+        var initialDateDefault = Date()
+        if let initialDate = initialDate {
+            initialDateDefault = initialDate
+        }
+
+        var endDateDefault = Calendar.current.date(byAdding: .day, value: 6, to: initialDateDefault) ?? Date()
+        if let endDate = endDate {
+            endDateDefault = endDate
+        }
+
+        let initialDateId = dateFormatter.string(from: initialDateDefault)
+        let endDateId = dateFormatter.string(from: endDateDefault)
+
+
+        let dateRangeId = "\(initialDateId)0000/\(endDateId)2359"
+
+        return dateRangeId
+    }
 }
 
 extension SportRadarEventsProvider: SportRadarConnectorSubscriber {

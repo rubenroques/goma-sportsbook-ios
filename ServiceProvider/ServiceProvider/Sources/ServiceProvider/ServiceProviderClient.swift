@@ -81,10 +81,8 @@ public class ServiceProviderClient {
     //
     // Sports
     //
-    public func allSportTypes(dateRangeId: String) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>? {
-        // TODO:
-        //return Fail(error: ServiceProviderError.request).eraseToAnyPublisher()
-        return self.eventsProvider?.allSportTypes(dateRangeId: dateRangeId) ?? nil
+    public func allSportTypes(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>? {
+        return self.eventsProvider?.allSportTypes(initialDate: initialDate, endDate: endDate) ?? nil
     }
 
     public func unsubscribeAllSportTypes() {
@@ -107,8 +105,8 @@ public class ServiceProviderClient {
         return self.eventsProvider?.subscribeLiveMatches(forSportType: sportType) ?? nil
     }
 
-    public func subscribePreLiveMatches(forSportType sportType: SportType, dateRangeId: String, sortType: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
-        return self.eventsProvider?.subscribePreLiveMatches(forSportType: sportType, dateRangeId: dateRangeId, sortType: sortType) ?? nil
+    public func subscribePreLiveMatches(forSportType sportType: SportType, initialDate: Date? = nil, endDate: Date? = nil, sortType: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
+        return self.eventsProvider?.subscribePreLiveMatches(forSportType: sportType, initialDate: initialDate, endDate: endDate, sortType: sortType) ?? nil
     }
 
     public func unsubscribePreLiveMatches() {
@@ -135,4 +133,5 @@ public class ServiceProviderClient {
     public func subscribeCompetitionMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
         return nil
     }
+
 }
