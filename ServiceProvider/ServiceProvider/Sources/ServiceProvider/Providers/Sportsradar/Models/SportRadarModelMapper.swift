@@ -9,6 +9,56 @@ import Foundation
 
 struct SportRadarModelMapper {
     
+    // ============================================================
+    // User
+    //
+    static func userProfile(fromPlayerInfoResponse playerInfoResponse: SportRadarModels.PlayerInfoResponse) -> UserProfile? {
+        
+        var userRegistrationStatus = UserRegistrationStatus.quickOpen
+        switch playerInfoResponse.registrationStatus ?? "" {
+        case "QUICK_OPEN": userRegistrationStatus = .quickOpen
+        case "QUICK_REG": userRegistrationStatus = .quickRegister
+        case "PLAYER": userRegistrationStatus = .completed
+        default: userRegistrationStatus = .quickOpen
+        }
+        
+        return UserProfile(userIdentifier: playerInfoResponse.partyId,
+                           username: playerInfoResponse.userId,
+                           email: playerInfoResponse.email,
+                           firstName: playerInfoResponse.firstName,
+                           lastName: playerInfoResponse.lastName,
+                           birthDate: playerInfoResponse.birthDateFormatted,
+                           emailVerificationStatus: EmailVerificationStatus(fromStringKey:  playerInfoResponse.emailVerificationStatus),
+                           userRegistrationStatus: userRegistrationStatus)
+    }
+    
+    static func userOverview(fromInternalLoginResponse loginResponse: SportRadarModels.LoginResponse) -> UserOverview? {
+        guard
+            let sessionKey = loginResponse.sessionKey,
+            let username = loginResponse.username,
+            let email = loginResponse.email
+        else {
+            return nil
+        }
+        return UserOverview(sessionKey: sessionKey,
+                            username: username,
+                            email: email,
+                            partyID: loginResponse.partyId,
+                            language: loginResponse.language,
+                            currency: loginResponse.currency,
+                            parentID: loginResponse.parentId,
+                            level: loginResponse.level,
+                            userType: loginResponse.userType,
+                            isFirstLogin: loginResponse.isFirstLogin,
+                            registrationStatus: loginResponse.registrationStatus,
+                            country: loginResponse.country,
+                            kycStatus: loginResponse.kycStatus,
+                            lockStatus: loginResponse.lockStatus)
+    }
+    
+    // ============================================================
+    // Events
+    //
     static func eventsGroup(fromInternalEvents internalEvents: [SportRadarModels.Event]) -> EventsGroup {
         let events = internalEvents.map({ event -> Event in
             if let eventMarkets = event.markets {
@@ -31,11 +81,11 @@ struct SportRadarModelMapper {
                          startDate: event.startDate ?? Date(),
                          markets: [])
         })
-
+        
         let filterEvents = events.filter({
             !$0.markets.isEmpty
         })
-
+        
         return EventsGroup(events: filterEvents)
     }
     
@@ -72,8 +122,7 @@ struct SportRadarModelMapper {
     }
     
     //
-    static func sportType(fromInternalSportType internalSportType: SportRadarModels.SportType)
-    -> SportType? {
+    static func sportType(fromInternalSportType internalSportType: SportRadarModels.SportType) -> SportType? {
         switch internalSportType {
         case .football: return .football
         case .golf: return .golf
@@ -163,6 +212,45 @@ struct SportRadarModelMapper {
         case .crossCountry: return .crossCountrySkiing
         case .equestrian: return .equestrianSports
         case .winterSports: return .wintersports
+            
+        case .gaelicHurling: return .gaelicHurling
+        case .gaelicSports: return .gaelicSports
+        case .rinkHockey: return .rinkHockey
+        case .dogRacing: return .dogRacing
+        case .basketball3X3: return .basketball3X3
+        case .worldOfTanks: return .worldOfTanks
+        case .olympics: return .olympics
+        case .synchronizedSwimming: return .synchronizedSwimming
+        case .trotting: return .trotting
+            
+        case .canoeSlalom: return .canoeSlalom
+        case .cyclingBmxFreestyle: return .cyclingBmxFreestyle
+        case .cyclingBmxRacing: return .cyclingBmxRacing
+        case .mountainBike: return .mountainBike
+        case .trackCycling: return .trackCycling
+        case .trampolineGymnastics: return .trampolineGymnastics
+        case .rhythmicGymnastics: return .rhythmicGymnastics
+        case .marathonSwimming: return .marathonSwimming
+            
+        case .boxing: return .boxing
+        case .taekwondo: return .taekwondo
+        case .karate: return .karate
+        case .wrestling: return .wrestling
+        case .mma: return .mma
+            
+        case .stockCarRacing: return .stockCarRacing
+        case .touringCarRacing: return .touringCarRacing
+        case .rally: return .rally
+        case .speedway: return .speedway
+        case .formulaE: return .formulaE
+        case .indyRacing: return .indyRacing
+        case .motorcycleRacing: return .motorcycleRacing
+        case .formula1: return .formula1
+            
+        case .numbers: return .numbers
+        case .emptyBets: return .emptyBets
+        case .lotteries: return .lotteries
+            
         default: return nil
         }
     }
@@ -248,7 +336,7 @@ struct SportRadarModelMapper {
         case .virtualTennis: return .virtualTennis
         case .virtualStreetFighter: return .streetFighter
         case .virtualGreyhounds: return .virtualGreyhoundRacing
-
+            
         case .eIceHockey: return .electronicIceHockey
         case .virtualNba2K: return .eSportNba2K
             
@@ -269,7 +357,7 @@ struct SportRadarModelMapper {
         case .olympics: return .olympics
         case .synchronizedSwimming: return .synchronizedSwimming
         case .trotting: return .trotting
-
+            
         case .canoeSlalom: return .canoeSlalom
         case .cyclingBmxFreestyle: return .cyclingBmxFreestyle
         case .cyclingBmxRacing: return .cyclingBmxRacing
@@ -278,13 +366,13 @@ struct SportRadarModelMapper {
         case .trampolineGymnastics: return .trampolineGymnastics
         case .rhythmicGymnastics: return .rhythmicGymnastics
         case .marathonSwimming: return .marathonSwimming
-
+            
         case .boxing: return .boxing
         case .taekwondo: return .taekwondo
         case .karate: return .karate
         case .wrestling: return .wrestling
         case .mma: return .mma
-
+            
         case .stockCarRacing: return .stockCarRacing
         case .touringCarRacing: return .touringCarRacing
         case .rally: return .rally
@@ -293,14 +381,25 @@ struct SportRadarModelMapper {
         case .indyRacing: return .indyRacing
         case .motorcycleRacing: return .motorcycleRacing
         case .formula1: return .formula1
-
+            
         case .numbers: return .numbers
         case .emptyBets: return .emptyBets
         case .lotteries: return .lotteries
-        
+            
         default: return nil
         }
     }
     // ==========================================
     
+}
+
+extension EmailVerificationStatus {
+    init(fromStringKey key: String) {
+        switch key {
+        case "VERIFIED":
+            self = .verified
+        default:
+            self = .unverified
+        }
+    }
 }

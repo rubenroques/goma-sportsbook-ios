@@ -72,7 +72,7 @@ class ProfileViewController: UIViewController {
         self.pageMode = .anonymous
         self.userSession = userSession
 
-        if userSession.hasValue {
+        if userSession != nil {
             pageMode = .user
         }
 
@@ -131,7 +131,6 @@ class ProfileViewController: UIViewController {
                 if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
                     let accountValue = bonusWallet.amount + value
                     self?.totalBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-
                 }
                 else {
                     self?.totalBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"

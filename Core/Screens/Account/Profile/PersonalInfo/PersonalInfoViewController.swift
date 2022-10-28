@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import ServiceProvider
 
 class PersonalInfoViewController: UIViewController {
 
@@ -36,7 +37,7 @@ class PersonalInfoViewController: UIViewController {
 
     var cancellables = Set<AnyCancellable>()
     var userSession: UserSession?
-    var countriesListing: EveryMatrix.CountryListing?
+    var countries: [Country] = []
     var profile: EveryMatrix.UserProfile?
 
     init(userSession: UserSession?) {
@@ -216,17 +217,40 @@ class PersonalInfoViewController: UIViewController {
 
     private func setupPublishers() {
 
-        Env.everyMatrixClient.getCountries()
+//        Env.everyMatrixClient.getCountries()
+//            .receive(on: DispatchQueue.main)
+//            .eraseToAnyPublisher()
+//            .sink { _ in
+//                self.countryHeaderTextFieldView.isUserInteractionEnabled = true
+//            } receiveValue: { countriesListing in
+//                self.countriesListing = countriesListing
+//                self.setupWithCountryCodes(countriesListing)
+//            }
+//        .store(in: &cancellables)
+        
+        Env.serviceProvider.getCountries()
+            .map { (serviceProviderCountries: [ServiceProvider.Country]) -> [Country] in
+                serviceProviderCountries.map({ (serviceProviderCountry: ServiceProvider.Country) -> Country in
+                    return Country(name: serviceProviderCountry.name,
+                                   capital: serviceProviderCountry.capital,
+                                   region: serviceProviderCountry.region,
+                                   iso2Code: serviceProviderCountry.iso2Code,
+                                   iso3Code: serviceProviderCountry.iso3Code,
+                                   numericCode: serviceProviderCountry.numericCode,
+                                   phonePrefix: serviceProviderCountry.phonePrefix)
+                    
+                })
+            }
             .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
             .sink { _ in
                 self.countryHeaderTextFieldView.isUserInteractionEnabled = true
-            } receiveValue: { countriesListing in
-                self.countriesListing = countriesListing
-                self.setupWithCountryCodes(countriesListing)
+            } receiveValue: {  [weak self] countriesArray in
+                self?.countries = countriesArray
+                
+                self?.setupWithCountryCodes(countriesArray)
             }
-        .store(in: &cancellables)
-
+            .store(in: &cancellables)
+        
         Env.everyMatrixClient.getProfile()
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
@@ -251,7 +275,8 @@ class PersonalInfoViewController: UIViewController {
         let postalCodeChanged = postalCodeHeaderTextFieldView.text == profile?.postalCode ? false : true
         let personalIdChanged = cardIdHeaderTextFieldView.text == profile?.personalID ? false : true
 
-        if emailChanged || titleChanged || firstNameChanged || lastNameChanged || address1Changed || address2Changed || cityChanged || postalCodeChanged || personalIdChanged {
+        if emailChanged || titleChanged || firstNameChanged || lastNameChanged || address1Changed
+            || address2Changed || cityChanged || postalCodeChanged || personalIdChanged {
             self.editButton.isEnabled = true
         }
         else {
@@ -399,7 +424,7 @@ class PersonalInfoViewController: UIViewController {
 // Flags business logic
 extension PersonalInfoViewController {
 
-    private func setupWithCountryCodes(_ listings: EveryMatrix.CountryListing) {
+    private func setupWithCountryCodes(_ countries: [Country]) {
 
 //        for country in listings.countries where country.isoCode == listings.currentIpCountry {
 //            self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country), slideUp: true)
@@ -413,28 +438,40 @@ extension PersonalInfoViewController {
         
     }
 
-    private func showCountrySelector(listing: EveryMatrix.CountryListing) {
-        let phonePrefixSelectorViewController = PhonePrefixSelectorViewController(countriesArray: listing, showIndicatives: false)
+//    private func showCountrySelector(listing: EveryMatrix.CountryListing) {
+//        let phonePrefixSelectorViewController = PhonePrefixSelectorViewController(countriesArray: listing, showIndicatives: false)
+//        phonePrefixSelectorViewController.modalPresentationStyle = .overCurrentContext
+//        phonePrefixSelectorViewController.didSelectCountry = { [weak self] country in
+//            self?.setupWithSelectedCountry(country)
+//            phonePrefixSelectorViewController.animateDismissView()
+//        }
+//        self.present(phonePrefixSelectorViewController, animated: false, completion: nil)
+//    }
+    
+    private func showPhonePrefixSelector(_ countries: [Country]) {
+        let phonePrefixSelectorViewController = PhonePrefixSelectorViewController(countries: countries, originCountry: nil)
         phonePrefixSelectorViewController.modalPresentationStyle = .overCurrentContext
         phonePrefixSelectorViewController.didSelectCountry = { [weak self] country in
             self?.setupWithSelectedCountry(country)
+            
             phonePrefixSelectorViewController.animateDismissView()
         }
         self.present(phonePrefixSelectorViewController, animated: false, completion: nil)
     }
 
-    private func setupWithSelectedCountry(_ country: EveryMatrix.Country) {
+    private func setupWithSelectedCountry(_ country: Country) {
         self.countryHeaderTextFieldView.setText(formatIndicativeCountry(country), slideUp: true)
     }
 
-    private func formatIndicativeCountry(_ country: EveryMatrix.Country) -> String {
-        var stringCountry = "\(country.name)"
-        if let isoCode = country.isoCode {
-            stringCountry = "\(isoCode) - \(country.name)"
-            if let flag = CountryFlagHelper.flag(forCode: isoCode) {
-                stringCountry = "\(flag) \(country.name)"
-            }
+    private func formatIndicativeCountry(_ country: Country) -> String {
+        var stringCountry = "\(country.phonePrefix)"
+        let isoCode = country.iso2Code
+        
+        stringCountry = "\(isoCode) - \(country.phonePrefix)"
+        if let flag = CountryFlagHelper.flag(forCode: isoCode) {
+            stringCountry = "\(flag) \(country.phonePrefix)"
         }
+        
         return stringCountry
     }
 
@@ -478,10 +515,8 @@ extension PersonalInfoViewController {
             self.countryHeaderTextFieldView.isDisabled = true
         }
         
-        if let countriesListing = self.countriesListing,
-           let nationality = profile.fields.nationality?.lowercased() {
-            
-            for country in countriesListing.countries where country.name.lowercased() == nationality {
+        if let nationality = profile.fields.nationality?.lowercased() {
+            for country in countries where country.name.lowercased() == nationality {
                 self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country), slideUp: true)
             }
         }

@@ -19,7 +19,7 @@ protocol SportRadarConnectorSubscriber {
 //    func upcomingEventListBySportTypeDate(forSportType sportType: SportType, withEvents: [EventsGroup])
 }
 
-class SportRadarConnector: NSObject, Connector  {
+class SportRadarSocketConnector: NSObject, Connector {
     
     var token: SessionAccessToken?
 
@@ -89,7 +89,7 @@ class SportRadarConnector: NSObject, Connector  {
 }
 
 
-extension SportRadarConnector: WebSocketDelegate {
+extension SportRadarSocketConnector: WebSocketDelegate {
     
     internal func didReceive(event: WebSocketEvent, client: WebSocket) {
         
@@ -106,18 +106,18 @@ extension SportRadarConnector: WebSocketDelegate {
             self.isConnected = true
             self.sendListeningStarted(toSocket: client)
             
-            print("SportRadarConnector websocket is connected: \(headers)")
+            print("SportRadarSocketConnector websocket is connected: \(headers)")
         case .disconnected(let reason, let code):
             self.isConnected = false
-            print("SportRadarConnector websocket is disconnected: \(reason) with code: \(code)")
+            print("SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
-            print("SportRadarConnector websocket received text: \(string)")
+            print("SportRadarSocketConnector websocket received text: \(string)")
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleResponse(sportRadarSocketResponse, data: data)
             }
         case .binary(let data):
-            print("SportRadarConnector websocket Received data: \(data.count)")
+            print("SportRadarSocketConnector websocket Received data: \(data.count)")
             
             if let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleResponse(sportRadarSocketResponse, data: data)

@@ -19,48 +19,27 @@ public class ServiceProviderClient {
     private var privilegedAccessManager: (any PrivilegedAccessManager)?
     private var bettingProvider: (any BettingProvider)?
     private var eventsProvider: (any EventsProvider)?
-        
+    
     public init(providerType: ProviderType) {
         self.providerType = providerType
-        
-        //        switch providerType {
-        //        case .everymatrix:
-        //            fatalError()
-        //            let everymatrixProvider = EverymatrixProvider()
-        //            self.privilegedAccessManager = everymatrixProvider
-        //            self.bettingProvider = everymatrixProvider
-        //            self.eventsProvider = everymatrixProvider
-        //        case .sportradar:
-        //            let sportsradarProvider = SportsradarProvider()
-        //            self.privilegedAccessManager = sportsradarProvider
-        //            self.bettingProvider = sportsradarProvider
-        //            self.eventsProvider = sportsradarProvider
-        //        }
-        
-        // Debug only, delete later
-        // self.connect()
-        //
     }
     
     public func connect() {
         switch self.providerType {
         case .everymatrix:
             fatalError()
-        // let everymatrixProvider = EverymatrixProvider()
-        // self.privilegedAccessManager = everymatrixProvider
-        // self.bettingProvider = everymatrixProvider
-        // self.eventsProvider = everymatrixProvider
+            // let everymatrixProvider = EverymatrixProvider()
+            // self.privilegedAccessManager = everymatrixProvider
+            // self.bettingProvider = everymatrixProvider
+            // self.eventsProvider = everymatrixProvider
         case .sportradar:
-            let sportRadarConnector = SportRadarConnector()
-            
+            let sportRadarConnector = SportRadarSocketConnector()
             self.eventsConnectionStatePublisher = sportRadarConnector.connectionStatePublisher
-            
             sportRadarConnector.connect()
             
-            let sportRadarProvider = SportRadarEventsProvider(connector: sportRadarConnector)
-            self.privilegedAccessManager = nil // sportsradarProvider
+            self.privilegedAccessManager = SportRadarPrivilegedAccessManager(connector: OmegaConnector())
+            self.eventsProvider = SportRadarEventsProvider(connector: sportRadarConnector)
             self.bettingProvider = nil // sportsradarProvider
-            self.eventsProvider = sportRadarProvider
         }
     }
     
@@ -72,12 +51,9 @@ public class ServiceProviderClient {
         
     }
     
-    public func loginUser(withUsername username: String, andPassword password: String) -> AnyPublisher<Bool, Never> {
-        return Future.init { promisse in
-            promisse(.success(true))
-        }.eraseToAnyPublisher()
-    }
+}
 
+extension ServiceProviderClient {
     //
     // Sports
     //
@@ -135,4 +111,68 @@ public class ServiceProviderClient {
     public func subscribeCompetitionMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
         return nil
     }
+}
+
+
+extension ServiceProviderClient {
+    
+    //
+    // PrivilegedAccessManager
+    //
+    public func loginUser(withUsername username: String, andPassword password: String) -> AnyPublisher<UserProfile, ServiceProviderError> {
+        
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(outputType: UserProfile.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.login(username: username, password: password)
+        
+    }
+    
+    public func getProfile() -> AnyPublisher<UserProfile, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(outputType: UserProfile.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.getUserProfile()
+    }
+    
+    public func checkEmailRegistered(_ email: String) -> AnyPublisher<Bool, ServiceProviderError> {
+        
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.checkEmailRegistered(email)
+    }
+    
+}
+
+extension ServiceProviderClient {
+    
+    public func getCountries() -> AnyPublisher<[Country], ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(outputType: [Country].self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        
+        return privilegedAccessManager.getCountries()
+    }
+    
+    public func getCurrentCountry() -> AnyPublisher<Country?, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(outputType: Country?.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.getCurrentCountry()
+    }
+    
 }

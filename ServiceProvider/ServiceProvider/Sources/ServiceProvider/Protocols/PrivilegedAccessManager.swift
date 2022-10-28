@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-enum UserSessionState {
+enum UserSessionStatus {
     case anonymous
     case logged
 }
@@ -17,13 +17,23 @@ protocol PrivilegedAccessManager {
 
     init(connector: Connector)
     
-    var userSessionStatePublisher: AnyPublisher<UserSessionState, Error> { get }
+    var userSessionStatePublisher: AnyPublisher<UserSessionStatus, Error> { get }
+    var userProfilePublisher: AnyPublisher<UserProfile?, Error> { get }
     
-    func login()
-    func register()
-    func recoverPassword()
-    func changePassword()
-    func getProfile()
-    func getProfileStatus()
+    func login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError>
+    func getUserProfile() -> AnyPublisher<UserProfile, ServiceProviderError>
+    
+    func checkEmailRegistered(_ email: String) -> AnyPublisher<Bool, ServiceProviderError>
+    
+    func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError>
+    
+    func getCountries() -> AnyPublisher<[Country], ServiceProviderError>
+    func getCurrentCountry() -> AnyPublisher<Country?, ServiceProviderError>
+        
+//    func register()
+//    func recoverPassword()
+//    func changePassword()
+//    func getUserProfile() -> AnyPublisher<UserProfile, ServiceProviderError>
+//    func getProfileStatus()
 
 }

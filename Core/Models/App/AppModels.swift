@@ -144,3 +144,14 @@ struct BannerInfo {
     let imageURL: String?
     let priorityOrder: Int?
 }
+
+
+struct Country {
+    let name: String
+    let capital: String?
+    let region: String
+    let iso2Code: String
+    let iso3Code: String
+    let numericCode: String
+    let phonePrefix: String
+}

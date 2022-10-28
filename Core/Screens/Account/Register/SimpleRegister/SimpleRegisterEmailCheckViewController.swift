@@ -241,11 +241,8 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
     }
 
     @IBAction private func didTapRegisterButton() {
-
         let email = emailHeadertextFieldView.text
-
         self.viewModel.registerEmail(email: email)
-
     }
 
     @IBAction private func skipAction() {

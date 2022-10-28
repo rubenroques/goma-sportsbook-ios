@@ -19,7 +19,7 @@ public enum ConnectorState {
 
 protocol Connector {
     
-    var token: SessionAccessToken? { get }
+    var token: SessionAccessToken? { get set }
  
     var connectionStatePublisher: AnyPublisher<ConnectorState, Error> { get }
     

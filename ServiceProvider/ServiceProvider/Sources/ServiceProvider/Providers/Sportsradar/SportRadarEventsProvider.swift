@@ -10,9 +10,9 @@ import Combine
 
 class SportRadarEventsProvider: EventsProvider {
 
-    var connector: SportRadarConnector
+    var connector: SportRadarSocketConnector
     
-    required init(connector: SportRadarConnector) {
+    required init(connector: SportRadarSocketConnector) {
         self.connector = connector
     }
     
@@ -135,7 +135,7 @@ class SportRadarEventsProvider: EventsProvider {
         let contentId = dateRangeId
 
         let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentId: contentId)
-        var request = self.createSubscribeRequest(withHTTPBody: bodyData)
+        let request = self.createSubscribeRequest(withHTTPBody: bodyData)
         let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 self.allSportTypesPublisher?.send(completion: .failure(ServiceProviderError.onSubscribe))
@@ -189,6 +189,7 @@ class SportRadarEventsProvider: EventsProvider {
 
         let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentId: contentId)
         var request = self.createSubscribeRequest(withHTTPBody: bodyData)
+        
         let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
 
             if let error = error {

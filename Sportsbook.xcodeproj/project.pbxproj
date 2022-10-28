@@ -911,6 +911,11 @@
 		45322143280F01530092CCB4 /* BettingHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45322141280F01530092CCB4 /* BettingHistoryViewModel.swift */; };
 		4540ED2E27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4540ED2D27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift */; };
 		4540ED2F27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4540ED2D27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift */; };
+		45452BEA290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
+		45452BEB290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
+		45452BEC290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
+		45452BED290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
+		45452BEE290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
 		454990CC2716333F00D57CE2 /* SportsTypes.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 454990CB2716333F00D57CE2 /* SportsTypes.xcassets */; };
 		454990CD2716333F00D57CE2 /* SportsTypes.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 454990CB2716333F00D57CE2 /* SportsTypes.xcassets */; };
 		454990CF27163D3200D57CE2 /* CollapsibleGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454990CE27163D3200D57CE2 /* CollapsibleGroupView.swift */; };
@@ -5270,6 +5275,7 @@
 		4532213E280F01410092CCB4 /* TransactionsHistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsHistoryViewModel.swift; sourceTree = "<group>"; };
 		45322141280F01530092CCB4 /* BettingHistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BettingHistoryViewModel.swift; sourceTree = "<group>"; };
 		4540ED2D27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedBetLineTableViewCell.swift; sourceTree = "<group>"; };
+		45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Country.swift"; sourceTree = "<group>"; };
 		454990CB2716333F00D57CE2 /* SportsTypes.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SportsTypes.xcassets; sourceTree = "<group>"; };
 		454990CE27163D3200D57CE2 /* CollapsibleGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleGroupView.swift; sourceTree = "<group>"; };
 		454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaGamingServiceClient.swift; sourceTree = "<group>"; };
@@ -7877,6 +7883,7 @@
 				454E0AD02734A39800794E0C /* CurrencyHelper.swift */,
 				45626E33275530990069B89B /* OddFormatter.swift */,
 				450B781C28F56BA5009229E3 /* ServiceProviderModelMapper.swift */,
+				45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */,
 				450B7B3E28F637FA009229E3 /* ServiceProviderModelMapper+Sports.swift */,
 			);
 			path = Helpers;
@@ -9023,8 +9030,8 @@
 		A9E7C6AA27BD573000F784C9 /* AppSettings */ = {
 			isa = PBXGroup;
 			children = (
-				A9DF8E3B28E5A5B20083BF56 /* Tips */,
 				A9E7C6AB27BD574F00F784C9 /* AppSettingsViewController.swift */,
+				A9DF8E3B28E5A5B20083BF56 /* Tips */,
 				A91F4B3727BFCA0B008C7510 /* Odds */,
 				A91F4B3027BFB8E9008C7510 /* Appearance */,
 				A91F4B2C27BEAEED008C7510 /* Notifications */,
@@ -11071,6 +11078,7 @@
 				450B7A4F28F58574009229E3 /* FilterLineView.swift in Sources */,
 				450B7A5028F58574009229E3 /* AddContactViewController.swift in Sources */,
 				450B7A5128F58574009229E3 /* Bonus.swift in Sources */,
+				45452BED290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */,
 				450B7A5228F58574009229E3 /* LogViewerViewController.swift in Sources */,
 				450B7A5328F58574009229E3 /* TransactionsHistoryRootViewController.swift in Sources */,
 				450B7A5428F58574009229E3 /* FavoritesManager.swift in Sources */,
@@ -11666,6 +11674,7 @@
 				A99F7A1327D11BFE008BAF41 /* Bonus.swift in Sources */,
 				456B342D26C18C75009D7D27 /* LogViewerViewController.swift in Sources */,
 				4589C73D2818609300243547 /* TransactionsHistoryRootViewController.swift in Sources */,
+				45452BEA290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */,
 				45B6E210283F7D1F001B570C /* SharedBetTicket.swift in Sources */,
 				A99DFBED27342AEB00002CDB /* FavoritesManager.swift in Sources */,
 				45505F402800900600D4B53E /* MyTicketsRootViewController.swift in Sources */,
@@ -12318,6 +12327,7 @@
 				45BF4E6E270DC37D00785E79 /* FilterLineView.swift in Sources */,
 				A99F7A1427D11BFE008BAF41 /* Bonus.swift in Sources */,
 				4589C73E2818609300243547 /* TransactionsHistoryRootViewController.swift in Sources */,
+				45452BEB290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */,
 				45B6E211283F7D1F001B570C /* SharedBetTicket.swift in Sources */,
 				456B342E26C18C75009D7D27 /* LogViewerViewController.swift in Sources */,
 				45505F412800900600D4B53E /* MyTicketsRootViewController.swift in Sources */,
@@ -14101,6 +14111,7 @@
 				4589C90B282024E400243547 /* AddContactViewController.swift in Sources */,
 				4589C90C282024E400243547 /* Bonus.swift in Sources */,
 				4589C90D282024E400243547 /* LogViewerViewController.swift in Sources */,
+				45452BEC290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */,
 				4589C90E282024E400243547 /* TransactionsHistoryRootViewController.swift in Sources */,
 				4589C90F282024E400243547 /* FavoritesManager.swift in Sources */,
 				4589C910282024E400243547 /* MyTicketsRootViewController.swift in Sources */,
@@ -14696,6 +14707,7 @@
 				45A6BD6128246A7500D9B416 /* FilterLineView.swift in Sources */,
 				45A6BD6228246A7500D9B416 /* AddContactViewController.swift in Sources */,
 				45A6BD6328246A7500D9B416 /* Bonus.swift in Sources */,
+				45452BEE290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */,
 				45A6BD6428246A7500D9B416 /* LogViewerViewController.swift in Sources */,
 				45A6BD6528246A7500D9B416 /* TransactionsHistoryRootViewController.swift in Sources */,
 				45A6BD6628246A7500D9B416 /* FavoritesManager.swift in Sources */,

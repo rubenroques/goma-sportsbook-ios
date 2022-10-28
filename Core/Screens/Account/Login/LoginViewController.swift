@@ -1,5 +1,6 @@
 import UIKit
 import Combine
+import ServiceProvider
 
 class LoginViewController: UIViewController {
 
@@ -273,15 +274,15 @@ class LoginViewController: UIViewController {
     }
 
     @IBAction private func didTapLoginButton() {
-
+        
         let username = usernameHeaderTextFieldView.text
         let password = passwordHeaderTextFieldView.text
-
+        
         self.loginButton.isEnabled = false
-
+        
         self.showLoadingSpinner()
-
-        Env.userSessionStore.loginUser(withUsername: username, password: password)
+        
+        Env.userSessionStore.login(withUsername: username, password: password)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -297,45 +298,12 @@ class LoginViewController: UIViewController {
                 }
                 self.hideLoadingSpinner()
                 self.loginButton.isEnabled = true
-            }, receiveValue: { user in
-                self.getProfileStatus()
-
-                self.loginGomaAPI(username: user.username, password: user.userId)
-            })
-            .store(in: &cancellables)
-
-    }
-
-    func getProfileStatus() {
-        Env.everyMatrixClient.getProfileStatus()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
-                self.hideLoadingSpinner()
-            }, receiveValue: { value in
-                Env.userSessionStore.isUserProfileIncomplete.send(value.isProfileIncomplete)
+            }, receiveValue: { _ in
                 self.showNextViewController()
             })
             .store(in: &cancellables)
     }
-
-    func loginGomaAPI(username: String, password: String) {
-        let userLoginForm = UserLoginForm(username: username, password: password, deviceToken: Env.deviceFCMToken)
-        Env.gomaNetworkClient.requestLogin(deviceId: Env.deviceId, loginForm: userLoginForm)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
-
-            }, receiveValue: { value in
-                Env.gomaNetworkClient.refreshAuthToken(token: value)
-                Env.gomaSocialClient.connectSocket()
-
-                Env.userSessionStore.hasGomaUserSessionPublisher.send(true)
-
-                Env.gomaSocialClient.getInAppMessagesCounter()
-
-            })
-            .store(in: &cancellables)
-    }
-
+    
     func showLoadingSpinner() {
         view.addSubview(spinnerViewController.view)
         spinnerViewController.view.translatesAutoresizingMaskIntoConstraints = false
@@ -394,8 +362,8 @@ extension LoginViewController {
     @objc func didTapDebugFormFill() {
         
         if self.usernameHeaderTextFieldView.text.isEmpty || self.usernameHeaderTextFieldView.text == "ruben" {
-            self.usernameHeaderTextFieldView.setText("ruben@gomadevelopment.pt")
-            self.passwordHeaderTextFieldView.setText("ruben=GOMA=12345")
+            self.usernameHeaderTextFieldView.setText("gomafrontend") //("ruben@gomadevelopment.pt")
+            self.passwordHeaderTextFieldView.setText("Omega123") //("ruben=GOMA=12345")
             self.loginButton.isEnabled = true
         }
         else if self.usernameHeaderTextFieldView.text == "ruben4" {
@@ -419,7 +387,6 @@ extension LoginViewController {
             self.usernameHeaderTextFieldView.setText("modaf")
             self.passwordHeaderTextFieldView.setText("teste123456.")
             self.loginButton.isEnabled = true
-            
         }
         
     }

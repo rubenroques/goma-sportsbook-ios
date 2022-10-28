@@ -18,4 +18,5 @@ protocol EventsProvider {
     func unsubscribePreLiveMatches()
 //    func unsubscribeUpcomingMatches()
     func unsubscribeAllSportTypes()
+    
 }

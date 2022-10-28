@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import ServiceProvider
 
 class SimpleRegisterDetailsViewController: UIViewController {
 
@@ -37,8 +38,12 @@ class SimpleRegisterDetailsViewController: UIViewController {
     
     // Variables
     var emailAddress: String
-    private var selectedCountry: EveryMatrix.Country?
+    
+    private var selectedCountry: Country?
 
+    private var currentCountry: Country?
+    private var countriesArray: [Country] = []
+    
     init(emailAddress: String) {
         self.emailAddress = emailAddress
 
@@ -193,15 +198,61 @@ class SimpleRegisterDetailsViewController: UIViewController {
 
     private func setupPublishers() {
 
-        Env.everyMatrixClient.getCountries()
+//        Env.everyMatrixClient.getCountries()
+//            .receive(on: DispatchQueue.main)
+//            .eraseToAnyPublisher()
+//            .sink { _ in
+//                self.indicativeHeaderTextView.isUserInteractionEnabled = true
+//            } receiveValue: { [weak self] countries in
+//                self?.setupWithCountryCodes(countries)
+//            }
+//            .store(in: &cancellables)
+        
+        Env.serviceProvider.getCurrentCountry()
+            .compactMap({ $0 })
+            .map({ (serviceProviderCountry: ServiceProvider.Country) -> Country in
+                return Country(name: serviceProviderCountry.name,
+                               capital: serviceProviderCountry.capital,
+                               region: serviceProviderCountry.region,
+                               iso2Code: serviceProviderCountry.iso2Code,
+                               iso3Code: serviceProviderCountry.iso3Code,
+                               numericCode: serviceProviderCountry.numericCode,
+                               phonePrefix: serviceProviderCountry.phonePrefix)
+            })
             .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
             .sink { _ in
                 self.indicativeHeaderTextView.isUserInteractionEnabled = true
-            } receiveValue: { [weak self] countries in
-                self?.setupWithCountryCodes(countries)
+            } receiveValue: { [weak self] currentCountry in
+                self?.currentCountry = currentCountry
+                self?.selectedCountry = currentCountry
+                
+                self?.setupWithSelectedCountry(currentCountry)
             }
             .store(in: &cancellables)
+        
+        Env.serviceProvider.getCountries()
+            .map { (serviceProviderCountries: [ServiceProvider.Country]) -> [Country] in
+                serviceProviderCountries.map({ (serviceProviderCountry: ServiceProvider.Country) -> Country in
+                    return Country(name: serviceProviderCountry.name,
+                                   capital: serviceProviderCountry.capital,
+                                   region: serviceProviderCountry.region,
+                                   iso2Code: serviceProviderCountry.iso2Code,
+                                   iso3Code: serviceProviderCountry.iso3Code,
+                                   numericCode: serviceProviderCountry.numericCode,
+                                   phonePrefix: serviceProviderCountry.phonePrefix)
+                    
+                })
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                self.indicativeHeaderTextView.isUserInteractionEnabled = true
+            } receiveValue: {  [weak self] countriesArray in
+                self?.countriesArray = countriesArray
+                
+                self?.setupWithCountryCodes(countriesArray)
+            }
+            .store(in: &cancellables)
+        
 
         self.usernameHeaderTextView.textPublisher
             .removeDuplicates()
@@ -291,7 +342,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
         }
         
         guard
-            let selectedCountryISO = self.selectedCountry?.isoCode,
+            let selectedCountryISO = self.selectedCountry?.iso2Code,
             let mobilePrefixTextual = self.selectedCountry?.phonePrefix
         else {
             return
@@ -482,57 +533,56 @@ extension SimpleRegisterDetailsViewController {
 // Flags business logic
 extension SimpleRegisterDetailsViewController {
 
-    private func setupWithCountryCodes(_ listings: EveryMatrix.CountryListing) {
-
-        for country in listings.countries where country.isoCode == listings.currentIpCountry {
-            self.setupWithSelectedCountry(country)
-        }
-
+    private func setupWithCountryCodes(_ countries: [Country]) {
         self.indicativeHeaderTextView.isUserInteractionEnabled = true
         self.indicativeHeaderTextView.shouldBeginEditing = { [weak self] in
-            self?.showPhonePrefixSelector(listing: listings)
+            self?.showPhonePrefixSelector(countries)
             return false
         }
     }
 
-    private func showPhonePrefixSelector(listing: EveryMatrix.CountryListing) {
-        let phonePrefixSelectorViewController = PhonePrefixSelectorViewController(countriesArray: listing)
+    private func showPhonePrefixSelector(_ countries: [Country]) {
+        let phonePrefixSelectorViewController = PhonePrefixSelectorViewController(countries: countries, originCountry: self.currentCountry)
         phonePrefixSelectorViewController.modalPresentationStyle = .overCurrentContext
         phonePrefixSelectorViewController.didSelectCountry = { [weak self] country in
             self?.setupWithSelectedCountry(country)
             
             phonePrefixSelectorViewController.animateDismissView()
-            self?.updateBirthAgeLimit(ageLimit: country.legalAge)
+            
+            // TODO: Legal Age
+            let legalAge = 18
+            self?.updateBirthAgeLimit(ageLimit: legalAge)
         }
         self.present(phonePrefixSelectorViewController, animated: false, completion: nil)
     }
 
-    private func setupWithSelectedCountry(_ country: EveryMatrix.Country) {
+    private func setupWithSelectedCountry(_ country: Country) {
         self.selectedCountry = country
         self.indicativeHeaderTextView.setText(self.formatIndicativeCountry(country), slideUp: true)
 
-        let maxDate = self.dateForMaxLegalAge(legalAge: country.legalAge)
+        // TODO: Legal Age
+        let legalAge = 18
+        
+        let maxDate = self.dateForMaxLegalAge(legalAge: legalAge)
         self.dateHeaderTextView.datePicker.maximumDate = maxDate
     }
 
-    private func formatIndicativeCountry(_ country: EveryMatrix.Country) -> String {
+    private func formatIndicativeCountry(_ country: Country) -> String {
         var stringCountry = "\(country.phonePrefix)"
-        if let isoCode = country.isoCode {
-            stringCountry = "\(isoCode) - \(country.phonePrefix)"
-            if let flag = CountryFlagHelper.flag(forCode: isoCode) {
-                stringCountry = "\(flag) \(country.phonePrefix)"
-            }
+        let isoCode = country.iso2Code
+        
+        stringCountry = "\(isoCode) - \(country.phonePrefix)"
+        if let flag = CountryFlagHelper.flag(forCode: isoCode) {
+            stringCountry = "\(flag) \(country.phonePrefix)"
         }
+        
         return stringCountry
     }
 
     private func updateBirthAgeLimit(ageLimit: Int) {
-
         let maxDate = self.dateForMaxLegalAge(legalAge: ageLimit)
-        // let fieldDate = dateHeaderTextView.datePicker.date
         let fieldDate = getDateFromTextFieldString(string: dateHeaderTextView.text)
         if fieldDate > maxDate {
-            // dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App.alertError)
             dateHeaderTextView.datePicker.maximumDate = maxDate
         }
     }
