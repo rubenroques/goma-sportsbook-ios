@@ -84,7 +84,8 @@ class Authenticator {
             request.setValue("application/json", forHTTPHeaderField: "Accept")
 
             let body = """
-                       {"username": "\(loggedUser.username)",
+                       {
+                        "username": "\(loggedUser.username)",
                         "password": "\(loggedUser.password)",
                         "device_type": "ios",
                         "device_token": "\(loggedUser.deviceToken)"}

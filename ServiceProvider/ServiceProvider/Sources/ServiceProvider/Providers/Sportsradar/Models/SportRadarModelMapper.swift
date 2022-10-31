@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  SportRadarModelMapper.swift
 //  
 //
 //  Created by Ruben Roques on 11/10/2022.
@@ -21,15 +21,24 @@ struct SportRadarModelMapper {
         case "PLAYER": userRegistrationStatus = .completed
         default: userRegistrationStatus = .quickOpen
         }
-        
+
         return UserProfile(userIdentifier: playerInfoResponse.partyId,
                            username: playerInfoResponse.userId,
                            email: playerInfoResponse.email,
                            firstName: playerInfoResponse.firstName,
                            lastName: playerInfoResponse.lastName,
                            birthDate: playerInfoResponse.birthDateFormatted,
+                           gender: playerInfoResponse.gender,
+                           nationalityCode: playerInfoResponse.nationality,
+                           countryCode: playerInfoResponse.country,
+                           personalIdNumber: playerInfoResponse.idCardNumber,
+                           address: playerInfoResponse.address,
+                           province: playerInfoResponse.province,
+                           city: playerInfoResponse.city,
+                           postalCode: playerInfoResponse.postalCode,
                            emailVerificationStatus: EmailVerificationStatus(fromStringKey:  playerInfoResponse.emailVerificationStatus),
                            userRegistrationStatus: userRegistrationStatus)
+        
     }
     
     static func userOverview(fromInternalLoginResponse loginResponse: SportRadarModels.LoginResponse) -> UserOverview? {

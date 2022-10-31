@@ -82,6 +82,9 @@ class SimpleRegisterEmailCheckViewModel: NSObject {
 
     func requestValidEmailCheck(email: String) {
         
+        self.shouldAnimateEmailValidityView.send(true)
+        self.isRegisterEnabled.send(false)
+        
         Env.serviceProvider.checkEmailRegistered(email)
                     .receive(on: DispatchQueue.main)
                     .sink { [weak self] _ in
@@ -100,8 +103,6 @@ class SimpleRegisterEmailCheckViewModel: NSObject {
                     }
                     .store(in: &cancellables)
 
-        self.shouldAnimateEmailValidityView.send(false)
-        self.isRegisterEnabled.send(false)
     }
 }
 

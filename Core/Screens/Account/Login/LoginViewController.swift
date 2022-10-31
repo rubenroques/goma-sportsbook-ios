@@ -58,39 +58,17 @@ class LoginViewController: UIViewController {
         Env.userSessionStore.shouldRecordUserSession = true
 
         // TEMP EM SHUTDOWN
-//        Publishers.CombineLatest(self.usernameHeaderTextFieldView.textPublisher, self.passwordHeaderTextFieldView.textPublisher)
-//            .map { username, password in
-//                return (username?.isNotEmpty ?? false) && (password?.isNotEmpty ?? false)
-//            }
-//            .assign(to: \.isEnabled, on: loginButton)
-//            .store(in: &cancellables)
         self.loginButton.isEnabled = false
-
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapLoginLogo))
-        self.logoImageView.isUserInteractionEnabled = true
-        self.logoImageView.addGestureRecognizer(tapGestureRecognizer)
-
-        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressLoginLogo))
-        self.logoImageView.addGestureRecognizer(longPressGestureRecognizer)
-
-    }
-
-    @objc func didTapLoginLogo() {
-        let emailVerificationCodeViewModel = EmailVerificationCodeViewModel()
-
-        let emailVerificationCodeViewController = EmailVerificationCodeViewController(viewModel: emailVerificationCodeViewModel)
-
-        self.navigationController?.pushViewController(emailVerificationCodeViewController, animated: true)
-    }
-
-    @objc func didLongPressLoginLogo(_ sender: UILongPressGestureRecognizer) {
-        if sender.state == .began {
-            let smsVerificationCodeViewModel = CodeVerificationViewModel(email: "geral@gomadevelopment.pt")
-
-            let smsVerificationCodeViewController = CodeVerificationViewController(viewModel: smsVerificationCodeViewModel)
-
-            self.navigationController?.pushViewController(smsVerificationCodeViewController, animated: true)
-        }
+        Publishers.CombineLatest(self.usernameHeaderTextFieldView.textPublisher, self.passwordHeaderTextFieldView.textPublisher)
+            .map { username, password in
+                return (username?.isNotEmpty ?? false) && (password?.isNotEmpty ?? false)
+            }
+            .sink(receiveCompletion: { _ in
+                
+            }, receiveValue: { [weak self] validFields in
+                self?.loginButton.isEnabled = validFields
+            })
+            .store(in: &cancellables)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -311,14 +289,14 @@ class LoginViewController: UIViewController {
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
-
                     switch error {
                     case .invalidEmailPassword:
                         self.showWrongPasswordStatus()
-
                     case .restrictedCountry(let errorMessage):
                         self.showServerErrorStatus(errorMessage: errorMessage)
                     case .serverError:
+                        self.showServerErrorStatus()
+                    default:
                         self.showServerErrorStatus()
                     }
                 case .finished:

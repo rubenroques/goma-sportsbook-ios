@@ -37,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         #if XCODE_ACTION_install
             // Is archiving
         #else
-            // UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
+            UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
         #endif
         
         Logger.log("App Started")

@@ -15,6 +15,11 @@
 		4503E79B27D0E89600077CD2 /* CompetitionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4503E79927D0E89600077CD2 /* CompetitionDetailsViewController.swift */; };
 		4503E79D27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4503E79C27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift */; };
 		4503E79E27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4503E79C27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift */; };
+		45044AFB291022E90053311D /* ServiceProviderModelMapper+Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45044AFA291022E90053311D /* ServiceProviderModelMapper+Profile.swift */; };
+		45044AFC291022E90053311D /* ServiceProviderModelMapper+Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45044AFA291022E90053311D /* ServiceProviderModelMapper+Profile.swift */; };
+		45044AFD291022E90053311D /* ServiceProviderModelMapper+Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45044AFA291022E90053311D /* ServiceProviderModelMapper+Profile.swift */; };
+		45044AFE291022E90053311D /* ServiceProviderModelMapper+Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45044AFA291022E90053311D /* ServiceProviderModelMapper+Profile.swift */; };
+		45044AFF291022E90053311D /* ServiceProviderModelMapper+Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45044AFA291022E90053311D /* ServiceProviderModelMapper+Profile.swift */; };
 		45085660284A640D00F4FB52 /* FriendProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99FD5102835479200275509 /* FriendProfileViewModel.swift */; };
 		45085661284A640D00F4FB52 /* FriendProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99FD5102835479200275509 /* FriendProfileViewModel.swift */; };
 		450B781D28F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450B781C28F56BA5009229E3 /* ServiceProviderModelMapper.swift */; };
@@ -5945,6 +5950,7 @@
 		4502BF392798713C00F5B0CD /* HomeAwayCardStatsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeAwayCardStatsView.xib; sourceTree = "<group>"; };
 		4503E79927D0E89600077CD2 /* CompetitionDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionDetailsViewController.swift; sourceTree = "<group>"; };
 		4503E79C27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionDetailsViewModel.swift; sourceTree = "<group>"; };
+		45044AFA291022E90053311D /* ServiceProviderModelMapper+Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Profile.swift"; sourceTree = "<group>"; };
 		450B781C28F56BA5009229E3 /* ServiceProviderModelMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceProviderModelMapper.swift; sourceTree = "<group>"; };
 		450B7B2428F58574009229E3 /* SportRadar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SportRadar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		450B7B2928F58625009229E3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = "en.lproj/LaunchScreen-SportRadar.storyboard"; sourceTree = "<group>"; };
@@ -8670,6 +8676,7 @@
 				45626E33275530990069B89B /* OddFormatter.swift */,
 				450B781C28F56BA5009229E3 /* ServiceProviderModelMapper.swift */,
 				45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */,
+				45044AFA291022E90053311D /* ServiceProviderModelMapper+Profile.swift */,
 				450B7B3E28F637FA009229E3 /* ServiceProviderModelMapper+Sports.swift */,
 			);
 			path = Helpers;
@@ -11657,6 +11664,7 @@
 				450B789628F58574009229E3 /* Environment.swift in Sources */,
 				450B789728F58574009229E3 /* SegmentControlView.swift in Sources */,
 				450B789828F58574009229E3 /* UserInfoView.swift in Sources */,
+				45044AFC291022E90053311D /* ServiceProviderModelMapper+Profile.swift in Sources */,
 				450B789928F58574009229E3 /* ShareTicketChoiceViewModel.swift in Sources */,
 				450B789A28F58574009229E3 /* TodayMatchesDataSource.swift in Sources */,
 				450B789B28F58574009229E3 /* StaticHomeViewTemplateDataSource.swift in Sources */,
@@ -12255,6 +12263,7 @@
 				45A2897726C33C7800BCD5DA /* Environment.swift in Sources */,
 				4589C74E281C080700243547 /* SegmentControlView.swift in Sources */,
 				45A6BB8F2822B4CD00D9B416 /* StaticHomeViewTemplateDataSource.swift in Sources */,
+				45044AFE291022E90053311D /* ServiceProviderModelMapper+Profile.swift in Sources */,
 				A98EC7CC2889AD7B0044FC46 /* ShareTicketChoiceViewModel.swift in Sources */,
 				45C26DD127976ADF00513D41 /* TodayMatchesDataSource.swift in Sources */,
 				A9E7C6A527BA779200F784C9 /* AggregatorRepositoryType.swift in Sources */,
@@ -12912,6 +12921,7 @@
 				A9B841AF26E674AA00269B05 /* Match.swift in Sources */,
 				4589C74C281C080400243547 /* SegmentControlView.swift in Sources */,
 				45A6BB902822B4CD00D9B416 /* StaticHomeViewTemplateDataSource.swift in Sources */,
+				45044AFF291022E90053311D /* ServiceProviderModelMapper+Profile.swift in Sources */,
 				A98EC7CD2889ADC00044FC46 /* ShareTicketChoiceViewModel.swift in Sources */,
 				45D3DE3B271499DB00717124 /* BannerScrollTableViewCell.swift in Sources */,
 				45A2897826C33C7800BCD5DA /* Environment.swift in Sources */,
@@ -14702,6 +14712,7 @@
 				4589C7B5282024E400243547 /* Environment.swift in Sources */,
 				4589C7B6282024E400243547 /* SegmentControlView.swift in Sources */,
 				45B6E22D284151D1001B570C /* UserInfoView.swift in Sources */,
+				45044AFB291022E90053311D /* ServiceProviderModelMapper+Profile.swift in Sources */,
 				A98EC7CE2889ADC10044FC46 /* ShareTicketChoiceViewModel.swift in Sources */,
 				4589C7B7282024E400243547 /* TodayMatchesDataSource.swift in Sources */,
 				45A6BB912822B4CD00D9B416 /* StaticHomeViewTemplateDataSource.swift in Sources */,
@@ -16081,6 +16092,7 @@
 				A9C341A728F9A74A0055360B /* VersionUpdateViewController.swift in Sources */,
 				A9C341A828F9A74A0055360B /* SportSelectionCollectionViewCell.swift in Sources */,
 				A9C341A928F9A74A0055360B /* MultiSlider.swift in Sources */,
+				45044AFD291022E90053311D /* ServiceProviderModelMapper+Profile.swift in Sources */,
 				A9C341AA28F9A74A0055360B /* UserLoginForm.swift in Sources */,
 				A9C341AB28F9A74A0055360B /* OutrightCompetitionWidgetCollectionViewCell.swift in Sources */,
 				A9C341AC28F9A74A0055360B /* Tournament.swift in Sources */,
@@ -16490,7 +16502,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00706;
+				CURRENT_PROJECT_VERSION = 00710;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16516,7 +16528,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00706;
+				CURRENT_PROJECT_VERSION = 00710;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

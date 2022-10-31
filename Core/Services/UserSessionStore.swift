@@ -177,6 +177,7 @@ class UserSessionStore {
                     return .serverError
                 }
             }
+            .map(ServiceProviderModelMapper.userProfile(_:))
             .map { (userProfile: UserProfile) -> UserSession in
                 return UserSession(username: userProfile.username,
                                    password: password,
@@ -190,7 +191,7 @@ class UserSessionStore {
                 self?.saveUserSession(userSession)
                 self?.loginGomaAPI(username: userSession.username, password: userSession.userId)
                 
-                Env.userSessionStore.isUserProfileIncomplete.send(userSession.isProfileCompleted) // TODO: userSession isProfileIncomplete ?!
+                Env.userSessionStore.isUserProfileIncomplete.send(userSession.isProfileCompleted)
                 Env.userSessionStore.isUserEmailVerified.send(userSession.isEmailVerified)
             })
             .eraseToAnyPublisher()

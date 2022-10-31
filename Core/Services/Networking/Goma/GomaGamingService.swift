@@ -15,7 +15,8 @@ enum GomaGamingService {
     case modules
     
     case login(username: String, password: String, deviceToken: String)
-    case simpleRegister(username: String, email: String, phoneCountryCode: String, phone: String, birthDate: Date, userProviderId: String, deviceToken: String)
+    case simpleRegister(username: String, email: String, phoneCountryCode: String,
+                        phone: String, birthDate: Date, userProviderId: String, deviceToken: String)
     
     case updateProfile(name: String)
     case modalPopUpDetails
@@ -414,14 +415,15 @@ extension GomaGamingService: Endpoint {
             if TargetVariables.serviceProviderType == .sportradar {
                 prefix = "sr_"
             }
-            
+            let birthDateString = birthDate.toString(formatString: "yyyy-MM-dd")
             let body = """
-                       {"type": "small_register",
+                       {
+                        "type": "small_register",
                         "email": "\(prefix)\(email)",
                         "username": "\(prefix)\(username)",
                         "phone_country_code": "\(phoneCountryCode)",
                         "phone_number": "\(phone)",
-                        "birthdate": "\(birthDate)",
+                        "birthdate": "\(birthDateString)",
                         "user_provider_id": "\(userProviderId)",
                         "device_token": "\(deviceToken)"
                        }
@@ -429,7 +431,6 @@ extension GomaGamingService: Endpoint {
             let data = body.data(using: String.Encoding.utf8)!
             return data
 
-            
         case .login(let username, let password, let deviceToken):
             
             var prefix = ""

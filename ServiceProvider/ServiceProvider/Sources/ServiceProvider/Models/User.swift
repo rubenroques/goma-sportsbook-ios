@@ -76,6 +76,16 @@ public struct UserProfile: Codable {
     public let firstName: String?
     public let lastName: String?
     public let birthDate: Date
+    public let gender: String?
+    public let nationalityCode: String?
+    public let countryCode: String?
+    public let personalIdNumber: String?
+    public let address: String?
+    public let province: String?
+    public let city: String?
+    public let postalCode: String?
+    
+    
     public let emailVerificationStatus: EmailVerificationStatus
     public let userRegistrationStatus: UserRegistrationStatus
     
@@ -85,14 +95,32 @@ public struct UserProfile: Codable {
                 firstName: String?,
                 lastName: String?,
                 birthDate: Date,
+                gender: String?,
+                nationalityCode: String?,
+                countryCode: String?,
+                personalIdNumber: String?,
+                address: String?,
+                province: String?,
+                city: String?,
+                postalCode: String?,
                 emailVerificationStatus: EmailVerificationStatus,
                 userRegistrationStatus: UserRegistrationStatus) {
+        
         self.userIdentifier = userIdentifier
         self.username = username
         self.email = email
         self.firstName = firstName
         self.lastName = lastName
         self.birthDate = birthDate
+        self.gender = gender
+        self.nationalityCode = nationalityCode
+        self.countryCode = countryCode
+        self.personalIdNumber = personalIdNumber
+        self.address = address
+        self.province = province
+        self.city = city
+        self.postalCode = postalCode
+        
         self.emailVerificationStatus = emailVerificationStatus
         self.userRegistrationStatus = userRegistrationStatus
     }
@@ -105,6 +133,18 @@ public extension UserProfile {
     }
     var isRegistrationCompleted: Bool {
         return self.userRegistrationStatus == .completed
+    }
+    var nationalityCountry: Country? {
+        if let nationalityCode = self.nationalityCode {
+            return Country.init(isoCode: nationalityCode)
+        }
+        return nil
+    }
+    var country: Country? {
+        if let countryCode = self.countryCode {
+            return Country.init(isoCode: countryCode)
+        }
+        return nil
     }
 }
 

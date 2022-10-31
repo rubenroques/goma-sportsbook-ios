@@ -81,7 +81,7 @@ class PersonalInfoViewController: UIViewController {
         editButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
         titleHeaderTextFieldView.setPlaceholderText(localized("title"))
-        titleHeaderTextFieldView.setSelectionPicker(UserTitles.titles, headerVisible: true)
+        titleHeaderTextFieldView.setSelectionPicker(["---"], headerVisible: true)
         titleHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
         titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
         titleHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .regular, size: 15))
@@ -94,7 +94,7 @@ class PersonalInfoViewController: UIViewController {
         lastNameHeaderTextFieldView.setPlaceholderText(localized("last_name"))
 
         countryHeaderTextFieldView.setPlaceholderText(localized("nationality"))
-        countryHeaderTextFieldView.setSelectionPicker(["-----"], headerVisible: true)
+        countryHeaderTextFieldView.setSelectionPicker(["---"], headerVisible: true)
         countryHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
         countryHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
         countryHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .regular, size: 15))
@@ -231,14 +231,7 @@ class PersonalInfoViewController: UIViewController {
         Env.serviceProvider.getCountries()
             .map { (serviceProviderCountries: [ServiceProvider.Country]) -> [Country] in
                 serviceProviderCountries.map({ (serviceProviderCountry: ServiceProvider.Country) -> Country in
-                    return Country(name: serviceProviderCountry.name,
-                                   capital: serviceProviderCountry.capital,
-                                   region: serviceProviderCountry.region,
-                                   iso2Code: serviceProviderCountry.iso2Code,
-                                   iso3Code: serviceProviderCountry.iso3Code,
-                                   numericCode: serviceProviderCountry.numericCode,
-                                   phonePrefix: serviceProviderCountry.phonePrefix)
-                    
+                    return ServiceProviderModelMapper.country(fromServiceProviderCountry: serviceProviderCountry)
                 })
             }
             .receive(on: DispatchQueue.main)
@@ -251,15 +244,25 @@ class PersonalInfoViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        Env.everyMatrixClient.getProfile()
+        Env.serviceProvider.getProfile()
             .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
+            .map(ServiceProviderModelMapper.userProfile(_:))
             .sink { _ in
-
+                
             } receiveValue: { profile in
                 self.setupProfile(profile: profile)
             }
+        
         .store(in: &cancellables)
+        
+//        Env.everyMatrixClient.getProfile()
+//            .receive(on: DispatchQueue.main)
+//            .sink { _ in
+//
+//            } receiveValue: { profile in
+//                self.setupProfile(profile: profile)
+//            }
+//        .store(in: &cancellables)
 
     }
 
@@ -397,85 +400,38 @@ class PersonalInfoViewController: UIViewController {
         self.cardIdHeaderTextFieldView.resignFirstResponder()
     }
 
-    private func updateProfile(form: EveryMatrix.ProfileForm) {
-        Env.everyMatrixClient.updateProfile(form: form)
-            .breakpointOnError()
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                case .failure(let error):
-                    switch error {
-                    case let .requestError(message):
-                        self.showAlert(type: .error, text: message)
-                    default:
-                        self.showAlert(type: .error, text: "\(error)")
-                    }
-                case .finished:
-                    ()
-                }
-            } receiveValue: { _ in
-                self.showAlert(type: .success, text: localized("profile_updated_success"))
-            }
-            .store(in: &cancellables)
-    }
-
-}
-
-// Flags business logic
-extension PersonalInfoViewController {
-
-    private func setupWithCountryCodes(_ countries: [Country]) {
-
-//        for country in listings.countries where country.isoCode == listings.currentIpCountry {
-//            self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country), slideUp: true)
-//        }
-//
-//        self.countryHeaderTextFieldView.isUserInteractionEnabled = true
-//        self.countryHeaderTextFieldView.shouldBeginEditing = { [weak self] in
-//            self?.showCountrySelector(listing: listings)
-//            return false
-//        }
-        
-    }
-
-//    private func showCountrySelector(listing: EveryMatrix.CountryListing) {
-//        let phonePrefixSelectorViewController = PhonePrefixSelectorViewController(countriesArray: listing, showIndicatives: false)
-//        phonePrefixSelectorViewController.modalPresentationStyle = .overCurrentContext
-//        phonePrefixSelectorViewController.didSelectCountry = { [weak self] country in
-//            self?.setupWithSelectedCountry(country)
-//            phonePrefixSelectorViewController.animateDismissView()
-//        }
-//        self.present(phonePrefixSelectorViewController, animated: false, completion: nil)
-//    }
     
-    private func showPhonePrefixSelector(_ countries: [Country]) {
-        let phonePrefixSelectorViewController = PhonePrefixSelectorViewController(countries: countries, originCountry: nil)
-        phonePrefixSelectorViewController.modalPresentationStyle = .overCurrentContext
-        phonePrefixSelectorViewController.didSelectCountry = { [weak self] country in
-            self?.setupWithSelectedCountry(country)
-            
-            phonePrefixSelectorViewController.animateDismissView()
-        }
-        self.present(phonePrefixSelectorViewController, animated: false, completion: nil)
-    }
-
-    private func setupWithSelectedCountry(_ country: Country) {
-        self.countryHeaderTextFieldView.setText(formatIndicativeCountry(country), slideUp: true)
-    }
-
-    private func formatIndicativeCountry(_ country: Country) -> String {
-        var stringCountry = "\(country.phonePrefix)"
-        let isoCode = country.iso2Code
+    private func setupProfile(profile: UserProfile) {
         
-        stringCountry = "\(isoCode) - \(country.phonePrefix)"
-        if let flag = CountryFlagHelper.flag(forCode: isoCode) {
-            stringCountry = "\(flag) \(country.phonePrefix)"
+        
+        if let optionIndex = UserTitles.titles.firstIndex(of: profile.title?.rawValue ?? "") {
+            self.titleHeaderTextFieldView.setSelectionPicker(UserTitles.titles, headerVisible: true)
+            self.titleHeaderTextFieldView.setSelectedPickerOption(option: optionIndex)
+        }
+        else {
+            self.titleHeaderTextFieldView.setText("")
+            // self.titleHeaderTextFieldView.isDisabled = true
         }
         
-        return stringCountry
-    }
-
-    private func setupProfile(profile: EveryMatrix.UserProfileField) {
+        self.usernameHeaderTextFieldView.setText(profile.username)
+        self.emailHeaderTextFieldView.setText(profile.email)
+        
+        self.firstNameHeaderTextFieldView.setText(profile.firstName ?? "-")
+        self.lastNameHeaderTextFieldView.setText(profile.lastName ?? "-")
+        
+        if let country = profile.nationality {
+            self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country), slideUp: true)
+        }
+        
+        self.birthDateHeaderTextFieldView.setText(profile.birthDate.toString(formatString: "dd-MM-yyyy"))
+        self.adress1HeaderTextFieldView.setText(profile.address ?? "-")
+        self.adress2HeaderTextFieldView.setText(profile.province ?? "-")
+        self.cityHeaderTextFieldView.setText(profile.city ?? "-")
+        self.postalCodeHeaderTextFieldView.setText(profile.postalCode ?? "-")
+        
+        self.cardIdHeaderTextFieldView.setText(profile.personalIdNumber ?? "-")
+        
+        /*
         self.profile = profile.fields
 
         if let optionIndex = UserTitles.titles.firstIndex(of: profile.fields.title) {
@@ -578,6 +534,86 @@ extension PersonalInfoViewController {
                 self?.checkProfileInfoChanged()
             })
             .store(in: &cancellables)
+    
+         */
+    }
+
+    private func updateProfile(form: EveryMatrix.ProfileForm) {
+        Env.everyMatrixClient.updateProfile(form: form)
+            .breakpointOnError()
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .failure(let error):
+                    switch error {
+                    case let .requestError(message):
+                        self.showAlert(type: .error, text: message)
+                    default:
+                        self.showAlert(type: .error, text: "\(error)")
+                    }
+                case .finished:
+                    ()
+                }
+            } receiveValue: { _ in
+                self.showAlert(type: .success, text: localized("profile_updated_success"))
+            }
+            .store(in: &cancellables)
+    }
+
+}
+
+// Flags business logic
+extension PersonalInfoViewController {
+
+    private func setupWithCountryCodes(_ countries: [Country]) {
+
+//        for country in listings.countries where country.isoCode == listings.currentIpCountry {
+//            self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country), slideUp: true)
+//        }
+//
+//        self.countryHeaderTextFieldView.isUserInteractionEnabled = true
+//        self.countryHeaderTextFieldView.shouldBeginEditing = { [weak self] in
+//            self?.showCountrySelector(listing: listings)
+//            return false
+//        }
+        
+    }
+
+//    private func showCountrySelector(listing: EveryMatrix.CountryListing) {
+//        let phonePrefixSelectorViewController = PhonePrefixSelectorViewController(countriesArray: listing, showIndicatives: false)
+//        phonePrefixSelectorViewController.modalPresentationStyle = .overCurrentContext
+//        phonePrefixSelectorViewController.didSelectCountry = { [weak self] country in
+//            self?.setupWithSelectedCountry(country)
+//            phonePrefixSelectorViewController.animateDismissView()
+//        }
+//        self.present(phonePrefixSelectorViewController, animated: false, completion: nil)
+//    }
+    
+    private func showPhonePrefixSelector(_ countries: [Country]) {
+        let phonePrefixSelectorViewController = PhonePrefixSelectorViewController(countries: countries, originCountry: nil)
+        phonePrefixSelectorViewController.modalPresentationStyle = .overCurrentContext
+        phonePrefixSelectorViewController.didSelectCountry = { [weak self] country in
+            self?.setupWithSelectedCountry(country)
+            
+            phonePrefixSelectorViewController.animateDismissView()
+        }
+        self.present(phonePrefixSelectorViewController, animated: false, completion: nil)
+    }
+
+    private func setupWithSelectedCountry(_ country: Country) {
+        self.countryHeaderTextFieldView.setText(formatIndicativeCountry(country), slideUp: true)
+    }
+
+    private func formatIndicativeCountry(_ country: Country) -> String {
+        var stringCountry = "\(country.phonePrefix)"
+        let isoCode = country.iso2Code
+        
+        stringCountry = "\(isoCode) - \(country.phonePrefix)"
+        if let flag = CountryFlagHelper.flag(forCode: isoCode) {
+            stringCountry = "\(flag) \(country.phonePrefix)"
+        }
+        
+        return stringCountry
     }
 
 }
