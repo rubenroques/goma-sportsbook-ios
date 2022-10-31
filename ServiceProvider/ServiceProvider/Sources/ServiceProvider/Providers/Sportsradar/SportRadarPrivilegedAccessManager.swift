@@ -194,4 +194,19 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         
     }
 
+    func forgotPassword(email: String, secretQuestion: String? = nil, secretAnswer: String? = nil) -> AnyPublisher<Bool, ServiceProviderError> {
+        let endpoint = OmegaAPIClient.forgotPassword(email: email, secretQuestion: secretQuestion, secretAnswer: secretAnswer)
+        let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.networkManager.request(endpoint)
+
+        return publisher.flatMap({ statusResponse -> AnyPublisher<Bool, ServiceProviderError> in
+            if statusResponse.status == "SUCCESS" {
+                return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+
+    }
+
 }

@@ -392,7 +392,11 @@ class LoginViewController: UIViewController {
     }
 
     @IBAction private func didTapRecoverPassword() {
-        self.navigationController?.pushViewController(RecoverPasswordViewController(), animated: true)
+        let recoverPasswordViewModel = RecoverPasswordViewModel()
+
+        let recoverPasswordViewController = RecoverPasswordViewController(viewModel: recoverPasswordViewModel)
+
+        self.navigationController?.pushViewController(recoverPasswordViewController, animated: true)
     }
 
 }

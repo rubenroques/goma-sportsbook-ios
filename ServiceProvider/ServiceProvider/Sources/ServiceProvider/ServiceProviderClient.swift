@@ -163,7 +163,15 @@ extension ServiceProviderClient {
         }
         return privilegedAccessManager.signupConfirmation(email, confirmationCode: confirmationCode)
     }
-    
+
+    public func forgotPassword(email: String, secretQuestion: String? = nil, secrestAnswer: String? = nil) -> AnyPublisher<Bool, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.forgotPassword(email: email, secretQuestion: secretQuestion, secretAnswer: secrestAnswer)
+    }
 
     
 }

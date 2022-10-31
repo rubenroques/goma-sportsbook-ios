@@ -20,6 +20,7 @@ import Foundation
  https://ps.omegasys.eu/ps/ips/quickSignup [ post ]
  https://ps.omegasys.eu/ps/ips/resendVerificationCode
  https://ps.omegasys.eu/ps/ips/signupConfirmation
+ https://ps.omegasys.eu/ps/ips/forgotPasswordStep1And2
  */
 
 enum OmegaAPIClient {
@@ -34,9 +35,12 @@ enum OmegaAPIClient {
                      mobilePrefix: String, mobileNumber: String, countryIsoCode: String, currencyCode: String)
     case resendVerificationCode(username: String)
     case signupConfirmation(email: String, confirmationCode: String)
-    
+
     case getCountries
     case getCurrentCountry
+
+    case forgotPassword(email: String, secretQuestion: String? = nil, secretAnswer: String? = nil)
+
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -67,6 +71,8 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/getCountries"
         case .getCurrentCountry:
             return "/ps/ips/getCountryInfo"
+        case .forgotPassword:
+            return "/ps/ips/forgotPasswordStep1And2"
         }
     }
     
@@ -127,6 +133,23 @@ extension OmegaAPIClient: Endpoint {
             return [
                 //URLQueryItem(name: "ipAddress", value: Self.getIPAddress()),
             ]
+        case .forgotPassword(let email, let secretQuestion, let secretAnswer):
+            var queryItemsURL: [URLQueryItem] = []
+
+            let queryItem = URLQueryItem(name: "email", value: email)
+            queryItemsURL.append(queryItem)
+
+            if secretQuestion != nil {
+                let queryItem = URLQueryItem(name: "secretQuestion", value: secretQuestion)
+                queryItemsURL.append(queryItem)
+            }
+
+            if secretAnswer != nil {
+                let queryItem = URLQueryItem(name: "secretAnswer", value: secretAnswer)
+                queryItemsURL.append(queryItem)
+            }
+
+            return queryItemsURL
         }
     }
     
@@ -145,6 +168,7 @@ extension OmegaAPIClient: Endpoint {
         case .signupConfirmation: return .get
         case .getCountries: return .get
         case .getCurrentCountry: return .get
+        case .forgotPassword: return .get
         }
     }
     

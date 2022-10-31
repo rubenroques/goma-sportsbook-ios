@@ -612,4 +612,9 @@ Terms of use, Privacy Policy and EULA";
 "betbuilder_enabled" = "BetBuilder Enabled";
 
 "code_verification_error" = "Code Verification Error";
+"proceed" = "Proceed";
+"forgot_password" = "Forgot Password";
+"email_associated_account" = "Please enter your Email associated with your Account";
 
+"recover_password_sent" = "Recover Password Sent";
+"recover_password_sent_message" = "If the information provided is correct, a confirmation email will be sent to the registered email address. \nClick the link or Input the verification code in the email to complete the password reset process & create a new password.";
