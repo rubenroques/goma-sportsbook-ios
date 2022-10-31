@@ -320,6 +320,8 @@ class LoginViewController: UIViewController {
                         self.showServerErrorStatus(errorMessage: errorMessage)
                     case .serverError:
                         self.showServerErrorStatus()
+                    case .quickSignUpIncomplete:
+                        self.showServerErrorStatus()
                     }
                 case .finished:
                     ()

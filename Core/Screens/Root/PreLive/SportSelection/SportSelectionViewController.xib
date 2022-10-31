@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SportSelectionViewController" customModule="ShowcaseBeta" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SportSelectionViewController" customModule="Crocobet" customModuleProvider="target">
             <connections>
                 <outlet property="activityIndicatorView" destination="aZt-s5-qyb" id="CD4-bB-1Bi"/>
                 <outlet property="cancelButton" destination="cLs-ZG-bN5" id="Mwj-Ec-kwZ"/>
                 <outlet property="collectionView" destination="dwa-ZR-kCR" id="QAl-SA-fZK"/>
+                <outlet property="loadingBaseView" destination="Nff-bX-RPT" id="sJG-L2-RCV"/>
                 <outlet property="navigationLabel" destination="hS5-0I-Qx5" id="mjR-tv-cyA"/>
                 <outlet property="navigationView" destination="q3C-TI-tYo" id="oLZ-AC-IUq"/>
                 <outlet property="searchBar" destination="pkR-v4-LqE" id="kpN-EX-wgt"/>
@@ -30,9 +31,6 @@
                     <rect key="frame" x="0.0" y="0.0" width="482" height="44"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </view>
-                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="aZt-s5-qyb">
-                    <rect key="frame" x="222.5" y="510" width="37" height="37"/>
-                </activityIndicatorView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q3C-TI-tYo">
                     <rect key="frame" x="0.0" y="52" width="482" height="50"/>
                     <subviews>
@@ -81,6 +79,19 @@
                     </constraints>
                     <textInputTraits key="textInputTraits"/>
                 </searchBar>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nff-bX-RPT">
+                    <rect key="frame" x="0.0" y="153" width="482" height="709"/>
+                    <subviews>
+                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="aZt-s5-qyb">
+                            <rect key="frame" x="222.5" y="336" width="37" height="37"/>
+                        </activityIndicatorView>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="aZt-s5-qyb" firstAttribute="centerY" secondItem="Nff-bX-RPT" secondAttribute="centerY" id="DfD-h4-hxC"/>
+                        <constraint firstItem="aZt-s5-qyb" firstAttribute="centerX" secondItem="Nff-bX-RPT" secondAttribute="centerX" id="s0L-7j-Ado"/>
+                    </constraints>
+                </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -89,18 +100,20 @@
                 <constraint firstItem="dwa-ZR-kCR" firstAttribute="top" secondItem="pkR-v4-LqE" secondAttribute="bottom" constant="8" id="1S9-WY-Or4"/>
                 <constraint firstItem="q3C-TI-tYo" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="5fL-ES-d3g"/>
                 <constraint firstItem="dwa-ZR-kCR" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="25" id="FnB-ON-ifs"/>
+                <constraint firstItem="Nff-bX-RPT" firstAttribute="top" secondItem="pkR-v4-LqE" secondAttribute="bottom" id="NWr-dr-89g"/>
                 <constraint firstItem="q3C-TI-tYo" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="PW2-h7-xfC"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="top" secondItem="l0T-7m-PZF" secondAttribute="bottom" id="QWk-3T-T4J"/>
                 <constraint firstItem="pkR-v4-LqE" firstAttribute="top" secondItem="q3C-TI-tYo" secondAttribute="bottom" id="RdE-C4-yZJ"/>
                 <constraint firstAttribute="bottom" secondItem="dwa-ZR-kCR" secondAttribute="bottom" id="YBH-Ze-rSS"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Nff-bX-RPT" secondAttribute="trailing" id="b0q-uA-367"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="Nff-bX-RPT" secondAttribute="bottom" id="cgl-lr-lOd"/>
                 <constraint firstItem="pkR-v4-LqE" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="25" id="fZ7-n7-xzm"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="dwa-ZR-kCR" secondAttribute="trailing" constant="25" id="l0M-l4-n8s"/>
                 <constraint firstItem="l0T-7m-PZF" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="pK6-qZ-6fo"/>
+                <constraint firstItem="Nff-bX-RPT" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="q4s-kd-ajh"/>
                 <constraint firstItem="q3C-TI-tYo" firstAttribute="top" secondItem="l0T-7m-PZF" secondAttribute="bottom" constant="8" id="qKC-JP-qe8"/>
-                <constraint firstItem="aZt-s5-qyb" firstAttribute="centerY" secondItem="dwa-ZR-kCR" secondAttribute="centerY" id="qmN-we-glD"/>
                 <constraint firstItem="pkR-v4-LqE" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" constant="-25" id="udg-N0-yk7"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="l0T-7m-PZF" secondAttribute="trailing" id="uoY-1V-zCd"/>
-                <constraint firstItem="aZt-s5-qyb" firstAttribute="centerX" secondItem="dwa-ZR-kCR" secondAttribute="centerX" id="yjR-Na-ISO"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="123.18840579710145" y="71.651785714285708"/>

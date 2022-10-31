@@ -180,8 +180,13 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.networkManager.request(endpoint)
         
         return publisher.flatMap({ statusResponse -> AnyPublisher<Bool, ServiceProviderError> in
+            print("STATUS RESPONSE: \(statusResponse)")
             if statusResponse.status == "SUCCESS" {
                 return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            if let fieldError = statusResponse.errors?[0],
+               let message = statusResponse.message {
+                return Fail(outputType: Bool.self, failure: ServiceProviderError.errorMessage(message: message)).eraseToAnyPublisher()
             }
             return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
         })
