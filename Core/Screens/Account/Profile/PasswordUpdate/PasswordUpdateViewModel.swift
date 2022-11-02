@@ -67,45 +67,67 @@ class PasswordUpdateViewModel: NSObject {
     func savePassword(oldPassword: String, newPassword: String) {
         self.isLoadingPublisher.send(true)
 
-        Env.everyMatrixClient.changePassword(oldPassword: oldPassword,
-                                             newPassword: newPassword,
-                                             captchaPublicKey: "",
-                                             captchaChallenge: "",
-                                             captchaResponse: "")
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
-            .sink( receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    break
-                case .failure(let error):
-                    var errorMessage = ""
-                    switch error {
-                    case .requestError(let value):
-                        errorMessage = value
-                    case .decodingError:
-                        errorMessage = "\(error)"
-                    case .httpError:
-                        errorMessage = "\(error)"
-                    case .unknown:
-                        errorMessage = "\(error)"
-                    case .missingTransportSessionID:
-                        errorMessage = "\(error)"
-                    case .notConnected:
-                        errorMessage = "\(error)"
-                    case .noResultsReceived:
-                        errorMessage = "\(error)"
-                    }
-                    let alertInfo = AlertInfo(alertType: .error, message: errorMessage)
-                    self?.shouldShowAlertPublisher.send(alertInfo)
-                }
+        // TO-DO: Put EM changePassword to its specific service provider
+//        Env.everyMatrixClient.changePassword(oldPassword: oldPassword,
+//                                             newPassword: newPassword,
+//                                             captchaPublicKey: "",
+//                                             captchaChallenge: "",
+//                                             captchaResponse: "")
+//            .receive(on: DispatchQueue.main)
+//            .eraseToAnyPublisher()
+//            .sink( receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .finished:
+//                    break
+//                case .failure(let error):
+//                    var errorMessage = ""
+//                    switch error {
+//                    case .requestError(let value):
+//                        errorMessage = value
+//                    case .decodingError:
+//                        errorMessage = "\(error)"
+//                    case .httpError:
+//                        errorMessage = "\(error)"
+//                    case .unknown:
+//                        errorMessage = "\(error)"
+//                    case .missingTransportSessionID:
+//                        errorMessage = "\(error)"
+//                    case .notConnected:
+//                        errorMessage = "\(error)"
+//                    case .noResultsReceived:
+//                        errorMessage = "\(error)"
+//                    }
+//                    let alertInfo = AlertInfo(alertType: .error, message: errorMessage)
+//                    self?.shouldShowAlertPublisher.send(alertInfo)
+//                }
+//
+//                self?.isLoadingPublisher.send(false)
+//            }, receiveValue: { [weak self] _ in
+//                let alertInfo = AlertInfo(alertType: .success, message: localized("success_edit_password"))
+//                self?.shouldShowAlertPublisher.send(alertInfo)
+//                UserDefaults.standard.userSession?.password = newPassword
+//            }).store(in: &cancellables)
 
+        Env.serviceProvider.updatePassword(oldPassword: oldPassword, newPassword: newPassword)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("UPDATE PASSWORD ERROR: \(error)")
+
+                }
                 self?.isLoadingPublisher.send(false)
-            }, receiveValue: { [weak self] _ in
-                let alertInfo = AlertInfo(alertType: .success, message: localized("success_edit_password"))
-                self?.shouldShowAlertPublisher.send(alertInfo)
-                UserDefaults.standard.userSession?.password = newPassword
-            }).store(in: &cancellables)
+            }, receiveValue: { [weak self] success in
+                if success {
+                    let alertInfo = AlertInfo(alertType: .success, message: localized("success_edit_password"))
+                    self?.shouldShowAlertPublisher.send(alertInfo)
+                    UserDefaults.standard.userSession?.password = newPassword
+                }
+            })
+            .store(in: &cancellables)
     }
 
     func saveSecurityInfo(securityQuestion: String, securityAnswer: String) {

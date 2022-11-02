@@ -62,9 +62,18 @@ extension SportRadarModels {
                         
                         content = .inplaySportList(sportsTypes: sportsTypes)
                     case .sportTypeByDate:
-                        let sportsTypes: [SportRadarModels.SportType] = try firstContentContainer.decode([SportRadarModels.SportType].self, forKey: .change)
+                        // change key is optional
+                        if firstContentContainer.contains(.change) {
+                            let sportsTypes: [SportRadarModels.SportType] = try firstContentContainer.decode([SportRadarModels.SportType].self, forKey: .change)
 
-                        content = .sportTypeByDate(sportsTypes: sportsTypes)
+                            content = .sportTypeByDate(sportsTypes: sportsTypes)
+                        }
+                        else {
+                            let sportsTypes: [SportType] = []
+
+                            content = .sportTypeByDate(sportsTypes: sportsTypes)
+                        }
+
                     case .eventListBySportTypeDate:
                         // change key is optional
                         if firstContentContainer.contains(.change) {

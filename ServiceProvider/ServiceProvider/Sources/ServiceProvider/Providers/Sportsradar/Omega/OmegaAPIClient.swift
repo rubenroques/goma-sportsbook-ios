@@ -21,6 +21,7 @@ import Foundation
  https://ps.omegasys.eu/ps/ips/resendVerificationCode
  https://ps.omegasys.eu/ps/ips/signupConfirmation
  https://ps.omegasys.eu/ps/ips/forgotPasswordStep1And2
+ https://ps.omegasys.eu/ps/ips/updatePassword
  */
 
 enum OmegaAPIClient {
@@ -40,6 +41,7 @@ enum OmegaAPIClient {
     case getCurrentCountry
 
     case forgotPassword(email: String, secretQuestion: String? = nil, secretAnswer: String? = nil)
+    case updatePassword(sessionKey: String, oldPassword: String, newPassword: String)
 
 }
 
@@ -73,6 +75,8 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/getCountryInfo"
         case .forgotPassword:
             return "/ps/ips/forgotPasswordStep1And2"
+        case .updatePassword:
+            return "/ps/ips/updatePassword"
         }
     }
     
@@ -150,6 +154,12 @@ extension OmegaAPIClient: Endpoint {
             }
 
             return queryItemsURL
+        case .updatePassword(let sessionKey, let oldPassword, let newPassword):
+            return [
+                URLQueryItem(name: "sessionKey", value: sessionKey),
+                URLQueryItem(name: "oldPassword", value: oldPassword),
+                URLQueryItem(name: "newPassword", value: newPassword)
+            ]
         }
     }
     
@@ -169,6 +179,7 @@ extension OmegaAPIClient: Endpoint {
         case .getCountries: return .get
         case .getCurrentCountry: return .get
         case .forgotPassword: return .get
+        case .updatePassword: return .get
         }
     }
     

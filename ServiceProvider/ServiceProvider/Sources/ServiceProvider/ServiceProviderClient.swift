@@ -173,6 +173,14 @@ extension ServiceProviderClient {
         return privilegedAccessManager.forgotPassword(email: email, secretQuestion: secretQuestion, secretAnswer: secrestAnswer)
     }
 
+    public func updatePassword(oldPassword: String, newPassword: String) -> AnyPublisher<Bool, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.updatePassword(oldPassword: oldPassword, newPassword: newPassword)
+    }
     
 }
 

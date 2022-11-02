@@ -58,13 +58,13 @@ class LoginViewController: UIViewController {
         Env.userSessionStore.shouldRecordUserSession = true
 
         // TEMP EM SHUTDOWN
-//        Publishers.CombineLatest(self.usernameHeaderTextFieldView.textPublisher, self.passwordHeaderTextFieldView.textPublisher)
-//            .map { username, password in
-//                return (username?.isNotEmpty ?? false) && (password?.isNotEmpty ?? false)
-//            }
-//            .assign(to: \.isEnabled, on: loginButton)
-//            .store(in: &cancellables)
-        self.loginButton.isEnabled = false
+        Publishers.CombineLatest(self.usernameHeaderTextFieldView.textPublisher, self.passwordHeaderTextFieldView.textPublisher)
+            .map { username, password in
+                return (username?.isNotEmpty ?? false) && (password?.isNotEmpty ?? false)
+            }
+            .assign(to: \.isEnabled, on: loginButton)
+            .store(in: &cancellables)
+        //self.loginButton.isEnabled = false
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapLoginLogo))
         self.logoImageView.isUserInteractionEnabled = true

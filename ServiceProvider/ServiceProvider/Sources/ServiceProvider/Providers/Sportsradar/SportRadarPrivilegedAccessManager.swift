@@ -32,6 +32,15 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         self.userSessionStateSubject = .init(.anonymous)
         self.userProfileSubject = .init(nil)
     }
+
+    func getSessionKey() -> String? {
+
+        guard let sessionKey = self.retrieveSessionKey() else {
+            return nil
+        }
+
+        return sessionKey
+    }
     
     func login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError> {
         
@@ -196,6 +205,25 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
 
     func forgotPassword(email: String, secretQuestion: String? = nil, secretAnswer: String? = nil) -> AnyPublisher<Bool, ServiceProviderError> {
         let endpoint = OmegaAPIClient.forgotPassword(email: email, secretQuestion: secretQuestion, secretAnswer: secretAnswer)
+        let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.networkManager.request(endpoint)
+
+        return publisher.flatMap({ statusResponse -> AnyPublisher<Bool, ServiceProviderError> in
+            if statusResponse.status == "SUCCESS" {
+                return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+
+    }
+
+    func updatePassword(oldPassword: String, newPassword: String) -> AnyPublisher<Bool, ServiceProviderError> {
+        guard let sessionKey = self.retrieveSessionKey() else {
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+
+        let endpoint = OmegaAPIClient.updatePassword(sessionKey: sessionKey, oldPassword: oldPassword, newPassword: newPassword)
         let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.networkManager.request(endpoint)
 
         return publisher.flatMap({ statusResponse -> AnyPublisher<Bool, ServiceProviderError> in

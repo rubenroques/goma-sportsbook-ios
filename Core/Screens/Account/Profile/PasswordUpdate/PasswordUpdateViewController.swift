@@ -88,7 +88,6 @@ class PasswordUpdateViewController: UIViewController {
 
         newPasswordHeaderTextFieldView.setSecureField(true)
 
-
         confirmPasswordHeaderTextFieldView.setSecureField(true)
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
