@@ -112,6 +112,14 @@ extension ServiceProviderClient {
 
 }
 
+/* REST API Events
+ */
+extension ServiceProviderClient {
+    public func getMarketFilters() -> AnyPublisher<MarketFilter, ServiceProviderError>? {
+        return self.eventsProvider?.getMarketsFilter()
+    }
+}
+
 
 extension ServiceProviderClient {
     

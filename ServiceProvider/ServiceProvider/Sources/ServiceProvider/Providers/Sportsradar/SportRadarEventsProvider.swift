@@ -11,9 +11,11 @@ import Combine
 class SportRadarEventsProvider: EventsProvider {
 
     var connector: SportRadarSocketConnector
-    
+    private var networkManager: NetworkManager
+
     required init(connector: SportRadarSocketConnector) {
         self.connector = connector
+        self.networkManager = NetworkManager()
     }
     
     private var liveSportTypesPublisher: CurrentValueSubject<SubscribableContent<[SportTypeDetails]>, ServiceProviderError>?
@@ -390,10 +392,24 @@ extension SportRadarEventsProvider {
     private func createSubscribeRequest(withHTTPBody body: Data? = nil) -> URLRequest {
         let url = URL(string: "https://www-sportbook-goma-int.optimahq.com/services/content/subscribe")!
         var request = URLRequest(url: url)
-        request.httpBody = body
+        request.httpBody = body 
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Media-Type")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         return request
+    }
+}
+
+/* REST API Events
+ */
+extension SportRadarEventsProvider {
+
+    func getMarketsFilter() -> AnyPublisher<MarketFilter, ServiceProviderError>? {
+
+        let endpoint = SportRadarRestAPIClient.marketsFilter
+        let requestPublisher: AnyPublisher<MarketFilter, ServiceProviderError> = self.networkManager.request(endpoint)
+
+        return requestPublisher
+
     }
 }

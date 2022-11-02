@@ -18,4 +18,7 @@ protocol EventsProvider {
     func unsubscribePreLiveMatches()
 //    func unsubscribeUpcomingMatches()
     func unsubscribeAllSportTypes()
+
+    // REST API
+    func getMarketsFilter() -> AnyPublisher<MarketFilter, ServiceProviderError>?
 }

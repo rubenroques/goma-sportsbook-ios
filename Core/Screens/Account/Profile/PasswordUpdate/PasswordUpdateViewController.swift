@@ -69,11 +69,32 @@ class PasswordUpdateViewController: UIViewController {
         if TargetVariables.serviceProviderType == .sportradar {
             self.hideSecurityQuestionLayout()
         }
+
+        self.testRESTAPI()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         setupWithTheme()
+    }
+
+    func testRESTAPI() {
+
+        Env.serviceProvider.getMarketFilters()?
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+
+                case .finished:
+                    print("MARKET FILTER FINISHED")
+                case .failure(let error):
+                    print("MARKET FILTER ERROR: \(error)")
+
+                }
+            }, receiveValue: { [weak self] response in
+                print("MARKET FILTER RESPONSE: \(response)")
+            })
+            .store(in: &cancellables)
     }
 
     func commonInit() {

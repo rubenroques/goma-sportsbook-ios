@@ -31,7 +31,7 @@ class NetworkManager {
             return AnyPublisher(Fail<T, ServiceProviderError>(error: error))
         }
         
-//        print("ServiceProvider-NetworkManager requesting: \(request)")
+        print("ServiceProvider-NetworkManager requesting: \(request)")
         
         return self.session.dataTaskPublisher(for: request)
             .tryMap { result in
