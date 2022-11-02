@@ -178,7 +178,6 @@
 		450B78D728F58574009229E3 /* CGPoint+Shift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1F28772DA600037BBE /* CGPoint+Shift.swift */; };
 		450B78D828F58574009229E3 /* TSParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAB26F3548D00E69D65 /* TSParams.swift */; };
 		450B78D928F58574009229E3 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636A26BE949300690896 /* UserSettings.swift */; };
-		450B78DA28F58574009229E3 /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F3F526BF017A005DF543 /* RecoverPasswordViewController.swift */; };
 		450B78DB28F58574009229E3 /* StaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F42826C02EAA005DF543 /* StaticTableViewController.swift */; };
 		450B78DC28F58574009229E3 /* TransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F410E62827BC4FAB005C1964 /* TransactionsTableViewCell.swift */; };
 		450B78DD28F58574009229E3 /* UserRegisterForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B7DAE126F92CF30032C1C3 /* UserRegisterForm.swift */; };
@@ -733,7 +732,6 @@
 		450B7B0A28F58574009229E3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726338272C1A22002F2959 /* LiveMatchWidgetCollectionViewCell.xib */; };
 		450B7B0B28F58574009229E3 /* PolicyLinkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */; };
 		450B7B0C28F58574009229E3 /* Gilroy-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8E26F2146100A73E45 /* Gilroy-Thin.ttf */; };
-		450B7B0D28F58574009229E3 /* RecoverPasswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3F626BF017A005DF543 /* RecoverPasswordViewController.xib */; };
 		450B7B0E28F58574009229E3 /* Gilroy-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8326F2146000A73E45 /* Gilroy-Heavy.ttf */; };
 		450B7B0F28F58574009229E3 /* EditAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FBD26F4E55000059DCD /* EditAlertView.xib */; };
 		450B7B1028F58574009229E3 /* SharedAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CAB26BD981900EC572D /* SharedAssets.xcassets */; };
@@ -1340,7 +1338,6 @@
 		457CBA5B282D27D000ED0F00 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F3EC26BF017A005DF543 /* WelcomeViewController.swift */; };
 		457CBA5C282D27D000ED0F00 /* TSParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAB26F3548D00E69D65 /* TSParams.swift */; };
 		457CBA5D282D27D000ED0F00 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636A26BE949300690896 /* UserSettings.swift */; };
-		457CBA5E282D27D000ED0F00 /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F3F526BF017A005DF543 /* RecoverPasswordViewController.swift */; };
 		457CBA5F282D27D000ED0F00 /* StaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F42826C02EAA005DF543 /* StaticTableViewController.swift */; };
 		457CBA60282D27D000ED0F00 /* TransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F410E62827BC4FAB005C1964 /* TransactionsTableViewCell.swift */; };
 		457CBA61282D27D000ED0F00 /* UserRegisterForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B7DAE126F92CF30032C1C3 /* UserRegisterForm.swift */; };
@@ -1805,7 +1802,6 @@
 		457CBC34282D27D000ED0F00 /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726338272C1A22002F2959 /* LiveMatchWidgetCollectionViewCell.xib */; };
 		457CBC35282D27D000ED0F00 /* PolicyLinkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */; };
 		457CBC36282D27D000ED0F00 /* Gilroy-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8E26F2146100A73E45 /* Gilroy-Thin.ttf */; };
-		457CBC37282D27D000ED0F00 /* RecoverPasswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3F626BF017A005DF543 /* RecoverPasswordViewController.xib */; };
 		457CBC38282D27D000ED0F00 /* Gilroy-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8326F2146000A73E45 /* Gilroy-Heavy.ttf */; };
 		457CBC39282D27D000ED0F00 /* EditAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FBD26F4E55000059DCD /* EditAlertView.xib */; };
 		457CBC3A282D27D000ED0F00 /* SharedAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CAB26BD981900EC572D /* SharedAssets.xcassets */; };
@@ -1950,7 +1946,6 @@
 		457CBD02282D2CD100ED0F00 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F3EC26BF017A005DF543 /* WelcomeViewController.swift */; };
 		457CBD03282D2CD100ED0F00 /* TSParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAB26F3548D00E69D65 /* TSParams.swift */; };
 		457CBD04282D2CD100ED0F00 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636A26BE949300690896 /* UserSettings.swift */; };
-		457CBD05282D2CD100ED0F00 /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F3F526BF017A005DF543 /* RecoverPasswordViewController.swift */; };
 		457CBD06282D2CD100ED0F00 /* StaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F42826C02EAA005DF543 /* StaticTableViewController.swift */; };
 		457CBD07282D2CD100ED0F00 /* TransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F410E62827BC4FAB005C1964 /* TransactionsTableViewCell.swift */; };
 		457CBD08282D2CD100ED0F00 /* UserRegisterForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B7DAE126F92CF30032C1C3 /* UserRegisterForm.swift */; };
@@ -2415,7 +2410,6 @@
 		457CBEDB282D2CD100ED0F00 /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726338272C1A22002F2959 /* LiveMatchWidgetCollectionViewCell.xib */; };
 		457CBEDC282D2CD100ED0F00 /* PolicyLinkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */; };
 		457CBEDD282D2CD100ED0F00 /* Gilroy-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8E26F2146100A73E45 /* Gilroy-Thin.ttf */; };
-		457CBEDE282D2CD100ED0F00 /* RecoverPasswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3F626BF017A005DF543 /* RecoverPasswordViewController.xib */; };
 		457CBEDF282D2CD100ED0F00 /* Gilroy-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8326F2146000A73E45 /* Gilroy-Heavy.ttf */; };
 		457CBEE0282D2CD100ED0F00 /* EditAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FBD26F4E55000059DCD /* EditAlertView.xib */; };
 		457CBEE1282D2CD100ED0F00 /* SharedAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CAB26BD981900EC572D /* SharedAssets.xcassets */; };
@@ -2599,7 +2593,6 @@
 		4589C7E7282024E400243547 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F3EC26BF017A005DF543 /* WelcomeViewController.swift */; };
 		4589C7E8282024E400243547 /* TSParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAB26F3548D00E69D65 /* TSParams.swift */; };
 		4589C7E9282024E400243547 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636A26BE949300690896 /* UserSettings.swift */; };
-		4589C7EA282024E400243547 /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F3F526BF017A005DF543 /* RecoverPasswordViewController.swift */; };
 		4589C7EB282024E400243547 /* StaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F42826C02EAA005DF543 /* StaticTableViewController.swift */; };
 		4589C7EC282024E400243547 /* TransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F410E62827BC4FAB005C1964 /* TransactionsTableViewCell.swift */; };
 		4589C7ED282024E400243547 /* UserRegisterForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B7DAE126F92CF30032C1C3 /* UserRegisterForm.swift */; };
@@ -3051,7 +3044,6 @@
 		4589C9B3282024E400243547 /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726338272C1A22002F2959 /* LiveMatchWidgetCollectionViewCell.xib */; };
 		4589C9B4282024E400243547 /* PolicyLinkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */; };
 		4589C9B5282024E400243547 /* Gilroy-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8E26F2146100A73E45 /* Gilroy-Thin.ttf */; };
-		4589C9B6282024E400243547 /* RecoverPasswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3F626BF017A005DF543 /* RecoverPasswordViewController.xib */; };
 		4589C9B7282024E400243547 /* Gilroy-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8326F2146000A73E45 /* Gilroy-Heavy.ttf */; };
 		4589C9B8282024E400243547 /* EditAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FBD26F4E55000059DCD /* EditAlertView.xib */; };
 		4589C9B9282024E400243547 /* SharedAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CAB26BD981900EC572D /* SharedAssets.xcassets */; };
@@ -3083,10 +3075,6 @@
 		4589F40026BF017A005DF543 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3F226BF017A005DF543 /* LoginViewController.xib */; };
 		4589F40126BF017A005DF543 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F3F326BF017A005DF543 /* LoginViewController.swift */; };
 		4589F40226BF017A005DF543 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F3F326BF017A005DF543 /* LoginViewController.swift */; };
-		4589F40326BF017A005DF543 /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F3F526BF017A005DF543 /* RecoverPasswordViewController.swift */; };
-		4589F40426BF017A005DF543 /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F3F526BF017A005DF543 /* RecoverPasswordViewController.swift */; };
-		4589F40526BF017A005DF543 /* RecoverPasswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3F626BF017A005DF543 /* RecoverPasswordViewController.xib */; };
-		4589F40626BF017A005DF543 /* RecoverPasswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3F626BF017A005DF543 /* RecoverPasswordViewController.xib */; };
 		4589F40E26BF0203005DF543 /* RoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F40826BF0203005DF543 /* RoundButton.swift */; };
 		4589F40F26BF0203005DF543 /* RoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F40826BF0203005DF543 /* RoundButton.swift */; };
 		4589F41026BF0203005DF543 /* TitleTextFieldView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F40A26BF0203005DF543 /* TitleTextFieldView.xib */; };
@@ -3316,7 +3304,6 @@
 		45A6BC3528246A7500D9B416 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F3EC26BF017A005DF543 /* WelcomeViewController.swift */; };
 		45A6BC3628246A7500D9B416 /* TSParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAB26F3548D00E69D65 /* TSParams.swift */; };
 		45A6BC3728246A7500D9B416 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636A26BE949300690896 /* UserSettings.swift */; };
-		45A6BC3828246A7500D9B416 /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F3F526BF017A005DF543 /* RecoverPasswordViewController.swift */; };
 		45A6BC3928246A7500D9B416 /* StaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F42826C02EAA005DF543 /* StaticTableViewController.swift */; };
 		45A6BC3A28246A7500D9B416 /* TransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F410E62827BC4FAB005C1964 /* TransactionsTableViewCell.swift */; };
 		45A6BC3B28246A7500D9B416 /* UserRegisterForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B7DAE126F92CF30032C1C3 /* UserRegisterForm.swift */; };
@@ -3779,7 +3766,6 @@
 		45A6BE0C28246A7500D9B416 /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726338272C1A22002F2959 /* LiveMatchWidgetCollectionViewCell.xib */; };
 		45A6BE0D28246A7500D9B416 /* PolicyLinkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */; };
 		45A6BE0E28246A7500D9B416 /* Gilroy-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8E26F2146100A73E45 /* Gilroy-Thin.ttf */; };
-		45A6BE0F28246A7500D9B416 /* RecoverPasswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3F626BF017A005DF543 /* RecoverPasswordViewController.xib */; };
 		45A6BE1028246A7500D9B416 /* Gilroy-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8326F2146000A73E45 /* Gilroy-Heavy.ttf */; };
 		45A6BE1128246A7500D9B416 /* EditAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FBD26F4E55000059DCD /* EditAlertView.xib */; };
 		45A6BE1228246A7500D9B416 /* SharedAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CAB26BD981900EC572D /* SharedAssets.xcassets */; };
@@ -4767,6 +4753,15 @@
 		A9B331F0289422FC00D097F0 /* MessageDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331EB289422FB00D097F0 /* MessageDetailViewModel.swift */; };
 		A9B331F1289422FC00D097F0 /* MessageDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331EB289422FB00D097F0 /* MessageDetailViewModel.swift */; };
 		A9B331F2289422FC00D097F0 /* MessageDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331EB289422FB00D097F0 /* MessageDetailViewModel.swift */; };
+		A9B6305529102BF900BB850E /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */; };
+		A9B6305629102BF900BB850E /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */; };
+		A9B6305729102BF900BB850E /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */; };
+		A9B6305829102BF900BB850E /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */; };
+		A9B6305929102BF900BB850E /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */; };
+		A9B6305A29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */; };
+		A9B6305B29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */; };
+		A9B6305C29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */; };
+		A9B6305D29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */; };
 		A9B8407C26CA789A00269B05 /* VersionUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */; };
 		A9B8407D26CA789A00269B05 /* VersionUpdateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8407B26CA789A00269B05 /* VersionUpdateViewController.xib */; };
 		A9B8407E26CAAEB200269B05 /* VersionUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */; };
@@ -5079,7 +5074,6 @@
 		A9C3413128F9A74A0055360B /* CGPoint+Shift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F1F28772DA600037BBE /* CGPoint+Shift.swift */; };
 		A9C3413228F9A74A0055360B /* TSParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAB26F3548D00E69D65 /* TSParams.swift */; };
 		A9C3413328F9A74A0055360B /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636A26BE949300690896 /* UserSettings.swift */; };
-		A9C3413428F9A74A0055360B /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F3F526BF017A005DF543 /* RecoverPasswordViewController.swift */; };
 		A9C3413528F9A74A0055360B /* StaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F42826C02EAA005DF543 /* StaticTableViewController.swift */; };
 		A9C3413628F9A74A0055360B /* TransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F410E62827BC4FAB005C1964 /* TransactionsTableViewCell.swift */; };
 		A9C3413728F9A74A0055360B /* UserRegisterForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B7DAE126F92CF30032C1C3 /* UserRegisterForm.swift */; };
@@ -5632,7 +5626,6 @@
 		A9C3436228F9A74A0055360B /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726338272C1A22002F2959 /* LiveMatchWidgetCollectionViewCell.xib */; };
 		A9C3436328F9A74A0055360B /* PolicyLinkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */; };
 		A9C3436428F9A74A0055360B /* Gilroy-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8E26F2146100A73E45 /* Gilroy-Thin.ttf */; };
-		A9C3436528F9A74A0055360B /* RecoverPasswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3F626BF017A005DF543 /* RecoverPasswordViewController.xib */; };
 		A9C3436628F9A74A0055360B /* Gilroy-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8326F2146000A73E45 /* Gilroy-Heavy.ttf */; };
 		A9C3436728F9A74A0055360B /* EditAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FBD26F4E55000059DCD /* EditAlertView.xib */; };
 		A9C3436828F9A74A0055360B /* SharedAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CAB26BD981900EC572D /* SharedAssets.xcassets */; };
@@ -6228,8 +6221,6 @@
 		4589F3ED26BF017A005DF543 /* WelcomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WelcomeViewController.xib; sourceTree = "<group>"; };
 		4589F3F226BF017A005DF543 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		4589F3F326BF017A005DF543 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		4589F3F526BF017A005DF543 /* RecoverPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoverPasswordViewController.swift; sourceTree = "<group>"; };
-		4589F3F626BF017A005DF543 /* RecoverPasswordViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RecoverPasswordViewController.xib; sourceTree = "<group>"; };
 		4589F40826BF0203005DF543 /* RoundButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundButton.swift; sourceTree = "<group>"; };
 		4589F40A26BF0203005DF543 /* TitleTextFieldView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TitleTextFieldView.xib; sourceTree = "<group>"; };
 		4589F40B26BF0203005DF543 /* HeaderTextFieldView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeaderTextFieldView.xib; sourceTree = "<group>"; };
@@ -6592,6 +6583,7 @@
 		A9B331DB288FFFE000D097F0 /* MessagesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewModel.swift; sourceTree = "<group>"; };
 		A9B331E328904F4800D097F0 /* MessageDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDetailViewController.swift; sourceTree = "<group>"; };
 		A9B331EB289422FB00D097F0 /* MessageDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDetailViewModel.swift; sourceTree = "<group>"; };
+		A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverPasswordViewController.swift; sourceTree = "<group>"; };
 		A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionUpdateViewController.swift; sourceTree = "<group>"; };
 		A9B8407B26CA789A00269B05 /* VersionUpdateViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VersionUpdateViewController.xib; sourceTree = "<group>"; };
 		A9B8408026CFB49000269B05 /* DateUserLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUserLocation.swift; sourceTree = "<group>"; };
@@ -8098,8 +8090,7 @@
 		4589F3F426BF017A005DF543 /* RecoverPassword */ = {
 			isa = PBXGroup;
 			children = (
-				4589F3F526BF017A005DF543 /* RecoverPasswordViewController.swift */,
-				4589F3F626BF017A005DF543 /* RecoverPasswordViewController.xib */,
+				A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */,
 			);
 			path = RecoverPassword;
 			sourceTree = "<group>";
@@ -10484,7 +10475,6 @@
 				450B7B0A28F58574009229E3 /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
 				450B7B0B28F58574009229E3 /* PolicyLinkView.xib in Resources */,
 				450B7B0C28F58574009229E3 /* Gilroy-Thin.ttf in Resources */,
-				450B7B0D28F58574009229E3 /* RecoverPasswordViewController.xib in Resources */,
 				450B7B0E28F58574009229E3 /* Gilroy-Heavy.ttf in Resources */,
 				450B7B0F28F58574009229E3 /* EditAlertView.xib in Resources */,
 				450B7B1028F58574009229E3 /* SharedAssets.xcassets in Resources */,
@@ -10617,7 +10607,6 @@
 				45726340272C4355002F2959 /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
 				A9BCF430274BBE8D006DD528 /* PolicyLinkView.xib in Resources */,
 				45DDBAAE26F2146100A73E45 /* Gilroy-Thin.ttf in Resources */,
-				4589F40526BF017A005DF543 /* RecoverPasswordViewController.xib in Resources */,
 				45DDBA9826F2146100A73E45 /* Gilroy-Heavy.ttf in Resources */,
 				A9C82FBE26F4E55000059DCD /* EditAlertView.xib in Resources */,
 				455A0CAC26BD981900EC572D /* SharedAssets.xcassets in Resources */,
@@ -10749,7 +10738,6 @@
 				A9C602392716F7F900992E11 /* FilterCollapseView.xib in Resources */,
 				45A16E172707B6C100A95C01 /* ListTypeCollectionViewCell.xib in Resources */,
 				4572633F272C4355002F2959 /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
-				4589F40626BF017A005DF543 /* RecoverPasswordViewController.xib in Resources */,
 				45DDBA9926F2146100A73E45 /* Gilroy-Heavy.ttf in Resources */,
 				A9C82FBF26F4E55000059DCD /* EditAlertView.xib in Resources */,
 				454990CD2716333F00D57CE2 /* SportsTypes.xcassets in Resources */,
@@ -10885,7 +10873,6 @@
 				457CBC34282D27D000ED0F00 /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
 				457CBC35282D27D000ED0F00 /* PolicyLinkView.xib in Resources */,
 				457CBC36282D27D000ED0F00 /* Gilroy-Thin.ttf in Resources */,
-				457CBC37282D27D000ED0F00 /* RecoverPasswordViewController.xib in Resources */,
 				457CBC38282D27D000ED0F00 /* Gilroy-Heavy.ttf in Resources */,
 				457CBC39282D27D000ED0F00 /* EditAlertView.xib in Resources */,
 				457CBC3A282D27D000ED0F00 /* SharedAssets.xcassets in Resources */,
@@ -11015,7 +11002,6 @@
 				457CBEDB282D2CD100ED0F00 /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
 				457CBEDC282D2CD100ED0F00 /* PolicyLinkView.xib in Resources */,
 				457CBEDD282D2CD100ED0F00 /* Gilroy-Thin.ttf in Resources */,
-				457CBEDE282D2CD100ED0F00 /* RecoverPasswordViewController.xib in Resources */,
 				457CBEDF282D2CD100ED0F00 /* Gilroy-Heavy.ttf in Resources */,
 				457CBEE0282D2CD100ED0F00 /* EditAlertView.xib in Resources */,
 				457CBEE1282D2CD100ED0F00 /* SharedAssets.xcassets in Resources */,
@@ -11148,7 +11134,6 @@
 				4589C9B3282024E400243547 /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
 				4589C9B4282024E400243547 /* PolicyLinkView.xib in Resources */,
 				4589C9B5282024E400243547 /* Gilroy-Thin.ttf in Resources */,
-				4589C9B6282024E400243547 /* RecoverPasswordViewController.xib in Resources */,
 				4589C9B7282024E400243547 /* Gilroy-Heavy.ttf in Resources */,
 				4589C9B8282024E400243547 /* EditAlertView.xib in Resources */,
 				4589C9B9282024E400243547 /* SharedAssets.xcassets in Resources */,
@@ -11279,7 +11264,6 @@
 				45A6BE0C28246A7500D9B416 /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
 				45A6BE0D28246A7500D9B416 /* PolicyLinkView.xib in Resources */,
 				45A6BE0E28246A7500D9B416 /* Gilroy-Thin.ttf in Resources */,
-				45A6BE0F28246A7500D9B416 /* RecoverPasswordViewController.xib in Resources */,
 				45A6BE1028246A7500D9B416 /* Gilroy-Heavy.ttf in Resources */,
 				45A6BE1128246A7500D9B416 /* EditAlertView.xib in Resources */,
 				45A6BE1228246A7500D9B416 /* SharedAssets.xcassets in Resources */,
@@ -11410,7 +11394,6 @@
 				A9C3436228F9A74A0055360B /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
 				A9C3436328F9A74A0055360B /* PolicyLinkView.xib in Resources */,
 				A9C3436428F9A74A0055360B /* Gilroy-Thin.ttf in Resources */,
-				A9C3436528F9A74A0055360B /* RecoverPasswordViewController.xib in Resources */,
 				A9C3436628F9A74A0055360B /* Gilroy-Heavy.ttf in Resources */,
 				A9C3436728F9A74A0055360B /* EditAlertView.xib in Resources */,
 				A9C3436828F9A74A0055360B /* SharedAssets.xcassets in Resources */,
@@ -11732,7 +11715,6 @@
 				450B78D728F58574009229E3 /* CGPoint+Shift.swift in Sources */,
 				450B78D828F58574009229E3 /* TSParams.swift in Sources */,
 				450B78D928F58574009229E3 /* UserSettings.swift in Sources */,
-				450B78DA28F58574009229E3 /* RecoverPasswordViewController.swift in Sources */,
 				450B78DB28F58574009229E3 /* StaticTableViewController.swift in Sources */,
 				450B78DC28F58574009229E3 /* TransactionsTableViewCell.swift in Sources */,
 				450B78DD28F58574009229E3 /* UserRegisterForm.swift in Sources */,
@@ -11965,6 +11947,7 @@
 				450B79BF28F58574009229E3 /* OutrightMarketDetailsViewController.swift in Sources */,
 				450B79C028F58574009229E3 /* MyFavoriteCompetitionsDataSource.swift in Sources */,
 				450B79C128F58574009229E3 /* MainMarketType.swift in Sources */,
+				A9B6305629102BF900BB850E /* RecoverPasswordViewController.swift in Sources */,
 				450B79C228F58574009229E3 /* FilterHistoryViewModel.swift in Sources */,
 				450B79C328F58574009229E3 /* Colors.swift in Sources */,
 				450B79C428F58574009229E3 /* CashoutAggregator.swift in Sources */,
@@ -12331,7 +12314,6 @@
 				4589F3F726BF017A005DF543 /* WelcomeViewController.swift in Sources */,
 				45166CDD26F3548D00E69D65 /* TSParams.swift in Sources */,
 				4515636B26BE949300690896 /* UserSettings.swift in Sources */,
-				4589F40326BF017A005DF543 /* RecoverPasswordViewController.swift in Sources */,
 				4589F42926C02EAA005DF543 /* StaticTableViewController.swift in Sources */,
 				F410E62927BC4FAB005C1964 /* TransactionsTableViewCell.swift in Sources */,
 				A982959E283BA0AF0014066A /* BetSelectionTableViewCell.swift in Sources */,
@@ -12564,6 +12546,7 @@
 				A99FD5112835479200275509 /* FriendProfileViewModel.swift in Sources */,
 				45D9CBDE270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
 				454F0A7D27C41C22003123DF /* OutrightMarketDetailsViewController.swift in Sources */,
+				A9B6305829102BF900BB850E /* RecoverPasswordViewController.swift in Sources */,
 				F4DE47A7288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */,
 				A9E7C69B27B67D9800F784C9 /* MyFavoriteCompetitionsDataSource.swift in Sources */,
 				F4E3B74D2742B47100855C58 /* MainMarketType.swift in Sources */,
@@ -12787,6 +12770,7 @@
 				A98EC7D22889ADC30044FC46 /* ShareTicketChoiceViewModel.swift in Sources */,
 				A98708C128DA014800F27348 /* UserProfileViewController.swift in Sources */,
 				A9B331D9288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */,
+				A9B6305D29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */,
 				A9DF8E0728DDF64C0083BF56 /* UserInfoMultipleCardView.swift in Sources */,
 				450B7B4628F637FB009229E3 /* ServiceProviderModelMapper+Sports.swift in Sources */,
 				A9DF8E2028E45BF00083BF56 /* UserProfileViewModel.swift in Sources */,
@@ -12991,7 +12975,6 @@
 				4589F3F826BF017A005DF543 /* WelcomeViewController.swift in Sources */,
 				45166CDE26F3548D00E69D65 /* TSParams.swift in Sources */,
 				4515636C26BE949300690896 /* UserSettings.swift in Sources */,
-				4589F40426BF017A005DF543 /* RecoverPasswordViewController.swift in Sources */,
 				A982959F283BA0AF0014066A /* BetSelectionTableViewCell.swift in Sources */,
 				4589F42A26C02EAA005DF543 /* StaticTableViewController.swift in Sources */,
 				A9DF8E4F28E7071B0083BF56 /* UserNotificationInviteTableViewCell.swift in Sources */,
@@ -13222,6 +13205,7 @@
 				A99FD5122835479200275509 /* FriendProfileViewModel.swift in Sources */,
 				A91F4B2B27BE918C008C7510 /* LinkPresentationItemSource.swift in Sources */,
 				A91F4B4327C002FA008C7510 /* OddsFormat.swift in Sources */,
+				A9B6305929102BF900BB850E /* RecoverPasswordViewController.swift in Sources */,
 				F4DE47A8288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */,
 				A9B841BC26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,
 				45D9CBDF270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
@@ -13587,7 +13571,6 @@
 				457CBA5B282D27D000ED0F00 /* WelcomeViewController.swift in Sources */,
 				457CBA5C282D27D000ED0F00 /* TSParams.swift in Sources */,
 				457CBA5D282D27D000ED0F00 /* UserSettings.swift in Sources */,
-				457CBA5E282D27D000ED0F00 /* RecoverPasswordViewController.swift in Sources */,
 				457CBA5F282D27D000ED0F00 /* StaticTableViewController.swift in Sources */,
 				457CBA60282D27D000ED0F00 /* TransactionsTableViewCell.swift in Sources */,
 				457CBA61282D27D000ED0F00 /* UserRegisterForm.swift in Sources */,
@@ -13644,6 +13627,7 @@
 				457CBA89282D27D000ED0F00 /* SportMatchLineViewModel.swift in Sources */,
 				457CBA8A282D27D000ED0F00 /* SimpleListMarketDetailTableViewCell.swift in Sources */,
 				A9A207E5283BDFCB00499DBC /* ChatTicketSelectionView.swift in Sources */,
+				A9B6305B29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */,
 				457CBA8B282D27D000ED0F00 /* PopUpDetails.swift in Sources */,
 				457CBA8C282D27D000ED0F00 /* RunningPlatform.swift in Sources */,
 				A9863ECF286B17A600A4A1A2 /* ChatTicketStateInMessageView.swift in Sources */,
@@ -14180,7 +14164,6 @@
 				457CBD02282D2CD100ED0F00 /* WelcomeViewController.swift in Sources */,
 				457CBD03282D2CD100ED0F00 /* TSParams.swift in Sources */,
 				457CBD04282D2CD100ED0F00 /* UserSettings.swift in Sources */,
-				457CBD05282D2CD100ED0F00 /* RecoverPasswordViewController.swift in Sources */,
 				A9DF8E5B28E7447E0083BF56 /* ListActionHeaderFooterView.swift in Sources */,
 				457CBD06282D2CD100ED0F00 /* StaticTableViewController.swift in Sources */,
 				457CBD07282D2CD100ED0F00 /* TransactionsTableViewCell.swift in Sources */,
@@ -14219,6 +14202,7 @@
 				457CBD26282D2CD100ED0F00 /* MultipleBettingTicketTableViewCell.swift in Sources */,
 				457CBD27282D2CD100ED0F00 /* Throttler.swift in Sources */,
 				457CBD28282D2CD100ED0F00 /* LimitsResponse.swift in Sources */,
+				A9B6305C29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */,
 				457CBD29282D2CD100ED0F00 /* AggregatorsRepository.swift in Sources */,
 				A9B946CB28C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */,
 				457CBD2A282D2CD100ED0F00 /* LoginAccount.swift in Sources */,
@@ -14779,7 +14763,6 @@
 				45C10F7828772DA700037BBE /* CGPoint+Shift.swift in Sources */,
 				4589C7E8282024E400243547 /* TSParams.swift in Sources */,
 				4589C7E9282024E400243547 /* UserSettings.swift in Sources */,
-				4589C7EA282024E400243547 /* RecoverPasswordViewController.swift in Sources */,
 				4589C7EB282024E400243547 /* StaticTableViewController.swift in Sources */,
 				4589C7EC282024E400243547 /* TransactionsTableViewCell.swift in Sources */,
 				4589C7ED282024E400243547 /* UserRegisterForm.swift in Sources */,
@@ -15013,6 +14996,7 @@
 				4589C89C282024E400243547 /* OutrightMarketDetailsViewController.swift in Sources */,
 				4589C89D282024E400243547 /* MyFavoriteCompetitionsDataSource.swift in Sources */,
 				4589C89E282024E400243547 /* MainMarketType.swift in Sources */,
+				A9B6305529102BF900BB850E /* RecoverPasswordViewController.swift in Sources */,
 				F4DE47A9288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */,
 				4589C89F282024E400243547 /* Colors.swift in Sources */,
 				4589C8A0282024E400243547 /* CashoutAggregator.swift in Sources */,
@@ -15378,7 +15362,6 @@
 				45A6BC3528246A7500D9B416 /* WelcomeViewController.swift in Sources */,
 				45A6BC3628246A7500D9B416 /* TSParams.swift in Sources */,
 				45A6BC3728246A7500D9B416 /* UserSettings.swift in Sources */,
-				45A6BC3828246A7500D9B416 /* RecoverPasswordViewController.swift in Sources */,
 				45A6BC3928246A7500D9B416 /* StaticTableViewController.swift in Sources */,
 				45A6BC3A28246A7500D9B416 /* TransactionsTableViewCell.swift in Sources */,
 				45A6BC3B28246A7500D9B416 /* UserRegisterForm.swift in Sources */,
@@ -15611,6 +15594,7 @@
 				45A6BCF128246A7500D9B416 /* MainMarketType.swift in Sources */,
 				45A6BCF228246A7500D9B416 /* Colors.swift in Sources */,
 				45A6BCF328246A7500D9B416 /* CashoutAggregator.swift in Sources */,
+				A9B6305A29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */,
 				F4DE47AA288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */,
 				45A6BCF428246A7500D9B416 /* ConversationsViewModel.swift in Sources */,
 				45A6BCF528246A7500D9B416 /* FilterRowView.swift in Sources */,
@@ -15936,6 +15920,7 @@
 				A9C3410B28F9A74A0055360B /* UserProfileViewController.swift in Sources */,
 				A9C3410C28F9A74A0055360B /* TableViewDescriptor.swift in Sources */,
 				A9C3410D28F9A74A0055360B /* TitleView.swift in Sources */,
+				A9B6305729102BF900BB850E /* RecoverPasswordViewController.swift in Sources */,
 				A9C3410E28F9A74A0055360B /* PasswordUpdateViewController.swift in Sources */,
 				A9C3410F28F9A74A0055360B /* SearchV2Response.swift in Sources */,
 				A9C3411028F9A74A0055360B /* MultiSlider+Internal.swift in Sources */,
@@ -15974,7 +15959,6 @@
 				A9C3413128F9A74A0055360B /* CGPoint+Shift.swift in Sources */,
 				A9C3413228F9A74A0055360B /* TSParams.swift in Sources */,
 				A9C3413328F9A74A0055360B /* UserSettings.swift in Sources */,
-				A9C3413428F9A74A0055360B /* RecoverPasswordViewController.swift in Sources */,
 				A9C3413528F9A74A0055360B /* StaticTableViewController.swift in Sources */,
 				A9C3413628F9A74A0055360B /* TransactionsTableViewCell.swift in Sources */,
 				A9C3413728F9A74A0055360B /* UserRegisterForm.swift in Sources */,

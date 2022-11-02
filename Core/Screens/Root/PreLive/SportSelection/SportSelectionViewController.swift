@@ -21,6 +21,7 @@ class SportSelectionViewController: UIViewController {
     @IBOutlet private var cancelButton: UIButton!
     @IBOutlet private var collectionView: UICollectionView!
     @IBOutlet private var searchBar: UISearchBar!
+    @IBOutlet private var loadingBaseView: UIView!
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
 
     // Variables
@@ -39,6 +40,19 @@ class SportSelectionViewController: UIViewController {
     var liveSportsDetailsCancellable: AnyCancellable?
     
     var selectionDelegate: SportTypeSelectionViewDelegate?
+
+    var isLoading: Bool = false {
+        didSet {
+            if isLoading {
+                self.loadingBaseView.isHidden = false
+                self.activityIndicatorView.startAnimating()
+            }
+            else {
+                self.loadingBaseView.isHidden = true
+                self.activityIndicatorView.stopAnimating()
+            }
+        }
+    }
     
     private var cancellable = Set<AnyCancellable>()
 
@@ -73,8 +87,8 @@ class SportSelectionViewController: UIViewController {
 
     func commonInit() {
         
-        self.activityIndicatorView.isHidden = true
-        self.view.bringSubviewToFront(self.activityIndicatorView)
+        self.view.bringSubviewToFront(self.loadingBaseView)
+        self.isLoading = true
 
         if isLiveSport {
             getSportsLive()
@@ -132,6 +146,8 @@ class SportSelectionViewController: UIViewController {
             }
         }
 
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
     }
 
     func getSports() {
@@ -160,8 +176,14 @@ class SportSelectionViewController: UIViewController {
 
         self.allSportsPublisher = Env.serviceProvider.allSportTypes()?
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 print("Env.serviceProvider.allSportTypes completed \(completion)")
+                switch completion {
+                case .finished:
+                    ()
+                case .failure:
+                    self?.isLoading = false
+                }
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
                 switch subscribableContent {
                 case .connected:
@@ -189,8 +211,14 @@ class SportSelectionViewController: UIViewController {
         self.liveSportsPublisher = nil
 
         self.liveSportsPublisher = Env.serviceProvider.liveSportTypes()?
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 print("Env.serviceProvider.liveSportTypes completed \(completion)")
+                switch completion {
+                case .finished:
+                    ()
+                case .failure:
+                    self?.isLoading = false
+                }
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportTypeDetails]>) in
                 switch subscribableContent {
                 case .connected:
@@ -223,7 +251,8 @@ class SportSelectionViewController: UIViewController {
     }
 
     func configureWithLiveSportsDetails(_ sportTypeDetails: [ServiceProvider.SportTypeDetails]) {
-        
+        self.isLoading = true
+
         // TODO: Remove [EveryMatrix.Discipline] logic from this ViewModel, should be using the ServiceProvider models
         // or another independent one
         let sportsTypes = sportTypeDetails.map { sportTypeDetails in
@@ -239,7 +268,7 @@ class SportSelectionViewController: UIViewController {
 
         self.fullSportsData = self.sportsData
         
-        self.activityIndicatorView.isHidden = true
+        self.isLoading = false
         
         self.collectionView.reloadData()
     }
@@ -256,6 +285,8 @@ class SportSelectionViewController: UIViewController {
 
     func configureWithAllSports(_ sportTypes: [ServiceProvider.SportType]) {
 
+        self.isLoading = true
+
         // TODO: Remove [EveryMatrix.Discipline] logic from this ViewModel, should be using the ServiceProvider models
         // or another independent one
         let sportsTypes = sportTypes.map { sportType in
@@ -271,7 +302,7 @@ class SportSelectionViewController: UIViewController {
 
         self.fullSportsData = self.sportsData
 
-        self.activityIndicatorView.isHidden = true
+        self.isLoading = false
 
         self.collectionView.reloadData()
     }

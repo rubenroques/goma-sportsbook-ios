@@ -26,6 +26,8 @@ public enum ServiceProviderError: Error {
     case unauthorized
     case forbidden
     case invalidResponse
+
+    case errorMessage(message: String)
     
     case unknown
 }

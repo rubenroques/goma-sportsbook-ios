@@ -151,10 +151,12 @@ extension SportRadarModels {
     struct StatusResponse: Codable {
         let status: String
         let errors: [FieldError]?
+        let message: String?
 
         enum CodingKeys: String, CodingKey {
             case status = "status"
             case errors = "errors"
+            case message = "message"
         }
     }
 

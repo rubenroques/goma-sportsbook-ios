@@ -10,6 +10,8 @@ import Combine
 
 class EmailVerificationCodeViewModel {
 
+    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+
     init() {
 
     }
@@ -17,6 +19,13 @@ class EmailVerificationCodeViewModel {
     func submitVerificationCode(email: String, code: String) {
         // TO-DO: Process submit code
         print("SUBMIT: \(email) - \(code)")
+
+        self.isLoadingPublisher.send(true)
+
+        // TEST
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.isLoadingPublisher.send(false)
+        }
     }
 }
 
@@ -36,11 +45,28 @@ class EmailVerificationCodeViewController: UIViewController {
     private lazy var codeTextField: HeaderTextFieldView = Self.createCodeHeaderTextFieldView()
     private lazy var resendButton: UIButton = Self.createResendButton()
     private lazy var doneButton: UIButton = Self.createDoneButton()
+    private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
+    private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
     private var cancellables = Set<AnyCancellable>()
 
     private var viewModel: EmailVerificationCodeViewModel
 
+    // MARK: Public Properties
+    var isLoading: Bool = false {
+        didSet {
+            if isLoading {
+                self.loadingBaseView.isHidden = false
+                self.loadingActivityIndicatorView.startAnimating()
+            }
+            else {
+                self.loadingBaseView.isHidden = true
+                self.loadingActivityIndicatorView.stopAnimating()
+            }
+        }
+    }
+
+    // MARK: - Lifetime and Cycle
     init(viewModel: EmailVerificationCodeViewModel) {
 
         self.viewModel = viewModel
@@ -71,6 +97,11 @@ class EmailVerificationCodeViewController: UIViewController {
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
+
+        self.isLoading = false
+
+        self.bind(toViewModel: self.viewModel)
+
     }
 
     // MARK: - Layout and Theme
@@ -113,6 +144,22 @@ class EmailVerificationCodeViewController: UIViewController {
         self.resendButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         StyleHelper.styleButton(button: self.doneButton)
+
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
+
+        self.loadingActivityIndicatorView.color = UIColor.lightGray
+    }
+
+    // MARK: - Bindings
+    private func bind(toViewModel viewModel: EmailVerificationCodeViewModel) {
+
+        viewModel.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoading in
+                self?.isLoading = isLoading
+            })
+            .store(in: &cancellables)
+
     }
 
     // MARK: Functions
@@ -275,6 +322,20 @@ extension EmailVerificationCodeViewController {
         return button
     }
 
+    private static func createLoadingBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createLoadingActivityIndicatorView() -> UIActivityIndicatorView {
+        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.stopAnimating()
+        return activityIndicatorView
+    }
+
     private func setupSubviews() {
 
         self.view.addSubview(self.topSafeAreaView)
@@ -302,6 +363,10 @@ extension EmailVerificationCodeViewController {
         self.containerView.addSubview(self.resendButton)
 
         self.containerView.addSubview(self.doneButton)
+
+        self.containerView.addSubview(self.loadingBaseView)
+
+        self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
 
         self.initConstraints()
     }
@@ -375,6 +440,18 @@ extension EmailVerificationCodeViewController {
             self.doneButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -50),
             self.doneButton.heightAnchor.constraint(equalToConstant: 50),
             self.doneButton.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20)
+        ])
+
+        // Loading view
+        NSLayoutConstraint.activate([
+
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
+
+            self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
+            self.loadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor)
         ])
 
     }
