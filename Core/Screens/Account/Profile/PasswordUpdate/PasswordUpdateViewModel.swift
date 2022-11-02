@@ -116,7 +116,16 @@ class PasswordUpdateViewModel: NSObject {
                 case .finished:
                     ()
                 case .failure(let error):
-                    print("UPDATE PASSWORD ERROR: \(error)")
+                    if case .errorMessage(message: let message) = error {
+                        if message.contains("CURRENT_PASSWORD_INCORRECT") {
+                            let alertInfo = AlertInfo(alertType: .error, message: localized("current_password_incorrect"))
+                            self?.shouldShowAlertPublisher.send(alertInfo)
+                        }
+                    }
+                    else {
+                        let alertInfo = AlertInfo(alertType: .error, message: localized("server_error_message"))
+                        self?.shouldShowAlertPublisher.send(alertInfo)
+                    }
 
                 }
                 self?.isLoadingPublisher.send(false)

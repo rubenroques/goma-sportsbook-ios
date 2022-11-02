@@ -230,6 +230,11 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             if statusResponse.status == "SUCCESS" {
                 return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
+            if let fieldError = statusResponse.errors?[0] {
+                let messageError = fieldError.error
+                
+                return Fail(outputType: Bool.self, failure: ServiceProviderError.errorMessage(message: messageError)).eraseToAnyPublisher()
+            }
 
             return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
         })

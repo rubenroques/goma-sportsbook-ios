@@ -65,6 +65,10 @@ class PasswordUpdateViewController: UIViewController {
         setupWithTheme()
 
         self.bind(toViewModel: self.viewModel)
+
+        if TargetVariables.serviceProviderType == .sportradar {
+            self.hideSecurityQuestionLayout()
+        }
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -308,6 +312,13 @@ class PasswordUpdateViewController: UIViewController {
 
         }
         self.view.bringSubviewToFront(popup)
+    }
+
+    private func hideSecurityQuestionLayout() {
+        self.separatorLineView.isHidden = true
+        self.securityQuestionLabel.isHidden = true
+        self.securityQuestionHeaderTextFieldView.isHidden = true
+        self.securityAnswerHeaderTextFieldView.isHidden = true
     }
 
     @objc func didTapBackground() {
