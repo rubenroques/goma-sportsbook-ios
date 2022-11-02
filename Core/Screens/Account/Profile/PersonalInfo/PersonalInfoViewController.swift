@@ -39,6 +39,8 @@ class PersonalInfoViewController: UIViewController {
     private var userSession: UserSession?
     private var countries: [Country] = []
     private var profile: UserProfile?
+    
+    private var originalFormHash: String?
 
     init(userSession: UserSession?) {
         self.userSession = userSession
@@ -124,7 +126,7 @@ class PersonalInfoViewController: UIViewController {
 
         bankIdHeaderTextFieldView.setPlaceholderText(localized("bank_id"))
 
-        let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
+        let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackgroundView))
         self.view.addGestureRecognizer(tapGestureRecognizer)
 
         self.editButton.isEnabled = false
@@ -146,7 +148,7 @@ class PersonalInfoViewController: UIViewController {
         editButton.backgroundColor = .clear
         editButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
         editButton.setTitleColor(UIColor.App.highlightPrimary, for: .highlighted)
-        editButton.setTitleColor(UIColor.App.highlightPrimary, for: .disabled)
+        editButton.setTitleColor(UIColor.App.highlightPrimary.withAlphaComponent(0.4), for: .disabled)
 
         containerView.backgroundColor = UIColor.App.backgroundPrimary
         headerView.backgroundColor = UIColor.App.backgroundPrimary
@@ -217,16 +219,32 @@ class PersonalInfoViewController: UIViewController {
 
     private func setupPublishers() {
 
-//        Env.everyMatrixClient.getCountries()
-//            .receive(on: DispatchQueue.main)
-//            .eraseToAnyPublisher()
-//            .sink { _ in
-//                self.countryHeaderTextFieldView.isUserInteractionEnabled = true
-//            } receiveValue: { countriesListing in
-//                self.countriesListing = countriesListing
-//                self.setupWithCountryCodes(countriesListing)
-//            }
-//        .store(in: &cancellables)
+        Publishers.MergeMany(self.titleHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
+                             self.firstNameHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
+                             self.lastNameHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
+                             self.countryHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
+                             self.birthDateHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
+                             self.adress1HeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
+                             self.adress2HeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
+                             self.cityHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
+                             self.postalCodeHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
+                             self.usernameHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
+                             self.emailHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
+                             self.cardIdHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
+                             self.bankIdHeaderTextFieldView.textPublisher.eraseToAnyPublisher())
+        .flatMap({ [weak self] _ -> AnyPublisher<Bool, Never> in
+            let newHash = self?.generateFormHash()
+            if let originalHash = self?.originalFormHash {
+                return Just(newHash != originalHash).eraseToAnyPublisher()
+            }
+            else {
+                return Just(false).eraseToAnyPublisher()
+            }
+        })
+        .sink(receiveValue: { (isEnabled: Bool) -> Void in
+            self.editButton.isEnabled = isEnabled
+        })
+        .store(in: &cancellables)
         
         Env.serviceProvider.getCountries()
             .map { (serviceProviderCountries: [ServiceProvider.Country]) -> [Country] in
@@ -254,50 +272,36 @@ class PersonalInfoViewController: UIViewController {
             }
         
         .store(in: &cancellables)
-        
-//        Env.everyMatrixClient.getProfile()
-//            .receive(on: DispatchQueue.main)
-//            .sink { _ in
-//
-//            } receiveValue: { profile in
-//                self.setupProfile(profile: profile)
-//            }
-//        .store(in: &cancellables)
 
     }
 
-    func checkProfileInfoChanged() {
-        // Updatable fields
-        let emailChanged = emailHeaderTextFieldView.text == profile?.email ? false : true
-        let titleChanged = titleHeaderTextFieldView.text == profile?.title?.rawValue ? false : true
-        let firstNameChanged = firstNameHeaderTextFieldView.text == profile?.firstName ? false : true
-        let lastNameChanged = lastNameHeaderTextFieldView.text == profile?.lastName ? false : true
-        let address1Changed = adress1HeaderTextFieldView.text == profile?.address ? false : true
-        let address2Changed = adress2HeaderTextFieldView.text == profile?.province ? false : true
-        let cityChanged = cityHeaderTextFieldView.text == profile?.city ? false : true
-        let postalCodeChanged = postalCodeHeaderTextFieldView.text == profile?.postalCode ? false : true
-        let personalIdChanged = cardIdHeaderTextFieldView.text == profile?.personalIdNumber ? false : true
-
-        if emailChanged || titleChanged || firstNameChanged || lastNameChanged || address1Changed
-            || address2Changed || cityChanged || postalCodeChanged || personalIdChanged {
-            self.editButton.isEnabled = true
-        }
-        else {
-            self.editButton.isEnabled = false
-        }
+    
+    func generateFormHash() -> String {
+        return [self.titleHeaderTextFieldView.text,
+                self.firstNameHeaderTextFieldView.text,
+                self.lastNameHeaderTextFieldView.text,
+                self.countryHeaderTextFieldView.text,
+                self.birthDateHeaderTextFieldView.text,
+                self.adress1HeaderTextFieldView.text,
+                self.adress2HeaderTextFieldView.text,
+                self.cityHeaderTextFieldView.text,
+                self.postalCodeHeaderTextFieldView.text,
+                self.usernameHeaderTextFieldView.text,
+                self.emailHeaderTextFieldView.text,
+                self.cardIdHeaderTextFieldView.text,
+                self.bankIdHeaderTextFieldView.text].joined().MD5
     }
 
-    @IBAction private func backAction() {
+    @IBAction private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
     }
 
-    @IBAction private func editAction() {
+    @IBAction private func didTapSaveButton() {
 
         var validFields = true
 
-        let username = usernameHeaderTextFieldView.text
-        let email = emailHeaderTextFieldView.text
-        let title = titleHeaderTextFieldView.text
+        // let username = usernameHeaderTextFieldView.text
+        // let email = emailHeaderTextFieldView.text
         let gender = titleHeaderTextFieldView.text == UserTitle.mister.rawValue ? "M" : "F"
         let firstName = firstNameHeaderTextFieldView.text
         let lastName = lastNameHeaderTextFieldView.text
@@ -373,8 +377,8 @@ class PersonalInfoViewController: UIViewController {
 //        }
 //
 
-        let form = ServiceProvider.UpdateUserProfileForm.init(username: username,
-                                                              email: email,
+        let form = ServiceProvider.UpdateUserProfileForm.init(username: nil,
+                                                              email: nil,
                                                               firstName: firstName,
                                                               lastName: lastName,
                                                               birthDate: date,
@@ -441,7 +445,7 @@ class PersonalInfoViewController: UIViewController {
         self.view.bringSubviewToFront(popup)
     }
 
-    @objc func didTapBackground() {
+    @objc func didTapBackgroundView() {
         self.resignFirstResponder()
         self.firstNameHeaderTextFieldView.resignFirstResponder()
         self.lastNameHeaderTextFieldView.resignFirstResponder()
@@ -454,7 +458,6 @@ class PersonalInfoViewController: UIViewController {
         self.cardIdHeaderTextFieldView.resignFirstResponder()
     }
 
-    
     private func setupProfile(profile: UserProfile) {
         
         self.profile = profile
@@ -486,13 +489,15 @@ class PersonalInfoViewController: UIViewController {
         
         self.cardIdHeaderTextFieldView.setText(profile.personalIdNumber ?? "-")
         
+        self.originalFormHash = self.generateFormHash()
+        
         /*
         self.profile = profile.fields
 
         if let optionIndex = UserTitles.titles.firstIndex(of: profile.fields.title) {
             self.titleHeaderTextFieldView.setSelectedPickerOption(option: optionIndex)
         }
-        self.titleHeaderTextFieldView.textPublisher
+        
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
@@ -504,7 +509,7 @@ class PersonalInfoViewController: UIViewController {
         }
 
         self.firstNameHeaderTextFieldView.setText(profile.fields.firstname)
-        self.firstNameHeaderTextFieldView.textPublisher
+        
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
@@ -515,7 +520,7 @@ class PersonalInfoViewController: UIViewController {
             self.lastNameHeaderTextFieldView.isDisabled = true
         }
         self.lastNameHeaderTextFieldView.setText(profile.fields.surname)
-        self.lastNameHeaderTextFieldView.textPublisher
+        
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
@@ -544,7 +549,7 @@ class PersonalInfoViewController: UIViewController {
         self.birthDateHeaderTextFieldView.setText(profile.fields.birthDate)
 
         self.adress1HeaderTextFieldView.setText(profile.fields.address1)
-        self.adress1HeaderTextFieldView.textPublisher
+        
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
@@ -552,7 +557,7 @@ class PersonalInfoViewController: UIViewController {
             .store(in: &cancellables)
 
         self.adress2HeaderTextFieldView.setText(profile.fields.address2)
-        self.adress2HeaderTextFieldView.textPublisher
+        
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
@@ -560,7 +565,7 @@ class PersonalInfoViewController: UIViewController {
             .store(in: &cancellables)
 
         self.cityHeaderTextFieldView.setText(profile.fields.city)
-        self.cityHeaderTextFieldView.textPublisher
+        
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
@@ -568,7 +573,7 @@ class PersonalInfoViewController: UIViewController {
             .store(in: &cancellables)
 
         self.postalCodeHeaderTextFieldView.setText(profile.fields.postalCode)
-        self.postalCodeHeaderTextFieldView.textPublisher
+        
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
@@ -583,7 +588,7 @@ class PersonalInfoViewController: UIViewController {
         self.emailHeaderTextFieldView.setText(profile.fields.email)
 
         self.cardIdHeaderTextFieldView.setText(profile.fields.personalID)
-        self.cardIdHeaderTextFieldView.textPublisher
+        
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
@@ -695,4 +700,8 @@ extension PersonalInfoViewController {
         scrollView.contentInset = contentInset
     }
 
+}
+
+extension PersonalInfoViewController {
+    
 }

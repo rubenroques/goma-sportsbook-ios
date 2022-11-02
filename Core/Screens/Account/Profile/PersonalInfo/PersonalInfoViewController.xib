@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PersonalInfoViewController" customModule="ShowcaseBeta" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PersonalInfoViewController" customModule="Crocobet" customModuleProvider="target">
             <connections>
                 <outlet property="adress1HeaderTextFieldView" destination="G8k-H1-yHP" id="5Fg-1D-LTH"/>
                 <outlet property="adress2HeaderTextFieldView" destination="hVs-Yj-IdY" id="xRP-JX-wTi"/>
@@ -40,7 +40,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kzd-gV-ZoX">
-                    <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                    <rect key="frame" x="0.0" y="48" width="414" height="44"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="249" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SER-yE-gNy">
                             <rect key="frame" x="72" y="11.5" width="270" height="21"/>
@@ -56,7 +56,7 @@
                             <inset key="contentEdgeInsets" minX="6" minY="0.0" maxX="6" maxY="0.0"/>
                             <state key="normal" title="Button"/>
                             <connections>
-                                <action selector="editAction" destination="-1" eventType="touchUpInside" id="mNw-6H-ukR"/>
+                                <action selector="didTapSaveButton" destination="-1" eventType="primaryActionTriggered" id="Wi7-0d-4en"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZXn-Za-lhi">
@@ -67,7 +67,7 @@
                             </constraints>
                             <state key="normal" image="arrow_back_icon"/>
                             <connections>
-                                <action selector="backAction" destination="-1" eventType="touchUpInside" id="jLL-BF-rgp"/>
+                                <action selector="didTapBackButton" destination="-1" eventType="primaryActionTriggered" id="IUx-NA-c9m"/>
                             </connections>
                         </button>
                     </subviews>
@@ -84,54 +84,54 @@
                     </constraints>
                 </view>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y3Z-Zp-eDo">
-                    <rect key="frame" x="0.0" y="96" width="414" height="1106"/>
+                    <rect key="frame" x="0.0" y="100" width="414" height="1102"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1gG-hR-Fft">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="1109"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RSd-Yc-g2A" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RSd-Yc-g2A" customClass="HeaderTextFieldView" customModule="Crocobet" customModuleProvider="target">
                                     <rect key="frame" x="16" y="88" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="kIn-eG-Sty"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="64c-44-siR" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="64c-44-siR" customClass="HeaderTextFieldView" customModule="Crocobet" customModuleProvider="target">
                                     <rect key="frame" x="16" y="176" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="q8K-zG-Uzd"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="O1P-Mb-hlb" customClass="HeaderDropDownSelectionView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="O1P-Mb-hlb" customClass="HeaderDropDownSelectionView" customModule="Crocobet" customModuleProvider="target">
                                     <rect key="frame" x="16" y="264" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="Hy9-Y6-E0s"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eNO-fq-jLM" customClass="HeaderDropDownSelectionView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eNO-fq-jLM" customClass="HeaderDropDownSelectionView" customModule="Crocobet" customModuleProvider="target">
                                     <rect key="frame" x="16" y="352" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="G1Y-Od-lPn"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G8k-H1-yHP" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G8k-H1-yHP" customClass="HeaderTextFieldView" customModule="Crocobet" customModuleProvider="target">
                                     <rect key="frame" x="16" y="440" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="GJt-uB-30r"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hVs-Yj-IdY" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hVs-Yj-IdY" customClass="HeaderTextFieldView" customModule="Crocobet" customModuleProvider="target">
                                     <rect key="frame" x="16" y="528" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="Wf6-gu-X3I"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6rd-p4-die" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6rd-p4-die" customClass="HeaderTextFieldView" customModule="Crocobet" customModuleProvider="target">
                                     <rect key="frame" x="16" y="616" width="183" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
@@ -145,42 +145,42 @@
                                         <constraint firstAttribute="height" constant="1" id="Lrc-p6-irt"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CUN-hX-sYG" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CUN-hX-sYG" customClass="HeaderTextFieldView" customModule="Crocobet" customModuleProvider="target">
                                     <rect key="frame" x="16" y="725" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="GgA-Le-QCe"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hb2-tJ-haa" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hb2-tJ-haa" customClass="HeaderTextFieldView" customModule="Crocobet" customModuleProvider="target">
                                     <rect key="frame" x="16" y="813" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="78W-HD-MbP"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zvu-Rc-BwZ" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zvu-Rc-BwZ" customClass="HeaderTextFieldView" customModule="Crocobet" customModuleProvider="target">
                                     <rect key="frame" x="16" y="901" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="A6y-FL-PDi"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lvj-YW-x7r" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lvj-YW-x7r" customClass="HeaderTextFieldView" customModule="Crocobet" customModuleProvider="target">
                                     <rect key="frame" x="16" y="989" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="Eg5-c2-tUD"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CP6-gF-fhM" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CP6-gF-fhM" customClass="HeaderTextFieldView" customModule="Crocobet" customModuleProvider="target">
                                     <rect key="frame" x="215" y="616" width="183" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="tMn-ad-bP8"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4bo-qc-VHQ" customClass="HeaderDropDownSelectionView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4bo-qc-VHQ" customClass="HeaderDropDownSelectionView" customModule="Crocobet" customModuleProvider="target">
                                     <rect key="frame" x="16" y="0.0" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
@@ -263,7 +263,7 @@
         </view>
     </objects>
     <resources>
-        <image name="arrow_back_icon" width="12" height="21"/>
+        <image name="arrow_back_icon" width="9" height="15"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
