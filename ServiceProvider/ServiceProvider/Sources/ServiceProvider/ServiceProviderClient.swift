@@ -136,6 +136,16 @@ extension ServiceProviderClient {
         }
         return privilegedAccessManager.getUserProfile()
     }
+
+    public func hasSecurityQuestions() -> Bool {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return false
+        }
+
+        return privilegedAccessManager.hasSecurityQuestions
+    }
     
     public func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError> {
         guard

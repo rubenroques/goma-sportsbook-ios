@@ -19,6 +19,8 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
     var userProfilePublisher: AnyPublisher<UserProfile?, Error> {
         return userProfileSubject.eraseToAnyPublisher()
     }
+
+    var hasSecurityQuestions: Bool
     
     private var networkManager: NetworkManager
     
@@ -31,6 +33,8 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         
         self.userSessionStateSubject = .init(.anonymous)
         self.userProfileSubject = .init(nil)
+
+        self.hasSecurityQuestions = false
     }
 
     func getSessionKey() -> String? {
@@ -232,7 +236,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             }
             if let fieldError = statusResponse.errors?[0] {
                 let messageError = fieldError.error
-                
+
                 return Fail(outputType: Bool.self, failure: ServiceProviderError.errorMessage(message: messageError)).eraseToAnyPublisher()
             }
 
