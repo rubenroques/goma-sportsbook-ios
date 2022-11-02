@@ -21,7 +21,7 @@ extension ServiceProviderModelMapper {
             country = ServiceProviderModelMapper.country(fromServiceProviderCountry: serviceProviderCountry)
         }
          
-        var title: UserTitles?
+        var title: UserTitle?
         if let gender = serviceProviderProfile.gender {
             if gender.lowercased() == "f" {
                 title = .mizz // "Ms"

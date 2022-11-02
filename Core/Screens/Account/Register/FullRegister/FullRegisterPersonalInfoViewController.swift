@@ -83,7 +83,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         titleLabel.text = localized("personal_information")
         titleLabel.font = AppFont.with(type: .bold, size: 18)
 
-        titleHeaderTextFieldView.setSelectionPicker(UserTitles.titles, headerVisible: true)
+        titleHeaderTextFieldView.setSelectionPicker(UserTitle.titles, headerVisible: true)
         titleHeaderTextFieldView.setPlaceholderText(localized("title"))
 
         titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))

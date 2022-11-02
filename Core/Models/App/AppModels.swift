@@ -170,7 +170,7 @@ struct UserProfile: Codable {
     var country: Country?
     
     var gender: String?
-    var title: UserTitles?
+    var title: UserTitle?
     
     var personalIdNumber: String?
     var address: String?

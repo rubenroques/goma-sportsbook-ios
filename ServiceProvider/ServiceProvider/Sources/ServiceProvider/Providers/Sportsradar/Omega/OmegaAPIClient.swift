@@ -28,7 +28,9 @@ enum OmegaAPIClient {
     case logout(sessionKey: String)
     case playerInfo(sessionKey: String)
     case balanceSimple(sessionKey: String)
-    case updateUserInfo(sessionKey: String)
+    case updatePlayerInfo(sessionKey: String, username: String?, email: String?, firstName: String?, lastName: String?,
+                          birthDate: Date?, gender: String?, address: String?, province: String?,
+                          city: String?, postalCode: String?, country: String?, cardId: String?)
     case checkCredentialEmail(email: String)
     case quickSignup(email: String, username: String, password: String, birthDate: Date,
                      mobilePrefix: String, mobileNumber: String, countryIsoCode: String, currencyCode: String)
@@ -53,8 +55,8 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/getPlayerInfo"
         case .balanceSimple:
             return "/ps/ips/getBalanceSimple"
-        case .updateUserInfo:
-            return "/ps/ips/updateUserInfo"
+        case .updatePlayerInfo:
+            return "/ps/ips/updatePlayerInfo"
         case .checkCredentialEmail:
             return "/ps/ips/checkCredential"
         case .quickSignup:
@@ -86,9 +88,6 @@ extension OmegaAPIClient: Endpoint {
             return [URLQueryItem(name: "sessionKey", value: sessionKey)]
         case .balanceSimple(let sessionKey):
             return [URLQueryItem(name: "sessionKey", value: sessionKey)]
-        case .updateUserInfo(let sessionKey):
-            return [URLQueryItem(name: "sessionKey", value: sessionKey)]
-        
         case .checkCredentialEmail(let email):
             return [URLQueryItem(name: "field", value: "email"),
                     URLQueryItem(name: "value", value: email)]
@@ -121,6 +120,34 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "email", value: email),
                 // URLQueryItem(name: "ipAddress", value: Self.getIPAddress()),
             ]
+        case .updatePlayerInfo(let sessionKey, let username, let email, let firstName, let lastName,
+                               let birthDate, let gender, let address, let province, let city,
+                               let postalCode, let country, let cardId):
+            
+            var query: [URLQueryItem] = [URLQueryItem(name: "sessionKey", value: sessionKey)]
+            
+            if let username = username { query.append(URLQueryItem(name: "userid", value: username)) }
+            if let email = email { query.append(URLQueryItem(name: "email", value: email)) }
+            
+            if let firstName = firstName { query.append(URLQueryItem(name: "firstName", value: firstName)) }
+            if let lastName = lastName { query.append(URLQueryItem(name: "lastName", value: lastName)) }
+            if let address = address { query.append(URLQueryItem(name: "address", value: address)) }
+            if let province = province { query.append(URLQueryItem(name: "province", value: province)) }
+            
+            if let gender = gender { query.append(URLQueryItem(name: "gender", value: gender)) }
+            if let country = country { query.append(URLQueryItem(name: "country", value: country)) }
+            if let birthDate = birthDate {
+                let dateFromatter = DateFormatter()
+                dateFromatter.dateFormat = "yyyy-MM-dd"
+                let birthDateString = dateFromatter.string(from: birthDate)
+                query.append(URLQueryItem(name: "birthDate", value: birthDateString))
+            }
+            
+            if let city = city { query.append(URLQueryItem(name: "city", value: city)) }
+            if let postalCode = postalCode { query.append(URLQueryItem(name: "postalCode", value: postalCode)) }
+            if let cardId = cardId { query.append(URLQueryItem(name: "idCardNumber", value: cardId)) }
+            
+            return query
         case .getCountries:
             return nil
         case .getCurrentCountry:
@@ -138,7 +165,7 @@ extension OmegaAPIClient: Endpoint {
         case .logout: return .get
         case .playerInfo: return .get
         case .balanceSimple: return .get
-        case .updateUserInfo: return .get
+        case .updatePlayerInfo: return .get
         case .checkCredentialEmail: return .get
         case .quickSignup: return .get
         case .resendVerificationCode: return .get

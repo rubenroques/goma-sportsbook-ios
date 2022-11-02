@@ -21,7 +21,9 @@ protocol PrivilegedAccessManager {
     var userProfilePublisher: AnyPublisher<UserProfile?, Error> { get }
     
     func login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError>
+    
     func getUserProfile() -> AnyPublisher<UserProfile, ServiceProviderError>
+    func updateUserProfile(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError>
     
     func checkEmailRegistered(_ email: String) -> AnyPublisher<Bool, ServiceProviderError>
     
@@ -32,4 +34,6 @@ protocol PrivilegedAccessManager {
         
     func signupConfirmation(_ email: String, confirmationCode: String) -> AnyPublisher<Bool, ServiceProviderError>
 
+    
+    
 }

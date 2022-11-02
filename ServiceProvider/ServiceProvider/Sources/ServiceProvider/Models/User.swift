@@ -170,3 +170,35 @@ public struct SimpleSignUpForm {
     }
     
 }
+
+public struct UpdateUserProfileForm {
+    
+    public var username: String?
+    public var email: String?
+    public var firstName: String?
+    public var lastName: String?
+    public var birthDate: Date?
+    public var gender: String?
+    public var address: String?
+    public var province: String?
+    public var city: String?
+    public var postalCode: String?
+    public var country: Country?
+    public var cardId: String?
+
+    public init(username: String? = nil, email: String? = nil, firstName: String? = nil, lastName: String? = nil, birthDate: Date? = nil, gender: String? = nil, address: String? = nil, province: String? = nil, city: String? = nil, postalCode: String? = nil, country: Country? = nil, cardId: String? = nil) {
+        self.username = username
+        self.email = email
+        self.firstName = firstName
+        self.lastName = lastName
+        self.birthDate = birthDate
+        self.gender = gender
+        self.address = address
+        self.province = province
+        self.city = city
+        self.postalCode = postalCode
+        self.country = country
+        self.cardId = cardId
+    }
+    
+}

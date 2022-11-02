@@ -35,10 +35,10 @@ class PersonalInfoViewController: UIViewController {
 
     // Variables
 
-    var cancellables = Set<AnyCancellable>()
-    var userSession: UserSession?
-    var countries: [Country] = []
-    var profile: EveryMatrix.UserProfile?
+    private var cancellables = Set<AnyCancellable>()
+    private var userSession: UserSession?
+    private var countries: [Country] = []
+    private var profile: UserProfile?
 
     init(userSession: UserSession?) {
         self.userSession = userSession
@@ -269,14 +269,14 @@ class PersonalInfoViewController: UIViewController {
     func checkProfileInfoChanged() {
         // Updatable fields
         let emailChanged = emailHeaderTextFieldView.text == profile?.email ? false : true
-        let titleChanged = titleHeaderTextFieldView.text == profile?.title ? false : true
-        let firstNameChanged = firstNameHeaderTextFieldView.text == profile?.firstname ? false : true
-        let lastNameChanged = lastNameHeaderTextFieldView.text == profile?.surname ? false : true
-        let address1Changed = adress1HeaderTextFieldView.text == profile?.address1 ? false : true
-        let address2Changed = adress2HeaderTextFieldView.text == profile?.address2 ? false : true
+        let titleChanged = titleHeaderTextFieldView.text == profile?.title?.rawValue ? false : true
+        let firstNameChanged = firstNameHeaderTextFieldView.text == profile?.firstName ? false : true
+        let lastNameChanged = lastNameHeaderTextFieldView.text == profile?.lastName ? false : true
+        let address1Changed = adress1HeaderTextFieldView.text == profile?.address ? false : true
+        let address2Changed = adress2HeaderTextFieldView.text == profile?.province ? false : true
         let cityChanged = cityHeaderTextFieldView.text == profile?.city ? false : true
         let postalCodeChanged = postalCodeHeaderTextFieldView.text == profile?.postalCode ? false : true
-        let personalIdChanged = cardIdHeaderTextFieldView.text == profile?.personalID ? false : true
+        let personalIdChanged = cardIdHeaderTextFieldView.text == profile?.personalIdNumber ? false : true
 
         if emailChanged || titleChanged || firstNameChanged || lastNameChanged || address1Changed
             || address2Changed || cityChanged || postalCodeChanged || personalIdChanged {
@@ -295,24 +295,34 @@ class PersonalInfoViewController: UIViewController {
 
         var validFields = true
 
+        let username = usernameHeaderTextFieldView.text
         let email = emailHeaderTextFieldView.text
         let title = titleHeaderTextFieldView.text
-        let gender = titleHeaderTextFieldView.text == "Mr." ? "M" : "F"
+        let gender = titleHeaderTextFieldView.text == UserTitle.mister.rawValue ? "M" : "F"
         let firstName = firstNameHeaderTextFieldView.text
         let lastName = lastNameHeaderTextFieldView.text
-        let birthDate = birthDateHeaderTextFieldView.text
-        let mobilePrefix = profile?.mobilePrefix ?? ""
-        let mobile = profile?.mobile ?? ""
-        let phonePrefix = profile?.phonePrefix ?? ""
-        let phone = profile?.phone ?? ""
-        let country = profile?.country ?? ""
+        let birthDateString = birthDateHeaderTextFieldView.text
+//        let mobilePrefix = profile?.mobilePrefix ?? ""
+//        let mobile = profile?.mobile ?? ""
+//        let phonePrefix = profile?.phonePrefix ?? ""
+//        let phone = profile?.phone ?? ""
+//        let country = profile?.country ?? ""
         let address1 = adress1HeaderTextFieldView.text
         let address2 = adress2HeaderTextFieldView.text
-        let city = cityHeaderTextFieldView.text
+        
         let postalCode = postalCodeHeaderTextFieldView.text
         let personalId = cardIdHeaderTextFieldView.text
-        let securityQuestion = profile?.securityQuestion ?? ""
-        let securityAnswer = profile?.securityAnswer ?? ""
+        
+        let city = self.profile?.city
+        
+        var serviceProviderCountry: ServiceProvider.Country?
+        if let countryValue = self.profile?.country {
+            serviceProviderCountry = ServiceProviderModelMapper.country(fromCountry: countryValue)
+        }
+        
+        let date = DateFormatter(format: "dd-MM-yyyy").date(from: birthDateString)
+//        let securityQuestion = profile?.securityQuestion ?? ""
+//        let securityAnswer = profile?.securityAnswer ?? ""
 
         // Verify required fields
         if firstName == "" {
@@ -336,27 +346,71 @@ class PersonalInfoViewController: UIViewController {
             validFields = false
         }
 
-        if validFields {
-            let form = EveryMatrix.ProfileForm(email: email,
-                                               title: title,
-                                               gender: gender,
-                                               firstname: firstName,
-                                               surname: lastName,
-                                               birthDate: birthDate,
-                                               country: country,
-                                               address1: address1,
-                                               address2: address2,
-                                               city: city,
-                                               postalCode: postalCode,
-                                               mobile: mobile,
-                                               mobilePrefix: mobilePrefix,
-                                               phone: phone,
-                                               phonePrefix: phonePrefix, personalID: personalId,
-                                               securityQuestion: securityQuestion,
-                                               securityAnswer: securityAnswer)
-
-            self.updateProfile(form: form)
+        if !validFields {
+            return
         }
+        
+//        if validFields {
+//            let form = EveryMatrix.ProfileForm(email: email,
+//                                               title: title,
+//                                               gender: gender,
+//                                               firstname: firstName,
+//                                               surname: lastName,
+//                                               birthDate: birthDate,
+//                                               country: country,
+//                                               address1: address1,
+//                                               address2: address2,
+//                                               city: city,
+//                                               postalCode: postalCode,
+//                                               mobile: mobile,
+//                                               mobilePrefix: mobilePrefix,
+//                                               phone: phone,
+//                                               phonePrefix: phonePrefix, personalID: personalId,
+//                                               securityQuestion: securityQuestion,
+//                                               securityAnswer: securityAnswer)
+//
+//            self.updateProfile(form: form)
+//        }
+//
+
+        let form = ServiceProvider.UpdateUserProfileForm.init(username: username,
+                                                              email: email,
+                                                              firstName: firstName,
+                                                              lastName: lastName,
+                                                              birthDate: date,
+                                                              gender: gender,
+                                                              address: address1,
+                                                              province: address2,
+                                                              city: city,
+                                                              postalCode: postalCode,
+                                                              country: serviceProviderCountry,
+                                                              cardId: personalId)
+        
+        Env.serviceProvider.updateUserProfile(form: form)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                if case .failure = completion {
+                    self.showAlert(type: .error, text: "")
+                }
+                
+//                switch completion {
+//                case .failure: //(let error):
+//                   switch error {
+//                   case ServiceProviderError.
+//                   case let .requestError(message):
+//                       self.showAlert(type: .error, text: message)
+//                   default:
+//                       self.showAlert(type: .error, text: "\(error)")
+//                   }
+//
+//                case .finished:
+//                    ()
+//                }
+            } receiveValue: { _ in
+                self.showAlert(type: .success, text: localized("profile_updated_success"))
+            }
+            .store(in: &cancellables)
+        
     }
 
     func showAlert(type: EditAlertView.AlertState, text: String = "") {
@@ -403,9 +457,10 @@ class PersonalInfoViewController: UIViewController {
     
     private func setupProfile(profile: UserProfile) {
         
+        self.profile = profile
         
-        if let optionIndex = UserTitles.titles.firstIndex(of: profile.title?.rawValue ?? "") {
-            self.titleHeaderTextFieldView.setSelectionPicker(UserTitles.titles, headerVisible: true)
+        if let optionIndex = UserTitle.titles.firstIndex(of: profile.title?.rawValue ?? "") {
+            self.titleHeaderTextFieldView.setSelectionPicker(UserTitle.titles, headerVisible: true)
             self.titleHeaderTextFieldView.setSelectedPickerOption(option: optionIndex)
         }
         else {

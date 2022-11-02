@@ -139,6 +139,36 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         .eraseToAnyPublisher()
     }
     
+    func updateUserProfile(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError> {
+        
+        guard let sessionKey = self.retrieveSessionKey() else {
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+        
+        let endpoint = OmegaAPIClient.updatePlayerInfo(sessionKey: sessionKey,
+                                                       username: form.username,
+                                                       email: form.email,
+                                                       firstName: form.firstName,
+                                                       lastName: form.lastName,
+                                                       birthDate: form.birthDate,
+                                                       gender: form.gender,
+                                                       address: form.address,
+                                                       province: form.province,
+                                                       city: form.city,
+                                                       postalCode: form.postalCode,
+                                                       country: form.country?.iso2Code,
+                                                       cardId: form.cardId)
+        
+        let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.networkManager.request(endpoint)
+        
+        return publisher.flatMap({ statusResponse -> AnyPublisher<Bool, ServiceProviderError> in
+            if statusResponse.status == "SUCCESS" {
+                return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+    }
     
     public func getCountries() -> AnyPublisher<[Country], ServiceProviderError> {
         
@@ -157,7 +187,6 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
                 return Fail(outputType: [Country].self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
             }
         }).eraseToAnyPublisher()
-
     }
     
     public func getCurrentCountry() -> AnyPublisher<Country?, ServiceProviderError> {
@@ -186,7 +215,6 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
         })
         .eraseToAnyPublisher()
-        
     }
 
 }

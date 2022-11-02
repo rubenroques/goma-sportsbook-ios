@@ -20,4 +20,8 @@ extension ServiceProviderModelMapper {
                        phonePrefix: serviceProviderCountry.phonePrefix)
     }
     
+    static func country(fromCountry country: Country) -> ServiceProvider.Country? {
+        return ServiceProvider.Country(isoCode: country.iso2Code)
+    }
+    
 }

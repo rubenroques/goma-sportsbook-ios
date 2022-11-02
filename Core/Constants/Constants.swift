@@ -91,7 +91,7 @@ enum CountryFlagHelper {
     }
 }
 
-enum UserTitles: String, Codable, CaseIterable {
+enum UserTitle: String, Codable, CaseIterable {
     case mister = "Mr."
     case mizz = "Ms."
     case misses = "Mrs."
@@ -99,6 +99,13 @@ enum UserTitles: String, Codable, CaseIterable {
     
     static var titles: [String] {
         return Self.allCases.map(\.rawValue)
+    }
+    
+    var genderAbbreviation: String {
+        switch self {
+        case .mister: return "M"
+        default: return "F"
+        }
     }
     // static let titles = ["Mr.", "Ms.", "Mrs.", "Miss"]
 }
