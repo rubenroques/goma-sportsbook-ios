@@ -26,11 +26,11 @@ import Foundation
 
 enum OmegaAPIClient {
     case login(username: String, password: String)
-    case openSession(sessionKey: String, productCode: String, gameId: String)
-    case logout(sessionKey: String)
-    case playerInfo(sessionKey: String)
-    case balanceSimple(sessionKey: String)
-    case updatePlayerInfo(sessionKey: String, username: String?, email: String?, firstName: String?, lastName: String?,
+    case openSession(productCode: String, gameId: String)
+    case logout
+    case playerInfo
+    case balanceSimple
+    case updatePlayerInfo(username: String?, email: String?, firstName: String?, lastName: String?,
                           birthDate: Date?, gender: String?, address: String?, province: String?,
                           city: String?, postalCode: String?, country: String?, cardId: String?)
     case checkCredentialEmail(email: String)
@@ -43,8 +43,7 @@ enum OmegaAPIClient {
     case getCurrentCountry
 
     case forgotPassword(email: String, secretQuestion: String? = nil, secretAnswer: String? = nil)
-    case updatePassword(sessionKey: String, oldPassword: String, newPassword: String)
-
+    case updatePassword(oldPassword: String, newPassword: String)
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -87,17 +86,15 @@ extension OmegaAPIClient: Endpoint {
         case .login(let username, let password):
             return [URLQueryItem(name: "username", value: username),
                     URLQueryItem(name: "password", value: password)]
-        case .openSession(let sessionKey, let productCode, let gameId):
-            return [URLQueryItem(name: "sessionKey", value: sessionKey),
-                    URLQueryItem(name: "productCode", value: productCode),
+        case .openSession(let productCode, let gameId):
+            return [URLQueryItem(name: "productCode", value: productCode),
                     URLQueryItem(name: "gameId", value: gameId)]
-        case .logout(let sessionKey):
-            return [URLQueryItem(name: "sessionKey", value: sessionKey)]
-        
-        case .playerInfo(let sessionKey):
-            return [URLQueryItem(name: "sessionKey", value: sessionKey)]
-        case .balanceSimple(let sessionKey):
-            return [URLQueryItem(name: "sessionKey", value: sessionKey)]
+        case .logout:
+            return nil
+        case .playerInfo:
+            return nil
+        case .balanceSimple:
+            return nil
         case .checkCredentialEmail(let email):
             return [URLQueryItem(name: "field", value: "email"),
                     URLQueryItem(name: "value", value: email)]
@@ -130,11 +127,11 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "email", value: email),
                 // URLQueryItem(name: "ipAddress", value: Self.getIPAddress()),
             ]
-        case .updatePlayerInfo(let sessionKey, let username, let email, let firstName, let lastName,
+        case .updatePlayerInfo(let username, let email, let firstName, let lastName,
                                let birthDate, let gender, let address, let province, let city,
                                let postalCode, let country, let cardId):
             
-            var query: [URLQueryItem] = [URLQueryItem(name: "sessionKey", value: sessionKey)]
+            var query: [URLQueryItem] = []
             
             if let username = username { query.append(URLQueryItem(name: "userid", value: username)) }
             if let email = email { query.append(URLQueryItem(name: "email", value: email)) }
@@ -181,11 +178,9 @@ extension OmegaAPIClient: Endpoint {
             }
 
             return queryItemsURL
-        case .updatePassword(let sessionKey, let oldPassword, let newPassword):
-            return [
-                URLQueryItem(name: "sessionKey", value: sessionKey),
-                URLQueryItem(name: "oldPassword", value: oldPassword),
-                URLQueryItem(name: "newPassword", value: newPassword)
+        case .updatePassword(let oldPassword, let newPassword):
+            return [URLQueryItem(name: "oldPassword", value: oldPassword),
+                    URLQueryItem(name: "newPassword", value: newPassword)
             ]
         }
     }
@@ -220,6 +215,15 @@ extension OmegaAPIClient: Endpoint {
          let data = body.data(using: String.Encoding.utf8)!
          return data
          */
+    }
+    
+    var requireSessionKey: Bool {
+        switch self {
+        case .openSession, .logout, .playerInfo, .balanceSimple, .updatePlayerInfo, .updatePassword:
+            return true
+        default:
+            return false
+        }
     }
     
     var url: String {

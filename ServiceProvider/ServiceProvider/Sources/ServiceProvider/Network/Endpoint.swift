@@ -16,14 +16,18 @@ protocol Endpoint {
     var method: HTTP.Method { get }
     var body: Data? { get }
     var timeout: TimeInterval { get }
+    var requireSessionKey: Bool { get }
 }
 
 extension Endpoint {
-    func request() -> URLRequest? {
+    func request(aditionalQueryItems: [URLQueryItem] = []) -> URLRequest? {
 
         guard var urlComponents = URLComponents(string: url) else { return nil }
-        urlComponents.path = endpoint
-        urlComponents.queryItems = query
+        urlComponents.path = self.endpoint
+        
+        var fullQuery = self.query ?? []
+        fullQuery.append(contentsOf: aditionalQueryItems)
+        urlComponents.queryItems = fullQuery
 
         guard let completedURL = urlComponents.url else { return nil }
 
