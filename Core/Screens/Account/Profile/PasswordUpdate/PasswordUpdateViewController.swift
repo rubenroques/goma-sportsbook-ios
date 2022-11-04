@@ -66,7 +66,7 @@ class PasswordUpdateViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
-        if TargetVariables.serviceProviderType == .sportradar {
+        if !Env.serviceProvider.hasSecurityQuestions() {
             self.hideSecurityQuestionLayout()
         }
     }

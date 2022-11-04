@@ -19,6 +19,7 @@ protocol PrivilegedAccessManager {
     
     var userSessionStatePublisher: AnyPublisher<UserSessionStatus, Error> { get }
     var userProfilePublisher: AnyPublisher<UserProfile?, Error> { get }
+    var hasSecurityQuestions: Bool { get }
     
     func login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError>
     
