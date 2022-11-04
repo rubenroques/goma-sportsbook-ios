@@ -6,8 +6,7 @@
 //
 
 import Foundation
-
-import UIKit
+import CryptoKit
 
 extension String {
     
@@ -32,10 +31,15 @@ extension String {
         }
         return ""
     }
-
+    
     func replacingFirstOccurrence(of target: String, with replacement: String) -> String {
         guard let range = self.range(of: target) else { return self }
         return self.replacingCharacters(in: range, with: replacement)
     }
-
+    
+    var MD5: String {
+        let computed = Insecure.MD5.hash(data: self.data(using: .utf8)!)
+        return computed.map { String(format: "%02hhx", $0) }.joined()
+    }
+    
 }

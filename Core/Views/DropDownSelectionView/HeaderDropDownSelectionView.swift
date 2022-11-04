@@ -30,7 +30,7 @@ class HeaderDropDownSelectionView: UIView {
     var didSelectPickerIndex: ((Int) -> Void)?
     var shouldBeginEditing: (() -> Bool)?
 
-    var textPublisher: CurrentValueSubject<String, Never> = .init("")
+    var textPublisher: CurrentValueSubject<String?, Never> = .init(nil)
 
     // Variables
     let datePicker = UIDatePicker()
@@ -296,6 +296,13 @@ class HeaderDropDownSelectionView: UIView {
         self.selectImage.image = image
     }
 
+    @discardableResult
+    override func resignFirstResponder() -> Bool {
+        super.resignFirstResponder()
+        self.textField.resignFirstResponder()
+        return true
+    }
+    
     // MARK: - Actions
     //
     @objc func pickerAction() {
@@ -304,7 +311,7 @@ class HeaderDropDownSelectionView: UIView {
     }
 
     @objc func datePickerDone() {
-        self.textField.resignFirstResponder()
+        self.resignFirstResponder()
     }
 
     @objc func dateChanged() {

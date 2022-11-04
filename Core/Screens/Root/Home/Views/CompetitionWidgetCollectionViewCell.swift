@@ -78,7 +78,7 @@ class CompetitionWidgetCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
 
         self.viewModel = nil
-        self.titleLabel.text = ""
+        self.titleLabel.text = localized("empty_value")
         self.flagImageView.image = nil
 
         self.setupWithTheme()
@@ -232,7 +232,7 @@ extension CompetitionWidgetCollectionViewCell {
         let seeAllLabel = UILabel()
         seeAllLabel.translatesAutoresizingMaskIntoConstraints = false
         seeAllLabel.numberOfLines = 1
-        seeAllLabel.text = "Open Competition Details"
+        seeAllLabel.text = localized("open_competition_details")
         seeAllLabel.font = AppFont.with(type: .semibold, size: 12)
         seeAllLabel.textAlignment = .center
         return seeAllLabel

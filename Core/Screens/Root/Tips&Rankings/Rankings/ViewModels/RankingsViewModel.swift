@@ -40,7 +40,7 @@ class RankingsViewModel {
         case 2:
             return localized("following")
         default:
-            return ""
+            return localized("empty_value")
         }
     }
 

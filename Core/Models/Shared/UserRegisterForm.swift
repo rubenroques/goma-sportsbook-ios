@@ -12,7 +12,7 @@ struct UserRegisterForm {
     let email: String
     let mobilePrefix: String
     let mobile: String
-    let birthDate: String
+    let birthDate: Date
     let userProviderId: String
     let deviceToken: String
 }
@@ -29,6 +29,18 @@ struct FullRegisterUserInfo {
     var securityQuestion: String
     var securityAnswer: String
     var personalID: String
+}
+
+struct ServiceProviderSimpleRegisterForm {
+    let email: String
+    let username: String
+    let password: String
+    let birthDate: String
+    let mobilePrefix: String
+    let mobileNumber: String
+    let emailVerificationURL: String
+    let countryCode: String
+    let currencyCode: String
 }
 
 extension EveryMatrix {

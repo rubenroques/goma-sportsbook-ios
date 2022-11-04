@@ -56,8 +56,14 @@ class LiveEventsViewController: UIViewController {
     var filterSelectedOption: Int = 0
     var selectedSport: Sport {
         didSet {
-            self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_\(selectedSport.id)")
-            self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+            if let sportIconImage = UIImage(named: "sport_type_mono_icon_\( selectedSport.id)") {
+                self.sportTypeIconImageView.image = sportIconImage
+                self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+            }
+            else {
+                self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_default")
+                self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+            }
             self.viewModel.selectedSport = selectedSport
         }
     }
@@ -92,7 +98,6 @@ class LiveEventsViewController: UIViewController {
             self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
         }
 
-        
         self.tableView.isHidden = false
         self.emptyBaseView.isHidden = true
         

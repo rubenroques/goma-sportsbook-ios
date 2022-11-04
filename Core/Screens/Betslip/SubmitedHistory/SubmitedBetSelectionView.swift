@@ -63,7 +63,7 @@ class SubmitedBetSelectionView: NibView {
             self.oddValueLabel.text = "-.--"
         }
 
-        self.eventTimeLabel.text = ""
+        self.eventTimeLabel.text = localized("empty_value")
 
         self.upChangeOddValueImage.alpha = 0.0
         self.downChangeOddValueImage.alpha = 0.0

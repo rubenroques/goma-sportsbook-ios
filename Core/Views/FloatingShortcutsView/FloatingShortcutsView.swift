@@ -64,7 +64,8 @@ class FloatingShortcutsView: UIView {
         
         let tapChatView = UITapGestureRecognizer(target: self, action: #selector(didTapChatView))
         self.chatButtonView.addGestureRecognizer(tapChatView)
-        
+
+        // EM TEMP SHUTDOWN
         if Env.appSession.businessModulesManager.isSocialFeaturesEnabled {
             self.chatButtonView.isHidden = false
         }
@@ -369,7 +370,7 @@ extension FloatingShortcutsView {
         chatCountLabel.textAlignment = .center
         chatCountLabel.clipsToBounds = true
         chatCountLabel.layer.masksToBounds = true
-        chatCountLabel.text = ""
+        chatCountLabel.text = localized("empty_value")
         return chatCountLabel
     }
 
@@ -405,8 +406,7 @@ extension FloatingShortcutsView {
         view.backgroundColor = UIColor.clear
         return view
     }
-    
-    
+
     private static func createBetslipCoinSceneView() -> SCNView {
         let view = SCNView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
         view.transform = CGAffineTransform(rotationAngle: .pi/2)

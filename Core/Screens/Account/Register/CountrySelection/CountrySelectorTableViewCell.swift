@@ -17,8 +17,8 @@ class CountrySelectorTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        self.nameLabel.text = ""
-        self.prefixLabel.text = ""
+        self.nameLabel.text = localized("empty_value")
+        self.prefixLabel.text = localized("empty_value")
 
         self.setupWithTheme()
     }
@@ -30,16 +30,15 @@ class CountrySelectorTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        self.nameLabel.text = ""
+        self.nameLabel.text = localized("empty_value")
         
         self.prefixLabel.isHidden = true
-        self.prefixLabel.text = ""
+        self.prefixLabel.text = localized("empty_value")
 
         self.setupWithTheme()
     }
 
     func setupWithTheme() {
-
         self.backgroundColor = .clear
         self.backgroundView?.backgroundColor = .clear
 
@@ -48,22 +47,18 @@ class CountrySelectorTableViewCell: UITableViewCell {
         self.prefixLabel.textColor = UIColor.App.textPrimary
     }
 
-    func setupWithCountry(country: EveryMatrix.Country, showPrefix: Bool) {
+    func setupWithCountry(country: Country, showPrefix: Bool) {
         if showPrefix, country.phonePrefix.isNotEmpty {
             self.prefixLabel.isHidden = false
             self.prefixLabel.text = "(\(country.phonePrefix))"
         }
-
         self.nameLabel.text = formatIndicativeCountry(country)
     }
 
-    private func formatIndicativeCountry(_ country: EveryMatrix.Country) -> String {
-        var stringCountry = "\(country.name)"
-        if let isoCode = country.isoCode {
-            stringCountry = "\(isoCode) - \(country.name)"
-            if let flag = CountryFlagHelper.flag(forCode: isoCode) {
-                stringCountry = "\(flag) \(country.name)"
-            }
+    private func formatIndicativeCountry(_ country: Country) -> String {
+        var stringCountry = "\(country.iso2Code) - \(country.name)"
+        if let flag = CountryFlagHelper.flag(forCode: country.iso2Code) {
+            stringCountry = "\(flag) \(country.name)"
         }
         return stringCountry
     }

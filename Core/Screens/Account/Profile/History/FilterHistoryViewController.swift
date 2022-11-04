@@ -71,14 +71,12 @@ class FilterHistoryViewController: UIViewController {
         self.endTimeHeaderTextView.isDisabled = false
         self.endTimeHeaderTextView.setDatePickerMode()
 
-        self.resetButton.text = localized("Reset")
-        self.cancelButton.text = localized("Cancel")
+        self.resetButton.text = localized("reset")
+        self.cancelButton.text = localized("cancel")
         
         self.view.bringSubviewToFront(self.dateRangeStackView)
         self.dateRangeStackView.bringSubviewToFront(self.startTimeHeaderTextView)
         self.dateRangeStackView.bringSubviewToFront(self.endTimeHeaderTextView)
-        
-        
         
         let tapCancelButton = UITapGestureRecognizer(target: self, action: #selector(self.cancelAction))
         cancelButton.isUserInteractionEnabled = true
@@ -378,7 +376,7 @@ extension FilterHistoryViewController {
     }
     
     private static func createSegmentedControl() -> UISegmentedControl {
-        let segment = UISegmentedControl(items: ["Transactions", "Betting"])
+        let segment = UISegmentedControl(items: [localized("transactions"), localized("betting")])
         segment.translatesAutoresizingMaskIntoConstraints = false
         segment.selectedSegmentIndex = 0
         return segment

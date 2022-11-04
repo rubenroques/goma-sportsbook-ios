@@ -1,5 +1,6 @@
 import UIKit
 import Combine
+import ServiceProvider
 
 class LoginViewController: UIViewController {
 
@@ -56,15 +57,33 @@ class LoginViewController: UIViewController {
         // Default value
         Env.userSessionStore.shouldRecordUserSession = true
 
+        // TEMP EM SHUTDOWN
+        self.loginButton.isEnabled = false
         Publishers.CombineLatest(self.usernameHeaderTextFieldView.textPublisher, self.passwordHeaderTextFieldView.textPublisher)
             .map { username, password in
                 return (username?.isNotEmpty ?? false) && (password?.isNotEmpty ?? false)
             }
-            .assign(to: \.isEnabled, on: loginButton)
+            .sink(receiveCompletion: { _ in
+                
+            }, receiveValue: { [weak self] validFields in
+                self?.loginButton.isEnabled = validFields
+            })
             .store(in: &cancellables)
-
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if self.isModal {
+            self.skipButton.isHidden = true
+            self.dismissButton.isHidden = false
+        }
+        else {
+            self.skipButton.isHidden = false
+            self.dismissButton.isHidden = true
+        }
+    }
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -106,7 +125,7 @@ class LoginViewController: UIViewController {
         loginLabel.font = AppFont.with(type: AppFont.AppFontType.bold, size: 26)
         loginLabel.text = localized("login")
 
-        self.usernameHeaderTextFieldView.setPlaceholderText(localized("email_address_or_username"))
+        self.usernameHeaderTextFieldView.setPlaceholderText(localized("email_address_placeholder"))
         self.passwordHeaderTextFieldView.setPlaceholderText(localized("password"))
 
         self.usernameHeaderTextFieldView.highlightColor = .white
@@ -141,65 +160,56 @@ class LoginViewController: UIViewController {
         self.dismissButton.setTitle(localized("close"), for: .normal)
         self.dismissButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
-        checkPolicyLinks()
-
-        if self.isModal {
-            self.skipButton.isHidden = true
-            self.dismissButton.isHidden = false
-        }
-        else {
-            self.skipButton.isHidden = false
-            self.dismissButton.isHidden = true
-        }
+        self.checkPolicyLinks()
 
         #if DEBUG
         let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
         debugLogoImageViewTap.numberOfTapsRequired = 3
-        logoImageView.isUserInteractionEnabled = true
-        logoImageView.addGestureRecognizer(debugLogoImageViewTap)
+        self.logoImageView.isUserInteractionEnabled = true
+        self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
         #endif
     }
 
     func setupWithTheme() {
         
         self.view.backgroundColor = UIColor.App.backgroundPrimary
-        skipView.backgroundColor = UIColor.App.backgroundPrimary
+        self.skipView.backgroundColor = UIColor.App.backgroundPrimary
 
-        skipButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
-        skipButton.backgroundColor = .clear
+        self.skipButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+        self.skipButton.backgroundColor = .clear
 
-        loginLabel.textColor = UIColor.App.textHeadlinePrimary
+        self.loginLabel.textColor = UIColor.App.textHeadlinePrimary
 
-        usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
-        usernameHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
+        self.usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        self.usernameHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
     
-        passwordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
-        passwordHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
+        self.passwordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        self.passwordHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
 
-        rememberView.backgroundColor = .clear
-        rememberLabel.textColor = UIColor.App.textPrimary
+        self.rememberView.backgroundColor = .clear
+        self.rememberLabel.textColor = UIColor.App.textPrimary
 
-        rememberImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        self.rememberImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
 
         if self.shouldRememberUser {
-            rememberToggleView.backgroundColor =  UIColor.App.buttonBackgroundPrimary
+            self.rememberToggleView.backgroundColor =  UIColor.App.buttonBackgroundPrimary
         }
         else {
-            rememberToggleView.backgroundColor =  UIColor.App.buttonBackgroundPrimary
+            self.rememberToggleView.backgroundColor =  UIColor.App.buttonBackgroundPrimary
         }
 
-        forgotButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+        self.forgotButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
-        loginButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
-        loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
-        loginButton.backgroundColor = .clear
-        loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
-        loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
-        loginButton.layer.cornerRadius = CornerRadius.button
-        loginButton.layer.masksToBounds = true
+        self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
+        self.loginButton.backgroundColor = .clear
+        self.loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        self.loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
+        self.loginButton.layer.cornerRadius = CornerRadius.button
+        self.loginButton.layer.masksToBounds = true
 
-        registerLabel.highlightTextLabel(fullString: localized("new_create_account"), highlightString: localized("create_account"))
+        self.registerLabel.highlightTextLabel(fullString: localized("new_create_account"), highlightString: localized("create_account"))
     }
 
     func checkPolicyLinks() {
@@ -266,23 +276,29 @@ class LoginViewController: UIViewController {
     }
 
     @IBAction private func didTapLoginButton() {
-
+        
         let username = usernameHeaderTextFieldView.text
         let password = passwordHeaderTextFieldView.text
-
+        
         self.loginButton.isEnabled = false
-
+        
         self.showLoadingSpinner()
-
-        Env.userSessionStore.loginUser(withUsername: username, password: password)
+        
+        Env.userSessionStore.login(withUsername: username, password: password)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
-                    if case error = UserSessionError.invalidEmailPassword {
+                    switch error {
+                    case .invalidEmailPassword:
                         self.showWrongPasswordStatus()
-                    }
-                    else {
+                    case .restrictedCountry(let errorMessage):
+                        self.showServerErrorStatus(errorMessage: errorMessage)
+                    case .serverError:
+                        self.showServerErrorStatus()
+                    case .quickSignUpIncomplete:
+                        self.showServerErrorStatus()
+                    default:
                         self.showServerErrorStatus()
                     }
                 case .finished:
@@ -290,45 +306,12 @@ class LoginViewController: UIViewController {
                 }
                 self.hideLoadingSpinner()
                 self.loginButton.isEnabled = true
-            }, receiveValue: { user in
-                self.getProfileStatus()
-
-                self.loginGomaAPI(username: user.username, password: user.userId)
-            })
-            .store(in: &cancellables)
-
-    }
-
-    func getProfileStatus() {
-        Env.everyMatrixClient.getProfileStatus()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
-                self.hideLoadingSpinner()
-            }, receiveValue: { value in
-                Env.userSessionStore.isUserProfileIncomplete.send(value.isProfileIncomplete)
+            }, receiveValue: { _ in
                 self.showNextViewController()
             })
             .store(in: &cancellables)
     }
-
-    func loginGomaAPI(username: String, password: String) {
-        let userLoginForm = UserLoginForm(username: username, password: password, deviceToken: Env.deviceFCMToken)
-        Env.gomaNetworkClient.requestLogin(deviceId: Env.deviceId, loginForm: userLoginForm)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
-
-            }, receiveValue: { value in
-                Env.gomaNetworkClient.refreshAuthToken(token: value)
-                Env.gomaSocialClient.connectSocket()
-
-                Env.userSessionStore.hasGomaUserSessionPublisher.send(true)
-
-                Env.gomaSocialClient.getInAppMessagesCounter()
-
-            })
-            .store(in: &cancellables)
-    }
-
+    
     func showLoadingSpinner() {
         view.addSubview(spinnerViewController.view)
         spinnerViewController.view.translatesAutoresizingMaskIntoConstraints = false
@@ -368,16 +351,30 @@ class LoginViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    private func showServerErrorStatus() {
-        let alert = UIAlertController(title: localized("login_error_title"),
-                                      message: localized("server_error_message"),
-                                      preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+    private func showServerErrorStatus(errorMessage: String? = nil) {
+        if let errorMessage = errorMessage {
+            let alert = UIAlertController(title: localized("login_error_title"),
+                                          message: errorMessage,
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else {
+            let alert = UIAlertController(title: localized("login_error_title"),
+                                          message: localized("server_error_message"),
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+
     }
 
     @IBAction private func didTapRecoverPassword() {
-        self.navigationController?.pushViewController(RecoverPasswordViewController(), animated: true)
+        let recoverPasswordViewModel = RecoverPasswordViewModel()
+
+        let recoverPasswordViewController = RecoverPasswordViewController(viewModel: recoverPasswordViewModel)
+
+        self.navigationController?.pushViewController(recoverPasswordViewController, animated: true)
     }
 
 }
@@ -387,8 +384,8 @@ extension LoginViewController {
     @objc func didTapDebugFormFill() {
         
         if self.usernameHeaderTextFieldView.text.isEmpty || self.usernameHeaderTextFieldView.text == "ruben" {
-            self.usernameHeaderTextFieldView.setText("ruben@gomadevelopment.pt")
-            self.passwordHeaderTextFieldView.setText("ruben=GOMA=12345")
+            self.usernameHeaderTextFieldView.setText("gomafrontend") //("ruben@gomadevelopment.pt")
+            self.passwordHeaderTextFieldView.setText("Omega123") //("ruben=GOMA=12345")
             self.loginButton.isEnabled = true
         }
         else if self.usernameHeaderTextFieldView.text == "ruben4" {
@@ -412,7 +409,6 @@ extension LoginViewController {
             self.usernameHeaderTextFieldView.setText("modaf")
             self.passwordHeaderTextFieldView.setText("teste123456.")
             self.loginButton.isEnabled = true
-            
         }
         
     }

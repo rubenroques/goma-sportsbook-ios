@@ -35,12 +35,13 @@ class HistoryViewModel {
         
         var identifier: String {
             switch self {
-            case .resolved: return "Resolved"
-            case .opened: return "Open"
-            case .won: return "Won"
-            case .cashout: return "Cashout"
+            case .resolved: return localized("resolved")
+            case .opened: return localized("open")
+            case .won: return localized("won")
+            case .cashout: return localized("cashout")
             case .none: return "None"
             }
+            
         }
     }
     
@@ -461,9 +462,9 @@ extension HistoryViewModel {
         if listType == .transactions {
             switch index {
             case 0:
-                return "Deposits"
+                return localized("deposit")
             case 1:
-                return "Withdraws"
+                return localized("withdraw")
             default:
                 return ""
             }
@@ -471,13 +472,13 @@ extension HistoryViewModel {
         else {
             switch index {
             case 0:
-                return "Resolved"
+                return localized("resolved")
             case 1:
-                return "Open"
+                return localized("open") 
             case 2:
-                return "Won"
+                return localized("won")
             case 3:
-                return "Cashout"
+                return localized("cashout")
             default:
                 return ""
             }

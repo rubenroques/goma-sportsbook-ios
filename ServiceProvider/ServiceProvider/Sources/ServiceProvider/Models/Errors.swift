@@ -1,0 +1,33 @@
+//
+//  File.swift
+//  
+//
+//  Created by Ruben Roques on 11/10/2022.
+//
+
+import Foundation
+
+public enum ServiceProviderError: Error {
+    case privilegedAccessManagerNotFound
+    
+    case invalidEmailPassword
+    case quickSignUpIncomplete
+    
+    case invalidSignUpEmail
+    case invalidSignUpUsername
+    case invalidSignUpPassword
+    
+    case userSessionNotFound
+    
+    case onSubscribe
+
+    case invalidRequestFormat
+    case request
+    case unauthorized
+    case forbidden
+    case invalidResponse
+
+    case errorMessage(message: String)
+    
+    case unknown
+}

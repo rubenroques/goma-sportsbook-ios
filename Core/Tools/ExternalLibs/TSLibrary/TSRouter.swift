@@ -32,7 +32,7 @@ enum TSRouter {
     case getProfileStatus
     case getUserBalance
     case getBetslipSelectionInfo(language: String, stakeAmount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection], oddsBoostPercentage: Double?)
-    case placeBet(language: String, amount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection], oddsValidationType: String, freeBet: Bool, ubsWalletId: String)
+    case placeBet(language: String, amount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection], oddsValidationType: String, freeBet: Bool, ubsWalletId: String, betBuilderPriceValue: Double? = nil)
     case getOpenBets(language: String, records: Int, page: Int)
     case cashoutBet(language: String, betId: String)
     case getMatchOdds(language: String, matchId: String, bettingTypeId: String)
@@ -490,13 +490,22 @@ enum TSRouter {
 
             return params
 
-        case .placeBet(let language, let amount, let betType, let tickets, let oddsValidationType, let freeBet, let ubsWalletId):
+        case .placeBet(let language, let amount, let betType, let tickets, let oddsValidationType, let freeBet, let ubsWalletId, let betBuilderPriceValue):
             var selection: [Any] = []
             for ticket in tickets {
-                selection.append([
-                    "bettingOfferId": "\(ticket.id)",
-                    "priceValue": ticket.currentOdd
-                ])
+                if let betBuilderPriceValue = betBuilderPriceValue {
+                    selection.append([
+                        "bettingOfferId": "\(ticket.id)",
+                        "priceValue": ticket.currentOdd,
+                        "betBuilderPriceValue": betBuilderPriceValue
+                    ])
+                }
+                else {
+                    selection.append([
+                        "bettingOfferId": "\(ticket.id)",
+                        "priceValue": ticket.currentOdd
+                    ])
+                }
             }
             let params: [String: Any] = ["lang": language,
                     "terminalType": "MOBILE",

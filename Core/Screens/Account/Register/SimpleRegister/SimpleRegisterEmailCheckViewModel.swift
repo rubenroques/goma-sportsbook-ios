@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import ServiceProvider
 
 class SimpleRegisterEmailCheckViewModel: NSObject {
 
@@ -40,8 +41,8 @@ class SimpleRegisterEmailCheckViewModel: NSObject {
             self.isLoadingPublisher.send(false)
             return
         }
-
-        Env.everyMatrixClient.validateEmail(email)
+        
+        Env.serviceProvider.checkEmailRegistered(email)
             .receive(on: DispatchQueue.main)
             .handleEvents(receiveOutput: { [weak self] _ in
                 self?.shouldAnimateEmailValidityView.send(true)
@@ -53,8 +54,8 @@ class SimpleRegisterEmailCheckViewModel: NSObject {
                 self?.shouldAnimateEmailValidityView.send(false)
                 self?.isLoadingPublisher.send(false)
             }
-            receiveValue: { [weak self] value in
-                if !value.isAvailable {
+            receiveValue: { [weak self] isEmailInUse in
+                if isEmailInUse {
                     self?.registerErrorTypePublisher.value = .usedEmail
                     self?.sendAnalyticsEvent(event: .userSignUpFail)
                 }
@@ -80,22 +81,28 @@ class SimpleRegisterEmailCheckViewModel: NSObject {
     }
 
     func requestValidEmailCheck(email: String) {
-        Env.everyMatrixClient.validateEmail(email)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.shouldAnimateEmailValidityView.send(false)
-            }
-            receiveValue: { [weak self] value in
-                if !value.isAvailable {
-                    self?.registerErrorTypePublisher.value = .usedEmail
-                    self?.isRegisterEnabled.send(false)
-                }
-                else {
-                    self?.isRegisterEnabled.send(true)
-                }
-                self?.shouldAnimateEmailValidityView.send(false)
-            }
-            .store(in: &cancellables)
+        
+        self.shouldAnimateEmailValidityView.send(true)
+        self.isRegisterEnabled.send(false)
+        
+        Env.serviceProvider.checkEmailRegistered(email)
+                    .receive(on: DispatchQueue.main)
+                    .sink { [weak self] _ in
+                        self?.shouldAnimateEmailValidityView.send(false)
+                    }
+                    receiveValue: { [weak self] isEmailInUse in
+                        
+                        if isEmailInUse {
+                            self?.registerErrorTypePublisher.value = .usedEmail
+                            self?.isRegisterEnabled.send(false)
+                        }
+                        else {
+                            self?.isRegisterEnabled.send(true)
+                        }
+                        self?.shouldAnimateEmailValidityView.send(false)
+                    }
+                    .store(in: &cancellables)
+
     }
 }
 

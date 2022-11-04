@@ -185,3 +185,7 @@ enum BetslipOddValidationType: String {
     }
 }
  
+enum ServiceProviderType: String {
+    case everymatrix
+    case sportradar
+}

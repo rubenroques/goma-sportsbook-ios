@@ -33,23 +33,29 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        self.totalOddValueLabel.text = ""
-        self.numberOfSelectionsValueLabel.text = ""
+        self.totalOddValueLabel.text = localized("empty_value")
+        self.numberOfSelectionsValueLabel.text = localized("empty_value")
 
         self.setupWithTheme()
 
         self.betNowButton.layer.cornerRadius = 5
         self.layer.cornerRadius = 9
+
+        // EM TEMP SHUTDOWN
+        self.betNowButton.isEnabled = false
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
 
         self.betsStackView.removeAllArrangedSubviews()
-        self.totalOddValueLabel.text = ""
-        self.numberOfSelectionsValueLabel.text = ""
+        self.totalOddValueLabel.text = localized("empty_value")
+        self.numberOfSelectionsValueLabel.text = localized("empty_value")
 
         self.viewModel = nil
+
+        // EM TEMP SHUTDOWN
+        self.betNowButton.isEnabled = false
 
     }
 
@@ -82,8 +88,7 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
         self.infoBetLabelsView.backgroundColor = UIColor.App.backgroundSecondary
         self.informationBetView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.betNowButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
-        self.betNowButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        StyleHelper.styleButton(button: self.betNowButton)
 
         self.totalOddValueLabel.backgroundColor = UIColor.App.backgroundSecondary
         self.totalOddLabel.backgroundColor = UIColor.App.backgroundSecondary

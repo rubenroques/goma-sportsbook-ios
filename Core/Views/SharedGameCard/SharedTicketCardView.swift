@@ -176,7 +176,7 @@ extension SharedTicketCardView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 14)
-        label.text = "Title"
+        label.text = localized("title")
         return label
     }
 
@@ -184,7 +184,7 @@ extension SharedTicketCardView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 9)
-        label.text = "Subtitle"
+        label.text = localized("subtitle")
         return label
     }
 
@@ -245,7 +245,7 @@ extension SharedTicketCardView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold , size: 10)
-        label.text = "Total Odd"
+        label.text = localized("total_odd")
         label.textAlignment = .center
         label.numberOfLines = 0
         return label
@@ -264,7 +264,7 @@ extension SharedTicketCardView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold , size: 10)
-        label.text = "Bet Amount"
+        label.text = localized("bet_amount")
         label.textAlignment = .center
         label.numberOfLines = 0
         return label
@@ -283,7 +283,7 @@ extension SharedTicketCardView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold , size: 10)
-        label.text = "Winnings"
+        label.text = localized("winnings")
         label.textAlignment = .center
         label.numberOfLines = 0
         return label

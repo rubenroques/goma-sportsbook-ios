@@ -173,7 +173,7 @@ extension SharedTicketBetLineView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 9)
-        label.text = "Tournament"
+        label.text = localized("tournament")
         return label
     }
 
@@ -181,7 +181,7 @@ extension SharedTicketBetLineView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 9)
-        label.text = "Date"
+        label.text = localized("date")
         label.textAlignment = .right
         label.numberOfLines = 0
         return label
@@ -191,7 +191,7 @@ extension SharedTicketBetLineView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 11)
-        label.text = "Home Team"
+        label.text = localized("home_label_default")
         return label
     }
 
@@ -199,7 +199,7 @@ extension SharedTicketBetLineView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 11)
-        label.text = "Away Team"
+        label.text = localized("away_label_default")
         return label
     }
 
@@ -213,7 +213,7 @@ extension SharedTicketBetLineView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 10)
-        label.text = "Market"
+        label.text = localized("market")
         label.textAlignment = .left
         label.numberOfLines = 0
         return label
@@ -223,7 +223,7 @@ extension SharedTicketBetLineView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 10)
-        label.text = "Outcome"
+        label.text = localized("outcome")
         label.textAlignment = .right
         label.numberOfLines = 0
         return label
@@ -233,7 +233,7 @@ extension SharedTicketBetLineView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 10)
-        label.text = "Odds"
+        label.text = localized("odds")
         label.textAlignment = .left
         label.numberOfLines = 0
         return label

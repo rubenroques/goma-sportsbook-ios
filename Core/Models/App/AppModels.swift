@@ -138,9 +138,47 @@ enum MarketType {
 }
 
 struct BannerInfo {
-    let type: String
-    let id: String
-    let matchId: String?
-    let imageURL: String?
-    let priorityOrder: Int?
+    var type: String
+    var id: String
+    var matchId: String?
+    var imageURL: String?
+    var priorityOrder: Int?
+}
+
+
+struct Country: Codable {
+    var name: String
+    var capital: String?
+    var region: String
+    var iso2Code: String
+    var iso3Code: String
+    var numericCode: String
+    var phonePrefix: String
+}
+
+
+struct UserProfile: Codable {
+    
+    var userIdentifier: String
+    var username: String
+    var email: String
+    var firstName: String?
+    var lastName: String?
+    var birthDate: Date
+    
+    var nationality: Country?
+    var country: Country?
+    
+    var gender: String?
+    var title: UserTitle?
+    
+    var personalIdNumber: String?
+    var address: String?
+    var province: String?
+    var city: String?
+    var postalCode: String?
+
+    var isEmailVerified: Bool
+    var isRegistrationCompleted: Bool
+    
 }

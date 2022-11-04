@@ -231,7 +231,7 @@ extension SuggestedBetsListViewController {
         titleLabel.font = AppFont.with(type: .bold, size: 14)
         titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 2
-        titleLabel.text = "You don’t have any selections yet."
+        titleLabel.text = localized("not_bets_tickets_section_yet")
         return titleLabel
     }
 
@@ -241,7 +241,7 @@ extension SuggestedBetsListViewController {
         subtitleLabel.font = AppFont.with(type: .bold, size: 20)
         subtitleLabel.textAlignment = .center
         subtitleLabel.numberOfLines = 2
-        subtitleLabel.text = "Here are your Suggested Bets!"
+        subtitleLabel.text = localized("suggested_bets")
         return subtitleLabel
     }
 
