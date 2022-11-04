@@ -91,7 +91,22 @@ enum CountryFlagHelper {
     }
 }
 
-enum UserTitles {
-    static let titles = ["Mr.", "Ms.", "Mrs.", "Miss"]
+enum UserTitle: String, Codable, CaseIterable {
+    case mister = "Mr."
+    case mizz = "Ms."
+    case misses = "Mrs."
+    case miss = "Miss"
+    
+    static var titles: [String] {
+        return Self.allCases.map(\.rawValue)
+    }
+    
+    var genderAbbreviation: String {
+        switch self {
+        case .mister: return "M"
+        default: return "F"
+        }
+    }
+    // static let titles = ["Mr.", "Ms.", "Mrs.", "Miss"]
 }
 // swiftlint:enable line_length

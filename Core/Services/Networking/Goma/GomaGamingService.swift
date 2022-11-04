@@ -13,10 +13,13 @@ enum GomaGamingService {
     case geolocation(latitude: String, longitude: String)
     case settings
     case modules
-    case simpleRegister(username: String, email: String, phoneCountryCode: String, phone: String, birthDate: String, userProviderId: String, deviceToken: String)
+    
+    case login(username: String, password: String, deviceToken: String)
+    case simpleRegister(username: String, email: String, phoneCountryCode: String,
+                        phone: String, birthDate: Date, userProviderId: String, deviceToken: String)
+    
     case updateProfile(name: String)
     case modalPopUpDetails
-    case login(username: String, password: String, deviceToken: String)
     case suggestedBets
     case addFavorites(favorites: String)
     case removeFavorite(favorite: String)
@@ -407,16 +410,38 @@ extension GomaGamingService: Endpoint {
             let data = body.data(using: String.Encoding.utf8)!
             return data
         case .simpleRegister(let username, let email, let phoneCountryCode, let phone, let birthDate, let userProviderId, let deviceToken):
+            
+            var prefix = ""
+            if TargetVariables.serviceProviderType == .sportradar {
+                prefix = "sr_"
+            }
+            let birthDateString = birthDate.toString(formatString: "yyyy-MM-dd")
             let body = """
-                       {"type": "small_register",
-                        "email": "\(email)",
-                        "username": "\(username)",
+                       {
+                        "type": "small_register",
+                        "email": "\(prefix)\(email)",
+                        "username": "\(prefix)\(username)",
                         "phone_country_code": "\(phoneCountryCode)",
                         "phone_number": "\(phone)",
-                        "birthdate": "\(birthDate)",
+                        "birthdate": "\(birthDateString)",
                         "user_provider_id": "\(userProviderId)",
                         "device_token": "\(deviceToken)"
                        }
+                       """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+
+        case .login(let username, let password, let deviceToken):
+            
+            var prefix = ""
+            if TargetVariables.serviceProviderType == .sportradar {
+                prefix = "sr_"
+            }
+            
+            let body = """
+                       {"username": "\(prefix)\(username)",
+                        "password": "\(password)",
+                        "device_token": "\(deviceToken)"}
                        """
             let data = body.data(using: String.Encoding.utf8)!
             return data
@@ -430,14 +455,6 @@ extension GomaGamingService: Endpoint {
             let data = body.data(using: String.Encoding.utf8)!
             return data
             
-        case .login(let username, let password, let deviceToken):
-            let body = """
-                       {"username": "\(username)",
-                        "password": "\(password)",
-                        "device_token": "\(deviceToken)"}
-                       """
-            let data = body.data(using: String.Encoding.utf8)!
-            return data
         case .addFavorites(let favorites):
             let body = """
                     {"favorites":

@@ -120,6 +120,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     private var selectedSingleOddsBoost: SingleBetslipOddsBoost?
 
     private var userSelectedSystemBet: Bool = false
+    private var isBetBuilderSelection: Bool = false
     
     var cancellables = Set<AnyCancellable>()
     var isSuggestedMultiple: Bool = false
@@ -218,7 +219,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         super.init(nibName: "PreSubmissionBetslipViewController", bundle: nil)
 
-        self.title = localized("betslip") // TODO: localization
+        self.title = localized("betslip")
     }
 
     @available(iOS, unavailable)
@@ -242,7 +243,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.view.bringSubviewToFront(emptyBetsBaseView)
         self.view.bringSubviewToFront(loadingBaseView)
 
-        self.betTypeSegmentControlView = SegmentControlView(options: [localized("single"), localized("multiple"), localized("system")]) // TODO: localization
+        self.betTypeSegmentControlView = SegmentControlView(options: [localized("single"), localized("multiple"), localized("system")])
         self.betTypeSegmentControlView?.translatesAutoresizingMaskIntoConstraints = false
         self.betTypeSegmentControlView?.didSelectItemAtIndexAction = self.didChangeSelectedSegmentItem
 
@@ -428,14 +429,17 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.multiplierPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] multiplier in
-                if let oddsBoostSelected = self?.oddsBoostSelected {
-                    let oddsBoostMultiplier = multiplier + (multiplier * oddsBoostSelected.oddsBoostPercent)
-                    self?.multipleOddsValueLabel.text = OddConverter.stringForValue(oddsBoostMultiplier, format: UserDefaults.standard.userOddsFormat)
-                    self?.secondaryMultipleOddsValueLabel.text = OddConverter.stringForValue(oddsBoostMultiplier, format: UserDefaults.standard.userOddsFormat)
-                }
-                else {
-                    self?.multipleOddsValueLabel.text = OddConverter.stringForValue(multiplier, format: UserDefaults.standard.userOddsFormat)
-                    self?.secondaryMultipleOddsValueLabel.text = OddConverter.stringForValue(multiplier, format: UserDefaults.standard.userOddsFormat)
+                guard let self = self else {return}
+                if !self.isBetBuilderSelection {
+                    if let oddsBoostSelected = self.oddsBoostSelected {
+                        let oddsBoostMultiplier = multiplier + (multiplier * oddsBoostSelected.oddsBoostPercent)
+                        self.multipleOddsValueLabel.text = OddConverter.stringForValue(oddsBoostMultiplier, format: UserDefaults.standard.userOddsFormat)
+                        self.secondaryMultipleOddsValueLabel.text = OddConverter.stringForValue(oddsBoostMultiplier, format: UserDefaults.standard.userOddsFormat)
+                    }
+                    else {
+                        self.multipleOddsValueLabel.text = OddConverter.stringForValue(multiplier, format: UserDefaults.standard.userOddsFormat)
+                        self.secondaryMultipleOddsValueLabel.text = OddConverter.stringForValue(multiplier, format: UserDefaults.standard.userOddsFormat)
+                    }
                 }
             })
             .store(in: &cancellables)
@@ -841,6 +845,18 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        Env.betslipManager.betBuilderOddPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] betBuilderOdd in
+                if let betBuilderOdd = betBuilderOdd {
+                    self?.updateOddsWithBetBuilder(betBuilderOdds: betBuilderOdd)
+                }
+                else {
+                    self?.updateOddsWithBetBuilder()
+                }
+            })
+            .store(in: &cancellables)
+
         self.setupWithTheme()
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -883,6 +899,35 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.showErrorView(errorMessage: localized("selections_not_combinable"))
         }
         self.tableView.reloadData()
+    }
+
+    private func updateOddsWithBetBuilder(betBuilderOdds: Double? = nil) {
+
+        if let betBuilderOdds = betBuilderOdds {
+            self.isBetBuilderSelection = true
+
+            self.multiplierPublisher.send(betBuilderOdds)
+
+            self.multipleBettingTicketDataSource.isBetBuilderActive = true
+
+            self.multipleOddsValueLabel.text = "\(OddConverter.stringForValue(betBuilderOdds, format: UserDefaults.standard.userOddsFormat)) (\(localized("betbuilder_enabled")))"
+
+            self.secondaryMultipleOddsValueLabel.text = "\(OddConverter.stringForValue(betBuilderOdds, format: UserDefaults.standard.userOddsFormat)) (\(localized("betbuilder_enabled")))"
+
+            self.tableView.reloadData()
+        }
+        else {
+            self.isBetBuilderSelection = false
+
+            self.multipleBettingTicketDataSource.isBetBuilderActive = false
+
+            let multiplierValue = self.multiplierPublisher.value
+
+            self.multiplierPublisher.send(multiplierValue)
+
+            self.tableView.reloadData()
+        }
+
     }
 
     func showErrorView(errorMessage: String?, isAlertLayout: Bool = false) {
@@ -1748,6 +1793,7 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
 
     var oddsBoostSelected: Bool = false
     var changedOddsBoostSelectionState: ((BetslipOddsBoost?) -> Void)?
+    var isBetBuilderActive: Bool = false
 
     init(bettingTickets: [BettingTicket]) {
         self.bettingTickets = bettingTickets
@@ -1769,6 +1815,13 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
                 cell.configureWithBettingTicket(bettingTicket, errorBetting: cellBetError.errorMessage)
             default:
                 cell.configureWithBettingTicket(bettingTicket)
+            }
+
+            if self.isBetBuilderActive {
+                cell.updateOddWithBetBuilder(isActive: true, bettingTicket: bettingTicket)
+            }
+            else {
+                cell.updateOddWithBetBuilder(isActive: false, bettingTicket: bettingTicket)
             }
 
             return cell

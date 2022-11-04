@@ -26,6 +26,7 @@ class AppSession {
     }
 
     func connectPublishers() {
+        
         NotificationCenter.default.publisher(for: .socketConnected)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in

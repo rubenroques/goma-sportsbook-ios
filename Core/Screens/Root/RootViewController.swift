@@ -545,6 +545,8 @@ class RootViewController: UIViewController {
 
         self.notificationCounterLabel.font = AppFont.with(type: .semibold, size: 12)
 
+        // EM TEMP SHUTDOWN
+        self.casinoButtonBaseView.isHidden = true
     }
 
     func setupWithTheme() {

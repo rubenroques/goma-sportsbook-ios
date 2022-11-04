@@ -42,6 +42,7 @@
 "invalid_email" = "This email format appears to be invalid.";
 "email_already_registered" = "This email address is already registered.";
 "username_already_registered" = "This username is already registered.";
+"invalid_username" = "This email format appears to be invalid.";
 "forgot" = "Forgot Password?";
 
 "new_create_account" = "New here? Create a new account";
@@ -316,6 +317,7 @@ Terms of use, Privacy Policy and EULA";
 "wallet_error" = "Wallet Error";
 "wallet_error_message" = "There was an error trying to get your wallet settings. Try again later.";
 "email_address_or_username" = "Email or Username";
+"email_address_placeholder" = "Email";
 "app_version_profile" = "App Version %s (%s)\nSportsbook® All Rights Reserved";
 "daily" = "Daily";
 "weekly" = "Weekly";
@@ -627,3 +629,15 @@ Terms of use, Privacy Policy and EULA";
 "accept" = "Accept";
 "reject" = "Reject";
 "read_all" = "Read all";
+
+"email_verification" = "Email Verification";
+"betbuilder_enabled" = "BetBuilder Enabled";
+
+"code_verification_error" = "Code Verification Error";
+"proceed" = "Proceed";
+"forgot_password" = "Forgot Password";
+"email_associated_account" = "Please enter your Email associated with your Account";
+
+"recover_password_sent" = "Recover Password Sent";
+"recover_password_sent_message" = "If the information provided is correct, a confirmation email will be sent to the registered email address. \nClick the link or Input the verification code in the email to complete the password reset process & create a new password.";
+"current_password_incorrect" = "Current password incorrect.";

@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import ServiceProvider
 
 class FullRegisterPersonalInfoViewController: UIViewController {
 
@@ -34,10 +35,11 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     // Variables
     var buttonEnabled: Bool = false
     var cancellables = Set<AnyCancellable>()
-    var countries: EveryMatrix.CountryListing?
+    var countries: [Country] = []
     var isBackButtonDisabled: Bool
     
-    private var selectedCountry: EveryMatrix.Country?
+    private var currentCountry: Country?
+    private var selectedCountry: Country?
 
     init(isBackButtonDisabled: Bool = false) {
         self.isBackButtonDisabled = isBackButtonDisabled
@@ -81,7 +83,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         titleLabel.text = localized("personal_information")
         titleLabel.font = AppFont.with(type: .bold, size: 18)
 
-        titleHeaderTextFieldView.setSelectionPicker(UserTitles.titles, headerVisible: true)
+        titleHeaderTextFieldView.setSelectionPicker(UserTitle.titles, headerVisible: true)
         titleHeaderTextFieldView.setPlaceholderText(localized("title"))
 
         titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
@@ -110,7 +112,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         continueButton.titleLabel?.font = AppFont.with(type: .bold, size: 17)
         continueButton.isEnabled = false
 
-        checkUserInputs()
+        self.checkUserInputs()
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
@@ -210,17 +212,61 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
     private func setupPublishers() {
 
-        Env.everyMatrixClient.getCountries()
+//        Env.everyMatrixClient.getCountries()
+//            .receive(on: DispatchQueue.main)
+//            .eraseToAnyPublisher()
+//            .sink { _ in
+//                self.countryHeaderTextFieldView.isUserInteractionEnabled = true
+//            } receiveValue: { countries in
+//                self.countries = countries
+//                self.setupWithCountryCodes(countries)
+//            }
+//        .store(in: &cancellables)
+
+        
+        Env.serviceProvider.getCurrentCountry()
+            .compactMap({ $0 })
+            .map({ (serviceProviderCountry: ServiceProvider.Country) -> Country in
+                return Country(name: serviceProviderCountry.name,
+                               capital: serviceProviderCountry.capital,
+                               region: serviceProviderCountry.region,
+                               iso2Code: serviceProviderCountry.iso2Code,
+                               iso3Code: serviceProviderCountry.iso3Code,
+                               numericCode: serviceProviderCountry.numericCode,
+                               phonePrefix: serviceProviderCountry.phonePrefix)
+            })
             .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
             .sink { _ in
                 self.countryHeaderTextFieldView.isUserInteractionEnabled = true
-            } receiveValue: { countries in
-                self.countries = countries
-                self.setupWithCountryCodes(countries)
+            } receiveValue: { [weak self] currentCountry in
+                self?.currentCountry = currentCountry
+                self?.selectedCountry = currentCountry
             }
-        .store(in: &cancellables)
-
+            .store(in: &cancellables)
+        
+        Env.serviceProvider.getCountries()
+            .map { (serviceProviderCountries: [ServiceProvider.Country]) -> [Country] in
+                serviceProviderCountries.map({ (serviceProviderCountry: ServiceProvider.Country) -> Country in
+                    return Country(name: serviceProviderCountry.name,
+                                   capital: serviceProviderCountry.capital,
+                                   region: serviceProviderCountry.region,
+                                   iso2Code: serviceProviderCountry.iso2Code,
+                                   iso3Code: serviceProviderCountry.iso3Code,
+                                   numericCode: serviceProviderCountry.numericCode,
+                                   phonePrefix: serviceProviderCountry.phonePrefix)
+                    
+                })
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                self.countryHeaderTextFieldView.isUserInteractionEnabled = true
+            } receiveValue: {  [weak self] countriesArray in
+                self?.countries = countriesArray
+                
+                self?.setupWithCountryCodes(countriesArray)
+            }
+            .store(in: &cancellables)
+        
         self.firstNameHeaderTextFieldView.textPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
@@ -349,22 +395,18 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 }
 
 extension FullRegisterPersonalInfoViewController {
-    private func setupWithCountryCodes(_ listings: EveryMatrix.CountryListing) {
-
-        for country in listings.countries where country.isoCode == listings.currentIpCountry {
-            self.setupWithSelectedCountry(country)
-            break
-        }
-
+    private func setupWithCountryCodes(_ countries: [Country]) {
         self.countryHeaderTextFieldView.isUserInteractionEnabled = true
         self.countryHeaderTextFieldView.shouldBeginEditing = { [weak self] in
-            self?.showCountrySelector(listing: listings)
+            self?.showCountrySelector(countries)
             return false
         }
     }
 
-    private func showCountrySelector(listing: EveryMatrix.CountryListing) {
-        let phonePrefixSelectorViewController = PhonePrefixSelectorViewController(countriesArray: listing, showIndicatives: false)
+    private func showCountrySelector(_ countries: [Country]) {
+        let phonePrefixSelectorViewController = PhonePrefixSelectorViewController(countries: countries,
+                                                                                  originCountry: nil,
+                                                                                  showIndicatives: false)
         phonePrefixSelectorViewController.modalPresentationStyle = .overCurrentContext
         phonePrefixSelectorViewController.didSelectCountry = { [weak self] country in
             self?.setupWithSelectedCountry(country)
@@ -373,19 +415,20 @@ extension FullRegisterPersonalInfoViewController {
         self.present(phonePrefixSelectorViewController, animated: false, completion: nil)
     }
 
-    private func setupWithSelectedCountry(_ country: EveryMatrix.Country) {
+    private func setupWithSelectedCountry(_ country: Country) {
         self.selectedCountry = country
         self.countryHeaderTextFieldView.setText(self.formatIndicativeCountry(country), slideUp: true)
     }
 
-    private func formatIndicativeCountry(_ country: EveryMatrix.Country) -> String {
+    private func formatIndicativeCountry(_ country: Country) -> String {
         var stringCountry = "\(country.name)"
-        if let isoCode = country.isoCode {
-            stringCountry = "\(isoCode) - \(country.name)"
-            if let flag = CountryFlagHelper.flag(forCode: isoCode) {
-                stringCountry = "\(flag) \(country.name)"
-            }
+        let isoCode = country.iso2Code
+        
+        stringCountry = "\(isoCode) - \(country.name)"
+        if let flag = CountryFlagHelper.flag(forCode: isoCode) {
+            stringCountry = "\(flag) \(country.name)"
         }
+        
         return stringCountry
     }
 }

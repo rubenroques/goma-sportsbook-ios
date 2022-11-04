@@ -56,4 +56,8 @@ struct TargetVariables: SportsbookTarget {
     static var casinoURL: String {
         return "https://sportsbook-cms.gomagaming.com/casino/"
     }
+    
+    static var serviceProviderType: ServiceProviderType {
+        return .everymatrix
+    }
 }

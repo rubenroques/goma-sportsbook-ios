@@ -239,7 +239,6 @@ class PreLiveEventsViewController: UIViewController {
         sportsSelectorButtonView.backgroundColor = UIColor.App.highlightPrimary
         sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
 
-        
         filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
@@ -360,15 +359,24 @@ class PreLiveEventsViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        
-        self.viewModel.isLoading
+//        self.viewModel.isLoading
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] isLoading in
+//                self?.loadingBaseView.isHidden = !isLoading
+//                if !isLoading {
+//                    self?.refreshControl.endRefreshing()
+//                }
+//            }
+//            .store(in: &cancellables)
+
+        self.viewModel.isLoadingEvents
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isLoading in
-                self?.loadingBaseView.isHidden = !isLoading
-                if !isLoading {
+            .sink(receiveValue: { [weak self] isLoadingEvents in
+                self?.loadingBaseView.isHidden = !isLoadingEvents
+                if !isLoadingEvents {
                     self?.refreshControl.endRefreshing()
                 }
-            }
+            })
             .store(in: &cancellables)
 
         self.viewModel.dataChangedPublisher

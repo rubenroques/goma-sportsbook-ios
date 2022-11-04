@@ -78,6 +78,9 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
         let userTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapUser))
         self.topInfoStackView.addGestureRecognizer(userTapGesture)
+
+        // EM TEMP SHUTDOWN
+        self.betButton.isEnabled = false
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -97,6 +100,9 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
         self.hasCounter = false
         self.showFullTipButton = false
+
+        // EM TEMP SHUTDOWN
+        self.betButton.isEnabled = false
     }
 
     // MARK: - Theme and Layout
@@ -240,7 +246,8 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     }
 
     @objc func didTapBetButton() {
-        self.viewModel?.createBetslipTicket()
+        // EM TEMP SHUTDOWN
+        //self.viewModel?.createBetslipTicket()
     }
 
     @objc func didTapCellContentView() {
