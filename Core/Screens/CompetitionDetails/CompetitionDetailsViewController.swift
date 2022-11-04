@@ -453,7 +453,7 @@ extension CompetitionDetailsViewController {
         titleLabel.textColor = UIColor.App.textPrimary
         titleLabel.font = AppFont.with(type: .semibold, size: 14)
         titleLabel.textAlignment = .left
-        titleLabel.text = "Competition Details"
+        titleLabel.text = localized("competition_details")
         titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return titleLabel
     }
@@ -539,7 +539,7 @@ extension CompetitionDetailsViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 12)
-        label.text = "Loading"
+        label.text = localized("loading")
         return label
     }
 

@@ -83,7 +83,7 @@ class SeeMoreMarketsCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
 
         self.subtitleLabel.isHidden = false
-        self.subtitleLabel.text = ""
+        self.subtitleLabel.text = localized("empty_value")
         
         self.setupWithTheme()
     }

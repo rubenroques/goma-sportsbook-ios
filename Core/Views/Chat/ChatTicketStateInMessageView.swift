@@ -199,7 +199,7 @@ extension ChatTicketStateInMessageView {
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Title"
+        label.text = localized("title")
         label.font = AppFont.with(type: .bold, size: 14)
         label.textAlignment = .left
         return label
@@ -244,7 +244,7 @@ extension ChatTicketStateInMessageView {
     private static func createTotalOddTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Total Odd"
+        label.text = localized("total_odd")
         label.font = AppFont.with(type: .semibold, size: 10)
         label.numberOfLines = 1
         label.textAlignment = .center
@@ -254,7 +254,7 @@ extension ChatTicketStateInMessageView {
     private static func createBetAmountTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Bet Amount"
+        label.text = localized("bet_amount")
         label.font = AppFont.with(type: .semibold, size: 10)
         label.numberOfLines = 1
         label.textAlignment = .center
@@ -264,7 +264,7 @@ extension ChatTicketStateInMessageView {
     private static func createPossibleWinningTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Possible Winning"
+        label.text = localized("possible_winnings")
         label.font = AppFont.with(type: .semibold, size: 10)
         label.numberOfLines = 1
         label.textAlignment = .center

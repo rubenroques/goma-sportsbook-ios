@@ -97,7 +97,7 @@ extension SportSectionHeaderView {
     private static func createTitleLabel() -> UILabel {
         let titleLabel = UILabel()
         titleLabel.numberOfLines = 1
-        titleLabel.text = "Sport"
+        titleLabel.text = localized("sport")
         titleLabel.font = AppFont.with(type: .bold, size: 16)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         return titleLabel

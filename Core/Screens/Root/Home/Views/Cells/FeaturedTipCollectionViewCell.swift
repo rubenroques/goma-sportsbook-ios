@@ -81,6 +81,9 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
         let userTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapUser))
         self.topInfoStackView.addGestureRecognizer(userTapGesture)
+
+        // EM TEMP SHUTDOWN
+        self.betButton.isEnabled = false
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -92,14 +95,17 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
         self.viewModel = nil
         
-        self.usernameLabel.text = ""
-        self.totalOddsValueLabel.text = ""
-        self.selectionsValueLabel.text = ""
+        self.usernameLabel.text = localized("empty_value")
+        self.totalOddsValueLabel.text = localized("empty_value")
+        self.selectionsValueLabel.text = localized("empty_value")
         
         self.tipsStackView.removeAllArrangedSubviews()
 
         self.hasCounter = false
         self.showFullTipButton = false
+
+        // EM TEMP SHUTDOWN
+        self.betButton.isEnabled = false
     }
 
     // MARK: - Theme and Layout
@@ -255,7 +261,8 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
     }
 
     @objc func didTapBetButton() {
-        self.viewModel?.createBetslipTicket()
+        // EM TEMP SHUTDOWN
+        //self.viewModel?.createBetslipTicket()
     }
 
     @objc func didTapCellContentView() {
@@ -345,7 +352,7 @@ extension FeaturedTipCollectionViewCell {
     private static func createUsernameLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Username"
+        label.text = localized("username")
         label.font = AppFont.with(type: .semibold, size: 15)
         return label
     }

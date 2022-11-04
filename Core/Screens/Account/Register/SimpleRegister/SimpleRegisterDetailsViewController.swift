@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import ServiceProvider
 
 class SimpleRegisterDetailsViewController: UIViewController {
 
@@ -37,8 +38,12 @@ class SimpleRegisterDetailsViewController: UIViewController {
     
     // Variables
     var emailAddress: String
-    private var selectedCountry: EveryMatrix.Country?
+    
+    private var selectedCountry: Country?
 
+    private var currentCountry: Country?
+    private var countriesArray: [Country] = []
+    
     init(emailAddress: String) {
         self.emailAddress = emailAddress
 
@@ -193,15 +198,61 @@ class SimpleRegisterDetailsViewController: UIViewController {
 
     private func setupPublishers() {
 
-        Env.everyMatrixClient.getCountries()
+//        Env.everyMatrixClient.getCountries()
+//            .receive(on: DispatchQueue.main)
+//            .eraseToAnyPublisher()
+//            .sink { _ in
+//                self.indicativeHeaderTextView.isUserInteractionEnabled = true
+//            } receiveValue: { [weak self] countries in
+//                self?.setupWithCountryCodes(countries)
+//            }
+//            .store(in: &cancellables)
+        
+        Env.serviceProvider.getCurrentCountry()
+            .compactMap({ $0 })
+            .map({ (serviceProviderCountry: ServiceProvider.Country) -> Country in
+                return Country(name: serviceProviderCountry.name,
+                               capital: serviceProviderCountry.capital,
+                               region: serviceProviderCountry.region,
+                               iso2Code: serviceProviderCountry.iso2Code,
+                               iso3Code: serviceProviderCountry.iso3Code,
+                               numericCode: serviceProviderCountry.numericCode,
+                               phonePrefix: serviceProviderCountry.phonePrefix)
+            })
             .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
             .sink { _ in
                 self.indicativeHeaderTextView.isUserInteractionEnabled = true
-            } receiveValue: { [weak self] countries in
-                self?.setupWithCountryCodes(countries)
+            } receiveValue: { [weak self] currentCountry in
+                self?.currentCountry = currentCountry
+                self?.selectedCountry = currentCountry
+                
+                self?.setupWithSelectedCountry(currentCountry)
             }
             .store(in: &cancellables)
+        
+        Env.serviceProvider.getCountries()
+            .map { (serviceProviderCountries: [ServiceProvider.Country]) -> [Country] in
+                serviceProviderCountries.map({ (serviceProviderCountry: ServiceProvider.Country) -> Country in
+                    return Country(name: serviceProviderCountry.name,
+                                   capital: serviceProviderCountry.capital,
+                                   region: serviceProviderCountry.region,
+                                   iso2Code: serviceProviderCountry.iso2Code,
+                                   iso3Code: serviceProviderCountry.iso3Code,
+                                   numericCode: serviceProviderCountry.numericCode,
+                                   phonePrefix: serviceProviderCountry.phonePrefix)
+                    
+                })
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                self.indicativeHeaderTextView.isUserInteractionEnabled = true
+            } receiveValue: {  [weak self] countriesArray in
+                self?.countriesArray = countriesArray
+                
+                self?.setupWithCountryCodes(countriesArray)
+            }
+            .store(in: &cancellables)
+        
 
         self.usernameHeaderTextView.textPublisher
             .removeDuplicates()
@@ -274,7 +325,10 @@ class SimpleRegisterDetailsViewController: UIViewController {
     @IBAction private func signUpAction() {
 
         let username = usernameHeaderTextView.text
-        let birthDate = dateHeaderTextView.text // Must be yyyy-MM-dd
+        
+        let birthDateString = dateHeaderTextView.text // Must be yyyy-MM-dd
+        let birthDate = self.getDateFromTextFieldString(string: birthDateString)
+        
         let mobile = phoneHeaderTextView.text
         let email = emailHeaderTextView.text
         let password = passwordHeaderTextView.text
@@ -291,7 +345,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
         }
         
         guard
-            let selectedCountryISO = self.selectedCountry?.isoCode,
+            let selectedCountryISO = self.selectedCountry?.iso2Code,
             let mobilePrefixTextual = self.selectedCountry?.phonePrefix
         else {
             return
@@ -302,19 +356,62 @@ class SimpleRegisterDetailsViewController: UIViewController {
         if !checkDateBirth() {
             return
         }
+//
+//        let form = EveryMatrix.SimpleRegisterForm(email: email,
+//                                                  username: username,
+//                                                  password: password,
+//                                                  birthDate: birthDate,
+//                                                  mobilePrefix: mobilePrefixTextual,
+//                                                  mobileNumber: mobile,
+//                                                  emailVerificationURL: emailVerificationURL,
+//                                                  countryCode: selectedCountryISO,
+//                                                  currencyCode: currency)
 
-        let form = EveryMatrix.SimpleRegisterForm(email: email,
-                                                  username: username,
-                                                  password: password,
-                                                  birthDate: birthDate,
-                                                  mobilePrefix: mobilePrefixTextual,
-                                                  mobileNumber: mobile,
-                                                  emailVerificationURL: emailVerificationURL,
-                                                  countryCode: selectedCountryISO,
-                                                  currencyCode: currency)
+        let form = ServiceProvider.SimpleSignUpForm.init(email: email,
+                                                         username: username,
+                                                         password: password,
+                                                         birthDate: birthDate,
+                                                         mobilePrefix: mobilePrefixTextual,
+                                                         mobileNumber: mobile,
+                                                         countryIsoCode: selectedCountryISO,
+                                                         currencyCode: currency)
         
         self.showLoadingSpinner()
-        self.registerUser(form: form)
+
+        Env.userSessionStore.registerUser(form: form)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                self?.hideLoadingSpinner()
+                switch completion {
+                case .failure(let error):
+                    switch error {
+                    case .usernameInvalid:
+                        self?.showUsernameInvalidErrorStatus()
+                    case .emailInvalid:
+                        self?.showEmailInavalidErrorStatus()
+                    case .passwordInvalid:
+                        self?.showServerErrorStatus()
+                    case .usernameAlreadyUsed:
+                        self?.showUsernameTakenErrorStatus()
+                    case .emailAlreadyUsed:
+                        self?.showEmailTakenErrorStatus()
+                    case .passwordWeak:
+                        self?.showPasswordTooWeakErrorStatus()
+                    case .serverError:
+                        self?.showServerErrorStatus()
+                    }
+                    AnalyticsClient.sendEvent(event: .userSignUpFail)
+                case .finished:
+                    ()
+                }
+            } receiveValue: { [weak self] userCreated in
+                if userCreated {
+                    Logger.log("User registered \(form.email)")
+                    AnalyticsClient.sendEvent(event: .userSignUpSuccess)
+                    self?.pushRegisterNextViewController(email: form.email)
+                }
+            }
+            .store(in: &cancellables)
 
     }
 
@@ -345,9 +442,8 @@ class SimpleRegisterDetailsViewController: UIViewController {
     }
 
     func pushRegisterNextViewController(email: String) {
-        let simpleRegisterEmailSentViewController = SimpleRegisterEmailSentViewController()
-        simpleRegisterEmailSentViewController.emailUser = email
-        self.navigationController?.pushViewController(simpleRegisterEmailSentViewController, animated: true)
+        let codeVerificationViewController = CodeVerificationViewController(viewModel: CodeVerificationViewModel(email: email))
+        self.navigationController?.pushViewController(codeVerificationViewController, animated: true)
     }
 
     @objc func didTapBackground() {
@@ -403,9 +499,22 @@ extension SimpleRegisterDetailsViewController {
         self.disableSignUpButton()
     }
 
+    func showUsernameInvalidErrorStatus() {
+        self.usernameHeaderTextView.showErrorOnField(text: localized("invalid_username"),
+                                                     color: UIColor.App.alertError)
+        self.disableSignUpButton()
+    }
+    
     func showEmailTakenErrorStatus() {
         self.usernameHeaderTextView
             .showErrorOnField(text: localized("email_already_registered"),
+                              color: UIColor.App.alertError)
+        self.disableSignUpButton()
+    }
+    
+    func showEmailInavalidErrorStatus() {
+        self.usernameHeaderTextView
+            .showErrorOnField(text: localized("invalid_email"),
                               color: UIColor.App.alertError)
         self.disableSignUpButton()
     }
@@ -430,39 +539,6 @@ extension SimpleRegisterDetailsViewController {
 // Network Requests
 extension SimpleRegisterDetailsViewController {
 
-    private func registerUser(form: EveryMatrix.SimpleRegisterForm) {
-        
-        Logger.log("Sent user register \(form.email)")
-        
-        Env.userSessionStore.registerUser(form: form)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                self?.hideLoadingSpinner()
-                switch completion {
-                case .failure(let error):
-                    switch error {
-                    case let .requestError(message) where message.lowercased().contains("username is already taken"):
-                        self?.showUsernameTakenErrorStatus()
-                    case let .requestError(message) where message.lowercased().contains("email already exists"):
-                        self?.showEmailTakenErrorStatus()
-                    case let .requestError(message) where message.lowercased().contains("your password is too simple"):
-                        self?.showPasswordTooWeakErrorStatus()
-                    default:
-                        self?.showServerErrorStatus()
-                    }
-                    AnalyticsClient.sendEvent(event: .userSignUpFail)
-                case .finished:
-                    ()
-                }
-            } receiveValue: { [weak self] _ in
-                Logger.log("User registered \(form.email)")
-                AnalyticsClient.sendEvent(event: .userSignUpSuccess)
-                self?.pushRegisterNextViewController(email: form.email)
-            }
-            .store(in: &cancellables)
-        
-    }
-
     private func requestValidUsernameCheck(_ username: String) {
         Env.everyMatrixClient
             .validateUsername(username)
@@ -482,57 +558,56 @@ extension SimpleRegisterDetailsViewController {
 // Flags business logic
 extension SimpleRegisterDetailsViewController {
 
-    private func setupWithCountryCodes(_ listings: EveryMatrix.CountryListing) {
-
-        for country in listings.countries where country.isoCode == listings.currentIpCountry {
-            self.setupWithSelectedCountry(country)
-        }
-
+    private func setupWithCountryCodes(_ countries: [Country]) {
         self.indicativeHeaderTextView.isUserInteractionEnabled = true
         self.indicativeHeaderTextView.shouldBeginEditing = { [weak self] in
-            self?.showPhonePrefixSelector(listing: listings)
+            self?.showPhonePrefixSelector(countries)
             return false
         }
     }
 
-    private func showPhonePrefixSelector(listing: EveryMatrix.CountryListing) {
-        let phonePrefixSelectorViewController = PhonePrefixSelectorViewController(countriesArray: listing)
+    private func showPhonePrefixSelector(_ countries: [Country]) {
+        let phonePrefixSelectorViewController = PhonePrefixSelectorViewController(countries: countries, originCountry: self.currentCountry)
         phonePrefixSelectorViewController.modalPresentationStyle = .overCurrentContext
         phonePrefixSelectorViewController.didSelectCountry = { [weak self] country in
             self?.setupWithSelectedCountry(country)
             
             phonePrefixSelectorViewController.animateDismissView()
-            self?.updateBirthAgeLimit(ageLimit: country.legalAge)
+            
+            // TODO: Legal Age
+            let legalAge = 18
+            self?.updateBirthAgeLimit(ageLimit: legalAge)
         }
         self.present(phonePrefixSelectorViewController, animated: false, completion: nil)
     }
 
-    private func setupWithSelectedCountry(_ country: EveryMatrix.Country) {
+    private func setupWithSelectedCountry(_ country: Country) {
         self.selectedCountry = country
         self.indicativeHeaderTextView.setText(self.formatIndicativeCountry(country), slideUp: true)
 
-        let maxDate = self.dateForMaxLegalAge(legalAge: country.legalAge)
+        // TODO: Legal Age
+        let legalAge = 18
+        
+        let maxDate = self.dateForMaxLegalAge(legalAge: legalAge)
         self.dateHeaderTextView.datePicker.maximumDate = maxDate
     }
 
-    private func formatIndicativeCountry(_ country: EveryMatrix.Country) -> String {
+    private func formatIndicativeCountry(_ country: Country) -> String {
         var stringCountry = "\(country.phonePrefix)"
-        if let isoCode = country.isoCode {
-            stringCountry = "\(isoCode) - \(country.phonePrefix)"
-            if let flag = CountryFlagHelper.flag(forCode: isoCode) {
-                stringCountry = "\(flag) \(country.phonePrefix)"
-            }
+        let isoCode = country.iso2Code
+        
+        stringCountry = "\(isoCode) - \(country.phonePrefix)"
+        if let flag = CountryFlagHelper.flag(forCode: isoCode) {
+            stringCountry = "\(flag) \(country.phonePrefix)"
         }
+        
         return stringCountry
     }
 
     private func updateBirthAgeLimit(ageLimit: Int) {
-
         let maxDate = self.dateForMaxLegalAge(legalAge: ageLimit)
-        // let fieldDate = dateHeaderTextView.datePicker.date
         let fieldDate = getDateFromTextFieldString(string: dateHeaderTextView.text)
         if fieldDate > maxDate {
-            // dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App.alertError)
             dateHeaderTextView.datePicker.maximumDate = maxDate
         }
     }

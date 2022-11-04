@@ -131,7 +131,7 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
             })
             .store(in: &cancellables)
 
-        self.seeAllLabel.text = "See All"
+        self.seeAllLabel.text = localized("see_all")
 
         self.reloadCollections()
     }
@@ -449,7 +449,7 @@ extension SportMatchSingleLineTableViewCell {
     private static func createTitleLabel() -> UILabel {
         let titleLabel = UILabel()
         titleLabel.numberOfLines = 1
-        titleLabel.text = ""
+        titleLabel.text = localized("empty_value")
         titleLabel.font = AppFont.with(type: .semibold, size: 13)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         return titleLabel
@@ -508,7 +508,7 @@ extension SportMatchSingleLineTableViewCell {
     private static func createSeeAllLabel() -> UILabel {
         let seeAllLabel = UILabel()
         seeAllLabel.numberOfLines = 1
-        seeAllLabel.text = "See All"
+        seeAllLabel.text = localized("see_all")
         seeAllLabel.font = AppFont.with(type: .semibold, size: 12)
         seeAllLabel.textAlignment = .center
         seeAllLabel.translatesAutoresizingMaskIntoConstraints = false

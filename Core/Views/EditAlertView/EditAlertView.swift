@@ -71,9 +71,9 @@ class EditAlertView: NibView {
 
         alertImageView.image = UIImage(named: "success_circle_icon")
 
-        alertLabel.text = ""
+        alertLabel.text = localized("empty_value")
 
-        alertTextLabel.text = ""
+        alertTextLabel.text = localized("empty_value")
         alertTextLabel.numberOfLines = 0
 
         closeButton.setTitle("", for: .normal)

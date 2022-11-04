@@ -115,10 +115,10 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         self.drawBaseView.backgroundColor = .clear
         self.awayBaseView.backgroundColor = .clear
 
-        self.homeParticipantNameLabel.text = ""
-        self.awayParticipantNameLabel.text = ""
-        self.dateLabel.text = ""
-        self.timeLabel.text = ""
+        self.homeParticipantNameLabel.text = localized("empty_value")
+        self.awayParticipantNameLabel.text = localized("empty_value")
+        self.dateLabel.text = localized("empty_value")
+        self.timeLabel.text = localized("empty_value")
 
         let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
         self.homeBaseView.addGestureRecognizer(tapLeftOddButton)
@@ -168,10 +168,10 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         self.dateLabel.isHidden = false
         self.matchBaseView.isHidden = true
 
-        self.homeParticipantNameLabel.text = ""
-        self.awayParticipantNameLabel.text = ""
-        self.dateLabel.text = ""
-        self.timeLabel.text = ""
+        self.homeParticipantNameLabel.text = localized("empty_value")
+        self.awayParticipantNameLabel.text = localized("empty_value")
+        self.dateLabel.text = localized("empty_value")
+        self.timeLabel.text = localized("empty_value")
 
         self.viewModel = nil
         self.completeMatch = nil
@@ -191,9 +191,9 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         self.isMiddleOutcomeButtonSelected = false
         self.isRightOutcomeButtonSelected = false
 
-        self.homeOddValueLabel.text = ""
-        self.drawOddValueLabel.text = ""
-        self.awayOddValueLabel.text = ""
+        self.homeOddValueLabel.text = localized("empty_value")
+        self.drawOddValueLabel.text = localized("empty_value")
+        self.awayOddValueLabel.text = localized("empty_value")
     }
 
     func setupWithTheme() {
@@ -492,9 +492,9 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
             Logger.log("No markets found")
             oddsStackView.alpha = 0.2
 
-            self.homeOddValueLabel.text = "-"
-            self.drawOddValueLabel.text = "-"
-            self.awayOddValueLabel.text = "-"
+            self.homeOddValueLabel.text = localized("empty")
+            self.drawOddValueLabel.text = localized("empty")
+            self.awayOddValueLabel.text = localized("empty")
         }
 
     }

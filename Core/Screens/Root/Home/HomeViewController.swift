@@ -612,7 +612,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         seeAllLabel.translatesAutoresizingMaskIntoConstraints = false
         seeAllLabel.font = AppFont.with(type: .semibold, size: 12)
         seeAllLabel.textColor = UIColor.App.highlightPrimary
-        seeAllLabel.text = "See All"
+        seeAllLabel.text = localized("see_all")
         seeAllLabel.isUserInteractionEnabled = true
 
         titleView.addSubview(titleStackView)
@@ -649,7 +649,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             seeAllLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFavorites)))
         }
         else if case .featuredTips = self.viewModel.contentType(forSection: section) {
-            seeAllLabel.text = "Expand"
+            seeAllLabel.text = localized("expand")
             seeAllLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFeaturedTips)))
         }
         else {

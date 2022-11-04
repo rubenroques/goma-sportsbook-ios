@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import ServiceProvider
 
 protocol SportTypeSelectionViewDelegate: AnyObject {
     func selectedSport(_ sport: Sport)
@@ -20,6 +21,7 @@ class SportSelectionViewController: UIViewController {
     @IBOutlet private var cancelButton: UIButton!
     @IBOutlet private var collectionView: UICollectionView!
     @IBOutlet private var searchBar: UISearchBar!
+    @IBOutlet private var loadingBaseView: UIView!
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
 
     // Variables
@@ -29,10 +31,28 @@ class SportSelectionViewController: UIViewController {
     var isLiveSport: Bool
     var sportsRepository: SportsAggregatorRepository
 
+    var allSportsPublisher: AnyCancellable?
+    var allSportsRegister: EndpointPublisherIdentifiable?
+
     var liveSportsPublisher: AnyCancellable?
     var liveSportsRegister: EndpointPublisherIdentifiable?
 
+    var liveSportsDetailsCancellable: AnyCancellable?
+    
     var selectionDelegate: SportTypeSelectionViewDelegate?
+
+    var isLoading: Bool = false {
+        didSet {
+            if isLoading {
+                self.loadingBaseView.isHidden = false
+                self.activityIndicatorView.startAnimating()
+            }
+            else {
+                self.loadingBaseView.isHidden = true
+                self.activityIndicatorView.stopAnimating()
+            }
+        }
+    }
     
     private var cancellable = Set<AnyCancellable>()
 
@@ -60,10 +80,15 @@ class SportSelectionViewController: UIViewController {
         self.setupWithTheme()
     }
 
+    deinit {
+        print("SPORT SELECTION DEINIT")
+        Env.serviceProvider.unsubscribeAllSportTypes()
+    }
+
     func commonInit() {
         
-        self.activityIndicatorView.isHidden = true
-        self.view.bringSubviewToFront(self.activityIndicatorView)
+        self.view.bringSubviewToFront(self.loadingBaseView)
+        self.isLoading = true
 
         if isLiveSport {
             getSportsLive()
@@ -121,36 +146,134 @@ class SportSelectionViewController: UIViewController {
             }
         }
 
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
     }
 
     func getSports() {
 
-        self.activityIndicatorView.isHidden = false
+//        let sports = Env.everyMatrixClient.getDisciplines(language: "en")
+//
+//        sports
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure:
+//                    print("Error retrieving data!")
+//                case .finished:
+//                    print("Data retrieved!")
+//                }
+//                self.activityIndicatorView.isHidden = true
+//            }, receiveValue: { value in
+//                self.sportsData = value.records ?? []
+//                self.fullSportsData = self.sportsData
+//                self.collectionView.reloadData()
+//            })
+//            .store(in: &self.cancellable)
 
-        let sports = Env.everyMatrixClient.getDisciplines(language: "en")
+        self.allSportsPublisher?.cancel()
+        self.allSportsPublisher = nil
 
-        sports
+        self.allSportsPublisher = Env.serviceProvider.allSportTypes()?
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
+                print("Env.serviceProvider.allSportTypes completed \(completion)")
                 switch completion {
-                case .failure:
-                    print("Error retrieving data!")
                 case .finished:
-                    print("Data retrieved!")
+                    ()
+                case .failure:
+                    self?.isLoading = false
                 }
-                self.activityIndicatorView.isHidden = true
-            }, receiveValue: { value in
-                self.sportsData = value.records ?? []
-                self.fullSportsData = self.sportsData
-                self.collectionView.reloadData()
+            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
+                switch subscribableContent {
+                case .connected:
+                    print("Env.serviceProvider.allSportTypes connected")
+                    // self?.configureWithAllSports([])
+                case .content(let sportTypes):
+                    print("Env.serviceProvider.allSportTypes content")
+                    self?.configureWithAllSports(sportTypes)
+                case .disconnected:
+                    print("Env.serviceProvider.allSportTypes disconnected")
+                    //self?.configureWithAllSports([])
+                }
             })
-            .store(in: &self.cancellable)
 
+        // EM TEMP SHUTDOWN
+//        self.sportsData = []
+//        self.fullSportsData = []
+//        self.activityIndicatorView.isHidden = true
+//        self.collectionView.reloadData()
     }
 
     func getSportsLive() {
-        self.activityIndicatorView.isHidden = false
+        
+        self.liveSportsPublisher?.cancel()
+        self.liveSportsPublisher = nil
 
+        self.liveSportsPublisher = Env.serviceProvider.liveSportTypes()?
+            .sink(receiveCompletion: { [weak self] completion in
+                print("Env.serviceProvider.liveSportTypes completed \(completion)")
+                switch completion {
+                case .finished:
+                    ()
+                case .failure:
+                    self?.isLoading = false
+                }
+            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportTypeDetails]>) in
+                switch subscribableContent {
+                case .connected:
+                    self?.configureWithLiveSportsDetails([])
+                case .content(let sportTypeDetails):
+                    self?.configureWithLiveSportsDetails(sportTypeDetails)
+                case .disconnected:
+                    self?.configureWithLiveSportsDetails([])
+                }
+            })
+        
+//        self.activityIndicatorView.isHidden = false
+//
+//        self.sportsData = Array(self.sportsRepository.sportsLive.values)
+//        let sortedArray = self.sportsData.sorted(by: {$0.id.localizedStandardCompare($1.id) == .orderedAscending})
+//        self.sportsData = sortedArray
+//
+//        self.fullSportsData = self.sportsData
+//
+//        self.collectionView.reloadData()
+//
+//        self.sportsRepository.changedSportsLivePublisher
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: {[weak self] _ in
+//                self?.updateSportsLiveCollection()
+//            })
+//            .store(in: &cancellable)
+//        self.activityIndicatorView.isHidden = true
+
+    }
+
+    func configureWithLiveSportsDetails(_ sportTypeDetails: [ServiceProvider.SportTypeDetails]) {
+        self.isLoading = true
+
+        // TODO: Remove [EveryMatrix.Discipline] logic from this ViewModel, should be using the ServiceProvider models
+        // or another independent one
+        let sportsTypes = sportTypeDetails.map { sportTypeDetails in
+            EveryMatrix.Discipline(type: sportTypeDetails.sportType.id,
+                                   id: sportTypeDetails.sportType.id,
+                                   name: sportTypeDetails.sportType.name,
+                                   numberOfLiveEvents: sportTypeDetails.eventsCount,
+                                   showEventCategory: false)
+        }
+        
+        let sortedArray = sportsTypes.sorted(by: {$0.id.localizedStandardCompare($1.id) == .orderedAscending})
+        self.sportsData = sortedArray
+
+        self.fullSportsData = self.sportsData
+        
+        self.isLoading = false
+        
+        self.collectionView.reloadData()
+    }
+    
+    func updateSportsLiveCollection() {
         self.sportsData = Array(self.sportsRepository.sportsLive.values)
         let sortedArray = self.sportsData.sorted(by: {$0.id.localizedStandardCompare($1.id) == .orderedAscending})
         self.sportsData = sortedArray
@@ -158,23 +281,28 @@ class SportSelectionViewController: UIViewController {
         self.fullSportsData = self.sportsData
 
         self.collectionView.reloadData()
-
-        self.sportsRepository.changedSportsLivePublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: {[weak self] _ in
-                self?.updateSportsLiveCollection()
-            })
-            .store(in: &cancellable)
-        self.activityIndicatorView.isHidden = true
-
     }
 
-    func updateSportsLiveCollection() {
-        self.sportsData = Array(self.sportsRepository.sportsLive.values)
-        let sortedArray = self.sportsData.sorted(by: {$0.id.localizedStandardCompare($1.id) == .orderedAscending})
+    func configureWithAllSports(_ sportTypes: [ServiceProvider.SportType]) {
+
+        self.isLoading = true
+
+        // TODO: Remove [EveryMatrix.Discipline] logic from this ViewModel, should be using the ServiceProvider models
+        // or another independent one
+        let sportsTypes = sportTypes.map { sportType in
+            EveryMatrix.Discipline(type: sportType.id,
+                                   id: sportType.id,
+                                   name: sportType.name,
+                                   numberOfLiveEvents: 0,
+                                   showEventCategory: false)
+        }
+
+        let sortedArray = sportsTypes.sorted(by: {$0.id.localizedStandardCompare($1.id) == .orderedAscending})
         self.sportsData = sortedArray
 
         self.fullSportsData = self.sportsData
+
+        self.isLoading = false
 
         self.collectionView.reloadData()
     }
@@ -198,7 +326,9 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
             fatalError()
         }
 
-        let viewModel = SportSelectionCollectionViewCellViewModel(sport: sportsData[indexPath.row])
+        // TODO: Refactor this logic to the CellViewModel
+        let viewModel = SportSelectionCollectionViewCellViewModel(sport: sportsData[indexPath.row],
+                                                                  isLive: isLiveSport)
 
         cell.configureCell(viewModel: viewModel)
 
@@ -206,9 +336,7 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
             cell.isSelected = true
             collectionView.selectItem(at: indexPath, animated: true, scrollPosition: UICollectionView.ScrollPosition.centeredHorizontally)
         }
-        if isLiveSport {
-            cell.viewModel?.setSportPublisher(sportsRepository: self.sportsRepository)
-        }
+        
         return cell
     }
 
@@ -219,7 +347,7 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         guard
-            let sportTypeAtIndex = sportsData[safe:indexPath.row],
+            let sportTypeAtIndex = sportsData[safe: indexPath.row],
             let cell = collectionView.cellForItem(at: indexPath) as? SportSelectionCollectionViewCell
         else {
             collectionView.deselectItem(at: indexPath, animated: true)

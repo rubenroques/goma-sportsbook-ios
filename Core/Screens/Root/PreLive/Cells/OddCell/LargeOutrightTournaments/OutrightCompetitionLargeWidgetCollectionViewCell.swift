@@ -94,7 +94,7 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
 
         self.viewModel = nil
-        self.titleLabel.text = ""
+        self.titleLabel.text = localized("empty_value")
 
         self.setupWithTheme()
         self.adjustDesignToCardStyle()
@@ -301,7 +301,7 @@ extension OutrightCompetitionLargeWidgetCollectionViewCell {
         let seeAllLabel = UILabel()
         seeAllLabel.translatesAutoresizingMaskIntoConstraints = false
         seeAllLabel.numberOfLines = 1
-        seeAllLabel.text = "View Competition Markets"
+        seeAllLabel.text = localized("view_competition_markets")
         seeAllLabel.font = AppFont.with(type: .semibold, size: 12)
         seeAllLabel.textAlignment = .center
         return seeAllLabel

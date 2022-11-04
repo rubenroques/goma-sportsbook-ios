@@ -143,16 +143,16 @@ class StaticHomeViewTemplateDataSource {
         Env.userSessionStore.isUserProfileIncomplete
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
-                self?.fetchAlerts()
-                self?.refreshPublisher.send()
+                //self?.fetchAlerts()
+                //self?.refreshPublisher.send()
             })
             .store(in: &cancellables)
 
         Env.userSessionStore.isUserEmailVerified
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
-                self?.fetchAlerts()
-                self?.refreshPublisher.send()
+                //self?.fetchAlerts()
+                //self?.refreshPublisher.send()
             })
             .store(in: &cancellables)
 
@@ -169,12 +169,12 @@ class StaticHomeViewTemplateDataSource {
             .sink { [weak self] locations in
                 self?.store.storeLocations(locations: locations)
 
-                self?.requestSports()
-                self?.fetchBanners()
-                self?.fetchFavoriteMatches()
+                //self?.requestSports()
+                //self?.fetchBanners()
+                //self?.fetchFavoriteMatches()
                 self?.fetchTips()
                 self?.fetchSuggestedBets()
-                self?.fetchAlerts()
+                //self?.fetchAlerts()
             }
             .store(in: &cancellables)
 
@@ -341,10 +341,10 @@ class StaticHomeViewTemplateDataSource {
 
     // Tips TEST
     func fetchTips() {
-
+        // TODO: Usar enum no betType, 
         Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE")
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
                     print("FEATURED TIPS ERROR: \(error)")
@@ -352,8 +352,6 @@ class StaticHomeViewTemplateDataSource {
                     ()
                 }
             }, receiveValue: { [weak self] response in
-                print("FEATURED TIPS RESPONSE: \(response)")
-
                 if let featuredTips = response.data {
                     self?.featuredTips = featuredTips
                 }
@@ -393,7 +391,8 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func numberOfSections() -> Int {
-        return itemsBeforeSports + sportsToFetch.count - 1 // minus the fist sport
+//        return itemsBeforeSports + sportsToFetch.count - 1 // minus the fist sport
+        return itemsBeforeSports
     }
 
     func numberOfRows(forSectionIndex section: Int) -> Int {

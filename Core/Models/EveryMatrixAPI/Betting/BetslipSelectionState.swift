@@ -82,6 +82,7 @@ struct BetslipSelectionState: Decodable {
     var forbiddenCombinations: [BetslipForbiddenCombination]
     var freeBets: [BetslipFreebet]
     var oddsBoosts: [BetslipOddsBoost]
+    var betBuilder: [BetBuilder]?
 
     enum CodingKeys: String, CodingKey {
         case minStake = "minStake"
@@ -92,6 +93,7 @@ struct BetslipSelectionState: Decodable {
         case winnings = "maxWinningAndTaxes"
         case freeBets = "freeBets"
         case oddsBoosts = "oddsBoosts"
+        case betBuilder = "betBuilder"
     }
 
     init(from decoder: Decoder) throws {
@@ -105,6 +107,9 @@ struct BetslipSelectionState: Decodable {
         self.winnings = try? container.decode(BetslipWinningsInfo.self, forKey: .winnings)
         self.freeBets = (try? container.decode([BetslipFreebet].self, forKey: .freeBets)) ?? []
         self.oddsBoosts = (try? container.decode([BetslipOddsBoost].self, forKey: .oddsBoosts)) ?? []
+//        let betBuilderItems = try container.decode([FailableDecodable<BetBuilder>].self, forKey: .betBuilder)
+//        self.betBuilder = betBuilderItems.compactMap({ $0.base })
+        self.betBuilder = (try? container.decode([BetBuilder].self, forKey: .betBuilder)) ?? []
     }
 }
 
@@ -185,3 +190,26 @@ struct BetslipPlaceEntry: Codable {
 
 }
 
+struct BetBuilder: Decodable {
+    var betBuilderOdds: Double
+    var selections: [BetBuilderSelection]
+
+    enum CodingKeys: String, CodingKey {
+        case betBuilderOdds = "betBuilderOdds"
+        case selections = "selections"
+    }
+}
+
+struct BetBuilderSelection: Decodable {
+    var priceValue: Double
+    var bettingOfferId: String
+    var outcomeId: String
+    var bettingTypeId: String
+
+    enum CodingKeys: String, CodingKey {
+        case priceValue = "priceValue"
+        case bettingOfferId = "bettingOfferId"
+        case outcomeId = "outcomeId"
+        case bettingTypeId = "bettingTypeId"
+    }
+}

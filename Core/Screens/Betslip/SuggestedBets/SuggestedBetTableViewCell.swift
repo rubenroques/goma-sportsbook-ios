@@ -55,6 +55,9 @@ class SuggestedBetTableViewCell: UITableViewCell {
 
         self.loadingIndicatorView.stopAnimating()
         self.placeBetButton.addTarget(self, action: #selector(didTapPlaceBetButton), for: .primaryActionTriggered)
+
+        // EM TEMP SHUTDOWN
+        self.placeBetButton.isEnabled = false
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -67,6 +70,9 @@ class SuggestedBetTableViewCell: UITableViewCell {
 
         self.loadingIndicatorView.stopAnimating()
         self.setupWithTheme()
+
+        // EM TEMP SHUTDOWN
+        self.placeBetButton.isEnabled = false
     }
 
     // MARK: Layout and Theme
@@ -140,15 +146,17 @@ class SuggestedBetTableViewCell: UITableViewCell {
 
     @objc private func didTapPlaceBetButton() {
 
-        guard let viewModel = self.viewModel else {
-            return
-        }
+        // EM TEMP SHUTDOWN
 
-        for ticket in viewModel.betslipTickets {
-            Env.betslipManager.addBettingTicket(ticket)
-        }
-
-        self.betNowCallbackAction?()
+//        guard let viewModel = self.viewModel else {
+//            return
+//        }
+//
+//        for ticket in viewModel.betslipTickets {
+//            Env.betslipManager.addBettingTicket(ticket)
+//        }
+//
+//        self.betNowCallbackAction?()
     }
 
 }
@@ -225,7 +233,7 @@ extension SuggestedBetTableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 14)
-        label.text = "-"
+        label.text = localized("empty")
         return label
     }
     private static func createTotalOddLabel() -> UILabel {
@@ -239,7 +247,7 @@ extension SuggestedBetTableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 14)
-        label.text = "-"
+        label.text = localized("empty")
         return label
     }
 

@@ -31,8 +31,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet private weak var resultLabel: UILabel!
     @IBOutlet private weak var matchTimeLabel: UILabel!
-    @IBOutlet private weak var liveIndicatorImageView: UIImageView!
-    @IBOutlet private weak var resultCenterStackView: UIStackView!
 
     @IBOutlet private weak var oddsStackView: UIStackView!
 
@@ -66,12 +64,20 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet private weak var headerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var teamsHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var resultCenterConstraint: NSLayoutConstraint!
     @IBOutlet private weak var buttonsHeightConstraint: NSLayoutConstraint!
-
+    
+    @IBOutlet private weak var homeRedCardView: UIView!
+    @IBOutlet private weak var homeRedCardLabel: UILabel!
+    @IBOutlet private weak var homeRedCardImage: UIImageView!
+    
+    @IBOutlet private weak var awayRedCardView: UIView!
+    @IBOutlet private weak var awayRedCardLabel: UILabel!
+    @IBOutlet private weak var awayRedCardImage: UIImageView!
+    
+    
+    private var cancellables = Set<AnyCancellable>()
+    
     private var cachedCardsStyle: CardsStyle?
-    //
-
     var viewModel: MatchWidgetCellViewModel?
 
     static var cellHeight: CGFloat = 156
@@ -106,6 +112,14 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     private var currentHomeOddValue: Double?
     private var currentDrawOddValue: Double?
     private var currentAwayOddValue: Double?
+    
+    private var goalsRegister: EndpointPublisherIdentifiable?
+    private var goalsSubscription: AnyCancellable?
+    
+    
+    private var homeRedCardPublisher: CurrentValueSubject<String, Never> = .init("0")
+    private var awayRedCardPublisher: CurrentValueSubject<String, Never> = .init("0")
+    
 
     private var isLeftOutcomeButtonSelected: Bool = false {
         didSet {
@@ -155,22 +169,53 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayUpChangeOddValueImage.alpha = 0.0
         self.awayDownChangeOddValueImage.alpha = 0.0
 
-        self.homeOddTitleLabel.text = "-"
-        self.drawOddTitleLabel.text = "-"
-        self.awayOddTitleLabel.text = "-"
+        self.homeOddTitleLabel.text = localized("empty")
+        self.drawOddTitleLabel.text = localized("empty")
+        self.awayOddTitleLabel.text = localized("empty")
 
-        self.eventNameLabel.text = ""
-        self.homeParticipantNameLabel.text = ""
-        self.awayParticipantNameLabel.text = ""
-        self.matchTimeLabel.text = ""
-        self.resultLabel.text = ""
+        self.eventNameLabel.text = localized("empty_value")
+        self.homeParticipantNameLabel.text = localized("empty_value")
+        self.awayParticipantNameLabel.text = localized("empty_value")
+        self.matchTimeLabel.text = localized("empty_value")
+        self.resultLabel.text = localized("empty_value")
 
         self.locationFlagImageView.image = nil
         self.suspendedBaseView.isHidden = true
 
         self.baseView.bringSubviewToFront(self.suspendedBaseView)
 
-        self.liveIndicatorImageView.image = UIImage(named: "icon_live")
+        self.homeRedCardPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] homeScoreValue in
+                
+                if homeScoreValue != "0" {
+                    self?.homeRedCardImage.isHidden = false
+                    self?.homeRedCardLabel.text = homeScoreValue
+                    self?.homeRedCardLabel.isHidden = false
+                }
+               else {
+                    self?.homeRedCardImage.isHidden = true
+                   self?.homeRedCardLabel.isHidden = true
+                }
+            })
+            .store(in: &cancellables)
+        
+        self.awayRedCardPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] awayScoreValue in
+                
+                if awayScoreValue != "0" {
+                    self?.awayRedCardImage.isHidden = false
+                    self?.awayRedCardLabel.text = awayScoreValue
+                    self?.awayRedCardLabel.isHidden = false
+                }
+                else {
+                    self?.awayRedCardImage.isHidden = true
+                    self?.awayRedCardLabel.isHidden = true
+                }
+                  
+            })
+            .store(in: &cancellables)
 
         let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
         self.homeBaseView.addGestureRecognizer(tapLeftOddButton)
@@ -223,19 +268,19 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.middleOutcome = nil
         self.rightOutcome = nil
 
-        self.eventNameLabel.text = ""
-        self.homeParticipantNameLabel.text = ""
-        self.awayParticipantNameLabel.text = ""
-        self.matchTimeLabel.text = ""
-        self.resultLabel.text = ""
+        self.eventNameLabel.text = localized("empty_value")
+        self.homeParticipantNameLabel.text = localized("empty_value")
+        self.awayParticipantNameLabel.text = localized("empty_value")
+        self.matchTimeLabel.text = localized("empty_value")
+        self.resultLabel.text = localized("empty_value")
 
-        self.homeOddTitleLabel.text = "-"
-        self.drawOddTitleLabel.text = "-"
-        self.awayOddTitleLabel.text = "-"
+        self.homeOddTitleLabel.text = localized("empty")
+        self.drawOddTitleLabel.text = localized("empty")
+        self.awayOddTitleLabel.text = localized("empty")
 
-        self.homeOddValueLabel.text = ""
-        self.drawOddValueLabel.text = ""
-        self.awayOddValueLabel.text = ""
+        self.homeOddValueLabel.text = localized("empty_value")
+        self.drawOddValueLabel.text = localized("empty_value")
+        self.awayOddValueLabel.text = localized("empty_value")
 
         self.homeBaseView.isUserInteractionEnabled = true
         self.drawBaseView.isUserInteractionEnabled = true
@@ -283,6 +328,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.middleOutcomeDisabled = false
         self.rightOutcomeDisabled = false
         self.suspendedBaseView.isHidden = true
+        
 
         self.adjustDesignToCardStyle()
         self.setupWithTheme()
@@ -359,7 +405,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         case .normal:
             self.adjustDesignToNormalCardStyle()
         }
-
+       
+        
         self.setNeedsLayout()
         self.layoutIfNeeded()
     }
@@ -372,10 +419,10 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.headerHeightConstraint.constant = 12
         self.teamsHeightConstraint.constant = 26
-        self.resultCenterConstraint.constant = -2
+        //self.resultCenterConstraint.constant = -2
         self.buttonsHeightConstraint.constant = 27
 
-        self.resultCenterStackView.spacing = -1
+        //self.resultCenterStackView.spacing = -1
 
         self.eventNameLabel.font = AppFont.with(type: .semibold, size: 9)
         self.resultLabel.font = AppFont.with(type: .bold, size: 13)
@@ -399,10 +446,10 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.headerHeightConstraint.constant = 17
         self.teamsHeightConstraint.constant = 67
-        self.resultCenterConstraint.constant = 0
+        //self.resultCenterConstraint.constant = 0
         self.buttonsHeightConstraint.constant = 40
 
-        self.resultCenterStackView.spacing = 2
+       // self.resultCenterStackView.spacing = 2
 
         self.eventNameLabel.font = AppFont.with(type: .semibold, size: 11)
         self.resultLabel.font = AppFont.with(type: .bold, size: 16)
@@ -417,6 +464,58 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.drawOddValueLabel.font = AppFont.with(type: .bold, size: 13)
         self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 13)
     }
+    
+    func requestRedCards(forMatchWithId id: String) {
+        
+        self.goalsSubscription?.cancel()
+        self.goalsSubscription = nil
+
+        if let goalsRegister = goalsRegister {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: goalsRegister)
+        }
+        
+        let endpoint = TSRouter.eventPartScoresPublisher(operatorId: Env.appSession.operatorId, language: "en", matchId: id)
+        
+        self.goalsSubscription = Env.everyMatrixClient.manager
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure:
+                    print("Error retrieving data!")
+                case .finished:
+                    print("Data retrieved!")
+                }
+            }, receiveValue: { [weak self] state in
+                switch state {
+                case .connect(let publisherIdentifiable):
+                    print("%%\(publisherIdentifiable)")
+                    self?.goalsRegister = publisherIdentifiable
+                case .initialContent(let aggregator):
+                    print("MyBets cashoutPublisher initialContent")
+                    for content in (aggregator.content ?? []) {
+                       switch content {
+                        case .eventPartScore(let eventPartScore):
+                            if let eventInfoTypeId = eventPartScore.eventInfoTypeID, eventInfoTypeId == "4" {
+                                if let homeScore = eventPartScore.homeScore {
+                                    self?.homeRedCardPublisher.send(homeScore)
+                                    
+                                }
+                                if let awayscore = eventPartScore.awayScore {
+                                    self?.awayRedCardPublisher.send(awayscore)
+                                  
+                                }
+                            }
+                        default: ()
+                        }
+                    }
+                case .updatedContent:
+                    print("MyBets cashoutPublisher updatedContent")
+                case .disconnect:
+                    print("MyBets cashoutPublisher disconnect")
+                }
+            })
+        
+    }
 
     func configure(withViewModel viewModel: MatchWidgetCellViewModel) {
 
@@ -426,8 +525,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
         self.awayParticipantNameLabel.text = "\(viewModel.awayTeamName)"
 
-        self.resultLabel.text = ""
-        self.matchTimeLabel.text = ""
+        self.resultLabel.text = localized("empty_value")
+        self.matchTimeLabel.text = localized("empty_value")
 
        // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
         if viewModel.countryISOCode != "" {
@@ -443,6 +542,13 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
             return
         }
 
+        if let matchId = viewModel.match {
+            self.requestRedCards(forMatchWithId: matchId.id)
+            
+        }
+        
+
+        
         if let market = match.markets.first {
 
             if let marketPublisher = viewModel.store.marketPublisher(withId: market.id) {
@@ -481,7 +587,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                         if !bettingOffer.isOpen {
                             weakSelf.homeBaseView.isUserInteractionEnabled = false
                             weakSelf.homeBaseView.alpha = 0.5
-                            weakSelf.homeOddValueLabel.text = "-"
+                            weakSelf.homeOddValueLabel.text = localized("empty")
                         }
                         else {
                             weakSelf.homeBaseView.isUserInteractionEnabled = true
@@ -530,7 +636,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                         if !bettingOffer.isOpen {
                             weakSelf.drawBaseView.isUserInteractionEnabled = false
                             weakSelf.drawBaseView.alpha = 0.5
-                            weakSelf.drawOddValueLabel.text = "-"
+                            weakSelf.drawOddValueLabel.text = localized("empty")
                         }
                         else {
                             weakSelf.drawBaseView.isUserInteractionEnabled = true
@@ -578,7 +684,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                         if !bettingOffer.isOpen {
                             weakSelf.awayBaseView.isUserInteractionEnabled = false
                             weakSelf.awayBaseView.alpha = 0.5
-                            weakSelf.awayOddValueLabel.text = "-"
+                            weakSelf.awayOddValueLabel.text = localized("empty")
                         }
                         else {
                             weakSelf.awayBaseView.isUserInteractionEnabled = true
@@ -619,9 +725,9 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
             Logger.log("No markets found")
             oddsStackView.alpha = 0.2
 
-            self.homeOddValueLabel.text = "-"
-            self.drawOddValueLabel.text = "-"
-            self.awayOddValueLabel.text = "-"
+            self.homeOddValueLabel.text = localized("empty")
+            self.drawOddValueLabel.text = localized("empty")
+            self.awayOddValueLabel.text = localized("empty")
 
         }
 
@@ -669,8 +775,12 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                         // Status
                         matchPart = eventPartName
                     }
+                    
+                   
+                    
                 }
             }
+           
         }
 
         if homeGoals.isNotEmpty && awayGoals.isNotEmpty {
@@ -977,18 +1087,18 @@ extension LiveMatchWidgetCollectionViewCell {
                 actionSheetController.addAction(favoriteAction)
             }
             else {
-                let favoriteAction: UIAlertAction = UIAlertAction(title: "Add to favorites", style: .default) { _ -> Void in
+                let favoriteAction: UIAlertAction = UIAlertAction(title: localized("add_to_favorites"), style: .default) { _ -> Void in
                     Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: .match)
                 }
                 actionSheetController.addAction(favoriteAction)
             }
 
-            let shareAction: UIAlertAction = UIAlertAction(title: "Share event", style: .default) { [weak self] _ -> Void in
+            let shareAction: UIAlertAction = UIAlertAction(title: localized("share_event"), style: .default) { [weak self] _ -> Void in
                 self?.didTapShareButton()
             }
             actionSheetController.addAction(shareAction)
 
-            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { _ -> Void in }
+            let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ -> Void in }
             actionSheetController.addAction(cancelAction)
 
             if let popoverController = actionSheetController.popoverPresentationController {

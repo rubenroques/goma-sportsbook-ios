@@ -92,10 +92,10 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         self.suspendedBettingOfferView.isHidden = true
         self.bettingTicket = nil
 
-        self.outcomeNameLabel.text = ""
-        self.oddValueLabel.text = ""
-        self.marketNameLabel.text = ""
-        self.matchDetailLabel.text = ""
+        self.outcomeNameLabel.text = localized("empty_value")
+        self.oddValueLabel.text = localized("empty_value")
+        self.marketNameLabel.text = localized("empty_value")
+        self.matchDetailLabel.text = localized("empty_value")
     }
 
     func setupWithTheme() {
@@ -209,7 +209,7 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
                 }
 
                 self?.currentOddValue = newOddValue
-                // self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                
                 self?.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
             })
 
@@ -220,6 +220,40 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         else {
             self.errorLateralTopView.backgroundColor = UIColor.App.backgroundSecondary
             self.errorLateralBottomView.backgroundColor = UIColor.App.backgroundSecondary
+        }
+    }
+
+    func updateOddWithBetBuilder(isActive: Bool, bettingTicket: BettingTicket) {
+
+        if isActive {
+            self.oddSubscriber?.cancel()
+            self.oddSubscriber = nil
+            self.oddValueLabel.text = "-.--"
+        }
+        else {
+            if self.oddSubscriber == nil {
+                self.oddSubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
+                    .map(\.value)
+                    .compactMap({ $0 })
+                    .receive(on: DispatchQueue.main)
+                    .sink(receiveValue: { [weak self] newOddValue in
+
+                        if let currentOddValue = self?.currentOddValue {
+                            if newOddValue > currentOddValue {
+                                self?.highlightOddChangeUp()
+                                Logger.log("highlightOddChange Up \(newOddValue) > \(currentOddValue) ")
+                            }
+                            else if newOddValue < currentOddValue {
+                                self?.highlightOddChangeDown()
+                                Logger.log("highlightOddChange Down \(newOddValue) < \(currentOddValue) ")
+                            }
+                        }
+
+                        self?.currentOddValue = newOddValue
+
+                        self?.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+                    })
+            }
         }
     }
 

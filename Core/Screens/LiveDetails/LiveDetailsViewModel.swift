@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import ServiceProvider
 
 class LiveDetailsViewModel {
 
@@ -43,12 +44,14 @@ class LiveDetailsViewModel {
         self.resetPageCount()
         self.isLoading.send(true)
 
+        
         self.fetchLocations()
             .sink { [weak self] locations in
                 self?.store.storeLocations(locations: locations)
                 self?.fetchMatches()
             }
             .store(in: &cancellables)
+         
     }
 
     func fetchLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {

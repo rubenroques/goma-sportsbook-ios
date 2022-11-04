@@ -165,7 +165,7 @@ extension CasinoGameDetailViewController {
         titleLabel.textColor = UIColor.App.textPrimary
         titleLabel.font = AppFont.with(type: .semibold, size: 14)
         titleLabel.textAlignment = .center
-        titleLabel.text = "Casino"
+        titleLabel.text = localized("casino")
         return titleLabel
     }
 
@@ -206,7 +206,7 @@ extension CasinoGameDetailViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 12)
-        label.text = "Loading"
+        label.text = localized("loading")
         return label
     }
     

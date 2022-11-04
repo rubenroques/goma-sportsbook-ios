@@ -74,7 +74,7 @@ extension RankingTypeTableHeaderView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
-        label.text = ""
+        label.text = localized("empty_value")
         label.font = AppFont.with(type: .bold, size: 15)
         label.textAlignment = .left
         return label

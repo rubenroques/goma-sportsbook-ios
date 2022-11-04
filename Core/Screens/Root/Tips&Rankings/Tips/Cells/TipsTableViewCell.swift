@@ -83,6 +83,8 @@ class TipsTableViewCell: UITableViewCell {
 
         self.hasFollow = false
 
+        // EM TEMP SHUTDOWN
+        self.betButton.isEnabled = false
     }
 
     // MARK: - Layout and Theme
@@ -146,6 +148,9 @@ class TipsTableViewCell: UITableViewCell {
 
         StyleHelper.styleButton(button: self.betButton)
         self.betButton.setInsets(forContentPadding: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10), imageTitlePadding: CGFloat(0))
+
+        // EM TEMP SHUTDOWN
+        self.betButton.isEnabled = false
     }
 
     // MARK: Function
@@ -227,11 +232,12 @@ class TipsTableViewCell: UITableViewCell {
     }
 
     @objc func didTapBetButton() {
-        if let viewModel = self.viewModel {
-            let betId = viewModel.getBetId()
-
-            viewModel.createBetslipTicket()
-        }
+        // EM TEMP SHUTDOWN
+//        if let viewModel = self.viewModel {
+//            let betId = viewModel.getBetId()
+//
+//            viewModel.createBetslipTicket()
+//        }
     }
 
     @objc func didTapUser() {
@@ -304,7 +310,7 @@ extension TipsTableViewCell {
     private static func createUsernameLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Username"
+        label.text = localized("username")
         label.font = AppFont.with(type: .semibold, size: 15)
         return label
     }

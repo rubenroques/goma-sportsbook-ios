@@ -195,10 +195,10 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         
         self.currentValue = 0
 
-        self.outcomeNameLabel.text = ""
-        self.oddValueLabel.text = ""
-        self.marketNameLabel.text = ""
-        self.matchDetailLabel.text = ""
+        self.outcomeNameLabel.text = localized("empty_value")
+        self.oddValueLabel.text = localized("empty_value")
+        self.marketNameLabel.text = localized("empty_value")
+        self.matchDetailLabel.text = localized("empty_value")
 
         self.amountTextfield.text = nil
 
@@ -212,7 +212,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.freeBetView.isSwitchOn = false
         self.oddsBoostView.isSwitchOn = false
 
-        self.oldOddLabel.text = ""
+        self.oldOddLabel.text = localized("empty_value")
         self.currentBoostedOddPercentage = 0
 
         self.buttonsBaseView.isUserInteractionEnabled = true
@@ -409,7 +409,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                                constant: 24).isActive = true
         }
         else {
-            self.errorLabel.text = ""
+            self.errorLabel.text = localized("empty_value")
             self.errorView.isHidden = true
 
             self.errorLateralTopView.backgroundColor = UIColor.App.backgroundSecondary
@@ -557,7 +557,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
             self.returnsValueLabel.text = possibleWinningsString
         }
         else {
-            self.returnsValueLabel.text = "-.--€"
+            self.returnsValueLabel.text = localized("no_value")
         }
     }
 
@@ -652,7 +652,7 @@ extension SingleBettingTicketTableViewCell {
     private static func createOldOddLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = ""
+        label.text = localized("empty_value")
         label.font = AppFont.with(type: .bold, size: 11)
         return label
     }

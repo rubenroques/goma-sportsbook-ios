@@ -16,4 +16,6 @@ struct UserSession: Codable {
     var userId: String
     var birthDate: String
     var isEmailVerified: Bool
+    var isProfileCompleted: Bool
+    
 }

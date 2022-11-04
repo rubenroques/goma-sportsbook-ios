@@ -154,15 +154,15 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.drawBaseView.layer.cornerRadius = 4.5
         self.awayBaseView.layer.cornerRadius = 4.5
 
-        self.homeOddTitleLabel.text = "-"
-        self.drawOddTitleLabel.text = "-"
-        self.awayOddTitleLabel.text = "-"
+        self.homeOddTitleLabel.text = localized("empty")
+        self.drawOddTitleLabel.text = localized("empty")
+        self.awayOddTitleLabel.text = localized("empty")
 
-        self.eventNameLabel.text = ""
-        self.homeParticipantNameLabel.text = ""
-        self.awayParticipantNameLabel.text = ""
-        self.dateLabel.text = ""
-        self.timeLabel.text = ""
+        self.eventNameLabel.text = localized("empty_value")
+        self.homeParticipantNameLabel.text = localized("empty_value")
+        self.awayParticipantNameLabel.text = localized("empty_value")
+        self.dateLabel.text = localized("empty_value")
+        self.timeLabel.text = localized("empty_value")
         self.locationFlagImageView.image = nil
         self.suspendedBaseView.isHidden = true
 
@@ -236,19 +236,19 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.dateLabel.isHidden = false
         
-        self.eventNameLabel.text = ""
-        self.homeParticipantNameLabel.text = ""
-        self.awayParticipantNameLabel.text = ""
-        self.dateLabel.text = ""
-        self.timeLabel.text = ""
+        self.eventNameLabel.text = localized("empty_value")
+        self.homeParticipantNameLabel.text = localized("empty_value")
+        self.awayParticipantNameLabel.text = localized("empty_value")
+        self.dateLabel.text = localized("empty_value")
+        self.timeLabel.text = localized("empty_value")
 
-        self.homeOddTitleLabel.text = "-"
-        self.drawOddTitleLabel.text = "-"
-        self.awayOddTitleLabel.text = "-"
+        self.homeOddTitleLabel.text = localized("empty")
+        self.drawOddTitleLabel.text = localized("empty")
+        self.awayOddTitleLabel.text = localized("empty")
         
-        self.homeOddValueLabel.text = ""
-        self.drawOddValueLabel.text = ""
-        self.awayOddValueLabel.text = ""
+        self.homeOddValueLabel.text = localized("empty_value")
+        self.drawOddValueLabel.text = localized("empty_value")
+        self.awayOddValueLabel.text = localized("empty_value")
 
         self.homeBaseView.isUserInteractionEnabled = true
         self.drawBaseView.isUserInteractionEnabled = true
@@ -449,7 +449,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.homeOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
                 self.leftOutcome = outcome
                 self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+
+                // Check for SportRadar invalid odd
+                if !outcome.bettingOffer.value.isNaN {
                 self.homeOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
+                }
+                else {
+                    self.homeBaseView.isUserInteractionEnabled = false
+                    self.homeBaseView.alpha = 0.5
+                    self.homeOddValueLabel.text = "-"
+                }
                 
                 self.leftOddButtonSubscriber = viewModel.store
                     .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
@@ -462,7 +471,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                         if !bettingOffer.isOpen {
                             weakSelf.homeBaseView.isUserInteractionEnabled = false
                             weakSelf.homeBaseView.alpha = 0.5
-                            weakSelf.homeOddValueLabel.text = "-"
+                            weakSelf.homeOddValueLabel.text = localized("empty")
                         }
                         else {
                             weakSelf.homeBaseView.isUserInteractionEnabled = true
@@ -498,7 +507,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.drawOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
                 self.middleOutcome = outcome
                 self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-                self.drawOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
+
+                // Check for SportRadar invalid odd
+                if !outcome.bettingOffer.value.isNaN {
+                    self.drawOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
+                }
+                else {
+                    self.drawBaseView.isUserInteractionEnabled = false
+                    self.drawBaseView.alpha = 0.5
+                    self.drawOddValueLabel.text = "-"
+                }
                 
                 self.middleOddButtonSubscriber = viewModel.store
                     .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
@@ -511,7 +529,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                         if !bettingOffer.isOpen {
                             weakSelf.drawBaseView.isUserInteractionEnabled = false
                             weakSelf.drawBaseView.alpha = 0.5
-                            weakSelf.drawOddValueLabel.text = "-"
+                            weakSelf.drawOddValueLabel.text = localized("empty")
                         }
                         else {
                             weakSelf.drawBaseView.isUserInteractionEnabled = true
@@ -546,8 +564,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.awayOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
                 self.rightOutcome = outcome
                 self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-                self.awayOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
-                
+                // Check for SportRadar invalid odd
+                if !outcome.bettingOffer.value.isNaN {
+                    self.awayOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
+                }
+                else {
+                    self.awayBaseView.isUserInteractionEnabled = false
+                    self.awayBaseView.alpha = 0.5
+                    self.awayOddValueLabel.text = "-"
+                }
+
                 self.rightOddButtonSubscriber = viewModel.store
                     .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                     .compactMap({ $0 })
@@ -559,7 +585,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                         if !bettingOffer.isOpen {
                             weakSelf.awayBaseView.isUserInteractionEnabled = false
                             weakSelf.awayBaseView.alpha = 0.5
-                            weakSelf.awayOddValueLabel.text = "-"
+                            weakSelf.awayOddValueLabel.text = localized("empty")
                         }
                         else {
                             weakSelf.awayBaseView.isUserInteractionEnabled = true
@@ -600,9 +626,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             Logger.log("No markets found")
             oddsStackView.alpha = 0.2
             
-            self.homeOddValueLabel.text = "-"
-            self.drawOddValueLabel.text = "-"
-            self.awayOddValueLabel.text = "-"
+            self.homeOddValueLabel.text = localized("empty")
+            self.drawOddValueLabel.text = localized("empty")
+            self.awayOddValueLabel.text = localized("empty")
             
         }
 
@@ -885,18 +911,18 @@ extension MatchWidgetCollectionViewCell {
                 actionSheetController.addAction(favoriteAction)
             }
             else {
-                let favoriteAction: UIAlertAction = UIAlertAction(title: "Add to favorites", style: .default) { _ -> Void in
+                let favoriteAction: UIAlertAction = UIAlertAction(title: localized("add_to_favorites"), style: .default) { _ -> Void in
                     Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: .match)
                 }
                 actionSheetController.addAction(favoriteAction)
             }
 
-            let shareAction: UIAlertAction = UIAlertAction(title: "Share event", style: .default) { [weak self] _ -> Void in
+            let shareAction: UIAlertAction = UIAlertAction(title: localized("share_event"), style: .default) { [weak self] _ -> Void in
                 self?.didTapShareButton()
             }
             actionSheetController.addAction(shareAction)
 
-            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { _ -> Void in }
+            let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ -> Void in }
             actionSheetController.addAction(cancelAction)
 
             if let popoverController = actionSheetController.popoverPresentationController {
