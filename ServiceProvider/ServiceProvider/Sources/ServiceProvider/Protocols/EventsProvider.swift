@@ -19,6 +19,8 @@ protocol EventsProvider {
 //    func unsubscribeUpcomingMatches()
     func unsubscribeAllSportTypes()
 
+    func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
+
     // REST API
     func getMarketsFilter() -> AnyPublisher<MarketFilter, ServiceProviderError>?
 }

@@ -110,6 +110,10 @@ extension ServiceProviderClient {
         return nil
     }
 
+    public func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
+        return self.eventsProvider?.subscribeMatchDetails(matchId: matchId)
+    }
+
 }
 
 /* REST API Events

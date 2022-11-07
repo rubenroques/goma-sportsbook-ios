@@ -124,33 +124,36 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
         self.titleLabel.text = market.marketName
 
         // calculate number of lines
+        let outcomes = market.numberOfColumns
 
-        // calculate number of lines
-//        let outcomes = market.outcomes.count
-//
-//        let useTriple = outcomes % 3 == 0
-//
-//        if useTriple {
-//            let numberOfLines = Int(outcomes / 3)
-//            //numberOfLines = numberOfLines < 4 ? numberOfLines : 4
-//
-//            self.columnType = ColumnType.triple
-//            self.collectionViewHeightContraint.constant = CGFloat(numberOfLines) * lineHeight
-//        }
-//        else {
-//            //Use double
-//            let numberOfLines = Int(outcomes / 2)
-//            //numberOfLines = numberOfLines < 3 ? numberOfLines : 3
-//
-//            self.columnType = ColumnType.double
-//            self.collectionViewHeightContraint.constant = CGFloat(numberOfLines) * lineHeight
-//        }
-//
-//        // each line is 50 including space
-//        self.setNeedsLayout()
-//        self.layoutIfNeeded()
-//
-//        self.collectionView.reloadData()
+        let useTriple = outcomes % 3 == 0
+
+        if useTriple {
+            let numberOfLines = Int(outcomes / 3)
+            //numberOfLines = numberOfLines < 4 ? numberOfLines : 4
+
+            self.columnType = ColumnType.triple
+            self.collectionViewHeightContraint.constant = CGFloat(numberOfLines) * lineHeight
+        }
+        else {
+            //Use double
+            var numberOfLines = Int(outcomes / 2)
+
+            let isIntValue = (outcomes/2).isMultiple(of: 2)
+            if !isIntValue  {
+                numberOfLines += 1
+            }
+            //numberOfLines = numberOfLines < 3 ? numberOfLines : 3
+
+            self.columnType = ColumnType.double
+            self.collectionViewHeightContraint.constant = CGFloat(numberOfLines) * lineHeight
+        }
+
+        // each line is 50 including space
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
+
+        self.collectionView.reloadData()
     }
 
 }

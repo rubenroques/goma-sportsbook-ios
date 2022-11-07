@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import OrderedCollections
+import ServiceProvider
 
 class MatchDetailsAggregatorRepository: NSObject {
 
@@ -145,6 +146,88 @@ class MatchDetailsAggregatorRepository: NSObject {
 
         let marketGroupsArray = Array(marketGroups.values)
         self.marketGroupsPublisher.send(marketGroupsArray)
+    }
+
+    func storeMarketGroups(fromMarketFilters marketFilters: [EventMarket], match: Match) {
+        
+        self.marketGroups = [:]
+
+        var availableMarkets: [String: [AvailableMarket]] = [:]
+        
+        let matchMarkets = match.markets
+
+        for matchMarket in matchMarkets {
+
+            if let marketTypeId = matchMarket.marketTypeId {
+
+                for eventMarket in marketFilters {
+
+                    if eventMarket.marketIds.contains(marketTypeId) {
+
+                        if availableMarkets[eventMarket.name] == nil {
+                            let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id)
+                            availableMarkets[eventMarket.name] = [availableMarket]
+                        }
+                        else {
+                            let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id)
+                            availableMarkets[eventMarket.name]?.append(availableMarket)
+                        }
+
+                    }
+
+                }
+
+                // Add to All Market aswell
+                let allEventMarket = marketFilters.filter({
+                    $0.id == "1"
+                })
+
+                if let eventMarket = allEventMarket[safe: 0] {
+                    if availableMarkets[eventMarket.name] == nil {
+                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id)
+                        availableMarkets[eventMarket.name] = [availableMarket]
+                    }
+                    else {
+                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id)
+                        availableMarkets[eventMarket.name]?.append(availableMarket)
+                    }
+                }
+
+            }
+            else {
+                let allEventMarket = marketFilters.filter({
+                    $0.id == "1"
+                })
+
+                if let eventMarket = allEventMarket[safe: 0] {
+                    if availableMarkets[eventMarket.name] == nil {
+                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id)
+                        availableMarkets[eventMarket.name] = [availableMarket]
+                    }
+                    else {
+                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id)
+                        availableMarkets[eventMarket.name]?.append(availableMarket)
+                    }
+                }
+
+            }
+        }
+
+        for availableMarket in availableMarkets {
+            let marketGroup = EveryMatrix.MarketGroup(type: availableMarket.key,
+                                                      id: availableMarket.value.first?.marketGroupId ?? "0",
+                                                      groupKey: "\(availableMarket.value.first?.marketGroupId ?? "0")",
+                                                      translatedName: availableMarket.key.capitalized,
+                                                      position: Int(availableMarket.value.first?.marketGroupId ?? "0") ?? 0,
+                                                      isDefault: availableMarket.key == "all" ? true : false,
+                                                      numberOfMarkets: availableMarket.value.count)
+
+            self.marketGroups[availableMarket.key] = marketGroup
+        }
+
+        let marketGroupsArray = Array(marketGroups.values)
+        self.marketGroupsPublisher.send(marketGroupsArray)
+
     }
 
     func marketGroupsArray() -> [EveryMatrix.MarketGroup] {
@@ -514,4 +597,9 @@ class MatchDetailsAggregatorRepository: NSObject {
         }
         return nil
     }
+}
+
+struct AvailableMarket {
+    var marketId: String
+    var marketGroupId: String
 }

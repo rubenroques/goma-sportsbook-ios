@@ -4762,6 +4762,14 @@
 		A9B6305B29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */; };
 		A9B6305C29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */; };
 		A9B6305D29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */; };
+		A9B6306029192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
+		A9B6306129192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
+		A9B6306229192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
+		A9B6306329192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
+		A9B6306429192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
+		A9B6306529192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
+		A9B6306629192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
+		A9B6306729192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
 		A9B8407C26CA789A00269B05 /* VersionUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */; };
 		A9B8407D26CA789A00269B05 /* VersionUpdateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8407B26CA789A00269B05 /* VersionUpdateViewController.xib */; };
 		A9B8407E26CAAEB200269B05 /* VersionUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */; };
@@ -6584,6 +6592,7 @@
 		A9B331E328904F4800D097F0 /* MessageDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDetailViewController.swift; sourceTree = "<group>"; };
 		A9B331EB289422FB00D097F0 /* MessageDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDetailViewModel.swift; sourceTree = "<group>"; };
 		A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverPasswordViewController.swift; sourceTree = "<group>"; };
+		A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SportRadarEventDetailRepository.swift; sourceTree = "<group>"; };
 		A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionUpdateViewController.swift; sourceTree = "<group>"; };
 		A9B8407B26CA789A00269B05 /* VersionUpdateViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VersionUpdateViewController.xib; sourceTree = "<group>"; };
 		A9B8408026CFB49000269B05 /* DateUserLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUserLocation.swift; sourceTree = "<group>"; };
@@ -7592,6 +7601,7 @@
 		455A0D1426BD9F3400EC572D /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A9B6305E29192AA600BB850E /* Repository */,
 				45D9CBE0270F3C8400B8C321 /* AppSession.swift */,
 				454E0A902732A78A00794E0C /* BetslipManager.swift */,
 				455A0D1526BD9F4D00EC572D /* GeoLocationManager.swift */,
@@ -9354,6 +9364,14 @@
 				A9B331EB289422FB00D097F0 /* MessageDetailViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		A9B6305E29192AA600BB850E /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+				A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */,
+			);
+			path = Repository;
 			sourceTree = "<group>";
 		};
 		A9B8407926CA788000269B05 /* VersionUpdate */ = {
@@ -11842,6 +11860,7 @@
 				450B795528F58574009229E3 /* InvocationSSWampMessage.swift in Sources */,
 				450B795628F58574009229E3 /* DepositResponse.swift in Sources */,
 				450B795728F58574009229E3 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
+				A9B6306129192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */,
 				450B795828F58574009229E3 /* UserSettingsGoma.swift in Sources */,
 				450B795928F58574009229E3 /* Localization.swift in Sources */,
 				450B795A28F58574009229E3 /* NewGroupViewController.swift in Sources */,
@@ -12441,6 +12460,7 @@
 				45626E442755599E0069B89B /* OverUnderMarketDetailTableViewCell.swift in Sources */,
 				A995C19A2799AF1100151462 /* SearchViewModel.swift in Sources */,
 				45166D0326F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
+				A9B6306329192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */,
 				A98757A1276CDB990099990D /* DepositResponse.swift in Sources */,
 				A97D2480281AD3AC003EEDEC /* PreviewChatCellViewModel.swift in Sources */,
 				A9829597283B94D00014066A /* ConversationBetSelectionViewController.swift in Sources */,
@@ -13100,6 +13120,7 @@
 				A9B841AB26E6597300269B05 /* Tournament.swift in Sources */,
 				45626E452755599E0069B89B /* OverUnderMarketDetailTableViewCell.swift in Sources */,
 				A995C19B2799AF1100151462 /* SearchViewModel.swift in Sources */,
+				A9B6306429192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */,
 				45166D0426F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				A97D2481281AD3AC003EEDEC /* PreviewChatCellViewModel.swift in Sources */,
 				A9829598283B94D00014066A /* ConversationBetSelectionViewController.swift in Sources */,
@@ -13936,6 +13957,7 @@
 				457CBB84282D27D000ED0F00 /* CompetitionsFiltersView.swift in Sources */,
 				457CBB85282D27D000ED0F00 /* PreviewChatTableViewCell.swift in Sources */,
 				45B6E229283FD08C001B570C /* ChatTicketInMessageView.swift in Sources */,
+				A9B6306629192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */,
 				457CBB86282D27D000ED0F00 /* CompetitionDetailsViewModel.swift in Sources */,
 				A98EC7E02889B0AA0044FC46 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				A98295A2283BA0AF0014066A /* BetSelectionTableViewCell.swift in Sources */,
@@ -14549,6 +14571,7 @@
 				457CBE38282D2CD100ED0F00 /* Throwable.swift in Sources */,
 				457CBE39282D2CD100ED0F00 /* SSWampSerializer.swift in Sources */,
 				457CBE3A282D2CD100ED0F00 /* NotificationsViewController.swift in Sources */,
+				A9B6306729192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */,
 				A98708AF28D3451C00F27348 /* RankingsViewModel.swift in Sources */,
 				457CBE3B282D2CD100ED0F00 /* LiveDetailsViewModel.swift in Sources */,
 				457CBE3C282D2CD100ED0F00 /* TitleTabularDataSource.swift in Sources */,
@@ -14891,6 +14914,7 @@
 				4589C84A282024E400243547 /* DepositResponse.swift in Sources */,
 				4589C84B282024E400243547 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
 				4589C84C282024E400243547 /* UserSettingsGoma.swift in Sources */,
+				A9B6306029192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */,
 				4589C84D282024E400243547 /* Localization.swift in Sources */,
 				4589C84E282024E400243547 /* NewGroupViewController.swift in Sources */,
 				4589C84F282024E400243547 /* ChallengeSSWampMessage.swift in Sources */,
@@ -15345,6 +15369,7 @@
 				45A6BC2828246A7500D9B416 /* DateUserLocation.swift in Sources */,
 				45A6BC2928246A7500D9B416 /* AppDelegate.swift in Sources */,
 				45A6BC2A28246A7500D9B416 /* LiveEventsViewController.swift in Sources */,
+				A9B6306529192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */,
 				A98295A1283BA0AF0014066A /* BetSelectionTableViewCell.swift in Sources */,
 				45A6BC2B28246A7500D9B416 /* UIImage+Extensions.swift in Sources */,
 				45A6BC2C28246A7500D9B416 /* PreSubmissionBetslipViewModel.swift in Sources */,
@@ -15911,6 +15936,7 @@
 				A9C3410228F9A74A0055360B /* Animator.swift in Sources */,
 				A9C3410328F9A74A0055360B /* ActionTextFieldView.swift in Sources */,
 				A9C3410428F9A74A0055360B /* TipsSettingsViewController.swift in Sources */,
+				A9B6306229192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */,
 				A9C3410528F9A74A0055360B /* RankingTypeTableHeaderView.swift in Sources */,
 				A9C3410628F9A74A0055360B /* GoodbyeSSWampMessage.swift in Sources */,
 				A9C3410728F9A74A0055360B /* CollapsibleGroupView.swift in Sources */,
@@ -16486,7 +16512,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00710;
+				CURRENT_PROJECT_VERSION = 00711;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16512,7 +16538,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00710;
+				CURRENT_PROJECT_VERSION = 00711;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

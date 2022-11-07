@@ -22,6 +22,23 @@ class MarketGroupDetailsStore {
     private var marketOutcomeRelations: [String: EveryMatrix.MarketOutcomeRelation] = [:]
 
     private var firstMarketCache: Market?
+
+    func storeMarketGroupDetailsFromMatch(match: Match, onMarketGroup marketGroupKey: String) {
+
+        for market in match.markets {
+            // marketsPublishers[market.id] = CurrentValueSubject<EveryMatrix.Market, Never>.init(market)
+
+            if var marketsForIterationMatch = marketsForGroup[marketGroupKey] {
+                marketsForIterationMatch.append(market.id)
+                marketsForGroup[marketGroupKey] = marketsForIterationMatch
+            }
+            else {
+                var newSet = OrderedSet<String>.init()
+                newSet.append(market.id)
+                marketsForGroup[marketGroupKey] = newSet
+            }
+        }
+    }
     
     func storeMarketGroupDetails(fromAggregator aggregator: EveryMatrix.Aggregator, onMarketGroup marketGroupKey: String) {
 
@@ -110,6 +127,127 @@ class MarketGroupDetailsStore {
                 ()
             }
         }
+    }
+
+    func marketGroupOrganizersFromFilters(withGroupKey key: String, match: Match) -> [MarketGroupOrganizer] {
+        var allMarkets: [String: Market] = [:]
+
+        var similarMarkets: [String: [Market]] = [:]
+        var similarMarketsNames: [String: String] = [:]
+        var similarMarketsOrdered: OrderedSet<String> = []
+
+        for market in match.markets {
+
+            let similarMarketKey = "\(market.id ?? "000")-\(match.homeParticipant.name ?? "x")-\(match.awayParticipant.name ?? "x")"
+
+            if self.firstMarketCache == nil {
+                self.firstMarketCache = market
+            }
+
+            allMarkets[market.id] = market
+            similarMarketsOrdered.append(similarMarketKey)
+
+            if var similarMarketsList = similarMarkets[similarMarketKey] {
+                similarMarketsList.append(market)
+                similarMarkets[similarMarketKey] = similarMarketsList
+            }
+            else {
+                similarMarkets[similarMarketKey] = [market]
+            }
+
+            similarMarketsNames[similarMarketKey] = market.name ?? ""
+        }
+
+        //
+        var marketGroupOrganizers: [MarketGroupOrganizer] = []
+        for marketKey in similarMarketsOrdered {
+
+            if let value = similarMarkets[marketKey] {
+
+                guard let firstMarket = value.first else { continue }
+
+                let marketGroupName = similarMarketsNames[marketKey] ?? ""
+
+                let allOutcomes = value.flatMap({ $0.outcomes })
+                var outcomesDictionary: [String: [Outcome]] = [:]
+
+                for outcomeIt in allOutcomes {
+                    let outcomeTypeName = outcomeIt.headerCodeName
+                    if var outcomesList = outcomesDictionary[outcomeTypeName] {
+                        outcomesList.append(outcomeIt)
+                        outcomesDictionary[outcomeTypeName] = outcomesList
+                    }
+                    else {
+                        outcomesDictionary[outcomeTypeName] = [outcomeIt]
+                    }
+                }
+
+                //
+                // Select the correct organizer
+                //
+                if outcomesDictionary.keys.count == 1 && (outcomesDictionary.keys.first == "" || outcomesDictionary.keys.first == "exact") {
+
+                    // Undefined markets without keys for outcomes grouping
+                    let sequentialMarketGroupOrganizer = SequentialMarketGroupOrganizer(id: firstMarket.id,
+                                                                                        name: marketGroupName,
+                                                                                        market: firstMarket,
+                                                                                        sortedByOdd: false)
+                    marketGroupOrganizers.append(sequentialMarketGroupOrganizer)
+
+                }
+                else if value.count == 1 {
+
+                    // One Market with multiples outcomes
+                    let columnListedMarketGroupOrganizer = ColumnListedMarketGroupOrganizer(id: firstMarket.id,
+                                                                                            name: marketGroupName,
+                                                                                            outcomes: outcomesDictionary)
+
+                    marketGroupOrganizers.append(columnListedMarketGroupOrganizer)
+
+                }
+                else if outcomesDictionary.keys.contains("exact") ||
+                            outcomesDictionary.keys.contains("range") ||
+                            outcomesDictionary.keys.contains("more_than") {
+
+                    // Each market is a column
+                    let columnListedMarketGroupOrganizer = MarketColumnsMarketGroupOrganizer(id: firstMarket.id,
+                                                                                             name: marketGroupName,
+                                                                                             markets: value,
+                                                                                             outcomes: outcomesDictionary)
+
+                    marketGroupOrganizers.append(columnListedMarketGroupOrganizer)
+                }
+                else if marketKey.hasPrefix("3-163") {
+                    // over under 1.5, 2.5, 3.5, 4.5  for each team and draw
+                    // 4 markets, 3 vetical groups
+
+                    let columnListedMarketGroupOrganizer = ColumnListedMarketGroupOrganizer(id: firstMarket.id,
+                                                                                            name: marketGroupName,
+                                                                                            outcomes: outcomesDictionary)
+                    marketGroupOrganizers.append(columnListedMarketGroupOrganizer)
+                }
+                else if outcomesDictionary.keys.count == 3 || outcomesDictionary.keys.count == 2 {
+
+                    // Groups Of Markets with 2 or three columns
+                    let marketLinesMarketGroupOrganizer = MarketLinesMarketGroupOrganizer(id: firstMarket.id,
+                                                                                          name: marketGroupName,
+                                                                                          markets: value,
+                                                                                          outcomes: outcomesDictionary)
+
+                    marketGroupOrganizers.append(marketLinesMarketGroupOrganizer)
+                }
+                else {
+                    // Fall back
+                    let columnListedMarketGroupOrganizer = ColumnListedMarketGroupOrganizer(id: firstMarket.id,
+                                                                                            name: marketGroupName,
+                                                                                            outcomes: outcomesDictionary)
+                    marketGroupOrganizers.append(columnListedMarketGroupOrganizer)
+                }
+            }
+        }
+
+        return marketGroupOrganizers
+
     }
 
     func marketGroupOrganizers(withGroupKey key: String) -> [MarketGroupOrganizer] {

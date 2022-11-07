@@ -24,6 +24,7 @@ class SportRadarEventsProvider: EventsProvider {
     private var preLiveEventsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
 //    private var popularEventsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
 //    private var upcomingEventsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
+    private var eventDetailsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
     
     func unsubscribeLiveMatches(forSportType sportType: SportType) {
         if let liveEventsPublisher = self.liveEventsPublisher {
@@ -303,6 +304,53 @@ class SportRadarEventsProvider: EventsProvider {
 //        self.upcomingEventsPublisher = nil
 //    }
 
+    func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
+
+        self.eventDetailsPublisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
+
+        guard
+            let sessionToken = connector.token
+        else {
+            return nil
+        }
+
+        let contentType = SportRadarModels.ContentType.eventDetails
+
+        let contentId = matchId
+
+        let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentId: contentId)
+        var request = self.createSubscribeRequest(withHTTPBody: bodyData)
+
+        let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+
+            if let error = error {
+                print("URLSession shared dataTask error \(error)")
+                self.preLiveEventsPublisher?.send(completion: .failure(ServiceProviderError.onSubscribe))
+                return
+            }
+
+            guard
+                let httpResponse = response as? HTTPURLResponse,
+                (200...299).contains(httpResponse.statusCode)
+            else {
+                self.eventDetailsPublisher?.send(completion: .failure(ServiceProviderError.onSubscribe))
+                return
+            }
+
+            print("eventListBySportTypeDate Popular - received")
+
+            self.eventDetailsPublisher?.send(.connected)
+        }
+
+        self.connector.subscribe(self, forContentType: .eventDetails)
+
+        sessionDataTask.resume()
+
+        print("eventDetails - requested")
+
+        return self.eventDetailsPublisher?.eraseToAnyPublisher()
+    }
+
     func getDateRangeId(initialDate: Date? = nil, endDate: Date? = nil) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd"
@@ -365,6 +413,12 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
 //            upcomingEventsByDatePublisher.send(.content(events))
 //        }
 //    }
+
+    func eventDetails(events: [EventsGroup]) {
+        if let eventDetailsPublisher = self.eventDetailsPublisher {
+            eventDetailsPublisher.send(.content(events))
+        }
+    }
     
 }
 

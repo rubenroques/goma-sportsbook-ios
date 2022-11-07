@@ -91,20 +91,17 @@ extension SportRadarModels {
 
                             content = .eventListBySportTypeDate(sportType: sportType, events: [])
                         }
-//                    case .popularEventListBySportTypeDate:
-//                        let events: [SportRadarModels.Event] = try firstContentContainer.decode([SportRadarModels.Event].self, forKey: .change)
-//                        guard let sportId = contentIdsArray.first else { throw SportRadarError.unkownContentId }
-//
-//                        let sportType = try SportRadarModels.SportType.init(id: sportId)
-//
-//                        content = .popularEventListBySportTypeDate(sportType: sportType, events: events)
-//                    case .upcomingEventListBySportTypeDate:
-//                        let events: [SportRadarModels.Event] = try firstContentContainer.decode([SportRadarModels.Event].self, forKey: .change)
-//                        guard let sportId = contentIdsArray.first else { throw SportRadarError.unkownContentId }
-//
-//                        let sportType = try SportRadarModels.SportType.init(id: sportId)
-//
-//                        content = .upcomingEventListBySportTypeDate(sportType: sportType, events: events)
+                    case .eventDetails:
+                        // change key is optional
+                        if firstContentContainer.contains(.change) {
+                            let event: SportRadarModels.Event = try firstContentContainer.decode(SportRadarModels.Event.self, forKey: .change)
+
+                            content = .eventDetails(eventDetails: [event])
+                        }
+                        else {
+
+                            content = .eventDetails(eventDetails: [])
+                        }
                     }
                     self = .contentChanges(content: content)
                 }

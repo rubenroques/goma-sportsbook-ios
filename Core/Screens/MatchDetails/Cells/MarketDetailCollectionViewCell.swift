@@ -86,6 +86,12 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         self.setupWithTheme()
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        self.containerView.layer.cornerRadius = CornerRadius.button
+    }
+
     func setupWithTheme() {
       // self.containerView.backgroundColor = UIColor.App.backgroundCards
         //self.containerView.layer.cornerRadius = CornerRadius.button
@@ -105,7 +111,7 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         self.marketTypeLabel.text = outcome.typeName
 
         self.updateBettingOffer(value: outcome.bettingOffer.value,
-                                statusId: outcome.bettingOffer.statusId ?? "1",
+                                statusId: outcome.bettingOffer.statusId != "" ? outcome.bettingOffer.statusId : "1",
                                 isAvailableForBetting: outcome.bettingOffer.isAvailable ?? true)
 
         self.isOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)

@@ -22,6 +22,7 @@ public struct MarketFilter: Codable {
         case goalMarkets = "Goal Markets"
         case handicapMarkets = "Handicap Markets"
         case otherMarkets = "Other Markets"
+
     }
 }
 
@@ -51,7 +52,7 @@ public struct TranslationInfo: Codable {
 }
 
 public struct MarketSportType: Codable {
-    var all: [MarketSport]
+    public var all: [MarketSport]
 
     enum CodingKeys: String, CodingKey {
         case all = "ALL"
@@ -59,9 +60,9 @@ public struct MarketSportType: Codable {
 }
 
 public struct MarketSport: Codable {
-    var ids: [String]
-    var displayOrder: Int
-    var expanded: Bool
+    public var ids: [String]
+    public var displayOrder: Int
+    public var expanded: Bool
 
     enum CodingKeys: String, CodingKey {
         case ids = "ids"

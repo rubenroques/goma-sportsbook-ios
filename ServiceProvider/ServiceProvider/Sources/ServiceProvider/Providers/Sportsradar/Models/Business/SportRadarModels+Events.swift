@@ -40,11 +40,15 @@ extension SportRadarModels {
         var id: String
         var name: String
         var outcomes: [Outcome]
+        var marketTypeId: String?
+        var eventMarketTypeId: String?
         
         enum CodingKeys: String, CodingKey {
             case id = "idfomarket"
             case name = "name"
             case outcomes = "selections"
+            case marketTypeId = "idefmarkettype"
+            case eventMarketTypeId = "idfomarkettype"
         }
         
     }
@@ -54,7 +58,8 @@ extension SportRadarModels {
         var id: String
         var name: String
         var hashCode: String
-        
+        var marketId: String?
+
         var odd: Double {
             let priceNumerator = Double(self.priceNumerator ?? "0.0") ?? 1.0
             let priceDenominator = Double(self.priceDenominator ?? "0.0") ?? 1.0
@@ -70,6 +75,7 @@ extension SportRadarModels {
             case hashCode = "selectionhashcode"
             case priceNumerator = "currentpriceup"
             case priceDenominator = "currentpricedown"
+            case marketId = "idfomarket"
         }
         
     }

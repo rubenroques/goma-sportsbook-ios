@@ -75,9 +75,11 @@ struct Market {
 
     var outcomes: [Outcome]
 
+    var marketTypeId: String?
+
     init( id: String, typeId: String, name: String,
           nameDigit1: Double?, nameDigit2: Double?, nameDigit3: Double?,
-          eventPartId: String?, bettingTypeId: String?, outcomes: [Outcome]) {
+          eventPartId: String?, bettingTypeId: String?, outcomes: [Outcome], marketTypeId: String? = nil) {
         self.id = id
         self.typeId = typeId
         self.name = name
@@ -87,6 +89,7 @@ struct Market {
         self.eventPartId = eventPartId
         self.bettingTypeId = bettingTypeId
         self.outcomes = outcomes
+        self.marketTypeId = marketTypeId
     }
 }
 

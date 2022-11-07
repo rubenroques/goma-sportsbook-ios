@@ -20,6 +20,7 @@ extension SportRadarModels {
         // case sportTypeList = ""
         case sportTypeByDate = "sportTypeByDate"
         case eventListBySportTypeDate = "eventListBySportTypeDate"
+        case eventDetails = "event"
 
     }
     
@@ -31,6 +32,7 @@ extension SportRadarModels {
         case eventListBySportTypeDate(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
 //        case popularEventListBySportTypeDate(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
 //        case upcomingEventListBySportTypeDate(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
+        case eventDetails(eventDetails: [SportRadarModels.Event])
 
         
         var code: ContentType {
@@ -41,6 +43,7 @@ extension SportRadarModels {
             case .eventListBySportTypeDate: return .eventListBySportTypeDate
 //            case .popularEventListBySportTypeDate: return .eventListBySportTypeDate
 //            case .upcomingEventListBySportTypeDate: return .eventListBySportTypeDate
+            case .eventDetails: return .eventDetails
             }
         }
         

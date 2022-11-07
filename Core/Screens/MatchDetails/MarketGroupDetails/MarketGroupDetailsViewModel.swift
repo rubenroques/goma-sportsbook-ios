@@ -49,42 +49,56 @@ class MarketGroupDetailsViewModel {
 
     func fetchMarketGroupDetails() {
 
-        if let marketGroupsDetailsRegister = self.marketGroupsDetailsRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: marketGroupsDetailsRegister)
-        }
+//        if let marketGroupsDetailsRegister = self.marketGroupsDetailsRegister {
+//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: marketGroupsDetailsRegister)
+//        }
+//
+//        let language = "en"
+//        let endpoint = TSRouter.matchMarketGroupDetailsPublisher(operatorId: Env.appSession.operatorId,
+//                                                                 language: language,
+//                                                                 matchId: self.match.id,
+//                                                                 marketGroupName: marketGroupId)
+//
+//        Env.everyMatrixClient.manager
+//            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure:
+//                    print("Error retrieving data!")
+//                case .finished:
+//                    print("Data retrieved!")
+//                }
+//                self?.isLoadingPublisher.send(false)
+//            }, receiveValue: { [weak self] state in
+//                switch state {
+//                case .connect(let publisherIdentifiable):
+//                    print("SportsViewModel competitionsMatchesPublisher connect")
+//                    self?.marketGroupsDetailsRegister = publisherIdentifiable
+//                case .initialContent(let aggregator):
+//                    print("SportsViewModel competitionsMatchesPublisher initialContent")
+//                    self?.storeMarketGroupDetails(fromAggregator: aggregator)
+//                case .updatedContent(let aggregatorUpdates):
+//                    print("SportsViewModel competitionsMatchesPublisher updatedContent")
+//                    self?.updateMarketGroupDetails(fromAggregator: aggregatorUpdates)
+//                case .disconnect:
+//                    print("SportsViewModel competitionsMatchesPublisher disconnect")
+//                }
+//            })
+//            .store(in: &cancellables)
 
-        let language = "en"
-        let endpoint = TSRouter.matchMarketGroupDetailsPublisher(operatorId: Env.appSession.operatorId,
-                                                                 language: language,
-                                                                 matchId: self.match.id,
-                                                                 marketGroupName: marketGroupId)
+        // TEMP
 
-        Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
-                case .finished:
-                    print("Data retrieved!")
-                }
-                self?.isLoadingPublisher.send(false)
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    print("SportsViewModel competitionsMatchesPublisher connect")
-                    self?.marketGroupsDetailsRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    print("SportsViewModel competitionsMatchesPublisher initialContent")
-                    self?.storeMarketGroupDetails(fromAggregator: aggregator)
-                case .updatedContent(let aggregatorUpdates):
-                    print("SportsViewModel competitionsMatchesPublisher updatedContent")
-                    self?.updateMarketGroupDetails(fromAggregator: aggregatorUpdates)
-                case .disconnect:
-                    print("SportsViewModel competitionsMatchesPublisher disconnect")
-                }
-            })
-            .store(in: &cancellables)
+        self.storeMarketGroupDetailsFromMatch(match: self.match)
+        //self.isLoadingPublisher.send(false)
+    }
+
+    func storeMarketGroupDetailsFromMatch(match: Match) {
+        self.store.storeMarketGroupDetailsFromMatch(match: match, onMarketGroup: "MarketKey")
+
+        let marketGroupOrganizers = self.store.marketGroupOrganizersFromFilters(withGroupKey: "MarketKey", match: match)
+
+        self.marketGroupOrganizersPublisher.send(marketGroupOrganizers)
+        self.isLoadingPublisher.send(false)
     }
 
     func storeMarketGroupDetails(fromAggregator aggregator: EveryMatrix.Aggregator) {
