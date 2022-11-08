@@ -138,7 +138,7 @@ class MarketGroupDetailsStore {
 
         for market in match.markets {
 
-            let similarMarketKey = "\(market.id ?? "000")-\(match.homeParticipant.name ?? "x")-\(match.awayParticipant.name ?? "x")"
+            let similarMarketKey = "\(market.name ?? "000")-\(match.homeParticipant.name ?? "x")-\(match.awayParticipant.name ?? "x")"
 
             if self.firstMarketCache == nil {
                 self.firstMarketCache = market
@@ -172,7 +172,7 @@ class MarketGroupDetailsStore {
                 var outcomesDictionary: [String: [Outcome]] = [:]
 
                 for outcomeIt in allOutcomes {
-                    let outcomeTypeName = outcomeIt.headerCodeName
+                    let outcomeTypeName = outcomeIt.codeName.components(separatedBy: CharacterSet.decimalDigits).joined()
                     if var outcomesList = outcomesDictionary[outcomeTypeName] {
                         outcomesList.append(outcomeIt)
                         outcomesDictionary[outcomeTypeName] = outcomesList
@@ -180,6 +180,15 @@ class MarketGroupDetailsStore {
                     else {
                         outcomesDictionary[outcomeTypeName] = [outcomeIt]
                     }
+
+//                    let outcomeTypeName = outcomeIt.headerCodeName
+//                    if var outcomesList = outcomesDictionary[outcomeTypeName] {
+//                        outcomesList.append(outcomeIt)
+//                        outcomesDictionary[outcomeTypeName] = outcomesList
+//                    }
+//                    else {
+//                        outcomesDictionary[outcomeTypeName] = [outcomeIt]
+//                    }
                 }
 
                 //

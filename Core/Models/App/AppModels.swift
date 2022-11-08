@@ -118,6 +118,10 @@ extension Outcome {
             else if let paramBoolean1 = self.paramBoolean1 {
                 return "\(paramBoolean1)"
             }
+            else if self.marketId != nil {
+                
+                return self.codeName.components(separatedBy: CharacterSet.decimalDigits).joined()
+            }
         }
 
         return self.codeName

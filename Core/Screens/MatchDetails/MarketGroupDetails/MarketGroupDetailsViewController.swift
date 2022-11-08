@@ -181,10 +181,6 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
             return UITableViewCell()
         }
 
-        if marketGroupOrganizer.marketId == "35106236.1" {
-            print("MULTIPLE LINES")
-        }
-
         if marketGroupOrganizer.numberOfColumns == 3 {
             guard
                 let cell = tableView.dequeueCellType(ThreeAwayMarketDetailTableViewCell.self)

@@ -223,6 +223,13 @@ struct MarketLinesMarketGroupOrganizer: MarketGroupOrganizer {
 //            return outcome
 //        }
 //        return nil
+
+//        if let market = self.sortedMarkets[safe: line], let outcomeKey = self.sortedOutcomeKeys[safe: column] {
+//            for outcome in market.outcomes where outcome.codeName.components(separatedBy: CharacterSet.decimalDigits).joined() == outcomeKey {
+//                return outcome
+//            }
+//        }
+//        return nil
     }
 }
 

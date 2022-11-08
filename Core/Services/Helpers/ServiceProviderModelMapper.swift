@@ -84,6 +84,7 @@ struct ServiceProviderModelMapper {
                               codeName: outcome.name,
                               typeName: outcome.name,
                               translatedName: outcome.name,
+                              marketId: outcome.marketId,
                               bettingOffer: bettingOffer)
         return outcome
     }
