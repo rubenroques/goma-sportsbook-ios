@@ -31,26 +31,27 @@ class SportRadarSocketConnector: NSObject, Connector {
     private let connectionStateSubject: CurrentValueSubject<ConnectorState, Error>
     
     private var webSocket : URLSessionWebSocketTask?
-    private let socket: WebSocket
+    private var socket: WebSocket
     private var isConnected: Bool
     
     override init() {
         self.connectionStateSubject = CurrentValueSubject<ConnectorState, Error>.init(.disconnected)
         self.isConnected = false
         
-        let wssURLString = "wss://velnt-spor-int.optimahq.com/notification/listen/websocket"
-        let request = URLRequest(url: URL(string: wssURLString)!)
-        
         // let pinner = FoundationSecurity(allowSelfSigned: true)
         // let compression = WSCompression()
-        
-        self.socket = WebSocket.init(request: request, useCustomEngine: false)
+        self.socket = WebSocket.init(request: Self.socketRequest(), useCustomEngine: false)
         super.init()
     }
     
     private func connectSocket() {
         self.socket.delegate = self
         self.socket.connect()
+    }
+    
+    private static func socketRequest() -> URLRequest {
+        let wssURLString = "wss://velnt-spor-int.optimahq.com/notification/listen/websocket"
+        return URLRequest(url: URL(string: wssURLString)!)
     }
     
     private func sendListeningStarted(toSocket socket: WebSocket) {
@@ -71,11 +72,13 @@ class SportRadarSocketConnector: NSObject, Connector {
     }
     
     func refreshConnection() {
-        self.socket.connect()
+        self.socket.forceDisconnect()
+        self.socket = WebSocket.init(request: Self.socketRequest(), useCustomEngine: false)
+        self.connectSocket()
     }
     
     func disconnect() {
-        
+        self.socket.forceDisconnect()
     }
     
     func subscribe(_ subscriber: SportRadarConnectorSubscriber, forContentType type: SportRadarModels.ContentType) {

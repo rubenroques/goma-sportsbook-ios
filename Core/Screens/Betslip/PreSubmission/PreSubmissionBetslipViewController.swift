@@ -745,12 +745,19 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        Env.userSessionStore.userBalanceWallet
+        Env.userSessionStore.userWalletPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] wallet in
-                self?.userBalance = wallet?.amount
+                self?.userBalance = wallet?.total
             })
             .store(in: &cancellables)
+        
+//        Env.userSessionStore.userBalanceWallet
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] wallet in
+//                self?.userBalance = wallet?.amount
+//            })
+//            .store(in: &cancellables)
 
         Env.everyMatrixClient.serviceStatusPublisher
             .filter({ $0 == .connected })

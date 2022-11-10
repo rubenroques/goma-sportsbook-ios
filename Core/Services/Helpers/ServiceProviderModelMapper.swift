@@ -8,7 +8,11 @@
 import Foundation
 import ServiceProvider
 
-struct ServiceProviderModelMapper {
+class ServiceProviderModelMapper {
+    
+}
+    
+extension ServiceProviderModelMapper {
     
     // Matches
     static func matches(fromEventsGroups eventsGroups: [EventsGroup]) -> [Match] {

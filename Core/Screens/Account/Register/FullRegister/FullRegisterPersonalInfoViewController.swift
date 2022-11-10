@@ -38,6 +38,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     var countries: [Country] = []
     var isBackButtonDisabled: Bool
     
+    private var profile: UserProfile?
     private var currentCountry: Country?
     private var selectedCountry: Country?
 
@@ -83,11 +84,15 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         titleLabel.text = localized("personal_information")
         titleLabel.font = AppFont.with(type: .bold, size: 18)
 
-        titleHeaderTextFieldView.setSelectionPicker(UserTitle.titles, headerVisible: true)
+        titleHeaderTextFieldView.setSelectionPicker(["---"], headerVisible: true)
         titleHeaderTextFieldView.setPlaceholderText(localized("title"))
-
         titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
+        titleHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
+        titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
+        titleHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .regular, size: 15))
+        titleHeaderTextFieldView.setPlaceholderTextColor(UIColor.App.inputTextTitle)
 
+        
         firstNameHeaderTextFieldView.setPlaceholderText(localized("first_name"))
         firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("names_match_id"), color: UIColor.App.inputTextTitle)
 
@@ -143,7 +148,6 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         titleLabel.textColor = UIColor.App.inputText
 
         titleHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
-        
         titleHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         titleHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
         titleHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
@@ -202,7 +206,6 @@ class FullRegisterPersonalInfoViewController: UIViewController {
             
             self.continueButton.isEnabled = true
             continueButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
-            
         }
         else {
             self.continueButton.isEnabled = false
@@ -223,6 +226,15 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 //            }
 //        .store(in: &cancellables)
 
+        Env.serviceProvider.getProfile()
+            .receive(on: DispatchQueue.main)
+            .map(ServiceProviderModelMapper.userProfile(_:))
+            .sink { _ in
+                
+            } receiveValue: { profile in
+                self.setupProfile(profile: profile)
+            }
+            .store(in: &cancellables)
         
         Env.serviceProvider.getCurrentCountry()
             .compactMap({ $0 })
@@ -317,38 +329,64 @@ class FullRegisterPersonalInfoViewController: UIViewController {
             .store(in: &cancellables)
     }
 
-    func createFullRegisterUserInfoForm() -> FullRegisterUserInfo {
+    func createFullRegisterUserForm() -> FullRegisterUserForm {
         
-        let countryName = self.selectedCountry?.name ?? ""
+        let gender = titleHeaderTextFieldView.text == UserTitle.mister.rawValue ? "M" : "F"
+
+        let firstName = self.firstNameHeaderTextFieldView.text
+        let lastName = self.lastNameHeaderTextFieldView.text
+        let address1 = self.address1HeaderTextFieldView.text
+        let address2 = self.address2HeaderTextFieldView.text
+        let city = self.cityHeaderTextFieldView.text
+        let postalCode = self.postalCodeHeaderTextFieldView.text
+        let birthDate = self.profile?.birthDate
         
-        let titleText = titleHeaderTextFieldView.text
-        let firstNameText = firstNameHeaderTextFieldView.text
-        let lastNameText = lastNameHeaderTextFieldView.text
-        let address1Text = address1HeaderTextFieldView.text
-        let address2Text = address2HeaderTextFieldView.text
-        let cityText = cityHeaderTextFieldView.text
-        let postalCodeText = postalCodeHeaderTextFieldView.text
-        
-        return FullRegisterUserInfo(title: titleText,
-            firstName: firstNameText,
-            lastName: lastNameText,
-            country: countryName,
-            address1: address1Text,
-            address2: address2Text,
-            city: cityText,
-            postalCode: postalCodeText,
-            securityQuestion: "",
-            securityAnswer: "",
-            personalID: "")
+        return FullRegisterUserForm(username: nil,
+                                    email: nil,
+                                    firstName: firstName,
+                                    lastName: lastName,
+                                    birthDate: birthDate,
+                                    gender: gender,
+                                    mobilePrefix: nil,
+                                    mobileNumber: nil,
+                                    address: address1,
+                                    province: address2,
+                                    city: city,
+                                    postalCode: postalCode,
+                                    country: self.selectedCountry,
+                                    cardId: nil)
+
     }
 
+    
+    private func setupProfile(profile: UserProfile) {
+                
+        self.profile = profile
+        
+        if let optionIndex = UserTitle.titles.firstIndex(of: profile.title?.rawValue ?? "") {
+            self.titleHeaderTextFieldView.setSelectionPicker(UserTitle.titles, headerVisible: true)
+            self.titleHeaderTextFieldView.setSelectedPickerOption(option: optionIndex)
+        }
+        else {
+            self.titleHeaderTextFieldView.setSelectionPicker(UserTitle.titles, headerVisible: true)
+            self.titleHeaderTextFieldView.setSelectedPickerOption(option: UserTitle.titles.startIndex)
+        }
+        
+        self.firstNameHeaderTextFieldView.setText(profile.firstName ?? "")
+        self.lastNameHeaderTextFieldView.setText(profile.lastName ?? "")
+        
+        if let country = profile.nationality {
+            self.selectedCountry = country
+            self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country), slideUp: true)
+        }
+    }
     @IBAction private func backAction() {
         self.navigationController?.popViewController(animated: true)
     }
 
     @IBAction private func continueAction() {
-        let fullRegisterUserInfoForm = self.createFullRegisterUserInfoForm()
-        let fullRegisterAddressCountryViewController = FullRegisterAddressCountryViewController(registerForm: fullRegisterUserInfoForm)
+        let fullRegisterUserForm = self.createFullRegisterUserForm()
+        let fullRegisterAddressCountryViewController = FullRegisterAddressCountryViewController(registerForm: fullRegisterUserForm)
         self.navigationController?.pushViewController(fullRegisterAddressCountryViewController, animated: true)
     }
 

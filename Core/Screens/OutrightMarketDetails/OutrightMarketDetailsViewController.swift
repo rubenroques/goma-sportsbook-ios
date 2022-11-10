@@ -160,7 +160,22 @@ class OutrightMarketDetailsViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
-
+        
+        // Env.userSessionStore.userWalletPublisher
+        Env.userSessionStore.userWalletPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] userWallet in
+                if let userWallet = userWallet,
+                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: userWallet.total))
+                {
+                    self?.accountValueLabel.text = formattedTotalString
+                }
+                else {
+                    self?.accountValueLabel.text = "-.--€"
+                }
+            }
+            .store(in: &cancellables)
+/*
         Env.userSessionStore.userBalanceWallet
             .compactMap({$0})
             .map(\.amount)
@@ -188,7 +203,8 @@ class OutrightMarketDetailsViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
-
+*/
+        
         self.viewModel.isLoadingPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in

@@ -144,34 +144,48 @@ class PopularDetailsViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        Env.userSessionStore.userBalanceWallet
-            .compactMap({$0})
-            .map(\.amount)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] value in
-                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
-                    let accountValue = bonusWallet.amount + value
-                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+//        Env.userSessionStore.userBalanceWallet
+//            .compactMap({$0})
+//            .map(\.amount)
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] value in
+//                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
+//                    let accountValue = bonusWallet.amount + value
+//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+//
+//                }
+//                else {
+//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
+//                }
+//            }
+//            .store(in: &cancellables)
+//
+//        Env.userSessionStore.userBonusBalanceWallet
+//            .compactMap({$0})
+//            .map(\.amount)
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] value in
+//                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
+//                    let accountValue = currentWallet.amount + value
+//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+//                }
+//            }
+//            .store(in: &cancellables)
 
+        Env.userSessionStore.userWalletPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] userWallet in
+                if let userWallet = userWallet,
+                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: userWallet.total))
+                {
+                    self?.accountValueLabel.text = formattedTotalString
                 }
                 else {
-                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
+                    self?.accountValueLabel.text = "-.--€"
                 }
             }
             .store(in: &cancellables)
-
-        Env.userSessionStore.userBonusBalanceWallet
-            .compactMap({$0})
-            .map(\.amount)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] value in
-                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
-                    let accountValue = currentWallet.amount + value
-                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-                }
-            }
-            .store(in: &cancellables)
-
+        
         self.viewModel.isLoading
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLoading in

@@ -38,4 +38,7 @@ protocol PrivilegedAccessManager {
     func forgotPassword(email: String, secretQuestion: String?, secretAnswer: String?) -> AnyPublisher<Bool, ServiceProviderError>
     func updatePassword(oldPassword: String, newPassword: String) -> AnyPublisher<Bool, ServiceProviderError>
 
+    func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError>
+    func signUpCompletion(form: ServiceProvider.UpdateUserProfileForm)  -> AnyPublisher<Bool, ServiceProviderError>
+    
 }

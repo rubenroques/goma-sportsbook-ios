@@ -140,19 +140,19 @@ class StaticHomeViewTemplateDataSource {
             })
             .store(in: &self.cancellables)
 
-        Env.userSessionStore.isUserProfileIncomplete
+        Env.userSessionStore.isUserProfileComplete
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
-                //self?.fetchAlerts()
-                //self?.refreshPublisher.send()
+                self?.fetchAlerts()
+                self?.refreshPublisher.send()
             })
             .store(in: &cancellables)
 
         Env.userSessionStore.isUserEmailVerified
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
-                //self?.fetchAlerts()
-                //self?.refreshPublisher.send()
+                self?.fetchAlerts()
+                self?.refreshPublisher.send()
             })
             .store(in: &cancellables)
 
@@ -169,12 +169,12 @@ class StaticHomeViewTemplateDataSource {
             .sink { [weak self] locations in
                 self?.store.storeLocations(locations: locations)
 
-                //self?.requestSports()
-                //self?.fetchBanners()
-                //self?.fetchFavoriteMatches()
+                self?.requestSports()
+                self?.fetchBanners()
+                self?.fetchFavoriteMatches()
                 self?.fetchTips()
                 self?.fetchSuggestedBets()
-                //self?.fetchAlerts()
+                self?.fetchAlerts()
             }
             .store(in: &cancellables)
 
@@ -228,7 +228,7 @@ class StaticHomeViewTemplateDataSource {
                 alertsArray.append(emailActivationAlertData)
             }
 
-            if Env.userSessionStore.isUserProfileIncomplete.value {
+            if !Env.userSessionStore.isUserProfileComplete.value {
                 let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
                                                                description: localized("complete_profile_description"),
                                                                linkLabel: localized("finish_up_profile"),

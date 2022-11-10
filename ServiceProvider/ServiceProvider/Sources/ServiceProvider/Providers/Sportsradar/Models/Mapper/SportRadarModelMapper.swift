@@ -65,6 +65,32 @@ struct SportRadarModelMapper {
                             lockStatus: loginResponse.lockStatus)
     }
     
+    static func userWallet(fromBalanceResponse playerInfoResponse: SportRadarModels.BalanceResponse) -> UserWallet {
+        return UserWallet(vipStatus: playerInfoResponse.vipStatus,
+                           currency: playerInfoResponse.currency,
+                           loyaltyPoint: playerInfoResponse.loyaltyPoint,
+                           totalString: playerInfoResponse.totalBalance,
+                           total: playerInfoResponse.totalBalanceNumber,
+                           withdrawableString: playerInfoResponse.withdrawableBalance,
+                           withdrawable: playerInfoResponse.withdrawableBalanceNumber,
+                           bonusString: playerInfoResponse.bonusBalance,
+                           bonus: playerInfoResponse.bonusBalanceNumber,
+                           pendingBonusString: playerInfoResponse.pendingBonusBalance,
+                           pendingBonus: playerInfoResponse.pendingBonusBalanceNumber,
+                           casinoPlayableBonusString: playerInfoResponse.casinoPlayableBonusBalance,
+                           casinoPlayableBonus: playerInfoResponse.casinoPlayableBonusBalanceNumber,
+                           sportsbookPlayableBonusString: playerInfoResponse.sportsbookPlayableBonusBalance,
+                           sportsbookPlayableBonus: playerInfoResponse.sportsbookPlayableBonusBalanceNumber,
+                           withdrawableEscrowString: playerInfoResponse.withdrawableEscrowBalance,
+                           withdrawableEscrow: playerInfoResponse.withdrawableEscrowBalanceNumber,
+                           totalWithdrawableString: playerInfoResponse.totalWithdrawableBalance,
+                           totalWithdrawable: playerInfoResponse.totalWithdrawableBalanceNumber,
+                           withdrawRestrictionAmountString: playerInfoResponse.withdrawRestrictionAmount,
+                           withdrawRestrictionAmount: playerInfoResponse.withdrawRestrictionAmountNumber,
+                           totalEscrowString: playerInfoResponse.totalEscrowBalance,
+                           totalEscrow: playerInfoResponse.totalEscrowBalanceNumber)
+    }
+    
     // ============================================================
     // Events
     //

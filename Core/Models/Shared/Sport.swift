@@ -16,7 +16,8 @@ struct Sport {
 
     init(id: String,
          name: String = "",
-         showEventCategory: Bool = false, liveEventsCount: Int = 0) {
+         showEventCategory: Bool = false,
+         liveEventsCount: Int = 0) {
         self.id = id
         self.name = name
         self.showEventCategory = showEventCategory

@@ -123,39 +123,68 @@ class ProfileViewController: UIViewController {
             }
         .store(in: &cancellables)
 
-        Env.userSessionStore.userBalanceWallet
-            .compactMap({$0})
-            .map(\.amount)
+//        Env.userSessionStore.userBalanceWallet
+//            .compactMap({$0})
+//            .map(\.amount)
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] value in
+//                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
+//                    let accountValue = bonusWallet.amount + value
+//                    self?.totalBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+//                }
+//                else {
+//                    self?.totalBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
+//                }
+//                self?.currentBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
+//            }
+//            .store(in: &cancellables)
+//
+//        Env.userSessionStore.userBonusBalanceWallet
+//            .compactMap({$0})
+//            .map(\.amount)
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] value in
+//                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
+//                    let accountValue = currentWallet.amount + value
+//
+//                    self?.totalBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+//                }
+//                self?.bonusBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
+//            }
+//            .store(in: &cancellables)
+//
+
+        Env.userSessionStore.refreshUserWallet()
+
+        Env.userSessionStore.userWalletPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] value in
-                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
-                    let accountValue = bonusWallet.amount + value
-                    self?.totalBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+            .sink { [weak self] userWallet in
+                if let userWallet = userWallet {
+                    if let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: userWallet.total)) {
+                        self?.totalBalanceLabel.text = formattedTotalString
+                    }
+                    else {
+                        self?.totalBalanceLabel.text = "-.--€"
+                    }
+                    if let bonusValue = userWallet.bonus,
+                        let formattedBonusString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: bonusValue)) {
+                        self?.bonusBalanceLabel.text = formattedBonusString
+                    }
+                    else {
+                        self?.bonusBalanceLabel.text = "-.--€"
+                    }
+                    self?.currentBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: userWallet.available)) ?? "-.--€"
                 }
                 else {
-                    self?.totalBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
+                    self?.totalBalanceLabel.text = "-.--€"
+                    self?.currentBalanceLabel.text = "-.--€"
+                    self?.bonusBalanceLabel.text = "-.--€"
+                    
                 }
-                self?.currentBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
             }
             .store(in: &cancellables)
-
-        Env.userSessionStore.userBonusBalanceWallet
-            .compactMap({$0})
-            .map(\.amount)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] value in
-                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
-                    let accountValue = currentWallet.amount + value
-
-                    self?.totalBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-                }
-                self?.bonusBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
-            }
-            .store(in: &cancellables)
-
-        Env.userSessionStore.forceWalletUpdate()
-
-        Env.userSessionStore.isUserProfileIncomplete
+        
+        Env.userSessionStore.isUserProfileComplete
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.verifyUserActivationConditions()
@@ -285,7 +314,7 @@ class ProfileViewController: UIViewController {
         }
 
         if let userSession = userSession {
-            if Env.userSessionStore.isUserProfileIncomplete.value {
+            if !Env.userSessionStore.isUserProfileComplete.value {
                 let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
                                                                description: localized("complete_profile_description"),
                                                                linkLabel: localized("finish_up_profile"),
@@ -421,15 +450,10 @@ class ProfileViewController: UIViewController {
     }
 
     @IBAction private func didTapDepositButton() {
-
-        if !Env.userSessionStore.isUserProfileIncomplete.value {
-
+        if Env.userSessionStore.isUserProfileComplete.value {
             let depositViewController = DepositViewController()
-
             let navigationViewController = Router.navigationController(with: depositViewController)
             self.present(navigationViewController, animated: true, completion: nil)
-
-            //self.navigationController?.pushViewController(depositViewController, animated: true)
         }
         else {
             let alert = UIAlertController(title: localized("profile_incomplete"),
@@ -438,15 +462,11 @@ class ProfileViewController: UIViewController {
             alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
-
     }
 
     @IBAction private func didTapWithdrawButton() {
-        if !Env.userSessionStore.isUserProfileIncomplete.value {
-
+        if Env.userSessionStore.isUserProfileComplete.value {
             let withDrawViewController = WithdrawViewController()
-
-            //self.navigationController?.pushViewController(withDrawViewController, animated: true)
             let navigationViewController = Router.navigationController(with: withDrawViewController)
             self.present(navigationViewController, animated: true, completion: nil)
         }

@@ -77,9 +77,10 @@ class BonusViewModel {
 
         var gamingAccountId = ""
 
-        if let walletGamingAccountId = Env.userSessionStore.userBalanceWallet.value?.id {
-            gamingAccountId = "\(walletGamingAccountId)"
-        }
+        // TODO: SportRadar - Apply Bonus
+//        if let walletGamingAccountId = Env.userSessionStore.userBalanceWallet.value?.id {
+//            gamingAccountId = "\(walletGamingAccountId)"
+//        }
 
         // Get Applicable Bonus
         Env.everyMatrixClient.getApplicableBonus(type: "deposit", gamingAccountId: gamingAccountId)

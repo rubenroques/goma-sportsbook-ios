@@ -201,6 +201,23 @@ extension ServiceProviderClient {
         return privilegedAccessManager.updatePassword(oldPassword: oldPassword, newPassword: newPassword)
     }
     
+    public func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(outputType: UserWallet.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.getUserBalance()
+    }
+    
+    public func signUpCompletion(form: ServiceProvider.UpdateUserProfileForm)  -> AnyPublisher<Bool, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.signUpCompletion(form: form)
+    }
 }
 
 extension ServiceProviderClient {

@@ -240,4 +240,47 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
 
     }
 
+    func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError> {
+        let endpoint = OmegaAPIClient.getBalance
+        let publisher: AnyPublisher<SportRadarModels.BalanceResponse, ServiceProviderError> = self.connector.request(endpoint)
+       
+        return publisher.flatMap({ balanceResponse -> AnyPublisher<UserWallet, ServiceProviderError> in
+            if balanceResponse.status == "SUCCESS" {
+                let userWallet = SportRadarModelMapper.userWallet(fromBalanceResponse: balanceResponse)
+                return Just(userWallet).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            return Fail(outputType: UserWallet.self,
+                        failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+    }
+    
+    func signUpCompletion(form: ServiceProvider.UpdateUserProfileForm)  -> AnyPublisher<Bool, ServiceProviderError> {
+        let endpoint = OmegaAPIClient.quickSignupCompletion(firstName: form.firstName,
+                                                            lastName: form.lastName,
+                                                            birthDate: form.birthDate,
+                                                            gender: form.gender,
+                                                            mobileNumber: form.mobileNumber,
+                                                            address: form.address,
+                                                            province: form.province,
+                                                            city: form.city,
+                                                            postalCode: form.postalCode,
+                                                            country: form.country?.iso2Code,
+                                                            cardId: form.cardId,
+                                                            securityQuestion: form.securityQuestion,
+                                                            securityAnswer: form.securityAnswer)
+        
+        let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ statusResponse -> AnyPublisher<Bool, ServiceProviderError> in
+            if statusResponse.status == "SUCCESS" {
+                return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+        
+    }
+    
 }

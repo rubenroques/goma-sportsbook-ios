@@ -17,18 +17,23 @@ struct UserRegisterForm {
     let deviceToken: String
 }
 
-struct FullRegisterUserInfo {
-    var title: String
-    var firstName: String
-    var lastName: String
-    var country: String
-    var address1: String
-    var address2: String
-    var city: String
-    var postalCode: String
-    var securityQuestion: String
-    var securityAnswer: String
-    var personalID: String
+struct FullRegisterUserForm {
+    var username: String?
+    var email: String?
+    var firstName: String?
+    var lastName: String?
+    var birthDate: Date?
+    var gender: String?
+    var mobilePrefix: String?
+    var mobileNumber: String?
+    var address: String?
+    var province: String?
+    var city: String?
+    var postalCode: String?
+    var country: Country?
+    var cardId: String?
+    var securityQuestion: String?
+    var securityAnswer: String?
 }
 
 struct ServiceProviderSimpleRegisterForm {

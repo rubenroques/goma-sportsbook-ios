@@ -125,7 +125,7 @@ class DynamicHomeViewTemplateDataSource {
             })
             .store(in: &self.cancellables)
 
-        Env.userSessionStore.isUserProfileIncomplete
+        Env.userSessionStore.isUserProfileComplete
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.fetchAlerts()
@@ -183,7 +183,7 @@ class DynamicHomeViewTemplateDataSource {
                 alertsArray.append(emailActivationAlertData)
             }
 
-            if Env.userSessionStore.isUserProfileIncomplete.value {
+            if !Env.userSessionStore.isUserProfileComplete.value {
                 let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
                                                                description: localized("complete_profile_description"),
                                                                linkLabel: localized("finish_up_profile"),

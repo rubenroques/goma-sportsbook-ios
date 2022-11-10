@@ -8,6 +8,7 @@
 import UIKit
 import UniformTypeIdentifiers
 import Combine
+import ServiceProvider
 
 class FullRegisterDocumentsViewController: UIViewController {
 
@@ -44,10 +45,10 @@ class FullRegisterDocumentsViewController: UIViewController {
                           "public.composite-content",
                           "public.text"]
     var cancellables = Set<AnyCancellable>()
-    var registerForm: FullRegisterUserInfo
+    var registerForm: FullRegisterUserForm
     var profile: EveryMatrix.UserProfile?
 
-    init(registerForm: FullRegisterUserInfo) {
+    init(registerForm: FullRegisterUserForm) {
         self.registerForm = registerForm
         super.init(nibName: "FullRegisterDocumentsViewController", bundle: nil)
     }
@@ -175,23 +176,15 @@ class FullRegisterDocumentsViewController: UIViewController {
 //            self.view.endEditing(true)
 //        }
 
-        let idText = idHeaderTextFieldView.text == "" ? false : true
+        let validCardId = idHeaderTextFieldView.text == "" ? false : true
 
-        if idText {
+        if validCardId {
             self.submitButton.isEnabled = true
-            self.submitButton.backgroundColor = UIColor.App.highlightPrimary
-            self.setupFullRegisterUserInfoForm()
         }
         else {
             self.submitButton.isEnabled = false
-            self.submitButton.backgroundColor = UIColor.App.backgroundPrimary
         }
 
-    }
-
-    func setupFullRegisterUserInfoForm() {
-        let idText = idHeaderTextFieldView.text
-        registerForm.personalID = idText
     }
 
     private func openFile() {
@@ -242,69 +235,116 @@ class FullRegisterDocumentsViewController: UIViewController {
 
     @IBAction func submitAction() {
         
-        guard let profile = profile else {
-            return
+//        guard let profile = profile else {
+//            return
+//        }
+//
+//        let gender = registerForm.title == "Mr." ? "M" : "F"
+//        let form = EveryMatrix.ProfileForm(email: profile.email,
+//                                           title: registerForm.title,
+//                                           gender: gender,
+//                                           firstname: registerForm.firstName,
+//                                           surname: registerForm.lastName,
+//                                           birthDate: profile.birthDate,
+//                                           country: registerForm.country,
+//                                           address1: registerForm.address1,
+//                                           address2: registerForm.address2,
+//                                           city: registerForm.city,
+//                                           postalCode: registerForm.postalCode,
+//                                           mobile: profile.mobile,
+//                                           mobilePrefix: profile.mobilePrefix,
+//                                           phone: profile.phone,
+//                                           phonePrefix: profile.phonePrefix,
+//                                           personalID: registerForm.personalID,
+//                                           securityQuestion: registerForm.securityQuestion,
+//                                           securityAnswer: registerForm.securityAnswer)
+//
+        var serviceProviderCountry: ServiceProvider.Country?
+        if let countryValue = self.registerForm.country {
+            serviceProviderCountry = ServiceProviderModelMapper.country(fromCountry: countryValue)
         }
         
-        let gender = registerForm.title == "Mr." ? "M" : "F"
-        let form = EveryMatrix.ProfileForm(email: profile.email,
-                                           title: registerForm.title,
-                                           gender: gender,
-                                           firstname: registerForm.firstName,
-                                           surname: registerForm.lastName,
-                                           birthDate: profile.birthDate,
-                                           country: registerForm.country,
-                                           address1: registerForm.address1,
-                                           address2: registerForm.address2,
-                                           city: registerForm.city,
-                                           postalCode: registerForm.postalCode,
-                                           mobile: profile.mobile,
-                                           mobilePrefix: profile.mobilePrefix,
-                                           phone: profile.phone,
-                                           phonePrefix: profile.phonePrefix,
-                                           personalID: registerForm.personalID,
-                                           securityQuestion: registerForm.securityQuestion,
-                                           securityAnswer: registerForm.securityAnswer)
+        let mobileNumber: String = (registerForm.mobilePrefix ?? "") + (registerForm.mobileNumber ?? "")
+        let form = ServiceProvider.UpdateUserProfileForm.init(username: registerForm.username,
+                                                              email: registerForm.email,
+                                                              firstName: registerForm.firstName,
+                                                              lastName: registerForm.lastName,
+                                                              birthDate: registerForm.birthDate,
+                                                              gender: registerForm.gender,
+                                                              address: registerForm.address,
+                                                              province: registerForm.province,
+                                                              city: registerForm.city,
+                                                              postalCode: registerForm.postalCode,
+                                                              country: serviceProviderCountry,
+                                                              cardId: self.idHeaderTextFieldView.text,
+                                                              mobileNumber: mobileNumber,
+                                                              securityQuestion: registerForm.securityQuestion,
+                                                              securityAnswer: registerForm.securityAnswer)
+        
         self.fullRegisterProfile(form: form)
 
     }
 
-    private func fullRegisterProfile(form: EveryMatrix.ProfileForm) {
-        Env.everyMatrixClient.updateProfile(form: form)
+    private func fullRegisterProfile(form: ServiceProvider.UpdateUserProfileForm) {
+        
+        Env.serviceProvider.signUpCompletion(form: form)
             .receive(on: DispatchQueue.main)
-            .sink { completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
-                case .failure(let error):
-                    print("fullRegisterProfile error: \(error)")
-                    switch error {
-                    case let .requestError(message):
-                        self.showAlert(type: .error, text: message)
-                    default:
-                        self.showAlert(type: .error, text: "\(error)")
-                    }
+                case .failure:
+                    print("signUpCompletion error")
+                    self.showAlert(type: .error, text: "")
                 case .finished:
                     ()
                 }
-                
-                print("fullRegisterProfile completion: \(completion)")
-                
-            } receiveValue: { _ in
-                self.refreshUserProfileStatus()
+            }, receiveValue: { success in
+                self.refreshUserProfile()
                 self.showAlert(type: .success, text: localized("profile_updated_success"))
                 self.navigationController?.popToRootViewController(animated: true)
-            }
+            })
             .store(in: &cancellables)
+
+//
+//      Env.everyMatrixClient.updateProfile(form: form)
+//            .receive(on: DispatchQueue.main)
+//            .sink { completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("fullRegisterProfile error: \(error)")
+//                    switch error {
+//                    case let .requestError(message):
+//                        self.showAlert(type: .error, text: message)
+//                    default:
+//                        self.showAlert(type: .error, text: "\(error)")
+//                    }
+//                case .finished:
+//                    ()
+//                }
+//
+//                print("fullRegisterProfile completion: \(completion)")
+//
+//            } receiveValue: { _ in
+//                self.refreshUserProfileStatus()
+//                self.showAlert(type: .success, text: localized("profile_updated_success"))
+//                self.navigationController?.popToRootViewController(animated: true)
+//            }
+//            .store(in: &cancellables)
+//
         
-        Env.gomaNetworkClient.requestUpdateNameProfile(name: "\(form.firstname) \(form.surname)")
-                    .replaceError(with: MessageNetworkResponse.failed)
-                    .sink { [weak self] response in
-                        print("update OnGomaAPI \(response)")
-                    }
-                    .store(in: &cancellables)
+        if let firstName = form.firstName, let lastName = form.lastName {
+            Env.gomaNetworkClient.requestUpdateNameProfile(name: "\(firstName) \(lastName)")
+                        .replaceError(with: MessageNetworkResponse.failed)
+                        .sink { response in
+                            print("Update name on GomaAPI \(response)")
+                        }
+                        .store(in: &cancellables)
+        }
+        
+        
     }
 
-    private func refreshUserProfileStatus() {
-        Env.userSessionStore.requestProfileStatus()
+    private func refreshUserProfile() {
+        Env.userSessionStore.refreshUserProfile()
     }
 
     @objc func didTapBackground() {

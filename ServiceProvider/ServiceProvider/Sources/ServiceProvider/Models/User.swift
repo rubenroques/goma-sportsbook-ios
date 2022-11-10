@@ -65,7 +65,7 @@ public struct UserOverview: Codable {
         case kycStatus = "kycStatus"
         case lockStatus = "lockStatus"
     }
-
+    
 }
 
 public struct UserProfile: Codable {
@@ -185,8 +185,12 @@ public struct UpdateUserProfileForm {
     public var postalCode: String?
     public var country: Country?
     public var cardId: String?
-
-    public init(username: String? = nil, email: String? = nil, firstName: String? = nil, lastName: String? = nil, birthDate: Date? = nil, gender: String? = nil, address: String? = nil, province: String? = nil, city: String? = nil, postalCode: String? = nil, country: Country? = nil, cardId: String? = nil) {
+    
+    public var mobileNumber: String?
+    public var securityQuestion: String?
+    public var securityAnswer: String?
+    
+    public init(username: String? = nil, email: String? = nil, firstName: String? = nil, lastName: String? = nil, birthDate: Date? = nil, gender: String? = nil, address: String? = nil, province: String? = nil, city: String? = nil, postalCode: String? = nil, country: Country? = nil, cardId: String? = nil, mobileNumber: String? = nil, securityQuestion: String? = nil, securityAnswer: String? = nil) {
         self.username = username
         self.email = email
         self.firstName = firstName
@@ -199,6 +203,64 @@ public struct UpdateUserProfileForm {
         self.postalCode = postalCode
         self.country = country
         self.cardId = cardId
+        self.mobileNumber = mobileNumber
+        self.securityQuestion = securityQuestion
+        self.securityAnswer = securityAnswer
     }
+    
+}
+
+public struct UserWallet {
+    public var vipStatus: String?
+    public var currency: String?
+    public var loyaltyPoint: Int?
+    
+    public var totalString: String?
+    public var total: Double?
+    public var withdrawableString: String?
+    public var withdrawable: Double?
+    public var bonusString: String?
+    public var bonus: Double?
+    public var pendingBonusString: String?
+    public var pendingBonus: Double?
+    public var casinoPlayableBonusString: String?
+    public var casinoPlayableBonus: Double?
+    public var sportsbookPlayableBonusString: String?
+    public var sportsbookPlayableBonus: Double?
+    public var withdrawableEscrowString: String?
+    public var withdrawableEscrow: Double?
+    public var totalWithdrawableString: String?
+    public var totalWithdrawable: Double?
+    public var withdrawRestrictionAmountString: String?
+    public var withdrawRestrictionAmount: Double?
+    public var totalEscrowString: String?
+    public var totalEscrow: Double?
+    
+    enum CodingKeys: String, CodingKey {
+        case totalString = "totalBalance"
+        case total = "totalBalanceNumber"
+        case withdrawableString = "withdrawableBalance"
+        case withdrawable = "withdrawableBalanceNumber"
+        case bonusString = "bonusBalance"
+        case bonus = "bonusBalanceNumber"
+        case pendingBonusString = "pendingBonusBalance"
+        case pendingBonus = "pendingBonusBalanceNumber"
+        case casinoPlayableBonusString = "casinoPlayableBonusBalance"
+        case casinoPlayableBonus = "casinoPlayableBonusBalanceNumber"
+        case sportsbookPlayableBonusString = "sportsbookPlayableBonusBalance"
+        case sportsbookPlayableBonus = "sportsbookPlayableBonusBalanceNumber"
+        case withdrawableEscrowString = "withdrawableEscrowBalance"
+        case withdrawableEscrow = "withdrawableEscrowBalanceNumber"
+        case totalWithdrawableString = "totalWithdrawableBalance"
+        case totalWithdrawable = "totalWithdrawableBalanceNumber"
+        case withdrawRestrictionAmountString = "withdrawRestrictionAmount"
+        case withdrawRestrictionAmount = "withdrawRestrictionAmountNumber"
+        case totalEscrowString = "totalEscrowBalance"
+        case totalEscrow = "totalEscrowBalanceNumber"
+        case currency = "currency"
+        case loyaltyPoint = "loyaltyPoint"
+        case vipStatus = "vipStatus"
+    }
+    
     
 }

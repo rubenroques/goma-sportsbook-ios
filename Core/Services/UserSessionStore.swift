@@ -32,15 +32,17 @@ class UserSessionStore {
 
     var isLoadingUserSessionPublisher = CurrentValueSubject<Bool, Never>(true)
     var userSessionPublisher = CurrentValueSubject<UserSession?, Never>(nil)
-    var userBalanceWallet = CurrentValueSubject<EveryMatrix.UserBalanceWallet?, Never>(nil)
-    var userBonusBalanceWallet = CurrentValueSubject<EveryMatrix.UserBalanceWallet?, Never>(nil)
-    var userWalletPublisher: AnyCancellable?
-    var userWalletRegister: EndpointPublisherIdentifiable?
+//    var userBalanceWallet = CurrentValueSubject<EveryMatrix.UserBalanceWallet?, Never>(nil)
+//    var userBonusBalanceWallet = CurrentValueSubject<EveryMatrix.UserBalanceWallet?, Never>(nil)
+//    var userWalletPublisher: AnyCancellable?
+//    var userWalletRegister: EndpointPublisherIdentifiable?
 
+    var userWalletPublisher = CurrentValueSubject<UserWallet?, Never>(nil)
+    
     var hasGomaUserSessionPublisher = CurrentValueSubject<Bool, Never>(false)
     
     var shouldRecordUserSession = true
-    var isUserProfileIncomplete = CurrentValueSubject<Bool, Never>(true)
+    var isUserProfileComplete = CurrentValueSubject<Bool, Never>(false)
     var isUserEmailVerified = CurrentValueSubject<Bool, Never>(false)
 
     private var pendingSignUpUserForm: ServiceProvider.SimpleSignUpForm?
@@ -68,7 +70,7 @@ class UserSessionStore {
         NotificationCenter.default.publisher(for: .userSessionConnected)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.subscribeAccountBalanceWatcher()
+                // self?.subscribeAccountBalanceWatcher()
                 
                 self?.requestNotificationsUserSettings()
                 self?.requestBettingUserSettings()
@@ -140,7 +142,7 @@ class UserSessionStore {
 
         UserDefaults.standard.userSession = nil
                 
-        self.unsubscribeWalletUpdates()
+        // self.unsubscribeWalletUpdates()
 
         Env.favoritesManager.clearCachedFavorites()
         Env.gomaSocialClient.clearUserChatroomsData()
@@ -159,7 +161,8 @@ class UserSessionStore {
             .store(in: &cancellables)
 
         self.userSessionPublisher.send(nil)
-        self.userBalanceWallet.send(nil)
+        
+        self.userWalletPublisher.send(nil)
         
         self.hasGomaUserSessionPublisher.send(false)
     }
@@ -177,7 +180,9 @@ class UserSessionStore {
                     return .serverError
                 }
             }
-            .map(ServiceProviderModelMapper.userProfile(_:))
+            .map({ (serviceProviderProfile: ServiceProvider.UserProfile) in
+                return ServiceProviderModelMapper.userProfile(serviceProviderProfile)
+            })
             .map { (userProfile: UserProfile) -> UserSession in
                 return UserSession(username: userProfile.username,
                                    password: password,
@@ -191,7 +196,9 @@ class UserSessionStore {
                 self?.saveUserSession(userSession)
                 self?.loginGomaAPI(username: userSession.username, password: userSession.userId)
                 
-                Env.userSessionStore.isUserProfileIncomplete.send(userSession.isProfileCompleted)
+                self?.refreshUserWallet()
+                
+                Env.userSessionStore.isUserProfileComplete.send(userSession.isProfileCompleted)
                 Env.userSessionStore.isUserEmailVerified.send(userSession.isEmailVerified)
             })
             .eraseToAnyPublisher()
@@ -271,7 +278,8 @@ class UserSessionStore {
 }
 
 extension UserSessionStore {
-
+    
+    /*
     func forceWalletUpdate() {
         let route = TSRouter.getUserBalance
         Env.everyMatrixClient.manager.getModel(router: route, decodingType: EveryMatrix.UserBalance.self)
@@ -294,6 +302,7 @@ extension UserSessionStore {
             }
             .store(in: &cancellables)
     }
+    */
     
     // =====================================
     //
@@ -338,7 +347,7 @@ extension UserSessionStore {
     private func storeBettingUserSettings(bettingUserSettings: BettingUserSettings) {
         UserDefaults.standard.bettingUserSettings = bettingUserSettings
     }
-    
+/*
     // =====================================
     //
     func subscribeAccountBalanceWatcher() {
@@ -407,17 +416,34 @@ extension UserSessionStore {
             Env.everyMatrixClient.manager.unsubscribeFromEndpoint(endpointPublisherIdentifiable: walletRegister)
         }
     }
-
-    func requestProfileStatus() {
-        Env.everyMatrixClient.getProfileStatus()
+*/
+    
+    func refreshUserWallet() {
+        Env.serviceProvider.getUserBalance()
             .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
-            .sink { _ in
-
-            } receiveValue: { status in
-                self.isUserProfileIncomplete.send(status.isProfileIncomplete)
-            }
-        .store(in: &cancellables)
+            .sink(receiveCompletion: { completion in
+                if case .failure = completion {
+                    self.userWalletPublisher.send(nil)
+                }
+            }, receiveValue: { [weak self] (userWallet: ServiceProvider.UserWallet) in
+                guard
+                    let currency = userWallet.currency,
+                    let total = userWallet.total
+                else {
+                    self?.userWalletPublisher.send(nil)
+                    return
+                }
+                let wallet = UserWallet(total: total,
+                                        bonus: userWallet.bonus,
+                                        totalWithdrawable: userWallet.totalWithdrawable,
+                                        currency: currency)
+                self?.userWalletPublisher.send(wallet)
+            })
+            .store(in: &cancellables)
+    }
+    
+    func refreshUserProfile() {
+        self.startUserSessionIfNeeded()
     }
 
 }
@@ -441,6 +467,7 @@ extension UserSessionStore {
 
         self.loadLoggedUser()
 
+        //Trigger internal login
         self.login(withUsername: user.username, password: userPassword)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -450,7 +477,7 @@ extension UserSessionStore {
                     ()
                 }
                 self?.isLoadingUserSessionPublisher.send(false)
-            }, receiveValue: { user in
+            }, receiveValue: { loggedUser in
                 
             })
             .store(in: &cancellables)

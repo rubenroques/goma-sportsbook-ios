@@ -18,7 +18,8 @@ struct CurrencyFormater {
     }()
 
     func currencyTypeFormatting(string: String) -> String {
-        let currencyWalletType = Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
+        // TODO: SportRadar currency
+        let currencyWalletType =  Env.userSessionStore.userWalletPublisher.value?.currency
         let decimals = Set("0123456789.")
         let value = string
         var filtered = ""

@@ -148,6 +148,39 @@ extension SportRadarModels {
 
 extension SportRadarModels {
     
+    struct BalanceResponse: Codable {
+        let status: String
+        let message: String?
+        let currency: String?
+        let loyaltyPoint: Int?
+        let vipStatus: String?
+        
+        let totalBalance: String?
+        let totalBalanceNumber: Double?
+        let withdrawableBalance: String?
+        let withdrawableBalanceNumber: Double?
+        let bonusBalance: String?
+        let bonusBalanceNumber: Double?
+        let pendingBonusBalance: String?
+        let pendingBonusBalanceNumber: Double?
+        let casinoPlayableBonusBalance: String?
+        let casinoPlayableBonusBalanceNumber: Double?
+        let sportsbookPlayableBonusBalance: String?
+        let sportsbookPlayableBonusBalanceNumber: Double?
+        let withdrawableEscrowBalance: String?
+        let withdrawableEscrowBalanceNumber: Double?
+        let totalWithdrawableBalance: String?
+        let totalWithdrawableBalanceNumber: Double?
+        let withdrawRestrictionAmount: String?
+        let withdrawRestrictionAmountNumber: Double?
+        let totalEscrowBalance: String?
+        let totalEscrowBalanceNumber: Double?
+    }
+
+}
+
+extension SportRadarModels {
+    
     struct StatusResponse: Codable {
         let status: String
         let errors: [FieldError]?

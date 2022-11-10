@@ -25,25 +25,57 @@ import Foundation
  */
 
 enum OmegaAPIClient {
-    case login(username: String, password: String)
-    case openSession(productCode: String, gameId: String)
+    case login(username: String,
+               password: String)
+    case openSession(productCode: String,
+                     gameId: String)
     case logout
     case playerInfo
-    case balanceSimple
-    case updatePlayerInfo(username: String?, email: String?, firstName: String?, lastName: String?,
-                          birthDate: Date?, gender: String?, address: String?, province: String?,
-                          city: String?, postalCode: String?, country: String?, cardId: String?)
+    case updatePlayerInfo(username: String?,
+                          email: String?,
+                          firstName: String?,
+                          lastName: String?,
+                          birthDate: Date?,
+                          gender: String?,
+                          address: String?,
+                          province: String?,
+                          city: String?,
+                          postalCode: String?,
+                          country: String?,
+                          cardId: String?)
     case checkCredentialEmail(email: String)
-    case quickSignup(email: String, username: String, password: String, birthDate: Date,
-                     mobilePrefix: String, mobileNumber: String, countryIsoCode: String, currencyCode: String)
+    case quickSignup(email: String,
+                     username: String,
+                     password: String,
+                     birthDate: Date,
+                     mobilePrefix: String,
+                     mobileNumber: String,
+                     countryIsoCode: String,
+                     currencyCode: String)
     case resendVerificationCode(username: String)
-    case signupConfirmation(email: String, confirmationCode: String)
-
+    case signupConfirmation(email: String,
+                            confirmationCode: String)
     case getCountries
     case getCurrentCountry
-
-    case forgotPassword(email: String, secretQuestion: String? = nil, secretAnswer: String? = nil)
-    case updatePassword(oldPassword: String, newPassword: String)
+    case forgotPassword(email: String,
+                        secretQuestion: String? = nil,
+                        secretAnswer: String? = nil)
+    case updatePassword(oldPassword: String,
+                        newPassword: String)
+    case getBalance
+    case quickSignupCompletion(firstName: String?,
+                               lastName: String?,
+                               birthDate: Date?,
+                               gender: String?,
+                               mobileNumber: String?,
+                               address: String?,
+                               province: String?,
+                               city: String?,
+                               postalCode: String?,
+                               country: String?,
+                               cardId: String?,
+                               securityQuestion: String?,
+                               securityAnswer: String?)
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -58,8 +90,6 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/logout"
         case .playerInfo:
             return "/ps/ips/getPlayerInfo"
-        case .balanceSimple:
-            return "/ps/ips/getBalanceSimple"
         case .updatePlayerInfo:
             return "/ps/ips/updatePlayerInfo"
         case .checkCredentialEmail:
@@ -78,6 +108,10 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/forgotPasswordStep1And2"
         case .updatePassword:
             return "/ps/ips/updatePassword"
+        case .getBalance:
+            return "/ps/ips/getBalanceSimple"
+        case .quickSignupCompletion:
+            return "/ps/ips/quickSignupCompletion"
         }
     }
     
@@ -92,8 +126,6 @@ extension OmegaAPIClient: Endpoint {
         case .logout:
             return nil
         case .playerInfo:
-            return nil
-        case .balanceSimple:
             return nil
         case .checkCredentialEmail(let email):
             return [URLQueryItem(name: "field", value: "email"),
@@ -125,7 +157,6 @@ extension OmegaAPIClient: Endpoint {
             return [
                 URLQueryItem(name: "confirmationCode", value: confirmationCode),
                 URLQueryItem(name: "email", value: email),
-                // URLQueryItem(name: "ipAddress", value: Self.getIPAddress()),
             ]
         case .updatePlayerInfo(let username, let email, let firstName, let lastName,
                                let birthDate, let gender, let address, let province, let city,
@@ -158,9 +189,7 @@ extension OmegaAPIClient: Endpoint {
         case .getCountries:
             return nil
         case .getCurrentCountry:
-            return [
-                //URLQueryItem(name: "ipAddress", value: Self.getIPAddress()),
-            ]
+            return nil
         case .forgotPassword(let email, let secretQuestion, let secretAnswer):
             var queryItemsURL: [URLQueryItem] = []
 
@@ -182,6 +211,38 @@ extension OmegaAPIClient: Endpoint {
             return [URLQueryItem(name: "oldPassword", value: oldPassword),
                     URLQueryItem(name: "newPassword", value: newPassword)
             ]
+        case .getBalance:
+            return nil
+        case .quickSignupCompletion(let firstName, let lastName, let birthDate, let gender, let mobileNumber,
+                                    let address, let province, let city, let postalCode, let country, let cardId, let securityQuestion, let securityAnswer):
+            var query: [URLQueryItem] = []
+            
+            if let firstName = firstName { query.append(URLQueryItem(name: "firstName", value: firstName)) }
+            if let lastName = lastName { query.append(URLQueryItem(name: "lastName", value: lastName)) }
+            if let gender = gender { query.append(URLQueryItem(name: "gender", value: gender)) }
+            if let mobileNumber = mobileNumber { query.append(URLQueryItem(name: "mobile", value: mobileNumber)) }
+            
+            if let birthDate = birthDate {
+                let dateFromatter = DateFormatter()
+                dateFromatter.dateFormat = "yyyy-MM-dd"
+                let birthDateString = dateFromatter.string(from: birthDate)
+                query.append(URLQueryItem(name: "birthDate", value: birthDateString))
+            }
+            
+            if let address = address { query.append(URLQueryItem(name: "address", value: address)) }
+            if let province = province { query.append(URLQueryItem(name: "province", value: province)) }
+            if let country = country { query.append(URLQueryItem(name: "country", value: country)) }
+            if let city = city { query.append(URLQueryItem(name: "city", value: city)) }
+            if let postalCode = postalCode { query.append(URLQueryItem(name: "postalCode", value: postalCode)) }
+            if let cardId = cardId { query.append(URLQueryItem(name: "idCardNumber", value: cardId)) }
+            
+            if let securityQuestion = securityQuestion { query.append(URLQueryItem(name: "securityQuestion", value: securityQuestion)) }
+            if let securityAnswer = securityAnswer { query.append(URLQueryItem(name: "securityAnswer", value: securityAnswer)) }
+            
+            
+            
+            
+            return query
         }
     }
     
@@ -192,7 +253,6 @@ extension OmegaAPIClient: Endpoint {
         case .openSession: return .get
         case .logout: return .get
         case .playerInfo: return .get
-        case .balanceSimple: return .get
         case .updatePlayerInfo: return .get
         case .checkCredentialEmail: return .get
         case .quickSignup: return .get
@@ -202,13 +262,14 @@ extension OmegaAPIClient: Endpoint {
         case .getCurrentCountry: return .get
         case .forgotPassword: return .get
         case .updatePassword: return .get
+        case .getBalance: return .get
+        case .quickSignupCompletion: return .get
         }
     }
     
     var body: Data? {
         return nil
-        
-        /**
+        /*
          let body = """
          {"type": "\(type)","text": "\(message)"}
          """
@@ -219,10 +280,21 @@ extension OmegaAPIClient: Endpoint {
     
     var requireSessionKey: Bool {
         switch self {
-        case .openSession, .logout, .playerInfo, .balanceSimple, .updatePlayerInfo, .updatePassword:
-            return true
-        default:
-            return false
+        case .login: return false
+        case .openSession: return true
+        case .logout: return true
+        case .playerInfo: return true
+        case .updatePlayerInfo: return true
+        case .checkCredentialEmail: return false
+        case .quickSignup: return false
+        case .resendVerificationCode: return false
+        case .signupConfirmation: return false
+        case .getCountries: return false
+        case .getCurrentCountry: return false
+        case .forgotPassword: return false
+        case .updatePassword: return true
+        case .getBalance: return true
+        case .quickSignupCompletion: return true
         }
     }
     
@@ -247,33 +319,4 @@ extension OmegaAPIClient: Endpoint {
         return TimeInterval(20)
     }
     
-}
-extension OmegaAPIClient {
-    static func getIPAddress() -> String {
-        var address: String?
-        var ifaddr: UnsafeMutablePointer<ifaddrs>? = nil
-        if getifaddrs(&ifaddr) == 0 {
-            var ptr = ifaddr
-            while ptr != nil {
-                defer { ptr = ptr?.pointee.ifa_next }
-                
-                guard let interface = ptr?.pointee else { return "" }
-                let addrFamily = interface.ifa_addr.pointee.sa_family
-                if addrFamily == UInt8(AF_INET) || addrFamily == UInt8(AF_INET6) {
-                    
-                    // wifi = ["en0"]
-                    // wired = ["en2", "en3", "en4"]
-                    // cellular = ["pdp_ip0","pdp_ip1","pdp_ip2","pdp_ip3"]
-                    let name: String = String(cString: (interface.ifa_name))
-                    if  name == "en0" || name == "en2" || name == "en3" || name == "en4" || name == "pdp_ip0" || name == "pdp_ip1" || name == "pdp_ip2" || name == "pdp_ip3" {
-                        var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
-                        getnameinfo(interface.ifa_addr, socklen_t((interface.ifa_addr.pointee.sa_len)), &hostname, socklen_t(hostname.count), nil, socklen_t(0), NI_NUMERICHOST)
-                        address = String(cString: hostname)
-                    }
-                }
-            }
-            freeifaddrs(ifaddr)
-        }
-        return address ?? ""
-    }
 }

@@ -25,47 +25,47 @@ class DepositViewModel: NSObject {
 
     // MARK: Functions
     func getDepositInfo(amountText: String) {
-        self.isLoadingPublisher.send(true)
-
-        let amountText = amountText
-        let amount = amountText.replacingOccurrences(of: ",", with: ".")
-        var currency = ""
-        var gamingAccountId = ""
-
-        if let walletCurrency = Env.userSessionStore.userBalanceWallet.value?.currency {
-            currency = walletCurrency
-        }
-        else {
-
-            self.showErrorAlertTypePublisher.send(.wallet)
-            self.isLoadingPublisher.send(false)
-        }
-
-        if let walletGamingAccountId = Env.userSessionStore.userBalanceWallet.value?.id {
-            gamingAccountId = "\(walletGamingAccountId)"
-        }
-        else {
-
-            self.showErrorAlertTypePublisher.send(.wallet)
-            self.isLoadingPublisher.send(false)
-        }
-
-        Env.everyMatrixClient.getDepositResponse(currency: currency, amount: amount, gamingAccountId: gamingAccountId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure:
-                    self?.showErrorAlertTypePublisher.send(.deposit)
-                case .finished:
-                    ()
-                }
-                self?.isLoadingPublisher.send(false)
-
-            }, receiveValue: { [weak self] value in
-
-                self?.cashierUrlPublisher.value = value.cashierUrl
-
-            })
-            .store(in: &cancellables)
+//        self.isLoadingPublisher.send(true)
+//
+//        let amountText = amountText
+//        let amount = amountText.replacingOccurrences(of: ",", with: ".")
+//        var currency = ""
+//        var gamingAccountId = ""
+//
+//        if let walletCurrency = Env.userSessionStore.userBalanceWallet.value?.currency {
+//            currency = walletCurrency
+//        }
+//        else {
+//
+//            self.showErrorAlertTypePublisher.send(.wallet)
+//            self.isLoadingPublisher.send(false)
+//        }
+//
+//        if let walletGamingAccountId = Env.userSessionStore.userBalanceWallet.value?.id {
+//            gamingAccountId = "\(walletGamingAccountId)"
+//        }
+//        else {
+//
+//            self.showErrorAlertTypePublisher.send(.wallet)
+//            self.isLoadingPublisher.send(false)
+//        }
+//
+//        Env.everyMatrixClient.getDepositResponse(currency: currency, amount: amount, gamingAccountId: gamingAccountId)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure:
+//                    self?.showErrorAlertTypePublisher.send(.deposit)
+//                case .finished:
+//                    ()
+//                }
+//                self?.isLoadingPublisher.send(false)
+//
+//            }, receiveValue: { [weak self] value in
+//
+//                self?.cashierUrlPublisher.value = value.cashierUrl
+//
+//            })
+//            .store(in: &cancellables)
     }
 }

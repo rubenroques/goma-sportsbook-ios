@@ -270,8 +270,7 @@ class PersonalInfoViewController: UIViewController {
             } receiveValue: { profile in
                 self.setupProfile(profile: profile)
             }
-        
-        .store(in: &cancellables)
+            .store(in: &cancellables)
 
     }
 
@@ -468,7 +467,10 @@ class PersonalInfoViewController: UIViewController {
         }
         else {
             self.titleHeaderTextFieldView.setText("")
-            // self.titleHeaderTextFieldView.isDisabled = true
+            
+            self.titleHeaderTextFieldView.setSelectionPicker(UserTitle.titles, headerVisible: true)
+            self.titleHeaderTextFieldView.setSelectedPickerOption(option: UserTitle.titles.startIndex)
+            
         }
         
         self.usernameHeaderTextFieldView.setText(profile.username)

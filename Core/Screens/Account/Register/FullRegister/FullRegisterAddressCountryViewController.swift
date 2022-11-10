@@ -26,9 +26,9 @@ class FullRegisterAddressCountryViewController: UIViewController {
     
     // Variables
     var cancellables = Set<AnyCancellable>()
-    var registerForm: FullRegisterUserInfo
+    var registerForm: FullRegisterUserForm
 
-    init(registerForm: FullRegisterUserInfo) {
+    init(registerForm: FullRegisterUserForm) {
         self.registerForm = registerForm
         super.init(nibName: "FullRegisterAddressCountryViewController", bundle: nil)
     }

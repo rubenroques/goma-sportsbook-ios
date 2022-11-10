@@ -468,6 +468,9 @@ class ProfileLimitsManagementViewController: UIViewController {
     private func saveLimitsOptions() {
         self.isLoading = true
 
+        // TODO: SportRadar Currency for wallet
+        // TODO: SportRadar limits configuration
+        
         let acceptedInputs = Set("0123456789.,")
 
         if self.viewModel.canUpdateDeposit {
@@ -476,7 +479,7 @@ class ProfileLimitsManagementViewController: UIViewController {
             let amountFiltered = String( amountString.filter{ acceptedInputs.contains($0)} )
             let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
 
-            let currency = Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
+            let currency = "EUR" // Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
 
             self.viewModel.sendLimit(limitType: LimitType.deposit.identifier, period: period, amount: amount, currency: currency)
 
@@ -487,7 +490,7 @@ class ProfileLimitsManagementViewController: UIViewController {
             let amountFiltered = String( amountString.filter{ acceptedInputs.contains($0)} )
             let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
 
-            let currency = Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
+            let currency = "EUR" // Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
 
             self.viewModel.sendLimit(limitType: LimitType.wagering.identifier, period: period, amount: amount, currency: currency)
 
@@ -498,7 +501,7 @@ class ProfileLimitsManagementViewController: UIViewController {
             let amountFiltered = String( amountString.filter{ acceptedInputs.contains($0)} )
             let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
 
-            let currency = Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
+            let currency = "EUR" // Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
 
             self.viewModel.sendLimit(limitType: LimitType.loss.identifier, period: period, amount: amount, currency: currency)
 

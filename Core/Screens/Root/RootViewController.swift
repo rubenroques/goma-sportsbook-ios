@@ -395,35 +395,49 @@ class RootViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        Env.userSessionStore.userBalanceWallet
-            .compactMap({$0})
-            .map(\.amount)
+        Env.userSessionStore.userWalletPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] value in
-                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
-                    let accountValue = bonusWallet.amount + value
-                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-
+            .sink { [weak self] userWallet in
+                if let userWallet = userWallet,
+                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: userWallet.total))
+                {
+                    self?.accountValueLabel.text = formattedTotalString
                 }
                 else {
-                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
+                    self?.accountValueLabel.text = "-.--€"
                 }
             }
             .store(in: &cancellables)
 
-        Env.userSessionStore.userBonusBalanceWallet
-            .compactMap({$0})
-            .map(\.amount)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] value in
-                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
-                    let accountValue = currentWallet.amount + value
-                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-                }
-            }
-            .store(in: &cancellables)
-
-        Env.userSessionStore.forceWalletUpdate()
+//        Env.userSessionStore.userBalanceWallet
+//            .compactMap({$0})
+//            .map(\.amount)
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] value in
+//                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
+//                    let accountValue = bonusWallet.amount + value
+//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+//
+//                }
+//                else {
+//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
+//                }
+//            }
+//            .store(in: &cancellables)
+//
+//        Env.userSessionStore.userBonusBalanceWallet
+//            .compactMap({$0})
+//            .map(\.amount)
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] value in
+//                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
+//                    let accountValue = currentWallet.amount + value
+//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+//                }
+//            }
+//            .store(in: &cancellables)
+        
+        Env.userSessionStore.refreshUserWallet()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -616,7 +630,8 @@ class RootViewController: UIViewController {
             self.profileBaseView.isHidden = false
             self.accountValueBaseView.isHidden = false
             
-            Env.userSessionStore.forceWalletUpdate()
+            Env.userSessionStore.refreshUserWallet()
+            
         case .anonymous:
             self.loginBaseView.isHidden = false
             self.profileBaseView.isHidden = true
