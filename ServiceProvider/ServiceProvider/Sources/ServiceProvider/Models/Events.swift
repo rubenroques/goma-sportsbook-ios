@@ -44,6 +44,7 @@ public struct Market: Codable {
     public var outcomes: [Outcome]
     public var marketTypeId: String?
     public var eventMarketTypeId: String?
+    public var eventName: String?
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -51,6 +52,7 @@ public struct Market: Codable {
         case outcomes = "outcomes"
         case marketTypeId = "marketTypeId"
         case eventMarketTypeId = "eventMarketTypeId"
+        case eventName = "eventName"
     }
     
 }
@@ -61,12 +63,14 @@ public struct Outcome: Codable {
     public var name: String
     public var odd: Double
     public var marketId: String?
+    public var orderValue: String?
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case name = "name"
         case odd = "odd"
         case marketId = "marketId"
+        case orderValue = "orderValue"
     }
     
 }

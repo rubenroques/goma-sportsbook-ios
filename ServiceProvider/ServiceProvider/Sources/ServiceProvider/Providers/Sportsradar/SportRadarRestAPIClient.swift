@@ -12,6 +12,7 @@ import Foundation
 
 enum SportRadarRestAPIClient {
     case marketsFilter
+    case fieldWidgetId(eventId: String)
 }
 
 extension SportRadarRestAPIClient: Endpoint {
@@ -19,24 +20,47 @@ extension SportRadarRestAPIClient: Endpoint {
         switch self {
         case .marketsFilter:
             return "/sportradar/sportsbook/config/marketsFilter_v2.json"
+        case .fieldWidgetId:
+            return "/services/content/get"
         }
     }
 
     var query: [URLQueryItem]? {
         switch self {
-        case .marketsFilter:
+        case .marketsFilter, .fieldWidgetId:
             return nil
         }
     }
 
     var method: HTTP.Method {
         switch self {
-        case .marketsFilter: return .get
+        case .marketsFilter:
+            return .get
+        case .fieldWidgetId:
+            return .post
         }
     }
 
     var body: Data? {
-        return nil
+        switch self {
+        case .fieldWidgetId(let eventId):
+            let bodyString =
+            """
+            {
+                "contentId": {
+                    "type": "eventExternalId",
+                    "id": "\(eventId)/SportRadarWidget"
+                },
+                "clientContext": {
+                    "language": "UK",
+                    "ipAddress": "127.0.0.1"
+                }
+            }
+            """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+        default:
+            return nil
+        }
 
         /**
          let body = """
@@ -48,7 +72,12 @@ extension SportRadarRestAPIClient: Endpoint {
     }
 
     var url: String {
-        return "https://cdn1.optimahq.com"
+        switch self {
+        case .fieldWidgetId:
+            return "https://www-sportbook-goma-int.optimahq.com/"
+        default:
+            return "https://cdn1.optimahq.com"
+        }
     }
 
     var headers: HTTP.Headers? {
@@ -68,4 +97,14 @@ extension SportRadarRestAPIClient: Endpoint {
         return TimeInterval(20)
     }
 
+}
+
+public struct FieldWidget: Codable {
+    public var data: String?
+    public var version: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case data = "data"
+        case version = "version"
+    }
 }

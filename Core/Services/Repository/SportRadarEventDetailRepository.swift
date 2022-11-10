@@ -26,7 +26,7 @@ class SportRadarEventDetailRepository {
 
         self.getMarketFilters()
     }
-
+    
     func getMarketFilters() {
 
         Env.serviceProvider.getMarketFilters()?

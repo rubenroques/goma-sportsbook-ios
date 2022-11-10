@@ -180,6 +180,8 @@ class MatchDetailsViewController: UIViewController {
                 
                 self.isStatsViewExpanded = false
                 self.isMatchFieldExpanded = false
+
+                self.headerStatsButtonBaseView.isHidden = true
                 
             case .live:
                 self.headerLiveButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
@@ -410,6 +412,9 @@ class MatchDetailsViewController: UIViewController {
         
         //
         self.view.bringSubviewToFront(self.matchNotAvailableView)
+
+        // TEMP REMOVE
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -628,6 +633,19 @@ class MatchDetailsViewController: UIViewController {
                 self?.reloadStatsCollectionView()
             })
             .store(in: &cancellables)
+
+        self.viewModel.fieldWidgetIdPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] fieldWidgetId in
+                if fieldWidgetId != "" {
+                    self?.headerButtonsBaseView.isHidden = false
+                    self?.setupMatchField()
+                }
+                else {
+                    self?.headerButtonsBaseView.isHidden = true
+                }
+            })
+            .store(in: &cancellables)
     }
     
     func reloadMarketGroupDetails(_ marketGroups: [MarketGroup]) {
@@ -720,14 +738,53 @@ class MatchDetailsViewController: UIViewController {
         if self.viewModel.matchModePublisher.value == .live && self.isValidStatsSport {
             self.shouldShowLiveFieldWebView = true
             self.isLiveFieldReady = false
-            
-            let request = URLRequest(url: URL(string: "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)")!)
-            self.matchFieldWebView.load(request)
+
+            // let request = URLRequest(url: URL(string: "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)")!)
+
+            let urlString = "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)"
+
+            if let fieldWidgetRequest = Env.serviceProvider.getFieldWidgetURLRequest(urlString: urlString) {
+
+                self.matchFieldWebView.load(fieldWidgetRequest)
+
+            }
+            else {
+                self.shouldShowLiveFieldWebView = false
+            }
+
         }
         else if self.viewModel.matchModePublisher.value == .preLive {
-            self.shouldShowLiveFieldWebView = false
+            // self.shouldShowLiveFieldWebView = false
+
+            // TEST
+            if self.viewModel.fieldWidgetIdPublisher.value != "" {
+                self.shouldShowLiveFieldWebView = true
+                self.isLiveFieldReady = false
+
+                var fieldWidgetFile = "field_widget_light.html"
+
+                let theme = self.traitCollection.userInterfaceStyle
+
+                if theme == .dark {
+                    fieldWidgetFile = "field_widget_dark.html"
+                }
+
+                let fileStringSplit = fieldWidgetFile.components(separatedBy: ".")
+                if let url = Bundle.main.url(forResource: fileStringSplit[0], withExtension: fileStringSplit[1]),
+                   let htmlString = Env.serviceProvider.getFieldWidgetHtml(widgetFile: fieldWidgetFile, eventId: self.viewModel.fieldWidgetIdPublisher.value) {
+
+                        self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
+
+                }
+                else {
+                    self.shouldShowLiveFieldWebView = false
+                }
+            }
+            else {
+                self.shouldShowLiveFieldWebView = false
+            }
         }
-        
+
     }
     
     func setupHeaderDetails() {

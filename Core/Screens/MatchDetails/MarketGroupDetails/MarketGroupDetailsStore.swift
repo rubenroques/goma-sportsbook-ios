@@ -136,6 +136,8 @@ class MarketGroupDetailsStore {
         var similarMarketsNames: [String: String] = [:]
         var similarMarketsOrdered: OrderedSet<String> = []
 
+        let decimalCharacters = CharacterSet.decimalDigits
+
         for market in match.markets {
 
             let similarMarketKey = "\(market.name ?? "000")-\(match.homeParticipant.name ?? "x")-\(match.awayParticipant.name ?? "x")"
@@ -144,18 +146,59 @@ class MarketGroupDetailsStore {
                 self.firstMarketCache = market
             }
 
-            allMarkets[market.id] = market
+            let outcomes = market.outcomes
+
+            var sortedOutcomes: [Outcome] = []
+
+            // Temp sort for 1x2
+            if outcomes.count == 3 {
+                sortedOutcomes = outcomes.sorted { out1, out2 in
+
+                    if let orderValue1 = out1.orderValue,
+                       let orderValue2 = out2.orderValue {
+                        let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(orderValue1)
+                        let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(orderValue2)
+                        return out1Value < out2Value
+                    }
+
+                    return out1.id < out2.id
+                }
+            }
+            else {
+                sortedOutcomes = outcomes.sorted { out1, out2 in
+                    if out1.codeName.rangeOfCharacter(from: decimalCharacters) != nil {
+                        let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1.codeName.trimmingCharacters(in: CharacterSet(charactersIn: "0123456789. ")))
+                        let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2.codeName.trimmingCharacters(in: CharacterSet(charactersIn: "0123456789. ")))
+                        return out1Value < out2Value
+                    }
+                    let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1.codeName)
+                    let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2.codeName)
+                    return out1Value < out2Value
+                }
+            }
+
+            let sortedOutcomeMarket = Market(id: market.id,
+                                typeId: market.typeId,
+                                name: market.name,
+                                nameDigit1: market.nameDigit1,
+                                nameDigit2: market.nameDigit2,
+                                nameDigit3: market.nameDigit3,
+                                eventPartId: market.eventPartId,
+                                bettingTypeId: market.bettingTypeId,
+                                outcomes: sortedOutcomes)
+
+            allMarkets[market.id] = sortedOutcomeMarket
             similarMarketsOrdered.append(similarMarketKey)
 
             if var similarMarketsList = similarMarkets[similarMarketKey] {
-                similarMarketsList.append(market)
+                similarMarketsList.append(sortedOutcomeMarket)
                 similarMarkets[similarMarketKey] = similarMarketsList
             }
             else {
-                similarMarkets[similarMarketKey] = [market]
+                similarMarkets[similarMarketKey] = [sortedOutcomeMarket]
             }
 
-            similarMarketsNames[similarMarketKey] = market.name ?? ""
+            similarMarketsNames[similarMarketKey] = sortedOutcomeMarket.name ?? ""
         }
 
         //
@@ -172,23 +215,28 @@ class MarketGroupDetailsStore {
                 var outcomesDictionary: [String: [Outcome]] = [:]
 
                 for outcomeIt in allOutcomes {
-                    let outcomeTypeName = outcomeIt.codeName.components(separatedBy: CharacterSet.decimalDigits).joined()
-                    if var outcomesList = outcomesDictionary[outcomeTypeName] {
-                        outcomesList.append(outcomeIt)
-                        outcomesDictionary[outcomeTypeName] = outcomesList
+
+                    if outcomeIt.codeName.rangeOfCharacter(from: decimalCharacters) != nil {
+                        let outcomeTypeName = outcomeIt.codeName.trimmingCharacters(in: CharacterSet(charactersIn: "0123456789. "))
+
+                        if var outcomesList = outcomesDictionary[outcomeTypeName] {
+                            outcomesList.append(outcomeIt)
+                            outcomesDictionary[outcomeTypeName] = outcomesList
+                        }
+                        else {
+                            outcomesDictionary[outcomeTypeName] = [outcomeIt]
+                        }
                     }
                     else {
-                        outcomesDictionary[outcomeTypeName] = [outcomeIt]
+                        let outcomeTypeName = outcomeIt.headerCodeName
+                        if var outcomesList = outcomesDictionary[outcomeTypeName] {
+                            outcomesList.append(outcomeIt)
+                            outcomesDictionary[outcomeTypeName] = outcomesList
+                        }
+                        else {
+                            outcomesDictionary[outcomeTypeName] = [outcomeIt]
+                        }
                     }
-
-//                    let outcomeTypeName = outcomeIt.headerCodeName
-//                    if var outcomesList = outcomesDictionary[outcomeTypeName] {
-//                        outcomesList.append(outcomeIt)
-//                        outcomesDictionary[outcomeTypeName] = outcomesList
-//                    }
-//                    else {
-//                        outcomesDictionary[outcomeTypeName] = [outcomeIt]
-//                    }
                 }
 
                 //

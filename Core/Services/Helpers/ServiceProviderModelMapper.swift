@@ -64,7 +64,8 @@ struct ServiceProviderModelMapper {
                       eventPartId: nil,
                       bettingTypeId: market.eventMarketTypeId,
                       outcomes: Self.outcomes(fromServiceProviderOutcomes: market.outcomes),
-                      marketTypeId: market.marketTypeId)
+                      marketTypeId: market.marketTypeId,
+                      eventName: market.eventName)
     }
     
     // Outcome
@@ -85,7 +86,8 @@ struct ServiceProviderModelMapper {
                               typeName: outcome.name,
                               translatedName: outcome.name,
                               marketId: outcome.marketId,
-                              bettingOffer: bettingOffer)
+                              bettingOffer: bettingOffer,
+                              orderValue: outcome.orderValue)
         return outcome
     }
 

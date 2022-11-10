@@ -23,4 +23,10 @@ protocol EventsProvider {
 
     // REST API
     func getMarketsFilter() -> AnyPublisher<MarketFilter, ServiceProviderError>?
+
+    func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>?
+
+    func getFieldWidgetURLRequest(urlString: String?, widgetFile: String?) -> URLRequest?
+
+    func getFieldWidgetHtml(widgetFile: String, eventId: String, providerId: String?) -> String?
 }

@@ -466,4 +466,48 @@ extension SportRadarEventsProvider {
         return requestPublisher
 
     }
+
+    func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>? {
+
+        let endpoint = SportRadarRestAPIClient.fieldWidgetId(eventId: eventId)
+        let requestPublisher: AnyPublisher<FieldWidget, ServiceProviderError> = self.networkManager.request(endpoint)
+
+        return requestPublisher
+
+    }
+
+    func getFieldWidgetURLRequest(urlString: String?, widgetFile: String?) -> URLRequest? {
+
+        if let urlString = urlString {
+            if let url = URL(string: urlString) {
+                let request = URLRequest(url: url)
+                return request
+            }
+        }
+
+        if let widgetFile = widgetFile {
+            let fileStringSplit = widgetFile.components(separatedBy: ".")
+            if let url = Bundle.main.url(forResource: fileStringSplit[0], withExtension: fileStringSplit[1]) {
+
+                let request = URLRequest(url: url)
+                return request
+            }
+        }
+
+        return nil
+    }
+
+    func getFieldWidgetHtml(widgetFile: String, eventId: String, providerId: String?) -> String? {
+
+        let fileStringSplit = widgetFile.components(separatedBy: ".")
+
+        let filePath = Bundle.main.path(forResource: fileStringSplit[0], ofType: fileStringSplit[1])
+        let contentData = FileManager.default.contents(atPath: filePath!)
+        let emailTemplate = NSString(data: contentData!, encoding: String.Encoding.utf8.rawValue) as? String
+        if let replacedHtmlContent = emailTemplate?.replacingOccurrences(of: "@eventId", with: eventId) {
+            return replacedHtmlContent
+        }
+
+        return nil
+    }
 }

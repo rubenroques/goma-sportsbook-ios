@@ -76,10 +76,11 @@ struct Market {
     var outcomes: [Outcome]
 
     var marketTypeId: String?
+    var eventName: String?
 
     init( id: String, typeId: String, name: String,
           nameDigit1: Double?, nameDigit2: Double?, nameDigit3: Double?,
-          eventPartId: String?, bettingTypeId: String?, outcomes: [Outcome], marketTypeId: String? = nil) {
+          eventPartId: String?, bettingTypeId: String?, outcomes: [Outcome], marketTypeId: String? = nil, eventName: String? = nil) {
         self.id = id
         self.typeId = typeId
         self.name = name
@@ -90,6 +91,7 @@ struct Market {
         self.bettingTypeId = bettingTypeId
         self.outcomes = outcomes
         self.marketTypeId = marketTypeId
+        self.eventName = eventName
     }
 }
 
@@ -106,6 +108,7 @@ struct Outcome {
     var marketId: String?
     var marketDigit1: Double?
     var bettingOffer: BettingOffer
+    var orderValue: String?
 }
 
 extension Outcome {
@@ -119,8 +122,12 @@ extension Outcome {
                 return "\(paramBoolean1)"
             }
             else if self.marketId != nil {
-                
-                return self.codeName.components(separatedBy: CharacterSet.decimalDigits).joined()
+                let decimalCharacters = CharacterSet.decimalDigits
+
+                if self.codeName.rangeOfCharacter(from: decimalCharacters) != nil {
+                    return self.codeName.trimmingCharacters(in: CharacterSet(charactersIn: "0123456789. "))
+                }
+                return self.codeName
             }
         }
 

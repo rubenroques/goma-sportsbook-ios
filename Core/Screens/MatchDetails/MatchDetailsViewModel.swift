@@ -32,6 +32,8 @@ class MatchDetailsViewModel: NSObject {
 
     var matchStatsUpdatedPublisher = PassthroughSubject<Void, Never>.init()
 
+    var fieldWidgetIdPublisher: CurrentValueSubject<String, Never> = .init("")
+
     var match: Match? {
         switch matchPublisher.value {
         case .loaded(let match):
@@ -123,6 +125,9 @@ class MatchDetailsViewModel: NSObject {
                             self.fetchMarketGroupsPublisher()
                         }
                     }
+                    else {
+                        self.isLoadingMarketGroups.send(false)
+                    }
 
                 case .disconnected:
                     print("Disconnected from ws")
@@ -194,6 +199,8 @@ class MatchDetailsViewModel: NSObject {
 //            self.getMatchDetails()
 //        }
 //        else {
+//        }
+
         self.serviceProviderStore.eventMarketsPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] eventsMarket in
@@ -203,8 +210,31 @@ class MatchDetailsViewModel: NSObject {
                 }
             })
             .store(in: &cancellables)
-//        }
 
+        self.getFieldWidgetId(eventId: matchId)
+
+    }
+
+    func getFieldWidgetId(eventId: String) {
+        Env.serviceProvider.getFieldWidgetId(eventId: eventId)?
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+
+                case .finished:
+                    print("FIELD WIDGET ID FINISHED")
+                case .failure(let error):
+                    print("FIELD WIDGET ID ERROR: \(error)")
+
+                }
+            }, receiveValue: { [weak self] fieldWidgetResponse in
+                print("FIELD WIDGET ID RESPONSE: \(fieldWidgetResponse)")
+
+                if let fieldWidgetId = fieldWidgetResponse.data {
+                    self?.fieldWidgetIdPublisher.send(fieldWidgetId)
+                }
+            })
+            .store(in: &cancellables)
     }
 
     func fetchMatchData() {

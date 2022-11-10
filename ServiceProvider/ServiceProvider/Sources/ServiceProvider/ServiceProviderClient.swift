@@ -122,6 +122,18 @@ extension ServiceProviderClient {
     public func getMarketFilters() -> AnyPublisher<MarketFilter, ServiceProviderError>? {
         return self.eventsProvider?.getMarketsFilter()
     }
+
+    public func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>? {
+        return self.eventsProvider?.getFieldWidgetId(eventId: eventId)
+    }
+
+    public func getFieldWidgetURLRequest(urlString: String? = nil, widgetFile: String? = nil) -> URLRequest? {
+        return self.eventsProvider?.getFieldWidgetURLRequest(urlString: urlString, widgetFile: widgetFile)
+    }
+
+    public func getFieldWidgetHtml(widgetFile: String, eventId: String, providerId: String? = nil) -> String? {
+        return self.eventsProvider?.getFieldWidgetHtml(widgetFile: widgetFile, eventId: eventId, providerId: providerId)
+    }
 }
 
 
