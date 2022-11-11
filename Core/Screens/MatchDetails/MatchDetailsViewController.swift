@@ -659,6 +659,7 @@ class MatchDetailsViewController: UIViewController {
         for marketGroup in marketGroups {
             if let groupKey = marketGroup.groupKey {
                 let viewModel = MarketGroupDetailsViewModel(match: match, marketGroupId: groupKey)
+                viewModel.availableMarkets = self.viewModel.serviceProviderStore.getAvailableMarketsForGroupKey(groupKey: groupKey)
                 let marketGroupDetailsViewController = MarketGroupDetailsViewController(viewModel: viewModel)
                 print("MatchDetailsMarkets - marketGroupDetailsViewController: \(groupKey)")
                 self.marketGroupsViewControllers.append(marketGroupDetailsViewController)

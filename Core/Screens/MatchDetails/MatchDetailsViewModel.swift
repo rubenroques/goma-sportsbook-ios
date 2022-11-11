@@ -332,7 +332,11 @@ class MatchDetailsViewModel: NSObject {
                         isDefault: rawMarketGroup.isDefault)
         }
 
-        self.marketGroupsPublisher.send(marketGroups)
+        let sortedMarketGroups = marketGroups.sorted(by: {
+            $0.id < $1.id
+        })
+
+        self.marketGroupsPublisher.send(sortedMarketGroups)
 
         self.isLoadingMarketGroups.send(false)
 

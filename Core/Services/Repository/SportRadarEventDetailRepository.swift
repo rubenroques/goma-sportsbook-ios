@@ -146,11 +146,13 @@ class SportRadarEventDetailRepository {
                     if eventMarket.marketIds.contains(marketTypeId) {
 
                         if availableMarkets[eventMarket.name] == nil {
-                            let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id)
+                            let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
+                                market: matchMarket)
                             availableMarkets[eventMarket.name] = [availableMarket]
                         }
                         else {
-                            let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id)
+                            let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
+                                market: matchMarket)
                             availableMarkets[eventMarket.name]?.append(availableMarket)
                         }
 
@@ -165,11 +167,13 @@ class SportRadarEventDetailRepository {
 
                 if let eventMarket = allEventMarket[safe: 0] {
                     if availableMarkets[eventMarket.name] == nil {
-                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id)
+                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
+                            market: matchMarket)
                         availableMarkets[eventMarket.name] = [availableMarket]
                     }
                     else {
-                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id)
+                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
+                            market: matchMarket)
                         availableMarkets[eventMarket.name]?.append(availableMarket)
                     }
                 }
@@ -182,11 +186,13 @@ class SportRadarEventDetailRepository {
 
                 if let eventMarket = allEventMarket[safe: 0] {
                     if availableMarkets[eventMarket.name] == nil {
-                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id)
+                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
+                            market: matchMarket)
                         availableMarkets[eventMarket.name] = [availableMarket]
                     }
                     else {
-                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id)
+                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
+                            market: matchMarket)
                         availableMarkets[eventMarket.name]?.append(availableMarket)
                     }
                 }
@@ -194,25 +200,51 @@ class SportRadarEventDetailRepository {
             }
         }
 
+        self.availableMarketGroups = availableMarkets
+
         for availableMarket in availableMarkets {
             let marketGroup = EveryMatrix.MarketGroup(type: availableMarket.key,
                                                       id: availableMarket.value.first?.marketGroupId ?? "0",
                                                       groupKey: "\(availableMarket.value.first?.marketGroupId ?? "0")",
                                                       translatedName: availableMarket.key.capitalized,
                                                       position: Int(availableMarket.value.first?.marketGroupId ?? "0") ?? 0,
-                                                      isDefault: availableMarket.key == "all" ? true : false,
+                                                      isDefault: availableMarket.key == "All Markets" ? true : false,
                                                       numberOfMarkets: availableMarket.value.count)
 
             self.marketGroups[availableMarket.key] = marketGroup
         }
 
         let marketGroupsArray = Array(marketGroups.values)
-        self.marketGroupsPublisher.send(marketGroupsArray)
+
+        let sortedMarketGroupsArray = marketGroupsArray.sorted(by: {
+            $0.id < $1.id
+        })
+
+        self.marketGroupsPublisher.send(sortedMarketGroupsArray)
 
     }
 
     func marketGroupsArray() -> [EveryMatrix.MarketGroup] {
         return Array(marketGroups.values)
+    }
+
+    func getAvailableMarketsForGroupKey(groupKey: String) -> [Market] {
+        var markets: [Market] = []
+
+        let filterAvailableMarkets = self.availableMarketGroups.filter({
+            $0.value.contains(where: {
+                $0.marketGroupId == groupKey
+            })
+        })
+
+        if let availableMarket = filterAvailableMarkets.first?.value {
+
+            for market in availableMarket {
+                markets.append(market.market)
+            }
+        }
+
+        return markets
     }
 }
 

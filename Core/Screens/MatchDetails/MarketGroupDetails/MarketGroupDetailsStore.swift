@@ -39,6 +39,23 @@ class MarketGroupDetailsStore {
             }
         }
     }
+
+    func storeMarketGroupDetailsFromMarkets(markets: [Market], onMarketGroup marketGroupKey: String) {
+
+        for market in markets {
+            // marketsPublishers[market.id] = CurrentValueSubject<EveryMatrix.Market, Never>.init(market)
+
+            if var marketsForIterationMatch = marketsForGroup[marketGroupKey] {
+                marketsForIterationMatch.append(market.id)
+                marketsForGroup[marketGroupKey] = marketsForIterationMatch
+            }
+            else {
+                var newSet = OrderedSet<String>.init()
+                newSet.append(market.id)
+                marketsForGroup[marketGroupKey] = newSet
+            }
+        }
+    }
     
     func storeMarketGroupDetails(fromAggregator aggregator: EveryMatrix.Aggregator, onMarketGroup marketGroupKey: String) {
 
@@ -129,7 +146,7 @@ class MarketGroupDetailsStore {
         }
     }
 
-    func marketGroupOrganizersFromFilters(withGroupKey key: String, match: Match) -> [MarketGroupOrganizer] {
+    func marketGroupOrganizersFromFilters(withGroupKey key: String, match: Match, markets: [Market]) -> [MarketGroupOrganizer] {
         var allMarkets: [String: Market] = [:]
 
         var similarMarkets: [String: [Market]] = [:]
@@ -138,7 +155,7 @@ class MarketGroupDetailsStore {
 
         let decimalCharacters = CharacterSet.decimalDigits
 
-        for market in match.markets {
+        for market in markets {
 
             let similarMarketKey = "\(market.name ?? "000")-\(match.homeParticipant.name ?? "x")-\(match.awayParticipant.name ?? "x")"
 

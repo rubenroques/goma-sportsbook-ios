@@ -165,11 +165,13 @@ class MatchDetailsAggregatorRepository: NSObject {
                     if eventMarket.marketIds.contains(marketTypeId) {
 
                         if availableMarkets[eventMarket.name] == nil {
-                            let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id)
+                            let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
+                                market: matchMarket)
                             availableMarkets[eventMarket.name] = [availableMarket]
                         }
                         else {
-                            let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id)
+                            let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
+                                market: matchMarket)
                             availableMarkets[eventMarket.name]?.append(availableMarket)
                         }
 
@@ -184,11 +186,13 @@ class MatchDetailsAggregatorRepository: NSObject {
 
                 if let eventMarket = allEventMarket[safe: 0] {
                     if availableMarkets[eventMarket.name] == nil {
-                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id)
+                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
+                            market: matchMarket)
                         availableMarkets[eventMarket.name] = [availableMarket]
                     }
                     else {
-                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id)
+                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
+                            market: matchMarket)
                         availableMarkets[eventMarket.name]?.append(availableMarket)
                     }
                 }
@@ -201,11 +205,13 @@ class MatchDetailsAggregatorRepository: NSObject {
 
                 if let eventMarket = allEventMarket[safe: 0] {
                     if availableMarkets[eventMarket.name] == nil {
-                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id)
+                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
+                            market: matchMarket)
                         availableMarkets[eventMarket.name] = [availableMarket]
                     }
                     else {
-                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id)
+                        let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
+                            market: matchMarket)
                         availableMarkets[eventMarket.name]?.append(availableMarket)
                     }
                 }
@@ -602,4 +608,5 @@ class MatchDetailsAggregatorRepository: NSObject {
 struct AvailableMarket {
     var marketId: String
     var marketGroupId: String
+    var market: Market
 }

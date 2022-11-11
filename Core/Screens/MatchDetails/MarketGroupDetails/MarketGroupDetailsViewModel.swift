@@ -25,6 +25,8 @@ class MarketGroupDetailsViewModel {
     private var marketGroupsDetailsRegister: EndpointPublisherIdentifiable?
     private var store: MarketGroupDetailsStore
 
+    var availableMarkets: [Market] = []
+
     private var cancellables: Set<AnyCancellable> = []
 
     init(match: Match, marketGroupId: String, store: MarketGroupDetailsStore = MarketGroupDetailsStore()) {
@@ -88,14 +90,14 @@ class MarketGroupDetailsViewModel {
 
         // TEMP
 
-        self.storeMarketGroupDetailsFromMatch(match: self.match)
+        self.storeMarketGroupDetailsFromMarkets(markets: self.availableMarkets)
         //self.isLoadingPublisher.send(false)
     }
 
-    func storeMarketGroupDetailsFromMatch(match: Match) {
-        self.store.storeMarketGroupDetailsFromMatch(match: match, onMarketGroup: "MarketKey")
+    func storeMarketGroupDetailsFromMarkets(markets: [Market]) {
+        self.store.storeMarketGroupDetailsFromMarkets(markets: markets, onMarketGroup: "MarketKey")
 
-        let marketGroupOrganizers = self.store.marketGroupOrganizersFromFilters(withGroupKey: "MarketKey", match: match)
+        let marketGroupOrganizers = self.store.marketGroupOrganizersFromFilters(withGroupKey: "MarketKey", match: match, markets: markets)
 
         self.marketGroupOrganizersPublisher.send(marketGroupOrganizers)
         self.isLoadingPublisher.send(false)

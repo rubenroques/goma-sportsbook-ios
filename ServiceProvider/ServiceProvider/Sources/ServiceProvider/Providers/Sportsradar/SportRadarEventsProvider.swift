@@ -360,7 +360,7 @@ class SportRadarEventsProvider: EventsProvider {
             initialDateDefault = initialDate
         }
 
-        var endDateDefault = Calendar.current.date(byAdding: .day, value: 6, to: initialDateDefault) ?? Date()
+        var endDateDefault = Calendar.current.date(byAdding: .day, value: 7, to: initialDateDefault) ?? Date()
         if let endDate = endDate {
             endDateDefault = endDate
         }
