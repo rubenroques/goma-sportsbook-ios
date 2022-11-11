@@ -20,6 +20,7 @@ class TipsTableViewCell: UITableViewCell {
     private lazy var userImageView: UIImageView = Self.createUserImageView()
     private lazy var usernameLabel: UILabel = Self.createUsernameLabel()
     private lazy var followButton: UIButton = Self.createFollowButton()
+    private lazy var unfollowButton: UIButton = Self.createUnfollowButton()
     private lazy var tipsStackView: UIStackView = Self.createTipsStackView()
     private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
     private lazy var totalOddsLabel: UILabel = Self.createTotalOddsLabel()
@@ -38,6 +39,7 @@ class TipsTableViewCell: UITableViewCell {
     var hasFollow: Bool = false {
         didSet {
             self.followButton.isHidden = !hasFollow
+            self.unfollowButton.isHidden = hasFollow
         }
     }
 
@@ -58,6 +60,9 @@ class TipsTableViewCell: UITableViewCell {
         self.hasFollow = false
 
         self.followButton.addTarget(self, action: #selector(didTapFollowButton), for: .primaryActionTriggered)
+
+        self.unfollowButton.addTarget(self, action: #selector(didTapUnfollowButton), for: .primaryActionTriggered)
+
 
         self.betButton.addTarget(self, action: #selector(didTapBetButton), for: .primaryActionTriggered)
 
@@ -125,6 +130,9 @@ class TipsTableViewCell: UITableViewCell {
 
         self.followButton.backgroundColor = .clear
         self.followButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
+
+        self.unfollowButton.backgroundColor = .clear
+        self.unfollowButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
 
         self.tipsStackView.backgroundColor = .clear
 
@@ -215,6 +223,14 @@ class TipsTableViewCell: UITableViewCell {
         }
     }
 
+    @objc func didTapUnfollowButton() {
+        if let viewModel = self.viewModel,
+           let userId = viewModel.getUserId() {
+
+            viewModel.unfollowUser(userId: userId)
+        }
+    }
+
     @objc func didTapBetButton() {
         // EM TEMP SHUTDOWN
 //        if let viewModel = self.viewModel {
@@ -294,7 +310,7 @@ extension TipsTableViewCell {
     private static func createUsernameLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Username"
+        label.text = localized("username")
         label.font = AppFont.with(type: .semibold, size: 15)
         return label
     }
@@ -303,6 +319,14 @@ extension TipsTableViewCell {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(localized("follow"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .semibold, size: 12)
+        return button
+    }
+
+    private static func createUnfollowButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(localized("unfollow"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .semibold, size: 12)
         return button
     }
@@ -379,6 +403,8 @@ extension TipsTableViewCell {
 
         self.containerView.addSubview(self.followButton)
 
+        self.containerView.addSubview(self.unfollowButton)
+
         self.containerView.addSubview(self.tipsStackView)
 
         self.containerView.addSubview(self.separatorLineView)
@@ -433,7 +459,11 @@ extension TipsTableViewCell {
 
             self.followButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -10),
             self.followButton.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 5),
-            self.followButton.heightAnchor.constraint(equalToConstant: 40)
+            self.followButton.heightAnchor.constraint(equalToConstant: 40),
+
+            self.unfollowButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -10),
+            self.unfollowButton.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 5),
+            self.unfollowButton.heightAnchor.constraint(equalToConstant: 40)
         ])
 
         // Tips stackview

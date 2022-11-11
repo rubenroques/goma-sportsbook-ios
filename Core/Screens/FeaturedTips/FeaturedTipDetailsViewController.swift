@@ -339,7 +339,7 @@ extension FeaturedTipDetailsViewController {
     private static func createUsernameLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Username"
+        label.text = localized("username")
         label.font = AppFont.with(type: .semibold, size: 15)
         return label
     }

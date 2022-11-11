@@ -92,10 +92,10 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         self.suspendedBettingOfferView.isHidden = true
         self.bettingTicket = nil
 
-        self.outcomeNameLabel.text = ""
-        self.oddValueLabel.text = ""
-        self.marketNameLabel.text = ""
-        self.matchDetailLabel.text = ""
+        self.outcomeNameLabel.text = localized("empty_value")
+        self.oddValueLabel.text = localized("empty_value")
+        self.marketNameLabel.text = localized("empty_value")
+        self.matchDetailLabel.text = localized("empty_value")
     }
 
     func setupWithTheme() {

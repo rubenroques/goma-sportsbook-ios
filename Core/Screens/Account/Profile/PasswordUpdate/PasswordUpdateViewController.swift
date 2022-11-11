@@ -66,7 +66,7 @@ class PasswordUpdateViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
-        if TargetVariables.serviceProviderType == .sportradar {
+        if !Env.serviceProvider.hasSecurityQuestions() {
             self.hideSecurityQuestionLayout()
         }
 
@@ -107,7 +107,7 @@ class PasswordUpdateViewController: UIViewController {
 
         self.securityAnswerHeaderTextFieldView.setPlaceholderText(localized("security_answer"))
 
-        self.passwordPolicyLabel.text = ""
+        self.passwordPolicyLabel.text = localized("empty_value")
         self.passwordPolicyLabel.font = AppFont.with(type: .semibold, size: 12)
         self.passwordPolicyLabel.numberOfLines = 0
 

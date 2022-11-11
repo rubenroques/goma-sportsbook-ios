@@ -185,8 +185,19 @@ class AddFriendViewController: UIViewController {
         Env.gomaSocialClient.allDataSubscribed
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
+                guard let self = self else {return}
 
-                self?.navigationController?.popViewController(animated: true)
+                if self.viewModel.chatroomsResponse.count > 1 {
+                    self.navigationController?.popViewController(animated: true)
+
+                }
+                else {
+                    if let chatroomId = self.viewModel.chatroomsResponse[safe: 0] {
+
+                        self.showChatroom(chatroomId: chatroomId)
+
+                    }
+                }
 
             })
             .store(in: &cancellables)
@@ -243,15 +254,28 @@ class AddFriendViewController: UIViewController {
 
     }
 
-    private func showChatroom(friendId: Int) {
+    private func showChatroom(friendId: Int? = nil, chatroomId: Int? = nil) {
 
-        let conversationData = self.viewModel.getConversationData(userId: "\(friendId)")
+        if let friendId = friendId {
+            let conversationData = self.viewModel.getConversationData(userId: "\(friendId)")
 
-        let conversationDetailViewModel = ConversationDetailViewModel(conversationData: conversationData)
+            let conversationDetailViewModel = ConversationDetailViewModel(conversationData: conversationData)
 
-        let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
+            let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
 
-        self.navigationController?.pushViewController(conversationDetailViewController, animated: true)
+            self.navigationController?.pushViewController(conversationDetailViewController, animated: true)
+        }
+
+        if let chatroomId = chatroomId {
+            let chatId = chatroomId
+
+            let conversationDetailViewModel = ConversationDetailViewModel(chatId: chatId)
+
+            let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
+
+            self.navigationController?.pushViewController(conversationDetailViewController, animated: true)
+        }
+
     }
 
     // MARK: Actions

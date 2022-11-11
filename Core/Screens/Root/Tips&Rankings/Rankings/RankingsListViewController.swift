@@ -30,6 +30,8 @@ class RankingsListViewController: UIViewController {
     private lazy var pickerBaseView: UIView = Self.createPickerBaseView()
     private lazy var pickerDoneButton: UIButton = Self.createPickerDoneButton()
     private lazy var pickerView: UIPickerView = Self.createPickerView()
+
+    private let refreshControl = UIRefreshControl()
     
     private var cancellables: Set<AnyCancellable> = []
     private let viewModel: RankingsListViewModel
@@ -86,6 +88,8 @@ class RankingsListViewController: UIViewController {
         
         self.tableView.delegate = self
         self.tableView.dataSource = self
+
+        self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
         
         self.tableView.isHidden = false
         self.emptyStateBaseView.isHidden = true
@@ -140,6 +144,9 @@ class RankingsListViewController: UIViewController {
         self.emptyFriendsSubtitleLabel.textColor = UIColor.App.textPrimary
 
         StyleHelper.styleButton(button: self.emptyFriendsButton)
+
+        self.refreshControl.tintColor = UIColor.lightGray
+
     }
 
     func configure(withViewModel viewModel: RankingsListViewModel) {
@@ -163,6 +170,9 @@ class RankingsListViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLoading in
                 self?.isLoading = isLoading
+                if !isLoading {
+                    self?.refreshControl.endRefreshing()
+                }
             })
             .store(in: &cancellables)
 
@@ -176,6 +186,16 @@ class RankingsListViewController: UIViewController {
             .store(in: &cancellables)
     }
 
+    // MARK: Functions
+    private func showUserProfile(userBasicInfo: UserBasicInfo) {
+
+        let userProfileViewModel = UserProfileViewModel(userBasicInfo: userBasicInfo)
+
+        let userProfileViewController = UserProfileViewController(viewModel: userProfileViewModel)
+
+        self.navigationController?.pushViewController(userProfileViewController, animated: true)
+    }
+
     // MARK: Actions
     @objc private func didTapAddFriendButton() {
         let addFriendViewModel = AddFriendViewModel()
@@ -184,6 +204,10 @@ class RankingsListViewController: UIViewController {
 
         self.navigationController?.pushViewController(addFriendViewController, animated: true)
 
+    }
+
+    @objc func refreshControllPulled() {
+        self.viewModel.loadInitialRankings()
     }
     
 }
@@ -210,6 +234,10 @@ extension RankingsListViewController: UITableViewDelegate, UITableViewDataSource
         }
 
         cell.configure(viewModel: cellViewModel)
+
+        cell.shouldShowUserProfile = { [weak self] userBasicInfo in
+            self?.showUserProfile(userBasicInfo: userBasicInfo)
+        }
         
         return cell
     }
@@ -337,7 +365,7 @@ extension RankingsListViewController {
         label.font = AppFont.with(type: .bold, size: 22)
         label.numberOfLines = 4
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "There’s no rankings here!"
+        label.text = localized("no_rankings")
         return label
     }
 
@@ -347,7 +375,7 @@ extension RankingsListViewController {
         label.font = AppFont.with(type: .bold, size: 16)
         label.numberOfLines = 4
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "There are no rankings currently to be displayed."
+        label.text = localized("no_rankings_to_display")
         return label
     }
 
@@ -452,7 +480,9 @@ extension RankingsListViewController {
         
         // self.pickerBaseView.addSubview(self.pickerView)
         // self.pickerBaseView.addSubview(self.pickerDoneButton)
-        
+
+        self.tableView.addSubview(self.refreshControl)
+
         self.initConstraints()
     }
 

@@ -50,9 +50,9 @@ class ActivationAlertCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        titleLabel.text = ""
-        descriptionLabel.text = ""
-        linkLabel.text = ""
+        titleLabel.text = localized("empty_value")
+        descriptionLabel.text = localized("empty_value")
+        linkLabel.text = localized("empty_value")
     }
 
     func setupWithTheme() {

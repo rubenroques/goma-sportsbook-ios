@@ -27,8 +27,8 @@ class MatchStatsCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        self.homeNameCaptionLabel.text = ""
-        self.awayNameCaptionLabel.text = ""
+        self.homeNameCaptionLabel.text = localized("empty_value")
+        self.awayNameCaptionLabel.text = localized("empty_value")
 
         self.setupWithTheme()
     }
@@ -45,8 +45,8 @@ class MatchStatsCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        self.homeNameCaptionLabel.text = ""
-        self.awayNameCaptionLabel.text = ""
+        self.homeNameCaptionLabel.text = localized("empty_value")
+        self.awayNameCaptionLabel.text = localized("empty_value")
 
         self.setupWithTheme()
     }

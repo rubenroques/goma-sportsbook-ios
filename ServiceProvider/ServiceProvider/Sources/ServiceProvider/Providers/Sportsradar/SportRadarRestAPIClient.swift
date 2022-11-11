@@ -16,6 +16,7 @@ enum SportRadarRestAPIClient {
 }
 
 extension SportRadarRestAPIClient: Endpoint {
+
     var endpoint: String {
         switch self {
         case .marketsFilter:
@@ -95,6 +96,10 @@ extension SportRadarRestAPIClient: Endpoint {
 
     var timeout: TimeInterval {
         return TimeInterval(20)
+    }
+
+    var requireSessionKey: Bool {
+        return false
     }
 
 }

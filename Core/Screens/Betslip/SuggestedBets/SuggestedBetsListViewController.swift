@@ -64,7 +64,7 @@ class SuggestedBetsListViewModel {
         return self.suggestedBetsSummaries.count
     }
 
-    func viewModeForRow(_ row: Int) -> SuggestedBetViewModel {
+    func viewModelForRow(_ row: Int) -> SuggestedBetViewModel {
         if let cachedViewModel = self.cachedSuggestedBetViewModels[row].value {
             return cachedViewModel
         }
@@ -177,7 +177,7 @@ class SuggestedBetsListViewController: UIViewController {
         self.viewModel.refreshSuggestedBets()
     }
 
-    private func reloadTableView() {
+    func reloadTableView() {
         self.tableView.reloadData()
     }
 
@@ -205,7 +205,7 @@ extension SuggestedBetsListViewController: UITableViewDelegate, UITableViewDataS
         else {
             fatalError()
         }
-        cell.setupWithViewModel(viewModel: self.viewModel.viewModeForRow(indexPath.row))
+        cell.setupWithViewModel(viewModel: self.viewModel.viewModelForRow(indexPath.row))
         return cell
     }
 
@@ -231,7 +231,7 @@ extension SuggestedBetsListViewController {
         titleLabel.font = AppFont.with(type: .bold, size: 14)
         titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 2
-        titleLabel.text = "You don’t have any selections yet."
+        titleLabel.text = localized("not_bets_tickets_section_yet")
         return titleLabel
     }
 
@@ -241,7 +241,7 @@ extension SuggestedBetsListViewController {
         subtitleLabel.font = AppFont.with(type: .bold, size: 20)
         subtitleLabel.textAlignment = .center
         subtitleLabel.numberOfLines = 2
-        subtitleLabel.text = "Here are your Suggested Bets!"
+        subtitleLabel.text = localized("suggested_bets")
         return subtitleLabel
     }
 

@@ -37,7 +37,7 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         var label  = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 12)
-        label.text = ""
+        label.text = localized("empty_value")
         return label
     }()
 

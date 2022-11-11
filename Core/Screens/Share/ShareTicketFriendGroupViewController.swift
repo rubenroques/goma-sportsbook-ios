@@ -329,7 +329,7 @@ extension ShareTicketFriendGroupViewController: UISearchBarDelegate {
     }
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        self.searchBar.text = ""
+        self.searchBar.text = localized("empty_value")
         self.searchUsers()
     }
 }

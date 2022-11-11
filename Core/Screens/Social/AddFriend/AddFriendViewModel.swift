@@ -30,6 +30,7 @@ class AddFriendViewModel {
     var friendCodeInvalidPublisher: PassthroughSubject<Void, Never> = .init()
     var shouldShowAlert: CurrentValueSubject<Bool, Never> = .init(false)
     var friendAlertType: FriendAlertType?
+    var chatroomsResponse: [Int] = []
 
     init() {
         self.canAddFriendPublisher.send(false)
@@ -221,6 +222,10 @@ class AddFriendViewModel {
                 self?.shouldShowAlert.send(true)
             }, receiveValue: { [weak self] response in
                 print("ADD FRIEND GOMA: \(response)")
+
+                if let chatroomIdsData = response.data?.chatroomIds {
+                    self?.chatroomsResponse = chatroomIdsData
+                }
                 self?.friendAlertType = .success
             })
             .store(in: &cancellables)

@@ -137,7 +137,7 @@ extension FeaturedTipView {
     private static func createTournamentLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Tournament"
+        label.text = localized("tournament")
         label.font = AppFont.with(type: .semibold, size: 11)
         return label
     }
@@ -145,7 +145,7 @@ extension FeaturedTipView {
     private static func createOutcomeLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Outcome"
+        label.text = localized("outcome")
         label.font = AppFont.with(type: .bold, size: 14)
         return label
     }

@@ -266,7 +266,7 @@ extension PreviewChatTableViewCell {
         let nameLabel = UILabel()
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.font = AppFont.with(type: .bold, size: 16)
-        nameLabel.text = "Username"
+        nameLabel.text = localized("username")
         nameLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return nameLabel
     }

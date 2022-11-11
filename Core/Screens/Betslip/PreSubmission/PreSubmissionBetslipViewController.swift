@@ -270,26 +270,29 @@ class PreSubmissionBetslipViewController: UIViewController {
         
         self.secondaryPlaceBetButtonsSeparatorView.alpha = 0.5
 
-        self.simpleWinningsValueLabel.text = "-.--€"
+        self.simpleWinningsValueLabel.text = localized("no_value")
         self.simpleOddsTitleLabel.text = localized("bets") + ":"
         self.simpleOddsValueLabel.text = "1"
+        
+        self.multipleOddsTitleLabel.text = localized("total_odd")
+        self.secondaryMultipleOddsTitleLabel.text = localized("total_odd")
         
         self.simpleOddsValueLabel.isHidden = false
         self.simpleOddsTitleLabel.isHidden = false
 
-        self.multipleWinningsValueLabel.text = "-.--€"
+        self.multipleWinningsValueLabel.text = localized("no_value")
         self.multipleOddsValueLabel.text = "-.--"
 
-        self.secondaryMultipleWinningsValueLabel.text = "-.--€"
+        self.secondaryMultipleWinningsValueLabel.text = localized("no_value")
         self.secondaryMultipleOddsValueLabel.text = "-.--"
         
-        self.systemWinningsValueLabel.text = "-.--€"
+        self.systemWinningsValueLabel.text = localized("no_value")
         self.systemOddsTitleLabel.text = localized("total_bet_amount")
-        self.systemOddsValueLabel.text = "-.--€"
+        self.systemOddsValueLabel.text = localized("no_value")
         
-        self.secondarySystemWinningsValueLabel.text = "-.--€"
+        self.secondarySystemWinningsValueLabel.text = localized("no_value")
         self.secondarySystemOddsTitleLabel.text = localized("total_bet_amount")
-        self.secondarySystemOddsValueLabel.text = "-.--€"
+        self.secondarySystemOddsValueLabel.text = localized("no_value")
         
         self.tableView.separatorStyle = .none
         self.tableView.allowsSelection = false
@@ -311,7 +314,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.systemBetTypeLoadingView.hidesWhenStopped = true
         self.systemBetTypeLoadingView.stopAnimating()
 
-        self.systemBetTypeLabel.text = ""
+        self.systemBetTypeLabel.text = localized("empty_value")
 
         let tapSystemBetTypeSelector = UITapGestureRecognizer(target: self, action: #selector(didTapSystemBetTypeSelector))
         self.systemBetInteriorView.addGestureRecognizer(tapSystemBetTypeSelector)
@@ -455,7 +458,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 case .loaded:
                     self?.isLoading = false
                 case .failed:
-                    ()
+                    self?.isLoading = false
                 }
             }
             .store(in: &cancellables)
@@ -480,6 +483,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isUnavailable in
                 self?.suggestedBetsListViewController.isEmptySharedBet = isUnavailable
+                self?.suggestedBetsListViewController.reloadTableView()
             })
             .store(in: &cancellables)
 
@@ -578,10 +582,10 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                     let totalValue = oddMultiplier * betValue
                     // totalValue = Double(floor(totalValue * 100)/100)
-                    return CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalValue)) ?? "-.--€"
+                    return CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalValue)) ?? localized("no_value")
                 }
                 else {
-                    return "-.--€"
+                    return localized("no_value")
                 }
             })
             .sink(receiveValue: { [weak self] possibleEarnings in
@@ -615,11 +619,11 @@ class PreSubmissionBetslipViewController: UIViewController {
                     }
                 }
                 if expectedReturn == 0 {
-                    return "-.--€"
+                    return localized("no_value")
                 }
                 else {
                     // expectedReturn = Double(floor(expectedReturn * 100)/100)
-                    return  CurrencyFormater.defaultFormat.string(from: NSNumber(value: expectedReturn)) ?? "-.--€"
+                    return  CurrencyFormater.defaultFormat.string(from: NSNumber(value: expectedReturn)) ?? localized("no_value")
                 }
             })
             .sink(receiveValue: { [weak self] possibleEarningsString in
@@ -1029,6 +1033,9 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.clearButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         self.settingsButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+        self.settingsButton.setTitle(localized("settings"), for: .normal)
+        
+        self.clearButton.setTitle(localized("clear_all"), for: .normal)
 
         self.secondaryAmountTextfield.font = AppFont.with(type: .semibold, size: 14)
         self.secondaryAmountTextfield.textColor = UIColor.App.textPrimary
@@ -1059,9 +1066,11 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.placeBetButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
         self.placeBetButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        self.placeBetButton.setTitle(localized("place_bet"), for: .normal)
 
         self.placeBetButton.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
         self.placeBetButton.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
+        self.placeBetButton.setTitle(localized("place_bet"), for: .disabled)
 
         self.plusOneButtonView.setBackgroundColor(UIColor.App.backgroundTertiary, for: .normal)
         self.plusOneButtonView.setTitleColor(UIColor.App.textPrimary, for: .normal)
@@ -1097,6 +1106,15 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.simpleWinningsBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.simpleWinningsTitleLabel.textColor = UIColor.App.textSecondary
+        
+        self.simpleWinningsTitleLabel.text = localized("possible_winnings")
+        self.systemWinningsTitleLabel.text = localized("possible_winnings")
+        self.multipleWinningsTitleLabel.text = localized("possible_winnings")
+        self.secondaryMultipleWinningsTitleLabel.text = localized("possible_winnings")
+        self.secondarySystemWinningsTitleLabel.text = localized("possible_winnings")
+        
+        
+        
         self.simpleWinningsValueLabel.textColor = UIColor.App.textPrimary
         self.simpleOddsTitleLabel.textColor = UIColor.App.textSecondary
         self.simpleOddsValueLabel.textColor = UIColor.App.textPrimary
@@ -1279,11 +1297,11 @@ class PreSubmissionBetslipViewController: UIViewController {
             return
         }
         
-        self.systemOddsValueLabel.text = "-.--€"
-        self.systemWinningsValueLabel.text = "-.--€"
+        self.systemOddsValueLabel.text = localized("no_value")
+        self.systemWinningsValueLabel.text = localized("no_value")
         
-        self.secondarySystemOddsValueLabel.text = "-.--€"
-        self.secondarySystemWinningsValueLabel.text = "-.--€"
+        self.secondarySystemOddsValueLabel.text = localized("no_value")
+        self.secondarySystemWinningsValueLabel.text = localized("no_value")
 
         Env.betslipManager
             .requestSystemBetslipSelectionState(systemBetType: selectedSystemBetType)
@@ -1303,27 +1321,27 @@ class PreSubmissionBetslipViewController: UIViewController {
         if let priceValueFactor = systemBetInfo.priceValueFactor, self.realBetValue != 0 {
             let possibleWinnings = priceValueFactor * self.realBetValue
 
-            let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: possibleWinnings)) ?? "-.--€"
+            let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: possibleWinnings)) ?? localized("no_value")
 
             self.systemWinningsValueLabel.text = possibleWinningsString
             self.secondarySystemWinningsValueLabel.text = possibleWinningsString
         }
         else {
-            self.systemWinningsValueLabel.text = "-.--€"
-            self.secondarySystemWinningsValueLabel.text = "-.--€"
+            self.systemWinningsValueLabel.text = localized("no_value")
+            self.secondarySystemWinningsValueLabel.text = localized("no_value")
         }
 
         if let numberOfBets = self.selectedSystemBetType?.numberOfBets, self.realBetValue != 0 {
             let totalBetAmount = Double(numberOfBets) * self.realBetValue
 
-            let totalBetAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalBetAmount)) ?? "-.--€"
+            let totalBetAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalBetAmount)) ?? localized("no_value")
 
             self.systemOddsValueLabel.text = totalBetAmountString
             self.secondarySystemOddsValueLabel.text = totalBetAmountString
         }
         else {
-            self.systemOddsValueLabel.text = "-.--€"
-            self.secondarySystemOddsValueLabel.text = "-.--€"
+            self.systemOddsValueLabel.text = localized("no_value")
+            self.secondarySystemOddsValueLabel.text = localized("no_value")
         }
 
         self.maxStakeSystem = systemBetInfo.maxStake

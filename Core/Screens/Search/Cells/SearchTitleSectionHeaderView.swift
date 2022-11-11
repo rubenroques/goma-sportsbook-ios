@@ -20,8 +20,8 @@ class SearchTitleSectionHeaderView: UITableViewHeaderFooterView {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        self.nameLabel.text = ""
-        self.countLabel.text = ""
+        self.nameLabel.text = localized("empty_value")
+        self.countLabel.text = localized("empty_value")
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

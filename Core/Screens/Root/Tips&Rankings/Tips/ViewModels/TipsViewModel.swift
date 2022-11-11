@@ -42,7 +42,7 @@ class TipsViewModel {
         case 3:
             return localized("following")
         default:
-            return ""
+            return localized("empty_value")
         }
     }
 

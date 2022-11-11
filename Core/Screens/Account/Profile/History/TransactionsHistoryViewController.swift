@@ -274,7 +274,7 @@ extension TransactionsHistoryViewController {
         label.font = AppFont.with(type: .bold, size: 22)
         label.numberOfLines = 4
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "There’s no transations here!"
+        label.text = localized("empty_no_transactions")
         return label
     }
 
@@ -284,7 +284,7 @@ extension TransactionsHistoryViewController {
         label.font = AppFont.with(type: .bold, size: 16)
         label.numberOfLines = 4
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "You haven’t made a transation yet, it’s time to deposit some money and start betting on your favourites."
+        label.text = localized("second_empty_no_transactions")
         return label
     }
 

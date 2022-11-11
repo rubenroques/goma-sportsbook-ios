@@ -43,7 +43,7 @@ class DebugViewController: UIViewController {
 
         self.addChildViewController(debugTableViewController, toView: self.view)
 
-        let close = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(closeDebugViewController))
+        let close = UIBarButtonItem(title: localized("close"), style: .plain, target: self, action: #selector(closeDebugViewController))
         navigationItem.rightBarButtonItems = [close]
     }
 

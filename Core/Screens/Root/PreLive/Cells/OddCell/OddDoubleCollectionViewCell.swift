@@ -110,11 +110,11 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.leftBaseView.layer.cornerRadius = 4.5
         self.rightBaseView.layer.cornerRadius = 4.5
 
-        self.participantsNameLabel.text = ""
-        self.marketNameLabel.text = ""
+        self.participantsNameLabel.text = localized("empty_value")
+        self.marketNameLabel.text = localized("empty_value")
 
-        self.leftOddValueLabel.text = "-"
-        self.rightOddValueLabel.text = "-"
+        self.leftOddValueLabel.text = localized("empty")
+        self.rightOddValueLabel.text = localized("empty")
 
         self.suspendedBaseView.isHidden = true
 
@@ -181,15 +181,15 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.isRightOutcomeButtonSelected = false
 
         self.statsBaseView.isHidden = true
-        self.homeNameCaptionLabel.text = ""
-        self.awayNameCaptionLabel.text = ""
+        self.homeNameCaptionLabel.text = localized("empty_value")
+        self.awayNameCaptionLabel.text = localized("empty_value")
 
-        self.marketNameLabel.text = ""
-        self.participantsNameLabel.text = ""
-        self.leftOddTitleLabel.text = ""
-        self.leftOddValueLabel.text = ""
-        self.rightOddTitleLabel.text = ""
-        self.rightOddValueLabel.text = ""
+        self.marketNameLabel.text = localized("empty_value")
+        self.participantsNameLabel.text = localized("empty_value")
+        self.leftOddTitleLabel.text = localized("empty_value")
+        self.leftOddValueLabel.text = localized("empty_value")
+        self.rightOddTitleLabel.text = localized("empty_value")
+        self.rightOddValueLabel.text = localized("empty_value")
 
         self.leftBaseView.isUserInteractionEnabled = true
         self.rightBaseView.isUserInteractionEnabled = true
@@ -390,7 +390,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                     if !bettingOffer.isOpen {
                         weakSelf.leftBaseView.isUserInteractionEnabled = false
                         weakSelf.leftBaseView.alpha = 0.5
-                        weakSelf.leftOddValueLabel.text = "-"
+                        weakSelf.leftOddValueLabel.text = localized("empty")
                     }
                     else {
                         weakSelf.leftBaseView.isUserInteractionEnabled = true
@@ -443,7 +443,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                     if !bettingOffer.isOpen {
                         weakSelf.rightBaseView.isUserInteractionEnabled = false
                         weakSelf.rightBaseView.alpha = 0.5
-                        weakSelf.rightOddValueLabel.text = "-"
+                        weakSelf.rightOddValueLabel.text = localized("empty")
                     }
                     else {
                         weakSelf.rightBaseView.isUserInteractionEnabled = true

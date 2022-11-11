@@ -191,7 +191,7 @@ class SearchViewController: UIViewController {
         self.noResultsImageView.image = UIImage(named: "no_search_results_icon")
         self.noResultsImageView.layer.cornerRadius = self.noResultsImageView.frame.width/2
 
-        self.noResultsLabel.text = ""
+        self.noResultsLabel.text = localized("empty_value")
         self.noResultsLabel.font = AppFont.with(type: .bold, size: 22)
 
         self.activityIndicatorBaseView.isHidden = true
@@ -390,7 +390,7 @@ extension SearchViewController: UISearchBarDelegate {
     }
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        self.searchBarView.text = ""
+        self.searchBarView.text = localized("empty_value")
         self.searchMatches()
     }
 }

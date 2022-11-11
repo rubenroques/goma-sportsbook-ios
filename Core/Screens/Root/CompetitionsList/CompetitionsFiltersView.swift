@@ -80,7 +80,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
                 self.headerBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
                 self.initialSelectedIds = self.selectedIds.value
-                self.closeButton.setTitle("Close", for: .normal)
+                self.closeButton.setTitle(localized("close"), for: .normal)
 
                 UIView.animate(withDuration: 0.4) {
                     self.titleLabel.alpha = 1.0
@@ -184,10 +184,10 @@ class CompetitionsFiltersView: UIView, NibLoadable {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] currentSelection in
                 if (self?.initialSelectedIds ?? []) == currentSelection {
-                    self?.closeButton.setTitle("Close", for: .normal)
+                    self?.closeButton.setTitle(localized("close"), for: .normal)
                 }
                 else {
-                    self?.closeButton.setTitle("Apply", for: .normal)
+                    self?.closeButton.setTitle(localized("apply"), for: .normal)
                 }
             })
             .store(in: &cancellables)
@@ -588,7 +588,7 @@ extension CompetitionsFiltersView: UISearchBarDelegate {
     }
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        self.searchBarView.text = ""
+        self.searchBarView.text = localized("empty_value")
         self.applyFilters()
     }
 }

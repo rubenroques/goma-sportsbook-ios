@@ -31,8 +31,8 @@ class Router {
 
     var blockerViewController: UIViewController?
     var screenBlocker: ScreenBlocker = .none
-
     var startingRoute: Route = .none
+    var appSharedState: AppSharedState?
 
     enum ScreenBlocker {
         case maintenance
@@ -183,6 +183,7 @@ class Router {
                     .sink(receiveValue: { [weak self] serviceStatus in
                         if let requestStartingRoute = self?.requestStartingRoute(),
                            serviceStatus == .connected {
+                            self?.appSharedState = .inactiveApp
                             self?.openRoute(requestStartingRoute)
                         }
                     })
@@ -201,6 +202,7 @@ class Router {
     }
 
     func openedNotificationRouteWhileActive(_ route: Route) {
+        self.appSharedState = .activeApp
         self.openRoute(route)
     }
 
@@ -332,13 +334,32 @@ class Router {
     }
 
     func showBetslipWithTicket(token: String) {
+        
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
 
-        let betslipViewController = BetslipViewController(startScreen: .sharedBet(token))
-        let navigationViewController = Router.navigationController(with: betslipViewController)
-        self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
+        if let appSharedState = self.appSharedState {
+            switch appSharedState {
+            case .inactiveApp:
+                let betslipViewController = BetslipViewController(startScreen: .sharedBet(token))
+                let navigationViewController = Router.navigationController(with: betslipViewController)
+                self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
+            case .activeApp:
+                NotificationCenter.default.publisher(for: .socketConnected)
+                    .receive(on: DispatchQueue.main)
+                    .sink(receiveCompletion: { _ in
+
+                    }, receiveValue: { [weak self] _ in
+
+                        let betslipViewController = BetslipViewController(startScreen: .sharedBet(token))
+                        let navigationViewController = Router.navigationController(with: betslipViewController)
+                        self?.rootViewController?.present(navigationViewController, animated: true, completion: nil)
+                    })
+                    .store(in: &cancellables)
+            }
+        }
+
     }
 
     //
@@ -369,7 +390,6 @@ class Router {
             if self.rootViewController?.presentedViewController?.isModal == true {
                 self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
             }
-            
 
             let socialViewController = SocialViewController(viewModel: SocialViewModel())
             
@@ -467,4 +487,9 @@ extension Router {
             rootWindow.rootViewController?.present(navigationController, animated: true, completion: nil)
         }
     }
+}
+
+enum AppSharedState {
+    case inactiveApp
+    case activeApp
 }

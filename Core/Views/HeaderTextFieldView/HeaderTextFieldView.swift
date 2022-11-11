@@ -505,7 +505,7 @@ class HeaderTextFieldView: NibView {
 
         showingTipLabel = false
 
-        tipLabel.text = ""
+        tipLabel.text = localized("empty_value")
         tipLabel.textColor = .black
         containerView.layer.borderColor = highlightColor.cgColor
         fieldState = .hidden

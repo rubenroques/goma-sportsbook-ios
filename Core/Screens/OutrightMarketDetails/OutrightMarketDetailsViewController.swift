@@ -253,19 +253,19 @@ class OutrightMarketDetailsViewController: UIViewController {
             actionSheetController.addAction(favoriteAction)
         }
         else {
-            let favoriteAction: UIAlertAction = UIAlertAction(title: "Add to favorites", style: .default) { _ -> Void in
+            let favoriteAction: UIAlertAction = UIAlertAction(title: localized("add_to_favorites"), style: .default) { _ -> Void in
                 Env.favoritesManager.addFavorite(eventId: self.viewModel.competition.id, favoriteType: .match)
                 
             }
             actionSheetController.addAction(favoriteAction)
         }
 
-        let shareAction: UIAlertAction = UIAlertAction(title: "Share event", style: .default) { [weak self] _ -> Void in
+        let shareAction: UIAlertAction = UIAlertAction(title: localized("share_event"), style: .default) { [weak self] _ -> Void in
             self?.didTapShareButton()
         }
         actionSheetController.addAction(shareAction)
 
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { _ -> Void in }
+        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ -> Void in }
         actionSheetController.addAction(cancelAction)
 
         if let popoverController = actionSheetController.popoverPresentationController {
@@ -485,7 +485,7 @@ extension OutrightMarketDetailsViewController {
         titleLabel.textColor = UIColor.App.textPrimary
         titleLabel.font = AppFont.with(type: .semibold, size: 14)
         titleLabel.textAlignment = .left
-        titleLabel.text = ""
+        titleLabel.text = localized("empty_value")
         titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return titleLabel
     }
@@ -525,7 +525,7 @@ extension OutrightMarketDetailsViewController {
         outrightsLabel.font = AppFont.with(type: .semibold, size: 12)
         outrightsLabel.textAlignment = .center
         outrightsLabel.numberOfLines = 1
-        outrightsLabel.text = "Outrights"
+        outrightsLabel.text = localized("outrights")
         return outrightsLabel
     }
 
@@ -536,7 +536,7 @@ extension OutrightMarketDetailsViewController {
         marketsLabel.font = AppFont.with(type: .bold, size: 17)
         marketsLabel.textAlignment = .center
         marketsLabel.numberOfLines = 1
-        marketsLabel.text = "Competition Markets"
+        marketsLabel.text = localized("competition_markets")
         return marketsLabel
     }
 
@@ -602,7 +602,7 @@ extension OutrightMarketDetailsViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 12)
-        label.text = "Loading"
+        label.text = localized("loading")
         label.setContentCompressionResistancePriority(.required, for: .horizontal)
         return label
     }
@@ -619,7 +619,7 @@ extension OutrightMarketDetailsViewController {
         label.font = AppFont.with(type: .semibold, size: 18)
         label.numberOfLines = 2
         label.textAlignment = .center
-        label.text = "This competition is no longer available for betting."
+        label.text = localized("competition_no_longer")
         return label
     }
 

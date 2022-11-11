@@ -120,6 +120,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             }
             else if urlSections.contains("bet") {
                 if let ticketId = urlSections.last {
+
                     self.openRoute(Route.ticket(id: ticketId), onApplication: application)
                 }
             }

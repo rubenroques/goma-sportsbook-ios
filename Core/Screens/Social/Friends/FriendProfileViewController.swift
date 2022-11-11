@@ -141,7 +141,7 @@ extension FriendProfileViewController {
     private static func createProfileUsernameLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Username"
+        label.text = localized("username")
         label.font = AppFont.with(type: .bold, size: 16)
         label.textAlignment = .center
         return label

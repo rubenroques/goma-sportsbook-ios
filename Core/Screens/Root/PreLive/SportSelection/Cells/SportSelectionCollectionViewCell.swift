@@ -42,9 +42,9 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         self.iconImageView.image = nil
-        self.nameLabel.text = ""
+        self.nameLabel.text = localized("empty_value")
         self.sport = nil
-        self.eventCountLabel.text = ""
+        self.eventCountLabel.text = localized("empty_value")
         self.currentLiveSportsPublisher?.cancel()
     }
 

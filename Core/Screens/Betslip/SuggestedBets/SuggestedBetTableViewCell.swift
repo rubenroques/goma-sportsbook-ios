@@ -233,7 +233,7 @@ extension SuggestedBetTableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 14)
-        label.text = "-"
+        label.text = localized("empty")
         return label
     }
     private static func createTotalOddLabel() -> UILabel {
@@ -247,7 +247,7 @@ extension SuggestedBetTableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 14)
-        label.text = "-"
+        label.text = localized("empty")
         return label
     }
 

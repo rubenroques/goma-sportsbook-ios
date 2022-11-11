@@ -173,7 +173,19 @@ class AddContactViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
 
-                self?.navigationController?.popToRootViewController(animated: true)
+                guard let self = self else {return}
+
+                if self.viewModel.chatroomsResponse.count > 1 {
+                    self.navigationController?.popToRootViewController(animated: true)
+
+                }
+                else {
+                    if let chatroomId = self.viewModel.chatroomsResponse[safe: 0] {
+
+                        self.showChatroom(chatroomId: chatroomId)
+
+                    }
+                }
             })
             .store(in: &cancellables)
     }
@@ -256,6 +268,16 @@ class AddContactViewController: UIViewController {
 
     }
 
+    private func showChatroom(chatroomId: Int) {
+
+        let conversationDetailViewModel = ConversationDetailViewModel(chatId: chatroomId)
+
+        let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
+
+        self.navigationController?.pushViewController(conversationDetailViewController, animated: true)
+
+    }
+
     // MARK: Actions
     @objc func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
@@ -316,7 +338,7 @@ extension AddContactViewController: UISearchBarDelegate {
     }
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        self.searchBar.text = ""
+        self.searchBar.text = localized("empty_value")
         self.searchUsers()
     }
 }

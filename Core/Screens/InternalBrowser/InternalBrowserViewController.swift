@@ -127,7 +127,7 @@ extension InternalBrowserViewController {
         titleLabel.textColor = UIColor.App.textPrimary
         titleLabel.font = AppFont.with(type: .semibold, size: 14)
         titleLabel.textAlignment = .center
-        titleLabel.text = ""
+        titleLabel.text = localized("empty_value")
         return titleLabel
     }
 

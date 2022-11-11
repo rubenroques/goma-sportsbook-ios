@@ -381,7 +381,7 @@ extension LiveDetailsViewController {
         titleLabel.textColor = UIColor.App.textPrimary
         titleLabel.font = AppFont.with(type: .semibold, size: 14)
         titleLabel.textAlignment = .left
-        titleLabel.text = "Live Matches"
+        titleLabel.text = localized("live_matches")
         titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return titleLabel
     }
@@ -462,7 +462,7 @@ extension LiveDetailsViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 12)
-        label.text = "Loading"
+        label.text = localized("loading")
         return label
     }
 

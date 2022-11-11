@@ -160,6 +160,16 @@ extension ServiceProviderClient {
         }
         return privilegedAccessManager.getUserProfile()
     }
+
+    public func hasSecurityQuestions() -> Bool {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return false
+        }
+
+        return privilegedAccessManager.hasSecurityQuestions
+    }
     
     public func updateUserProfile(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError> {
         guard

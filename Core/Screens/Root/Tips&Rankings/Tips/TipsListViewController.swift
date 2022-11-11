@@ -82,9 +82,7 @@ class TipsListViewController: UIViewController {
         self.tableView.register(TipsTableViewCell.self, forCellReuseIdentifier: TipsTableViewCell.identifier)
         self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
 
-        self.refreshControl.tintColor = UIColor.lightGray
         self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
-        self.tableView.addSubview(self.refreshControl)
 
         self.isLoading = false
 
@@ -132,6 +130,8 @@ class TipsListViewController: UIViewController {
         self.emptyFriendsSubtitleLabel.textColor = UIColor.App.textPrimary
 
         StyleHelper.styleButton(button: self.emptyFriendsButton)
+
+        self.refreshControl.tintColor = UIColor.lightGray
 
     }
 
@@ -303,7 +303,7 @@ extension TipsListViewController {
         label.textAlignment = .center
         label.font = AppFont.with(type: .bold, size: 22)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "There’s no tips here!"
+        label.text = localized("no_tips")
         label.textAlignment = .center
         return label
     }
@@ -314,7 +314,7 @@ extension TipsListViewController {
         label.font = AppFont.with(type: .bold, size: 16)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "There are no tips currently to be displayed."
+        label.text = localized("no_tips_to_display") 
         label.textAlignment = .center
         return label
     }
@@ -395,6 +395,8 @@ extension TipsListViewController {
         self.view.addSubview(self.loadingBaseView)
 
         self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
+
+        self.tableView.addSubview(self.refreshControl)
 
         self.initConstraints()
     }

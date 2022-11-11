@@ -356,7 +356,7 @@ extension PhonePrefixSelectorViewController: UISearchBarDelegate {
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        self.searchBar.text = ""
+        self.searchBar.text = localized("empty_value")
         self.applyFilters()
     }
     
