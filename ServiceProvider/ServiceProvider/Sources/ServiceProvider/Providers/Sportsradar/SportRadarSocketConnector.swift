@@ -17,6 +17,7 @@ protocol SportRadarConnectorSubscriber {
     func eventListBySportTypeDate(forSportType sportType: SportType, withEvents: [EventsGroup])
 //    func popularEventListBySportTypeDate(forSportType sportType: SportType, withEvents: [EventsGroup])
 //    func upcomingEventListBySportTypeDate(forSportType sportType: SportType, withEvents: [EventsGroup])
+    func eventDetails(events: [EventsGroup])
 }
 
 class SportRadarSocketConnector: NSObject, Connector {
@@ -193,6 +194,12 @@ extension SportRadarSocketConnector: WebSocketDelegate {
                 {
                     let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
                     subscriber.eventListBySportTypeDate(forSportType: sport, withEvents: [eventsGroup])
+                }
+            case .eventDetails(let events):
+                if let subscriber = self.subscriberForType[content.code] {
+                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
+
+                    subscriber.eventDetails(events: [eventsGroup])
                 }
             }
             

@@ -170,6 +170,13 @@ class OutcomeSelectionButtonView: NibView {
                 })
         }
 
+        // TEMP SPORTRADAR INFO
+        if let bettingOffer = self.bettingOffer {
+            self.updateBettingOffer(value: bettingOffer.value,
+                                    statusId: bettingOffer.statusId == "" ? "1" : bettingOffer.statusId,
+                                     isAvailableForBetting: bettingOffer.isAvailable)
+        }
+
         self.debouncerSubscription?.call()
 
     }
@@ -225,7 +232,8 @@ class OutcomeSelectionButtonView: NibView {
 
         guard
             let outcome = self.outcome,
-            let marketId = outcome.marketId
+            //let marketId = outcome.marketId
+            let marketId = self.marketId
         else {
             return
         }

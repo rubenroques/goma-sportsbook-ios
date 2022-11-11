@@ -69,6 +69,7 @@ class PasswordUpdateViewController: UIViewController {
         if !Env.serviceProvider.hasSecurityQuestions() {
             self.hideSecurityQuestionLayout()
         }
+
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

@@ -474,6 +474,10 @@ struct OddOutcomesSortingHelper {
         case "true": return 10
         case "false": return 20
 
+        case "h": return 10
+        case "d": return 20
+        case "a": return 30
+
         default:
             return 1000
         }

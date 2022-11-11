@@ -33,6 +33,25 @@ extension ServiceProviderModelMapper {
         }
         return matches
     }
+
+    static func match(fromEventGroup eventGroup: EventsGroup) -> Match? {
+        if let event = eventGroup.events[safe: 0] {
+
+            let match = Match(id: event.id,
+                              competitionId: event.competitionId,
+                              competitionName: event.competitionName,
+                              homeParticipant: Participant(id: "", name: event.homeTeamName),
+                              awayParticipant: Participant(id: "", name: event.awayTeamName),
+                              date: event.startDate,
+                              sportType: event.sportTypeName,
+                              numberTotalOfMarkets: 1,
+                              markets: Self.markets(fromServiceProviderMarkets: event.markets),
+                              rootPartId: "")
+            return match
+        }
+        
+        return nil
+    }
     
     // Market
     static func markets(fromServiceProviderMarkets markets: [ServiceProvider.Market]) -> [Market] {
@@ -47,8 +66,10 @@ extension ServiceProviderModelMapper {
                       nameDigit2: nil,
                       nameDigit3: nil,
                       eventPartId: nil,
-                      bettingTypeId: nil,
-                      outcomes: Self.outcomes(fromServiceProviderOutcomes: market.outcomes))
+                      bettingTypeId: market.eventMarketTypeId,
+                      outcomes: Self.outcomes(fromServiceProviderOutcomes: market.outcomes),
+                      marketTypeId: market.marketTypeId,
+                      eventName: market.eventName)
     }
     
     // Outcome
@@ -68,7 +89,9 @@ extension ServiceProviderModelMapper {
                               codeName: outcome.name,
                               typeName: outcome.name,
                               translatedName: outcome.name,
-                              bettingOffer: bettingOffer)
+                              marketId: outcome.marketId,
+                              bettingOffer: bettingOffer,
+                              orderValue: outcome.orderValue)
         return outcome
     }
 

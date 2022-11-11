@@ -11,9 +11,11 @@ import Combine
 class SportRadarEventsProvider: EventsProvider {
 
     var connector: SportRadarSocketConnector
-    
+    private var networkManager: NetworkManager
+
     required init(connector: SportRadarSocketConnector) {
         self.connector = connector
+        self.networkManager = NetworkManager()
     }
     
     private var liveSportTypesPublisher: CurrentValueSubject<SubscribableContent<[SportTypeDetails]>, ServiceProviderError>?
@@ -22,6 +24,7 @@ class SportRadarEventsProvider: EventsProvider {
     private var preLiveEventsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
 //    private var popularEventsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
 //    private var upcomingEventsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
+    private var eventDetailsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
     
     func unsubscribeLiveMatches(forSportType sportType: SportType) {
         if let liveEventsPublisher = self.liveEventsPublisher {
@@ -301,6 +304,53 @@ class SportRadarEventsProvider: EventsProvider {
 //        self.upcomingEventsPublisher = nil
 //    }
 
+    func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
+
+        self.eventDetailsPublisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
+
+        guard
+            let sessionToken = connector.token
+        else {
+            return nil
+        }
+
+        let contentType = SportRadarModels.ContentType.eventDetails
+
+        let contentId = matchId
+
+        let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentId: contentId)
+        var request = self.createSubscribeRequest(withHTTPBody: bodyData)
+
+        let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+
+            if let error = error {
+                print("URLSession shared dataTask error \(error)")
+                self.preLiveEventsPublisher?.send(completion: .failure(ServiceProviderError.onSubscribe))
+                return
+            }
+
+            guard
+                let httpResponse = response as? HTTPURLResponse,
+                (200...299).contains(httpResponse.statusCode)
+            else {
+                self.eventDetailsPublisher?.send(completion: .failure(ServiceProviderError.onSubscribe))
+                return
+            }
+
+            print("eventListBySportTypeDate Popular - received")
+
+            self.eventDetailsPublisher?.send(.connected)
+        }
+
+        self.connector.subscribe(self, forContentType: .eventDetails)
+
+        sessionDataTask.resume()
+
+        print("eventDetails - requested")
+
+        return self.eventDetailsPublisher?.eraseToAnyPublisher()
+    }
+
     func getDateRangeId(initialDate: Date? = nil, endDate: Date? = nil) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd"
@@ -310,7 +360,7 @@ class SportRadarEventsProvider: EventsProvider {
             initialDateDefault = initialDate
         }
 
-        var endDateDefault = Calendar.current.date(byAdding: .day, value: 6, to: initialDateDefault) ?? Date()
+        var endDateDefault = Calendar.current.date(byAdding: .day, value: 7, to: initialDateDefault) ?? Date()
         if let endDate = endDate {
             endDateDefault = endDate
         }
@@ -363,6 +413,12 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
 //            upcomingEventsByDatePublisher.send(.content(events))
 //        }
 //    }
+
+    func eventDetails(events: [EventsGroup]) {
+        if let eventDetailsPublisher = self.eventDetailsPublisher {
+            eventDetailsPublisher.send(.content(events))
+        }
+    }
     
 }
 
@@ -390,10 +446,68 @@ extension SportRadarEventsProvider {
     private func createSubscribeRequest(withHTTPBody body: Data? = nil) -> URLRequest {
         let url = URL(string: "https://www-sportbook-goma-int.optimahq.com/services/content/subscribe")!
         var request = URLRequest(url: url)
-        request.httpBody = body
+        request.httpBody = body 
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Media-Type")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         return request
+    }
+}
+
+/* REST API Events
+ */
+extension SportRadarEventsProvider {
+
+    func getMarketsFilter() -> AnyPublisher<MarketFilter, ServiceProviderError>? {
+
+        let endpoint = SportRadarRestAPIClient.marketsFilter
+        let requestPublisher: AnyPublisher<MarketFilter, ServiceProviderError> = self.networkManager.request(endpoint)
+
+        return requestPublisher
+
+    }
+
+    func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>? {
+
+        let endpoint = SportRadarRestAPIClient.fieldWidgetId(eventId: eventId)
+        let requestPublisher: AnyPublisher<FieldWidget, ServiceProviderError> = self.networkManager.request(endpoint)
+
+        return requestPublisher
+
+    }
+
+    func getFieldWidgetURLRequest(urlString: String?, widgetFile: String?) -> URLRequest? {
+
+        if let urlString = urlString {
+            if let url = URL(string: urlString) {
+                let request = URLRequest(url: url)
+                return request
+            }
+        }
+
+        if let widgetFile = widgetFile {
+            let fileStringSplit = widgetFile.components(separatedBy: ".")
+            if let url = Bundle.main.url(forResource: fileStringSplit[0], withExtension: fileStringSplit[1]) {
+
+                let request = URLRequest(url: url)
+                return request
+            }
+        }
+
+        return nil
+    }
+
+    func getFieldWidgetHtml(widgetFile: String, eventId: String, providerId: String?) -> String? {
+
+        let fileStringSplit = widgetFile.components(separatedBy: ".")
+
+        let filePath = Bundle.main.path(forResource: fileStringSplit[0], ofType: fileStringSplit[1])
+        let contentData = FileManager.default.contents(atPath: filePath!)
+        let emailTemplate = NSString(data: contentData!, encoding: String.Encoding.utf8.rawValue) as? String
+        if let replacedHtmlContent = emailTemplate?.replacingOccurrences(of: "@eventId", with: eventId) {
+            return replacedHtmlContent
+        }
+
+        return nil
     }
 }

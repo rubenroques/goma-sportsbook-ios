@@ -66,10 +66,29 @@ struct ColumnListedMarketGroupOrganizer: MarketGroupOrganizer {
         self.outcomes = processedOutcomes
 
         self.sortedOutcomeKeys = []
-        self.sortedOutcomeKeys = self.outcomes.keys.sorted { out1Name, out2Name in
-            let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1Name)
-            let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2Name)
-            return out1Value < out2Value
+
+        if self.outcomes.count == 3 {
+            //self.sortedOutcomeKeys = Array(self.outcomes.keys)
+
+            let outcomesSorted = self.outcomes.sorted { key1, key2 in
+
+                let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(key1.value.first?.orderValue ?? "1")
+                let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(key2.value.first?.orderValue ?? "2")
+                return out1Value < out2Value
+
+            }
+
+            for outcomeKey in outcomesSorted {
+                self.sortedOutcomeKeys.append(outcomeKey.key)
+            }
+
+        }
+        else {
+            self.sortedOutcomeKeys = self.outcomes.keys.sorted { out1Name, out2Name in
+                let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1Name)
+                let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2Name)
+                return out1Value < out2Value
+            }
         }
 
         self.sortedOutcomes = [:]
@@ -221,6 +240,13 @@ struct MarketLinesMarketGroupOrganizer: MarketGroupOrganizer {
 
 //        if let market = self.sortedMarkets[safe: line], let outcome = market.outcomes[safe: column] {
 //            return outcome
+//        }
+//        return nil
+
+//        if let market = self.sortedMarkets[safe: line], let outcomeKey = self.sortedOutcomeKeys[safe: column] {
+//            for outcome in market.outcomes where outcome.codeName.components(separatedBy: CharacterSet.decimalDigits).joined() == outcomeKey {
+//                return outcome
+//            }
 //        }
 //        return nil
     }

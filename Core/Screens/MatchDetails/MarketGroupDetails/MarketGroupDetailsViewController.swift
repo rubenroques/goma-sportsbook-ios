@@ -268,6 +268,9 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
                 return UITableViewCell()
             }
             cell.match = self.viewModel.match
+            cell.market = self.viewModel.match.markets.first(where: {
+                $0.id == marketGroupOrganizer.marketId
+            })
             cell.configure(withMarketGroupOrganizer: marketGroupOrganizer)
 
             cell.didLongPressOdd = { [weak self] bettingTicket in

@@ -18,4 +18,15 @@ protocol EventsProvider {
     func unsubscribePreLiveMatches()
 //    func unsubscribeUpcomingMatches()
     func unsubscribeAllSportTypes()
+
+    func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
+
+    // REST API
+    func getMarketsFilter() -> AnyPublisher<MarketFilter, ServiceProviderError>?
+
+    func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>?
+
+    func getFieldWidgetURLRequest(urlString: String?, widgetFile: String?) -> URLRequest?
+
+    func getFieldWidgetHtml(widgetFile: String, eventId: String, providerId: String?) -> String?
 }
