@@ -1173,7 +1173,7 @@ extension MatchDetailsViewController: UIPageViewControllerDelegate, UIPageViewCo
 extension MatchDetailsViewController: WKNavigationDelegate {
     
     private func recalculateWebview() {
-        executeDelayed(0.5) {
+        executeDelayed(1) {
             self.matchFieldWebView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { height, error in
                 if let heightFloat = height as? CGFloat {
                     self.redrawWebView(withHeight: heightFloat)
@@ -1183,6 +1183,19 @@ extension MatchDetailsViewController: WKNavigationDelegate {
                 }
             })
         }
+//        self.matchFieldWebView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { height, error in
+//            if let heightFloat = height as? CGFloat {
+//                if heightFloat < 100 {
+//                    self.recalculateWebview()
+//                }
+//                else {
+//                    self.redrawWebView(withHeight: heightFloat)
+//                }
+//            }
+//            if let error = error {
+//                Logger.log("Match details WKWebView didFinish error \(error)")
+//            }
+//        })
     }
     
     private func redrawWebView(withHeight heigth: CGFloat) {

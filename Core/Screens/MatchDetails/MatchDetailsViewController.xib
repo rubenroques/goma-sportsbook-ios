@@ -227,10 +227,10 @@
                                     <rect key="frame" x="0.0" y="0.0" width="135.5" height="86"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uAt-8e-lAE">
-                                            <rect key="frame" x="0.0" y="0.0" width="135.5" height="86"/>
+                                            <rect key="frame" x="10" y="0.0" width="125.5" height="86"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iF2-bh-zBH">
-                                                    <rect key="frame" x="0.0" y="0.0" width="135.5" height="86"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="125.5" height="86"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -243,7 +243,7 @@
                                         <constraint firstAttribute="trailing" secondItem="uAt-8e-lAE" secondAttribute="trailing" id="4YJ-Ro-sqM"/>
                                         <constraint firstAttribute="bottom" secondItem="uAt-8e-lAE" secondAttribute="bottom" id="GEW-Px-Ke2"/>
                                         <constraint firstItem="uAt-8e-lAE" firstAttribute="top" secondItem="qC7-5Z-DdX" secondAttribute="top" id="Wio-jZ-CMF"/>
-                                        <constraint firstItem="uAt-8e-lAE" firstAttribute="leading" secondItem="qC7-5Z-DdX" secondAttribute="leading" id="qc6-cU-jYG"/>
+                                        <constraint firstItem="uAt-8e-lAE" firstAttribute="leading" secondItem="qC7-5Z-DdX" secondAttribute="leading" constant="10" id="qc6-cU-jYG"/>
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mKd-ES-AeB">
@@ -387,15 +387,19 @@
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OYj-1f-qx5">
                                     <rect key="frame" x="278.5" y="0.0" width="135.5" height="86"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qBZ-rR-4Ui">
-                                            <rect key="frame" x="-0.5" y="0.0" width="135.5" height="86"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qBZ-rR-4Ui">
+                                            <rect key="frame" x="0.0" y="33" width="125.5" height="20.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    <constraints>
+                                        <constraint firstItem="qBZ-rR-4Ui" firstAttribute="centerY" secondItem="OYj-1f-qx5" secondAttribute="centerY" id="09e-kv-Bbb"/>
+                                        <constraint firstAttribute="trailing" secondItem="qBZ-rR-4Ui" secondAttribute="trailing" constant="10" id="imy-BF-ZGc"/>
+                                        <constraint firstItem="qBZ-rR-4Ui" firstAttribute="leading" secondItem="OYj-1f-qx5" secondAttribute="leading" id="sXh-WA-Tb0"/>
+                                    </constraints>
                                 </view>
                             </subviews>
                             <color key="backgroundColor" systemColor="systemGray2Color"/>
@@ -683,7 +687,7 @@
         </tapGestureRecognizer>
     </objects>
     <resources>
-        <image name="arrow_back_icon" width="12" height="21"/>
+        <image name="arrow_back_icon" width="9" height="15"/>
         <image name="arrow_circle_left_icon" width="24" height="24"/>
         <image name="country_flag_pt" width="33.333332061767578" height="22.333333969116211"/>
         <image name="market_stats_icon" width="10" height="13"/>
@@ -692,7 +696,7 @@
         <image name="red_card_image" width="9" height="14"/>
         <image name="tabbar_live_icon" width="25" height="23"/>
         <namedColor name="buttonBackgroundPrimary">
-            <color red="0.18823529411764706" green="0.36078431372549019" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.13725490196078433" green="0.69019607843137254" blue="0.30588235294117649" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
