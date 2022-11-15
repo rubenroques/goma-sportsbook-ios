@@ -130,7 +130,7 @@ struct SportRadarModelMapper {
     }
     
     static func outcome(fromInternalOutcome internalOutcome: SportRadarModels.Outcome) -> Outcome {
-        return Outcome(id: internalOutcome.id, name: internalOutcome.name, odd: internalOutcome.odd, marketId: internalOutcome.marketId, orderValue: internalOutcome.orderValue)
+        return Outcome(id: internalOutcome.id, name: internalOutcome.name, odd: internalOutcome.odd, marketId: internalOutcome.marketId, orderValue: internalOutcome.orderValue, externalReference: internalOutcome.externalReference)
     }
     
     // ============================================================

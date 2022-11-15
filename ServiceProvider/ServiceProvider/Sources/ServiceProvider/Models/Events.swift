@@ -64,6 +64,7 @@ public struct Outcome: Codable {
     public var odd: Double
     public var marketId: String?
     public var orderValue: String?
+    public var externalReference: String?
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -71,6 +72,7 @@ public struct Outcome: Codable {
         case odd = "odd"
         case marketId = "marketId"
         case orderValue = "orderValue"
+        case externalReference = "externalReference"
     }
     
 }

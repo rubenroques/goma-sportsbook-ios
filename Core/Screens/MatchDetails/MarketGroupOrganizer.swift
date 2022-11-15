@@ -37,9 +37,9 @@ struct ColumnListedMarketGroupOrganizer: MarketGroupOrganizer {
     private var sortedOutcomes: [String: [Outcome] ]
 
     init(id: String, name: String, outcomes: [String: [Outcome]] ) {
-
-        var processedOutcomes = outcomes
         
+        var processedOutcomes = outcomes
+
         // Custom processing
         // If we got a x_or_more market with all the options in the same column we split the in 3
         if Array(outcomes.keys) == ["x_or_more"] {
@@ -67,28 +67,10 @@ struct ColumnListedMarketGroupOrganizer: MarketGroupOrganizer {
 
         self.sortedOutcomeKeys = []
 
-        if self.outcomes.count == 3 {
-            //self.sortedOutcomeKeys = Array(self.outcomes.keys)
-
-            let outcomesSorted = self.outcomes.sorted { key1, key2 in
-
-                let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(key1.value.first?.orderValue ?? "1")
-                let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(key2.value.first?.orderValue ?? "2")
-                return out1Value < out2Value
-
-            }
-
-            for outcomeKey in outcomesSorted {
-                self.sortedOutcomeKeys.append(outcomeKey.key)
-            }
-
-        }
-        else {
-            self.sortedOutcomeKeys = self.outcomes.keys.sorted { out1Name, out2Name in
-                let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1Name)
-                let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2Name)
-                return out1Value < out2Value
-            }
+        self.sortedOutcomeKeys = self.outcomes.keys.sorted { out1Name, out2Name in
+            let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1Name)
+            let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2Name)
+            return out1Value < out2Value
         }
 
         self.sortedOutcomes = [:]
@@ -211,6 +193,7 @@ struct MarketLinesMarketGroupOrganizer: MarketGroupOrganizer {
         })
 
         self.maxLineValue = markets.count
+
     }
 
     var marketId: String {
@@ -238,17 +221,6 @@ struct MarketLinesMarketGroupOrganizer: MarketGroupOrganizer {
         }
         return nil
 
-//        if let market = self.sortedMarkets[safe: line], let outcome = market.outcomes[safe: column] {
-//            return outcome
-//        }
-//        return nil
-
-//        if let market = self.sortedMarkets[safe: line], let outcomeKey = self.sortedOutcomeKeys[safe: column] {
-//            for outcome in market.outcomes where outcome.codeName.components(separatedBy: CharacterSet.decimalDigits).joined() == outcomeKey {
-//                return outcome
-//            }
-//        }
-//        return nil
     }
 }
 
@@ -379,6 +351,66 @@ struct SequentialMarketGroupOrganizer: MarketGroupOrganizer {
         }
 
         self.maxLineValue = ceil(Double(self.market.outcomes.count)/Double(self.maxColumnValue))
+    }
+
+    var marketId: String {
+        return self.id
+    }
+
+    var marketName: String {
+        return "\(name)"
+    }
+
+    var numberOfColumns: Int {
+        return self.maxColumnValue
+    }
+
+    var numberOfLines: Int {
+        return Int(self.maxLineValue)
+    }
+
+    func outcomeFor(column: Int, line: Int) -> Outcome? {
+        let index = (line * numberOfColumns) + column
+        if let outcome = self.sortedOutcomes[safe: index] {
+            return outcome
+        }
+        return nil
+    }
+}
+
+struct UndefinedGroupMarketGroupOrganizer: MarketGroupOrganizer {
+
+    var id: String
+    var name: String
+    var outcomes: [String: [Outcome]]
+
+    private var sortedOutcomes: [Outcome]
+
+    private var maxColumnValue: Int
+    private var maxLineValue: Double
+
+    init(id: String, name: String, outcomes: [String: [Outcome]]) {
+
+        self.id = id
+        self.name = name
+        self.outcomes = outcomes
+
+        self.sortedOutcomes = []
+
+        for outcome in outcomes {
+            self.sortedOutcomes.append(contentsOf: outcome.value)
+        }
+
+        self.sortedOutcomes = self.sortedOutcomes.sorted(by: {
+            $0.id < $1.id
+        })
+
+        self.maxColumnValue = 3
+        if self.sortedOutcomes.count == 2 || self.sortedOutcomes.count == 4 {
+            self.maxColumnValue = 2
+        }
+
+        self.maxLineValue = ceil(Double(self.sortedOutcomes.count)/Double(self.maxColumnValue))
     }
 
     var marketId: String {
