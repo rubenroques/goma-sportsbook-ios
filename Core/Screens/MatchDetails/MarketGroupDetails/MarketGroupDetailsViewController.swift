@@ -300,7 +300,6 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
         let scrollViewTop = scrollView.frame.origin.y
 
         if self.lastContentOffset < scrollViewTop {
-            print("MARKET GROUP TABLE: \(scrollView.contentOffset.y)")
             self.shouldScrollToTop?(true)
         }
         else if self.lastContentOffset > scrollViewTop {
@@ -308,7 +307,6 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
 
         }
 
-        // update the new position acquired
         self.lastContentOffset = scrollView.contentOffset.y
     }
 }

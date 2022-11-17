@@ -1414,25 +1414,18 @@ extension MatchDetailsViewController: UIScrollViewDelegate {
 
             let scrollViewTop = scrollView.frame.origin.y
 
-            let marketFiltersTop = scrollView.superview!.convert(self.marketTypesCollectionView.bounds.origin, from: self.marketTypesCollectionView).y
+            if let marketFiltersTop = scrollView.superview?.convert(self.marketTypesCollectionView.bounds.origin, from: self.marketTypesCollectionView).y {
 
-            if self.lastContentOffset > scrollView.contentOffset.y {
-                print("MOVING UP")
+                if self.lastContentOffset < scrollView.contentOffset.y {
 
-            }
-            else if self.lastContentOffset < scrollView.contentOffset.y {
-                print("MOVING DOWN")
-
-                if marketFiltersTop < scrollViewTop {
-                    print("FILTER ON TOP")
-                    self.contentScrollView.isScrollEnabled = false
-                    self.autoScrollEnabled = false
+                    if marketFiltersTop < scrollViewTop {
+                        self.contentScrollView.isScrollEnabled = false
+                        self.autoScrollEnabled = false
+                    }
                 }
             }
 
-            // update the new position acquired
             self.lastContentOffset = scrollView.contentOffset.y
-            print(lastContentOffset)
         }
     }
 }
