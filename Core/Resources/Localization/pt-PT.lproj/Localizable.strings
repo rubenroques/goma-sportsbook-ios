@@ -610,7 +610,7 @@ Terms of use, Privacy Policy and EULA";
 
 "no_value" = "-.--€";
 "empty_value" = "";
-"empty" = "placeholder";
+"empty" = "-";
 "unfollow" = "Unfollow";
 
 "accumulated_odds_winning" = "Accumulated odd of winning";
