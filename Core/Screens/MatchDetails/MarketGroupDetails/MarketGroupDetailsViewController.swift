@@ -22,6 +22,11 @@ class MarketGroupDetailsViewController: UIViewController {
     
     private var cancellables: Set<AnyCancellable> = []
 
+    // ScrollView content offset
+    private var lastContentOffset: CGFloat = 0
+
+    var shouldScrollToTop: ((Bool) -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(viewModel: MarketGroupDetailsViewModel) {
         self.viewModel = viewModel
@@ -288,6 +293,23 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+
+        let scrollViewTop = scrollView.frame.origin.y
+
+        if self.lastContentOffset < scrollViewTop {
+            print("MARKET GROUP TABLE: \(scrollView.contentOffset.y)")
+            self.shouldScrollToTop?(true)
+        }
+        else if self.lastContentOffset > scrollViewTop {
+            self.shouldScrollToTop?(false)
+
+        }
+
+        // update the new position acquired
+        self.lastContentOffset = scrollView.contentOffset.y
     }
 }
 

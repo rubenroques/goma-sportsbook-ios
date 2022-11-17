@@ -44,7 +44,8 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var headerLiveButtonBaseView: UIView!
     @IBOutlet private var liveButtonLabel: UILabel!
     @IBOutlet private var liveButtonImageView: UIImageView!
-    
+    @IBOutlet private var fieldExpandImageView: UIImageView!
+
     @IBOutlet private var headerStatsButtonBaseView: UIView!
     @IBOutlet private var statsButtonLabel: UILabel!
     @IBOutlet private var statsButtonImageView: UIImageView!
@@ -84,8 +85,12 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private weak var awayRedCardImage: UIImageView!
     @IBOutlet private weak var homeRedCardLabel: UILabel!
     @IBOutlet private weak var awayRedCardsLabel: UILabel!
-    
-    
+
+    @IBOutlet private weak var marketsStackView: UIStackView!
+    @IBOutlet private weak var contentScrollView: UIScrollView!
+
+    @IBOutlet private weak var tableViewHeightConstraint: NSLayoutConstraint!
+
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
     private static func createFloatingShortcutsView() -> FloatingShortcutsView {
         let floatingShortcutsView = FloatingShortcutsView()
@@ -153,8 +158,12 @@ class MatchDetailsViewController: UIViewController {
         didSet {
             if self.isMatchFieldExpanded {
                 self.matchFieldWebViewHeight.constant = matchFielHeight
+                self.fieldExpandImageView.image = UIImage(named: "arrow_up_icon")
+                self.fieldExpandImageView.setImageColor(color: UIColor.App.textPrimary)
             }
             else {
+                self.fieldExpandImageView.image = UIImage(named: "arrow_down_icon")
+                self.fieldExpandImageView.setImageColor(color: UIColor.App.textSecondary)
                 self.matchFieldWebViewHeight.constant = 0
             }
             
@@ -164,6 +173,10 @@ class MatchDetailsViewController: UIViewController {
             }
         }
     }
+
+    // ScrollView content offset
+    private var lastContentOffset: CGFloat = 0
+    private var autoScrollEnabled: Bool = true
     
     enum HeaderBarSelection {
         case none
@@ -178,6 +191,7 @@ class MatchDetailsViewController: UIViewController {
                 self.headerLiveButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
                 self.liveButtonLabel.textColor = UIColor.App.textSecondary
                 self.liveButtonImageView.setImageColor(color: UIColor.App.textSecondary)
+                self.fieldExpandImageView.setImageColor(color: UIColor.App.textSecondary)
                 //
                 self.headerStatsButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
                 self.statsButtonLabel.textColor = UIColor.App.textSecondary
@@ -193,6 +207,7 @@ class MatchDetailsViewController: UIViewController {
                 self.headerLiveButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
                 self.liveButtonLabel.textColor = UIColor.App.textPrimary
                 self.liveButtonImageView.setImageColor(color: UIColor.App.textPrimary)
+                self.fieldExpandImageView.setImageColor(color: UIColor.App.textPrimary)
                 //
                 self.headerStatsButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
                 self.statsButtonLabel.textColor = UIColor.App.textSecondary
@@ -206,6 +221,7 @@ class MatchDetailsViewController: UIViewController {
                 self.headerLiveButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
                 self.liveButtonLabel.textColor = UIColor.App.textSecondary
                 self.liveButtonImageView.setImageColor(color: UIColor.App.textSecondary)
+                self.fieldExpandImageView.setImageColor(color: UIColor.App.textSecondary)
                 //
                 self.headerStatsButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
                 self.statsButtonLabel.textColor = UIColor.App.textPrimary
@@ -394,6 +410,8 @@ class MatchDetailsViewController: UIViewController {
             sharedGameCardView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             sharedGameCardView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
+
+        self.setTableViewHeight()
         
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
@@ -405,6 +423,13 @@ class MatchDetailsViewController: UIViewController {
         self.headerStatsButtonBaseView.addGestureRecognizer(didTapStatsGesture)
         
         self.headerBarSelection = .none
+
+        // ScrollView
+        self.contentScrollView.delegate = self
+
+        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(didSwipeDownMarkets))
+        swipeDown.direction = .down
+        self.headerDetailView.addGestureRecognizer(swipeDown)
         
         self.setupWithTheme()
         
@@ -520,6 +545,9 @@ class MatchDetailsViewController: UIViewController {
         self.statsCollectionView.backgroundColor = UIColor.App.backgroundPrimary
         self.statsBackSliderView.backgroundColor = UIColor.App.buttonBackgroundSecondary
         self.statsNotFoundLabel.textColor = UIColor.App.textPrimary
+
+        self.fieldExpandImageView.setImageColor(color: UIColor.App.textSecondary)
+        self.fieldExpandImageView.tintColor = UIColor.App.textSecondary
     }
     
     // MARK: - Bindings
@@ -700,6 +728,33 @@ class MatchDetailsViewController: UIViewController {
             })
             .store(in: &cancellables)
     }
+
+    func setTableViewHeight() {
+        let screenSize: CGRect = UIScreen.main.bounds
+        //let screenSize = self.view.safeAreaLayoutGuide.layoutFrame
+
+        let screenHeight = screenSize.height
+
+        let headerDetailViewHeight = self.headerDetailView.frame.height
+
+        let widgetStackViewHeight = self.headerButtonsBaseView.frame.height
+
+        let marketsStackView = self.marketsStackView.frame.height
+
+        var newTableViewHeight = screenHeight - headerDetailViewHeight - (marketsStackView - widgetStackViewHeight)
+
+        if screenHeight > 800 {
+            newTableViewHeight -= 60
+        }
+        else {
+            newTableViewHeight -= 20
+        }
+
+        self.tableViewHeightConstraint.constant = newTableViewHeight
+        self.contentScrollView.layoutIfNeeded()
+
+        self.contentScrollView.bounces = false
+    }
     
     func reloadMarketGroupDetails(_ marketGroups: [MarketGroup]) {
         
@@ -714,6 +769,27 @@ class MatchDetailsViewController: UIViewController {
                 let viewModel = MarketGroupDetailsViewModel(match: match, marketGroupId: groupKey)
                 viewModel.availableMarkets = self.viewModel.serviceProviderStore.getAvailableMarketsForGroupKey(groupKey: groupKey)
                 let marketGroupDetailsViewController = MarketGroupDetailsViewController(viewModel: viewModel)
+
+                marketGroupDetailsViewController.shouldScrollToTop = { [weak self] scrollTop in
+
+                    guard let self = self else {return}
+
+                    self.contentScrollView.isScrollEnabled = true
+
+                    if scrollTop {
+                        self.contentScrollView.setContentOffset(CGPoint.zero, animated: true)
+                        self.autoScrollEnabled = true
+                    }
+                    else {
+                        if self.autoScrollEnabled {
+                            let marketFilterOffset = self.isMatchFieldExpanded ? self.headerButtonsBaseView.frame.height + self.matchFielHeight : self.headerButtonsBaseView.frame.height
+
+                            self.contentScrollView.setContentOffset(CGPoint(x: 0, y: marketFilterOffset), animated: true)
+                            self.autoScrollEnabled = false
+                        }
+                    }
+                }
+
                 print("MatchDetailsMarkets - marketGroupDetailsViewController: \(groupKey)")
                 self.marketGroupsViewControllers.append(marketGroupDetailsViewController)
             }
@@ -930,6 +1006,14 @@ class MatchDetailsViewController: UIViewController {
         else if matchPart.isNotEmpty {
             self.headerDetailLiveBottomLabel.text = "\(matchPart)"
         }
+    }
+
+    @objc func didSwipeDownMarkets() {
+
+        self.contentScrollView.isScrollEnabled = true
+        self.contentScrollView.setContentOffset(CGPoint.zero, animated: true)
+        self.autoScrollEnabled = true
+
     }
     
     @objc func didTapLiveButtonHeaderView() {
@@ -1324,6 +1408,31 @@ extension MatchDetailsViewController: UIScrollViewDelegate {
                     }
                 }
             }
+        }
+
+        if scrollView == self.contentScrollView {
+
+            let scrollViewTop = scrollView.frame.origin.y
+
+            let marketFiltersTop = scrollView.superview!.convert(self.marketTypesCollectionView.bounds.origin, from: self.marketTypesCollectionView).y
+
+            if self.lastContentOffset > scrollView.contentOffset.y {
+                print("MOVING UP")
+
+            }
+            else if self.lastContentOffset < scrollView.contentOffset.y {
+                print("MOVING DOWN")
+
+                if marketFiltersTop < scrollViewTop {
+                    print("FILTER ON TOP")
+                    self.contentScrollView.isScrollEnabled = false
+                    self.autoScrollEnabled = false
+                }
+            }
+
+            // update the new position acquired
+            self.lastContentOffset = scrollView.contentOffset.y
+            print(lastContentOffset)
         }
     }
 }

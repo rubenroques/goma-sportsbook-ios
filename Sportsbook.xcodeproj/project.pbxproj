@@ -4770,14 +4770,6 @@
 		A9B6306529192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
 		A9B6306629192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
 		A9B6306729192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
-		A9B63073291ABC1300BB850E /* field_widget.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B63072291ABC1300BB850E /* field_widget.html */; };
-		A9B63074291ABC1300BB850E /* field_widget.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B63072291ABC1300BB850E /* field_widget.html */; };
-		A9B63075291ABC1300BB850E /* field_widget.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B63072291ABC1300BB850E /* field_widget.html */; };
-		A9B63076291ABC1300BB850E /* field_widget.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B63072291ABC1300BB850E /* field_widget.html */; };
-		A9B63077291ABC1300BB850E /* field_widget.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B63072291ABC1300BB850E /* field_widget.html */; };
-		A9B63078291ABC1300BB850E /* field_widget.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B63072291ABC1300BB850E /* field_widget.html */; };
-		A9B63079291ABC1300BB850E /* field_widget.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B63072291ABC1300BB850E /* field_widget.html */; };
-		A9B6307A291ABC1300BB850E /* field_widget.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B63072291ABC1300BB850E /* field_widget.html */; };
 		A9B6307C291BE10200BB850E /* field_widget_light.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B6307B291BE10100BB850E /* field_widget_light.html */; };
 		A9B6307D291BE10200BB850E /* field_widget_light.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B6307B291BE10100BB850E /* field_widget_light.html */; };
 		A9B6307E291BE10200BB850E /* field_widget_light.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B6307B291BE10100BB850E /* field_widget_light.html */; };
@@ -6617,7 +6609,6 @@
 		A9B331EB289422FB00D097F0 /* MessageDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDetailViewModel.swift; sourceTree = "<group>"; };
 		A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverPasswordViewController.swift; sourceTree = "<group>"; };
 		A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SportRadarEventDetailRepository.swift; sourceTree = "<group>"; };
-		A9B63072291ABC1300BB850E /* field_widget.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = field_widget.html; sourceTree = "<group>"; };
 		A9B6307B291BE10100BB850E /* field_widget_light.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = field_widget_light.html; sourceTree = "<group>"; };
 		A9B63084291BE10900BB850E /* field_widget_dark.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = field_widget_dark.html; sourceTree = "<group>"; };
 		A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionUpdateViewController.swift; sourceTree = "<group>"; };
@@ -9406,7 +9397,6 @@
 		A9B63068291AB5F800BB850E /* Widgets */ = {
 			isa = PBXGroup;
 			children = (
-				A9B63072291ABC1300BB850E /* field_widget.html */,
 				A9B6307B291BE10100BB850E /* field_widget_light.html */,
 				A9B63084291BE10900BB850E /* field_widget_dark.html */,
 			);
@@ -10482,7 +10472,6 @@
 				450B7AD528F58574009229E3 /* Gilroy-Medium.ttf in Resources */,
 				450B7AD628F58574009229E3 /* Localizable.strings in Resources */,
 				450B7AD728F58574009229E3 /* LoadingMoreTableViewCell.xib in Resources */,
-				A9B63074291ABC1300BB850E /* field_widget.html in Resources */,
 				450B7AD828F58574009229E3 /* MatchLineTableViewCell.xib in Resources */,
 				450B7AD928F58574009229E3 /* RecentSearchHeaderView.xib in Resources */,
 				450B7ADA28F58574009229E3 /* SportSelectionViewController.xib in Resources */,
@@ -10615,7 +10604,6 @@
 				45DDBAA626F2146100A73E45 /* Gilroy-Medium.ttf in Resources */,
 				455A0CAE26BD982000EC572D /* Localizable.strings in Resources */,
 				45726333272B13D7002F2959 /* LoadingMoreTableViewCell.xib in Resources */,
-				A9B63076291ABC1300BB850E /* field_widget.html in Resources */,
 				457816AB2706679400F66878 /* MatchLineTableViewCell.xib in Resources */,
 				A96B619327A0496C005DC376 /* RecentSearchHeaderView.xib in Resources */,
 				A98D3B2B271481A8003BAE6F /* SportSelectionViewController.xib in Resources */,
@@ -10755,7 +10743,6 @@
 				A96B619427A0496C005DC376 /* RecentSearchHeaderView.xib in Resources */,
 				A98D3B3427148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */,
 				457F49702737F9330047169D /* SubmitedBetTableViewCell.xib in Resources */,
-				A9B63077291ABC1300BB850E /* field_widget.html in Resources */,
 				458BAC782770ACAE006C4BC7 /* MyTicketTableViewCell.xib in Resources */,
 				45626E472755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib in Resources */,
 				A99A970E26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */,
@@ -10888,7 +10875,6 @@
 				457CBBFE282D27D000ED0F00 /* HeadToHeadCardStatsView.xib in Resources */,
 				457CBBFF282D27D000ED0F00 /* Gilroy-Regular.ttf in Resources */,
 				457CBC00282D27D000ED0F00 /* Gilroy-Medium.ttf in Resources */,
-				A9B63079291ABC1300BB850E /* field_widget.html in Resources */,
 				457CBC01282D27D000ED0F00 /* Localizable.strings in Resources */,
 				457CBC02282D27D000ED0F00 /* LoadingMoreTableViewCell.xib in Resources */,
 				457CBC03282D27D000ED0F00 /* MatchLineTableViewCell.xib in Resources */,
@@ -11021,7 +11007,6 @@
 				457CBEA7282D2CD100ED0F00 /* Gilroy-Regular.ttf in Resources */,
 				457CBEA8282D2CD100ED0F00 /* Gilroy-Medium.ttf in Resources */,
 				457CBEA9282D2CD100ED0F00 /* Localizable.strings in Resources */,
-				A9B6307A291ABC1300BB850E /* field_widget.html in Resources */,
 				457CBEAA282D2CD100ED0F00 /* LoadingMoreTableViewCell.xib in Resources */,
 				457CBEAB282D2CD100ED0F00 /* MatchLineTableViewCell.xib in Resources */,
 				457CBEAC282D2CD100ED0F00 /* RecentSearchHeaderView.xib in Resources */,
@@ -11154,7 +11139,6 @@
 				4589C97D282024E400243547 /* Gilroy-Regular.ttf in Resources */,
 				4589C97E282024E400243547 /* Gilroy-Medium.ttf in Resources */,
 				4589C97F282024E400243547 /* Localizable.strings in Resources */,
-				A9B63073291ABC1300BB850E /* field_widget.html in Resources */,
 				4589C980282024E400243547 /* LoadingMoreTableViewCell.xib in Resources */,
 				4589C981282024E400243547 /* MatchLineTableViewCell.xib in Resources */,
 				4589C982282024E400243547 /* RecentSearchHeaderView.xib in Resources */,
@@ -11287,7 +11271,6 @@
 				45A6BDD728246A7500D9B416 /* Gilroy-Medium.ttf in Resources */,
 				45A6BDD828246A7500D9B416 /* Localizable.strings in Resources */,
 				45A6BDD928246A7500D9B416 /* LoadingMoreTableViewCell.xib in Resources */,
-				A9B63078291ABC1300BB850E /* field_widget.html in Resources */,
 				45A6BE3528246AFA00D9B416 /* Colors.xcassets in Resources */,
 				45A6BE3728246AFA00D9B416 /* GoogleService-Info.plist in Resources */,
 				45A6BDDA28246A7500D9B416 /* MatchLineTableViewCell.xib in Resources */,
@@ -11441,7 +11424,6 @@
 				A9C3434028F9A74A0055360B /* DepositViewController.xib in Resources */,
 				A9C3434128F9A74A0055360B /* Inconsolata-Bold.ttf in Resources */,
 				A9C3434228F9A74A0055360B /* HomeFilterViewController.xib in Resources */,
-				A9B63075291ABC1300BB850E /* field_widget.html in Resources */,
 				A9C3434328F9A74A0055360B /* FilterSliderInfoView.xib in Resources */,
 				A9C3434428F9A74A0055360B /* ListTypeCollectionViewCell.xib in Resources */,
 				A9C3434528F9A74A0055360B /* EmailVerificationViewController.xib in Resources */,
