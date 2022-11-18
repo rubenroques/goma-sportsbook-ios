@@ -177,7 +177,7 @@ class MatchDetailsViewController: UIViewController {
     // ScrollView content offset
     private var lastContentOffset: CGFloat = 0
     private var autoScrollEnabled: Bool = true
-    
+
     enum HeaderBarSelection {
         case none
         case live
@@ -731,7 +731,6 @@ class MatchDetailsViewController: UIViewController {
 
     func setTableViewHeight() {
         let screenSize: CGRect = UIScreen.main.bounds
-        //let screenSize = self.view.safeAreaLayoutGuide.layoutFrame
 
         let screenHeight = screenSize.height
 
@@ -777,14 +776,20 @@ class MatchDetailsViewController: UIViewController {
                     self.contentScrollView.isScrollEnabled = true
 
                     if scrollTop {
-                        self.contentScrollView.setContentOffset(CGPoint.zero, animated: true)
+                        UIView.animate(withDuration: 0.3, animations: {
+                            self.contentScrollView.setContentOffset(
+                                CGPoint.zero, animated: false)
+                        })
                         self.autoScrollEnabled = true
                     }
                     else {
                         if self.autoScrollEnabled {
                             let marketFilterOffset = self.isMatchFieldExpanded ? self.headerButtonsBaseView.frame.height + self.matchFielHeight : self.headerButtonsBaseView.frame.height
 
-                            self.contentScrollView.setContentOffset(CGPoint(x: 0, y: marketFilterOffset), animated: true)
+                            UIView.animate(withDuration: 0.3, animations: {
+                                self.contentScrollView.setContentOffset(
+                                    CGPoint(x: 0, y: marketFilterOffset), animated: false)
+                            })
                             self.autoScrollEnabled = false
                         }
                     }
@@ -1414,14 +1419,16 @@ extension MatchDetailsViewController: UIScrollViewDelegate {
 
             let scrollViewTop = scrollView.frame.origin.y
 
-            if let marketFiltersTop = scrollView.superview?.convert(self.marketTypesCollectionView.bounds.origin, from: self.marketTypesCollectionView).y {
+            let marketFilterOffset = self.isMatchFieldExpanded ? self.headerButtonsBaseView.frame.height + self.matchFielHeight : self.headerButtonsBaseView.frame.height
 
-                if self.lastContentOffset < scrollView.contentOffset.y {
+            if self.lastContentOffset < scrollView.contentOffset.y {
 
-                    if marketFiltersTop < scrollViewTop {
-                        self.contentScrollView.isScrollEnabled = false
-                        self.autoScrollEnabled = false
-                    }
+                if marketFilterOffset <= scrollView.contentOffset.y && self.autoScrollEnabled {
+
+                    self.contentScrollView.setContentOffset(CGPoint(x: 0, y: marketFilterOffset), animated: false)
+
+                    self.contentScrollView.isScrollEnabled = false
+                    self.autoScrollEnabled = false
                 }
             }
 

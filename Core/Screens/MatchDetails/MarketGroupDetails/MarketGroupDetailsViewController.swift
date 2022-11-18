@@ -24,7 +24,6 @@ class MarketGroupDetailsViewController: UIViewController {
 
     // ScrollView content offset
     private var lastContentOffset: CGFloat = 0
-
     var shouldScrollToTop: ((Bool) -> Void)?
 
     // MARK: - Lifetime and Cycle
@@ -55,9 +54,12 @@ class MarketGroupDetailsViewController: UIViewController {
         self.tableView.register(ThreeAwayMarketDetailTableViewCell.nib, forCellReuseIdentifier: ThreeAwayMarketDetailTableViewCell.identifier)
         self.tableView.register(OverUnderMarketDetailTableViewCell.nib, forCellReuseIdentifier: OverUnderMarketDetailTableViewCell.identifier)
 
+        self.tableView.bounces = false
+
         self.showLoading()
 
         self.bind(toViewModel: self.viewModel)
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -299,7 +301,7 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
 
         let scrollViewTop = scrollView.frame.origin.y
 
-        if self.lastContentOffset < scrollViewTop {
+        if scrollViewTop == scrollView.contentOffset.y && self.lastContentOffset != 0  {
             self.shouldScrollToTop?(true)
         }
         else if self.lastContentOffset > scrollViewTop {
@@ -309,6 +311,7 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
 
         self.lastContentOffset = scrollView.contentOffset.y
     }
+
 }
 
 extension MarketGroupDetailsViewController {
