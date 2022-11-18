@@ -146,9 +146,11 @@ class MatchDetailsViewController: UIViewController {
         didSet {
             if self.shouldShowLiveFieldWebView {
                 self.headerLiveButtonBaseView.isHidden = false
+                self.contentScrollView.isScrollEnabled = true
             }
             else {
                 self.headerLiveButtonBaseView.isHidden = true
+                self.contentScrollView.isScrollEnabled = false
             }
         }
     }
@@ -1015,9 +1017,11 @@ class MatchDetailsViewController: UIViewController {
 
     @objc func didSwipeDownMarkets() {
 
-        self.contentScrollView.isScrollEnabled = true
-        self.contentScrollView.setContentOffset(CGPoint.zero, animated: true)
-        self.autoScrollEnabled = true
+        if self.shouldShowLiveFieldWebView {
+            self.contentScrollView.isScrollEnabled = true
+            self.contentScrollView.setContentOffset(CGPoint.zero, animated: true)
+            self.autoScrollEnabled = true
+        }
 
     }
     
