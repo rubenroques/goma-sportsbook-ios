@@ -13,6 +13,7 @@ import Foundation
 enum SportRadarRestAPIClient {
     case marketsFilter
     case fieldWidgetId(eventId: String)
+    case sportsList
 }
 
 extension SportRadarRestAPIClient: Endpoint {
@@ -21,14 +22,14 @@ extension SportRadarRestAPIClient: Endpoint {
         switch self {
         case .marketsFilter:
             return "/sportradar/sportsbook/config/marketsFilter_v2.json"
-        case .fieldWidgetId:
+        case .fieldWidgetId, .sportsList:
             return "/services/content/get"
         }
     }
 
     var query: [URLQueryItem]? {
         switch self {
-        case .marketsFilter, .fieldWidgetId:
+        case .marketsFilter, .fieldWidgetId, .sportsList:
             return nil
         }
     }
@@ -37,7 +38,7 @@ extension SportRadarRestAPIClient: Endpoint {
         switch self {
         case .marketsFilter:
             return .get
-        case .fieldWidgetId:
+        case .fieldWidgetId, .sportsList:
             return .post
         }
     }
@@ -58,6 +59,21 @@ extension SportRadarRestAPIClient: Endpoint {
                 }
             }
             """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+        case .sportsList:
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "boNavigationList",
+                                "id": "1355/top"
+                            },
+                            "clientContext": {
+                                "language": "UK",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
         default:
             return nil
@@ -111,5 +127,37 @@ public struct FieldWidget: Codable {
     enum CodingKeys: String, CodingKey {
         case data = "data"
         case version = "version"
+    }
+}
+
+public struct SportsListResponse: Codable {
+    public var data: SportsList?
+
+    enum CodingKeys: String, CodingKey {
+        case data = "data"
+    }
+}
+
+public struct SportsList: Codable {
+    public var sportNodes: [SportNode]
+
+    enum CodingKeys: String, CodingKey {
+        case sportNodes: "bonavigationnodes"
+    }
+}
+
+public struct SportNode: Codable {
+    public var id: String
+    public var name: String
+    public var numberMarkets: Int
+    public var numberEvents: Int
+    public var defaultOrder: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id = "idfwbonavigation"
+        case name = "name"
+        case numberMarkets = "nummarkets"
+        case numberEvents = "numevents"
+        case defaultOrder = "defaultOrder"
     }
 }

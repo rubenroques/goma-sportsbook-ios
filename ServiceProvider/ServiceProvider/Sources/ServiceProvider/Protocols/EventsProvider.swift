@@ -26,6 +26,8 @@ protocol EventsProvider {
 
     func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>?
 
+    func getSportsList() -> AnyPublisher<SportsList, ServiceProviderError>?
+
     func getFieldWidgetURLRequest(urlString: String?, widgetFile: String?) -> URLRequest?
 
     func getFieldWidgetHtml(widgetFile: String, eventId: String, providerId: String?) -> String?
