@@ -25,6 +25,49 @@ class SportRadarEventDetailRepository {
     init() {
 
         self.getMarketFilters()
+
+        self.getAllSports()
+
+        self.getUnifiedSports()
+    }
+
+    func getUnifiedSports() {
+
+        Env.serviceProvider.getUnifiedSportsList()?
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+
+                case .finished:
+                    print("UNIFIED SPORTS LIST FINISHED")
+                case .failure(let error):
+                    print("UNIFIED SPORTS LIST ERROR: \(error)")
+                }
+            }, receiveValue: { [weak self] sportsList in
+                print("UNIFIED SPORTS LIST RESPONSE: \(sportsList)")
+
+            })
+            .store(in: &cancellables)
+    }
+
+    func getAllSports() {
+
+        Env.serviceProvider.getSportsList()?
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+
+                case .finished:
+                    print("SPORTS LIST FINISHED")
+                case .failure(let error):
+                    print("SPORTS LIST ERROR: \(error)")
+
+                }
+            }, receiveValue: { [weak self] sportsList in
+                print("SPORTS LIST RESPONSE: \(sportsList)")
+
+            })
+            .store(in: &cancellables)
     }
     
     func getMarketFilters() {

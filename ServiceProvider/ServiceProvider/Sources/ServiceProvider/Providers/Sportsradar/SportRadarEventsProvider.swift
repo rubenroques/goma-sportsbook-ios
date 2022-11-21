@@ -13,6 +13,8 @@ class SportRadarEventsProvider: EventsProvider {
     var connector: SportRadarSocketConnector
     private var networkManager: NetworkManager
 
+    private var cancellables = Set<AnyCancellable>()
+
     required init(connector: SportRadarSocketConnector) {
         self.connector = connector
         self.networkManager = NetworkManager()
@@ -444,7 +446,9 @@ extension SportRadarEventsProvider {
     }
     
     private func createSubscribeRequest(withHTTPBody body: Data? = nil) -> URLRequest {
-        let url = URL(string: "https://www-sportbook-goma-int.optimahq.com/services/content/subscribe")!
+        //let url = URL(string: "https://www-sportbook-goma-int.optimahq.com/services/content/subscribe")!
+        let url = URL(string: "https://www-sportsbook-uat.optimahq.com/services/content/subscribe")!
+
         var request = URLRequest(url: url)
         request.httpBody = body 
         request.httpMethod = "POST"
@@ -509,5 +513,64 @@ extension SportRadarEventsProvider {
         }
 
         return nil
+    }
+
+    func getSportsList() -> AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError>? {
+
+        let endpoint = SportRadarRestAPIClient.sportsList
+        let requestPublisher: AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError> = self.networkManager.request(endpoint)
+
+        return requestPublisher
+
+    }
+
+    func getUnifiedSportsList(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<[SportType], ServiceProviderError>? {
+
+        // Navigation Sports
+        let sportsEndpoint = SportRadarRestAPIClient.sportsList
+        let sportsRequestPublisher: AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError> = self.networkManager.request(sportsEndpoint)
+
+        // Code Sports
+        let dateRange = self.getDateRangeId()
+        let codeSportsEndpoint = SportRadarRestAPIClient.scheduleSportsList(dateRange: dateRange)
+
+        let codeSportsRequestPublisher: AnyPublisher<SportRadarResponse<[ScheduledSport]>, ServiceProviderError> = self.networkManager.request(codeSportsEndpoint)
+
+        return Publishers.CombineLatest(sportsRequestPublisher, codeSportsRequestPublisher)
+            .flatMap({ sportsList, codeSportsList -> AnyPublisher<[SportType], ServiceProviderError> in
+
+                if let sports = sportsList.data?.sportNodes?.filter({
+                    $0.numberEvents != "0"
+                }),
+                   let codeSports = codeSportsList.data {
+
+                    let newSports = sports.map(SportRadarModelMapper.sportType(fromSportNode:)).compactMap({ $0 })
+
+                    let newCodeSports = codeSports.map(SportRadarModelMapper.sportType(fromScheduledSport:)).compactMap({ $0 })
+
+                    let unifiedSportsList = Array(Set(newSports + newCodeSports))
+
+                    return Just(unifiedSportsList).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
+                }
+                return Fail(outputType: [SportType].self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+            })
+            .eraseToAnyPublisher()
+
+
+//        return codeSportsRequestPublisher.flatMap({ sportsListResponse -> AnyPublisher<[SportType], ServiceProviderError> in
+//
+//            if let mappedSportsTypes = sportsListResponse.map(SportRadarModelMapper.sportTypeDetails(fromInternalSportTypeDetails:)).compactMap({ $0 }) {
+//
+//                return Just(mappedSportsTypes).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+//
+//            }
+//
+//
+//            return Fail(outputType: [SportType].self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+//        })
+
+        //return codeSportsRequestPublisher
+
     }
 }

@@ -124,7 +124,6 @@ class MatchDetailsViewModel: NSObject {
                 case .connected:
                     print("Connected to ws")
                 case .content(let events):
-                    print("MATCH DETAIL: \(events)")
                     self.isLoadingMarketGroups.send(true)
                     if let event = events[safe: 0],
                        let match = ServiceProviderModelMapper.match(fromEventGroup: event) {

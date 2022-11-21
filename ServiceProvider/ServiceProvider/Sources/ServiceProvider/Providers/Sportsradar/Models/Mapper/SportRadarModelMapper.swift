@@ -424,6 +424,22 @@ struct SportRadarModelMapper {
         default: return nil
         }
     }
+
+    static func sportType(fromSportNode sportNode: SportNode) -> SportType? {
+
+        let sportType = SportType(id: sportNode.id, name: sportNode.name)
+
+        return sportType
+        //return .unknown(id: sportNode.id, name: sportNode.name)
+    }
+
+    static func sportType(fromScheduledSport scheduledSport: ScheduledSport) -> SportType? {
+
+        let sportType = SportType(id: "", code: scheduledSport.id, name: scheduledSport.name)
+
+        return sportType        //return .unknown(id: scheduledSport.id.id, name: scheduledSport.id.name)
+
+    }
     // ==========================================
     
 }

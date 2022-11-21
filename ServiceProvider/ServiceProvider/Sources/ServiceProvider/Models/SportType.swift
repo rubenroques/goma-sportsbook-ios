@@ -7,7 +7,8 @@
 
 import Foundation
 
-public enum SportType {
+public enum SportType: Hashable {
+
     case football
     case golf
     case tennis
@@ -199,8 +200,10 @@ public enum SportType {
     case numbers
     case emptyBets
     case lotteries
+
+    case unknown(id: String?, code: String?, name: String?)
     
-    public init?(id: String) {
+    public init?(id: String, code: String? = nil , name: String? = nil) {
         switch id {
         // Initial list from EveryMatrix
         case "1": self = .football
@@ -391,7 +394,8 @@ public enum SportType {
         case "930": self = .numbers
         case "931": self = .emptyBets
         case "932": self = .lotteries
-        default: return nil
+        default: self = .unknown(id: id, code: code, name: name)
+
         }
     }
     
@@ -584,6 +588,7 @@ public enum SportType {
         case .numbers: return "930"
         case .emptyBets: return "931"
         case .lotteries: return "932"
+        case .unknown(let id, _, _): return id ?? ""
         }
     }
     
@@ -776,6 +781,15 @@ public enum SportType {
         case .numbers: return "Numbers"
         case .emptyBets: return "Empty Bets"
         case .lotteries: return "Lotteries"
+        case .unknown(_, _, let name): return name ?? ""
+        }
+    }
+
+    public var code: String {
+        switch self {
+
+        case .unknown(_, let code, _): return code ?? ""
+        default: return ""
         }
     }
 }

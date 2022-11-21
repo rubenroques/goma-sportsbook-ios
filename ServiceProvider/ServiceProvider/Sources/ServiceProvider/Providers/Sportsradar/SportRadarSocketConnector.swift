@@ -51,7 +51,8 @@ class SportRadarSocketConnector: NSObject, Connector {
     }
     
     private static func socketRequest() -> URLRequest {
-        let wssURLString = "wss://velnt-spor-int.optimahq.com/notification/listen/websocket"
+        //let wssURLString = "wss://velnt-spor-int.optimahq.com/notification/listen/websocket"
+        let wssURLString = "wss://velnt-spor-uat.optimahq.com/notification/listen/websocket"
         return URLRequest(url: URL(string: wssURLString)!)
     }
     
