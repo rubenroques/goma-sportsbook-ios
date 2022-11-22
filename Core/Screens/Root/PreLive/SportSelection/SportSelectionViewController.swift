@@ -41,6 +41,8 @@ class SportSelectionViewController: UIViewController {
     
     var selectionDelegate: SportTypeSelectionViewDelegate?
 
+    var cancellables = Set<AnyCancellable>()
+
     var isLoading: Bool = false {
         didSet {
             if isLoading {
@@ -171,32 +173,52 @@ class SportSelectionViewController: UIViewController {
 //            })
 //            .store(in: &self.cancellable)
 
-        self.allSportsPublisher?.cancel()
-        self.allSportsPublisher = nil
+//        self.allSportsPublisher?.cancel()
+//        self.allSportsPublisher = nil
+//
+//        self.allSportsPublisher = Env.serviceProvider.allSportTypes()?
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                print("Env.serviceProvider.allSportTypes completed \(completion)")
+//                switch completion {
+//                case .finished:
+//                    ()
+//                case .failure:
+//                    self?.isLoading = false
+//                }
+//            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
+//                switch subscribableContent {
+//                case .connected:
+//                    print("Env.serviceProvider.allSportTypes connected")
+//                    // self?.configureWithAllSports([])
+//                case .content(let sportTypes):
+//                    print("Env.serviceProvider.allSportTypes content")
+//                    self?.configureWithAllSports(sportTypes)
+//                case .disconnected:
+//                    print("Env.serviceProvider.allSportTypes disconnected")
+//                    //self?.configureWithAllSports([])
+//                }
+//            })
+        self.isLoading = true
 
-        self.allSportsPublisher = Env.serviceProvider.allSportTypes()?
+        Env.serviceProvider.getUnifiedSportsList()?
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
-                print("Env.serviceProvider.allSportTypes completed \(completion)")
                 switch completion {
+
                 case .finished:
-                    ()
-                case .failure:
+                    print("UNIFIED SPORTS LIST FINISHED")
+                case .failure(let error):
+                    print("UNIFIED SPORTS LIST ERROR: \(error)")
                     self?.isLoading = false
                 }
-            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
-                switch subscribableContent {
-                case .connected:
-                    print("Env.serviceProvider.allSportTypes connected")
-                    // self?.configureWithAllSports([])
-                case .content(let sportTypes):
-                    print("Env.serviceProvider.allSportTypes content")
-                    self?.configureWithAllSports(sportTypes)
-                case .disconnected:
-                    print("Env.serviceProvider.allSportTypes disconnected")
-                    //self?.configureWithAllSports([])
-                }
+
+            }, receiveValue: { [weak self] sportsList in
+                print("UNIFIED SPORTS LIST RESPONSE: \(sportsList)")
+                self?.configureWithUniqueSports(sportsList)
+
             })
+            .store(in: &cancellables)
 
         // EM TEMP SHUTDOWN
 //        self.sportsData = []
@@ -285,8 +307,6 @@ class SportSelectionViewController: UIViewController {
 
     func configureWithAllSports(_ sportTypes: [ServiceProvider.SportType]) {
 
-        self.isLoading = true
-
         // TODO: Remove [EveryMatrix.Discipline] logic from this ViewModel, should be using the ServiceProvider models
         // or another independent one
         let sportsTypes = sportTypes.map { sportType in
@@ -299,6 +319,28 @@ class SportSelectionViewController: UIViewController {
 
         let sortedArray = sportsTypes.sorted(by: {$0.id.localizedStandardCompare($1.id) == .orderedAscending})
         self.sportsData = sortedArray
+
+        self.fullSportsData = self.sportsData
+
+        self.isLoading = false
+
+        self.collectionView.reloadData()
+    }
+
+    func configureWithUniqueSports(_ uniqueSports: [SportUnique]) {
+
+        self.isLoading = true
+
+        let sportsTypes = uniqueSports.map { uniqueSport in
+            EveryMatrix.Discipline(type: uniqueSport.iconId ?? "0",
+                                   id: uniqueSport.iconId ?? "0",
+                                   name: uniqueSport.name,
+                                   numberOfLiveEvents: 0,
+                                   showEventCategory: false)
+        }
+
+//        let sortedArray = sportsTypes.sorted(by: {$0.id.localizedStandardCompare($1.id) == .orderedAscending})
+        self.sportsData = sportsTypes
 
         self.fullSportsData = self.sportsData
 

@@ -425,19 +425,17 @@ struct SportRadarModelMapper {
         }
     }
 
-    static func sportType(fromSportNode sportNode: SportNode) -> SportType? {
+    static func sportUnique(fromSportNode sportNode: SportNode) -> SportUnique? {
 
-        let sportType = SportType(id: sportNode.id, name: sportNode.name)
+        let sportUnique = SportUnique(name: sportNode.name, numericId: sportNode.id, alphaId: nil, iconId: nil, numberEvents: sportNode.numberEvents, numberOutrightEvents: sportNode.numberOutrightEvents, numberOutrightMarkets: sportNode.numberOutrightMarkets)
 
-        return sportType
-        //return .unknown(id: sportNode.id, name: sportNode.name)
+        return sportUnique
     }
 
-    static func sportType(fromScheduledSport scheduledSport: ScheduledSport) -> SportType? {
+    static func sportUnique(fromScheduledSport scheduledSport: ScheduledSport) -> SportUnique? {
 
-        let sportType = SportType(id: "", code: scheduledSport.id, name: scheduledSport.name)
-
-        return sportType        //return .unknown(id: scheduledSport.id.id, name: scheduledSport.id.name)
+        let sportUnique = SportUnique(name: scheduledSport.name, numericId: nil, alphaId: scheduledSport.id, iconId: nil, numberEvents: nil, numberOutrightEvents: nil, numberOutrightMarkets: nil)
+        return sportUnique
 
     }
     // ==========================================

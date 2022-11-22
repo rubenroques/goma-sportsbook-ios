@@ -139,7 +139,7 @@ extension ServiceProviderClient {
         return self.eventsProvider?.getSportsList()
     }
 
-    public func getUnifiedSportsList(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<[SportType], ServiceProviderError>? {
+    public func getUnifiedSportsList(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<[SportUnique], ServiceProviderError>? {
         return self.eventsProvider?.getUnifiedSportsList(initialDate: initialDate, endDate: endDate)
     }
 }

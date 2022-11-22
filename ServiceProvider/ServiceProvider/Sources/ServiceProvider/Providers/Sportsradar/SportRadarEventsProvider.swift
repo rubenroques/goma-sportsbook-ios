@@ -375,6 +375,60 @@ class SportRadarEventsProvider: EventsProvider {
 
         return dateRangeId
     }
+
+    func mergeSports(numericSportArray: [SportUnique], alphaSportArray: [SportUnique]) -> [SportUnique] {
+
+        var uniqueArray: [SportUnique] = []
+
+        for numericSport in numericSportArray {
+
+            let alphaFilter = alphaSportArray.filter({ $0.name == numericSport.name })
+
+            if let alphaSport = alphaFilter.first {
+                let mergedSport = SportUnique(name: numericSport.name,
+                                              numericId: numericSport.numericId,
+                                              alphaId: alphaSport.alphaId,
+                                              iconId: numericSport.iconId,
+                                              numberEvents: numericSport.numberEvents,
+                                              numberOutrightEvents: numericSport.numberOutrightEvents,
+                                              numberOutrightMarkets: numericSport.numberOutrightMarkets)
+
+                uniqueArray.append(mergedSport)
+            }
+            else {
+                uniqueArray.append(numericSport)
+            }
+
+        }
+
+        for alphaSport in alphaSportArray {
+
+            if !uniqueArray.contains(where: { $0.name == alphaSport.name}) {
+                uniqueArray.append(alphaSport)
+            }
+        }
+
+        // Check code id
+        var uniqueSportsArray: [SportUnique] = []
+
+        for uniqueSport in uniqueArray {
+
+            let sportTypeFilter = SportType.allCases.filter({
+                $0.name == uniqueSport.name
+            })
+
+            if let sportType = sportTypeFilter.first {
+                let newSportUnique = SportUnique(name: uniqueSport.name, numericId: uniqueSport.numericId, alphaId: uniqueSport.alphaId, iconId: sportType.id, numberEvents: uniqueSport.numberEvents, numberOutrightEvents: uniqueSport.numberOutrightEvents, numberOutrightMarkets: uniqueSport.numberOutrightMarkets)
+
+                uniqueSportsArray.append(newSportUnique)
+            }
+            else {
+                uniqueSportsArray.append(uniqueSport)
+            }
+        }
+
+        return uniqueSportsArray
+    }
 }
 
 extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
@@ -524,7 +578,7 @@ extension SportRadarEventsProvider {
 
     }
 
-    func getUnifiedSportsList(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<[SportType], ServiceProviderError>? {
+    func getUnifiedSportsList(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<[SportUnique], ServiceProviderError>? {
 
         // Navigation Sports
         let sportsEndpoint = SportRadarRestAPIClient.sportsList
@@ -537,23 +591,23 @@ extension SportRadarEventsProvider {
         let codeSportsRequestPublisher: AnyPublisher<SportRadarResponse<[ScheduledSport]>, ServiceProviderError> = self.networkManager.request(codeSportsEndpoint)
 
         return Publishers.CombineLatest(sportsRequestPublisher, codeSportsRequestPublisher)
-            .flatMap({ sportsList, codeSportsList -> AnyPublisher<[SportType], ServiceProviderError> in
+            .flatMap({ sportsList, codeSportsList -> AnyPublisher<[SportUnique], ServiceProviderError> in
 
                 if let sports = sportsList.data?.sportNodes?.filter({
                     $0.numberEvents != "0"
                 }),
                    let codeSports = codeSportsList.data {
 
-                    let newSports = sports.map(SportRadarModelMapper.sportType(fromSportNode:)).compactMap({ $0 })
+                    let newSports = sports.map(SportRadarModelMapper.sportUnique(fromSportNode:)).compactMap({ $0 })
 
-                    let newCodeSports = codeSports.map(SportRadarModelMapper.sportType(fromScheduledSport:)).compactMap({ $0 })
+                    let newCodeSports = codeSports.map(SportRadarModelMapper.sportUnique(fromScheduledSport:)).compactMap({ $0 })
 
-                    let unifiedSportsList = Array(Set(newSports + newCodeSports))
+                    let unifiedSportsList = self.mergeSports(numericSportArray: newSports, alphaSportArray: newCodeSports)
 
                     return Just(unifiedSportsList).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
 
                 }
-                return Fail(outputType: [SportType].self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+                return Fail(outputType: [SportUnique].self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
             })
             .eraseToAnyPublisher()
 

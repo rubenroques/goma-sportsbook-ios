@@ -168,11 +168,15 @@ public struct SportNode: Codable {
     public var id: String
     public var name: String
     public var numberEvents: String
+    public var numberOutrightEvents: String
+    public var numberOutrightMarkets: String
 
     enum CodingKeys: String, CodingKey {
         case id = "idfwbonavigation"
         case name = "name"
         case numberEvents = "numevents"
+        case numberOutrightEvents = "numoutrightevents"
+        case numberOutrightMarkets = "numoutrightmarkets"
     }
 }
 
@@ -185,4 +189,14 @@ public struct ScheduledSport: Codable {
         case name = "name"
     }
 
+}
+
+public struct SportUnique: Codable, Hashable {
+    public var name: String
+    public var numericId: String?
+    public var alphaId: String?
+    public var iconId: String?
+    public var numberEvents: String?
+    public var numberOutrightEvents: String?
+    public var numberOutrightMarkets: String?
 }

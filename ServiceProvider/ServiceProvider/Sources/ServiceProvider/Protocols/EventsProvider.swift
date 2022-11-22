@@ -28,7 +28,7 @@ protocol EventsProvider {
 
     func getSportsList() -> AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError>?
 
-    func getUnifiedSportsList(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportType], ServiceProviderError>?
+    func getUnifiedSportsList(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportUnique], ServiceProviderError>?
 
     func getFieldWidgetURLRequest(urlString: String?, widgetFile: String?) -> URLRequest?
 
