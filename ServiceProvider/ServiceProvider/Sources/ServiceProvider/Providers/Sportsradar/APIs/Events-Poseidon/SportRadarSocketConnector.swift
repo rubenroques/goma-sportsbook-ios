@@ -18,11 +18,12 @@ protocol SportRadarConnectorSubscriber {
 //    func popularEventListBySportTypeDate(forSportType sportType: SportType, withEvents: [EventsGroup])
 //    func upcomingEventListBySportTypeDate(forSportType sportType: SportType, withEvents: [EventsGroup])
     func eventDetails(events: [EventsGroup])
+    
 }
 
 class SportRadarSocketConnector: NSObject, Connector {
     
-    var token: SessionAccessToken?
+    var token: SportRadarSessionAccessToken?
 
     var subscriberForType: [SportRadarModels.ContentType: SportRadarConnectorSubscriber] = [:]
     
@@ -51,7 +52,7 @@ class SportRadarSocketConnector: NSObject, Connector {
     }
     
     private static func socketRequest() -> URLRequest {
-        let wssURLString = "wss://velnt-spor-int.optimahq.com/notification/listen/websocket"
+        let wssURLString = SportRadarConstants.socketURL
         return URLRequest(url: URL(string: wssURLString)!)
     }
     
@@ -59,7 +60,7 @@ class SportRadarSocketConnector: NSObject, Connector {
         
         // TODO: ipAddress is empty, and language is hardcoded
         let body = """
-                   {"subscriberId":null,"versionList":[],"clientContext":{"language":"UK","ipAddress":""}}
+                   {"subscriberId":null,"versionList":[],"clientContext":{"language":"\(SportRadarConstants.socketLanguageCode)","ipAddress":""}}
                    """
         
         self.socket.write(string: body) {
@@ -115,16 +116,15 @@ extension SportRadarSocketConnector: WebSocketDelegate {
             self.isConnected = false
             print("SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
-            print("SportRadarSocketConnector websocket received text: \(string)")
+            print("SportRadarSocketConnector websocket received text: \(string.count)")
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
-                self.handleResponse(sportRadarSocketResponse, data: data)
+                self.handleContentMessage(sportRadarSocketResponse, messageData: data)
             }
         case .binary(let data):
-            print("SportRadarSocketConnector websocket Received data: \(data.count)")
-            
+            print("SportRadarSocketConnector websocket received data: \(data.count)")
             if let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
-                self.handleResponse(sportRadarSocketResponse, data: data)
+                self.handleContentMessage(sportRadarSocketResponse, messageData: data)
             }
         case .ping(_):
             break
@@ -138,17 +138,12 @@ extension SportRadarSocketConnector: WebSocketDelegate {
             self.isConnected = false
         case .error(let error):
             self.isConnected = false
-            print("Socket Error \(error.debugDescription)")
-            // TEMP SOCKET SHUTDOWN ERROR
-//            if error.debugDescription.contains("Code=57") {
-//                print("Socket Error DISCONNECTED")
-//                self.refreshConnection()
-//            }
+            print("SportRadarSocketConnector websocket Error \(error.debugDescription)")
             self.refreshConnection()
         }
     }
     
-    func handleResponse(_ messageType: SportRadarModels.NotificationType, data: Data) {
+    func handleContentMessage(_ messageType: SportRadarModels.NotificationType, messageData: Data) {
         
         switch messageType {
         case .listeningStarted(let sessionTokenId):
@@ -174,20 +169,6 @@ extension SportRadarSocketConnector: WebSocketDelegate {
                     let mappedSportsTypes = sportsTypes.map(SportRadarModelMapper.sportType(fromInternalSportType:)).compactMap({ $0 })
                     subscriber.sportTypeByDate(withSportTypes: mappedSportsTypes)
                 }
-//            case .popularEventListBySportTypeDate(let sportType, let events):
-//                if let subscriber = self.subscriberForType[content.code],
-//                   let sport = SportRadarModelMapper.sportType(fromInternalSportType: sportType)
-//                {
-//                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-//                    subscriber.popularEventListBySportTypeDate(forSportType: sport, withEvents: [eventsGroup])
-//                }
-//            case .upcomingEventListBySportTypeDate(let sportType, let events):
-//                if let subscriber = self.subscriberForType[content.code],
-//                   let sport = SportRadarModelMapper.sportType(fromInternalSportType: sportType)
-//                {
-//                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-//                    subscriber.upcomingEventListBySportTypeDate(forSportType: sport, withEvents: [eventsGroup])
-//                }
             case .eventListBySportTypeDate(let sportType, let events):
                 if let subscriber = self.subscriberForType[content.code],
                    let sport = SportRadarModelMapper.sportType(fromInternalSportType: sportType)
@@ -198,7 +179,6 @@ extension SportRadarSocketConnector: WebSocketDelegate {
             case .eventDetails(let events):
                 if let subscriber = self.subscriberForType[content.code] {
                     let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-
                     subscriber.eventDetails(events: [eventsGroup])
                 }
             }

@@ -118,7 +118,7 @@ class LiveEventsViewModel: NSObject {
         
         // self.getSportsLive()
         // Subscribe live sports
-        self.liveSportsPublisher = Env.serviceProvider.liveSportTypes()?
+        self.liveSportsPublisher = Env.serviceProvider.liveSportTypes()
             .sink(receiveCompletion: { completion in
                 print("Env.serviceProvider.liveSportTypes completed \(completion)")
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportTypeDetails]>) in
@@ -157,7 +157,7 @@ class LiveEventsViewModel: NSObject {
         
         print("subscribeLiveMatches fetchData called")
         
-        self.providerLiveMatchesSubscriber = Env.serviceProvider.subscribeLiveMatches(forSportType: sportType)?
+        self.providerLiveMatchesSubscriber = Env.serviceProvider.subscribeLiveMatches(forSportType: sportType)
             .sink(receiveCompletion: { completion in
                 print("Env.serviceProvider.subscribeLiveMatches completed \(completion)")
             }, receiveValue: { (subscribableContent: SubscribableContent<[EventsGroup]>) in

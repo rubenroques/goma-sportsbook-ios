@@ -74,5 +74,3 @@ public struct Outcome: Codable {
     }
     
 }
-
-

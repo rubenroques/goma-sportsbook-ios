@@ -472,6 +472,7 @@ extension UserSessionStore {
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
+                    print("UserSessionStore login failed, error: \(error)")
                     self?.logout()
                 case .finished:
                     ()

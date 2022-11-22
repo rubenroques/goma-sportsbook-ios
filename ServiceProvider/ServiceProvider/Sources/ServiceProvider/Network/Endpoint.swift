@@ -20,7 +20,8 @@ protocol Endpoint {
 }
 
 extension Endpoint {
-    func request(aditionalQueryItems: [URLQueryItem] = []) -> URLRequest? {
+    func request(aditionalQueryItems: [URLQueryItem] = [],
+                 aditionalHeaders: HTTP.Headers? = nil) -> URLRequest? {
 
         guard var urlComponents = URLComponents(string: url) else { return nil }
         urlComponents.path = self.endpoint
@@ -33,10 +34,15 @@ extension Endpoint {
 
         var request = URLRequest(url: completedURL)
         request.httpMethod = self.method.value()
-        request.timeoutInterval = timeout
-        request.httpBody = body
-        if let headersValue = headers {
+        request.timeoutInterval = self.timeout
+        request.httpBody = self.body
+        if let headersValue = self.headers {
             for (key, value) in headersValue {
+                request.setValue(value, forHTTPHeaderField: key)
+            }
+        }
+        if let aditionalHeadersValue = aditionalHeaders {
+            for (key, value) in aditionalHeadersValue {
                 request.setValue(value, forHTTPHeaderField: key)
             }
         }

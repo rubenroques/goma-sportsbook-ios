@@ -264,6 +264,14 @@ class PersonalInfoViewController: UIViewController {
         
         Env.serviceProvider.getProfile()
             .receive(on: DispatchQueue.main)
+            .handleEvents(receiveSubscription: { [weak self] _ in
+                self?.showLoadingView()
+                self?.view.isUserInteractionEnabled = false
+            },
+            receiveCompletion: { [weak self] _ in
+                self?.hideLoadingView()
+                self?.view.isUserInteractionEnabled = true
+            })
             .map(ServiceProviderModelMapper.userProfile(_:))
             .sink { _ in
                 
@@ -388,29 +396,25 @@ class PersonalInfoViewController: UIViewController {
                                                               postalCode: postalCode,
                                                               country: serviceProviderCountry,
                                                               cardId: personalId)
+        self.showLoadingView()
         
         Env.serviceProvider.updateUserProfile(form: form)
             .receive(on: DispatchQueue.main)
+            .handleEvents(receiveSubscription: { [weak self] _ in
+                self?.showLoadingView()
+                self?.view.isUserInteractionEnabled = false
+            },
+            receiveCompletion: { [weak self] _ in
+                self?.hideLoadingView()
+                self?.view.isUserInteractionEnabled = true
+            })
             .sink { completion in
                 if case .failure = completion {
                     self.showAlert(type: .error, text: "")
                 }
-                
-//                switch completion {
-//                case .failure: //(let error):
-//                   switch error {
-//                   case ServiceProviderError.
-//                   case let .requestError(message):
-//                       self.showAlert(type: .error, text: message)
-//                   default:
-//                       self.showAlert(type: .error, text: "\(error)")
-//                   }
-//
-//                case .finished:
-//                    ()
-//                }
+                self.hideLoadingView()
             } receiveValue: { _ in
-                self.showAlert(type: .success, text: localized("profile_updated_success"))
+                // self.showAlert(type: .success, text: localized("profile_updated_success"))
             }
             .store(in: &cancellables)
         

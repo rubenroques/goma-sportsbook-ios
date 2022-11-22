@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ServiceProvider
 import Combine
 
 class StaticHomeViewTemplateDataSource {
@@ -165,34 +166,57 @@ class StaticHomeViewTemplateDataSource {
         self.sportGroupViewModelCache = [:]
         self.cachedFeaturedTipLineViewModel = nil
 
-        self.fetchLocations()
-            .sink { [weak self] locations in
-                self?.store.storeLocations(locations: locations)
-
-                self?.requestSports()
-                self?.fetchBanners()
-                self?.fetchFavoriteMatches()
-                self?.fetchTips()
-                self?.fetchSuggestedBets()
-                self?.fetchAlerts()
-            }
-            .store(in: &cancellables)
+        self.requestSports()
+        self.fetchBanners()
+        self.fetchFavoriteMatches()
+        self.fetchTips()
+        self.fetchSuggestedBets()
+        self.fetchAlerts()
+        
+//        self.fetchLocations()
+//            .sink { [weak self] locations in
+//                self?.store.storeLocations(locations: locations)
+//
+//                self?.requestSports()
+//                self?.fetchBanners()
+//                self?.fetchFavoriteMatches()
+//                self?.fetchTips()
+//                self?.fetchSuggestedBets()
+//                self?.fetchAlerts()
+//            }
+//            .store(in: &cancellables)
 
     }
 
     func requestSports() {
 
-        let language = "en"
-        Env.everyMatrixClient.getDisciplines(language: language)
-            .map(\.records)
-            .compactMap({ $0 })
-            .sink(receiveCompletion: { _ in
-
-            }, receiveValue: { response in
-                self.sportsToFetch = Array(response.map(Sport.init(discipline:)).prefix(10))
-                self.refreshPublisher.send()
-            })
+        Env.serviceProvider.allSportTypes()
+            .sink { (completion: Subscribers.Completion<ServiceProviderError>) in
+                
+            } receiveValue: { (subscribableContent: SubscribableContent<[SportType]>) in
+                switch subscribableContent {
+                case .connected:
+                    ()
+                case .content(let sportsList):
+                    self.sportsToFetch = Array(sportsList.map(Sport.init(serviceProviderSportType:)).prefix(10))
+                    self.refreshPublisher.send()
+                case .disconnected:
+                    ()
+                }
+            }
             .store(in: &cancellables)
+
+//        let language = "en"
+//        Env.everyMatrixClient.getDisciplines(language: language)
+//            .map(\.records)
+//            .compactMap({ $0 })
+//            .sink(receiveCompletion: { _ in
+//
+//            }, receiveValue: { response in
+//                self.sportsToFetch = Array(response.map(Sport.init(discipline:)).prefix(10))
+//                self.refreshPublisher.send()
+//            })
+//            .store(in: &cancellables)
     }
 
     func fetchLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {

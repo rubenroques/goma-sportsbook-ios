@@ -35,5 +35,5 @@ extension Sport {
     init(discipline: EveryMatrix.Discipline) {
         self.init(id: discipline.id, name: discipline.name ?? "", showEventCategory: discipline.showEventCategory ?? false, liveEventsCount: discipline.numberOfLiveEvents ?? 0)
     }
-    
+
 }

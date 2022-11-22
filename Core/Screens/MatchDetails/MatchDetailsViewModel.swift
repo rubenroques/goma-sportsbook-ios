@@ -108,7 +108,7 @@ class MatchDetailsViewModel: NSObject {
 
     func getMatchDetails() {
 
-        Env.serviceProvider.subscribeMatchDetails(matchId: self.matchId)?
+        Env.serviceProvider.subscribeMatchDetails(matchId: self.matchId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 print("Env.serviceProvider.subscribeEventDetails completed \(completion)")

@@ -212,8 +212,9 @@ class HeaderDropDownSelectionView: UIView {
         }
 
         self.textField.inputView = pickerView
-        self.setText(self.selectionArray[defaultValue])
-
+        if let element = self.selectionArray[safe: defaultValue] {
+            self.setText(element)
+        }
         self.configureDismissPickerView()
     }
 

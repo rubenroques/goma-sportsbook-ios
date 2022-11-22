@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ServiceProvider
 import Combine
 
 class SportMatchLineViewModel {
@@ -72,8 +73,10 @@ class SportMatchLineViewModel {
     private var competitionMatchesRegister: EndpointPublisherIdentifiable?
     private var outrightCompetitionsRegister: EndpointPublisherIdentifiable?
 
-    private var matchesIds: [String] = []
+    // private var matchesIds: [String] = []
 
+    private var matches: [Match] = []
+    
     private var cancellables: Set<AnyCancellable> = []
 
     init(sport: Sport, matchesType: MatchesType, store: HomeStore) {
@@ -161,8 +164,7 @@ extension SportMatchLineViewModel {
         else if self.isOutrightCompetitionLine() {
             return 2
         }
-        else if let lineMatchId = matchesIds[safe: lineIndex],
-            self.store.matchWithId(id: lineMatchId) != nil {
+        else if self.matches[safe: lineIndex] != nil {
             return 2
         }
         else {
@@ -198,8 +200,7 @@ extension SportMatchLineViewModel {
                 }
             }
         }
-        else if let lineMatchId = matchesIds[safe: lineIndex],
-           let lineMatch = self.store.matchWithId(id: lineMatchId) {
+        else if let lineMatch = self.matches[safe: lineIndex] {
             if section == 0 {
                 return lineMatch.markets.isEmpty ? 1 : lineMatch.markets.count
             }
@@ -211,16 +212,14 @@ extension SportMatchLineViewModel {
     }
 
     func numberOfMatchMarket(forLine lineIndex: Int = 0) -> Int {
-        if let lineMatchId = matchesIds[safe: lineIndex],
-           let lineMatch = self.store.matchWithId(id: lineMatchId) {
+        if let lineMatch = self.matches[safe: lineIndex] {
             return lineMatch.numberTotalOfMarkets
         }
         return 0
     }
 
     func match(forLine lineIndex: Int = 0) -> Match? {
-        if let lineMatchId = matchesIds[safe: lineIndex],
-           let lineMatch = self.store.matchWithId(id: lineMatchId) {
+        if let lineMatch = self.matches[safe: lineIndex] {
             return lineMatch
         }
         return nil
@@ -274,80 +273,140 @@ extension SportMatchLineViewModel {
     }
 
     private func fetchPopularMatches() {
-
-        if let popularMatchesRegister = popularMatchesRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: popularMatchesRegister)
+        
+        guard
+            let serviceProviderSportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
+        else {
+            return
         }
+        
+        Env.serviceProvider.subscribePreLiveMatches(forSportType: serviceProviderSportType,
+                                                    pageIndex: 0,
+                                                    eventCount: 2,
+                                                    sortType: .popular)
+        .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
+            switch completion {
+            case .finished:
+                ()
+            case .failure:
+                self?.finishedWithError()
+            }
+        } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
+            switch subscribableContent {
+            case .connected:
+                self?.storeMatches([])
+            case .content(let eventsGroups):
+                let matches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+                self?.storeMatches(matches)
+            case .disconnected:
+                self?.storeMatches([])
+            }
+            self?.updatedContent()
+        }
+        .store(in: &cancellables)
 
-        let endpoint = TSRouter.popularMatchesPublisher(operatorId: Env.appSession.operatorId,
-                                                        language: "en",
-                                                        sportId: self.sport.id,
-                                                        matchesCount: 2)
-        self.popularMatchesPublisher?.cancel()
-        self.popularMatchesPublisher = nil
-
-        self.popularMatchesPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure:
-                    self?.finishedWithError()
-                case .finished:
-                    print("Data retrieved!")
-                }
-                
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    self?.popularMatchesRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    self?.storeMatches(fromAggregator: aggregator)
-                    self?.updatedContent()
-                case .updatedContent(let aggregatorUpdates):
-                    self?.updateMatches(fromAggregator: aggregatorUpdates)
-                case .disconnect:
-                    ()
-                }
-            })
+//
+//        if let popularMatchesRegister = popularMatchesRegister {
+//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: popularMatchesRegister)
+//        }
+//
+//        let endpoint = TSRouter.popularMatchesPublisher(operatorId: Env.appSession.operatorId,
+//                                                        language: "en",
+//                                                        sportId: self.sport.id,
+//                                                        matchesCount: 2)
+//        self.popularMatchesPublisher?.cancel()
+//        self.popularMatchesPublisher = nil
+//
+//        self.popularMatchesPublisher = Env.everyMatrixClient.manager
+//            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure:
+//                    self?.finishedWithError()
+//                case .finished:
+//                    print("Data retrieved!")
+//                }
+//
+//            }, receiveValue: { [weak self] state in
+//                switch state {
+//                case .connect(let publisherIdentifiable):
+//                    self?.popularMatchesRegister = publisherIdentifiable
+//                case .initialContent(let aggregator):
+//                    self?.storeMatches(fromAggregator: aggregator)
+//                    self?.updatedContent()
+//                case .updatedContent(let aggregatorUpdates):
+//                    self?.updateMatches(fromAggregator: aggregatorUpdates)
+//                case .disconnect:
+//                    ()
+//                }
+//            })
     }
 
     private func fetchLiveMatches() {
-
-        if let liveMatchesRegister = liveMatchesRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: liveMatchesRegister)
+        
+        guard
+            let serviceProviderSportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
+        else {
+            return
         }
-
-        let endpoint = TSRouter.liveMatchesPublisher(operatorId: Env.appSession.operatorId,
-                                                     language: "en",
-                                                     sportId: self.sport.id,
-                                                     matchesCount: 2)
-        self.liveMatchesPublisher?.cancel()
-        self.liveMatchesPublisher = nil
-
-        self.liveMatchesPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+        
+        Env.serviceProvider.subscribeLiveMatches(forSportType: serviceProviderSportType)
+            .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
                 switch completion {
+                case .finished:
+                    ()
                 case .failure:
                     self?.finishedWithError()
-                case .finished:
-                    print("Data retrieved!")
                 }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    self?.popularMatchesRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    self?.storeMatches(fromAggregator: aggregator)
-                    self?.updatedContent()
-                case .updatedContent(let aggregatorUpdates):
-                    self?.updateMatches(fromAggregator: aggregatorUpdates)
-                case .disconnect:
-                    ()
+            } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
+                switch subscribableContent {
+                case .connected:
+                    self?.storeMatches([])
+                case .content(let eventsGroups):
+                    let matches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+                    self?.storeMatches(matches)
+                case .disconnected:
+                    self?.storeMatches([])
                 }
-            })
+                self?.updatedContent()
+            }
+            .store(in: &cancellables)
+        
+//        if let liveMatchesRegister = liveMatchesRegister {
+//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: liveMatchesRegister)
+//        }
+//
+//        let endpoint = TSRouter.liveMatchesPublisher(operatorId: Env.appSession.operatorId,
+//                                                     language: "en",
+//                                                     sportId: self.sport.id,
+//                                                     matchesCount: 2)
+//        self.liveMatchesPublisher?.cancel()
+//        self.liveMatchesPublisher = nil
+//
+//        self.liveMatchesPublisher = Env.everyMatrixClient.manager
+//            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure:
+//                    self?.finishedWithError()
+//                case .finished:
+//                    print("Data retrieved!")
+//                }
+//            }, receiveValue: { [weak self] state in
+//                switch state {
+//                case .connect(let publisherIdentifiable):
+//                    self?.popularMatchesRegister = publisherIdentifiable
+//                case .initialContent(let aggregator):
+//                    self?.storeMatches(fromAggregator: aggregator)
+//                    self?.updatedContent()
+//                case .updatedContent(let aggregatorUpdates):
+//                    self?.updateMatches(fromAggregator: aggregatorUpdates)
+//                case .disconnect:
+//                    ()
+//                }
+//            })
     }
 
     func fetchTopCompetitionMatches() {
@@ -452,27 +511,36 @@ extension SportMatchLineViewModel {
         self.updatedContent()
     }
 
-    func storeMatches(fromAggregator aggregator: EveryMatrix.Aggregator) {
-        var matchesIds: [String] = []
-        for content in aggregator.content ?? [] {
-            switch content {
-            case .match(let matchContent):
-                matchesIds.append(matchContent.id)
-            default:
-                ()
-            }
+    func storeMatches(_ matches: [Match]) {
+        if case .popular = self.matchesType, matches.isEmpty, self.outrightCompetitions.isEmpty {
+            self.fetchOutrightCompetitions()
+            return
         }
-        self.store.storeContent(fromAggregator: aggregator)
-        self.matchesIds = Array(matchesIds.prefix(2))
-
-        // Request outright if no popular matches found
-        if case .popular = self.matchesType {
-            if self.matchesIds.isEmpty && self.outrightCompetitions.isEmpty {
-                self.fetchOutrightCompetitions()
-            }
-        }
-
+        
+        self.matches = Array(matches.prefix(2))
     }
+    
+//    func storeMatches(fromAggregator aggregator: EveryMatrix.Aggregator) {
+//        var matchesIds: [String] = []
+//        for content in aggregator.content ?? [] {
+//            switch content {
+//            case .match(let matchContent):
+//                matchesIds.append(matchContent.id)
+//            default:
+//                ()
+//            }
+//        }
+//        self.store.storeContent(fromAggregator: aggregator)
+//        self.matchesIds = Array(matchesIds.prefix(2))
+//
+//        // Request outright if no popular matches found
+//        if case .popular = self.matchesType {
+//            if self.matchesIds.isEmpty && self.outrightCompetitions.isEmpty {
+//                self.fetchOutrightCompetitions()
+//            }
+//        }
+//
+//    }
 
     private func finishedWithError() {
         self.loadingPublisher.send(.empty)
@@ -504,14 +572,14 @@ extension SportMatchLineViewModel {
                     self.loadingPublisher.send(.loaded)
                 }
             case .live, .popular:
-                if self.matchesIds.count == 2 {
+                if self.matches.count == 2 {
                     self.layoutTypePublisher.send(.doubleLine)
                 }
-                else if matchesIds.count == 1 {
+                else if matches.count == 1 {
                     self.layoutTypePublisher.send(.singleLine)
                 }
 
-                if self.matchesIds.isEmpty {
+                if self.matches.isEmpty {
                     self.loadingPublisher.send(.empty)
                 }
                 else {

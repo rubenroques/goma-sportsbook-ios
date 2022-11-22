@@ -289,6 +289,14 @@ class FullRegisterDocumentsViewController: UIViewController {
         
         Env.serviceProvider.signUpCompletion(form: form)
             .receive(on: DispatchQueue.main)
+            .handleEvents(receiveSubscription: { [weak self] _ in
+                self?.showLoadingView()
+                self?.view.isUserInteractionEnabled = false
+            },
+            receiveCompletion: { [weak self] _ in
+                self?.hideLoadingView()
+                self?.view.isUserInteractionEnabled = true
+            })
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
@@ -297,9 +305,8 @@ class FullRegisterDocumentsViewController: UIViewController {
                 case .finished:
                     ()
                 }
-            }, receiveValue: { success in
+            }, receiveValue: { _ in
                 self.refreshUserProfile()
-                self.showAlert(type: .success, text: localized("profile_updated_success"))
                 self.navigationController?.popToRootViewController(animated: true)
             })
             .store(in: &cancellables)

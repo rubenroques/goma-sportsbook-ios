@@ -174,7 +174,7 @@ class SportSelectionViewController: UIViewController {
         self.allSportsPublisher?.cancel()
         self.allSportsPublisher = nil
 
-        self.allSportsPublisher = Env.serviceProvider.allSportTypes()?
+        self.allSportsPublisher = Env.serviceProvider.allSportTypes()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 print("Env.serviceProvider.allSportTypes completed \(completion)")
@@ -210,7 +210,7 @@ class SportSelectionViewController: UIViewController {
         self.liveSportsPublisher?.cancel()
         self.liveSportsPublisher = nil
 
-        self.liveSportsPublisher = Env.serviceProvider.liveSportTypes()?
+        self.liveSportsPublisher = Env.serviceProvider.liveSportTypes()
             .sink(receiveCompletion: { [weak self] completion in
                 print("Env.serviceProvider.liveSportTypes completed \(completion)")
                 switch completion {

@@ -74,10 +74,10 @@ extension SportRadarRestAPIClient: Endpoint {
 
     var url: String {
         switch self {
+        case .marketsFilter:
+            return SportRadarConstants.sportRadarFrontEndURL
         case .fieldWidgetId:
-            return "https://www-sportbook-goma-int.optimahq.com/"
-        default:
-            return "https://cdn1.optimahq.com"
+            return SportRadarConstants.bettingHostname
         }
     }
 

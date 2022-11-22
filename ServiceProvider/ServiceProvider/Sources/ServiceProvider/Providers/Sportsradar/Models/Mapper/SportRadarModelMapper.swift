@@ -134,6 +134,73 @@ struct SportRadarModelMapper {
     }
     
     // ============================================================
+    // Betting
+    //
+    
+    static func bettingHistory(fromInternalBettingHistory internalBettingHistory: SportRadarModels.BettingHistory) -> BettingHistory {
+        let betGroups = Dictionary.init(grouping: internalBettingHistory.bets, by: \.identifier)
+        let bets = betGroups.map { identifier, internalBets in
+            let betSelections = internalBets.map(Self.betSelection(fromInternalBet:))
+            let potentialReturn: Double = internalBets.first?.potentialReturn ?? 0.0
+            return Bet(identifier: identifier, selections: betSelections, potentialReturn: potentialReturn)
+        }
+        return BettingHistory(bets: bets)
+    }
+
+    static func betSelection(fromInternalBet internalBet: SportRadarModels.Bet) -> BetSelection {
+        return BetSelection(identifier: internalBet.identifier,
+                            eventName: internalBet.eventName,
+                            homeTeamName: internalBet.homeTeamName,
+                            awayTeamName: internalBet.awayTeamName,
+                            marketName: internalBet.marketName,
+                            outcomeName: internalBet.outcomeName)
+    }
+    
+    //  SportRadar ---> ServiceProvider
+    static func betSlip(fromInternalBetslip betslip: SportRadarModels.BetSlip) -> BetSlip {
+        return BetSlip(tickets: betslip.tickets.map(Self.betTicket(fromInternalBetTicket:)))
+    }
+    
+    static func betTicket(fromInternalBetTicket betTicket: SportRadarModels.BetTicket) -> BetTicket {
+        return BetTicket(selection: betTicket.selections.map(Self.betTicketSelection(fromInternalBetTicketSelection:)),
+                         betType: "")
+    }
+    
+    static func betTicketSelection(fromInternalBetTicketSelection betTicketSelection: SportRadarModels.BetTicketSelection) -> BetTicketSelection {
+        return BetTicketSelection(identifier: betTicketSelection.identifier,
+                                  eventName: "",
+                                  homeTeamName: "",
+                                  awayTeamName: "",
+                                  marketName: "",
+                                  outcomeName: "")
+    }
+    
+    //  ServiceProvider ---> SportRadar
+    static func internalBetSlip(fromBetslip betslip: BetSlip) -> SportRadarModels.BetSlip {
+        return SportRadarModels.BetSlip(tickets: betslip.tickets.map(Self.internalBetTicket(fromBetTicket:)))
+    }
+    
+    static func internalBetTicket(fromBetTicket betTicket: BetTicket) -> SportRadarModels.BetTicket {
+        return SportRadarModels.BetTicket(selections: betTicket.selection.map(Self.internalBetTicketSelection(fromBetTicketSelection:)),
+                                          betTypeCode: betTicket.betType,
+                                          placeStake: "",
+                                          winStake: "",
+                                          pool: false)
+    }
+    
+    static func internalBetTicketSelection(fromBetTicketSelection betTicketSelection: BetTicketSelection) -> SportRadarModels.BetTicketSelection {
+        return SportRadarModels.BetTicketSelection(identifier: betTicketSelection.identifier,
+                                                   eachWayReduction: "",
+                                                   eachWayPlaceTerms: "",
+                                                   idFOPriceType: "",
+                                                   isTrap: "",
+                                                   priceUp: "",
+                                                   priceDown: "")
+    }
+    
+    
+    
+    // ============================================================
     // Sports
     //
     static func sportTypeDetails(fromInternalSportTypeDetails internalSportTypeDetails: SportRadarModels.SportTypeDetails)
@@ -425,6 +492,7 @@ struct SportRadarModelMapper {
         }
     }
     // ==========================================
+
     
 }
 

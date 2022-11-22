@@ -8,8 +8,9 @@
 import Foundation
 import Combine
 
-struct OmegaSessionAccessToken: SessionAccessToken {
-    var hash: String
+struct OmegaSessionAccessToken {
+    var sessionKey: String
+    var launchKey: String?
 }
 
 struct OmegaSessionCredentials {

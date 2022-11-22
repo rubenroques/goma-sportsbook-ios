@@ -607,7 +607,10 @@ class PreLiveEventsViewModel: NSObject {
             let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
         else {return}
 
-        self.popularMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType, sortType: "T")?
+        self.popularMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType,
+                                                                                   pageIndex: self.popularMatchesPage,
+                                                                                   eventCount: 10,
+                                                                                   sortType: .popular)
             .sink(receiveCompletion: { completion in
                 print("Env.serviceProvider.subscribePopularMatches completed \(completion)")
                 switch completion {
@@ -637,7 +640,6 @@ class PreLiveEventsViewModel: NSObject {
                     //self.isLoadingEvents.send(false)
                     self.updateContentList()
                     //self.unsubscribePopularMatches()
-
                 }
             })
 
@@ -767,7 +769,10 @@ class PreLiveEventsViewModel: NSObject {
             let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
         else {return}
 
-        self.todayMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType, sortType: "D")?
+        self.todayMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType,
+                                                                                 pageIndex: self.todayMatchesPage,
+                                                                                 eventCount: 10,
+                                                                                 sortType: .date)
             .sink(receiveCompletion: { completion in
                 print("Env.serviceProvider.subscribeUpcomingMatches completed \(completion)")
                 switch completion {
@@ -1009,24 +1014,24 @@ class PreLiveEventsViewModel: NSObject {
             let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
         else {return}
 
-        self.competitionsMatchesPublisher = Env.serviceProvider.subscribeCompetitionMatches(forSportType: sportType)?
-            .sink(receiveCompletion: { completion in
-                print("Env.serviceProvider.subscribeCompetitionMatches completed \(completion)")
-            }, receiveValue: { (subscribableContent: SubscribableContent<[EventsGroup]>) in
-                print("Env.serviceProvider.subscribeCompetitionMatches value \(subscribableContent)")
-                switch subscribableContent {
-                case .connected:
-                    print("Connected to ws")
-                case .content(let eventsGroups):
-                    self.competitions = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups)
-                    self.competitionsDataSource.competitions = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups)
-                    self.filteredOutrightCompetitionsDataSource.outrightCompetitions = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups)
-                    self.isLoadingCompetitionMatches.send(false)
-                    self.updateContentList()
-                case .disconnected:
-                    print("Disconnected from ws")
-                }
-            })
+//        self.competitionsMatchesPublisher = Env.serviceProvider.subscribeCompetitionMatches(forSportType: sportType)
+//            .sink(receiveCompletion: { completion in
+//                print("Env.serviceProvider.subscribeCompetitionMatches completed \(completion)")
+//            }, receiveValue: { (subscribableContent: SubscribableContent<[EventsGroup]>) in
+//                print("Env.serviceProvider.subscribeCompetitionMatches value \(subscribableContent)")
+//                switch subscribableContent {
+//                case .connected:
+//                    print("Connected to ws")
+//                case .content(let eventsGroups):
+//                    self.competitions = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups)
+//                    self.competitionsDataSource.competitions = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups)
+//                    self.filteredOutrightCompetitionsDataSource.outrightCompetitions = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups)
+//                    self.isLoadingCompetitionMatches.send(false)
+//                    self.updateContentList()
+//                case .disconnected:
+//                    print("Disconnected from ws")
+//                }
+//            })
 
         self.competitionsDataSource.competitions = []
         self.competitions = []

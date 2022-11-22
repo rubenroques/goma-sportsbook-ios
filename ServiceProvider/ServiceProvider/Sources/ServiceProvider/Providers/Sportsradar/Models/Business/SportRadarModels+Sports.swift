@@ -561,6 +561,12 @@ extension SportRadarModels {
             case .virtualTennis: return "Virtual Tennis"
             }
         }
+        
+        var numericCode: String {
+        
+            return ""
+        }
+        
     }
     
 }

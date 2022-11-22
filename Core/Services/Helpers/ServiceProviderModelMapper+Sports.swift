@@ -29,3 +29,9 @@ extension ServiceProviderModelMapper {
     }
     
 }
+
+extension Sport {
+    init(serviceProviderSportType sportType: ServiceProvider.SportType) {
+        self = ServiceProviderModelMapper.sport(fromServiceProviderSportType: sportType)
+    }
+}

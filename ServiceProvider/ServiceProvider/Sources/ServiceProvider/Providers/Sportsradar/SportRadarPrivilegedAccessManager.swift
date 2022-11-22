@@ -18,18 +18,37 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         return userProfileSubject.eraseToAnyPublisher()
     }
 
-    var hasSecurityQuestions: Bool
+    var hasSecurityQuestions: Bool = false
     
-    private let userSessionStateSubject: CurrentValueSubject<UserSessionStatus, Error>
-    private let userProfileSubject: CurrentValueSubject<UserProfile?, Error>
+    private var sessionCoordinator: SportRadarSessionCoordinator
     
-    required init(connector: Connector = OmegaConnector()) {
-        self.connector = OmegaConnector()
+    private let userSessionStateSubject: CurrentValueSubject<UserSessionStatus, Error> = .init(.anonymous)
+    private let userProfileSubject: CurrentValueSubject<UserProfile?, Error> = .init(nil)
+    
+    private var cancellables: Set<AnyCancellable> = []
+    
+    init(sessionCoordinator: SportRadarSessionCoordinator, connector: OmegaConnector = OmegaConnector()) {
         
-        self.userSessionStateSubject = .init(.anonymous)
-        self.userProfileSubject = .init(nil)
-
-        self.hasSecurityQuestions = false
+        self.connector = connector
+        self.sessionCoordinator = sessionCoordinator
+        
+        self.connector.tokenPublisher.sink { [weak self] omegaSessionAccessToken in
+            if let omegaSessionAccessToken {
+                self?.sessionCoordinator.saveToken(omegaSessionAccessToken.sessionKey, withKey: .restSessionToken)
+                
+                if let launchToken = omegaSessionAccessToken.launchKey {
+                    self?.sessionCoordinator.saveToken(launchToken, withKey: .launchToken)
+                }
+                else {
+                    self?.sessionCoordinator.clearToken(withKey: .launchToken)
+                }
+            }
+            else {
+                self?.sessionCoordinator.clearToken(withKey: .restSessionToken)
+            }
+        }
+        .store(in: &cancellables)
+        
     }
     
     func login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError> {
@@ -55,7 +74,6 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             return Fail(outputType: UserProfile.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
         })
         .eraseToAnyPublisher()
-        
     }
     
     func logout() {
@@ -95,7 +113,6 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
     }
  
     func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError> {
-        
         
         let endpoint = OmegaAPIClient.quickSignup(email: form.email,
                                                   username: form.username,

@@ -84,7 +84,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         titleLabel.text = localized("personal_information")
         titleLabel.font = AppFont.with(type: .bold, size: 18)
 
-        titleHeaderTextFieldView.setSelectionPicker(["---"], headerVisible: true)
+        titleHeaderTextFieldView.setSelectionPicker([""], headerVisible: true)
         titleHeaderTextFieldView.setPlaceholderText(localized("title"))
         titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
         titleHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
@@ -92,7 +92,6 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         titleHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .regular, size: 15))
         titleHeaderTextFieldView.setPlaceholderTextColor(UIColor.App.inputTextTitle)
 
-        
         firstNameHeaderTextFieldView.setPlaceholderText(localized("first_name"))
         firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("names_match_id"), color: UIColor.App.inputTextTitle)
 
@@ -100,7 +99,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         lastNameHeaderTextFieldView.showTipWithoutIcon(text: localized("names_match_id"), color: UIColor.App.inputTextTitle)
 
         countryHeaderTextFieldView.setPlaceholderText(localized("nationality"))
-        countryHeaderTextFieldView.setSelectionPicker(["-----"], headerVisible: true)
+        countryHeaderTextFieldView.setSelectionPicker([""], headerVisible: true)
         countryHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
         countryHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
         countryHeaderTextFieldView.isUserInteractionEnabled = false
@@ -228,6 +227,14 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
         Env.serviceProvider.getProfile()
             .receive(on: DispatchQueue.main)
+            .handleEvents(receiveSubscription: { [weak self] _ in
+                self?.showLoadingView()
+                self?.view.isUserInteractionEnabled = false
+            },
+            receiveCompletion: { [weak self] _ in
+                self?.hideLoadingView()
+                self?.view.isUserInteractionEnabled = true
+            })
             .map(ServiceProviderModelMapper.userProfile(_:))
             .sink { _ in
                 
@@ -358,7 +365,6 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
     }
 
-    
     private func setupProfile(profile: UserProfile) {
                 
         self.profile = profile
@@ -380,6 +386,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
             self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country), slideUp: true)
         }
     }
+    
     @IBAction private func backAction() {
         self.navigationController?.popViewController(animated: true)
     }

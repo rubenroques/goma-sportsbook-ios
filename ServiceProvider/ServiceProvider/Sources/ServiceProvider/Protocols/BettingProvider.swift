@@ -9,7 +9,6 @@ import Foundation
 import Combine
 
 protocol BettingProvider {
-    
-    init(connector: any Connector)
-    
+    func getBetHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError>
+    func calculateBetslipState(_ betslip: BetSlip)  -> AnyPublisher<BetslipState, ServiceProviderError>
 }

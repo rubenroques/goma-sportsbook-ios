@@ -82,13 +82,13 @@ class RequestLocationAccessViewController: UIViewController {
     }
 
     @IBAction private func enableLocationAction() {
-        showLoadingView()
+        showLoading()
         executeDelayed(1) {
             Env.locationManager.requestGeoLocationUpdates()
         }
     }
 
-    func showLoadingView() {
+    func showLoading() {
 
         self.loadingView = self.createLoadingView()
 

@@ -13,7 +13,7 @@ final class ServiceProviderTests: XCTestCase {
         // results.
         XCTAssertEqual("!", "!")
     }
-    
+   /*
     func testConnection() {
         
         print("\n\n")
@@ -50,6 +50,6 @@ final class ServiceProviderTests: XCTestCase {
         waitForExpectations(timeout: 20)
         
         
-    }
+    }*/
     
 }
