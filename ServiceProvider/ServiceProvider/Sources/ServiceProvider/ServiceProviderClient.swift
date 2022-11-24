@@ -65,7 +65,7 @@ extension ServiceProviderClient {
         self.eventsProvider?.unsubscribeAllSportTypes()
     }
     
-    public func liveSportTypes() -> AnyPublisher<SubscribableContent<[SportTypeDetails]>, ServiceProviderError>? {
+    public func liveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>? {
         return self.eventsProvider?.liveSportTypes() ?? nil
     }
     
@@ -89,20 +89,11 @@ extension ServiceProviderClient {
         self.eventsProvider?.unsubscribePreLiveMatches()
     }
 
-    public func subscribePopularOutrightCompetitionsMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
+    public func subscribePopularOutrightCompetitionsMatches(forSportType sportType: SportTypeInfo) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
         return nil
     }
 
-//    public func subscribeUpcomingMatches(forSportType sportType: SportType, dateRangeId: String, sortType: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
-//        return self.eventsProvider?.subscribeUpcomingMatches(forSportType: sportType, dateRangeId: dateRangeId, sortType: sortType) ?? nil
-//
-//    }
-//
-//    public func unsubscribeUpcomingMatches() {
-//        self.eventsProvider?.unsubscribeUpcomingMatches()
-//    }
-
-    public func subscribeCompetitions(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
+    public func subscribeCompetitions(forSportType sportType: SportTypeInfo) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
         return nil
     }
 
@@ -139,8 +130,14 @@ extension ServiceProviderClient {
         return self.eventsProvider?.getSportsList()
     }
 
-    public func getUnifiedSportsList(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<[SportUnique], ServiceProviderError>? {
-        return self.eventsProvider?.getUnifiedSportsList(initialDate: initialDate, endDate: endDate)
+    public func getAllSportsList(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<[SportType], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getAllSportsList(initialDate: initialDate, endDate: endDate)
     }
 }
 

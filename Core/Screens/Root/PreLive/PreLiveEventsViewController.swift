@@ -107,7 +107,7 @@ class PreLiveEventsViewController: UIViewController {
         }
     }
 
-    init(selectedSportType: Sport = .football) {
+    init(selectedSportType: Sport) {
         self.selectedSport = selectedSportType
         self.viewModel = PreLiveEventsViewModel(selectedSport: self.selectedSport)
         super.init(nibName: "PreLiveEventsViewController", bundle: nil)

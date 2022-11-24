@@ -26,10 +26,10 @@ extension SportRadarModels {
     
     enum Content {
         
-        case liveAdvancedList(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
-        case inplaySportList(sportsTypes: [SportRadarModels.SportTypeDetails])
-        case sportTypeByDate(sportsTypes: [SportRadarModels.SportType])
-        case eventListBySportTypeDate(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
+        case liveAdvancedList(sportType: SportType, events: [SportRadarModels.Event])
+        case inplaySportList(sportsTypes: [SportType])
+        case sportTypeByDate(sportsTypes: [SportType])
+        case eventListBySportTypeDate(sportType: SportType, events: [SportRadarModels.Event])
 //        case popularEventListBySportTypeDate(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
 //        case upcomingEventListBySportTypeDate(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
         case eventDetails(eventDetails: [SportRadarModels.Event])

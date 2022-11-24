@@ -25,8 +25,8 @@ class SportSelectionViewController: UIViewController {
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
 
     // Variables
-    var sportsData: [EveryMatrix.Discipline] = []
-    var fullSportsData: [EveryMatrix.Discipline] = []
+    var sportsData: [Sport] = []
+    var fullSportsData: [Sport] = []
     var defaultSport: Sport
     var isLiveSport: Bool
     var sportsRepository: SportsAggregatorRepository
@@ -173,35 +173,9 @@ class SportSelectionViewController: UIViewController {
 //            })
 //            .store(in: &self.cancellable)
 
-//        self.allSportsPublisher?.cancel()
-//        self.allSportsPublisher = nil
-//
-//        self.allSportsPublisher = Env.serviceProvider.allSportTypes()?
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                print("Env.serviceProvider.allSportTypes completed \(completion)")
-//                switch completion {
-//                case .finished:
-//                    ()
-//                case .failure:
-//                    self?.isLoading = false
-//                }
-//            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
-//                switch subscribableContent {
-//                case .connected:
-//                    print("Env.serviceProvider.allSportTypes connected")
-//                    // self?.configureWithAllSports([])
-//                case .content(let sportTypes):
-//                    print("Env.serviceProvider.allSportTypes content")
-//                    self?.configureWithAllSports(sportTypes)
-//                case .disconnected:
-//                    print("Env.serviceProvider.allSportTypes disconnected")
-//                    //self?.configureWithAllSports([])
-//                }
-//            })
         self.isLoading = true
 
-        Env.serviceProvider.getUnifiedSportsList()?
+        Env.serviceProvider.getAllSportsList()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -214,17 +188,11 @@ class SportSelectionViewController: UIViewController {
                 }
 
             }, receiveValue: { [weak self] sportsList in
-                print("UNIFIED SPORTS LIST RESPONSE: \(sportsList)")
-                self?.configureWithUniqueSports(sportsList)
+                self?.configureWithAllSports(sportsList)
 
             })
             .store(in: &cancellables)
 
-        // EM TEMP SHUTDOWN
-//        self.sportsData = []
-//        self.fullSportsData = []
-//        self.activityIndicatorView.isHidden = true
-//        self.collectionView.reloadData()
     }
 
     func getSportsLive() {
@@ -241,14 +209,14 @@ class SportSelectionViewController: UIViewController {
                 case .failure:
                     self?.isLoading = false
                 }
-            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportTypeDetails]>) in
+            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
                 switch subscribableContent {
                 case .connected:
-                    self?.configureWithLiveSportsDetails([])
-                case .content(let sportTypeDetails):
-                    self?.configureWithLiveSportsDetails(sportTypeDetails)
+                    self?.configureWithLiveSports([])
+                case .content(let sportTypes):
+                    self?.configureWithLiveSports(sportTypes)
                 case .disconnected:
-                    self?.configureWithLiveSportsDetails([])
+                    self?.configureWithLiveSports([])
                 }
             })
         
@@ -272,21 +240,12 @@ class SportSelectionViewController: UIViewController {
 
     }
 
-    func configureWithLiveSportsDetails(_ sportTypeDetails: [ServiceProvider.SportTypeDetails]) {
+    func configureWithLiveSports(_ sportTypes: [ServiceProvider.SportType]) {
         self.isLoading = true
 
-        // TODO: Remove [EveryMatrix.Discipline] logic from this ViewModel, should be using the ServiceProvider models
-        // or another independent one
-        let sportsTypes = sportTypeDetails.map { sportTypeDetails in
-            EveryMatrix.Discipline(type: sportTypeDetails.sportType.id,
-                                   id: sportTypeDetails.sportType.id,
-                                   name: sportTypeDetails.sportType.name,
-                                   numberOfLiveEvents: sportTypeDetails.eventsCount,
-                                   showEventCategory: false)
-        }
-        
-        let sortedArray = sportsTypes.sorted(by: {$0.id.localizedStandardCompare($1.id) == .orderedAscending})
-        self.sportsData = sortedArray
+        self.sportsData = sportTypes.map({ sportType in
+            ServiceProviderModelMapper.liveSport(fromServiceProviderSportType: sportType)
+        })
 
         self.fullSportsData = self.sportsData
         
@@ -294,53 +253,49 @@ class SportSelectionViewController: UIViewController {
         
         self.collectionView.reloadData()
     }
-    
+
+    // TODO: Fix updated live sports
     func updateSportsLiveCollection() {
-        self.sportsData = Array(self.sportsRepository.sportsLive.values)
-        let sortedArray = self.sportsData.sorted(by: {$0.id.localizedStandardCompare($1.id) == .orderedAscending})
-        self.sportsData = sortedArray
-
-        self.fullSportsData = self.sportsData
-
-        self.collectionView.reloadData()
+//        self.sportsData = Array(self.sportsRepository.sportsLive.values)
+//        let sortedArray = self.sportsData.sorted(by: {$0.id.localizedStandardCompare($1.id) == .orderedAscending})
+//        self.sportsData = sortedArray
+//
+//        self.fullSportsData = self.sportsData
+//
+//        self.collectionView.reloadData()
     }
 
-    func configureWithAllSports(_ sportTypes: [ServiceProvider.SportType]) {
-
+//    func configureWithAllSports(_ sportTypes: [ServiceProvider.SportTypeInfo]) {
+//
         // TODO: Remove [EveryMatrix.Discipline] logic from this ViewModel, should be using the ServiceProvider models
-        // or another independent one
-        let sportsTypes = sportTypes.map { sportType in
-            EveryMatrix.Discipline(type: sportType.id,
-                                   id: sportType.id,
-                                   name: sportType.name,
-                                   numberOfLiveEvents: 0,
-                                   showEventCategory: false)
-        }
-
-        let sortedArray = sportsTypes.sorted(by: {$0.id.localizedStandardCompare($1.id) == .orderedAscending})
-        self.sportsData = sortedArray
-
-        self.fullSportsData = self.sportsData
-
-        self.isLoading = false
-
-        self.collectionView.reloadData()
-    }
-
-    func configureWithUniqueSports(_ uniqueSports: [SportUnique]) {
-
-        self.isLoading = true
-
-        let sportsTypes = uniqueSports.map { uniqueSport in
-            EveryMatrix.Discipline(type: uniqueSport.iconId ?? "0",
-                                   id: uniqueSport.iconId ?? "0",
-                                   name: uniqueSport.name,
-                                   numberOfLiveEvents: 0,
-                                   showEventCategory: false)
-        }
+//        // or another independent one
+//        let sportsTypes = sportTypes.map { sportType in
+//            EveryMatrix.Discipline(type: sportType.id,
+//                                   id: sportType.id,
+//                                   name: sportType.name,
+//                                   numberOfLiveEvents: 0,
+//                                   showEventCategory: false)
+//        }
 
 //        let sortedArray = sportsTypes.sorted(by: {$0.id.localizedStandardCompare($1.id) == .orderedAscending})
-        self.sportsData = sportsTypes
+//        self.sportsData =
+//
+//        self.fullSportsData = self.sportsData
+//
+//        self.isLoading = false
+//
+//        self.collectionView.reloadData()
+//    }
+
+    func configureWithAllSports(_ sportTypes: [SportType]) {
+
+        self.isLoading = true
+
+//        let sortedArray = sportsTypes.sorted(by: {$0.id.localizedStandardCompare($1.id) == .orderedAscending})
+
+        self.sportsData = sportTypes.map({ sportType in
+            ServiceProviderModelMapper.sport(fromServiceProviderSportType: sportType)
+        })
 
         self.fullSportsData = self.sportsData
 
@@ -363,13 +318,15 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
-            let cell = collectionView.dequeueCellType(SportSelectionCollectionViewCell.self, indexPath: indexPath)
+            let cell = collectionView.dequeueCellType(SportSelectionCollectionViewCell.self, indexPath: indexPath),
+            let sport = sportsData[safe: indexPath.row]
         else {
             fatalError()
         }
 
         // TODO: Refactor this logic to the CellViewModel
-        let viewModel = SportSelectionCollectionViewCellViewModel(sport: sportsData[indexPath.row],
+
+        let viewModel = SportSelectionCollectionViewCellViewModel(sport: sport,
                                                                   isLive: isLiveSport)
 
         cell.configureCell(viewModel: viewModel)
@@ -389,21 +346,17 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         guard
-            let sportTypeAtIndex = sportsData[safe: indexPath.row],
+            let sportAtIndex = sportsData[safe: indexPath.row],
             let cell = collectionView.cellForItem(at: indexPath) as? SportSelectionCollectionViewCell
         else {
             collectionView.deselectItem(at: indexPath, animated: true)
             return
         }
 
-        let selectedSport = Sport(id: sportTypeAtIndex.id,
-                          name: sportTypeAtIndex.name ?? "",
-                          showEventCategory: sportTypeAtIndex.showEventCategory ?? false)
-
         cell.isSelected = true
-        self.defaultSport = selectedSport
+        self.defaultSport = sportAtIndex
 
-        self.selectionDelegate?.selectedSport(selectedSport)
+        self.selectionDelegate?.selectedSport(sportAtIndex)
 
         self.dismiss(animated: true, completion: nil)
         AnalyticsClient.sendEvent(event: .selectedSport(sportId: self.defaultSport.id ))
@@ -415,7 +368,7 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
 
         if !searchText.isEmpty {
             for sport in self.fullSportsData {
-                if sport.name!.lowercased().contains(searchText.lowercased()) {
+                if sport.name.lowercased().contains(searchText.lowercased()) {
                     self.sportsData.append(sport)
 
                 }

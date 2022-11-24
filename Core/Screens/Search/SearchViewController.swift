@@ -294,7 +294,7 @@ class SearchViewController: UIViewController {
     }
 
     private func openCompetitionDetailsScreen(competition: EveryMatrix.Tournament) {
-        let sport = Sport(id: competition.sportId ?? "")
+        let sport = Sport(id: competition.sportId ?? "", alphaId: nil, numericId: nil)
         let competitionId = competition.id
         let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport, store: AggregatorsRepository())
         let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)

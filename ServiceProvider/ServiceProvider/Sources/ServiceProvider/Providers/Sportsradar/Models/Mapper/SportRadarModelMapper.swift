@@ -138,26 +138,26 @@ struct SportRadarModelMapper {
     //
     static func sportTypeDetails(fromInternalSportTypeDetails internalSportTypeDetails: SportRadarModels.SportTypeDetails)
     -> SportTypeDetails? {
-        guard
-            let sportType = Self.sportType(fromInternalSportType: internalSportTypeDetails.sportType)
-        else {
-            return nil
-        }
-        return SportTypeDetails(sportType: sportType, eventsCount: internalSportTypeDetails.eventsCount)
+//        guard
+//            let sportType = Self.sportType(fromInternalSportType: internalSportTypeDetails.sportType)
+//        else {
+//            return nil
+//        }
+        return SportTypeDetails(sportType: internalSportTypeDetails.sportType, eventsCount: internalSportTypeDetails.eventsCount)
     }
     
     static func internalSportTypeDetails(fromSportTypeDetails sportTypeDetails: SportTypeDetails)
     -> SportRadarModels.SportTypeDetails? {
-        guard
-            let sportType = Self.internalSportType(fromSportType: sportTypeDetails.sportType)
-        else {
-            return nil
-        }
-        return SportRadarModels.SportTypeDetails(sportType: sportType, eventsCount: sportTypeDetails.eventsCount)
+//        guard
+//            let sportType = Self.internalSportType(fromSportType: sportTypeDetails.sportType)
+//        else {
+//            return nil
+//        }
+        return SportRadarModels.SportTypeDetails(sportType: sportTypeDetails.sportType, eventsCount: sportTypeDetails.eventsCount, sportName: "")
     }
     
     //
-    static func sportType(fromInternalSportType internalSportType: SportRadarModels.SportType) -> SportType? {
+    static func sportType(fromInternalSportType internalSportType: SportRadarModels.SportTypeInfo) -> SportTypeInfo? {
         switch internalSportType {
         case .football: return .football
         case .golf: return .golf
@@ -290,151 +290,151 @@ struct SportRadarModelMapper {
         }
     }
     
-    static func internalSportType(fromSportType sportType: SportType) -> SportRadarModels.SportType? {
-        switch sportType {
-        case .football: return .football
-        case .golf: return .golf
-        case .tennis: return .tennis
-        case .americanFootball: return .americanFootball
-        case .iceHockey: return .iceHockey
-        case .handball: return .handball
-        case .basketball: return .basketball
-        case .baseball: return .baseball
-        case .fieldHockey: return .fieldHockey
-        case .softball: return .softball
-        case .weightlifting: return .weightlifting
-        case .athletics: return .athletics
-        case .badminton: return .badminton
-        case .afl: return .aussieRules
-        case .bandy: return .bandy
-        case .bowls: return .bowls
-        case .beachFootball: return .beachFootball
-        case .cricket: return .cricket
-        case .curling: return .curling
-        case .cycling: return .cycling
-        case .darts: return .darts
-        case .floorball: return .floorball
-        case .futsal: return .futsal
-        case .motorRacing: return .motorsport
-        case .pesapallo: return .pesapallo
-        case .rugbyLeague: return .rugbyLeague
-        case .rugbyUnion: return .rugbyUnion
-        case .snooker: return .snooker
-        case .squash: return .squash
-        case .tableTennis: return .tableTennis
-        case .volleyball: return .volleyball
-        case .alpineSkiing: return .alpineSkiing
-        case .biathlon: return .biathlon
-        case .bobsleigh: return .bobsleigh
-        case .luge: return .luge
-        case .nordicCombined: return .nordicCombined
-        case .skiJumping: return .skiJumping
-        case .snowboard: return .snowboard
-        case .speedSkating: return .speedSkating
-        case .archery: return .archery
-        case .diving: return .diving
-        case .smite: return .smite
-        case .fencing: return .fencing
-        case .judo: return .judo
-        case .lacrosse: return .lacrosse
-        case .modernPentathlon: return .modernPentathlon
-        case .pool: return .pool
-        case .rowing: return .rowing
-        case .sailing: return .sailing
-        case .shooting: return .shooting
-        case .shortTrackSpeedSkating: return .shortTrackSpeedSkating
-        case .skeleton: return .skeleton
-        case .specials: return .specials
-        case .swimming: return .swimming
-        case .figureSkating: return .figureSkating
-        case .sportClimbing: return .sportClimbing
-        case .triathlon: return .triathlon
-        case .skateboarding: return .skateboarding
-        case .surfing: return .surfing
-        case .gaelicFootball: return .gaelicFootball
-        case .greyhounds: return .greyhoundRacing
-        case .horseRacing: return .horseRacing
-        case .canoeing: return .canoe
-        case .csGo: return .counterStrike
-        case .dota2: return .dota2
-        case .leagueOfLegends: return .leagueOfLegends
-        case .starcraft2: return .starCraft
-        case .callOfDuty: return .callOfDuty
-        case .heroesOfTheStorm: return .heroesOfTheStorm
-        case .overwatch: return .overwatch
-        case .warcraft3: return .worldOfWarcraft
-        case .pubg: return .playerUnknownsBattlegrounds
-        case .hearthstone: return .heartstone
-        case .virtualHorseRacing: return .virtualHorseRacing
-        case .virtualFootball: return .virtualFootball
-        case .virtualBasketball: return .virtualBasketball
-        case .virtualTennis: return .virtualTennis
-        case .virtualStreetFighter: return .streetFighter
-        case .virtualGreyhounds: return .virtualGreyhoundRacing
-            
-        case .eIceHockey: return .electronicIceHockey
-        case .virtualNba2K: return .eSportNba2K
-            
-        case .waterPolo: return .waterpolo
-        case .beachVolleyball: return .beachVolley
-        case .gymnastics: return .gymnastic
-        case .freestyleSkiing: return .freestyle
-        case .crossCountrySkiing: return .crossCountry
-        case .equestrianSports: return .equestrian
-        case .wintersports: return .winterSports
-            
-        case .gaelicHurling: return .gaelicHurling
-        case .gaelicSports: return .gaelicSports
-        case .rinkHockey: return .rinkHockey
-        case .dogRacing: return .dogRacing
-        case .basketball3X3: return .basketball3X3
-        case .worldOfTanks: return .worldOfTanks
-        case .olympics: return .olympics
-        case .synchronizedSwimming: return .synchronizedSwimming
-        case .trotting: return .trotting
-            
-        case .canoeSlalom: return .canoeSlalom
-        case .cyclingBmxFreestyle: return .cyclingBmxFreestyle
-        case .cyclingBmxRacing: return .cyclingBmxRacing
-        case .mountainBike: return .mountainBike
-        case .trackCycling: return .trackCycling
-        case .trampolineGymnastics: return .trampolineGymnastics
-        case .rhythmicGymnastics: return .rhythmicGymnastics
-        case .marathonSwimming: return .marathonSwimming
-            
-        case .boxing: return .boxing
-        case .taekwondo: return .taekwondo
-        case .karate: return .karate
-        case .wrestling: return .wrestling
-        case .mma: return .mma
-            
-        case .stockCarRacing: return .stockCarRacing
-        case .touringCarRacing: return .touringCarRacing
-        case .rally: return .rally
-        case .speedway: return .speedway
-        case .formulaE: return .formulaE
-        case .indyRacing: return .indyRacing
-        case .motorcycleRacing: return .motorcycleRacing
-        case .formula1: return .formula1
-            
-        case .numbers: return .numbers
-        case .emptyBets: return .emptyBets
-        case .lotteries: return .lotteries
-            
-        default: return nil
-        }
-    }
+//    static func internalSportType(fromSportType sportType: SportType) -> SportRadarModels.SportTypeInfo? {
+//        switch sportType {
+//        case .football: return .football
+//        case .golf: return .golf
+//        case .tennis: return .tennis
+//        case .americanFootball: return .americanFootball
+//        case .iceHockey: return .iceHockey
+//        case .handball: return .handball
+//        case .basketball: return .basketball
+//        case .baseball: return .baseball
+//        case .fieldHockey: return .fieldHockey
+//        case .softball: return .softball
+//        case .weightlifting: return .weightlifting
+//        case .athletics: return .athletics
+//        case .badminton: return .badminton
+//        case .afl: return .aussieRules
+//        case .bandy: return .bandy
+//        case .bowls: return .bowls
+//        case .beachFootball: return .beachFootball
+//        case .cricket: return .cricket
+//        case .curling: return .curling
+//        case .cycling: return .cycling
+//        case .darts: return .darts
+//        case .floorball: return .floorball
+//        case .futsal: return .futsal
+//        case .motorRacing: return .motorsport
+//        case .pesapallo: return .pesapallo
+//        case .rugbyLeague: return .rugbyLeague
+//        case .rugbyUnion: return .rugbyUnion
+//        case .snooker: return .snooker
+//        case .squash: return .squash
+//        case .tableTennis: return .tableTennis
+//        case .volleyball: return .volleyball
+//        case .alpineSkiing: return .alpineSkiing
+//        case .biathlon: return .biathlon
+//        case .bobsleigh: return .bobsleigh
+//        case .luge: return .luge
+//        case .nordicCombined: return .nordicCombined
+//        case .skiJumping: return .skiJumping
+//        case .snowboard: return .snowboard
+//        case .speedSkating: return .speedSkating
+//        case .archery: return .archery
+//        case .diving: return .diving
+//        case .smite: return .smite
+//        case .fencing: return .fencing
+//        case .judo: return .judo
+//        case .lacrosse: return .lacrosse
+//        case .modernPentathlon: return .modernPentathlon
+//        case .pool: return .pool
+//        case .rowing: return .rowing
+//        case .sailing: return .sailing
+//        case .shooting: return .shooting
+//        case .shortTrackSpeedSkating: return .shortTrackSpeedSkating
+//        case .skeleton: return .skeleton
+//        case .specials: return .specials
+//        case .swimming: return .swimming
+//        case .figureSkating: return .figureSkating
+//        case .sportClimbing: return .sportClimbing
+//        case .triathlon: return .triathlon
+//        case .skateboarding: return .skateboarding
+//        case .surfing: return .surfing
+//        case .gaelicFootball: return .gaelicFootball
+//        case .greyhounds: return .greyhoundRacing
+//        case .horseRacing: return .horseRacing
+//        case .canoeing: return .canoe
+//        case .csGo: return .counterStrike
+//        case .dota2: return .dota2
+//        case .leagueOfLegends: return .leagueOfLegends
+//        case .starcraft2: return .starCraft
+//        case .callOfDuty: return .callOfDuty
+//        case .heroesOfTheStorm: return .heroesOfTheStorm
+//        case .overwatch: return .overwatch
+//        case .warcraft3: return .worldOfWarcraft
+//        case .pubg: return .playerUnknownsBattlegrounds
+//        case .hearthstone: return .heartstone
+//        case .virtualHorseRacing: return .virtualHorseRacing
+//        case .virtualFootball: return .virtualFootball
+//        case .virtualBasketball: return .virtualBasketball
+//        case .virtualTennis: return .virtualTennis
+//        case .virtualStreetFighter: return .streetFighter
+//        case .virtualGreyhounds: return .virtualGreyhoundRacing
+//
+//        case .eIceHockey: return .electronicIceHockey
+//        case .virtualNba2K: return .eSportNba2K
+//
+//        case .waterPolo: return .waterpolo
+//        case .beachVolleyball: return .beachVolley
+//        case .gymnastics: return .gymnastic
+//        case .freestyleSkiing: return .freestyle
+//        case .crossCountrySkiing: return .crossCountry
+//        case .equestrianSports: return .equestrian
+//        case .wintersports: return .winterSports
+//
+//        case .gaelicHurling: return .gaelicHurling
+//        case .gaelicSports: return .gaelicSports
+//        case .rinkHockey: return .rinkHockey
+//        case .dogRacing: return .dogRacing
+//        case .basketball3X3: return .basketball3X3
+//        case .worldOfTanks: return .worldOfTanks
+//        case .olympics: return .olympics
+//        case .synchronizedSwimming: return .synchronizedSwimming
+//        case .trotting: return .trotting
+//
+//        case .canoeSlalom: return .canoeSlalom
+//        case .cyclingBmxFreestyle: return .cyclingBmxFreestyle
+//        case .cyclingBmxRacing: return .cyclingBmxRacing
+//        case .mountainBike: return .mountainBike
+//        case .trackCycling: return .trackCycling
+//        case .trampolineGymnastics: return .trampolineGymnastics
+//        case .rhythmicGymnastics: return .rhythmicGymnastics
+//        case .marathonSwimming: return .marathonSwimming
+//
+//        case .boxing: return .boxing
+//        case .taekwondo: return .taekwondo
+//        case .karate: return .karate
+//        case .wrestling: return .wrestling
+//        case .mma: return .mma
+//
+//        case .stockCarRacing: return .stockCarRacing
+//        case .touringCarRacing: return .touringCarRacing
+//        case .rally: return .rally
+//        case .speedway: return .speedway
+//        case .formulaE: return .formulaE
+//        case .indyRacing: return .indyRacing
+//        case .motorcycleRacing: return .motorcycleRacing
+//        case .formula1: return .formula1
+//
+//        case .numbers: return .numbers
+//        case .emptyBets: return .emptyBets
+//        case .lotteries: return .lotteries
+//
+//        default: return nil
+//        }
+//    }
 
-    static func sportUnique(fromSportNode sportNode: SportNode) -> SportUnique? {
+    static func sportUnique(fromSportNode sportNode: SportNode) -> SportType? {
 
-        let sportUnique = SportUnique(name: sportNode.name, numericId: sportNode.id, alphaId: nil, iconId: nil, numberEvents: sportNode.numberEvents, numberOutrightEvents: sportNode.numberOutrightEvents, numberOutrightMarkets: sportNode.numberOutrightMarkets)
+        let sportUnique = SportType(name: sportNode.name, numericId: sportNode.id, alphaId: nil, iconId: nil, numberEvents: sportNode.numberEvents, numberOutrightEvents: sportNode.numberOutrightEvents, numberOutrightMarkets: sportNode.numberOutrightMarkets)
 
         return sportUnique
     }
 
-    static func sportUnique(fromScheduledSport scheduledSport: ScheduledSport) -> SportUnique? {
+    static func sportUnique(fromScheduledSport scheduledSport: ScheduledSport) -> SportType? {
 
-        let sportUnique = SportUnique(name: scheduledSport.name, numericId: nil, alphaId: scheduledSport.id, iconId: nil, numberEvents: nil, numberOutrightEvents: nil, numberOutrightMarkets: nil)
+        let sportUnique = SportType(name: scheduledSport.name, numericId: nil, alphaId: scheduledSport.id, iconId: nil, numberEvents: nil, numberOutrightEvents: nil, numberOutrightMarkets: nil)
         return sportUnique
 
     }

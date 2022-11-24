@@ -191,7 +191,7 @@ public struct ScheduledSport: Codable {
 
 }
 
-public struct SportUnique: Codable, Hashable {
+public struct SportType: Codable, Hashable {
     public var name: String
     public var numericId: String?
     public var alphaId: String?
@@ -199,4 +199,14 @@ public struct SportUnique: Codable, Hashable {
     public var numberEvents: String?
     public var numberOutrightEvents: String?
     public var numberOutrightMarkets: String?
+
+    public init(name: String, numericId: String? = nil, alphaId: String? = nil, iconId: String? = nil, numberEvents: String? = nil, numberOutrightEvents: String? = nil, numberOutrightMarkets: String? = nil) {
+        self.name = name
+        self.numericId = numericId
+        self.alphaId = alphaId
+        self.iconId = iconId
+        self.numberEvents = numberEvents
+        self.numberOutrightEvents = numberOutrightEvents
+        self.numberOutrightMarkets = numberOutrightMarkets
+    }
 }

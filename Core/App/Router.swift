@@ -424,11 +424,11 @@ extension Router {
     }
 
     static func mainScreenViewController() -> UIViewController {
-        return RootViewController()
+        return RootViewController(defaultSport: Env.sportsStore.defaultSport)
     }
 
     static func mainScreenViewControllerFlow() -> UIViewController {
-        return Router.navigationController(with: RootViewController() )
+        return Router.navigationController(with: RootViewController(defaultSport: Env.sportsStore.defaultSport) )
     }
 
 }

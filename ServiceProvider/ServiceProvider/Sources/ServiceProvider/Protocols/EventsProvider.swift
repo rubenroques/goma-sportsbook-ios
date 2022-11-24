@@ -10,7 +10,7 @@ import Combine
 
 protocol EventsProvider {
 
-    func liveSportTypes() -> AnyPublisher<SubscribableContent<[SportTypeDetails]>, ServiceProviderError>?
+    func liveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>?
     func subscribeLiveMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
     func allSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>?
     func subscribePreLiveMatches(forSportType sportType: SportType, initialDate: Date?, endDate: Date?, sortType: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
@@ -28,7 +28,7 @@ protocol EventsProvider {
 
     func getSportsList() -> AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError>?
 
-    func getUnifiedSportsList(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportUnique], ServiceProviderError>?
+    func getAllSportsList(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportType], ServiceProviderError>
 
     func getFieldWidgetURLRequest(urlString: String?, widgetFile: String?) -> URLRequest?
 

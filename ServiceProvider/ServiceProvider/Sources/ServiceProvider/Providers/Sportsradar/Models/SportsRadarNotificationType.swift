@@ -54,17 +54,25 @@ extension SportRadarModels {
                         let events: [SportRadarModels.Event] = try firstContentContainer.decode([SportRadarModels.Event].self, forKey: .change)
                         guard let sportId = contentIdsArray.first else { throw SportRadarError.unkownContentId }
                         
-                        let sportType = try SportRadarModels.SportType.init(id: sportId)
+                        let sportTypeInfo = try SportRadarModels.SportTypeInfo.init(id: sportId)
+
+                        let sportType = SportType(name: sportTypeInfo.name, numericId: nil, alphaId: sportTypeInfo.id, iconId: nil, numberEvents: nil, numberOutrightEvents: nil, numberOutrightMarkets: nil)
                         
                         content = .liveAdvancedList(sportType: sportType, events: events)
                     case .inplaySportList:
-                        let sportsTypes: [SportRadarModels.SportTypeDetails] = try firstContentContainer.decode([SportRadarModels.SportTypeDetails].self, forKey: .change)
-                        
+                        let sportsTypeDetails: [SportRadarModels.SportTypeDetails] = try firstContentContainer.decode([SportRadarModels.SportTypeDetails].self, forKey: .change)
+
+                        let sportsTypes = sportsTypeDetails.map(\.sportType)
+
                         content = .inplaySportList(sportsTypes: sportsTypes)
                     case .sportTypeByDate:
                         // change key is optional
                         if firstContentContainer.contains(.change) {
-                            let sportsTypes: [SportRadarModels.SportType] = try firstContentContainer.decode([SportRadarModels.SportType].self, forKey: .change)
+                            let sportsTypesInfo: [SportRadarModels.SportTypeInfo] = try firstContentContainer.decode([SportRadarModels.SportTypeInfo].self, forKey: .change)
+
+                            let sportsTypes = sportsTypesInfo.map({
+                                SportType(name: $0.name, numericId: nil, alphaId: $0.id, iconId: nil, numberEvents: nil, numberOutrightEvents: nil, numberOutrightMarkets: nil)
+                            })
 
                             content = .sportTypeByDate(sportsTypes: sportsTypes)
                         }
@@ -80,14 +88,18 @@ extension SportRadarModels {
                             let events: [SportRadarModels.Event] = try firstContentContainer.decode([SportRadarModels.Event].self, forKey: .change)
                             guard let sportId = contentIdsArray.first else { throw SportRadarError.unkownContentId }
 
-                            let sportType = try SportRadarModels.SportType.init(id: sportId)
+                            let sportTypeInfo = try SportRadarModels.SportTypeInfo.init(id: sportId)
+
+                            let sportType = SportType(name: sportTypeInfo.name, numericId: nil, alphaId: sportTypeInfo.id, iconId: nil, numberEvents: nil, numberOutrightEvents: nil, numberOutrightMarkets: nil)
 
                             content = .eventListBySportTypeDate(sportType: sportType, events: events)
                         }
                         else {
                             guard let sportId = contentIdsArray.first else { throw SportRadarError.unkownContentId }
 
-                            let sportType = try SportRadarModels.SportType.init(id: sportId)
+                            let sportTypeInfo = try SportRadarModels.SportTypeInfo.init(id: sportId)
+
+                            let sportType = SportType(name: sportTypeInfo.name, numericId: nil, alphaId: sportTypeInfo.id, iconId: nil, numberEvents: nil, numberOutrightEvents: nil, numberOutrightMarkets: nil)
 
                             content = .eventListBySportTypeDate(sportType: sportType, events: [])
                         }

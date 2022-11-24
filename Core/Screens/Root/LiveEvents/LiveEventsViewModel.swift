@@ -121,12 +121,12 @@ class LiveEventsViewModel: NSObject {
         self.liveSportsPublisher = Env.serviceProvider.liveSportTypes()?
             .sink(receiveCompletion: { completion in
                 print("Env.serviceProvider.liveSportTypes completed \(completion)")
-            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportTypeDetails]>) in
+            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
                 switch subscribableContent {
                 case .connected:
                     self?.liveSports = []
-                case .content(let sportTypeDetails):
-                    let sports = sportTypeDetails.map(ServiceProviderModelMapper.sport(fromServiceProviderSportTypeDetails:))
+                case .content(let sportTypes):
+                    let sports = sportTypes.map(ServiceProviderModelMapper.liveSport(fromServiceProviderSportType:))
                     self?.liveSports = sports
                 case .disconnected:
                     self?.liveSports = []
@@ -146,14 +146,13 @@ class LiveEventsViewModel: NSObject {
 
         self.providerLiveMatchesSubscriber?.cancel()
         
-        guard
-            let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-        else {
-            self.allMatches = []
-            self.isLoadingAllEventsList.send(false)
-            self.updateContentList()
-            return
-        }
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
+//        else {
+//            self.allMatches = []
+//            self.isLoadingAllEventsList.send(false)
+//            self.updateContentList()
+//            return
+//        }
         
         print("subscribeLiveMatches fetchData called")
         

@@ -57,8 +57,8 @@ class HomeFilterViewController: UIViewController {
 
     var delegate: HomeFilterOptionsViewDelegate?
 
-    init(sportsModel: PreLiveEventsViewModel = PreLiveEventsViewModel(selectedSport: Sport.football),
-         liveEventsViewModel: LiveEventsViewModel = LiveEventsViewModel(selectedSport: Sport.football)) {
+    init(sportsModel: PreLiveEventsViewModel = PreLiveEventsViewModel(selectedSport: Env.sportsStore.defaultSport),
+         liveEventsViewModel: LiveEventsViewModel = LiveEventsViewModel(selectedSport: Env.sportsStore.defaultSport)) {
         self.sportsModel = sportsModel
         self.liveEventsViewModel = liveEventsViewModel
         super.init(nibName: "HomeFilterViewController", bundle: nil)

@@ -28,6 +28,8 @@ struct Bootstrap {
 
         let serviceProvider = Env.serviceProvider
         serviceProvider.connect()
+
+        Env.sportsStore.getSportTypesList()
         
     }
 

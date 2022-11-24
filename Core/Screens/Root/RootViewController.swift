@@ -126,8 +126,8 @@ class RootViewController: UIViewController {
     //
     // Child view controllers
     lazy var homeViewController = HomeViewController()
-    lazy var preLiveViewController = PreLiveEventsViewController(selectedSportType: Sport.football)
-    lazy var liveEventsViewController = LiveEventsViewController()
+    lazy var preLiveViewController = PreLiveEventsViewController(selectedSportType: Env.sportsStore.defaultSport)
+    lazy var liveEventsViewController = LiveEventsViewController(selectedSport: Env.sportsStore.defaultSport)
     lazy var tipsRootViewController = TipsRootViewController()
     lazy var casinoViewController = CasinoWebViewController(userId: self.userId)
 
@@ -191,7 +191,7 @@ class RootViewController: UIViewController {
 
     //
     //
-    init(initialScreen: TabItem = .home, defaultSport: Sport = .football) {
+    init(initialScreen: TabItem = .home, defaultSport: Sport) {
         self.selectedTabItem = initialScreen
         self.currentSport = defaultSport
         super.init(nibName: "RootViewController", bundle: nil)
@@ -791,6 +791,7 @@ extension RootViewController {
         }
 
         if case .preLive = tab, !preLiveViewControllerLoaded {
+            // Iniciar prelive vc
             self.addChildViewController(self.preLiveViewController, toView: self.preLiveBaseView)
             self.preLiveViewController.selectedSport = self.currentSport
             self.preLiveViewController.didChangeSport = { [weak self] newSport in

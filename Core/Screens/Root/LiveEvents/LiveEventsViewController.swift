@@ -72,7 +72,7 @@ class LiveEventsViewController: UIViewController {
     var didTapChatButtonAction: (() -> Void)?
     var didTapBetslipButtonAction: (() -> Void)?
 
-    init(selectedSport: Sport = Sport.football) {
+    init(selectedSport: Sport) {
         self.selectedSport = selectedSport
         self.viewModel = LiveEventsViewModel(selectedSport: self.selectedSport)
         super.init(nibName: "LiveEventsViewController", bundle: nil)

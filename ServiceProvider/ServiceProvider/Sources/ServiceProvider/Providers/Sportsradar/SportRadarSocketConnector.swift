@@ -12,11 +12,9 @@ import Combine
 protocol SportRadarConnectorSubscriber {
 
     func liveAdvancedListUpdated(forSportType sportType: SportType, withEvents: [EventsGroup])
-    func inplaySportListUpdated(withSportTypesDetails: [SportTypeDetails])
+    func inplaySportListUpdated(withSportTypes: [SportType])
     func sportTypeByDate(withSportTypes: [SportType])
     func eventListBySportTypeDate(forSportType sportType: SportType, withEvents: [EventsGroup])
-//    func popularEventListBySportTypeDate(forSportType sportType: SportType, withEvents: [EventsGroup])
-//    func upcomingEventListBySportTypeDate(forSportType sportType: SportType, withEvents: [EventsGroup])
     func eventDetails(events: [EventsGroup])
 }
 
@@ -159,42 +157,24 @@ extension SportRadarSocketConnector: WebSocketDelegate {
         case .contentChanges(let content):
             switch content {
             case .liveAdvancedList(let sportType, let events):
-                if let subscriber = self.subscriberForType[content.code],
-                   let sport = SportRadarModelMapper.sportType(fromInternalSportType: sportType)
+                if let subscriber = self.subscriberForType[content.code]
                 {
                     let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-                    subscriber.liveAdvancedListUpdated(forSportType: sport, withEvents: [eventsGroup])
+                    subscriber.liveAdvancedListUpdated(forSportType: sportType, withEvents: [eventsGroup])
                 }
             case .inplaySportList(let sportsTypes):
                 if let subscriber = self.subscriberForType[content.code] {
-                    let mappedSportsTypes = sportsTypes.map(SportRadarModelMapper.sportTypeDetails(fromInternalSportTypeDetails:)).compactMap({ $0 })
-                    subscriber.inplaySportListUpdated(withSportTypesDetails: mappedSportsTypes)
+                    subscriber.inplaySportListUpdated(withSportTypes: sportsTypes)
                 }
             case .sportTypeByDate(let sportsTypes):
                 if let subscriber = self.subscriberForType[content.code] {
-                    let mappedSportsTypes = sportsTypes.map(SportRadarModelMapper.sportType(fromInternalSportType:)).compactMap({ $0 })
-                    subscriber.sportTypeByDate(withSportTypes: mappedSportsTypes)
+                    subscriber.sportTypeByDate(withSportTypes: sportsTypes)
                 }
-//            case .popularEventListBySportTypeDate(let sportType, let events):
-//                if let subscriber = self.subscriberForType[content.code],
-//                   let sport = SportRadarModelMapper.sportType(fromInternalSportType: sportType)
-//                {
-//                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-//                    subscriber.popularEventListBySportTypeDate(forSportType: sport, withEvents: [eventsGroup])
-//                }
-//            case .upcomingEventListBySportTypeDate(let sportType, let events):
-//                if let subscriber = self.subscriberForType[content.code],
-//                   let sport = SportRadarModelMapper.sportType(fromInternalSportType: sportType)
-//                {
-//                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-//                    subscriber.upcomingEventListBySportTypeDate(forSportType: sport, withEvents: [eventsGroup])
-//                }
             case .eventListBySportTypeDate(let sportType, let events):
-                if let subscriber = self.subscriberForType[content.code],
-                   let sport = SportRadarModelMapper.sportType(fromInternalSportType: sportType)
+                if let subscriber = self.subscriberForType[content.code]
                 {
                     let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-                    subscriber.eventListBySportTypeDate(forSportType: sport, withEvents: [eventsGroup])
+                    subscriber.eventListBySportTypeDate(forSportType: sportType, withEvents: [eventsGroup])
                 }
             case .eventDetails(let events):
                 if let subscriber = self.subscriberForType[content.code] {

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum SportType: CaseIterable {
+public enum SportTypeInfo: CaseIterable {
 
     case football
     case golf
