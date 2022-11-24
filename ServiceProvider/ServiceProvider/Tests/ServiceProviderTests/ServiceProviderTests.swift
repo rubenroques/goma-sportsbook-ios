@@ -31,7 +31,7 @@ final class ServiceProviderTests: XCTestCase {
                         switch eventsGroups {
                         case .connected:
                             print("subscribeLiveMatches connected")
-                        case .content(let eventsGroup):
+                        case .contentUpdate(let eventsGroup):
                             print("subscribeLiveMatches content \(eventsGroup)")
                         case .disconnected:
                             print("subscribeLiveMatches disconnected")

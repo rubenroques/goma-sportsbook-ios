@@ -81,7 +81,6 @@ class SportSelectionViewController: UIViewController {
     }
 
     deinit {
-        print("SPORT SELECTION DEINIT")
         Env.serviceProvider.unsubscribeAllSportTypes()
     }
 
@@ -189,7 +188,7 @@ class SportSelectionViewController: UIViewController {
                 case .connected:
                     print("Env.serviceProvider.allSportTypes connected")
                     // self?.configureWithAllSports([])
-                case .content(let sportTypes):
+                case .contentUpdate(let sportTypes):
                     print("Env.serviceProvider.allSportTypes content")
                     self?.configureWithAllSports(sportTypes)
                 case .disconnected:
@@ -223,7 +222,7 @@ class SportSelectionViewController: UIViewController {
                 switch subscribableContent {
                 case .connected:
                     self?.configureWithLiveSportsDetails([])
-                case .content(let sportTypeDetails):
+                case .contentUpdate(let sportTypeDetails):
                     self?.configureWithLiveSportsDetails(sportTypeDetails)
                 case .disconnected:
                     self?.configureWithLiveSportsDetails([])

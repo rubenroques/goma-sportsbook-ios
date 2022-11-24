@@ -7,17 +7,7 @@
 
 import Foundation
 
-public enum EventListSort {
-    case date
-    case popular
-    
-    var id: String {
-        switch self {
-        case .date:
-            return "D"
-        case .popular:
-            return "T"
-        }
-    }
-    
+public enum EventListSort: String {
+    case date = "D"
+    case popular = "T"
 }

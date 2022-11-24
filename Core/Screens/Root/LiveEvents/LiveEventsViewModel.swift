@@ -74,7 +74,6 @@ class LiveEventsViewModel: NSObject {
     var dataDidChangedAction: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
     
-    private var cancellables = Set<AnyCancellable>()
     private var sportsCancellables = Set<AnyCancellable>()
     private var allMatchesPublisher: AnyCancellable?
     private var bannersInfoPublisher: AnyCancellable?
@@ -85,9 +84,12 @@ class LiveEventsViewModel: NSObject {
     private var bannersInfoRegister: EndpointPublisherIdentifiable?
 
     private var allMatchesCount = 10
-    private var allMatchesPage = 1
+    private var allMatchesPage = 0
     private var allMatchesHasMorePages = true
 
+    private var cancellables = Set<AnyCancellable>()
+    private var subscriptions = Set<ServiceProvider.Subscription>()
+    
     init(selectedSport: Sport) {
 
         self.selectedSport = selectedSport
@@ -123,9 +125,10 @@ class LiveEventsViewModel: NSObject {
                 print("Env.serviceProvider.liveSportTypes completed \(completion)")
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportTypeDetails]>) in
                 switch subscribableContent {
-                case .connected:
+                case .connected(let subscription):
+                    self?.subscriptions.insert(subscription)
                     self?.liveSports = []
-                case .content(let sportTypeDetails):
+                case .contentUpdate(let sportTypeDetails):
                     let sports = sportTypeDetails.map(ServiceProviderModelMapper.sport(fromServiceProviderSportTypeDetails:))
                     self?.liveSports = sports
                 case .disconnected:
@@ -138,42 +141,6 @@ class LiveEventsViewModel: NSObject {
         }
     }
 
-    func fetchData() {
-        self.isLoadingAllEventsList.send(true)
-
-        self.allMatchesPage = 1
-        self.allMatchesHasMorePages = true
-
-        self.providerLiveMatchesSubscriber?.cancel()
-        
-        guard
-            let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-        else {
-            self.allMatches = []
-            self.isLoadingAllEventsList.send(false)
-            self.updateContentList()
-            return
-        }
-        
-        print("subscribeLiveMatches fetchData called")
-        
-        self.providerLiveMatchesSubscriber = Env.serviceProvider.subscribeLiveMatches(forSportType: sportType)
-            .sink(receiveCompletion: { completion in
-                print("Env.serviceProvider.subscribeLiveMatches completed \(completion)")
-            }, receiveValue: { (subscribableContent: SubscribableContent<[EventsGroup]>) in
-                print("Env.serviceProvider.subscribeLiveMatches value \(subscribableContent)")
-                switch subscribableContent {
-                case .connected:
-                    print("Connected to ws")
-                case .content(let eventsGroups):
-                    self.allMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
-                    self.isLoadingAllEventsList.send(false)
-                    self.updateContentList()
-                case .disconnected:
-                    print("Disconnected from ws")
-                }
-            })
-        
         /*
         self.fetchAllMatches()
          
@@ -195,7 +162,7 @@ class LiveEventsViewModel: NSObject {
             self.liveEventsCountPublisher.send(0)
         }
         */
-    }
+    // }
 
     func getSportsLive() {
 
@@ -400,13 +367,73 @@ class LiveEventsViewModel: NSObject {
     // MARK: - Fetches
     //
     //
+    
+    func fetchData() {
+        self.isLoadingAllEventsList.send(true)
+        
+        self.allMatchesPage = 0
+        self.allMatchesHasMorePages = true
+        
+        self.providerLiveMatchesSubscriber?.cancel()
+        
+        guard
+            let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
+        else {
+            self.allMatches = []
+            self.isLoadingAllEventsList.send(false)
+            self.updateContentList()
+            return
+        }
+        
+        print("subscribeLiveMatches fetchData called")
+        
+        self.providerLiveMatchesSubscriber = Env.serviceProvider.subscribeLiveMatches(forSportType: sportType, pageIndex: self.allMatchesPage)
+            .sink(receiveCompletion: { completion in
+                // TODO: subscribeLiveMatches receiveCompletion
+            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
+                switch subscribableContent {
+                case .connected(let subscription):
+                    self?.subscriptions.insert(subscription)
+                case .contentUpdate(let eventsGroups):
+                    self?.allMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+                    self?.isLoadingAllEventsList.send(false)
+                    self?.updateContentList()
+                case .disconnected:
+                    () // TODO: subscribeLiveMatches disconnected
+                }
+            })
+    }
+    
     private func fetchAllMatchesNextPage() {
         self.allMatchesPage += 1
         self.fetchAllMatches()
     }
 
     private func fetchAllMatches() {
-
+        
+        // TEST PAGINATION
+        guard
+            let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
+        else {
+            return
+        }
+        
+        self.providerLiveMatchesSubscriber = Env.serviceProvider.subscribeLiveMatches(forSportType: sportType, pageIndex: self.allMatchesPage)
+            .sink(receiveCompletion: { completion in
+                () // TODO: subscribeLiveMatches completion
+            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
+                switch subscribableContent {
+                case .connected(let subscription):
+                    self?.subscriptions.insert(subscription)
+                case .contentUpdate(let eventsGroups):
+                    self?.allMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+                    self?.isLoadingAllEventsList.send(false)
+                    self?.updateContentList()
+                case .disconnected:
+                    () // TODO: subscribeLiveMatches disconnected
+                }
+            })
+        
         // EM TEMP SHUTDOWN
 //        if let allMatchesRegister = allMatchesRegister {
 //            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: allMatchesRegister)

@@ -121,9 +121,9 @@ class MatchDetailsViewModel: NSObject {
             }, receiveValue: { (subscribableContent: SubscribableContent<[EventsGroup]>) in
                 print("Env.serviceProvider.subscribeEventDetails value \(subscribableContent)")
                 switch subscribableContent {
-                case .connected:
+                case .connected(let subscription):
                     print("Connected to ws")
-                case .content(let events):
+                case .contentUpdate(let events):
                     print("MATCH DETAIL: \(events)")
                     self.isLoadingMarketGroups.send(true)
                     if let event = events[safe: 0],

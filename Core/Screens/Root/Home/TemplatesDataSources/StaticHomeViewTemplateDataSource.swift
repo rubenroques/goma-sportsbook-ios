@@ -192,12 +192,12 @@ class StaticHomeViewTemplateDataSource {
 
         Env.serviceProvider.allSportTypes()
             .sink { (completion: Subscribers.Completion<ServiceProviderError>) in
-                
+                // TODO:  allSportTypes Handle completion with error
             } receiveValue: { (subscribableContent: SubscribableContent<[SportType]>) in
                 switch subscribableContent {
-                case .connected:
+                case .connected(let subscription):
                     ()
-                case .content(let sportsList):
+                case .contentUpdate(let sportsList):
                     self.sportsToFetch = Array(sportsList.map(Sport.init(serviceProviderSportType:)).prefix(10))
                     self.refreshPublisher.send()
                 case .disconnected:
@@ -267,36 +267,39 @@ class StaticHomeViewTemplateDataSource {
 
         self.stopBannerUpdates()
 
-        let endpoint = TSRouter.bannersInfoPublisher(operatorId: Env.appSession.operatorId, language: "en")
-
-        self.bannersInfoPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrixSocketResponse<EveryMatrix.BannerInfo>.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
-
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    self?.bannersInfoRegister = publisherIdentifiable
-                case .initialContent(let responde):
-                    print("HomeViewModel bannersInfo initialContent")
-                    let sortedBanners = (responde.records ?? []).sorted {
-                        $0.priorityOrder ?? 0 < $1.priorityOrder ?? 1
-                    }
-                    self?.banners = sortedBanners.map({
-                        BannerInfo(type: $0.type,
-                                   id: $0.id,
-                                   matchId: $0.matchID,
-                                   imageURL: $0.imageURL,
-                                   priorityOrder: $0.priorityOrder)
-                    })
-                    self?.stopBannerUpdates()
-                case .updatedContent:
-                    ()
-                case .disconnect:
-                    ()
-                }
-            })
+        self.banners = []
+        
+        // TODO: Fetch banners
+//        let endpoint = TSRouter.bannersInfoPublisher(operatorId: Env.appSession.operatorId, language: "en")
+//
+//        self.bannersInfoPublisher = Env.everyMatrixClient.manager
+//            .registerOnEndpoint(endpoint, decodingType: EveryMatrixSocketResponse<EveryMatrix.BannerInfo>.self)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { _ in
+//
+//            }, receiveValue: { [weak self] state in
+//                switch state {
+//                case .connect(let publisherIdentifiable):
+//                    self?.bannersInfoRegister = publisherIdentifiable
+//                case .initialContent(let responde):
+//                    print("HomeViewModel bannersInfo initialContent")
+//                    let sortedBanners = (responde.records ?? []).sorted {
+//                        $0.priorityOrder ?? 0 < $1.priorityOrder ?? 1
+//                    }
+//                    self?.banners = sortedBanners.map({
+//                        BannerInfo(type: $0.type,
+//                                   id: $0.id,
+//                                   matchId: $0.matchID,
+//                                   imageURL: $0.imageURL,
+//                                   priorityOrder: $0.priorityOrder)
+//                    })
+//                    self?.stopBannerUpdates()
+//                case .updatedContent:
+//                    ()
+//                case .disconnect:
+//                    ()
+//                }
+//            })
     }
 
     // Favorites
@@ -415,8 +418,8 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func numberOfSections() -> Int {
-//        return itemsBeforeSports + sportsToFetch.count - 1 // minus the fist sport
-        return itemsBeforeSports
+        return itemsBeforeSports + sportsToFetch.count - 1 // minus the fist sport
+        // return itemsBeforeSports
     }
 
     func numberOfRows(forSectionIndex section: Int) -> Int {

@@ -35,12 +35,8 @@ public class ServiceProviderClient {
             
             let sessionCoordinator = SportRadarSessionCoordinator()
             
-            let sportRadarConnector = SportRadarSocketConnector()
-            self.eventsConnectionStatePublisher = sportRadarConnector.connectionStatePublisher
-            sportRadarConnector.connect()
-            
             self.privilegedAccessManager = SportRadarPrivilegedAccessManager(sessionCoordinator: sessionCoordinator, connector: OmegaConnector())
-            self.eventsProvider = SportRadarEventsProvider(sessionCoordinator: sessionCoordinator, connector: sportRadarConnector)
+            self.eventsProvider = SportRadarEventsProvider(sessionCoordinator: sessionCoordinator, connector: SportRadarSocketConnector())
             self.bettingProvider = SportRadarBettingProvider(sessionCoordinator: sessionCoordinator)
         }
     }
@@ -85,13 +81,13 @@ extension ServiceProviderClient {
     //
     // Events
     //
-    public func subscribeLiveMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+    public func subscribeLiveMatches(forSportType sportType: SportType, pageIndex: Int) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
-        return eventsProvider.subscribeLiveMatches(forSportType: sportType)
+        return eventsProvider.subscribeLiveMatches(forSportType: sportType, pageIndex: pageIndex)
     }
 
     public func subscribePreLiveMatches(forSportType sportType: SportType,
@@ -111,10 +107,6 @@ extension ServiceProviderClient {
                                                       endDate: endDate,
                                                       eventCount: eventCount,
                                                       sortType: sortType)
-    }
-
-    public func unsubscribePreLiveMatches() {
-        self.eventsProvider?.unsubscribePreLiveMatches()
     }
 
     public func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {

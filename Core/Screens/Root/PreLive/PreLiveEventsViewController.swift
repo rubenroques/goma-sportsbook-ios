@@ -121,7 +121,7 @@ class PreLiveEventsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        competitionsFiltersView.selectedIds
+        self.competitionsFiltersView.selectedIds
             .receive(on: DispatchQueue.main)
             .sink { idsSet in
                 print("selectedIds -> \(idsSet)")

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ServiceProvider
 import Combine
 
 class SearchViewController: UIViewController {
@@ -29,7 +30,8 @@ class SearchViewController: UIViewController {
     // Variables
     var viewModel: SearchViewModel
     var cancellables = Set<AnyCancellable>()
-
+    var subscriptions = Set<ServiceProvider.Subscription>()
+    
     var didSelectMatchAction: ((Match) -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didSelectCompetitionAction: ((String) -> Void)?
@@ -94,6 +96,25 @@ class SearchViewController: UIViewController {
         
         self.searchBarView.becomeFirstResponder()
 
+        Env.serviceProvider.subscribePreLiveMatches(forSportType: SportType.football,
+                                                    pageIndex: 0,
+                                                    eventCount: 10,
+                                                    sortType: EventListSort.popular)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                
+            } receiveValue: { [weak self] subscribableContent in
+                switch subscribableContent {
+                case .connected(let subscription):
+                    self?.subscriptions.insert(subscription)
+                case .contentUpdate(let eventGroups):
+                    print("eventGroups count \(eventGroups.count)")
+                case .disconnected:
+                    ()
+                }
+            }
+            .store(in: &cancellables)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {

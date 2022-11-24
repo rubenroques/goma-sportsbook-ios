@@ -23,22 +23,14 @@ extension SportRadarModels {
     
     enum Content {
         
-        case liveAdvancedList(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
+        case liveAdvancedList(topicIdentifier: TopicIdentifier, events: [SportRadarModels.Event])
+        case eventListBySportTypeDate(topicIdentifier: TopicIdentifier, events: [SportRadarModels.Event])
+        
         case inplaySportList(sportsTypes: [SportRadarModels.SportTypeDetails])
         case sportTypeByDate(sportsTypes: [SportRadarModels.SportType])
-        case eventListBySportTypeDate(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
+        
         case eventDetails(eventDetails: [SportRadarModels.Event])
-        
-        var code: ContentType {
-            switch self {
-            case .liveAdvancedList: return .liveAdvancedList
-            case .inplaySportList: return .inplaySportList
-            case .sportTypeByDate: return .sportTypeByDate
-            case .eventListBySportTypeDate: return .eventListBySportTypeDate
-            case .eventDetails: return .eventDetails
-            }
-        }
-        
+
     }
     
 }
@@ -78,30 +70,30 @@ extension SportRadarModels {
                     var dataUnkeyedContainer = try container.nestedUnkeyedContainer(forKey: .data)
                     // while !dataUnkeyedContainer.isAtEnd {
                     // }
-                    let firstContentContainer = try dataUnkeyedContainer.nestedContainer(keyedBy: CodingKeys.self)
-                    let contentTypeContainer = try firstContentContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
+                    let contentContainer = try dataUnkeyedContainer.nestedContainer(keyedBy: CodingKeys.self)
                     
+                    let contentTypeContainer = try contentContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
                     let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
-                    let contentIdsArray = ((try? contentTypeContainer.decode(String.self, forKey: .contentId)) ?? "").components(separatedBy: "/")
                     
+//                    let contentIdsArray = ((try? contentTypeContainer.decode(String.self, forKey: .contentId)) ?? "").components(separatedBy: "/")
+//
+                    
+                    let topicIdentifier = try contentContainer.decode(TopicIdentifier.self, forKey: .content)
                     var content: Content
                     
                     switch contentType {
                     case .liveAdvancedList:
-                        let events: [SportRadarModels.Event] = try firstContentContainer.decode([SportRadarModels.Event].self, forKey: .change)
-                        guard let sportId = contentIdsArray.first else { throw SportRadarError.unkownContentId }
+                        let events: [SportRadarModels.Event] = try contentContainer.decode([SportRadarModels.Event].self, forKey: .change)
+                        content = .liveAdvancedList(topicIdentifier: topicIdentifier, events: events)
                         
-                        let sportType = try SportRadarModels.SportType.init(id: sportId)
-                        
-                        content = .liveAdvancedList(sportType: sportType, events: events)
                     case .inplaySportList:
-                        let sportsTypes: [SportRadarModels.SportTypeDetails] = try firstContentContainer.decode([SportRadarModels.SportTypeDetails].self, forKey: .change)
+                        let sportsTypes: [SportRadarModels.SportTypeDetails] = try contentContainer.decode([SportRadarModels.SportTypeDetails].self, forKey: .change)
                         
                         content = .inplaySportList(sportsTypes: sportsTypes)
                     case .sportTypeByDate:
                         // change key is optional
-                        if firstContentContainer.contains(.change) {
-                            let sportsTypes: [SportRadarModels.SportType] = try firstContentContainer.decode([SportRadarModels.SportType].self, forKey: .change)
+                        if contentContainer.contains(.change) {
+                            let sportsTypes: [SportRadarModels.SportType] = try contentContainer.decode([SportRadarModels.SportType].self, forKey: .change)
 
                             content = .sportTypeByDate(sportsTypes: sportsTypes)
                         }
@@ -113,25 +105,18 @@ extension SportRadarModels {
 
                     case .eventListBySportTypeDate:
                         // change key is optional
-                        if firstContentContainer.contains(.change) {
-                            let events: [SportRadarModels.Event] = try firstContentContainer.decode([SportRadarModels.Event].self, forKey: .change)
-                            guard let sportId = contentIdsArray.first else { throw SportRadarError.unkownContentId }
-
-                            let sportType = try SportRadarModels.SportType.init(id: sportId)
-
-                            content = .eventListBySportTypeDate(sportType: sportType, events: events)
+                        if contentContainer.contains(.change) {
+                            let events: [SportRadarModels.Event] = try contentContainer.decode([SportRadarModels.Event].self, forKey: .change)
+                            content = .eventListBySportTypeDate(topicIdentifier: topicIdentifier, events: events)
                         }
                         else {
-                            guard let sportId = contentIdsArray.first else { throw SportRadarError.unkownContentId }
-
-                            let sportType = try SportRadarModels.SportType.init(id: sportId)
-
-                            content = .eventListBySportTypeDate(sportType: sportType, events: [])
+                            content = .eventListBySportTypeDate(topicIdentifier: topicIdentifier, events: [])
                         }
+                        
                     case .eventDetails:
                         // change key is optional
-                        if firstContentContainer.contains(.change) {
-                            let event: SportRadarModels.Event = try firstContentContainer.decode(SportRadarModels.Event.self, forKey: .change)
+                        if contentContainer.contains(.change) {
+                            let event: SportRadarModels.Event = try contentContainer.decode(SportRadarModels.Event.self, forKey: .change)
 
                             content = .eventDetails(eventDetails: [event])
                         }

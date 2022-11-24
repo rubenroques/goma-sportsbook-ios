@@ -9,23 +9,19 @@ import Foundation
 import Starscream
 import Combine
 
-protocol SportRadarConnectorSubscriber {
-
-    func liveAdvancedListUpdated(forSportType sportType: SportType, withEvents: [EventsGroup])
+protocol SportRadarConnectorSubscriber: AnyObject {
+    func liveAdvancedListUpdated(forTopicIdentifier identifier: TopicIdentifier, withEvents: [EventsGroup])
     func inplaySportListUpdated(withSportTypesDetails: [SportTypeDetails])
     func sportTypeByDate(withSportTypes: [SportType])
-    func eventListBySportTypeDate(forSportType sportType: SportType, withEvents: [EventsGroup])
-//    func popularEventListBySportTypeDate(forSportType sportType: SportType, withEvents: [EventsGroup])
-//    func upcomingEventListBySportTypeDate(forSportType sportType: SportType, withEvents: [EventsGroup])
+    func eventListBySportTypeDate(forTopicIdentifier identifier: TopicIdentifier, withEvents: [EventsGroup])
     func eventDetails(events: [EventsGroup])
-    
 }
 
 class SportRadarSocketConnector: NSObject, Connector {
     
     var token: SportRadarSessionAccessToken?
 
-    var subscriberForType: [SportRadarModels.ContentType: SportRadarConnectorSubscriber] = [:]
+    weak var messageSubscriber: SportRadarConnectorSubscriber?
     
     var connectionStatePublisher: AnyPublisher<ConnectorState, Error> {
         connectionStateSubject.eraseToAnyPublisher()
@@ -40,8 +36,6 @@ class SportRadarSocketConnector: NSObject, Connector {
         self.connectionStateSubject = CurrentValueSubject<ConnectorState, Error>.init(.disconnected)
         self.isConnected = false
         
-        // let pinner = FoundationSecurity(allowSelfSigned: true)
-        // let compression = WSCompression()
         self.socket = WebSocket.init(request: Self.socketRequest(), useCustomEngine: false)
         super.init()
     }
@@ -82,15 +76,7 @@ class SportRadarSocketConnector: NSObject, Connector {
     func disconnect() {
         self.socket.forceDisconnect()
     }
-    
-    func subscribe(_ subscriber: SportRadarConnectorSubscriber, forContentType type: SportRadarModels.ContentType) {
-        self.subscriberForType[type] = subscriber
-    }
 
-    func unsubscribe(forContentType type: SportRadarModels.ContentType) {
-        self.subscriberForType[type] = nil
-    }
-    
 }
 
 
@@ -152,37 +138,32 @@ extension SportRadarSocketConnector: WebSocketDelegate {
             self.connectionStateSubject.send(.connected)
         case .contentChanges(let content):
             switch content {
-            case .liveAdvancedList(let sportType, let events):
-                if let subscriber = self.subscriberForType[content.code],
-                   let sport = SportRadarModelMapper.sportType(fromInternalSportType: sportType)
-                {
+            case .liveAdvancedList(let topicIdentifier, let events):
+                if let subscriber = self.messageSubscriber {
                     let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-                    subscriber.liveAdvancedListUpdated(forSportType: sport, withEvents: [eventsGroup])
+                    subscriber.liveAdvancedListUpdated(forTopicIdentifier: topicIdentifier, withEvents: [eventsGroup])
                 }
             case .inplaySportList(let sportsTypes):
-                if let subscriber = self.subscriberForType[content.code] {
+                if let subscriber = self.messageSubscriber {
                     let mappedSportsTypes = sportsTypes.map(SportRadarModelMapper.sportTypeDetails(fromInternalSportTypeDetails:)).compactMap({ $0 })
                     subscriber.inplaySportListUpdated(withSportTypesDetails: mappedSportsTypes)
                 }
             case .sportTypeByDate(let sportsTypes):
-                if let subscriber = self.subscriberForType[content.code] {
+            if let subscriber = self.messageSubscriber {
                     let mappedSportsTypes = sportsTypes.map(SportRadarModelMapper.sportType(fromInternalSportType:)).compactMap({ $0 })
                     subscriber.sportTypeByDate(withSportTypes: mappedSportsTypes)
                 }
-            case .eventListBySportTypeDate(let sportType, let events):
-                if let subscriber = self.subscriberForType[content.code],
-                   let sport = SportRadarModelMapper.sportType(fromInternalSportType: sportType)
-                {
+            case .eventListBySportTypeDate(let topicIdentifier, let events):
+                if let subscriber = self.messageSubscriber {
                     let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-                    subscriber.eventListBySportTypeDate(forSportType: sport, withEvents: [eventsGroup])
+                    subscriber.eventListBySportTypeDate(forTopicIdentifier: topicIdentifier, withEvents: [eventsGroup])
                 }
             case .eventDetails(let events):
-                if let subscriber = self.subscriberForType[content.code] {
+                if let subscriber = self.messageSubscriber {
                     let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
                     subscriber.eventDetails(events: [eventsGroup])
                 }
             }
-            
         case .unknown:
             print("Uknown Response")
         }

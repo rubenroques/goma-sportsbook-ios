@@ -78,6 +78,7 @@ class SportMatchLineViewModel {
     private var matches: [Match] = []
     
     private var cancellables: Set<AnyCancellable> = []
+    private var subscriptions = Set<ServiceProvider.Subscription>()
 
     init(sport: Sport, matchesType: MatchesType, store: HomeStore) {
 
@@ -293,9 +294,10 @@ extension SportMatchLineViewModel {
             }
         } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
             switch subscribableContent {
-            case .connected:
+            case .connected(let subscription):
+                self?.subscriptions.insert(subscription)
                 self?.storeMatches([])
-            case .content(let eventsGroups):
+            case .contentUpdate(let eventsGroups):
                 let matches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
                 self?.storeMatches(matches)
             case .disconnected:
@@ -351,7 +353,7 @@ extension SportMatchLineViewModel {
             return
         }
         
-        Env.serviceProvider.subscribeLiveMatches(forSportType: serviceProviderSportType)
+        Env.serviceProvider.subscribeLiveMatches(forSportType: serviceProviderSportType, pageIndex: 0)
             .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
                 switch completion {
                 case .finished:
@@ -361,9 +363,10 @@ extension SportMatchLineViewModel {
                 }
             } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
                 switch subscribableContent {
-                case .connected:
+                case .connected(let subscription):
+                    self?.subscriptions.insert(subscription)
                     self?.storeMatches([])
-                case .content(let eventsGroups):
+                case .contentUpdate(let eventsGroups):
                     let matches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
                     self?.storeMatches(matches)
                 case .disconnected:
@@ -454,39 +457,42 @@ extension SportMatchLineViewModel {
 
     private func fetchOutrightCompetitions() {
 
-        if let outrightCompetitionsRegister = outrightCompetitionsRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: outrightCompetitionsRegister)
-        }
-
-        let endpoint = TSRouter.popularTournamentsPublisher(operatorId: Env.appSession.operatorId,
-                                                        language: "en",
-                                                            sportId: self.sport.id,
-                                                        tournamentsCount: 2)
-        self.outrightCompetitionsPublisher?.cancel()
-        self.outrightCompetitionsPublisher = nil
-
-        self.outrightCompetitionsPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
-                case .finished:
-                    print("Data retrieved!")
-                }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    self?.outrightCompetitionsRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    self?.storeOutrightCompetitions(aggregator: aggregator)
-                case .updatedContent: // (let aggregatorUpdates):
-                    ()
-                case .disconnect:
-                    ()
-                }
-            })
+        // TODO: fetchOutrightCompetitions
+        return
+        
+//        if let outrightCompetitionsRegister = outrightCompetitionsRegister {
+//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: outrightCompetitionsRegister)
+//        }
+//
+//        let endpoint = TSRouter.popularTournamentsPublisher(operatorId: Env.appSession.operatorId,
+//                                                        language: "en",
+//                                                            sportId: self.sport.id,
+//                                                        tournamentsCount: 2)
+//        self.outrightCompetitionsPublisher?.cancel()
+//        self.outrightCompetitionsPublisher = nil
+//
+//        self.outrightCompetitionsPublisher = Env.everyMatrixClient.manager
+//            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure:
+//                    print("Error retrieving data!")
+//                case .finished:
+//                    print("Data retrieved!")
+//                }
+//            }, receiveValue: { [weak self] state in
+//                switch state {
+//                case .connect(let publisherIdentifiable):
+//                    self?.outrightCompetitionsRegister = publisherIdentifiable
+//                case .initialContent(let aggregator):
+//                    self?.storeOutrightCompetitions(aggregator: aggregator)
+//                case .updatedContent: // (let aggregatorUpdates):
+//                    ()
+//                case .disconnect:
+//                    ()
+//                }
+//            })
     }
 
     func storeOutrightCompetitions(aggregator: EveryMatrix.Aggregator) {
