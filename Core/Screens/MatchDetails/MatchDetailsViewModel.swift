@@ -79,6 +79,9 @@ class MatchDetailsViewModel: NSObject {
 
         self.connectPublishers()
         self.requestRedCards(forMatchWithId: match.id)
+
+        self.getMatchDetails()
+
     }
 
     init(matchMode: MatchMode = .preLive, matchId: String) {
@@ -97,6 +100,8 @@ class MatchDetailsViewModel: NSObject {
         self.connectPublishers()
         
         self.requestRedCards(forMatchWithId: matchId)
+
+        self.getMatchDetails()
         
     }
 
@@ -125,12 +130,15 @@ class MatchDetailsViewModel: NSObject {
                     print("Connected to ws")
                 case .content(let events):
                     self.isLoadingMarketGroups.send(true)
-                    if let event = events[safe: 0],
-                       let match = ServiceProviderModelMapper.match(fromEventGroup: event) {
+                    if let eventGroup = events[safe: 0],
+                       let match = ServiceProviderModelMapper.match(fromEventGroup: eventGroup) {
                         self.matchPublisher.send(.loaded(match))
-                        if let marketFilters = self.marketFilters {
-                            self.serviceProviderStore.storeMarketGroups(fromMarketFilters: marketFilters, match: match)
-                            self.fetchMarketGroupsPublisher()
+//                        if let marketFilters = self.marketFilters {
+//                            self.serviceProviderStore.storeMarketGroups(fromMarketFilters: marketFilters, match: match)
+//                            self.fetchMarketGroupsPublisher()
+//                        }
+                        if let eventMapped = ServiceProviderModelMapper.event(fromEventGroup: eventGroup){
+                            self.getMarketGroups(event: eventMapped)
                         }
                     }
                     else {
@@ -144,6 +152,19 @@ class MatchDetailsViewModel: NSObject {
             })
             .store(in: &cancellables)
 
+    }
+
+    func getMarketGroups(event: ServiceProvider.Event) {
+
+        Env.serviceProvider.getMarketFilters(event: event)?
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: {[weak self] completion in
+                ()
+            }, receiveValue: { [weak self] marketGroup in
+                print("MARKET GROUP: \(marketGroup)")
+                self?.fetchMarketGroupsPublisher(marketGroups: marketGroup)
+            })
+            .store(in: &cancellables)
     }
 
     func connectPublishers() {
@@ -181,33 +202,6 @@ class MatchDetailsViewModel: NSObject {
                 self?.matchStatsUpdatedPublisher.send()
             }
             .store(in: &cancellables)
-
-        // Sportradar markets
-//        Env.serviceProvider.getMarketFilters()?
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                switch completion {
-//
-//                case .finished:
-//                    print("MARKET FILTER FINISHED")
-//                case .failure(let error):
-//                    print("MARKET FILTER ERROR: \(error)")
-//
-//                }
-//            }, receiveValue: { [weak self] marketFilter in
-//                print("MARKET FILTER RESPONSE: \(marketFilter)")
-//                self?.marketFilters = marketFilter
-//                self?.getMatchDetails()
-//
-//            })
-//            .store(in: &cancellables)
-
-//        if self.serviceProviderStore.eventMarketsPublisher.value.isNotEmpty {
-//            self.marketFilters = self.serviceProviderStore.eventMarketsPublisher.value
-//            self.getMatchDetails()
-//        }
-//        else {
-//        }
 
         self.serviceProviderStore.eventMarketsPublisher
             .receive(on: DispatchQueue.main)
@@ -313,7 +307,7 @@ class MatchDetailsViewModel: NSObject {
             }
             self.matchPublisher.send(.loaded(match))
 
-            self.fetchMarketGroupsPublisher()
+            //self.fetchMarketGroupsPublisher()
         }
         else {
             self.matchPublisher.send(.failed)
@@ -330,14 +324,17 @@ class MatchDetailsViewModel: NSObject {
 
     //
     //
-    private func fetchMarketGroupsPublisher() {
+    private func fetchMarketGroupsPublisher(marketGroups: [ServiceProvider.MarketGroup]) {
 
-        let marketGroups = self.serviceProviderStore.marketGroupsArray().map { rawMarketGroup in
+        let marketGroups = marketGroups.map { rawMarketGroup in
+
             MarketGroup(id: rawMarketGroup.id,
                         type: rawMarketGroup.type,
                         groupKey: rawMarketGroup.groupKey,
                         translatedName: rawMarketGroup.translatedName,
-                        isDefault: rawMarketGroup.isDefault)
+                        isDefault: rawMarketGroup.isDefault,
+                        markets: ServiceProviderModelMapper.optionalMarkets(fromServiceProviderMarkets: rawMarketGroup.markets))
+
         }
 
         let sortedMarketGroups = marketGroups.sorted(by: {
@@ -398,7 +395,8 @@ class MatchDetailsViewModel: NSObject {
                         type: rawMarketGroup.type,
                         groupKey: rawMarketGroup.groupKey,
                         translatedName: rawMarketGroup.translatedName,
-                        isDefault: rawMarketGroup.isDefault)
+                        isDefault: rawMarketGroup.isDefault,
+                        markets: nil)
         }
 
         self.isLoadingMarketGroups.send(false)
@@ -419,13 +417,13 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.serviceProviderStore.marketGroupsPublisher.value.count
+        return self.marketGroupsPublisher.value.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
             let cell = collectionView.dequeueCellType(ListTypeCollectionViewCell.self, indexPath: indexPath),
-            let item = self.serviceProviderStore.marketGroupsPublisher.value[safe: indexPath.row]
+            let item = self.marketGroupsPublisher.value[safe: indexPath.row]
         else {
             fatalError()
         }

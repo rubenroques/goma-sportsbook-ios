@@ -110,8 +110,8 @@ extension ServiceProviderClient {
 /* REST API Events
  */
 extension ServiceProviderClient {
-    public func getMarketFilters() -> AnyPublisher<MarketFilter, ServiceProviderError>? {
-        return self.eventsProvider?.getMarketsFilter()
+    public func getMarketFilters(event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError>? {
+        return self.eventsProvider?.getMarketsFilter(event: event)
     }
 
     public func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>? {

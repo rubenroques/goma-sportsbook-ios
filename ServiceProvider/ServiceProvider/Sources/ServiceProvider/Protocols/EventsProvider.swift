@@ -22,7 +22,7 @@ protocol EventsProvider {
     func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
 
     // REST API
-    func getMarketsFilter() -> AnyPublisher<MarketFilter, ServiceProviderError>?
+    func getMarketsFilter(event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError>?
 
     func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>?
 

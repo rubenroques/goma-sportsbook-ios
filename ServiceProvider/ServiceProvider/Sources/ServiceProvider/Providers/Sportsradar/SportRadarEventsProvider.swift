@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import OrderedCollections
 
 class SportRadarEventsProvider: EventsProvider {
 
@@ -457,6 +458,182 @@ class SportRadarEventsProvider: EventsProvider {
 
         return uniqueSportsArray
     }
+
+    private func processMarketFilters(marketFilter: MarketFilter, match: Event) -> [MarketGroup] {
+
+        var eventMarkets: [EventMarket] = []
+        var marketGroups: OrderedDictionary<String, MarketGroup> = [:]
+        var availableMarkets: [String: [AvailableMarket]] = [:]
+
+        var availableMarketGroups: [String: [AvailableMarket]] = [:]
+
+        // All Market
+        let allMarket = marketFilter.allMarkets
+        let allEventMarket = EventMarket(id: "\(allMarket.displayOrder)", name: allMarket.translations?.english ?? "", marketIds: [])
+        eventMarkets.append(allEventMarket)
+
+        // Popular Market
+        let popularMarket = marketFilter.popularMarkets
+        var popularMarketIds: [String] = []
+        if let popularMarketSportsIds = popularMarket.marketsSportType?.all {
+
+            for marketId in popularMarketSportsIds {
+                let marketSportId = marketId.ids[0]
+                popularMarketIds.append(marketSportId)
+
+            }
+        }
+        let popularEventMarket = EventMarket(id: "\(popularMarket.displayOrder)", name: popularMarket.translations?.english ?? "", marketIds: popularMarketIds)
+        eventMarkets.append(popularEventMarket)
+
+        // Total Market
+        let totalMarket = marketFilter.totalMarkets
+        var totalMarketIds: [String] = []
+        if let totalMarketSportsIds = totalMarket.marketsSportType?.all {
+
+            for marketId in totalMarketSportsIds {
+                let marketSportId = marketId.ids[0]
+                totalMarketIds.append(marketSportId)
+
+            }
+        }
+        let totalEventMarket = EventMarket(id: "\(totalMarket.displayOrder)", name: totalMarket.translations?.english ?? "", marketIds: totalMarketIds)
+        eventMarkets.append(totalEventMarket)
+
+        // Total Market
+        let goalMarket = marketFilter.goalMarkets
+        var goalMarketIds: [String] = []
+        if let goalMarketSportsIds = goalMarket.marketsSportType?.all {
+
+            for marketId in goalMarketSportsIds {
+                let marketSportId = marketId.ids[0]
+                goalMarketIds.append(marketSportId)
+
+            }
+        }
+        let goalEventMarket = EventMarket(id: "\(goalMarket.displayOrder)", name: goalMarket.translations?.english ?? "", marketIds: goalMarketIds)
+        eventMarkets.append(goalEventMarket)
+
+        // Handicap Market
+        let handicapMarket = marketFilter.handicapMarkets
+        var handicapMarketIds: [String] = []
+        if let handicapMarketSportsIds = handicapMarket.marketsSportType?.all {
+
+            for marketId in handicapMarketSportsIds {
+                let marketSportId = marketId.ids[0]
+                handicapMarketIds.append(marketSportId)
+
+            }
+        }
+        let handicapEventMarket = EventMarket(id: "\(handicapMarket.displayOrder)", name: handicapMarket.translations?.english ?? "", marketIds: handicapMarketIds)
+        eventMarkets.append(handicapEventMarket)
+
+        // Other Market
+        let otherMarket = marketFilter.otherMarkets
+        var otherMarketIds: [String] = []
+        if let otherMarketSportsIds = otherMarket.marketsSportType?.all {
+
+            for marketId in otherMarketSportsIds {
+                let marketSportId = marketId.ids[0]
+                otherMarketIds.append(marketSportId)
+
+            }
+        }
+        let otherEventMarket = EventMarket(id: "\(otherMarket.displayOrder)", name: otherMarket.translations?.english ?? "", marketIds: otherMarketIds)
+        eventMarkets.append(otherEventMarket)
+
+        //self.eventMarketsPublisher.send(self.eventMarkets)
+
+        let matchMarkets = match.markets
+
+        for matchMarket in matchMarkets {
+
+            if let marketTypeId = matchMarket.marketTypeId {
+
+                for eventMarket in eventMarkets {
+
+                    if eventMarket.marketIds.contains(marketTypeId) {
+
+                        if availableMarkets[eventMarket.name] == nil {
+                            let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
+                                                                  market: matchMarket)
+                            availableMarkets[eventMarket.name] = [availableMarket]
+                        }
+                        else {
+                            let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
+                                                                  market: matchMarket)
+                            availableMarkets[eventMarket.name]?.append(availableMarket)
+                        }
+
+                    }
+
+                }
+
+                // Add to All Market aswell
+                let allEventMarket = eventMarkets.filter({
+                    $0.id == "1"
+                })
+
+                let eventMarket = allEventMarket[0]
+
+                if availableMarkets[eventMarket.name] == nil {
+                    let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
+                                                          market: matchMarket)
+                    availableMarkets[eventMarket.name] = [availableMarket]
+                }
+                else {
+                    let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
+                                                          market: matchMarket)
+                    availableMarkets[eventMarket.name]?.append(availableMarket)
+                }
+
+            }
+            else {
+                let allEventMarket = eventMarkets.filter({
+                    $0.id == "1"
+                })
+
+                let eventMarket = allEventMarket[0]
+                if availableMarkets[eventMarket.name] == nil {
+                    let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
+                                                          market: matchMarket)
+                    availableMarkets[eventMarket.name] = [availableMarket]
+                }
+                else {
+                    let availableMarket = AvailableMarket(marketId: matchMarket.id, marketGroupId: eventMarket.id,
+                                                          market: matchMarket)
+                    availableMarkets[eventMarket.name]?.append(availableMarket)
+                }
+
+            }
+        }
+
+
+        availableMarketGroups = availableMarkets
+
+        for availableMarket in availableMarkets {
+            let marketGroup = MarketGroup(type: availableMarket.key,
+                                                      id: availableMarket.value.first?.marketGroupId ?? "0",
+                                                      groupKey: "\(availableMarket.value.first?.marketGroupId ?? "0")",
+                                                      translatedName: availableMarket.key.capitalized,
+                                                      position: Int(availableMarket.value.first?.marketGroupId ?? "0") ?? 0,
+                                                      isDefault: availableMarket.key == "All Markets" ? true : false,
+                                                      numberOfMarkets: availableMarket.value.count,
+                                          markets: availableMarket.value.map(\.market))
+
+            marketGroups[availableMarket.key] = marketGroup
+        }
+
+        let marketGroupsArray = Array(marketGroups.values)
+
+        let sortedMarketGroupsArray = marketGroupsArray.sorted(by: {
+            $0.id < $1.id
+        })
+
+        //self.marketGroupsPublisher.send(sortedMarketGroupsArray)
+        return sortedMarketGroupsArray
+    }
+
 }
 
 extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
@@ -544,12 +721,20 @@ extension SportRadarEventsProvider {
  */
 extension SportRadarEventsProvider {
 
-    func getMarketsFilter() -> AnyPublisher<MarketFilter, ServiceProviderError>? {
+    func getMarketsFilter(event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError>? {
 
         let endpoint = SportRadarRestAPIClient.marketsFilter
         let requestPublisher: AnyPublisher<MarketFilter, ServiceProviderError> = self.networkManager.request(endpoint)
 
-        return requestPublisher
+
+        return requestPublisher.flatMap({ marketFilters -> AnyPublisher<[MarketGroup], ServiceProviderError> in
+
+            let marketGroups = self.processMarketFilters(marketFilter: marketFilters, match: event)
+
+            return Just(marketGroups).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
+        })
+        .eraseToAnyPublisher()
 
     }
 
@@ -655,4 +840,29 @@ extension SportRadarEventsProvider {
         //return codeSportsRequestPublisher
 
     }
+}
+
+public struct EventMarket {
+    public var id: String
+    public var name: String
+    public var marketIds: [String]
+
+}
+
+public struct AvailableMarket {
+    public var marketId: String
+    public var marketGroupId: String
+    public var market: Market
+}
+
+public struct MarketGroup {
+
+    public var type: String
+    public var id: String
+    public var groupKey: String?
+    public var translatedName: String?
+    public var position: Int?
+    public var isDefault: Bool?
+    public var numberOfMarkets: Int?
+    public var markets: [Market]?
 }

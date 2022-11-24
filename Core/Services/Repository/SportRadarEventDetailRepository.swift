@@ -30,23 +30,23 @@ class SportRadarEventDetailRepository {
     
     func getMarketFilters() {
 
-        Env.serviceProvider.getMarketFilters()?
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-
-                case .finished:
-                    print("MARKET FILTER FINISHED")
-                case .failure(let error):
-                    print("MARKET FILTER ERROR: \(error)")
-
-                }
-            }, receiveValue: { [weak self] marketFilter in
-                print("MARKET FILTER RESPONSE: \(marketFilter)")
-                self?.processMarketFilters(marketFilter: marketFilter)
-
-            })
-            .store(in: &cancellables)
+//        Env.serviceProvider.getMarketFilters()?
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//
+//                case .finished:
+//                    print("MARKET FILTER FINISHED")
+//                case .failure(let error):
+//                    print("MARKET FILTER ERROR: \(error)")
+//
+//                }
+//            }, receiveValue: { [weak self] marketFilter in
+//                print("MARKET FILTER RESPONSE: \(marketFilter)")
+//                self?.processMarketFilters(marketFilter: marketFilter)
+//
+//            })
+//            .store(in: &cancellables)
     }
 
     private func processMarketFilters(marketFilter: MarketFilter) {
