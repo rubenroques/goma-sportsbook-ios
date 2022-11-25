@@ -24,14 +24,11 @@ protocol EventsProvider {
     // REST API
     func getMarketsFilter(event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError>?
 
-    func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>?
+    func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>
 
     func getSportsList() -> AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError>?
 
     func getAllSportsList(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportType], ServiceProviderError>
 
-    func getFieldWidgetURLRequest(urlString: String?, widgetFile: String?) -> URLRequest?
-
-    func getFieldWidgetHtml(widgetFile: String, eventId: String, providerId: String?) -> String?
-
+    func getFieldWidget(eventId: String, isDarkTheme: Bool?) -> AnyPublisher<FieldWidgetRenderData, ServiceProviderError>
 }

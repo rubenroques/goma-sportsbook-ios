@@ -9,6 +9,7 @@ import UIKit
 import Combine
 import LinkPresentation
 import WebKit
+import ServiceProvider
 
 class MatchDetailsViewController: UIViewController {
     
@@ -554,6 +555,9 @@ class MatchDetailsViewController: UIViewController {
     
     // MARK: - Bindings
     private func bind(toViewModel viewModel: MatchDetailsViewModel) {
+
+        let theme = self.traitCollection.userInterfaceStyle
+        viewModel.getFieldWidget(isDarkTheme: theme == .dark ? true : false)
         
         Env.userSessionStore.userSessionPublisher
             .receive(on: DispatchQueue.main)
@@ -717,10 +721,10 @@ class MatchDetailsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        self.viewModel.fieldWidgetIdPublisher
+        self.viewModel.shouldRenderFieldWidget
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] fieldWidgetId in
-                if fieldWidgetId != "" {
+            .sink(receiveValue: { [weak self] shouldRender in
+                if shouldRender {
                     self?.headerButtonsBaseView.isHidden = false
                     self?.setupMatchField()
                 }
@@ -875,17 +879,24 @@ class MatchDetailsViewController: UIViewController {
         }
         
         if self.viewModel.matchModePublisher.value == .live && self.isValidStatsSport {
-            self.shouldShowLiveFieldWebView = true
-            self.isLiveFieldReady = false
+
 
             // let request = URLRequest(url: URL(string: "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)")!)
 
-            let urlString = "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)"
+            if let fieldWidget = self.viewModel.fieldWidgetRenderData {
+                self.shouldShowLiveFieldWebView = true
+                self.isLiveFieldReady = false
 
-            if let fieldWidgetRequest = Env.serviceProvider.getFieldWidgetURLRequest(urlString: urlString) {
+                //let urlString = "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)"
 
-                self.matchFieldWebView.load(fieldWidgetRequest)
-
+                if let htmlString = fieldWidget.htmlString,
+                   let url = fieldWidget.url {
+                    self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
+                }
+                else if let url = fieldWidget.url {
+                    let urlRequest = URLRequest(url: url)
+                    self.matchFieldWebView.load(urlRequest)
+                }
             }
             else {
                 self.shouldShowLiveFieldWebView = false
@@ -896,27 +907,17 @@ class MatchDetailsViewController: UIViewController {
             // self.shouldShowLiveFieldWebView = false
 
             // TEST
-            if self.viewModel.fieldWidgetIdPublisher.value != "" {
+            if let fieldWidget = self.viewModel.fieldWidgetRenderData {
                 self.shouldShowLiveFieldWebView = true
                 self.isLiveFieldReady = false
 
-                var fieldWidgetFile = "field_widget_light.html"
-
-                let theme = self.traitCollection.userInterfaceStyle
-
-                if theme == .dark {
-                    fieldWidgetFile = "field_widget_dark.html"
+                if let htmlString = fieldWidget.htmlString,
+                   let url = fieldWidget.url {
+                    self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
                 }
-
-                let fileStringSplit = fieldWidgetFile.components(separatedBy: ".")
-                if let url = Bundle.main.url(forResource: fileStringSplit[0], withExtension: fileStringSplit[1]),
-                   let htmlString = Env.serviceProvider.getFieldWidgetHtml(widgetFile: fieldWidgetFile, eventId: self.viewModel.fieldWidgetIdPublisher.value) {
-
-                        self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
-
-                }
-                else {
-                    self.shouldShowLiveFieldWebView = false
+                else if let url = fieldWidget.url {
+                    let urlRequest = URLRequest(url: url)
+                    self.matchFieldWebView.load(urlRequest)
                 }
             }
             else {

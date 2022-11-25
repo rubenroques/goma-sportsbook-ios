@@ -22,7 +22,6 @@ class MatchDetailsViewModel: NSObject {
     var awayRedCardsScorePublisher: CurrentValueSubject<String, Never> = .init("0")
 
     var store: MatchDetailsAggregatorRepository
-    var serviceProviderStore: SportRadarEventDetailRepository
 
     var isLoadingMarketGroups: CurrentValueSubject<Bool, Never> = .init(true)
 
@@ -37,7 +36,8 @@ class MatchDetailsViewModel: NSObject {
     private var goalsRegister: EndpointPublisherIdentifiable?
     private var goalsSubscription: AnyCancellable?
 
-    var fieldWidgetIdPublisher: CurrentValueSubject<String, Never> = .init("")
+    var shouldRenderFieldWidget: CurrentValueSubject<Bool, Never> = .init(false)
+    var fieldWidgetRenderData: FieldWidgetRenderData?
 
     var match: Match? {
         switch matchPublisher.value {
@@ -73,8 +73,6 @@ class MatchDetailsViewModel: NSObject {
 
         self.matchModePublisher.send(matchMode)
 
-        self.serviceProviderStore = SportRadarEventDetailRepository()
-
         super.init()
 
         self.connectPublishers()
@@ -92,8 +90,6 @@ class MatchDetailsViewModel: NSObject {
         self.matchModePublisher.send(matchMode)
 
         self.store = MatchDetailsAggregatorRepository(matchId: matchId)
-
-        self.serviceProviderStore = SportRadarEventDetailRepository()
 
         super.init()
 
@@ -133,10 +129,7 @@ class MatchDetailsViewModel: NSObject {
                     if let eventGroup = events[safe: 0],
                        let match = ServiceProviderModelMapper.match(fromEventGroup: eventGroup) {
                         self.matchPublisher.send(.loaded(match))
-//                        if let marketFilters = self.marketFilters {
-//                            self.serviceProviderStore.storeMarketGroups(fromMarketFilters: marketFilters, match: match)
-//                            self.fetchMarketGroupsPublisher()
-//                        }
+
                         if let eventMapped = ServiceProviderModelMapper.event(fromEventGroup: eventGroup){
                             self.getMarketGroups(event: eventMapped)
                         }
@@ -203,38 +196,47 @@ class MatchDetailsViewModel: NSObject {
             }
             .store(in: &cancellables)
 
-        self.serviceProviderStore.eventMarketsPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] eventsMarket in
-                if eventsMarket.isNotEmpty {
-                    self?.marketFilters = eventsMarket
-                    self?.getMatchDetails()
-                }
-            })
-            .store(in: &cancellables)
-
-        self.getFieldWidgetId(eventId: matchId)
-
+        //self.getFieldWidgetId(eventId: matchId)
     }
 
-    func getFieldWidgetId(eventId: String) {
-        Env.serviceProvider.getFieldWidgetId(eventId: eventId)?
+    func getFieldWidget(isDarkTheme: Bool) {
+//        Env.serviceProvider.getFieldWidgetId(eventId: eventId)?
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//
+//                case .finished:
+//                    print("FIELD WIDGET ID FINISHED")
+//                case .failure(let error):
+//                    print("FIELD WIDGET ID ERROR: \(error)")
+//
+//                }
+//            }, receiveValue: { [weak self] fieldWidgetResponse in
+//                print("FIELD WIDGET ID RESPONSE: \(fieldWidgetResponse)")
+//
+//                if let fieldWidgetId = fieldWidgetResponse.data {
+//                    self?.fieldWidgetIdPublisher.send(fieldWidgetId)
+//                }
+//            })
+//            .store(in: &cancellables)
+
+        Env.serviceProvider.getFieldWidget(eventId: self.matchId, isDarkTheme: isDarkTheme)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
 
                 case .finished:
-                    print("FIELD WIDGET ID FINISHED")
+                    print("FIELD WIDGET RENDER DATA FINISHED")
                 case .failure(let error):
-                    print("FIELD WIDGET ID ERROR: \(error)")
+                    print("FIELD WIDGET RENDER DATA ERROR: \(error)")
 
                 }
-            }, receiveValue: { [weak self] fieldWidgetResponse in
-                print("FIELD WIDGET ID RESPONSE: \(fieldWidgetResponse)")
+            }, receiveValue: { [weak self] fieldWidget in
+                print("FIELD WIDGET RENDER DATA RESPONSE: \(fieldWidget)")
 
-                if let fieldWidgetId = fieldWidgetResponse.data {
-                    self?.fieldWidgetIdPublisher.send(fieldWidgetId)
-                }
+                self?.fieldWidgetRenderData = fieldWidget
+                self?.shouldRenderFieldWidget.send(true)
+
             })
             .store(in: &cancellables)
     }

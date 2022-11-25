@@ -738,7 +738,7 @@ extension SportRadarEventsProvider {
 
     }
 
-    func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>? {
+    func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError> {
 
         let endpoint = SportRadarRestAPIClient.fieldWidgetId(eventId: eventId)
         let requestPublisher: AnyPublisher<FieldWidget, ServiceProviderError> = self.networkManager.request(endpoint)
@@ -747,39 +747,38 @@ extension SportRadarEventsProvider {
 
     }
 
-    func getFieldWidgetURLRequest(urlString: String?, widgetFile: String?) -> URLRequest? {
+    func getFieldWidget(eventId: String, isDarkTheme: Bool? = nil) -> AnyPublisher<FieldWidgetRenderData, ServiceProviderError> {
 
-        if let urlString = urlString {
-            if let url = URL(string: urlString) {
-                let request = URLRequest(url: url)
-                return request
+        var fieldWidgetFile = "field_widget_light.html"
+
+        if isDarkTheme ?? true {
+            fieldWidgetFile = "field_widget_dark.html"
+        }
+
+        return self.getFieldWidgetId(eventId: eventId).flatMap({ fieldWidget -> AnyPublisher<FieldWidgetRenderData, ServiceProviderError> in
+
+            let fileStringSplit = fieldWidgetFile.components(separatedBy: ".")
+
+            let bundleUrl = Bundle.main.url(forResource: fileStringSplit[0], withExtension: fileStringSplit[1])
+
+            let filePath = Bundle.main.path(forResource: fileStringSplit[0], ofType: fileStringSplit[1])
+            let contentData = FileManager.default.contents(atPath: filePath!)
+            let emailTemplate = NSString(data: contentData!, encoding: String.Encoding.utf8.rawValue) as? String
+            if let fieldWidgetId = fieldWidget.data,
+               let replacedHtmlContent = emailTemplate?.replacingOccurrences(of: "@eventId", with: fieldWidgetId) {
+
+                let fieldWidgetRenderData = FieldWidgetRenderData(url: bundleUrl, htmlString: replacedHtmlContent)
+
+                return Just(fieldWidgetRenderData).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
             }
-        }
 
-        if let widgetFile = widgetFile {
-            let fileStringSplit = widgetFile.components(separatedBy: ".")
-            if let url = Bundle.main.url(forResource: fileStringSplit[0], withExtension: fileStringSplit[1]) {
+            return Fail(outputType: FieldWidgetRenderData.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
 
-                let request = URLRequest(url: url)
-                return request
-            }
-        }
+        })
+        .eraseToAnyPublisher()
 
-        return nil
-    }
 
-    func getFieldWidgetHtml(widgetFile: String, eventId: String, providerId: String?) -> String? {
-
-        let fileStringSplit = widgetFile.components(separatedBy: ".")
-
-        let filePath = Bundle.main.path(forResource: fileStringSplit[0], ofType: fileStringSplit[1])
-        let contentData = FileManager.default.contents(atPath: filePath!)
-        let emailTemplate = NSString(data: contentData!, encoding: String.Encoding.utf8.rawValue) as? String
-        if let replacedHtmlContent = emailTemplate?.replacingOccurrences(of: "@eventId", with: eventId) {
-            return replacedHtmlContent
-        }
-
-        return nil
     }
 
     func getSportsList() -> AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError>? {
@@ -865,4 +864,9 @@ public struct MarketGroup {
     public var isDefault: Bool?
     public var numberOfMarkets: Int?
     public var markets: [Market]?
+}
+
+public struct FieldWidgetRenderData {
+    public var url: URL?
+    public var htmlString: String?
 }
