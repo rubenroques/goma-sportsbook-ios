@@ -17,7 +17,6 @@ protocol EventsProvider {
     
     func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
     
-    // REST API
     func getMarketsFilter() -> AnyPublisher<MarketFilter, ServiceProviderError>
     
     func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>
@@ -27,7 +26,7 @@ protocol EventsProvider {
     func getFieldWidgetHtml(widgetFile: String, eventId: String, providerId: String?) -> String?
     
     // TODO: TASK André - temos 4 sports lists ?
-    func getSportsList() -> AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError>
+    // func getSportsList() -> AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError>
 
     func getAllSportsList(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportType], ServiceProviderError>
 

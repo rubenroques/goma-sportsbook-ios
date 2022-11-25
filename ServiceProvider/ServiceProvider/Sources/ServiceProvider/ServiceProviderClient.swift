@@ -154,14 +154,14 @@ extension ServiceProviderClient {
         return self.eventsProvider?.getFieldWidgetHtml(widgetFile: widgetFile, eventId: eventId, providerId: providerId)
     }
 
-    public func getSportsList() -> AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError> {
-        guard
-            let eventsProvider = self.eventsProvider
-        else {
-            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
-        }
-        return eventsProvider.getSportsList()
-    }
+//    public func getSportsList() -> AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError> {
+//        guard
+//            let eventsProvider = self.eventsProvider
+//        else {
+//            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+//        }
+//        return eventsProvider.getSportsList()
+//    }
 
     public func getAllSportsList(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<[SportType], ServiceProviderError> {
         guard

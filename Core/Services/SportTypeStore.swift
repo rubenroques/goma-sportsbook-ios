@@ -31,7 +31,7 @@ class SportTypeStore {
 
     func getSportTypesList() {
 
-        Env.serviceProvider.getAllSportsList().sink(receiveCompletion: { [weak self] completion in
+        Env.serviceProvider.getAllSportsList().sink(receiveCompletion: { completion in
             switch completion {
             case .finished:
                 ()
