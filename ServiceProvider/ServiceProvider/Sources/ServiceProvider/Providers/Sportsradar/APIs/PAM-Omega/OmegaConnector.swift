@@ -106,10 +106,10 @@ class OmegaConnector: Connector {
                 }
                 return ServiceProviderError.invalidResponse
             })
-            .handleEvents(receiveOutput: { data in
-                print("ServiceProvider-NetworkManager [[ requesting ]] ", request,
-                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
-            })
+//            .handleEvents(receiveOutput: { data in
+//                print("ServiceProvider-OmegaConnector [[ requesting ]] ", request,
+//                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
+//            })
             .flatMap({ [weak self] (data: Data) -> AnyPublisher<T, ServiceProviderError> in
                 guard
                     let self = self
@@ -128,7 +128,7 @@ class OmegaConnector: Connector {
                             return Just(mappedObject).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
                         }
                         catch {
-                            print("ServiceProvider-NetworkManager Decoding Error \(error)")
+                            print("ServiceProvider-OmegaConnector Decoding Error \(error)")
                             return Fail(error: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
                         }
                     }
@@ -163,8 +163,7 @@ class OmegaConnector: Connector {
             }
             .decode(type: SportRadarModels.LoginResponse.self, decoder: self.decoder)
             .mapError { error in
-                // Debug helper
-                print("ServiceProvider-NetworkManager Error \(error)")
+                print("ServiceProvider-OmegaConnector Error \(error)")
                 return ServiceProviderError.invalidResponse
             }
             .flatMap({ loginResponse -> AnyPublisher<SportRadarModels.LoginResponse, ServiceProviderError> in
@@ -218,7 +217,7 @@ class OmegaConnector: Connector {
             .decode(type: SportRadarModels.OpenSessionResponse.self, decoder: self.decoder)
             .mapError { error in
                 // Debug helper
-                print("ServiceProvider-NetworkManager Error \(error)")
+                print("ServiceProvider-OmegaConnector Error \(error)")
                 return ServiceProviderError.invalidResponse
             }
             .sink(receiveCompletion: { completion in

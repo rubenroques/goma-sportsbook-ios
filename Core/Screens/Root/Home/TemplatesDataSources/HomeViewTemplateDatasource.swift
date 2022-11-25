@@ -36,3 +36,4 @@ protocol HomeViewTemplateDataSource {
     func isMatchLive(withMatchId matchId: String) -> Bool
 
 }
+

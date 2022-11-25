@@ -23,11 +23,11 @@ class LiveEventsViewModel: NSObject {
     enum ScreenState {
         case emptyAndFilter
         case emptyNoFilter
-        case noEmptyNoFilter
-        case noEmptyAndFilter
+        case contentNoFilter
+        case contentAndFilter
     }
     
-    var screenStatePublisher: CurrentValueSubject<ScreenState, Never> = .init(.noEmptyNoFilter)
+    var screenStatePublisher: CurrentValueSubject<ScreenState, Never> = .init(.emptyNoFilter)
     
     private var allMatchesViewModelDataSource = AllMatchesViewModelDataSource(matches: [])
 
@@ -38,13 +38,10 @@ class LiveEventsViewModel: NSObject {
     var isLoading: AnyPublisher<Bool, Never>
     var isUserLoggedPublisher: CurrentValueSubject<Bool, Never> = .init(true)
 
-    var sportsRepository: SportsAggregatorRepository = SportsAggregatorRepository()
     var liveEventsCountPublisher: CurrentValueSubject<Int, Never> = .init(0)
-    var liveSportsPublisher: AnyCancellable?
-    var liveSportsRegister: EndpointPublisherIdentifiable?
+    var liveSportsCancellable: AnyCancellable?
 
     var didTapFavoriteMatchAction: ((Match) -> Void)?
-    var currentLiveSportsPublisher: AnyCancellable?
     var didLongPressOdd: ((BettingTicket) -> Void)?
 
     var didChangeSportType = false
@@ -73,8 +70,7 @@ class LiveEventsViewModel: NSObject {
     }
     var dataDidChangedAction: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
-    
-    private var sportsCancellables = Set<AnyCancellable>()
+
     private var allMatchesPublisher: AnyCancellable?
     private var bannersInfoPublisher: AnyCancellable?
     
@@ -97,6 +93,8 @@ class LiveEventsViewModel: NSObject {
 
         super.init()
 
+        self.subscribeToLiveSports()
+
         self.allMatchesViewModelDataSource.requestNextPage = { [weak self] in
             self?.fetchAllMatchesNextPage()
         }
@@ -108,6 +106,7 @@ class LiveEventsViewModel: NSObject {
 //        self.allMatchesViewModelDataSource.didTapFavoriteAction = { [weak self] match in
 //            self?.didTapFavoriteMatchAction?(match)
 //        }
+
         self.allMatchesViewModelDataSource.matchStatsViewModelForMatch = { [weak self] match in
             return self?.matchStatsViewModel(forMatch: match)
         }
@@ -117,12 +116,17 @@ class LiveEventsViewModel: NSObject {
                 self?.isUserLoggedPublisher.send(isLogged)
             })
             .store(in: &self.cancellables)
-        
-        // self.getSportsLive()
-        // Subscribe live sports
-        self.liveSportsPublisher = Env.serviceProvider.liveSportTypes()
+
+        self.allMatchesViewModelDataSource.didLongPressOdd = {[weak self] bettingTicket in
+            self?.didLongPressOdd?(bettingTicket)
+        }
+
+    }
+
+    func subscribeToLiveSports() {
+        self.liveSportsCancellable = Env.serviceProvider.subscribeLiveSportTypes()
             .sink(receiveCompletion: { completion in
-                print("Env.serviceProvider.liveSportTypes completed \(completion)")
+                print("LiveEventsViewModel subscribeLiveSportTypes completed \(completion)")
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
                 switch subscribableContent {
                 case .connected(let subscription):
@@ -135,94 +139,8 @@ class LiveEventsViewModel: NSObject {
                     self?.liveSports = []
                 }
             })
-            
-        self.allMatchesViewModelDataSource.didLongPressOdd = {[weak self] bettingTicket in
-            self?.didLongPressOdd?(bettingTicket)
-        }
     }
 
-        /*
-        self.fetchAllMatches()
-         
-        if let sportPublisher = sportsRepository.sportsLivePublisher[self.selectedSport.id] {
-            
-            self.currentLiveSportsPublisher?.cancel()
-            self.currentLiveSportsPublisher = nil
-            
-            self.currentLiveSportsPublisher = sportPublisher
-                .receive(on: DispatchQueue.main)
-                .sink(receiveValue: {[weak self] sport in
-                    self?.liveEventsCountPublisher.send(sport.numberOfLiveEvents ?? 0)
-                })
-        }
-        else {
-            self.currentLiveSportsPublisher?.cancel()
-            self.currentLiveSportsPublisher = nil
-            
-            self.liveEventsCountPublisher.send(0)
-        }
-        */
-    // }
-
-    func getSportsLive() {
-
-//        if let liveSportsRegister = liveSportsRegister {
-//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: liveSportsRegister)
-//        }
-//
-//        let endpoint = TSRouter.sportsListPublisher(operatorId: Env.appSession.operatorId,
-//                                                    language: "en")
-//
-//        self.liveSportsPublisher?.cancel()
-//        self.liveSportsPublisher = nil
-//
-//        self.liveSportsPublisher = Env.everyMatrixClient.manager
-//            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.SportsAggregator.self)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .failure:
-//                    print("Error retrieving liveSportsPublisher data!")
-//                case .finished:
-//                    ()
-//                }
-//            }, receiveValue: { [weak self] state in
-//                switch state {
-//                case .connect(let publisherIdentifiable):
-//                    self?.liveSportsRegister = publisherIdentifiable
-//                case .initialContent(let aggregator):
-//                    self?.setupSportsAggregatorProcessor(aggregator: aggregator)
-//                case .updatedContent(let aggregatorUpdates):
-//                    self?.updateSportsAggregatorProcessor(aggregator: aggregatorUpdates)
-//                case .disconnect:
-//                    ()
-//                }
-//
-//            })
-    }
-
-    func setupSportsAggregatorProcessor(aggregator: EveryMatrix.SportsAggregator) {
-        sportsRepository.processSportsAggregator(aggregator)
-
-        if let sportPublisher = sportsRepository.sportsLivePublisher[self.selectedSport.id] {
-            
-            self.currentLiveSportsPublisher?.cancel()
-            self.currentLiveSportsPublisher = nil
-            
-            self.currentLiveSportsPublisher = sportPublisher
-                .receive(on: DispatchQueue.main)
-                .sink(receiveValue: {[weak self] sport in
-                    self?.liveEventsCountPublisher.send(sport.numberOfLiveEvents ?? 0)
-                })
-        }
-        else {
-            self.currentLiveSportsPublisher?.cancel()
-            self.currentLiveSportsPublisher = nil
-            
-            self.liveEventsCountPublisher.send(0)
-        }
-    }
-    
     func configureWithSports(_ liveSports: [Sport]) {
         var liveEventsCount: Int = 0
         for sport in liveSports {
@@ -234,11 +152,6 @@ class LiveEventsViewModel: NSObject {
         self.liveEventsCountPublisher.send(liveEventsCount)
     }
 
-    func updateSportsAggregatorProcessor(aggregator: EveryMatrix.SportsAggregator) {
-        sportsRepository.processContentUpdateSportsAggregator(aggregator)
-
-    }
-    
     func markAsFavorite(match: Match) {
         
         var isFavorite = false
@@ -319,11 +232,11 @@ class LiveEventsViewModel: NSObject {
 
         if let numberOfFilters = self.homeFilterOptions?.countFilters {
             if numberOfFilters > 0 {
-                if !self.allMatchesViewModelDataSource.matches.isNotEmpty {
+                if self.allMatchesViewModelDataSource.matches.isEmpty {
                     self.screenStatePublisher.send(.emptyAndFilter)
                 }
                 else {
-                    self.screenStatePublisher.send(.noEmptyAndFilter)
+                    self.screenStatePublisher.send(.contentAndFilter)
                 }
             }
             else {
@@ -331,19 +244,21 @@ class LiveEventsViewModel: NSObject {
                     self.screenStatePublisher.send(.emptyNoFilter)
                 }
                 else {
-                    self.screenStatePublisher.send(.noEmptyNoFilter)
+                    self.screenStatePublisher.send(.contentNoFilter)
                 }
             }
         }
         else {
-            if !self.allMatchesViewModelDataSource.matches.isNotEmpty {
+            if self.allMatchesViewModelDataSource.matches.isEmpty {
                 self.screenStatePublisher.send(.emptyNoFilter)
             }
             else {
-                self.screenStatePublisher.send(.noEmptyNoFilter)
+                self.screenStatePublisher.send(.contentNoFilter)
             }
         }
-        
+
+        self.allMatchesViewModelDataSource.shouldShowLoadingCell = false
+
         // TODO: - Code Review
         DispatchQueue.main.async {
             self.dataDidChangedAction?()
@@ -383,6 +298,12 @@ class LiveEventsViewModel: NSObject {
         self.providerLiveMatchesSubscriber = Env.serviceProvider.subscribeLiveMatches(forSportType: sportType, pageIndex: self.allMatchesPage)
             .sink(receiveCompletion: { completion in
                 // TODO: subscribeLiveMatches receiveCompletion
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    Logger.log("subscribeLiveMatches error \(error)")
+                }
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
                 switch subscribableContent {
                 case .connected(let subscription):
@@ -392,7 +313,7 @@ class LiveEventsViewModel: NSObject {
                     self?.isLoadingAllEventsList.send(false)
                     self?.updateContentList()
                 case .disconnected:
-                    () // TODO: subscribeLiveMatches disconnected
+                    Logger.log("subscribeLiveMatches subscribableContent disconnected")
                 }
             })
     }
@@ -404,24 +325,28 @@ class LiveEventsViewModel: NSObject {
 
     private func fetchAllMatches() {
         
+        // TODO: Pagination for SportRadar
         // TEST PAGINATION
-        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
         
-        self.providerLiveMatchesSubscriber = Env.serviceProvider.subscribeLiveMatches(forSportType: sportType, pageIndex: self.allMatchesPage)
-            .sink(receiveCompletion: { completion in
-                () // TODO: subscribeLiveMatches completion
-            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
-                switch subscribableContent {
-                case .connected(let subscription):
-                    self?.subscriptions.insert(subscription)
-                case .contentUpdate(let eventsGroups):
-                    self?.allMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
-                    self?.isLoadingAllEventsList.send(false)
-                    self?.updateContentList()
-                case .disconnected:
-                    () // TODO: subscribeLiveMatches disconnected
-                }
-            })
+//        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
+//
+//        self.providerLiveMatchesSubscriber = Env.serviceProvider.subscribeLiveMatches(forSportType: sportType, pageIndex: self.allMatchesPage)
+//            .sink(receiveCompletion: { completion in
+//                () // TODO: subscribeLiveMatches completion
+//            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
+//                switch subscribableContent {
+//                case .connected(let subscription):
+//                    self?.subscriptions.insert(subscription)
+//                case .contentUpdate(let eventsGroups):
+//                    self?.allMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+//                    self?.isLoadingAllEventsList.send(false)
+//                    self?.updateContentList()
+//                case .disconnected:
+//                    () // TODO: subscribeLiveMatches disconnected
+//                }
+//            })
+//
+        
         
         // EM TEMP SHUTDOWN
 //        if let allMatchesRegister = allMatchesRegister {

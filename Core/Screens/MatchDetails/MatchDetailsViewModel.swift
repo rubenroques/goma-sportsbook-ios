@@ -226,18 +226,14 @@ class MatchDetailsViewModel: NSObject {
     func getFieldWidgetId(eventId: String) {
         Env.serviceProvider.getFieldWidgetId(eventId: eventId)?
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
-
                 case .finished:
-                    print("FIELD WIDGET ID FINISHED")
-                case .failure(let error):
-                    print("FIELD WIDGET ID ERROR: \(error)")
-
+                    ()
+                case .failure:
+                    ()
                 }
             }, receiveValue: { [weak self] fieldWidgetResponse in
-                print("FIELD WIDGET ID RESPONSE: \(fieldWidgetResponse)")
-
                 if let fieldWidgetId = fieldWidgetResponse.data {
                     self?.fieldWidgetIdPublisher.send(fieldWidgetId)
                 }

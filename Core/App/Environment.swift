@@ -27,7 +27,7 @@ class Environment {
             return ServiceProviderClient(providerType: .sportradar)
         }
     }()
-    
+
     let betslipManager = BetslipManager()
 
     let userSessionStore = UserSessionStore()
@@ -76,4 +76,5 @@ extension Environment {
         return Bundle.main.bundleIdentifier ?? "com.goma.sportsbook"
     }
 }
+
 

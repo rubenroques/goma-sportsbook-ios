@@ -300,7 +300,7 @@ class Router {
 
     func showRequestDeniedLocationScreen() {
         self.hideLocationScreen()
-        
+
         let refusedAccessViewController = RefusedAccessViewController()
         self.rootViewController?.present(refusedAccessViewController, animated: true, completion: nil)
     }
@@ -334,7 +334,7 @@ class Router {
     }
 
     func showBetslipWithTicket(token: String) {
-        
+
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
@@ -365,7 +365,7 @@ class Router {
     //
     // Chat
     func showChatNotifications() {
-        
+
         let chatNotificationsViewController = ChatNotificationsViewController()
         self.showIntoSocialViewControllerModal(chatNotificationsViewController)
     }
@@ -383,7 +383,7 @@ class Router {
         if let rootNavigationViewController = self.rootViewController?.presentedViewController as? UINavigationController,
            rootNavigationViewController.rootViewController is SocialViewController {
             rootNavigationViewController.popToRootViewController(animated: true)
-          
+
             rootNavigationViewController.pushViewController(viewController, animated: true)
         }
         else {
@@ -392,14 +392,14 @@ class Router {
             }
 
             let socialViewController = SocialViewController(viewModel: SocialViewModel())
-            
+
             let navigationViewController = Router.navigationController(with: socialViewController)
             navigationViewController.pushViewController(viewController, animated: false)
-            
+
             self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
         }
     }
-    
+
     //
     func subscribeBetslipSharedTicketStatus(betToken: String) {
 
@@ -493,3 +493,4 @@ enum AppSharedState {
     case inactiveApp
     case activeApp
 }
+

@@ -172,7 +172,7 @@ class StaticHomeViewTemplateDataSource {
         self.fetchTips()
         self.fetchSuggestedBets()
         self.fetchAlerts()
-        
+
 //        self.fetchLocations()
 //            .sink { [weak self] locations in
 //                self?.store.storeLocations(locations: locations)
@@ -190,7 +190,7 @@ class StaticHomeViewTemplateDataSource {
 
     func requestSports() {
 
-        Env.serviceProvider.getAllSportsList()
+        Env.serviceProvider.getAvailableSportTypes()
             .map({ sportTypesArray in
                 return sportTypesArray.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
             })
@@ -202,7 +202,7 @@ class StaticHomeViewTemplateDataSource {
                 self.refreshPublisher.send()
             })
             .store(in: &cancellables)
-        
+
 //        let language = "en"
 //        Env.everyMatrixClient.getDisciplines(language: language)
 //            .map(\.records)
@@ -265,7 +265,7 @@ class StaticHomeViewTemplateDataSource {
         self.stopBannerUpdates()
 
         self.banners = []
-        
+
         // TODO: Fetch banners
 //        let endpoint = TSRouter.bannersInfoPublisher(operatorId: Env.appSession.operatorId, language: "en")
 //
@@ -365,7 +365,7 @@ class StaticHomeViewTemplateDataSource {
 
     // Tips TEST
     func fetchTips() {
-        // TODO: Usar enum no betType, 
+        // TODO: Usar enum no betType,
         Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE")
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -398,7 +398,7 @@ class StaticHomeViewTemplateDataSource {
                 }
             })
             .sink(receiveCompletion: { _ in
-                
+
             },
             receiveValue: { [weak self] suggestedBets in
                 self?.suggestedBets = suggestedBets
@@ -634,4 +634,5 @@ extension StaticHomeViewTemplateDataSource {
     }
 
 }
+
 

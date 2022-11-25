@@ -27,7 +27,7 @@ class SportTypeStore {
 
     func getSportTypesList() {
 
-        Env.serviceProvider.getAllSportsList()
+        Env.serviceProvider.getAvailableSportTypes()
             .sink(receiveCompletion: { completion in
             switch completion {
             case .finished:

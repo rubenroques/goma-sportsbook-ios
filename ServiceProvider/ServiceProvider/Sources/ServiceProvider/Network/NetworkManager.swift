@@ -30,9 +30,6 @@ class NetworkManager {
             let error = ServiceProviderError.invalidRequestFormat
             return AnyPublisher(Fail<T, ServiceProviderError>(error: error))
         }
-        
-        print("ServiceProvider-NetworkManager requesting: \(request)")
-        
         return self.session.dataTaskPublisher(for: request)
             .tryMap { result in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
@@ -47,14 +44,14 @@ class NetworkManager {
                 return result.data
             }
             // Debug helper
-            .handleEvents(receiveOutput: { data in
-                print("ServiceProvider-NetworkManager [[ requesting ]] ", request,
-                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
-            })
+//            .handleEvents(receiveOutput: { data in
+//                print("ServiceProvider-NetworkManager [[ requesting ]] ", request,
+//                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
+//            })
             .decode(type: T.self, decoder: self.decoder)
             .mapError { error in
                 // Debug helper
-                print("ServiceProvider-NetworkManager Error \(error)")
+                // print("ServiceProvider-NetworkManager Error \(error)")
                 return ServiceProviderError.invalidResponse
             }
             .eraseToAnyPublisher()

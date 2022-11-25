@@ -76,7 +76,7 @@ class SportMatchLineViewModel {
     // private var matchesIds: [String] = []
 
     private var matches: [Match] = []
-    
+
     private var cancellables: Set<AnyCancellable> = []
     private var subscriptions = Set<ServiceProvider.Subscription>()
 
@@ -274,9 +274,9 @@ extension SportMatchLineViewModel {
     }
 
     private func fetchPopularMatches() {
-        
+
         let serviceProviderSportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
-        
+
         Env.serviceProvider.subscribePreLiveMatches(forSportType: serviceProviderSportType,
                                                     pageIndex: 0,
                                                     eventCount: 2,
@@ -342,9 +342,9 @@ extension SportMatchLineViewModel {
     }
 
     private func fetchLiveMatches() {
-        
+
         let serviceProviderSportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
-        
+
         Env.serviceProvider.subscribeLiveMatches(forSportType: serviceProviderSportType, pageIndex: 0)
             .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
                 switch completion {
@@ -367,7 +367,7 @@ extension SportMatchLineViewModel {
                 self?.updatedContent()
             }
             .store(in: &cancellables)
-        
+
 //        if let liveMatchesRegister = liveMatchesRegister {
 //            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: liveMatchesRegister)
 //        }
@@ -407,7 +407,7 @@ extension SportMatchLineViewModel {
     func fetchTopCompetitionMatches() {
 
         return
-        
+
         // EM TEMP SHUTDOWN
         /*
         let language = "en"
@@ -518,10 +518,10 @@ extension SportMatchLineViewModel {
             self.fetchOutrightCompetitions()
             return
         }
-        
+
         self.matches = Array(matches.prefix(2))
     }
-    
+
 //    func storeMatches(fromAggregator aggregator: EveryMatrix.Aggregator) {
 //        var matchesIds: [String] = []
 //        for content in aggregator.content ?? [] {
@@ -547,7 +547,7 @@ extension SportMatchLineViewModel {
     private func finishedWithError() {
         self.loadingPublisher.send(.empty)
     }
-    
+
     private func updatedContent() {
 
         if self.isOutrightCompetitionLine() {
@@ -600,3 +600,4 @@ extension SportMatchLineViewModel {
     }
 
 }
+

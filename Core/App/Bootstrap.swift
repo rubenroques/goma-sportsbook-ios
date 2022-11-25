@@ -30,7 +30,7 @@ struct Bootstrap {
         serviceProvider.connect()
 
         Env.sportsStore.getSportTypesList()
-        
+
     }
 
     func refreshSession() {
@@ -38,3 +38,4 @@ struct Bootstrap {
     }
 
 }
+

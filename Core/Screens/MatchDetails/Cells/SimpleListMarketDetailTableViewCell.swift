@@ -129,22 +129,13 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
         let useTriple = outcomes % 3 == 0
 
         if useTriple {
-            let numberOfLines = Int(outcomes / 3)
-            //numberOfLines = numberOfLines < 4 ? numberOfLines : 4
-
+            let numberOfLines = Int(ceil(Double(outcomes) / 3))
             self.columnType = ColumnType.triple
             self.collectionViewHeightContraint.constant = CGFloat(numberOfLines) * lineHeight
         }
         else {
             //Use double
-            let numberOfLines = Int(outcomes / 2)
-
-//            let isIntValue = (outcomes/2).isMultiple(of: 2)
-//            if !isIntValue  {
-//                numberOfLines += 1
-//            }
-            //numberOfLines = numberOfLines < 3 ? numberOfLines : 3
-
+            let numberOfLines = Int(ceil(Double(outcomes) / 2))
             self.columnType = ColumnType.double
             self.collectionViewHeightContraint.constant = CGFloat(numberOfLines) * lineHeight
         }

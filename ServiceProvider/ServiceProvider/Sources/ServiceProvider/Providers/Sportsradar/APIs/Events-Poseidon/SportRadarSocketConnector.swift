@@ -58,7 +58,7 @@ class SportRadarSocketConnector: NSObject, Connector {
                    """
         
         self.socket.write(string: body) {
-            print("sendListeningStarted - sent")
+            print("ServiceProvider - SportRadarSocketConnector: sendListeningStarted sent")
         }
         
     }
@@ -97,18 +97,16 @@ extension SportRadarSocketConnector: WebSocketDelegate {
             self.isConnected = true
             self.sendListeningStarted(toSocket: client)
             
-            print("SportRadarSocketConnector websocket is connected: \(headers)")
+            print("ServiceProvider - SportRadarSocketConnector websocket is connected: \(headers)")
         case .disconnected(let reason, let code):
             self.isConnected = false
-            print("SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
+            print("ServiceProvider - SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
-            print("SportRadarSocketConnector websocket received text: \(string.count)")
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)
             }
         case .binary(let data):
-            print("SportRadarSocketConnector websocket received data: \(data.count)")
             if let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)
             }
@@ -124,7 +122,7 @@ extension SportRadarSocketConnector: WebSocketDelegate {
             self.isConnected = false
         case .error(let error):
             self.isConnected = false
-            print("SportRadarSocketConnector websocket Error \(error.debugDescription)")
+            print("ServiceProvider - SportRadarSocketConnector websocket Error \(error.debugDescription)")
             self.refreshConnection()
         }
     }

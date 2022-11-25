@@ -26,13 +26,13 @@ class LiveEventsViewController: UIViewController {
     @IBOutlet private weak var filtersButtonView: UIView!
 
     @IBOutlet private weak var filtersCountLabel: UILabel!
-    
+
     @IBOutlet private weak var emptyBaseView: UIView!
     @IBOutlet private weak var firstTextFieldEmptyStateLabel: UILabel!
     @IBOutlet private weak var secondTextFieldEmptyStateLabel: UILabel!
     @IBOutlet private weak var emptyStateImage: UIImageView!
     @IBOutlet private weak var emptyStateButton: UIButton!
-    
+
     @IBOutlet private weak var liveEventsCountView: UIView!
     @IBOutlet private weak var liveEventsCountLabel: UILabel!
 
@@ -44,7 +44,7 @@ class LiveEventsViewController: UIViewController {
         floatingShortcutsView.translatesAutoresizingMaskIntoConstraints = false
         return floatingShortcutsView
     }
-    
+
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
     private let refreshControl = UIRefreshControl()
@@ -52,7 +52,7 @@ class LiveEventsViewController: UIViewController {
     var cancellables = Set<AnyCancellable>()
 
     var viewModel: LiveEventsViewModel
-    
+
     var filterSelectedOption: Int = 0
     var selectedSport: Sport {
         didSet {
@@ -100,7 +100,7 @@ class LiveEventsViewController: UIViewController {
 
         self.tableView.isHidden = false
         self.emptyBaseView.isHidden = true
-        
+
 //        self.viewModel.didTapFavoriteMatchAction = { match in
 //            if !UserSessionStore.isUserLogged() {
 //                self.presentLoginViewController()
@@ -125,10 +125,10 @@ class LiveEventsViewController: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+
         self.floatingShortcutsView.resetAnimations()
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -147,7 +147,7 @@ class LiveEventsViewController: UIViewController {
     private func commonInit() {
 
         self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_1")
-       
+
         let color = UIColor.App.backgroundPrimary
 
         self.leftGradientBaseView.backgroundColor = color
@@ -168,11 +168,11 @@ class LiveEventsViewController: UIViewController {
         rightGradientMaskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
         rightGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
         self.rightGradientBaseView.layer.mask = rightGradientMaskLayer
-        
+
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
         filtersButtonView.isUserInteractionEnabled = true
-        
+
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         flowLayout.scrollDirection = .horizontal
@@ -185,10 +185,10 @@ class LiveEventsViewController: UIViewController {
                                        forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
         filtersCollectionView.delegate = self
         filtersCollectionView.dataSource = self
-        
+
         filtersCountLabel.isHidden = true
         liveEventsCountView.isHidden = true
-       
+
         refreshControl.tintColor = UIColor.lightGray
         refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
         tableView.addSubview(self.refreshControl)
@@ -217,20 +217,20 @@ class LiveEventsViewController: UIViewController {
             self.floatingShortcutsView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
             self.floatingShortcutsView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -12),
         ])
-        
+
         self.view.bringSubviewToFront(self.loadingBaseView)
-        
+
         self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in
             self?.didTapBetslipView()
         }
         self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
             self?.didTapChatView()
         }
-        
+
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
     }
-    
+
     func presentLoginViewController() {
       let loginViewController = Router.navigationController(with: LoginViewController())
       self.present(loginViewController, animated: true, completion: nil)
@@ -259,7 +259,7 @@ class LiveEventsViewController: UIViewController {
         self.viewModel.dataDidChangedAction = { [unowned self] in
             self.tableView.reloadData()
         }
-        
+
         self.viewModel.liveEventsCountPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] liveEventsCount in
@@ -272,21 +272,19 @@ class LiveEventsViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
-        
+
         self.viewModel.screenStatePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] screenState in
                 switch screenState {
-                case .noEmptyNoFilter:
+                case .contentNoFilter, .contentAndFilter:
                     self?.emptyBaseView.isHidden = true
                     self?.tableView.isHidden = false
                 case .emptyNoFilter:
-                    self?.setEmptyStateBaseView(firstLabelText: localized("empty_list"), secondLabelText: localized("second_empty_list"), isUserLoggedIn: true)
+                    self?.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
+                                                secondLabelText: localized("second_empty_list"), isUserLoggedIn: true)
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
-                case .noEmptyAndFilter:
-                    self?.emptyBaseView.isHidden = true
-                    self?.tableView.isHidden = false
                 case .emptyAndFilter:
                     self?.setEmptyStateBaseView(firstLabelText: localized("empty_list_with_filters"),
                                                 secondLabelText: localized("second_empty_list_with_filters"), isUserLoggedIn: true)
@@ -329,7 +327,7 @@ class LiveEventsViewController: UIViewController {
 
         self.tableView.backgroundColor = .clear
         self.tableView.backgroundView?.backgroundColor = .clear
-        
+
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
@@ -338,7 +336,7 @@ class LiveEventsViewController: UIViewController {
 
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
-        
+
         self.filtersCollectionView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.emptyBaseView.backgroundColor = UIColor.App.backgroundPrimary
@@ -354,9 +352,9 @@ class LiveEventsViewController: UIViewController {
         let homeFilterViewController = HomeFilterViewController(liveEventsViewModel: self.viewModel)
         homeFilterViewController.delegate = self
         self.present(homeFilterViewController, animated: true, completion: nil)
-        
+
     }
-    
+
     func reloadData() {
         self.tableView.reloadData()
     }
@@ -365,7 +363,7 @@ class LiveEventsViewController: UIViewController {
         self.selectedSport = sport
         self.didChangeSport?(sport)
     }
-    
+
     private func openQuickbet(_ bettingTicket: BettingTicket) {
 
         if let userSession = UserSessionStore.loggedUserSession() {
@@ -386,8 +384,7 @@ class LiveEventsViewController: UIViewController {
 
     @objc func handleSportsSelectionTap() {
         let sportSelectionViewController = SportSelectionViewController(defaultSport: self.selectedSport,
-                                                            isLiveSport: true,
-                                                            sportsRepository: self.viewModel.sportsRepository)
+                                                            isLiveSport: true)
         sportSelectionViewController.selectionDelegate = self
         self.present(sportSelectionViewController, animated: true, completion: nil)
     }
@@ -405,7 +402,7 @@ class LiveEventsViewController: UIViewController {
     }
 
     func setEmptyStateBaseView(firstLabelText: String, secondLabelText: String, isUserLoggedIn: Bool) {
-    
+
         if isUserLoggedIn {
             self.emptyStateImage.image = UIImage(named: "no_content_icon")
             self.firstTextFieldEmptyStateLabel.text = firstLabelText
@@ -419,7 +416,7 @@ class LiveEventsViewController: UIViewController {
             self.emptyStateButton.isHidden = isUserLoggedIn
             self.emptyStateButton.setTitle(localized("login"), for: .normal)
         }
-        
+
     }
 
 }
@@ -545,7 +542,7 @@ extension LiveEventsViewController: HomeFilterOptionsViewDelegate {
             filtersCountLabel.isHidden = true
         }
     }
-    
+
 }
 
 extension LiveEventsViewController: SportTypeSelectionViewDelegate {
@@ -555,3 +552,4 @@ extension LiveEventsViewController: SportTypeSelectionViewDelegate {
     }
 
 }
+

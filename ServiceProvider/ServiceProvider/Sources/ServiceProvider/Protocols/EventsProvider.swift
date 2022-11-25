@@ -11,12 +11,18 @@ import Combine
 protocol EventsProvider {
     
     func subscribeLiveMatches(forSportType sportType: SportType, pageIndex: Int) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
-    func unsubscribeAllSportTypes()
-    
+
     func subscribePreLiveMatches(forSportType sportType: SportType, pageIndex: Int, initialDate: Date?, endDate: Date?, eventCount: Int, sortType: EventListSort) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
     
     func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
-    
+
+    func subscribeAvailableSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
+
+    func subscribeLiveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
+
+    //
+    func getAvailableSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportType], ServiceProviderError>
+
     func getMarketsFilter() -> AnyPublisher<MarketFilter, ServiceProviderError>
     
     func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>
@@ -24,14 +30,5 @@ protocol EventsProvider {
     func getFieldWidgetURLRequest(urlString: String?, widgetFile: String?) -> URLRequest?
     
     func getFieldWidgetHtml(widgetFile: String, eventId: String, providerId: String?) -> String?
-    
-    // TODO: TASK André - temos 4 sports lists ?
-    // func getSportsList() -> AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError>
 
-    func getAllSportsList(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportType], ServiceProviderError>
-
-    func allSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
-    
-    func liveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
-    
 }
