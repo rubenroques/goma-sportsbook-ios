@@ -34,17 +34,3 @@ struct NetworkResponse<T: Decodable>: Decodable {
         case data = "data"
     }
 }
-
-struct ExampleModel: Codable {
-
-    let userId: Int
-    let deviceId: String
-    let deviceType: String
-
-    enum CodingKeys: String, CodingKey {
-        case userId = "id"
-        case deviceId = "device_uuid"
-        case deviceType = "device_type"
-    }
-
-}

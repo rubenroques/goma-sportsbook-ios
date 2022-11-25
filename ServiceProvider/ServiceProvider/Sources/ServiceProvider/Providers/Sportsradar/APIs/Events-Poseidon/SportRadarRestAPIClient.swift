@@ -191,6 +191,7 @@ public struct ScheduledSport: Codable {
 
 }
 
+// TODO: TASK André - Este devia ser o unico modelo publico
 public struct SportType: Codable, Hashable {
     public var name: String
     public var numericId: String?

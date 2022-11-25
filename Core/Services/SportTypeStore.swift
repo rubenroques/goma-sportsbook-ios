@@ -11,17 +11,10 @@ import ServiceProvider
 
 class SportTypeStore {
 
-    private var cancellables = Set<AnyCancellable>()
-    private var sports = [Sport]()
     var isLoadingSportTypesPublisher = CurrentValueSubject<Bool, Never>(true)
 
     var defaultSport: Sport {
-        if let football = self.sports.filter({
-            $0.name.lowercased() == "football"
-        }).first {
-            return football
-        }
-        else if let firstSport = self.sports.first {
+        if let firstSport = self.sports.first {
             return firstSport
         }
         else {
@@ -29,14 +22,19 @@ class SportTypeStore {
         }
     }
 
+    private var cancellables = Set<AnyCancellable>()
+    private var sports = [Sport]()
+
     func getSportTypesList() {
 
-        Env.serviceProvider.getAllSportsList().sink(receiveCompletion: { completion in
+        Env.serviceProvider.getAllSportsList()
+            .sink(receiveCompletion: { completion in
             switch completion {
             case .finished:
                 ()
             case .failure(let error):
                 print("SPORT LIST ERROR: \(error)")
+                // TODO: Retry the request
             }
         }, receiveValue: { [weak self] sportsList in
 

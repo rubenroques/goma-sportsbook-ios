@@ -31,8 +31,8 @@ public class ServiceProviderClient {
             // self.bettingProvider = everymatrixProvider
             // self.eventsProvider = everymatrixProvider
         case .sportradar:
-            // Session Coordinator
             
+            // Session Coordinator
             let sessionCoordinator = SportRadarSessionCoordinator()
             
             self.privilegedAccessManager = SportRadarPrivilegedAccessManager(sessionCoordinator: sessionCoordinator, connector: OmegaConnector())
@@ -113,8 +113,7 @@ extension ServiceProviderClient {
         guard
             let eventsProvider = self.eventsProvider
         else {
-            return Fail(outputType: SubscribableContent<[EventsGroup]>.self,
-                        failure: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
         return eventsProvider.subscribeMatchDetails(matchId: matchId)
     }
@@ -130,8 +129,7 @@ extension ServiceProviderClient {
         guard
             let eventsProvider = self.eventsProvider
         else {
-            return Fail(outputType: MarketFilter.self,
-                        failure: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
         return eventsProvider.getMarketsFilter()
     }
@@ -140,8 +138,7 @@ extension ServiceProviderClient {
         guard
             let eventsProvider = self.eventsProvider
         else {
-            return Fail(outputType: FieldWidget.self,
-                        failure: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
         return eventsProvider.getFieldWidgetId(eventId: eventId)
     }
@@ -183,8 +180,7 @@ extension ServiceProviderClient {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: UserProfile.self,
-                        failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }        
         return privilegedAccessManager.login(username: username, password: password)
     }
@@ -193,8 +189,7 @@ extension ServiceProviderClient {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: UserProfile.self,
-                        failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.getUserProfile()
     }
@@ -205,7 +200,6 @@ extension ServiceProviderClient {
         else {
             return false
         }
-
         return privilegedAccessManager.hasSecurityQuestions
     }
     
@@ -213,8 +207,7 @@ extension ServiceProviderClient {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: Bool.self,
-                        failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.updateUserProfile(form: form)
     }
@@ -223,8 +216,7 @@ extension ServiceProviderClient {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: Bool.self,
-                        failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.simpleSignUp(form: form)
     }
@@ -233,8 +225,7 @@ extension ServiceProviderClient {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: Bool.self,
-                        failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.checkEmailRegistered(email)
     }
@@ -243,8 +234,7 @@ extension ServiceProviderClient {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: Bool.self,
-                        failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.signupConfirmation(email, confirmationCode: confirmationCode)
     }
@@ -253,8 +243,7 @@ extension ServiceProviderClient {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: Bool.self,
-                        failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.forgotPassword(email: email, secretQuestion: secretQuestion, secretAnswer: secrestAnswer)
     }
@@ -263,8 +252,7 @@ extension ServiceProviderClient {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: Bool.self,
-                        failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.updatePassword(oldPassword: oldPassword, newPassword: newPassword)
     }
@@ -273,8 +261,7 @@ extension ServiceProviderClient {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: UserWallet.self,
-                        failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.getUserBalance()
     }
@@ -283,8 +270,7 @@ extension ServiceProviderClient {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: Bool.self,
-                        failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.signUpCompletion(form: form)
     }
@@ -296,8 +282,7 @@ extension ServiceProviderClient {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: [Country].self,
-                        failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         
         return privilegedAccessManager.getCountries()
@@ -307,8 +292,7 @@ extension ServiceProviderClient {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: Country?.self,
-                        failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.getCurrentCountry()
     }

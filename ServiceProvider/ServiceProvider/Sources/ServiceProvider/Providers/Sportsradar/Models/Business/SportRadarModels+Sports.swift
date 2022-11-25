@@ -31,7 +31,13 @@ extension SportRadarModels {
             let sportTypeIdString = try container.decode(String.self, forKey: .sportType)
             let sportTypeName = try container.decode(String.self, forKey: .sportName)
             let eventsCount = try container.decode(Int.self, forKey: .eventsCount)
-            self.sportType = try SportType(name: sportTypeName, numericId: nil, alphaId: sportTypeIdString, iconId: nil, numberEvents: "\(eventsCount)", numberOutrightEvents: nil, numberOutrightMarkets: nil)
+            self.sportType = try SportType(name: sportTypeName,
+                                           numericId: nil,
+                                           alphaId: sportTypeIdString,
+                                           iconId: nil,
+                                           numberEvents: "\(eventsCount)",
+                                           numberOutrightEvents: nil,
+                                           numberOutrightMarkets: nil)
             self.eventsCount = try container.decode(Int.self, forKey: .eventsCount)
             self.sportName = try container.decode(String.self, forKey: .sportName)
         }
