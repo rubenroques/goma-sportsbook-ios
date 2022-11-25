@@ -277,26 +277,26 @@ class PreLiveEventsViewModel: NSObject {
 
     func fetchData() {
 
-        guard
-            let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-        else {
-            self.popularMatchesDataSource.outrightCompetitions = nil
-            self.popularOutrightCompetitions = nil
-            self.popularMatches = []
-
-            self.todayMatchesDataSource.todayMatches = []
-            self.todayMatches = []
-
-            self.competitionsDataSource.competitions = []
-            self.competitions = []
-            self.filteredOutrightCompetitionsDataSource.outrightCompetitions = []
-
-            self.isLoadingPopularList.send(false)
-            self.isLoadingTodayList.send(false)
-
-            self.updateContentList()
-            return
-        }
+//        guard
+//            let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
+//        else {
+//            self.popularMatchesDataSource.outrightCompetitions = nil
+//            self.popularOutrightCompetitions = nil
+//            self.popularMatches = []
+//
+//            self.todayMatchesDataSource.todayMatches = []
+//            self.todayMatches = []
+//
+//            self.competitionsDataSource.competitions = []
+//            self.competitions = []
+//            self.filteredOutrightCompetitionsDataSource.outrightCompetitions = []
+//
+//            self.isLoadingPopularList.send(false)
+//            self.isLoadingTodayList.send(false)
+//
+//            self.updateContentList()
+//            return
+//        }
 
         if didChangeSport {
             self.lastCompetitionsMatchesRequested = []
@@ -606,9 +606,8 @@ class PreLiveEventsViewModel: NSObject {
         self.isLoadingPopularList.send(true)
         self.isLoadingEvents.send(true)
 
-        guard
-            let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-        else {return}
+
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
 
         self.popularMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType,
                                                                                    pageIndex: 0,
@@ -762,9 +761,7 @@ class PreLiveEventsViewModel: NSObject {
         self.isLoadingTodayList.send(true)
         self.isLoadingEvents.send(true)
 
-        guard
-            let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-        else {return}
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
 
         self.todayMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType,
                                                                                  pageIndex: 0,
@@ -1003,9 +1000,7 @@ class PreLiveEventsViewModel: NSObject {
 
     func fetchCompetitionsMatchesWithIds(_ ids: [String]) {
 
-        guard
-            let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-        else {return}
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
 
 //        self.competitionsMatchesPublisher = Env.serviceProvider.subscribeCompetitionMatches(forSportType: sportType)
 //            .sink(receiveCompletion: { completion in

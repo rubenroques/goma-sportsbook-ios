@@ -94,27 +94,7 @@ class SearchViewController: UIViewController {
             self?.didTapChatView()
         }
         
-        self.searchBarView.becomeFirstResponder()
-
-        Env.serviceProvider.subscribePreLiveMatches(forSportType: SportType.football,
-                                                    pageIndex: 0,
-                                                    eventCount: 10,
-                                                    sortType: EventListSort.popular)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                
-            } receiveValue: { [weak self] subscribableContent in
-                switch subscribableContent {
-                case .connected(let subscription):
-                    self?.subscriptions.insert(subscription)
-                case .contentUpdate(let eventGroups):
-                    print("eventGroups count \(eventGroups.count)")
-                case .disconnected:
-                    ()
-                }
-            }
-            .store(in: &cancellables)
-        
+        self.searchBarView.becomeFirstResponder()        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -315,7 +295,7 @@ class SearchViewController: UIViewController {
     }
 
     private func openCompetitionDetailsScreen(competition: EveryMatrix.Tournament) {
-        let sport = Sport(id: competition.sportId ?? "")
+        let sport = Sport(id: competition.sportId ?? "", alphaId: nil, numericId: nil)
         let competitionId = competition.id
         let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport, store: AggregatorsRepository())
         let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)

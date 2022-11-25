@@ -30,11 +30,12 @@ class SplashViewController: UIViewController {
 
         Logger.log("Starting connections")
 
-        self.isLoadingBootDataSubscription = Publishers.CombineLatest(Env.appSession.isLoadingAppSettingsPublisher,
-                                                                  Env.userSessionStore.isLoadingUserSessionPublisher)
+        self.isLoadingBootDataSubscription = Publishers.CombineLatest3(Env.appSession.isLoadingAppSettingsPublisher,
+                                                                       Env.userSessionStore.isLoadingUserSessionPublisher,
+                                                                       Env.sportsStore.isLoadingSportTypesPublisher)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isLoadingAppSettings, isLoadingUserSession in
-                if !isLoadingAppSettings && !isLoadingUserSession {
+            .sink { [weak self] isLoadingAppSettings, isLoadingUserSession, isLoadingSportTypes in
+                if !isLoadingAppSettings && !isLoadingUserSession && !isLoadingSportTypes {
                     self?.splashLoadingCompleted()
                 }
             }

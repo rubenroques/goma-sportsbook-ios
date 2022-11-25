@@ -4786,14 +4786,6 @@
 		A9B6306529192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
 		A9B6306629192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
 		A9B6306729192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
-		A9B63073291ABC1300BB850E /* field_widget.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B63072291ABC1300BB850E /* field_widget.html */; };
-		A9B63074291ABC1300BB850E /* field_widget.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B63072291ABC1300BB850E /* field_widget.html */; };
-		A9B63075291ABC1300BB850E /* field_widget.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B63072291ABC1300BB850E /* field_widget.html */; };
-		A9B63076291ABC1300BB850E /* field_widget.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B63072291ABC1300BB850E /* field_widget.html */; };
-		A9B63077291ABC1300BB850E /* field_widget.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B63072291ABC1300BB850E /* field_widget.html */; };
-		A9B63078291ABC1300BB850E /* field_widget.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B63072291ABC1300BB850E /* field_widget.html */; };
-		A9B63079291ABC1300BB850E /* field_widget.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B63072291ABC1300BB850E /* field_widget.html */; };
-		A9B6307A291ABC1300BB850E /* field_widget.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B63072291ABC1300BB850E /* field_widget.html */; };
 		A9B6307C291BE10200BB850E /* field_widget_light.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B6307B291BE10100BB850E /* field_widget_light.html */; };
 		A9B6307D291BE10200BB850E /* field_widget_light.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B6307B291BE10100BB850E /* field_widget_light.html */; };
 		A9B6307E291BE10200BB850E /* field_widget_light.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B6307B291BE10100BB850E /* field_widget_light.html */; };
@@ -4939,6 +4931,14 @@
 		A9BCF45127552851006DD528 /* Cashout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF44F27552851006DD528 /* Cashout.swift */; };
 		A9BCF45627554E88006DD528 /* CashoutSubmission.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF45527554E88006DD528 /* CashoutSubmission.swift */; };
 		A9BCF45727554E88006DD528 /* CashoutSubmission.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF45527554E88006DD528 /* CashoutSubmission.swift */; };
+		A9BDD4F1292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
+		A9BDD4F2292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
+		A9BDD4F3292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
+		A9BDD4F4292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
+		A9BDD4F5292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
+		A9BDD4F6292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
+		A9BDD4F7292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
+		A9BDD4F8292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
 		A9C18A92285CDF0B009F0063 /* ToastCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C18A91285CDF0B009F0063 /* ToastCustom.swift */; };
 		A9C18A93285CDF0B009F0063 /* ToastCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C18A91285CDF0B009F0063 /* ToastCustom.swift */; };
 		A9C18A94285CDF0B009F0063 /* ToastCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C18A91285CDF0B009F0063 /* ToastCustom.swift */; };
@@ -6635,7 +6635,6 @@
 		A9B331EB289422FB00D097F0 /* MessageDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDetailViewModel.swift; sourceTree = "<group>"; };
 		A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverPasswordViewController.swift; sourceTree = "<group>"; };
 		A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SportRadarEventDetailRepository.swift; sourceTree = "<group>"; };
-		A9B63072291ABC1300BB850E /* field_widget.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = field_widget.html; sourceTree = "<group>"; };
 		A9B6307B291BE10100BB850E /* field_widget_light.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = field_widget_light.html; sourceTree = "<group>"; };
 		A9B63084291BE10900BB850E /* field_widget_dark.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = field_widget_dark.html; sourceTree = "<group>"; };
 		A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionUpdateViewController.swift; sourceTree = "<group>"; };
@@ -6691,6 +6690,7 @@
 		A9BCF44B2750FCA5006DD528 /* BetslipErrorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BetslipErrorView.xib; sourceTree = "<group>"; };
 		A9BCF44F27552851006DD528 /* Cashout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cashout.swift; sourceTree = "<group>"; };
 		A9BCF45527554E88006DD528 /* CashoutSubmission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashoutSubmission.swift; sourceTree = "<group>"; };
+		A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportTypeStore.swift; sourceTree = "<group>"; };
 		A9C18A91285CDF0B009F0063 /* ToastCustom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastCustom.swift; sourceTree = "<group>"; };
 		A9C18A9F28661975009F0063 /* ConversationBetSelectionRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationBetSelectionRootViewController.swift; sourceTree = "<group>"; };
 		A9C1C0962873455000E9D6AC /* SocialAppItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialAppItemCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -7659,6 +7659,7 @@
 				456B341226C13AE1009D7D27 /* Networking */,
 				45D9CBE4270F444000B8C321 /* Helpers */,
 				A96B619E27AC0642005DC376 /* URLSchemaManager.swift */,
+				A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -9426,7 +9427,6 @@
 		A9B63068291AB5F800BB850E /* Widgets */ = {
 			isa = PBXGroup;
 			children = (
-				A9B63072291ABC1300BB850E /* field_widget.html */,
 				A9B6307B291BE10100BB850E /* field_widget_light.html */,
 				A9B63084291BE10900BB850E /* field_widget_dark.html */,
 			);
@@ -10502,7 +10502,6 @@
 				450B7AD528F58574009229E3 /* Gilroy-Medium.ttf in Resources */,
 				450B7AD628F58574009229E3 /* Localizable.strings in Resources */,
 				450B7AD728F58574009229E3 /* LoadingMoreTableViewCell.xib in Resources */,
-				A9B63074291ABC1300BB850E /* field_widget.html in Resources */,
 				450B7AD828F58574009229E3 /* MatchLineTableViewCell.xib in Resources */,
 				450B7AD928F58574009229E3 /* RecentSearchHeaderView.xib in Resources */,
 				450B7ADA28F58574009229E3 /* SportSelectionViewController.xib in Resources */,
@@ -10635,7 +10634,6 @@
 				45DDBAA626F2146100A73E45 /* Gilroy-Medium.ttf in Resources */,
 				455A0CAE26BD982000EC572D /* Localizable.strings in Resources */,
 				45726333272B13D7002F2959 /* LoadingMoreTableViewCell.xib in Resources */,
-				A9B63076291ABC1300BB850E /* field_widget.html in Resources */,
 				457816AB2706679400F66878 /* MatchLineTableViewCell.xib in Resources */,
 				A96B619327A0496C005DC376 /* RecentSearchHeaderView.xib in Resources */,
 				A98D3B2B271481A8003BAE6F /* SportSelectionViewController.xib in Resources */,
@@ -10775,7 +10773,6 @@
 				A96B619427A0496C005DC376 /* RecentSearchHeaderView.xib in Resources */,
 				A98D3B3427148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */,
 				457F49702737F9330047169D /* SubmitedBetTableViewCell.xib in Resources */,
-				A9B63077291ABC1300BB850E /* field_widget.html in Resources */,
 				458BAC782770ACAE006C4BC7 /* MyTicketTableViewCell.xib in Resources */,
 				45626E472755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib in Resources */,
 				A99A970E26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */,
@@ -10908,7 +10905,6 @@
 				457CBBFE282D27D000ED0F00 /* HeadToHeadCardStatsView.xib in Resources */,
 				457CBBFF282D27D000ED0F00 /* Gilroy-Regular.ttf in Resources */,
 				457CBC00282D27D000ED0F00 /* Gilroy-Medium.ttf in Resources */,
-				A9B63079291ABC1300BB850E /* field_widget.html in Resources */,
 				457CBC01282D27D000ED0F00 /* Localizable.strings in Resources */,
 				457CBC02282D27D000ED0F00 /* LoadingMoreTableViewCell.xib in Resources */,
 				457CBC03282D27D000ED0F00 /* MatchLineTableViewCell.xib in Resources */,
@@ -11041,7 +11037,6 @@
 				457CBEA7282D2CD100ED0F00 /* Gilroy-Regular.ttf in Resources */,
 				457CBEA8282D2CD100ED0F00 /* Gilroy-Medium.ttf in Resources */,
 				457CBEA9282D2CD100ED0F00 /* Localizable.strings in Resources */,
-				A9B6307A291ABC1300BB850E /* field_widget.html in Resources */,
 				457CBEAA282D2CD100ED0F00 /* LoadingMoreTableViewCell.xib in Resources */,
 				457CBEAB282D2CD100ED0F00 /* MatchLineTableViewCell.xib in Resources */,
 				457CBEAC282D2CD100ED0F00 /* RecentSearchHeaderView.xib in Resources */,
@@ -11174,7 +11169,6 @@
 				4589C97D282024E400243547 /* Gilroy-Regular.ttf in Resources */,
 				4589C97E282024E400243547 /* Gilroy-Medium.ttf in Resources */,
 				4589C97F282024E400243547 /* Localizable.strings in Resources */,
-				A9B63073291ABC1300BB850E /* field_widget.html in Resources */,
 				4589C980282024E400243547 /* LoadingMoreTableViewCell.xib in Resources */,
 				4589C981282024E400243547 /* MatchLineTableViewCell.xib in Resources */,
 				4589C982282024E400243547 /* RecentSearchHeaderView.xib in Resources */,
@@ -11307,7 +11301,6 @@
 				45A6BDD728246A7500D9B416 /* Gilroy-Medium.ttf in Resources */,
 				45A6BDD828246A7500D9B416 /* Localizable.strings in Resources */,
 				45A6BDD928246A7500D9B416 /* LoadingMoreTableViewCell.xib in Resources */,
-				A9B63078291ABC1300BB850E /* field_widget.html in Resources */,
 				45A6BE3528246AFA00D9B416 /* Colors.xcassets in Resources */,
 				45A6BE3728246AFA00D9B416 /* GoogleService-Info.plist in Resources */,
 				45A6BDDA28246A7500D9B416 /* MatchLineTableViewCell.xib in Resources */,
@@ -11461,7 +11454,6 @@
 				A9C3434028F9A74A0055360B /* DepositViewController.xib in Resources */,
 				A9C3434128F9A74A0055360B /* Inconsolata-Bold.ttf in Resources */,
 				A9C3434228F9A74A0055360B /* HomeFilterViewController.xib in Resources */,
-				A9B63075291ABC1300BB850E /* field_widget.html in Resources */,
 				A9C3434328F9A74A0055360B /* FilterSliderInfoView.xib in Resources */,
 				A9C3434428F9A74A0055360B /* ListTypeCollectionViewCell.xib in Resources */,
 				A9C3434528F9A74A0055360B /* EmailVerificationViewController.xib in Resources */,
@@ -12146,6 +12138,7 @@
 				450B7A1B28F58574009229E3 /* ShiftViewOptions.swift in Sources */,
 				450B7A1C28F58574009229E3 /* ServiceProviderModelMapper.swift in Sources */,
 				450B7A1D28F58574009229E3 /* SearchTitleSectionHeaderView.swift in Sources */,
+				A9BDD4F2292E3F08001A7799 /* SportTypeStore.swift in Sources */,
 				450B7A1E28F58574009229E3 /* EmptyCardTableViewCell.swift in Sources */,
 				450B7A1F28F58574009229E3 /* AuthenticateSSWampMessage.swift in Sources */,
 				450B7A2028F58574009229E3 /* AddFriendViewController.swift in Sources */,
@@ -12748,6 +12741,7 @@
 				450B781D28F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */,
 				F4B32D992790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */,
 				45166CE726F3548D00E69D65 /* AuthenticateSSWampMessage.swift in Sources */,
+				A9BDD4F4292E3F08001A7799 /* SportTypeStore.swift in Sources */,
 				A9992FEF280888FA0098854C /* AddFriendViewController.swift in Sources */,
 				A97D24682812EFE1003EEDEC /* GroupUserManagementCellViewModel.swift in Sources */,
 				45A2896726C32D3F00BCD5DA /* NetworkModels.swift in Sources */,
@@ -13410,6 +13404,7 @@
 				450B781E28F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */,
 				A90BC90927C3B99500667616 /* GamesNotificationViewModel.swift in Sources */,
 				A995C1AD279B10B600151462 /* SearchTitleSectionHeaderView.swift in Sources */,
+				A9BDD4F5292E3F08001A7799 /* SportTypeStore.swift in Sources */,
 				A9992FF0280888FA0098854C /* AddFriendViewController.swift in Sources */,
 				A97D24692812EFE1003EEDEC /* GroupUserManagementCellViewModel.swift in Sources */,
 				F4B32D9A2790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */,
@@ -13857,6 +13852,7 @@
 				457CBAE7282D27D000ED0F00 /* BonusViewController.swift in Sources */,
 				457CBAE8282D27D000ED0F00 /* ChatMessageView.swift in Sources */,
 				A9DF8E2F28E45CB50083BF56 /* FeaturedTipDetailsViewModel.swift in Sources */,
+				A9BDD4F7292E3F08001A7799 /* SportTypeStore.swift in Sources */,
 				45B6E200283E3F14001B570C /* EditContactViewController.swift in Sources */,
 				457CBAE9282D27D000ED0F00 /* CurrencyHelper.swift in Sources */,
 				457CBAEA282D27D000ED0F00 /* SSWampExtensions.swift in Sources */,
@@ -14338,6 +14334,7 @@
 				A9A207E6283BDFCB00499DBC /* ChatTicketSelectionView.swift in Sources */,
 				A9DF8E0628DDF64C0083BF56 /* UserInfoMultipleCardView.swift in Sources */,
 				457CBD35282D2CD100ED0F00 /* RunningPlatform.swift in Sources */,
+				A9BDD4F8292E3F08001A7799 /* SportTypeStore.swift in Sources */,
 				457CBD36282D2CD100ED0F00 /* AppModels.swift in Sources */,
 				A9863ED0286B17A600A4A1A2 /* ChatTicketStateInMessageView.swift in Sources */,
 				457CBD37282D2CD100ED0F00 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
@@ -15210,6 +15207,7 @@
 				450B781F28F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */,
 				4589C8E1282024E400243547 /* SearchTitleSectionHeaderView.swift in Sources */,
 				4589C8E2282024E400243547 /* EmptyCardTableViewCell.swift in Sources */,
+				A9BDD4F1292E3F08001A7799 /* SportTypeStore.swift in Sources */,
 				4589C8E3282024E400243547 /* AuthenticateSSWampMessage.swift in Sources */,
 				4589C8E4282024E400243547 /* AddFriendViewController.swift in Sources */,
 				4589C8E5282024E400243547 /* GroupUserManagementCellViewModel.swift in Sources */,
@@ -15361,6 +15359,7 @@
 				45A6BBD528246A7500D9B416 /* SimpleRegisterEmailCheckViewModel.swift in Sources */,
 				45A6BBD628246A7500D9B416 /* RegisterSSWampMessage.swift in Sources */,
 				45A6BBD728246A7500D9B416 /* SuggestedBetSummary.swift in Sources */,
+				A9BDD4F6292E3F08001A7799 /* SportTypeStore.swift in Sources */,
 				A9DF8E0C28DDFC590083BF56 /* SportStatisticView.swift in Sources */,
 				45A6BBD828246A7500D9B416 /* Bundle+Extensions.swift in Sources */,
 				A9A207E4283BDFCB00499DBC /* ChatTicketSelectionView.swift in Sources */,
@@ -16496,6 +16495,7 @@
 				A9C342CC28F9A74A0055360B /* BonusSwitchView.swift in Sources */,
 				A9C342CD28F9A74A0055360B /* ReceivedMessageTableViewCell.swift in Sources */,
 				A9C342CE28F9A74A0055360B /* RecentSearchHeaderView.swift in Sources */,
+				A9BDD4F3292E3F08001A7799 /* SportTypeStore.swift in Sources */,
 				A9C342CF28F9A74A0055360B /* SharedGameCardView.swift in Sources */,
 				A9C342D028F9A74A0055360B /* DefaultShiftAnimation.swift in Sources */,
 				A9C342D128F9A74A0055360B /* Event.swift in Sources */,
@@ -16613,7 +16613,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00715;
+				CURRENT_PROJECT_VERSION = 00716;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16639,7 +16639,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00715;
+				CURRENT_PROJECT_VERSION = 00716;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

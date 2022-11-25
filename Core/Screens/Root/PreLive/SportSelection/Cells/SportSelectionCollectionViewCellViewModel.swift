@@ -10,7 +10,7 @@ import Combine
 
 class SportSelectionCollectionViewCellViewModel: NSObject {
 
-    var sport: EveryMatrix.Discipline
+    var sport: Sport
     var isLive: Bool
     
     var sportPublisher: AnyCancellable?
@@ -19,7 +19,7 @@ class SportSelectionCollectionViewCellViewModel: NSObject {
     var numberOfLiveEvents: String?
     var updateLiveEvents: (() -> Void)?
 
-    init(sport: EveryMatrix.Discipline, isLive: Bool) {
+    init(sport: Sport, isLive: Bool) {
         self.sport = sport
         self.isLive  = isLive
         
@@ -28,9 +28,8 @@ class SportSelectionCollectionViewCellViewModel: NSObject {
         self.sportName = sport.name
         self.sportIconName =  "sport_type_icon_\(sport.id)"
         
-        if let numberOfLiveEvents = sport.numberOfLiveEvents {
-            self.numberOfLiveEvents = "\(numberOfLiveEvents)"
-        }
+        let numberOfLiveEvents = sport.liveEventsCount
+        self.numberOfLiveEvents = "\(numberOfLiveEvents)"
         
     }
 

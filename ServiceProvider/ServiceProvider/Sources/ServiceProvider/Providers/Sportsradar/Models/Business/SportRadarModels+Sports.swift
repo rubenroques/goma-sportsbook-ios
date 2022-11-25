@@ -12,33 +12,41 @@ extension SportRadarModels {
     struct SportTypeDetails: Codable {
         var sportType: SportType
         var eventsCount: Int
+        var sportName: String
         
         enum CodingKeys: String, CodingKey {
             case sportType = "idfosporttype"
             case eventsCount = "numEvents"
+            case sportName = "sporttypename"
         }
         
-        init(sportType: SportType, eventsCount: Int) {
+        init(sportType: SportType, eventsCount: Int, sportName: String) {
             self.sportType = sportType
             self.eventsCount = eventsCount
+            self.sportName = sportName
         }
         
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             let sportTypeIdString = try container.decode(String.self, forKey: .sportType)
-            self.sportType = try SportType(id: sportTypeIdString)
+            let sportTypeName = try container.decode(String.self, forKey: .sportName)
+            let eventsCount = try container.decode(Int.self, forKey: .eventsCount)
+            self.sportType = try SportType(name: sportTypeName, numericId: nil, alphaId: sportTypeIdString, iconId: nil, numberEvents: "\(eventsCount)", numberOutrightEvents: nil, numberOutrightMarkets: nil)
             self.eventsCount = try container.decode(Int.self, forKey: .eventsCount)
+            self.sportName = try container.decode(String.self, forKey: .sportName)
         }
         
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(self.sportType, forKey: .sportType)
             try container.encode(self.eventsCount, forKey: .eventsCount)
+            try container.encode(self.sportName, forKey: .sportName)
+
         }
         
     }
     
-    enum SportType: Codable {
+    enum SportTypeInfo: Codable {
         case aussieRules
         case badminton
         case bandy

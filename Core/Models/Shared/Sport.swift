@@ -11,21 +11,23 @@ struct Sport {
 
     let id: String
     let name: String
+    let alphaId: String?
+    let numericId: String?
     let showEventCategory: Bool
     let liveEventsCount: Int
 
     init(id: String,
          name: String = "",
+         alphaId: String?,
+         numericId: String?,
          showEventCategory: Bool = false,
          liveEventsCount: Int = 0) {
         self.id = id
         self.name = name
+        self.alphaId = alphaId
+        self.numericId = numericId
         self.showEventCategory = showEventCategory
         self.liveEventsCount = liveEventsCount
-    }
-
-    static var football: Sport {
-        return Sport(id: "1", name: "Football", showEventCategory: false, liveEventsCount: 0)
     }
     
 }
@@ -33,7 +35,12 @@ struct Sport {
 extension Sport {
     
     init(discipline: EveryMatrix.Discipline) {
-        self.init(id: discipline.id, name: discipline.name ?? "", showEventCategory: discipline.showEventCategory ?? false, liveEventsCount: discipline.numberOfLiveEvents ?? 0)
+        self.init(id: discipline.id,
+                  name: discipline.name ?? "",
+                  alphaId: nil,
+                  numericId: nil,
+                  showEventCategory: discipline.showEventCategory ?? false,
+                  liveEventsCount: discipline.numberOfLiveEvents ?? 0)
     }
 
 }

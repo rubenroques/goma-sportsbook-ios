@@ -13,6 +13,8 @@ import Foundation
 enum SportRadarRestAPIClient {
     case marketsFilter
     case fieldWidgetId(eventId: String)
+    case sportsList
+    case scheduleSportsList(dateRange: String)
 }
 
 extension SportRadarRestAPIClient: Endpoint {
@@ -21,14 +23,14 @@ extension SportRadarRestAPIClient: Endpoint {
         switch self {
         case .marketsFilter:
             return "/sportradar/sportsbook/config/marketsFilter_v2.json"
-        case .fieldWidgetId:
+        case .fieldWidgetId, .sportsList, .scheduleSportsList:
             return "/services/content/get"
         }
     }
 
     var query: [URLQueryItem]? {
         switch self {
-        case .marketsFilter, .fieldWidgetId:
+        case .marketsFilter, .fieldWidgetId, .sportsList, .scheduleSportsList:
             return nil
         }
     }
@@ -37,7 +39,7 @@ extension SportRadarRestAPIClient: Endpoint {
         switch self {
         case .marketsFilter:
             return .get
-        case .fieldWidgetId:
+        case .fieldWidgetId, .sportsList, .scheduleSportsList:
             return .post
         }
     }
@@ -59,6 +61,36 @@ extension SportRadarRestAPIClient: Endpoint {
             }
             """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
+        case .sportsList:
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "boNavigationList",
+                                "id": "1355/top"
+                            },
+                            "clientContext": {
+                                "language": "UK",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+        case .scheduleSportsList(let dateRange):
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "sportTypeByDate",
+                                "id": "\(dateRange)"
+                            },
+                            "clientContext": {
+                                "language": "UK",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
         default:
             return nil
         }
@@ -77,6 +109,10 @@ extension SportRadarRestAPIClient: Endpoint {
         case .marketsFilter:
             return SportRadarConstants.sportRadarFrontEndURL
         case .fieldWidgetId:
+            return SportRadarConstants.bettingHostname
+        case .sportsList:
+            return SportRadarConstants.bettingHostname
+        case .scheduleSportsList:
             return SportRadarConstants.bettingHostname
         }
     }
@@ -104,6 +140,7 @@ extension SportRadarRestAPIClient: Endpoint {
 
 }
 
+// TODO: TASK André - Estes modelos estão no sitio errado
 public struct FieldWidget: Codable {
     public var data: String?
     public var version: Int?
@@ -111,5 +148,69 @@ public struct FieldWidget: Codable {
     enum CodingKeys: String, CodingKey {
         case data = "data"
         case version = "version"
+    }
+}
+
+public struct SportRadarResponse<T: Codable>: Codable {
+
+    let data: T?
+
+    enum CodingKeys: String, CodingKey {
+        case data = "data"
+    }
+}
+
+public struct SportsList: Codable {
+    public var sportNodes: [SportNode]?
+
+    enum CodingKeys: String, CodingKey {
+        case sportNodes = "bonavigationnodes"
+    }
+}
+
+public struct SportNode: Codable {
+    public var id: String
+    public var name: String
+    public var numberEvents: String
+    public var numberOutrightEvents: String
+    public var numberOutrightMarkets: String
+
+    enum CodingKeys: String, CodingKey {
+        case id = "idfwbonavigation"
+        case name = "name"
+        case numberEvents = "numevents"
+        case numberOutrightEvents = "numoutrightevents"
+        case numberOutrightMarkets = "numoutrightmarkets"
+    }
+}
+
+public struct ScheduledSport: Codable {
+    public var id: String
+    public var name: String
+
+    enum CodingKeys: String, CodingKey {
+        case id = "idfosporttype"
+        case name = "name"
+    }
+
+}
+
+public struct SportType: Codable, Hashable {
+    public var name: String
+    public var numericId: String?
+    public var alphaId: String?
+    public var iconId: String?
+    public var numberEvents: String?
+    public var numberOutrightEvents: String?
+    public var numberOutrightMarkets: String?
+
+    public init(name: String, numericId: String? = nil, alphaId: String? = nil, iconId: String? = nil, numberEvents: String? = nil, numberOutrightEvents: String? = nil, numberOutrightMarkets: String? = nil) {
+        self.name = name
+        self.numericId = numericId
+        self.alphaId = alphaId
+        self.iconId = iconId
+        self.numberEvents = numberEvents
+        self.numberOutrightEvents = numberOutrightEvents
+        self.numberOutrightMarkets = numberOutrightMarkets
     }
 }

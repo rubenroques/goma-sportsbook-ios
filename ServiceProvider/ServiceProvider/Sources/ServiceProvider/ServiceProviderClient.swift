@@ -69,7 +69,7 @@ extension ServiceProviderClient {
         self.eventsProvider?.unsubscribeAllSportTypes()
     }
     
-    public func liveSportTypes() -> AnyPublisher<SubscribableContent<[SportTypeDetails]>, ServiceProviderError> {
+    public func liveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -77,7 +77,7 @@ extension ServiceProviderClient {
         }
         return eventsProvider.liveSportTypes()
     }
-    
+
     //
     // Events
     //
@@ -152,6 +152,24 @@ extension ServiceProviderClient {
 
     public func getFieldWidgetHtml(widgetFile: String, eventId: String, providerId: String? = nil) -> String? {
         return self.eventsProvider?.getFieldWidgetHtml(widgetFile: widgetFile, eventId: eventId, providerId: providerId)
+    }
+
+    public func getSportsList() -> AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.getSportsList()
+    }
+
+    public func getAllSportsList(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<[SportType], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.getAllSportsList(initialDate: initialDate, endDate: endDate)
     }
 }
 

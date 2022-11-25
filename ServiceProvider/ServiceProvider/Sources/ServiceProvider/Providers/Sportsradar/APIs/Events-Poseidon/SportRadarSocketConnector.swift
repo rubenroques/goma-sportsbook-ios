@@ -11,7 +11,7 @@ import Combine
 
 protocol SportRadarConnectorSubscriber: AnyObject {
     func liveAdvancedListUpdated(forTopicIdentifier identifier: TopicIdentifier, withEvents: [EventsGroup])
-    func inplaySportListUpdated(withSportTypesDetails: [SportTypeDetails])
+    func inplaySportListUpdated(withSportTypes: [SportType])
     func sportTypeByDate(withSportTypes: [SportType])
     func eventListBySportTypeDate(forTopicIdentifier identifier: TopicIdentifier, withEvents: [EventsGroup])
     func eventDetails(events: [EventsGroup])
@@ -145,13 +145,11 @@ extension SportRadarSocketConnector: WebSocketDelegate {
                 }
             case .inplaySportList(let sportsTypes):
                 if let subscriber = self.messageSubscriber {
-                    let mappedSportsTypes = sportsTypes.map(SportRadarModelMapper.sportTypeDetails(fromInternalSportTypeDetails:)).compactMap({ $0 })
-                    subscriber.inplaySportListUpdated(withSportTypesDetails: mappedSportsTypes)
+                    subscriber.inplaySportListUpdated(withSportTypes: sportsTypes)
                 }
             case .sportTypeByDate(let sportsTypes):
-            if let subscriber = self.messageSubscriber {
-                    let mappedSportsTypes = sportsTypes.map(SportRadarModelMapper.sportType(fromInternalSportType:)).compactMap({ $0 })
-                    subscriber.sportTypeByDate(withSportTypes: mappedSportsTypes)
+                if let subscriber = self.messageSubscriber {
+                    subscriber.sportTypeByDate(withSportTypes: sportsTypes)
                 }
             case .eventListBySportTypeDate(let topicIdentifier, let events):
                 if let subscriber = self.messageSubscriber {

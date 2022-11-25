@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  SportType.swift
 //  
 //
 //  Created by Ruben Roques on 10/10/2022.
@@ -7,7 +7,8 @@
 
 import Foundation
 
-public enum SportType {
+public enum SportTypeInfo: CaseIterable {
+
     case football
     case golf
     case tennis
@@ -199,9 +200,6 @@ public enum SportType {
     case numbers
     case emptyBets
     case lotteries
-    
-    case unkown(id: String, name: String)
-    
     public init?(id: String) {
         switch id {
         // Initial list from EveryMatrix
@@ -586,8 +584,6 @@ public enum SportType {
         case .numbers: return "930"
         case .emptyBets: return "931"
         case .lotteries: return "932"
-            
-        case .unkown(let id, _): return id
         }
     }
     
@@ -780,8 +776,6 @@ public enum SportType {
         case .numbers: return "Numbers"
         case .emptyBets: return "Empty Bets"
         case .lotteries: return "Lotteries"
-            
-        case .unkown(_, let name): return name
         }
     }
 }

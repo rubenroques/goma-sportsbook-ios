@@ -26,8 +26,8 @@ extension SportRadarModels {
         case liveAdvancedList(topicIdentifier: TopicIdentifier, events: [SportRadarModels.Event])
         case eventListBySportTypeDate(topicIdentifier: TopicIdentifier, events: [SportRadarModels.Event])
         
-        case inplaySportList(sportsTypes: [SportRadarModels.SportTypeDetails])
-        case sportTypeByDate(sportsTypes: [SportRadarModels.SportType])
+        case inplaySportList(sportsTypes: [SportType])
+        case sportTypeByDate(sportsTypes: [SportType])
         
         case eventDetails(eventDetails: [SportRadarModels.Event])
 
@@ -68,8 +68,7 @@ extension SportRadarModels {
             case "CONTENT_CHANGES":
                 do {
                     var dataUnkeyedContainer = try container.nestedUnkeyedContainer(forKey: .data)
-                    // while !dataUnkeyedContainer.isAtEnd {
-                    // }
+                    
                     let contentContainer = try dataUnkeyedContainer.nestedContainer(keyedBy: CodingKeys.self)
                     
                     let contentTypeContainer = try contentContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
@@ -87,19 +86,18 @@ extension SportRadarModels {
                         content = .liveAdvancedList(topicIdentifier: topicIdentifier, events: events)
                         
                     case .inplaySportList:
-                        let sportsTypes: [SportRadarModels.SportTypeDetails] = try contentContainer.decode([SportRadarModels.SportTypeDetails].self, forKey: .change)
-                        
+                        let sportsTypeDetails: [SportRadarModels.SportTypeDetails] = try contentContainer.decode([SportRadarModels.SportTypeDetails].self, forKey: .change)
+                        let sportsTypes = sportsTypeDetails.map(\.sportType)
                         content = .inplaySportList(sportsTypes: sportsTypes)
+                        
                     case .sportTypeByDate:
                         // change key is optional
                         if contentContainer.contains(.change) {
-                            let sportsTypes: [SportRadarModels.SportType] = try contentContainer.decode([SportRadarModels.SportType].self, forKey: .change)
-
+                            let sportsTypes: [SportType] = try contentContainer.decode([SportType].self, forKey: .change)
                             content = .sportTypeByDate(sportsTypes: sportsTypes)
                         }
                         else {
                             let sportsTypes: [SportType] = []
-
                             content = .sportTypeByDate(sportsTypes: sportsTypes)
                         }
 
@@ -141,7 +139,7 @@ extension SportRadarModels {
         }
     }
 }
-
+/*
 extension SportRadarModels {
     
     struct SocketMessageType: Codable {
@@ -208,3 +206,4 @@ extension SportRadarModels {
         }
     }
 }
+*/

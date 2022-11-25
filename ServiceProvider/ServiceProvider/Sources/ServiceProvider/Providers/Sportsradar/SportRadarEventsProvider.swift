@@ -9,9 +9,11 @@ import Foundation
 import Combine
 
 class SportRadarEventsProvider: EventsProvider {
-
+    
     private var connector: SportRadarSocketConnector
     private var networkManager: NetworkManager
+
+    private var cancellables = Set<AnyCancellable>()
 
     required init(sessionCoordinator: SportRadarSessionCoordinator, connector: SportRadarSocketConnector = SportRadarSocketConnector()) {
         self.connector = connector
@@ -21,14 +23,13 @@ class SportRadarEventsProvider: EventsProvider {
         self.connector.connect()
     }
     
-    
-    // private var preLiveEventsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
-    // private var liveEventsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
-    
-    private var liveSportTypesPublisher: CurrentValueSubject<SubscribableContent<[SportTypeDetails]>, ServiceProviderError>?
+        
+    private var liveSportTypesPublisher: CurrentValueSubject<SubscribableContent<[SportType]>, ServiceProviderError>?
+    private var liveEventsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
     private var allSportTypesPublisher: CurrentValueSubject<SubscribableContent<[SportType]>, ServiceProviderError>?
     
     private var eventDetailsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
+    private var sportTypesPublisher: CurrentValueSubject<[SportType], ServiceProviderError>?
     
     //
     // All the events publishers
@@ -42,7 +43,7 @@ class SportRadarEventsProvider: EventsProvider {
 
         // Get the session
         guard
-            let sportId = SportRadarModelMapper.internalSportType(fromSportType: sportType)?.id,
+            let sportId = sportType.alphaId,
             let sessionToken = connector.token
         else {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
@@ -107,7 +108,8 @@ class SportRadarEventsProvider: EventsProvider {
 
         // Get the session
         guard
-            let sportId = SportRadarModelMapper.internalSportType(fromSportType: sportType)?.id,
+            //let sportId = SportRadarModelMapper.internalSportType(fromSportType: sportType)?.id,
+            let sportId = sportType.alphaId,
             let sessionToken = connector.token
         else {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
@@ -154,11 +156,10 @@ class SportRadarEventsProvider: EventsProvider {
             return publisher.eraseToAnyPublisher()
         }
     }
-    
-    func liveSportTypes() -> AnyPublisher<SubscribableContent<[SportTypeDetails]>, ServiceProviderError> {
-        
+
+    func liveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
         if self.liveSportTypesPublisher == nil {
-            self.liveSportTypesPublisher = CurrentValueSubject<SubscribableContent<[SportTypeDetails]>, ServiceProviderError>.init(.disconnected)
+            self.liveSportTypesPublisher = CurrentValueSubject<SubscribableContent<[SportType]>, ServiceProviderError>.init(.disconnected)
         }
         
         guard
@@ -359,6 +360,84 @@ class SportRadarEventsProvider: EventsProvider {
         return publisher.eraseToAnyPublisher()
     }
 
+    func mergeSports(numericSportArray: [SportType], alphaSportArray: [SportType]) -> [SportType] {
+
+        var uniqueArray: [SportType] = []
+
+        for numericSport in numericSportArray {
+
+            let alphaFilter = alphaSportArray.filter({ $0.name.lowercased() == numericSport.name.lowercased() })
+
+            if let alphaSport = alphaFilter.first {
+                let mergedSport = SportType(name: numericSport.name,
+                                              numericId: numericSport.numericId,
+                                              alphaId: alphaSport.alphaId,
+                                              iconId: numericSport.iconId,
+                                              numberEvents: numericSport.numberEvents,
+                                              numberOutrightEvents: numericSport.numberOutrightEvents,
+                                              numberOutrightMarkets: numericSport.numberOutrightMarkets)
+
+                uniqueArray.append(mergedSport)
+            }
+            else {
+                uniqueArray.append(numericSport)
+            }
+
+        }
+
+        for alphaSport in alphaSportArray {
+
+            if !uniqueArray.contains(where: { $0.name.lowercased() == alphaSport.name.lowercased() }) {
+                uniqueArray.append(alphaSport)
+            }
+
+        }
+
+        // Check code id
+        var uniqueSportsArray: [SportType] = []
+
+        for uniqueSport in uniqueArray {
+
+            let sportTypeFilter = SportTypeInfo.allCases.filter({
+                $0.name.lowercased() == uniqueSport.name.lowercased()
+            })
+
+            // Check for unique sport
+            if !uniqueSportsArray.contains(where: {
+                $0.name == uniqueSport.name
+            }) {
+                if let sportType = sportTypeFilter.first {
+                    let newSportUnique = SportType(name: uniqueSport.name, numericId: uniqueSport.numericId, alphaId: uniqueSport.alphaId, iconId: sportType.id, numberEvents: uniqueSport.numberEvents, numberOutrightEvents: uniqueSport.numberOutrightEvents, numberOutrightMarkets: uniqueSport.numberOutrightMarkets)
+
+                    uniqueSportsArray.append(newSportUnique)
+                }
+                else {
+                    uniqueSportsArray.append(uniqueSport)
+                }
+            }
+        }
+
+        // Merge Football and Soccer - TEMP
+        if uniqueSportsArray.contains(where: { $0.name == "Soccer" }),
+           let soccerSportType = uniqueSportsArray.filter({ $0.name == "Soccer" }).first,
+           let footballIndex = uniqueSportsArray.firstIndex(where: { $0.name == "Football" }) {
+
+            let newSport = SportType(name: uniqueSportsArray[footballIndex].name,
+                                     numericId: uniqueSportsArray[footballIndex].numericId,
+                                     alphaId: soccerSportType.alphaId,
+                                     iconId: uniqueSportsArray[footballIndex].iconId,
+                                     numberEvents: uniqueSportsArray[footballIndex].numberEvents,
+                                     numberOutrightEvents: uniqueSportsArray[footballIndex].numberOutrightEvents,
+                                     numberOutrightMarkets: uniqueSportsArray[footballIndex].numberOutrightMarkets)
+
+            uniqueSportsArray[footballIndex] = newSport
+
+            uniqueSportsArray.removeAll(where: {$0 == soccerSportType})
+        }
+
+
+        return uniqueSportsArray
+    }
 }
 
 extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
@@ -380,9 +459,9 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
         }
     }
     
-    func inplaySportListUpdated(withSportTypesDetails sportTypesDetails: [SportTypeDetails]) {
+    func inplaySportListUpdated(withSportTypes sportTypes: [SportType]) {
         if let liveSportTypesPublisher = self.liveSportTypesPublisher {
-            liveSportTypesPublisher.send(.contentUpdate(content: sportTypesDetails))
+            liveSportTypesPublisher.send(.contentUpdate(content: sportTypes))
         }
     }
 
@@ -438,17 +517,57 @@ extension SportRadarEventsProvider {
     }
 
     func getFieldWidgetHtml(widgetFile: String, eventId: String, providerId: String?) -> String? {
-
         let fileStringSplit = widgetFile.components(separatedBy: ".")
-
         let filePath = Bundle.main.path(forResource: fileStringSplit[0], ofType: fileStringSplit[1])
         let contentData = FileManager.default.contents(atPath: filePath!)
         let emailTemplate = NSString(data: contentData!, encoding: String.Encoding.utf8.rawValue) as? String
         if let replacedHtmlContent = emailTemplate?.replacingOccurrences(of: "@eventId", with: eventId) {
             return replacedHtmlContent
         }
-
         return nil
+    }
+
+    func getSportsList() -> AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError> {
+        let endpoint = SportRadarRestAPIClient.sportsList
+        let requestPublisher: AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError> = self.networkManager.request(endpoint)
+        return requestPublisher
+    }
+
+    func getAllSportsList(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<[SportType], ServiceProviderError> {
+
+        //TODO: TASK - André, onde são usadas estas datas?
+        
+        // Navigation Sports
+        let sportsEndpoint = SportRadarRestAPIClient.sportsList
+        let sportsRequestPublisher: AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError> = self.networkManager.request(sportsEndpoint)
+
+        // Code Sports
+        let dateRange = self.getDateRangeId()
+        let codeSportsEndpoint = SportRadarRestAPIClient.scheduleSportsList(dateRange: dateRange)
+
+        let codeSportsRequestPublisher: AnyPublisher<SportRadarResponse<[ScheduledSport]>, ServiceProviderError> = self.networkManager.request(codeSportsEndpoint)
+
+        return Publishers.CombineLatest(sportsRequestPublisher, codeSportsRequestPublisher)
+            .flatMap({ sportsList, codeSportsList -> AnyPublisher<[SportType], ServiceProviderError> in
+
+                if let sports = sportsList.data?.sportNodes?.filter({
+                    $0.numberEvents != "0"
+                }),
+                   let codeSports = codeSportsList.data {
+
+                    let newSports = sports.map(SportRadarModelMapper.sportUnique(fromSportNode:)).compactMap({ $0 })
+
+                    let newCodeSports = codeSports.map(SportRadarModelMapper.sportUnique(fromScheduledSport:)).compactMap({ $0 })
+
+                    let unifiedSportsList = self.mergeSports(numericSportArray: newSports, alphaSportArray: newCodeSports)
+
+                    return Just(unifiedSportsList).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
+                }
+                return Fail(outputType: [SportType].self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+            })
+            .eraseToAnyPublisher()
+        
     }
 }
 

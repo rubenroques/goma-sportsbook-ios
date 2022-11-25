@@ -190,22 +190,19 @@ class StaticHomeViewTemplateDataSource {
 
     func requestSports() {
 
-        Env.serviceProvider.allSportTypes()
-            .sink { (completion: Subscribers.Completion<ServiceProviderError>) in
-                // TODO:  allSportTypes Handle completion with error
-            } receiveValue: { (subscribableContent: SubscribableContent<[SportType]>) in
-                switch subscribableContent {
-                case .connected(let subscription):
-                    ()
-                case .contentUpdate(let sportsList):
-                    self.sportsToFetch = Array(sportsList.map(Sport.init(serviceProviderSportType:)).prefix(10))
-                    self.refreshPublisher.send()
-                case .disconnected:
-                    ()
-                }
-            }
+        Env.serviceProvider.getAllSportsList()
+            .map({ sportTypesArray in
+                return sportTypesArray.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
+            })
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { (completion: Subscribers.Completion<ServiceProviderError>) in
+                () // TODO:  allSportTypes Handle completion with error
+            }, receiveValue: { (sportTypes: [Sport]) in
+                self.sportsToFetch = Array(sportTypes.prefix(10))
+                self.refreshPublisher.send()
+            })
             .store(in: &cancellables)
-
+        
 //        let language = "en"
 //        Env.everyMatrixClient.getDisciplines(language: language)
 //            .map(\.records)

@@ -137,12 +137,12 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
         }
         else {
             //Use double
-            var numberOfLines = Int(outcomes / 2)
+            let numberOfLines = Int(outcomes / 2)
 
-            let isIntValue = (outcomes/2).isMultiple(of: 2)
-            if !isIntValue  {
-                numberOfLines += 1
-            }
+//            let isIntValue = (outcomes/2).isMultiple(of: 2)
+//            if !isIntValue  {
+//                numberOfLines += 1
+//            }
             //numberOfLines = numberOfLines < 3 ? numberOfLines : 3
 
             self.columnType = ColumnType.double

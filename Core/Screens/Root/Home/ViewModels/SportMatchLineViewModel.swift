@@ -275,11 +275,7 @@ extension SportMatchLineViewModel {
 
     private func fetchPopularMatches() {
         
-        guard
-            let serviceProviderSportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
-        else {
-            return
-        }
+        let serviceProviderSportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
         
         Env.serviceProvider.subscribePreLiveMatches(forSportType: serviceProviderSportType,
                                                     pageIndex: 0,
@@ -347,11 +343,7 @@ extension SportMatchLineViewModel {
 
     private func fetchLiveMatches() {
         
-        guard
-            let serviceProviderSportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
-        else {
-            return
-        }
+        let serviceProviderSportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
         
         Env.serviceProvider.subscribeLiveMatches(forSportType: serviceProviderSportType, pageIndex: 0)
             .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
@@ -414,6 +406,10 @@ extension SportMatchLineViewModel {
 
     func fetchTopCompetitionMatches() {
 
+        return
+        
+        // EM TEMP SHUTDOWN
+        /*
         let language = "en"
         let endpoint = TSRouter.getCustomTournaments(language: language, sportId: self.sport.id)
 
@@ -452,14 +448,14 @@ extension SportMatchLineViewModel {
                 self?.updatedContent()
             })
             .store(in: &cancellables)
-
+         */
     }
 
     private func fetchOutrightCompetitions() {
 
+        // EM TEMP SHUTDOWN
         // TODO: fetchOutrightCompetitions
-        return
-        
+
 //        if let outrightCompetitionsRegister = outrightCompetitionsRegister {
 //            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: outrightCompetitionsRegister)
 //        }

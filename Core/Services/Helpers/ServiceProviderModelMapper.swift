@@ -91,7 +91,8 @@ extension ServiceProviderModelMapper {
                               translatedName: outcome.name,
                               marketId: outcome.marketId,
                               bettingOffer: bettingOffer,
-                              orderValue: outcome.orderValue)
+                              orderValue: outcome.orderValue,
+                              externalReference: outcome.externalReference)
         return outcome
     }
 

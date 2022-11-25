@@ -25,6 +25,7 @@ class SportRadarEventDetailRepository {
     init() {
 
         self.getMarketFilters()
+
     }
     
     func getMarketFilters() {

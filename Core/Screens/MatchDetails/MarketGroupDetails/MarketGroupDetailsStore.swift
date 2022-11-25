@@ -153,11 +153,9 @@ class MarketGroupDetailsStore {
         var similarMarketsNames: [String: String] = [:]
         var similarMarketsOrdered: OrderedSet<String> = []
 
-        let decimalCharacters = CharacterSet.decimalDigits
-
         for market in markets {
 
-            let similarMarketKey = "\(market.name ?? "000")-\(match.homeParticipant.name ?? "x")-\(match.awayParticipant.name ?? "x")"
+            let similarMarketKey = "\(market.bettingTypeId ?? "000")-\(match.homeParticipant.name ?? "x")-\(match.awayParticipant.name ?? "x")"
 
             if self.firstMarketCache == nil {
                 self.firstMarketCache = market
@@ -167,10 +165,7 @@ class MarketGroupDetailsStore {
 
             var sortedOutcomes: [Outcome] = []
 
-            // Temp sort for 1x2
-            if outcomes.count == 3 {
                 sortedOutcomes = outcomes.sorted { out1, out2 in
-
                     if let orderValue1 = out1.orderValue,
                        let orderValue2 = out2.orderValue {
                         let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(orderValue1)
@@ -178,21 +173,11 @@ class MarketGroupDetailsStore {
                         return out1Value < out2Value
                     }
 
-                    return out1.id < out2.id
-                }
-            }
-            else {
-                sortedOutcomes = outcomes.sorted { out1, out2 in
-                    if out1.codeName.rangeOfCharacter(from: decimalCharacters) != nil {
-                        let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1.codeName.trimmingCharacters(in: CharacterSet(charactersIn: "0123456789. ")))
-                        let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2.codeName.trimmingCharacters(in: CharacterSet(charactersIn: "0123456789. ")))
-                        return out1Value < out2Value
-                    }
                     let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1.codeName)
                     let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2.codeName)
                     return out1Value < out2Value
                 }
-            }
+//            }
 
             let sortedOutcomeMarket = Market(id: market.id,
                                 typeId: market.typeId,
@@ -230,29 +215,16 @@ class MarketGroupDetailsStore {
 
                 let allOutcomes = value.flatMap({ $0.outcomes })
                 var outcomesDictionary: [String: [Outcome]] = [:]
-
+                
                 for outcomeIt in allOutcomes {
 
-                    if outcomeIt.codeName.rangeOfCharacter(from: decimalCharacters) != nil {
-                        let outcomeTypeName = outcomeIt.codeName.trimmingCharacters(in: CharacterSet(charactersIn: "0123456789. "))
-
-                        if var outcomesList = outcomesDictionary[outcomeTypeName] {
-                            outcomesList.append(outcomeIt)
-                            outcomesDictionary[outcomeTypeName] = outcomesList
-                        }
-                        else {
-                            outcomesDictionary[outcomeTypeName] = [outcomeIt]
-                        }
+                    let outcomeTypeName = outcomeIt.headerCodeName
+                    if var outcomesList = outcomesDictionary[outcomeTypeName] {
+                        outcomesList.append(outcomeIt)
+                        outcomesDictionary[outcomeTypeName] = outcomesList
                     }
                     else {
-                        let outcomeTypeName = outcomeIt.headerCodeName
-                        if var outcomesList = outcomesDictionary[outcomeTypeName] {
-                            outcomesList.append(outcomeIt)
-                            outcomesDictionary[outcomeTypeName] = outcomesList
-                        }
-                        else {
-                            outcomesDictionary[outcomeTypeName] = [outcomeIt]
-                        }
+                        outcomesDictionary[outcomeTypeName] = [outcomeIt]
                     }
                 }
 
@@ -309,6 +281,12 @@ class MarketGroupDetailsStore {
                                                                                           outcomes: outcomesDictionary)
 
                     marketGroupOrganizers.append(marketLinesMarketGroupOrganizer)
+                }
+                else if outcomesDictionary.keys.count > 3 {
+                    // Grouped markets with a lot of outcomes undefined
+                    let undefinedGroupMarketGroupOrganizer = UndefinedGroupMarketGroupOrganizer(id: firstMarket.id, name: marketGroupName, outcomes: outcomesDictionary)
+
+                    marketGroupOrganizers.append(undefinedGroupMarketGroupOrganizer)
                 }
                 else {
                     // Fall back

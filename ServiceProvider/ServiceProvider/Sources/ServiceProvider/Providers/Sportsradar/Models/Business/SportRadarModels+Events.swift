@@ -62,6 +62,7 @@ extension SportRadarModels {
         var hashCode: String
         var marketId: String?
         var orderValue: String?
+        var externalReference: String?
 
         var odd: Double {
             let priceNumerator = Double(self.priceNumerator ?? "0.0") ?? 1.0
@@ -80,6 +81,7 @@ extension SportRadarModels {
             case priceDenominator = "currentpricedown"
             case marketId = "idfomarket"
             case orderValue = "hadvalue"
+            case externalReference = "externalreference"
         }
         
     }

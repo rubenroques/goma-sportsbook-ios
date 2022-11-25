@@ -27,7 +27,7 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
             }
         }
     }
-    var sport: EveryMatrix.Discipline?
+    var sport: Sport?
     private var cancellable = Set<AnyCancellable>()
     private var currentLiveSportsPublisher: AnyCancellable?
     var viewModel: SportSelectionCollectionViewCellViewModel?
