@@ -34,12 +34,6 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
-    func requestTest(deviceId: String) -> AnyPublisher<ExampleModel?, NetworkError> {
-        let endpoint = GomaGamingService.test
-        let requestPublisher: AnyPublisher<ExampleModel?, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
-        return requestPublisher
-    }
-
     func requestGeoLocation(deviceId: String, latitude: Double, longitude: Double) -> AnyPublisher<Bool, NetworkError> {
         let accessGrantedMessage = "User Access Granted!".lowercased()
         let endpoint = GomaGamingService.geolocation(latitude: String(latitude), longitude: String(longitude))
