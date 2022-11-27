@@ -80,7 +80,6 @@
 		450B787B28F58574009229E3 /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
 		450B787C28F58574009229E3 /* SportMatchDoubleLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AA91C927C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift */; };
 		450B787D28F58574009229E3 /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C6023D2716FACB00992E11 /* RadioButton.swift */; };
-		450B787E28F58574009229E3 /* EventsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452047B52703656300B277B5 /* EventsStore.swift */; };
 		450B787F28F58574009229E3 /* SocialAppItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C1C0962873455000E9D6AC /* SocialAppItemCollectionViewCell.swift */; };
 		450B788028F58574009229E3 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456B342326C17E83009D7D27 /* Constants.swift */; };
 		450B788128F58574009229E3 /* YieldSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC226F3548D00E69D65 /* YieldSSWampMessage.swift */; };
@@ -833,7 +832,6 @@
 		457CBA12282D27D000ED0F00 /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
 		457CBA13282D27D000ED0F00 /* SportMatchDoubleLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AA91C927C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift */; };
 		457CBA14282D27D000ED0F00 /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C6023D2716FACB00992E11 /* RadioButton.swift */; };
-		457CBA15282D27D000ED0F00 /* EventsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452047B52703656300B277B5 /* EventsStore.swift */; };
 		457CBA16282D27D000ED0F00 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456B342326C17E83009D7D27 /* Constants.swift */; };
 		457CBA17282D27D000ED0F00 /* YieldSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC226F3548D00E69D65 /* YieldSSWampMessage.swift */; };
 		457CBA18282D27D000ED0F00 /* ConversationsDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE628083C7C0098854C /* ConversationsDetailViewModel.swift */; };
@@ -1438,7 +1436,6 @@
 		457CBCB9282D2CD100ED0F00 /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
 		457CBCBA282D2CD100ED0F00 /* SportMatchDoubleLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AA91C927C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift */; };
 		457CBCBB282D2CD100ED0F00 /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C6023D2716FACB00992E11 /* RadioButton.swift */; };
-		457CBCBC282D2CD100ED0F00 /* EventsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452047B52703656300B277B5 /* EventsStore.swift */; };
 		457CBCBD282D2CD100ED0F00 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456B342326C17E83009D7D27 /* Constants.swift */; };
 		457CBCBE282D2CD100ED0F00 /* YieldSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC226F3548D00E69D65 /* YieldSSWampMessage.swift */; };
 		457CBCBF282D2CD100ED0F00 /* ConversationsDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE628083C7C0098854C /* ConversationsDetailViewModel.swift */; };
@@ -2046,7 +2043,6 @@
 		4589C79F282024E400243547 /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
 		4589C7A0282024E400243547 /* SportMatchDoubleLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AA91C927C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift */; };
 		4589C7A1282024E400243547 /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C6023D2716FACB00992E11 /* RadioButton.swift */; };
-		4589C7A2282024E400243547 /* EventsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452047B52703656300B277B5 /* EventsStore.swift */; };
 		4589C7A3282024E400243547 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456B342326C17E83009D7D27 /* Constants.swift */; };
 		4589C7A4282024E400243547 /* YieldSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC226F3548D00E69D65 /* YieldSSWampMessage.swift */; };
 		4589C7A5282024E400243547 /* ConversationsDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE628083C7C0098854C /* ConversationsDetailViewModel.swift */; };
@@ -2651,7 +2647,6 @@
 		45A6BBEC28246A7500D9B416 /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
 		45A6BBED28246A7500D9B416 /* SportMatchDoubleLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AA91C927C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift */; };
 		45A6BBEE28246A7500D9B416 /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C6023D2716FACB00992E11 /* RadioButton.swift */; };
-		45A6BBEF28246A7500D9B416 /* EventsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452047B52703656300B277B5 /* EventsStore.swift */; };
 		45A6BBF028246A7500D9B416 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456B342326C17E83009D7D27 /* Constants.swift */; };
 		45A6BBF128246A7500D9B416 /* YieldSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC226F3548D00E69D65 /* YieldSSWampMessage.swift */; };
 		45A6BBF228246A7500D9B416 /* ConversationsDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE628083C7C0098854C /* ConversationsDetailViewModel.swift */; };
@@ -3681,7 +3676,6 @@
 		A9C340D528F9A74A0055360B /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
 		A9C340D628F9A74A0055360B /* SportMatchDoubleLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AA91C927C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift */; };
 		A9C340D728F9A74A0055360B /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C6023D2716FACB00992E11 /* RadioButton.swift */; };
-		A9C340D828F9A74A0055360B /* EventsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452047B52703656300B277B5 /* EventsStore.swift */; };
 		A9C340D928F9A74A0055360B /* SocialAppItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C1C0962873455000E9D6AC /* SocialAppItemCollectionViewCell.swift */; };
 		A9C340DA28F9A74A0055360B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456B342326C17E83009D7D27 /* Constants.swift */; };
 		A9C340DB28F9A74A0055360B /* YieldSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC226F3548D00E69D65 /* YieldSSWampMessage.swift */; };
@@ -4537,7 +4531,6 @@
 		451E1F6B2825636F000E957B /* InternalBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternalBrowserViewController.swift; sourceTree = "<group>"; };
 		451E1F7028290DE2000E957B /* PictureInPictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureInPictureView.swift; sourceTree = "<group>"; };
 		4520365A26EF9B7F000BCFA6 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = SOURCE_ROOT; };
-		452047B52703656300B277B5 /* EventsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsStore.swift; sourceTree = "<group>"; };
 		452047B827036D3900B277B5 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		452047B927036D3900B277B5 /* SplashViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SplashViewController.xib; sourceTree = "<group>"; };
 		4523AECF27FB284000C5BF4E /* CasinoWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CasinoWebViewController.swift; sourceTree = "<group>"; };
@@ -5684,15 +5677,6 @@
 			path = Gilroy;
 			sourceTree = "<group>";
 		};
-		452047B42703654700B277B5 /* Stores */ = {
-			isa = PBXGroup;
-			children = (
-				452047B52703656300B277B5 /* EventsStore.swift */,
-				45EF54092709E81C00D1E13E /* PopUpStore.swift */,
-			);
-			path = Stores;
-			sourceTree = "<group>";
-		};
 		452047BE27036D4600B277B5 /* Splash */ = {
 			isa = PBXGroup;
 			children = (
@@ -5720,6 +5704,17 @@
 				A9C82FB426F3AFB400059DCD /* PersonalInfoViewController.xib */,
 			);
 			path = PersonalInfo;
+			sourceTree = "<group>";
+		};
+		453976272933F6D100E747EF /* ModelMappers */ = {
+			isa = PBXGroup;
+			children = (
+				450B781C28F56BA5009229E3 /* ServiceProviderModelMapper.swift */,
+				45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */,
+				45044AFA291022E90053311D /* ServiceProviderModelMapper+Profile.swift */,
+				450B7B3E28F637FA009229E3 /* ServiceProviderModelMapper+Sports.swift */,
+			);
+			path = ModelMappers;
 			sourceTree = "<group>";
 		};
 		454A7A6126DA2FD600E6E74E /* Misc */ = {
@@ -5874,7 +5869,6 @@
 				455A0D1426BD9F3400EC572D /* Services */,
 				456B341826C178D9009D7D27 /* Constants */,
 				4589F3E926BF0160005DF543 /* Screens */,
-				452047B42703654700B277B5 /* Stores */,
 				456B341326C13AEE009D7D27 /* Models */,
 				4589F40726BF01B4005DF543 /* Views */,
 				456B341B26C17C77009D7D27 /* Protocols */,
@@ -6048,6 +6042,7 @@
 		455C676927DF5C8D00AAB2A5 /* PopularDetails */ = {
 			isa = PBXGroup;
 			children = (
+				45EF54092709E81C00D1E13E /* PopUpStore.swift */,
 				455C676B27DF635200AAB2A5 /* PopularDetailsViewController.swift */,
 				455C677927E39C3D00AAB2A5 /* PopularDetailsViewModel.swift */,
 			);
@@ -6078,13 +6073,6 @@
 			children = (
 				455C962626FE11CA00456F30 /* RootViewController.swift */,
 				455C962726FE11CA00456F30 /* RootViewController.xib */,
-				45C3E8D727B56DC7007A1A0F /* Home */,
-				45D712EC27031C4F00AC0364 /* PreLive */,
-				45D712FC27033BF400AC0364 /* LiveEvents */,
-				45EF5430270C5FD600D1E13E /* Filters */,
-				45B0BD2F271EED24009C41FA /* CompetitionsList */,
-				458BAC66276B652F006C4BC7 /* MyTickets */,
-				A9FB6D3F28C61D0500E3FE58 /* Tips&Rankings */,
 			);
 			path = Root;
 			sourceTree = "<group>";
@@ -6119,6 +6107,7 @@
 		456B341326C13AEE009D7D27 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				453976272933F6D100E747EF /* ModelMappers */,
 				A97D246A28180566003EEDEC /* GGAPI */,
 				45D728D52715F6C700EFE04D /* App */,
 				45B7DADD26F92CC30032C1C3 /* Shared */,
@@ -6435,12 +6424,19 @@
 			children = (
 				452047BE27036D4600B277B5 /* Splash */,
 				455C962526FE11B300456F30 /* Root */,
+				45C3E8D727B56DC7007A1A0F /* Home */,
+				45D712EC27031C4F00AC0364 /* PreLive */,
+				45D712FC27033BF400AC0364 /* LiveEvents */,
+				A9BCF438274FB558006DD528 /* MatchDetails */,
+				45EF5430270C5FD600D1E13E /* Filters */,
+				45B0BD2F271EED24009C41FA /* CompetitionsList */,
+				458BAC66276B652F006C4BC7 /* MyTickets */,
+				A9FB6D3F28C61D0500E3FE58 /* Tips&Rankings */,
 				A98708B928DA011200F27348 /* UserProfile */,
 				A902299E28AFD3F400972863 /* Quickbet */,
 				A9B946C428C21C560091296E /* FeaturedTips */,
 				A9863ED1286F01C400A4A1A2 /* Share */,
 				A995C1922799917100151462 /* Search */,
-				A9BCF438274FB558006DD528 /* MatchDetails */,
 				455C676A27DF5C9900AAB2A5 /* LiveDetails */,
 				455C676927DF5C8D00AAB2A5 /* PopularDetails */,
 				4503E79827D0E85D00077CD2 /* CompetitionDetails */,
@@ -6464,17 +6460,17 @@
 		4589F3EA26BF017A005DF543 /* Account */ = {
 			isa = PBXGroup;
 			children = (
+				4589F3F126BF017A005DF543 /* Login */,
+				4589F3EE26BF017A005DF543 /* Register */,
 				A9D5BB74290A9C8D001B0E13 /* VerificationCode */,
+				4589F3F426BF017A005DF543 /* RecoverPassword */,
 				A9B331B8288EF1F800D097F0 /* Messages */,
 				A99F79F627CF9821008BAF41 /* Bonus */,
 				A9E7C6AA27BD573000F784C9 /* AppSettings */,
 				A90D8AF2277200A300DF88EB /* Withdraw */,
 				A9875792276CA4ED0099990D /* Deposit */,
-				4589F3F126BF017A005DF543 /* Login */,
 				A9C82FB226F3AB3400059DCD /* Profile */,
 				4589F3EB26BF017A005DF543 /* Welcome */,
-				4589F3EE26BF017A005DF543 /* Register */,
-				4589F3F426BF017A005DF543 /* RecoverPassword */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -7084,10 +7080,6 @@
 				454E0AC72733FBF200794E0C /* StyleHelpers.swift */,
 				454E0AD02734A39800794E0C /* CurrencyHelper.swift */,
 				45626E33275530990069B89B /* OddFormatter.swift */,
-				450B781C28F56BA5009229E3 /* ServiceProviderModelMapper.swift */,
-				45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */,
-				45044AFA291022E90053311D /* ServiceProviderModelMapper+Profile.swift */,
-				450B7B3E28F637FA009229E3 /* ServiceProviderModelMapper+Sports.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -9670,7 +9662,6 @@
 				450B787B28F58574009229E3 /* SportSelectionViewController.swift in Sources */,
 				450B787C28F58574009229E3 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
 				450B787D28F58574009229E3 /* RadioButton.swift in Sources */,
-				450B787E28F58574009229E3 /* EventsStore.swift in Sources */,
 				450B787F28F58574009229E3 /* SocialAppItemCollectionViewCell.swift in Sources */,
 				450B788028F58574009229E3 /* Constants.swift in Sources */,
 				450B788128F58574009229E3 /* YieldSSWampMessage.swift in Sources */,
@@ -10331,7 +10322,6 @@
 				457CBA12282D27D000ED0F00 /* SportSelectionViewController.swift in Sources */,
 				457CBA13282D27D000ED0F00 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
 				457CBA14282D27D000ED0F00 /* RadioButton.swift in Sources */,
-				457CBA15282D27D000ED0F00 /* EventsStore.swift in Sources */,
 				457CBA16282D27D000ED0F00 /* Constants.swift in Sources */,
 				A9C1C09B2873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
 				457CBA17282D27D000ED0F00 /* YieldSSWampMessage.swift in Sources */,
@@ -10930,7 +10920,6 @@
 				457CBCB9282D2CD100ED0F00 /* SportSelectionViewController.swift in Sources */,
 				457CBCBA282D2CD100ED0F00 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
 				457CBCBB282D2CD100ED0F00 /* RadioButton.swift in Sources */,
-				457CBCBC282D2CD100ED0F00 /* EventsStore.swift in Sources */,
 				A9C1C09C2873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
 				457CBCBD282D2CD100ED0F00 /* Constants.swift in Sources */,
 				457CBCBE282D2CD100ED0F00 /* YieldSSWampMessage.swift in Sources */,
@@ -11530,7 +11519,6 @@
 				4589C79F282024E400243547 /* SportSelectionViewController.swift in Sources */,
 				4589C7A0282024E400243547 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
 				4589C7A1282024E400243547 /* RadioButton.swift in Sources */,
-				4589C7A2282024E400243547 /* EventsStore.swift in Sources */,
 				A9C1C0992873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
 				4589C7A3282024E400243547 /* Constants.swift in Sources */,
 				4589C7A4282024E400243547 /* YieldSSWampMessage.swift in Sources */,
@@ -12136,7 +12124,6 @@
 				45A6BBED28246A7500D9B416 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
 				A9C1C09A2873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
 				45A6BBEE28246A7500D9B416 /* RadioButton.swift in Sources */,
-				45A6BBEF28246A7500D9B416 /* EventsStore.swift in Sources */,
 				45A6BBF028246A7500D9B416 /* Constants.swift in Sources */,
 				45A6BBF128246A7500D9B416 /* YieldSSWampMessage.swift in Sources */,
 				45A6BBF228246A7500D9B416 /* ConversationsDetailViewModel.swift in Sources */,
@@ -12733,7 +12720,6 @@
 				A9C340D528F9A74A0055360B /* SportSelectionViewController.swift in Sources */,
 				A9C340D628F9A74A0055360B /* SportMatchDoubleLineTableViewCell.swift in Sources */,
 				A9C340D728F9A74A0055360B /* RadioButton.swift in Sources */,
-				A9C340D828F9A74A0055360B /* EventsStore.swift in Sources */,
 				A9C340D928F9A74A0055360B /* SocialAppItemCollectionViewCell.swift in Sources */,
 				A9C340DA28F9A74A0055360B /* Constants.swift in Sources */,
 				A9C340DB28F9A74A0055360B /* YieldSSWampMessage.swift in Sources */,
