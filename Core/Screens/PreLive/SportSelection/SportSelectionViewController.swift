@@ -147,25 +147,41 @@ class SportSelectionViewController: UIViewController {
     func getAvailableSports() {
         self.isLoading = true
 
-        self.allSportsPublisher?.cancel()
-        self.allSportsPublisher = nil
+//        self.allSportsPublisher?.cancel()
+//        self.allSportsPublisher = nil
+//
+//        self.allSportsPublisher = Env.serviceProvider.subscribeAvailableSportTypes()
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                print("Env.serviceProvider.liveSportTypes completed \(completion)")
+//                self?.isLoading = false
+//            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
+//                switch subscribableContent {
+//                case .connected:
+//                    self?.configureWithSports([])
+//                case .contentUpdate(let sportTypes):
+//                    self?.configureWithSports(sportTypes)
+//                    self?.isLoading = false
+//                case .disconnected:
+//                    self?.configureWithSports([])
+//                }
+//            })
 
-        self.allSportsPublisher = Env.serviceProvider.subscribeAvailableSportTypes()
+        Env.serviceProvider.getAvailableSportTypes()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
-                print("Env.serviceProvider.liveSportTypes completed \(completion)")
-                self?.isLoading = false
-            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
-                switch subscribableContent {
-                case .connected:
-                    self?.configureWithSports([])
-                case .contentUpdate(let sportTypes):
-                    self?.configureWithSports(sportTypes)
+                switch completion {
+                case .finished:
+                    print("AVAILABLE SPORTS FINISHED")
+                case .failure(let error):
+                    print("AVAILABLE SPORTS ERROR: \(error)")
                     self?.isLoading = false
-                case .disconnected:
-                    self?.configureWithSports([])
                 }
+            }, receiveValue: { [weak self] sportTypes in
+                self?.configureWithSports(sportTypes)
+                self?.isLoading = false
             })
+            .store(in: &cancellables)
 
     }
 

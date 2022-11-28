@@ -25,6 +25,7 @@ class MarketGroupDetailsViewController: UIViewController {
     // ScrollView content offset
     private var lastContentOffset: CGFloat = 0
     var shouldScrollToTop: ((Bool) -> Void)?
+    var enableAutoScroll: (() -> Void?)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: MarketGroupDetailsViewModel) {
@@ -301,15 +302,19 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
 
         let scrollViewTop = scrollView.frame.origin.y
 
-        if scrollViewTop == scrollView.contentOffset.y && self.lastContentOffset != 0  {
+        if scrollViewTop == scrollView.contentOffset.y && self.lastContentOffset != 0 {
             self.shouldScrollToTop?(true)
+            self.enableAutoScroll?()
         }
         else if self.lastContentOffset > scrollViewTop {
             self.shouldScrollToTop?(false)
-
         }
 
         self.lastContentOffset = scrollView.contentOffset.y
+    }
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        self.enableAutoScroll?()
     }
 
 }

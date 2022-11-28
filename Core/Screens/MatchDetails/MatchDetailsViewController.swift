@@ -430,9 +430,8 @@ class MatchDetailsViewController: UIViewController {
         // ScrollView
         self.contentScrollView.delegate = self
 
-        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(didSwipeDownMarkets))
-        swipeDown.direction = .down
-        self.headerDetailView.addGestureRecognizer(swipeDown)
+        let tapMarkets = UITapGestureRecognizer(target: self, action: #selector(didTapMarkets))
+        self.headerDetailView.addGestureRecognizer(tapMarkets)
         
         self.setupWithTheme()
         
@@ -781,27 +780,30 @@ class MatchDetailsViewController: UIViewController {
 
                     guard let self = self else {return}
 
-                    self.contentScrollView.isScrollEnabled = true
-
                     if scrollTop {
-                        UIView.animate(withDuration: 0.3, animations: {
+                        UIView.animate(withDuration: 0.5, animations: {
                             self.contentScrollView.setContentOffset(
                                 CGPoint.zero, animated: false)
                         })
-                        self.autoScrollEnabled = true
                     }
                     else {
                         if self.autoScrollEnabled {
                             let marketFilterOffset = self.isMatchFieldExpanded ? self.headerButtonsBaseView.frame.height + self.matchFielHeight : self.headerButtonsBaseView.frame.height
 
-                            UIView.animate(withDuration: 0.3, animations: {
+                            UIView.animate(withDuration: 0.5, animations: {
                                 self.contentScrollView.setContentOffset(
                                     CGPoint(x: 0, y: marketFilterOffset), animated: false)
                             })
+
                             self.autoScrollEnabled = false
                         }
                     }
                 }
+
+                marketGroupDetailsViewController.enableAutoScroll = { [weak self] in
+                    self?.autoScrollEnabled = true
+                }
+
 
                 print("MatchDetailsMarkets - marketGroupDetailsViewController: \(groupKey)")
                 self.marketGroupsViewControllers.append(marketGroupDetailsViewController)
@@ -880,14 +882,13 @@ class MatchDetailsViewController: UIViewController {
         
         if self.viewModel.matchModePublisher.value == .live && self.isValidStatsSport {
 
-
             // let request = URLRequest(url: URL(string: "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)")!)
 
             if let fieldWidget = self.viewModel.fieldWidgetRenderData {
                 self.shouldShowLiveFieldWebView = true
                 self.isLiveFieldReady = false
 
-                //let urlString = "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)"
+                // let urlString = "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)"
 
                 if let htmlString = fieldWidget.htmlString,
                    let url = fieldWidget.url {
@@ -1018,12 +1019,10 @@ class MatchDetailsViewController: UIViewController {
         }
     }
 
-    @objc func didSwipeDownMarkets() {
+    @objc func didTapMarkets() {
 
         if self.shouldShowLiveFieldWebView {
-            self.contentScrollView.isScrollEnabled = true
             self.contentScrollView.setContentOffset(CGPoint.zero, animated: true)
-            self.autoScrollEnabled = true
         }
 
     }
@@ -1435,12 +1434,9 @@ extension MatchDetailsViewController: UIScrollViewDelegate {
 
             if self.lastContentOffset < scrollView.contentOffset.y {
 
-                if marketFilterOffset <= scrollView.contentOffset.y && self.autoScrollEnabled {
+                if marketFilterOffset <= scrollView.contentOffset.y {
 
                     self.contentScrollView.setContentOffset(CGPoint(x: 0, y: marketFilterOffset), animated: false)
-
-                    self.contentScrollView.isScrollEnabled = false
-                    self.autoScrollEnabled = false
                 }
             }
 
