@@ -6009,6 +6009,7 @@
 				A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */,
 				45DDBAB926F2406100A73E45 /* UserSessionStore.swift */,
 				45D871CF2710995700F5B87B /* AggregatorsRepository.swift */,
+				45EF54092709E81C00D1E13E /* PopUpStore.swift */,
 				A99DFBEC27342AEB00002CDB /* FavoritesManager.swift */,
 				456B341226C13AE1009D7D27 /* Networking */,
 				45D9CBE4270F444000B8C321 /* Helpers */,
@@ -6042,7 +6043,6 @@
 		455C676927DF5C8D00AAB2A5 /* PopularDetails */ = {
 			isa = PBXGroup;
 			children = (
-				45EF54092709E81C00D1E13E /* PopUpStore.swift */,
 				455C676B27DF635200AAB2A5 /* PopularDetailsViewController.swift */,
 				455C677927E39C3D00AAB2A5 /* PopularDetailsViewModel.swift */,
 			);
@@ -6426,6 +6426,7 @@
 				455C962526FE11B300456F30 /* Root */,
 				45C3E8D727B56DC7007A1A0F /* Home */,
 				45D712EC27031C4F00AC0364 /* PreLive */,
+				A98D3B272714817C003BAE6F /* SportSelection */,
 				45D712FC27033BF400AC0364 /* LiveEvents */,
 				A9BCF438274FB558006DD528 /* MatchDetails */,
 				45EF5430270C5FD600D1E13E /* Filters */,
@@ -6981,7 +6982,6 @@
 				45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */,
 				45109A642799C7EA00E4AC2E /* ViewModels */,
 				45C26DC627976A1000513D41 /* DataSources */,
-				A98D3B272714817C003BAE6F /* SportSelection */,
 				45D871CE271098F100F5B87B /* Cells */,
 				45A16E112707B69200A95C01 /* Filters */,
 			);

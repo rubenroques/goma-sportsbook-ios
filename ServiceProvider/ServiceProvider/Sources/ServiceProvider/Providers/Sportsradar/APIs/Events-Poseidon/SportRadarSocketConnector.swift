@@ -11,8 +11,8 @@ import Combine
 
 protocol SportRadarConnectorSubscriber: AnyObject {
     func liveAdvancedListUpdated(forTopicIdentifier identifier: TopicIdentifier, withEvents: [EventsGroup])
-    func inplaySportListUpdated(withSportTypes: [SportType])
-    func sportTypeByDate(withSportTypes: [SportType])
+    func inplaySportListUpdated(withSportTypes: [SportRadarModels.SportType])
+    func sportTypeByDate(withSportTypes: [SportRadarModels.SportType])
     func eventListBySportTypeDate(forTopicIdentifier identifier: TopicIdentifier, withEvents: [EventsGroup])
     func eventDetails(events: [EventsGroup])
 }

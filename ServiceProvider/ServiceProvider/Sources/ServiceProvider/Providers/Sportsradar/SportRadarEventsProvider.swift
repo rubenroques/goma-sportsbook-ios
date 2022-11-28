@@ -181,7 +181,7 @@ class SportRadarEventsProvider: EventsProvider {
         return publisher.eraseToAnyPublisher()
     }
 
-    func subscribeAvailableSportTypes(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+    func subscribePreLiveSportTypes(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
         if self.allSportTypesPublisher == nil {
             self.allSportTypesPublisher = CurrentValueSubject<SubscribableContent<[SportType]>, ServiceProviderError>.init(.disconnected)
         }
@@ -258,91 +258,6 @@ class SportRadarEventsProvider: EventsProvider {
         return publisher.eraseToAnyPublisher()
     }
 
-    func mergeSports(numericSportArray: [SportType], alphaSportArray: [SportType]) -> [SportType] {
-
-        var uniqueArray: [SportType] = []
-
-        for numericSport in numericSportArray {
-
-            if numericSport.name.lowercased() == "top bets"
-                || numericSport.name.lowercased() == "top bet"
-                || numericSport.name.lowercased() == "outrights" {
-                continue
-            }
-
-            let alphaFilter = alphaSportArray.filter({ $0.name.lowercased() == numericSport.name.lowercased() })
-
-            if let alphaSport = alphaFilter.first {
-                let mergedSport = SportType(name: numericSport.name,
-                                              numericId: numericSport.numericId,
-                                              alphaId: alphaSport.alphaId,
-                                              iconId: numericSport.iconId,
-                                              numberEvents: numericSport.numberEvents,
-                                              numberOutrightEvents: numericSport.numberOutrightEvents,
-                                              numberOutrightMarkets: numericSport.numberOutrightMarkets)
-
-                uniqueArray.append(mergedSport)
-            }
-            else {
-                uniqueArray.append(numericSport)
-            }
-
-        }
-
-        for alphaSport in alphaSportArray {
-
-            if !uniqueArray.contains(where: { $0.name.lowercased() == alphaSport.name.lowercased() }) {
-                uniqueArray.append(alphaSport)
-            }
-
-        }
-
-        // Check code id
-        var uniqueSportsArray: [SportType] = []
-
-        for uniqueSport in uniqueArray {
-
-            let sportTypeFilter = SportTypeInfo.allCases.filter({
-                $0.name.lowercased() == uniqueSport.name.lowercased()
-            })
-
-            // Check for unique sport
-            if !uniqueSportsArray.contains(where: {
-                $0.name == uniqueSport.name
-            }) {
-                if let sportType = sportTypeFilter.first {
-                    let newSportUnique = SportType(name: uniqueSport.name, numericId: uniqueSport.numericId, alphaId: uniqueSport.alphaId, iconId: sportType.id, numberEvents: uniqueSport.numberEvents, numberOutrightEvents: uniqueSport.numberOutrightEvents, numberOutrightMarkets: uniqueSport.numberOutrightMarkets)
-
-                    uniqueSportsArray.append(newSportUnique)
-                }
-                else {
-                    uniqueSportsArray.append(uniqueSport)
-                }
-            }
-        }
-
-        // TODO: TASK André - Falar com o pedro sobre este merge
-        // Merge Football and Soccer - TEMP
-        if uniqueSportsArray.contains(where: { $0.name == "Soccer" }),
-           let soccerSportType = uniqueSportsArray.filter({ $0.name == "Soccer" }).first,
-           let footballIndex = uniqueSportsArray.firstIndex(where: { $0.name == "Football" }) {
-
-            let newSport = SportType(name: uniqueSportsArray[footballIndex].name,
-                                     numericId: uniqueSportsArray[footballIndex].numericId,
-                                     alphaId: soccerSportType.alphaId,
-                                     iconId: uniqueSportsArray[footballIndex].iconId,
-                                     numberEvents: uniqueSportsArray[footballIndex].numberEvents,
-                                     numberOutrightEvents: uniqueSportsArray[footballIndex].numberOutrightEvents,
-                                     numberOutrightMarkets: uniqueSportsArray[footballIndex].numberOutrightMarkets)
-
-            uniqueSportsArray[footballIndex] = newSport
-
-            uniqueSportsArray.removeAll(where: {$0 == soccerSportType})
-        }
-
-
-        return uniqueSportsArray
-    }
 }
 
 extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
@@ -364,15 +279,17 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
         }
     }
 
-    func inplaySportListUpdated(withSportTypes sportTypes: [SportType]) {
+    func inplaySportListUpdated(withSportTypes sportTypes: [SportRadarModels.SportType]) {
         if let liveSportTypesPublisher = self.liveSportTypesPublisher {
-            liveSportTypesPublisher.send(.contentUpdate(content: sportTypes))
+            let sports = sportTypes.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
+            liveSportTypesPublisher.send(.contentUpdate(content: sports))
         }
     }
 
-    func sportTypeByDate(withSportTypes sportTypes: [SportType]) {
+    func sportTypeByDate(withSportTypes sportTypes: [SportRadarModels.SportType]) {
         if let allSportTypesPublisher = self.allSportTypesPublisher {
-            allSportTypesPublisher.send(.contentUpdate(content: sportTypes))
+            let sports = sportTypes.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
+            allSportTypesPublisher.send(.contentUpdate(content: sports))
         }
     }
 
@@ -432,47 +349,35 @@ extension SportRadarEventsProvider {
         return nil
     }
 
-//    func getSportsList() -> AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError> {
-//        let endpoint = SportRadarRestAPIClient.sportsBoNavigationList
-//        let requestPublisher: AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError> = self.networkManager.request(endpoint)
-//        return requestPublisher
-//    }
-
     func getAvailableSportTypes(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<[SportType], ServiceProviderError> {
-
-        //TODO: TASK - André, onde são usadas estas datas?
 
         // Navigation Sports
         let sportsEndpoint = SportRadarRestAPIClient.sportsBoNavigationList
-        let sportsRequestPublisher: AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError> = self.networkManager.request(sportsEndpoint)
+        let sportsRequestPublisher: AnyPublisher<SportRadarModels.RestResponse<SportRadarModels.SportsList>, ServiceProviderError> = self.networkManager.request(sportsEndpoint)
 
         // Code Sports
-        let dateRange = self.getDateRangeId()
+        let dateRange = self.getDateRangeId(initialDate: initialDate, endDate: endDate)
         let codeSportsEndpoint = SportRadarRestAPIClient.sportsScheduledList(dateRange: dateRange)
 
-        let codeSportsRequestPublisher: AnyPublisher<SportRadarResponse<[ScheduledSport]>, ServiceProviderError> = self.networkManager.request(codeSportsEndpoint)
+        let codeSportsRequestPublisher: AnyPublisher<SportRadarModels.RestResponse<[SportRadarModels.ScheduledSport]>, ServiceProviderError> = self.networkManager.request(codeSportsEndpoint)
 
         return Publishers.CombineLatest(sportsRequestPublisher, codeSportsRequestPublisher)
-            .flatMap({ sportsList, codeSportsList -> AnyPublisher<[SportType], ServiceProviderError> in
-
-                if let sports = sportsList.data?.sportNodes?.filter({
-                    $0.numberEvents != "0"
-                }),
-                   let codeSports = codeSportsList.data {
-
-                    let newSports = sports.map(SportRadarModelMapper.sportUnique(fromSportNode:)).compactMap({ $0 })
-
-                    let newCodeSports = codeSports.map(SportRadarModelMapper.sportUnique(fromScheduledSport:)).compactMap({ $0 })
-
-                    let unifiedSportsList = self.mergeSports(numericSportArray: newSports, alphaSportArray: newCodeSports)
-
-                    return Just(unifiedSportsList).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-
+            .flatMap({ numericSportsList, alphaSportsList -> AnyPublisher<[SportType], ServiceProviderError> in
+                if
+                    let numericSports = numericSportsList.data?.sportNodes?.filter({
+                        $0.numberEvents > 0 // || $0.numberOutrightEvents > 0 || $0.numberOutrightMarkets > 0
+                    }),
+                    let alphaSports = alphaSportsList.data
+                {
+                    let newNumericSports = numericSports.map(SportRadarModelMapper.sportType(fromSportNode:))
+                    let newAlphaSports = alphaSports.map(SportRadarModelMapper.sportType(fromScheduledSport:))
+                    let unifiedSportsList = self.mergeSports(numericSportArray: newNumericSports, alphaSportArray: newAlphaSports)
+                    let sportTypes = unifiedSportsList.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
+                    return Just(sportTypes).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
                 }
                 return Fail(outputType: [SportType].self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
             })
             .eraseToAnyPublisher()
-
     }
 }
 
@@ -504,23 +409,72 @@ extension SportRadarEventsProvider {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd"
 
-        var initialDateDefault = Date()
-        if let initialDate = initialDate {
-            initialDateDefault = initialDate
-        }
-
-        var endDateDefault = Calendar.current.date(byAdding: .day, value: 7, to: initialDateDefault) ?? Date()
-        if let endDate = endDate {
-            endDateDefault = endDate
-        }
+        let initialDateDefault: Date = initialDate ?? Date()
+        let endDateDefault: Date = endDate ?? Calendar.current.date(byAdding: .day, value: 7, to: initialDateDefault) ?? Date()
 
         let initialDateId = dateFormatter.string(from: initialDateDefault)
         let endDateId = dateFormatter.string(from: endDateDefault)
 
-
         let dateRangeId = "\(initialDateId)0000/\(endDateId)2359"
 
         return dateRangeId
+    }
+
+}
+
+extension SportRadarEventsProvider {
+
+    private func mergeSports(numericSportArray: [SportRadarModels.SportType], alphaSportArray: [SportRadarModels.SportType]) -> [SportRadarModels.SportType] {
+
+        var uniqueSportsArray: [SportRadarModels.SportType] = []
+
+        for numericSport in numericSportArray {
+
+            if numericSport.name.lowercased() == "top bets"
+                || numericSport.name.lowercased() == "top bet"
+                || numericSport.name.lowercased() == "outrights" {
+                continue
+            }
+
+            let alphaFilter = alphaSportArray.filter({ $0.name.lowercased() == numericSport.name.lowercased() })
+
+            if let alphaSport = alphaFilter.first {
+                let mergedSport = SportRadarModels.SportType(name: numericSport.name,
+                                                             numericId: numericSport.numericId,
+                                                             alphaId: alphaSport.alphaId,
+                                                             numberEvents: numericSport.numberEvents,
+                                                             numberOutrightEvents: numericSport.numberOutrightEvents,
+                                                             numberOutrightMarkets: numericSport.numberOutrightMarkets)
+                uniqueSportsArray.append(mergedSport)
+            }
+            else {
+                uniqueSportsArray.append(numericSport)
+            }
+        }
+
+        for alphaSport in alphaSportArray {
+            if !uniqueSportsArray.contains(where: { $0.name.lowercased() == alphaSport.name.lowercased() }) {
+                uniqueSportsArray.append(alphaSport)
+            }
+        }
+
+        // TODO: TASK André - Falar com o pedro sobre este merge
+        // Merge Football and Soccer - TEMP
+        if uniqueSportsArray.contains(where: { $0.name == "Soccer" }),
+           let soccerSportType = uniqueSportsArray.filter({ $0.name == "Soccer" }).first,
+           let footballIndex = uniqueSportsArray.firstIndex(where: { $0.name == "Football" }) {
+
+            let newSport = SportRadarModels.SportType(name: uniqueSportsArray[footballIndex].name,
+                                                      numericId: uniqueSportsArray[footballIndex].numericId,
+                                                      alphaId: soccerSportType.alphaId,
+                                                      numberEvents: uniqueSportsArray[footballIndex].numberEvents,
+                                                      numberOutrightEvents: uniqueSportsArray[footballIndex].numberOutrightEvents,
+                                                      numberOutrightMarkets: uniqueSportsArray[footballIndex].numberOutrightMarkets)
+
+            uniqueSportsArray[footballIndex] = newSport
+            uniqueSportsArray.removeAll(where: {$0 == soccerSportType})
+        }
+        return uniqueSportsArray
     }
 
 }

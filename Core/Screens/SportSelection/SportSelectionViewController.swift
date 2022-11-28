@@ -150,7 +150,18 @@ class SportSelectionViewController: UIViewController {
         self.allSportsPublisher?.cancel()
         self.allSportsPublisher = nil
 
-        self.allSportsPublisher = Env.serviceProvider.subscribeAvailableSportTypes()
+        self.allSportsPublisher = Env.serviceProvider.getAvailableSportTypes()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                print("Env.serviceProvider.liveSportTypes completed \(completion)")
+                self?.isLoading = false
+            }, receiveValue: { [weak self] (sportTypes: [SportType]) in
+                print("Env.serviceProvider otherSportTypes getAvailableSportTypes \(sportTypes)")
+                self?.configureWithSports(sportTypes)
+                self?.isLoading = false
+            })
+
+        Env.serviceProvider.subscribePreLiveSportTypes()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 print("Env.serviceProvider.liveSportTypes completed \(completion)")
@@ -158,14 +169,15 @@ class SportSelectionViewController: UIViewController {
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
                 switch subscribableContent {
                 case .connected:
-                    self?.configureWithSports([])
+                    ()
                 case .contentUpdate(let sportTypes):
-                    self?.configureWithSports(sportTypes)
-                    self?.isLoading = false
+                    print("Env.serviceProvider otherSportTypes subscribePreLiveSportTypes \(sportTypes)")
+                    ()
                 case .disconnected:
-                    self?.configureWithSports([])
+                    ()
                 }
             })
+            .store(in: &self.cancellables)
 
     }
 
@@ -195,7 +207,7 @@ class SportSelectionViewController: UIViewController {
 
     func configureWithSports(_ sportTypes: [ServiceProvider.SportType]) {
         self.sportsData = sportTypes.map({ sportType in
-            ServiceProviderModelMapper.liveSport(fromServiceProviderSportType: sportType)
+            ServiceProviderModelMapper.sport(fromServiceProviderSportType: sportType)
         })
         self.fullSportsData = self.sportsData
         self.collectionView.reloadData()

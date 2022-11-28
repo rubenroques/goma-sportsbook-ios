@@ -1065,12 +1065,11 @@ class MatchDetailsViewController: UIViewController {
     
     @objc private func openCompetitionsDetails() {
         if let match = self.viewModel.match {
+            // TODO: This sport is incomplete
+            let sport = Sport(id: match.sportType, name: "", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0)
             let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [match.competitionId],
-                                                                          sport: Sport(id: match.sportType,
-
-                                                                                       alphaId: nil,
-
-                                                                                       numericId: nil), store: AggregatorsRepository())
+                                                                          sport: sport,
+                                                                          store: AggregatorsRepository())
             let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
             self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
         }

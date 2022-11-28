@@ -11,7 +11,11 @@ public protocol UnsubscriptionController: AnyObject {
     func unsubscribe(subscription: Subscription)
 }
 
-public class Subscription: Hashable, Equatable, Identifiable {
+public protocol AnySubscription: Hashable, Equatable, Identifiable {
+
+}
+
+public class Subscription: AnySubscription {
     
     public var id: String
     public var unsubscriptionPayloadData: Data {
@@ -60,6 +64,32 @@ public class Subscription: Hashable, Equatable, Identifiable {
         return lhs.id == rhs.id && lhs.subscriptionData == rhs.subscriptionData
     }
         
+}
+
+public class SubscriptionGroup: AnySubscription {
+
+    public var id: String
+    private var subscriptions: [Subscription]
+
+    init(id: String) {
+        self.id = id
+        self.subscriptions = []
+    }
+
+    deinit {
+        print("ServerProvider.SubscriptionGroup.Debug dinit \(self.id)")
+        print("ServerProvider.SubscriptionGroup.Debug subscription init will be called too")
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(subscriptions)
+        hasher.combine(id)
+    }
+
+    public static func == (lhs: SubscriptionGroup, rhs: SubscriptionGroup) -> Bool {
+        return lhs.id == rhs.id && lhs.subscriptions == rhs.subscriptions
+    }
+
 }
 
 public class TopicIdentifier: Codable, Hashable, Equatable, Identifiable {

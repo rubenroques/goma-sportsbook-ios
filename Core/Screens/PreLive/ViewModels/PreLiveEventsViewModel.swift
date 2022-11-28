@@ -367,16 +367,16 @@ class PreLiveEventsViewModel: NSObject {
     func setMatchListType(_ matchListType: MatchListType) {
         switch matchListType {
         case .popular:
-            //self.unsubscribeUpcomingMatches()
+            // self.unsubscribeUpcomingMatches()
             self.fetchPopularMatches()
         case .upcoming:
-            //self.unsubscribePopularMatches()
+            // self.unsubscribePopularMatches()
             self.fetchTodayMatches()
         case .competitions:
             self.fetchCompetitionsFilters()
         }
         self.matchListTypePublisher.send(matchListType)
-        //self.updateContentList()
+        // self.updateContentList()
     }
 
     private func updateContentList() {
@@ -607,9 +607,9 @@ class PreLiveEventsViewModel: NSObject {
         self.isLoadingEvents.send(true)
 
 
-        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
+        let sport = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
 
-        self.popularMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType,
+        self.popularMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sport,
                                                                                    pageIndex: 0,
                                                                                    eventCount: 10,
                                                                                    sortType: .popular)

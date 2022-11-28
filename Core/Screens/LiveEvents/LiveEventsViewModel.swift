@@ -133,7 +133,7 @@ class LiveEventsViewModel: NSObject {
                     self?.subscriptions.insert(subscription)
                     self?.liveSports = []
                 case .contentUpdate(let sportTypes):
-                    let sports = sportTypes.map(ServiceProviderModelMapper.liveSport(fromServiceProviderSportType:))
+                    let sports = sportTypes.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
                     self?.liveSports = sports
                 case .disconnected:
                     self?.liveSports = []

@@ -31,6 +31,14 @@ extension SportRadarModels {
         
         case eventDetails(eventDetails: [SportRadarModels.Event])
     }
+
+    struct RestResponse<T: Codable>: Codable {
+        let data: T?
+        enum CodingKeys: String, CodingKey {
+            case data = "data"
+        }
+    }
+
 }
 
 
@@ -91,7 +99,7 @@ extension SportRadarModels {
                     case .sportTypeByDate:
                         // change key is optional
                         if contentContainer.contains(.change) {
-                            let sportsTypes: [SportType] = try contentContainer.decode([SportType].self, forKey: .change)
+                            let sportsTypes: [SportRadarModels.SportType] = try contentContainer.decode([SportRadarModels.SportType].self, forKey: .change)
                             content = .sportTypeByDate(sportsTypes: sportsTypes)
                         }
                         else {
