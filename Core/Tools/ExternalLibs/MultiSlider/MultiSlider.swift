@@ -6,7 +6,6 @@
 //  Copyright © 2016 Yonat Sharon. All rights reserved.
 //
 
-import AvailableHapticFeedback
 import SweeterSwift
 import UIKit
 
@@ -215,7 +214,6 @@ open class MultiSlider: UIControl {
     let margin: CGFloat = 32
     var isSettingValue = false
     lazy var defaultThumbImage: UIImage? = .circle()
-    var selectionFeedbackGenerator = AvailableHapticFeedback()
 
     // MARK: - Overrides
 

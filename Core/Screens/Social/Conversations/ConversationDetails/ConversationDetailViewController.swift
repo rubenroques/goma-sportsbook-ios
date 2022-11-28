@@ -7,7 +7,6 @@
 
 import UIKit
 import Combine
-import Nuke
 
 class ConversationDetailViewController: UIViewController {
 

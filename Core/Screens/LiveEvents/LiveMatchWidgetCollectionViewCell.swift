@@ -8,7 +8,6 @@
 import UIKit
 import Kingfisher
 import LinkPresentation
-import Nuke
 import Combine
 
 class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
