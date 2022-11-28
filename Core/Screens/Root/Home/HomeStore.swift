@@ -190,7 +190,7 @@ class HomeStore {
             self.locations[location.id] = location
         }
     }
-    
+
     func location(forId id: String) -> EveryMatrix.Location? {
         return self.locations[id]
     }
@@ -323,3 +323,4 @@ extension HomeStore: AggregatorStore {
         return matchesInfo
     }
 }
+

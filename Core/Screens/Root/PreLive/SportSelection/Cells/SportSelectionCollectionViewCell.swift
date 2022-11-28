@@ -85,21 +85,14 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
     func configureCell(viewModel: SportSelectionCollectionViewCellViewModel) {
 
         self.viewModel = viewModel
-
         self.sport = viewModel.sport
-
-        nameLabel.text = viewModel.sportName
+        self.nameLabel.text = viewModel.sportName
 
         if let sportIconName = viewModel.sportIconName, let sportIconImage = UIImage(named: sportIconName) {
             iconImageView.image = sportIconImage
         }
         else {
             iconImageView.image = UIImage(named: "sport_type_icon_default")
-        }
-
-        viewModel.updateLiveEvents = {
-            self.eventCountView.isHidden = false
-            self.eventCountLabel.text = self.viewModel?.numberOfLiveEvents
         }
         
         if viewModel.isLive, let numberOfLiveEvents = viewModel.numberOfLiveEvents {

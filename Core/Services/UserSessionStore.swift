@@ -467,11 +467,12 @@ extension UserSessionStore {
 
         self.loadLoggedUser()
 
-        //Trigger internal login
+        // Trigger internal login
         self.login(withUsername: user.username, password: userPassword)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
+                    print("UserSessionStore login failed, error: \(error)")
                     self?.logout()
                 case .finished:
                     ()

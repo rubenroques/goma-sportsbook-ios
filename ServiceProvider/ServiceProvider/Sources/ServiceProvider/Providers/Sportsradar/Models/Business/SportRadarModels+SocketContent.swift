@@ -2,11 +2,10 @@
 //  SportRadarModels.swift
 //  
 //
-//  Created by Ruben Roques on 14/10/2022.
+//  Created by Ruben Roques on 05/10/2022.
 //
 
 import Foundation
-
 
 enum SportRadarModels {
     
@@ -17,36 +16,124 @@ extension SportRadarModels {
     enum ContentType: String, Codable {
         case liveAdvancedList = "liveDataSummaryAdvancedListBySportType"
         case inplaySportList = "inplaySportListBySportType"
-        // case sportTypeList = ""
         case sportTypeByDate = "sportTypeByDate"
         case eventListBySportTypeDate = "eventListBySportTypeDate"
         case eventDetails = "event"
-
     }
     
     enum Content {
         
-        case liveAdvancedList(sportType: SportType, events: [SportRadarModels.Event])
-        case inplaySportList(sportsTypes: [SportType])
-        case sportTypeByDate(sportsTypes: [SportType])
-        case eventListBySportTypeDate(sportType: SportType, events: [SportRadarModels.Event])
-//        case popularEventListBySportTypeDate(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
-//        case upcomingEventListBySportTypeDate(sportType: SportRadarModels.SportType, events: [SportRadarModels.Event])
-        case eventDetails(eventDetails: [SportRadarModels.Event])
-
+        case liveAdvancedList(topicIdentifier: TopicIdentifier, events: [SportRadarModels.Event])
+        case eventListBySportTypeDate(topicIdentifier: TopicIdentifier, events: [SportRadarModels.Event])
         
-        var code: ContentType {
-            switch self {
-            case .liveAdvancedList: return .liveAdvancedList
-            case .inplaySportList: return .inplaySportList
-            case .sportTypeByDate: return .sportTypeByDate
-            case .eventListBySportTypeDate: return .eventListBySportTypeDate
-//            case .popularEventListBySportTypeDate: return .eventListBySportTypeDate
-//            case .upcomingEventListBySportTypeDate: return .eventListBySportTypeDate
-            case .eventDetails: return .eventDetails
+        case inplaySportList(sportsTypes: [SportType])
+        case sportTypeByDate(sportsTypes: [SportType]) // TODO: Task André - Deveria ser um modelo da Sportradar, SportRadarModels.SportType
+        
+        case eventDetails(eventDetails: [SportRadarModels.Event])
+    }
+}
+
+
+extension SportRadarModels {
+    
+    enum NotificationType: Codable {
+        
+        case listeningStarted(sessionTokenId: String)
+        case contentChanges(content: Content)
+        case unknown
+
+        enum CodingKeys: String, CodingKey {
+            case notificationType = "notificationType"
+            case data = "data"
+            
+            case content = "contentId"
+            case contentType = "type"
+            case contentId = "id"
+            
+            case changeType = "changeType"
+            case change = "change"
+        }
+        
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            
+            let typeString = try container.decode(String.self, forKey: .notificationType)
+            
+            switch typeString {
+            case "LISTENING_STARTED":
+                let sessionTokenId = try container.decode(String.self, forKey: .data)
+                self = .listeningStarted(sessionTokenId: sessionTokenId)
+            case "CONTENT_CHANGES":
+                do {
+                    var dataUnkeyedContainer = try container.nestedUnkeyedContainer(forKey: .data)
+                    
+                    let contentContainer = try dataUnkeyedContainer.nestedContainer(keyedBy: CodingKeys.self)
+                    
+                    let contentTypeContainer = try contentContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
+                    let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
+                    
+//                    let contentIdsArray = ((try? contentTypeContainer.decode(String.self, forKey: .contentId)) ?? "").components(separatedBy: "/")
+//
+                    
+                    let topicIdentifier = try contentContainer.decode(TopicIdentifier.self, forKey: .content)
+                    var content: Content
+                    
+                    switch contentType {
+                    case .liveAdvancedList:
+                        let events: [SportRadarModels.Event] = try contentContainer.decode([SportRadarModels.Event].self, forKey: .change)
+                        content = .liveAdvancedList(topicIdentifier: topicIdentifier, events: events)
+                        
+                    case .inplaySportList:
+                        let sportsTypeDetails: [SportRadarModels.SportTypeDetails] = try contentContainer.decode([SportRadarModels.SportTypeDetails].self, forKey: .change)
+                        let sportsTypes = sportsTypeDetails.map(\.sportType)
+                        content = .inplaySportList(sportsTypes: sportsTypes)
+                        
+                    case .sportTypeByDate:
+                        // change key is optional
+                        if contentContainer.contains(.change) {
+                            let sportsTypes: [SportType] = try contentContainer.decode([SportType].self, forKey: .change)
+                            content = .sportTypeByDate(sportsTypes: sportsTypes)
+                        }
+                        else {
+                            let sportsTypes: [SportType] = []
+                            content = .sportTypeByDate(sportsTypes: sportsTypes)
+                        }
+
+                    case .eventListBySportTypeDate:
+                        // change key is optional
+                        if contentContainer.contains(.change) {
+                            let events: [SportRadarModels.Event] = try contentContainer.decode([SportRadarModels.Event].self, forKey: .change)
+                            content = .eventListBySportTypeDate(topicIdentifier: topicIdentifier, events: events)
+                        }
+                        else {
+                            content = .eventListBySportTypeDate(topicIdentifier: topicIdentifier, events: [])
+                        }
+                        
+                    case .eventDetails:
+                        // change key is optional
+                        if contentContainer.contains(.change) {
+                            let event: SportRadarModels.Event = try contentContainer.decode(SportRadarModels.Event.self, forKey: .change)
+
+                            content = .eventDetails(eventDetails: [event])
+                        }
+                        else {
+
+                            content = .eventDetails(eventDetails: [])
+                        }
+                    }
+                    self = .contentChanges(content: content)
+                }
+                catch {
+                    print("Decoding error \(error)")
+                    self = .unknown
+                }
+            default:
+                self = .unknown
             }
         }
         
+        func encode(to encoder: Encoder) throws {
+            
+        }
     }
-    
 }

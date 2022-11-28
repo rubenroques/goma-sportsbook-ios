@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ServiceProvider
 import Combine
 
 class SearchViewController: UIViewController {
@@ -23,12 +24,13 @@ class SearchViewController: UIViewController {
     @IBOutlet private weak var noResultsLabel: UILabel!
     @IBOutlet private weak var activityIndicatorBaseView: UIView!
     @IBOutlet private weak var activityIndicatorView: UIActivityIndicatorView!
-    
+
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
 
     // Variables
     var viewModel: SearchViewModel
     var cancellables = Set<AnyCancellable>()
+    var subscriptions = Set<ServiceProvider.Subscription>()
 
     var didSelectMatchAction: ((Match) -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
@@ -91,17 +93,16 @@ class SearchViewController: UIViewController {
         self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
             self?.didTapChatView()
         }
-        
-        self.searchBarView.becomeFirstResponder()
 
+        self.searchBarView.becomeFirstResponder()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         self.floatingShortcutsView.resetAnimations()
     }
-    
+
     func setupWithTheme() {
 
         self.view.backgroundColor = UIColor.App.backgroundPrimary
@@ -243,7 +244,7 @@ class SearchViewController: UIViewController {
             self.present(matchDetailsViewController, animated: true, completion: nil)
 
         }
-        
+
 //        self.didTapFavoriteMatchAction = { match in
 //            if !UserSessionStore.isUserLogged() {
 //                self.presentLoginViewController()
@@ -330,7 +331,7 @@ class SearchViewController: UIViewController {
     @objc func didTapBetslipView() {
         self.openBetslipModal()
     }
-    
+
     func openBetslipModal() {
         let betslipViewController = BetslipViewController()
         betslipViewController.willDismissAction = { [weak self] in
@@ -339,11 +340,11 @@ class SearchViewController: UIViewController {
 
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
-    
+
     @objc func didTapChatView() {
         self.openChatModal()
     }
-    
+
     func openChatModal() {
         if UserSessionStore.isUserLogged() {
             let socialViewController = SocialViewController()
@@ -354,7 +355,7 @@ class SearchViewController: UIViewController {
             self.present(loginViewController, animated: true, completion: nil)
         }
     }
-    
+
 }
 
 extension SearchViewController: UISearchBarDelegate {
@@ -439,7 +440,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                     cell.tappedMatchLineAction = {
                         self.openMatchDetailsScreen(match: match)
                     }
-                    
+
                     cell.didTapFavoriteMatchAction = { [weak self] match in
                         self?.didTapFavoriteMatchAction?(match)
                     }
@@ -448,7 +449,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                     cell.didLongPressOdd = { [weak self] bettingTicket in
                         self?.openQuickbet(bettingTicket)
                     }
-                    
+
                     return cell
                 }
 
@@ -607,11 +608,11 @@ extension SearchViewController {
         floatingShortcutsView.translatesAutoresizingMaskIntoConstraints = false
         return floatingShortcutsView
     }
-    
+
     private func setupSubviews() {
 
         self.view.addSubview(self.floatingShortcutsView)
-        
+
         self.initConstraints()
 
         self.containerView.layoutSubviews()
@@ -626,3 +627,5 @@ extension SearchViewController {
     }
 
 }
+
+

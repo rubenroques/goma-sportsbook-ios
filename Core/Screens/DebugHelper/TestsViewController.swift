@@ -43,46 +43,10 @@ class TestsViewController: UIViewController {
 
     @IBAction private func didTapAPITest() {
 
-        Env.gomaNetworkClient.requestTest(deviceId: Env.deviceId)
-            .sink(receiveCompletion: {
-                print("Received completion: \($0).")
-            },
-            receiveValue: { user in
-                print("Received Content - user: \(String(describing: user)).")
-            })
-            .store(in: &cancellables)
     }
 
     @IBAction private func didTapUserSettings() {
 
-//        Env.gomaNetworkClient.requestSettings(deviceId: Env.deviceId)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .failure:
-//                    print("Error retrieving user settings!")
-//
-//                case .finished:
-//                    print("User settings retrieved!")
-//                }
-//
-//                print("Received completion: \(completion).")
-//
-//            },
-//            receiveValue: { data in
-//                print("Received Content - data: \(data!).")
-//                var settingsArray = [GomaClientSettings]()
-//                for value in data! {
-//                    let setting = GomaClientSettings(id: value.id, category: value.category, name: value.name, type: value.type)
-//                    settingsArray.append(setting)
-//                }
-//                let settingsData = try? JSONEncoder().encode(settingsArray)
-//
-//                UserDefaults.standard.set(settingsData, forKey: "user_settings")
-//
-//                let settingsStored = Env.getUserSettings()
-//                print("User settings: \(String(describing: settingsStored))")
-//            })
-//            .store(in: &cancellables)
     }
 
     @IBAction private func testEveryMatrixAPI() {

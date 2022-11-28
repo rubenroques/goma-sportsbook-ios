@@ -9,20 +9,19 @@ import Foundation
 import Starscream
 import Combine
 
-protocol SportRadarConnectorSubscriber {
-
-    func liveAdvancedListUpdated(forSportType sportType: SportType, withEvents: [EventsGroup])
+protocol SportRadarConnectorSubscriber: AnyObject {
+    func liveAdvancedListUpdated(forTopicIdentifier identifier: TopicIdentifier, withEvents: [EventsGroup])
     func inplaySportListUpdated(withSportTypes: [SportType])
     func sportTypeByDate(withSportTypes: [SportType])
-    func eventListBySportTypeDate(forSportType sportType: SportType, withEvents: [EventsGroup])
+    func eventListBySportTypeDate(forTopicIdentifier identifier: TopicIdentifier, withEvents: [EventsGroup])
     func eventDetails(events: [EventsGroup])
 }
 
 class SportRadarSocketConnector: NSObject, Connector {
     
-    var token: SessionAccessToken?
+    var token: SportRadarSessionAccessToken?
 
-    var subscriberForType: [SportRadarModels.ContentType: SportRadarConnectorSubscriber] = [:]
+    weak var messageSubscriber: SportRadarConnectorSubscriber?
     
     var connectionStatePublisher: AnyPublisher<ConnectorState, Error> {
         connectionStateSubject.eraseToAnyPublisher()
@@ -37,8 +36,6 @@ class SportRadarSocketConnector: NSObject, Connector {
         self.connectionStateSubject = CurrentValueSubject<ConnectorState, Error>.init(.disconnected)
         self.isConnected = false
         
-        // let pinner = FoundationSecurity(allowSelfSigned: true)
-        // let compression = WSCompression()
         self.socket = WebSocket.init(request: Self.socketRequest(), useCustomEngine: false)
         super.init()
     }
@@ -49,8 +46,7 @@ class SportRadarSocketConnector: NSObject, Connector {
     }
     
     private static func socketRequest() -> URLRequest {
-        //let wssURLString = "wss://velnt-spor-int.optimahq.com/notification/listen/websocket"
-        let wssURLString = "wss://velnt-spor-uat.optimahq.com/notification/listen/websocket"
+        let wssURLString = SportRadarConstants.socketURL
         return URLRequest(url: URL(string: wssURLString)!)
     }
     
@@ -58,11 +54,11 @@ class SportRadarSocketConnector: NSObject, Connector {
         
         // TODO: ipAddress is empty, and language is hardcoded
         let body = """
-                   {"subscriberId":null,"versionList":[],"clientContext":{"language":"UK","ipAddress":""}}
+                   {"subscriberId":null,"versionList":[],"clientContext":{"language":"\(SportRadarConstants.socketLanguageCode)","ipAddress":""}}
                    """
         
         self.socket.write(string: body) {
-            print("sendListeningStarted - sent")
+            print("ServiceProvider - SportRadarSocketConnector: sendListeningStarted sent")
         }
         
     }
@@ -80,15 +76,7 @@ class SportRadarSocketConnector: NSObject, Connector {
     func disconnect() {
         self.socket.forceDisconnect()
     }
-    
-    func subscribe(_ subscriber: SportRadarConnectorSubscriber, forContentType type: SportRadarModels.ContentType) {
-        self.subscriberForType[type] = subscriber
-    }
 
-    func unsubscribe(forContentType type: SportRadarModels.ContentType) {
-        self.subscriberForType[type] = nil
-    }
-    
 }
 
 
@@ -109,21 +97,18 @@ extension SportRadarSocketConnector: WebSocketDelegate {
             self.isConnected = true
             self.sendListeningStarted(toSocket: client)
             
-            print("SportRadarSocketConnector websocket is connected: \(headers)")
+            print("ServiceProvider - SportRadarSocketConnector websocket is connected: \(headers)")
         case .disconnected(let reason, let code):
             self.isConnected = false
-            print("SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
+            print("ServiceProvider - SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
-            print("SportRadarSocketConnector websocket received text: \(string)")
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
-                self.handleResponse(sportRadarSocketResponse, data: data)
+                self.handleContentMessage(sportRadarSocketResponse, messageData: data)
             }
         case .binary(let data):
-            print("SportRadarSocketConnector websocket Received data: \(data.count)")
-            
             if let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
-                self.handleResponse(sportRadarSocketResponse, data: data)
+                self.handleContentMessage(sportRadarSocketResponse, messageData: data)
             }
         case .ping(_):
             break
@@ -137,17 +122,12 @@ extension SportRadarSocketConnector: WebSocketDelegate {
             self.isConnected = false
         case .error(let error):
             self.isConnected = false
-            print("Socket Error \(error.debugDescription)")
-            // TEMP SOCKET SHUTDOWN ERROR
-//            if error.debugDescription.contains("Code=57") {
-//                print("Socket Error DISCONNECTED")
-//                self.refreshConnection()
-//            }
+            print("ServiceProvider - SportRadarSocketConnector websocket Error \(error.debugDescription)")
             self.refreshConnection()
         }
     }
     
-    func handleResponse(_ messageType: SportRadarModels.NotificationType, data: Data) {
+    func handleContentMessage(_ messageType: SportRadarModels.NotificationType, messageData: Data) {
         
         switch messageType {
         case .listeningStarted(let sessionTokenId):
@@ -156,34 +136,30 @@ extension SportRadarSocketConnector: WebSocketDelegate {
             self.connectionStateSubject.send(.connected)
         case .contentChanges(let content):
             switch content {
-            case .liveAdvancedList(let sportType, let events):
-                if let subscriber = self.subscriberForType[content.code]
-                {
+            case .liveAdvancedList(let topicIdentifier, let events):
+                if let subscriber = self.messageSubscriber {
                     let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-                    subscriber.liveAdvancedListUpdated(forSportType: sportType, withEvents: [eventsGroup])
+                    subscriber.liveAdvancedListUpdated(forTopicIdentifier: topicIdentifier, withEvents: [eventsGroup])
                 }
             case .inplaySportList(let sportsTypes):
-                if let subscriber = self.subscriberForType[content.code] {
+                if let subscriber = self.messageSubscriber {
                     subscriber.inplaySportListUpdated(withSportTypes: sportsTypes)
                 }
             case .sportTypeByDate(let sportsTypes):
-                if let subscriber = self.subscriberForType[content.code] {
+                if let subscriber = self.messageSubscriber {
                     subscriber.sportTypeByDate(withSportTypes: sportsTypes)
                 }
-            case .eventListBySportTypeDate(let sportType, let events):
-                if let subscriber = self.subscriberForType[content.code]
-                {
+            case .eventListBySportTypeDate(let topicIdentifier, let events):
+                if let subscriber = self.messageSubscriber {
                     let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-                    subscriber.eventListBySportTypeDate(forSportType: sportType, withEvents: [eventsGroup])
+                    subscriber.eventListBySportTypeDate(forTopicIdentifier: topicIdentifier, withEvents: [eventsGroup])
                 }
             case .eventDetails(let events):
-                if let subscriber = self.subscriberForType[content.code] {
+                if let subscriber = self.messageSubscriber {
                     let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-
                     subscriber.eventDetails(events: [eventsGroup])
                 }
             }
-            
         case .unknown:
             print("Uknown Response")
         }

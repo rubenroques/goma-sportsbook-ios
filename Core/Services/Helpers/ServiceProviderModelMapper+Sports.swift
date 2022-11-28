@@ -19,8 +19,8 @@ extension ServiceProviderModelMapper {
                      showEventCategory: false)
     }
 
+    // TODO: TASK André - sport vs liveSport ? são iguais
     static func liveSport(fromServiceProviderSportType sportType: ServiceProvider.SportType) -> Sport {
-
         let sportTypeFilter = SportTypeInfo.allCases.filter({
             $0.name.lowercased() == sportType.name.lowercased()
         }).first
@@ -34,8 +34,13 @@ extension ServiceProviderModelMapper {
     }
     
     static func serviceProviderSportType(fromSport sport: Sport) -> ServiceProvider.SportType {
-
-        return ServiceProvider.SportType(name: sport.name, numericId: sport.numericId, alphaId: sport.alphaId, iconId: sport.id, numberEvents: nil, numberOutrightEvents: nil, numberOutrightMarkets: nil)
+        return ServiceProvider.SportType(name: sport.name,
+                                         numericId: sport.numericId,
+                                         alphaId: sport.alphaId,
+                                         iconId: sport.id,
+                                         numberEvents: nil,
+                                         numberOutrightEvents: nil,
+                                         numberOutrightMarkets: nil)
     }
     
     static func sport(fromServiceProviderSportTypeDetails sportTypeDetails: ServiceProvider.SportTypeDetails) -> Sport {
@@ -47,4 +52,10 @@ extension ServiceProviderModelMapper {
                      liveEventsCount: sportTypeDetails.eventsCount)
     }
     
+}
+
+extension Sport {
+    init(serviceProviderSportType sportType: ServiceProvider.SportType) {
+        self = ServiceProviderModelMapper.sport(fromServiceProviderSportType: sportType)
+    }
 }

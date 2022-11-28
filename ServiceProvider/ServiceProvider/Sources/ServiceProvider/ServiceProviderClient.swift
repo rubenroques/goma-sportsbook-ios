@@ -2,28 +2,26 @@ import Combine
 import Foundation
 
 public class ServiceProviderClient {
-    
-    public private(set) var text = "Hello, World!"
-    
+
     public enum ProviderType {
         case everymatrix
         case sportradar
     }
-    
+
     public var privilegedAccessManagerConnectionStatePublisher: AnyPublisher<ConnectorState, Error> = Just(ConnectorState.disconnected).setFailureType(to: Error.self).eraseToAnyPublisher()
     public var eventsConnectionStatePublisher: AnyPublisher<ConnectorState, Error> = Just(ConnectorState.disconnected).setFailureType(to: Error.self).eraseToAnyPublisher()
     public var bettingConnectionStatePublisher: AnyPublisher<ConnectorState, Error> = Just(ConnectorState.disconnected).setFailureType(to: Error.self).eraseToAnyPublisher()
-    
+
     private var providerType: ProviderType = .everymatrix
-    
+
     private var privilegedAccessManager: (any PrivilegedAccessManager)?
     private var bettingProvider: (any BettingProvider)?
     private var eventsProvider: (any EventsProvider)?
-    
+
     public init(providerType: ProviderType) {
         self.providerType = providerType
     }
-    
+
     public func connect() {
         switch self.providerType {
         case .everymatrix:
@@ -33,85 +31,99 @@ public class ServiceProviderClient {
             // self.bettingProvider = everymatrixProvider
             // self.eventsProvider = everymatrixProvider
         case .sportradar:
-            let sportRadarConnector = SportRadarSocketConnector()
-            self.eventsConnectionStatePublisher = sportRadarConnector.connectionStatePublisher
-            sportRadarConnector.connect()
-            
-            self.privilegedAccessManager = SportRadarPrivilegedAccessManager(connector: OmegaConnector())
-            self.eventsProvider = SportRadarEventsProvider(connector: sportRadarConnector)
-            self.bettingProvider = nil // sportsradarProvider
+
+            // Session Coordinator
+            let sessionCoordinator = SportRadarSessionCoordinator()
+
+            self.privilegedAccessManager = SportRadarPrivilegedAccessManager(sessionCoordinator: sessionCoordinator, connector: OmegaConnector())
+            self.eventsProvider = SportRadarEventsProvider(sessionCoordinator: sessionCoordinator, connector: SportRadarSocketConnector())
+            self.bettingProvider = SportRadarBettingProvider(sessionCoordinator: sessionCoordinator)
         }
     }
-    
+
     public func forceReconnect() {
-        
+
     }
-    
+
     public func disconnect() {
-        
+
     }
-    
+
 }
 
 extension ServiceProviderClient {
+
     //
     // Sports
     //
-    public func allSportTypes(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>? {
-        return self.eventsProvider?.allSportTypes(initialDate: initialDate, endDate: endDate) ?? nil
+    public func subscribeAvailableSportTypes(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeAvailableSportTypes(initialDate: initialDate, endDate: endDate)
     }
 
-    public func unsubscribeAllSportTypes() {
-        self.eventsProvider?.unsubscribeAllSportTypes()
+    public func subscribeLiveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeLiveSportTypes()
     }
-    
-    public func liveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>? {
-        return self.eventsProvider?.liveSportTypes() ?? nil
-    }
-    
-    public func popularSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>? {
-        // TODO:
-        return Fail(error: ServiceProviderError.request).eraseToAnyPublisher()
-    }
-    
+
     //
     // Events
     //
-    public func subscribeLiveMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
-        return self.eventsProvider?.subscribeLiveMatches(forSportType: sportType) ?? nil
+    public func subscribeLiveMatches(forSportType sportType: SportType, pageIndex: Int) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeLiveMatches(forSportType: sportType, pageIndex: pageIndex)
     }
 
-    public func subscribePreLiveMatches(forSportType sportType: SportType, initialDate: Date? = nil, endDate: Date? = nil, sortType: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
-        return self.eventsProvider?.subscribePreLiveMatches(forSportType: sportType, initialDate: initialDate, endDate: endDate, sortType: sortType) ?? nil
+    public func subscribePreLiveMatches(forSportType sportType: SportType,
+                                        pageIndex: Int,
+                                        initialDate: Date? = nil,
+                                        endDate: Date? = nil,
+                                        eventCount: Int,
+                                        sortType: EventListSort) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribePreLiveMatches(forSportType: sportType,
+                                                      pageIndex: pageIndex,
+                                                      initialDate: initialDate,
+                                                      endDate: endDate,
+                                                      eventCount: eventCount,
+                                                      sortType: sortType)
     }
 
-    public func unsubscribePreLiveMatches() {
-        self.eventsProvider?.unsubscribePreLiveMatches()
-    }
-
-    public func subscribePopularOutrightCompetitionsMatches(forSportType sportType: SportTypeInfo) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
-        return nil
-    }
-
-    public func subscribeCompetitions(forSportType sportType: SportTypeInfo) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
-        return nil
-    }
-
-    public func subscribeCompetitionMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
-        return nil
-    }
-
-    public func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>? {
-        return self.eventsProvider?.subscribeMatchDetails(matchId: matchId)
+    public func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeMatchDetails(matchId: matchId)
     }
 
 }
 
-/* REST API Events
- */
 extension ServiceProviderClient {
-    public func getMarketFilters(event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError>? {
-        return self.eventsProvider?.getMarketsFilter(event: event)
+    public func getMarketFilters(event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.getMarketsFilter(event: event)
     }
 
     public func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError> {
@@ -134,42 +146,45 @@ extension ServiceProviderClient {
         return eventsProvider.getFieldWidget(eventId: eventId, isDarkTheme: isDarkTheme)
     }
 
-    public func getSportsList() -> AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError>? {
-        return self.eventsProvider?.getSportsList()
-    }
+//    public func getSportsList() -> AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError> {
+//        guard
+//            let eventsProvider = self.eventsProvider
+//        else {
+//            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+//        }
+//        return eventsProvider.getSportsList()
+//    }
 
-    public func getAllSportsList(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<[SportType], ServiceProviderError> {
+    public func getAvailableSportTypes(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<[SportType], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-
-        return eventsProvider.getAllSportsList(initialDate: initialDate, endDate: endDate)
+        return eventsProvider.getAvailableSportTypes(initialDate: initialDate, endDate: endDate)
     }
 }
 
 
 extension ServiceProviderClient {
-    
+
     //
     // PrivilegedAccessManager
     //
     public func loginUser(withUsername username: String, andPassword password: String) -> AnyPublisher<UserProfile, ServiceProviderError> {
-        
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: UserProfile.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
-        }        
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
         return privilegedAccessManager.login(username: username, password: password)
     }
-    
+
     public func getProfile() -> AnyPublisher<UserProfile, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: UserProfile.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.getUserProfile()
     }
@@ -180,42 +195,41 @@ extension ServiceProviderClient {
         else {
             return false
         }
-
         return privilegedAccessManager.hasSecurityQuestions
     }
-    
+
     public func updateUserProfile(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: Bool.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.updateUserProfile(form: form)
     }
-    
+
     public func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: Bool.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.simpleSignUp(form: form)
     }
-        
+
     public func checkEmailRegistered(_ email: String) -> AnyPublisher<Bool, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: Bool.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.checkEmailRegistered(email)
     }
-  
+
     public func signupConfirmation(_ email: String, confirmationCode: String) -> AnyPublisher<Bool, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: Bool.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.signupConfirmation(email, confirmationCode: confirmationCode)
     }
@@ -224,7 +238,7 @@ extension ServiceProviderClient {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: Bool.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.forgotPassword(email: email, secretQuestion: secretQuestion, secretAnswer: secrestAnswer)
     }
@@ -233,49 +247,80 @@ extension ServiceProviderClient {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: Bool.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.updatePassword(oldPassword: oldPassword, newPassword: newPassword)
     }
-    
+
     public func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: UserWallet.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.getUserBalance()
     }
-    
+
     public func signUpCompletion(form: ServiceProvider.UpdateUserProfileForm)  -> AnyPublisher<Bool, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: Bool.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.signUpCompletion(form: form)
     }
 }
 
 extension ServiceProviderClient {
-    
+
     public func getCountries() -> AnyPublisher<[Country], ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: [Country].self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        
+
         return privilegedAccessManager.getCountries()
     }
-    
+
     public func getCurrentCountry() -> AnyPublisher<Country?, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            return Fail(outputType: Country?.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.getCurrentCountry()
     }
-    
+
 }
+
+extension ServiceProviderClient {
+
+    //
+    // Betting
+    //
+    public func getBettingHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(outputType: BettingHistory.self,
+                        failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return bettingProvider.getBetHistory(pageIndex: pageIndex)
+    }
+
+    public func calculateBetslipState(_ betslip: BetSlip)  -> AnyPublisher<BetslipState, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(outputType: BetslipState.self,
+                        failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return bettingProvider.calculateBetslipState(betslip)
+
+    }
+
+}
+

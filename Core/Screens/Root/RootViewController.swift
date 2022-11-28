@@ -14,11 +14,11 @@ class RootViewController: UIViewController {
 
     @IBOutlet private var topSafeAreaView: UIView!
     @IBOutlet private var topBarView: UIView!
-    
+
     @IBOutlet private var containerView: UIView!
-    
+
     @IBOutlet private var leadingSportsBookContentConstriant: NSLayoutConstraint!
-    
+
     @IBOutlet private var sportsBookContentView: UIView!
     @IBOutlet private var casinoContentView: UIView!
 
@@ -27,11 +27,11 @@ class RootViewController: UIViewController {
     @IBOutlet private var liveBaseView: UIView!
     @IBOutlet private var tipsBaseView: UIView!
     @IBOutlet private var casinoBaseView: UIView!
-    
+
     @IBOutlet private var tabBarView: UIView!
     @IBOutlet private var bottomSafeAreaView: UIView!
     @IBOutlet private var casinoBottomView: UIView!
-    
+
     @IBOutlet private var sportsButtonBaseView: UIView!
     @IBOutlet private var sportsIconImageView: UIImageView!
     @IBOutlet private var sportsTitleLabel: UILabel!
@@ -47,15 +47,15 @@ class RootViewController: UIViewController {
     @IBOutlet private var tipsButtonBaseView: UIView!
     @IBOutlet private var tipsIconImageView: UIImageView!
     @IBOutlet private var tipsTitleLabel: UILabel!
-    
+
     @IBOutlet private var casinoButtonBaseView: UIView!
     @IBOutlet private var casinoIconImageView: UIImageView!
     @IBOutlet private var casinoTitleLabel: UILabel!
-    
+
     @IBOutlet private var sportsbookButtonBaseView: UIView!
     @IBOutlet private var sportsbookIconImageView: UIImageView!
     @IBOutlet private var sportsbookTitleLabel: UILabel!
-    
+
     @IBOutlet private var profileBaseView: UIView!
     @IBOutlet private var profilePictureBaseView: UIView!
     @IBOutlet private var profilePictureImageView: UIImageView!
@@ -64,7 +64,7 @@ class RootViewController: UIViewController {
     @IBOutlet private var logoImageView: UIImageView!
     @IBOutlet private var logoImageWidthConstraint: NSLayoutConstraint!
     @IBOutlet private var logoImageHeightConstraint: NSLayoutConstraint!
-    
+
     @IBOutlet private var loginBaseView: UIView!
     @IBOutlet private var loginButton: UIButton!
 
@@ -76,10 +76,10 @@ class RootViewController: UIViewController {
 
     @IBOutlet private var notificationCounterView: UIView!
     @IBOutlet private var notificationCounterLabel: UILabel!
-    
+
     @IBOutlet private var localAuthenticationBaseView: UIView!
     @IBOutlet private var unlockAppButton: UIButton!
-    
+
     //
     //
     private var pictureInPictureView: PictureInPictureView?
@@ -89,7 +89,7 @@ class RootViewController: UIViewController {
         overlayWindow.windowLevel = .alert
         return overlayWindow
     }()
-    
+
     //
     //
     var isLocalAuthenticationCoveringView: Bool = true {
@@ -102,13 +102,13 @@ class RootViewController: UIViewController {
             }
         }
     }
-    
+
     //
     let activeButtonAlpha = 1.0
     let idleButtonAlpha = 0.52
-    
+
     var userId: String {
-    
+
         let status = Env.everyMatrixClient.userSessionStatusPublisher.value
         if status == .logged {
             if let session = UserSessionStore.loggedUserSession() {
@@ -122,7 +122,7 @@ class RootViewController: UIViewController {
                 return ""
         }
     }
-    
+
     //
     // Child view controllers
     lazy var homeViewController = HomeViewController()
@@ -169,7 +169,7 @@ class RootViewController: UIViewController {
             case .casino:
                 self.selectCasinoTabBarItem()
             }
-        
+
         }
     }
 
@@ -178,7 +178,7 @@ class RootViewController: UIViewController {
         case casino
     }
     var appMode: AppMode = .sportsbook
-    
+
     enum ScreenState {
         case logged(user: UserSession)
         case anonymous
@@ -234,7 +234,7 @@ class RootViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         AnalyticsClient.sendEvent(event: .appStart)
 
         self.view.sendSubviewToBack(topBarView)
@@ -257,7 +257,7 @@ class RootViewController: UIViewController {
                                                selector: #selector(self.windowDidBecomeKeyNotification(_:)),
                                                name: UIWindow.didBecomeKeyNotification,
                                                object: nil)
-        
+
         //
         // UIApplication States
         //
@@ -265,12 +265,12 @@ class RootViewController: UIViewController {
                                                selector: #selector(self.appWillEnterForeground),
                                                name: UIApplication.willEnterForegroundNotification,
                                                object: nil)
-        
+
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(self.appDidEnterBackground),
                                                name: UIApplication.didEnterBackgroundNotification,
                                                object: nil)
-        
+
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(self.appWillResignActive),
                                                name: UIApplication.willResignActiveNotification,
@@ -280,7 +280,7 @@ class RootViewController: UIViewController {
                                                selector: #selector(self.appDidBecomeActive),
                                                name: UIApplication.didBecomeActiveNotification,
                                                object: nil)
-        
+
 //        NotificationCenter.default.addObserver(
 //            forName: UIWindow.didResignKeyNotification,
 //            object: self.overlayWindow,
@@ -305,7 +305,7 @@ class RootViewController: UIViewController {
         self.setupWithTheme()
 
         Env.userSessionStore.userSessionPublisher
-            .receive(on: DispatchQueue.main) 
+            .receive(on: DispatchQueue.main)
             .sink { userSession in
                 if let userSession = userSession {
                     self.screenState = .logged(user: userSession)
@@ -366,15 +366,15 @@ class RootViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
-        
+
         //Add blur effect
         self.localAuthenticationBaseView.backgroundColor = .clear
-        
+
         let blurEffect = UIBlurEffect(style: .regular)
-        
+
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         //if you have more UIViews, use an insertSubview API to place it where needed
         self.localAuthenticationBaseView.insertSubview(blurEffectView, at: 0)
 
@@ -384,10 +384,10 @@ class RootViewController: UIViewController {
             blurEffectView.topAnchor.constraint(equalTo: self.localAuthenticationBaseView.topAnchor),
             blurEffectView.bottomAnchor.constraint(equalTo: self.localAuthenticationBaseView.bottomAnchor),
         ])
-        
+
         self.localAuthenticationBaseView.alpha = 0.0
         self.showLocalAuthenticationCoveringViewIfNeeded()
-        
+
         self.authenticateUser()
 
     }
@@ -436,26 +436,26 @@ class RootViewController: UIViewController {
 //                }
 //            }
 //            .store(in: &cancellables)
-        
+
         Env.userSessionStore.refreshUserWallet()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-    
+
         executeDelayed(0.1) {
             self.loadChildViewControllerIfNeeded(tab: .preLive)
         }
-        
+
         executeDelayed(0.2) {
             self.loadChildViewControllerIfNeeded(tab: .live)
         }
-        
+
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        
+
         self.setupWithTheme()
     }
 
@@ -466,7 +466,7 @@ class RootViewController: UIViewController {
         self.profilePictureImageView.layer.cornerRadius = profilePictureImageView.frame.size.width/2
         self.profilePictureImageView.layer.borderWidth = 1
         self.profilePictureImageView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
-        
+
         self.profilePictureImageView.layer.masksToBounds = true
 
         self.accountValueView.layer.cornerRadius = CornerRadius.view
@@ -516,15 +516,15 @@ class RootViewController: UIViewController {
         self.casinoTitleLabel.text = localized("casino")
         self.sportsbookTitleLabel.text = localized("sportsbook")
         self.tipsTitleLabel.text = localized("tips")
-        
+
         self.casinoBottomView.backgroundColor = UIColor.App.backgroundPrimary
-        
+
         self.casinoButtonBaseView.backgroundColor = UIColor.App.backgroundCards
         self.casinoButtonBaseView.layer.maskedCorners = [ .layerMinXMaxYCorner, .layerMinXMinYCorner]
-        
+
         self.sportsbookButtonBaseView.backgroundColor = UIColor.App.backgroundCards
         self.sportsbookButtonBaseView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
-        
+
         let homeTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapHomeTabItem))
         homeButtonBaseView.addGestureRecognizer(homeTapGesture)
 
@@ -536,10 +536,10 @@ class RootViewController: UIViewController {
 
         let tipsTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapTipsTabItem))
         tipsButtonBaseView.addGestureRecognizer(tipsTapGesture)
-        
+
         let casinoTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapCasinoTabItem))
         casinoButtonBaseView.addGestureRecognizer(casinoTapGesture)
-        
+
         let sportsbookTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSportsbookIcon))
         sportsbookButtonBaseView.addGestureRecognizer(sportsbookTapGesture)
 
@@ -570,14 +570,14 @@ class RootViewController: UIViewController {
         self.liveBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.tipsBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.casinoBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        
+
         self.homeTitleLabel.textColor = UIColor.App.highlightPrimary
         self.liveTitleLabel.textColor = UIColor.App.highlightPrimary
         self.sportsTitleLabel.textColor = UIColor.App.highlightPrimary
         self.tipsTitleLabel.textColor = UIColor.App.highlightPrimary
         self.casinoTitleLabel.textColor = UIColor.App.textSecondary
         self.sportsbookTitleLabel.textColor = UIColor.App.textSecondary
-        
+
         self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
         self.topBarView.backgroundColor = UIColor.App.backgroundPrimary
         self.sportsBookContentView.backgroundColor = UIColor.App.backgroundPrimary
@@ -614,10 +614,10 @@ class RootViewController: UIViewController {
 
         self.casinoButtonBaseView.alpha = self.activeButtonAlpha
         self.casinoIconImageView.setImageColor(color: UIColor.App.iconSecondary)
-        
+
         self.sportsbookButtonBaseView.alpha = self.activeButtonAlpha
         self.sportsbookIconImageView.setImageColor(color: UIColor.App.iconSecondary)
-        
+
         self.redrawButtonButtons()
 
         self.notificationCounterLabel.textColor = UIColor.App.buttonTextPrimary
@@ -629,14 +629,14 @@ class RootViewController: UIViewController {
             self.loginBaseView.isHidden = true
             self.profileBaseView.isHidden = false
             self.accountValueBaseView.isHidden = false
-            
+
             Env.userSessionStore.refreshUserWallet()
-            
+
         case .anonymous:
             self.loginBaseView.isHidden = false
             self.profileBaseView.isHidden = true
             self.accountValueBaseView.isHidden = true
-            
+
         }
     }
 
@@ -725,7 +725,7 @@ class RootViewController: UIViewController {
     @objc func didTapLogoImageView() {
 
     }
-    
+
 }
 
 extension RootViewController {
@@ -787,7 +787,7 @@ extension RootViewController {
                 self?.openUserProfile(userBasicInfo: userBasicInfo)
             }
             homeViewControllerLoaded = true
-            
+
         }
 
         if case .preLive = tab, !preLiveViewControllerLoaded {
@@ -836,10 +836,10 @@ extension RootViewController {
 
             tipsRootViewControllerLoaded = true
         }
-        
+
         if case .casino = tab, !casinoViewControllerLoaded {
             self.searchButton.isHidden = true
-          
+
             self.casinoViewController.modalPresentationStyle = .fullScreen
             self.casinoViewController.navigationItem.hidesBackButton = true
             self.addChildViewController(self.casinoViewController, toView: self.casinoBaseView)
@@ -908,9 +908,9 @@ extension RootViewController {
         popUpPromotionView.alpha = 0
         popUpPromotionView.didTapCloseButton = { [weak self] in
             PopUpStore.didHidePopUp(withId: details.id, withTimeout: details.intervalMinutes ?? 0)
-            
+
             self?.closePopUp()
-            
+
         }
         popUpPromotionView.didTapPromotionButton = { [weak self] link in
             if let link = link, let url = URL(string: link) {
@@ -975,21 +975,21 @@ extension RootViewController {
 extension RootViewController {
 
     @objc private func didTapHomeTabItem() {
-        
+
         self.flipToSportsbookIfNeeded()
-        
+
         self.selectedTabItem = .home
     }
 
     @objc private func didTapSportsTabItem() {
         self.flipToSportsbookIfNeeded()
-        
+
         self.selectedTabItem = .preLive
     }
 
     @objc private func didTapLiveTabItem() {
         self.flipToSportsbookIfNeeded()
-        
+
         self.selectedTabItem = .live
     }
 
@@ -999,19 +999,19 @@ extension RootViewController {
 
         self.selectedTabItem = .tips
     }
-    
+
     @objc private func didTapCasinoTabItem() {
         self.flipToCasinoIfNeeded()
-        
+
         self.selectedTabItem = .casino
     }
-    
+
     @objc private func didTapSportsbookIcon() {
         self.flipToSportsbookIfNeeded()
-        
+
         self.selectedTabItem = .home
     }
-    
+
     //
     //
     func selectHomeTabBarItem() {
@@ -1057,7 +1057,7 @@ extension RootViewController {
 
         self.redrawButtonButtons()
     }
-    
+
     func selectCasinoTabBarItem() {
         self.loadChildViewControllerIfNeeded(tab: .casino)
 
@@ -1077,7 +1077,7 @@ extension RootViewController {
             liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             tipsTitleLabel.textColor = UIColor.App.iconSecondary
             tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
-           
+
         case .preLive:
             sportsButtonBaseView.alpha = self.activeButtonAlpha
             homeTitleLabel.textColor = UIColor.App.iconSecondary
@@ -1110,7 +1110,7 @@ extension RootViewController {
             liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
             tipsTitleLabel.textColor = UIColor.App.highlightPrimary
             tipsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
-            
+
         case .casino:
             homeTitleLabel.textColor = UIColor.App.iconSecondary
             homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
@@ -1126,79 +1126,79 @@ extension RootViewController {
         if self.appMode == .casino {
             return
         }
-        
+
         self.appMode = .casino
-        
+
         self.searchButton.isHidden = true
-        
+
         UIView.animate(withDuration: 0.35,
                        delay: 0.0,
                        options: .curveEaseInOut,
                        animations: {
-            
+
             self.sportsBookContentView.alpha = 0.45
             self.casinoContentView.alpha = 1.0
-            
+
             self.leadingSportsBookContentConstriant.constant = -self.containerView.frame.size.width
-            
+
             self.view.setNeedsLayout()
             self.view.layoutIfNeeded()
-            
+
         }, completion: nil)
-        
+
     }
-    
+
     func flipToSportsbookIfNeeded() {
         if self.appMode == .sportsbook {
             return
         }
-        
+
         self.appMode = .sportsbook
-        
+
         self.searchButton.isHidden = false
-       
+
         UIView.animate(withDuration: 0.35,
                        delay: 0.0,
                        options: .curveEaseInOut,
                        animations: {
-            
+
             self.sportsBookContentView.alpha = 1.0
             self.casinoContentView.alpha = 0.45
-            
+
             self.leadingSportsBookContentConstriant.constant = 0
-            
+
             self.view.setNeedsLayout()
             self.view.layoutIfNeeded()
-            
+
         }, completion: nil)
-        
+
     }
-    
+
 }
 
 extension RootViewController {
-    
+
     func showLocalAuthenticationCoveringViewIfNeeded() {
-        
+
         #if DEBUG
         self.isLocalAuthenticationCoveringView = false
         return
         #endif
-        
+
         if Env.userSessionStore.shouldRequestFaceId() {
             self.isLocalAuthenticationCoveringView = true
         }
     }
-    
+
     @IBAction private func didTapUnlockButton() {
         self.authenticateUser()
     }
-    
+
     @objc func appWillEnterForeground() {
         self.authenticateUser()
         print("LocalAuth Foreground")
     }
-    
+
     @objc func appDidEnterBackground() {
         self.showLocalAuthenticationCoveringViewIfNeeded()
         print("LocalAuth Background")
@@ -1208,33 +1208,33 @@ extension RootViewController {
         // self.authenticateUser()
         print("LocalAuth Active")
     }
-    
+
     @objc func appWillResignActive() {
         //  self.isLocalAuthenticationCoveringView = true
         print("LocalAuth Inactive")
     }
-    
+
     func authenticateUser() {
-    
+
         #if DEBUG
         return
         #endif
-        
+
         if !Env.userSessionStore.shouldRequestFaceId() {
             return
         }
-        
+
         let context = LAContext()
-        
+
         var error: NSError?
         if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthentication, error: &error) {
-            
+
             // Device can use biometric authentication
             context.evaluatePolicy(
                 LAPolicy.deviceOwnerAuthentication,
                 localizedReason: "Access requires authentication",
                 reply: { success, error in
-                    
+
                     DispatchQueue.main.async {
                         if let err = error {
                             switch err._code {
@@ -1254,7 +1254,7 @@ extension RootViewController {
                         }
                     }
             })
-            
+
         }
         else {
             // Device cannot use biometric authentication
@@ -1271,20 +1271,21 @@ extension RootViewController {
                 }
             }
         }
-        
+
     }
-    
+
     func notifyUser(_ msg: String, err: String?) {
         let alert = UIAlertController(title: msg,
                                       message: err,
                                       preferredStyle: .alert)
-        
+
         let cancelAction = UIAlertAction(title: "OK",
                                          style: .cancel, handler: nil)
-        
+
         alert.addAction(cancelAction)
         self.present(alert, animated: true,
                      completion: nil)
     }
-    
+
 }
+

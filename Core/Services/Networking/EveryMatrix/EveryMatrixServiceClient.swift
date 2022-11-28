@@ -27,7 +27,7 @@ class EveryMatrixServiceClient: ObservableObject {
     var userSessionStatusPublisher: CurrentValueSubject<EveryMatrixServiceUserSessionStatus, Never> = .init(.anonymous)
 
     //
-    var manager: TSManager = TSManager()
+    var manager: TSManager
 
     private var cancellable = Set<AnyCancellable>()
 
@@ -37,6 +37,8 @@ class EveryMatrixServiceClient: ObservableObject {
     init() {
         // The singleton init below is used to start up TS connection
 
+        self.manager = TSManager()
+        
         reachability.whenReachable = { [weak self] _ in
             if self?.isInitialConnectionCheck ?? true {
                 self?.isInitialConnectionCheck = false

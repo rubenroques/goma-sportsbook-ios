@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  SportType.swift
 //  
 //
 //  Created by Ruben Roques on 10/10/2022.
@@ -200,7 +200,6 @@ public enum SportTypeInfo: CaseIterable {
     case numbers
     case emptyBets
     case lotteries
-
     public init?(id: String) {
         switch id {
         // Initial list from EveryMatrix
@@ -393,7 +392,6 @@ public enum SportTypeInfo: CaseIterable {
         case "931": self = .emptyBets
         case "932": self = .lotteries
         default: return nil
-
         }
     }
     

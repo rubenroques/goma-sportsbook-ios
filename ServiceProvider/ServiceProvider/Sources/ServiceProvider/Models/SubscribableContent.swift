@@ -8,7 +8,7 @@
 import Foundation
 
 public enum SubscribableContent<T> {
-    case connected // subscriptionIdentifier: SubscriptionIdentifier)
-    case content(T)
+    case connected(subscription: Subscription)
+    case contentUpdate(content: T)
     case disconnected
 }

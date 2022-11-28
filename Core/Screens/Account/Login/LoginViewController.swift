@@ -384,8 +384,8 @@ extension LoginViewController {
     @objc func didTapDebugFormFill() {
         
         if self.usernameHeaderTextFieldView.text.isEmpty || self.usernameHeaderTextFieldView.text == "ruben" {
-            self.usernameHeaderTextFieldView.setText("pafeha4474@lance7.com") // ("gomafrontend") //("ruben@gomadevelopment.pt")
-            self.passwordHeaderTextFieldView.setText("iosGoma123") //("Omega123") //("ruben=GOMA=12345")
+            self.usernameHeaderTextFieldView.setText("gomafrontend") // ("pafeha4474@lance7.com") // ("gomafrontend") // ("ruben@gomadevelopment.pt")
+            self.passwordHeaderTextFieldView.setText("Omega123") // ("iosGoma123") // ("Omega123") // ("ruben=GOMA=12345")
             self.loginButton.isEnabled = true
         }
         else if self.usernameHeaderTextFieldView.text == "ruben4" {
@@ -433,4 +433,5 @@ extension UILabel {
         self.attributedText = highlightAttriString
         self.isUserInteractionEnabled = true
     }
+
 }

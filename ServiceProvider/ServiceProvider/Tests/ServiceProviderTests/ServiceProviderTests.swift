@@ -13,7 +13,7 @@ final class ServiceProviderTests: XCTestCase {
         // results.
         XCTAssertEqual("!", "!")
     }
-    
+   /*
     func testConnection() {
         
         print("\n\n")
@@ -31,7 +31,7 @@ final class ServiceProviderTests: XCTestCase {
                         switch eventsGroups {
                         case .connected:
                             print("subscribeLiveMatches connected")
-                        case .content(let eventsGroup):
+                        case .contentUpdate(let eventsGroup):
                             print("subscribeLiveMatches content \(eventsGroup)")
                         case .disconnected:
                             print("subscribeLiveMatches disconnected")
@@ -50,6 +50,6 @@ final class ServiceProviderTests: XCTestCase {
         waitForExpectations(timeout: 20)
         
         
-    }
+    }*/
     
 }

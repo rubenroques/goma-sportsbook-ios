@@ -42,5 +42,5 @@ extension Sport {
                   showEventCategory: discipline.showEventCategory ?? false,
                   liveEventsCount: discipline.numberOfLiveEvents ?? 0)
     }
-    
+
 }

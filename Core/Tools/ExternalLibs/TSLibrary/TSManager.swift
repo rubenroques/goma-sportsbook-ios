@@ -168,12 +168,12 @@ final class TSManager {
                     return
                 }
 
-                if let initialDumpProcedure = initialDumpProcedure {
-                    Logger.log("TSManager getModel initial dump - proc:\(initialDumpProcedure) url:\(router.procedure), args:\(router.args ?? [] )")
-                }
-                else {
-                    Logger.log("TSManager getModel - url:\(router.procedure), args:\(router.args ?? [] ), kwargs:\(router.kwargs ?? [:] )")
-                }
+//                if let initialDumpProcedure = initialDumpProcedure {
+//                    Logger.log("TSManager getModel initial dump - proc:\(initialDumpProcedure) url:\(router.procedure), args:\(router.args ?? [] )")
+//                }
+//                else {
+//                    Logger.log("TSManager getModel - url:\(router.procedure), args:\(router.args ?? [] ), kwargs:\(router.kwargs ?? [:] )")
+//                }
 
                 if swampSession.isConnected() {
                     swampSession.call(router.procedure, options: [:], args: router.args, kwargs: router.kwargs, onSuccess: { details, results, kwResults, arrResults in

@@ -16,7 +16,7 @@ class SplashViewController: UIViewController {
 
     init(loadingCompleted: @escaping () -> Void) {
         self.loadingCompleted = loadingCompleted
-        
+
         super.init(nibName: "SplashViewController", bundle: nil)
     }
 
@@ -47,3 +47,4 @@ class SplashViewController: UIViewController {
     }
 
 }
+

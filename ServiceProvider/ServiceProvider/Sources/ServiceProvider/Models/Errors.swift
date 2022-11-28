@@ -8,6 +8,7 @@
 import Foundation
 
 public enum ServiceProviderError: Error {
+    
     case privilegedAccessManagerNotFound
     case eventsProviderNotFound
     

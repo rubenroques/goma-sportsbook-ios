@@ -109,7 +109,7 @@ class MatchDetailsViewModel: NSObject {
 
     func getMatchDetails() {
 
-        Env.serviceProvider.subscribeMatchDetails(matchId: self.matchId)?
+        Env.serviceProvider.subscribeMatchDetails(matchId: self.matchId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 print("Env.serviceProvider.subscribeEventDetails completed \(completion)")
@@ -122,9 +122,9 @@ class MatchDetailsViewModel: NSObject {
             }, receiveValue: { (subscribableContent: SubscribableContent<[EventsGroup]>) in
                 print("Env.serviceProvider.subscribeEventDetails value \(subscribableContent)")
                 switch subscribableContent {
-                case .connected:
+                case .connected(let subscription):
                     print("Connected to ws")
-                case .content(let events):
+                case .contentUpdate(let events):
                     self.isLoadingMarketGroups.send(true)
                     if let eventGroup = events[safe: 0],
                        let match = ServiceProviderModelMapper.match(fromEventGroup: eventGroup) {
@@ -149,7 +149,7 @@ class MatchDetailsViewModel: NSObject {
 
     func getMarketGroups(event: ServiceProvider.Event) {
 
-        Env.serviceProvider.getMarketFilters(event: event)?
+        Env.serviceProvider.getMarketFilters(event: event)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: {[weak self] completion in
                 ()
@@ -222,9 +222,8 @@ class MatchDetailsViewModel: NSObject {
 
         Env.serviceProvider.getFieldWidget(eventId: self.matchId, isDarkTheme: isDarkTheme)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
-
                 case .finished:
                     print("FIELD WIDGET RENDER DATA FINISHED")
                 case .failure(let error):

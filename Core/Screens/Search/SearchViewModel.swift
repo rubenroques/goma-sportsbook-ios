@@ -86,13 +86,13 @@ class SearchViewModel: NSObject {
 
         }
     }
-    
+
     func markAsFavorite(match : Match){
         var isFavorite = false
         for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
             isFavorite = true
         }
-        
+
         if isFavorite {
             Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
         }
@@ -469,7 +469,7 @@ class SearchViewModel: NSObject {
 
             return resultsCountText
         }
-        
+
     }
 }
 
@@ -511,3 +511,4 @@ extension SearchViewModel: AggregatorStore {
         return matchesInfo
     }
 }
+

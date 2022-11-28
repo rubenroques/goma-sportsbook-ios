@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct SportRadarSessionAccessToken: SessionAccessToken {
+struct SportRadarSessionAccessToken {
     var hash: String
 }

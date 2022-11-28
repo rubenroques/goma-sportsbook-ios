@@ -13,8 +13,8 @@ import Foundation
 enum SportRadarRestAPIClient {
     case marketsFilter
     case fieldWidgetId(eventId: String)
-    case sportsList
-    case scheduleSportsList(dateRange: String)
+    case sportsBoNavigationList
+    case sportsScheduledList(dateRange: String)
 }
 
 extension SportRadarRestAPIClient: Endpoint {
@@ -23,14 +23,18 @@ extension SportRadarRestAPIClient: Endpoint {
         switch self {
         case .marketsFilter:
             return "/sportradar/sportsbook/config/marketsFilter_v2.json"
-        case .fieldWidgetId, .sportsList, .scheduleSportsList:
+        case .fieldWidgetId:
+            return "/services/content/get"
+        case .sportsBoNavigationList:
+            return "/services/content/get"
+        case .sportsScheduledList:
             return "/services/content/get"
         }
     }
 
     var query: [URLQueryItem]? {
         switch self {
-        case .marketsFilter, .fieldWidgetId, .sportsList, .scheduleSportsList:
+        case .marketsFilter, .fieldWidgetId, .sportsBoNavigationList, .sportsScheduledList:
             return nil
         }
     }
@@ -39,7 +43,7 @@ extension SportRadarRestAPIClient: Endpoint {
         switch self {
         case .marketsFilter:
             return .get
-        case .fieldWidgetId, .sportsList, .scheduleSportsList:
+        case .fieldWidgetId, .sportsBoNavigationList, .sportsScheduledList:
             return .post
         }
     }
@@ -61,7 +65,7 @@ extension SportRadarRestAPIClient: Endpoint {
             }
             """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
-        case .sportsList:
+        case .sportsBoNavigationList:
             let bodyString =
                         """
                         {
@@ -76,7 +80,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         }
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
-        case .scheduleSportsList(let dateRange):
+        case .sportsScheduledList(let dateRange):
             let bodyString =
                         """
                         {
@@ -94,23 +98,18 @@ extension SportRadarRestAPIClient: Endpoint {
         default:
             return nil
         }
-
-        /**
-         let body = """
-         {"type": "\(type)","text": "\(message)"}
-         """
-         let data = body.data(using: String.Encoding.utf8)!
-         return data
-         */
     }
 
     var url: String {
         switch self {
-        case .fieldWidgetId, .sportsList, .scheduleSportsList:
-            //return "https://www-sportbook-goma-int.optimahq.com/"
-            return "https://www-pam-uat.optimahq.com/"
-        default:
-            return "https://cdn1.optimahq.com"
+        case .marketsFilter:
+            return SportRadarConstants.sportRadarFrontEndURL
+        case .fieldWidgetId:
+            return SportRadarConstants.bettingHostname
+        case .sportsBoNavigationList:
+            return SportRadarConstants.bettingHostname
+        case .sportsScheduledList:
+            return SportRadarConstants.bettingHostname
         }
     }
 
@@ -137,6 +136,7 @@ extension SportRadarRestAPIClient: Endpoint {
 
 }
 
+// TODO: TASK André - Estes modelos estão no sitio errado
 public struct FieldWidget: Codable {
     public var data: String?
     public var version: Int?
@@ -191,6 +191,7 @@ public struct ScheduledSport: Codable {
 
 }
 
+// TODO: TASK André - Este devia ser o unico modelo publico
 public struct SportType: Codable, Hashable {
     public var name: String
     public var numericId: String?

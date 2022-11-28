@@ -29,6 +29,11 @@ extension SportRadarModels {
         let securityVerificationRequiredFields: [String]?
     }
 
+    struct OpenSessionResponse: Codable {
+        let status: String
+        let launchToken: String
+    }
+    
     struct PlayerInfoResponse: Codable {
         let status: String
         

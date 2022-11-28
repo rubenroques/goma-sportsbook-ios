@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ServiceProvider
 import Combine
 
 class StaticHomeViewTemplateDataSource {
@@ -165,34 +166,54 @@ class StaticHomeViewTemplateDataSource {
         self.sportGroupViewModelCache = [:]
         self.cachedFeaturedTipLineViewModel = nil
 
-        self.fetchLocations()
-            .sink { [weak self] locations in
-                self?.store.storeLocations(locations: locations)
+        self.requestSports()
+        self.fetchBanners()
+        self.fetchFavoriteMatches()
+        self.fetchTips()
+        self.fetchSuggestedBets()
+        self.fetchAlerts()
 
-                self?.requestSports()
-                self?.fetchBanners()
-                self?.fetchFavoriteMatches()
-                self?.fetchTips()
-                self?.fetchSuggestedBets()
-                self?.fetchAlerts()
-            }
-            .store(in: &cancellables)
+//        self.fetchLocations()
+//            .sink { [weak self] locations in
+//                self?.store.storeLocations(locations: locations)
+//
+//                self?.requestSports()
+//                self?.fetchBanners()
+//                self?.fetchFavoriteMatches()
+//                self?.fetchTips()
+//                self?.fetchSuggestedBets()
+//                self?.fetchAlerts()
+//            }
+//            .store(in: &cancellables)
 
     }
 
     func requestSports() {
 
-        let language = "en"
-        Env.everyMatrixClient.getDisciplines(language: language)
-            .map(\.records)
-            .compactMap({ $0 })
-            .sink(receiveCompletion: { _ in
-
-            }, receiveValue: { response in
-                self.sportsToFetch = Array(response.map(Sport.init(discipline:)).prefix(10))
+        Env.serviceProvider.getAvailableSportTypes()
+            .map({ sportTypesArray in
+                return sportTypesArray.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
+            })
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { (completion: Subscribers.Completion<ServiceProviderError>) in
+                () // TODO:  allSportTypes Handle completion with error
+            }, receiveValue: { (sportTypes: [Sport]) in
+                self.sportsToFetch = Array(sportTypes.prefix(10))
                 self.refreshPublisher.send()
             })
             .store(in: &cancellables)
+
+//        let language = "en"
+//        Env.everyMatrixClient.getDisciplines(language: language)
+//            .map(\.records)
+//            .compactMap({ $0 })
+//            .sink(receiveCompletion: { _ in
+//
+//            }, receiveValue: { response in
+//                self.sportsToFetch = Array(response.map(Sport.init(discipline:)).prefix(10))
+//                self.refreshPublisher.send()
+//            })
+//            .store(in: &cancellables)
     }
 
     func fetchLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {
@@ -243,36 +264,39 @@ class StaticHomeViewTemplateDataSource {
 
         self.stopBannerUpdates()
 
-        let endpoint = TSRouter.bannersInfoPublisher(operatorId: Env.appSession.operatorId, language: "en")
+        self.banners = []
 
-        self.bannersInfoPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrixSocketResponse<EveryMatrix.BannerInfo>.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
-
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    self?.bannersInfoRegister = publisherIdentifiable
-                case .initialContent(let responde):
-                    print("HomeViewModel bannersInfo initialContent")
-                    let sortedBanners = (responde.records ?? []).sorted {
-                        $0.priorityOrder ?? 0 < $1.priorityOrder ?? 1
-                    }
-                    self?.banners = sortedBanners.map({
-                        BannerInfo(type: $0.type,
-                                   id: $0.id,
-                                   matchId: $0.matchID,
-                                   imageURL: $0.imageURL,
-                                   priorityOrder: $0.priorityOrder)
-                    })
-                    self?.stopBannerUpdates()
-                case .updatedContent:
-                    ()
-                case .disconnect:
-                    ()
-                }
-            })
+        // TODO: Fetch banners
+//        let endpoint = TSRouter.bannersInfoPublisher(operatorId: Env.appSession.operatorId, language: "en")
+//
+//        self.bannersInfoPublisher = Env.everyMatrixClient.manager
+//            .registerOnEndpoint(endpoint, decodingType: EveryMatrixSocketResponse<EveryMatrix.BannerInfo>.self)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { _ in
+//
+//            }, receiveValue: { [weak self] state in
+//                switch state {
+//                case .connect(let publisherIdentifiable):
+//                    self?.bannersInfoRegister = publisherIdentifiable
+//                case .initialContent(let responde):
+//                    print("HomeViewModel bannersInfo initialContent")
+//                    let sortedBanners = (responde.records ?? []).sorted {
+//                        $0.priorityOrder ?? 0 < $1.priorityOrder ?? 1
+//                    }
+//                    self?.banners = sortedBanners.map({
+//                        BannerInfo(type: $0.type,
+//                                   id: $0.id,
+//                                   matchId: $0.matchID,
+//                                   imageURL: $0.imageURL,
+//                                   priorityOrder: $0.priorityOrder)
+//                    })
+//                    self?.stopBannerUpdates()
+//                case .updatedContent:
+//                    ()
+//                case .disconnect:
+//                    ()
+//                }
+//            })
     }
 
     // Favorites
@@ -341,7 +365,7 @@ class StaticHomeViewTemplateDataSource {
 
     // Tips TEST
     func fetchTips() {
-        // TODO: Usar enum no betType, 
+        // TODO: Usar enum no betType,
         Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE")
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -374,7 +398,7 @@ class StaticHomeViewTemplateDataSource {
                 }
             })
             .sink(receiveCompletion: { _ in
-                
+
             },
             receiveValue: { [weak self] suggestedBets in
                 self?.suggestedBets = suggestedBets
@@ -391,8 +415,8 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func numberOfSections() -> Int {
-//        return itemsBeforeSports + sportsToFetch.count - 1 // minus the fist sport
-        return itemsBeforeSports
+        return itemsBeforeSports + sportsToFetch.count - 1 // minus the fist sport
+        // return itemsBeforeSports
     }
 
     func numberOfRows(forSectionIndex section: Int) -> Int {
@@ -610,4 +634,5 @@ extension StaticHomeViewTemplateDataSource {
     }
 
 }
+
 

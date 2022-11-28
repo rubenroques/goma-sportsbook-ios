@@ -25,10 +25,8 @@ import Foundation
  */
 
 enum OmegaAPIClient {
-    case login(username: String,
-               password: String)
-    case openSession(productCode: String,
-                     gameId: String)
+    case login(username: String, password: String)
+    case openSession
     case logout
     case playerInfo
     case updatePlayerInfo(username: String?,
@@ -120,9 +118,9 @@ extension OmegaAPIClient: Endpoint {
         case .login(let username, let password):
             return [URLQueryItem(name: "username", value: username),
                     URLQueryItem(name: "password", value: password)]
-        case .openSession(let productCode, let gameId):
-            return [URLQueryItem(name: "productCode", value: productCode),
-                    URLQueryItem(name: "gameId", value: gameId)]
+        case .openSession:
+            return [URLQueryItem(name: "productCode", value: "SPORT_RADAR"),
+                    URLQueryItem(name: "gameId", value: "SPORTSBOOK")]
         case .logout:
             return nil
         case .playerInfo:
@@ -299,7 +297,7 @@ extension OmegaAPIClient: Endpoint {
     }
     
     var url: String {
-        return "https://ps.omegasys.eu"
+        return SportRadarConstants.pamHostname
     }
     
     var headers: HTTP.Headers? {

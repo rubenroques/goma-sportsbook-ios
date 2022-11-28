@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         #else
             UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
         #endif
-        
+
         Logger.log("App Started")
 
         // Store device id
@@ -151,7 +151,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         else if let routeIdValue = userInfo["routeId"] as? Int {
             routeId = String(routeIdValue)
         }
-        
+
         let routeLabel = userInfo["routeLabel"] as? String ?? ""
 
         let chatroomOnForegroundID = Env.gomaSocialClient.chatroomOnForeground()
@@ -233,3 +233,4 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
 
 }
+

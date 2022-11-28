@@ -121,7 +121,7 @@ class PreLiveEventsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        competitionsFiltersView.selectedIds
+        self.competitionsFiltersView.selectedIds
             .receive(on: DispatchQueue.main)
             .sink { idsSet in
                 print("selectedIds -> \(idsSet)")
@@ -138,7 +138,7 @@ class PreLiveEventsViewController: UIViewController {
             let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
             self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
         }
-        
+
 //        self.viewModel.didTapFavoriteMatchAction = { match in
 //            if !UserSessionStore.isUserLogged(){
 //                self.presentLoginViewController()
@@ -157,7 +157,7 @@ class PreLiveEventsViewController: UIViewController {
 
         self.tableView.isHidden = false
         self.emptyBaseView.isHidden = true
-        
+
 //        self.viewModel.isUserLoggedPublisher.receive(on: DispatchQueue.main)
 //            .sink(receiveValue: { [weak self] isLogged in
 //                if !isLogged {
@@ -181,15 +181,15 @@ class PreLiveEventsViewController: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+
         self.floatingShortcutsView.resetAnimations()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -211,9 +211,9 @@ class PreLiveEventsViewController: UIViewController {
 
         self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_1")
         self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
-        
+
         let color = UIColor.App.backgroundPrimary
-        
+
         leftGradientBaseView.backgroundColor = color
         let leftGradientMaskLayer = CAGradientLayer()
         leftGradientMaskLayer.frame = leftGradientBaseView.bounds
@@ -260,10 +260,10 @@ class PreLiveEventsViewController: UIViewController {
         filtersCountLabel.font = AppFont.with(type: .bold, size: 10.0)
         filtersCountLabel.layer.masksToBounds = true
         filtersCountLabel.backgroundColor = UIColor.App.highlightSecondary
-        
+
         tableView.backgroundColor = .clear
         tableView.backgroundView?.backgroundColor = .clear
-        
+
         tableView.separatorStyle = .none
 
         tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
@@ -315,21 +315,21 @@ class PreLiveEventsViewController: UIViewController {
 
         // == BetslipButtonView
         self.view.addSubview(self.floatingShortcutsView)
-        
+
         self.floatingShortcutsBottomConstraint = self.floatingShortcutsView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -12)
-        
+
         NSLayoutConstraint.activate([
             self.floatingShortcutsView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
             self.floatingShortcutsBottomConstraint,
         ])
-        
+
         self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in
             self?.didTapBetslipView()
         }
         self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
             self?.didTapChatView()
         }
-        
+
         // ==
 
         //
@@ -503,7 +503,7 @@ class PreLiveEventsViewController: UIViewController {
         self.filtersButtonView.backgroundColor = UIColor.App.backgroundTertiary
         self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
-        
+
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -545,7 +545,7 @@ class PreLiveEventsViewController: UIViewController {
         default:
             ()
         }
-        
+
         self.filtersCollectionView.reloadData()
         self.filtersCollectionView.layoutIfNeeded()
 
@@ -665,7 +665,7 @@ class PreLiveEventsViewController: UIViewController {
     }
 
     func setEmptyStateBaseView(firstLabelText: String, secondLabelText: String, isUserLoggedIn: Bool) {
-    
+
         if isUserLoggedIn {
             self.emptyStateImage.image = UIImage(named: "no_content_icon")
             self.firstTextFieldEmptyStateLabel.text = firstLabelText
@@ -679,7 +679,7 @@ class PreLiveEventsViewController: UIViewController {
             self.emptyStateButton.isHidden = isUserLoggedIn
             self.emptyStateButton.setTitle("Login", for: .normal)
         }
-        
+
     }
 
     func layoutBetslipButtonPosition() {
@@ -698,7 +698,7 @@ class PreLiveEventsViewController: UIViewController {
         }
         self.floatingShortcutsBottomConstraint.constant = constant
     }
-    
+
     @IBAction private func didTapLoginButton() {
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
@@ -712,7 +712,7 @@ extension PreLiveEventsViewController: UIScrollViewDelegate {
         if !shouldDetectScrollMovement {
             return
         }
-        
+
         switch scrollView.panGestureRecognizer.state {
         case .began, .changed:
             ()
@@ -752,7 +752,7 @@ extension PreLiveEventsViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         return self.viewModel.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
     }
-    
+
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return self.viewModel.tableView(tableView, viewForHeaderInSection: section)
     }
@@ -799,7 +799,7 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
         else {
             fatalError()
         }
-        
+
         switch indexPath.row {
         case 0:
             cell.setupWithTitle(localized("popular"))
@@ -814,7 +814,7 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
         default:
             ()
         }
-        
+
         if filterSelectedOption == indexPath.row {
             cell.setSelectedType(true)
         }
@@ -897,5 +897,6 @@ extension PreLiveEventsViewController: HomeFilterOptionsViewDelegate {
 
         }
     }
-    
+
 }
+
