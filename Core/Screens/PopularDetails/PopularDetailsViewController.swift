@@ -607,10 +607,10 @@ extension PopularDetailsViewController {
         ])
 
         NSLayoutConstraint.activate([
+            self.loadingBaseView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            self.loadingBaseView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             self.view.leadingAnchor.constraint(equalTo: self.loadingBaseView.leadingAnchor),
-            self.view.trailingAnchor.constraint(equalTo: self.loadingBaseView.trailingAnchor),
-            self.view.topAnchor.constraint(equalTo: self.loadingBaseView.topAnchor),
-            self.view.bottomAnchor.constraint(equalTo: self.loadingBaseView.bottomAnchor)
+            self.navigationView.bottomAnchor.constraint(equalTo: self.loadingBaseView.topAnchor)
         ])
 
         NSLayoutConstraint.activate([

@@ -11,11 +11,11 @@ public protocol UnsubscriptionController: AnyObject {
     func unsubscribe(subscription: Subscription)
 }
 
-public protocol AnySubscription: Hashable, Equatable, Identifiable {
+public protocol AnySubscription {
 
 }
 
-public class Subscription: AnySubscription {
+public class Subscription: Hashable, Equatable, Identifiable {
     
     public var id: String
     public var unsubscriptionPayloadData: Data {
@@ -66,7 +66,7 @@ public class Subscription: AnySubscription {
         
 }
 
-public class SubscriptionGroup: AnySubscription {
+public class SubscriptionGroup: Hashable, Equatable, Identifiable {
 
     public var id: String
     private var subscriptions: [Subscription]

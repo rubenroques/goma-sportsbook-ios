@@ -18,7 +18,6 @@ class LiveDetailsViewModel {
     var titlePublisher: CurrentValueSubject<String, Never>
 
     private var matchesPublisher: AnyCancellable?
-    private var matchesRegister: EndpointPublisherIdentifiable?
 
     private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
 
@@ -30,6 +29,7 @@ class LiveDetailsViewModel {
     private var matchesHasNextPage = true
 
     private var cancellables: Set<AnyCancellable> = []
+    private var subscriptions: Set<ServiceProvider.Subscription> = []
 
     init(sport: Sport, store: AggregatorsRepository) {
         self.store = store
@@ -43,26 +43,7 @@ class LiveDetailsViewModel {
     func refresh() {
         self.resetPageCount()
         self.isLoading.send(true)
-
-        
-        self.fetchLocations()
-            .sink { [weak self] locations in
-                self?.store.storeLocations(locations: locations)
-                self?.fetchMatches()
-            }
-            .store(in: &cancellables)
-         
-    }
-
-    func fetchLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {
-
-        let router = TSRouter.getLocations(language: "en", sortByPopularity: false)
-        return Env.everyMatrixClient.manager.getModel(router: router, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
-            .map(\.records)
-            .compactMap({$0})
-            .replaceError(with: [EveryMatrix.Location]())
-            .eraseToAnyPublisher()
-
+        self.fetchMatches()
     }
 
     func requestNextPage() {
@@ -85,58 +66,44 @@ class LiveDetailsViewModel {
 
     private func fetchMatches() {
 
-        if let matchesRegister = matchesRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchesRegister)
-        }
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
 
-        let matchesCount = self.matchesCount * self.matchesPage
+        print("subscribeLiveMatches fetchData called")
 
-        let endpoint = TSRouter.liveMatchesPublisher(operatorId: Env.appSession.operatorId,
-                                                        language: "en",
-                                                        sportId: self.sport.id,
-                                                        matchesCount: matchesCount)
-        self.matchesPublisher?.cancel()
-        self.matchesPublisher = nil
-
-        self.matchesPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .receive(on: DispatchQueue.main)
+        self.matchesPublisher = Env.serviceProvider.subscribeLiveMatches(forSportType: sportType, pageIndex: 0)
             .sink(receiveCompletion: { [weak self] completion in
+                // TODO: subscribeLiveMatches receiveCompletion
                 switch completion {
-                case .failure:
-                    print("Error retrieving data!")
                 case .finished:
-                    print("Data retrieved!")
-                }
-                self?.isLoading.send(false)
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    self?.matchesRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    self?.storeAggregatorProcessor(aggregator)
-                case .updatedContent(let aggregatorUpdates):
-                    self?.updateWithAggregatorProcessor(aggregatorUpdates)
-                case .disconnect:
                     ()
+                case .failure(let error):
+                    Logger.log("subscribeLiveMatches error \(error)")
+                    self?.setupWithError()
+                }
+            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
+                switch subscribableContent {
+                case .connected(let subscription):
+                    self?.subscriptions.insert(subscription)
+                case .contentUpdate(let eventsGroups):
+                    let allMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+                    self?.setupWithMatches(allMatches)
+                case .disconnected:
+                    Logger.log("subscribeLiveMatches subscribableContent disconnected")
                 }
             })
+
     }
 
-    private func storeAggregatorProcessor(_ aggregator: EveryMatrix.Aggregator) {
-        self.store.processAggregator(aggregator, withListType: .popularEvents,
-                                                 shouldClear: true)
-
-        let matches = self.store.matchesForListType(.popularEvents)
-        if matches.count < self.matchesCount * self.matchesPage {
-            self.matchesHasNextPage = false
-        }
-
+    private func setupWithMatches(_ matches: [Match]) {
         self.matches = matches
 
         self.isLoading.send(false)
 
         self.refreshPublisher.send()
+    }
+
+    private func setupWithError() {
+        self.isLoading.send(false)
     }
 
     private func updateWithAggregatorProcessor(_ aggregator: EveryMatrix.Aggregator) {

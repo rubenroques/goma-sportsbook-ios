@@ -12,7 +12,7 @@ struct SportRadarConstants {
 //    =======================================
 //       GOMA ENV
 //    =======================================
-//
+
 //    //Events via socket
 //    static var socketHostname = "wss://velnt-spor-int.optimahq.com"
 //    static var socketURL: String {
@@ -32,14 +32,14 @@ struct SportRadarConstants {
 //
 //    // Others
 //    static var sportRadarFrontEndURL = "https://cdn1.optimahq.com"
-//
+
 //    ===================================================================================================================
 
 
 //    =======================================
 //       DEMO VIDEO ENV
 //    =======================================
-//
+
     //Events via socket
     static var socketHostname = "wss://velnt-spor-uat.optimahq.com"
     static var socketURL: String {

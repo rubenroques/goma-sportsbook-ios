@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import ServiceProvider
 
 class PopularDetailsViewModel {
 
@@ -21,9 +22,6 @@ class PopularDetailsViewModel {
     private var matchesPublisher: AnyCancellable?
     private var matchesRegister: EndpointPublisherIdentifiable?
 
-    private var outrightCompetitionsPublisher: AnyCancellable?
-    private var outrightCompetitionsRegister: EndpointPublisherIdentifiable?
-
     private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
 
     private var sport: Sport
@@ -35,6 +33,7 @@ class PopularDetailsViewModel {
     private var matchesHasNextPage = true
 
     private var cancellables: Set<AnyCancellable> = []
+    private var subscriptions: Set<ServiceProvider.Subscription> = []
 
     init(sport: Sport, store: AggregatorsRepository) {
         self.store = store
@@ -47,26 +46,8 @@ class PopularDetailsViewModel {
 
     func refresh() {
         self.resetPageCount()
-
         self.isLoading.send(true)
-
-        self.fetchLocations()
-            .sink { [weak self] locations in
-                self?.store.storeLocations(locations: locations)
-                self?.fetchMatches()
-            }
-            .store(in: &cancellables)
-    }
-
-    func fetchLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {
-
-        let router = TSRouter.getLocations(language: "en", sortByPopularity: false)
-        return Env.everyMatrixClient.manager.getModel(router: router, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
-            .map(\.records)
-            .compactMap({$0})
-            .replaceError(with: [EveryMatrix.Location]())
-            .eraseToAnyPublisher()
-
+        self.fetchMatches()
     }
 
     func requestNextPage() {
@@ -89,102 +70,43 @@ class PopularDetailsViewModel {
 
     private func fetchMatches() {
 
-        if let matchesRegister = matchesRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchesRegister)
-        }
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
 
-        let matchesCount = self.matchesCount * self.matchesPage
+        Logger.log("subscribePreLiveMatches fetchData called")
 
-        let endpoint = TSRouter.popularMatchesPublisher(operatorId: Env.appSession.operatorId,
-                                                        language: "en",
-                                                        sportId: self.sport.id,
-                                                        matchesCount: matchesCount)
-        self.matchesPublisher?.cancel()
-        self.matchesPublisher = nil
-
-        self.matchesPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .receive(on: DispatchQueue.main)
+        self.matchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType, pageIndex: 0, eventCount: 20, sortType: .popular)
             .sink(receiveCompletion: { [weak self] completion in
+                // TODO: subscribePreLiveMatches receiveCompletion
                 switch completion {
-                case .failure:
-                    print("matchesPublisher Error retrieving data!")
                 case .finished:
-                    print("matchesPublisher Data retrieved!")
-                }
-                self?.isLoading.send(false)
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    self?.matchesRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    self?.storeAggregatorProcessor(aggregator)
-                case .updatedContent(let aggregatorUpdates):
-                    self?.updateWithAggregatorProcessor(aggregatorUpdates)
-                case .disconnect:
                     ()
+                case .failure(let error):
+                    self?.setupWithError()
+                    Logger.log("subscribePreLiveMatches error \(error)")
+                }
+            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
+                switch subscribableContent {
+                case .connected(let subscription):
+                    self?.subscriptions.insert(subscription)
+                case .contentUpdate(let eventsGroups):
+                    let allMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+                    self?.setupWithMatches(allMatches)
+                case .disconnected:
+                    Logger.log("subscribePreLiveMatches subscribableContent disconnected")
                 }
             })
+
     }
 
     private func closeOutrightCompetitionsConnection() {
-        if let outrightCompetitionsRegister = outrightCompetitionsRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: outrightCompetitionsRegister)
-        }
 
-        self.outrightCompetitionsPublisher?.cancel()
-        self.outrightCompetitionsPublisher = nil
     }
 
     private func fetchOutrightCompetitions() {
 
-        if let outrightCompetitionsRegister = outrightCompetitionsRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: outrightCompetitionsRegister)
-        }
-
-        let sportId = self.sport.id
-
-        let endpoint = TSRouter.popularTournamentsPublisher(operatorId: Env.appSession.operatorId,
-                                                        language: "en",
-                                                        sportId: sportId,
-                                                        tournamentsCount: 20)
-        self.outrightCompetitionsPublisher?.cancel()
-        self.outrightCompetitionsPublisher = nil
-
-        self.outrightCompetitionsPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure:
-                    print("outrightCompetitionsPublisher Error retrieving data!")
-                case .finished:
-                    print("outrightCompetitionsPublisher Data retrieved!")
-                }
-                self?.isLoading.send(false)
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    self?.outrightCompetitionsRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    self?.storeOutrightCompetitionsAggregatorProcessor(aggregator: aggregator)
-                case .updatedContent: // (let aggregatorUpdates):
-                    ()
-                case .disconnect:
-                    ()
-                }
-            })
     }
 
-    private func storeAggregatorProcessor(_ aggregator: EveryMatrix.Aggregator) {
-        self.store.processAggregator(aggregator, withListType: .popularEvents,
-                                                 shouldClear: true)
-
-        let matches = self.store.matchesForListType(.popularEvents)
-        if matches.count < self.matchesCount * self.matchesPage {
-            self.matchesHasNextPage = false
-        }
-
+    private func setupWithMatches(_ matches: [Match]) {
         if matches.isNotEmpty {
             self.matches = matches
 
@@ -196,6 +118,10 @@ class PopularDetailsViewModel {
         else {
             self.fetchOutrightCompetitions()
         }
+    }
+
+    private func setupWithError() {
+        self.isLoading.send(false)
     }
 
     private func updateWithAggregatorProcessor(_ aggregator: EveryMatrix.Aggregator) {
