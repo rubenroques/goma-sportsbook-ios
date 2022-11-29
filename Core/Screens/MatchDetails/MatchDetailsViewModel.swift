@@ -22,7 +22,6 @@ class MatchDetailsViewModel: NSObject {
     var awayRedCardsScorePublisher: CurrentValueSubject<String, Never> = .init("0")
 
     var store: MatchDetailsAggregatorRepository
-    var serviceProviderStore: SportRadarEventDetailRepository
 
     var isLoadingMarketGroups: CurrentValueSubject<Bool, Never> = .init(true)
 
@@ -37,7 +36,8 @@ class MatchDetailsViewModel: NSObject {
     private var goalsRegister: EndpointPublisherIdentifiable?
     private var goalsSubscription: AnyCancellable?
 
-    var fieldWidgetIdPublisher: CurrentValueSubject<String, Never> = .init("")
+    var shouldRenderFieldWidget: CurrentValueSubject<Bool, Never> = .init(false)
+    var fieldWidgetRenderData: FieldWidgetRenderData?
 
     var match: Match? {
         switch matchPublisher.value {
@@ -73,12 +73,13 @@ class MatchDetailsViewModel: NSObject {
 
         self.matchModePublisher.send(matchMode)
 
-        self.serviceProviderStore = SportRadarEventDetailRepository()
-
         super.init()
 
         self.connectPublishers()
         self.requestRedCards(forMatchWithId: match.id)
+
+        self.getMatchDetails()
+
     }
 
     init(matchMode: MatchMode = .preLive, matchId: String) {
@@ -90,13 +91,13 @@ class MatchDetailsViewModel: NSObject {
 
         self.store = MatchDetailsAggregatorRepository(matchId: matchId)
 
-        self.serviceProviderStore = SportRadarEventDetailRepository()
-
         super.init()
 
         self.connectPublishers()
         
         self.requestRedCards(forMatchWithId: matchId)
+
+        self.getMatchDetails()
         
     }
 
@@ -125,12 +126,12 @@ class MatchDetailsViewModel: NSObject {
                     print("Connected to ws")
                 case .contentUpdate(let events):
                     self.isLoadingMarketGroups.send(true)
-                    if let event = events[safe: 0],
-                       let match = ServiceProviderModelMapper.match(fromEventGroup: event) {
+                    if let eventGroup = events[safe: 0],
+                       let match = ServiceProviderModelMapper.match(fromEventGroup: eventGroup) {
                         self.matchPublisher.send(.loaded(match))
-                        if let marketFilters = self.marketFilters {
-                            self.serviceProviderStore.storeMarketGroups(fromMarketFilters: marketFilters, match: match)
-                            self.fetchMarketGroupsPublisher()
+
+                        if let eventMapped = ServiceProviderModelMapper.event(fromEventGroup: eventGroup){
+                            self.getMarketGroups(event: eventMapped)
                         }
                     }
                     else {
@@ -144,6 +145,19 @@ class MatchDetailsViewModel: NSObject {
             })
             .store(in: &cancellables)
 
+    }
+
+    func getMarketGroups(event: ServiceProvider.Event) {
+
+        Env.serviceProvider.getMarketFilters(event: event)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: {[weak self] completion in
+                ()
+            }, receiveValue: { [weak self] marketGroup in
+                print("MARKET GROUP: \(marketGroup)")
+                self?.fetchMarketGroupsPublisher(marketGroups: marketGroup)
+            })
+            .store(in: &cancellables)
     }
 
     func connectPublishers() {
@@ -182,61 +196,46 @@ class MatchDetailsViewModel: NSObject {
             }
             .store(in: &cancellables)
 
-        // Sportradar markets
-//        Env.serviceProvider.getMarketFilters()?
+        //self.getFieldWidgetId(eventId: matchId)
+    }
+
+    func getFieldWidget(isDarkTheme: Bool) {
+//        Env.serviceProvider.getFieldWidgetId(eventId: eventId)?
 //            .receive(on: DispatchQueue.main)
 //            .sink(receiveCompletion: { [weak self] completion in
 //                switch completion {
 //
 //                case .finished:
-//                    print("MARKET FILTER FINISHED")
+//                    print("FIELD WIDGET ID FINISHED")
 //                case .failure(let error):
-//                    print("MARKET FILTER ERROR: \(error)")
+//                    print("FIELD WIDGET ID ERROR: \(error)")
 //
 //                }
-//            }, receiveValue: { [weak self] marketFilter in
-//                print("MARKET FILTER RESPONSE: \(marketFilter)")
-//                self?.marketFilters = marketFilter
-//                self?.getMatchDetails()
+//            }, receiveValue: { [weak self] fieldWidgetResponse in
+//                print("FIELD WIDGET ID RESPONSE: \(fieldWidgetResponse)")
 //
+//                if let fieldWidgetId = fieldWidgetResponse.data {
+//                    self?.fieldWidgetIdPublisher.send(fieldWidgetId)
+//                }
 //            })
 //            .store(in: &cancellables)
 
-//        if self.serviceProviderStore.eventMarketsPublisher.value.isNotEmpty {
-//            self.marketFilters = self.serviceProviderStore.eventMarketsPublisher.value
-//            self.getMatchDetails()
-//        }
-//        else {
-//        }
-
-        self.serviceProviderStore.eventMarketsPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] eventsMarket in
-                if eventsMarket.isNotEmpty {
-                    self?.marketFilters = eventsMarket
-                    self?.getMatchDetails()
-                }
-            })
-            .store(in: &cancellables)
-
-        self.getFieldWidgetId(eventId: matchId)
-
-    }
-
-    func getFieldWidgetId(eventId: String) {
-        Env.serviceProvider.getFieldWidgetId(eventId: eventId)?
+        Env.serviceProvider.getFieldWidget(eventId: self.matchId, isDarkTheme: isDarkTheme)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
-                    ()
-                case .failure:
-                    ()
+                    print("FIELD WIDGET RENDER DATA FINISHED")
+                case .failure(let error):
+                    print("FIELD WIDGET RENDER DATA ERROR: \(error)")
+
                 }
-            }, receiveValue: { [weak self] fieldWidgetResponse in
-                if let fieldWidgetId = fieldWidgetResponse.data {
-                    self?.fieldWidgetIdPublisher.send(fieldWidgetId)
-                }
+            }, receiveValue: { [weak self] fieldWidget in
+                print("FIELD WIDGET RENDER DATA RESPONSE: \(fieldWidget)")
+
+                self?.fieldWidgetRenderData = fieldWidget
+                self?.shouldRenderFieldWidget.send(true)
+
             })
             .store(in: &cancellables)
     }
@@ -309,7 +308,7 @@ class MatchDetailsViewModel: NSObject {
             }
             self.matchPublisher.send(.loaded(match))
 
-            self.fetchMarketGroupsPublisher()
+            //self.fetchMarketGroupsPublisher()
         }
         else {
             self.matchPublisher.send(.failed)
@@ -326,14 +325,17 @@ class MatchDetailsViewModel: NSObject {
 
     //
     //
-    private func fetchMarketGroupsPublisher() {
+    private func fetchMarketGroupsPublisher(marketGroups: [ServiceProvider.MarketGroup]) {
 
-        let marketGroups = self.serviceProviderStore.marketGroupsArray().map { rawMarketGroup in
+        let marketGroups = marketGroups.map { rawMarketGroup in
+
             MarketGroup(id: rawMarketGroup.id,
                         type: rawMarketGroup.type,
                         groupKey: rawMarketGroup.groupKey,
                         translatedName: rawMarketGroup.translatedName,
-                        isDefault: rawMarketGroup.isDefault)
+                        isDefault: rawMarketGroup.isDefault,
+                        markets: ServiceProviderModelMapper.optionalMarkets(fromServiceProviderMarkets: rawMarketGroup.markets))
+
         }
 
         let sortedMarketGroups = marketGroups.sorted(by: {
@@ -394,7 +396,8 @@ class MatchDetailsViewModel: NSObject {
                         type: rawMarketGroup.type,
                         groupKey: rawMarketGroup.groupKey,
                         translatedName: rawMarketGroup.translatedName,
-                        isDefault: rawMarketGroup.isDefault)
+                        isDefault: rawMarketGroup.isDefault,
+                        markets: nil)
         }
 
         self.isLoadingMarketGroups.send(false)
@@ -415,13 +418,13 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.serviceProviderStore.marketGroupsPublisher.value.count
+        return self.marketGroupsPublisher.value.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
             let cell = collectionView.dequeueCellType(ListTypeCollectionViewCell.self, indexPath: indexPath),
-            let item = self.serviceProviderStore.marketGroupsPublisher.value[safe: indexPath.row]
+            let item = self.marketGroupsPublisher.value[safe: indexPath.row]
         else {
             fatalError()
         }

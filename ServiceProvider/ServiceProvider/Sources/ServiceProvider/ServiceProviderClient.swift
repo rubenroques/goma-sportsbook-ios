@@ -117,34 +117,33 @@ extension ServiceProviderClient {
 }
 
 extension ServiceProviderClient {
-
-    //
-    // REST API Events
-    //
-    public func getMarketFilters() -> AnyPublisher<MarketFilter, ServiceProviderError>? {
+    public func getMarketFilters(event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
-            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-        return eventsProvider.getMarketsFilter()
+        return eventsProvider.getMarketsFilter(event: event)
     }
 
-    public func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>? {
+    public func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
-            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
+
         return eventsProvider.getFieldWidgetId(eventId: eventId)
     }
 
-    public func getFieldWidgetURLRequest(urlString: String? = nil, widgetFile: String? = nil) -> URLRequest? {
-        return self.eventsProvider?.getFieldWidgetURLRequest(urlString: urlString, widgetFile: widgetFile)
-    }
+    public func getFieldWidget(eventId: String, isDarkTheme: Bool? = nil) -> AnyPublisher<FieldWidgetRenderData, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
 
-    public func getFieldWidgetHtml(widgetFile: String, eventId: String, providerId: String? = nil) -> String? {
-        return self.eventsProvider?.getFieldWidgetHtml(widgetFile: widgetFile, eventId: eventId, providerId: providerId)
+        return eventsProvider.getFieldWidget(eventId: eventId, isDarkTheme: isDarkTheme)
     }
 
     public func getAvailableSportTypes(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<[SportType], ServiceProviderError> {

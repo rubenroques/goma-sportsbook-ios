@@ -9,6 +9,7 @@ import UIKit
 import Combine
 import LinkPresentation
 import WebKit
+import ServiceProvider
 
 class MatchDetailsViewController: UIViewController {
     
@@ -146,9 +147,11 @@ class MatchDetailsViewController: UIViewController {
         didSet {
             if self.shouldShowLiveFieldWebView {
                 self.headerLiveButtonBaseView.isHidden = false
+                self.contentScrollView.isScrollEnabled = true
             }
             else {
                 self.headerLiveButtonBaseView.isHidden = true
+                self.contentScrollView.isScrollEnabled = false
             }
         }
     }
@@ -177,7 +180,7 @@ class MatchDetailsViewController: UIViewController {
     // ScrollView content offset
     private var lastContentOffset: CGFloat = 0
     private var autoScrollEnabled: Bool = true
-    
+
     enum HeaderBarSelection {
         case none
         case live
@@ -427,9 +430,8 @@ class MatchDetailsViewController: UIViewController {
         // ScrollView
         self.contentScrollView.delegate = self
 
-        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(didSwipeDownMarkets))
-        swipeDown.direction = .down
-        self.headerDetailView.addGestureRecognizer(swipeDown)
+        let tapMarkets = UITapGestureRecognizer(target: self, action: #selector(didTapMarkets))
+        self.headerDetailView.addGestureRecognizer(tapMarkets)
         
         self.setupWithTheme()
         
@@ -443,8 +445,6 @@ class MatchDetailsViewController: UIViewController {
         
         //
         self.view.bringSubviewToFront(self.matchNotAvailableView)
-
-        // TEMP REMOVE
 
     }
     
@@ -552,6 +552,9 @@ class MatchDetailsViewController: UIViewController {
     
     // MARK: - Bindings
     private func bind(toViewModel viewModel: MatchDetailsViewModel) {
+
+        let theme = self.traitCollection.userInterfaceStyle
+        viewModel.getFieldWidget(isDarkTheme: theme == .dark ? true : false)
         
         Env.userSessionStore.userSessionPublisher
             .receive(on: DispatchQueue.main)
@@ -715,10 +718,10 @@ class MatchDetailsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        self.viewModel.fieldWidgetIdPublisher
+        self.viewModel.shouldRenderFieldWidget
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] fieldWidgetId in
-                if fieldWidgetId != "" {
+            .sink(receiveValue: { [weak self] shouldRender in
+                if shouldRender {
                     self?.headerButtonsBaseView.isHidden = false
                     self?.setupMatchField()
                 }
@@ -731,7 +734,6 @@ class MatchDetailsViewController: UIViewController {
 
     func setTableViewHeight() {
         let screenSize: CGRect = UIScreen.main.bounds
-        //let screenSize = self.view.safeAreaLayoutGuide.layoutFrame
 
         let screenHeight = screenSize.height
 
@@ -767,28 +769,39 @@ class MatchDetailsViewController: UIViewController {
         for marketGroup in marketGroups {
             if let groupKey = marketGroup.groupKey {
                 let viewModel = MarketGroupDetailsViewModel(match: match, marketGroupId: groupKey)
-                viewModel.availableMarkets = self.viewModel.serviceProviderStore.getAvailableMarketsForGroupKey(groupKey: groupKey)
+                if let groupMarkets = marketGroup.markets {
+                    viewModel.availableMarkets = groupMarkets
+                }
                 let marketGroupDetailsViewController = MarketGroupDetailsViewController(viewModel: viewModel)
 
                 marketGroupDetailsViewController.shouldScrollToTop = { [weak self] scrollTop in
 
                     guard let self = self else {return}
 
-                    self.contentScrollView.isScrollEnabled = true
-
                     if scrollTop {
-                        self.contentScrollView.setContentOffset(CGPoint.zero, animated: true)
-                        self.autoScrollEnabled = true
+                        UIView.animate(withDuration: 0.5, animations: {
+                            self.contentScrollView.setContentOffset(
+                                CGPoint.zero, animated: false)
+                        })
                     }
                     else {
                         if self.autoScrollEnabled {
                             let marketFilterOffset = self.isMatchFieldExpanded ? self.headerButtonsBaseView.frame.height + self.matchFielHeight : self.headerButtonsBaseView.frame.height
 
-                            self.contentScrollView.setContentOffset(CGPoint(x: 0, y: marketFilterOffset), animated: true)
+                            UIView.animate(withDuration: 0.5, animations: {
+                                self.contentScrollView.setContentOffset(
+                                    CGPoint(x: 0, y: marketFilterOffset), animated: false)
+                            })
+
                             self.autoScrollEnabled = false
                         }
                     }
                 }
+
+                marketGroupDetailsViewController.enableAutoScroll = { [weak self] in
+                    self?.autoScrollEnabled = true
+                }
+
 
                 print("MatchDetailsMarkets - marketGroupDetailsViewController: \(groupKey)")
                 self.marketGroupsViewControllers.append(marketGroupDetailsViewController)
@@ -866,17 +879,23 @@ class MatchDetailsViewController: UIViewController {
         }
         
         if self.viewModel.matchModePublisher.value == .live && self.isValidStatsSport {
-            self.shouldShowLiveFieldWebView = true
-            self.isLiveFieldReady = false
 
             // let request = URLRequest(url: URL(string: "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)")!)
 
-            let urlString = "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)"
+            if let fieldWidget = self.viewModel.fieldWidgetRenderData {
+                self.shouldShowLiveFieldWebView = true
+                self.isLiveFieldReady = false
 
-            if let fieldWidgetRequest = Env.serviceProvider.getFieldWidgetURLRequest(urlString: urlString) {
+                // let urlString = "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)"
 
-                self.matchFieldWebView.load(fieldWidgetRequest)
-
+                if let htmlString = fieldWidget.htmlString,
+                   let url = fieldWidget.url {
+                    self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
+                }
+                else if let url = fieldWidget.url {
+                    let urlRequest = URLRequest(url: url)
+                    self.matchFieldWebView.load(urlRequest)
+                }
             }
             else {
                 self.shouldShowLiveFieldWebView = false
@@ -887,27 +906,17 @@ class MatchDetailsViewController: UIViewController {
             // self.shouldShowLiveFieldWebView = false
 
             // TEST
-            if self.viewModel.fieldWidgetIdPublisher.value != "" {
+            if let fieldWidget = self.viewModel.fieldWidgetRenderData {
                 self.shouldShowLiveFieldWebView = true
                 self.isLiveFieldReady = false
 
-                var fieldWidgetFile = "field_widget_light.html"
-
-                let theme = self.traitCollection.userInterfaceStyle
-
-                if theme == .dark {
-                    fieldWidgetFile = "field_widget_dark.html"
+                if let htmlString = fieldWidget.htmlString,
+                   let url = fieldWidget.url {
+                    self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
                 }
-
-                let fileStringSplit = fieldWidgetFile.components(separatedBy: ".")
-                if let url = Bundle.main.url(forResource: fileStringSplit[0], withExtension: fileStringSplit[1]),
-                   let htmlString = Env.serviceProvider.getFieldWidgetHtml(widgetFile: fieldWidgetFile, eventId: self.viewModel.fieldWidgetIdPublisher.value) {
-
-                        self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
-
-                }
-                else {
-                    self.shouldShowLiveFieldWebView = false
+                else if let url = fieldWidget.url {
+                    let urlRequest = URLRequest(url: url)
+                    self.matchFieldWebView.load(urlRequest)
                 }
             }
             else {
@@ -1008,11 +1017,11 @@ class MatchDetailsViewController: UIViewController {
         }
     }
 
-    @objc func didSwipeDownMarkets() {
+    @objc func didTapMarkets() {
 
-        self.contentScrollView.isScrollEnabled = true
-        self.contentScrollView.setContentOffset(CGPoint.zero, animated: true)
-        self.autoScrollEnabled = true
+        if self.shouldShowLiveFieldWebView {
+            self.contentScrollView.setContentOffset(CGPoint.zero, animated: true)
+        }
 
     }
     
@@ -1415,20 +1424,12 @@ extension MatchDetailsViewController: UIScrollViewDelegate {
         }
 
         if scrollView == self.contentScrollView {
-
-            let scrollViewTop = scrollView.frame.origin.y
-
-            if let marketFiltersTop = scrollView.superview?.convert(self.marketTypesCollectionView.bounds.origin, from: self.marketTypesCollectionView).y {
-
-                if self.lastContentOffset < scrollView.contentOffset.y {
-
-                    if marketFiltersTop < scrollViewTop {
-                        self.contentScrollView.isScrollEnabled = false
-                        self.autoScrollEnabled = false
-                    }
+            let marketFilterOffset = self.isMatchFieldExpanded ? self.headerButtonsBaseView.frame.height + self.matchFielHeight : self.headerButtonsBaseView.frame.height
+            if self.lastContentOffset < scrollView.contentOffset.y {
+                if marketFilterOffset <= scrollView.contentOffset.y {
+                    self.contentScrollView.setContentOffset(CGPoint(x: 0, y: marketFilterOffset), animated: false)
                 }
             }
-
             self.lastContentOffset = scrollView.contentOffset.y
         }
     }

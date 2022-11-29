@@ -23,12 +23,9 @@ protocol EventsProvider {
     //
     func getAvailableSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportType], ServiceProviderError>
 
-    func getMarketsFilter() -> AnyPublisher<MarketFilter, ServiceProviderError>
+    func getMarketsFilter(event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError>
     
     func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>
     
-    func getFieldWidgetURLRequest(urlString: String?, widgetFile: String?) -> URLRequest?
-    
-    func getFieldWidgetHtml(widgetFile: String, eventId: String, providerId: String?) -> String?
-
+    func getFieldWidget(eventId: String, isDarkTheme: Bool?) -> AnyPublisher<FieldWidgetRenderData, ServiceProviderError>
 }

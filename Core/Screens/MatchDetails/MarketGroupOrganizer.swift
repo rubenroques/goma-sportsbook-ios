@@ -18,12 +18,13 @@ protocol MarketGroupOrganizer {
 
 }
 
-struct MarketGroup: Codable {
+struct MarketGroup {
     let id: String
     let type: String
     let groupKey: String?
     let translatedName: String?
     let isDefault: Bool?
+    let markets: [Market]?
 }
 
 struct ColumnListedMarketGroupOrganizer: MarketGroupOrganizer {

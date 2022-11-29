@@ -153,31 +153,11 @@ class SportSelectionViewController: UIViewController {
         self.allSportsPublisher = Env.serviceProvider.getAvailableSportTypes()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
-                print("Env.serviceProvider.liveSportTypes completed \(completion)")
                 self?.isLoading = false
             }, receiveValue: { [weak self] (sportTypes: [SportType]) in
-                print("Env.serviceProvider otherSportTypes getAvailableSportTypes \(sportTypes)")
                 self?.configureWithSports(sportTypes)
                 self?.isLoading = false
             })
-
-        Env.serviceProvider.subscribePreLiveSportTypes()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                print("Env.serviceProvider.liveSportTypes completed \(completion)")
-                self?.isLoading = false
-            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
-                switch subscribableContent {
-                case .connected:
-                    ()
-                case .contentUpdate(let sportTypes):
-                    print("Env.serviceProvider otherSportTypes subscribePreLiveSportTypes \(sportTypes)")
-                    ()
-                case .disconnected:
-                    ()
-                }
-            })
-            .store(in: &self.cancellables)
 
     }
 
