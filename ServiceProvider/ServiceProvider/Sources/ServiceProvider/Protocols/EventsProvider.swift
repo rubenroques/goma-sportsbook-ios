@@ -28,4 +28,9 @@ protocol EventsProvider {
     func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>
     
     func getFieldWidget(eventId: String, isDarkTheme: Bool?) -> AnyPublisher<FieldWidgetRenderData, ServiceProviderError>
+
+    func getSportRegions(sportId: String) -> AnyPublisher<SportNodeInfo, ServiceProviderError>
+
+    func getRegionCompetitions(regionId: String) -> AnyPublisher<SportRegionInfo, ServiceProviderError>
+
 }

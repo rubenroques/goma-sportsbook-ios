@@ -646,10 +646,10 @@ extension SportRadarEventsProvider {
         return Publishers.CombineLatest(sportsRequestPublisher, codeSportsRequestPublisher)
             .flatMap({ sportsList, codeSportsList -> AnyPublisher<[SportType], ServiceProviderError> in
 
-                if let sports = sportsList.data?.sportNodes?.filter({
+                if let sports = sportsList.data.sportNodes?.filter({
                     $0.numberEvents != "0"
-                }),
-                   let codeSports = codeSportsList.data {
+                }) {
+                    let codeSports = codeSportsList.data
 
                     let newSports = sports.map(SportRadarModelMapper.sportUnique(fromSportNode:)).compactMap({ $0 })
 
@@ -663,6 +663,36 @@ extension SportRadarEventsProvider {
                 return Fail(outputType: [SportType].self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
             })
             .eraseToAnyPublisher()
+
+    }
+
+    func getSportRegions(sportId: String) -> AnyPublisher<SportNodeInfo, ServiceProviderError> {
+
+        let endpoint = SportRadarRestAPIClient.sportRegionsNavigationList(sportId: sportId)
+        let requestPublisher: AnyPublisher<SportRadarResponse<SportRadarModels.SportNodeInfo>, ServiceProviderError> = self.networkManager.request(endpoint)
+
+
+        return requestPublisher.map( { sportRadarResponse -> SportNodeInfo in
+            let sportNodeInfo = sportRadarResponse.data
+            let mappedSportNodeInfo = SportRadarModelMapper.sportNodeInfo(fromInternalSportNodeInfo:sportNodeInfo)
+            return mappedSportNodeInfo
+
+        }).eraseToAnyPublisher()
+
+    }
+
+    func getRegionCompetitions(regionId: String) -> AnyPublisher<SportRegionInfo, ServiceProviderError> {
+
+        let endpoint = SportRadarRestAPIClient.regionCompetitions(regionId: regionId)
+        let requestPublisher: AnyPublisher<SportRadarResponse<SportRadarModels.SportRegionInfo>, ServiceProviderError> = self.networkManager.request(endpoint)
+
+
+        return requestPublisher.map( { sportRadarResponse -> SportRegionInfo in
+            let sportRegionInfo = sportRadarResponse.data
+            let mappedSportRegionInfo = SportRadarModelMapper.sportRegionInfo(fromInternalSportRegionInfo: sportRegionInfo)
+            return mappedSportRegionInfo
+
+        }).eraseToAnyPublisher()
 
     }
 }

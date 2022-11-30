@@ -146,15 +146,6 @@ extension ServiceProviderClient {
         return eventsProvider.getFieldWidget(eventId: eventId, isDarkTheme: isDarkTheme)
     }
 
-//    public func getSportsList() -> AnyPublisher<SportRadarResponse<SportsList>, ServiceProviderError> {
-//        guard
-//            let eventsProvider = self.eventsProvider
-//        else {
-//            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
-//        }
-//        return eventsProvider.getSportsList()
-//    }
-
     public func getAvailableSportTypes(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<[SportType], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -162,6 +153,26 @@ extension ServiceProviderClient {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
         return eventsProvider.getAvailableSportTypes(initialDate: initialDate, endDate: endDate)
+    }
+
+    public func getSportRegions(sportId: String) -> AnyPublisher<SportNodeInfo, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getSportRegions(sportId: sportId)
+    }
+
+    public func getRegionCompetitions(regionId: String) -> AnyPublisher<SportRegionInfo, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getRegionCompetitions(regionId: regionId)
     }
 }
 

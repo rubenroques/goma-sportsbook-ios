@@ -505,6 +505,36 @@ struct SportRadarModelMapper {
         return sportUnique
 
     }
+
+    static func sportNodeInfo(fromInternalSportNodeInfo sportNodeInfo: SportRadarModels.SportNodeInfo) -> SportNodeInfo {
+        let sportRegionNodes = sportNodeInfo.regionNodes.map(self.sportNodeRegion(fromInternalSportNodeRegion:))
+
+        let sportNodeInfo = SportNodeInfo(id: sportNodeInfo.id, regionNodes: sportRegionNodes, defaultOrder: sportNodeInfo.defaultOrder)
+
+        return sportNodeInfo
+    }
+
+    static func sportNodeRegion(fromInternalSportNodeRegion sportNodeRegion: SportRadarModels.SportRegion) -> SportRegion {
+
+        let sportRegionNode = SportRegion(id: sportNodeRegion.id, name: sportNodeRegion.name)
+
+        return sportRegionNode
+    }
+
+    static func sportRegionInfo(fromInternalSportRegionInfo sportRegionInfo: SportRadarModels.SportRegionInfo) -> SportRegionInfo {
+        let regionCompetitionNodes = sportRegionInfo.competitionNodes.map(self.regionCompetitionNode(fromInternalSportCompetition:))
+
+        let sportRegionInfo = SportRegionInfo(id: sportRegionInfo.id, name: sportRegionInfo.name, competitionNodes: regionCompetitionNodes)
+
+        return sportRegionInfo
+    }
+
+    static func regionCompetitionNode(fromInternalSportCompetition sportCompetition: SportRadarModels.SportCompetition) -> SportCompetition {
+
+        let sportCompetition = SportCompetition(id: sportCompetition.id, name: sportCompetition.name)
+
+        return sportCompetition
+    }
     // ==========================================
 
     

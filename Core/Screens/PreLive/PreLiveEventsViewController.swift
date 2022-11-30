@@ -128,6 +128,10 @@ class PreLiveEventsViewController: UIViewController {
             }
             .store(in: &cancellables)
 
+        self.competitionsFiltersView.shouldLoadCompetitions = { [weak self] regionId in
+            print("REGION ID CLICKED: \(regionId)")
+        }
+
         self.commonInit()
         self.setupWithTheme()
 
@@ -452,7 +456,8 @@ class PreLiveEventsViewController: UIViewController {
             }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] competitions in
-                self?.competitionsFiltersView.competitions = competitions.filter { $0.cells.isNotEmpty }
+                //self?.competitionsFiltersView.competitions = competitions.filter { $0.cells.isNotEmpty }
+                self?.competitionsFiltersView.competitions = competitions
             }
             .store(in: &cancellables)
 

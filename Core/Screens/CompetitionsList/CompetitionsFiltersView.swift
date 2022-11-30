@@ -36,6 +36,8 @@ class CompetitionsFiltersView: UIView, NibLoadable {
     var selectedIds: CurrentValueSubject<Set<String>, Never> = .init([])
     var expandedCellsDictionary: [String: Bool] = [:]
 
+    var shouldLoadCompetitions: ((String) -> Void)?
+
     var isLoading: Bool = false {
         didSet {
             if isLoading {
@@ -51,7 +53,8 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         didSet {
             self.expandedCellsDictionary = [:]
             self.competitions.forEach({ competition in
-                self.expandedCellsDictionary[competition.id] = (competition.id == "0") // Only popular competition will be true, to appear opened by default
+                //self.expandedCellsDictionary[competition.id] = (competition.id == "0") // Only popular competition will be true, to appear opened by default
+                self.expandedCellsDictionary[competition.id] = (competition.id == self.competitions.first?.id)
             })
             self.searchBarView.text = nil
             self.filteredCompetitions = competitions
@@ -503,6 +506,8 @@ extension CompetitionsFiltersView: CollapsibleTableViewHeaderDelegate {
             expandedCellsDictionary[sectionIdentifier] = true
         }
 
+        self.shouldLoadCompetitions?(sectionIdentifier)
+        
         self.redrawForSection(sectionIdentifier)
     }
 

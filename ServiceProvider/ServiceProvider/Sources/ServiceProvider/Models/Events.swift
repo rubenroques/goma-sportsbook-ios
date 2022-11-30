@@ -76,3 +76,60 @@ public struct Outcome: Codable {
     }
     
 }
+
+public struct SportNodeInfo: Codable {
+    public var id: String
+    public var regionNodes: [SportRegion]
+    public var navigationTypes: [String]?
+    public var name: String?
+    public var defaultOrder: Int?
+    public var numMarkets: String?
+    public var numEvents: String?
+    public var numOutrightMarkets: String?
+    public var numOutrightEvents: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id = "idfwbonavigation"
+        case regionNodes = "bonavigationnodes"
+        case navigationTypes = "idfwbonavigationtypes"
+        case name = "name"
+        case defaultOrder = "defaultOrder"
+        case numMarkets = "nummarkets"
+        case numEvents = "numevents"
+        case numOutrightMarkets = "numoutrightmarkets"
+        case numOutrightEvents = "numoutrightevents"
+    }
+}
+
+public struct SportRegion: Codable {
+    public var id: String
+    public var name: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id = "idfwbonavigation"
+        case name = "name"
+    }
+}
+
+public struct SportRegionInfo: Codable {
+    public var id: String
+    public var name: String
+    public var competitionNodes: [SportCompetition]
+
+    enum CodingKeys: String, CodingKey {
+        case id = "idfwbonavigation"
+        case name = "name"
+        case competitionNodes = "bonavigationnodes"
+    }
+}
+
+public struct SportCompetition: Codable {
+    public var id: String
+    public var name: String
+
+    enum CodingKeys: String, CodingKey {
+        case id = "idfwbonavigation"
+        case name = "name"
+    }
+}
+

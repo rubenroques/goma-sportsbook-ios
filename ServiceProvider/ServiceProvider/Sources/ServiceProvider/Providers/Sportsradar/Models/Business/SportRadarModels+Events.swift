@@ -85,5 +85,64 @@ extension SportRadarModels {
         }
         
     }
+
+    struct SportNodeInfo: Codable {
+        var id: String
+        var regionNodes: [SportRegion]
+        var navigationTypes: [String]?
+        var name: String?
+        var defaultOrder: Int?
+        var numMarkets: String?
+        var numEvents: String?
+        var numOutrightMarkets: String?
+        var numOutrightEvents: String?
+
+        enum CodingKeys: String, CodingKey {
+            case id = "idfwbonavigation"
+            case regionNodes = "bonavigationnodes"
+            case navigationTypes = "idfwbonavigationtypes"
+            case name = "name"
+            case defaultOrder = "defaultOrder"
+            case numMarkets = "nummarkets"
+            case numEvents = "numevents"
+            case numOutrightMarkets = "numoutrightmarkets"
+            case numOutrightEvents = "numoutrightevents"
+        }
+    }
+
+    struct SportRegion: Codable {
+        var id: String
+        var name: String?
+
+        enum CodingKeys: String, CodingKey {
+            case id = "idfwbonavigation"
+            case name = "name"
+        }
+    }
+
+    struct SportRegionInfo: Codable {
+        var id: String
+        var name: String
+        var competitionNodes: [SportCompetition]
+
+        enum CodingKeys: String, CodingKey {
+            case id = "idfwbonavigation"
+            case name = "name"
+            case competitionNodes = "bonavigationnodes"
+        }
+    }
+
+    struct SportCompetition: Codable {
+        var id: String
+        var name: String
+
+        enum CodingKeys: String, CodingKey {
+            case id = "idfwbonavigation"
+            case name = "name"
+        }
+    }
     
 }
+
+
+
