@@ -380,16 +380,16 @@ class PreLiveEventsViewModel: NSObject {
     func setMatchListType(_ matchListType: MatchListType) {
         switch matchListType {
         case .popular:
-            //self.unsubscribeUpcomingMatches()
+            // self.unsubscribeUpcomingMatches()
             self.fetchPopularMatches()
         case .upcoming:
-            //self.unsubscribePopularMatches()
+            // self.unsubscribePopularMatches()
             self.fetchTodayMatches()
         case .competitions:
             self.fetchCompetitionsFilters()
         }
         self.matchListTypePublisher.send(matchListType)
-        //self.updateContentList()
+        // self.updateContentList()
     }
 
     private func updateContentList() {
@@ -619,9 +619,10 @@ class PreLiveEventsViewModel: NSObject {
         self.isLoadingPopularList.send(true)
         self.isLoadingEvents.send(true)
 
-        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
 
-        self.popularMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType,
+        let sport = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
+
+        self.popularMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sport,
                                                                                    pageIndex: 0,
                                                                                    eventCount: 10,
                                                                                    sortType: .popular)
@@ -1053,6 +1054,30 @@ class PreLiveEventsViewModel: NSObject {
     func fetchCompetitionsMatchesWithIds(_ ids: [String]) {
 
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
+        guard let competitionId = ids.first else {return}
+
+        Env.serviceProvider.getCompetitionMarketGroups(competitionId: competitionId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("COMPETITION INFO ERROR: \(error)")
+                }
+
+            }, receiveValue: { [weak self] competitionInfo in
+                print("COMPETITION INFO RESPONSE: \(competitionInfo)")
+                if let marketGroup = competitionInfo.marketGroups.filter({
+                    $0.name == "Main"
+                }).first {
+                    self?.subscribeCompetitionMatches(forMarketGroupId: marketGroup.id)
+
+                }
+
+
+            })
+            .store(in: &cancellables)
 
 //        self.competitionsMatchesPublisher = Env.serviceProvider.subscribeCompetitionMatches(forSportType: sportType)
 //            .sink(receiveCompletion: { completion in
@@ -1129,6 +1154,34 @@ class PreLiveEventsViewModel: NSObject {
 //                    print("PreLiveEventsViewModel competitionsMatchesPublisher disconnect")
 //                }
 //            })
+    }
+
+    func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String) {
+
+        Env.serviceProvider.subscribeCompetitionMatches(forMarketGroupId: marketGroupId)
+        .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
+            switch completion {
+            case .finished:
+                ()
+            case .failure:
+                //self?.finishedWithError()
+                print("SUBSCRIPTION COMPETITION MATCHES ERROR")
+            }
+        } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
+            switch subscribableContent {
+            case .connected(let subscription):
+                self?.subscriptions.insert(subscription)
+                //self?.storeMatches([])
+            case .contentUpdate(let eventsGroups):
+                let matches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+                //self?.storeMatches(matches)
+            case .disconnected:
+                //self?.storeMatches([])
+                ()
+            }
+            //self?.updatedContent()
+        }
+        .store(in: &cancellables)
     }
 
     //
@@ -1273,6 +1326,26 @@ class PreLiveEventsViewModel: NSObject {
 
             self.updateContentList()
         }
+    }
+
+    func loadCompetitionByRegion(regionId: String) {
+
+        Env.serviceProvider.getRegionCompetitions(regionId: regionId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("REGION COMPETITION ERROR: \(error)")
+                }
+            }, receiveValue: { [weak self] sportRegionInfo in
+                print("REGION COMPETITION RESPONSE: \(sportRegionInfo)")
+                self?.regionCompetitionsPublisher.value[sportRegionInfo.id] = sportRegionInfo.competitionNodes
+                self?.setupCompetitionGroups()
+
+            })
+            .store(in: &cancellables)
     }
 
     func outrightCompetitions(forIds ids: [String]) -> [Competition] {

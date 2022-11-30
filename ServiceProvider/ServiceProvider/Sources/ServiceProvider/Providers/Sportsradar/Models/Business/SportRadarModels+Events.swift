@@ -8,6 +8,16 @@
 import Foundation
 
 extension SportRadarModels {
+
+    struct SportRadarResponse<T: Codable>: Codable {
+        var data: T
+        var version: Int?
+
+        enum CodingKeys: String, CodingKey {
+            case data = "data"
+            case version = "value"
+        }
+    }
     
     struct Event: Codable {
         
@@ -139,6 +149,40 @@ extension SportRadarModels {
         enum CodingKeys: String, CodingKey {
             case id = "idfwbonavigation"
             case name = "name"
+        }
+    }
+
+    struct SportCompetitionInfo: Codable {
+        var id: String
+        var name: String
+        var marketGroups: [SportCompetitionMarketGroup]
+
+        enum CodingKeys: String, CodingKey {
+            case id = "idfwbonavigation"
+            case name = "name"
+            case marketGroups = "marketgroups"
+        }
+    }
+
+    struct SportCompetitionMarketGroup: Codable {
+        var id: String
+        var name: String
+
+        enum CodingKeys: String, CodingKey {
+            case id = "idfwmarketgroup"
+            case name = "name"
+        }
+    }
+
+    struct CompetitionMarketGroup: Codable {
+        var id: String
+        var name: String
+        var events: [Event]
+
+        enum CodingKeys: String, CodingKey {
+            case id = "idfwmarketgroup"
+            case name = "name"
+            case events = "events"
         }
     }
     

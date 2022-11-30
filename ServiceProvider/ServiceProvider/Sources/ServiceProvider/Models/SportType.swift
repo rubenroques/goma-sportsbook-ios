@@ -7,7 +7,38 @@
 
 import Foundation
 
-public enum SportTypeInfo: CaseIterable {
+public struct SportType { // : Codable, Hashable {
+    public var name: String
+    public var numericId: String?
+    public var alphaId: String?
+    public var iconId: String?
+    public var showEventCategory: Bool
+    public var numberEvents: Int
+    public var numberOutrightEvents: Int
+    public var numberOutrightMarkets: Int
+
+    public init(name: String,
+                numericId: String?,
+                alphaId: String?,
+                iconId: String?,
+                showEventCategory: Bool,
+                numberEvents: Int,
+                numberOutrightEvents: Int,
+                numberOutrightMarkets: Int) {
+        self.name = name
+        self.numericId = numericId
+        self.alphaId = alphaId
+        self.iconId = iconId
+        self.showEventCategory = showEventCategory
+        self.numberEvents = numberEvents
+        self.numberOutrightEvents = numberOutrightEvents
+        self.numberOutrightMarkets = numberOutrightMarkets
+    }
+}
+
+// TODO: TASK André - Este devia ser o unico modelo publico
+
+enum SportTypeInfo: CaseIterable {
 
     case football
     case golf
@@ -200,6 +231,7 @@ public enum SportTypeInfo: CaseIterable {
     case numbers
     case emptyBets
     case lotteries
+
     public init?(id: String) {
         switch id {
         // Initial list from EveryMatrix

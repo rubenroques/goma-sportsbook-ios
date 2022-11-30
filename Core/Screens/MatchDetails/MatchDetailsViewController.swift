@@ -446,8 +446,6 @@ class MatchDetailsViewController: UIViewController {
         //
         self.view.bringSubviewToFront(self.matchNotAvailableView)
 
-        // TEMP REMOVE
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -884,20 +882,24 @@ class MatchDetailsViewController: UIViewController {
 
             // let request = URLRequest(url: URL(string: "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)")!)
 
-            if let fieldWidget = self.viewModel.fieldWidgetRenderData {
+            if let fieldWidget = self.viewModel.fieldWidgetRenderDataType {
                 self.shouldShowLiveFieldWebView = true
                 self.isLiveFieldReady = false
 
                 // let urlString = "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)"
 
-                if let htmlString = fieldWidget.htmlString,
-                   let url = fieldWidget.url {
-                    self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
-                }
-                else if let url = fieldWidget.url {
+                switch fieldWidget {
+                case .url(let url):
+
                     let urlRequest = URLRequest(url: url)
                     self.matchFieldWebView.load(urlRequest)
+
+                case .htmlString(let url, let htmlString):
+
+                    self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
+
                 }
+                
             }
             else {
                 self.shouldShowLiveFieldWebView = false
@@ -908,18 +910,22 @@ class MatchDetailsViewController: UIViewController {
             // self.shouldShowLiveFieldWebView = false
 
             // TEST
-            if let fieldWidget = self.viewModel.fieldWidgetRenderData {
+            if let fieldWidget = self.viewModel.fieldWidgetRenderDataType {
                 self.shouldShowLiveFieldWebView = true
                 self.isLiveFieldReady = false
 
-                if let htmlString = fieldWidget.htmlString,
-                   let url = fieldWidget.url {
-                    self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
-                }
-                else if let url = fieldWidget.url {
+                switch fieldWidget {
+                case .url(let url):
+
                     let urlRequest = URLRequest(url: url)
                     self.matchFieldWebView.load(urlRequest)
+
+                case .htmlString(let url, let htmlString):
+
+                    self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
+
                 }
+
             }
             else {
                 self.shouldShowLiveFieldWebView = false
@@ -1076,12 +1082,11 @@ class MatchDetailsViewController: UIViewController {
     
     @objc private func openCompetitionsDetails() {
         if let match = self.viewModel.match {
+            // TODO: This sport is incomplete
+            let sport = Sport(id: match.sportType, name: "", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0)
             let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [match.competitionId],
-                                                                          sport: Sport(id: match.sportType,
-
-                                                                                       alphaId: nil,
-
-                                                                                       numericId: nil), store: AggregatorsRepository())
+                                                                          sport: sport,
+                                                                          store: AggregatorsRepository())
             let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
             self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
         }
@@ -1427,19 +1432,12 @@ extension MatchDetailsViewController: UIScrollViewDelegate {
         }
 
         if scrollView == self.contentScrollView {
-
-            let scrollViewTop = scrollView.frame.origin.y
-
             let marketFilterOffset = self.isMatchFieldExpanded ? self.headerButtonsBaseView.frame.height + self.matchFielHeight : self.headerButtonsBaseView.frame.height
-
             if self.lastContentOffset < scrollView.contentOffset.y {
-
                 if marketFilterOffset <= scrollView.contentOffset.y {
-
                     self.contentScrollView.setContentOffset(CGPoint(x: 0, y: marketFilterOffset), animated: false)
                 }
             }
-
             self.lastContentOffset = scrollView.contentOffset.y
         }
     }

@@ -130,6 +130,7 @@ class PreLiveEventsViewController: UIViewController {
 
         self.competitionsFiltersView.shouldLoadCompetitions = { [weak self] regionId in
             print("REGION ID CLICKED: \(regionId)")
+            self?.viewModel.loadCompetitionByRegion(regionId: regionId)
         }
 
         self.commonInit()

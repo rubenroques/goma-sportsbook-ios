@@ -8,11 +8,13 @@
 import UIKit
 import Combine
 import FirebaseMessaging
+import Reachability
 
 class SplashViewController: UIViewController {
 
     private var isLoadingBootDataSubscription: AnyCancellable?
     private var loadingCompleted: () -> Void
+    private var reachability: Reachability?
 
     init(loadingCompleted: @escaping () -> Void) {
         self.loadingCompleted = loadingCompleted
@@ -30,6 +32,16 @@ class SplashViewController: UIViewController {
 
         Logger.log("Starting connections")
 
+        self.reachability = try? Reachability()
+
+        self.reachability?.whenUnreachable = { _ in
+            let alert = UIAlertController(title: "No Internet",
+                                          message: "No internet connection found. Please check your device settings and try again.",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+
         self.isLoadingBootDataSubscription = Publishers.CombineLatest3(Env.appSession.isLoadingAppSettingsPublisher,
                                                                        Env.userSessionStore.isLoadingUserSessionPublisher,
                                                                        Env.sportsStore.isLoadingSportTypesPublisher)
@@ -40,6 +52,7 @@ class SplashViewController: UIViewController {
                 }
             }
     }
+
 
     func splashLoadingCompleted() {
         self.isLoadingBootDataSubscription = nil

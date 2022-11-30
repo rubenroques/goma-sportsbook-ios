@@ -19,18 +19,28 @@ extension SportRadarModels {
         case sportTypeByDate = "sportTypeByDate"
         case eventListBySportTypeDate = "eventListBySportTypeDate"
         case eventDetails = "event"
+        case eventGroup = "eventGroup"
     }
     
     enum Content {
         
         case liveAdvancedList(topicIdentifier: TopicIdentifier, events: [SportRadarModels.Event])
         case eventListBySportTypeDate(topicIdentifier: TopicIdentifier, events: [SportRadarModels.Event])
+        case eventGroup(topicIdentifier: TopicIdentifier, events: [SportRadarModels.Event])
         
         case inplaySportList(sportsTypes: [SportType])
         case sportTypeByDate(sportsTypes: [SportType]) // TODO: Task André - Deveria ser um modelo da Sportradar, SportRadarModels.SportType
         
         case eventDetails(eventDetails: [SportRadarModels.Event])
     }
+
+    struct RestResponse<T: Codable>: Codable {
+        let data: T?
+        enum CodingKeys: String, CodingKey {
+            case data = "data"
+        }
+    }
+
 }
 
 
@@ -91,7 +101,7 @@ extension SportRadarModels {
                     case .sportTypeByDate:
                         // change key is optional
                         if contentContainer.contains(.change) {
-                            let sportsTypes: [SportType] = try contentContainer.decode([SportType].self, forKey: .change)
+                            let sportsTypes: [SportRadarModels.SportType] = try contentContainer.decode([SportRadarModels.SportType].self, forKey: .change)
                             content = .sportTypeByDate(sportsTypes: sportsTypes)
                         }
                         else {
@@ -119,6 +129,16 @@ extension SportRadarModels {
                         else {
 
                             content = .eventDetails(eventDetails: [])
+                        }
+                    case .eventGroup:
+                        if contentContainer.contains(.change) {
+                            let marketGroup: SportRadarModels.CompetitionMarketGroup = try contentContainer.decode(SportRadarModels.CompetitionMarketGroup.self, forKey: .change)
+
+                            let events = marketGroup.events
+                            content = .eventGroup(topicIdentifier: topicIdentifier, events: events)
+                        }
+                        else {
+                            content = .eventGroup(topicIdentifier: topicIdentifier, events: [])
                         }
                     }
                     self = .contentChanges(content: content)

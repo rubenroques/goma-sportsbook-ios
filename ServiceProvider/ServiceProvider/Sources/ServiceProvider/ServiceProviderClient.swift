@@ -56,13 +56,13 @@ extension ServiceProviderClient {
     //
     // Sports
     //
-    public func subscribeAvailableSportTypes(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+    public func subscribePreLiveSportTypes(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
-        return eventsProvider.subscribeAvailableSportTypes(initialDate: initialDate, endDate: endDate)
+        return eventsProvider.subscribePreLiveSportTypes(initialDate: initialDate, endDate: endDate)
     }
 
     public func subscribeLiveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
@@ -105,6 +105,16 @@ extension ServiceProviderClient {
                                                       sortType: sortType)
     }
 
+    public func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeCompetitionMatches(forMarketGroupId: marketGroupId)
+    }
+
     public func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -136,7 +146,7 @@ extension ServiceProviderClient {
         return eventsProvider.getFieldWidgetId(eventId: eventId)
     }
 
-    public func getFieldWidget(eventId: String, isDarkTheme: Bool? = nil) -> AnyPublisher<FieldWidgetRenderData, ServiceProviderError> {
+    public func getFieldWidget(eventId: String, isDarkTheme: Bool? = nil) -> AnyPublisher<FieldWidgetRenderDataType, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -173,6 +183,16 @@ extension ServiceProviderClient {
         }
 
         return eventsProvider.getRegionCompetitions(regionId: regionId)
+    }
+
+    public func getCompetitionMarketGroups(competitionId: String) -> AnyPublisher<SportCompetitionInfo, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getCompetitionMarketGroups(competitionId: competitionId)
     }
 }
 

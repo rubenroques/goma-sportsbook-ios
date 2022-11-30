@@ -54,7 +54,7 @@ class UserSessionStore {
             .sink(receiveCompletion: { _ in
 
             }, receiveValue: { [weak self] _ in
-                Logger.log("EMSessionLoginFLow - Socket Connected received will login if needed")
+                Logger.log("UserSessionStore - Socket Connected received will login if needed")
                 self?.startUserSessionIfNeeded()
             })
             .store(in: &cancellables)
@@ -62,7 +62,7 @@ class UserSessionStore {
         NotificationCenter.default.publisher(for: .userSessionForcedLogoutDisconnected)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                Logger.log("EMSessionLoginFLow - SessionForcedLogoutDisconnected received will logout local user")
+                Logger.log("UserSessionStore - SessionForcedLogoutDisconnected received will logout local user")
                 self?.logout()
             }
             .store(in: &cancellables)
@@ -84,14 +84,17 @@ class UserSessionStore {
     }
 
     static func storedUserPassword() -> String? {
-        guard
+        if
             let storedUserSession = UserSessionStore.loggedUserSession(),
             let passwordData = try? KeychainInterface.readPassword(service: Env.bundleId, account: storedUserSession.userId),
             let password = String(data: passwordData, encoding: .utf8)
-        else {
-            return nil
+        {
+            return password
         }
-        return password
+        else if let userSession = Self.loggedUserSession() {
+            return userSession.password
+        }
+        return nil
     }
 
     static func isUserLogged() -> Bool {
@@ -99,9 +102,10 @@ class UserSessionStore {
     }
 
     func saveUserSession(_ userSession: UserSession) {
-        userSessionPublisher.send(userSession)
 
-        UserDefaults.standard.userSession = userSession
+        if UserDefaults.standard.userSession != nil {
+            return
+        }
 
         if let password = userSession.password, let passwordData = password.data(using: .utf8) {
             do {
@@ -112,6 +116,9 @@ class UserSessionStore {
             }
         }
 
+        UserDefaults.standard.userSession = userSession
+
+        userSessionPublisher.send(userSession)
     }
 
     func loadLoggedUser() {
@@ -458,12 +465,12 @@ extension UserSessionStore {
             let user = UserSessionStore.loggedUserSession(),
             let userPassword = UserSessionStore.storedUserPassword()
         else {
-            Logger.log("EMSessionLoginFLow - User Session not found - login not needed")
+            Logger.log("UserSessionStore - User Session not found - login not needed")
             self.isLoadingUserSessionPublisher.send(false)
             return
         }
 
-        Logger.log("EMSessionLoginFLow - User Session found - login needed")
+        Logger.log("UserSessionStore - User Session found - login needed")
 
         self.loadLoggedUser()
 
@@ -472,8 +479,17 @@ extension UserSessionStore {
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
+                    switch error {
+                    case .invalidEmailPassword:
+                        self?.logout()
+                    case .quickSignUpIncomplete:
+                        self?.logout() // TODO: Finish Quick Sign up code completion
+                    case .restrictedCountry(let errorMessage):
+                        ()
+                    case .serverError:
+                        ()
+                    }
                     print("UserSessionStore login failed, error: \(error)")
-                    self?.logout()
                 case .finished:
                     ()
                 }

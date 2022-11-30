@@ -11,10 +11,11 @@ import Combine
 
 protocol SportRadarConnectorSubscriber: AnyObject {
     func liveAdvancedListUpdated(forTopicIdentifier identifier: TopicIdentifier, withEvents: [EventsGroup])
-    func inplaySportListUpdated(withSportTypes: [SportType])
-    func sportTypeByDate(withSportTypes: [SportType])
+    func inplaySportListUpdated(withSportTypes: [SportRadarModels.SportType])
+    func sportTypeByDate(withSportTypes: [SportRadarModels.SportType])
     func eventListBySportTypeDate(forTopicIdentifier identifier: TopicIdentifier, withEvents: [EventsGroup])
     func eventDetails(events: [EventsGroup])
+    func eventGroups(forTopicIdentifier identifier: TopicIdentifier, withEvents: [EventsGroup])
 }
 
 class SportRadarSocketConnector: NSObject, Connector {
@@ -158,6 +159,11 @@ extension SportRadarSocketConnector: WebSocketDelegate {
                 if let subscriber = self.messageSubscriber {
                     let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
                     subscriber.eventDetails(events: [eventsGroup])
+                }
+            case .eventGroup(topicIdentifier: let topicIdentifier, events: let events):
+                if let subscriber = self.messageSubscriber {
+                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
+                    subscriber.eventGroups(forTopicIdentifier: topicIdentifier, withEvents: [eventsGroup])
                 }
             }
         case .unknown:

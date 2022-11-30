@@ -17,11 +17,11 @@ struct Sport {
     let liveEventsCount: Int
 
     init(id: String,
-         name: String = "",
+         name: String,
          alphaId: String?,
          numericId: String?,
-         showEventCategory: Bool = false,
-         liveEventsCount: Int = 0) {
+         showEventCategory: Bool,
+         liveEventsCount: Int) {
         self.id = id
         self.name = name
         self.alphaId = alphaId

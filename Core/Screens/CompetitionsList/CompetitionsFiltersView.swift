@@ -35,6 +35,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
 
     var selectedIds: CurrentValueSubject<Set<String>, Never> = .init([])
     var expandedCellsDictionary: [String: Bool] = [:]
+    var loadedExpandedCells: [String] = []
 
     var shouldLoadCompetitions: ((String) -> Void)?
 
@@ -51,12 +52,36 @@ class CompetitionsFiltersView: UIView, NibLoadable {
     
     var competitions: [CompetitionFilterSectionViewModel] = [] {
         didSet {
-            self.expandedCellsDictionary = [:]
-            self.competitions.forEach({ competition in
-                //self.expandedCellsDictionary[competition.id] = (competition.id == "0") // Only popular competition will be true, to appear opened by default
-                self.expandedCellsDictionary[competition.id] = (competition.id == self.competitions.first?.id)
-            })
-            self.searchBarView.text = nil
+            if self.loadedExpandedCells.isEmpty {
+                self.expandedCellsDictionary = [:]
+                self.competitions.forEach({ competition in
+                    //self.expandedCellsDictionary[competition.id] = (competition.id == "0") // Only popular competition will be true, to appear opened by default
+                    self.expandedCellsDictionary[competition.id] = (competition.id == self.competitions.first?.id)
+
+                    if self.expandedCellsDictionary[competition.id] == true {
+                        self.loadedExpandedCells.append(competition.id)
+                    }
+                })
+
+                self.searchBarView.text = nil
+            }
+            else {
+                self.competitions.forEach({ competition in
+                    if self.expandedCellsDictionary[competition.id] == nil {
+                        self.expandedCellsDictionary[competition.id] = true
+                        self.loadedExpandedCells.append(competition.id)
+                        //self.didToogleSection(sectionIdentifier: competition.id)
+                        // self.redrawForSection(competition.id)
+                    }
+                    else {
+                        self.expandedCellsDictionary[competition.id] = false
+
+                    }
+
+                })
+
+            }
+
             self.filteredCompetitions = competitions
         }
     }
@@ -506,8 +531,11 @@ extension CompetitionsFiltersView: CollapsibleTableViewHeaderDelegate {
             expandedCellsDictionary[sectionIdentifier] = true
         }
 
-        self.shouldLoadCompetitions?(sectionIdentifier)
-        
+        if !self.loadedExpandedCells.contains(sectionIdentifier) {
+            self.loadedExpandedCells.append(sectionIdentifier)
+            self.shouldLoadCompetitions?(sectionIdentifier)
+        }
+
         self.redrawForSection(sectionIdentifier)
     }
 
