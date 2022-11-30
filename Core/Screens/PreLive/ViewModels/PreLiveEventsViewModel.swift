@@ -1054,30 +1054,32 @@ class PreLiveEventsViewModel: NSObject {
     func fetchCompetitionsMatchesWithIds(_ ids: [String]) {
 
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-        guard let competitionId = ids.first else {return}
 
-        Env.serviceProvider.getCompetitionMarketGroups(competitionId: competitionId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    print("COMPETITION INFO ERROR: \(error)")
-                }
+        self.isLoadingCompetitionMatches.send(true)
 
-            }, receiveValue: { [weak self] competitionInfo in
-                print("COMPETITION INFO RESPONSE: \(competitionInfo)")
-                if let marketGroup = competitionInfo.marketGroups.filter({
-                    $0.name == "Main"
-                }).first {
-                    self?.subscribeCompetitionMatches(forMarketGroupId: marketGroup.id)
+        for competitionId in ids {
+            Env.serviceProvider.getCompetitionMarketGroups(competitionId: competitionId)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+                    switch completion {
+                    case .finished:
+                        ()
+                    case .failure(let error):
+                        print("COMPETITION INFO ERROR: \(error)")
+                    }
 
-                }
+                }, receiveValue: { [weak self] competitionInfo in
+                    print("COMPETITION INFO RESPONSE: \(competitionInfo)")
+                    if let marketGroup = competitionInfo.marketGroups.filter({
+                        $0.name == "Main"
+                    }).first {
+                        self?.subscribeCompetitionMatches(forMarketGroupId: marketGroup.id, competitionInfo: competitionInfo)
 
+                    }
 
-            })
-            .store(in: &cancellables)
+                })
+                .store(in: &cancellables)
+        }
 
 //        self.competitionsMatchesPublisher = Env.serviceProvider.subscribeCompetitionMatches(forSportType: sportType)
 //            .sink(receiveCompletion: { completion in
@@ -1098,10 +1100,10 @@ class PreLiveEventsViewModel: NSObject {
 //                }
 //            })
 
-        self.competitionsDataSource.competitions = []
-        self.competitions = []
-        self.filteredOutrightCompetitionsDataSource.outrightCompetitions = []
-        self.isLoadingCompetitionMatches.send(false)
+//        self.competitionsDataSource.competitions = []
+//        self.competitions = []
+//        self.filteredOutrightCompetitionsDataSource.outrightCompetitions = []
+        //self.isLoadingCompetitionMatches.send(false)
 
 //        self.lastCompetitionsMatchesRequested = ids
 //
@@ -1156,8 +1158,11 @@ class PreLiveEventsViewModel: NSObject {
 //            })
     }
 
-    func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String) {
+    func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String, competitionInfo: SportCompetitionInfo) {
 
+        self.competitions = []
+        self.competitionsDataSource.competitions = []
+        
         Env.serviceProvider.subscribeCompetitionMatches(forMarketGroupId: marketGroupId)
         .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
             switch completion {
@@ -1174,6 +1179,7 @@ class PreLiveEventsViewModel: NSObject {
                 //self?.storeMatches([])
             case .contentUpdate(let eventsGroups):
                 let matches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+                self?.processCompetitionMatches(matches: matches, competitionInfo: competitionInfo)
                 //self?.storeMatches(matches)
             case .disconnected:
                 //self?.storeMatches([])
@@ -1182,6 +1188,26 @@ class PreLiveEventsViewModel: NSObject {
             //self?.updatedContent()
         }
         .store(in: &cancellables)
+    }
+
+    private func processCompetitionMatches(matches: [Match], competitionInfo: SportCompetitionInfo) {
+
+        let competitionsGroups = self.competitionGroupsPublisher.value
+
+        let newCompetition = Competition(id: competitionInfo.id,
+                                         name: competitionInfo.name,
+                                         matches: matches,
+                                         outrightMarkets: 0)
+//        if !self.competitions.contains(where: {
+//            $0.id == competitionInfo.id
+//        }) {
+//            self.competitions.append(newCompetition)
+//            self.competitionsDataSource.competitions = self.competitions
+//        }
+        self.competitions.append(newCompetition)
+        self.competitionsDataSource.competitions = self.competitions
+        self.isLoadingCompetitionMatches.send(false)
+        self.updateContentList()
     }
 
     //
