@@ -11,7 +11,8 @@ public enum ServiceProviderError: Error {
     
     case privilegedAccessManagerNotFound
     case eventsProviderNotFound
-    
+    case subscriptionNotFound
+
     case invalidEmailPassword
     case quickSignUpIncomplete
     

@@ -6,15 +6,14 @@
 //
 
 import Foundation
+import Combine
 
 class SportRadarEventsStorage {
+
+    var events: [Event] = []
     
-    let topicIdentifier: TopicIdentifier
-    
-    private var events: [String] = []
-    
-    init(topicIdentifier: TopicIdentifier) {
-        self.topicIdentifier = topicIdentifier
+    init() {
+
     }
     
 }

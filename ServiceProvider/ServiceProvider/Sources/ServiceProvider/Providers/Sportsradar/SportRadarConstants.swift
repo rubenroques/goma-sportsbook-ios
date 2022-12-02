@@ -52,7 +52,7 @@ struct SportRadarConstants {
     static var pamHostname = "https://ps.omegasys.eu"
 
     // Betting
-    static var bettingHostname = "https://www-pam-uat.optimahq.com"
+    static var bettingHostname = "https://www-pam-uat.optimahq.com" 
     static var bettingURL: String {
         return bettingHostname + "/api/betting"
     }

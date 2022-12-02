@@ -74,7 +74,7 @@ class PopularDetailsViewModel {
 
         Logger.log("subscribePreLiveMatches fetchData called")
 
-        self.matchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType, pageIndex: 0, eventCount: 20, sortType: .popular)
+        self.matchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType, sortType: .popular)
             .sink(receiveCompletion: { [weak self] completion in
                 // TODO: subscribePreLiveMatches receiveCompletion
                 switch completion {

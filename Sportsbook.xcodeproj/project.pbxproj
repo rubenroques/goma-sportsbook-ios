@@ -771,6 +771,7 @@
 		45452BED290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
 		45452BEE290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
 		455A0C6B26BD902F00EC572D /* SportsbookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0C6A26BD902F00EC572D /* SportsbookTests.swift */; };
+		455FD239293924FB007A32C2 /* Helpers in Frameworks */ = {isa = PBXBuildFile; productRef = 455FD238293924FB007A32C2 /* Helpers */; };
 		4568B9662858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
 		4568B9672858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
 		4568B9682858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
@@ -4643,6 +4644,7 @@
 		455C962626FE11CA00456F30 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		455C962726FE11CA00456F30 /* RootViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
 		455F765026F0EFCE00B9B85D /* LoginAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginAccount.swift; sourceTree = "<group>"; };
+		455FD23529392458007A32C2 /* Helpers */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Helpers; sourceTree = "<group>"; };
 		45626E33275530990069B89B /* OddFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddFormatter.swift; sourceTree = "<group>"; };
 		45626E36275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeAwayMarketDetailTableViewCell.swift; sourceTree = "<group>"; };
 		45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThreeAwayMarketDetailTableViewCell.xib; sourceTree = "<group>"; };
@@ -5337,6 +5339,7 @@
 				4589C948282024E400243547 /* FirebaseAnalytics in Frameworks */,
 				4589C949282024E400243547 /* OrderedCollections in Frameworks */,
 				4589C94A282024E400243547 /* SweeterSwift in Frameworks */,
+				455FD239293924FB007A32C2 /* Helpers in Frameworks */,
 				4589C94B282024E400243547 /* Starscream in Frameworks */,
 				45A6BB81282140D100D9B416 /* SocketIO in Frameworks */,
 			);
@@ -5839,6 +5842,7 @@
 		455A0C4726BD902C00EC572D = {
 			isa = PBXGroup;
 			children = (
+				455FD2342939241D007A32C2 /* Helpers */,
 				4593D7072930515D00C10654 /* GomaGaming */,
 				45B7BD4928E5AD48007832C2 /* ServiceProvider */,
 				455A0C5226BD902C00EC572D /* Core */,
@@ -6084,6 +6088,14 @@
 				457F495B2737C2280047169D /* UserBalance.swift */,
 			);
 			path = Account;
+			sourceTree = "<group>";
+		};
+		455FD2342939241D007A32C2 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				455FD23529392458007A32C2 /* Helpers */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		4568B96B2858E43700FA99B3 /* FlipperView */ = {
@@ -8562,6 +8574,7 @@
 				4589C772282024E400243547 /* SwiftyBeaver */,
 				45A6BB80282140D100D9B416 /* SocketIO */,
 				45B7BD4F28E5B080007832C2 /* ServiceProvider */,
+				455FD238293924FB007A32C2 /* Helpers */,
 			);
 			productName = Sportsbook;
 			productReference = 4589C9CD282024E400243547 /* GOMASports.app */;
@@ -14489,6 +14502,10 @@
 		450B784228F58574009229E3 /* ServiceProvider */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ServiceProvider;
+		};
+		455FD238293924FB007A32C2 /* Helpers */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Helpers;
 		};
 		457CB9C6282D27D000ED0F00 /* Reachability */ = {
 			isa = XCSwiftPackageProductDependency;

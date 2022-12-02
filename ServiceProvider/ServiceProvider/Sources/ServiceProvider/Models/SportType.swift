@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct SportType { // : Codable, Hashable {
+public struct SportType {
     public var name: String
     public var numericId: String?
     public var alphaId: String?

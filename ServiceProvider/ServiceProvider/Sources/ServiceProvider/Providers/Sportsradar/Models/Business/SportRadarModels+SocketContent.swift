@@ -12,22 +12,14 @@ enum SportRadarModels {
 }
 
 extension SportRadarModels {
-    
-    enum ContentType: String, Codable {
-        case liveAdvancedList = "liveDataSummaryAdvancedListBySportType"
-        case inplaySportList = "inplaySportListBySportType"
-        case sportTypeByDate = "sportTypeByDate"
-        case eventListBySportTypeDate = "eventListBySportTypeDate"
-        case eventDetails = "event"
-    }
-    
-    enum Content {
+
+    enum ContentContainer {
         
-        case liveAdvancedList(topicIdentifier: TopicIdentifier, events: [SportRadarModels.Event])
-        case eventListBySportTypeDate(topicIdentifier: TopicIdentifier, events: [SportRadarModels.Event])
+        case liveEvents(contentIdentifier: ContentIdentifier, events: [SportRadarModels.Event])
+        case preLiveEvents(contentIdentifier: ContentIdentifier, events: [SportRadarModels.Event])
         
-        case inplaySportList(sportsTypes: [SportType])
-        case sportTypeByDate(sportsTypes: [SportType]) // TODO: Task André - Deveria ser um modelo da Sportradar, SportRadarModels.SportType
+        case liveSports(sportsTypes: [SportType])
+        case preLiveSports(sportsTypes: [SportType]) // TODO: Task André - Deveria ser um modelo da Sportradar, SportRadarModels.SportType
         
         case eventDetails(eventDetails: [SportRadarModels.Event])
     }
@@ -47,7 +39,7 @@ extension SportRadarModels {
     enum NotificationType: Codable {
         
         case listeningStarted(sessionTokenId: String)
-        case contentChanges(content: Content)
+        case contentChanges(content: ContentContainer)
         case unknown
 
         enum CodingKeys: String, CodingKey {
@@ -81,40 +73,39 @@ extension SportRadarModels {
                     let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
                     
 //                    let contentIdsArray = ((try? contentTypeContainer.decode(String.self, forKey: .contentId)) ?? "").components(separatedBy: "/")
-//
-                    
-                    let topicIdentifier = try contentContainer.decode(TopicIdentifier.self, forKey: .content)
-                    var content: Content
+
+                    let contentIdentifier = try contentContainer.decode(ContentIdentifier.self, forKey: .content)
+                    var content: ContentContainer
                     
                     switch contentType {
-                    case .liveAdvancedList:
+                    case .liveEvents:
                         let events: [SportRadarModels.Event] = try contentContainer.decode([SportRadarModels.Event].self, forKey: .change)
-                        content = .liveAdvancedList(topicIdentifier: topicIdentifier, events: events)
+                        content = .liveEvents(contentIdentifier: contentIdentifier, events: events)
                         
-                    case .inplaySportList:
+                    case .liveSports:
                         let sportsTypeDetails: [SportRadarModels.SportTypeDetails] = try contentContainer.decode([SportRadarModels.SportTypeDetails].self, forKey: .change)
                         let sportsTypes = sportsTypeDetails.map(\.sportType)
-                        content = .inplaySportList(sportsTypes: sportsTypes)
+                        content = .liveSports(sportsTypes: sportsTypes)
                         
-                    case .sportTypeByDate:
+                    case .preLiveSports:
                         // change key is optional
                         if contentContainer.contains(.change) {
                             let sportsTypes: [SportRadarModels.SportType] = try contentContainer.decode([SportRadarModels.SportType].self, forKey: .change)
-                            content = .sportTypeByDate(sportsTypes: sportsTypes)
+                            content = .preLiveSports(sportsTypes: sportsTypes)
                         }
                         else {
                             let sportsTypes: [SportType] = []
-                            content = .sportTypeByDate(sportsTypes: sportsTypes)
+                            content = .preLiveSports(sportsTypes: sportsTypes)
                         }
 
-                    case .eventListBySportTypeDate:
+                    case .preLiveEvents:
                         // change key is optional
                         if contentContainer.contains(.change) {
                             let events: [SportRadarModels.Event] = try contentContainer.decode([SportRadarModels.Event].self, forKey: .change)
-                            content = .eventListBySportTypeDate(topicIdentifier: topicIdentifier, events: events)
+                            content = .preLiveEvents(contentIdentifier: contentIdentifier, events: events)
                         }
                         else {
-                            content = .eventListBySportTypeDate(topicIdentifier: topicIdentifier, events: [])
+                            content = .preLiveEvents(contentIdentifier: contentIdentifier, events: [])
                         }
                         
                     case .eventDetails:

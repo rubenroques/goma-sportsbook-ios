@@ -11,57 +11,130 @@ import OrderedCollections
 
 class SportRadarEventsProvider: EventsProvider {
 
-    private var connector: SportRadarSocketConnector
-    private var networkManager: NetworkManager
+    private var socketConnector: SportRadarSocketConnector
+    private var restConnector: SportRadarRestConnector
 
     private var cancellables = Set<AnyCancellable>()
 
-    required init(sessionCoordinator: SportRadarSessionCoordinator, connector: SportRadarSocketConnector = SportRadarSocketConnector()) {
-        self.connector = connector
-        self.networkManager = NetworkManager()
+    required init(sessionCoordinator: SportRadarSessionCoordinator,
+                  socketConnector: SportRadarSocketConnector = SportRadarSocketConnector(),
+                  restConnector: SportRadarRestConnector = SportRadarRestConnector()) {
+        self.socketConnector = socketConnector
+        self.restConnector = restConnector
 
-        self.connector.messageSubscriber = self
-        self.connector.connect()
+        self.socketConnector.messageSubscriber = self
+        self.socketConnector.connect()
     }
 
+    private var liveEventsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
 
     private var liveSportTypesPublisher: CurrentValueSubject<SubscribableContent<[SportType]>, ServiceProviderError>?
-    private var liveEventsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
     private var allSportTypesPublisher: CurrentValueSubject<SubscribableContent<[SportType]>, ServiceProviderError>?
 
     private var eventDetailsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
     private var sportTypesPublisher: CurrentValueSubject<[SportType], ServiceProviderError>?
 
-    //
-    // All the events publishers
-    private var eventsPublishers: [TopicIdentifier: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>] = [:]
+    private var eventsPaginators: [String: SportRadarEventsPaginator] = [:]
 
     //
-    // Keep a reference for all the subscriptions. This allows the ServiceProvider to subscribe to the same content in two diferente places
-    private var activeSubscriptions: NSMapTable<TopicIdentifier, Subscription> = .init(keyOptions: .strongMemory , valueOptions: .weakMemory)
+    // All the events publishers
+    private var eventsPublishers: [ContentIdentifier: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>] = [:]
+
+    //
+    // Keep a reference for all the subscriptions. This allows the ServiceProvider to subscribe to the same content in two different app places
+    private var activeSubscriptions: NSMapTable<ContentIdentifier, Subscription> = .init(keyOptions: .strongMemory , valueOptions: .weakMemory)
+
+    private let defaultEventCount = 10
+
+    func requestPreLiveMatchesNextPage(forSportType sportType: SportType, initialDate: Date? = nil, endDate: Date? = nil, sortType: EventListSort) -> AnyPublisher<Bool, ServiceProviderError> {
+        // Get the session
+        guard
+            let sportId = sportType.alphaId
+        else {
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+        // contentType -> eventListBySportTypeDate
+        let contentType = ContentType.preLiveEvents
+
+        // contentId -> FBL/202210210000/202210212359/0/20/T
+        let contentRoute = ContentRoute.preLiveEvents(sportAlphaId: sportId,
+                                                      startDate: initialDate,
+                                                      endDate: endDate,
+                                                      pageIndex: 0,
+                                                      eventCount: self.defaultEventCount,
+                                                      sortType: sortType)
+
+        let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
+
+        if let paginator = self.eventsPaginators[contentIdentifier.pageableId] {
+            return paginator.requestNextPage().eraseToAnyPublisher()
+        }
+        else {
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.subscriptionNotFound).eraseToAnyPublisher()
+        }
+    }
+
+    func subscribePreLiveMatches(forSportType sportType: SportType, initialDate: Date? = nil, endDate: Date? = nil, eventCount: Int? = nil, sortType: EventListSort) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+
+        // Get the session
+        guard
+            let sportId = sportType.alphaId,
+            let sessionToken = socketConnector.token
+        else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+
+        let eventCountValue = eventCount ?? self.defaultEventCount
+
+        // contentType -> eventListBySportTypeDate
+        let contentType = ContentType.preLiveEvents
+
+        // contentId -> FBL/202210210000/202210212359/0/20/T
+        let contentRoute = ContentRoute.preLiveEvents(sportAlphaId: sportId,
+                                                      startDate: initialDate,
+                                                      endDate: endDate,
+                                                      pageIndex: 0,
+                                                      eventCount: eventCountValue,
+                                                      sortType: sortType)
+
+        let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
+
+        if let paginator = self.eventsPaginators[contentIdentifier.pageableId] {
+            return paginator.eventsPublisher()
+        }
+        else {
+            let paginator = SportRadarEventsPaginator(contentIdentifier: contentIdentifier,
+                                            sessionToken: sessionToken.hash,
+                                            storage: SportRadarEventsStorage())
+            self.eventsPaginators[contentIdentifier.pageableId] = paginator
+
+            return paginator.requestInitialPage()
+        }
+    }
 
     func subscribePreLiveMatches(forSportType sportType: SportType, pageIndex: Int, initialDate: Date? = nil, endDate: Date? = nil, eventCount: Int, sortType: EventListSort) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
 
         // Get the session
         guard
             let sportId = sportType.alphaId,
-            let sessionToken = connector.token
+            let sessionToken = socketConnector.token
         else {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
 
         // Create the contentIdentifier
-        var dateRangeId = self.getDateRangeId()
+        // let contentId = "\(sportId)/\(dateRangeId)/\(pageIndex)/\(eventCount)/\(sortType.rawValue)" c
 
-        if let initialDate = initialDate,
-        let endDate = endDate {
-            dateRangeId = self.getDateRangeId(initialDate: initialDate, endDate: endDate)
-        }
+        let contentType = ContentType.preLiveEvents // eventListBySportTypeDate
 
-        let contentId = "\(sportId)/\(dateRangeId)/\(pageIndex)/\(eventCount)/\(sortType.rawValue)" // FBL/202210210000/202210212359/0/20/T: example content ID
-        let contentType = SportRadarModels.ContentType.eventListBySportTypeDate
+        let contentRoute = ContentRoute.preLiveEvents(sportAlphaId: sportId,
+                                                      startDate: initialDate,
+                                                      endDate: endDate,
+                                                      pageIndex: pageIndex,
+                                                      eventCount: eventCount,
+                                                      sortType: sortType)
 
-        let contentIdentifier = TopicIdentifier(contentType: contentType.rawValue, contentId: contentId)
+        let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
 
         if let publisher = self.eventsPublishers[contentIdentifier], let subscription = self.activeSubscriptions.object(forKey: contentIdentifier) {
             // We already have a publisher for this events and a subscription object for the caller to store
@@ -72,9 +145,14 @@ class SportRadarEventsProvider: EventsProvider {
         else {
             // We have neither a publisher nor a subscription object
             let publisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
-            let subscription = Subscription(contentType: contentType.rawValue, contentId: contentId, token: sessionToken.hash, unsubscriber: self)
+            let subscription = Subscription(contentType: contentType,
+                                            contentRoute: contentRoute,
+                                            sessionToken: sessionToken.hash,
+                                            unsubscriber: self)
 
-            let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentId: contentId)
+            let bodyData = self.createPayloadData(with: sessionToken,
+                                                  contentType: contentType,
+                                                  contentRoute: contentRoute)
             let request = self.createSubscribeRequest(withHTTPBody: bodyData)
 
             let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
@@ -104,15 +182,17 @@ class SportRadarEventsProvider: EventsProvider {
         guard
             //let sportId = SportRadarModelMapper.internalSportType(fromSportType: sportType)?.id,
             let sportId = sportType.alphaId,
-            let sessionToken = connector.token
+            let sessionToken = socketConnector.token
         else {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
 
-        let contentType = SportRadarModels.ContentType.liveAdvancedList
-        let contentId = "\(sportId)/\(pageIndex)" // FBL/0 -> /0 means page 0 of pagination
+        let contentType = ContentType.liveEvents
+//        let contentId = "\(sportId)/\(pageIndex)" // FBL/0 -> /0 means page 0 of pagination
+        let contentRoute = ContentRoute.liveEvents(sportAlphaId: sportId, pageIndex: pageIndex)
 
-        let contentIdentifier = TopicIdentifier(contentType: contentType.rawValue, contentId: contentId)
+        let contentIdentifier = ContentIdentifier(contentType: contentType,
+                                                  contentRoute: contentRoute)
 
         if let publisher = self.eventsPublishers[contentIdentifier], let subscription = self.activeSubscriptions.object(forKey: contentIdentifier) {
             // We already have a publisher for this events and a subscription object for the caller to store
@@ -123,8 +203,12 @@ class SportRadarEventsProvider: EventsProvider {
         else {
             // We have neither a publisher nor a subscription object
             let publisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
-            let subscription = Subscription(contentType: contentType.rawValue, contentId: contentId, token: sessionToken.hash, unsubscriber: self)
-            let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentId: contentId)
+            let subscription = Subscription(contentType: contentType,
+                                            contentRoute: contentRoute,
+                                            sessionToken: sessionToken.hash,
+                                            unsubscriber: self)
+
+            let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentRoute: contentRoute)
             let request = self.createSubscribeRequest(withHTTPBody: bodyData)
 
             let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
@@ -154,15 +238,16 @@ class SportRadarEventsProvider: EventsProvider {
         }
 
         guard
-            let sessionToken = connector.token,
+            let sessionToken = socketConnector.token,
             let publisher = self.liveSportTypesPublisher
         else {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
 
-        let contentType = SportRadarModels.ContentType.inplaySportList
+        let contentType = ContentType.liveSports
+        let contentRoute = ContentRoute.liveSports
 
-        let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType)
+        let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentRoute: contentRoute)
         let request = self.createSubscribeRequest(withHTTPBody: bodyData)
         let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
             guard
@@ -188,23 +273,16 @@ class SportRadarEventsProvider: EventsProvider {
         }
 
         guard
-            let sessionToken = connector.token,
+            let sessionToken = socketConnector.token,
             let publisher = self.allSportTypesPublisher
         else {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
 
-        let contentType = SportRadarModels.ContentType.sportTypeByDate
+        let contentType = ContentType.preLiveSports
+        let contentRoute = ContentRoute.preLiveSports(startDate: initialDate, endDate: endDate)
 
-        // Today sports ID
-        var contentId = self.getDateRangeId()
-
-        if let initialDate = initialDate,
-        let endDate = endDate {
-            contentId = self.getDateRangeId(initialDate: initialDate, endDate: endDate)
-        }
-
-        let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentId: contentId)
+        let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentRoute: contentRoute)
         let request = self.createSubscribeRequest(withHTTPBody: bodyData)
         let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
 
@@ -230,17 +308,17 @@ class SportRadarEventsProvider: EventsProvider {
         self.eventDetailsPublisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
 
         guard
-            let sessionToken = connector.token,
+            let sessionToken = socketConnector.token,
             let publisher = self.eventDetailsPublisher
         else {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
 
-        let contentType = SportRadarModels.ContentType.eventDetails
+        let contentType = ContentType.eventDetails
 
-        let contentId = matchId
+        let contentRoute = ContentRoute.eventDetails(eventId: matchId)
 
-        let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentId: contentId)
+        let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentRoute: contentRoute)
         let request = self.createSubscribeRequest(withHTTPBody: bodyData)
 
         let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
@@ -263,8 +341,7 @@ class SportRadarEventsProvider: EventsProvider {
 
 extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
 
-    // Live events
-    func liveAdvancedListUpdated(forTopicIdentifier identifier: TopicIdentifier, withEvents events: [EventsGroup]) {
+    func liveEventsUpdated(forContentIdentifier identifier: ContentIdentifier, withEvents events: [EventsGroup]) {
 
         // Gravar na store do topic
 
@@ -273,28 +350,31 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
         }
     }
 
-    // Prelive events
-    func eventListBySportTypeDate(forTopicIdentifier identifier: TopicIdentifier, withEvents events: [EventsGroup]) {
+    func preLiveEventsUpdated(forContentIdentifier identifier: ContentIdentifier, withEvents events: [EventsGroup]) {
+        if let eventPaginator = self.eventsPaginators[identifier.pageableId] {
+            let flattenedEvents = events.flatMap({ $0.events })
+            eventPaginator.updateEventsList(events: flattenedEvents)
+        }
         if let publisher = self.eventsPublishers[identifier] {
             publisher.send(.contentUpdate(content: events))
         }
     }
 
-    func inplaySportListUpdated(withSportTypes sportTypes: [SportRadarModels.SportType]) {
+    func liveSportsUpdated(withSportTypes sportTypes: [SportRadarModels.SportType]) {
         if let liveSportTypesPublisher = self.liveSportTypesPublisher {
             let sports = sportTypes.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
             liveSportTypesPublisher.send(.contentUpdate(content: sports))
         }
     }
 
-    func sportTypeByDate(withSportTypes sportTypes: [SportRadarModels.SportType]) {
+    func preLiveSportsUpdated(withSportTypes sportTypes: [SportRadarModels.SportType]) {
         if let allSportTypesPublisher = self.allSportTypesPublisher {
             let sports = sportTypes.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
             allSportTypesPublisher.send(.contentUpdate(content: sports))
         }
     }
 
-    func eventDetails(events: [EventsGroup]) {
+    func eventDetailsUpdated(events: [EventsGroup]) {
         if let eventDetailsPublisher = self.eventDetailsPublisher {
             eventDetailsPublisher.send(.contentUpdate(content: events))
         }
@@ -309,8 +389,7 @@ extension SportRadarEventsProvider {
     func getMarketsFilter(event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError> {
 
         let endpoint = SportRadarRestAPIClient.marketsFilter
-        let requestPublisher: AnyPublisher<MarketFilter, ServiceProviderError> = self.networkManager.request(endpoint)
-
+        let requestPublisher: AnyPublisher<MarketFilter, ServiceProviderError> = self.restConnector.request(endpoint)
 
         return requestPublisher.flatMap({ marketFilters -> AnyPublisher<[MarketGroup], ServiceProviderError> in
 
@@ -326,7 +405,7 @@ extension SportRadarEventsProvider {
     func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError> {
 
         let endpoint = SportRadarRestAPIClient.fieldWidgetId(eventId: eventId)
-        let requestPublisher: AnyPublisher<FieldWidget, ServiceProviderError> = self.networkManager.request(endpoint)
+        let requestPublisher: AnyPublisher<FieldWidget, ServiceProviderError> = self.restConnector.request(endpoint)
         return requestPublisher
     }
 
@@ -368,13 +447,13 @@ extension SportRadarEventsProvider {
 
         // Navigation Sports
         let sportsEndpoint = SportRadarRestAPIClient.sportsBoNavigationList
-        let sportsRequestPublisher: AnyPublisher<SportRadarModels.RestResponse<SportRadarModels.SportsList>, ServiceProviderError> = self.networkManager.request(sportsEndpoint)
+        let sportsRequestPublisher: AnyPublisher<SportRadarModels.RestResponse<SportRadarModels.SportsList>, ServiceProviderError> = self.restConnector.request(sportsEndpoint)
 
         // Code Sports
-        let dateRange = self.getDateRangeId(initialDate: initialDate, endDate: endDate)
+        let dateRange = ContentDateFormatter.getDateRangeId(startDate: initialDate, endDate: endDate)
         let codeSportsEndpoint = SportRadarRestAPIClient.sportsScheduledList(dateRange: dateRange)
 
-        let codeSportsRequestPublisher: AnyPublisher<SportRadarModels.RestResponse<[SportRadarModels.ScheduledSport]>, ServiceProviderError> = self.networkManager.request(codeSportsEndpoint)
+        let codeSportsRequestPublisher: AnyPublisher<SportRadarModels.RestResponse<[SportRadarModels.ScheduledSport]>, ServiceProviderError> = self.restConnector.request(codeSportsEndpoint)
 
         return Publishers.CombineLatest(sportsRequestPublisher, codeSportsRequestPublisher)
             .flatMap({ numericSportsList, alphaSportsList -> AnyPublisher<[SportType], ServiceProviderError> in
@@ -399,9 +478,8 @@ extension SportRadarEventsProvider {
 extension SportRadarEventsProvider: UnsubscriptionController {
 
     func unsubscribe(subscription: Subscription) {
-        print("ServerProvider.Subscription.Debug unsubscribe \(subscription.id)")
-
-        let request = self.createUnsubscribeRequest(withHTTPBody: subscription.unsubscriptionPayloadData)
+        let endpoint = SportRadarRestAPIClient.unsubscribe(sessionToken: subscription.sessionToken, contentIdentifier: subscription.contentIdentifier)
+        guard let request = endpoint.request() else { return }
         let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
             guard
                 error == nil,
@@ -411,6 +489,7 @@ extension SportRadarEventsProvider: UnsubscriptionController {
                 print("SportRadarEventsProvider unsubscribe failed")
                 return
             }
+            print("SportRadarEventsProvider unsubscribe ok")
         }
         sessionDataTask.resume()
     }
@@ -420,20 +499,7 @@ extension SportRadarEventsProvider: UnsubscriptionController {
 // Helpers
 extension SportRadarEventsProvider {
 
-    private func getDateRangeId(initialDate: Date? = nil, endDate: Date? = nil) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd"
 
-        let initialDateDefault: Date = initialDate ?? Date()
-        let endDateDefault: Date = endDate ?? Calendar.current.date(byAdding: .day, value: 7, to: initialDateDefault) ?? Date()
-
-        let initialDateId = dateFormatter.string(from: initialDateDefault)
-        let endDateId = dateFormatter.string(from: endDateDefault)
-
-        let dateRangeId = "\(initialDateId)0000/\(endDateId)2359"
-
-        return dateRangeId
-    }
 
 }
 
@@ -671,16 +737,16 @@ extension SportRadarEventsProvider {
 
 extension SportRadarEventsProvider {
 
-    private func createPayloadData(with sessionAccessToken: SportRadarSessionAccessToken,
-                                   contentType: SportRadarModels.ContentType,
-                                   contentId: String = "") -> Data {
+    private func createPayloadData(with sessionAccessToken: SportRadarSessionAccessToken, contentType: ContentType, contentRoute: ContentRoute) -> Data {
+
+        let contenteFullRoutw = contentRoute
         let bodyString =
         """
         {
             "subscriberId": "\(sessionAccessToken.hash)",
             "contentId": {
                 "type": "\(contentType.rawValue)",
-                "id": "\(contentId)"
+                "id": "\(contentRoute.fullRoute)"
             },
             "clientContext": {
                 "language": "\(SportRadarConstants.socketLanguageCode)",

@@ -91,7 +91,7 @@ class LiveEventsViewController: UIViewController {
         self.commonInit()
         self.setupWithTheme()
         self.connectPublishers()
-        self.viewModel.fetchData()
+        self.viewModel.fetchLiveMatches()
 
         self.viewModel.didSelectMatchAction = { match in
             let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
@@ -390,7 +390,7 @@ class LiveEventsViewController: UIViewController {
     }
 
     @objc func refreshControllPulled() {
-        self.viewModel.fetchData()
+        self.viewModel.fetchLiveMatches()
     }
 
     @objc func didTapBetslipView() {
@@ -510,7 +510,7 @@ extension LiveEventsViewController: UICollectionViewDelegate, UICollectionViewDa
 
         switch indexPath.row {
         case 0:
-            self.viewModel.setMatchListType(.allMatches)
+            self.viewModel.setMatchListType(.liveMatches)
         default:
             ()
         }

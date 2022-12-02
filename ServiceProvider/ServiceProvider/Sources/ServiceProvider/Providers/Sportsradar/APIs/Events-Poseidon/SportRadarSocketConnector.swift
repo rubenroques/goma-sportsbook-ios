@@ -10,11 +10,13 @@ import Starscream
 import Combine
 
 protocol SportRadarConnectorSubscriber: AnyObject {
-    func liveAdvancedListUpdated(forTopicIdentifier identifier: TopicIdentifier, withEvents: [EventsGroup])
-    func inplaySportListUpdated(withSportTypes: [SportRadarModels.SportType])
-    func sportTypeByDate(withSportTypes: [SportRadarModels.SportType])
-    func eventListBySportTypeDate(forTopicIdentifier identifier: TopicIdentifier, withEvents: [EventsGroup])
-    func eventDetails(events: [EventsGroup])
+    func liveEventsUpdated(forContentIdentifier identifier: ContentIdentifier, withEvents: [EventsGroup])
+    func preLiveEventsUpdated(forContentIdentifier identifier: ContentIdentifier, withEvents: [EventsGroup])
+
+    func liveSportsUpdated(withSportTypes: [SportRadarModels.SportType])
+    func preLiveSportsUpdated(withSportTypes: [SportRadarModels.SportType])
+
+    func eventDetailsUpdated(events: [EventsGroup])
 }
 
 class SportRadarSocketConnector: NSObject, Connector {
@@ -136,28 +138,30 @@ extension SportRadarSocketConnector: WebSocketDelegate {
             self.connectionStateSubject.send(.connected)
         case .contentChanges(let content):
             switch content {
-            case .liveAdvancedList(let topicIdentifier, let events):
+            case .liveEvents(let contentIdentifier, let events):
                 if let subscriber = self.messageSubscriber {
                     let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-                    subscriber.liveAdvancedListUpdated(forTopicIdentifier: topicIdentifier, withEvents: [eventsGroup])
+                    subscriber.liveEventsUpdated(forContentIdentifier: contentIdentifier, withEvents: [eventsGroup])
                 }
-            case .inplaySportList(let sportsTypes):
-                if let subscriber = self.messageSubscriber {
-                    subscriber.inplaySportListUpdated(withSportTypes: sportsTypes)
-                }
-            case .sportTypeByDate(let sportsTypes):
-                if let subscriber = self.messageSubscriber {
-                    subscriber.sportTypeByDate(withSportTypes: sportsTypes)
-                }
-            case .eventListBySportTypeDate(let topicIdentifier, let events):
+            case .preLiveEvents(let contentIdentifier, let events):
                 if let subscriber = self.messageSubscriber {
                     let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-                    subscriber.eventListBySportTypeDate(forTopicIdentifier: topicIdentifier, withEvents: [eventsGroup])
+                    subscriber.preLiveEventsUpdated(forContentIdentifier: contentIdentifier, withEvents: [eventsGroup])
                 }
+
+            case .liveSports(let sportsTypes):
+                if let subscriber = self.messageSubscriber {
+                    subscriber.liveSportsUpdated(withSportTypes: sportsTypes)
+                }
+            case .preLiveSports(let sportsTypes):
+                if let subscriber = self.messageSubscriber {
+                    subscriber.preLiveSportsUpdated(withSportTypes: sportsTypes)
+                }
+
             case .eventDetails(let events):
                 if let subscriber = self.messageSubscriber {
                     let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-                    subscriber.eventDetails(events: [eventsGroup])
+                    subscriber.eventDetailsUpdated(events: [eventsGroup])
                 }
             }
         case .unknown:

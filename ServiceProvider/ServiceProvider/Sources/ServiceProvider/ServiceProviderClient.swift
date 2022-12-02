@@ -35,8 +35,11 @@ public class ServiceProviderClient {
             // Session Coordinator
             let sessionCoordinator = SportRadarSessionCoordinator()
 
-            self.privilegedAccessManager = SportRadarPrivilegedAccessManager(sessionCoordinator: sessionCoordinator, connector: OmegaConnector())
-            self.eventsProvider = SportRadarEventsProvider(sessionCoordinator: sessionCoordinator, connector: SportRadarSocketConnector())
+            self.privilegedAccessManager = SportRadarPrivilegedAccessManager(sessionCoordinator: sessionCoordinator,
+                                                                             connector: OmegaConnector())
+            self.eventsProvider = SportRadarEventsProvider(sessionCoordinator: sessionCoordinator,
+                                                           socketConnector: SportRadarSocketConnector(),
+                                                           restConnector: SportRadarRestConnector())
             self.bettingProvider = SportRadarBettingProvider(sessionCoordinator: sessionCoordinator)
         }
     }
@@ -87,10 +90,9 @@ extension ServiceProviderClient {
     }
 
     public func subscribePreLiveMatches(forSportType sportType: SportType,
-                                        pageIndex: Int,
                                         initialDate: Date? = nil,
                                         endDate: Date? = nil,
-                                        eventCount: Int,
+                                        eventCount: Int? = nil,
                                         sortType: EventListSort) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -98,10 +100,21 @@ extension ServiceProviderClient {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
         return eventsProvider.subscribePreLiveMatches(forSportType: sportType,
-                                                      pageIndex: pageIndex,
                                                       initialDate: initialDate,
                                                       endDate: endDate,
                                                       eventCount: eventCount,
+                                                      sortType: sortType)
+    }
+
+    public func requestPreLiveMatchesNextPage(forSportType sportType: SportType, initialDate: Date? = nil, endDate: Date? = nil, sortType: EventListSort) -> AnyPublisher<Bool, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.requestPreLiveMatchesNextPage(forSportType: sportType,
+                                                      initialDate: initialDate,
+                                                      endDate: endDate,
                                                       sortType: sortType)
     }
 

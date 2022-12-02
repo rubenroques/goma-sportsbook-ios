@@ -278,7 +278,6 @@ extension SportMatchLineViewModel {
         let serviceProviderSportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
 
         Env.serviceProvider.subscribePreLiveMatches(forSportType: serviceProviderSportType,
-                                                    pageIndex: 0,
                                                     eventCount: 2,
                                                     sortType: .popular)
         .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in

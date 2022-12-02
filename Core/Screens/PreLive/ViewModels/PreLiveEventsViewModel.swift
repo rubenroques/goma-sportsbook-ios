@@ -427,10 +427,6 @@ class PreLiveEventsViewModel: NSObject {
             }
         }
 
-        // EM TEMP SHUTDOWN
-        self.popularMatchesHasNextPage = false
-        self.todayMatchesHasNextPage = false
-
         self.dataChangedPublisher.send()
     }
 
@@ -592,13 +588,18 @@ class PreLiveEventsViewModel: NSObject {
     // MARK: - Fetches
     //
     //
-
     private func fetchPopularMatchesNextPage() {
-        if !popularMatchesHasNextPage {
-            return
-        }
-        self.popularMatchesPage += 1
-        self.fetchPopularMatches()
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
+        Env.serviceProvider.requestPreLiveMatchesNextPage(forSportType: sportType, sortType: .popular)
+            .sink { completion in
+                print("requestPreLiveMatchesNextPage completion \(completion)")
+            } receiveValue: { [weak self] hasNextPage in
+                self?.todayMatchesHasNextPage = hasNextPage
+                if !hasNextPage {
+                    self?.updateContentList()
+                }
+            }
+            .store(in: &cancellables)
     }
 
     private func fetchPopularMatches() {
@@ -606,13 +607,9 @@ class PreLiveEventsViewModel: NSObject {
         self.isLoadingPopularList.send(true)
         self.isLoadingEvents.send(true)
 
-
         let sport = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
 
-        self.popularMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sport,
-                                                                                   pageIndex: 0,
-                                                                                   eventCount: 10,
-                                                                                   sortType: .popular)
+        self.popularMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sport, sortType: .popular)
             .sink(receiveCompletion: { completion in
                 print("Prelive subscribePopularMatches completed \(completion)")
                 switch completion {
@@ -749,11 +746,17 @@ class PreLiveEventsViewModel: NSObject {
 
     //
     private func fetchTodayMatchesNextPage() {
-        if !todayMatchesHasNextPage {
-            return
-        }
-        self.todayMatchesPage += 1
-        self.fetchTodayMatches()
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
+        Env.serviceProvider.requestPreLiveMatchesNextPage(forSportType: sportType, sortType: .date)
+            .sink { completion in
+                print("requestPreLiveMatchesNextPage completion \(completion)")
+            } receiveValue: { [weak self] hasNextPage in
+                self?.todayMatchesHasNextPage = hasNextPage
+                if !hasNextPage {
+                    self?.updateContentList()
+                }
+            }
+            .store(in: &cancellables)
     }
 
     private func fetchTodayMatches(withFilter: Bool = false, timeRange: String = "") {
@@ -763,10 +766,7 @@ class PreLiveEventsViewModel: NSObject {
 
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
 
-        self.todayMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType,
-                                                                                 pageIndex: 0,
-                                                                                 eventCount: 10,
-                                                                                 sortType: .date)
+        self.todayMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType, sortType: .date)
             .sink(receiveCompletion: { completion in
                 print("Env.serviceProvider.subscribeUpcomingMatches completed \(completion)")
                 switch completion {
