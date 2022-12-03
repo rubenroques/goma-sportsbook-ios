@@ -41,6 +41,7 @@ class LiveEventsViewModel: NSObject {
     var liveEventsCountPublisher: CurrentValueSubject<Int, Never> = .init(0)
     var liveSportsCancellable: AnyCancellable?
 
+    var resetScrollPosition: (() -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
 
@@ -48,12 +49,16 @@ class LiveEventsViewModel: NSObject {
     var selectedSport: Sport {
         willSet {
             if newValue.id != self.selectedSport.id {
-                didChangeSportType = true
+                self.didChangeSportType = true
             }
         }
         didSet {
-            self.fetchLiveMatches()
-            self.configureWithSports(self.liveSports)
+            if didChangeSportType {
+                self.resetScrollPosition?()
+                self.fetchLiveMatches()
+                self.configureWithSports(self.liveSports)
+                self.didChangeSportType = false
+            }
         }
     }
 
@@ -73,8 +78,6 @@ class LiveEventsViewModel: NSObject {
 
     private var liveMatchesSubscriber: AnyCancellable?
 
-    private var liveMatchesCount = 10
-    private var liveMatchesPage = 0
     private var liveMatchesHasMorePages = true
 
     private var cancellables = Set<AnyCancellable>()
@@ -118,6 +121,7 @@ class LiveEventsViewModel: NSObject {
     }
 
     func subscribeToLiveSports() {
+
         self.liveSportsCancellable = Env.serviceProvider.subscribeLiveSportTypes()
             .sink(receiveCompletion: { completion in
                 print("LiveEventsViewModel subscribeLiveSportTypes completed \(completion)")
@@ -216,14 +220,6 @@ class LiveEventsViewModel: NSObject {
 
         self.liveMatchesViewModelDataSource.matches = filterLiveMatches(with: self.homeFilterOptions, matches: self.liveMatches)
 
-        if self.liveMatches.isNotEmpty, self.liveMatches.count < (self.liveMatchesCount * self.liveMatchesPage) {
-            self.liveMatchesHasMorePages = false
-            self.liveMatchesViewModelDataSource.shouldShowLoadingCell = false
-        }
-        else {
-            self.liveMatchesViewModelDataSource.shouldShowLoadingCell = true
-        }
-
         if let numberOfFilters = self.homeFilterOptions?.countFilters {
             if numberOfFilters > 0 {
                 if self.liveMatchesViewModelDataSource.matches.isEmpty {
@@ -265,11 +261,12 @@ class LiveEventsViewModel: NSObject {
     //
     private func fetchLiveMatchesNextPage() {
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-        Env.serviceProvider.requestPreLiveMatchesNextPage(forSportType: sportType, sortType: .date)
+        Env.serviceProvider.requestLiveMatchesNextPage(forSportType: sportType)
             .sink { completion in
                 print("requestPreLiveMatchesNextPage completion \(completion)")
             } receiveValue: { [weak self] hasNextPage in
                 self?.liveMatchesHasMorePages = hasNextPage
+                self?.liveMatchesViewModelDataSource.shouldShowLoadingCell = hasNextPage
                 if !hasNextPage {
                     self?.updateContentList()
                 }
@@ -279,36 +276,37 @@ class LiveEventsViewModel: NSObject {
 
 
     func fetchLiveMatches() {
-        self.isLoadingAllEventsList.send(true)
-        
-        self.liveMatchesPage = 0
+
         self.liveMatchesHasMorePages = true
-        
         self.liveMatchesSubscriber?.cancel()
-        
+
+        self.isLoadingAllEventsList.send(true)
+
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
         
-        print("subscribeLiveMatches fetchLiveMatches called")
+        print("subscribeLiveMatches called")
         
-        self.liveMatchesSubscriber = Env.serviceProvider.subscribeLiveMatches(forSportType: sportType, pageIndex: self.liveMatchesPage)
+        self.liveMatchesSubscriber = Env.serviceProvider.subscribeLiveMatches(forSportType: sportType)
             .sink(receiveCompletion: { completion in
                 // TODO: subscribeLiveMatches receiveCompletion
                 switch completion {
                 case .finished:
-                    ()
+                    Logger.log("subscribeLiveMatches finished")
                 case .failure(let error):
                     Logger.log("subscribeLiveMatches error \(error)")
                 }
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
                 switch subscribableContent {
                 case .connected(let subscription):
+                    Logger.log("subscribeLiveMatches connected")
                     self?.subscriptions.insert(subscription)
                 case .contentUpdate(let eventsGroups):
+                    Logger.log("subscribeLiveMatches content")
                     self?.liveMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
                     self?.isLoadingAllEventsList.send(false)
                     self?.updateContentList()
                 case .disconnected:
-                    Logger.log("subscribeLiveMatches subscribableContent disconnected")
+                    Logger.log("subscribeLiveMatches disconnected")
                 }
             })
     }

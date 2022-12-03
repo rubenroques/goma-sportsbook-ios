@@ -37,14 +37,48 @@ class SportRadarEventsProvider: EventsProvider {
     private var eventsPaginators: [String: SportRadarEventsPaginator] = [:]
 
     //
-    // All the events publishers
-    private var eventsPublishers: [ContentIdentifier: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>] = [:]
-
-    //
     // Keep a reference for all the subscriptions. This allows the ServiceProvider to subscribe to the same content in two different app places
     private var activeSubscriptions: NSMapTable<ContentIdentifier, Subscription> = .init(keyOptions: .strongMemory , valueOptions: .weakMemory)
 
     private let defaultEventCount = 10
+
+
+    func subscribePreLiveMatches(forSportType sportType: SportType, initialDate: Date? = nil, endDate: Date? = nil, eventCount: Int? = nil, sortType: EventListSort) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+
+        // Get the session
+        guard
+            let sportId = sportType.alphaId,
+            let sessionToken = socketConnector.token
+        else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+
+        let eventCountValue = eventCount ?? self.defaultEventCount
+
+        // contentType -> eventListBySportTypeDate
+        let contentType = ContentType.preLiveEvents
+        // contentId -> FBL/202210210000/202210212359/0/20/T
+        let contentRoute = ContentRoute.preLiveEvents(sportAlphaId: sportId,
+                                                      startDate: initialDate,
+                                                      endDate: endDate,
+                                                      pageIndex: 0,
+                                                      eventCount: eventCountValue,
+                                                      sortType: sortType)
+
+        let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
+
+        if let paginator = self.eventsPaginators[contentIdentifier.pageableId] {
+            return paginator.eventsPublisher()
+        }
+        else {
+            let paginator = SportRadarEventsPaginator(contentIdentifier: contentIdentifier,
+                                            sessionToken: sessionToken.hash,
+                                            storage: SportRadarEventsStorage())
+            self.eventsPaginators[contentIdentifier.pageableId] = paginator
+
+            return paginator.requestInitialPage()
+        }
+    }
 
     func requestPreLiveMatchesNextPage(forSportType sportType: SportType, initialDate: Date? = nil, endDate: Date? = nil, sortType: EventListSort) -> AnyPublisher<Bool, ServiceProviderError> {
         // Get the session
@@ -74,7 +108,8 @@ class SportRadarEventsProvider: EventsProvider {
         }
     }
 
-    func subscribePreLiveMatches(forSportType sportType: SportType, initialDate: Date? = nil, endDate: Date? = nil, eventCount: Int? = nil, sortType: EventListSort) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+
+    func subscribeLiveMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
 
         // Get the session
         guard
@@ -84,18 +119,10 @@ class SportRadarEventsProvider: EventsProvider {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
 
-        let eventCountValue = eventCount ?? self.defaultEventCount
-
-        // contentType -> eventListBySportTypeDate
-        let contentType = ContentType.preLiveEvents
-
-        // contentId -> FBL/202210210000/202210212359/0/20/T
-        let contentRoute = ContentRoute.preLiveEvents(sportAlphaId: sportId,
-                                                      startDate: initialDate,
-                                                      endDate: endDate,
-                                                      pageIndex: 0,
-                                                      eventCount: eventCountValue,
-                                                      sortType: sortType)
+        // contentType -> liveDataSummaryAdvancedListBySportType
+        let contentType = ContentType.liveEvents
+        // contentId -> FBL/0 -> /0 means page 0 of pagination
+        let contentRoute = ContentRoute.liveEvents(sportAlphaId: sportId, pageIndex: 0)
 
         let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
 
@@ -107,128 +134,30 @@ class SportRadarEventsProvider: EventsProvider {
                                             sessionToken: sessionToken.hash,
                                             storage: SportRadarEventsStorage())
             self.eventsPaginators[contentIdentifier.pageableId] = paginator
-
             return paginator.requestInitialPage()
         }
+
     }
 
-    func subscribePreLiveMatches(forSportType sportType: SportType, pageIndex: Int, initialDate: Date? = nil, endDate: Date? = nil, eventCount: Int, sortType: EventListSort) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
-
+    func requestLiveMatchesNextPage(forSportType sportType: SportType) -> AnyPublisher<Bool, ServiceProviderError> {
         // Get the session
         guard
-            let sportId = sportType.alphaId,
-            let sessionToken = socketConnector.token
+            let sportId = sportType.alphaId
         else {
-            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
 
-        // Create the contentIdentifier
-        // let contentId = "\(sportId)/\(dateRangeId)/\(pageIndex)/\(eventCount)/\(sortType.rawValue)" c
-
-        let contentType = ContentType.preLiveEvents // eventListBySportTypeDate
-
-        let contentRoute = ContentRoute.preLiveEvents(sportAlphaId: sportId,
-                                                      startDate: initialDate,
-                                                      endDate: endDate,
-                                                      pageIndex: pageIndex,
-                                                      eventCount: eventCount,
-                                                      sortType: sortType)
-
+        // contentType -> liveDataSummaryAdvancedListBySportType
+        let contentType = ContentType.liveEvents
+        // contentId -> FBL/0 -> /0 means page 0 of pagination
+        let contentRoute = ContentRoute.liveEvents(sportAlphaId: sportId, pageIndex: 0)
         let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
 
-        if let publisher = self.eventsPublishers[contentIdentifier], let subscription = self.activeSubscriptions.object(forKey: contentIdentifier) {
-            // We already have a publisher for this events and a subscription object for the caller to store
-            return publisher
-                .prepend(.connected(subscription: subscription))
-                .eraseToAnyPublisher()
+        if let paginator = self.eventsPaginators[contentIdentifier.pageableId] {
+            return paginator.requestNextPage().eraseToAnyPublisher()
         }
         else {
-            // We have neither a publisher nor a subscription object
-            let publisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
-            let subscription = Subscription(contentType: contentType,
-                                            contentRoute: contentRoute,
-                                            sessionToken: sessionToken.hash,
-                                            unsubscriber: self)
-
-            let bodyData = self.createPayloadData(with: sessionToken,
-                                                  contentType: contentType,
-                                                  contentRoute: contentRoute)
-            let request = self.createSubscribeRequest(withHTTPBody: bodyData)
-
-            let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
-                guard
-                    (error == nil),
-                    let httpResponse = response as? HTTPURLResponse,
-                    (200...299).contains(httpResponse.statusCode)
-                else {
-                    print("SportRadarEventsProvider: eventListBySportTypeDate - error on subscribe to topic")
-                    publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
-                    return
-                }
-                publisher.send(.connected(subscription: subscription))
-            }
-            sessionDataTask.resume()
-
-            self.activeSubscriptions.setObject(subscription, forKey: contentIdentifier)
-            self.eventsPublishers[contentIdentifier] = publisher
-
-            return publisher.eraseToAnyPublisher()
-        }
-    }
-
-    func subscribeLiveMatches(forSportType sportType: SportType, pageIndex: Int) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
-
-        // Get the session
-        guard
-            //let sportId = SportRadarModelMapper.internalSportType(fromSportType: sportType)?.id,
-            let sportId = sportType.alphaId,
-            let sessionToken = socketConnector.token
-        else {
-            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
-        }
-
-        let contentType = ContentType.liveEvents
-//        let contentId = "\(sportId)/\(pageIndex)" // FBL/0 -> /0 means page 0 of pagination
-        let contentRoute = ContentRoute.liveEvents(sportAlphaId: sportId, pageIndex: pageIndex)
-
-        let contentIdentifier = ContentIdentifier(contentType: contentType,
-                                                  contentRoute: contentRoute)
-
-        if let publisher = self.eventsPublishers[contentIdentifier], let subscription = self.activeSubscriptions.object(forKey: contentIdentifier) {
-            // We already have a publisher for this events and a subscription object for the caller to store
-            return publisher
-                .prepend(.connected(subscription: subscription))
-                .eraseToAnyPublisher()
-        }
-        else {
-            // We have neither a publisher nor a subscription object
-            let publisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
-            let subscription = Subscription(contentType: contentType,
-                                            contentRoute: contentRoute,
-                                            sessionToken: sessionToken.hash,
-                                            unsubscriber: self)
-
-            let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentRoute: contentRoute)
-            let request = self.createSubscribeRequest(withHTTPBody: bodyData)
-
-            let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
-                guard
-                    (error == nil),
-                    let httpResponse = response as? HTTPURLResponse,
-                    (200...299).contains(httpResponse.statusCode)
-                else {
-                    print("SportRadarEventsProvider: eventListBySportTypeDate - error on subscribe to topic")
-                    publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
-                    return
-                }
-                publisher.send(.connected(subscription: subscription))
-            }
-            sessionDataTask.resume()
-
-            self.activeSubscriptions.setObject(subscription, forKey: contentIdentifier)
-            self.eventsPublishers[contentIdentifier] = publisher
-
-            return publisher.eraseToAnyPublisher()
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.subscriptionNotFound).eraseToAnyPublisher()
         }
     }
 
@@ -246,15 +175,22 @@ class SportRadarEventsProvider: EventsProvider {
 
         let contentType = ContentType.liveSports
         let contentRoute = ContentRoute.liveSports
+        let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
+        let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: sessionToken.hash, contentIdentifier: contentIdentifier)
 
-        let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentRoute: contentRoute)
-        let request = self.createSubscribeRequest(withHTTPBody: bodyData)
+        guard
+            let request = endpoint.request()
+        else {
+            return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
+        }
+
         let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
             guard
                 error == nil,
                 let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode)
             else {
+                print("ServiceProvider subscribeLiveSportTypes \(error) \(response)")
                 publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
                 return
             }
@@ -281,9 +217,15 @@ class SportRadarEventsProvider: EventsProvider {
 
         let contentType = ContentType.preLiveSports
         let contentRoute = ContentRoute.preLiveSports(startDate: initialDate, endDate: endDate)
+        let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
+        let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: sessionToken.hash, contentIdentifier: contentIdentifier)
 
-        let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentRoute: contentRoute)
-        let request = self.createSubscribeRequest(withHTTPBody: bodyData)
+        guard
+            let request = endpoint.request()
+        else {
+            return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
+        }
+
         let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
 
             guard
@@ -291,6 +233,7 @@ class SportRadarEventsProvider: EventsProvider {
                 let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode)
             else {
+                print("ServiceProvider subscribePreLiveSportTypes \(error) \(response)")
                 publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
                 return
             }
@@ -327,6 +270,7 @@ class SportRadarEventsProvider: EventsProvider {
                 let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode)
             else {
+                print("ServiceProvider subscribeMatchDetails \(error) \(response)")
                 publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
                 return
             }
@@ -342,11 +286,9 @@ class SportRadarEventsProvider: EventsProvider {
 extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
 
     func liveEventsUpdated(forContentIdentifier identifier: ContentIdentifier, withEvents events: [EventsGroup]) {
-
-        // Gravar na store do topic
-
-        if let publisher = self.eventsPublishers[identifier] {
-            publisher.send(.contentUpdate(content: events))
+        if let eventPaginator = self.eventsPaginators[identifier.pageableId] {
+            let flattenedEvents = events.flatMap({ $0.events })
+            eventPaginator.updateEventsList(events: flattenedEvents)
         }
     }
 
@@ -354,9 +296,6 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
         if let eventPaginator = self.eventsPaginators[identifier.pageableId] {
             let flattenedEvents = events.flatMap({ $0.events })
             eventPaginator.updateEventsList(events: flattenedEvents)
-        }
-        if let publisher = self.eventsPublishers[identifier] {
-            publisher.send(.contentUpdate(content: events))
         }
     }
 

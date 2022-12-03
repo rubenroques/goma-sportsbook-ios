@@ -114,6 +114,10 @@ class LiveEventsViewController: UIViewController {
         self.viewModel.didLongPressOdd = { [weak self] bettingTicket in
             self?.openQuickbet(bettingTicket)
         }
+
+        self.viewModel.resetScrollPosition = { [weak self] in
+            self?.tableView.setContentOffset(.zero, animated: false)
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {

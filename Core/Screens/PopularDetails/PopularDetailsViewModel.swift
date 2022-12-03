@@ -28,9 +28,7 @@ class PopularDetailsViewModel {
     private var matches: [Match] = []
     private var outrightCompetitions: [Competition]?
 
-    private var matchesCount = 10
-    private var matchesPage = 1
-    private var matchesHasNextPage = true
+    private var hasNextPage = true
 
     private var cancellables: Set<AnyCancellable> = []
     private var subscriptions: Set<ServiceProvider.Subscription> = []
@@ -45,8 +43,8 @@ class PopularDetailsViewModel {
     }
 
     func refresh() {
-        self.resetPageCount()
         self.isLoading.send(true)
+        self.hasNextPage = true
         self.fetchMatches()
     }
 
@@ -54,18 +52,18 @@ class PopularDetailsViewModel {
         self.fetchNextPage()
     }
 
-    private func resetPageCount() {
-        self.matchesCount = 10
-        self.matchesPage = 1
-        self.matchesHasNextPage = true
-    }
-
     private func fetchNextPage() {
-        if !matchesHasNextPage {
-            return
-        }
-        self.matchesPage += 1
-        self.fetchMatches()
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
+        Env.serviceProvider.requestPreLiveMatchesNextPage(forSportType: sportType, sortType: .popular)
+            .sink { completion in
+                print("requestPreLiveMatchesNextPage completion \(completion)")
+            } receiveValue: { [weak self] hasNextPage in
+                self?.hasNextPage = hasNextPage
+                if !hasNextPage {
+                    self?.refreshPublisher.send()
+                }
+            }
+            .store(in: &cancellables)
     }
 
     private func fetchMatches() {
@@ -180,7 +178,7 @@ extension PopularDetailsViewModel {
 extension PopularDetailsViewModel {
 
     func shouldShowLoadingCell() -> Bool {
-        return self.matches.isNotEmpty && matchesHasNextPage
+        return self.matches.isNotEmpty && hasNextPage
     }
 
     func numberOfSection() -> Int {

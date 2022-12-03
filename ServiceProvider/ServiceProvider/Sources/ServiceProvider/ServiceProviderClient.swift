@@ -80,13 +80,22 @@ extension ServiceProviderClient {
     //
     // Events
     //
-    public func subscribeLiveMatches(forSportType sportType: SportType, pageIndex: Int) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+    public func subscribeLiveMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
-        return eventsProvider.subscribeLiveMatches(forSportType: sportType, pageIndex: pageIndex)
+        return eventsProvider.subscribeLiveMatches(forSportType: sportType)
+    }
+
+    public func requestLiveMatchesNextPage(forSportType sportType: SportType) -> AnyPublisher<Bool, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.requestLiveMatchesNextPage(forSportType: sportType)
     }
 
     public func subscribePreLiveMatches(forSportType sportType: SportType,

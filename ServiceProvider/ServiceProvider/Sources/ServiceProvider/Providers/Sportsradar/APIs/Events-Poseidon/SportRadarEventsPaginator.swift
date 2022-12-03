@@ -83,7 +83,7 @@ class SportRadarEventsPaginator {
                 let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode)
             else {
-                print("SportRadarEventsProvider: eventListBySportTypeDate - error on subscribe to topic")
+                print("SportRadarEventsPaginator: requestNextPage - error on subscribe to topic \(error) \(response)")
                 return
             }
             let subscription = Subscription(contentIdentifier: nextPageContentIdentifier,
@@ -114,7 +114,7 @@ class SportRadarEventsPaginator {
                 let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode)
             else {
-                print("SportRadarEventsProvider: eventListBySportTypeDate - error on subscribe to topic")
+                print("SportRadarEventsPaginator: requestInitialPage - error on subscribe to topic \(error) \(response)")
                 publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
                 return
             }

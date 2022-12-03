@@ -344,7 +344,7 @@ extension SportMatchLineViewModel {
 
         let serviceProviderSportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
 
-        Env.serviceProvider.subscribeLiveMatches(forSportType: serviceProviderSportType, pageIndex: 0)
+        Env.serviceProvider.subscribeLiveMatches(forSportType: serviceProviderSportType)
             .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
                 switch completion {
                 case .finished:
