@@ -9,7 +9,7 @@ import UIKit
 import Combine
 import LinkPresentation
 import WebKit
-import ServiceProvider
+import ServicesProvider
 
 class MatchDetailsViewController: UIViewController {
     

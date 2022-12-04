@@ -66,7 +66,7 @@ class PasswordUpdateViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
-        if !Env.serviceProvider.hasSecurityQuestions() {
+        if !Env.servicesProvider.hasSecurityQuestions() {
             self.hideSecurityQuestionLayout()
         }
 

@@ -260,8 +260,7 @@ class HomeViewController: UIViewController {
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        // TODO: REMOVE THIS, DEBUG ONLY
-        return 0 // self.viewModel.numberOfSections()
+        return self.viewModel.numberOfSections()
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

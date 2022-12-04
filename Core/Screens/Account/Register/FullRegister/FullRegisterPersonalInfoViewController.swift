@@ -7,7 +7,7 @@
 
 import UIKit
 import Combine
-import ServiceProvider
+import ServicesProvider
 
 class FullRegisterPersonalInfoViewController: UIViewController {
 
@@ -225,7 +225,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 //            }
 //        .store(in: &cancellables)
 
-        Env.serviceProvider.getProfile()
+        Env.servicesProvider.getProfile()
             .receive(on: DispatchQueue.main)
             .handleEvents(receiveSubscription: { [weak self] _ in
                 self?.showLoadingView()
@@ -243,9 +243,9 @@ class FullRegisterPersonalInfoViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        Env.serviceProvider.getCurrentCountry()
+        Env.servicesProvider.getCurrentCountry()
             .compactMap({ $0 })
-            .map({ (serviceProviderCountry: ServiceProvider.Country) -> Country in
+            .map({ (serviceProviderCountry: ServicesProvider.Country) -> Country in
                 return Country(name: serviceProviderCountry.name,
                                capital: serviceProviderCountry.capital,
                                region: serviceProviderCountry.region,
@@ -263,9 +263,9 @@ class FullRegisterPersonalInfoViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        Env.serviceProvider.getCountries()
-            .map { (serviceProviderCountries: [ServiceProvider.Country]) -> [Country] in
-                serviceProviderCountries.map({ (serviceProviderCountry: ServiceProvider.Country) -> Country in
+        Env.servicesProvider.getCountries()
+            .map { (serviceProviderCountries: [ServicesProvider.Country]) -> [Country] in
+                serviceProviderCountries.map({ (serviceProviderCountry: ServicesProvider.Country) -> Country in
                     return Country(name: serviceProviderCountry.name,
                                    capital: serviceProviderCountry.capital,
                                    region: serviceProviderCountry.region,

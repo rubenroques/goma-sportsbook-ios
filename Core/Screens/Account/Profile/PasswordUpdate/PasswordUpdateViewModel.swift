@@ -108,7 +108,7 @@ class PasswordUpdateViewModel: NSObject {
 //                UserDefaults.standard.userSession?.password = newPassword
 //            }).store(in: &cancellables)
 
-        Env.serviceProvider.updatePassword(oldPassword: oldPassword, newPassword: newPassword)
+        Env.servicesProvider.updatePassword(oldPassword: oldPassword, newPassword: newPassword)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {

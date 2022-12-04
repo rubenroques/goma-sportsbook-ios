@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 import OrderedCollections
-import ServiceProvider
+import ServicesProvider
 
 class LiveEventsViewModel: NSObject {
 
@@ -81,7 +81,7 @@ class LiveEventsViewModel: NSObject {
     private var liveMatchesHasMorePages = true
 
     private var cancellables = Set<AnyCancellable>()
-    private var subscriptions = Set<ServiceProvider.Subscription>()
+    private var subscriptions = Set<ServicesProvider.Subscription>()
     
     init(selectedSport: Sport) {
 
@@ -122,7 +122,7 @@ class LiveEventsViewModel: NSObject {
 
     func subscribeToLiveSports() {
 
-        self.liveSportsCancellable = Env.serviceProvider.subscribeLiveSportTypes()
+        self.liveSportsCancellable = Env.servicesProvider.subscribeLiveSportTypes()
             .sink(receiveCompletion: { completion in
                 print("LiveEventsViewModel subscribeLiveSportTypes completed \(completion)")
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
@@ -261,7 +261,7 @@ class LiveEventsViewModel: NSObject {
     //
     private func fetchLiveMatchesNextPage() {
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-        Env.serviceProvider.requestLiveMatchesNextPage(forSportType: sportType)
+        Env.servicesProvider.requestLiveMatchesNextPage(forSportType: sportType)
             .sink { completion in
                 print("requestPreLiveMatchesNextPage completion \(completion)")
             } receiveValue: { [weak self] hasNextPage in
@@ -286,7 +286,7 @@ class LiveEventsViewModel: NSObject {
         
         print("subscribeLiveMatches called")
         
-        self.liveMatchesSubscriber = Env.serviceProvider.subscribeLiveMatches(forSportType: sportType)
+        self.liveMatchesSubscriber = Env.servicesProvider.subscribeLiveMatches(forSportType: sportType)
             .sink(receiveCompletion: { completion in
                 // TODO: subscribeLiveMatches receiveCompletion
                 switch completion {

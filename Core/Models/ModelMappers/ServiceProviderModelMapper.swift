@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ServiceProvider
+import ServicesProvider
 
 enum ServiceProviderModelMapper {
     
@@ -53,7 +53,7 @@ extension ServiceProviderModelMapper {
         return nil
     }
 
-    static func event(fromEventGroup eventGroup: EventsGroup) -> ServiceProvider.Event? {
+    static func event(fromEventGroup eventGroup: EventsGroup) -> ServicesProvider.Event? {
         if let event = eventGroup.events[safe: 0] {
 
             return event
@@ -63,11 +63,11 @@ extension ServiceProviderModelMapper {
     }
     
     // Market
-    static func markets(fromServiceProviderMarkets markets: [ServiceProvider.Market]) -> [Market] {
+    static func markets(fromServiceProviderMarkets markets: [ServicesProvider.Market]) -> [Market] {
         return markets.map(Self.market(fromServiceProviderMarket:))
     }
     
-    static func market(fromServiceProviderMarket market: ServiceProvider.Market) -> Market {
+    static func market(fromServiceProviderMarket market: ServicesProvider.Market) -> Market {
         return Market(id: market.id,
                       typeId: market.name,
                       name: market.name,
@@ -81,7 +81,7 @@ extension ServiceProviderModelMapper {
                       eventName: market.eventName)
     }
 
-    static func optionalMarkets(fromServiceProviderMarkets markets: [ServiceProvider.Market]?) -> [Market]? {
+    static func optionalMarkets(fromServiceProviderMarkets markets: [ServicesProvider.Market]?) -> [Market]? {
         if let markets = markets {
             return markets.map(Self.market(fromServiceProviderMarket:))
         }
@@ -89,11 +89,11 @@ extension ServiceProviderModelMapper {
     }
     
     // Outcome
-    static func outcomes(fromServiceProviderOutcomes outcomes: [ServiceProvider.Outcome]) -> [Outcome] {
+    static func outcomes(fromServiceProviderOutcomes outcomes: [ServicesProvider.Outcome]) -> [Outcome] {
         return outcomes.map(Self.outcome(fromServiceProviderOutcome:))
     }
     
-    static func outcome(fromServiceProviderOutcome outcome: ServiceProvider.Outcome) -> Outcome {
+    static func outcome(fromServiceProviderOutcome outcome: ServicesProvider.Outcome) -> Outcome {
         
         let bettingOffer = BettingOffer(id: outcome.id,
                                         value: outcome.odd,

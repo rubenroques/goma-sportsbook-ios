@@ -604,7 +604,6 @@
 		450B7A8C28F58574009229E3 /* ChatSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D4E280EF90100E82724 /* ChatSettingsViewModel.swift */; };
 		450B7A8D28F58574009229E3 /* GomaGamingSocialServiceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D2487281BEED1003EEDEC /* GomaGamingSocialServiceClient.swift */; };
 		450B7A8E28F58574009229E3 /* BettingOffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841B726E91BBC00269B05 /* BettingOffer.swift */; };
-		450B7A9028F58574009229E3 /* ServiceProvider in Frameworks */ = {isa = PBXBuildFile; productRef = 450B784228F58574009229E3 /* ServiceProvider */; };
 		450B7A9128F58574009229E3 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 450B783E28F58574009229E3 /* FirebaseMessaging */; };
 		450B7A9228F58574009229E3 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 450B783428F58574009229E3 /* FirebaseDatabase */; };
 		450B7A9428F58574009229E3 /* DictionaryCoding in Frameworks */ = {isa = PBXBuildFile; productRef = 450B782828F58574009229E3 /* DictionaryCoding */; };
@@ -771,7 +770,6 @@
 		45452BED290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
 		45452BEE290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
 		455A0C6B26BD902F00EC572D /* SportsbookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0C6A26BD902F00EC572D /* SportsbookTests.swift */; };
-		455FD239293924FB007A32C2 /* Helpers in Frameworks */ = {isa = PBXBuildFile; productRef = 455FD238293924FB007A32C2 /* Helpers */; };
 		4568B9662858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
 		4568B9672858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
 		4568B9682858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
@@ -3278,6 +3276,7 @@
 		45B7BD5228E5B084007832C2 /* ServiceProvider in Frameworks */ = {isa = PBXBuildFile; productRef = 45B7BD5128E5B084007832C2 /* ServiceProvider */; };
 		45B7BD5428E5B088007832C2 /* ServiceProvider in Frameworks */ = {isa = PBXBuildFile; productRef = 45B7BD5328E5B088007832C2 /* ServiceProvider */; };
 		45B7BD5628E5B08C007832C2 /* ServiceProvider in Frameworks */ = {isa = PBXBuildFile; productRef = 45B7BD5528E5B08C007832C2 /* ServiceProvider */; };
+		45BA77A5293CD60800B6ACA6 /* ServicesProvider in Frameworks */ = {isa = PBXBuildFile; productRef = 45BA77A4293CD60800B6ACA6 /* ServicesProvider */; };
 		45C10E2028759FEF00037BBE /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10E1D28759FEF00037BBE /* KDCircularProgress.swift */; };
 		45C10E2128759FEF00037BBE /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10E1D28759FEF00037BBE /* KDCircularProgress.swift */; };
 		45C10E2228759FEF00037BBE /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10E1D28759FEF00037BBE /* KDCircularProgress.swift */; };
@@ -4644,7 +4643,6 @@
 		455C962626FE11CA00456F30 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		455C962726FE11CA00456F30 /* RootViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
 		455F765026F0EFCE00B9B85D /* LoginAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginAccount.swift; sourceTree = "<group>"; };
-		455FD23529392458007A32C2 /* Helpers */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Helpers; sourceTree = "<group>"; };
 		45626E33275530990069B89B /* OddFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddFormatter.swift; sourceTree = "<group>"; };
 		45626E36275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeAwayMarketDetailTableViewCell.swift; sourceTree = "<group>"; };
 		45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThreeAwayMarketDetailTableViewCell.xib; sourceTree = "<group>"; };
@@ -4758,7 +4756,6 @@
 		45936CAF270EEFA200E8260E /* LoadableContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadableContent.swift; sourceTree = "<group>"; };
 		45936CB2270EF02200E8260E /* SearchTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTextField.swift; sourceTree = "<group>"; };
 		45936CB5270EF04500E8260E /* SportType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportType.swift; sourceTree = "<group>"; };
-		4593D7082930526300C10654 /* GomaGaming */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = GomaGaming; sourceTree = "<group>"; };
 		45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailsAggregatorRepository.swift; sourceTree = "<group>"; };
 		45A0B301274FA3B800211A85 /* MarketGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketGroup.swift; sourceTree = "<group>"; };
 		45A16E122707B6C100A95C01 /* ListTypeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTypeCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -4806,10 +4803,12 @@
 		45B6E21D283FCFDC001B570C /* ReceivedTicketMessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedTicketMessageTableViewCell.swift; sourceTree = "<group>"; };
 		45B6E224283FD08C001B570C /* ChatTicketInMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTicketInMessageView.swift; sourceTree = "<group>"; };
 		45B74ACE292BFE3500F2076C /* ServiceProviderType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceProviderType.swift; sourceTree = "<group>"; };
-		45B7BD4A28E5AD73007832C2 /* ServiceProvider */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ServiceProvider; sourceTree = "<group>"; };
 		45B7DADA26F8FF130032C1C3 /* PopUpDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpDetails.swift; sourceTree = "<group>"; };
 		45B7DADE26F92CE40032C1C3 /* UserSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSession.swift; sourceTree = "<group>"; };
 		45B7DAE126F92CF30032C1C3 /* UserRegisterForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegisterForm.swift; sourceTree = "<group>"; };
+		45BA77A0293CD35700B6ACA6 /* Extensions */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Extensions; sourceTree = "<group>"; };
+		45BA77A2293CD42400B6ACA6 /* GomaGamingSDK */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = GomaGamingSDK; sourceTree = "<group>"; };
+		45BA77A3293CD45500B6ACA6 /* ServicesProvider */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ServicesProvider; sourceTree = "<group>"; };
 		45BD39C5270213DE001DD51D /* KeychainInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainInterface.swift; sourceTree = "<group>"; };
 		45BEA47726F4DC9900680181 /* SimpleRegisterDetailsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SimpleRegisterDetailsViewController.xib; sourceTree = "<group>"; };
 		45BEA47826F4DC9900680181 /* SimpleRegisterEmailCheckViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleRegisterEmailCheckViewController.swift; sourceTree = "<group>"; };
@@ -5249,7 +5248,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				450B7A9028F58574009229E3 /* ServiceProvider in Frameworks */,
 				450B7A9128F58574009229E3 /* FirebaseMessaging in Frameworks */,
 				450B7A9228F58574009229E3 /* FirebaseDatabase in Frameworks */,
 				450B7A9428F58574009229E3 /* DictionaryCoding in Frameworks */,
@@ -5265,6 +5263,7 @@
 				450B7AA028F58574009229E3 /* SweeterSwift in Frameworks */,
 				450B7AA128F58574009229E3 /* Starscream in Frameworks */,
 				450B7AA228F58574009229E3 /* SocketIO in Frameworks */,
+				45BA77A5293CD60800B6ACA6 /* ServicesProvider in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5339,7 +5338,6 @@
 				4589C948282024E400243547 /* FirebaseAnalytics in Frameworks */,
 				4589C949282024E400243547 /* OrderedCollections in Frameworks */,
 				4589C94A282024E400243547 /* SweeterSwift in Frameworks */,
-				455FD239293924FB007A32C2 /* Helpers in Frameworks */,
 				4589C94B282024E400243547 /* Starscream in Frameworks */,
 				45A6BB81282140D100D9B416 /* SocketIO in Frameworks */,
 			);
@@ -5842,9 +5840,9 @@
 		455A0C4726BD902C00EC572D = {
 			isa = PBXGroup;
 			children = (
-				455FD2342939241D007A32C2 /* Helpers */,
-				4593D7072930515D00C10654 /* GomaGaming */,
-				45B7BD4928E5AD48007832C2 /* ServiceProvider */,
+				45BA77A3293CD45500B6ACA6 /* ServicesProvider */,
+				45BA77A2293CD42400B6ACA6 /* GomaGamingSDK */,
+				45BA77A0293CD35700B6ACA6 /* Extensions */,
 				455A0C5226BD902C00EC572D /* Core */,
 				455A0C9226BD906700EC572D /* Clients */,
 				455A0C5126BD902C00EC572D /* Products */,
@@ -6088,14 +6086,6 @@
 				457F495B2737C2280047169D /* UserBalance.swift */,
 			);
 			path = Account;
-			sourceTree = "<group>";
-		};
-		455FD2342939241D007A32C2 /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-				455FD23529392458007A32C2 /* Helpers */,
-			);
-			path = Helpers;
 			sourceTree = "<group>";
 		};
 		4568B96B2858E43700FA99B3 /* FlipperView */ = {
@@ -6609,14 +6599,6 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		4593D7072930515D00C10654 /* GomaGaming */ = {
-			isa = PBXGroup;
-			children = (
-				4593D7082930526300C10654 /* GomaGaming */,
-			);
-			path = GomaGaming;
-			sourceTree = "<group>";
-		};
 		45A16E112707B69200A95C01 /* Filters */ = {
 			isa = PBXGroup;
 			children = (
@@ -6781,14 +6763,6 @@
 				45761A062844E8AF00A40826 /* Cells */,
 			);
 			path = BetTicketShare;
-			sourceTree = "<group>";
-		};
-		45B7BD4928E5AD48007832C2 /* ServiceProvider */ = {
-			isa = PBXGroup;
-			children = (
-				45B7BD4A28E5AD73007832C2 /* ServiceProvider */,
-			);
-			path = ServiceProvider;
 			sourceTree = "<group>";
 		};
 		45B7DADD26F92CC30032C1C3 /* Shared */ = {
@@ -8448,7 +8422,7 @@
 				450B783E28F58574009229E3 /* FirebaseMessaging */,
 				450B783F28F58574009229E3 /* SwiftyBeaver */,
 				450B784128F58574009229E3 /* SocketIO */,
-				450B784228F58574009229E3 /* ServiceProvider */,
+				45BA77A4293CD60800B6ACA6 /* ServicesProvider */,
 			);
 			productName = Sportsbook;
 			productReference = 450B7B2428F58574009229E3 /* SportRadar.app */;
@@ -8574,7 +8548,6 @@
 				4589C772282024E400243547 /* SwiftyBeaver */,
 				45A6BB80282140D100D9B416 /* SocketIO */,
 				45B7BD4F28E5B080007832C2 /* ServiceProvider */,
-				455FD238293924FB007A32C2 /* Helpers */,
 			);
 			productName = Sportsbook;
 			productReference = 4589C9CD282024E400243547 /* GOMASports.app */;
@@ -13335,7 +13308,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00722;
+				CURRENT_PROJECT_VERSION = 00723;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -13361,7 +13334,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00722;
+				CURRENT_PROJECT_VERSION = 00723;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -14499,14 +14472,6 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = SocketIO;
 		};
-		450B784228F58574009229E3 /* ServiceProvider */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ServiceProvider;
-		};
-		455FD238293924FB007A32C2 /* Helpers */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Helpers;
-		};
 		457CB9C6282D27D000ED0F00 /* Reachability */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 457CB9C7282D27D000ED0F00 /* XCRemoteSwiftPackageReference "Reachability" */;
@@ -14821,6 +14786,10 @@
 		45B7BD5528E5B08C007832C2 /* ServiceProvider */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ServiceProvider;
+		};
+		45BA77A4293CD60800B6ACA6 /* ServicesProvider */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ServicesProvider;
 		};
 		A9C3407F28F9A74A0055360B /* Reachability */ = {
 			isa = XCSwiftPackageProductDependency;

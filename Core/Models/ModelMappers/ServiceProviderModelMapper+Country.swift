@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import ServiceProvider
+import ServicesProvider
 
 extension ServiceProviderModelMapper {
     
-    static func country(fromServiceProviderCountry serviceProviderCountry: ServiceProvider.Country) -> Country {
+    static func country(fromServiceProviderCountry serviceProviderCountry: ServicesProvider.Country) -> Country {
         return Country(name: serviceProviderCountry.name,
                        capital: serviceProviderCountry.capital,
                        region: serviceProviderCountry.region,
@@ -20,8 +20,8 @@ extension ServiceProviderModelMapper {
                        phonePrefix: serviceProviderCountry.phonePrefix)
     }
     
-    static func country(fromCountry country: Country) -> ServiceProvider.Country? {
-        return ServiceProvider.Country(isoCode: country.iso2Code)
+    static func country(fromCountry country: Country) -> ServicesProvider.Country? {
+        return ServicesProvider.Country(isoCode: country.iso2Code)
     }
     
 }

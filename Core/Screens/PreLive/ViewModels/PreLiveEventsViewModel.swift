@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 import OrderedCollections
-import ServiceProvider
+import ServicesProvider
 
 class PreLiveEventsViewModel: NSObject {
 
@@ -143,7 +143,7 @@ class PreLiveEventsViewModel: NSObject {
     }
     
     private var cancellables = Set<AnyCancellable>()
-    private var subscriptions = Set<ServiceProvider.Subscription>()
+    private var subscriptions = Set<ServicesProvider.Subscription>()
 
     init(selectedSport: Sport) {
         self.selectedSport = selectedSport
@@ -574,7 +574,7 @@ class PreLiveEventsViewModel: NSObject {
     //
     private func fetchPopularMatchesNextPage() {
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-        Env.serviceProvider.requestPreLiveMatchesNextPage(forSportType: sportType, sortType: .popular)
+        Env.servicesProvider.requestPreLiveMatchesNextPage(forSportType: sportType, sortType: .popular)
             .sink { completion in
                 print("requestPreLive fetchPopularMatchesNextPage completion \(completion)")
             } receiveValue: { [weak self] hasNextPage in
@@ -593,7 +593,7 @@ class PreLiveEventsViewModel: NSObject {
 
         let sport = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
 
-        self.popularMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sport, sortType: .popular)
+        self.popularMatchesPublisher = Env.servicesProvider.subscribePreLiveMatches(forSportType: sport, sortType: .popular)
             .sink(receiveCompletion: { completion in
                 print("Prelive subscribePopularMatches completed \(completion)")
                 switch completion {
@@ -629,7 +629,7 @@ class PreLiveEventsViewModel: NSObject {
     //
     private func fetchTodayMatchesNextPage() {
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-        Env.serviceProvider.requestPreLiveMatchesNextPage(forSportType: sportType, sortType: .date)
+        Env.servicesProvider.requestPreLiveMatchesNextPage(forSportType: sportType, sortType: .date)
             .sink { completion in
                 print("requestPreLiveMatchesNextPage completion \(completion)")
             } receiveValue: { [weak self] hasNextPage in
@@ -648,9 +648,9 @@ class PreLiveEventsViewModel: NSObject {
 
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
 
-        self.todayMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType, sortType: .date)
+        self.todayMatchesPublisher = Env.servicesProvider.subscribePreLiveMatches(forSportType: sportType, sortType: .date)
             .sink(receiveCompletion: { completion in
-                print("Env.serviceProvider.subscribeUpcomingMatches completed \(completion)")
+                print("Env.servicesProvider.subscribeUpcomingMatches completed \(completion)")
                 switch completion {
                 case .finished:
                     ()
@@ -661,7 +661,7 @@ class PreLiveEventsViewModel: NSObject {
                     self.updateContentList()
                 }
             }, receiveValue: { (subscribableContent: SubscribableContent<[EventsGroup]>) in
-                print("Env.serviceProvider.subscribeUpcomingMatches value \(subscribableContent)")
+                print("Env.servicesProvider.subscribeUpcomingMatches value \(subscribableContent)")
                 switch subscribableContent {
                 case .connected(let subscription):
                     self.subscriptions.insert(subscription)

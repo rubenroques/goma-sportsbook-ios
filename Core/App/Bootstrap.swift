@@ -26,8 +26,8 @@ struct Bootstrap {
             Env.locationManager.startGeoLocationUpdates()
         }
 
-        let serviceProvider = Env.serviceProvider
-        serviceProvider.connect()
+        let servicesProvider = Env.servicesProvider
+        servicesProvider.connect()
 
         Env.sportsStore.getSportTypesList()
 

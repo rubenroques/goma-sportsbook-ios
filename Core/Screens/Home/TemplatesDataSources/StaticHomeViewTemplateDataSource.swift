@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ServiceProvider
+import ServicesProvider
 import Combine
 
 class StaticHomeViewTemplateDataSource {
@@ -190,7 +190,7 @@ class StaticHomeViewTemplateDataSource {
 
     func requestSports() {
 
-        Env.serviceProvider.getAvailableSportTypes()
+        Env.servicesProvider.getAvailableSportTypes()
             .map({ sportTypesArray in
                 return sportTypesArray.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
             })

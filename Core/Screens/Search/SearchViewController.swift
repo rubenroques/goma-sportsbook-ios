@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import ServiceProvider
+import ServicesProvider
 import Combine
 
 class SearchViewController: UIViewController {
@@ -30,7 +30,7 @@ class SearchViewController: UIViewController {
     // Variables
     var viewModel: SearchViewModel
     var cancellables = Set<AnyCancellable>()
-    var subscriptions = Set<ServiceProvider.Subscription>()
+    var subscriptions = Set<ServicesProvider.Subscription>()
 
     var didSelectMatchAction: ((Match) -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?

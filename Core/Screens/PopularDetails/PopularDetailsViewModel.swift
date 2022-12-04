@@ -7,7 +7,7 @@
 
 import Foundation
 import Combine
-import ServiceProvider
+import ServicesProvider
 
 class PopularDetailsViewModel {
 
@@ -31,7 +31,7 @@ class PopularDetailsViewModel {
     private var hasNextPage = true
 
     private var cancellables: Set<AnyCancellable> = []
-    private var subscriptions: Set<ServiceProvider.Subscription> = []
+    private var subscriptions: Set<ServicesProvider.Subscription> = []
 
     init(sport: Sport, store: AggregatorsRepository) {
         self.store = store
@@ -54,7 +54,7 @@ class PopularDetailsViewModel {
 
     private func fetchNextPage() {
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
-        Env.serviceProvider.requestPreLiveMatchesNextPage(forSportType: sportType, sortType: .popular)
+        Env.servicesProvider.requestPreLiveMatchesNextPage(forSportType: sportType, sortType: .popular)
             .sink { completion in
                 print("requestPreLiveMatchesNextPage completion \(completion)")
             } receiveValue: { [weak self] hasNextPage in
@@ -72,7 +72,7 @@ class PopularDetailsViewModel {
 
         Logger.log("subscribePreLiveMatches fetchData called")
 
-        self.matchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType, sortType: .popular)
+        self.matchesPublisher = Env.servicesProvider.subscribePreLiveMatches(forSportType: sportType, sortType: .popular)
             .sink(receiveCompletion: { [weak self] completion in
                 // TODO: subscribePreLiveMatches receiveCompletion
                 switch completion {

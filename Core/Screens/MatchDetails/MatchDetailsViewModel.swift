@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 import Combine
-import ServiceProvider
+import ServicesProvider
 
 class MatchDetailsViewModel: NSObject {
 
@@ -109,10 +109,10 @@ class MatchDetailsViewModel: NSObject {
 
     func getMatchDetails() {
 
-        Env.serviceProvider.subscribeMatchDetails(matchId: self.matchId)
+        Env.servicesProvider.subscribeMatchDetails(matchId: self.matchId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
-                print("Env.serviceProvider.subscribeEventDetails completed \(completion)")
+                print("Env.servicesProvider.subscribeEventDetails completed \(completion)")
                 switch completion {
                 case .finished:
                     ()
@@ -120,7 +120,7 @@ class MatchDetailsViewModel: NSObject {
                     print("MATCH DETAILS ERROR: \(error)")
                 }
             }, receiveValue: { (subscribableContent: SubscribableContent<[EventsGroup]>) in
-                print("Env.serviceProvider.subscribeEventDetails value \(subscribableContent)")
+                print("Env.servicesProvider.subscribeEventDetails value \(subscribableContent)")
                 switch subscribableContent {
                 case .connected(let subscription):
                     print("Connected to ws")
@@ -147,9 +147,9 @@ class MatchDetailsViewModel: NSObject {
 
     }
 
-    func getMarketGroups(event: ServiceProvider.Event) {
+    func getMarketGroups(event: ServicesProvider.Event) {
 
-        Env.serviceProvider.getMarketFilters(event: event)
+        Env.servicesProvider.getMarketFilters(event: event)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: {[weak self] completion in
                 ()
@@ -200,7 +200,7 @@ class MatchDetailsViewModel: NSObject {
     }
 
     func getFieldWidget(isDarkTheme: Bool) {
-//        Env.serviceProvider.getFieldWidgetId(eventId: eventId)?
+//        Env.servicesProvider.getFieldWidgetId(eventId: eventId)?
 //            .receive(on: DispatchQueue.main)
 //            .sink(receiveCompletion: { [weak self] completion in
 //                switch completion {
@@ -220,7 +220,7 @@ class MatchDetailsViewModel: NSObject {
 //            })
 //            .store(in: &cancellables)
 
-        Env.serviceProvider.getFieldWidget(eventId: self.matchId, isDarkTheme: isDarkTheme)
+        Env.servicesProvider.getFieldWidget(eventId: self.matchId, isDarkTheme: isDarkTheme)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -325,7 +325,7 @@ class MatchDetailsViewModel: NSObject {
 
     //
     //
-    private func fetchMarketGroupsPublisher(marketGroups: [ServiceProvider.MarketGroup]) {
+    private func fetchMarketGroupsPublisher(marketGroups: [ServicesProvider.MarketGroup]) {
 
         let marketGroups = marketGroups.map { rawMarketGroup in
 

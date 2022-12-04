@@ -7,7 +7,7 @@
 
 import Foundation
 import Combine
-import ServiceProvider
+import ServicesProvider
 
 enum UserSessionError: Error {
     case invalidEmailPassword
@@ -45,7 +45,7 @@ class UserSessionStore {
     var isUserProfileComplete = CurrentValueSubject<Bool, Never>(false)
     var isUserEmailVerified = CurrentValueSubject<Bool, Never>(false)
 
-    private var pendingSignUpUserForm: ServiceProvider.SimpleSignUpForm?
+    private var pendingSignUpUserForm: ServicesProvider.SimpleSignUpForm?
     
     init() {
 
@@ -176,7 +176,7 @@ class UserSessionStore {
 
     func login(withUsername username: String, password: String) -> AnyPublisher<UserSession, UserSessionError> {
 
-        let publisher = Env.serviceProvider.loginUser(withUsername: username, andPassword: password)
+        let publisher = Env.servicesProvider.loginUser(withUsername: username, andPassword: password)
             .mapError { (error: ServiceProviderError) -> UserSessionError in
                 switch error {
                 case .invalidEmailPassword:
@@ -187,7 +187,7 @@ class UserSessionStore {
                     return .serverError
                 }
             }
-            .map({ (serviceProviderProfile: ServiceProvider.UserProfile) in
+            .map({ (serviceProviderProfile: ServicesProvider.UserProfile) in
                 return ServiceProviderModelMapper.userProfile(serviceProviderProfile)
             })
             .map { (userProfile: UserProfile) -> UserSession in
@@ -213,8 +213,8 @@ class UserSessionStore {
         return publisher
     }
     
-    func registerUser(form: ServiceProvider.SimpleSignUpForm) -> AnyPublisher<Bool, RegisterUserError> {
-        return Env.serviceProvider.simpleSignUp(form: form)
+    func registerUser(form: ServicesProvider.SimpleSignUpForm) -> AnyPublisher<Bool, RegisterUserError> {
+        return Env.servicesProvider.simpleSignUp(form: form)
             .mapError { (error: ServiceProviderError) -> RegisterUserError in
                 switch error {
                 case ServiceProviderError.invalidSignUpUsername:
@@ -266,7 +266,7 @@ class UserSessionStore {
             return Just(false).setFailureType(to: UserSessionError.self).eraseToAnyPublisher()
         }
     }
-//    private func triggerLoginAfterRegister(form: ServiceProvider.SimpleSignUpForm) {
+//    private func triggerLoginAfterRegister(form: ServicesProvider.SimpleSignUpForm) {
 //        self.login(withUsername: form.username, password: form.password)
 //            .map { String($0.userId) }
 //            .sink(receiveCompletion: { [weak self] completion in
@@ -426,13 +426,13 @@ extension UserSessionStore {
 */
     
     func refreshUserWallet() {
-        Env.serviceProvider.getUserBalance()
+        Env.servicesProvider.getUserBalance()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 if case .failure = completion {
                     self.userWalletPublisher.send(nil)
                 }
-            }, receiveValue: { [weak self] (userWallet: ServiceProvider.UserWallet) in
+            }, receiveValue: { [weak self] (userWallet: ServicesProvider.UserWallet) in
                 guard
                     let currency = userWallet.currency,
                     let total = userWallet.total
@@ -545,7 +545,7 @@ extension UserSessionStore {
             .store(in: &cancellables)
     }
 
-    func signUpSimpleGomaAPI(form: ServiceProvider.SimpleSignUpForm, userId: String) {
+    func signUpSimpleGomaAPI(form: ServicesProvider.SimpleSignUpForm, userId: String) {
         let deviceId = Env.deviceId
         let userRegisterForm = UserRegisterForm(username: form.username,
                                                 email: form.email,

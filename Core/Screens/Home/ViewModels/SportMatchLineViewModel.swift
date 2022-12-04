@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ServiceProvider
+import ServicesProvider
 import Combine
 
 class SportMatchLineViewModel {
@@ -78,7 +78,7 @@ class SportMatchLineViewModel {
     private var matches: [Match] = []
 
     private var cancellables: Set<AnyCancellable> = []
-    private var subscriptions = Set<ServiceProvider.Subscription>()
+    private var subscriptions = Set<ServicesProvider.Subscription>()
 
     init(sport: Sport, matchesType: MatchesType, store: HomeStore) {
 
@@ -277,7 +277,7 @@ extension SportMatchLineViewModel {
 
         let serviceProviderSportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
 
-        Env.serviceProvider.subscribePreLiveMatches(forSportType: serviceProviderSportType,
+        Env.servicesProvider.subscribePreLiveMatches(forSportType: serviceProviderSportType,
                                                     eventCount: 2,
                                                     sortType: .popular)
         .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
@@ -344,7 +344,7 @@ extension SportMatchLineViewModel {
 
         let serviceProviderSportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
 
-        Env.serviceProvider.subscribeLiveMatches(forSportType: serviceProviderSportType)
+        Env.servicesProvider.subscribeLiveMatches(forSportType: serviceProviderSportType)
             .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
                 switch completion {
                 case .finished:

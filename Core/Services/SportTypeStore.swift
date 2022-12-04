@@ -7,7 +7,7 @@
 
 import Foundation
 import Combine
-import ServiceProvider
+import ServicesProvider
 
 class SportTypeStore {
 
@@ -26,8 +26,7 @@ class SportTypeStore {
     private var sports = [Sport]()
 
     func getSportTypesList() {
-
-        Env.serviceProvider.getAvailableSportTypes()
+        Env.servicesProvider.getAvailableSportTypes()
             .sink(receiveCompletion: { completion in
             switch completion {
             case .finished:
