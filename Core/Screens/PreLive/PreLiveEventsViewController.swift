@@ -44,7 +44,6 @@ class PreLiveEventsViewController: UIViewController {
         return floatingShortcutsView
     }
 
-
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
 
@@ -579,8 +578,18 @@ class PreLiveEventsViewController: UIViewController {
     }
 
     func applyCompetitionsFiltersWithIds(_ ids: [String], animated: Bool = true) {
-        self.viewModel.fetchCompetitionsMatchesWithIds(ids)
-        self.showBottomBarCompetitionsFilters(animated: animated)
+        if ids.count > 5 {
+            let alert = UIAlertController(title: "Filter limit exceeded",
+                                          message: "You can only select 5 competitions at once. Please review your selections",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else {
+            self.viewModel.fetchCompetitionsMatchesWithIds(ids)
+            self.showBottomBarCompetitionsFilters(animated: animated)
+        }
+
     }
 
     func presentLoginViewController() {

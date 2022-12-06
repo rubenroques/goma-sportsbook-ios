@@ -68,6 +68,11 @@ class PreLiveEventsViewModel: NSObject {
     
     var isUserLoggedPublisher: CurrentValueSubject<Bool, Never> = .init(true)
 
+    var selectedCompetitionsInfoPublisher: CurrentValueSubject<[String: SportCompetitionInfo], Never> = .init([:])
+    var expectedCompetitionsPublisher: CurrentValueSubject<Int, Never> = .init(0)
+
+    var competitionsMatchesSubscriptions: CurrentValueSubject<[String: SportCompetitionInfo], Never> = .init([:])
+
     //
     // Private vars
     //
@@ -188,6 +193,7 @@ class PreLiveEventsViewModel: NSObject {
         if let competitionsMatchesRegister = self.competitionsMatchesRegister {
             Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: competitionsMatchesRegister)
         }
+
     }
 
     func setupCallbacks() {
@@ -286,6 +292,53 @@ class PreLiveEventsViewModel: NSObject {
             })
             .store(in: &cancellables)
 
+        Publishers.CombineLatest(self.expectedCompetitionsPublisher, self.selectedCompetitionsInfoPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] expectedCompetitions, selectedCompetitionsInfo in
+
+                if selectedCompetitionsInfo.count == expectedCompetitions {
+                    print("ALL COMPETITIONS DATA")
+                    self?.subscribeCompetitionsMatches()
+                }
+            })
+            .store(in: &cancellables)
+
+        self.competitionsMatchesSubscriptions
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] competitionMatchesSubscriptions in
+
+                if competitionMatchesSubscriptions.count == self?.expectedCompetitionsPublisher.value {
+                    print("ALL COMPETITIONS SUBSCRIPTIONS")
+
+                    self?.isLoadingCompetitionMatches.send(false)
+                    self?.isLoadingEvents.send(false)
+                    self?.updateContentList()
+                }
+            })
+            .store(in: &cancellables)
+
+    }
+
+    func subscribeCompetitionsMatches() {
+
+        let competitionInfos = self.selectedCompetitionsInfoPublisher.value.map({$0.value})
+
+        self.competitions = []
+        self.competitionsDataSource.competitions = []
+
+        for competitionInfo in competitionInfos {
+
+            if let marketGroup = competitionInfo.marketGroups.filter({
+                $0.name == "Main"
+            }).first {
+                self.subscribeCompetitionMatches(forMarketGroupId: marketGroup.id, competitionInfo: competitionInfo)
+
+            }
+            else {
+                self.competitionsMatchesSubscriptions.value[competitionInfo.id] = competitionInfo
+            }
+            //self.subscribeCompetitionMatches(forMarketGroupId: competitionInfo.id, competitionInfo: competitionInfo)
+        }
     }
 
     func fetchData() {
@@ -876,7 +929,6 @@ class PreLiveEventsViewModel: NSObject {
                     print("REGION COMPETITION ERROR: \(error)")
                 }
             }, receiveValue: { [weak self] sportRegionInfo in
-                print("REGION COMPETITION RESPONSE: \(sportRegionInfo)")
                 self?.regionCompetitionsPublisher.value[sportRegionInfo.id] = sportRegionInfo.competitionNodes
 
             })
@@ -886,9 +938,10 @@ class PreLiveEventsViewModel: NSObject {
     func fetchCompetitionsFilters() {
 
         // EM TEMP SHUTDOWN
-        self.competitions = []
-        self.popularOutrightCompetitions = []
+//        self.competitions = []
+//        self.popularOutrightCompetitions = []
         self.isLoadingCompetitionGroups.send(false)
+        self.isLoadingEvents.send(false)
         self.updateContentList()
 
         guard let sportNumericId = self.selectedSport.numericId else { return }
@@ -903,7 +956,6 @@ class PreLiveEventsViewModel: NSObject {
                     print("SPORT REGION FAILURE: \(error)")
                 }
             }, receiveValue: { [weak self] response in
-                print("SPORT REGION RESPONSE: \(response)")
                 let sportRegions = response.regionNodes
 
                 self?.sportRegionsPublisher.send(sportRegions)
@@ -1055,7 +1107,22 @@ class PreLiveEventsViewModel: NSObject {
 
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
 
-        self.isLoadingCompetitionMatches.send(true)
+        if ids.isEmpty {
+            self.competitions = []
+            self.competitionsDataSource.competitions = []
+            self.updateContentList()
+            self.isLoadingCompetitionMatches.send(false)
+            self.isLoadingEvents.send(false)
+        }
+        else {
+            self.isLoadingCompetitionMatches.send(true)
+            self.isLoadingEvents.send(true)
+        }
+
+        self.selectedCompetitionsInfoPublisher.value = [:]
+        self.competitionsMatchesSubscriptions.value = [:]
+
+        self.expectedCompetitionsPublisher.send(ids.count)
 
         for competitionId in ids {
             Env.serviceProvider.getCompetitionMarketGroups(competitionId: competitionId)
@@ -1066,16 +1133,12 @@ class PreLiveEventsViewModel: NSObject {
                         ()
                     case .failure(let error):
                         print("COMPETITION INFO ERROR: \(error)")
+                        self?.selectedCompetitionsInfoPublisher.value[competitionId] = nil
                     }
 
                 }, receiveValue: { [weak self] competitionInfo in
-                    print("COMPETITION INFO RESPONSE: \(competitionInfo)")
-                    if let marketGroup = competitionInfo.marketGroups.filter({
-                        $0.name == "Main"
-                    }).first {
-                        self?.subscribeCompetitionMatches(forMarketGroupId: marketGroup.id, competitionInfo: competitionInfo)
 
-                    }
+                    self?.selectedCompetitionsInfoPublisher.value[competitionInfo.id] = competitionInfo
 
                 })
                 .store(in: &cancellables)
@@ -1160,54 +1223,39 @@ class PreLiveEventsViewModel: NSObject {
 
     func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String, competitionInfo: SportCompetitionInfo) {
 
-        self.competitions = []
-        self.competitionsDataSource.competitions = []
-        
         Env.serviceProvider.subscribeCompetitionMatches(forMarketGroupId: marketGroupId)
         .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
             switch completion {
             case .finished:
                 ()
             case .failure:
-                //self?.finishedWithError()
                 print("SUBSCRIPTION COMPETITION MATCHES ERROR")
             }
         } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
             switch subscribableContent {
             case .connected(let subscription):
                 self?.subscriptions.insert(subscription)
-                //self?.storeMatches([])
             case .contentUpdate(let eventsGroups):
                 let matches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
                 self?.processCompetitionMatches(matches: matches, competitionInfo: competitionInfo)
-                //self?.storeMatches(matches)
             case .disconnected:
-                //self?.storeMatches([])
                 ()
             }
-            //self?.updatedContent()
         }
         .store(in: &cancellables)
     }
 
     private func processCompetitionMatches(matches: [Match], competitionInfo: SportCompetitionInfo) {
 
-        let competitionsGroups = self.competitionGroupsPublisher.value
-
         let newCompetition = Competition(id: competitionInfo.id,
                                          name: competitionInfo.name,
                                          matches: matches,
                                          outrightMarkets: 0)
-//        if !self.competitions.contains(where: {
-//            $0.id == competitionInfo.id
-//        }) {
-//            self.competitions.append(newCompetition)
-//            self.competitionsDataSource.competitions = self.competitions
-//        }
+
         self.competitions.append(newCompetition)
         self.competitionsDataSource.competitions = self.competitions
-        self.isLoadingCompetitionMatches.send(false)
-        self.updateContentList()
+        self.competitionsMatchesSubscriptions.value[competitionInfo.id] = competitionInfo
+
     }
 
     //
