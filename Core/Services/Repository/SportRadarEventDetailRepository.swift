@@ -8,7 +8,7 @@
 //import Foundation
 //import Combine
 //import OrderedCollections
-//import ServiceProvider
+//import ServicesProvider
 //
 //class SportRadarEventDetailRepository {
 //
@@ -30,7 +30,7 @@
 //
 //    func getMarketFilters() {
 //
-////        Env.serviceProvider.getMarketFilters()?
+////        Env.servicesProvider.getMarketFilters()?
 ////            .receive(on: DispatchQueue.main)
 ////            .sink(receiveCompletion: { [weak self] completion in
 ////                switch completion {

@@ -144,7 +144,7 @@ class BonusRootViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        Env.everyMatrixClient.userSessionStatusPublisher
+        Env.userSessionStore.userSessionStatusPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] status in
                 switch status {

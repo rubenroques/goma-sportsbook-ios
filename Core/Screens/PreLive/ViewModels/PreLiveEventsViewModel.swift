@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 import OrderedCollections
-import ServiceProvider
+import ServicesProvider
 
 class PreLiveEventsViewModel: NSObject {
 
@@ -44,6 +44,9 @@ class PreLiveEventsViewModel: NSObject {
             }
         }
         didSet {
+            if didChangeSport {
+                self.resetScrollPositionAction?()
+            }
             self.fetchData()
         }
     }
@@ -64,8 +67,9 @@ class PreLiveEventsViewModel: NSObject {
     var didSelectMatchAction: ((Match) -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didSelectCompetitionAction: ((Competition) -> Void)?
-    var didLongPressOdd: ((BettingTicket) -> Void)?
-    
+    var didLongPressOddAction: ((BettingTicket) -> Void)?
+    var resetScrollPositionAction: (() -> Void)?
+
     var isUserLoggedPublisher: CurrentValueSubject<Bool, Never> = .init(true)
 
     var selectedCompetitionsInfoPublisher: CurrentValueSubject<[String: SportCompetitionInfo], Never> = .init([:])
@@ -147,7 +151,7 @@ class PreLiveEventsViewModel: NSObject {
     var regionCompetitionsPublisher: CurrentValueSubject<[String: [SportCompetition]], Never> = .init([:])
     
     private var cancellables = Set<AnyCancellable>()
-    private var subscriptions = Set<ServiceProvider.Subscription>()
+    private var subscriptions = Set<ServicesProvider.Subscription>()
 
     init(selectedSport: Sport) {
         self.selectedSport = selectedSport
@@ -263,11 +267,11 @@ class PreLiveEventsViewModel: NSObject {
 
         // Did select odd
         self.popularMatchesDataSource.didLongPressOdd = { [weak self] bettingTicket in
-            self?.didLongPressOdd?(bettingTicket)
+            self?.didLongPressOddAction?(bettingTicket)
         }
 
         self.todayMatchesDataSource.didLongPressOdd = { [weak self] bettingTicket in
-            self?.didLongPressOdd?(bettingTicket)
+            self?.didLongPressOddAction?(bettingTicket)
         }
 
     }
@@ -343,28 +347,8 @@ class PreLiveEventsViewModel: NSObject {
 
     func fetchData() {
 
-//        guard
-//            let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-//        else {
-//            self.popularMatchesDataSource.outrightCompetitions = nil
-//            self.popularOutrightCompetitions = nil
-//            self.popularMatches = []
-//
-//            self.todayMatchesDataSource.todayMatches = []
-//            self.todayMatches = []
-//
-//            self.competitionsDataSource.competitions = []
-//            self.competitions = []
-//            self.filteredOutrightCompetitionsDataSource.outrightCompetitions = []
-//
-//            self.isLoadingPopularList.send(false)
-//            self.isLoadingTodayList.send(false)
-//
-//            self.updateContentList()
-//            return
-//        }
-
         if didChangeSport {
+
             self.lastCompetitionsMatchesRequested = []
 
             self.popularMatchesDataSource.outrightCompetitions = nil
@@ -492,10 +476,6 @@ class PreLiveEventsViewModel: NSObject {
                 self.screenStatePublisher.send(.noEmptyNoFilter)
             }
         }
-
-        // EM TEMP SHUTDOWN
-        self.popularMatchesHasNextPage = false
-        self.todayMatchesHasNextPage = false
 
         self.dataChangedPublisher.send()
     }
@@ -658,13 +638,18 @@ class PreLiveEventsViewModel: NSObject {
     // MARK: - Fetches
     //
     //
-
     private func fetchPopularMatchesNextPage() {
-        if !popularMatchesHasNextPage {
-            return
-        }
-        self.popularMatchesPage += 1
-        self.fetchPopularMatches()
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
+        Env.servicesProvider.requestPreLiveMatchesNextPage(forSportType: sportType, sortType: .popular)
+            .sink { completion in
+                print("requestPreLive fetchPopularMatchesNextPage completion \(completion)")
+            } receiveValue: { [weak self] hasNextPage in
+                self?.popularMatchesHasNextPage = hasNextPage
+                if  !hasNextPage {
+                    self?.updateContentList()
+                }
+            }
+            .store(in: &cancellables)
     }
 
     private func fetchPopularMatches() {
@@ -672,13 +657,9 @@ class PreLiveEventsViewModel: NSObject {
         self.isLoadingPopularList.send(true)
         self.isLoadingEvents.send(true)
 
-
         let sport = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
 
-        self.popularMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sport,
-                                                                                   pageIndex: 0,
-                                                                                   eventCount: 10,
-                                                                                   sortType: .popular)
+        self.popularMatchesPublisher = Env.servicesProvider.subscribePreLiveMatches(forSportType: sport, sortType: .popular)
             .sink(receiveCompletion: { completion in
                 print("Prelive subscribePopularMatches completed \(completion)")
                 switch completion {
@@ -708,118 +689,22 @@ class PreLiveEventsViewModel: NSObject {
                 }
             })
 
-//        self.popularMatches = []
-//        self.isLoadingPopularList.send(false)
-
-//        if let popularMatchesRegister = popularMatchesRegister {
-//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: popularMatchesRegister)
-//        }
-//
-//        let matchesCount = self.popularMatchesCount * self.popularMatchesPage
-//
-//        let endpoint = TSRouter.popularMatchesPublisher(operatorId: Env.appSession.operatorId,
-//                                                        language: "en",
-//                                                        sportId: self.selectedSport.id,
-//                                                        matchesCount: matchesCount)
-//        self.popularMatchesPublisher?.cancel()
-//        self.popularMatchesPublisher = nil
-//
-//        self.popularMatchesPublisher = Env.everyMatrixClient.manager
-//            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                switch completion {
-//                case .failure:
-//                    print("Error retrieving data!")
-//                case .finished:
-//                    print("Data retrieved!")
-//                }
-//                self?.isLoadingPopularList.send(false)
-//            }, receiveValue: { [weak self] state in
-//                switch state {
-//                case .connect(let publisherIdentifiable):
-//                    self?.popularMatchesRegister = publisherIdentifiable
-//                case .initialContent(let aggregator):
-//                    self?.setupPopularAggregatorProcessor(aggregator: aggregator)
-//                case .updatedContent(let aggregatorUpdates):
-//                    self?.updatePopularAggregatorProcessor(aggregator: aggregatorUpdates)
-//                case .disconnect:
-//                    ()
-//                }
-//            })
     }
 
-
-    private func fetchOutrightCompetitions() {
-
-//        guard
-//            let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-//        else {return}
-//
-//        self.popularTournamentsPublisher = Env.serviceProvider.subscribePopularOutrightCompetitionsMatches(forSportType: sportType)?
-//            .sink(receiveCompletion: { completion in
-//                print("Env.serviceProvider.subscribePopularOutrightCompetitionsMatches completed \(completion)")
-//            }, receiveValue: { (subscribableContent: SubscribableContent<[EventsGroup]>) in
-//                print("Env.serviceProvider.subscribePopularOutrightCompetitionsMatches value \(subscribableContent)")
-//                switch subscribableContent {
-//                case .connected:
-//                    print("Connected to ws")
-//                case .contentUpdate(let eventsGroups):
-//                    self.popularOutrightCompetitions = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups)
-//                    self.isLoadingPopularList.send(false)
-//                    self.updateContentList()
-//                case .disconnected:
-//                    print("Disconnected from ws")
-//                }
-//            })
-
-        self.popularOutrightCompetitions = []
-        self.isLoadingPopularList.send(false)
-
-//        if let popularTournamentsRegister = popularOutrightCompetitionsRegister {
-//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: popularTournamentsRegister)
-//        }
-//
-//        let sportId = self.selectedSport.id
-//
-//        let endpoint = TSRouter.popularTournamentsPublisher(operatorId: Env.appSession.operatorId,
-//                                                        language: "en",
-//                                                        sportId: sportId,
-//                                                        tournamentsCount: 20)
-//        self.popularTournamentsPublisher?.cancel()
-//        self.popularTournamentsPublisher = nil
-//
-//        self.popularTournamentsPublisher = Env.everyMatrixClient.manager
-//            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .failure:
-//                    print("popularTournamentsPublisher Error retrieving data!")
-//                case .finished:
-//                    print("popularTournamentsPublisher Data retrieved!")
-//                }
-//            }, receiveValue: { [weak self] state in
-//                switch state {
-//                case .connect(let publisherIdentifiable):
-//                    self?.popularOutrightCompetitionsRegister = publisherIdentifiable
-//                case .initialContent(let aggregator):
-//                    self?.setupPopularTournamentsAggregatorProcessor(aggregator: aggregator)
-//                case .updatedContent: // (let aggregatorUpdates):
-//                    ()
-//                case .disconnect:
-//                    ()
-//                }
-//            })
-    }
 
     //
     private func fetchTodayMatchesNextPage() {
-        if !todayMatchesHasNextPage {
-            return
-        }
-        self.todayMatchesPage += 1
-        self.fetchTodayMatches()
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
+        Env.servicesProvider.requestPreLiveMatchesNextPage(forSportType: sportType, sortType: .date)
+            .sink { completion in
+                print("requestPreLiveMatchesNextPage completion \(completion)")
+            } receiveValue: { [weak self] hasNextPage in
+                self?.todayMatchesHasNextPage = hasNextPage
+                if !hasNextPage {
+                    self?.updateContentList()
+                }
+            }
+            .store(in: &cancellables)
     }
 
     private func fetchTodayMatches(withFilter: Bool = false, timeRange: String = "") {
@@ -829,12 +714,9 @@ class PreLiveEventsViewModel: NSObject {
 
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
 
-        self.todayMatchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType,
-                                                                                 pageIndex: 0,
-                                                                                 eventCount: 10,
-                                                                                 sortType: .date)
+        self.todayMatchesPublisher = Env.servicesProvider.subscribePreLiveMatches(forSportType: sportType, sortType: .date)
             .sink(receiveCompletion: { completion in
-                print("Env.serviceProvider.subscribeUpcomingMatches completed \(completion)")
+                print("Env.servicesProvider.subscribeUpcomingMatches completed \(completion)")
                 switch completion {
                 case .finished:
                     ()
@@ -845,7 +727,7 @@ class PreLiveEventsViewModel: NSObject {
                     self.updateContentList()
                 }
             }, receiveValue: { (subscribableContent: SubscribableContent<[EventsGroup]>) in
-                print("Env.serviceProvider.subscribeUpcomingMatches value \(subscribableContent)")
+                print("Env.servicesProvider.subscribeUpcomingMatches value \(subscribableContent)")
                 switch subscribableContent {
                 case .connected(let subscription):
                     self.subscriptions.insert(subscription)
@@ -864,62 +746,17 @@ class PreLiveEventsViewModel: NSObject {
                 }
             })
 
-//        self.todayMatches = []
-//        self.isLoadingTodayList.send(false)
+    }
 
-//        if let todayMatchesRegister = todayMatchesRegister {
-//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: todayMatchesRegister)
-//        }
-//
-//        let matchesCount = self.todayMatchesCount * self.todayMatchesPage
-//
-//        var endpoint = TSRouter.todayMatchesPublisher(operatorId: Env.appSession.operatorId,
-//                                                      language: "en",
-//                                                      sportId: self.selectedSport.id,
-//                                                      matchesCount: matchesCount)
-//
-//        if withFilter {
-//            endpoint = TSRouter.todayMatchesFilterPublisher(operatorId: Env.appSession.operatorId,
-//                                                          language: "en",
-//                                                            sportId: self.selectedSport.id,
-//                                                          matchesCount: matchesCount, timeRange: timeRange)
-//        }
-//
-//        self.todayMatchesPublisher?.cancel()
-//        self.todayMatchesPublisher = nil
-//
-//        self.todayMatchesPublisher = Env.everyMatrixClient.manager
-//            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                switch completion {
-//                case .failure:
-//                    print("Error retrieving data!")
-//
-//                case .finished:
-//                    print("Data retrieved!")
-//                }
-//                self?.isLoadingTodayList.send(false)
-//            }, receiveValue: { [weak self] state in
-//                switch state {
-//                case .connect(let publisherIdentifiable):
-//                    print("PreLiveEventsViewModel todayMatchesPublisher connect")
-//                    self?.todayMatchesRegister = publisherIdentifiable
-//                case .initialContent(let aggregator):
-//                    print("PreLiveEventsViewModel todayMatchesPublisher initialContent")
-//                    self?.setupTodayAggregatorProcessor(aggregator: aggregator)
-//                case .updatedContent(let aggregatorUpdates):
-//                    self?.updateTodayAggregatorProcessor(aggregator: aggregatorUpdates)
-//                case .disconnect:
-//                    print("PreLiveEventsViewModel todayMatchesPublisher disconnect")
-//                }
-//            })
+    private func fetchOutrightCompetitions() {
+        self.popularOutrightCompetitions = []
+        self.isLoadingPopularList.send(false)
     }
 
     func getFirstRegionCompetitions() {
         guard let firstRegion = self.sportRegionsPublisher.value.first else {return}
 
-        Env.serviceProvider.getRegionCompetitions(regionId: firstRegion.id)
+        Env.servicesProvider.getRegionCompetitions(regionId: firstRegion.id)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -946,7 +783,7 @@ class PreLiveEventsViewModel: NSObject {
 
         guard let sportNumericId = self.selectedSport.numericId else { return }
 
-        Env.serviceProvider.getSportRegions(sportId: sportNumericId)
+        Env.servicesProvider.getSportRegions(sportId: sportNumericId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -1125,7 +962,7 @@ class PreLiveEventsViewModel: NSObject {
         self.expectedCompetitionsPublisher.send(ids.count)
 
         for competitionId in ids {
-            Env.serviceProvider.getCompetitionMarketGroups(competitionId: competitionId)
+            Env.servicesProvider.getCompetitionMarketGroups(competitionId: competitionId)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
                     switch completion {
@@ -1168,62 +1005,11 @@ class PreLiveEventsViewModel: NSObject {
 //        self.filteredOutrightCompetitionsDataSource.outrightCompetitions = []
         //self.isLoadingCompetitionMatches.send(false)
 
-//        self.lastCompetitionsMatchesRequested = ids
-//
-//        if let competitionsMatchesRegister = competitionsMatchesRegister {
-//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: competitionsMatchesRegister)
-//        }
-//
-//        let endpoint = TSRouter.competitionsMatchesPublisher(operatorId: Env.appSession.operatorId,
-//                                                             language: "en",
-//                                                             sportId: self.selectedSport.id,
-//                                                             events: ids)
-//
-//        self.competitionsMatchesPublisher?.cancel()
-//        self.competitionsMatchesPublisher = nil
-//
-//        if ids.isEmpty {
-//            self.competitionsDataSource.competitions = []
-//            self.competitions = []
-//            self.filteredOutrightCompetitionsDataSource.outrightCompetitions = []
-//
-//            self.updateContentList()
-//            return
-//        }
-//
-//        self.isLoadingCompetitionMatches.send(true)
-//
-//        self.competitionsMatchesPublisher = Env.everyMatrixClient.manager
-//            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                switch completion {
-//                case .failure:
-//                    print("Error retrieving data!")
-//                case .finished:
-//                    print("Data retrieved!")
-//                }
-//                self?.isLoadingCompetitionMatches.send(false)
-//            }, receiveValue: { [weak self] state in
-//                switch state {
-//                case .connect(let publisherIdentifiable):
-//                    print("PreLiveEventsViewModel competitionsMatchesPublisher connect")
-//                    self?.competitionsMatchesRegister = publisherIdentifiable
-//                case .initialContent(let aggregator):
-//                    print("PreLiveEventsViewModel competitionsMatchesPublisher initialContent")
-//                    self?.setupCompetitionsAggregatorProcessor(aggregator: aggregator, withCompetitionsIds: ids)
-//                case .updatedContent(let aggregatorUpdates):
-//                    self?.updateCompetitionsAggregatorProcessor(aggregator: aggregatorUpdates)
-//                    print("PreLiveEventsViewModel competitionsMatchesPublisher updatedContent")
-//                case .disconnect:
-//                    print("PreLiveEventsViewModel competitionsMatchesPublisher disconnect")
-//                }
-//            })
     }
 
     func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String, competitionInfo: SportCompetitionInfo) {
 
-        Env.serviceProvider.subscribeCompetitionMatches(forMarketGroupId: marketGroupId)
+        Env.servicesProvider.subscribeCompetitionMatches(forMarketGroupId: marketGroupId)
         .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
             switch completion {
             case .finished:
@@ -1404,7 +1190,7 @@ class PreLiveEventsViewModel: NSObject {
 
     func loadCompetitionByRegion(regionId: String) {
 
-        Env.serviceProvider.getRegionCompetitions(regionId: regionId)
+        Env.servicesProvider.getRegionCompetitions(regionId: regionId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {

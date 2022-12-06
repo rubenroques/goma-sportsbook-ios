@@ -7,7 +7,7 @@
 
 import Foundation
 import Combine
-import ServiceProvider
+import ServicesProvider
 
 class LiveDetailsViewModel {
 
@@ -24,12 +24,10 @@ class LiveDetailsViewModel {
     private var sport: Sport
     private var matches: [Match] = []
 
-    private var matchesCount = 10
-    private var matchesPage = 1
-    private var matchesHasNextPage = true
+    private var hasNextPage = true
 
     private var cancellables: Set<AnyCancellable> = []
-    private var subscriptions: Set<ServiceProvider.Subscription> = []
+    private var subscriptions: Set<ServicesProvider.Subscription> = []
 
     init(sport: Sport, store: AggregatorsRepository) {
         self.store = store
@@ -41,28 +39,29 @@ class LiveDetailsViewModel {
     }
 
     func refresh() {
-        self.resetPageCount()
+        self.hasNextPage = true
         self.isLoading.send(true)
         self.fetchMatches()
     }
 
     func requestNextPage() {
-        self.fetchNextPage()
+        self.fetchMatchesNextPage()
     }
 
-    private func resetPageCount() {
-        self.matchesCount = 10
-        self.matchesPage = 1
-        self.matchesHasNextPage = true
+    private func fetchMatchesNextPage() {
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
+        Env.servicesProvider.requestLiveMatchesNextPage(forSportType: sportType)
+            .sink { completion in
+                print("requestPreLiveMatchesNextPage completion \(completion)")
+            } receiveValue: { [weak self] hasNextPage in
+                self?.hasNextPage = hasNextPage
+                if !hasNextPage {
+                    self?.requestUpdate()
+                }
+            }
+            .store(in: &cancellables)
     }
 
-    private func fetchNextPage() {
-        if !matchesHasNextPage {
-            return
-        }
-        self.matchesPage += 1
-        self.fetchMatches()
-    }
 
     private func fetchMatches() {
 
@@ -70,7 +69,7 @@ class LiveDetailsViewModel {
 
         print("subscribeLiveMatches fetchData called")
 
-        self.matchesPublisher = Env.serviceProvider.subscribeLiveMatches(forSportType: sportType, pageIndex: 0)
+        self.matchesPublisher = Env.servicesProvider.subscribeLiveMatches(forSportType: sportType)
             .sink(receiveCompletion: { [weak self] completion in
                 // TODO: subscribeLiveMatches receiveCompletion
                 switch completion {
@@ -87,19 +86,21 @@ class LiveDetailsViewModel {
                 case .contentUpdate(let eventsGroups):
                     let allMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
                     self?.setupWithMatches(allMatches)
+                    self?.requestUpdate()
                 case .disconnected:
                     Logger.log("subscribeLiveMatches subscribableContent disconnected")
                 }
             })
+    }
 
+    private func requestUpdate() {
+        self.refreshPublisher.send()
     }
 
     private func setupWithMatches(_ matches: [Match]) {
         self.matches = matches
 
         self.isLoading.send(false)
-
-        self.refreshPublisher.send()
     }
 
     private func setupWithError() {
@@ -134,7 +135,7 @@ extension LiveDetailsViewModel {
 extension LiveDetailsViewModel {
 
     func shouldShowLoadingCell() -> Bool {
-        return self.matches.isNotEmpty && matchesHasNextPage
+        return self.matches.isNotEmpty && hasNextPage
     }
 
     func numberOfSection() -> Int {

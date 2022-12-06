@@ -8,7 +8,7 @@
 import UIKit
 import UniformTypeIdentifiers
 import Combine
-import ServiceProvider
+import ServicesProvider
 
 class FullRegisterDocumentsViewController: UIViewController {
 
@@ -259,13 +259,13 @@ class FullRegisterDocumentsViewController: UIViewController {
 //                                           securityQuestion: registerForm.securityQuestion,
 //                                           securityAnswer: registerForm.securityAnswer)
 //
-        var serviceProviderCountry: ServiceProvider.Country?
+        var serviceProviderCountry: ServicesProvider.Country?
         if let countryValue = self.registerForm.country {
             serviceProviderCountry = ServiceProviderModelMapper.country(fromCountry: countryValue)
         }
         
         let mobileNumber: String = (registerForm.mobilePrefix ?? "") + (registerForm.mobileNumber ?? "")
-        let form = ServiceProvider.UpdateUserProfileForm.init(username: registerForm.username,
+        let form = ServicesProvider.UpdateUserProfileForm.init(username: registerForm.username,
                                                               email: registerForm.email,
                                                               firstName: registerForm.firstName,
                                                               lastName: registerForm.lastName,
@@ -285,9 +285,9 @@ class FullRegisterDocumentsViewController: UIViewController {
 
     }
 
-    private func fullRegisterProfile(form: ServiceProvider.UpdateUserProfileForm) {
+    private func fullRegisterProfile(form: ServicesProvider.UpdateUserProfileForm) {
         
-        Env.serviceProvider.signUpCompletion(form: form)
+        Env.servicesProvider.signUpCompletion(form: form)
             .receive(on: DispatchQueue.main)
             .handleEvents(receiveSubscription: { [weak self] _ in
                 self?.showLoadingView()

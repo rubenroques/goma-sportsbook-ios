@@ -7,7 +7,7 @@
 
 import UIKit
 import Combine
-import ServiceProvider
+import ServicesProvider
 
 protocol SportTypeSelectionViewDelegate: AnyObject {
     func selectedSport(_ sport: Sport)
@@ -150,7 +150,7 @@ class SportSelectionViewController: UIViewController {
         self.allSportsPublisher?.cancel()
         self.allSportsPublisher = nil
 
-        self.allSportsPublisher = Env.serviceProvider.getAvailableSportTypes()
+        self.allSportsPublisher = Env.servicesProvider.getAvailableSportTypes()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 self?.isLoading = false
@@ -167,9 +167,9 @@ class SportSelectionViewController: UIViewController {
         self.liveSportsPublisher?.cancel()
         self.liveSportsPublisher = nil
 
-        self.liveSportsPublisher = Env.serviceProvider.subscribeLiveSportTypes()
+        self.liveSportsPublisher = Env.servicesProvider.subscribeLiveSportTypes()
             .sink(receiveCompletion: { [weak self] completion in
-                print("Env.serviceProvider.liveSportTypes completed \(completion)")
+                print("Env.servicesProvider.liveSportTypes completed \(completion)")
                 self?.isLoading = false
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
                 switch subscribableContent {
@@ -185,7 +185,7 @@ class SportSelectionViewController: UIViewController {
 
     }
 
-    func configureWithSports(_ sportTypes: [ServiceProvider.SportType]) {
+    func configureWithSports(_ sportTypes: [ServicesProvider.SportType]) {
         self.sportsData = sportTypes.map({ sportType in
             ServiceProviderModelMapper.sport(fromServiceProviderSportType: sportType)
         })

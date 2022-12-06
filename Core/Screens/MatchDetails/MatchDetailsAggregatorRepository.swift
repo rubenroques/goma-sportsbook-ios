@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 import OrderedCollections
-import ServiceProvider
+import ServicesProvider
 
 class MatchDetailsAggregatorRepository: NSObject {
 

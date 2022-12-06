@@ -8,9 +8,7 @@
 import Foundation
 
 struct TargetVariables: SportsbookTarget {
-    
-    typealias Flags = TargetFeatureFlags
-    
+        
 #if DEBUG
     static var environmentType: EnvironmentType = .dev
 #else
@@ -45,15 +43,7 @@ struct TargetVariables: SportsbookTarget {
     static var everyMatrixHost: String {
         return ""
     }
-    
-    struct TargetFeatureFlags: FeatureFlags {
-        static var chatEnabled: Bool { true }
-        static var showNewCheckout: Bool { true }
-        static var showNewLoginScreen: Bool { true }
-        static var limitCheckoutItems: Int { 1 }
-    }
-    static var featureFlags: TargetFeatureFlags.Type { TargetFeatureFlags.self }
-    
+
     static var supportedThemes: [Theme] {
         return Theme.allCases
     }
@@ -69,5 +59,9 @@ struct TargetVariables: SportsbookTarget {
     static var serviceProviderType: ServiceProviderType {
         return .everymatrix
     }
-    
+
+    static var features: [SportsbookTargetFeatures] {
+        return SportsbookTargetFeatures.allCases
+    }
+
 }

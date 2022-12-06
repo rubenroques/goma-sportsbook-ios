@@ -1,6 +1,6 @@
 import UIKit
 import Combine
-import ServiceProvider
+import ServicesProvider
 
 class LoginViewController: UIViewController {
 

@@ -171,8 +171,12 @@ class PreLiveEventsViewController: UIViewController {
 //            })
 //            .store(in: &self.cancellables)
 
-        self.viewModel.didLongPressOdd = { [weak self] bettingTicket in
+        self.viewModel.didLongPressOddAction = { [weak self] bettingTicket in
             self?.openQuickbet(bettingTicket)
+        }
+
+        self.viewModel.resetScrollPositionAction = { [weak self] in
+            self?.tableView.setContentOffset(.zero, animated: false)
         }
     }
 

@@ -107,29 +107,13 @@ class RootViewController: UIViewController {
     let activeButtonAlpha = 1.0
     let idleButtonAlpha = 0.52
 
-    var userId: String {
-
-        let status = Env.everyMatrixClient.userSessionStatusPublisher.value
-        if status == .logged {
-            if let session = UserSessionStore.loggedUserSession() {
-                return session.userId
-            }
-            else {
-                return ""
-            }
-        }
-        else {
-                return ""
-        }
-    }
-
     //
     // Child view controllers
     lazy var homeViewController = HomeViewController()
     lazy var preLiveViewController = PreLiveEventsViewController(selectedSportType: Env.sportsStore.defaultSport)
     lazy var liveEventsViewController = LiveEventsViewController(selectedSport: Env.sportsStore.defaultSport)
     lazy var tipsRootViewController = TipsRootViewController()
-    lazy var casinoViewController = CasinoWebViewController(userId: self.userId)
+    lazy var casinoViewController = CasinoWebViewController()
 
     // Loaded view controllers
     var homeViewControllerLoaded = false
@@ -559,8 +543,20 @@ class RootViewController: UIViewController {
 
         self.notificationCounterLabel.font = AppFont.with(type: .semibold, size: 12)
 
-        // EM TEMP SHUTDOWN
-        self.casinoButtonBaseView.isHidden = true
+        if TargetVariables.hasFeatureEnabled(feature: .casino) {
+            self.casinoButtonBaseView.isHidden = false
+        }
+        else {
+            self.casinoButtonBaseView.isHidden = true
+        }
+
+        if TargetVariables.hasFeatureEnabled(feature: .tips) {
+            self.tipsButtonBaseView.isHidden = false
+        }
+        else {
+            self.tipsButtonBaseView.isHidden = true
+        }
+
     }
 
     func setupWithTheme() {

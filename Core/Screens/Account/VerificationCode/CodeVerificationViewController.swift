@@ -7,7 +7,7 @@
 
 import UIKit
 import Combine
-import ServiceProvider
+import ServicesProvider
 
 class CodeVerificationViewModel {
 
@@ -21,7 +21,7 @@ class CodeVerificationViewModel {
     }
 
     func submitVerificationCode(code: String) -> AnyPublisher<Bool, ServiceProviderError> {
-        return Env.serviceProvider.signupConfirmation(self.email, confirmationCode: code)
+        return Env.servicesProvider.signupConfirmation(self.email, confirmationCode: code)
     }
     
 }

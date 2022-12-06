@@ -8,16 +8,16 @@
 import UIKit
 import Combine
 import OrderedCollections
-import ServiceProvider
+import ServicesProvider
 
 class LiveEventsViewModel: NSObject {
 
-    private var allMatches: [Match] = []
+    private var liveMatches: [Match] = []
 
-    var matchListTypePublisher: CurrentValueSubject<MatchListType, Never> = .init(.allMatches)
+    var matchListTypePublisher: CurrentValueSubject<MatchListType, Never> = .init(.liveMatches)
    
     enum MatchListType {
-        case allMatches
+        case liveMatches
     }
 
     enum ScreenState {
@@ -29,7 +29,7 @@ class LiveEventsViewModel: NSObject {
     
     var screenStatePublisher: CurrentValueSubject<ScreenState, Never> = .init(.emptyNoFilter)
     
-    private var allMatchesViewModelDataSource = AllMatchesViewModelDataSource(matches: [])
+    private var liveMatchesViewModelDataSource = LiveMatchesViewModelDataSource(matches: [])
 
     private var isLoadingAllEventsList: CurrentValueSubject<Bool, Never> = .init(true)
 
@@ -41,6 +41,7 @@ class LiveEventsViewModel: NSObject {
     var liveEventsCountPublisher: CurrentValueSubject<Int, Never> = .init(0)
     var liveSportsCancellable: AnyCancellable?
 
+    var resetScrollPosition: (() -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
 
@@ -48,12 +49,16 @@ class LiveEventsViewModel: NSObject {
     var selectedSport: Sport {
         willSet {
             if newValue.id != self.selectedSport.id {
-                didChangeSportType = true
+                self.didChangeSportType = true
             }
         }
         didSet {
-            self.fetchData()
-            self.configureWithSports(self.liveSports)
+            if didChangeSportType {
+                self.resetScrollPosition?()
+                self.fetchLiveMatches()
+                self.configureWithSports(self.liveSports)
+                self.didChangeSportType = false
+            }
         }
     }
 
@@ -71,20 +76,12 @@ class LiveEventsViewModel: NSObject {
     var dataDidChangedAction: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
 
-    private var allMatchesPublisher: AnyCancellable?
-    private var bannersInfoPublisher: AnyCancellable?
-    
-    private var providerLiveMatchesSubscriber: AnyCancellable?
+    private var liveMatchesSubscriber: AnyCancellable?
 
-    private var allMatchesRegister: EndpointPublisherIdentifiable?
-    private var bannersInfoRegister: EndpointPublisherIdentifiable?
-
-    private var allMatchesCount = 10
-    private var allMatchesPage = 0
-    private var allMatchesHasMorePages = true
+    private var liveMatchesHasMorePages = true
 
     private var cancellables = Set<AnyCancellable>()
-    private var subscriptions = Set<ServiceProvider.Subscription>()
+    private var subscriptions = Set<ServicesProvider.Subscription>()
     
     init(selectedSport: Sport) {
 
@@ -95,36 +92,37 @@ class LiveEventsViewModel: NSObject {
 
         self.subscribeToLiveSports()
 
-        self.allMatchesViewModelDataSource.requestNextPage = { [weak self] in
-            self?.fetchAllMatchesNextPage()
+        self.liveMatchesViewModelDataSource.requestNextPage = { [weak self] in
+            self?.fetchLiveMatchesNextPage()
         }
 
-        self.allMatchesViewModelDataSource.didSelectMatchAction = { [weak self] match in
+        self.liveMatchesViewModelDataSource.didSelectMatchAction = { [weak self] match in
             self?.didSelectMatchAction?(match)
         }
         
-//        self.allMatchesViewModelDataSource.didTapFavoriteAction = { [weak self] match in
+//        self.liveMatchesViewModelDataSource.didTapFavoriteAction = { [weak self] match in
 //            self?.didTapFavoriteMatchAction?(match)
 //        }
 
-        self.allMatchesViewModelDataSource.matchStatsViewModelForMatch = { [weak self] match in
+        self.liveMatchesViewModelDataSource.matchStatsViewModelForMatch = { [weak self] match in
             return self?.matchStatsViewModel(forMatch: match)
         }
 
-        self.allMatchesViewModelDataSource.isUserLoggedPublisher.receive(on: DispatchQueue.main)
+        self.liveMatchesViewModelDataSource.isUserLoggedPublisher.receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLogged in
                 self?.isUserLoggedPublisher.send(isLogged)
             })
             .store(in: &self.cancellables)
 
-        self.allMatchesViewModelDataSource.didLongPressOdd = {[weak self] bettingTicket in
+        self.liveMatchesViewModelDataSource.didLongPressOdd = {[weak self] bettingTicket in
             self?.didLongPressOdd?(bettingTicket)
         }
 
     }
 
     func subscribeToLiveSports() {
-        self.liveSportsCancellable = Env.serviceProvider.subscribeLiveSportTypes()
+
+        self.liveSportsCancellable = Env.servicesProvider.subscribeLiveSportTypes()
             .sink(receiveCompletion: { completion in
                 print("LiveEventsViewModel subscribeLiveSportTypes completed \(completion)")
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
@@ -177,7 +175,7 @@ class LiveEventsViewModel: NSObject {
         }
     }
     
-    func filterAllMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {
+    func filterLiveMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {
         guard let filterOptionsValue = filtersOptions else {
             return matches
         }
@@ -220,19 +218,11 @@ class LiveEventsViewModel: NSObject {
 
     private func updateContentList() {
 
-        self.allMatchesViewModelDataSource.matches = filterAllMatches(with: self.homeFilterOptions, matches: self.allMatches)
-
-        if self.allMatches.isNotEmpty, self.allMatches.count < (self.allMatchesCount * self.allMatchesPage) {
-            self.allMatchesHasMorePages = false
-            self.allMatchesViewModelDataSource.shouldShowLoadingCell = false
-        }
-        else {
-            self.allMatchesViewModelDataSource.shouldShowLoadingCell = true
-        }
+        self.liveMatchesViewModelDataSource.matches = filterLiveMatches(with: self.homeFilterOptions, matches: self.liveMatches)
 
         if let numberOfFilters = self.homeFilterOptions?.countFilters {
             if numberOfFilters > 0 {
-                if self.allMatchesViewModelDataSource.matches.isEmpty {
+                if self.liveMatchesViewModelDataSource.matches.isEmpty {
                     self.screenStatePublisher.send(.emptyAndFilter)
                 }
                 else {
@@ -240,7 +230,7 @@ class LiveEventsViewModel: NSObject {
                 }
             }
             else {
-                if !self.allMatchesViewModelDataSource.matches.isNotEmpty {
+                if !self.liveMatchesViewModelDataSource.matches.isNotEmpty {
                     self.screenStatePublisher.send(.emptyNoFilter)
                 }
                 else {
@@ -249,7 +239,7 @@ class LiveEventsViewModel: NSObject {
             }
         }
         else {
-            if self.allMatchesViewModelDataSource.matches.isEmpty {
+            if self.liveMatchesViewModelDataSource.matches.isEmpty {
                 self.screenStatePublisher.send(.emptyNoFilter)
             }
             else {
@@ -257,7 +247,7 @@ class LiveEventsViewModel: NSObject {
             }
         }
 
-        self.allMatchesViewModelDataSource.shouldShowLoadingCell = false
+        self.liveMatchesViewModelDataSource.shouldShowLoadingCell = false
 
         // TODO: - Code Review
         DispatchQueue.main.async {
@@ -265,127 +255,60 @@ class LiveEventsViewModel: NSObject {
         }
     }
 
-    private func setupAllMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        Env.everyMatrixStorage.processAggregator(aggregator, withListType: .allLiveEvents,
-                                                 shouldClear: true)
-        self.allMatches = Env.everyMatrixStorage.matchesForListType(.allLiveEvents)
-        self.isLoadingAllEventsList.send(false)
-
-        self.updateContentList()
-    }
-
-    private func updateAllMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
-    }
-
     //
     // MARK: - Fetches
     //
     //
-    
-    func fetchData() {
+    private func fetchLiveMatchesNextPage() {
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
+        Env.servicesProvider.requestLiveMatchesNextPage(forSportType: sportType)
+            .sink { completion in
+                print("requestPreLiveMatchesNextPage completion \(completion)")
+            } receiveValue: { [weak self] hasNextPage in
+                self?.liveMatchesHasMorePages = hasNextPage
+                self?.liveMatchesViewModelDataSource.shouldShowLoadingCell = hasNextPage
+                if !hasNextPage {
+                    self?.updateContentList()
+                }
+            }
+            .store(in: &cancellables)
+    }
+
+
+    func fetchLiveMatches() {
+
+        self.liveMatchesHasMorePages = true
+        self.liveMatchesSubscriber?.cancel()
+
         self.isLoadingAllEventsList.send(true)
-        
-        self.allMatchesPage = 0
-        self.allMatchesHasMorePages = true
-        
-        self.providerLiveMatchesSubscriber?.cancel()
-        
+
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
         
-        print("subscribeLiveMatches fetchData called")
+        print("subscribeLiveMatches called")
         
-        self.providerLiveMatchesSubscriber = Env.serviceProvider.subscribeLiveMatches(forSportType: sportType, pageIndex: self.allMatchesPage)
+        self.liveMatchesSubscriber = Env.servicesProvider.subscribeLiveMatches(forSportType: sportType)
             .sink(receiveCompletion: { completion in
                 // TODO: subscribeLiveMatches receiveCompletion
                 switch completion {
                 case .finished:
-                    ()
+                    Logger.log("subscribeLiveMatches finished")
                 case .failure(let error):
                     Logger.log("subscribeLiveMatches error \(error)")
                 }
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
                 switch subscribableContent {
                 case .connected(let subscription):
+                    Logger.log("subscribeLiveMatches connected")
                     self?.subscriptions.insert(subscription)
                 case .contentUpdate(let eventsGroups):
-                    self?.allMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+                    Logger.log("subscribeLiveMatches content")
+                    self?.liveMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
                     self?.isLoadingAllEventsList.send(false)
                     self?.updateContentList()
                 case .disconnected:
-                    Logger.log("subscribeLiveMatches subscribableContent disconnected")
+                    Logger.log("subscribeLiveMatches disconnected")
                 }
             })
-    }
-    
-    private func fetchAllMatchesNextPage() {
-        self.allMatchesPage += 1
-        self.fetchAllMatches()
-    }
-
-    private func fetchAllMatches() {
-        
-        // TODO: Pagination for SportRadar
-        // TEST PAGINATION
-        
-//        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-//
-//        self.providerLiveMatchesSubscriber = Env.serviceProvider.subscribeLiveMatches(forSportType: sportType, pageIndex: self.allMatchesPage)
-//            .sink(receiveCompletion: { completion in
-//                () // TODO: subscribeLiveMatches completion
-//            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
-//                switch subscribableContent {
-//                case .connected(let subscription):
-//                    self?.subscriptions.insert(subscription)
-//                case .contentUpdate(let eventsGroups):
-//                    self?.allMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
-//                    self?.isLoadingAllEventsList.send(false)
-//                    self?.updateContentList()
-//                case .disconnected:
-//                    () // TODO: subscribeLiveMatches disconnected
-//                }
-//            })
-//
-        
-        
-        // EM TEMP SHUTDOWN
-//        if let allMatchesRegister = allMatchesRegister {
-//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: allMatchesRegister)
-//        }
-//
-//        let matchesCount = self.allMatchesCount * self.allMatchesPage
-//
-//        let endpoint = TSRouter.liveMatchesPublisher(operatorId: Env.appSession.operatorId,
-//                                                     language: "en",
-//                                                     sportId: self.selectedSport.id,
-//                                                     matchesCount: matchesCount)
-//
-//        self.allMatchesPublisher?.cancel()
-//        self.allMatchesPublisher = nil
-//
-//        self.allMatchesPublisher = Env.everyMatrixClient.manager
-//            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                switch completion {
-//                case .failure:
-//                    print("Error retrieving data!")
-//                case .finished:
-//                    print("Data retrieved!")
-//                }
-//                self?.isLoadingAllEventsList.send(false)
-//            }, receiveValue: { [weak self] state in
-//                switch state {
-//                case .connect(let publisherIdentifiable):
-//                    self?.allMatchesRegister = publisherIdentifiable
-//                case .initialContent(let aggregator):
-//                    self?.setupAllMatchesAggregatorProcessor(aggregator: aggregator)
-//                case .updatedContent(let aggregatorUpdates):
-//                    self?.updateAllMatchesAggregatorProcessor(aggregator: aggregatorUpdates)
-//                case .disconnect:
-//                    ()
-//                }
-//            })
     }
 
 }
@@ -394,66 +317,66 @@ extension LiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
         switch self.matchListTypePublisher.value {
-        case .allMatches:
-            return self.allMatchesViewModelDataSource.numberOfSections(in: tableView)
+        case .liveMatches:
+            return self.liveMatchesViewModelDataSource.numberOfSections(in: tableView)
         }
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch self.matchListTypePublisher.value {
-        case .allMatches:
-            return self.allMatchesViewModelDataSource.tableView(tableView, numberOfRowsInSection: section)
+        case .liveMatches:
+            return self.liveMatchesViewModelDataSource.tableView(tableView, numberOfRowsInSection: section)
         }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: UITableViewCell
         switch self.matchListTypePublisher.value {
-        case .allMatches:
-            cell = self.allMatchesViewModelDataSource.tableView(tableView, cellForRowAt: indexPath)
+        case .liveMatches:
+            cell = self.liveMatchesViewModelDataSource.tableView(tableView, cellForRowAt: indexPath)
         }
         return cell
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         switch self.matchListTypePublisher.value {
-        case .allMatches:
-            return self.allMatchesViewModelDataSource.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
+        case .liveMatches:
+            return self.liveMatchesViewModelDataSource.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
         }
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         switch self.matchListTypePublisher.value {
-        case .allMatches:
-            return self.allMatchesViewModelDataSource.tableView(tableView, viewForHeaderInSection: section)
+        case .liveMatches:
+            return self.liveMatchesViewModelDataSource.tableView(tableView, viewForHeaderInSection: section)
         }
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch self.matchListTypePublisher.value {
-        case .allMatches:
-            return self.allMatchesViewModelDataSource.tableView(tableView, heightForRowAt: indexPath)
+        case .liveMatches:
+            return self.liveMatchesViewModelDataSource.tableView(tableView, heightForRowAt: indexPath)
         }
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch self.matchListTypePublisher.value {
-        case .allMatches:
-            return self.allMatchesViewModelDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
+        case .liveMatches:
+            return self.liveMatchesViewModelDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
         }
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch self.matchListTypePublisher.value {
-        case .allMatches:
-            return self.allMatchesViewModelDataSource.tableView(tableView, heightForHeaderInSection: section)
+        case .liveMatches:
+            return self.liveMatchesViewModelDataSource.tableView(tableView, heightForHeaderInSection: section)
         }
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
         switch self.matchListTypePublisher.value {
-        case .allMatches:
-            return self.allMatchesViewModelDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
+        case .liveMatches:
+            return self.liveMatchesViewModelDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
         }
     }
 
@@ -467,7 +390,7 @@ extension LiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
 
 }
 
-class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
+class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
     var matches: [Match] = []
     var requestNextPage: (() -> Void)?

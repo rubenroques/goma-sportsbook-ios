@@ -12,8 +12,6 @@ protocol SportsbookClient {
 }
 
 protocol SportsbookTarget {
-    
-    associatedtype Flags: FeatureFlags
 
     static var environmentType: EnvironmentType { get }
 
@@ -28,8 +26,6 @@ protocol SportsbookTarget {
     
     static var everyMatrixHost: String { get }
 
-    static var featureFlags: Flags.Type { get }
-
     static var supportedThemes: [Theme] { get }
 
     static var defaultCardStyle: CardsStyle { get }
@@ -38,4 +34,41 @@ protocol SportsbookTarget {
     
     static var casinoURL: String { get }
 
+    static var features: [SportsbookTargetFeatures] { get }
+
+    static func hasFeatureEnabled(feature: SportsbookTargetFeatures) -> Bool
+
+}
+
+enum SportsbookTargetFeatures: CaseIterable {
+    case homeBanners
+    case homePopUps
+
+    case favoriteEvents
+    case favoriteCompetitions
+
+    case eventStats
+    case eventListFilters
+
+    case betsNotifications
+    case eventsNotifications
+
+    case chat
+    case tips
+
+    case suggestedBets
+    case cashout
+
+    case casino
+}
+
+extension SportsbookTarget {
+    static func hasFeatureEnabled(feature: SportsbookTargetFeatures) -> Bool {
+        for enabledFeature in Self.features {
+            if feature == enabledFeature {
+                return true
+            }
+        }
+        return false
+    }
 }

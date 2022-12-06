@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ServiceProvider
+import ServicesProvider
 
 let Env = Environment() // swiftlint:disable:this identifier_name
 
@@ -18,13 +18,13 @@ class Environment {
     let everyMatrixClient = EveryMatrixServiceClient()
     let everyMatrixStorage = AggregatorsRepository()
 
-    lazy var serviceProvider: ServiceProviderClient = {
+    lazy var servicesProvider: ServicesProviderClient = {
         let provider = TargetVariables.serviceProviderType
         switch provider {
         case .everymatrix:
-            return ServiceProviderClient(providerType: .everymatrix)
+            return ServicesProviderClient(providerType: .everymatrix)
         case .sportradar:
-            return ServiceProviderClient(providerType: .sportradar)
+            return ServicesProviderClient(providerType: .sportradar)
         }
     }()
 

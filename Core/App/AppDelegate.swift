@@ -10,7 +10,7 @@ import Firebase
 import FirebaseMessaging
 import SwiftyBeaver
 import SwiftUI
-import ServiceProvider
+import ServicesProvider
 
 let swiftyBeaverLog = SwiftyBeaver.self
 

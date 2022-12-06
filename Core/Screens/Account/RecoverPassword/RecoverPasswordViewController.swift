@@ -7,7 +7,7 @@
 
 import UIKit
 import Combine
-import ServiceProvider
+import ServicesProvider
 
 class RecoverPasswordViewModel {
 
@@ -16,7 +16,7 @@ class RecoverPasswordViewModel {
     }
 
     func submitRecoverPassword(email: String, secrestQuestion: String? = nil, secrestAnswer: String? = nil) -> AnyPublisher<Bool, ServiceProviderError> {
-        return Env.serviceProvider.forgotPassword(email: email, secretQuestion: secrestQuestion, secrestAnswer: secrestAnswer)
+        return Env.servicesProvider.forgotPassword(email: email, secretQuestion: secrestQuestion, secrestAnswer: secrestAnswer)
     }
 }
 

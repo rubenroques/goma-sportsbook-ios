@@ -108,7 +108,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     @IBOutlet private weak var secondPlaceBetBaseViewConstraint: NSLayoutConstraint!
 
-    private var suggestedBetsListViewController: SuggestedBetsListViewController
+    private var suggestedBetsListViewController: SuggestedBetsListViewController?
 
     private var singleBettingTicketDataSource = SingleBettingTicketDataSource.init(bettingTickets: [])
     private var multipleBettingTicketDataSource = MultipleBettingTicketDataSource.init(bettingTickets: [])
@@ -215,7 +215,10 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     init(viewModel: PreSubmissionBetslipViewModel) {
         self.viewModel = viewModel
-        self.suggestedBetsListViewController = SuggestedBetsListViewController(viewModel: SuggestedBetsListViewModel())
+
+        if TargetVariables.hasFeatureEnabled(feature: .suggestedBets) {
+            self.suggestedBetsListViewController = SuggestedBetsListViewController(viewModel: SuggestedBetsListViewModel())
+        }
 
         super.init(nibName: "PreSubmissionBetslipViewController", bundle: nil)
 
@@ -253,7 +256,9 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.betTypeSegmentControlView!.centerYAnchor.constraint(equalTo: self.betTypeSegmentControlBaseView.centerYAnchor),
         ])
 
-        self.addChildViewController(self.suggestedBetsListViewController, toView: self.emptyBetsBaseView)
+        if let suggestedBetsListViewController = self.suggestedBetsListViewController {
+            self.addChildViewController(suggestedBetsListViewController, toView: self.emptyBetsBaseView)
+        }
 
         self.emptyBetsBaseView.isHidden = true
 
@@ -482,8 +487,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.viewModel.isUnavailableBetSelection
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isUnavailable in
-                self?.suggestedBetsListViewController.isEmptySharedBet = isUnavailable
-                self?.suggestedBetsListViewController.reloadTableView()
+                self?.suggestedBetsListViewController?.isEmptySharedBet = isUnavailable
+                self?.suggestedBetsListViewController?.reloadTableView()
             })
             .store(in: &cancellables)
 
@@ -875,9 +880,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.placeBetButton.isEnabled = false
 
         self.getUserSettings()
-
-        Env.everyMatrixClient.manager.swampSession?.printMemoryLogs()
-
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -1178,7 +1180,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBAction private func didTapClearButton() {
         Env.betslipManager.clearAllBettingTickets()
 
-        self.suggestedBetsListViewController.refreshSuggestedBets()
+        self.suggestedBetsListViewController?.refreshSuggestedBets()
 //
 //        self.gomaSuggestedBetsResponse = []
 //

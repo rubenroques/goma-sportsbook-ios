@@ -7,7 +7,7 @@
 
 import UIKit
 import Combine
-import ServiceProvider
+import ServicesProvider
 
 class PersonalInfoViewController: UIViewController {
 
@@ -246,9 +246,9 @@ class PersonalInfoViewController: UIViewController {
         })
         .store(in: &cancellables)
         
-        Env.serviceProvider.getCountries()
-            .map { (serviceProviderCountries: [ServiceProvider.Country]) -> [Country] in
-                serviceProviderCountries.map({ (serviceProviderCountry: ServiceProvider.Country) -> Country in
+        Env.servicesProvider.getCountries()
+            .map { (serviceProviderCountries: [ServicesProvider.Country]) -> [Country] in
+                serviceProviderCountries.map({ (serviceProviderCountry: ServicesProvider.Country) -> Country in
                     return ServiceProviderModelMapper.country(fromServiceProviderCountry: serviceProviderCountry)
                 })
             }
@@ -262,7 +262,7 @@ class PersonalInfoViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        Env.serviceProvider.getProfile()
+        Env.servicesProvider.getProfile()
             .receive(on: DispatchQueue.main)
             .handleEvents(receiveSubscription: { [weak self] _ in
                 self?.showLoadingView()
@@ -326,7 +326,7 @@ class PersonalInfoViewController: UIViewController {
         
         let city = self.profile?.city
         
-        var serviceProviderCountry: ServiceProvider.Country?
+        var serviceProviderCountry: ServicesProvider.Country?
         if let countryValue = self.profile?.country {
             serviceProviderCountry = ServiceProviderModelMapper.country(fromCountry: countryValue)
         }
@@ -384,7 +384,7 @@ class PersonalInfoViewController: UIViewController {
 //        }
 //
 
-        let form = ServiceProvider.UpdateUserProfileForm.init(username: nil,
+        let form = ServicesProvider.UpdateUserProfileForm.init(username: nil,
                                                               email: nil,
                                                               firstName: firstName,
                                                               lastName: lastName,
@@ -398,7 +398,7 @@ class PersonalInfoViewController: UIViewController {
                                                               cardId: personalId)
         self.showLoadingView()
         
-        Env.serviceProvider.updateUserProfile(form: form)
+        Env.servicesProvider.updateUserProfile(form: form)
             .receive(on: DispatchQueue.main)
             .handleEvents(receiveSubscription: { [weak self] _ in
                 self?.showLoadingView()

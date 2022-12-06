@@ -6,12 +6,12 @@
 //
 
 import Foundation
-import ServiceProvider
+import ServicesProvider
 
 extension ServiceProviderModelMapper {
     
     // Sports
-    static func sport(fromServiceProviderSportType sportType: ServiceProvider.SportType) -> Sport {
+    static func sport(fromServiceProviderSportType sportType: ServicesProvider.SportType) -> Sport {
 
         let sport = Sport(id: sportType.iconId ?? "0",
                           name: sportType.name,
@@ -22,8 +22,8 @@ extension ServiceProviderModelMapper {
         return sport
     }
 
-    static func serviceProviderSportType(fromSport sport: Sport) -> ServiceProvider.SportType {
-        let serviceProviderSportType = ServiceProvider.SportType(name: sport.name,
+    static func serviceProviderSportType(fromSport sport: Sport) -> ServicesProvider.SportType {
+        let serviceProviderSportType = ServicesProvider.SportType(name: sport.name,
                                                                  numericId: sport.numericId,
                                                                  alphaId: sport.alphaId,
                                                                  iconId: sport.id,
@@ -37,7 +37,7 @@ extension ServiceProviderModelMapper {
 }
 
 extension Sport {
-    init(serviceProviderSportType sportType: ServiceProvider.SportType) {
+    init(serviceProviderSportType sportType: ServicesProvider.SportType) {
         self = ServiceProviderModelMapper.sport(fromServiceProviderSportType: sportType)
     }
 }

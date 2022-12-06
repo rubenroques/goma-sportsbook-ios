@@ -35,6 +35,9 @@ class MatchStatsViewModel {
 
     private func requestStats() {
 
+        // TODO: This will not be used
+        return
+
         let deviceId = Env.deviceId
         self.requestMatchStatsCancellable = Env.gomaNetworkClient.requestMatchStats(deviceId: deviceId, matchId: matchId)
             .sink { completion in

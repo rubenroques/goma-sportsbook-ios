@@ -7,7 +7,7 @@
 
 import Foundation
 import Combine
-import ServiceProvider
+import ServicesProvider
 
 class SimpleRegisterEmailCheckViewModel: NSObject {
 
@@ -42,7 +42,7 @@ class SimpleRegisterEmailCheckViewModel: NSObject {
             return
         }
         
-        Env.serviceProvider.checkEmailRegistered(email)
+        Env.servicesProvider.checkEmailRegistered(email)
             .receive(on: DispatchQueue.main)
             .handleEvents(receiveOutput: { [weak self] _ in
                 self?.shouldAnimateEmailValidityView.send(true)
@@ -85,7 +85,7 @@ class SimpleRegisterEmailCheckViewModel: NSObject {
         self.shouldAnimateEmailValidityView.send(true)
         self.isRegisterEnabled.send(false)
         
-        Env.serviceProvider.checkEmailRegistered(email)
+        Env.servicesProvider.checkEmailRegistered(email)
                     .receive(on: DispatchQueue.main)
                     .sink { [weak self] _ in
                         self?.shouldAnimateEmailValidityView.send(false)

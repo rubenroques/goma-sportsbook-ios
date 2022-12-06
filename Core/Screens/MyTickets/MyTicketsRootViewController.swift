@@ -124,14 +124,15 @@ class MyTicketsRootViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        Env.everyMatrixClient.userSessionStatusPublisher
+        Env.userSessionStore.userSessionStatusPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] status in
-                switch status {
-                case .anonymous:
-                    self?.showNoLoginView()
+            .sink {[weak self]  userSessionStatus in
+
+                switch userSessionStatus {
                 case .logged:
-                    self?.hideNoLoginView()
+                    self?.hideNoLoginFoundView()
+                case .anonymous:
+                    self?.showNoLoginFoundView()
                 }
             }
             .store(in: &cancellables)
@@ -143,11 +144,11 @@ class MyTicketsRootViewController: UIViewController {
     }
 
     // MARK: - Convenience
-    func showNoLoginView() {
+    func showNoLoginFoundView() {
         self.noLoginBaseView.isHidden = false
     }
 
-    func hideNoLoginView() {
+    func hideNoLoginFoundView() {
         self.noLoginBaseView.isHidden = true
     }
 

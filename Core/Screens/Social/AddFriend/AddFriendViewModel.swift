@@ -80,10 +80,8 @@ class AddFriendViewModel {
                 case .finished:
                     ()
                 }
-
 //                self?.isLoadingPublisher.send(false)
 //                self?.dataNeedsReload.send()
-
             }, receiveValue: { [weak self] response in
                 if let friends = response.data {
                     self?.friendsPublisher.value = friends

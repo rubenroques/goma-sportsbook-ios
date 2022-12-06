@@ -7,7 +7,7 @@
 
 import Foundation
 import Combine
-import ServiceProvider
+import ServicesProvider
 
 class PopularDetailsViewModel {
 
@@ -28,12 +28,10 @@ class PopularDetailsViewModel {
     private var matches: [Match] = []
     private var outrightCompetitions: [Competition]?
 
-    private var matchesCount = 10
-    private var matchesPage = 1
-    private var matchesHasNextPage = true
+    private var hasNextPage = true
 
     private var cancellables: Set<AnyCancellable> = []
-    private var subscriptions: Set<ServiceProvider.Subscription> = []
+    private var subscriptions: Set<ServicesProvider.Subscription> = []
 
     init(sport: Sport, store: AggregatorsRepository) {
         self.store = store
@@ -45,8 +43,8 @@ class PopularDetailsViewModel {
     }
 
     func refresh() {
-        self.resetPageCount()
         self.isLoading.send(true)
+        self.hasNextPage = true
         self.fetchMatches()
     }
 
@@ -54,18 +52,18 @@ class PopularDetailsViewModel {
         self.fetchNextPage()
     }
 
-    private func resetPageCount() {
-        self.matchesCount = 10
-        self.matchesPage = 1
-        self.matchesHasNextPage = true
-    }
-
     private func fetchNextPage() {
-        if !matchesHasNextPage {
-            return
-        }
-        self.matchesPage += 1
-        self.fetchMatches()
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
+        Env.servicesProvider.requestPreLiveMatchesNextPage(forSportType: sportType, sortType: .popular)
+            .sink { completion in
+                print("requestPreLiveMatchesNextPage completion \(completion)")
+            } receiveValue: { [weak self] hasNextPage in
+                self?.hasNextPage = hasNextPage
+                if !hasNextPage {
+                    self?.refreshPublisher.send()
+                }
+            }
+            .store(in: &cancellables)
     }
 
     private func fetchMatches() {
@@ -74,7 +72,7 @@ class PopularDetailsViewModel {
 
         Logger.log("subscribePreLiveMatches fetchData called")
 
-        self.matchesPublisher = Env.serviceProvider.subscribePreLiveMatches(forSportType: sportType, pageIndex: 0, eventCount: 20, sortType: .popular)
+        self.matchesPublisher = Env.servicesProvider.subscribePreLiveMatches(forSportType: sportType, sortType: .popular)
             .sink(receiveCompletion: { [weak self] completion in
                 // TODO: subscribePreLiveMatches receiveCompletion
                 switch completion {
@@ -180,7 +178,7 @@ extension PopularDetailsViewModel {
 extension PopularDetailsViewModel {
 
     func shouldShowLoadingCell() -> Bool {
-        return self.matches.isNotEmpty && matchesHasNextPage
+        return self.matches.isNotEmpty && hasNextPage
     }
 
     func numberOfSection() -> Int {

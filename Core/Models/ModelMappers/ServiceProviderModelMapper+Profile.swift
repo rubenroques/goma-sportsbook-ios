@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import ServiceProvider
+import ServicesProvider
 
 extension ServiceProviderModelMapper {
     
-    static func userProfile(_ serviceProviderProfile: ServiceProvider.UserProfile) -> UserProfile {
+    static func userProfile(_ serviceProviderProfile: ServicesProvider.UserProfile) -> UserProfile {
         var nationalityCountry: Country?
         if let serviceProviderCountry = serviceProviderProfile.nationalityCountry {
             nationalityCountry = ServiceProviderModelMapper.country(fromServiceProviderCountry: serviceProviderCountry)
