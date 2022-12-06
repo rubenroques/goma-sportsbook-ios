@@ -61,7 +61,7 @@ class GomaGamingServiceClient {
 
     func requestSettings(deviceId: String) -> AnyPublisher<[GomaClientSettings]?, NetworkError> {
         let endpoint = GomaGamingService.settings
-        let requestPublisher: AnyPublisher<[GomaClientSettings]?, NetworkError> = networkClient.requestEndpointArrayData(deviceId: deviceId, endpoint: endpoint)
+        let requestPublisher: AnyPublisher<[GomaClientSettings]?, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
 
@@ -104,7 +104,7 @@ class GomaGamingServiceClient {
     // TODO: Code Review -
     func requestSuggestedBets(deviceId: String) -> AnyPublisher<[[SuggestedBetSummary]]?, NetworkError> {
         let endpoint = GomaGamingService.suggestedBets
-        let requestPublisher: AnyPublisher<[[SuggestedBetSummary]]?, NetworkError> = networkClient.requestEndpointArrayData(deviceId: deviceId, endpoint: endpoint)
+        let requestPublisher: AnyPublisher<[[SuggestedBetSummary]]?, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
 

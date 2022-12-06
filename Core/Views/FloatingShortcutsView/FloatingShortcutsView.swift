@@ -65,8 +65,7 @@ class FloatingShortcutsView: UIView {
         let tapChatView = UITapGestureRecognizer(target: self, action: #selector(didTapChatView))
         self.chatButtonView.addGestureRecognizer(tapChatView)
 
-        // EM TEMP SHUTDOWN
-        if Env.appSession.businessModulesManager.isSocialFeaturesEnabled {
+        if TargetVariables.hasFeatureEnabled(feature: .chat) {
             self.chatButtonView.isHidden = false
         }
         else {

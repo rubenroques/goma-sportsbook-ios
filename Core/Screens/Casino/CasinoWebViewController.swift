@@ -18,7 +18,7 @@ class CasinoWebViewController: UIViewController {
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
-    private var userId: String
+    private var userId: String = ""
     private var cancellables = Set<AnyCancellable>()
     
     private var noSessionUrlString: String = TargetVariables.casinoURL
@@ -26,8 +26,7 @@ class CasinoWebViewController: UIViewController {
     private var viewModel: CasinoViewModel
     private let refreshControl = UIRefreshControl()
 
-    init(userId: String, viewModel: CasinoViewModel = CasinoViewModel() ) {
-        self.userId = userId
+    init(viewModel: CasinoViewModel = CasinoViewModel() ) {
         self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)

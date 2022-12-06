@@ -73,14 +73,18 @@ class BettingConnector: Connector {
                 }
                 return result.data
             }
-//            .handleEvents(receiveOutput: { data in
-//                print("Betting-NetworkManager [[ requesting ]] ", request,
-//                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
-//            })
+            .handleEvents(receiveOutput: { data in
+                print("Betting-NetworkManager [[ requesting ]] ", request,
+                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
+            })
             .decode(type: T.self, decoder: self.decoder)
             .mapError({ error in
                 if let typedError = error as? ServiceProviderError {
                     return typedError
+                }
+                else if let decodingError = error as? DecodingError {
+                    let errorMessage = "\(decodingError)"
+                    return ServiceProviderError.decodingError(message: errorMessage)
                 }
                 return ServiceProviderError.invalidResponse
             })

@@ -26,11 +26,9 @@ class PreSubmissionBetslipViewModel {
 
         self.sharedBetToken = sharedBetToken
 
-        Env.everyMatrixClient.userSessionStatusPublisher
+        Env.userSessionStore.userSessionStatusPublisher
             .receive(on: DispatchQueue.main)
-            .sink { _ in
-
-            } receiveValue: { [weak self] status in
+            .sink { [weak self] status in
                 if status == .logged {
                     if let sharedBetTokenValue = self?.sharedBetToken {
                         self?.sharedBetsPublisher.send(.loading)

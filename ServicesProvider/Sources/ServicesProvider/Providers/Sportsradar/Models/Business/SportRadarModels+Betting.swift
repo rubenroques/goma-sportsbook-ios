@@ -50,10 +50,23 @@ extension SportRadarModels {
             case eventName
             case homeTeamName = "participantHome"
             case awayTeamName = "participantAway"
-            case sportTypeName
+            case sportTypeName = "idFOSportType"
             case marketName
             case outcomeName = "selectionName"
             case potentialReturn
+        }
+
+        init(from decoder: Decoder) throws {
+            let container: KeyedDecodingContainer<SportRadarModels.Bet.CodingKeys> = try decoder.container(keyedBy: SportRadarModels.Bet.CodingKeys.self)
+            let identifierInt = try container.decode(Double.self, forKey: SportRadarModels.Bet.CodingKeys.identifier)
+            self.identifier = String(identifierInt)
+            self.eventName = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.eventName)
+            self.homeTeamName = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.homeTeamName)
+            self.awayTeamName = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.awayTeamName)
+            self.sportTypeName = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.sportTypeName)
+            self.marketName = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.marketName)
+            self.outcomeName = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.outcomeName)
+            self.potentialReturn = try container.decode(Double.self, forKey: SportRadarModels.Bet.CodingKeys.potentialReturn)
         }
 
     }

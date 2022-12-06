@@ -26,24 +26,38 @@ enum RegisterUserError: Error {
     case serverError
 }
 
+enum UserSessionStatus {
+    case anonymous
+    case logged
+}
+
 class UserSessionStore {
 
     var cancellables = Set<AnyCancellable>()
 
     var isLoadingUserSessionPublisher = CurrentValueSubject<Bool, Never>(true)
     var userSessionPublisher = CurrentValueSubject<UserSession?, Never>(nil)
-//    var userBalanceWallet = CurrentValueSubject<EveryMatrix.UserBalanceWallet?, Never>(nil)
-//    var userBonusBalanceWallet = CurrentValueSubject<EveryMatrix.UserBalanceWallet?, Never>(nil)
-//    var userWalletPublisher: AnyCancellable?
-//    var userWalletRegister: EndpointPublisherIdentifiable?
+    var userSessionStatusPublisher: AnyPublisher<UserSessionStatus, Never> {
+        return self.userSessionPublisher
+            .map { session in
+                if session != nil {
+                    return UserSessionStatus.logged
+                }
+                else {
+                    return UserSessionStatus.anonymous
+                }
+            }
+            .eraseToAnyPublisher()
+    }
 
     var userWalletPublisher = CurrentValueSubject<UserWallet?, Never>(nil)
     
     var hasGomaUserSessionPublisher = CurrentValueSubject<Bool, Never>(false)
     
     var shouldRecordUserSession = true
-    var isUserProfileComplete = CurrentValueSubject<Bool, Never>(false)
-    var isUserEmailVerified = CurrentValueSubject<Bool, Never>(false)
+
+    var isUserProfileComplete = CurrentValueSubject<Bool?, Never>(nil)
+    var isUserEmailVerified = CurrentValueSubject<Bool?, Never>(nil)
 
     private var pendingSignUpUserForm: ServicesProvider.SimpleSignUpForm?
     
@@ -99,6 +113,10 @@ class UserSessionStore {
 
     static func isUserLogged() -> Bool {
         return UserDefaults.standard.userSession != nil
+    }
+
+    func isUserLogged() -> Bool {
+        return Self.isUserLogged()
     }
 
     func saveUserSession(_ userSession: UserSession) {
@@ -168,7 +186,10 @@ class UserSessionStore {
             .store(in: &cancellables)
 
         self.userSessionPublisher.send(nil)
-        
+
+        self.isUserProfileComplete.send(nil)
+        self.isUserEmailVerified.send(nil)
+
         self.userWalletPublisher.send(nil)
         
         self.hasGomaUserSessionPublisher.send(false)

@@ -241,19 +241,24 @@ class BetslipViewController: UIViewController {
     }
 
     @objc func didTapAccountValue(_ sender: UITapGestureRecognizer) {
-        if Env.userSessionStore.isUserProfileComplete.value {
+        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete.value {
+            if isUserProfileComplete {
 
-            let depositViewController = DepositViewController()
+                let depositViewController = DepositViewController()
 
-            let navigationViewController = Router.navigationController(with: depositViewController)
-            self.present(navigationViewController, animated: true, completion: nil)
+                let navigationViewController = Router.navigationController(with: depositViewController)
+                self.present(navigationViewController, animated: true, completion: nil)
+            }
+            else {
+                let alert = UIAlertController(title: localized("profile_incomplete"),
+                                              message: localized("profile_incomplete_2"),
+                                              preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
         }
         else {
-            let alert = UIAlertController(title: localized("profile_incomplete"),
-                                          message: localized("profile_incomplete_2"),
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            // No logged-in user
         }
     }
 

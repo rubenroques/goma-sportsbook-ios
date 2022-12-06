@@ -17,9 +17,9 @@ extension BettingAPIClient: Endpoint {
     var endpoint: String {
         switch self {
         case .betHistory:
-            return "/fo/bets"
+            return "/api/betting/fo/bets"
         case .calculateReturns:
-            return "/fo/bet/calculate"
+            return "/api/betting/fo/bet/calculate"
         }
     }
     
@@ -82,7 +82,7 @@ extension BettingAPIClient: Endpoint {
     }
     
     var url: String {
-        return SportRadarConstants.bettingURL
+        return SportRadarConstants.bettingHostname
     }
     
     var headers: HTTP.Headers? {

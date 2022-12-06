@@ -100,9 +100,15 @@ class MyTicketsViewModel: NSObject {
             }
             .store(in: &cancellables)
 
-        Env.everyMatrixClient.userSessionStatusPublisher
+        Env.betslipManager.newBetsPlacedPublisher
+            .sink { [weak self] in
+                self?.refresh()
+            }
+            .store(in: &cancellables)
+
+        Env.userSessionStore.userSessionStatusPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] userSessionStatus in
+            .sink { [weak self]  userSessionStatus in
                 switch userSessionStatus {
                 case .logged:
                     self?.refresh()
@@ -111,8 +117,6 @@ class MyTicketsViewModel: NSObject {
                 }
             }
             .store(in: &cancellables)
-
-        self.loadLocations()
 
     }
 
@@ -129,23 +133,6 @@ class MyTicketsViewModel: NSObject {
     }
 
     //
-    func loadLocations() {
-        let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
-        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
-            .sink(receiveCompletion: { _ in
-
-            },
-            receiveValue: { [weak self] response in
-                self?.locationsCodesDictionary = [:]
-                (response.records ?? []).forEach { location in
-                    if let code = location.code {
-                        self?.locationsCodesDictionary[location.id] = code
-                    }
-                }
-            })
-            .store(in: &cancellables)
-    }
-
     func clearData() {
         self.resolvedMyTickets.value = []
         self.openedMyTickets.value = []
@@ -157,184 +144,253 @@ class MyTicketsViewModel: NSObject {
 
         self.isLoadingTickets.send(true)
 
-        let resolvedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.resolved, records: recordsPerPage, page: page)
-        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: BetHistoryResponse.self)
+        Env.servicesProvider.getResolvedBetsHistory(pageIndex: 0)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let apiError):
-                    switch apiError {
-                    case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
-                        self?.clearData()
-                    case .notConnected:
-                        self?.clearData()
-                    default:
-                        ()
-                    }
-                case .finished:
-                    ()
+            .sink { [weak self] completion in
+                if case .failure = completion {
+                    self?.clearData()
                 }
                 self?.isLoadingTickets.send(false)
-            },
-            receiveValue: { [weak self] betHistoryResponse in
-                guard let self = self else {return}
-
-                if self.resolvedMyTickets.value.isEmpty {
-                    self.resolvedMyTickets.send(betHistoryResponse.betList ?? [])
-
-                    if (betHistoryResponse.betList ?? []).isEmpty {
-                        self.listStatePublisher.send(.empty)
-                    }
-                    else {
-                        self.listStatePublisher.send(.loaded)
-                    }
-                    
-                    if let betHistory = betHistoryResponse.betList {
-                        if betHistory.count < self.recordsPerPage {
-                            self.hasNextPage = false
-                        }
-                    }
+            } receiveValue: { bettingHistory in
+                let betHistoryEntries = ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory: bettingHistory).betList ?? []
+                self.resolvedMyTickets.send(betHistoryEntries)
+                if betHistoryEntries.isEmpty {
+                    self.listStatePublisher.send(.empty)
                 }
                 else {
-                    var newResolvedTickets = self.resolvedMyTickets.value
-                    newResolvedTickets.append(contentsOf: betHistoryResponse.betList ?? [])
-
-                    self.resolvedMyTickets.send(newResolvedTickets)
-
                     self.listStatePublisher.send(.loaded)
-
-                    if self.resolvedMyTickets.value.count < self.recordsPerPage * (self.resolvedPage + 1) {
-                        self.hasNextPage = false
-                    }
-                    else {
-                        self.hasNextPage = true
-                    }
                 }
-            })
+
+                // TODO: Pagination
+                // self.hasNextPage = true
+            }
             .store(in: &cancellables)
+//
+//
+//        let resolvedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.resolved, records: recordsPerPage, page: page)
+//        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: BetHistoryResponse.self)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let apiError):
+//                    switch apiError {
+//                    case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
+//                        self?.clearData()
+//                    case .notConnected:
+//                        self?.clearData()
+//                    default:
+//                        ()
+//                    }
+//                case .finished:
+//                    ()
+//                }
+//                self?.isLoadingTickets.send(false)
+//            },
+//            receiveValue: { [weak self] betHistoryResponse in
+//                guard let self = self else {return}
+//
+//                if self.resolvedMyTickets.value.isEmpty {
+//                    self.resolvedMyTickets.send(betHistoryResponse.betList ?? [])
+//
+//                    if (betHistoryResponse.betList ?? []).isEmpty {
+//                        self.listStatePublisher.send(.empty)
+//                    }
+//                    else {
+//                        self.listStatePublisher.send(.loaded)
+//                    }
+//
+//                    if let betHistory = betHistoryResponse.betList {
+//                        if betHistory.count < self.recordsPerPage {
+//                            self.hasNextPage = false
+//                        }
+//                    }
+//                }
+//                else {
+//                    var newResolvedTickets = self.resolvedMyTickets.value
+//                    newResolvedTickets.append(contentsOf: betHistoryResponse.betList ?? [])
+//
+//                    self.resolvedMyTickets.send(newResolvedTickets)
+//
+//                    self.listStatePublisher.send(.loaded)
+//
+//                    if self.resolvedMyTickets.value.count < self.recordsPerPage * (self.resolvedPage + 1) {
+//                        self.hasNextPage = false
+//                    }
+//                    else {
+//                        self.hasNextPage = true
+//                    }
+//                }
+//            })
+//            .store(in: &cancellables)
     }
 
     func loadOpenedTickets(page: Int) {
 
         self.isLoadingTickets.send(true)
 
-        let openedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.opened, records: recordsPerPage, page: page)
-        Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
+        Env.servicesProvider.getOpenBetsHistory(pageIndex: 0)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let apiError):
-                    switch apiError {
-                    case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
-                        self?.clearData()
-                    case .notConnected:
-                        self?.clearData()
-                    default:
-                        ()
-                    }
-                case .finished:
-                    ()
+            .sink { [weak self] completion in
+                if case let .failure(error) = completion {
+                    Logger.log("loadOpenedTickets error \(error)")
+                    self?.clearData()
                 }
                 self?.isLoadingTickets.send(false)
-            },
-            receiveValue: { [weak self] betHistoryResponse in
-                guard let self = self else {return}
-
-                if self.openedMyTickets.value.isEmpty {
-                    self.openedMyTickets.send(betHistoryResponse.betList ?? [])
-
-                    if (betHistoryResponse.betList ?? []).isEmpty {
-                        self.listStatePublisher.send(.empty)
-                    }
-                    else {
-                        self.listStatePublisher.send(.loaded)
-                    }
-                    
-                    if let betHistory = betHistoryResponse.betList {
-                        if betHistory.count < self.recordsPerPage {
-                            self.hasNextPage = false
-                        }
-                    }
+            } receiveValue: { bettingHistory in
+                let betHistoryEntries = ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory: bettingHistory).betList ?? []
+                self.openedMyTickets.send(betHistoryEntries)
+                if betHistoryEntries.isEmpty {
+                    self.listStatePublisher.send(.empty)
                 }
                 else {
-                    var newOpenedTickets = self.openedMyTickets.value
-                    newOpenedTickets.append(contentsOf: betHistoryResponse.betList ?? [])
-
-                    self.openedMyTickets.send(newOpenedTickets)
-
                     self.listStatePublisher.send(.loaded)
-
-                    if self.openedMyTickets.value.count < self.recordsPerPage * (self.openedPage + 1) {
-                        self.hasNextPage = false
-                    }
-                    else {
-                        self.hasNextPage = true
-                    }
                 }
-              
-            })
+
+                // TODO: Pagination
+                // self.hasNextPage = true
+            }
             .store(in: &cancellables)
+
+//        let openedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.opened, records: recordsPerPage, page: page)
+//        Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let apiError):
+//                    switch apiError {
+//                    case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
+//                        self?.clearData()
+//                    case .notConnected:
+//                        self?.clearData()
+//                    default:
+//                        ()
+//                    }
+//                case .finished:
+//                    ()
+//                }
+//                self?.isLoadingTickets.send(false)
+//            },
+//            receiveValue: { [weak self] betHistoryResponse in
+//                guard let self = self else {return}
+//
+//                if self.openedMyTickets.value.isEmpty {
+//                    self.openedMyTickets.send(betHistoryResponse.betList ?? [])
+//
+//                    if (betHistoryResponse.betList ?? []).isEmpty {
+//                        self.listStatePublisher.send(.empty)
+//                    }
+//                    else {
+//                        self.listStatePublisher.send(.loaded)
+//                    }
+//
+//                    if let betHistory = betHistoryResponse.betList {
+//                        if betHistory.count < self.recordsPerPage {
+//                            self.hasNextPage = false
+//                        }
+//                    }
+//                }
+//                else {
+//                    var newOpenedTickets = self.openedMyTickets.value
+//                    newOpenedTickets.append(contentsOf: betHistoryResponse.betList ?? [])
+//
+//                    self.openedMyTickets.send(newOpenedTickets)
+//
+//                    self.listStatePublisher.send(.loaded)
+//
+//                    if self.openedMyTickets.value.count < self.recordsPerPage * (self.openedPage + 1) {
+//                        self.hasNextPage = false
+//                    }
+//                    else {
+//                        self.hasNextPage = true
+//                    }
+//                }
+//
+//            })
+//            .store(in: &cancellables)
     }
 
     func loadWonTickets(page: Int) {
 
         self.isLoadingTickets.send(true)
 
-        let wonRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.won, records: recordsPerPage, page: page)
-        Env.everyMatrixClient.manager.getModel(router: wonRoute, decodingType: BetHistoryResponse.self)
+        Env.servicesProvider.getWonBetsHistory(pageIndex: 0)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let apiError):
-                    switch apiError {
-                    case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
-                        self?.clearData()
-                    case .notConnected:
-                        self?.clearData()
-                    default:
-                        ()
-                    }
-                case .finished:
-                    ()
+            .sink { [weak self] completion in
+                if case .failure = completion {
+                    self?.clearData()
                 }
                 self?.isLoadingTickets.send(false)
-            },
-            receiveValue: { [weak self] betHistoryResponse in
-                guard let self = self else {return}
-
-                if self.wonMyTickets.value.isEmpty {
-                    self.wonMyTickets.send(betHistoryResponse.betList ?? [])
-
-                    if (betHistoryResponse.betList ?? []).isEmpty {
-                        self.listStatePublisher.send(.empty)
-                    }
-                    else {
-                        self.listStatePublisher.send(.loaded)
-                    }
-                    
-                    if let betHistory = betHistoryResponse.betList {
-                        if betHistory.count < self.recordsPerPage {
-                            self.hasNextPage = false
-                        }
-                    }
+            } receiveValue: { bettingHistory in
+                let betHistoryEntries = ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory: bettingHistory).betList ?? []
+                self.wonMyTickets.send(betHistoryEntries)
+                if betHistoryEntries.isEmpty {
+                    self.listStatePublisher.send(.empty)
                 }
                 else {
-                    var newWonTickets = self.wonMyTickets.value
-                    newWonTickets.append(contentsOf: betHistoryResponse.betList ?? [])
-
-                    self.wonMyTickets.send(newWonTickets)
-
                     self.listStatePublisher.send(.loaded)
-
-                    if self.wonMyTickets.value.count < self.recordsPerPage * (self.wonPage + 1) {
-                        self.hasNextPage = false
-                    }
-                    else {
-                        self.hasNextPage = true
-                    }
                 }
-            })
+
+                // TODO: Pagination
+                // self.hasNextPage = true
+            }
             .store(in: &cancellables)
+
+        
+//        let wonRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.won, records: recordsPerPage, page: page)
+//        Env.everyMatrixClient.manager.getModel(router: wonRoute, decodingType: BetHistoryResponse.self)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let apiError):
+//                    switch apiError {
+//                    case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
+//                        self?.clearData()
+//                    case .notConnected:
+//                        self?.clearData()
+//                    default:
+//                        ()
+//                    }
+//                case .finished:
+//                    ()
+//                }
+//                self?.isLoadingTickets.send(false)
+//            },
+//            receiveValue: { [weak self] betHistoryResponse in
+//                guard let self = self else {return}
+//
+//                if self.wonMyTickets.value.isEmpty {
+//                    self.wonMyTickets.send(betHistoryResponse.betList ?? [])
+//
+//                    if (betHistoryResponse.betList ?? []).isEmpty {
+//                        self.listStatePublisher.send(.empty)
+//                    }
+//                    else {
+//                        self.listStatePublisher.send(.loaded)
+//                    }
+//
+//                    if let betHistory = betHistoryResponse.betList {
+//                        if betHistory.count < self.recordsPerPage {
+//                            self.hasNextPage = false
+//                        }
+//                    }
+//                }
+//                else {
+//                    var newWonTickets = self.wonMyTickets.value
+//                    newWonTickets.append(contentsOf: betHistoryResponse.betList ?? [])
+//
+//                    self.wonMyTickets.send(newWonTickets)
+//
+//                    self.listStatePublisher.send(.loaded)
+//
+//                    if self.wonMyTickets.value.count < self.recordsPerPage * (self.wonPage + 1) {
+//                        self.hasNextPage = false
+//                    }
+//                    else {
+//                        self.hasNextPage = true
+//                    }
+//                }
+//            })
+//            .store(in: &cancellables)
 
     }
 

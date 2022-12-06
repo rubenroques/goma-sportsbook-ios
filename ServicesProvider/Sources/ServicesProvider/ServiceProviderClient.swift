@@ -324,6 +324,39 @@ extension ServicesProviderClient {
         return bettingProvider.getBetHistory(pageIndex: pageIndex)
     }
 
+    public func getOpenBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(outputType: BettingHistory.self,
+                        failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return bettingProvider.getOpenBetsHistory(pageIndex: pageIndex)
+    }
+
+    public func getResolvedBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(outputType: BettingHistory.self,
+                        failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return bettingProvider.getResolvedBetsHistory(pageIndex: pageIndex)
+    }
+
+    public func getWonBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(outputType: BettingHistory.self,
+                        failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return bettingProvider.getWonBetsHistory(pageIndex: pageIndex)
+    }
+
     public func calculateBetslipState(_ betslip: BetSlip)  -> AnyPublisher<BetslipState, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider

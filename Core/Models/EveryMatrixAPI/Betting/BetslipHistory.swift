@@ -9,11 +9,9 @@ import Foundation
 
 // MARK: - BetHistoryRow
 struct BetHistoryResponse: Codable {
-    var totalRecords: String?
     var betList: [BetHistoryEntry]?
 
     enum CodingKeys: String, CodingKey {
-        case totalRecords = "totalRecords"
         case betList = "betList"
     }
 }

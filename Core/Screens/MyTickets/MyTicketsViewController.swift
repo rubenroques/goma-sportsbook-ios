@@ -165,12 +165,6 @@ class MyTicketsViewController: UIViewController {
             self?.navigationController?.pushViewController(matchDetailsViewController, animated: true)
             
         }
-        
-        Env.betslipManager.newBetsPlacedPublisher
-            .sink { [weak self] in
-                self?.viewModel.refresh()
-            }
-            .store(in: &cancellables)
 
         self.viewModel.clickedBetTokenPublisher
             .receive(on: DispatchQueue.main)

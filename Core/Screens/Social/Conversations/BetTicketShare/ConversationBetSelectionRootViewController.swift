@@ -175,7 +175,7 @@ class ConversationBetSelectionRootViewController: UIViewController {
     // MARK: - Bindings
     private func bind(toViewModel viewModel: ConversationBetSelectionRootViewModel) {
 
-        self.viewModel.selectedTicketTypeIndexPublisher
+        viewModel.selectedTicketTypeIndexPublisher
             .removeDuplicates()
             .compactMap({ $0 })
             .receive(on: DispatchQueue.main)
@@ -184,18 +184,6 @@ class ConversationBetSelectionRootViewController: UIViewController {
                 self?.scrollToViewController(atIndex: newIndex)
             }
             .store(in: &cancellables)
-
-//        Env.everyMatrixClient.userSessionStatusPublisher
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] status in
-//                switch status {
-//                case .anonymous:
-//                    self?.showNoLoginView()
-//                case .logged:
-//                    self?.hideNoLoginView()
-//                }
-//            }
-//            .store(in: &cancellables)
 
         viewModel.chatTitlePublisher
             .sink(receiveValue: { [weak self] title in

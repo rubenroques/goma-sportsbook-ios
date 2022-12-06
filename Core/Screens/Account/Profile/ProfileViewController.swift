@@ -302,27 +302,23 @@ class ProfileViewController: UIViewController {
         var showActivationAlertScrollableView = false
         self.alertsArray = []
 
-        if let userEmailVerified = userSession?.isEmailVerified {
-            if !userEmailVerified && !Env.userSessionStore.isUserEmailVerified.value {
-                let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
-                                                               description: localized("app_full_potential"),
-                                                               linkLabel: localized("verify_my_account"),
-                                                               alertType: .email)
-                alertsArray.append(emailActivationAlertData)
-                showActivationAlertScrollableView = true
-            }
+        if let isUserEmailVerified = Env.userSessionStore.isUserEmailVerified.value, !isUserEmailVerified {
+            let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
+                                                           description: localized("app_full_potential"),
+                                                           linkLabel: localized("verify_my_account"),
+                                                           alertType: .email)
+            alertsArray.append(emailActivationAlertData)
+            showActivationAlertScrollableView = true
         }
 
-        if let userSession = userSession {
-            if !Env.userSessionStore.isUserProfileComplete.value {
-                let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
-                                                               description: localized("complete_profile_description"),
-                                                               linkLabel: localized("finish_up_profile"),
-                                                               alertType: .profile)
+        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete.value, !isUserProfileComplete {
+            let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
+                                                           description: localized("complete_profile_description"),
+                                                           linkLabel: localized("finish_up_profile"),
+                                                           alertType: .profile)
 
-                alertsArray.append(completeProfileAlertData)
-                showActivationAlertScrollableView = true
-            }
+            alertsArray.append(completeProfileAlertData)
+            showActivationAlertScrollableView = true
         }
 
         if showActivationAlertScrollableView {
@@ -450,32 +446,36 @@ class ProfileViewController: UIViewController {
     }
 
     @IBAction private func didTapDepositButton() {
-        if Env.userSessionStore.isUserProfileComplete.value {
-            let depositViewController = DepositViewController()
-            let navigationViewController = Router.navigationController(with: depositViewController)
-            self.present(navigationViewController, animated: true, completion: nil)
-        }
-        else {
-            let alert = UIAlertController(title: localized("profile_incomplete"),
-                                          message: localized("profile_incomplete_deposit"),
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete.value {
+            if isUserProfileComplete {
+                let depositViewController = DepositViewController()
+                let navigationViewController = Router.navigationController(with: depositViewController)
+                self.present(navigationViewController, animated: true, completion: nil)
+            }
+            else {
+                let alert = UIAlertController(title: localized("profile_incomplete"),
+                                              message: localized("profile_incomplete_deposit"),
+                                              preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
         }
     }
 
     @IBAction private func didTapWithdrawButton() {
-        if Env.userSessionStore.isUserProfileComplete.value {
-            let withDrawViewController = WithdrawViewController()
-            let navigationViewController = Router.navigationController(with: withDrawViewController)
-            self.present(navigationViewController, animated: true, completion: nil)
-        }
-        else {
-            let alert = UIAlertController(title: localized("profile_incomplete"),
-                                          message: localized("profile_incomplete_withdraw"),
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete.value {
+            if isUserProfileComplete {
+                let withDrawViewController = WithdrawViewController()
+                let navigationViewController = Router.navigationController(with: withDrawViewController)
+                self.present(navigationViewController, animated: true, completion: nil)
+            }
+            else {
+                let alert = UIAlertController(title: localized("profile_incomplete"),
+                                              message: localized("profile_incomplete_withdraw"),
+                                              preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
         }
     }
 
