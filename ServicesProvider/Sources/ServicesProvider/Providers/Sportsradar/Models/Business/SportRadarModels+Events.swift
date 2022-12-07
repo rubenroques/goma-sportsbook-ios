@@ -83,7 +83,19 @@ extension SportRadarModels {
             case orderValue = "hadvalue"
             case externalReference = "externalreference"
         }
-        
+
+        init(from decoder: Decoder) throws {
+            let container: KeyedDecodingContainer<SportRadarModels.Outcome.CodingKeys> = try decoder.container(keyedBy: SportRadarModels.Outcome.CodingKeys.self)
+            self.id = try container.decode(String.self, forKey: SportRadarModels.Outcome.CodingKeys.id)
+            self.name = try container.decode(String.self, forKey: SportRadarModels.Outcome.CodingKeys.name)
+            self.hashCode = try container.decode(String.self, forKey: SportRadarModels.Outcome.CodingKeys.hashCode)
+            self.priceNumerator = try container.decodeIfPresent(String.self, forKey: SportRadarModels.Outcome.CodingKeys.priceNumerator)
+            self.priceDenominator = try container.decodeIfPresent(String.self, forKey: SportRadarModels.Outcome.CodingKeys.priceDenominator)
+            self.marketId = try container.decodeIfPresent(String.self, forKey: SportRadarModels.Outcome.CodingKeys.marketId)
+            self.orderValue = try container.decodeIfPresent(String.self, forKey: SportRadarModels.Outcome.CodingKeys.orderValue)
+            self.externalReference = try container.decodeIfPresent(String.self, forKey: SportRadarModels.Outcome.CodingKeys.externalReference)
+        }
+
     }
     
 }

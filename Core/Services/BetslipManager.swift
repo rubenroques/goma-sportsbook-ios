@@ -9,6 +9,7 @@ import UIKit
 import Combine
 import OrderedCollections
 import nanopb
+import ServicesProvider
 
 struct BetPlacedDetails {
     var response: BetslipPlaceBetResponse
@@ -39,9 +40,11 @@ class BetslipManager: NSObject {
         self.bettingTicketsPublisher = .init([])
         
         var cachedBetslipTicketsDictionary: OrderedDictionary<String, BettingTicket> = [:]
-        for ticket in UserDefaults.standard.cachedBetslipTickets {
-                cachedBetslipTicketsDictionary[ticket.id] = ticket
-        }
+
+        // TODO: restore cache for betslip
+        //        for ticket in UserDefaults.standard.cachedBetslipTickets {
+        //                cachedBetslipTicketsDictionary[ticket.id] = ticket
+        //        }
     
         self.bettingTicketsDictionaryPublisher = .init(cachedBetslipTicketsDictionary)
         self.bettingTicketPublisher = [:]
@@ -87,19 +90,28 @@ class BetslipManager: NSObject {
         }
         .store(in: &cancellables)
 
-        bettingTicketsDictionaryPublisher
+        bettingTicketsPublisher
             .filter({ return !$0.isEmpty })
-            .removeDuplicates()
-            .debounce(for: 1.0, scheduler: DispatchQueue.main)
-            .eraseToAnyPublisher()
-            .map({ _ -> Void in
-                return ()
+            .debounce(for: 1.0, scheduler: DispatchQueue.main) // TODO: optimize debounce duration
+            .sink(receiveValue: { [weak self] bettingTickets in
+                self?.requestAllowedBetTypes(withBettingTickets: bettingTickets)
             })
-            .sink { [weak self] in
-                self?.requestSimpleBetslipSelectionState()
-                self?.requestMultipleBetslipSelectionState()
-            }
             .store(in: &cancellables)
+
+        // TODO: optimize the requests
+//        bettingTicketsDictionaryPublisher
+//            .filter({ return !$0.isEmpty })
+//            .removeDuplicates()
+//            .debounce(for: 1.0, scheduler: DispatchQueue.main)
+//            .eraseToAnyPublisher()
+//            .map({ _ -> Void in
+//                return ()
+//            })
+//            .sink { [weak self] in
+//                self?.requestSimpleBetslipSelectionState()
+//                self?.requestMultipleBetslipSelectionState()
+//            }
+//            .store(in: &cancellables)
 
     }
 
@@ -273,6 +285,73 @@ class BetslipManager: NSObject {
 
 //
 extension BetslipManager {
+
+    func requestAllowedBetTypes(withBettingTickets bettingTickets: [BettingTicket]) {
+        let betTicketSelections: [ServicesProvider.BetTicketSelection] = bettingTickets.map { bettingTicket -> ServicesProvider.BetTicketSelection in
+            let betTicketSelection = ServicesProvider.BetTicketSelection(identifier: bettingTicket.id,
+                                                                         eventName: "",
+                                                                         homeTeamName: "",
+                                                                         awayTeamName: "",
+                                                                         marketName: "",
+                                                                         outcomeName: "",
+                                                                         odd: .european(odd: bettingTicket.value))
+            return betTicketSelection
+        }
+
+        Env.servicesProvider.getAllowedBetTypes(withBetTicketSelections: betTicketSelections)
+            .sink { completion in
+                // TODO: return error
+                print("getAllowedBetTypes completion \(completion)")
+            } receiveValue: { allowedBetTypes in
+                // TODO: return aloowed bet types to the betslip presubmitionvc
+                print("getAllowedBetTypes \(allowedBetTypes)")
+            }
+            .store(in: &cancellables)
+    }
+
+    func placeSingleBet(stake: Double) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
+
+        guard
+            let firstBettingTicket =  self.bettingTicketsPublisher.value.first
+        else {
+            return Fail(error: BetslipErrorType.emptyBetslip).eraseToAnyPublisher()
+        }
+
+        let rational = OddConverter.rationalApproximation(originalValue: firstBettingTicket.value)
+        let oddNumerator = rational.num
+        let oddDenominator = rational.den
+
+        let betTicketSelection = ServicesProvider.BetTicketSelection(identifier: firstBettingTicket.id,
+                                                                     eventName: "",
+                                                                     homeTeamName: "",
+                                                                     awayTeamName: "",
+                                                                     marketName: "",
+                                                                     outcomeName: "",
+                                                                     odd: .fraction(numerator: oddNumerator, denominator: oddDenominator))
+
+        return Env.servicesProvider.placeSingleBet(betTicketSelection: betTicketSelection, stake: stake)
+            .map { (placeBetResponse: PlacedBetResponse) -> [BetPlacedDetails] in
+                return placeBetResponse.bets.map { (placedBetEntry: PlacedBetEntry) -> BetPlacedDetails in
+                    let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
+                    let response = BetslipPlaceBetResponse(betId: placedBetEntry.identifier,
+                                                           betSucceed: true,
+                                                           totalPriceValue: totalPriceValue,
+                                                           maxWinning: placedBetEntry.potentialReturn)
+                    return BetPlacedDetails(response: response, tickets: [])
+                }
+            }
+            .mapError({ _ in
+                return BetslipErrorType.placedBetError
+            })
+            .handleEvents(receiveOutput: { betPlacedDetailsArray in
+                let shouldUpdate = betPlacedDetailsArray.map(\.response.betSucceed).compactMap({ $0 }).allSatisfy { $0 }
+                if shouldUpdate {
+                    self.newBetsPlacedPublisher.send()
+                }
+            })
+            .eraseToAnyPublisher()
+    }
+
 
     func requestSimpleBetslipSelectionState(oddsBoostPercentage: Double? = nil) {
 
@@ -631,6 +710,12 @@ extension BetslipManager {
 
 }
 
+enum BetslipErrorType: Error {
+    case emptyBetslip
+    case placedBetError
+    case forbiddenBetError
+    case none
+}
 
 struct BetslipError {
     var errorMessage: String
@@ -641,9 +726,5 @@ struct BetslipError {
         self.errorType = errorType
     }
 
-    enum BetslipErrorType {
-        case placedBetError
-        case forbiddenBetError
-        case none
-    }
+
 }

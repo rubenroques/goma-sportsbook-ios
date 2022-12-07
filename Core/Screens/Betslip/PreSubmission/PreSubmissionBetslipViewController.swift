@@ -1383,24 +1383,38 @@ class PreSubmissionBetslipViewController: UIViewController {
         if UserSessionStore.isUserLogged() {
             
             if self.listTypePublisher.value == .simple {
-
-                Env.betslipManager.placeAllSingleBets(withSkateAmount: self.simpleBetsBettingValues.value,
-                                                      singleFreeBet: self.singleBettingTicketDataSource.currentTicketFreeBetSelected,
-                                                      singleOddsBoost: self.singleBettingTicketDataSource.currentTicketOddsBoostSelected)
-                    .receive(on: DispatchQueue.main)
-                    .sink { completion in
-                        switch completion {
-                        case .failure(let error):
-                            Logger.log("Place AllSingleBets error \(error)")
-                        default: ()
-                        }
-                        self.isLoading = false
-                    } receiveValue: { [weak self] betPlacedDetailsArray in
-                        
-                        self?.betPlacedAction?(betPlacedDetailsArray)
-
+                let firstBetTicketStake: Double = self.simpleBetsBettingValues.value.first?.value ?? 0.0
+                Env.betslipManager.placeSingleBet(stake: firstBetTicketStake)
+                .receive(on: DispatchQueue.main)
+                .sink { completion in
+                    switch completion {
+                    case .failure(let error):
+                        Logger.log("Place AllSingleBets error \(error)")
+                    default: ()
                     }
-                    .store(in: &cancellables)
+                    self.isLoading = false
+                } receiveValue: { [weak self] betPlacedDetailsArray in
+                    self?.betPlacedAction?(betPlacedDetailsArray)
+                }
+                .store(in: &cancellables)
+//
+//                Env.betslipManager.placeAllSingleBets(withSkateAmount: self.simpleBetsBettingValues.value,
+//                                                      singleFreeBet: self.singleBettingTicketDataSource.currentTicketFreeBetSelected,
+//                                                      singleOddsBoost: self.singleBettingTicketDataSource.currentTicketOddsBoostSelected)
+//                    .receive(on: DispatchQueue.main)
+//                    .sink { completion in
+//                        switch completion {
+//                        case .failure(let error):
+//                            Logger.log("Place AllSingleBets error \(error)")
+//                        default: ()
+//                        }
+//                        self.isLoading = false
+//                    } receiveValue: { [weak self] betPlacedDetailsArray in
+//
+//                        self?.betPlacedAction?(betPlacedDetailsArray)
+//
+//                    }
+//                    .store(in: &cancellables)
 
             }
             else if self.listTypePublisher.value == .multiple {

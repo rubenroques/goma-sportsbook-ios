@@ -180,11 +180,6 @@ class BetSubmissionSuccessViewController: UIViewController {
     }
 
     private func showBetShareScreen() {
-//        let renderer = UIGraphicsImageRenderer(size: self.scrollView.bounds.size)
-//        let image = renderer.image { _ in
-//            self.scrollView.drawHierarchy(in: self.scrollView.bounds, afterScreenUpdates: true)
-//        }
-//        self.ticketSnapshot = image
 
         if let betHistoryEntry = self.sharedBetHistory,
            let sharedBetToken = self.sharedBetToken,
@@ -225,6 +220,7 @@ class BetSubmissionSuccessViewController: UIViewController {
 
     private func loadBetTickets() {
 
+        /*
         for betPlaced in self.betPlacedDetailsArray {
 
             if let betId = betPlaced.response.betId {
@@ -263,6 +259,7 @@ class BetSubmissionSuccessViewController: UIViewController {
                     .store(in: &cancellables)
             }
         }
+         */
     }
 
     private func getSharedBetToken(betHistoryEntry: BetHistoryEntry) {

@@ -32,7 +32,7 @@ class SportRadarBettingProvider: BettingProvider {
     }
 
     func getBetHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
-        let endpoint = BettingAPIClient.betHistory(page: pageIndex, startDate: nil, endDate: nil, betState: nil, betOutcome: nil)
+        let endpoint = BettingAPIClient.betHistory(page: pageIndex, startDate: nil, endDate: nil, betState: nil, betResult: nil)
         let publisher: AnyPublisher<[SportRadarModels.Bet], ServiceProviderError> = self.connector.request(endpoint)
         return publisher
             .map { bets in
@@ -42,8 +42,8 @@ class SportRadarBettingProvider: BettingProvider {
     }
 
     func getOpenBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
-        let endpoint = BettingAPIClient.betHistory(page: pageIndex, startDate: nil, endDate: nil, betState: [SportRadarModels.BetState.opened], betOutcome: nil)
-        let publisher: AnyPublisher<[SportRadarModels.Bet], ServiceProviderError> = self.connector.request(endpoint)        
+        let endpoint = BettingAPIClient.betHistory(page: pageIndex, startDate: nil, endDate: nil, betState: [SportRadarModels.BetState.opened], betResult: nil)
+        let publisher: AnyPublisher<[SportRadarModels.Bet], ServiceProviderError> = self.connector.request(endpoint)
         return publisher
             .map { bets in
                 return SportRadarModels.BettingHistory(bets: bets)
@@ -52,7 +52,7 @@ class SportRadarBettingProvider: BettingProvider {
     }
 
     func getResolvedBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
-        let endpoint = BettingAPIClient.betHistory(page: pageIndex, startDate: nil, endDate: nil, betState: [SportRadarModels.BetState.settled], betOutcome: nil)
+        let endpoint = BettingAPIClient.betHistory(page: pageIndex, startDate: nil, endDate: nil, betState: [SportRadarModels.BetState.settled], betResult: nil)
         let publisher: AnyPublisher<[SportRadarModels.Bet], ServiceProviderError> = self.connector.request(endpoint)
         return publisher
             .map { bets in
@@ -62,7 +62,7 @@ class SportRadarBettingProvider: BettingProvider {
     }
 
     func getWonBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
-        let endpoint = BettingAPIClient.betHistory(page: pageIndex, startDate: nil, endDate: nil, betState: nil, betOutcome: [SportRadarModels.BetOutcome.won])
+        let endpoint = BettingAPIClient.betHistory(page: pageIndex, startDate: nil, endDate: nil, betState: nil, betResult: [SportRadarModels.BetResult.won])
         let publisher: AnyPublisher<[SportRadarModels.Bet], ServiceProviderError> = self.connector.request(endpoint)
         return publisher
             .map { bets in
@@ -71,7 +71,22 @@ class SportRadarBettingProvider: BettingProvider {
             .map(SportRadarModelMapper.bettingHistory(fromInternalBettingHistory:)).eraseToAnyPublisher()
     }
 
-    func calculateBetslipState(_ betslip: BetSlip)  -> AnyPublisher<BetslipState, ServiceProviderError> {
+    func getAllowedBetTypes(withBetTicketSelections betTicketSelections: [BetTicketSelection]) -> AnyPublisher<[BetType], ServiceProviderError> {
+        let endpoint = BettingAPIClient.getAllowedBetTypes(betTicketSelections: betTicketSelections)
+        let publisher: AnyPublisher<[SportRadarModels.BetType], ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher
+            .map { (sportRadarBetTypes: [SportRadarModels.BetType]) -> [BetType] in
+                return sportRadarBetTypes.map { sportRadarBetType in
+                    return BetType(type: BetType.GrouppingType.single,
+                                   potencialReturn: sportRadarBetType.potencialReturn,
+                                   totalStake: sportRadarBetType.totalStake)
+                }
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func calculateBetslipState(_ betslip: BetSlip) -> AnyPublisher<BetslipState, ServiceProviderError> {
 
         guard
             let firstBetTicket = betslip.tickets.first
@@ -79,11 +94,19 @@ class SportRadarBettingProvider: BettingProvider {
             return Fail(outputType: BetslipState.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
 
-        let betTicket = SportRadarModelMapper.internalBetTicket(fromBetTicket: firstBetTicket)
-        let endpoint = BettingAPIClient.calculateReturns(betTicket: betTicket)
-        let publisher: AnyPublisher<SportRadarModels.BetSlipStateResponse, ServiceProviderError> = self.connector.request(endpoint)
+        //        let betTicket = SportRadarModelMapper.internalBetTicket(fromBetTicket: firstBetTicket)
+        //        let endpoint = BettingAPIClient.calculateReturns(betTicket: betTicket)
+        //        let publisher: AnyPublisher<SportRadarModels.BetSlipStateResponse, ServiceProviderError> = self.connector.request(endpoint)
 
         return Fail(outputType: BetslipState.self, failure: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+    }
+
+    func placeSingleBet(betTicketSelection: BetTicketSelection, stake: Double) -> AnyPublisher<PlacedBetResponse, ServiceProviderError> {
+        let endpoint = BettingAPIClient.placeBet(betTicketSelection: betTicketSelection, stake: stake)
+        let publisher: AnyPublisher<SportRadarModels.PlacedBetResponse, ServiceProviderError> = self.connector.request(endpoint)
+        return publisher
+            .map({ SportRadarModelMapper.placedBetResponse(fromInternalPlacedBetResponse: $0) })
+            .eraseToAnyPublisher()
     }
 
 }

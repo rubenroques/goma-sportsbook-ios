@@ -37,8 +37,30 @@ extension ServiceProviderModelMapper {
     }
 
     static func betHistoryEntrySelection(fromServiceProviderBetSelection betSelection: ServicesProvider.BetSelection) -> BetHistoryEntrySelection {
+
+        let status: BetSelectionStatus
+        switch betSelection.state {
+        case .opened: status = .opened
+        case .closed: status = .closed
+        case .settled: status = .settled
+        case .cancelled: status = .cancelled
+        case .attempted: status = .undefined
+        case .undefined: status = .undefined
+        }
+
+        let result: BetSelectionResult
+        switch betSelection.result {
+        case .open: result = .open
+        case .won: result = .won
+        case .lost: result = .lost
+        case .drawn: result = .drawn
+        case .notSpecified: result = .undefined
+        case .void: result = .undefined
+        }
+
         let betHistoryEntrySelection = BetHistoryEntrySelection(outcomeId: betSelection.identifier,
-                                                                status: nil,
+                                                                status: status,
+                                                                result: result,
                                                                 priceValue: nil,
                                                                 sportId: nil,
                                                                 sportName: nil,

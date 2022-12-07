@@ -148,7 +148,31 @@ struct SportRadarModelMapper {
     }
 
     static func betSelection(fromInternalBet internalBet: SportRadarModels.Bet) -> BetSelection {
+
+        let state: BetState
+        switch internalBet.state {
+        case .opened: state = .opened
+        case .closed: state = .closed
+        case .settled: state = .settled
+        case .cancelled: state = .cancelled
+        case .undefined: state = .undefined
+        case .attempted: state = .attempted
+        case .allStates: state = .undefined
+        }
+
+        let result: BetResult
+        switch internalBet.result {
+        case .open: result = .open
+        case .won: result = .won
+        case .lost: result = .lost
+        case .drawn: result = .drawn
+        case .notSpecified: result = .notSpecified
+        case .void: result = .void
+        }
+
         return BetSelection(identifier: internalBet.identifier,
+                            state: state,
+                            result: result,
                             eventName: internalBet.eventName,
                             homeTeamName: internalBet.homeTeamName,
                             awayTeamName: internalBet.awayTeamName,
@@ -172,9 +196,37 @@ struct SportRadarModelMapper {
                                   homeTeamName: "",
                                   awayTeamName: "",
                                   marketName: "",
-                                  outcomeName: "")
+                                  outcomeName: "",
+                                  odd: .fraction(numerator: Int(betTicketSelection.priceUp) ?? 0,
+                                                 denominator: Int(betTicketSelection.priceDown) ?? 1))
     }
-    
+
+    //
+    // PlacedBetResponse
+    //
+    static func placedBetResponse(fromInternalPlacedBetResponse placedBetResponse: SportRadarModels.PlacedBetResponse) -> PlacedBetResponse {
+        let bets = placedBetResponse.bets.map(Self.placedBetEntry(fromInternalPlacedBetEntry:))
+        return PlacedBetResponse(identifier: placedBetResponse.identifier,
+                          bets: bets)
+    }
+
+    static func placedBetEntry(fromInternalPlacedBetEntry placedBetEntry: SportRadarModels.PlacedBetEntry) -> PlacedBetEntry {
+        let betLegs = placedBetEntry.betLegs.map(Self.placedBetLeg(fromInternalPlacedBetLeg:))
+        return PlacedBetEntry(identifier: placedBetEntry.identifier,
+                              potentialReturn: placedBetEntry.potentialReturn,
+                              placeStake: placedBetEntry.placeStake,
+                              betLegs: betLegs)
+    }
+
+    static func placedBetLeg(fromInternalPlacedBetLeg placedBetLeg: SportRadarModels.PlacedBetLeg) -> PlacedBetLeg {
+        return PlacedBetLeg(identifier: placedBetLeg.identifier,
+                            priceType: placedBetLeg.priceType,
+                            priceNumerator: placedBetLeg.priceNumerator,
+                            priceDenominator: placedBetLeg.priceDenominator)
+    }
+
+
+    //
     //  ServiceProvider ---> SportRadar
     static func internalBetSlip(fromBetslip betslip: BetSlip) -> SportRadarModels.BetSlip {
         return SportRadarModels.BetSlip(tickets: betslip.tickets.map(Self.internalBetTicket(fromBetTicket:)))

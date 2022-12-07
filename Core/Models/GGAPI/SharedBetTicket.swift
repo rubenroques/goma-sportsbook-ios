@@ -169,7 +169,8 @@ extension BetHistoryEntry {
 struct SharedBetTicketSelection: Codable, Hashable {
     
     let outcomeId: String
-    let status: String?
+    let status: BetSelectionStatus
+    let result: BetSelectionResult
     let priceValue: Double?
     let sportId: String?
     let sportName: String?
@@ -196,6 +197,7 @@ struct SharedBetTicketSelection: Codable, Hashable {
     enum CodingKeys: String, CodingKey {
         case outcomeId = "outcomeId"
         case status = "status"
+        case result = "result"
         case priceValue = "odds"
         case sportId = "sport_id"
         case sportName = "sport"
@@ -227,6 +229,7 @@ extension SharedBetTicketSelection {
     init(selection: BetHistoryEntrySelection) {
         self.init(outcomeId: selection.outcomeId,
                   status: selection.status,
+                  result: selection.result,
                   priceValue: selection.priceValue,
                   sportId: selection.sportId,
                   sportName: selection.sportName,
@@ -255,6 +258,7 @@ extension BetHistoryEntrySelection {
     init(sharedBetTicketSelection: SharedBetTicketSelection) {
         self.init(outcomeId: sharedBetTicketSelection.outcomeId,
                   status: sharedBetTicketSelection.status,
+                  result: sharedBetTicketSelection.result,
                   priceValue: sharedBetTicketSelection.priceValue,
                   sportId: sharedBetTicketSelection.sportId,
                   sportName: sharedBetTicketSelection.sportName,

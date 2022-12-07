@@ -103,17 +103,18 @@ class ChatTicketSelectionView: UIView {
         }
 
         if hasBetStatus {
-            if self.betHistoryEntrySelection.status == "WON" || self.betHistoryEntrySelection.status == "HALF_WON" {
+            switch self.betHistoryEntrySelection.result {
+            case .won, .halfWon:
                 self.betStatusView.backgroundColor = UIColor.App.myTicketsWon
                 self.betStatusLabel.text = localized("won")
-            }
-            else if self.betHistoryEntrySelection.status == "LOST" || self.betHistoryEntrySelection.status == "HALF_LOST" {
+            case .lost, .halfLost:
                 self.betStatusView.backgroundColor = UIColor.App.myTicketsLost
                 self.betStatusLabel.text = localized("lost")
-            }
-            else if self.betHistoryEntrySelection.status == "DRAW" {
+            case .drawn:
                 self.betStatusView.backgroundColor = UIColor.App.myTicketsOther
                 self.betStatusLabel.text = localized("draw")
+            case .undefined, .open:
+                self.hasBetStatus = false
             }
         }
         else {

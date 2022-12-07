@@ -88,7 +88,7 @@ struct OddConverter {
 //    }
 
     // swiftlint:disable identifier_name
-    private static func rationalApproximation(originalValue value: Double, withPrecision eps: Double = 1.0E-6) -> Rational {
+    static func rationalApproximation(originalValue value: Double, withPrecision eps: Double = 1.0E-6) -> Rational {
         var x = value-1
         var a = x.rounded(.down)
         var (h1, k1, h, k) = (1, 0, Int(a), 1)

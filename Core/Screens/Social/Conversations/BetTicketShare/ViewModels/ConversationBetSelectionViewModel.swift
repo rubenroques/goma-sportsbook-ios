@@ -185,7 +185,8 @@ class ConversationBetSelectionViewModel {
     }
 
     func loadOpenedTickets(page: Int) {
-
+        // TODO: ServiceProvider get My Bets
+/*
         self.isLoadingOpened.send(true)
 
         let openedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.opened, records: recordsPerPage, page: page)
@@ -212,10 +213,12 @@ class ConversationBetSelectionViewModel {
                 self?.reloadData()
             })
             .store(in: &cancellables)
+ */
     }
 
     func loadResolvedTickets(page: Int) {
-
+        // TODO: ServiceProvider get My Bets
+/*
         self.isLoadingResolved.send(true)
 
         let resolvedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.resolved, records: recordsPerPage, page: page)
@@ -244,10 +247,12 @@ class ConversationBetSelectionViewModel {
                 }
             })
             .store(in: &cancellables)
+ */
     }
 
     func loadWonTickets(page: Int) {
-
+        // TODO: ServiceProvider get My Bets
+/*
         self.isLoadingWon.send(true)
 
         let wonRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.won, records: recordsPerPage, page: page)
@@ -276,6 +281,8 @@ class ConversationBetSelectionViewModel {
                 }
             })
             .store(in: &cancellables)
+
+ */
 
     }
 

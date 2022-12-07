@@ -14,6 +14,10 @@ protocol BettingProvider {
     func getOpenBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError>
     func getResolvedBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError>
     func getWonBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError>
+
+    func getAllowedBetTypes(withBetTicketSelections betTicketSelections: [BetTicketSelection]) -> AnyPublisher<[BetType], ServiceProviderError>
     
     func calculateBetslipState(_ betslip: BetSlip)  -> AnyPublisher<BetslipState, ServiceProviderError>
+
+    func placeSingleBet(betTicketSelection: BetTicketSelection, stake: Double) -> AnyPublisher<PlacedBetResponse, ServiceProviderError>
 }
