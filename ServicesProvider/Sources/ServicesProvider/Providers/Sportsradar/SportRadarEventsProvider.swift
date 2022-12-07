@@ -36,6 +36,11 @@ class SportRadarEventsProvider: EventsProvider {
 
     private var eventsPaginators: [String: SportRadarEventsPaginator] = [:]
 
+    private var competitionEventsPublisher: [ContentIdentifier: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>] = [:]
+    //private var eventsPublishers: [TopicIdentifier: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>] = [:]
+
+
+
     //
     // Keep a reference for all the subscriptions. This allows the ServiceProvider to subscribe to the same content in two different app places
     private var activeSubscriptions: NSMapTable<ContentIdentifier, Subscription> = .init(keyOptions: .strongMemory , valueOptions: .weakMemory)
@@ -158,6 +163,59 @@ class SportRadarEventsProvider: EventsProvider {
         }
         else {
             return Fail(outputType: Bool.self, failure: ServiceProviderError.subscriptionNotFound).eraseToAnyPublisher()
+        }
+    }
+
+    func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+
+        // Get the session
+        guard
+            let sessionToken = socketConnector.token
+        else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+
+        // Create the contentIdentifier
+
+        let contentType = ContentType.eventGroup
+
+        let contentRoute = ContentRoute.eventGroup(marketGroupId: marketGroupId)
+
+        let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
+
+        if let publisher = self.competitionEventsPublisher[contentIdentifier], let subscription = self.activeSubscriptions.object(forKey: contentIdentifier) {
+            // We already have a publisher for this events and a subscription object for the caller to store
+            return publisher
+                .prepend(.connected(subscription: subscription))
+                .eraseToAnyPublisher()
+        }
+        else {
+            // We have neither a publisher nor a subscription object
+            let publisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
+
+            let subscription = Subscription(contentIdentifier: contentIdentifier, sessionToken: sessionToken.hash, unsubscriber: self)
+
+            let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentRoute: contentRoute)
+            let request = self.createSubscribeRequest(withHTTPBody: bodyData)
+
+            let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+                guard
+                    (error == nil),
+                    let httpResponse = response as? HTTPURLResponse,
+                    (200...299).contains(httpResponse.statusCode)
+                else {
+                    print("SportRadarEventsProvider: eventListBySportTypeDate - error on subscribe to topic")
+                    publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
+                    return
+                }
+                publisher.send(.connected(subscription: subscription))
+            }
+            sessionDataTask.resume()
+
+            self.activeSubscriptions.setObject(subscription, forKey: contentIdentifier)
+            self.competitionEventsPublisher[contentIdentifier] = publisher
+
+            return publisher.eraseToAnyPublisher()
         }
     }
 
@@ -319,6 +377,13 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
         }
     }
 
+    // Competition events
+    func eventGroups(forContentIdentifier identifier: ContentIdentifier, withEvents events: [EventsGroup]) {
+        if let publisher = self.competitionEventsPublisher[identifier] {
+            publisher.send(.contentUpdate(content: events))
+        }
+    }
+
 }
 
 /* REST API Events
@@ -348,7 +413,7 @@ extension SportRadarEventsProvider {
         return requestPublisher
     }
 
-    func getFieldWidget(eventId: String, isDarkTheme: Bool? = nil) -> AnyPublisher<FieldWidgetRenderData, ServiceProviderError> {
+    func getFieldWidget(eventId: String, isDarkTheme: Bool? = nil) -> AnyPublisher<FieldWidgetRenderDataType, ServiceProviderError> {
 
         var fieldWidgetFile = "field_widget_light.html"
 
@@ -356,25 +421,25 @@ extension SportRadarEventsProvider {
             fieldWidgetFile = "field_widget_dark.html"
         }
 
-        return self.getFieldWidgetId(eventId: eventId).flatMap({ fieldWidget -> AnyPublisher<FieldWidgetRenderData, ServiceProviderError> in
+        return self.getFieldWidgetId(eventId: eventId).flatMap({ fieldWidget -> AnyPublisher<FieldWidgetRenderDataType, ServiceProviderError> in
 
             let fileStringSplit = fieldWidgetFile.components(separatedBy: ".")
-
-            let bundleUrl = Bundle.main.url(forResource: fileStringSplit[0], withExtension: fileStringSplit[1])
 
             let filePath = Bundle.main.path(forResource: fileStringSplit[0], ofType: fileStringSplit[1])
             let contentData = FileManager.default.contents(atPath: filePath!)
             let emailTemplate = NSString(data: contentData!, encoding: String.Encoding.utf8.rawValue) as? String
             if let fieldWidgetId = fieldWidget.data,
-               let replacedHtmlContent = emailTemplate?.replacingOccurrences(of: "@eventId", with: fieldWidgetId) {
+               let replacedHtmlContent = emailTemplate?.replacingOccurrences(of: "@eventId", with: fieldWidgetId),
+               let bundleUrl = Bundle.main.url(forResource: fileStringSplit[0], withExtension: fileStringSplit[1]) {
 
-                let fieldWidgetRenderData = FieldWidgetRenderData(url: bundleUrl, htmlString: replacedHtmlContent)
+                //let fieldWidgetRenderData = FieldWidgetRenderData(url: bundleUrl, htmlString: replacedHtmlContent)
+                let fieldWidgetRenderDataType = FieldWidgetRenderDataType.htmlString(url: bundleUrl, htmlString: replacedHtmlContent)
 
-                return Just(fieldWidgetRenderData).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                return Just(fieldWidgetRenderDataType).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
 
             }
 
-            return Fail(outputType: FieldWidgetRenderData.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+            return Fail(outputType: FieldWidgetRenderDataType.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
 
         })
         .eraseToAnyPublisher()
@@ -411,6 +476,49 @@ extension SportRadarEventsProvider {
                 return Fail(outputType: [SportType].self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
             })
             .eraseToAnyPublisher()
+    }
+
+    func getSportRegions(sportId: String) -> AnyPublisher<SportNodeInfo, ServiceProviderError> {
+
+        let endpoint = SportRadarRestAPIClient.sportRegionsNavigationList(sportId: sportId)
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.SportNodeInfo>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+
+        return requestPublisher.map( { sportRadarResponse -> SportNodeInfo in
+            let sportNodeInfo = sportRadarResponse.data
+            let mappedSportNodeInfo = SportRadarModelMapper.sportNodeInfo(fromInternalSportNodeInfo:sportNodeInfo)
+            return mappedSportNodeInfo
+
+        }).eraseToAnyPublisher()
+
+    }
+
+    func getRegionCompetitions(regionId: String) -> AnyPublisher<SportRegionInfo, ServiceProviderError> {
+
+        let endpoint = SportRadarRestAPIClient.regionCompetitions(regionId: regionId)
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.SportRegionInfo>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+
+        return requestPublisher.map( { sportRadarResponse -> SportRegionInfo in
+            let sportRegionInfo = sportRadarResponse.data
+            let mappedSportRegionInfo = SportRadarModelMapper.sportRegionInfo(fromInternalSportRegionInfo: sportRegionInfo)
+            return mappedSportRegionInfo
+
+        }).eraseToAnyPublisher()
+
+    }
+
+    func getCompetitionMarketGroups(competitionId: String) -> AnyPublisher<SportCompetitionInfo, ServiceProviderError> {
+
+        let endpoint = SportRadarRestAPIClient.competitionMarketGroups(competitionId: competitionId)
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.SportCompetitionInfo>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { sportRadarResponse -> SportCompetitionInfo in
+            let sportCompetitionInfo = sportRadarResponse.data
+            let mappedSportCompetitionInfo = SportRadarModelMapper.sportCompetitionInfo(fromInternalSportCompetitionInfo: sportCompetitionInfo)
+            return mappedSportCompetitionInfo
+        })
+        .eraseToAnyPublisher()
     }
 }
 
@@ -719,34 +827,3 @@ extension SportRadarEventsProvider {
     }
 
 }
-
-public struct EventMarket {
-    public var id: String
-    public var name: String
-    public var marketIds: [String]
-
-}
-
-public struct AvailableMarket {
-    public var marketId: String
-    public var marketGroupId: String
-    public var market: Market
-}
-
-public struct MarketGroup {
-
-    public var type: String
-    public var id: String
-    public var groupKey: String?
-    public var translatedName: String?
-    public var position: Int?
-    public var isDefault: Bool?
-    public var numberOfMarkets: Int?
-    public var markets: [Market]?
-}
-
-public struct FieldWidgetRenderData {
-    public var url: URL?
-    public var htmlString: String?
-}
-

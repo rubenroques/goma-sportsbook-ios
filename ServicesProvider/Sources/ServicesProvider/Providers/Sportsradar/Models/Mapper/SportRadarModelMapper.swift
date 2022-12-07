@@ -298,6 +298,55 @@ struct SportRadarModelMapper {
         let validChars = Set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLKMNOPQRSTUVWXYZ1234567890")
         return string.filter { validChars.contains($0) }.lowercased()
     }
+
+    static func sportNodeInfo(fromInternalSportNodeInfo sportNodeInfo: SportRadarModels.SportNodeInfo) -> SportNodeInfo {
+        let sportRegionNodes = sportNodeInfo.regionNodes.map(self.sportNodeRegion(fromInternalSportNodeRegion:))
+
+        let sportNodeInfo = SportNodeInfo(id: sportNodeInfo.id, regionNodes: sportRegionNodes, defaultOrder: sportNodeInfo.defaultOrder)
+
+        return sportNodeInfo
+    }
+
+    static func sportNodeRegion(fromInternalSportNodeRegion sportNodeRegion: SportRadarModels.SportRegion) -> SportRegion {
+
+        let sportRegionNode = SportRegion(id: sportNodeRegion.id, name: sportNodeRegion.name)
+
+        return sportRegionNode
+    }
+
+    static func sportRegionInfo(fromInternalSportRegionInfo sportRegionInfo: SportRadarModels.SportRegionInfo) -> SportRegionInfo {
+        let regionCompetitionNodes = sportRegionInfo.competitionNodes.map(self.regionCompetitionNode(fromInternalSportCompetition:))
+
+        let sportRegionInfo = SportRegionInfo(id: sportRegionInfo.id, name: sportRegionInfo.name, competitionNodes: regionCompetitionNodes)
+
+        return sportRegionInfo
+    }
+
+    static func regionCompetitionNode(fromInternalSportCompetition sportCompetition: SportRadarModels.SportCompetition) -> SportCompetition {
+
+        let sportCompetition = SportCompetition(id: sportCompetition.id, name: sportCompetition.name)
+
+        return sportCompetition
+    }
+
+    static func sportCompetitionInfo(fromInternalSportCompetitionInfo sportCompetitionInfo: SportRadarModels.SportCompetitionInfo) -> SportCompetitionInfo {
+        let marketGroups = sportCompetitionInfo.marketGroups.map(self.competitionMarketGroup(fromInternalSportCompetitionMarketGroup:))
+
+        let sportCompetitionInfo = SportCompetitionInfo(id: sportCompetitionInfo.id,
+                                                        name: sportCompetitionInfo.name,
+                                                        marketGroups: marketGroups,
+                                                        numberOutrightEvents: sportCompetitionInfo.numberOutrightEvents,
+                                                        numberOutrightMarkets: sportCompetitionInfo.numberOutrightMarkets)
+
+        return sportCompetitionInfo
+    }
+
+    static func competitionMarketGroup(fromInternalSportCompetitionMarketGroup sportCompetitionMarketGroup: SportRadarModels.SportCompetitionMarketGroup) -> SportCompetitionMarketGroup {
+
+        let sportCompetitionMarketGroup = SportCompetitionMarketGroup(id: sportCompetitionMarketGroup.id, name: sportCompetitionMarketGroup.name)
+
+        return sportCompetitionMarketGroup
+    }
     // ==========================================
 
 }

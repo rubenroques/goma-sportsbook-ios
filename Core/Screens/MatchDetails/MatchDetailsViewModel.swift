@@ -37,7 +37,7 @@ class MatchDetailsViewModel: NSObject {
     private var goalsSubscription: AnyCancellable?
 
     var shouldRenderFieldWidget: CurrentValueSubject<Bool, Never> = .init(false)
-    var fieldWidgetRenderData: FieldWidgetRenderData?
+    var fieldWidgetRenderDataType: FieldWidgetRenderDataType?
 
     var match: Match? {
         switch matchPublisher.value {
@@ -230,10 +230,9 @@ class MatchDetailsViewModel: NSObject {
                     print("FIELD WIDGET RENDER DATA ERROR: \(error)")
 
                 }
-            }, receiveValue: { [weak self] fieldWidget in
-                print("FIELD WIDGET RENDER DATA RESPONSE: \(fieldWidget)")
+            }, receiveValue: { [weak self] fieldWidgetType in
 
-                self?.fieldWidgetRenderData = fieldWidget
+                self?.fieldWidgetRenderDataType = fieldWidgetType
                 self?.shouldRenderFieldWidget.send(true)
 
             })

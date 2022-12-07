@@ -882,20 +882,24 @@ class MatchDetailsViewController: UIViewController {
 
             // let request = URLRequest(url: URL(string: "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)")!)
 
-            if let fieldWidget = self.viewModel.fieldWidgetRenderData {
+            if let fieldWidget = self.viewModel.fieldWidgetRenderDataType {
                 self.shouldShowLiveFieldWebView = true
                 self.isLiveFieldReady = false
 
                 // let urlString = "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)"
 
-                if let htmlString = fieldWidget.htmlString,
-                   let url = fieldWidget.url {
-                    self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
-                }
-                else if let url = fieldWidget.url {
+                switch fieldWidget {
+                case .url(let url):
+
                     let urlRequest = URLRequest(url: url)
                     self.matchFieldWebView.load(urlRequest)
+
+                case .htmlString(let url, let htmlString):
+
+                    self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
+
                 }
+                
             }
             else {
                 self.shouldShowLiveFieldWebView = false
@@ -906,18 +910,22 @@ class MatchDetailsViewController: UIViewController {
             // self.shouldShowLiveFieldWebView = false
 
             // TEST
-            if let fieldWidget = self.viewModel.fieldWidgetRenderData {
+            if let fieldWidget = self.viewModel.fieldWidgetRenderDataType {
                 self.shouldShowLiveFieldWebView = true
                 self.isLiveFieldReady = false
 
-                if let htmlString = fieldWidget.htmlString,
-                   let url = fieldWidget.url {
-                    self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
-                }
-                else if let url = fieldWidget.url {
+                switch fieldWidget {
+                case .url(let url):
+
                     let urlRequest = URLRequest(url: url)
                     self.matchFieldWebView.load(urlRequest)
+
+                case .htmlString(let url, let htmlString):
+
+                    self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
+
                 }
+
             }
             else {
                 self.shouldShowLiveFieldWebView = false

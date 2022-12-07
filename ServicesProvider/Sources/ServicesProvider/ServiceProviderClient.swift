@@ -137,6 +137,16 @@ extension ServicesProviderClient {
         return eventsProvider.subscribeMatchDetails(matchId: matchId)
     }
 
+    public func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeCompetitionMatches(forMarketGroupId: marketGroupId)
+    }
+
 }
 
 extension ServicesProviderClient {
@@ -159,7 +169,7 @@ extension ServicesProviderClient {
         return eventsProvider.getFieldWidgetId(eventId: eventId)
     }
 
-    public func getFieldWidget(eventId: String, isDarkTheme: Bool? = nil) -> AnyPublisher<FieldWidgetRenderData, ServiceProviderError> {
+    public func getFieldWidget(eventId: String, isDarkTheme: Bool? = nil) -> AnyPublisher<FieldWidgetRenderDataType, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
@@ -176,6 +186,36 @@ extension ServicesProviderClient {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
         return eventsProvider.getAvailableSportTypes(initialDate: initialDate, endDate: endDate)
+    }
+
+    public func getSportRegions(sportId: String) -> AnyPublisher<SportNodeInfo, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getSportRegions(sportId: sportId)
+    }
+
+    public func getRegionCompetitions(regionId: String) -> AnyPublisher<SportRegionInfo, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getRegionCompetitions(regionId: regionId)
+    }
+
+    public func getCompetitionMarketGroups(competitionId: String) -> AnyPublisher<SportCompetitionInfo, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getCompetitionMarketGroups(competitionId: competitionId)
     }
 }
 

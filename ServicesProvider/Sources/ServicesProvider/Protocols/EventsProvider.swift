@@ -19,6 +19,8 @@ protocol EventsProvider {
 
     func requestPreLiveMatchesNextPage(forSportType sportType: SportType, initialDate: Date?, endDate: Date?, sortType: EventListSort) -> AnyPublisher<Bool, ServiceProviderError>
 
+    func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
+
     //
     func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
 
@@ -34,5 +36,12 @@ protocol EventsProvider {
     
     func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>
     
-    func getFieldWidget(eventId: String, isDarkTheme: Bool?) -> AnyPublisher<FieldWidgetRenderData, ServiceProviderError>
+    func getFieldWidget(eventId: String, isDarkTheme: Bool?) -> AnyPublisher<FieldWidgetRenderDataType, ServiceProviderError>
+
+    func getSportRegions(sportId: String) -> AnyPublisher<SportNodeInfo, ServiceProviderError>
+
+    func getRegionCompetitions(regionId: String) -> AnyPublisher<SportRegionInfo, ServiceProviderError>
+
+    func getCompetitionMarketGroups(competitionId: String) -> AnyPublisher<SportCompetitionInfo, ServiceProviderError>
+
 }

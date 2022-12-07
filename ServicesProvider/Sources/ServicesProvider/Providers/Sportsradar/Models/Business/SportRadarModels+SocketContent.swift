@@ -22,6 +22,8 @@ extension SportRadarModels {
         case preLiveSports(sportsTypes: [SportType]) // TODO: Task André - Deveria ser um modelo da Sportradar, SportRadarModels.SportType
         
         case eventDetails(eventDetails: [SportRadarModels.Event])
+        case eventGroup(contentIdentifier: ContentIdentifier, events: [SportRadarModels.Event])
+
     }
 
     struct RestResponse<T: Codable>: Codable {
@@ -118,6 +120,16 @@ extension SportRadarModels {
                         else {
 
                             content = .eventDetails(eventDetails: [])
+                        }
+                    case .eventGroup:
+                        if contentContainer.contains(.change) {
+                            let marketGroup: SportRadarModels.CompetitionMarketGroup = try contentContainer.decode(SportRadarModels.CompetitionMarketGroup.self, forKey: .change)
+
+                            let events = marketGroup.events
+                            content = .eventGroup(contentIdentifier: contentIdentifier, events: events)
+                        }
+                        else {
+                            content = .eventGroup(contentIdentifier: contentIdentifier, events: [])
                         }
                     }
                     self = .contentChanges(content: content)

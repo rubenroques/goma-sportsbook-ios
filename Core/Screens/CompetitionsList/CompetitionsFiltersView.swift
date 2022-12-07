@@ -35,6 +35,10 @@ class CompetitionsFiltersView: UIView, NibLoadable {
 
     var selectedIds: CurrentValueSubject<Set<String>, Never> = .init([])
     var expandedCellsDictionary: [String: Bool] = [:]
+    var loadedExpandedCells: [String] = []
+
+    var shouldLoadCompetitions: ((String) -> Void)?
+    var expandCompetitionLoaded: String?
 
     var isLoading: Bool = false {
         didSet {
@@ -49,18 +53,55 @@ class CompetitionsFiltersView: UIView, NibLoadable {
     
     var competitions: [CompetitionFilterSectionViewModel] = [] {
         didSet {
-            self.expandedCellsDictionary = [:]
-            self.competitions.forEach({ competition in
-                self.expandedCellsDictionary[competition.id] = (competition.id == "0") // Only popular competition will be true, to appear opened by default
-            })
-            self.searchBarView.text = nil
-            self.filteredCompetitions = competitions
+            if self.loadedExpandedCells.isEmpty {
+                self.expandedCellsDictionary = [:]
+                self.competitions.forEach({ competition in
+                    //self.expandedCellsDictionary[competition.id] = (competition.id == "0") // Only popular competition will be true, to appear opened by default
+                    self.expandedCellsDictionary[competition.id] = (competition.id == self.competitions.first?.id)
+
+                    if self.expandedCellsDictionary[competition.id] == true {
+                        self.loadedExpandedCells.append(competition.id)
+                    }
+                })
+
+                self.searchBarView.text = nil
+            }
+            else {
+                self.competitions.forEach({ competition in
+                    if self.expandedCellsDictionary[competition.id] == nil {
+                        self.expandedCellsDictionary[competition.id] = true
+                        self.loadedExpandedCells.append(competition.id)
+                    }
+                    else {
+                        if let expandCompetitionLoaded = self.expandCompetitionLoaded,
+                           competition.id == expandCompetitionLoaded {
+                            self.expandedCellsDictionary[competition.id] = true
+
+                        }
+                        else {
+                            self.expandedCellsDictionary[competition.id] = false
+
+                        }
+
+                    }
+
+                })
+
+            }
+            if self.searchBarView.text != "" {
+                self.applyFilters()
+            }
+            else {
+                self.filteredCompetitions = competitions
+            }
         }
     }
     var filteredCompetitions: [CompetitionFilterSectionViewModel] = [] {
         didSet {
             let selectedCells = tableView.indexPathsForSelectedRows ?? []
+
             self.reloadTableView()
+
             for selectedCellIndexPath in selectedCells {
                 tableView.selectRow(at: selectedCellIndexPath, animated: false, scrollPosition: .none)
             }
@@ -331,6 +372,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
     func resetSelection() {
         self.selectedIds.send([])
         self.competitionSelectedIds = [:]
+        self.loadedExpandedCells = []
 
         self.reloadTableView()
     }
@@ -501,6 +543,12 @@ extension CompetitionsFiltersView: CollapsibleTableViewHeaderDelegate {
         }
         else {
             expandedCellsDictionary[sectionIdentifier] = true
+        }
+
+        if !self.loadedExpandedCells.contains(sectionIdentifier) {
+            self.loadedExpandedCells.append(sectionIdentifier)
+            self.shouldLoadCompetitions?(sectionIdentifier)
+            self.expandCompetitionLoaded = sectionIdentifier
         }
 
         self.redrawForSection(sectionIdentifier)

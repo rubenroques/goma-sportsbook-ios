@@ -17,6 +17,9 @@ enum SportRadarRestAPIClient {
     case fieldWidgetId(eventId: String)
     case sportsBoNavigationList
     case sportsScheduledList(dateRange: String)
+    case sportRegionsNavigationList(sportId: String)
+    case regionCompetitions(regionId: String)
+    case competitionMarketGroups(competitionId: String)
 }
 
 extension SportRadarRestAPIClient: Endpoint {
@@ -37,6 +40,12 @@ extension SportRadarRestAPIClient: Endpoint {
             return "/services/content/get"
         case .sportsScheduledList:
             return "/services/content/get"
+        case .sportRegionsNavigationList:
+            return "/services/content/get"
+        case .regionCompetitions:
+            return "/services/content/get"
+        case .competitionMarketGroups:
+            return "/services/content/get"
         }
     }
 
@@ -48,6 +57,9 @@ extension SportRadarRestAPIClient: Endpoint {
         case .fieldWidgetId: return nil
         case .sportsBoNavigationList: return nil
         case .sportsScheduledList: return nil
+        case .sportRegionsNavigationList: return nil 
+        case .regionCompetitions: return nil
+        case .competitionMarketGroups: return nil
         }
     }
 
@@ -59,6 +71,9 @@ extension SportRadarRestAPIClient: Endpoint {
         case .fieldWidgetId: return .post
         case .sportsBoNavigationList: return .post
         case .sportsScheduledList: return .post
+        case .sportRegionsNavigationList: return .post 
+        case .regionCompetitions: return .post
+        case .competitionMarketGroups: return .post
         }
     }
 
@@ -113,6 +128,52 @@ extension SportRadarRestAPIClient: Endpoint {
                         }
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
+        case .sportRegionsNavigationList(let sportId):
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "boNavigationList",
+                                "id": "1355/\(sportId)"
+                            },
+                            "clientContext": {
+                                "language": "UK",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+        case .regionCompetitions(let regionId):
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "boNavigationList",
+                                "id": "1355/\(regionId)"
+                            },
+                            "clientContext": {
+                                "language": "UK",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
+        case .competitionMarketGroups(let competitionId):
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "boNavigationList",
+                                "id": "1355/\(competitionId)"
+                            },
+                            "clientContext": {
+                                "language": "UK",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
         default:
             return nil
         }
@@ -133,6 +194,12 @@ extension SportRadarRestAPIClient: Endpoint {
         case .sportsBoNavigationList:
             return SportRadarConstants.bettingHostname
         case .sportsScheduledList:
+            return SportRadarConstants.bettingHostname
+        case .sportRegionsNavigationList:
+            return SportRadarConstants.bettingHostname
+        case .regionCompetitions:
+            return SportRadarConstants.bettingHostname
+        case .competitionMarketGroups:
             return SportRadarConstants.bettingHostname
         }
     }
@@ -158,6 +225,12 @@ extension SportRadarRestAPIClient: Endpoint {
         case .sportsBoNavigationList:
             return defaultHeaders
         case .sportsScheduledList(_):
+            return defaultHeaders
+        case .sportRegionsNavigationList:
+            return defaultHeaders
+        case .regionCompetitions:
+            return defaultHeaders
+        case .competitionMarketGroups:
             return defaultHeaders
         }
     }
@@ -215,15 +288,4 @@ extension SportRadarRestAPIClient {
         }
     }
 
-}
-
-// TODO: TASK André - Estes modelos estão no sitio errado
-public struct FieldWidget: Codable {
-    public var data: String?
-    public var version: Int?
-
-    enum CodingKeys: String, CodingKey {
-        case data = "data"
-        case version = "version"
-    }
 }

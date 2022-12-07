@@ -7,6 +7,7 @@
 
 import Foundation
 import GameController
+import ServicesProvider
 
 struct CompetitionGroup {
     var id: String
@@ -26,13 +27,15 @@ struct Competition {
     var matches: [Match]
     var venue: Location?
     var outrightMarkets: Int
+    var competitionInfo: SportCompetitionInfo?
 
-    init(id: String, name: String, matches: [Match] = [], venue: Location? = nil, outrightMarkets: Int) {
+    init(id: String, name: String, matches: [Match] = [], venue: Location? = nil, outrightMarkets: Int, competitionInfo: SportCompetitionInfo? = nil) {
         self.id = id
         self.name = name
         self.matches = matches
         self.venue = venue
         self.outrightMarkets = outrightMarkets
+        self.competitionInfo = competitionInfo
     }
 }
 

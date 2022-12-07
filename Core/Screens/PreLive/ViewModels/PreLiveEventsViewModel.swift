@@ -72,6 +72,11 @@ class PreLiveEventsViewModel: NSObject {
 
     var isUserLoggedPublisher: CurrentValueSubject<Bool, Never> = .init(true)
 
+    var selectedCompetitionsInfoPublisher: CurrentValueSubject<[String: SportCompetitionInfo], Never> = .init([:])
+    var expectedCompetitionsPublisher: CurrentValueSubject<Int, Never> = .init(0)
+
+    var competitionsMatchesSubscriptions: CurrentValueSubject<[String: SportCompetitionInfo], Never> = .init([:])
+
     //
     // Private vars
     //
@@ -141,6 +146,9 @@ class PreLiveEventsViewModel: NSObject {
 
         }
     }
+
+    var sportRegionsPublisher: CurrentValueSubject<[SportRegion], Never> = .init([])
+    var regionCompetitionsPublisher: CurrentValueSubject<[String: [SportCompetition]], Never> = .init([:])
     
     private var cancellables = Set<AnyCancellable>()
     private var subscriptions = Set<ServicesProvider.Subscription>()
@@ -189,6 +197,7 @@ class PreLiveEventsViewModel: NSObject {
         if let competitionsMatchesRegister = self.competitionsMatchesRegister {
             Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: competitionsMatchesRegister)
         }
+
     }
 
     func setupCallbacks() {
@@ -277,6 +286,64 @@ class PreLiveEventsViewModel: NSObject {
             })
             .store(in: &cancellables)
 
+        Publishers.CombineLatest(self.sportRegionsPublisher, self.regionCompetitionsPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] sportRegions, regionCompetitions in
+
+                if sportRegions.isNotEmpty && regionCompetitions.isNotEmpty {
+                    self?.setupCompetitionGroups()
+                }
+            })
+            .store(in: &cancellables)
+
+        Publishers.CombineLatest(self.expectedCompetitionsPublisher, self.selectedCompetitionsInfoPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] expectedCompetitions, selectedCompetitionsInfo in
+
+                if selectedCompetitionsInfo.count == expectedCompetitions {
+                    print("ALL COMPETITIONS DATA")
+                    self?.processCompetitionsInfo()
+                }
+            })
+            .store(in: &cancellables)
+
+        self.competitionsMatchesSubscriptions
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] competitionMatchesSubscriptions in
+
+                if competitionMatchesSubscriptions.count == self?.expectedCompetitionsPublisher.value {
+                    print("ALL COMPETITIONS SUBSCRIPTIONS")
+
+                    self?.isLoadingCompetitionMatches.send(false)
+                    self?.isLoadingEvents.send(false)
+                    self?.updateContentList()
+                }
+            })
+            .store(in: &cancellables)
+
+    }
+
+    func processCompetitionsInfo() {
+
+        let competitionInfos = self.selectedCompetitionsInfoPublisher.value.map({$0.value})
+
+        self.competitions = []
+        self.competitionsDataSource.competitions = []
+
+        for competitionInfo in competitionInfos {
+
+            if let marketGroup = competitionInfo.marketGroups.filter({
+                $0.name == "Main"
+            }).first {
+                self.subscribeCompetitionMatches(forMarketGroupId: marketGroup.id, competitionInfo: competitionInfo)
+
+            }
+            else {
+                self.processCompetitionOutrights(competitionInfo: competitionInfo)
+                //self.competitionsMatchesSubscriptions.value[competitionInfo.id] = competitionInfo
+            }
+            //self.subscribeCompetitionMatches(forMarketGroupId: competitionInfo.id, competitionInfo: competitionInfo)
+        }
     }
 
     func fetchData() {
@@ -687,25 +754,308 @@ class PreLiveEventsViewModel: NSObject {
         self.isLoadingPopularList.send(false)
     }
 
+    func getFirstRegionCompetitions() {
+        guard let firstRegion = self.sportRegionsPublisher.value.first else {return}
+
+        Env.servicesProvider.getRegionCompetitions(regionId: firstRegion.id)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("REGION COMPETITION ERROR: \(error)")
+                }
+            }, receiveValue: { [weak self] sportRegionInfo in
+                self?.regionCompetitionsPublisher.value[sportRegionInfo.id] = sportRegionInfo.competitionNodes
+
+            })
+            .store(in: &cancellables)
+    }
+
     func fetchCompetitionsFilters() {
 
         // EM TEMP SHUTDOWN
-        self.competitions = []
-        self.popularOutrightCompetitions = []
+//        self.competitions = []
+//        self.popularOutrightCompetitions = []
         self.isLoadingCompetitionGroups.send(false)
+        self.isLoadingEvents.send(false)
         self.updateContentList()
 
+        guard let sportNumericId = self.selectedSport.numericId else { return }
+
+        Env.servicesProvider.getSportRegions(sportId: sportNumericId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("SPORT REGION FAILURE: \(error)")
+                }
+            }, receiveValue: { [weak self] response in
+                let sportRegions = response.regionNodes
+
+                self?.sportRegionsPublisher.send(sportRegions)
+                self?.getFirstRegionCompetitions()
+            })
+            .store(in: &cancellables)
+
+//        let language = "en"
+//        let sportId = self.selectedSport.id
+//        let shouldShowEventCategory = self.selectedSport.showEventCategory
+//
+//        let popularTournamentsPublisher = Env.everyMatrixClient.manager
+//            .getModel(router: TSRouter.getCustomTournaments(language: language, sportId: sportId),
+//                      decodingType: EveryMatrixSocketResponse<EveryMatrix.Tournament>.self)
+//            .eraseToAnyPublisher()
+//
+//        if let tournamentsRegister = tournamentsRegister {
+//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: tournamentsRegister)
+//        }
+//
+//        self.tournamentsPublisher = Env.everyMatrixClient.manager
+//            .registerOnEndpoint(TSRouter.tournamentsPublisher(operatorId: Env.appSession.operatorId,
+//                                                              language: language,
+//                                                              sportId: sportId),
+//                      decodingType: EveryMatrixSocketResponse<EveryMatrix.Tournament>.self)
+//            .handleEvents(receiveCompletion: { completion in
+//                print("TournamentsPublisher completion \(completion)")
+//            })
+//            .map({ [weak self] (subscriptionContent: TSSubscriptionContent<EveryMatrixSocketResponse<EveryMatrix.Tournament>>) -> [EveryMatrix.Tournament]? in
+//                if case .connect(let publisherIdentifiable) = subscriptionContent {
+//                    self?.tournamentsRegister = publisherIdentifiable
+//                }
+//                else if case let .initialContent(initialDumpContent) = subscriptionContent {
+//                    return initialDumpContent.records ?? []
+//                }
+//                return nil
+//            })
+//            .compactMap({$0})
+//            .eraseToAnyPublisher()
+//
+//        if shouldShowEventCategory {
+//            if let locationsRegister = locationsRegister {
+//                Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: locationsRegister)
+//            }
+//
+//            self.locationsPublisher = Env.everyMatrixClient.manager
+//                .registerOnEndpoint(TSRouter.eventCategoryBySport(operatorId: Env.appSession.operatorId,
+//                                                                language: language,
+//                                                                sportId: sportId),
+//                                    decodingType: EveryMatrixSocketResponse<EveryMatrix.EventCategory>.self)
+//                .handleEvents(receiveCompletion: { completion in
+//                    print("EventCategoryBySport completion \(completion)")
+//                })
+//                .map({ [weak self] (subscriptionContent: TSSubscriptionContent<EveryMatrixSocketResponse<EveryMatrix.EventCategory>>) -> [EveryMatrix.Location]? in
+//
+//                    if case .connect(let publisherIdentifiable) = subscriptionContent {
+//                        self?.locationsRegister = publisherIdentifiable
+//                    }
+//                    else if case let .initialContent(initialDumpContent) = subscriptionContent {
+//
+//                        let eventCategoryData = initialDumpContent.records ?? []
+//                        let migratedLocation = eventCategoryData.map { eventCategory in
+//                            return EveryMatrix.Location.init(id: eventCategory.id,
+//                                                             type: "",
+//                                                             typeId: nil,
+//                                                             name: eventCategory.name,
+//                                                             shortName: eventCategory.shortName,
+//                                                             code: nil)
+//                        }
+//                        return migratedLocation
+//                    }
+//                    return nil
+//                })
+//                .compactMap({$0})
+//                .eraseToAnyPublisher()
+//        }
+//        else {
+//            if let locationsRegister = locationsRegister {
+//                Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: locationsRegister)
+//            }
+//
+//            self.locationsPublisher = Env.everyMatrixClient.manager
+//                .registerOnEndpoint(TSRouter.locationsPublisher(operatorId: Env.appSession.operatorId,
+//                                                                language: language,
+//                                                                sportId: sportId),
+//                                    decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
+//                .handleEvents(receiveCompletion: { completion in
+//                    print("LocationsPublisher completion \(completion)")
+//                })
+//                .map({ [weak self] (subscriptionContent: TSSubscriptionContent<EveryMatrixSocketResponse<EveryMatrix.Location>>) -> [EveryMatrix.Location]? in
+//                    if case .connect(let publisherIdentifiable) = subscriptionContent {
+//                        self?.locationsRegister = publisherIdentifiable
+//                    }
+//                    else if case let .initialContent(initialDumpContent) = subscriptionContent {
+//                        return initialDumpContent.records ?? []
+//                    }
+//                    return nil
+//                })
+//                .compactMap({$0})
+//                .eraseToAnyPublisher()
+//
+//        }
+//
+//        guard
+//            let locationsPublisher = self.locationsPublisher,
+//            let tournamentsPublisher = self.tournamentsPublisher
+//        else {
+//            return
+//        }
+//
+//        self.competitionsFilterPublisher?.cancel()
+//        self.competitionsFilterPublisher = nil
+//
+//        self.competitionsFilterPublisher = Publishers.Zip3(popularTournamentsPublisher, tournamentsPublisher, locationsPublisher)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure:
+//                    print("Error retrieving data!")
+//                case .finished:
+//                    print("Data retrieved!")
+//                }
+//
+//                self?.isLoadingCompetitionGroups.send(false)
+//
+//                self?.competitionsFilterPublisher?.cancel()
+//                self?.competitionsFilterPublisher = nil
+//
+//                if let locationsRegister = self?.locationsRegister {
+//                    Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: locationsRegister)
+//                }
+//
+//                if let tournamentsRegister = self?.tournamentsRegister {
+//                    Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: tournamentsRegister)
+//                }
+//
+//            }, receiveValue: { [weak self] popularTournaments, tournaments, locations in
+//                Env.everyMatrixStorage.storePopularTournaments(tournaments: popularTournaments.records ?? [])
+//                Env.everyMatrixStorage.storeTournaments(tournaments: tournaments)
+//                Env.everyMatrixStorage.storeLocations(locations: locations)
+//
+//                self?.setupCompetitionGroups()
+//            })
+        //
+        //
     }
 
     func fetchCompetitionsMatchesWithIds(_ ids: [String]) {
 
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
 
-        self.competitionsDataSource.competitions = []
-        self.competitions = []
-        self.filteredOutrightCompetitionsDataSource.outrightCompetitions = []
-        self.isLoadingCompetitionMatches.send(false)
+        if ids.isEmpty {
+            self.competitions = []
+            self.competitionsDataSource.competitions = []
+            self.updateContentList()
+            self.isLoadingCompetitionMatches.send(false)
+            self.isLoadingEvents.send(false)
+        }
+        else {
+            self.isLoadingCompetitionMatches.send(true)
+            self.isLoadingEvents.send(true)
+        }
 
+        self.selectedCompetitionsInfoPublisher.value = [:]
+        self.competitionsMatchesSubscriptions.value = [:]
+
+        self.expectedCompetitionsPublisher.send(ids.count)
+
+        for competitionId in ids {
+            Env.servicesProvider.getCompetitionMarketGroups(competitionId: competitionId)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+                    switch completion {
+                    case .finished:
+                        ()
+                    case .failure(let error):
+                        print("COMPETITION INFO ERROR: \(error)")
+                        self?.selectedCompetitionsInfoPublisher.value[competitionId] = nil
+                    }
+
+                }, receiveValue: { [weak self] competitionInfo in
+
+                    self?.selectedCompetitionsInfoPublisher.value[competitionInfo.id] = competitionInfo
+
+                })
+                .store(in: &cancellables)
+        }
+
+//        self.competitionsMatchesPublisher = Env.serviceProvider.subscribeCompetitionMatches(forSportType: sportType)
+//            .sink(receiveCompletion: { completion in
+//                print("Env.serviceProvider.subscribeCompetitionMatches completed \(completion)")
+//            }, receiveValue: { (subscribableContent: SubscribableContent<[EventsGroup]>) in
+//                print("Env.serviceProvider.subscribeCompetitionMatches value \(subscribableContent)")
+//                switch subscribableContent {
+//                case .connected:
+//                    print("Connected to ws")
+//                case .contentUpdate(let eventsGroups):
+//                    self.competitions = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups)
+//                    self.competitionsDataSource.competitions = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups)
+//                    self.filteredOutrightCompetitionsDataSource.outrightCompetitions = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups)
+//                    self.isLoadingCompetitionMatches.send(false)
+//                    self.updateContentList()
+//                case .disconnected:
+//                    print("Disconnected from ws")
+//                }
+//            })
+
+//        self.competitionsDataSource.competitions = []
+//        self.competitions = []
+//        self.filteredOutrightCompetitionsDataSource.outrightCompetitions = []
+        //self.isLoadingCompetitionMatches.send(false)
+
+    }
+
+    func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String, competitionInfo: SportCompetitionInfo) {
+
+        Env.servicesProvider.subscribeCompetitionMatches(forMarketGroupId: marketGroupId)
+        .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
+            switch completion {
+            case .finished:
+                ()
+            case .failure:
+                print("SUBSCRIPTION COMPETITION MATCHES ERROR")
+            }
+        } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
+            switch subscribableContent {
+            case .connected(let subscription):
+                self?.subscriptions.insert(subscription)
+            case .contentUpdate(let eventsGroups):
+                let matches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+                self?.processCompetitionMatches(matches: matches, competitionInfo: competitionInfo)
+            case .disconnected:
+                ()
+            }
+        }
+        .store(in: &cancellables)
+    }
+
+    private func processCompetitionMatches(matches: [Match], competitionInfo: SportCompetitionInfo) {
+
+        let newCompetition = Competition(id: competitionInfo.id,
+                                         name: competitionInfo.name,
+                                         matches: matches,
+                                         outrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
+        competitionInfo: competitionInfo)
+
+        self.competitions.append(newCompetition)
+        self.competitionsDataSource.competitions = self.competitions
+        self.competitionsMatchesSubscriptions.value[competitionInfo.id] = competitionInfo
+
+    }
+
+    private func processCompetitionOutrights(competitionInfo: SportCompetitionInfo) {
+        let newCompetition = Competition(id: competitionInfo.id,
+                                         name: competitionInfo.name,
+                                         matches: [],
+                                         outrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
+        competitionInfo: competitionInfo)
+
+        self.competitions.append(newCompetition)
+        self.competitionsDataSource.competitions = self.competitions
+        self.competitionsMatchesSubscriptions.value[competitionInfo.id] = competitionInfo
     }
 
     //
@@ -781,67 +1131,95 @@ class PreLiveEventsViewModel: NSObject {
 
     private func setupCompetitionGroups() {
 
-        let shouldShowEventCategory = self.selectedSport.showEventCategory
+//        let shouldShowEventCategory = self.selectedSport.showEventCategory
+//
+//        var addedCompetitionIds: [String] = []
+//
+//        var popularCompetitions = [Competition]()
+//        for popularCompetition in Env.everyMatrixStorage.popularTournaments.values where (popularCompetition.sportId ?? "") == self.selectedSport.id {
+//
+//            let competition = Competition(id: popularCompetition.id,
+//                                          name: popularCompetition.name ?? "",
+//                                          outrightMarkets: popularCompetition.numberOfOutrightMarkets ?? 0)
+//            addedCompetitionIds.append(popularCompetition.id)
+//            popularCompetitions.append(competition)
+//        }
+//
+//        let popularCompetitionGroup = CompetitionGroup(id: "0",
+//                                                       name: localized("popular_competitions"),
+//                                                       aggregationType: CompetitionGroup.AggregationType.popular,
+//                                                       competitions: popularCompetitions)
+//        var popularCompetitionGroups = [popularCompetitionGroup]
+//
+//        var competitionsGroups = [CompetitionGroup]()
+//        for location in Env.everyMatrixStorage.locations.values {
+//
+//            var locationCompetitions = [Competition]()
+//            var tournamentIds = (Env.everyMatrixStorage.tournamentsForLocation[location.id] ?? [])
+//
+//            if shouldShowEventCategory {
+//                tournamentIds = (Env.everyMatrixStorage.tournamentsForCategory[location.id] ?? [])
+//            }
+//
+//            for rawCompetitionId in tournamentIds {
+//
+//                guard
+//                    let rawCompetition = Env.everyMatrixStorage.tournaments[rawCompetitionId],
+//                    (rawCompetition.sportId ?? "") == self.selectedSport.id
+//                else {
+//                    continue
+//                }
+//
+//                let competition = Competition(id: rawCompetition.id,
+//                                              name: rawCompetition.name ?? "",
+//                                              outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
+//                addedCompetitionIds.append(rawCompetition.id)
+//                locationCompetitions.append(competition)
+//            }
+//
+//            let locationCompetitionGroup = CompetitionGroup(id: location.id,
+//                                                            name: location.name ?? "",
+//                                                            aggregationType: CompetitionGroup.AggregationType.region,
+//                                                            competitions: locationCompetitions)
+//
+//            if locationCompetitions.isNotEmpty {
+//                competitionsGroups.append(locationCompetitionGroup)
+//            }
+//        }
+        if self.sportRegionsPublisher.value.isNotEmpty,
+           self.regionCompetitionsPublisher.value.isNotEmpty {
 
-        var addedCompetitionIds: [String] = []
+            let sportRegions = self.sportRegionsPublisher.value
+            let regionCompetitions = self.regionCompetitionsPublisher.value
 
-        var popularCompetitions = [Competition]()
-        for popularCompetition in Env.everyMatrixStorage.popularTournaments.values where (popularCompetition.sportId ?? "") == self.selectedSport.id {
+            var competitionGroups = ServiceProviderModelMapper.competitionGroups(fromSportRegions: sportRegions, withRegionCompetitions: regionCompetitions)
 
-            let competition = Competition(id: popularCompetition.id,
-                                          name: popularCompetition.name ?? "",
-                                          outrightMarkets: popularCompetition.numberOfOutrightMarkets ?? 0)
-            addedCompetitionIds.append(popularCompetition.id)
-            popularCompetitions.append(competition)
+            //popularCompetitionGroups.append(contentsOf: competitionsGroups)
+
+            self.competitionGroupsPublisher.send(competitionGroups)
+
+            self.updateContentList()
         }
+    }
 
-        let popularCompetitionGroup = CompetitionGroup(id: "0",
-                                                       name: localized("popular_competitions"),
-                                                       aggregationType: CompetitionGroup.AggregationType.popular,
-                                                       competitions: popularCompetitions)
-        var popularCompetitionGroups = [popularCompetitionGroup]
+    func loadCompetitionByRegion(regionId: String) {
 
-        var competitionsGroups = [CompetitionGroup]()
-        for location in Env.everyMatrixStorage.locations.values {
-
-            var locationCompetitions = [Competition]()
-            var tournamentIds = (Env.everyMatrixStorage.tournamentsForLocation[location.id] ?? [])
-
-            if shouldShowEventCategory {
-                tournamentIds = (Env.everyMatrixStorage.tournamentsForCategory[location.id] ?? [])
-            }
-
-            for rawCompetitionId in tournamentIds {
-
-                guard
-                    let rawCompetition = Env.everyMatrixStorage.tournaments[rawCompetitionId],
-                    (rawCompetition.sportId ?? "") == self.selectedSport.id
-                else {
-                    continue
+        Env.servicesProvider.getRegionCompetitions(regionId: regionId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("REGION COMPETITION ERROR: \(error)")
                 }
+            }, receiveValue: { [weak self] sportRegionInfo in
+                print("REGION COMPETITION RESPONSE: \(sportRegionInfo)")
+                self?.regionCompetitionsPublisher.value[sportRegionInfo.id] = sportRegionInfo.competitionNodes
+                self?.setupCompetitionGroups()
 
-                let competition = Competition(id: rawCompetition.id,
-                                              name: rawCompetition.name ?? "",
-                                              outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
-                addedCompetitionIds.append(rawCompetition.id)
-                locationCompetitions.append(competition)
-            }
-
-            let locationCompetitionGroup = CompetitionGroup(id: location.id,
-                                                            name: location.name ?? "",
-                                                            aggregationType: CompetitionGroup.AggregationType.region,
-                                                            competitions: locationCompetitions)
-
-            if locationCompetitions.isNotEmpty {
-                competitionsGroups.append(locationCompetitionGroup)
-            }
-        }
-
-        popularCompetitionGroups.append(contentsOf: competitionsGroups)
-
-        self.competitionGroupsPublisher.send(popularCompetitionGroups)
-
-        self.updateContentList()
+            })
+            .store(in: &cancellables)
     }
 
     func outrightCompetitions(forIds ids: [String]) -> [Competition] {
