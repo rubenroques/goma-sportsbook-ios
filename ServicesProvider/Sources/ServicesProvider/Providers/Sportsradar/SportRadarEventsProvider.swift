@@ -36,7 +36,9 @@ class SportRadarEventsProvider: EventsProvider {
 
     private var eventsPaginators: [String: SportRadarEventsPaginator] = [:]
 
-    private var competitionEventsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
+    private var competitionEventsPublisher: [ContentIdentifier: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>] = [:]
+    //private var eventsPublishers: [TopicIdentifier: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>] = [:]
+
 
 
     //
@@ -166,76 +168,55 @@ class SportRadarEventsProvider: EventsProvider {
 
     func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
 
-        self.competitionEventsPublisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
-
         // Get the session
         guard
-            let sessionToken = socketConnector.token,
-            let publisher = self.competitionEventsPublisher
+            let sessionToken = socketConnector.token
         else {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
 
         // Create the contentIdentifier
 
-        //let contentId = marketGroupId
         let contentType = ContentType.eventGroup
 
         let contentRoute = ContentRoute.eventGroup(marketGroupId: marketGroupId)
 
-        //let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
+        let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
 
-
-        let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentRoute: contentRoute)
-        let request = self.createSubscribeRequest(withHTTPBody: bodyData)
-
-        let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard
-                error == nil,
-                let httpResponse = response as? HTTPURLResponse,
-                (200...299).contains(httpResponse.statusCode)
-            else {
-                print("ServiceProvider subscribeMatchDetails \(error) \(response)")
-                publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
-                return
-            }
+        if let publisher = self.competitionEventsPublisher[contentIdentifier], let subscription = self.activeSubscriptions.object(forKey: contentIdentifier) {
+            // We already have a publisher for this events and a subscription object for the caller to store
+            return publisher
+                .prepend(.connected(subscription: subscription))
+                .eraseToAnyPublisher()
         }
-        sessionDataTask.resume()
-        return publisher.eraseToAnyPublisher()
+        else {
+            // We have neither a publisher nor a subscription object
+            let publisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
 
-//        if let publisher = self.competitionEventsPublisher, let subscription = self.activeSubscriptions.object(forKey: contentIdentifier) {
-//            // We already have a publisher for this events and a subscription object for the caller to store
-//            return publisher
-//                .prepend(.connected(subscription: subscription))
-//                .eraseToAnyPublisher()
-//        }
-//        else {
-//            // We have neither a publisher nor a subscription object
-//            let publisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
-//            let subscription = Subscription(contentType: contentType.rawValue, contentId: contentId, token: sessionToken.hash, unsubscriber: self)
-//
-//            let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentId: contentId)
-//            let request = self.createSubscribeRequest(withHTTPBody: bodyData)
-//
-//            let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
-//                guard
-//                    (error == nil),
-//                    let httpResponse = response as? HTTPURLResponse,
-//                    (200...299).contains(httpResponse.statusCode)
-//                else {
-//                    print("SportRadarEventsProvider: eventListBySportTypeDate - error on subscribe to topic")
-//                    publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
-//                    return
-//                }
-//                publisher.send(.connected(subscription: subscription))
-//            }
-//            sessionDataTask.resume()
-//
-//            self.activeSubscriptions.setObject(subscription, forKey: contentIdentifier)
-//            self.eventsPublishers[contentIdentifier] = publisher
-//
-//            return publisher.eraseToAnyPublisher()
-//        }
+            let subscription = Subscription(contentIdentifier: contentIdentifier, sessionToken: sessionToken.hash, unsubscriber: self)
+
+            let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentRoute: contentRoute)
+            let request = self.createSubscribeRequest(withHTTPBody: bodyData)
+
+            let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+                guard
+                    (error == nil),
+                    let httpResponse = response as? HTTPURLResponse,
+                    (200...299).contains(httpResponse.statusCode)
+                else {
+                    print("SportRadarEventsProvider: eventListBySportTypeDate - error on subscribe to topic")
+                    publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
+                    return
+                }
+                publisher.send(.connected(subscription: subscription))
+            }
+            sessionDataTask.resume()
+
+            self.activeSubscriptions.setObject(subscription, forKey: contentIdentifier)
+            self.competitionEventsPublisher[contentIdentifier] = publisher
+
+            return publisher.eraseToAnyPublisher()
+        }
     }
 
     func subscribeLiveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
@@ -398,7 +379,7 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
 
     // Competition events
     func eventGroups(forContentIdentifier identifier: ContentIdentifier, withEvents events: [EventsGroup]) {
-        if let publisher = self.competitionEventsPublisher {
+        if let publisher = self.competitionEventsPublisher[identifier] {
             publisher.send(.contentUpdate(content: events))
         }
     }
