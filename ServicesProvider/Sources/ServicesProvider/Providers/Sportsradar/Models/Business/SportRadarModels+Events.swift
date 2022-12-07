@@ -156,11 +156,15 @@ extension SportRadarModels {
         var id: String
         var name: String
         var marketGroups: [SportCompetitionMarketGroup]
+        var numberOutrightEvents: String
+        var numberOutrightMarkets: String
 
         enum CodingKeys: String, CodingKey {
             case id = "idfwbonavigation"
             case name = "name"
             case marketGroups = "marketgroups"
+            case numberOutrightEvents = "numoutrightevents"
+            case numberOutrightMarkets = "numoutrightmarkets"
         }
     }
 

@@ -182,11 +182,15 @@ public struct SportCompetitionInfo: Codable {
     public var id: String
     public var name: String
     public var marketGroups: [SportCompetitionMarketGroup]
+    public var numberOutrightEvents: String
+    public var numberOutrightMarkets: String
 
     enum CodingKeys: String, CodingKey {
         case id = "idfwbonavigation"
         case name = "name"
         case marketGroups = "marketgroups"
+        case numberOutrightEvents = "numoutrightevents"
+        case numberOutrightMarkets = "numoutrightmarkets"
     }
 }
 

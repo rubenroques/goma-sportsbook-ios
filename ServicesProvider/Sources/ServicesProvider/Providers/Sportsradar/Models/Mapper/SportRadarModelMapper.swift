@@ -280,7 +280,11 @@ struct SportRadarModelMapper {
     static func sportCompetitionInfo(fromInternalSportCompetitionInfo sportCompetitionInfo: SportRadarModels.SportCompetitionInfo) -> SportCompetitionInfo {
         let marketGroups = sportCompetitionInfo.marketGroups.map(self.competitionMarketGroup(fromInternalSportCompetitionMarketGroup:))
 
-        let sportCompetitionInfo = SportCompetitionInfo(id: sportCompetitionInfo.id, name: sportCompetitionInfo.name, marketGroups: marketGroups)
+        let sportCompetitionInfo = SportCompetitionInfo(id: sportCompetitionInfo.id,
+                                                        name: sportCompetitionInfo.name,
+                                                        marketGroups: marketGroups,
+                                                        numberOutrightEvents: sportCompetitionInfo.numberOutrightEvents,
+                                                        numberOutrightMarkets: sportCompetitionInfo.numberOutrightMarkets)
 
         return sportCompetitionInfo
     }

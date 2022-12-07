@@ -302,7 +302,7 @@ class PreLiveEventsViewModel: NSObject {
 
                 if selectedCompetitionsInfo.count == expectedCompetitions {
                     print("ALL COMPETITIONS DATA")
-                    self?.subscribeCompetitionsMatches()
+                    self?.processCompetitionsInfo()
                 }
             })
             .store(in: &cancellables)
@@ -323,7 +323,7 @@ class PreLiveEventsViewModel: NSObject {
 
     }
 
-    func subscribeCompetitionsMatches() {
+    func processCompetitionsInfo() {
 
         let competitionInfos = self.selectedCompetitionsInfoPublisher.value.map({$0.value})
 
@@ -339,7 +339,8 @@ class PreLiveEventsViewModel: NSObject {
 
             }
             else {
-                self.competitionsMatchesSubscriptions.value[competitionInfo.id] = competitionInfo
+                self.processCompetitionOutrights(competitionInfo: competitionInfo)
+                //self.competitionsMatchesSubscriptions.value[competitionInfo.id] = competitionInfo
             }
             //self.subscribeCompetitionMatches(forMarketGroupId: competitionInfo.id, competitionInfo: competitionInfo)
         }
@@ -1036,12 +1037,25 @@ class PreLiveEventsViewModel: NSObject {
         let newCompetition = Competition(id: competitionInfo.id,
                                          name: competitionInfo.name,
                                          matches: matches,
-                                         outrightMarkets: 0)
+                                         outrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
+        competitionInfo: competitionInfo)
 
         self.competitions.append(newCompetition)
         self.competitionsDataSource.competitions = self.competitions
         self.competitionsMatchesSubscriptions.value[competitionInfo.id] = competitionInfo
 
+    }
+
+    private func processCompetitionOutrights(competitionInfo: SportCompetitionInfo) {
+        let newCompetition = Competition(id: competitionInfo.id,
+                                         name: competitionInfo.name,
+                                         matches: [],
+                                         outrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
+        competitionInfo: competitionInfo)
+
+        self.competitions.append(newCompetition)
+        self.competitionsDataSource.competitions = self.competitions
+        self.competitionsMatchesSubscriptions.value[competitionInfo.id] = competitionInfo
     }
 
     //

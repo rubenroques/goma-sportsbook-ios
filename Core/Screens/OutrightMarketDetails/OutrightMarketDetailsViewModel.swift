@@ -31,7 +31,7 @@ class OutrightMarketDetailsViewModel {
         self.competition = competition
         self.store = store
 
-        self.fetchCompetitionMarkets(competitionId: competition.id)
+        self.fetchCompetitionMarkets(competition: competition)
     }
 
     // MARK: - View Configuration
@@ -61,45 +61,47 @@ class OutrightMarketDetailsViewModel {
     }
 
     // MARK: - Internal functions
-    private func fetchCompetitionMarkets(competitionId id: String) {
+    private func fetchCompetitionMarkets(competition: Competition) {
 
         self.isLoadingPublisher.send(true)
 
-        let language = "en"
-        let endpoint = TSRouter.tournamentOddsPublisher(operatorId: Env.appSession.operatorId,
-                                                        language: language,
-                                                        eventId: id)
-
-        if let competitionMarketRegister = self.competitionMarketRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: competitionMarketRegister)
-        }
-
-        self.competitionMarketPublisher?.cancel()
-        self.competitionMarketPublisher = nil
-
-        self.competitionMarketPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
-                case .finished:
-                    print("Data retrieved!")
-                }
-                self.isLoadingPublisher.send(false)
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    self?.competitionMarketRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    self?.storeAggregator(aggregator)
-                case .updatedContent(let aggregatorUpdates):
-                    self?.updateWithAggregator(aggregatorUpdates)
-                case .disconnect:
-                    ()
-
-                }
-            })
+        // EM
+//        let language = "en"
+//        let endpoint = TSRouter.tournamentOddsPublisher(operatorId: Env.appSession.operatorId,
+//                                                        language: language,
+//                                                        eventId: competition.id)
+//
+//        if let competitionMarketRegister = self.competitionMarketRegister {
+//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: competitionMarketRegister)
+//        }
+//
+//        self.competitionMarketPublisher?.cancel()
+//        self.competitionMarketPublisher = nil
+//
+//        self.competitionMarketPublisher = Env.everyMatrixClient.manager
+//            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure:
+//                    print("Error retrieving data!")
+//                case .finished:
+//                    print("Data retrieved!")
+//                }
+//                self.isLoadingPublisher.send(false)
+//            }, receiveValue: { [weak self] state in
+//                switch state {
+//                case .connect(let publisherIdentifiable):
+//                    self?.competitionMarketRegister = publisherIdentifiable
+//                case .initialContent(let aggregator):
+//                    self?.storeAggregator(aggregator)
+//                case .updatedContent(let aggregatorUpdates):
+//                    self?.updateWithAggregator(aggregatorUpdates)
+//                case .disconnect:
+//                    ()
+//
+//                }
+//            })
+        self.isLoadingPublisher.send(false)
     }
 
     private func storeAggregator(_ aggregator: EveryMatrix.Aggregator) {
