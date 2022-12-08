@@ -329,27 +329,35 @@ extension BetslipManager {
                                                                      outcomeName: "",
                                                                      odd: .fraction(numerator: oddNumerator, denominator: oddDenominator))
 
-        return Env.servicesProvider.placeSingleBet(betTicketSelection: betTicketSelection, stake: stake)
-            .map { (placeBetResponse: PlacedBetResponse) -> [BetPlacedDetails] in
-                return placeBetResponse.bets.map { (placedBetEntry: PlacedBetEntry) -> BetPlacedDetails in
+        let publisher =  Env.servicesProvider.placeSingleBet(betTicketSelection: betTicketSelection, stake: stake)
+            .mapError({ _ in
+                return BetslipErrorType.forbiddenBetError
+            })
+            .flatMap({ (placedBetResponse: PlacedBetResponse) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> in
+                guard
+                    placedBetResponse.succeed
+                else {
+                    return Fail(error: BetslipErrorType.betPlacementError).eraseToAnyPublisher()
+                }
+                let betPlacedDetailsArray = placedBetResponse.bets.map { (placedBetEntry: PlacedBetEntry) -> BetPlacedDetails in
                     let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
                     let response = BetslipPlaceBetResponse(betId: placedBetEntry.identifier,
-                                                           betSucceed: true,
+                                                           betSucceed: placedBetResponse.succeed,
                                                            totalPriceValue: totalPriceValue,
                                                            maxWinning: placedBetEntry.potentialReturn)
                     return BetPlacedDetails(response: response, tickets: [])
                 }
-            }
-            .mapError({ _ in
-                return BetslipErrorType.placedBetError
+                return Just(betPlacedDetailsArray).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()
             })
             .handleEvents(receiveOutput: { betPlacedDetailsArray in
-                let shouldUpdate = betPlacedDetailsArray.map(\.response.betSucceed).compactMap({ $0 }).allSatisfy { $0 }
+                let shouldUpdate: Bool = betPlacedDetailsArray.map(\.response.betSucceed).compactMap({ $0 }).allSatisfy { $0 }
                 if shouldUpdate {
                     self.newBetsPlacedPublisher.send()
                 }
             })
             .eraseToAnyPublisher()
+
+        return publisher
     }
 
 
@@ -644,7 +652,7 @@ extension BetslipManager {
             }
 
             if hasFoundCorrespondingId {
-                let betslipError = BetslipError(errorMessage: errorMessage, errorType: .placedBetError)
+                let betslipError = BetslipError(errorMessage: errorMessage, errorType: .betPlacementError)
                 return betslipError
             }
             else {
@@ -695,7 +703,7 @@ extension BetslipManager {
             }
 
             if hasFoundCorrespondingId {
-                let betslipError = BetslipError(errorMessage: errorMessage, errorType: .placedBetError)
+                let betslipError = BetslipError(errorMessage: errorMessage, errorType: .betPlacementError)
                 return betslipError
             }
             else {
@@ -712,7 +720,7 @@ extension BetslipManager {
 
 enum BetslipErrorType: Error {
     case emptyBetslip
-    case placedBetError
+    case betPlacementError
     case forbiddenBetError
     case none
 }

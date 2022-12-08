@@ -143,20 +143,35 @@ extension SportRadarModels {
 
     struct PlacedBetResponse: Codable {
         var identifier: String
+        var responseCode: String
         var bets: [PlacedBetEntry]
 
         enum CodingKeys: String, CodingKey {
             case identifier = "idFOBetSlip"
             case bets = "bets"
+            case status = "status"
+            case responseCode = "state"
         }
 
         init(from decoder: Decoder) throws {
-            let container: KeyedDecodingContainer<SportRadarModels.PlacedBetResponse.CodingKeys> = try decoder.container(keyedBy: SportRadarModels.PlacedBetResponse.CodingKeys.self)
+            let container: KeyedDecodingContainer<SportRadarModels.PlacedBetResponse.CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
 
-            let identifierInt = try container.decode(Int.self, forKey: SportRadarModels.PlacedBetResponse.CodingKeys.identifier)
+            let identifierInt = try container.decode(Int.self, forKey: .identifier)
             self.identifier = "\(identifierInt)"
-            self.bets = try container.decode([SportRadarModels.PlacedBetEntry].self, forKey: SportRadarModels.PlacedBetResponse.CodingKeys.bets)
+            self.bets = try container.decode([SportRadarModels.PlacedBetEntry].self, forKey: .bets)
+
+            let statusContainer = try? container.nestedContainer(keyedBy: CodingKeys.self, forKey: .status)
+            let statusCodeInt = (try? statusContainer?.decodeIfPresent(Int.self, forKey: .responseCode)) ?? 0
+            self.responseCode = "\(statusCodeInt)"
         }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(self.identifier, forKey: CodingKeys.identifier)
+            try container.encode(self.bets, forKey: CodingKeys.bets)
+            try container.encode(self.responseCode, forKey: CodingKeys.responseCode)
+        }
+        
     }
 
     struct PlacedBetEntry: Codable {

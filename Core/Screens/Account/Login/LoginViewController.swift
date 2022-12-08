@@ -162,12 +162,12 @@ class LoginViewController: UIViewController {
 
         self.checkPolicyLinks()
 
-        #if DEBUG
+
         let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
         debugLogoImageViewTap.numberOfTapsRequired = 3
         self.logoImageView.isUserInteractionEnabled = true
         self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
-        #endif
+
     }
 
     func setupWithTheme() {
@@ -388,9 +388,9 @@ extension LoginViewController {
             self.passwordHeaderTextFieldView.setText("Omega123") // ("iosGoma123") // ("Omega123") // ("ruben=GOMA=12345")
             self.loginButton.isEnabled = true
         }
-        else if self.usernameHeaderTextFieldView.text == "ruben4" {
-            self.usernameHeaderTextFieldView.setText("wodes95597@steamoh.com")
-            self.passwordHeaderTextFieldView.setText("ruben=GOMA1")
+        else if self.usernameHeaderTextFieldView.text == "gomafrontend" {
+            self.usernameHeaderTextFieldView.setText("pafeha4474@lance7.com")
+            self.passwordHeaderTextFieldView.setText("iosGoma123")
             self.loginButton.isEnabled = true
         }
         else if self.usernameHeaderTextFieldView.text == "ruben5" {

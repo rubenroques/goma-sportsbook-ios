@@ -86,7 +86,7 @@ class BetSubmissionSuccessViewController: UIViewController {
         // Number Of Bets
         self.numberOfBets = betPlacedDetailsArray.count
 
-         super.init(nibName: "BetSubmissionSuccessViewController", bundle: nil)
+        super.init(nibName: "BetSubmissionSuccessViewController", bundle: nil)
     }
 
     @available(iOS, unavailable)

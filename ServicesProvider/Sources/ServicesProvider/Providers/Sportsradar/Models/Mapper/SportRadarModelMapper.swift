@@ -206,8 +206,12 @@ struct SportRadarModelMapper {
     //
     static func placedBetResponse(fromInternalPlacedBetResponse placedBetResponse: SportRadarModels.PlacedBetResponse) -> PlacedBetResponse {
         let bets = placedBetResponse.bets.map(Self.placedBetEntry(fromInternalPlacedBetEntry:))
+
+        let betSucceed = placedBetResponse.responseCode == "2" && placedBetResponse.identifier != "0"
         return PlacedBetResponse(identifier: placedBetResponse.identifier,
-                          bets: bets)
+                                 responseCode: placedBetResponse.responseCode,
+                                 succeed: betSucceed,
+                                 bets: bets)
     }
 
     static func placedBetEntry(fromInternalPlacedBetEntry placedBetEntry: SportRadarModels.PlacedBetEntry) -> PlacedBetEntry {

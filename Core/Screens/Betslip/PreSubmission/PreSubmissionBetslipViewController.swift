@@ -1386,13 +1386,20 @@ class PreSubmissionBetslipViewController: UIViewController {
                 let firstBetTicketStake: Double = self.simpleBetsBettingValues.value.first?.value ?? 0.0
                 Env.betslipManager.placeSingleBet(stake: firstBetTicketStake)
                 .receive(on: DispatchQueue.main)
-                .sink { completion in
+                .sink { [weak self] completion in
                     switch completion {
                     case .failure(let error):
                         Logger.log("Place AllSingleBets error \(error)")
+                        if let self {
+                            let message = """
+                            Something went wrong with your bet request.
+                            Make sure you have completed your profile and enought balance.
+                            """
+                            UIAlertController.showMessage(title: "Not submitted", message: message, on: self)
+                        }
                     default: ()
                     }
-                    self.isLoading = false
+                    self?.isLoading = false
                 } receiveValue: { [weak self] betPlacedDetailsArray in
                     self?.betPlacedAction?(betPlacedDetailsArray)
                 }
@@ -1699,7 +1706,7 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
         let cellBetError = Env.betslipManager.getErrorsForSingleBetBettingTicket(bettingTicket: bettingTicket)
 
         switch cellBetError.errorType {
-        case .placedBetError:
+        case .betPlacementError:
             cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue, errorBetting: cellBetError.errorMessage)
         default:
             cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue)
@@ -1833,7 +1840,7 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
             let cellBetError = Env.betslipManager.getErrorsForBettingTicket(bettingTicket: bettingTicket)
 
             switch cellBetError.errorType {
-            case .placedBetError:
+            case .betPlacementError:
                 cell.configureWithBettingTicket(bettingTicket, errorBetting: cellBetError.errorMessage)
             case .forbiddenBetError:
                 cell.configureWithBettingTicket(bettingTicket, errorBetting: cellBetError.errorMessage)
@@ -1920,7 +1927,7 @@ class SystemBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
         let cellBetError = Env.betslipManager.getErrorsForBettingTicket(bettingTicket: bettingTicket)
 
         switch cellBetError.errorType {
-        case .placedBetError:
+        case .betPlacementError:
             cell.configureWithBettingTicket(bettingTicket, errorBetting: cellBetError.errorMessage)
         case .forbiddenBetError:
             cell.configureWithBettingTicket(bettingTicket, errorBetting: cellBetError.errorMessage)
