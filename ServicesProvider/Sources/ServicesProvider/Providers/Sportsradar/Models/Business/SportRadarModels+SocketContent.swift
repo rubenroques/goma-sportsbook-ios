@@ -23,6 +23,7 @@ extension SportRadarModels {
         
         case eventDetails(eventDetails: [SportRadarModels.Event])
         case eventGroup(contentIdentifier: ContentIdentifier, events: [SportRadarModels.Event])
+        case outrightEventGroup(events: [SportRadarModels.Event])
 
     }
 

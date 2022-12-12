@@ -165,18 +165,18 @@ class MarketGroupDetailsStore {
 
             var sortedOutcomes: [Outcome] = []
 
-                sortedOutcomes = outcomes.sorted { out1, out2 in
-                    if let orderValue1 = out1.orderValue,
-                       let orderValue2 = out2.orderValue {
-                        let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(orderValue1)
-                        let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(orderValue2)
-                        return out1Value < out2Value
-                    }
-
-                    let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1.codeName)
-                    let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2.codeName)
+            sortedOutcomes = outcomes.sorted { out1, out2 in
+                if let orderValue1 = out1.orderValue,
+                   let orderValue2 = out2.orderValue {
+                    let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(orderValue1)
+                    let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(orderValue2)
                     return out1Value < out2Value
                 }
+
+                let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1.codeName)
+                let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2.codeName)
+                return out1Value < out2Value
+            }
 //            }
 
             let sortedOutcomeMarket = Market(id: market.id,

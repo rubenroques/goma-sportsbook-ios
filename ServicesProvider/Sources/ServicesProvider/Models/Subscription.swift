@@ -148,7 +148,7 @@ public enum ContentRoute {
             return ""
         case .eventDetails:
             return ""
-        case .eventGroup(let marketGroupId):
+        case .eventGroup:
             return ""
         }
     }
@@ -165,7 +165,7 @@ public enum ContentRoute {
             return nil
         case .eventDetails(_):
             return nil
-        case .eventGroup(let marketGroupId):
+        case .eventGroup:
             return nil
         }
     }

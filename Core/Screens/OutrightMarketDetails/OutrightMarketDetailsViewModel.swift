@@ -4,8 +4,9 @@
 //
 //  Created by Ruben Roques on 22/02/2022.
 //
-
+import Foundation
 import Combine
+import ServicesProvider
 
 class OutrightMarketDetailsViewModel {
 
@@ -25,6 +26,9 @@ class OutrightMarketDetailsViewModel {
     private var store: OutrightMarketDetailsStore
 
     private static let groupKey = "Main"
+
+    private var cancellables = Set<AnyCancellable>()
+    private var subscriptions = Set<ServicesProvider.Subscription>()
 
     // MARK: - Lifetime and Cycle
     init(competition: Competition, store: OutrightMarketDetailsStore) {
@@ -65,6 +69,39 @@ class OutrightMarketDetailsViewModel {
 
         self.isLoadingPublisher.send(true)
 
+        if let outrightMarketGroup = competition.competitionInfo?.marketGroups.filter({
+            $0.name == "Outright"
+        }).first {
+
+            Env.servicesProvider.subscribeOutrightMarkets(forMarketGroupId: outrightMarketGroup.id)
+            .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure:
+                    print("SUBSCRIPTION COMPETITION OUTRIGHTS ERROR")
+                }
+            } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
+                switch subscribableContent {
+                case .connected(let subscription):
+                    self?.subscriptions.insert(subscription)
+                case .contentUpdate(let eventsGroups):
+                    print("OUTRIGHTS EVENTS: \(eventsGroups)")
+                    if let event = eventsGroups.first?.events.first {
+                        //self.storeMarkets(markets: eventsGroups)
+                        let markets = ServiceProviderModelMapper.markets(fromServiceProviderMarkets: event.markets)
+                        self?.storeMarkets(markets: markets)
+                        //self?.isLoadingPublisher.send(false)
+                    }
+
+                case .disconnected:
+                    ()
+                }
+            }
+            .store(in: &cancellables)
+
+        }
+
         // EM
 //        let language = "en"
 //        let endpoint = TSRouter.tournamentOddsPublisher(operatorId: Env.appSession.operatorId,
@@ -101,6 +138,19 @@ class OutrightMarketDetailsViewModel {
 //
 //                }
 //            })
+        //self.isLoadingPublisher.send(false)
+    }
+
+    private func storeMarkets(markets: [Market]) {
+        self.store.storeMarketGroupDetailsFromMarkets(markets: markets, onMarketGroup: "MarketKey")
+
+        let marketGroupOrganizers = self.store.marketGroupOrganizersFromGroups(withGroupKey: "MarketKey")
+
+        self.marketGroupOrganizers = marketGroupOrganizers
+
+        self.isCompetitionBettingAvailablePublisher.send(self.marketGroupOrganizers.isNotEmpty)
+
+        self.refreshPublisher.send()
         self.isLoadingPublisher.send(false)
     }
 
