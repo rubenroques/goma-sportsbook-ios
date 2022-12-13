@@ -257,7 +257,10 @@ struct SportRadarModelMapper {
 
     static func sportNodeRegion(fromInternalSportNodeRegion sportNodeRegion: SportRadarModels.SportRegion) -> SportRegion {
 
-        let sportRegionNode = SportRegion(id: sportNodeRegion.id, name: sportNodeRegion.name)
+        let sportRegionNode = SportRegion(id: sportNodeRegion.id,
+                                          name: sportNodeRegion.name,
+                                          numberEvents: sportNodeRegion.numberEvents,
+                                          numberOutrightEvents: sportNodeRegion.numberOutrightEvents)
 
         return sportRegionNode
     }
@@ -272,7 +275,10 @@ struct SportRadarModelMapper {
 
     static func regionCompetitionNode(fromInternalSportCompetition sportCompetition: SportRadarModels.SportCompetition) -> SportCompetition {
 
-        let sportCompetition = SportCompetition(id: sportCompetition.id, name: sportCompetition.name)
+        let sportCompetition = SportCompetition(id: sportCompetition.id,
+                                                name: sportCompetition.name,
+                                                numberEvents: sportCompetition.numberEvents,
+                                                numberOutrightEvents: sportCompetition.numberOutrightEvents)
 
         return sportCompetition
     }

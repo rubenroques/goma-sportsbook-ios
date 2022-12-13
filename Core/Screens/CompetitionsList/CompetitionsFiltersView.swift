@@ -38,7 +38,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
     var loadedExpandedCells: [String] = []
 
     var shouldLoadCompetitions: ((String) -> Void)?
-    var expandCompetitionLoaded: String?
+    var expandCompetitionLoaded: [String] = []
 
     var isLoading: Bool = false {
         didSet {
@@ -61,6 +61,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
 
                     if self.expandedCellsDictionary[competition.id] == true {
                         self.loadedExpandedCells.append(competition.id)
+                        self.expandCompetitionLoaded.append(competition.id)
                     }
                 })
 
@@ -73,8 +74,17 @@ class CompetitionsFiltersView: UIView, NibLoadable {
                         self.loadedExpandedCells.append(competition.id)
                     }
                     else {
-                        if let expandCompetitionLoaded = self.expandCompetitionLoaded,
-                           competition.id == expandCompetitionLoaded {
+//                        if let expandCompetitionLoaded = self.expandCompetitionLoaded,
+//                           competition.id == expandCompetitionLoaded {
+//                            self.expandedCellsDictionary[competition.id] = true
+//
+//                        }
+//                        else {
+//                            self.expandedCellsDictionary[competition.id] = false
+//
+//                        }
+                        if self.expandCompetitionLoaded.isNotEmpty,
+                           self.expandCompetitionLoaded.contains(competition.id) {
                             self.expandedCellsDictionary[competition.id] = true
 
                         }
@@ -373,6 +383,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.selectedIds.send([])
         self.competitionSelectedIds = [:]
         self.loadedExpandedCells = []
+        self.expandCompetitionLoaded = []
 
         self.reloadTableView()
     }
@@ -548,7 +559,8 @@ extension CompetitionsFiltersView: CollapsibleTableViewHeaderDelegate {
         if !self.loadedExpandedCells.contains(sectionIdentifier) {
             self.loadedExpandedCells.append(sectionIdentifier)
             self.shouldLoadCompetitions?(sectionIdentifier)
-            self.expandCompetitionLoaded = sectionIdentifier
+            //self.expandCompetitionLoaded = sectionIdentifier
+            self.expandCompetitionLoaded.append(sectionIdentifier)
         }
 
         self.redrawForSection(sectionIdentifier)

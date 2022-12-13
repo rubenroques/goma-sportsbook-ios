@@ -542,7 +542,7 @@ extension SportRadarEventsProvider {
             .flatMap({ numericSportsList, alphaSportsList -> AnyPublisher<[SportType], ServiceProviderError> in
                 if
                     let numericSports = numericSportsList.data?.sportNodes?.filter({
-                        $0.numberEvents > 0 // || $0.numberOutrightEvents > 0 || $0.numberOutrightMarkets > 0
+                        $0.numberEvents > 0 || $0.numberOutrightEvents > 0 //|| $0.numberOutrightMarkets > 0
                     }),
                     let alphaSports = alphaSportsList.data
                 {
@@ -566,7 +566,14 @@ extension SportRadarEventsProvider {
         return requestPublisher.map( { sportRadarResponse -> SportNodeInfo in
             let sportNodeInfo = sportRadarResponse.data
             let mappedSportNodeInfo = SportRadarModelMapper.sportNodeInfo(fromInternalSportNodeInfo:sportNodeInfo)
-            return mappedSportNodeInfo
+
+            let filteredRegionNode = mappedSportNodeInfo.regionNodes.filter({
+                $0.numberEvents != "0" || $0.numberOutrightEvents != "0"
+            })
+
+            let filteredSportNodeInfo = SportNodeInfo(id: mappedSportNodeInfo.id, regionNodes: filteredRegionNode)
+
+            return filteredSportNodeInfo
 
         }).eraseToAnyPublisher()
 
@@ -581,7 +588,14 @@ extension SportRadarEventsProvider {
         return requestPublisher.map( { sportRadarResponse -> SportRegionInfo in
             let sportRegionInfo = sportRadarResponse.data
             let mappedSportRegionInfo = SportRadarModelMapper.sportRegionInfo(fromInternalSportRegionInfo: sportRegionInfo)
-            return mappedSportRegionInfo
+
+            let filteredCompetitionNodes = mappedSportRegionInfo.competitionNodes.filter({
+                $0.numberEvents != "0" || $0.numberOutrightEvents != "0"
+            })
+
+            let filteredSportRegionInfo = SportRegionInfo(id: mappedSportRegionInfo.id, name: mappedSportRegionInfo.name, competitionNodes: filteredCompetitionNodes)
+
+            return filteredSportRegionInfo
 
         }).eraseToAnyPublisher()
 

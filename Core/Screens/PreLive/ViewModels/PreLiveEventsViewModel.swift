@@ -767,6 +767,7 @@ class PreLiveEventsViewModel: NSObject {
                     print("REGION COMPETITION ERROR: \(error)")
                 }
             }, receiveValue: { [weak self] sportRegionInfo in
+                let sportRegion = sportRegionInfo
                 self?.regionCompetitionsPublisher.value[sportRegionInfo.id] = sportRegionInfo.competitionNodes
 
             })

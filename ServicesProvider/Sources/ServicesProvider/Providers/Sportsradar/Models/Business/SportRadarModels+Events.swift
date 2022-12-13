@@ -123,10 +123,14 @@ extension SportRadarModels {
     struct SportRegion: Codable {
         var id: String
         var name: String?
+        var numberEvents: String
+        var numberOutrightEvents: String
 
         enum CodingKeys: String, CodingKey {
             case id = "idfwbonavigation"
             case name = "name"
+            case numberEvents = "numevents"
+            case numberOutrightEvents = "numoutrightevents"
         }
     }
 
@@ -145,10 +149,14 @@ extension SportRadarModels {
     struct SportCompetition: Codable {
         var id: String
         var name: String
+        var numberEvents: String
+        var numberOutrightEvents: String
 
         enum CodingKeys: String, CodingKey {
             case id = "idfwbonavigation"
             case name = "name"
+            case numberEvents = "numevents"
+            case numberOutrightEvents = "numoutrightevents"
         }
     }
 
