@@ -53,6 +53,7 @@ extension SportRadarModels {
         var marketTypeId: String?
         var eventMarketTypeId: String?
         var eventName: String?
+        var isMainOutright: Bool?
 
         enum CodingKeys: String, CodingKey {
             case id = "idfomarket"
@@ -61,6 +62,7 @@ extension SportRadarModels {
             case marketTypeId = "idefmarkettype"
             case eventMarketTypeId = "idfomarkettype"
             case eventName = "eventname"
+            case isMainOutright = "ismainoutright"
         }
         
     }

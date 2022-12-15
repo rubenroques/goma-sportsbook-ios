@@ -74,15 +74,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
                         self.loadedExpandedCells.append(competition.id)
                     }
                     else {
-//                        if let expandCompetitionLoaded = self.expandCompetitionLoaded,
-//                           competition.id == expandCompetitionLoaded {
-//                            self.expandedCellsDictionary[competition.id] = true
-//
-//                        }
-//                        else {
-//                            self.expandedCellsDictionary[competition.id] = false
-//
-//                        }
+
                         if self.expandCompetitionLoaded.isNotEmpty,
                            self.expandCompetitionLoaded.contains(competition.id) {
                             self.expandedCellsDictionary[competition.id] = true
@@ -551,15 +543,26 @@ extension CompetitionsFiltersView: CollapsibleTableViewHeaderDelegate {
 
         if expandedCellsDictionary[sectionIdentifier] ?? false {
             expandedCellsDictionary[sectionIdentifier] = false
+            if self.expandCompetitionLoaded.contains(sectionIdentifier) {
+
+                if let index = self.expandCompetitionLoaded.firstIndex(of: sectionIdentifier) {
+
+                    self.expandCompetitionLoaded.remove(at: index)
+
+                }
+            }
         }
         else {
             expandedCellsDictionary[sectionIdentifier] = true
+
+            if self.loadedExpandedCells.contains(sectionIdentifier) {
+                self.expandCompetitionLoaded.append(sectionIdentifier)
+            }
         }
 
         if !self.loadedExpandedCells.contains(sectionIdentifier) {
             self.loadedExpandedCells.append(sectionIdentifier)
             self.shouldLoadCompetitions?(sectionIdentifier)
-            //self.expandCompetitionLoaded = sectionIdentifier
             self.expandCompetitionLoaded.append(sectionIdentifier)
         }
 

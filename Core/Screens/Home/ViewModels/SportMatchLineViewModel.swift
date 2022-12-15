@@ -505,7 +505,7 @@ extension SportMatchLineViewModel {
             return Competition.init(id: rawTournament.id,
                              name: rawTournament.name ?? "",
                              venue: location,
-                             outrightMarkets: rawTournament.numberOfOutrightMarkets ?? 0)
+                             numberOutrightMarkets: rawTournament.numberOfOutrightMarkets ?? 0)
         }
 
         self.outrightCompetitions = Array(localOutrightCompetitions.prefix(2))

@@ -141,7 +141,7 @@ class PopularDetailsViewModel {
             let competition = Competition(id: rawCompetition.id,
                                                name: rawCompetition.name ?? "",
                                                venue: location,
-                                               outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
+                                               numberOutrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
             return competition
         }
 

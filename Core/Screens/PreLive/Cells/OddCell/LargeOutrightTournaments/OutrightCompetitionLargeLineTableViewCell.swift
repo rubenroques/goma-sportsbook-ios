@@ -15,7 +15,7 @@ class OutrightCompetitionLargeLineViewModel {
 
     init(competition: Competition) {
         self.competition = competition
-        self.numberOfMarkets = competition.outrightMarkets
+        self.numberOfMarkets = competition.numberOutrightMarkets
     }
 
     func numberOfSection() -> Int {

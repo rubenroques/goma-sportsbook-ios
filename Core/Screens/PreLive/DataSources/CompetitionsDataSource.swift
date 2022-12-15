@@ -33,7 +33,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let competition = competitions[safe: section] {
-            if competition.outrightMarkets > 0 {
+            if competition.numberOutrightMarkets > 0 {
                 return competition.matches.count + 1
             }
             else {
@@ -50,7 +50,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
             fatalError()
         }
 
-        if competition.outrightMarkets > 0 {
+        if competition.numberOutrightMarkets > 0 {
             if indexPath.row == 0 {
                 guard
                     let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLineTableViewCell.identifier)
@@ -156,7 +156,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
         }
 
         if let competition = competitions[safe: indexPath.section] {
-            if competition.outrightMarkets > 0 && indexPath.row == 0 {
+            if competition.numberOutrightMarkets > 0 && indexPath.row == 0 {
                 return 105
             }
             else {
@@ -172,7 +172,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
         }
 
         if let competition = competitions[safe: indexPath.section] {
-            if competition.outrightMarkets > 0 && indexPath.row == 0 {
+            if competition.numberOutrightMarkets > 0 && indexPath.row == 0 {
                 return 105
             }
             else {

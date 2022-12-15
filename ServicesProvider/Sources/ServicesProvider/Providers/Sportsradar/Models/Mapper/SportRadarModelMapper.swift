@@ -126,7 +126,7 @@ struct SportRadarModelMapper {
     
     static func market(fromInternalMarket internalMarket: SportRadarModels.Market) -> Market {
         let outcomes = internalMarket.outcomes.map(Self.outcome(fromInternalOutcome:))
-        return Market(id: internalMarket.id, name: internalMarket.name, outcomes: outcomes, marketTypeId: internalMarket.marketTypeId, eventMarketTypeId: internalMarket.eventMarketTypeId, eventName: internalMarket.eventName)
+        return Market(id: internalMarket.id, name: internalMarket.name, outcomes: outcomes, marketTypeId: internalMarket.marketTypeId, eventMarketTypeId: internalMarket.eventMarketTypeId, eventName: internalMarket.eventName, isMainOutright: internalMarket.isMainOutright)
     }
     
     static func outcome(fromInternalOutcome internalOutcome: SportRadarModels.Outcome) -> Outcome {

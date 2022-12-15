@@ -323,7 +323,7 @@ class MyFavoritesViewModel: NSObject {
                                               name: rawCompetition.name ?? "",
                                               matches: (competitionsMatches[competitionId] ?? []),
                                               venue: location,
-                                              outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
+                                              numberOutrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
                 processedCompetitions.append(competition)
             }
         }
@@ -412,7 +412,7 @@ class MyFavoritesViewModel: NSObject {
                                               name: rawCompetition.name ?? "",
                                               matches: (competitionsMatches[competitionId] ?? []),
                                               venue: location,
-                                              outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
+                                              numberOutrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
                 processedCompetitions.append(competition)
 
             }

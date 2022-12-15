@@ -19,16 +19,18 @@ extension ServiceProviderModelMapper {
         var matches = [Match]()
         for eventsGroup in eventsGroups {
             for event in eventsGroup.events {
-                matches.append(Match(id: event.id,
-                                     competitionId: event.competitionId,
-                                     competitionName: event.competitionName,
-                                     homeParticipant: Participant(id: "", name: event.homeTeamName),
-                                     awayParticipant: Participant(id: "", name: event.awayTeamName),
-                                     date: event.startDate,
-                                     sportType: event.sportTypeName,
-                                     numberTotalOfMarkets: 1,
-                                     markets: Self.markets(fromServiceProviderMarkets: event.markets),
-                                     rootPartId: ""))
+//                if event.homeTeamName != "" || event.awayTeamName != "" {
+                    matches.append(Match(id: event.id,
+                                         competitionId: event.competitionId,
+                                         competitionName: event.competitionName,
+                                         homeParticipant: Participant(id: "", name: event.homeTeamName),
+                                         awayParticipant: Participant(id: "", name: event.awayTeamName),
+                                         date: event.startDate,
+                                         sportType: event.sportTypeName,
+                                         numberTotalOfMarkets: 1,
+                                         markets: Self.markets(fromServiceProviderMarkets: event.markets),
+                                         rootPartId: ""))
+//                }
             }
         }
         return matches
@@ -78,7 +80,8 @@ extension ServiceProviderModelMapper {
                       bettingTypeId: market.eventMarketTypeId,
                       outcomes: Self.outcomes(fromServiceProviderOutcomes: market.outcomes),
                       marketTypeId: market.marketTypeId,
-                      eventName: market.eventName)
+                      eventName: market.eventName,
+                      isMainOutright: market.isMainOutright)
     }
 
     static func optionalMarkets(fromServiceProviderMarkets markets: [ServicesProvider.Market]?) -> [Market]? {
@@ -115,6 +118,17 @@ extension ServiceProviderModelMapper {
     static func competitions(fromEventsGroups eventsGroups: [EventsGroup]) -> [Competition] {
         var competitions = [Competition]()
 
+        if let event = eventsGroups.first {
+
+            let mappedCompetitions = event.events.map({ event in
+                let competition = Competition(id: event.id, name: event.competitionName, numberOutrightMarkets: event.markets.count,
+                                              outrightMarkets: ServiceProviderModelMapper.markets(fromServiceProviderMarkets: event.markets))
+                return competition
+            })
+
+            return mappedCompetitions
+        }
+
         return competitions
     }
 
@@ -147,7 +161,8 @@ extension ServiceProviderModelMapper {
     static func competitions(fromSportCompetitions sportCompetitions: [SportCompetition]) -> [Competition] {
 
         let competitions = sportCompetitions.map({ sportCompetition in
-            let competition = Competition(id: sportCompetition.id, name: sportCompetition.name, outrightMarkets: 0)
+            let competition = Competition(id: sportCompetition.id, name: sportCompetition.name, numberOutrightMarkets: 0,
+                                          outrightMarkets: [])
             return competition
         })
 

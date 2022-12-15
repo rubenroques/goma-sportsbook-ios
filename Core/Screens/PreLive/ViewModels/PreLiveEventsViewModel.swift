@@ -97,7 +97,7 @@ class PreLiveEventsViewModel: NSObject {
     private var favoriteCompetitions: [Competition] = []
 
     private var popularMatchesDataSource = PopularMatchesDataSource(matches: [], outrightCompetitions: nil)
-    private var todayMatchesDataSource = TodayMatchesDataSource(todayMatches: [])
+    private var todayMatchesDataSource = TodayMatchesDataSource(todayMatches: [], outrightCompetitions: nil)
     private var competitionsDataSource = CompetitionsDataSource(competitions: [])
     private var filteredOutrightCompetitionsDataSource = FilteredOutrightCompetitionsDataSource(outrightCompetitions: [])
 
@@ -246,6 +246,9 @@ class PreLiveEventsViewModel: NSObject {
         self.popularMatchesDataSource.didSelectCompetitionAction = { [weak self] competition in
             self?.didSelectCompetitionAction?(competition)
         }
+        self.todayMatchesDataSource.didSelectCompetitionAction = { [weak self] competition in
+            self?.didSelectCompetitionAction?(competition)
+        }
         self.competitionsDataSource.didSelectCompetitionAction = { [weak self] competition in
             self?.didSelectCompetitionAction?(competition)
         }
@@ -358,6 +361,8 @@ class PreLiveEventsViewModel: NSObject {
 
             self.todayMatchesDataSource.todayMatches = []
             self.todayMatches = []
+            self.todayOutrightCompetitions = nil
+            self.todayMatchesDataSource.outrightCompetitions = nil
 
             self.competitionsDataSource.competitions = []
             self.competitions = []
@@ -385,7 +390,7 @@ class PreLiveEventsViewModel: NSObject {
 //                self.fetchCompetitionsMatchesWithIds(lastCompetitionsMatchesRequested)
 //            }
 
-        self.isLoadingEvents.send(true)
+        //self.isLoadingEvents.send(true)
 
         switch self.matchListTypePublisher.value {
         case .popular:
@@ -398,6 +403,25 @@ class PreLiveEventsViewModel: NSObject {
                 self.fetchCompetitionsMatchesWithIds(lastCompetitionsMatchesRequested)
             }
         }
+    }
+
+    private func clearData() {
+        self.lastCompetitionsMatchesRequested = []
+
+        self.popularMatchesDataSource.outrightCompetitions = nil
+        self.popularOutrightCompetitions = nil
+        self.popularMatches = []
+
+        self.todayMatchesDataSource.todayMatches = []
+        self.todayMatches = []
+        self.todayOutrightCompetitions = nil
+        self.todayMatchesDataSource.outrightCompetitions = nil
+
+        self.competitionsDataSource.competitions = []
+        self.competitions = []
+        self.filteredOutrightCompetitionsDataSource.outrightCompetitions = []
+
+        self.dataChangedPublisher.send()
     }
     
     func markAsFavorite(match: Match) {
@@ -416,6 +440,9 @@ class PreLiveEventsViewModel: NSObject {
     }
     
     func setMatchListType(_ matchListType: MatchListType) {
+
+        self.matchListTypePublisher.send(matchListType)
+
         switch matchListType {
         case .popular:
             // self.unsubscribeUpcomingMatches()
@@ -426,24 +453,33 @@ class PreLiveEventsViewModel: NSObject {
         case .competitions:
             self.fetchCompetitionsFilters()
         }
-        self.matchListTypePublisher.send(matchListType)
         // self.updateContentList()
     }
 
-    private func updateContentList() {
+    private func updateContentList(eventsGroups: [EventsGroup]? = nil) {
 
         self.popularMatchesDataSource.matches = filterPopularMatches(with: self.homeFilterOptions,
                                                                               matches: self.popularMatches)
 
         self.popularMatchesDataSource.outrightCompetitions = self.popularOutrightCompetitions
 
-        if self.popularMatches.isEmpty && self.popularOutrightCompetitions == nil {
-            self.fetchOutrightCompetitions()
+        if self.matchListTypePublisher.value == .popular {
+            if self.popularMatches.isEmpty && self.popularOutrightCompetitions == nil {
+                self.fetchOutrightCompetitions(eventsGroups: eventsGroups)
+            }
         }
 
         //
         self.todayMatchesDataSource.todayMatches = filterTodayMatches(with: self.homeFilterOptions,
                                                                               matches: self.todayMatches)
+
+        self.todayMatchesDataSource.outrightCompetitions = self.todayOutrightCompetitions
+
+        if self.matchListTypePublisher.value == .upcoming {
+            if self.todayMatches.isEmpty && self.todayOutrightCompetitions == nil {
+                self.fetchOutrightCompetitions(eventsGroups: eventsGroups)
+            }
+        }
 
         //
         self.competitionsDataSource.competitions = filterCompetitionMatches(with: self.homeFilterOptions,
@@ -655,7 +691,7 @@ class PreLiveEventsViewModel: NSObject {
 
     private func fetchPopularMatches() {
 
-        self.isLoadingPopularList.send(true)
+        //self.isLoadingPopularList.send(true)
         self.isLoadingEvents.send(true)
 
         let sport = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
@@ -666,7 +702,8 @@ class PreLiveEventsViewModel: NSObject {
                 switch completion {
                 case .finished:
                     ()
-                case .failure:
+                case .failure(let error):
+                    print("Prelive subscribePopularMatches error: \(error)")
                     self.popularMatches = []
                     self.isLoadingPopularList.send(false)
                     self.isLoadingEvents.send(false)
@@ -677,10 +714,11 @@ class PreLiveEventsViewModel: NSObject {
                 case .connected(let subscription):
                     self.subscriptions.insert(subscription)
                 case .contentUpdate(let eventsGroups):
-                    self.popularMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
-                    self.isLoadingPopularList.send(false)
-                    self.isLoadingEvents.send(false)
-                    self.updateContentList()
+                    self.processEvents(eventsGroups: eventsGroups)
+//                    self.popularMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+//                    self.isLoadingPopularList.send(false)
+//                    self.isLoadingEvents.send(false)
+//                    self.updateContentList(eventsGroups: eventsGroups)
                 case .disconnected:
                     self.popularMatches = []
                     // self.isLoadingPopularList.send(false)
@@ -691,7 +729,6 @@ class PreLiveEventsViewModel: NSObject {
             })
 
     }
-
 
     //
     private func fetchTodayMatchesNextPage() {
@@ -710,7 +747,7 @@ class PreLiveEventsViewModel: NSObject {
 
     private func fetchTodayMatches(withFilter: Bool = false, timeRange: String = "") {
 
-        self.isLoadingTodayList.send(true)
+        //self.isLoadingTodayList.send(true)
         self.isLoadingEvents.send(true)
 
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
@@ -734,10 +771,11 @@ class PreLiveEventsViewModel: NSObject {
                     self.subscriptions.insert(subscription)
                     print("Connected to ws")
                 case .contentUpdate(let eventsGroups):
-                    self.todayMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
-                    self.isLoadingTodayList.send(false)
-                    self.isLoadingEvents.send(false)
-                    self.updateContentList()
+                    self.processEvents(eventsGroups: eventsGroups)
+//                    self.todayMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+//                    self.isLoadingTodayList.send(false)
+//                    self.isLoadingEvents.send(false)
+//                    self.updateContentList()
                 case .disconnected:
                     print("Disconnected from ws")
                     self.todayMatches = []
@@ -749,9 +787,57 @@ class PreLiveEventsViewModel: NSObject {
 
     }
 
-    private func fetchOutrightCompetitions() {
-        self.popularOutrightCompetitions = []
+    private func fetchOutrightCompetitions(eventsGroups: [EventsGroup]? = nil) {
+        self.isLoadingPopularList.send(true)
+        self.isLoadingTodayList.send(true)
+        self.isLoadingEvents.send(true)
+
+        if let eventsGroups {
+            let competitions = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups)
+            print("OUTRIGHT COMPETITIONS: \(competitions)")
+
+            if self.matchListTypePublisher.value == .popular {
+                self.popularOutrightCompetitions = competitions
+                self.popularMatchesDataSource.outrightCompetitions = self.popularOutrightCompetitions
+            }
+            else if self.matchListTypePublisher.value == .upcoming {
+                self.todayOutrightCompetitions = competitions
+                self.todayMatchesDataSource.outrightCompetitions = self.todayOutrightCompetitions
+
+            }
+        }
+
         self.isLoadingPopularList.send(false)
+        self.isLoadingTodayList.send(false)
+        self.isLoadingEvents.send(false)
+
+    }
+
+    private func processEvents(eventsGroups: [EventsGroup]) {
+
+        // TODO: Recheck with isMainOutright when data is available to test
+        if let event = eventsGroups.first?.events.first,
+           event.homeTeamName == "" || event.awayTeamName == "" {
+            self.isLoadingEvents.send(false)
+            self.updateContentList(eventsGroups: eventsGroups)
+        }
+        else {
+            switch self.matchListTypePublisher.value {
+            case .popular:
+                self.popularMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+                self.isLoadingPopularList.send(false)
+                self.isLoadingEvents.send(false)
+                self.updateContentList()
+            case .upcoming:
+                self.todayMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+                self.isLoadingTodayList.send(false)
+                self.isLoadingEvents.send(false)
+                self.updateContentList()
+            default:
+                ()
+            }
+
+        }
     }
 
     func getFirstRegionCompetitions() {
@@ -1038,7 +1124,7 @@ class PreLiveEventsViewModel: NSObject {
         let newCompetition = Competition(id: competitionInfo.id,
                                          name: competitionInfo.name,
                                          matches: matches,
-                                         outrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
+                                         numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
         competitionInfo: competitionInfo)
 
         self.competitions.append(newCompetition)
@@ -1051,7 +1137,7 @@ class PreLiveEventsViewModel: NSObject {
         let newCompetition = Competition(id: competitionInfo.id,
                                          name: competitionInfo.name,
                                          matches: [],
-                                         outrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
+                                         numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
         competitionInfo: competitionInfo)
 
         self.competitions.append(newCompetition)
@@ -1106,7 +1192,7 @@ class PreLiveEventsViewModel: NSObject {
             let competition = Competition(id: rawCompetition.id,
                                                name: rawCompetition.name ?? "",
                                                venue: location,
-                                               outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
+                                               numberOutrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
             return competition
         }
 
@@ -1240,7 +1326,7 @@ class PreLiveEventsViewModel: NSObject {
                 let competition = Competition(id: rawCompetition.id,
                                               name: rawCompetition.name ?? "",
                                               venue: location,
-                                              outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
+                                              numberOutrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
                 outrightCompetitions.append(competition)
             }
             else if let rawCompetition = Env.everyMatrixStorage.popularTournaments[id] {
@@ -1255,7 +1341,7 @@ class PreLiveEventsViewModel: NSObject {
                 let competition = Competition(id: rawCompetition.id,
                                               name: rawCompetition.name ?? "",
                                               venue: location,
-                                              outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
+                                              numberOutrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
                 outrightCompetitions.append(competition)
             }
         }
@@ -1298,7 +1384,7 @@ class PreLiveEventsViewModel: NSObject {
                                               name: rawCompetition.name ?? "",
                                               matches: (competitionsMatches[competitionId] ?? []),
                                               venue: location,
-                                              outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
+                                              numberOutrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
                 processedCompetitions.append(competition)
             }
         }
@@ -1347,7 +1433,7 @@ class PreLiveEventsViewModel: NSObject {
                                                   name: rawCompetition.name ?? "",
                                                   matches: (competitionsMatches[competitionId] ?? []),
                                                   venue: location,
-                                                  outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
+                                                  numberOutrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
                     processedCompetitions.append(competition)
                 }
 
@@ -1408,6 +1494,10 @@ extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
            }
            return self.popularMatchesDataSource.matches.isNotEmpty
        case .upcoming:
+           if self.todayMatchesDataSource.todayMatches.isEmpty,
+              let outrightCompetitions = self.todayMatchesDataSource.outrightCompetitions {
+               return outrightCompetitions.isNotEmpty
+           }
            return self.todayMatchesDataSource.todayMatches.isNotEmpty
        case .competitions:
            if self.competitions.isEmpty {

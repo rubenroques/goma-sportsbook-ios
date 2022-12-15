@@ -45,6 +45,7 @@ public struct Market: Codable {
     public var marketTypeId: String?
     public var eventMarketTypeId: String?
     public var eventName: String?
+    public var isMainOutright: Bool?
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -53,6 +54,7 @@ public struct Market: Codable {
         case marketTypeId = "marketTypeId"
         case eventMarketTypeId = "eventMarketTypeId"
         case eventName = "eventName"
+        case isMainOutright = "ismainoutright"
     }
     
 }

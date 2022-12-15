@@ -413,7 +413,7 @@ class OutrightMarketDetailsStore {
                     marketGroupOrganizers.append(sequentialMarketGroupOrganizer)
 
                 }
-                else if outcomesDictionary.keys.count > 3 && value.count == 1 {
+                else if outcomesDictionary.keys.count > 3 && value.count >= 1 {
                     // Grouped markets with a lot of outcomes undefined
                     let undefinedGroupMarketGroupOrganizer = UndefinedGroupMarketGroupOrganizer(id: firstMarket.id, name: marketGroupName, outcomes: outcomesDictionary)
 
