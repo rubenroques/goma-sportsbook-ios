@@ -46,4 +46,6 @@ protocol EventsProvider {
 
     func getCompetitionMarketGroups(competitionId: String) -> AnyPublisher<SportCompetitionInfo, ServiceProviderError>
 
+    func getSearchEvents(query: String, resultLimit: String, page: String) -> AnyPublisher<EventsGroup, ServiceProviderError>
+
 }

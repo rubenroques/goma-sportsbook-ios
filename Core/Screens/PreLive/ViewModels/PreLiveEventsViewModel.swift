@@ -794,7 +794,6 @@ class PreLiveEventsViewModel: NSObject {
 
         if let eventsGroups {
             let competitions = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups)
-            print("OUTRIGHT COMPETITIONS: \(competitions)")
 
             if self.matchListTypePublisher.value == .popular {
                 self.popularOutrightCompetitions = competitions

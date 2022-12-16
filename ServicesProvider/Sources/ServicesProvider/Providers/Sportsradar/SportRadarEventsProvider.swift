@@ -613,6 +613,21 @@ extension SportRadarEventsProvider {
         })
         .eraseToAnyPublisher()
     }
+
+    func getSearchEvents(query: String, resultLimit: String, page: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+
+        let endpoint = SportRadarRestAPIClient.search(query: query, resultLimit: resultLimit, page: page)
+
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<[SportRadarModels.Event]>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { sportRadarResponse -> EventsGroup in
+            let events = sportRadarResponse.data
+            let mappedEventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
+            return mappedEventsGroup
+        })
+        .eraseToAnyPublisher()
+
+    }
 }
 
 extension SportRadarEventsProvider: UnsubscriptionController {

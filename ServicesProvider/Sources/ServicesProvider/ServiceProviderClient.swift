@@ -227,6 +227,16 @@ extension ServicesProviderClient {
 
         return eventsProvider.getCompetitionMarketGroups(competitionId: competitionId)
     }
+
+    public func getSearchEvents(query: String, resultLimit: String, page: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getSearchEvents(query: query, resultLimit: resultLimit, page: page)
+    }
 }
 
 

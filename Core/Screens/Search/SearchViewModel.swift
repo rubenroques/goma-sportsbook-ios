@@ -128,7 +128,23 @@ class SearchViewModel: NSObject {
         self.isEmptySearch = false
 
         // EM TEMP SHUTDOWN
-        self.hasDoneSearch = true
+        //self.hasDoneSearch = true
+        Env.servicesProvider.getSearchEvents(query: searchQuery, resultLimit: "50", page: "0")
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("SEARCH ERROR: \(error)")
+                }
+
+            }, receiveValue: { [weak self] eventsGroup in
+
+                print("SEARCH RESPONSE: \(eventsGroup)")
+
+            })
+            .store(in: &cancellables)
 
 //        let searchRoute = TSRouter.searchV2(language: "en",
 //                                            limit: 20,

@@ -51,7 +51,7 @@ class SportRadarRestConnector {
             .decode(type: T.self, decoder: self.decoder)
             .mapError { error in
                 // Debug helper
-                // print("ServiceProvider-NetworkManager Error \(error)")
+                print("ServiceProvider-NetworkManager Error \(error)")
                 return ServiceProviderError.invalidResponse
             }
             .eraseToAnyPublisher()

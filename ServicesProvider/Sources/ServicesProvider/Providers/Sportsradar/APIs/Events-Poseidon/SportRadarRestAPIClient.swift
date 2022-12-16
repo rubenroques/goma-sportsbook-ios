@@ -20,6 +20,7 @@ enum SportRadarRestAPIClient {
     case sportRegionsNavigationList(sportId: String)
     case regionCompetitions(regionId: String)
     case competitionMarketGroups(competitionId: String)
+    case search(query: String, resultLimit: String, page: String)
 }
 
 extension SportRadarRestAPIClient: Endpoint {
@@ -46,6 +47,8 @@ extension SportRadarRestAPIClient: Endpoint {
             return "/services/content/get"
         case .competitionMarketGroups:
             return "/services/content/get"
+        case .search:
+            return "/services/content/get"
         }
     }
 
@@ -60,6 +63,7 @@ extension SportRadarRestAPIClient: Endpoint {
         case .sportRegionsNavigationList: return nil 
         case .regionCompetitions: return nil
         case .competitionMarketGroups: return nil
+        case .search: return nil
         }
     }
 
@@ -74,6 +78,7 @@ extension SportRadarRestAPIClient: Endpoint {
         case .sportRegionsNavigationList: return .post 
         case .regionCompetitions: return .post
         case .competitionMarketGroups: return .post
+        case .search: return .post
         }
     }
 
@@ -174,6 +179,21 @@ extension SportRadarRestAPIClient: Endpoint {
                         }
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
+        case .search(let query, let resultLimit, let page):
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "eventSearch",
+                                "id": "\(query)/\(resultLimit)/\(page)"
+                            },
+                            "clientContext": {
+                                "language": "UK",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
         default:
             return nil
         }
@@ -200,6 +220,8 @@ extension SportRadarRestAPIClient: Endpoint {
         case .regionCompetitions:
             return SportRadarConstants.bettingHostname
         case .competitionMarketGroups:
+            return SportRadarConstants.bettingHostname
+        case .search:
             return SportRadarConstants.bettingHostname
         }
     }
@@ -231,6 +253,8 @@ extension SportRadarRestAPIClient: Endpoint {
         case .regionCompetitions:
             return defaultHeaders
         case .competitionMarketGroups:
+            return defaultHeaders
+        case .search:
             return defaultHeaders
         }
     }
