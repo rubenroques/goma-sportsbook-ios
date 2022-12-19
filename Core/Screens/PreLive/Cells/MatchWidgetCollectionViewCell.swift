@@ -55,6 +55,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var suspendedBaseView: UIView!
     @IBOutlet private weak var suspendedLabel: UILabel!
 
+    @IBOutlet private weak var seeAllBaseView: UIView!
+    @IBOutlet private weak var seeAllLabel: UILabel!
+
     //
     // Design Constraints
     @IBOutlet private weak var topMarginSpaceConstraint: NSLayoutConstraint!
@@ -154,6 +157,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.drawBaseView.layer.cornerRadius = 4.5
         self.awayBaseView.layer.cornerRadius = 4.5
 
+        self.seeAllBaseView.layer.cornerRadius = 4.5
+
         self.homeOddTitleLabel.text = localized("empty")
         self.drawOddTitleLabel.text = localized("empty")
         self.awayOddTitleLabel.text = localized("empty")
@@ -165,6 +170,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.timeLabel.text = localized("empty_value")
         self.locationFlagImageView.image = nil
         self.suspendedBaseView.isHidden = true
+        self.seeAllBaseView.isHidden = true
 
         let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
         self.homeBaseView.addGestureRecognizer(tapLeftOddButton)
@@ -271,6 +277,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.middleOutcomeDisabled = false
         self.rightOutcomeDisabled = false
         self.suspendedBaseView.isHidden = true
+        self.seeAllBaseView.isHidden = true
 
         self.adjustDesignToCardStyle()
         self.setupWithTheme()
@@ -298,6 +305,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.suspendedBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
         self.suspendedLabel.textColor = UIColor.App.textDisablePrimary
+
+        self.seeAllBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
+        self.seeAllLabel.textColor = UIColor.App.textPrimary
 
         if isLeftOutcomeButtonSelected {
             self.homeBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
@@ -626,9 +636,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             Logger.log("No markets found")
             oddsStackView.alpha = 0.2
             
-            self.homeOddValueLabel.text = localized("empty")
-            self.drawOddValueLabel.text = localized("empty")
-            self.awayOddValueLabel.text = localized("empty")
+//            self.homeOddValueLabel.text = localized("empty")
+//            self.drawOddValueLabel.text = localized("empty")
+//            self.awayOddValueLabel.text = localized("empty")
+            self.showSeeAllView()
             
         }
 
@@ -649,6 +660,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     private func showClosedView() {
         self.suspendedLabel.text = localized("closed_market")
         self.suspendedBaseView.isHidden = false
+    }
+
+    private func showSeeAllView() {
+        self.seeAllLabel.text = localized("see_all")
+        self.seeAllBaseView.isHidden = false
+        self.oddsStackView.isHidden = true
     }
 
     //

@@ -622,7 +622,9 @@ extension SportRadarEventsProvider {
 
         return requestPublisher.map( { sportRadarResponse -> EventsGroup in
             let events = sportRadarResponse.data
-            let mappedEventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
+            let mappedEventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events, withEmptyMarkets: true)
+//            let mappedEventsGroup = SportRadarModelMapper.events(fromInternalEvents: events)
+
             return mappedEventsGroup
         })
         .eraseToAnyPublisher()

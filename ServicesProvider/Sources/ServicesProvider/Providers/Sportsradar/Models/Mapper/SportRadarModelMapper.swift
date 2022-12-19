@@ -94,7 +94,8 @@ struct SportRadarModelMapper {
     // ============================================================
     // Events
     //
-    static func eventsGroup(fromInternalEvents internalEvents: [SportRadarModels.Event]) -> EventsGroup {
+    static func eventsGroup(fromInternalEvents internalEvents: [SportRadarModels.Event], withEmptyMarkets: Bool? = nil) -> EventsGroup {
+
         let events = internalEvents.map({ event -> Event in
             if let eventMarkets = event.markets {
                 let markets = eventMarkets.map(Self.market(fromInternalMarket:))
@@ -117,11 +118,19 @@ struct SportRadarModelMapper {
                          markets: [])
         })
         
-        let filterEvents = events.filter({
-            !$0.markets.isEmpty
-        })
-        
-        return EventsGroup(events: filterEvents)
+//        let filterEvents = events.filter({
+//            !$0.markets.isEmpty
+//        })
+
+        if let withEmptyMarkets,
+           withEmptyMarkets {
+            let filterEvents = events.filter({
+                $0.id != "_TOKEN_"
+            })
+            return EventsGroup(events: filterEvents)
+        }
+
+        return EventsGroup(events: events)
     }
     
     static func market(fromInternalMarket internalMarket: SportRadarModels.Market) -> Market {

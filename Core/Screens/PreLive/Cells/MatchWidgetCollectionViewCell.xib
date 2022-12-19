@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -89,6 +89,22 @@
                                 <constraints>
                                     <constraint firstItem="Thh-yZ-s6v" firstAttribute="centerY" secondItem="DoR-hW-9XB" secondAttribute="centerY" id="U4M-l5-EF6"/>
                                     <constraint firstItem="Thh-yZ-s6v" firstAttribute="centerX" secondItem="DoR-hW-9XB" secondAttribute="centerX" id="X8d-gM-cyI"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xel-CJ-cY5">
+                                <rect key="frame" x="12" y="104" width="307" height="40"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Suspended" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vrs-dD-HHo">
+                                        <rect key="frame" x="119.5" y="13.5" width="68.5" height="13"/>
+                                        <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="13"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="Vrs-dD-HHo" firstAttribute="centerY" secondItem="Xel-CJ-cY5" secondAttribute="centerY" id="bdm-kl-7NF"/>
+                                    <constraint firstItem="Vrs-dD-HHo" firstAttribute="centerX" secondItem="Xel-CJ-cY5" secondAttribute="centerX" id="x6P-qx-45a"/>
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="kTP-cv-RCw">
@@ -354,12 +370,16 @@
                             <constraint firstItem="D8R-G1-Yk3" firstAttribute="top" secondItem="Ll0-G9-s03" secondAttribute="bottom" constant="4" id="H5T-qv-Lm3"/>
                             <constraint firstItem="D8R-G1-Yk3" firstAttribute="trailing" secondItem="kTP-cv-RCw" secondAttribute="trailing" id="I4Z-ly-41y"/>
                             <constraint firstItem="WZf-bd-zho" firstAttribute="leading" secondItem="Ll0-G9-s03" secondAttribute="trailing" constant="4" id="Luu-zR-4n9"/>
+                            <constraint firstItem="Xel-CJ-cY5" firstAttribute="trailing" secondItem="hqr-8r-9MW" secondAttribute="trailing" id="Mv2-Xj-hur"/>
                             <constraint firstItem="Ll0-G9-s03" firstAttribute="leading" secondItem="kTP-cv-RCw" secondAttribute="leading" id="PLK-hn-M9U"/>
                             <constraint firstItem="DoR-hW-9XB" firstAttribute="top" secondItem="3W6-fO-bs3" secondAttribute="top" id="RFZ-uY-sN0"/>
                             <constraint firstItem="Ll0-G9-s03" firstAttribute="top" secondItem="T2w-ri-ozy" secondAttribute="top" constant="11" id="Rin-Ge-cb1"/>
                             <constraint firstItem="kTP-cv-RCw" firstAttribute="top" secondItem="D8R-G1-Yk3" secondAttribute="bottom" constant="5" id="VV9-JI-uRu"/>
+                            <constraint firstItem="Xel-CJ-cY5" firstAttribute="bottom" secondItem="3W6-fO-bs3" secondAttribute="bottom" id="gi5-hS-caq"/>
                             <constraint firstAttribute="bottom" secondItem="kTP-cv-RCw" secondAttribute="bottom" constant="12" id="jPE-gz-w4d"/>
+                            <constraint firstItem="Xel-CJ-cY5" firstAttribute="leading" secondItem="3W6-fO-bs3" secondAttribute="leading" id="lN5-r1-FNX"/>
                             <constraint firstAttribute="trailing" secondItem="kTP-cv-RCw" secondAttribute="trailing" constant="12" id="oUB-LZ-QCO"/>
+                            <constraint firstItem="Xel-CJ-cY5" firstAttribute="top" secondItem="3W6-fO-bs3" secondAttribute="top" id="sRD-oM-dr9"/>
                             <constraint firstAttribute="width" constant="331" id="sUR-Bz-O1X"/>
                             <constraint firstItem="WZf-bd-zho" firstAttribute="centerY" secondItem="Ll0-G9-s03" secondAttribute="centerY" id="stQ-y3-xc4"/>
                             <constraint firstItem="fML-Z9-21w" firstAttribute="centerX" secondItem="hjz-Yg-JGd" secondAttribute="centerX" id="xqw-Bk-PIe"/>
@@ -407,6 +427,8 @@
                 <outlet property="oddsStackView" destination="kTP-cv-RCw" id="WXr-a6-clg"/>
                 <outlet property="participantsBaseView" destination="D8R-G1-Yk3" id="n6Q-CP-41c"/>
                 <outlet property="resultCenterConstraint" destination="2Mu-Hz-yGt" id="FU2-6y-yee"/>
+                <outlet property="seeAllBaseView" destination="Xel-CJ-cY5" id="Dfl-gY-KSc"/>
+                <outlet property="seeAllLabel" destination="Vrs-dD-HHo" id="3Bb-90-ubx"/>
                 <outlet property="suspendedBaseView" destination="DoR-hW-9XB" id="30i-gU-w3n"/>
                 <outlet property="suspendedLabel" destination="Thh-yZ-s6v" id="Xsi-9y-Nef"/>
                 <outlet property="teamsHeightConstraint" destination="WkJ-AG-pI4" id="XD9-8p-6d2"/>
@@ -420,7 +442,7 @@
     <resources>
         <image name="odd_down_icon" width="10" height="5"/>
         <image name="odd_up_icon" width="10" height="5"/>
-        <image name="unselected_favorite_icon" width="16" height="15"/>
+        <image name="unselected_favorite_icon" width="19" height="18"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
