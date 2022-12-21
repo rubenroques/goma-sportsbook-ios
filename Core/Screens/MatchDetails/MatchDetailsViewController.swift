@@ -81,7 +81,10 @@ class MatchDetailsViewController: UIViewController {
     
     @IBOutlet private var matchNotAvailableView: UIView!
     @IBOutlet private var matchNotAvailableLabel: UILabel!
-    
+
+    @IBOutlet private var marketsNotAvailableView: UIView!
+    @IBOutlet private var marketsNotAvailableLabel: UILabel!
+
     @IBOutlet private weak var homeRedCardImage: UIImageView!
     @IBOutlet private weak var awayRedCardImage: UIImageView!
     @IBOutlet private weak var homeRedCardLabel: UILabel!
@@ -286,6 +289,8 @@ class MatchDetailsViewController: UIViewController {
         
         //
         self.matchNotAvailableView.isHidden = true
+
+        self.marketsNotAvailableView.isHidden = true
         
         self.matchFieldBaseView.isHidden = false
         self.statsBaseView.isHidden = false
@@ -538,6 +543,10 @@ class MatchDetailsViewController: UIViewController {
         
         self.matchNotAvailableView.backgroundColor = UIColor.App.backgroundPrimary
         self.matchNotAvailableLabel.textColor = UIColor.App.textPrimary
+
+        self.marketsNotAvailableView.backgroundColor = UIColor.App.backgroundPrimary
+        self.marketsNotAvailableLabel.textColor = UIColor.App.textPrimary
+
         self.matchFieldLoadingView.tintColor = .gray
         
         self.statsBaseView.backgroundColor = UIColor.App.backgroundTertiary
@@ -816,6 +825,10 @@ class MatchDetailsViewController: UIViewController {
         }
         
         print("MatchDetailsMarkets - \(self.marketGroupsViewControllers.count)")
+
+        if marketGroups.isEmpty {
+            self.showMarketsNotAvailableView()
+        }
     }
     
     func reloadMarketGroupDetailsContent() {
@@ -1064,6 +1077,17 @@ class MatchDetailsViewController: UIViewController {
         self.shareButton.isHidden = true
         
         self.matchNotAvailableView.isHidden = false
+    }
+
+    func showMarketsNotAvailableView() {
+
+        self.tableView.isHidden = true
+
+        self.marketTypesCollectionView.isHidden = true
+
+        self.marketsNotAvailableView.isHidden = false
+
+        self.marketsNotAvailableLabel.text = localized("markets_not_available")
     }
     
     @objc func didTapBetslipView() {

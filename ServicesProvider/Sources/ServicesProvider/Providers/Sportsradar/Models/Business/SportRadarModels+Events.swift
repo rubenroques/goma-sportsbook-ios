@@ -31,7 +31,9 @@ extension SportRadarModels {
         var startDate: Date?
         
         var markets: [Market]?
-        
+
+        var numberMarkets: Int?
+
         enum CodingKeys: String, CodingKey {
             case id = "idfoevent"
             case homeName = "participantname_home"
@@ -41,6 +43,7 @@ extension SportRadarModels {
             case sportTypeName = "sporttypename"
             case startDate = "tsstart"
             case markets = "markets"
+            case numberMarkets = "numMarkets"
         }
 
         init(from decoder: Decoder) throws {
@@ -53,6 +56,7 @@ extension SportRadarModels {
             self.competitionName = container.contains(.competitionName) ? try container.decode(String.self, forKey: .competitionName) : nil
             self.sportTypeName = container.contains(.sportTypeName) ? try container.decode(String.self, forKey: .sportTypeName) : nil
             self.markets = container.contains(.markets) ? try container.decode([Market].self, forKey: .markets) : nil
+            self.numberMarkets = container.contains(.numberMarkets) ? try container.decode(Int.self, forKey: .numberMarkets) : nil
 
             let dateString = container.contains(.startDate) ? try container.decode(String.self, forKey: .startDate) : nil
 

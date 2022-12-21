@@ -194,7 +194,7 @@ class SearchViewModel: NSObject {
                               date: event.startDate ?? Date(timeIntervalSince1970: 0),
                               sportType: event.sportTypeName ?? "",
                               venue: nil,
-                              numberTotalOfMarkets: event.markets.count ?? 0,
+                              numberTotalOfMarkets: event.numberMarkets != nil ? event.numberMarkets ?? 0 : event.markets.count,
                               markets: ServiceProviderModelMapper.markets(fromServiceProviderMarkets: event.markets),
                               rootPartId: "",
                               sportName: event.sportTypeName)

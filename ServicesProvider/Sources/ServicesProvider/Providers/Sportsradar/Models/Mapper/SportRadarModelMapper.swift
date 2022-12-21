@@ -106,7 +106,8 @@ struct SportRadarModelMapper {
                              competitionId: event.competitionId ?? "",
                              competitionName: event.competitionName ?? "",
                              startDate: event.startDate ?? Date(),
-                             markets: markets)
+                             markets: markets,
+                             numberMarkets: event.numberMarkets)
             }
             return Event(id: event.id,
                          homeTeamName: event.homeName ?? "",
@@ -115,7 +116,8 @@ struct SportRadarModelMapper {
                          competitionId: event.competitionId ?? "",
                          competitionName: event.competitionName ?? "",
                          startDate: event.startDate ?? Date(),
-                         markets: [])
+                         markets: [],
+                         numberMarkets: event.numberMarkets)
         })
         
 //        let filterEvents = events.filter({
