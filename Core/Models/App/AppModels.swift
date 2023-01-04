@@ -157,12 +157,69 @@ extension Outcome {
     }
 }
 
+enum OddFormat: Codable, Hashable {
+    case fraction(numerator: Int, denominator: Int)
+    case decimal(odd: Double)
+
+    func hash(into hasher: inout Hasher) {
+        switch self {
+        case .fraction(let numerator, let denominator):
+            hasher.combine("fraction")
+            hasher.combine(numerator)
+            hasher.combine(denominator)
+        case .decimal(let odd):
+            hasher.combine("decimal")
+            hasher.combine(odd)
+        }
+    }
+    
+}
+
 struct BettingOffer {
+
     var id: String
-    var value: Double
+
     var statusId: String
     var isLive: Bool
     var isAvailable: Bool
+
+    var odd: OddFormat
+
+    var decimalOdd: Double {
+        switch self.odd {
+        case .fraction(let numerator, let denominator):
+            return (Double(numerator)/Double(denominator)) + 1.0
+        case .decimal(let odd):
+            return odd
+        }
+    }
+
+    var fractionalOdd: (numerator: Int, denominator: Int) {
+        switch self.odd {
+        case .fraction(let numerator, let denominator):
+            return (numerator, denominator)
+        case .decimal(let odd):
+            let rational = OddConverter.rationalApproximation(originalValue: odd)
+            return (rational.num, rational.den)
+        }
+    }
+
+    init(id: String, decimalOdd: Double, statusId: String, isLive: Bool, isAvailable: Bool) {
+        self.id = id
+        self.odd = OddFormat.decimal(odd: decimalOdd)
+        self.statusId = statusId
+        self.isLive = isLive
+        self.isAvailable = isAvailable
+    }
+
+    init(id: String, odd: OddFormat, statusId: String, isLive: Bool, isAvailable: Bool) {
+        self.id = id
+        self.odd = odd
+        self.statusId = statusId
+        self.isLive = isLive
+        self.isAvailable = isAvailable
+    }
+
 }
 
 enum MarketType {

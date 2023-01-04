@@ -110,7 +110,7 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
 
         self.marketTypeLabel.text = outcome.typeName
 
-        self.updateBettingOffer(value: outcome.bettingOffer.value,
+        self.updateBettingOffer(value: outcome.bettingOffer.decimalOdd,
                                 statusId: outcome.bettingOffer.statusId != "" ? outcome.bettingOffer.statusId : "1",
                                 isAvailableForBetting: outcome.bettingOffer.isAvailable ?? true)
 

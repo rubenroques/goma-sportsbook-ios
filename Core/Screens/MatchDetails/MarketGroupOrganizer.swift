@@ -340,7 +340,7 @@ struct SequentialMarketGroupOrganizer: MarketGroupOrganizer {
         self.market = market
 
         if sortedByOdd {
-            self.sortedOutcomes = market.outcomes.sorted(by: \.bettingOffer.value)
+            self.sortedOutcomes = market.outcomes.sorted(by: \.bettingOffer.decimalOdd)
         }
         else {
             self.sortedOutcomes = market.outcomes.sorted(by: \.translatedName)

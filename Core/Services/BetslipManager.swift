@@ -232,7 +232,7 @@ class BetslipManager: NSObject {
                                                  outcomeId: bettingTicket.outcomeId,
                                                  marketId: bettingTicket.marketId,
                                                  matchId: bettingTicket.matchId,
-                                                 value: value,
+                                                 decimalOdd: value,
                                                  isAvailable: bettingOffer.isAvailable ?? bettingTicket.isAvailable,
                                                  statusId: bettingOffer.statusId ?? bettingTicket.statusId,
                                                  matchDescription: bettingTicket.matchDescription,
@@ -250,7 +250,7 @@ class BetslipManager: NSObject {
                                                  outcomeId: bettingTicket.outcomeId,
                                                  marketId: bettingTicket.marketId,
                                                  matchId: bettingTicket.matchId,
-                                                 value: newOdd ?? bettingTicket.value,
+                                                 decimalOdd: newOdd ?? bettingTicket.decimalOdd,
                                                  isAvailable: isAvailable ?? bettingTicket.isAvailable,
                                                  statusId: statusId ?? bettingTicket.statusId,
                                                  matchDescription: bettingTicket.matchDescription,
@@ -303,7 +303,7 @@ extension BetslipManager {
                                                                          awayTeamName: "",
                                                                          marketName: "",
                                                                          outcomeName: "",
-                                                                         odd: .european(odd: bettingTicket.value),
+                                                                         odd: .european(odd: bettingTicket.decimalOdd),
                                                                          stake: 1)
             return betTicketSelection
         }
@@ -351,17 +351,14 @@ extension BetslipManager {
             return Fail(error: BetslipErrorType.emptyBetslip).eraseToAnyPublisher()
         }
 
-        let rational = OddConverter.rationalApproximation(originalValue: firstBettingTicket.value)
-        let oddNumerator = rational.num
-        let oddDenominator = rational.den
-
+        let convertedOdd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: firstBettingTicket.odd)
         let betTicketSelection = ServicesProvider.BetTicketSelection(identifier: firstBettingTicket.id,
                                                                      eventName: "",
                                                                      homeTeamName: "",
                                                                      awayTeamName: "",
                                                                      marketName: "",
                                                                      outcomeName: "",
-                                                                     odd: .fraction(numerator: oddNumerator, denominator: oddDenominator),
+                                                                     odd: convertedOdd,
                                                                      stake: stake)
 
         let publisher =  Env.servicesProvider.placeSingleBet(betTicketSelection: betTicketSelection)
@@ -400,7 +397,7 @@ extension BetslipManager {
 
         let ticketSelections = self.bettingTicketsPublisher.value
             .map { (ticket: BettingTicket) in
-                let rational = OddConverter.rationalApproximation(originalValue: ticket.value)
+                let rational = OddConverter.rationalApproximation(originalValue: ticket.decimalOdd)
                 let oddNumerator = rational.num
                 let oddDenominator = rational.den
                 let stake = amounts[ticket.id] ?? 1.0
@@ -432,7 +429,7 @@ extension BetslipManager {
     func requestSimpleBetslipSelectionState(oddsBoostPercentage: Double? = nil) {
 
         let ticketSelections = self.bettingTicketsPublisher.value
-            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
+            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.decimalOdd) })
 
         for ticket in ticketSelections {
 
@@ -465,7 +462,7 @@ extension BetslipManager {
     func requestMultipleBetslipSelectionState(oddsBoostPercentage: Double? = nil) {
 
         let ticketSelections = self.bettingTicketsPublisher.value
-            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
+            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.decimalOdd) })
 
         let route = TSRouter.getBetslipSelectionInfo(language: "en",
                                                      stakeAmount: 1,
@@ -496,7 +493,7 @@ extension BetslipManager {
     -> AnyPublisher<BetslipSelectionState, EveryMatrix.APIError> {
 
         let ticketSelections = self.bettingTicketsPublisher.value
-            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
+            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.decimalOdd) })
 
         let route = TSRouter.getSystemBetSelectionInfo(language: "en",
                                                        stakeAmount: amount,
@@ -558,7 +555,7 @@ extension BetslipManager {
         let updatedTicketSelections = self.bettingTicketsPublisher.value
         let ticketSelections = updatedTicketSelections.filter({ bettingTicket in
             bettingTicket.id == betTicketId
-        }).map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
+        }).map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.decimalOdd) })
 
         let betslipOddValidationType: String = UserDefaults.standard.bettingUserSettings.oddValidationType
 
@@ -600,7 +597,7 @@ extension BetslipManager {
 
         let updatedTicketSelections = self.bettingTicketsPublisher.value
         let ticketSelections = updatedTicketSelections
-            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
+            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.decimalOdd) })
         
         let betslipOddValidationType: String = UserDefaults.standard.bettingUserSettings.oddValidationType
 
@@ -650,7 +647,7 @@ extension BetslipManager {
 
         let updatedTicketSelections = self.bettingTicketsPublisher.value
         let ticketSelections = updatedTicketSelections
-            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
+            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.decimalOdd) })
         
         let betslipOddValidationType: String = UserDefaults.standard.bettingUserSettings.oddValidationType
         

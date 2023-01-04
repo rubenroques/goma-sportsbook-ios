@@ -167,7 +167,7 @@ class QuickBetViewModel {
     }
 
     func requestSimpleBetSelectionState() {
-        let ticketSelection = EveryMatrix.BetslipTicketSelection(id: self.bettingTicket.id, currentOdd: self.bettingTicket.value)
+        let ticketSelection = EveryMatrix.BetslipTicketSelection(id: self.bettingTicket.id, currentOdd: self.bettingTicket.decimalOdd)
 
         let route = TSRouter.getBetslipSelectionInfo(language: "en",
                                                      stakeAmount: 1,
@@ -242,7 +242,7 @@ class QuickBetViewModel {
 
         let betAmount = self.finalBetAmountPublisher.value
 
-        let ticketSelection = EveryMatrix.BetslipTicketSelection(id: self.bettingTicket.id, currentOdd: self.bettingTicket.value)
+        let ticketSelection = EveryMatrix.BetslipTicketSelection(id: self.bettingTicket.id, currentOdd: self.bettingTicket.decimalOdd)
 
         let userBetslipSetting = UserDefaults.standard.string(forKey: "betslipOddValidationType")
 

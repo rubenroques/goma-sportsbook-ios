@@ -387,7 +387,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
             if let outcome = market.outcomes[safe: 0] {
                 self.homeOddTitleLabel.text = outcome.translatedName.isNotEmpty ? outcome.translatedName : outcome.typeName
-                self.homeOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
+                self.homeOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.decimalOdd * 100)/100))"
                 // self.currentHomeOddValue = outcome.bettingOffer.value
                 self.leftOutcome = outcome
 
@@ -421,7 +421,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
             }
             if let outcome = market.outcomes[safe: 1] {
                 self.drawOddTitleLabel.text = outcome.translatedName.isNotEmpty ? outcome.translatedName : outcome.typeName
-                self.drawOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
+                self.drawOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.decimalOdd * 100)/100))"
                 // self.currentDrawOddValue = outcome.bettingOffer.value
                 self.middleOutcome = outcome
 
@@ -454,7 +454,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
             }
             if let outcome = market.outcomes[safe: 2] {
                 self.awayOddTitleLabel.text = outcome.translatedName.isNotEmpty ? outcome.translatedName : outcome.typeName
-                self.awayOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
+                self.awayOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.decimalOdd * 100)/100))"
                 // self.currentAwayOddValue = outcome.bettingOffer.value
                 self.rightOutcome = outcome
 

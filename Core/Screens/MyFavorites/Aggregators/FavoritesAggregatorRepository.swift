@@ -262,7 +262,7 @@ class FavoritesAggregatorsRepository {
 
                     if let rawBettingOffer = self.bettingOffers[rawOutcome.id] {
                         let bettingOffer = BettingOffer(id: rawBettingOffer.id,
-                                                        value: rawBettingOffer.oddsValue ?? 0.0,
+                                                        decimalOdd: rawBettingOffer.oddsValue ?? 0.0,
                                                         statusId: "", // TODO: Code Review 14/02 - Add status id
                                                         isLive: rawBettingOffer.isLive ?? false,
                                                         isAvailable: rawBettingOffer.isAvailable ?? true)

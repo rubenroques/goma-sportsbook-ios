@@ -107,9 +107,9 @@ extension ServiceProviderModelMapper {
     }
     
     static func outcome(fromServiceProviderOutcome outcome: ServicesProvider.Outcome) -> Outcome {
-        
+        let oddFormat: OddFormat = Self.oddFormat(fromServiceProviderOddFormat: outcome.odd)
         let bettingOffer = BettingOffer(id: outcome.id,
-                                        value: outcome.odd,
+                                        odd:  oddFormat,
                                         statusId: "",
                                         isLive: true,
                                         isAvailable: true)
@@ -122,12 +122,30 @@ extension ServiceProviderModelMapper {
                               bettingOffer: bettingOffer,
                               orderValue: outcome.orderValue,
                               externalReference: outcome.externalReference)
+
         return outcome
+    }
+
+    static func oddFormat(fromServiceProviderOddFormat oddFormat: ServicesProvider.OddFormat) -> OddFormat {
+        switch oddFormat {
+        case .european(let odd):
+            return .decimal(odd: odd)
+        case .fraction(let numerator, let denominator):
+            return .fraction(numerator: numerator, denominator: denominator)
+        }
+    }
+
+    static func serviceProviderOddFormat(fromOddFormat oddFormat: OddFormat) -> ServicesProvider.OddFormat {
+        switch oddFormat {
+        case .decimal(let odd):
+            return .european(odd: odd)
+        case .fraction(let numerator, let denominator):
+            return .fraction(numerator: numerator, denominator: denominator)
+        }
     }
 
     static func competitions(fromEventsGroups eventsGroups: [EventsGroup]) -> [Competition] {
         var competitions = [Competition]()
-
         return competitions
     }
 

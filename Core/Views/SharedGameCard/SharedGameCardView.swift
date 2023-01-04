@@ -245,15 +245,15 @@ class SharedGameCardView: UIView {
             if mainMarket.outcomes.count > 2 {
                 if let leftOdd = mainMarket.outcomes[safe: 0] {
                     self.leftOddTopLabel.text = leftOdd.typeName
-                    self.leftOddBottomLabel.text = OddFormatter.formatOdd(withValue: leftOdd.bettingOffer.value)
+                    self.leftOddBottomLabel.text = OddFormatter.formatOdd(withValue: leftOdd.bettingOffer.decimalOdd)
                 }
                 if let middleOdd = mainMarket.outcomes[safe: 1] {
                     self.middleOddTopLabel.text = middleOdd.typeName
-                    self.middleOddBottomLabel.text = OddFormatter.formatOdd(withValue: middleOdd.bettingOffer.value)
+                    self.middleOddBottomLabel.text = OddFormatter.formatOdd(withValue: middleOdd.bettingOffer.decimalOdd)
                 }
                 if let rightOdd = mainMarket.outcomes[safe: 2] {
                     self.rightOddTopLabel.text = rightOdd.typeName
-                    self.rightOddBottomLabel.text = OddFormatter.formatOdd(withValue: rightOdd.bettingOffer.value)
+                    self.rightOddBottomLabel.text = OddFormatter.formatOdd(withValue: rightOdd.bettingOffer.decimalOdd)
                 }
 
             }
@@ -261,11 +261,11 @@ class SharedGameCardView: UIView {
                 self.isTwoMarket = true
                 if let leftOdd = mainMarket.outcomes[safe: 0] {
                     self.leftOddTopLabel.text = leftOdd.typeName
-                    self.leftOddBottomLabel.text = OddFormatter.formatOdd(withValue: leftOdd.bettingOffer.value)
+                    self.leftOddBottomLabel.text = OddFormatter.formatOdd(withValue: leftOdd.bettingOffer.decimalOdd)
                 }
                 if let rightOdd = mainMarket.outcomes[safe: 1] {
                     self.rightOddTopLabel.text = rightOdd.typeName
-                    self.rightOddBottomLabel.text = OddFormatter.formatOdd(withValue: rightOdd.bettingOffer.value)
+                    self.rightOddBottomLabel.text = OddFormatter.formatOdd(withValue: rightOdd.bettingOffer.decimalOdd)
                 }
             }
         }

@@ -433,8 +433,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
             self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
             // Check for SportRadar invalid odd
-            if !outcome.bettingOffer.value.isNaN {
-            self.leftOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
+            if !outcome.bettingOffer.decimalOdd.isNaN {
+            self.leftOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
             }
             else {
                 self.leftBaseView.isUserInteractionEnabled = false
@@ -486,8 +486,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
             self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
             // Check for SportRadar invalid odd
-            if !outcome.bettingOffer.value.isNaN {
-            self.middleOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
+            if !outcome.bettingOffer.decimalOdd.isNaN {
+            self.middleOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
             }
             else {
                 self.middleBaseView.isUserInteractionEnabled = false
@@ -539,8 +539,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
             self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
             // Check for SportRadar invalid odd
-            if !outcome.bettingOffer.value.isNaN {
-            self.rightOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
+            if !outcome.bettingOffer.decimalOdd.isNaN {
+            self.rightOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
             }
             else {
                 self.rightBaseView.isUserInteractionEnabled = false

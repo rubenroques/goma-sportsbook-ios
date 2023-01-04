@@ -77,11 +77,7 @@ extension SportRadarModels {
         var orderValue: String?
         var externalReference: String?
 
-        var odd: Double {
-            let priceNumerator = Double(self.priceNumerator ?? "0.0") ?? 1.0
-            let priceDenominator = Double(self.priceDenominator ?? "0.0") ?? 1.0
-            return (priceNumerator/priceDenominator) + 1.0
-        }
+        var odd: OddFormat
         
         private var priceNumerator: String?
         private var priceDenominator: String?
@@ -107,6 +103,11 @@ extension SportRadarModels {
             self.marketId = try container.decodeIfPresent(String.self, forKey: SportRadarModels.Outcome.CodingKeys.marketId)
             self.orderValue = try container.decodeIfPresent(String.self, forKey: SportRadarModels.Outcome.CodingKeys.orderValue)
             self.externalReference = try container.decodeIfPresent(String.self, forKey: SportRadarModels.Outcome.CodingKeys.externalReference)
+
+            let numerator = Double(self.priceNumerator ?? "0.0") ?? 1.0
+            let denominator = Double(self.priceDenominator ?? "0.0") ?? 1.0
+
+            self.odd = .fraction(numerator: Int(numerator), denominator: Int(denominator) )
         }
 
     }

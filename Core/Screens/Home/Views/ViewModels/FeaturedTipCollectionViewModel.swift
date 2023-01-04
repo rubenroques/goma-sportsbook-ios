@@ -65,7 +65,7 @@ class FeaturedTipCollectionViewModel {
                                        outcomeId: selection.outcomeId,
                                        marketId: selection.bettingTypeId,
                                        matchId: selection.eventId,
-                                       value: Double(selection.odds) ?? 0.0,
+                                       decimalOdd: Double(selection.odds) ?? 0.0,
                                        isAvailable: true,
                                        statusId: "\(selection.extraSelectionInfo.outcomeEntity.statusId)",
                                        matchDescription: selection.eventName,

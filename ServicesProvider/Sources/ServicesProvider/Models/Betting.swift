@@ -86,12 +86,12 @@ public struct BetslipState: Codable {
     }
 }
 
-public struct BetTicketSelection: Codable {
+public enum OddFormat: Codable {
+    case fraction(numerator: Int, denominator: Int)
+    case european(odd: Double)
+}
 
-    public enum OddFormat: Codable {
-        case fraction(numerator: Int, denominator: Int)
-        case european(odd: Double)
-    }
+public struct BetTicketSelection: Codable {
 
     public var identifier: String
     public var eventName: String
@@ -103,7 +103,15 @@ public struct BetTicketSelection: Codable {
 
     public var stake: Double
 
-    public init(identifier: String, eventName: String, homeTeamName: String, awayTeamName: String, marketName: String, outcomeName: String, odd: OddFormat, stake: Double) {
+    public init(identifier: String,
+                eventName: String,
+                homeTeamName: String,
+                awayTeamName: String,
+                marketName: String,
+                outcomeName: String,
+                odd: OddFormat,
+                stake: Double) {
+        
         self.identifier = identifier
         self.eventName = eventName
         self.homeTeamName = homeTeamName

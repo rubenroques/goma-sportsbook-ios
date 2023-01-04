@@ -197,7 +197,7 @@ class LiveEventsViewModel: NSObject {
             let matchOdds = marketSort[0].outcomes
             let oddsRange = filterOptionsValue.lowerBoundOddsRange...filterOptionsValue.highBoundOddsRange
             for odd in matchOdds {
-                let oddValue = CGFloat(odd.bettingOffer.value)
+                let oddValue = CGFloat(odd.bettingOffer.decimalOdd)
                 if oddsRange.contains(oddValue) {
                     var newMatch = match
                     newMatch.markets = marketSort

@@ -64,7 +64,7 @@ public struct Outcome: Codable {
     
     public var id: String
     public var name: String
-    public var odd: Double
+    public var odd: OddFormat
     public var marketId: String?
     public var orderValue: String?
     public var externalReference: String?

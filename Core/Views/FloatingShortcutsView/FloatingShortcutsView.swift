@@ -98,7 +98,7 @@ class FloatingShortcutsView: UIView {
             .receive(on: DispatchQueue.main)
             .dropFirst()
             .map({ orderedSet -> Double in
-                let newArray = orderedSet.map { $0.value }
+                let newArray = orderedSet.map { $0.decimalOdd }
                 let multiple: Double = newArray.reduce(1.0, *)
                 return multiple
             })

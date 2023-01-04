@@ -531,7 +531,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         Env.betslipManager.bettingTicketsPublisher
             .receive(on: DispatchQueue.main)
             .map({ orderedSet -> Double in
-                let newArray = orderedSet.map { $0.value }
+                let newArray = orderedSet.map { $0.decimalOdd }
                 let multiple: Double = newArray.reduce(1.0, *)
                 return multiple
             })
@@ -721,13 +721,13 @@ class PreSubmissionBetslipViewController: UIViewController {
                     if let betValue = simpleBetsBettingValues[ticket.id] {
                         if ticket.bettingId == currentOddsBoost?.bettingId {
                             let oddsBoost = currentOddsBoost?.oddsBoost.oddsBoostPercent ?? 0
-                            let boostedValue = ticket.value + (ticket.value * oddsBoost)
+                            let boostedValue = ticket.decimalOdd + (ticket.decimalOdd * oddsBoost)
                             let expectedTicketReturn = boostedValue * betValue
                             expectedReturn += expectedTicketReturn
 
                         }
                         else {
-                            let expectedTicketReturn = ticket.value * betValue
+                            let expectedTicketReturn = ticket.decimalOdd * betValue
                             expectedReturn += expectedTicketReturn
                         }
                     }
