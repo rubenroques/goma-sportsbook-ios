@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 struct BettingTicket: Hashable, Codable {
 
     var id: String

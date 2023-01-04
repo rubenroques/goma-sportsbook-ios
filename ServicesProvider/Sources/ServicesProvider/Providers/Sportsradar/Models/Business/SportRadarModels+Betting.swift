@@ -123,18 +123,36 @@ extension SportRadarModels {
         }
     }
 
+    struct BetslipPotentialReturnResponse: Codable {
+
+        var potentialReturn: Double
+        var totalStake: Double
+        var numberOfBets: Int
+
+        enum CodingKeys: String, CodingKey {
+            case numberOfBets = "unitCount"
+            case potentialReturn = "potentialReturn"
+            case totalStake = "totalStake"
+        }
+        
+    }
+
     struct BetType: Codable {
+
         var typeCode: String
         var typeName: String
         var potencialReturn: Double
         var totalStake: Double
+        var numberOfIndividualBets: Int
 
         enum CodingKeys: String, CodingKey {
+            case numberOfIndividualBets = "unitCount"
             case typeCode = "idFOBetType"
             case typeName = "name"
             case potencialReturn = "potentialReturn"
             case totalStake = "totalStake"
         }
+        
     }
 
     struct BetSlipStateResponse: Codable {

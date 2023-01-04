@@ -19,6 +19,12 @@ extension ServiceProviderModelMapper {
         var matches = [Match]()
         for eventsGroup in eventsGroups {
             for event in eventsGroup.events {
+
+                var venue: Location?
+                if let venueCountry = event.venueCountry {
+                    venue = Location(id: venueCountry.iso2Code, name: venueCountry.name, isoCode: venueCountry.iso2Code)
+                }
+
                 matches.append(Match(id: event.id,
                                      competitionId: event.competitionId,
                                      competitionName: event.competitionName,
@@ -26,6 +32,7 @@ extension ServiceProviderModelMapper {
                                      awayParticipant: Participant(id: "", name: event.awayTeamName),
                                      date: event.startDate,
                                      sportType: event.sportTypeName,
+                                     venue: venue,
                                      numberTotalOfMarkets: 1,
                                      markets: Self.markets(fromServiceProviderMarkets: event.markets),
                                      rootPartId: ""))
@@ -37,6 +44,11 @@ extension ServiceProviderModelMapper {
     static func match(fromEventGroup eventGroup: EventsGroup) -> Match? {
         if let event = eventGroup.events[safe: 0] {
 
+            var venue: Location?
+            if let venueCountry = event.venueCountry {
+                venue = Location(id: venueCountry.iso2Code, name: venueCountry.name, isoCode: venueCountry.iso2Code)
+            }
+
             let match = Match(id: event.id,
                               competitionId: event.competitionId,
                               competitionName: event.competitionName,
@@ -44,6 +56,7 @@ extension ServiceProviderModelMapper {
                               awayParticipant: Participant(id: "", name: event.awayTeamName),
                               date: event.startDate,
                               sportType: event.sportTypeName,
+                              venue: venue,
                               numberTotalOfMarkets: 1,
                               markets: Self.markets(fromServiceProviderMarkets: event.markets),
                               rootPartId: "")

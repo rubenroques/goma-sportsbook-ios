@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -28,6 +28,7 @@
                 <outlet property="clearBaseView" destination="cEh-jz-3Se" id="vuR-kr-g6Y"/>
                 <outlet property="clearButton" destination="1NK-ag-RHY" id="KEL-kL-XIx"/>
                 <outlet property="emptyBetsBaseView" destination="WLl-sg-9Tv" id="12I-jL-puf"/>
+                <outlet property="emptyBetslipLabel" destination="hOC-eh-4d8" id="FXV-cw-Wks"/>
                 <outlet property="loadingBaseView" destination="WId-wH-AbA" id="e6z-KH-C4B"/>
                 <outlet property="loadingView" destination="cMq-CI-620" id="18N-Rk-IcL"/>
                 <outlet property="maxValueButtonView" destination="gFf-QV-h6m" id="qga-Nt-U3P"/>
@@ -200,15 +201,28 @@
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WLl-sg-9Tv">
                     <rect key="frame" x="0.0" y="0.0" width="757" height="1107"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hOC-eh-4d8">
+                            <rect key="frame" x="60" y="508.5" width="637" height="20.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="hOC-eh-4d8" firstAttribute="centerY" secondItem="WLl-sg-9Tv" secondAttribute="centerY" constant="-35" id="4Br-Rp-P3H"/>
+                        <constraint firstItem="hOC-eh-4d8" firstAttribute="centerX" secondItem="WLl-sg-9Tv" secondAttribute="centerX" id="8VQ-wO-aFD"/>
+                        <constraint firstItem="hOC-eh-4d8" firstAttribute="leading" secondItem="WLl-sg-9Tv" secondAttribute="leading" constant="60" id="JL7-69-p1r"/>
+                    </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TZO-Zq-dgn">
-                    <rect key="frame" x="0.0" y="44" width="757" height="56"/>
+                    <rect key="frame" x="0.0" y="48" width="757" height="56"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="56" id="rJr-ME-4RE"/>
                     </constraints>
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Q4m-H4-Smm">
-                    <rect key="frame" x="0.0" y="132" width="757" height="679"/>
+                    <rect key="frame" x="0.0" y="136" width="757" height="675"/>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </tableView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Oi-Vo-9uT">
@@ -777,7 +791,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cEh-jz-3Se">
-                    <rect key="frame" x="0.0" y="100" width="757" height="32"/>
+                    <rect key="frame" x="0.0" y="104" width="757" height="32"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1NK-ag-RHY">
                             <rect key="frame" x="694" y="5" width="51" height="25"/>
@@ -807,7 +821,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aLF-yD-t2E">
-                    <rect key="frame" x="0.0" y="0.0" width="757" height="44"/>
+                    <rect key="frame" x="0.0" y="0.0" width="757" height="48"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wu6-kU-jpt">
                     <rect key="frame" x="0.0" y="1073" width="757" height="34"/>

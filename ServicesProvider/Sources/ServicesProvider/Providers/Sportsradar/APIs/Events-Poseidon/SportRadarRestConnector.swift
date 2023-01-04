@@ -44,14 +44,14 @@ class SportRadarRestConnector {
                 return result.data
             }
             // Debug helper
-//            .handleEvents(receiveOutput: { data in
-//                print("ServiceProvider-NetworkManager [[ requesting ]] ", request,
-//                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
-//            })
+            .handleEvents(receiveOutput: { data in
+                print("ServiceProvider-NetworkManager [[ requesting ]] ", request,
+                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
+            })
             .decode(type: T.self, decoder: self.decoder)
             .mapError { error in
                 // Debug helper
-                // print("ServiceProvider-NetworkManager Error \(error)")
+                print("ServiceProvider-NetworkManager Error \(error)")
                 return ServiceProviderError.invalidResponse
             }
             .eraseToAnyPublisher()

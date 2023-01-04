@@ -17,7 +17,7 @@ protocol BettingProvider {
 
     func getAllowedBetTypes(withBetTicketSelections betTicketSelections: [BetTicketSelection]) -> AnyPublisher<[BetType], ServiceProviderError>
     
-    func calculateBetslipState(_ betslip: BetSlip)  -> AnyPublisher<BetslipState, ServiceProviderError>
-
-    func placeSingleBet(betTicketSelection: BetTicketSelection, stake: Double) -> AnyPublisher<PlacedBetResponse, ServiceProviderError>
+    func calculatePotentialReturn(forBetslipState betslipState: BetslipState)  -> AnyPublisher<BetslipPotentialReturn, ServiceProviderError>
+    
+    func placeSingleBet(betTicketSelection: BetTicketSelection) -> AnyPublisher<PlacedBetResponse, ServiceProviderError>
 }

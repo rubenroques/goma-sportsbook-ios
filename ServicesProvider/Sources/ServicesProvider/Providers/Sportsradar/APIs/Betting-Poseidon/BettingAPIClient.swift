@@ -9,9 +9,9 @@ import Foundation
 
 enum BettingAPIClient {
     case betHistory(page: Int, startDate: Date?, endDate: Date?, betState: [SportRadarModels.BetState]?, betResult: [SportRadarModels.BetResult]?)
-    case calculateReturns(betTicket: BetTicket)
+    case calculateReturns(betslipState: BetslipState)
     case getAllowedBetTypes(betTicketSelections: [BetTicketSelection])
-    case placeBet(betTicketSelection: BetTicketSelection, stake: Double)
+    case placeBet(betTicketSelection: BetTicketSelection)
 }
 
 extension BettingAPIClient: Endpoint {
@@ -124,7 +124,7 @@ extension BettingAPIClient: Endpoint {
             return data
 
         // ===================================================
-        case .placeBet(let betTicketSelection, let stake):
+        case .placeBet(let betTicketSelection):
 
             let priceDown: String
             let priceUp: String
@@ -159,7 +159,7 @@ extension BettingAPIClient: Endpoint {
                              ],
                              "idFOBetType": "S",
                              "pool": false,
-                             "placeStake": \(stake),
+                             "placeStake": \(betTicketSelection.stake),
                              "showStake": 0,
                              "winStake": 0
                            }

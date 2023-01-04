@@ -50,26 +50,40 @@ public struct BetTicketStake: Codable {
     var stake: Double
 }
 
+public enum BetGrouppingType: String, Codable {
+    case single = "S"
+    case multiple
+    case system
+}
+
 public struct BetType: Codable {
 
-    enum GrouppingType: String, Codable {
-        case single = "S"
-        case multiple
-        case system
+    public var name: String
+    public var type: BetGrouppingType
+    public var code: String
+    public var numberOfBets: Int
+    public var potencialReturn: Double
+    public var totalStake: Double?
+
+}
+
+public struct BetslipPotentialReturn: Codable {
+    public var potentialReturn: Double
+    public var totalStake: Double
+    public var numberOfBets: Int
+    public var betType: BetGrouppingType
+}
+
+public struct BetslipState: Codable {
+    public var tickets: [BetTicketSelection]
+    public var stakes: [String: Double]
+    public var betType: BetGrouppingType
+
+    public init(tickets: [BetTicketSelection], stakes: [String : Double], betType: BetGrouppingType) {
+        self.tickets = tickets
+        self.stakes = stakes
+        self.betType = betType
     }
-
-    var type: GrouppingType
-    var potencialReturn: Double
-    var totalStake: Double?
-}
-
-public struct BetSlip: Codable {
-    public var tickets: [BetTicket]
-}
-
-public struct BetTicket: Codable {
-    public var selection: [BetTicketSelection]
-    public var betType: String
 }
 
 public struct BetTicketSelection: Codable {
@@ -87,7 +101,9 @@ public struct BetTicketSelection: Codable {
     public var outcomeName: String
     public var odd: OddFormat
 
-    public init(identifier: String, eventName: String, homeTeamName: String, awayTeamName: String, marketName: String, outcomeName: String, odd: OddFormat) {
+    public var stake: Double
+
+    public init(identifier: String, eventName: String, homeTeamName: String, awayTeamName: String, marketName: String, outcomeName: String, odd: OddFormat, stake: Double) {
         self.identifier = identifier
         self.eventName = eventName
         self.homeTeamName = homeTeamName
@@ -95,6 +111,7 @@ public struct BetTicketSelection: Codable {
         self.marketName = marketName
         self.outcomeName = outcomeName
         self.odd = odd
+        self.stake = stake
     }
 
 }
@@ -165,9 +182,4 @@ public struct PlacedBetLeg: Codable {
         self.priceDenominator = priceDenominator
     }
 
-}
-
-
-public struct BetslipState: Codable {
-    
 }

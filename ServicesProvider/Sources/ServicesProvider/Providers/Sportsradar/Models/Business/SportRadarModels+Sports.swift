@@ -117,6 +117,12 @@ extension SportRadarModels {
             case id = "idfosporttype"
             case name = "name"
         }
+
+        init(from decoder: Decoder) throws {
+            let container: KeyedDecodingContainer<SportRadarModels.ScheduledSport.CodingKeys> = try decoder.container(keyedBy: SportRadarModels.ScheduledSport.CodingKeys.self)
+            self.id = try container.decode(String.self, forKey: SportRadarModels.ScheduledSport.CodingKeys.id)
+            self.name = try container.decode(String.self, forKey: SportRadarModels.ScheduledSport.CodingKeys.name)
+        }
     }
 
 }

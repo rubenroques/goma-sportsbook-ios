@@ -102,6 +102,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var secondarySystemWinningsSeparatorView: UIView!
 
     @IBOutlet private weak var emptyBetsBaseView: UIView!
+    @IBOutlet private weak var emptyBetslipLabel: UILabel!
 
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
@@ -122,8 +123,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     private var userSelectedSystemBet: Bool = false
     private var isBetBuilderSelection: Bool = false
     
-    var cancellables = Set<AnyCancellable>()
-    var isSuggestedMultiple: Bool = false
+    private var cancellables = Set<AnyCancellable>()
 
     var viewModel: PreSubmissionBetslipViewModel
 
@@ -136,15 +136,38 @@ class PreSubmissionBetslipViewController: UIViewController {
     private var listTypePublisher: CurrentValueSubject<BetslipType, Never> = .init(.simple)
 
     // System Bets vars
-    var selectedSystemBetType: SystemBetType? {
+    private var selectedSystemBetType: SystemBetType? {
         didSet {
             if let systemBetType = self.selectedSystemBetType {
-                self.systemBetTypeLabel.text = systemBetType.name ?? localized("system_bet")
+                self.systemBetTypeLabel.text = "\(systemBetType.name ?? localized("system_bet")) x\(systemBetType.numberOfBets ?? 0)"
             }
         }
     }
-    var systemBetOptions: [SystemBetType] = []
-    var showingSystemBetOptionsSelector: Bool = false {
+
+    private var systemBetOptions: [SystemBetType] = [] {
+        didSet {
+            var containsOldSelection = false
+            var componentsIndex = 0
+            if let currentSelection = self.selectedSystemBetType {
+                for (index, item) in self.systemBetOptions.enumerated() {
+                    if currentSelection.id == item.id {
+                        containsOldSelection = true
+                        componentsIndex = index
+                        break
+                    }
+                }
+            }
+
+            if self.selectedSystemBetType == nil || !containsOldSelection {
+                self.selectedSystemBetType = self.systemBetOptions.first
+            }
+
+            self.systemBetTypePickerView.reloadAllComponents()
+            self.systemBetTypePickerView.selectRow(componentsIndex, inComponent: 0, animated: false)
+        }
+    }
+
+    private var showingSystemBetOptionsSelector: Bool = false {
         didSet {
             if showingSystemBetOptionsSelector {
                 self.systemBetTypeSelectorBaseView.alpha = 1.0
@@ -155,7 +178,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
-    var showingSettingsSelector: Bool = false {
+    private var showingSettingsSelector: Bool = false {
         didSet {
             if showingSettingsSelector {
                 self.settingsPickerBaseView.alpha = 1.0
@@ -166,15 +189,16 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
-    var selectedBetslipSetting: String?
+    private var selectedBetslipSetting: String?
 
     // Multiple Bets values
-     var displayBetValue: Int = 0 {
+    private var displayBetValue: Int = 0 {
         didSet {
             self.realBetValuePublisher.send(self.realBetValue)
         }
     }
-     var realBetValue: Double {
+
+    private var realBetValue: Double {
         if displayBetValue == 0 {
             return 0
         }
@@ -298,7 +322,11 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondarySystemWinningsValueLabel.text = localized("no_value")
         self.secondarySystemOddsTitleLabel.text = localized("total_bet_amount")
         self.secondarySystemOddsValueLabel.text = localized("no_value")
-        
+
+        self.emptyBetslipLabel.text = localized("not_bets_tickets_section_yet")
+        self.emptyBetslipLabel.textAlignment = .center
+        self.emptyBetslipLabel.font = AppFont.with(type: .semibold, size: 18)
+
         self.tableView.separatorStyle = .none
         self.tableView.allowsSelection = false
 
@@ -370,12 +398,10 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .sink { [weak self] tickets in
                 self?.systemBettingTicketDataSource.bettingTickets = tickets
-                self?.systemBetOptions = []
-                
-                self?.requestSystemBetsTypes()
             }
             .store(in: &cancellables)
-        
+
+        /*
         Env.betslipManager.bettingTicketsPublisher
             .receive(on: DispatchQueue.main)
             .map(Array.init)
@@ -418,6 +444,89 @@ class PreSubmissionBetslipViewController: UIViewController {
                 
             }
             .store(in: &cancellables)
+        */
+
+        Publishers.CombineLatest(Env.betslipManager.bettingTicketsPublisher, Env.betslipManager.allowedBetTypesPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] betTickets, betTypes in
+                let oldSegmentIndex = self?.betTypeSegmentControlView?.selectedItemIndex
+                let userDidSelectedSystemBet = self?.userSelectedSystemBet ?? false
+
+                let containsSingle = betTypes.first(where: { betType in
+                    if case .single = betType {
+                        return true
+                    }
+                    return false
+                }) != nil
+                let containsMultiple = betTypes.first(where: { betType in
+                    if case .multiple = betType {
+                        return true
+                    }
+                    return false
+                }) != nil
+                let containsSystem = betTypes.first(where: { betType in
+                    if case .system(_) = betType {
+                        return true
+                    }
+                    return false
+                }) != nil
+
+
+                if betTickets.count == 1 {
+                    self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 0, animated: true)
+                }
+                else if containsMultiple, betTickets.count > 1, !userDidSelectedSystemBet {
+                    self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 1, animated: true)
+                }
+                else if oldSegmentIndex == 1, !containsMultiple {
+                    self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 0, animated: true)
+                }
+                else if userDidSelectedSystemBet, oldSegmentIndex == 2, !containsSystem {
+                    self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 1, animated: true)
+                }
+
+                if let newSegmentIndex = self?.betTypeSegmentControlView?.selectedItemIndex, newSegmentIndex != oldSegmentIndex {
+                    self?.didChangeSelectedSegmentItem(toIndex: newSegmentIndex)
+                }
+
+            }
+            .store(in: &cancellables)
+
+        Env.betslipManager.allowedBetTypesPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] betTypes in
+                let containsSingle = betTypes.first(where: { betType in
+                    if case .single = betType {
+                        return true
+                    }
+                    return false
+                }) != nil
+                let containsMultiple = betTypes.first(where: { betType in
+                    if case .multiple = betType {
+                        return true
+                    }
+                    return false
+                }) != nil
+                let containsSystem = betTypes.first(where: { betType in
+                    if case .system(_) = betType {
+                        return true
+                    }
+                    return false
+                }) != nil
+
+                self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 0, isEnabled: containsSingle)
+                self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 1, isEnabled: containsMultiple)
+                self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 2, isEnabled: containsSystem)
+            }
+            .store(in: &cancellables)
+
+        Env.betslipManager.systemTypesAvailablePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] systemBetType in
+                self?.systemBetOptions = systemBetType
+            }
+            .store(in: &cancellables)
+
 
         Env.betslipManager.bettingTicketsPublisher
             .receive(on: DispatchQueue.main)
@@ -885,6 +994,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
+        Env.betslipManager.refreshAllowedBetTypes()
         self.isKeyboardShowingPublisher.send(false) 
     }
 
@@ -1107,6 +1217,8 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.emptyBetsBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
+        self.emptyBetslipLabel.textColor = UIColor.App.textPrimary
+
         self.simpleWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.multipleWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.secondaryMultipleWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
@@ -1250,6 +1362,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.showingSettingsSelector = false
     }
 
+/*
     func requestSystemBetsTypes() {
 
         self.systemBetTypeLoadingView.startAnimating()
@@ -1296,6 +1409,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
     }
+*/
 
     func requestSystemBetInfo() {
 
@@ -1623,8 +1737,9 @@ extension PreSubmissionBetslipViewController: UIPickerViewDelegate, UIPickerView
 
     func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         if pickerView.tag == 1 {
-            return NSAttributedString(string: self.systemBetOptions[safe: row]?.name ?? "--",
-                                  attributes: [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary])
+            let name = "\(self.systemBetOptions[safe: row]?.name ?? "--") x\(self.systemBetOptions[safe: row]?.numberOfBets ?? 0)"
+            return NSAttributedString(string: name,
+                                      attributes: [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary])
         }
         else {
             return NSAttributedString(string: Env.userBetslipSettingsSelectorList[safe: row]?.description ?? "--",

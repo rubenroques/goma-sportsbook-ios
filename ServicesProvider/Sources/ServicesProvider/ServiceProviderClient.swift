@@ -42,6 +42,7 @@ public class ServicesProviderClient {
                                                            socketConnector: SportRadarSocketConnector(),
                                                            restConnector: SportRadarRestConnector())
             self.bettingProvider = SportRadarBettingProvider(sessionCoordinator: sessionCoordinator)
+
         }
     }
 
@@ -362,26 +363,26 @@ extension ServicesProviderClient {
         return bettingProvider.getAllowedBetTypes(withBetTicketSelections: betTicketSelections)
     }
 
-    public func calculateBetslipState(_ betslip: BetSlip)  -> AnyPublisher<BetslipState, ServiceProviderError> {
+    public func calculatePotentialReturn(forBetslipState betslipState: BetslipState)  -> AnyPublisher<BetslipPotentialReturn, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
-            return Fail(outputType: BetslipState.self,
+            return Fail(outputType: BetslipPotentialReturn.self,
                         failure: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
 
-        return bettingProvider.calculateBetslipState(betslip)
+        return bettingProvider.calculatePotentialReturn(forBetslipState: betslipState)
 
     }
 
-    public func placeSingleBet(betTicketSelection: BetTicketSelection, stake: Double) -> AnyPublisher<PlacedBetResponse, ServiceProviderError> {
+    public func placeSingleBet(betTicketSelection: BetTicketSelection) -> AnyPublisher<PlacedBetResponse, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
 
-        return bettingProvider.placeSingleBet(betTicketSelection: betTicketSelection, stake: stake)
+        return bettingProvider.placeSingleBet(betTicketSelection: betTicketSelection)
     }
 
     //

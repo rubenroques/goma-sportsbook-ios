@@ -31,6 +31,8 @@ extension SportRadarModels {
         var startDate: Date?
         
         var markets: [Market]?
+
+        var tournamentCountryName: String?
         
         enum CodingKeys: String, CodingKey {
             case id = "idfoevent"
@@ -41,6 +43,7 @@ extension SportRadarModels {
             case sportTypeName = "sporttypename"
             case startDate = "tsstart"
             case markets = "markets"
+            case tournamentCountryName = "tournamentcountryname"
         }
         
     }

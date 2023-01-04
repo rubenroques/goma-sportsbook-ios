@@ -23,6 +23,8 @@ public struct Event: Codable {
     public var startDate: Date
     
     public var markets: [Market]
+
+    public var venueCountry: Country?
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -33,6 +35,7 @@ public struct Event: Codable {
         case sportTypeName = "sportTypeName"
         case startDate = "startDate"
         case markets = "markets"
+        case venueCountry = "venueCountry"
     }
     
 }
