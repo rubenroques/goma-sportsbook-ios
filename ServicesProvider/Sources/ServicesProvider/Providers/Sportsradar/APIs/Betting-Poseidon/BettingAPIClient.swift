@@ -9,9 +9,10 @@ import Foundation
 
 enum BettingAPIClient {
     case betHistory(page: Int, startDate: Date?, endDate: Date?, betState: [SportRadarModels.BetState]?, betResult: [SportRadarModels.BetResult]?)
-    case calculateReturns(betslipState: BetslipState)
+    case betDetails(identifier: String)
+    case calculateReturns(betTicket: BetTicket)
     case getAllowedBetTypes(betTicketSelections: [BetTicketSelection])
-    case placeBet(betTicketSelection: BetTicketSelection)
+    case placeBets(betTickets: [BetTicket])
 }
 
 extension BettingAPIClient: Endpoint {
@@ -20,11 +21,13 @@ extension BettingAPIClient: Endpoint {
         switch self {
         case .betHistory:
             return "/api/betting/fo/bets"
+        case .betDetails(let identifier):
+            return "/api/betting/fo/bets/\(identifier)"
         case .calculateReturns:
             return "/api/betting/fo/bet/calculate"
         case .getAllowedBetTypes:
             return "/api/betting/fo/allowedBetTypesWithCalculation"
-        case .placeBet:
+        case .placeBets:
             return "/api/betting/fo/betslip"
         }
     }
@@ -54,11 +57,13 @@ extension BettingAPIClient: Endpoint {
             query.append(URLQueryItem(name: "pageSize", value: "10"))
             query.append(URLQueryItem(name: "pageNumber", value: "\(page)"))
             return query
+        case .betDetails:
+            return nil
         case .calculateReturns:
             return nil
         case .getAllowedBetTypes:
             return nil
-        case .placeBet:
+        case .placeBets:
             return nil
         }
     }
@@ -67,12 +72,14 @@ extension BettingAPIClient: Endpoint {
         switch self {
         case .betHistory:
             return nil
+        case .betDetails:
+            return nil
         case .calculateReturns(let betTicket):
             let jsonData = (try? JSONEncoder().encode(betTicket)) ?? Data()
             // let jsonString = String(data: jsonData, encoding: .utf8)
             return jsonData
 
-        // ===================================================
+            // ===================================================
         case .getAllowedBetTypes(let betTicketSelections):
 
             var betLegs: [String] = []
@@ -118,58 +125,75 @@ extension BettingAPIClient: Endpoint {
                          "winStake": 0,
                          "isPool": false
                        }
-
                        """
             let data = body.data(using: String.Encoding.utf8)!
             return data
 
-        // ===================================================
-        case .placeBet(let betTicketSelection):
+        case .placeBets(let betTickets):
 
-            let priceDown: String
-            let priceUp: String
+            var betsArray: [String] = []
 
-            switch betTicketSelection.odd {
-            case .fraction(let numerator, let denominator):
-                priceUp = "\(numerator)"
-                priceDown = "\(denominator)"
-            case .european:
-                priceUp = ""
-                priceDown = ""
+            for ticket in betTickets {
+
+                var legsStringArray: [String] = []
+
+                for selection in ticket.tickets {
+
+                    let priceDown: String
+                    let priceUp: String
+
+                    switch selection.odd {
+                    case .fraction(let numerator, let denominator):
+                        priceUp = "\(numerator)"
+                        priceDown = "\(denominator)"
+                    case .european:
+                        priceUp = ""
+                        priceDown = ""
+                    }
+
+                    legsStringArray.append(
+                    """
+                    {
+                      "eachWayPlaceTerms": "",
+                      "eachWayReduction": "",
+                      "handicap": "",
+                      "idFOPriceType": "CP",
+                      "idFOSelection": "\(selection.identifier)",
+                      "isTrap": "",
+                      "lowerBand": "",
+                      "priceDown": "\(priceDown)",
+                      "priceUp": "\(priceUp)",
+                      "systemTag": "",
+                      "upperBand": ""
+                    }
+                    """)
+                }
+
+                let legsString = legsStringArray.joined(separator: ",")
+                betsArray.append(
+                    """
+                    {
+                        "betLegs": [ \(legsString) ],
+                        "idFOBetType": "\(ticket.betGroupingType.identifier)",
+                        "pool": false,
+                        "placeStake": 0,
+                        "showStake": 0,
+                        "winStake": \(ticket.globalStake ?? 0.0)
+                    }
+                    """)
             }
+
+            let betsString = betsArray.joined(separator: ",")
 
             let body = """
                        {
-                         "bets": [
-                           {
-                             "betLegs": [
-                               {
-                                 "eachWayPlaceTerms": "",
-                                 "eachWayReduction": "",
-                                 "handicap": "",
-                                 "idFOPriceType": "CP",
-                                 "idFOSelection": "\(betTicketSelection.identifier)",
-                                 "isTrap": "",
-                                 "lowerBand": "",
-                                 "priceDown": "\(priceDown)",
-                                 "priceUp": "\(priceUp)",
-                                 "systemTag": "",
-                                 "upperBand": ""
-                               }
-                             ],
-                             "idFOBetType": "S",
-                             "pool": false,
-                             "placeStake": \(betTicketSelection.stake),
-                             "showStake": 0,
-                             "winStake": 0
-                           }
-                         ],
+                         "bets": [\(betsString)],
                          "useAutoAcceptance": true
                        }
                        """
             let data = body.data(using: String.Encoding.utf8)!
             return data
-        // ===================================================
+
         }
         
     }
@@ -177,22 +201,20 @@ extension BettingAPIClient: Endpoint {
     var method: HTTP.Method {
         switch self {
         case .betHistory: return .get
+        case .betDetails: return .get
         case .calculateReturns: return .post
         case .getAllowedBetTypes: return .post
-        case .placeBet: return .post
+        case .placeBets: return .post
         }
     }
     
     var requireSessionKey: Bool {
         switch self {
-        case .betHistory:
-            return true
-        case .calculateReturns:
-            return false
-        case .getAllowedBetTypes:
-            return false
-        case .placeBet:
-            return true
+        case .betHistory: return true
+        case .betDetails: return true
+        case .calculateReturns: return false
+        case .getAllowedBetTypes: return false
+        case .placeBets: return true
         }
     }
     

@@ -363,7 +363,7 @@ extension ServicesProviderClient {
         return bettingProvider.getAllowedBetTypes(withBetTicketSelections: betTicketSelections)
     }
 
-    public func calculatePotentialReturn(forBetslipState betslipState: BetslipState)  -> AnyPublisher<BetslipPotentialReturn, ServiceProviderError> {
+    public func calculatePotentialReturn(forBetTicket betTicket: BetTicket) -> AnyPublisher<BetslipPotentialReturn, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
@@ -371,18 +371,18 @@ extension ServicesProviderClient {
                         failure: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
 
-        return bettingProvider.calculatePotentialReturn(forBetslipState: betslipState)
+        return bettingProvider.calculatePotentialReturn(forBetTicket: betTicket)
 
     }
 
-    public func placeSingleBet(betTicketSelection: BetTicketSelection) -> AnyPublisher<PlacedBetResponse, ServiceProviderError> {
+    public func placeBets(betTickets: [BetTicket]) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
 
-        return bettingProvider.placeSingleBet(betTicketSelection: betTicketSelection)
+        return bettingProvider.placeBets(betTickets: betTickets)
     }
 
     //
@@ -426,6 +426,17 @@ extension ServicesProviderClient {
         }
 
         return bettingProvider.getWonBetsHistory(pageIndex: pageIndex)
+    }
+
+
+    public func getBetDetails(identifier: String) -> AnyPublisher<Bet, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return bettingProvider.getBetDetails(identifier: identifier)
     }
 
 }

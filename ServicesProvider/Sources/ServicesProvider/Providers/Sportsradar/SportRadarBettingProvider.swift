@@ -81,25 +81,32 @@ class SportRadarBettingProvider: BettingProvider {
             .eraseToAnyPublisher()
     }
 
-    func calculatePotentialReturn(forBetslipState betslipState: BetslipState)  -> AnyPublisher<BetslipPotentialReturn, ServiceProviderError> {
-        let endpoint = BettingAPIClient.calculateReturns(betslipState: betslipState)
+    func calculatePotentialReturn(forBetTicket betTicket: BetTicket)  -> AnyPublisher<BetslipPotentialReturn, ServiceProviderError> {
+        let endpoint = BettingAPIClient.calculateReturns(betTicket: betTicket)
         let publisher: AnyPublisher<SportRadarModels.BetslipPotentialReturnResponse, ServiceProviderError> = self.connector.request(endpoint)
         return publisher
             .map { (betslipPotentialReturn: SportRadarModels.BetslipPotentialReturnResponse) -> BetslipPotentialReturn in
                 return BetslipPotentialReturn(potentialReturn: betslipPotentialReturn.potentialReturn,
                                               totalStake: betslipPotentialReturn.totalStake,
-                                              numberOfBets: betslipPotentialReturn.numberOfBets,
-                                              betType: betslipState.betType)
+                                              numberOfBets: betslipPotentialReturn.numberOfBets)
             }
             .eraseToAnyPublisher()
     }
 
-    func placeSingleBet(betTicketSelection: BetTicketSelection) -> AnyPublisher<PlacedBetResponse, ServiceProviderError> {
-        let endpoint = BettingAPIClient.placeBet(betTicketSelection: betTicketSelection)
-        let publisher: AnyPublisher<SportRadarModels.PlacedBetResponse, ServiceProviderError> = self.connector.request(endpoint)
+    func placeBets(betTickets: [BetTicket]) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+        let endpoint = BettingAPIClient.placeBets(betTickets: betTickets)
+        let publisher: AnyPublisher<SportRadarModels.PlacedBetsResponse, ServiceProviderError> = self.connector.request(endpoint)
         return publisher
-            .map({ SportRadarModelMapper.placedBetResponse(fromInternalPlacedBetResponse: $0) })
+            .map({ SportRadarModelMapper.placedBetsResponse(fromInternalPlacedBetsResponse: $0) })
             .eraseToAnyPublisher()
+    }
+
+    func getBetDetails(identifier: String) -> AnyPublisher<Bet, ServiceProviderError> {
+//        let endpoint = BettingAPIClient.betDetails(identifier: identifier)
+//        let publisher: AnyPublisher<SportRadarModels.Bet, ServiceProviderError> = self.connector.request(endpoint)
+//        return publisher.map(SportRadarModelMapper.bettingHistory(fromInternalBettingHistory: <#T##SportRadarModels.BettingHistory#>)
+
+        return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
     }
 
 }

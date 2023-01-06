@@ -1497,20 +1497,17 @@ class PreSubmissionBetslipViewController: UIViewController {
         if UserSessionStore.isUserLogged() {
             
             if self.listTypePublisher.value == .simple {
-                let firstBetTicketStake: Double = self.simpleBetsBettingValues.value.first?.value ?? 0.0
-                Env.betslipManager.placeSingleBet(stake: firstBetTicketStake)
+                let singleBetTicketStakes = self.simpleBetsBettingValues.value
+                Env.betslipManager.placeSingleBets(amounts: singleBetTicketStakes)
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] completion in
                     switch completion {
                     case .failure(let error):
-                        Logger.log("Place AllSingleBets error \(error)")
-                        if let self {
-                            let message = """
-                            Something went wrong with your bet request.
-                            Make sure you have completed your profile and enought balance.
-                            """
-                            UIAlertController.showMessage(title: "Not submitted", message: message, on: self)
-                        }
+                        let message = """
+                        Something went wrong with your bet request.
+                        Make sure you have completed your profile and enought balance.
+                        """
+                        self?.showErrorView(errorMessage: message)
                     default: ()
                     }
                     self?.isLoading = false
@@ -1518,44 +1515,42 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.betPlacedAction?(betPlacedDetailsArray)
                 }
                 .store(in: &cancellables)
-//
-//                Env.betslipManager.placeAllSingleBets(withSkateAmount: self.simpleBetsBettingValues.value,
-//                                                      singleFreeBet: self.singleBettingTicketDataSource.currentTicketFreeBetSelected,
-//                                                      singleOddsBoost: self.singleBettingTicketDataSource.currentTicketOddsBoostSelected)
-//                    .receive(on: DispatchQueue.main)
-//                    .sink { completion in
-//                        switch completion {
-//                        case .failure(let error):
-//                            Logger.log("Place AllSingleBets error \(error)")
-//                        default: ()
-//                        }
-//                        self.isLoading = false
-//                    } receiveValue: { [weak self] betPlacedDetailsArray in
-//
-//                        self?.betPlacedAction?(betPlacedDetailsArray)
-//
-//                    }
-//                    .store(in: &cancellables)
-
             }
             else if self.listTypePublisher.value == .multiple {
-                Env.betslipManager.placeMultipleBet(withSkateAmount: self.realBetValue, freeBet: self.freeBetSelected, oddsBoost: self.oddsBoostSelected)
+                Env.betslipManager.placeMultipleBet(withStake: self.realBetValue)
                     .receive(on: DispatchQueue.main)
-                    .sink { [weak self] _ in
+                    .sink { [weak self] completion in
+                        switch completion {
+                        case .failure(let error):
+                            let message = """
+                            Something went wrong with your bet request.
+                            Make sure you have completed your profile and enought balance.
+                            """
+                            self?.showErrorView(errorMessage: message)
+                        default: ()
+                        }
                         self?.isLoading = false
                     } receiveValue: { [weak self] betPlacedDetails in
-                        self?.betPlacedAction?([betPlacedDetails])
+                        self?.betPlacedAction?(betPlacedDetails)
                     }
                     .store(in: &cancellables)
             }
-
             else if self.listTypePublisher.value == .system, let selectedSystemBetType = self.selectedSystemBetType {
-                Env.betslipManager.placeSystemBet(withSkateAmount: self.realBetValue, systemBetType: selectedSystemBetType)
+                Env.betslipManager.placeSystemBet(withStake: self.realBetValue, systemBetType: selectedSystemBetType)
                     .receive(on: DispatchQueue.main)
-                    .sink { [weak self] _ in
+                    .sink { [weak self] completion in
+                        switch completion {
+                        case .failure(let error):
+                            let message = """
+                            Something went wrong with your bet request.
+                            Make sure you have completed your profile and enought balance.
+                            """
+                            self?.showErrorView(errorMessage: message)
+                        default: ()
+                        }
                         self?.isLoading = false
                     } receiveValue: { [weak self] betPlacedDetails in
-                        self?.betPlacedAction?([betPlacedDetails])
+                        self?.betPlacedAction?(betPlacedDetails)
                     }
                     .store(in: &cancellables)
             }

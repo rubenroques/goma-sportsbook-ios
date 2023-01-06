@@ -46,43 +46,51 @@ public enum BetState: String, Codable {
     case undefined
 }
 
-public struct BetTicketStake: Codable {
-    var stake: Double
-}
+//public struct BetTicketStake: Codable {
+//    var stake: Double
+//}
 
-public enum BetGrouppingType: String, Codable {
-    case single = "S"
-    case multiple
-    case system
+public enum BetGroupingType: Codable {
+    case single(identifier: String)
+    case multiple(identifier: String)
+    case system(identifier: String, name: String)
+
+    var identifier: String {
+        switch self {
+        case .single(let identifier):
+            return identifier
+        case .multiple(let identifier):
+            return identifier
+        case .system(let identifier, let name):
+            return identifier
+        }
+    }
 }
 
 public struct BetType: Codable {
-
     public var name: String
-    public var type: BetGrouppingType
+    public var grouping: BetGroupingType
     public var code: String
     public var numberOfBets: Int
     public var potencialReturn: Double
     public var totalStake: Double?
-
 }
 
 public struct BetslipPotentialReturn: Codable {
     public var potentialReturn: Double
     public var totalStake: Double
     public var numberOfBets: Int
-    public var betType: BetGrouppingType
 }
 
-public struct BetslipState: Codable {
+public struct BetTicket: Codable {
     public var tickets: [BetTicketSelection]
-    public var stakes: [String: Double]
-    public var betType: BetGrouppingType
+    public var globalStake: Double?
+    public var betGroupingType: BetGroupingType
 
-    public init(tickets: [BetTicketSelection], stakes: [String : Double], betType: BetGrouppingType) {
+    public init(tickets: [BetTicketSelection], stake: Double?, betGroupingType: BetGroupingType) {
         self.tickets = tickets
-        self.stakes = stakes
-        self.betType = betType
+        self.globalStake = stake
+        self.betGroupingType = betGroupingType
     }
 }
 
@@ -124,7 +132,7 @@ public struct BetTicketSelection: Codable {
 
 }
 
-public struct PlacedBetResponse: Codable {
+public struct PlacedBetsResponse: Codable {
     public var identifier: String
     public var responseCode: String
     public var succeed: Bool

@@ -43,7 +43,6 @@ extension SportRadarModels {
         var result: BetResult
         var marketName: String
         var outcomeName: String
-        
         var potentialReturn: Double
         
         enum CodingKeys: String, CodingKey {
@@ -100,7 +99,6 @@ extension SportRadarModels {
             case potentialReturn = "potentialReturn"
             case pool = "pool"
         }
-        
     }
     
     struct BetTicketSelection: Codable {
@@ -159,7 +157,7 @@ extension SportRadarModels {
         var tickets: [BetTicket]
     }
 
-    struct PlacedBetResponse: Codable {
+    struct PlacedBetsResponse: Codable {
         var identifier: String
         var responseCode: String
         var bets: [PlacedBetEntry]
@@ -172,7 +170,7 @@ extension SportRadarModels {
         }
 
         init(from decoder: Decoder) throws {
-            let container: KeyedDecodingContainer<SportRadarModels.PlacedBetResponse.CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
+            let container: KeyedDecodingContainer<SportRadarModels.PlacedBetsResponse.CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
 
             let identifierInt = try container.decode(Int.self, forKey: .identifier)
             self.identifier = "\(identifierInt)"

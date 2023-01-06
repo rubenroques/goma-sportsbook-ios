@@ -8,7 +8,7 @@
 import Foundation
 
 public enum BetType {
-    case single
-    case multiple
-    case system(name: String)
+    case single(identifier: String)
+    case multiple(identifier: String)
+    case system(identifier: String, name: String)
 }

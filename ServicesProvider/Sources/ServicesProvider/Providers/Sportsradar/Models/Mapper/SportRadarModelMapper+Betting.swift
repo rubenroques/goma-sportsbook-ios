@@ -57,12 +57,12 @@ extension SportRadarModelMapper {
 
 
     //  SportRadar ---> ServiceProvider
-    static func placedBetResponse(fromInternalPlacedBetResponse placedBetResponse: SportRadarModels.PlacedBetResponse) -> PlacedBetResponse {
-        let bets = placedBetResponse.bets.map(Self.placedBetEntry(fromInternalPlacedBetEntry:))
+    static func placedBetsResponse(fromInternalPlacedBetsResponse placedBetsResponse: SportRadarModels.PlacedBetsResponse) -> PlacedBetsResponse {
+        let bets = placedBetsResponse.bets.map(Self.placedBetEntry(fromInternalPlacedBetEntry:))
 
-        let betSucceed = placedBetResponse.responseCode == "2" && placedBetResponse.identifier != "0"
-        return PlacedBetResponse(identifier: placedBetResponse.identifier,
-                                 responseCode: placedBetResponse.responseCode,
+        let betSucceed = placedBetsResponse.responseCode == "2" && placedBetsResponse.identifier != "0"
+        return PlacedBetsResponse(identifier: placedBetsResponse.identifier,
+                                 responseCode: placedBetsResponse.responseCode,
                                  succeed: betSucceed,
                                  bets: bets)
     }
@@ -87,25 +87,25 @@ extension SportRadarModelMapper {
         switch (betType.typeCode, betType.numberOfIndividualBets) {
         case ("S", _):
             return BetType.init(name: betType.typeName,
-                                type: .single,
+                                grouping: .single(identifier: betType.typeCode),
                                 code: betType.typeCode,
                                 numberOfBets: betType.numberOfIndividualBets,
                                 potencialReturn: betType.potencialReturn)
         case ("C1", _):
             return BetType.init(name: betType.typeName,
-                                type: .single,
+                                grouping: .single(identifier: betType.typeCode),
                                 code: betType.typeCode,
                                 numberOfBets: betType.numberOfIndividualBets,
                                 potencialReturn: betType.potencialReturn)
         case (_ , 1):
             return BetType.init(name: betType.typeName,
-                                type: .multiple,
+                                grouping: .multiple(identifier: betType.typeCode),
                                 code: betType.typeCode,
                                 numberOfBets: betType.numberOfIndividualBets,
                                 potencialReturn: betType.potencialReturn)
         default:
             return BetType.init(name: betType.typeName,
-                                type: .system,
+                                grouping: .system(identifier: betType.typeCode, name: betType.typeName),
                                 code: betType.typeCode,
                                 numberOfBets: betType.numberOfIndividualBets,
                                 potencialReturn: betType.potencialReturn)

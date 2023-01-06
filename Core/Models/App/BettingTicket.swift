@@ -113,12 +113,12 @@ extension BettingTicket {
                   outcomeId: outcome.id,
                   marketId: market.id,
                   matchId: match.id,
-                  decimalOdd: outcome.bettingOffer.decimalOdd,
                   isAvailable: outcome.bettingOffer.isAvailable,
                   statusId: "1",
                   matchDescription: matchDescription,
                   marketDescription: marketDescription,
-                  outcomeDescription: outcomeDescription)
+                  outcomeDescription: outcomeDescription,
+                  odd: outcome.bettingOffer.odd)
     }
 
     init(match: Match, marketId: String, outcome: Outcome) {
@@ -131,12 +131,12 @@ extension BettingTicket {
                   outcomeId: outcome.id,
                   marketId: marketId,
                   matchId: match.id,
-                  decimalOdd: outcome.bettingOffer.decimalOdd,
                   isAvailable: outcome.bettingOffer.isAvailable,
                   statusId: "1",
                   matchDescription: matchDescription,
                   marketDescription: marketDescription,
-                  outcomeDescription: outcomeDescription)
+                  outcomeDescription: outcomeDescription,
+                  odd: outcome.bettingOffer.odd)
     }
 
 }
