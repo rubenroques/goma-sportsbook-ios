@@ -37,6 +37,7 @@ class LiveEventsViewController: UIViewController {
     @IBOutlet private weak var liveEventsCountLabel: UILabel!
 
     var turnTimeRangeOn: Bool = false
+    var isLiveEventsMarkets: Bool = true
 
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
     private static func createFloatingShortcutsView() -> FloatingShortcutsView {

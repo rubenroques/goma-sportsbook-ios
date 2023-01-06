@@ -227,7 +227,7 @@ class FilterHistoryViewController: UIViewController {
         for view in self.filterRowViews {
             view.isChecked = false
             // Default filter selected
-            if view.viewId == defaultFilter.identifier {
+            if view.viewId == "\(defaultFilter.identifier)" {
                 view.isChecked = true
             }
             else {
@@ -238,19 +238,18 @@ class FilterHistoryViewController: UIViewController {
         self.viewModel.didSelectFilter(atIndex: defaultFilter.identifier)
     }
     
-
     func checkMarketRadioOptions(views: [FilterRowView], viewTapped: FilterRowView) {
         for view in views {
             view.isChecked = false
         }
         viewTapped.isChecked = true
-        if viewTapped.viewId == 2 {
+        if viewTapped.viewId == "2" {
             self.dateRangeStackView.isHidden = false
-            self.viewModel.didSelectFilter(atIndex: viewTapped.viewId)
+            self.viewModel.didSelectFilter(atIndex: Int(viewTapped.viewId) ?? 0)
         }
         else {
             self.dateRangeStackView.isHidden = true
-            self.viewModel.didSelectFilter(atIndex: viewTapped.viewId)
+            self.viewModel.didSelectFilter(atIndex: Int(viewTapped.viewId) ?? 0)
         }
         
     }
@@ -292,7 +291,7 @@ extension FilterHistoryViewController {
             filterRowView.isChecked = false
             filterRowView.buttonType = .radio
             filterRowView.setTitle(title: range.key)
-            filterRowView.viewId = range.identifier
+            filterRowView.viewId = "\(range.identifier)"
             filterRowViews.append(filterRowView)
             filterCollapseView.addViewtoStack(view: filterRowView)
         }
@@ -306,12 +305,12 @@ extension FilterHistoryViewController {
         
         for view in filterRowViews {
             view.didTapView = { [weak self] _ in
-                self?.viewModel.didSelectFilter(atIndex: view.viewId)
+                self?.viewModel.didSelectFilter(atIndex: Int(view.viewId) ?? 0)
                 self?.checkMarketRadioOptions(views: self?.filterRowViews ?? [], viewTapped: view)
             }
 
             // Default market selected
-            if view.viewId == viewInt {
+            if view.viewId == "\(viewInt)" {
                 view.isChecked = true
             }
         }

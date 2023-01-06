@@ -274,6 +274,7 @@ public class ContentIdentifier: Decodable, Hashable, Equatable, Identifiable {
 struct ContentDateFormatter {
 
     static func getDateRangeId(startDate: Date? = nil, endDate: Date? = nil) -> String {
+        // TODO: Re-check dates with hour and minute after confirmation with SportRadar
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd"
 

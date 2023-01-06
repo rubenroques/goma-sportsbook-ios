@@ -46,6 +46,7 @@ class PreLiveEventsViewModel: NSObject {
         didSet {
             if didChangeSport {
                 self.resetScrollPositionAction?()
+                self.homeFilterOptions = nil
             }
             self.fetchData()
         }
@@ -53,9 +54,11 @@ class PreLiveEventsViewModel: NSObject {
 
     var homeFilterOptions: HomeFilterOptions? {
         didSet {
-            if let lowerTimeRange = homeFilterOptions?.lowerBoundTimeRange, let highTimeRange = homeFilterOptions?.highBoundTimeRange {
-                let timeRange = "\(Int(lowerTimeRange))-\(Int(highTimeRange))"
-                self.fetchTodayMatches(withFilter: true, timeRange: timeRange)
+            if self.matchListTypePublisher.value == .upcoming {
+                if let lowerTimeRange = homeFilterOptions?.lowerBoundTimeRange, let highTimeRange = homeFilterOptions?.highBoundTimeRange {
+                    let timeRange = "\(Int(lowerTimeRange))-\(Int(highTimeRange))"
+                    self.fetchTodayMatches(withFilter: true, timeRange: timeRange)
+                }
             }
             else {
                 self.updateContentList()
@@ -88,6 +91,8 @@ class PreLiveEventsViewModel: NSObject {
 
     private var todayMatches: [Match] = []
     private var todayOutrightCompetitions: [Competition]?
+
+    var mainMarkets: OrderedDictionary<String, Market> = [:]
 
     private var competitionsMatches: [Match] = []
     private var competitions: [Competition] = []
@@ -438,6 +443,22 @@ class PreLiveEventsViewModel: NSObject {
         }
        
     }
+
+    func getFirstMarketType() -> Market? {
+        return self.mainMarkets.values.first
+    }
+
+    func getMarketType(marketTypeId: String) -> Market? {
+        if self.mainMarkets.contains(where: {
+            $0.value.marketTypeId == marketTypeId
+        }) {
+            return self.mainMarkets.values.first(where: {
+                $0.marketTypeId == marketTypeId
+            })
+        }
+
+        return nil
+    }
     
     func setMatchListType(_ matchListType: MatchListType) {
 
@@ -452,6 +473,9 @@ class PreLiveEventsViewModel: NSObject {
             self.fetchTodayMatches()
         case .competitions:
             self.fetchCompetitionsFilters()
+            if let matches = self.competitionsDataSource.competitions.first?.matches {
+                self.setMainMarkets(matches: matches)
+            }
         }
         // self.updateContentList()
     }
@@ -514,6 +538,8 @@ class PreLiveEventsViewModel: NSObject {
             }
         }
 
+        //self.isLoadingEvents.send(false)
+
         self.dataChangedPublisher.send()
     }
 
@@ -543,9 +569,9 @@ class PreLiveEventsViewModel: NSObject {
             }
             // Check default market order
             var marketSort: [Market] = []
-            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
+//            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
+            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.marketTypeId == filterOptionsValue.defaultMarket?.id })
 
-            
             if let newFirstMarket = match.markets[safe: (favoriteMarketIndex ?? 0)] {
                 marketSort.append(newFirstMarket)
             }
@@ -588,7 +614,8 @@ class PreLiveEventsViewModel: NSObject {
             
             // Check default market order
             var marketSort: [Market] = []
-            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
+//            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
+            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.marketTypeId == filterOptionsValue.defaultMarket?.id })
             
             if let newFirstMarket = match.markets[safe: (favoriteMarketIndex ?? 0)] {
                 marketSort.append(newFirstMarket)
@@ -637,7 +664,8 @@ class PreLiveEventsViewModel: NSObject {
                 
                 // Check default market order
                 var marketSort: [Market] = []
-                let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
+//                let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
+                let favoriteMarketIndex = match.markets.firstIndex(where: { $0.marketTypeId == filterOptionsValue.defaultMarket?.id })
                 
                 if let newFirstMarket = match.markets[safe: (favoriteMarketIndex ?? 0)] {
                     marketSort.append(newFirstMarket)
@@ -752,38 +780,80 @@ class PreLiveEventsViewModel: NSObject {
 
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
 
-        self.todayMatchesPublisher = Env.servicesProvider.subscribePreLiveMatches(forSportType: sportType, sortType: .date)
-            .sink(receiveCompletion: { completion in
-                print("Env.servicesProvider.subscribeUpcomingMatches completed \(completion)")
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    self.todayMatches = []
-                    self.isLoadingTodayList.send(false)
-                    self.isLoadingEvents.send(false)
-                    self.updateContentList()
-                }
-            }, receiveValue: { (subscribableContent: SubscribableContent<[EventsGroup]>) in
-                print("Env.servicesProvider.subscribeUpcomingMatches value \(subscribableContent)")
-                switch subscribableContent {
-                case .connected(let subscription):
-                    self.subscriptions.insert(subscription)
-                    print("Connected to ws")
-                case .contentUpdate(let eventsGroups):
-                    self.processEvents(eventsGroups: eventsGroups)
-//                    self.todayMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
-//                    self.isLoadingTodayList.send(false)
-//                    self.isLoadingEvents.send(false)
-//                    self.updateContentList()
-                case .disconnected:
-                    print("Disconnected from ws")
-                    self.todayMatches = []
-                    //self.isLoadingTodayList.send(false)
-                    //self.isLoadingEvents.send(false)
-                    self.updateContentList()
-                }
-            })
+        if withFilter && timeRange != "" {
+
+            let datesFilter = Env.servicesProvider.getDatesFilter(timeRange: timeRange)
+
+            self.todayMatchesPublisher = Env.servicesProvider.subscribePreLiveMatches(forSportType: sportType,
+                                                                                      initialDate: datesFilter[safe: 0],
+                                                                                      endDate: datesFilter[safe: 1],
+                                                                                      sortType: .date)
+                .sink(receiveCompletion: { completion in
+                    //print("Env.servicesProvider.subscribeUpcomingMatches completed \(completion)")
+                    switch completion {
+                    case .finished:
+                        ()
+                    case .failure(let error):
+                        self.todayMatches = []
+                        self.isLoadingTodayList.send(false)
+                        self.isLoadingEvents.send(false)
+                        self.updateContentList()
+                    }
+                }, receiveValue: { (subscribableContent: SubscribableContent<[EventsGroup]>) in
+                    //print("Env.servicesProvider.subscribeUpcomingMatches value \(subscribableContent)")
+                    switch subscribableContent {
+                    case .connected(let subscription):
+                        self.subscriptions.insert(subscription)
+                        print("Connected to ws")
+                    case .contentUpdate(let eventsGroups):
+                        self.processEvents(eventsGroups: eventsGroups)
+                        //                    self.todayMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+                        //                    self.isLoadingTodayList.send(false)
+                        //                    self.isLoadingEvents.send(false)
+                        //                    self.updateContentList()
+                    case .disconnected:
+                        print("Disconnected from ws")
+                        self.todayMatches = []
+                        //self.isLoadingTodayList.send(false)
+                        //self.isLoadingEvents.send(false)
+                        self.updateContentList()
+                    }
+                })
+        }
+        else {
+            self.todayMatchesPublisher = Env.servicesProvider.subscribePreLiveMatches(forSportType: sportType, sortType: .date)
+                .sink(receiveCompletion: { completion in
+                    //print("Env.servicesProvider.subscribeUpcomingMatches completed \(completion)")
+                    switch completion {
+                    case .finished:
+                        ()
+                    case .failure(let error):
+                        self.todayMatches = []
+                        self.isLoadingTodayList.send(false)
+                        self.isLoadingEvents.send(false)
+                        self.updateContentList()
+                    }
+                }, receiveValue: { (subscribableContent: SubscribableContent<[EventsGroup]>) in
+                    //print("Env.servicesProvider.subscribeUpcomingMatches value \(subscribableContent)")
+                    switch subscribableContent {
+                    case .connected(let subscription):
+                        self.subscriptions.insert(subscription)
+                        print("Connected to ws")
+                    case .contentUpdate(let eventsGroups):
+                        self.processEvents(eventsGroups: eventsGroups)
+                        //                    self.todayMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+                        //                    self.isLoadingTodayList.send(false)
+                        //                    self.isLoadingEvents.send(false)
+                        //                    self.updateContentList()
+                    case .disconnected:
+                        print("Disconnected from ws")
+                        self.todayMatches = []
+                        //self.isLoadingTodayList.send(false)
+                        //self.isLoadingEvents.send(false)
+                        self.updateContentList()
+                    }
+                })
+        }
 
     }
 
@@ -824,11 +894,14 @@ class PreLiveEventsViewModel: NSObject {
             switch self.matchListTypePublisher.value {
             case .popular:
                 self.popularMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+                print("POPULAR MATCHES: \(self.popularMatches)")
+                self.setMainMarkets(matches: self.popularMatches)
                 self.isLoadingPopularList.send(false)
                 self.isLoadingEvents.send(false)
                 self.updateContentList()
             case .upcoming:
                 self.todayMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+                self.setMainMarkets(matches: self.popularMatches)
                 self.isLoadingTodayList.send(false)
                 self.isLoadingEvents.send(false)
                 self.updateContentList()
@@ -836,6 +909,28 @@ class PreLiveEventsViewModel: NSObject {
                 ()
             }
 
+        }
+    }
+
+    func setMainMarkets(matches: [Match]) {
+        self.mainMarkets = [:]
+//        if let mainMatch = matches.first {
+//            let firstMarkets = Array(mainMatch.markets[0...1])
+//
+//            for market in firstMarkets {
+//                if let marketTypeId = market.bettingTypeId {
+//                    self.mainMarkets[marketTypeId] = market
+//                }
+//            }
+//        }
+
+        for match in matches {
+
+            for market in match.markets {
+                if let marketTypeId = market.marketTypeId {
+                    self.mainMarkets[marketTypeId] = market
+                }
+            }
         }
     }
 
@@ -1126,6 +1221,7 @@ class PreLiveEventsViewModel: NSObject {
                                          numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
         competitionInfo: competitionInfo)
 
+        self.setMainMarkets(matches: matches)
         self.competitions.append(newCompetition)
         self.competitionsDataSource.competitions = self.competitions
         self.competitionsMatchesSubscriptions.value[competitionInfo.id] = competitionInfo

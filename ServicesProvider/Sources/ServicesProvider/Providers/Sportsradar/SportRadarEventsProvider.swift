@@ -890,6 +890,27 @@ extension SportRadarEventsProvider {
         return sortedMarketGroupsArray
     }
 
+    func getDatesFilter(timeRange: String) -> [Date] {
+        var dates = [Date]()
+
+        let hours = timeRange.components(separatedBy: "-")
+
+        if let initialHour = Int(hours[safe: 0] ?? "0"),
+           let endHour = Int(hours[safe: 1] ?? "48") {
+
+            if let startDate = Calendar.current.date(byAdding: .hour, value: initialHour, to: Date()),
+               let endDate = Calendar.current.date(byAdding: .hour, value: endHour, to: Date()) {
+                dates.append(startDate)
+                dates.append(endDate)
+
+                print("Dates calculated")
+            }
+
+        }
+
+        return dates
+    }
+
 }
 
 extension SportRadarEventsProvider {

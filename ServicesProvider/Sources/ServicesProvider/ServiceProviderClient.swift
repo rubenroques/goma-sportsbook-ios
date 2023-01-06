@@ -431,3 +431,16 @@ extension ServicesProviderClient {
 
 }
 
+// Utilities
+extension ServicesProviderClient {
+
+    public func getDatesFilter(timeRange: String) -> [Date] {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return []
+        }
+
+        return eventsProvider.getDatesFilter(timeRange: timeRange)
+    }
+}

@@ -35,6 +35,7 @@ class PreLiveEventsViewController: UIViewController {
     private let refreshControl = UIRefreshControl()
 
     var turnTimeRangeOn: Bool = false
+    var isLiveEventsMarkets: Bool = false
 
     var floatingShortcutsBottomConstraint = NSLayoutConstraint()
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
