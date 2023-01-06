@@ -27,13 +27,14 @@ class SportTypeStore {
 
     func getSportTypesList() {
         Env.servicesProvider.getAvailableSportTypes()
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
             switch completion {
             case .finished:
                 ()
             case .failure(let error):
                 print("SPORT LIST ERROR: \(error)")
                 // TODO: Retry the request
+                self?.isLoadingSportTypesPublisher.send(false)
             }
         }, receiveValue: { [weak self] sportsList in
 

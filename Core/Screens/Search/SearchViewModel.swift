@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import OrderedCollections
+import ServicesProvider
 
 class SearchViewModel: NSObject {
 
@@ -128,7 +129,23 @@ class SearchViewModel: NSObject {
         self.isEmptySearch = false
 
         // EM TEMP SHUTDOWN
-        self.hasDoneSearch = true
+        //self.hasDoneSearch = true
+        Env.servicesProvider.getSearchEvents(query: searchQuery, resultLimit: "20", page: "0")
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("SEARCH ERROR: \(error)")
+                }
+
+            }, receiveValue: { [weak self] eventsGroup in
+
+                print("SEARCH RESPONSE: \(eventsGroup)")
+                self?.processEvents(eventsGroup: eventsGroup)
+            })
+            .store(in: &cancellables)
 
 //        let searchRoute = TSRouter.searchV2(language: "en",
 //                                            limit: 20,
@@ -160,6 +177,39 @@ class SearchViewModel: NSObject {
 //
 //            })
 //            .store(in: &cancellables)
+
+    }
+
+    func processEvents(eventsGroup: EventsGroup) {
+
+        for event in eventsGroup.events {
+
+            let match = Match(id: event.id,
+                              competitionId: event.competitionId ?? "",
+                              competitionName: event.competitionName ?? "",
+                              homeParticipant: Participant(id: "",
+                                                           name: event.homeTeamName ?? ""),
+                              awayParticipant: Participant(id: "",
+                                                           name: event.awayTeamName ?? ""),
+                              date: event.startDate ?? Date(timeIntervalSince1970: 0),
+                              sportType: event.sportTypeName ?? "",
+                              venue: nil,
+                              numberTotalOfMarkets: event.numberMarkets != nil ? event.numberMarkets ?? 0 : event.markets.count,
+                              markets: ServiceProviderModelMapper.markets(fromServiceProviderMarkets: event.markets),
+                              rootPartId: "",
+                              sportName: event.sportTypeName)
+
+            if self.searchMatchesPublisher.value[match.sportType] != nil {
+                let searchMatch = SearchEvent.match(match)
+                self.searchMatchesPublisher.value[match.sportType]?.append(searchMatch)
+            }
+            else {
+                let searchMatch = SearchEvent.match(match)
+                self.searchMatchesPublisher.value[match.sportType] = [searchMatch]
+            }
+        }
+
+        self.setSportMatchesArray()
 
     }
 

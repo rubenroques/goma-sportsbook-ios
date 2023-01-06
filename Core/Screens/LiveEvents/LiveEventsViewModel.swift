@@ -14,6 +14,8 @@ class LiveEventsViewModel: NSObject {
 
     private var liveMatches: [Match] = []
 
+    var mainMarkets: OrderedDictionary<String, Market> = [:]
+
     var matchListTypePublisher: CurrentValueSubject<MatchListType, Never> = .init(.liveMatches)
    
     enum MatchListType {
@@ -150,6 +152,22 @@ class LiveEventsViewModel: NSObject {
         self.liveEventsCountPublisher.send(liveEventsCount)
     }
 
+    func getFirstMarketType() -> Market? {
+        return self.mainMarkets.values.first
+    }
+
+    func getMarketType(marketTypeId: String) -> Market? {
+        if self.mainMarkets.contains(where: {
+            $0.value.marketTypeId == marketTypeId
+        }) {
+            return self.mainMarkets.values.first(where: {
+                $0.marketTypeId == marketTypeId
+            })
+        }
+
+        return nil
+    }
+
     func markAsFavorite(match: Match) {
         
         var isFavorite = false
@@ -187,7 +205,8 @@ class LiveEventsViewModel: NSObject {
             }
             // Check default market order
             var marketSort: [Market] = []
-            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
+//            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
+            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket?.id })
             marketSort.append(match.markets[favoriteMarketIndex ?? 0])
             for market in match.markets where market.typeId != marketSort[0].typeId {
                 marketSort.append(market)
@@ -303,12 +322,28 @@ class LiveEventsViewModel: NSObject {
                 case .contentUpdate(let eventsGroups):
                     Logger.log("subscribeLiveMatches content")
                     self?.liveMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+                    if let liveMatches = self?.liveMatches {
+                        self?.setMainMarkets(matches: liveMatches)
+                    }
                     self?.isLoadingAllEventsList.send(false)
                     self?.updateContentList()
                 case .disconnected:
                     Logger.log("subscribeLiveMatches disconnected")
                 }
             })
+    }
+
+    func setMainMarkets(matches: [Match]) {
+        self.mainMarkets = [:]
+
+        for match in matches {
+
+            for market in match.markets {
+                if let marketTypeId = market.marketTypeId {
+                    self.mainMarkets[marketTypeId] = market
+                }
+            }
+        }
     }
 
 }

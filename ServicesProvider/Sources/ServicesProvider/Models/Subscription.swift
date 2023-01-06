@@ -148,7 +148,7 @@ public enum ContentRoute {
             return ""
         case .eventDetails:
             return ""
-        case .eventGroup(let marketGroupId):
+        case .eventGroup:
             return ""
         }
     }
@@ -165,7 +165,7 @@ public enum ContentRoute {
             return nil
         case .eventDetails(_):
             return nil
-        case .eventGroup(let marketGroupId):
+        case .eventGroup:
             return nil
         }
     }
@@ -274,6 +274,7 @@ public class ContentIdentifier: Decodable, Hashable, Equatable, Identifiable {
 struct ContentDateFormatter {
 
     static func getDateRangeId(startDate: Date? = nil, endDate: Date? = nil) -> String {
+        // TODO: Re-check dates with hour and minute after confirmation with SportRadar
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd"
 

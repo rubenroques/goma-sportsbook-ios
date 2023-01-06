@@ -35,6 +35,7 @@ class PreLiveEventsViewController: UIViewController {
     private let refreshControl = UIRefreshControl()
 
     var turnTimeRangeOn: Bool = false
+    var isLiveEventsMarkets: Bool = false
 
     var floatingShortcutsBottomConstraint = NSLayoutConstraint()
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
@@ -217,7 +218,15 @@ class PreLiveEventsViewController: UIViewController {
 
     private func commonInit() {
 
-        self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_1")
+        //self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_1")
+        //self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        if let sportIconImage = UIImage(named: "sport_type_mono_icon_\( selectedSport.id)") {
+            self.sportTypeIconImageView.image = sportIconImage
+        }
+        else {
+            self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_default")
+        }
+
         self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
 
         let color = UIColor.App.backgroundPrimary

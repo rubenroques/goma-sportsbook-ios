@@ -11,6 +11,7 @@ import OrderedCollections
 //
 protocol HomeFilterOptionsViewDelegate: AnyObject {
     var turnTimeRangeOn: Bool { get set }
+    var isLiveEventsMarkets: Bool { get set }
     func setHomeFilters(homeFilters: HomeFilterOptions?)
 
 }
@@ -47,10 +48,11 @@ class HomeFilterViewController: UIViewController {
     var highBoundOddsRange: CGFloat = 30.0
     var countFilters: Int = 0
 
-    var defaultMarket: MainMarketType = .homeDrawAway
+    //var defaultMarket: MainMarketType = .homeDrawAway
+    var defaultMarket: MainMarketType?
     var marketViews: [FilterRowView] = []
     var filterValues: HomeFilterOptions?
-    var mainMarkets: OrderedDictionary<String, EveryMatrix.Market> = [:]
+    var mainMarkets: OrderedDictionary<String, Market> = [:]
 
     var sportsModel: PreLiveEventsViewModel
     var liveEventsViewModel: LiveEventsViewModel
@@ -84,8 +86,16 @@ class HomeFilterViewController: UIViewController {
 
     func commonInit() {
         // Test values
-        mainMarkets = Env.everyMatrixStorage.mainMarkets
-    
+        //mainMarkets = Env.everyMatrixStorage.mainMarkets
+        if let delegate = self.delegate {
+            if delegate.isLiveEventsMarkets {
+                self.mainMarkets = self.liveEventsViewModel.mainMarkets
+            }
+            else {
+                self.mainMarkets = self.sportsModel.mainMarkets
+            }
+        }
+
         if sportsModel.homeFilterOptions != nil {
             filterValues = sportsModel.homeFilterOptions
         }
@@ -93,10 +103,34 @@ class HomeFilterViewController: UIViewController {
             filterValues = liveEventsViewModel.homeFilterOptions
         }
         else {
-            filterValues = HomeFilterOptions()
+//            filterValues = HomeFilterOptions()
+            if let delegate = self.delegate {
+                if delegate.isLiveEventsMarkets {
+                    if let firstMarketType = self.liveEventsViewModel.getFirstMarketType() {
+                        let defaultMarketType = MainMarketType(id: firstMarketType.marketTypeId ?? "", marketName: firstMarketType.name)
+                        filterValues = HomeFilterOptions(defaultMarket: defaultMarketType)
+                    }
+                    else {
+                        filterValues = HomeFilterOptions()
+                    }
+                }
+                else {
+                    if let firstMarketType = self.sportsModel.getFirstMarketType() {
+                        let defaultMarketType = MainMarketType(id: firstMarketType.marketTypeId ?? "", marketName: firstMarketType.name)
+                        filterValues = HomeFilterOptions(defaultMarket: defaultMarketType)
+                    }
+                    else {
+                        filterValues = HomeFilterOptions()
+                    }
+                }
+            }
+            else {
+                filterValues = HomeFilterOptions()
+            }
+
         }
         
-        defaultMarket = filterValues!.defaultMarket
+        defaultMarket = filterValues?.defaultMarket
 
         navigationLabel.text = localized("filters")
         navigationLabel.font = AppFont.with(type: .bold, size: 17)
@@ -111,8 +145,14 @@ class HomeFilterViewController: UIViewController {
         
         self.setupTimeRangeSection()
 
-        if let marketId = filterValues?.defaultMarket.marketId {
+//        if let marketId = filterValues?.defaultMarket.marketId {
+//            self.setupAvailableMarketsSection(value: marketId)
+//        }
+        if let marketId = filterValues?.defaultMarket?.id {
             self.setupAvailableMarketsSection(value: marketId)
+        }
+        else {
+            self.availableMarketsCollapseView.setTitle(title: localized("default_market"))
         }
 
         self.setupCardSltyleCollapseView()
@@ -205,19 +245,20 @@ class HomeFilterViewController: UIViewController {
 
         var filterMarketsId: [String] = []
         for market in mainMarkets {
-            if !filterMarketsId.contains(market.value.bettingTypeId!) {
+            if !filterMarketsId.contains((market.value.bettingTypeId ?? market.value.marketTypeId) ?? "") {
                 let marketView = FilterRowView()
                 marketView.buttonType = .radio
-                marketView.setTitle(title: "\(market.value.bettingTypeName!)")
-                marketView.viewId = Int(market.value.bettingTypeId!)!
+                //marketView.setTitle(title: "\(MainMarketType.init(id: market.value.marketTypeId ?? "")?.marketName ?? "")")
+                marketView.setTitle(title: market.value.name)
+                marketView.viewId = market.value.marketTypeId ?? "0"
                 marketViews.append(marketView)
-                filterMarketsId.append(market.value.bettingTypeId!)
+                filterMarketsId.append((market.value.bettingTypeId ?? market.value.marketTypeId) ?? "")
                 availableMarketsCollapseView.addViewtoStack(view: marketView)
             }
         }
 
         // Set selected view
-        let viewInt = Int(value)
+        let viewInt = value
         for view in marketViews {
             view.didTapView = { [weak self] _ in
                 self?.checkMarketRadioOptions(views: self?.marketViews ?? [], viewTapped: view)
@@ -245,7 +286,7 @@ class HomeFilterViewController: UIViewController {
         smallCardStyleOption.buttonType = .radio
         smallCardStyleOption.isChecked = false
         smallCardStyleOption.setTitle(title: "Small")
-        smallCardStyleOption.viewId = 0
+        smallCardStyleOption.viewId = "0"
 
         cardSltyleCollapseView.addViewtoStack(view: smallCardStyleOption)
 
@@ -253,7 +294,7 @@ class HomeFilterViewController: UIViewController {
         self.normalCardStyleOption.buttonType = .radio
         self.normalCardStyleOption.isChecked = false
         self.normalCardStyleOption.setTitle(title: "Normal")
-        self.normalCardStyleOption.viewId = 0
+        self.normalCardStyleOption.viewId = "0"
 
         cardSltyleCollapseView.addViewtoStack(view: normalCardStyleOption)
 
@@ -299,11 +340,25 @@ class HomeFilterViewController: UIViewController {
         }
         viewTapped.isChecked = true
         
-        if let defaultMarketInit = MainMarketType.init(rawValue: String(viewTapped.viewId)) {
-            defaultMarket = defaultMarketInit
-            oddsCollapseView.setTitleWithBold(title: localized("odds_filter") + " " + String(defaultMarket.marketName), charToSplit: ":")
+//        if let defaultMarketInit = MainMarketType.init(rawValue: String(viewTapped.viewId)) {
+//            defaultMarket = defaultMarketInit
+//            oddsCollapseView.setTitleWithBold(title: localized("odds_filter") + " " + String(defaultMarket.marketName), charToSplit: ":")
+//        }
+        if let delegate = self.delegate {
+            if delegate.isLiveEventsMarkets {
+                if let defaultMarketInit = self.liveEventsViewModel.getMarketType(marketTypeId: viewTapped.viewId) {
+                    defaultMarket = MainMarketType(id: defaultMarketInit.marketTypeId ?? "", marketName: defaultMarketInit.name)
+                    oddsCollapseView.setTitleWithBold(title: localized("odds_filter") + " " + String(defaultMarket?.marketName ?? ""), charToSplit: ":")
+                }
+            }
+            else {
+                if let defaultMarketInit = self.sportsModel.getMarketType(marketTypeId: viewTapped.viewId) {
+                    defaultMarket = MainMarketType(id: defaultMarketInit.marketTypeId ?? "", marketName: defaultMarketInit.name)
+                    oddsCollapseView.setTitleWithBold(title: localized("odds_filter") + " " + String(defaultMarket?.marketName ?? ""), charToSplit: ":")
+                }
+            }
         }
-        
+
     }
 
     func setupOddsSection() {
@@ -312,7 +367,7 @@ class HomeFilterViewController: UIViewController {
 
         lowerBoundOddsRange = filterValues!.lowerBoundOddsRange
         highBoundOddsRange = filterValues!.highBoundOddsRange
-        oddsCollapseView.setTitleWithBold(title: localized("odds_filter") + " " + String(defaultMarket.marketName), charToSplit: ":")
+        oddsCollapseView.setTitleWithBold(title: localized("odds_filter") + " " + String(defaultMarket?.marketName ?? ""), charToSplit: ":")
         oddsCollapseView.hasCheckbox = false
         
         //oddsCollapseView.backgroundColor = UIColor.App.backgroundPrimary
@@ -324,7 +379,7 @@ class HomeFilterViewController: UIViewController {
         oddRangeMultiSlider?.orientation = .horizontal
         oddRangeMultiSlider?.minimumValue = minValue
         oddRangeMultiSlider?.maximumValue = maxValue
-        oddRangeMultiSlider?.outerTrackColor = UIColor.App.highlightPrimary
+        oddRangeMultiSlider?.outerTrackColor = UIColor.App.separatorLine
         oddRangeMultiSlider?.value = [lowerBoundOddsRange, highBoundOddsRange]
         oddRangeMultiSlider?.snapStepSize = 0.1
         oddRangeMultiSlider?.thumbImage = UIImage(named: "slider_thumb_icon")
@@ -372,7 +427,24 @@ class HomeFilterViewController: UIViewController {
     }
 
     @IBAction private func resetAction() {
-        let homeFilterOptions = HomeFilterOptions()
+        var homeFilterOptions = HomeFilterOptions()
+
+        if let delegate = self.delegate {
+
+            if delegate.isLiveEventsMarkets {
+                if let firstMarketType = self.liveEventsViewModel.getFirstMarketType() {
+                    let defaultMarketType = MainMarketType(id: firstMarketType.marketTypeId ?? "", marketName: firstMarketType.name)
+                    homeFilterOptions = HomeFilterOptions(defaultMarket: defaultMarketType)
+                }
+            }
+            else {
+                if let firstMarketType = self.sportsModel.getFirstMarketType() {
+                    let defaultMarketType = MainMarketType(id: firstMarketType.marketTypeId ?? "", marketName: firstMarketType.name)
+                    homeFilterOptions = HomeFilterOptions(defaultMarket: defaultMarketType)
+                }
+            }
+        }
+
 
         lowerBoundTimeRange = homeFilterOptions.lowerBoundTimeRange
         highBoundTimeRange = homeFilterOptions.highBoundTimeRange
@@ -388,12 +460,25 @@ class HomeFilterViewController: UIViewController {
         for view in self.marketViews {
             view.isChecked = false
             // Default market selected
-            if view.viewId == Int(homeFilterOptions.defaultMarket.marketId) {
+            if view.viewId == homeFilterOptions.defaultMarket?.id {
                 view.isChecked = true
                 
-                if let defaultMarketInit = MainMarketType.init(rawValue: String(view.viewId)) {
-                    defaultMarket = defaultMarketInit
+//                if let defaultMarketInit = MainMarketType.init(rawValue: String(view.viewId)) {
+//                    defaultMarket = defaultMarketInit
+//                }
+                if let delegate = self.delegate {
+                    if delegate.isLiveEventsMarkets {
+                        if let defaultMarketInit = self.liveEventsViewModel.getMarketType(marketTypeId: view.viewId) {
+                            defaultMarket = MainMarketType(id: defaultMarketInit.marketTypeId ?? "", marketName: defaultMarketInit.name)
+                        }
+                    }
+                    else {
+                        if let defaultMarketInit = self.sportsModel.getMarketType(marketTypeId: view.viewId) {
+                            defaultMarket = MainMarketType(id: defaultMarketInit.marketTypeId ?? "", marketName: defaultMarketInit.name)
+                        }
+                    }
                 }
+
                 
             }
         }
@@ -414,10 +499,25 @@ class HomeFilterViewController: UIViewController {
             countFilters += 1
         }
         
-        if defaultMarket.marketId != MainMarketType.homeDrawAway.marketId {
-           countFilters += 1
+//        if defaultMarket.marketId != MainMarketType.homeDrawAway.marketId {
+//           countFilters += 1
+//        }
+        if let delegate = self.delegate {
+            if delegate.isLiveEventsMarkets {
+                if let defaultMarketId = defaultMarket?.id,
+                   let firstMarketTypeId = self.liveEventsViewModel.getFirstMarketType()?.marketTypeId,
+                defaultMarketId != firstMarketTypeId {
+                   countFilters += 1
+                }
+            }
+            else {
+                if let defaultMarketId = defaultMarket?.id,
+                   let firstMarketTypeId = self.sportsModel.getFirstMarketType()?.marketTypeId,
+                defaultMarketId != firstMarketTypeId {
+                   countFilters += 1
+                }
+            }
         }
-
 
         let homeFilterOptions = HomeFilterOptions(lowerBoundTimeRange: lowerBoundTimeRange,
                                                   highBoundTimeRange: highBoundTimeRange,
@@ -432,4 +532,3 @@ class HomeFilterViewController: UIViewController {
     }
 
 }
-

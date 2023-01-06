@@ -135,6 +135,7 @@ class MatchDetailsViewModel: NSObject {
                         }
                     }
                     else {
+                        self.marketGroupsPublisher.send([])
                         self.isLoadingMarketGroups.send(false)
                     }
 

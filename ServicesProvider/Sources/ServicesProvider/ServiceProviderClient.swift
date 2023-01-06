@@ -148,6 +148,16 @@ extension ServicesProviderClient {
         return eventsProvider.subscribeCompetitionMatches(forMarketGroupId: marketGroupId)
     }
 
+    public func subscribeOutrightMarkets(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeOutrightMarkets(forMarketGroupId: marketGroupId)
+    }
+
 }
 
 extension ServicesProviderClient {
@@ -217,6 +227,16 @@ extension ServicesProviderClient {
         }
 
         return eventsProvider.getCompetitionMarketGroups(competitionId: competitionId)
+    }
+
+    public func getSearchEvents(query: String, resultLimit: String, page: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getSearchEvents(query: query, resultLimit: resultLimit, page: page)
     }
 }
 
@@ -441,3 +461,16 @@ extension ServicesProviderClient {
 
 }
 
+// Utilities
+extension ServicesProviderClient {
+
+    public func getDatesFilter(timeRange: String) -> [Date] {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return []
+        }
+
+        return eventsProvider.getDatesFilter(timeRange: timeRange)
+    }
+}

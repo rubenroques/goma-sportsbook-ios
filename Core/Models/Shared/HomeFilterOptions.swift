@@ -12,7 +12,7 @@ struct HomeFilterOptions {
 
     let lowerBoundTimeRange: CGFloat
     let highBoundTimeRange: CGFloat
-    let defaultMarket: MainMarketType
+    let defaultMarket: MainMarketType?
  
     let lowerBoundOddsRange: CGFloat
     let highBoundOddsRange: CGFloat
@@ -20,7 +20,7 @@ struct HomeFilterOptions {
 
     init(lowerBoundTimeRange: CGFloat = 0.0,
          highBoundTimeRange: CGFloat = 48.0,
-         defaultMarket: MainMarketType = MainMarketType.homeDrawAway,
+         defaultMarket: MainMarketType? = nil,
          lowerBoundOddsRange: CGFloat = 1.0,
          highBoundOddsRange: CGFloat = 30.0,
          countFilters: Int = 0) {

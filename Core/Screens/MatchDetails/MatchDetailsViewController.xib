@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -62,6 +62,8 @@
                 <outlet property="marketGroupsPagedBaseView" destination="8LV-6W-WLu" id="QRI-Se-Osv"/>
                 <outlet property="marketTypeSeparator" destination="5CV-zZ-7va" id="r7b-32-Wah"/>
                 <outlet property="marketTypesCollectionView" destination="bBf-el-85E" id="ECQ-NU-tsR"/>
+                <outlet property="marketsNotAvailableLabel" destination="baT-1t-Vd7" id="bXk-Wu-Pch"/>
+                <outlet property="marketsNotAvailableView" destination="56R-Yf-D3H" id="sPA-s2-sWX"/>
                 <outlet property="marketsStackView" destination="W2u-dp-ZVd" id="att-Gn-YWr"/>
                 <outlet property="matchFieldBaseView" destination="cyX-7G-uWo" id="Hhl-TB-CJ3"/>
                 <outlet property="matchFieldLoadingView" destination="kvy-p9-fCM" id="pGk-RS-4Oj"/>
@@ -99,14 +101,14 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9vu-0T-T83">
-                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="48"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eBl-1l-lUO">
-                    <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                    <rect key="frame" x="0.0" y="92" width="414" height="804"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This match is no longer available for betting" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4rD-5c-LKj">
-                            <rect key="frame" x="36" y="366" width="342" height="36"/>
+                            <rect key="frame" x="36" y="364" width="342" height="36"/>
                             <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="18"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -120,7 +122,7 @@
                     </constraints>
                 </view>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fdu-WM-VjI">
-                    <rect key="frame" x="0.0" y="44" width="414" height="130"/>
+                    <rect key="frame" x="0.0" y="48" width="414" height="130"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BWt-ze-64e">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
@@ -428,7 +430,7 @@
                     </constraints>
                 </view>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zsb-8j-oxP">
-                    <rect key="frame" x="0.0" y="174" width="414" height="722"/>
+                    <rect key="frame" x="0.0" y="178" width="414" height="718"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="W2u-dp-ZVd">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="110"/>
@@ -656,6 +658,24 @@
                             <rect key="frame" x="0.0" y="110" width="414" height="615"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="56R-Yf-D3H">
+                            <rect key="frame" x="0.0" y="110" width="414" height="615"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="baT-1t-Vd7">
+                                    <rect key="frame" x="30" y="298.5" width="354" height="18"/>
+                                    <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="18"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <constraints>
+                                <constraint firstItem="baT-1t-Vd7" firstAttribute="centerY" secondItem="56R-Yf-D3H" secondAttribute="centerY" id="Eag-FY-pHF"/>
+                                <constraint firstItem="baT-1t-Vd7" firstAttribute="centerX" secondItem="56R-Yf-D3H" secondAttribute="centerX" id="VES-qa-lG5"/>
+                                <constraint firstItem="baT-1t-Vd7" firstAttribute="leading" secondItem="56R-Yf-D3H" secondAttribute="leading" constant="30" id="ane-LN-ZO5"/>
+                                <constraint firstAttribute="trailing" secondItem="baT-1t-Vd7" secondAttribute="trailing" constant="30" id="lYG-CH-4bQ"/>
+                            </constraints>
+                        </view>
                     </subviews>
                     <constraints>
                         <constraint firstItem="W2u-dp-ZVd" firstAttribute="trailing" secondItem="4EJ-mA-Qog" secondAttribute="trailing" id="3Pp-OI-5dr"/>
@@ -665,19 +685,24 @@
                         <constraint firstAttribute="bottom" secondItem="jEG-kW-DaM" secondAttribute="bottom" id="GC7-8C-0DM"/>
                         <constraint firstItem="8LV-6W-WLu" firstAttribute="leading" secondItem="4EJ-mA-Qog" secondAttribute="leading" id="H9P-84-B2f"/>
                         <constraint firstItem="8LV-6W-WLu" firstAttribute="width" secondItem="Pue-vU-ZBK" secondAttribute="width" id="Hgk-xa-2IJ"/>
+                        <constraint firstItem="56R-Yf-D3H" firstAttribute="leading" secondItem="4EJ-mA-Qog" secondAttribute="leading" id="PeH-bd-ACB"/>
+                        <constraint firstItem="56R-Yf-D3H" firstAttribute="width" secondItem="Pue-vU-ZBK" secondAttribute="width" id="Sty-yi-WyB"/>
                         <constraint firstItem="jEG-kW-DaM" firstAttribute="width" secondItem="Pue-vU-ZBK" secondAttribute="width" id="Ucp-ID-Hws"/>
                         <constraint firstItem="4EJ-mA-Qog" firstAttribute="trailing" secondItem="jEG-kW-DaM" secondAttribute="trailing" id="Vgm-Us-vtJ"/>
+                        <constraint firstItem="Pue-vU-ZBK" firstAttribute="bottom" secondItem="56R-Yf-D3H" secondAttribute="bottom" id="djW-8t-Msm"/>
                         <constraint firstItem="8LV-6W-WLu" firstAttribute="top" secondItem="W2u-dp-ZVd" secondAttribute="bottom" id="duN-uT-rgE"/>
                         <constraint firstItem="W2u-dp-ZVd" firstAttribute="leading" secondItem="4EJ-mA-Qog" secondAttribute="leading" id="e5R-C6-gMg"/>
                         <constraint firstItem="jEG-kW-DaM" firstAttribute="top" secondItem="W2u-dp-ZVd" secondAttribute="bottom" id="eR7-Ca-2Ez"/>
+                        <constraint firstItem="56R-Yf-D3H" firstAttribute="top" secondItem="W2u-dp-ZVd" secondAttribute="bottom" id="nkI-cl-Vgy"/>
                         <constraint firstItem="W2u-dp-ZVd" firstAttribute="width" secondItem="Pue-vU-ZBK" secondAttribute="width" id="qMd-Hx-5E4"/>
                         <constraint firstAttribute="bottom" secondItem="8LV-6W-WLu" secondAttribute="bottom" id="ujx-AK-o99"/>
+                        <constraint firstItem="4EJ-mA-Qog" firstAttribute="trailing" secondItem="56R-Yf-D3H" secondAttribute="trailing" id="vce-m8-7bj"/>
                     </constraints>
                     <viewLayoutGuide key="contentLayoutGuide" id="4EJ-mA-Qog"/>
                     <viewLayoutGuide key="frameLayoutGuide" id="Pue-vU-ZBK"/>
                 </scrollView>
                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="FrV-dt-cge">
-                    <rect key="frame" x="188.5" y="516.5" width="37" height="37"/>
+                    <rect key="frame" x="188.5" y="518.5" width="37" height="37"/>
                     <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </activityIndicatorView>
             </subviews>
@@ -727,7 +752,7 @@
         <image name="red_card_image" width="9" height="14"/>
         <image name="tabbar_live_icon" width="25" height="23"/>
         <namedColor name="buttonBackgroundPrimary">
-            <color red="0.13725490196078433" green="0.69019607843137254" blue="0.30588235294117649" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.97254901960784312" green="0.9882352941176471" blue="0.0078431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

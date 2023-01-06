@@ -25,6 +25,7 @@ public struct Event: Codable {
     public var markets: [Market]
 
     public var venueCountry: Country?
+    public var numberMarkets: Int?
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -36,6 +37,7 @@ public struct Event: Codable {
         case startDate = "startDate"
         case markets = "markets"
         case venueCountry = "venueCountry"
+        case numberMarkets = "numMarkets"
     }
     
 }
@@ -48,6 +50,7 @@ public struct Market: Codable {
     public var marketTypeId: String?
     public var eventMarketTypeId: String?
     public var eventName: String?
+    public var isMainOutright: Bool?
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -56,6 +59,7 @@ public struct Market: Codable {
         case marketTypeId = "marketTypeId"
         case eventMarketTypeId = "eventMarketTypeId"
         case eventName = "eventName"
+        case isMainOutright = "ismainoutright"
     }
     
 }
@@ -152,10 +156,14 @@ public struct SportNodeInfo: Codable {
 public struct SportRegion: Codable {
     public var id: String
     public var name: String?
+    public var numberEvents: String
+    public var numberOutrightEvents: String
 
     enum CodingKeys: String, CodingKey {
         case id = "idfwbonavigation"
         case name = "name"
+        case numberEvents = "numevents"
+        case numberOutrightEvents = "numoutrightevents"
     }
 }
 
@@ -174,10 +182,14 @@ public struct SportRegionInfo: Codable {
 public struct SportCompetition: Codable {
     public var id: String
     public var name: String
+    public var numberEvents: String
+    public var numberOutrightEvents: String
 
     enum CodingKeys: String, CodingKey {
         case id = "idfwbonavigation"
         case name = "name"
+        case numberEvents = "numevents"
+        case numberOutrightEvents = "numoutrightevents"
     }
 }
 

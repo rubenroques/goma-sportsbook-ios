@@ -211,7 +211,7 @@ class CompetitionDetailsViewModel {
                                               name: rawCompetition.name ?? "",
                                               matches: (competitionsMatches[competitionId] ?? []),
                                               venue: location,
-                                              outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
+                                              numberOutrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
                 processedCompetitions.append(competition)
             }
         }
@@ -231,7 +231,7 @@ class CompetitionDetailsViewModel {
                                                   name: rawCompetition.name ?? "",
                                                   matches: (competitionsMatches[competitionId] ?? []),
                                                   venue: location,
-                                                  outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
+                                                  numberOutrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
                     processedCompetitions.append(competition)
                 }
             }
@@ -261,7 +261,7 @@ extension CompetitionDetailsViewModel {
 extension CompetitionDetailsViewModel {
 
     func shouldShowOutrightMarkets(forSection section: Int) -> Bool {
-        return self.loadedCompetitions[safe: section]?.outrightMarkets ?? 0 > 0
+        return self.loadedCompetitions[safe: section]?.numberOutrightMarkets ?? 0 > 0
     }
 
     func numberOfSection() -> Int {

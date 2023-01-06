@@ -293,8 +293,9 @@ extension SportMatchLineViewModel {
                 self?.subscriptions.insert(subscription)
                 self?.storeMatches([])
             case .contentUpdate(let eventsGroups):
-                let matches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
-                self?.storeMatches(matches)
+                self?.processEvents(eventsGroups: eventsGroups)
+//                let matches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+//                self?.storeMatches(matches)
             case .disconnected:
                 self?.storeMatches([])
             }
@@ -450,10 +451,17 @@ extension SportMatchLineViewModel {
          */
     }
 
-    private func fetchOutrightCompetitions() {
+    private func fetchOutrightCompetitions(eventsGroups: [EventsGroup]? = nil) {
 
         // EM TEMP SHUTDOWN
         // TODO: fetchOutrightCompetitions
+
+        if let eventsGroups {
+            let competitions = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups)
+
+            self.outrightCompetitions = Array(competitions.prefix(2))
+            self.updatedContent()
+        }
 
 //        if let outrightCompetitionsRegister = outrightCompetitionsRegister {
 //            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: outrightCompetitionsRegister)
@@ -490,6 +498,18 @@ extension SportMatchLineViewModel {
 //            })
     }
 
+    func processEvents(eventsGroups: [EventsGroup]) {
+        if let event = eventsGroups.first?.events.first,
+           event.homeTeamName == "" || event.awayTeamName == "" {
+            let matches = [Match]()
+            self.storeMatches(matches, eventsGroups: eventsGroups)
+        }
+        else {
+            let matches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
+            self.storeMatches(matches)
+        }
+    }
+
     func storeOutrightCompetitions(aggregator: EveryMatrix.Aggregator) {
 
         self.store.storeOutrightTournaments(aggregator)
@@ -505,16 +525,17 @@ extension SportMatchLineViewModel {
             return Competition.init(id: rawTournament.id,
                              name: rawTournament.name ?? "",
                              venue: location,
-                             outrightMarkets: rawTournament.numberOfOutrightMarkets ?? 0)
+                             numberOutrightMarkets: rawTournament.numberOfOutrightMarkets ?? 0)
         }
 
         self.outrightCompetitions = Array(localOutrightCompetitions.prefix(2))
         self.updatedContent()
     }
 
-    func storeMatches(_ matches: [Match]) {
+    func storeMatches(_ matches: [Match], eventsGroups: [EventsGroup]? = nil) {
+        
         if case .popular = self.matchesType, matches.isEmpty, self.outrightCompetitions.isEmpty {
-            self.fetchOutrightCompetitions()
+            self.fetchOutrightCompetitions(eventsGroups: eventsGroups)
             return
         }
 

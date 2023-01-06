@@ -641,3 +641,5 @@ Terms of use, Privacy Policy and EULA";
 "recover_password_sent" = "Recover Password Sent";
 "recover_password_sent_message" = "If the information provided is correct, a confirmation email will be sent to the registered email address. \nClick the link or Input the verification code in the email to complete the password reset process & create a new password.";
 "current_password_incorrect" = "Current password incorrect.";
+
+"markets_not_available" = "Markets not available.";

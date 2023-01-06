@@ -89,7 +89,7 @@ class FilterRowView: NibView {
             }
         }
     }
-    var viewId: Int = 0
+    var viewId: String = "0"
 
     var didTapView: ((Bool) -> Void)?
 

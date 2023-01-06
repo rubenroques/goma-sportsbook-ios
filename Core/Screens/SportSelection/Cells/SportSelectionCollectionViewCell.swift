@@ -23,7 +23,7 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
                 containerView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
             }
             else {
-                containerView.layer.borderColor = UIColor.App.highlightSecondary.cgColor
+                containerView.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
             }
         }
     }
@@ -48,7 +48,7 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
         self.currentLiveSportsPublisher?.cancel()
     }
 
-    func setupWithTheme(){
+    func setupWithTheme() {
         containerView.backgroundColor = UIColor.App.backgroundSecondary
         containerView.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
         
@@ -98,6 +98,8 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
         if viewModel.isLive, let numberOfLiveEvents = viewModel.numberOfLiveEvents {
             self.showEventCount(numberOfLiveEvents)
         }
+
+        self.isSelected = false
     }
     
     func showEventCount(_ count: String) {

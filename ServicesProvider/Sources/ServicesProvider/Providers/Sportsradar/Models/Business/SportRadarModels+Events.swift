@@ -34,6 +34,8 @@ extension SportRadarModels {
 
         var tournamentCountryName: String?
         
+        var numberMarkets: Int?
+
         enum CodingKeys: String, CodingKey {
             case id = "idfoevent"
             case homeName = "participantname_home"
@@ -44,7 +46,37 @@ extension SportRadarModels {
             case startDate = "tsstart"
             case markets = "markets"
             case tournamentCountryName = "tournamentcountryname"
+            case numberMarkets = "numMarkets"
         }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.id = try container.decode(String.self, forKey: .id)
+
+            self.homeName = container.contains(.homeName) ? try container.decode(String.self, forKey: .homeName) : nil
+            self.awayName = container.contains(.awayName) ? try container.decode(String.self, forKey: .awayName) : nil
+            self.competitionId = container.contains(.competitionId) ? try container.decode(String.self, forKey: .competitionId) : nil
+            self.competitionName = container.contains(.competitionName) ? try container.decode(String.self, forKey: .competitionName) : nil
+            self.sportTypeName = container.contains(.sportTypeName) ? try container.decode(String.self, forKey: .sportTypeName) : nil
+            self.markets = container.contains(.markets) ? try container.decode([Market].self, forKey: .markets) : nil
+            self.numberMarkets = container.contains(.numberMarkets) ? try container.decode(Int.self, forKey: .numberMarkets) : nil
+
+            let dateString = container.contains(.startDate) ? try container.decode(String.self, forKey: .startDate) : nil
+
+            if let dateString {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+                if let date = formatter.date(from: dateString) {
+                    self.startDate = date
+                } else {
+                    throw DecodingError.dataCorruptedError(forKey: .startDate,
+                                                           in: container,
+                                                           debugDescription: "Date string does not match format expected by formatter.")
+                }
+            }
+
+
+          }
         
     }
     
@@ -56,6 +88,7 @@ extension SportRadarModels {
         var marketTypeId: String?
         var eventMarketTypeId: String?
         var eventName: String?
+        var isMainOutright: Bool?
 
         enum CodingKeys: String, CodingKey {
             case id = "idfomarket"
@@ -64,6 +97,7 @@ extension SportRadarModels {
             case marketTypeId = "idefmarkettype"
             case eventMarketTypeId = "idfomarkettype"
             case eventName = "eventname"
+            case isMainOutright = "ismainoutright"
         }
         
     }
@@ -139,10 +173,14 @@ extension SportRadarModels {
     struct SportRegion: Codable {
         var id: String
         var name: String?
+        var numberEvents: String
+        var numberOutrightEvents: String
 
         enum CodingKeys: String, CodingKey {
             case id = "idfwbonavigation"
             case name = "name"
+            case numberEvents = "numevents"
+            case numberOutrightEvents = "numoutrightevents"
         }
     }
 
@@ -161,10 +199,14 @@ extension SportRadarModels {
     struct SportCompetition: Codable {
         var id: String
         var name: String
+        var numberEvents: String
+        var numberOutrightEvents: String
 
         enum CodingKeys: String, CodingKey {
             case id = "idfwbonavigation"
             case name = "name"
+            case numberEvents = "numevents"
+            case numberOutrightEvents = "numoutrightevents"
         }
     }
 
