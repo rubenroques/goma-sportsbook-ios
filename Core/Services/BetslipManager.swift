@@ -11,10 +11,6 @@ import OrderedCollections
 import nanopb
 import ServicesProvider
 
-struct BetPlacedDetails {
-    var response: BetslipPlaceBetResponse
-    var tickets: [BettingTicket]
-}
 
 class BetslipManager: NSObject {
 
@@ -568,6 +564,37 @@ extension BetslipManager {
 
     }
 
+    func requestSystemBetPotentialReturn(withSkateAmount stake: Double, systemBetType: SystemBetType) -> AnyPublisher<BetPotencialReturn, Never>  {
+
+        let betTicketSelections = self.bettingTicketsPublisher.value.map { bettingTicket in
+            let odd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
+            let betTicketSelection = ServicesProvider.BetTicketSelection(identifier: bettingTicket.id,
+                                                                         eventName: "",
+                                                                         homeTeamName: "",
+                                                                         awayTeamName: "",
+                                                                         marketName: "",
+                                                                         outcomeName: "",
+                                                                         odd: odd,
+                                                                         stake: stake)
+            return betTicketSelection
+        }
+
+        let betTicket = BetTicket.init(tickets: betTicketSelections,
+                                       stake: stake,
+                                       betGroupingType: BetGroupingType.system(identifier: systemBetType.id, name: systemBetType.name ?? ""))
+
+
+        return Env.servicesProvider.calculatePotentialReturn(forBetTicket: betTicket)
+            .map({ betslipPotentialReturn in
+                return BetPotencialReturn(potentialReturn: betslipPotentialReturn.potentialReturn,
+                                          totalStake: betslipPotentialReturn.totalStake,
+                                          numberOfBets: betslipPotentialReturn.numberOfBets)
+            })
+            .replaceError(with: nil)
+            .replaceNil(with: BetPotencialReturn(potentialReturn: 0, totalStake: 0, numberOfBets: 0))
+            .eraseToAnyPublisher()
+    }
+
     func requestSimpleBetslipSelectionState(oddsBoostPercentage: Double? = nil) {
 
         let ticketSelections = self.bettingTicketsPublisher.value
@@ -946,4 +973,16 @@ struct BetslipError {
     }
 
 
+}
+
+
+struct BetPlacedDetails {
+    var response: BetslipPlaceBetResponse
+    var tickets: [BettingTicket]
+}
+
+struct BetPotencialReturn: Codable {
+    var potentialReturn: Double
+    var totalStake: Double
+    var numberOfBets: Int
 }

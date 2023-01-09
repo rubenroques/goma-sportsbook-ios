@@ -1414,7 +1414,6 @@ class PreSubmissionBetslipViewController: UIViewController {
     func requestSystemBetInfo() {
 
         guard
-            // self.realBetValue != 0, NOTA: Tive de desactivar esta opção para conseguir ter o maxAmount da system bet e colocar 1 por default na chamada, como se faz na multipla
             let selectedSystemBetType = self.selectedSystemBetType
         else {
             return
@@ -1426,6 +1425,19 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondarySystemOddsValueLabel.text = localized("no_value")
         self.secondarySystemWinningsValueLabel.text = localized("no_value")
 
+        let stake = self.realBetValue
+        Env.betslipManager.requestSystemBetPotentialReturn(withSkateAmount: stake,
+                                                           systemBetType: selectedSystemBetType)
+        .receive(on: DispatchQueue.main)
+        .sink { completion in
+
+        } receiveValue: { [weak self] betPotencialReturn in
+            self?.configureWithSystemBetPotencialReturn(betPotencialReturn)
+        }
+        .store(in: &cancellables)
+
+
+        /*
         Env.betslipManager
             .requestSystemBetslipSelectionState(systemBetType: selectedSystemBetType)
             .receive(on: DispatchQueue.main)
@@ -1436,6 +1448,18 @@ class PreSubmissionBetslipViewController: UIViewController {
                 self?.configureWithSystemBetInfo(systemBetInfo: betDetails)
             }
             .store(in: &cancellables)
+*/
+    }
+
+    func configureWithSystemBetPotencialReturn(_ betPotencialReturn: BetPotencialReturn) {
+
+        let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betPotencialReturn.potentialReturn)) ?? localized("no_value")
+        self.systemWinningsValueLabel.text = possibleWinningsString
+        self.secondarySystemWinningsValueLabel.text = possibleWinningsString
+
+        let totalBetAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betPotencialReturn.totalStake)) ?? localized("no_value")
+        self.systemOddsValueLabel.text = totalBetAmountString
+        self.secondarySystemOddsValueLabel.text = totalBetAmountString
 
     }
 

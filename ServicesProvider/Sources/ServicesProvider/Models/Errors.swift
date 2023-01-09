@@ -26,6 +26,7 @@ public enum ServiceProviderError: Error {
     case onSubscribe
 
     case invalidRequestFormat
+    case internalServerError
     case request
     case unauthorized
     case forbidden

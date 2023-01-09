@@ -68,11 +68,23 @@ class BettingConnector: Connector {
                 else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 403 {
                     throw ServiceProviderError.forbidden
                 }
+                else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 500 {
+                    throw ServiceProviderError.internalServerError
+                }
                 else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode != 200 {
                     throw ServiceProviderError.unknown
                 }
                 return result.data
             }
+            .handleEvents(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    print("Betting-NetworkManager [[ requesting ]] ", request,
+                          " [[ error completion ]] ", error)
+                case .finished:
+                    print("Betting-NetworkManager [[ requesting ]] ", request, " [[ normal completion ]] ")
+                }
+            })
             .handleEvents(receiveOutput: { data in
                 print("Betting-NetworkManager [[ requesting ]] ", request,
                       " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )

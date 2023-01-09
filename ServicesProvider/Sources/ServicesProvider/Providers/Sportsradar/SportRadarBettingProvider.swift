@@ -48,7 +48,8 @@ class SportRadarBettingProvider: BettingProvider {
             .map { bets in
                 return SportRadarModels.BettingHistory(bets: bets)
             }
-            .map(SportRadarModelMapper.bettingHistory(fromInternalBettingHistory:)).eraseToAnyPublisher()
+            .map(SportRadarModelMapper.bettingHistory(fromInternalBettingHistory:))
+            .eraseToAnyPublisher()
     }
 
     func getResolvedBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {

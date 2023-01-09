@@ -51,11 +51,20 @@ extension BettingAPIClient: Endpoint {
             if let betStates = betStates?.map(\.rawValue).joined(separator: ",") {
                 query.append(URLQueryItem(name: "betStateTypes", value: betStates))
             }
+
             if let betOutcomes = betOutcomes?.map(\.rawValue).joined(separator: ",") {
-                query.append(URLQueryItem(name: "betStateTypes", value: betOutcomes))
+                query.append(URLQueryItem(name: "betOutcomes", value: betOutcomes))
             }
+            else {
+                query.append(URLQueryItem(name: "betOutcomes", value: "NotSpecified"))
+            }
+
+            query.append(URLQueryItem(name: "orderBy", value: "0"))
+            query.append(URLQueryItem(name: "orderDesc", value: "true"))
+
             query.append(URLQueryItem(name: "pageSize", value: "10"))
             query.append(URLQueryItem(name: "pageNumber", value: "\(page)"))
+
             return query
         case .betDetails:
             return nil
@@ -75,9 +84,7 @@ extension BettingAPIClient: Endpoint {
         case .betDetails:
             return nil
         case .calculateReturns(let betTicket):
-            let jsonData = (try? JSONEncoder().encode(betTicket)) ?? Data()
-            // let jsonString = String(data: jsonData, encoding: .utf8)
-            return jsonData
+            return Self.createBetLegsJSONBody(fromBetTicket: betTicket)
 
             // ===================================================
         case .getAllowedBetTypes(let betTicketSelections):
@@ -132,13 +139,9 @@ extension BettingAPIClient: Endpoint {
         case .placeBets(let betTickets):
 
             var betsArray: [String] = []
-
             for ticket in betTickets {
-
                 var legsStringArray: [String] = []
-
                 for selection in ticket.tickets {
-
                     let priceDown: String
                     let priceUp: String
 
@@ -193,7 +196,6 @@ extension BettingAPIClient: Endpoint {
                        """
             let data = body.data(using: String.Encoding.utf8)!
             return data
-
         }
         
     }
@@ -241,5 +243,119 @@ extension BettingAPIClient: Endpoint {
         return TimeInterval(20)
     }
     
-    
+    // TODO: Check if we can use this in every endpoint
+    private static func createBetJSONBody(fromBetTickets betTickets: [BetTicket]) -> Data {
+        var betsArray: [String] = []
+        for ticket in betTickets {
+            var legsStringArray: [String] = []
+            for selection in ticket.tickets {
+                let priceDown: String
+                let priceUp: String
+
+                switch selection.odd {
+                case .fraction(let numerator, let denominator):
+                    priceUp = "\(numerator)"
+                    priceDown = "\(denominator)"
+                case .european:
+                    priceUp = ""
+                    priceDown = ""
+                }
+
+                legsStringArray.append(
+                """
+                {
+                  "eachWayPlaceTerms": "",
+                  "eachWayReduction": "",
+                  "handicap": "",
+                  "idFOPriceType": "CP",
+                  "idFOSelection": "\(selection.identifier)",
+                  "isTrap": "",
+                  "lowerBand": "",
+                  "priceDown": "\(priceDown)",
+                  "priceUp": "\(priceUp)",
+                  "systemTag": "",
+                  "upperBand": ""
+                }
+                """)
+            }
+
+            let legsString = legsStringArray.joined(separator: ",")
+            betsArray.append(
+                """
+                {
+                    "betLegs": [ \(legsString) ],
+                    "idFOBetType": "\(ticket.betGroupingType.identifier)",
+                    "pool": false,
+                    "placeStake": 0,
+                    "showStake": 0,
+                    "winStake": \(ticket.globalStake ?? 0.0)
+                }
+                """)
+        }
+
+        let betsString = betsArray.joined(separator: ",")
+        let body = """
+                   {
+                     "bets": [\(betsString)],
+                     "useAutoAcceptance": true
+                   }
+                   """
+
+        let data = body.data(using: String.Encoding.utf8)!
+        return data
+    }
+
+    private static func createBetLegsJSONBody(fromBetTicket betTicket: BetTicket) -> Data {
+
+        var legsStringArray: [String] = []
+        for selection in betTicket.tickets {
+            let priceDown: String
+            let priceUp: String
+
+            switch selection.odd {
+            case .fraction(let numerator, let denominator):
+                priceUp = "\(numerator)"
+                priceDown = "\(denominator)"
+            case .european:
+                priceUp = ""
+                priceDown = ""
+            }
+
+            legsStringArray.append(
+                """
+                {
+                  "eachWayPlaceTerms": "",
+                  "eachWayReduction": "",
+                  "handicap": "",
+                  "idFOPriceType": "CP",
+                  "idFOSelection": "\(selection.identifier)",
+                  "isTrap": "",
+                  "lowerBand": "",
+                  "priceDown": "\(priceDown)",
+                  "priceUp": "\(priceUp)",
+                  "systemTag": "",
+                  "upperBand": ""
+                }
+                """)
+        }
+
+        let legsString = legsStringArray.joined(separator: ",")
+        let body =
+                """
+                {
+                    "betLegs": [ \(legsString) ],
+                    "idFOBetType": "\(betTicket.betGroupingType.identifier)",
+                    "pool": false,
+                    "placeStake": 0,
+                    "showStake": 0,
+                    "winStake": \(betTicket.globalStake ?? 0.0)
+                }
+                """
+
+        let data = body.data(using: String.Encoding.utf8)!
+        return data
+    }
+
 }
+
+
