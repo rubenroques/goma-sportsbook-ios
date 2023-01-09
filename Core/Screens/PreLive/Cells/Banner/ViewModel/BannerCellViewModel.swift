@@ -63,13 +63,26 @@ class BannerCellViewModel {
 
         if let matchId = self.matchId {
             self.presentationType = .match(id: matchId)
-            self.imageURL = URL(string: EveryMatrixInfo.staticHost + imageURLString)
+
+            if imageURL.contains("https") {
+                self.imageURL = URL(string: imageURLString)
+            }
+            else {
+                self.imageURL = URL(string: EveryMatrixInfo.staticHost + imageURLString)
+            }
+
             self.requestMatchInfo(matchId)
             self.requestMatchOdds()
         }
         else {
             self.presentationType = .image
-            self.imageURL = URL(string: EveryMatrixInfo.staticHost + imageURLString)
+
+            if imageURL.contains("https") {
+                self.imageURL = URL(string: imageURLString)
+            }
+            else {
+                self.imageURL = URL(string: EveryMatrixInfo.staticHost + imageURLString)
+            }
         }
 
     }

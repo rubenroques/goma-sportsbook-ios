@@ -231,6 +231,32 @@ extension SportRadarModels {
             case events = "events"
         }
     }
+
+    struct BannerResponse: Codable {
+        var bannerItems: [Banner]
+
+        enum CodingKeys: String, CodingKey {
+            case bannerItems = "headlineItems"
+        }
+    }
+
+    struct Banner: Codable {
+        var id: String
+        var name: String
+        var title: String
+        var imageUrl: String
+        var bodyText: String?
+        var type: String
+
+        enum CodingKeys: String, CodingKey {
+            case id = "idfwheadline"
+            case name = "name"
+            case title = "title"
+            case imageUrl = "imageurl"
+            case bodyText = "bodytext"
+            case type = "idfwheadlinetype"
+        }
+    }
     
 }
 

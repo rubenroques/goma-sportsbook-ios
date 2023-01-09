@@ -292,6 +292,29 @@ class StaticHomeViewTemplateDataSource {
 //                    ()
 //                }
 //            })
+        Env.servicesProvider.getBanners()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("BANNERS ERROR: \(error)")
+                }
+
+            }, receiveValue: { [weak self] bannersResponse in
+
+                let banners = bannersResponse.bannerItems.map({
+
+                    let bannerInfo = BannerInfo(type: $0.type, id: $0.id, imageURL: $0.imageUrl)
+
+                    return bannerInfo
+                })
+
+                self?.banners = banners
+
+            })
+            .store(in: &cancellables)
     }
 
     // Favorites

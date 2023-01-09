@@ -268,7 +268,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.locationFlagImageView.image = nil
 
         self.oddsStackView.alpha = 1.0
-        
+        self.oddsStackView.isHidden = false
+
         self.awayBaseView.isHidden = false
 
         self.isFavorite = false

@@ -237,6 +237,16 @@ extension ServicesProviderClient {
 
         return eventsProvider.getSearchEvents(query: query, resultLimit: resultLimit, page: page)
     }
+
+    public func getBanners() -> AnyPublisher<BannerResponse, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getBanners()
+    }
 }
 
 

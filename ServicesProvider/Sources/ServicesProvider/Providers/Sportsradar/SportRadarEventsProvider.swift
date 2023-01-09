@@ -622,10 +622,32 @@ extension SportRadarEventsProvider {
 
         return requestPublisher.map( { sportRadarResponse -> EventsGroup in
             let events = sportRadarResponse.data
-            let mappedEventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events, withEmptyMarkets: true)
+            let mappedEventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
+
+            let filteredEvents = mappedEventsGroup.events.filter({
+                $0.id != "_TOKEN_"
+            })
+
+            let filteredEventsGroup = EventsGroup(events: filteredEvents)
+
+            return filteredEventsGroup
+        })
+        .eraseToAnyPublisher()
+
+    }
+
+    func getBanners() -> AnyPublisher<BannerResponse, ServiceProviderError> {
+
+        let endpoint = SportRadarRestAPIClient.banners
+
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.BannerResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { sportRadarResponse -> BannerResponse in
+            let bannersResponse = sportRadarResponse.data
+            let mappedBannersResponse = SportRadarModelMapper.bannerResponse(fromInternalBannerResponse: bannersResponse)
 //            let mappedEventsGroup = SportRadarModelMapper.events(fromInternalEvents: events)
 
-            return mappedEventsGroup
+            return mappedBannersResponse
         })
         .eraseToAnyPublisher()
 

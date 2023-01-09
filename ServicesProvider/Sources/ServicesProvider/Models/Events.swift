@@ -217,3 +217,29 @@ public struct SportCompetitionMarketGroup: Codable {
     }
 }
 
+public struct BannerResponse: Codable {
+    public var bannerItems: [Banner]
+
+    enum CodingKeys: String, CodingKey {
+        case bannerItems = "headlineItems"
+    }
+}
+
+public struct Banner: Codable {
+    public var id: String
+    public var name: String
+    public var title: String
+    public var imageUrl: String
+    public var bodyText: String?
+    public var type: String
+
+    enum CodingKeys: String, CodingKey {
+        case id = "idfwheadline"
+        case name = "name"
+        case title = "title"
+        case imageUrl = "imageurl"
+        case bodyText = "bodytext"
+        case type = "idfwheadlinetype"
+    }
+}
+

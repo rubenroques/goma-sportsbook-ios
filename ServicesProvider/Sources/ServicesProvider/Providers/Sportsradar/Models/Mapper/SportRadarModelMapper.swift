@@ -94,7 +94,7 @@ struct SportRadarModelMapper {
     // ============================================================
     // Events
     //
-    static func eventsGroup(fromInternalEvents internalEvents: [SportRadarModels.Event], withEmptyMarkets: Bool? = nil) -> EventsGroup {
+    static func eventsGroup(fromInternalEvents internalEvents: [SportRadarModels.Event]) -> EventsGroup {
 
         let events = internalEvents.map({ event -> Event in
             if let eventMarkets = event.markets {
@@ -119,18 +119,6 @@ struct SportRadarModelMapper {
                          markets: [],
                          numberMarkets: event.numberMarkets)
         })
-        
-//        let filterEvents = events.filter({
-//            !$0.markets.isEmpty
-//        })
-
-        if let withEmptyMarkets,
-           withEmptyMarkets {
-            let filterEvents = events.filter({
-                $0.id != "_TOKEN_"
-            })
-            return EventsGroup(events: filterEvents)
-        }
 
         return EventsGroup(events: events)
     }
@@ -142,6 +130,23 @@ struct SportRadarModelMapper {
     
     static func outcome(fromInternalOutcome internalOutcome: SportRadarModels.Outcome) -> Outcome {
         return Outcome(id: internalOutcome.id, name: internalOutcome.name, odd: internalOutcome.odd, marketId: internalOutcome.marketId, orderValue: internalOutcome.orderValue, externalReference: internalOutcome.externalReference)
+    }
+
+    static func bannerResponse(fromInternalBannerResponse internalBannerResponse: SportRadarModels.BannerResponse) -> BannerResponse {
+
+        let banners = internalBannerResponse.bannerItems.map({ banner -> Banner in
+            let banner = Self.banner(fromInternalBanner: banner)
+
+            return banner
+
+        })
+
+        return BannerResponse(bannerItems: banners)
+
+    }
+
+    static func banner(fromInternalBanner internalBanner: SportRadarModels.Banner) -> Banner {
+        return Banner(id: internalBanner.id, name: internalBanner.name, title: internalBanner.title, imageUrl: internalBanner.imageUrl, bodyText: internalBanner.bodyText, type: internalBanner.type)
     }
     
     // ============================================================
