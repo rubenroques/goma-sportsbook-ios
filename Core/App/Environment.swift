@@ -56,6 +56,10 @@ class Environment {
                                                                                 description: localized("accept_any")),
                                                                BetslipSelection(key: BetslipOddValidationType.acceptHigher.rawValue,
                                                                                 description: localized("accept_higher"))]
+    
+    init() {
+
+    }
 
 }
 

@@ -24,6 +24,7 @@ public struct Event: Codable {
     
     public var markets: [Market]
 
+    public var venueCountry: Country?
     public var numberMarkets: Int?
     
     enum CodingKeys: String, CodingKey {
@@ -35,6 +36,7 @@ public struct Event: Codable {
         case sportTypeName = "sportTypeName"
         case startDate = "startDate"
         case markets = "markets"
+        case venueCountry = "venueCountry"
         case numberMarkets = "numMarkets"
     }
     
@@ -66,7 +68,7 @@ public struct Outcome: Codable {
     
     public var id: String
     public var name: String
-    public var odd: Double
+    public var odd: OddFormat
     public var marketId: String?
     public var orderValue: String?
     public var externalReference: String?

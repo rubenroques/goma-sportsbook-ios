@@ -190,7 +190,6 @@ class DynamicHomeViewTemplateDataSource {
         }
     }
 
-
     // Favorites
     private func fetchFavoriteMatches() {
 

@@ -46,8 +46,12 @@ class BetslipViewController: UIViewController {
     init(startScreen: StartScreen = .bets) {
 
         self.startScreen = startScreen
+        
+        if Env.betslipManager.bettingTicketsPublisher.value.isEmpty {
+            self.startScreen = .myTickets(.opened, "")
+        }
 
-        switch startScreen {
+        switch self.startScreen {
         case .myTickets(let type, _):
             switch type {
             case .opened, .won:
@@ -59,7 +63,7 @@ class BetslipViewController: UIViewController {
             self.myTicketsRootViewController = MyTicketsRootViewController(viewModel: MyTicketsRootViewModel(startTabIndex: 0))
         }
 
-        switch startScreen {
+        switch self.startScreen {
         case .sharedBet(let token):
             self.preSubmissionBetslipViewController = PreSubmissionBetslipViewController(viewModel: PreSubmissionBetslipViewModel(sharedBetToken: token))
         default:
@@ -70,7 +74,7 @@ class BetslipViewController: UIViewController {
 
         self.viewControllerTabDataSource = TitleTabularDataSource(with: self.viewControllers)
 
-        switch startScreen {
+        switch self.startScreen {
         case .bets, .sharedBet:
             self.viewControllerTabDataSource.initialPage = 0
         case .myTickets:

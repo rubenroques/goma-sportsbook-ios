@@ -116,7 +116,7 @@ class OutcomeSelectionButtonView: NibView {
         self.bettingOffer = outcome.bettingOffer
         self.marketTypeLabel.text = outcome.translatedName
 
-        self.updateBettingOffer(value: outcome.bettingOffer.value,
+        self.updateBettingOffer(value: outcome.bettingOffer.decimalOdd,
                                 statusId: outcome.bettingOffer.statusId,
                                 isAvailableForBetting: outcome.bettingOffer.isAvailable)
 
@@ -172,7 +172,7 @@ class OutcomeSelectionButtonView: NibView {
 
         // TEMP SPORTRADAR INFO
         if let bettingOffer = self.bettingOffer {
-            self.updateBettingOffer(value: bettingOffer.value,
+            self.updateBettingOffer(value: bettingOffer.decimalOdd,
                                     statusId: bettingOffer.statusId == "" ? "1" : bettingOffer.statusId,
                                      isAvailableForBetting: bettingOffer.isAvailable)
         }
@@ -249,7 +249,7 @@ class OutcomeSelectionButtonView: NibView {
                                           outcomeId: outcome.id,
                                           marketId: marketId,
                                           matchId: match.id,
-                                          value: outcome.bettingOffer.value,
+                                          decimalOdd: outcome.bettingOffer.decimalOdd,
                                           isAvailable: outcome.bettingOffer.isAvailable,
                                           statusId: "1",
                                           matchDescription: matchDescription,
@@ -272,7 +272,7 @@ class OutcomeSelectionButtonView: NibView {
                                           outcomeId: outcome.id,
                                           marketId: marketId,
                                           matchId: "",
-                                          value: outcome.bettingOffer.value,
+                                          decimalOdd: outcome.bettingOffer.decimalOdd,
                                           isAvailable: outcome.bettingOffer.isAvailable,
                                           statusId: "1",
                                           matchDescription: matchDescription,
@@ -324,7 +324,7 @@ class OutcomeSelectionButtonView: NibView {
                                               outcomeId: outcome.id,
                                               marketId: marketId,
                                               matchId: match.id,
-                                              value: outcome.bettingOffer.value,
+                                              decimalOdd: outcome.bettingOffer.decimalOdd,
                                               isAvailable: outcome.bettingOffer.isAvailable,
                                               statusId: "1",
                                               matchDescription: matchDescription,
@@ -347,7 +347,7 @@ class OutcomeSelectionButtonView: NibView {
                                               outcomeId: outcome.id,
                                               marketId: marketId,
                                               matchId: "",
-                                              value: outcome.bettingOffer.value,
+                                              decimalOdd: outcome.bettingOffer.decimalOdd,
                                               isAvailable: outcome.bettingOffer.isAvailable,
                                               statusId: "1",
                                               matchDescription: matchDescription,

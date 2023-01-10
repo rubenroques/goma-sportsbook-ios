@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import ServicesProvider
 
 class BetSubmissionSuccessViewController: UIViewController {
 
@@ -86,7 +87,7 @@ class BetSubmissionSuccessViewController: UIViewController {
         // Number Of Bets
         self.numberOfBets = betPlacedDetailsArray.count
 
-         super.init(nibName: "BetSubmissionSuccessViewController", bundle: nil)
+        super.init(nibName: "BetSubmissionSuccessViewController", bundle: nil)
     }
 
     @available(iOS, unavailable)
@@ -116,7 +117,7 @@ class BetSubmissionSuccessViewController: UIViewController {
         let checkboxTap = UITapGestureRecognizer(target: self, action: #selector(didTapCheckbox))
         self.checkboxView.addGestureRecognizer(checkboxTap)
 
-        self.loadLocations()
+        self.loadBetTickets()
 
         self.setupWithTheme()
     }
@@ -180,11 +181,6 @@ class BetSubmissionSuccessViewController: UIViewController {
     }
 
     private func showBetShareScreen() {
-//        let renderer = UIGraphicsImageRenderer(size: self.scrollView.bounds.size)
-//        let image = renderer.image { _ in
-//            self.scrollView.drawHierarchy(in: self.scrollView.bounds, afterScreenUpdates: true)
-//        }
-//        self.ticketSnapshot = image
 
         if let betHistoryEntry = self.sharedBetHistory,
            let sharedBetToken = self.sharedBetToken,
@@ -203,66 +199,30 @@ class BetSubmissionSuccessViewController: UIViewController {
         }
     }
 
-    private func loadLocations() {
-        self.isLoading = true
-
-        let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
-        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
-            .sink(receiveCompletion: { _ in
-
-            },
-            receiveValue: { [weak self] response in
-                self?.locationsCodesDictionary = [:]
-                (response.records ?? []).forEach { location in
-                    if let code = location.code {
-                        self?.locationsCodesDictionary[location.id] = code
-                        self?.loadBetTickets()
-                    }
-                }
-            })
-            .store(in: &cancellables)
+    private func loadBetTicket(withId id: String) -> AnyPublisher<BetHistoryEntry, ServiceProviderError> {
+        return Env.servicesProvider.getBetDetails(identifier: id)
+            .map { (bet: ServicesProvider.Bet) -> BetHistoryEntry in
+                return ServiceProviderModelMapper.betHistoryEntry(fromServiceProviderBet: bet)
+            }.eraseToAnyPublisher()
     }
 
     private func loadBetTickets() {
 
-        for betPlaced in self.betPlacedDetailsArray {
+        var bettingTickets: [BetHistoryEntry] = []
 
-            if let betId = betPlaced.response.betId {
-
-                let ticketRoute = TSRouter.getTicket(betId: betId)
-                Env.everyMatrixClient.manager.getModel(router: ticketRoute, decodingType: BetHistoryResponse.self)
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { [weak self] completion in
-                        switch completion {
-                        case .failure(let apiError):
-                            switch apiError {
-                            case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
-                                ()
-                            case .notConnected:
-                                ()
-                            default:
-                                ()
-                            }
-                        case .finished:
-                            ()
-                        }
-                        self?.isLoading = false
-                    },
-                          receiveValue: { [weak self] betHistoryResponse in
-
-                        if let betHistory = betHistoryResponse.betList?.first {
-
-                            if let betHistoryEntryArray = self?.betHistoryEntry,
-                               !betHistoryEntryArray.contains(where: {$0.betId == betHistory.betId}) {
-                            self?.betHistoryEntry.append(betHistory)
-                            self?.configureBetCard(betHistory: betHistory)
-                            }
-                        }
-
-                    })
-                    .store(in: &cancellables)
+        let requests = self.betPlacedDetailsArray
+            .map(\.response.betId)
+            .compactMap({ $0 })
+            .map(self.loadBetTicket(withId:))
+        Publishers.MergeMany(requests)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                self?.configureBetCards(withBetHistoryEntries: bettingTickets)
+                self?.isLoading = false
+            } receiveValue: { bettingTicket in
+                bettingTickets.append(bettingTicket)
             }
-        }
+            .store(in: &cancellables)
     }
 
     private func getSharedBetToken(betHistoryEntry: BetHistoryEntry) {
@@ -294,22 +254,27 @@ class BetSubmissionSuccessViewController: UIViewController {
 
             })
             .store(in: &cancellables)
+    }
 
+    private func configureBetCards(withBetHistoryEntries betHistoryEntries: [BetHistoryEntry]) {
+        self.clearBetCard()
+
+        for betHistoryEntry in betHistoryEntries {
+            self.configureBetCard(betHistory: betHistoryEntry)
+        }
+    }
+
+    private func clearBetCard() {
+        self.betCardsStackView.removeAllArrangedSubviews()
     }
 
     private func configureBetCard(betHistory: BetHistoryEntry) {
-
-        let locationsCodes = (betHistory.selections ?? [])
-            .map({ event -> String in
-                let id = event.venueId ?? ""
-                return self.locationsCodesDictionary[id] ?? ""
-            })
 
         let sharedTicketCardView = SharedTicketCardView()
 
         let betCardViewModel = MyTicketCellViewModel(ticket: betHistory)
 
-        sharedTicketCardView.configure(withBetHistoryEntry: betHistory, countryCodes: locationsCodes, viewModel: betCardViewModel)
+        sharedTicketCardView.configure(withBetHistoryEntry: betHistory, countryCodes: [], viewModel: betCardViewModel)
 
         sharedTicketCardView.didTappedSharebet = { [weak self] snapshot in
             self?.getSharedBetToken(betHistoryEntry: betHistory)

@@ -586,7 +586,7 @@ class PreLiveEventsViewModel: NSObject {
             let matchOdds = marketSort[0].outcomes
             let oddsRange = filterOptionsValue.lowerBoundOddsRange...filterOptionsValue.highBoundOddsRange
             for odd in matchOdds {
-                let oddValue = CGFloat(odd.bettingOffer.value)
+                let oddValue = CGFloat(odd.bettingOffer.decimalOdd)
                 if oddsRange.contains(oddValue) {
                     var newMatch = match
                     newMatch.markets = marketSort
@@ -630,7 +630,7 @@ class PreLiveEventsViewModel: NSObject {
             let oddsRange = filterOptionsValue.lowerBoundOddsRange...filterOptionsValue.highBoundOddsRange
             var oddsInRange = false
             for odd in matchOdds {
-                let oddValue = CGFloat(odd.bettingOffer.value)
+                let oddValue = CGFloat(odd.bettingOffer.decimalOdd)
                 if oddsRange.contains(oddValue) {
                     oddsInRange = true
                     break
@@ -681,7 +681,7 @@ class PreLiveEventsViewModel: NSObject {
                 let matchOdds = marketSort[0].outcomes
                 let oddsRange = filterOptionsValue.lowerBoundOddsRange...filterOptionsValue.highBoundOddsRange
                 for odd in matchOdds {
-                    let oddValue = CGFloat(odd.bettingOffer.value)
+                    let oddValue = CGFloat(odd.bettingOffer.decimalOdd)
                     if oddsRange.contains(oddValue) {
                         var newMatch = match
                         newMatch.markets = marketSort

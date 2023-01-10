@@ -170,7 +170,7 @@ class URLSchemaManager {
                                                   outcomeId: betSelection.outcomeId,
                                                   marketId: markets.first?.id ?? "1",
                                                   matchId: betSelection.eventId,
-                                                  value: betSelection.priceValue,
+                                                  decimalOdd: betSelection.priceValue,
                                                   isAvailable: markets.first?.isAvailable ?? true,
                                                   statusId: "1",
                                                   matchDescription: betSelection.eventName,

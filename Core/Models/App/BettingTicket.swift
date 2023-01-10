@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 struct BettingTicket: Hashable, Codable {
 
     var id: String
@@ -18,7 +19,6 @@ struct BettingTicket: Hashable, Codable {
     var marketId: String
     var matchId: String
 
-    var value: Double
     var isAvailable: Bool
     var statusId: String
 
@@ -30,8 +30,75 @@ struct BettingTicket: Hashable, Codable {
         return self.isAvailable && ((self.statusId ?? "") == "1" )
     }
 
+    var odd: OddFormat
+
+    var decimalOdd: Double {
+        switch self.odd {
+        case .fraction(let numerator, let denominator):
+            return (Double(numerator)/Double(denominator)) + 1.0
+        case .decimal(let odd):
+            return odd
+        }
+    }
+
+    var fractionalOdd: (numerator: Int, denominator: Int) {
+        switch self.odd {
+        case .fraction(let numerator, let denominator):
+            return (numerator, denominator)
+        case .decimal(let odd):
+            let rational = OddConverter.rationalApproximation(originalValue: odd)
+            return (rational.num, rational.den)
+        }
+    }
+
     static func == (lhs: BettingTicket, rhs: BettingTicket) -> Bool {
         return lhs.bettingId == rhs.bettingId
+    }
+
+    init(id: String,
+         outcomeId: String,
+         marketId: String,
+         matchId: String,
+         isAvailable: Bool,
+         statusId: String,
+         matchDescription: String,
+         marketDescription: String,
+         outcomeDescription: String,
+         odd: OddFormat) {
+
+        self.id = id
+        self.outcomeId = outcomeId
+        self.marketId = marketId
+        self.matchId = matchId
+        self.isAvailable = isAvailable
+        self.statusId = statusId
+        self.matchDescription = matchDescription
+        self.marketDescription = marketDescription
+        self.outcomeDescription = outcomeDescription
+        self.odd = odd
+    }
+
+    init(id: String,
+         outcomeId: String,
+         marketId: String,
+         matchId: String,
+         decimalOdd: Double,
+         isAvailable: Bool,
+         statusId: String,
+         matchDescription: String,
+         marketDescription: String,
+         outcomeDescription: String) {
+
+        self.id = id
+        self.outcomeId = outcomeId
+        self.marketId = marketId
+        self.matchId = matchId
+        self.isAvailable = isAvailable
+        self.statusId = statusId
+        self.matchDescription = matchDescription
+        self.marketDescription = marketDescription
+        self.outcomeDescription = outcomeDescription
+        self.odd = OddFormat.decimal(odd: decimalOdd)
     }
 
 }
@@ -46,12 +113,12 @@ extension BettingTicket {
                   outcomeId: outcome.id,
                   marketId: market.id,
                   matchId: match.id,
-                  value: outcome.bettingOffer.value,
                   isAvailable: outcome.bettingOffer.isAvailable,
                   statusId: "1",
                   matchDescription: matchDescription,
                   marketDescription: marketDescription,
-                  outcomeDescription: outcomeDescription)
+                  outcomeDescription: outcomeDescription,
+                  odd: outcome.bettingOffer.odd)
     }
 
     init(match: Match, marketId: String, outcome: Outcome) {
@@ -64,35 +131,12 @@ extension BettingTicket {
                   outcomeId: outcome.id,
                   marketId: marketId,
                   matchId: match.id,
-                  value: outcome.bettingOffer.value,
                   isAvailable: outcome.bettingOffer.isAvailable,
                   statusId: "1",
                   matchDescription: matchDescription,
                   marketDescription: marketDescription,
-                  outcomeDescription: outcomeDescription)
+                  outcomeDescription: outcomeDescription,
+                  odd: outcome.bettingOffer.odd)
     }
-
-//    init(betHistoryEntrySelection: BetHistoryEntrySelection) {
-//
-//        let matchDescription =  [betHistoryEntrySelection.homeParticipantName, betHistoryEntrySelection.awayParticipantName]
-//            .compactMap({ $0 })
-//            .joined(separator: " x ")
-//
-//        let matchDescription = matchDescription
-//        let marketDescription = betHistoryEntrySelection.marketName ?? ""
-//        let outcomeDescription = betHistoryEntrySelection.betName ?? ""
-//
-//
-//        self.init(id: betHistoryEntrySelection.id,
-//                  outcomeId: betHistoryEntrySelection.outcomeId,
-//                  marketId: betHistoryEntrySelection.eventId,
-//                  matchId: <#T##String#>,
-//                  value: 0.0,
-//                  isAvailable: true,
-//                  statusId: "1",
-//                  matchDescription: <#T##String#>,
-//                  marketDescription: <#T##String#>,
-//                  outcomeDescription: <#T##String#>)
-//    }
 
 }

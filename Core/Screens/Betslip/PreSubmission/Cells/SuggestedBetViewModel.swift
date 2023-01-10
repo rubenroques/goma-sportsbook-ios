@@ -122,11 +122,11 @@ class SuggestedBetViewModel: NSObject {
                                 if betOutcome.codeName == gomaBet.bettingOption && market.typeId == "\(gomaBet.bettingType)" {
 
                                     if firstOdd {
-                                        totalOdd = betOutcome.bettingOffer.value
+                                        totalOdd = betOutcome.bettingOffer.decimalOdd
                                         firstOdd = false
                                     }
                                     else {
-                                        totalOdd *= betOutcome.bettingOffer.value
+                                        totalOdd *= betOutcome.bettingOffer.decimalOdd
                                     }
 
                                     let gameInfo = "\(market.name)"
@@ -166,11 +166,11 @@ class SuggestedBetViewModel: NSObject {
                                 if betOutcome.codeName == gomaBet.bettingOption && nameOddString == nameOddGoma {
 
                                     if firstOdd {
-                                        totalOdd = betOutcome.bettingOffer.value
+                                        totalOdd = betOutcome.bettingOffer.decimalOdd
                                         firstOdd = false
                                     }
                                     else {
-                                        totalOdd *= betOutcome.bettingOffer.value
+                                        totalOdd *= betOutcome.bettingOffer.decimalOdd
                                     }
 
                                     let gameInfo = "\(market.name)"
@@ -371,7 +371,7 @@ class SuggestedBetViewModel: NSObject {
 
                 if let rawBettingOffer = self.bettingOffers[rawOutcome.id] {
                     let bettingOffer = BettingOffer(id: rawBettingOffer.id,
-                                                    value: rawBettingOffer.oddsValue ?? 0.0,
+                                                    decimalOdd: rawBettingOffer.oddsValue ?? 0.0,
                                                     statusId: rawBettingOffer.statusId ?? "1",
                                                     isLive: rawBettingOffer.isLive ?? false,
                                                     isAvailable: rawBettingOffer.isAvailable ?? true)

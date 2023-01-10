@@ -123,7 +123,7 @@ class MarketGroupDetailsViewModel {
         
         let tickets = Env.betslipManager.bettingTicketsPublisher.value
         let ticketSelections = tickets
-            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
+            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.decimalOdd) })
         
         if ticketSelections.isEmpty {
             self.grayedOutSelectionsPublisher.send(BetBuilderGrayoutsState.defaultState)

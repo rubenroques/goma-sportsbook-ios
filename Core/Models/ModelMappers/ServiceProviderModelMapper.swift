@@ -19,18 +19,23 @@ extension ServiceProviderModelMapper {
         var matches = [Match]()
         for eventsGroup in eventsGroups {
             for event in eventsGroup.events {
-//                if event.homeTeamName != "" || event.awayTeamName != "" {
-                    matches.append(Match(id: event.id,
-                                         competitionId: event.competitionId,
-                                         competitionName: event.competitionName,
-                                         homeParticipant: Participant(id: "", name: event.homeTeamName),
-                                         awayParticipant: Participant(id: "", name: event.awayTeamName),
-                                         date: event.startDate,
-                                         sportType: event.sportTypeName,
-                                         numberTotalOfMarkets: 1,
-                                         markets: Self.markets(fromServiceProviderMarkets: event.markets),
-                                         rootPartId: ""))
-//                }
+
+                var venue: Location?
+                if let venueCountry = event.venueCountry {
+                    venue = Location(id: venueCountry.iso2Code, name: venueCountry.name, isoCode: venueCountry.iso2Code)
+                }
+
+                matches.append(Match(id: event.id,
+                                     competitionId: event.competitionId,
+                                     competitionName: event.competitionName,
+                                     homeParticipant: Participant(id: "", name: event.homeTeamName),
+                                     awayParticipant: Participant(id: "", name: event.awayTeamName),
+                                     date: event.startDate,
+                                     sportType: event.sportTypeName,
+                                     venue: venue,
+                                     numberTotalOfMarkets: 1,
+                                     markets: Self.markets(fromServiceProviderMarkets: event.markets),
+                                     rootPartId: ""))
             }
         }
         return matches
@@ -59,6 +64,11 @@ extension ServiceProviderModelMapper {
     static func match(fromEventGroup eventGroup: EventsGroup) -> Match? {
         if let event = eventGroup.events[safe: 0] {
 
+            var venue: Location?
+            if let venueCountry = event.venueCountry {
+                venue = Location(id: venueCountry.iso2Code, name: venueCountry.name, isoCode: venueCountry.iso2Code)
+            }
+
             let match = Match(id: event.id,
                               competitionId: event.competitionId,
                               competitionName: event.competitionName,
@@ -66,6 +76,7 @@ extension ServiceProviderModelMapper {
                               awayParticipant: Participant(id: "", name: event.awayTeamName),
                               date: event.startDate,
                               sportType: event.sportTypeName,
+                              venue: venue,
                               numberTotalOfMarkets: 1,
                               markets: Self.markets(fromServiceProviderMarkets: event.markets),
                               rootPartId: "")
@@ -117,9 +128,9 @@ extension ServiceProviderModelMapper {
     }
     
     static func outcome(fromServiceProviderOutcome outcome: ServicesProvider.Outcome) -> Outcome {
-        
+        let oddFormat: OddFormat = Self.oddFormat(fromServiceProviderOddFormat: outcome.odd)
         let bettingOffer = BettingOffer(id: outcome.id,
-                                        value: outcome.odd,
+                                        odd:  oddFormat,
                                         statusId: "",
                                         isLive: true,
                                         isAvailable: true)
@@ -132,7 +143,26 @@ extension ServiceProviderModelMapper {
                               bettingOffer: bettingOffer,
                               orderValue: outcome.orderValue,
                               externalReference: outcome.externalReference)
+
         return outcome
+    }
+
+    static func oddFormat(fromServiceProviderOddFormat oddFormat: ServicesProvider.OddFormat) -> OddFormat {
+        switch oddFormat {
+        case .european(let odd):
+            return .decimal(odd: odd)
+        case .fraction(let numerator, let denominator):
+            return .fraction(numerator: numerator, denominator: denominator)
+        }
+    }
+
+    static func serviceProviderOddFormat(fromOddFormat oddFormat: OddFormat) -> ServicesProvider.OddFormat {
+        switch oddFormat {
+        case .decimal(let odd):
+            return .european(odd: odd)
+        case .fraction(let numerator, let denominator):
+            return .fraction(numerator: numerator, denominator: denominator)
+        }
     }
 
     static func competitions(fromEventsGroups eventsGroups: [EventsGroup]) -> [Competition] {

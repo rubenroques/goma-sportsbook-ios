@@ -32,6 +32,8 @@ extension SportRadarModels {
         
         var markets: [Market]?
 
+        var tournamentCountryName: String?
+        
         var numberMarkets: Int?
 
         enum CodingKeys: String, CodingKey {
@@ -43,6 +45,7 @@ extension SportRadarModels {
             case sportTypeName = "sporttypename"
             case startDate = "tsstart"
             case markets = "markets"
+            case tournamentCountryName = "tournamentcountryname"
             case numberMarkets = "numMarkets"
         }
 
@@ -108,11 +111,7 @@ extension SportRadarModels {
         var orderValue: String?
         var externalReference: String?
 
-        var odd: Double {
-            let priceNumerator = Double(self.priceNumerator ?? "0.0") ?? 1.0
-            let priceDenominator = Double(self.priceDenominator ?? "0.0") ?? 1.0
-            return (priceNumerator/priceDenominator) + 1.0
-        }
+        var odd: OddFormat
         
         private var priceNumerator: String?
         private var priceDenominator: String?
@@ -127,7 +126,24 @@ extension SportRadarModels {
             case orderValue = "hadvalue"
             case externalReference = "externalreference"
         }
-        
+
+        init(from decoder: Decoder) throws {
+            let container: KeyedDecodingContainer<SportRadarModels.Outcome.CodingKeys> = try decoder.container(keyedBy: SportRadarModels.Outcome.CodingKeys.self)
+            self.id = try container.decode(String.self, forKey: SportRadarModels.Outcome.CodingKeys.id)
+            self.name = try container.decode(String.self, forKey: SportRadarModels.Outcome.CodingKeys.name)
+            self.hashCode = try container.decode(String.self, forKey: SportRadarModels.Outcome.CodingKeys.hashCode)
+            self.priceNumerator = try container.decodeIfPresent(String.self, forKey: SportRadarModels.Outcome.CodingKeys.priceNumerator)
+            self.priceDenominator = try container.decodeIfPresent(String.self, forKey: SportRadarModels.Outcome.CodingKeys.priceDenominator)
+            self.marketId = try container.decodeIfPresent(String.self, forKey: SportRadarModels.Outcome.CodingKeys.marketId)
+            self.orderValue = try container.decodeIfPresent(String.self, forKey: SportRadarModels.Outcome.CodingKeys.orderValue)
+            self.externalReference = try container.decodeIfPresent(String.self, forKey: SportRadarModels.Outcome.CodingKeys.externalReference)
+
+            let numerator = Double(self.priceNumerator ?? "0.0") ?? 1.0
+            let denominator = Double(self.priceDenominator ?? "0.0") ?? 1.0
+
+            self.odd = .fraction(numerator: Int(numerator), denominator: Int(denominator) )
+        }
+
     }
 
     struct SportNodeInfo: Codable {

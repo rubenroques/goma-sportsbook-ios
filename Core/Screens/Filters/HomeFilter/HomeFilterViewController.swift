@@ -103,6 +103,7 @@ class HomeFilterViewController: UIViewController {
             filterValues = liveEventsViewModel.homeFilterOptions
         }
         else {
+
 //            filterValues = HomeFilterOptions()
             if let delegate = self.delegate {
                 if delegate.isLiveEventsMarkets {

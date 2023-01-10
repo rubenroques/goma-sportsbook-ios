@@ -158,7 +158,8 @@ class BettingHistoryViewModel {
     }
 
     func loadOpenedTickets(page: Int) {
-
+        // TODO: ServiceProvider get My Bets
+/*
         self.listStatePublisher.send(.loading)
 
         let openedRoute = TSRouter.getMyTickets(language: "en",
@@ -223,10 +224,12 @@ class BettingHistoryViewModel {
 
             })
             .store(in: &cancellables)
+        */
     }
 
     func loadResolvedTickets(page: Int) {
-
+        // TODO: ServiceProvider get My Bets
+/*
         self.listStatePublisher.send(.loading)
 
         let openedRoute = TSRouter.getMyTickets(language: "en",
@@ -290,10 +293,12 @@ class BettingHistoryViewModel {
 
             })
             .store(in: &cancellables)
+        */
     }
 
     func loadWonTickets(page: Int) {
-
+        // TODO: ServiceProvider get My Bets
+/*
         self.listStatePublisher.send(.loading)
 
         let openedRoute = TSRouter.getMyTickets(language: "en",
@@ -363,9 +368,11 @@ class BettingHistoryViewModel {
                 }
             })
             .store(in: &cancellables)
+        */
     }
     func loadCashoutTickets(page: Int) {
-
+        // TODO: ServiceProvider get My Bets
+/*
         self.listStatePublisher.send(.loading)
 
         let openedRoute = TSRouter.getMyTickets(language: "en",
@@ -432,6 +439,7 @@ class BettingHistoryViewModel {
                 }
             })
             .store(in: &cancellables)
+ */
     }
     
     func refresh() {

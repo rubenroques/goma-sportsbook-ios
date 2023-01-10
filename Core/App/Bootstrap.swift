@@ -16,21 +16,19 @@ struct Bootstrap {
     }
 
     func boot() {
-
-        _ = Env
+        let env = Env
 
         self.router.makeKeyAndVisible()
-        Env.businessSettingsSocket.connect()
 
-        if Env.locationManager.isLocationServicesEnabled() {
-            Env.locationManager.startGeoLocationUpdates()
+        env.betslipManager.start()
+        env.businessSettingsSocket.connect()
+
+        if env.locationManager.isLocationServicesEnabled() {
+            env.locationManager.startGeoLocationUpdates()
         }
 
-        let servicesProvider = Env.servicesProvider
-        servicesProvider.connect()
-
-        Env.sportsStore.getSportTypesList()
-
+        env.servicesProvider.connect()
+        env.sportsStore.getSportTypesList()
     }
 
     func refreshSession() {

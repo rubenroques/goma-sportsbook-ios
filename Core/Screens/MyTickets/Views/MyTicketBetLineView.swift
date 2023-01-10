@@ -86,6 +86,8 @@ class MyTicketBetLineView: NibView {
 
     override func commonInit() {
 
+        self.liveIconImage.isHidden = true
+        
         self.baseView.clipsToBounds = true
         self.baseView.layer.cornerRadius = 8
         self.baseView.layer.masksToBounds = true
@@ -119,7 +121,13 @@ class MyTicketBetLineView: NibView {
             self.locationImageView.isHidden = true
         }
 
-        self.marketLabel.text = "\(self.betHistoryEntrySelection.marketName ?? "") (\(self.betHistoryEntrySelection.bettingTypeEventPartName ?? ""))"
+        self.marketLabel.text = ""
+        if let marketName = self.betHistoryEntrySelection.marketName, let partName = self.betHistoryEntrySelection.bettingTypeEventPartName {
+            self.marketLabel.text = "\(marketName) (\(partName))"
+        }
+        else if let marketName = self.betHistoryEntrySelection.marketName {
+            self.marketLabel.text = "\(marketName)"
+        }
         self.outcomeLabel.text = self.betHistoryEntrySelection.betName ?? ""
         self.oddTitleLabel.text = localized("odd")
 
@@ -204,53 +212,50 @@ class MyTicketBetLineView: NibView {
     }
 
     func configureFromStatus() {
-        if let status = self.betHistoryEntrySelection.status?.uppercased() {
-            switch status {
-            case "WON":
-                self.indicatorBaseView.isHidden = false
-                self.dateLabel.isHidden = true
-                self.indicatorInternalBaseView.backgroundColor = UIColor.App.myTicketsWon
-                self.indicatorLabel.text = localized("won")
-                self.bottomBaseView.backgroundColor = .clear
-                self.separatorView.isHidden = false
-            case "HALF_WON":
-                self.indicatorBaseView.isHidden = false
-                self.dateLabel.isHidden = true
-                self.indicatorInternalBaseView.backgroundColor = UIColor.App.myTicketsWon
-                self.indicatorLabel.text = localized("half_won")
-                self.bottomBaseView.backgroundColor = .clear
-                self.separatorView.isHidden = false
-            case "LOST":
-                self.indicatorBaseView.isHidden = false
-                self.dateLabel.isHidden = true
-                self.indicatorInternalBaseView.backgroundColor = UIColor.App.myTicketsLost
-                self.bottomBaseView.backgroundColor = .clear
-                self.indicatorLabel.text = localized("lost")
-                self.separatorView.isHidden = false
-            case "HALF_LOST":
-                self.indicatorBaseView.isHidden = false
-                self.dateLabel.isHidden = true
-                self.indicatorInternalBaseView.backgroundColor = UIColor.App.myTicketsLost
-                self.bottomBaseView.backgroundColor = .clear
-                self.indicatorLabel.text = localized("half_lost")
-                self.separatorView.isHidden = false
-            case "DRAW":
-                self.indicatorBaseView.isHidden = false
-                self.dateLabel.isHidden = true
-                self.indicatorInternalBaseView.backgroundColor = UIColor.App.myTicketsOther
-                self.bottomBaseView.backgroundColor = .clear
-                self.indicatorLabel.text = localized("draw")
-                self.separatorView.isHidden = false
-            case "OPEN":
-                self.dateLabel.isHidden = false
-                self.indicatorLabel.text = localized("empty_value")
-                self.indicatorBaseView.isHidden = true
-            default:
-                self.dateLabel.isHidden = true
-                self.indicatorLabel.text = localized("empty_value")
-                self.indicatorBaseView.isHidden = false
-
-            }
+        switch self.betHistoryEntrySelection.result {
+        case .won:
+            self.indicatorBaseView.isHidden = false
+            self.dateLabel.isHidden = true
+            self.indicatorInternalBaseView.backgroundColor = UIColor.App.myTicketsWon
+            self.indicatorLabel.text = localized("won")
+            self.bottomBaseView.backgroundColor = .clear
+            self.separatorView.isHidden = false
+        case .halfWon:
+            self.indicatorBaseView.isHidden = false
+            self.dateLabel.isHidden = true
+            self.indicatorInternalBaseView.backgroundColor = UIColor.App.myTicketsWon
+            self.indicatorLabel.text = localized("half_won")
+            self.bottomBaseView.backgroundColor = .clear
+            self.separatorView.isHidden = false
+        case .lost:
+            self.indicatorBaseView.isHidden = false
+            self.dateLabel.isHidden = true
+            self.indicatorInternalBaseView.backgroundColor = UIColor.App.myTicketsLost
+            self.bottomBaseView.backgroundColor = .clear
+            self.indicatorLabel.text = localized("lost")
+            self.separatorView.isHidden = false
+        case .halfLost:
+            self.indicatorBaseView.isHidden = false
+            self.dateLabel.isHidden = true
+            self.indicatorInternalBaseView.backgroundColor = UIColor.App.myTicketsLost
+            self.bottomBaseView.backgroundColor = .clear
+            self.indicatorLabel.text = localized("half_lost")
+            self.separatorView.isHidden = false
+        case .drawn:
+            self.indicatorBaseView.isHidden = false
+            self.dateLabel.isHidden = true
+            self.indicatorInternalBaseView.backgroundColor = UIColor.App.myTicketsOther
+            self.bottomBaseView.backgroundColor = .clear
+            self.indicatorLabel.text = localized("draw")
+            self.separatorView.isHidden = false
+        case .open:
+            self.dateLabel.isHidden = false
+            self.indicatorLabel.text = localized("empty_value")
+            self.indicatorBaseView.isHidden = true
+        case .undefined:
+            self.dateLabel.isHidden = true
+            self.indicatorLabel.text = localized("empty_value")
+            self.indicatorBaseView.isHidden = false
         }
     }
     

@@ -126,7 +126,8 @@ class SubmitedBetslipViewController: UIViewController {
     }
 
     private func requestHistory() {
-
+        // TODO: Get my bets from ServicePRovider
+        /*
         let route = TSRouter.getOpenBets(language: "en", records: 100, page: 0)
 
         Env.everyMatrixClient.manager.getModel(router: route, decodingType: BetHistoryResponse.self)
@@ -147,6 +148,7 @@ class SubmitedBetslipViewController: UIViewController {
                 self.tableView.reloadData()
             }
             .store(in: &cancellables)
+         */
     }
 
     private func requestCashout(betHistoryEntry: BetHistoryEntry) {

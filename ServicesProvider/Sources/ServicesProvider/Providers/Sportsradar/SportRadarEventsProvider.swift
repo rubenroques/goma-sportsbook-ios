@@ -678,8 +678,6 @@ extension SportRadarEventsProvider: UnsubscriptionController {
 // Helpers
 extension SportRadarEventsProvider {
 
-
-
 }
 
 extension SportRadarEventsProvider {

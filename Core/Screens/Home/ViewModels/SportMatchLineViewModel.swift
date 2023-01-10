@@ -350,7 +350,7 @@ extension SportMatchLineViewModel {
                 switch completion {
                 case .finished:
                     ()
-                case .failure:
+                case .failure(let error):
                     self?.finishedWithError()
                 }
             } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in

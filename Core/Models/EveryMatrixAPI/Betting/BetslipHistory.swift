@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - BetHistoryRow
-struct BetHistoryResponse: Codable {
+struct BetHistoryResponse {
     var betList: [BetHistoryEntry]?
 
     enum CodingKeys: String, CodingKey {
@@ -16,7 +16,7 @@ struct BetHistoryResponse: Codable {
     }
 }
 
-struct BetHistoryEntry: Codable {
+struct BetHistoryEntry {
     let betId: String
     let selections: [BetHistoryEntrySelection]?
     let type: String?
@@ -61,9 +61,29 @@ struct BetHistoryEntry: Codable {
 }
 
 // MARK: - Selection
+enum BetSelectionStatus: String, Codable, CaseIterable {
+    case opened
+    case closed
+    case settled
+    case cancelled
+    case undefined
+}
+
+enum BetSelectionResult: String, Codable, CaseIterable {
+    case won
+    case halfWon
+    case lost
+    case halfLost
+    case drawn
+    case open
+    case undefined
+}
+
+
 struct BetHistoryEntrySelection: Codable {
     let outcomeId: String
-    let status: String?
+    let status: BetSelectionStatus
+    let result: BetSelectionResult
     let priceValue: Double?
     let sportId: String?
     let sportName: String?
@@ -90,6 +110,7 @@ struct BetHistoryEntrySelection: Codable {
     enum CodingKeys: String, CodingKey {
         case outcomeId = "outcomeId"
         case status = "status"
+        case result = "result"
         case priceValue = "priceValue"
         case sportId = "sportId"
         case sportName = "sportName"

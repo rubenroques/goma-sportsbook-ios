@@ -164,8 +164,9 @@ class HistoryViewModel {
 
     func loadResolvedTickets(page: Int) {
 
+        // TODO: Get my bets from ServicePRovider
+        /*
         self.isLoadingResolved.send(true)
-
 
         let resolvedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.resolved , records: recordsPerPage, page: page)
         Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: BetHistoryResponse.self)
@@ -193,7 +194,7 @@ class HistoryViewModel {
                 self?.loadCashoutTickets(page: 0)
             })
             .store(in: &cancellables)
-        
+        */
         
 
     }
@@ -211,7 +212,8 @@ class HistoryViewModel {
     
     
     func loadOpenedTickets(page: Int) {
-
+        // TODO: Get my bets from ServicePRovider
+        /*
         self.isLoadingOpened.send(true)
 
 
@@ -240,11 +242,12 @@ class HistoryViewModel {
 
             })
             .store(in: &cancellables)
-
+*/
     }
 
     func loadWonTickets(page: Int) {
-
+        // TODO: Get my bets from ServicePRovider
+        /*
         self.isLoadingWon.send(true)
 
         let wonRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.won, records: recordsPerPage, page: page)
@@ -272,7 +275,7 @@ class HistoryViewModel {
                 
             })
             .store(in: &cancellables)
-
+*/
     }
     
     func loadDeposits(page: Int) {

@@ -573,7 +573,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.homeOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
                 self.leftOutcome = outcome
                 self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-                self.homeOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
+                self.homeOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
 
                 self.leftOddButtonSubscriber = viewModel.store
                     .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
@@ -622,7 +622,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.drawOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
                 self.middleOutcome = outcome
                 self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-                self.drawOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
+                self.drawOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
 
                 self.middleOddButtonSubscriber = viewModel.store
                     .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
@@ -670,7 +670,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.awayOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
                 self.rightOutcome = outcome
                 self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-                self.awayOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
+                self.awayOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
 
                 self.rightOddButtonSubscriber = viewModel.store
                     .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
