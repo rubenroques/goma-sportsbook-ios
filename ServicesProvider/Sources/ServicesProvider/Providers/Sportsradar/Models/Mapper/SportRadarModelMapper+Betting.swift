@@ -9,15 +9,28 @@ import Foundation
 
 extension SportRadarModelMapper {
 
-
     static func bettingHistory(fromInternalBettingHistory internalBettingHistory: SportRadarModels.BettingHistory) -> BettingHistory {
         let betGroups = Dictionary.init(grouping: internalBettingHistory.bets, by: \.identifier)
         let bets = betGroups.map { identifier, internalBets in
-            let betSelections = internalBets.map(Self.betSelection(fromInternalBet:))
+
+            let firstBet: SportRadarModels.Bet? = internalBets.first
+
+            let betSelections = internalBets.sorted { $0.order > $1.order }.map(Self.betSelection(fromInternalBet:))
+
+            let firstConvertedBet = betSelections.first
+
             let potentialReturn: Double = internalBets.first?.potentialReturn ?? 0.0
-            return Bet(identifier: identifier, selections: betSelections, potentialReturn: potentialReturn)
+            return Bet(identifier: identifier,
+                       type: firstBet?.type ?? "",
+                       state: firstConvertedBet?.state ?? .undefined,
+                       result: firstConvertedBet?.result ?? .notSpecified,
+                       stake: firstBet?.totalStake ?? 0.0,
+                       totalOdd: firstBet?.totalOdd ?? 0.0,
+                       selections: betSelections,
+                       potentialReturn: potentialReturn,
+                       date: firstBet?.attemptedDate ?? Date())
         }
-        return BettingHistory(bets: bets)
+        return BettingHistory(bets: bets.sorted(by: { $0.date > $1.date }))
     }
 
     static func betSelection(fromInternalBet internalBet: SportRadarModels.Bet) -> BetSelection {
@@ -39,6 +52,7 @@ extension SportRadarModelMapper {
         case .won: result = .won
         case .lost: result = .lost
         case .drawn: result = .drawn
+        case .pending: result = .pending
         case .notSpecified: result = .notSpecified
         case .void: result = .void
         }
@@ -50,7 +64,9 @@ extension SportRadarModelMapper {
                             homeTeamName: internalBet.homeTeamName,
                             awayTeamName: internalBet.awayTeamName,
                             marketName: internalBet.marketName,
-                            outcomeName: internalBet.outcomeName)
+                            outcomeName: internalBet.outcomeName,
+                            odd: OddFormat.fraction(numerator: Int(internalBet.oddNumerator),
+                                                    denominator: Int(internalBet.oddDenominator)))
     }
 
     //  ServiceProvider ----> SportRadar
