@@ -14,13 +14,29 @@ class SportRadarEventsProvider: EventsProvider {
     private var socketConnector: SportRadarSocketConnector
     private var restConnector: SportRadarRestConnector
 
+    var sessionCoordinator: SportRadarSessionCoordinator
+
     private var cancellables = Set<AnyCancellable>()
 
     required init(sessionCoordinator: SportRadarSessionCoordinator,
                   socketConnector: SportRadarSocketConnector = SportRadarSocketConnector(),
                   restConnector: SportRadarRestConnector = SportRadarRestConnector()) {
+        self.sessionCoordinator = sessionCoordinator
+
         self.socketConnector = socketConnector
         self.restConnector = restConnector
+
+        self.sessionCoordinator.token(forKey: .launchToken)
+            .sink { [weak self] launchToken in
+                if let launchTokenValue = launchToken  {
+                    print("LAUCH TOKEN: \(launchTokenValue)")
+                    self?.restConnector.saveSessionKey(launchTokenValue)
+                }
+                else {
+                    self?.restConnector.clearSessionKey()
+                }
+            }
+            .store(in: &cancellables)
 
         self.socketConnector.messageSubscriber = self
         self.socketConnector.connect()
@@ -651,6 +667,22 @@ extension SportRadarEventsProvider {
         })
         .eraseToAnyPublisher()
 
+    }
+
+    // Favorites
+    func getFavoritesList() -> AnyPublisher<FavoritesListResponse, ServiceProviderError> {
+
+        let endpoint = SportRadarRestAPIClient.favoritesList
+
+        let requestPublisher: AnyPublisher<SportRadarModels.FavoritesListResponse, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { favoritesListResponse -> FavoritesListResponse in
+
+            let mappedFavoritesListResponse = SportRadarModelMapper.favoritesListResponse(fromInternalFavoritesListResponse: favoritesListResponse)
+
+            return mappedFavoritesListResponse
+        })
+        .eraseToAnyPublisher()
     }
 }
 

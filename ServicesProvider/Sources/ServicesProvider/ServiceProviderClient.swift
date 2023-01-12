@@ -248,6 +248,16 @@ extension ServicesProviderClient {
 
         return eventsProvider.getBanners()
     }
+
+    public func getFavoritesList() -> AnyPublisher<FavoritesListResponse, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getFavoritesList()
+    }
 }
 
 

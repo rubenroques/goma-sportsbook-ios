@@ -22,6 +22,12 @@ enum SportRadarRestAPIClient {
     case competitionMarketGroups(competitionId: String)
     case search(query: String, resultLimit: String, page: String)
     case banners
+    case favoritesList
+    case addFavoriteList(name: String)
+    case addFavoriteToList(listId: String, eventId: String)
+    case getFavoritesFromList(listId: String)
+    case deleteFavoriteList(listId: String)
+    case deleteFavoriteFromList(eventId: String)
 }
 
 extension SportRadarRestAPIClient: Endpoint {
@@ -52,6 +58,18 @@ extension SportRadarRestAPIClient: Endpoint {
             return "/services/content/get"
         case .banners:
             return "/services/content/get"
+        case .favoritesList:
+            return "/API/favourites/fw/getAccountFavouriteCoupon"
+        case .addFavoriteList:
+            return "/API/favourites/fw/addAccountFavouriteCoupon"
+        case .addFavoriteToList:
+            return "/API/favourites/fw/addAccountFavourite"
+        case .getFavoritesFromList:
+            return "/API/favourites/fw/getFavouritesForCustomer"
+        case .deleteFavoriteList:
+            return "/API/favourites/fw/deleteAccountFavouriteCoupon"
+        case .deleteFavoriteFromList:
+            return "/API/favourites/fw/deleteAccountFavourite"
         }
     }
 
@@ -68,6 +86,12 @@ extension SportRadarRestAPIClient: Endpoint {
         case .competitionMarketGroups: return nil
         case .search: return nil
         case .banners: return nil
+        case .favoritesList: return nil
+        case .addFavoriteList: return nil
+        case .addFavoriteToList: return nil
+        case .getFavoritesFromList: return nil
+        case .deleteFavoriteList: return nil
+        case .deleteFavoriteFromList: return nil
         }
     }
 
@@ -84,6 +108,12 @@ extension SportRadarRestAPIClient: Endpoint {
         case .competitionMarketGroups: return .post
         case .search: return .post
         case .banners: return .post
+        case .favoritesList: return .get
+        case .addFavoriteList: return .post
+        case .addFavoriteToList: return .post
+        case .getFavoritesFromList: return .get
+        case .deleteFavoriteList: return .delete
+        case .deleteFavoriteFromList: return .delete
         }
     }
 
@@ -214,6 +244,51 @@ extension SportRadarRestAPIClient: Endpoint {
                         }
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
+        case .addFavoriteList(let name):
+            let bodyString =
+                        """
+                        {
+                            "name": \(name)
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+        case .addFavoriteToList(let listId, let eventId):
+            let bodyString =
+                        """
+                        {
+                            "idfwAccountFavouriteCoupon": \(listId),
+                            "niddcUserReq": null,
+                            "nidmmCustomer":  null,
+                            "sfavouriteContent": ["\(eventId)"],
+                            "sfavouriteID": "\(eventId)",
+                            "sidfwFavouriteType": "N"
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+        case .getFavoritesFromList(let listId):
+            let bodyString =
+                        """
+                        {
+                            "idfwAccountFavouriteCoupon": \(listId)
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+        case .deleteFavoriteList(let listId):
+            let bodyString =
+                        """
+                        {
+                            "idfwAccountFavouriteCoupon": \(listId)
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+        case .deleteFavoriteFromList(let eventId):
+            let bodyString =
+                        """
+                        {
+                            "nidfwAccountFavourites": \(eventId)
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
         default:
             return nil
         }
@@ -244,6 +319,18 @@ extension SportRadarRestAPIClient: Endpoint {
         case .search:
             return SportRadarConstants.bettingHostname
         case .banners:
+            return SportRadarConstants.bettingHostname
+        case .favoritesList:
+            return SportRadarConstants.bettingHostname
+        case .addFavoriteList:
+            return SportRadarConstants.bettingHostname
+        case .addFavoriteToList:
+            return SportRadarConstants.bettingHostname
+        case .getFavoritesFromList:
+            return SportRadarConstants.bettingHostname
+        case .deleteFavoriteList:
+            return SportRadarConstants.bettingHostname
+        case .deleteFavoriteFromList:
             return SportRadarConstants.bettingHostname
         }
     }
@@ -280,6 +367,60 @@ extension SportRadarRestAPIClient: Endpoint {
             return defaultHeaders
         case .banners:
             return defaultHeaders
+        case .favoritesList:
+            return [
+                "Accept-Encoding": "gzip, deflate, br",
+                "Content-Type": "application/json; charset=UTF-8",
+                "Media-Type": "application/json",
+                "Accept": "application/json",
+                "X-MGS-BusinessUnit": "10013",
+                "X-MGS-Location": "UK",
+            ]
+        case .addFavoriteList:
+            return [
+                "Accept-Encoding": "gzip, deflate, br",
+                "Content-Type": "application/json; charset=UTF-8",
+                "Media-Type": "application/json",
+                "Accept": "application/json",
+                "X-MGS-BusinessUnit": "10013",
+                "X-MGS-Location": "UK",
+            ]
+        case .addFavoriteToList:
+            return [
+                "Accept-Encoding": "gzip, deflate, br",
+                "Content-Type": "application/json; charset=UTF-8",
+                "Media-Type": "application/json",
+                "Accept": "application/json",
+                "X-MGS-BusinessUnit": "10013",
+                "X-MGS-Location": "UK",
+            ]
+        case .getFavoritesFromList:
+            return [
+                "Accept-Encoding": "gzip, deflate, br",
+                "Content-Type": "application/json; charset=UTF-8",
+                "Media-Type": "application/json",
+                "Accept": "application/json",
+                "X-MGS-BusinessUnit": "10013",
+                "X-MGS-Location": "UK",
+            ]
+        case .deleteFavoriteList:
+            return [
+                "Accept-Encoding": "gzip, deflate, br",
+                "Content-Type": "application/json; charset=UTF-8",
+                "Media-Type": "application/json",
+                "Accept": "application/json",
+                "X-MGS-BusinessUnit": "10013",
+                "X-MGS-Location": "UK",
+            ]
+        case .deleteFavoriteFromList:
+            return [
+                "Accept-Encoding": "gzip, deflate, br",
+                "Content-Type": "application/json; charset=UTF-8",
+                "Media-Type": "application/json",
+                "Accept": "application/json",
+                "X-MGS-BusinessUnit": "10013",
+                "X-MGS-Location": "UK",
+            ]
         }
     }
 
@@ -292,7 +433,16 @@ extension SportRadarRestAPIClient: Endpoint {
     }
 
     var requireSessionKey: Bool {
-        return false
+        switch self {
+        case .favoritesList:
+            return true
+        case .addFavoriteList:
+            return true
+        case .addFavoriteToList:
+            return true
+        default:
+            return false
+        }
     }
 
 }

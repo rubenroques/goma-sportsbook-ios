@@ -245,3 +245,19 @@ public struct Banner: Codable {
     }
 }
 
+// Favorites
+public struct FavoritesListResponse: Codable {
+    public var favoritesList: [FavoriteList]
+
+    enum CodingKeys: String, CodingKey {
+        case favoritesList = "accountFavouriteCoupons"
+    }
+}
+
+public struct FavoriteList: Codable {
+    public var id: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+    }
+}
