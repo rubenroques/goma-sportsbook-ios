@@ -21,6 +21,7 @@ enum CornerRadius {
     static let view: CGFloat = 5.0
     static let label: CGFloat = 3.0
     static let squareView: CGFloat = 4.0
+    static let card: CGFloat = 12.0
 }
 
 enum TextSpacing {
