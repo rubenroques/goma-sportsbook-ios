@@ -768,6 +768,7 @@
 		45452BEC290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
 		45452BED290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
 		45452BEE290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
+		4554ED0A2976F7FE006942B3 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4554ED092976F7FE006942B3 /* IQKeyboardManagerSwift */; };
 		455A0C6B26BD902F00EC572D /* SportsbookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0C6A26BD902F00EC572D /* SportsbookTests.swift */; };
 		4568B9662858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
 		4568B9672858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
@@ -3380,6 +3381,7 @@
 		45D1ED5E28A150C2001E18E5 /* BusinessModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */; };
 		45D1ED5F28A150C2001E18E5 /* BusinessModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */; };
 		45D1ED6028A150C2001E18E5 /* BusinessModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */; };
+		45D3BBAC296F13BB009E0D09 /* RegisterFlow in Frameworks */ = {isa = PBXBuildFile; productRef = 45D3BBAB296F13BB009E0D09 /* RegisterFlow */; };
 		45E8E29828C88E1300A09B02 /* UserRankingPositionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29528C88E1300A09B02 /* UserRankingPositionTableViewCell.swift */; };
 		45E8E29928C88E1300A09B02 /* UserRankingPositionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29528C88E1300A09B02 /* UserRankingPositionTableViewCell.swift */; };
 		45E8E29A28C88E1300A09B02 /* UserRankingPositionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29528C88E1300A09B02 /* UserRankingPositionTableViewCell.swift */; };
@@ -4550,6 +4552,7 @@
 		454990CE27163D3200D57CE2 /* CollapsibleGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleGroupView.swift; sourceTree = "<group>"; };
 		454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaGamingServiceClient.swift; sourceTree = "<group>"; };
 		454A7A6226DA300900E6E74E /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = SOURCE_ROOT; };
+		454DC4502975C62300B48D9A /* Theming */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Theming; path = ../../Theming; sourceTree = "<group>"; };
 		454E090727EB831600391560 /* SocialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialViewController.swift; sourceTree = "<group>"; };
 		454E090A27EC7A0300391560 /* ConversationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsViewController.swift; sourceTree = "<group>"; };
 		454E090D27EC7C1100391560 /* FriendsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListViewController.swift; sourceTree = "<group>"; };
@@ -4868,6 +4871,7 @@
 		45CD7B56271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeeMoreMarketsCollectionViewCell.swift; sourceTree = "<group>"; };
 		45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SeeMoreMarketsCollectionViewCell.xib; sourceTree = "<group>"; };
 		45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessModules.swift; sourceTree = "<group>"; };
+		45D3BBAA296EDA1A009E0D09 /* RegisterFlow */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RegisterFlow; sourceTree = "<group>"; };
 		45D3DE322714889200717124 /* Date+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		45D3DE35271492E000717124 /* BannerInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerInfo.swift; sourceTree = "<group>"; };
 		45D3DE38271499DB00717124 /* BannerScrollTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerScrollTableViewCell.swift; sourceTree = "<group>"; };
@@ -5255,10 +5259,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45D3BBAC296F13BB009E0D09 /* RegisterFlow in Frameworks */,
 				450B7A9128F58574009229E3 /* FirebaseMessaging in Frameworks */,
 				450B7A9228F58574009229E3 /* FirebaseDatabase in Frameworks */,
 				450B7A9428F58574009229E3 /* DictionaryCoding in Frameworks */,
 				450B7A9528F58574009229E3 /* Reachability in Frameworks */,
+				4554ED0A2976F7FE006942B3 /* IQKeyboardManagerSwift in Frameworks */,
 				450B7A9628F58574009229E3 /* Kingfisher in Frameworks */,
 				450B7A9928F58574009229E3 /* FirebaseAuth in Frameworks */,
 				450B7A9A28F58574009229E3 /* Collections in Frameworks */,
@@ -5848,7 +5854,9 @@
 		455A0C4726BD902C00EC572D = {
 			isa = PBXGroup;
 			children = (
+				454DC4502975C62300B48D9A /* Theming */,
 				45BA77A3293CD45500B6ACA6 /* ServicesProvider */,
+				45D3BBAA296EDA1A009E0D09 /* RegisterFlow */,
 				45BA77A2293CD42400B6ACA6 /* GomaGamingSDK */,
 				45BA77A0293CD35700B6ACA6 /* Extensions */,
 				455A0C5226BD902C00EC572D /* Core */,
@@ -8431,6 +8439,8 @@
 				450B783F28F58574009229E3 /* SwiftyBeaver */,
 				450B784128F58574009229E3 /* SocketIO */,
 				45BA77A4293CD60800B6ACA6 /* ServicesProvider */,
+				45D3BBAB296F13BB009E0D09 /* RegisterFlow */,
+				4554ED092976F7FE006942B3 /* IQKeyboardManagerSwift */,
 			);
 			productName = Sportsbook;
 			productReference = 450B7B2428F58574009229E3 /* SportRadar.app */;
@@ -8669,6 +8679,7 @@
 				457EDAC12791D39B00DDCD83 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
 				45EF50E5282E6AA4008180CA /* XCRemoteSwiftPackageReference "socket" */,
 				45EF50E8282E6AD7008180CA /* XCRemoteSwiftPackageReference "Starscream" */,
+				4554ED082976F7FE006942B3 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -13977,6 +13988,14 @@
 				minimumVersion = 7.0.0;
 			};
 		};
+		4554ED082976F7FE006942B3 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
 		457CB9C7282D27D000ED0F00 /* XCRemoteSwiftPackageReference "Reachability" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ashleymills/Reachability.swift";
@@ -14486,6 +14505,11 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = SocketIO;
 		};
+		4554ED092976F7FE006942B3 /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4554ED082976F7FE006942B3 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
+		};
 		457CB9C6282D27D000ED0F00 /* Reachability */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 457CB9C7282D27D000ED0F00 /* XCRemoteSwiftPackageReference "Reachability" */;
@@ -14804,6 +14828,10 @@
 		45BA77A4293CD60800B6ACA6 /* ServicesProvider */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ServicesProvider;
+		};
+		45D3BBAB296F13BB009E0D09 /* RegisterFlow */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RegisterFlow;
 		};
 		A9C3407F28F9A74A0055360B /* Reachability */ = {
 			isa = XCSwiftPackageProductDependency;

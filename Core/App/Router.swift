@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import SwiftUI
+import RegisterFlow
 
 enum Route {
     case openBet(id: String)
@@ -73,7 +74,10 @@ class Router {
         let splashViewController = SplashViewController(loadingCompleted: {
             self.showPostLoadingFlow()
         })
-        self.rootWindow.rootViewController = splashViewController
+        // self.rootWindow.rootViewController = splashViewController
+
+        let viewModel = SteppedRegistrationViewModel(currentStep: 0, numberOfSteps: 5)
+        self.rootWindow.rootViewController = SteppedRegistrationViewController(viewModel: viewModel)
         self.rootWindow.makeKeyAndVisible()
     }
 
