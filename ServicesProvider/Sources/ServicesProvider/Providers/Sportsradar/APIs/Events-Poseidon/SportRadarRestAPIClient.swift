@@ -24,10 +24,10 @@ enum SportRadarRestAPIClient {
     case banners
     case favoritesList
     case addFavoriteList(name: String)
-    case addFavoriteToList(listId: String, eventId: String)
-    case getFavoritesFromList(listId: String)
-    case deleteFavoriteList(listId: String)
-    case deleteFavoriteFromList(eventId: String)
+    case addFavoriteToList(listId: Int, eventId: String)
+    case getFavoritesFromList(listId: Int)
+    case deleteFavoriteList(listId: Int)
+    case deleteFavoriteFromList(eventId: Int)
 }
 
 extension SportRadarRestAPIClient: Endpoint {
@@ -69,7 +69,7 @@ extension SportRadarRestAPIClient: Endpoint {
         case .deleteFavoriteList:
             return "/API/favourites/fw/deleteAccountFavouriteCoupon"
         case .deleteFavoriteFromList:
-            return "/API/favourites/fw/deleteAccountFavourite"
+            return "/API/favourites/fw/deleteAccountFavourites"
         }
     }
 
@@ -111,7 +111,7 @@ extension SportRadarRestAPIClient: Endpoint {
         case .favoritesList: return .get
         case .addFavoriteList: return .post
         case .addFavoriteToList: return .post
-        case .getFavoritesFromList: return .get
+        case .getFavoritesFromList: return .post
         case .deleteFavoriteList: return .delete
         case .deleteFavoriteFromList: return .delete
         }
@@ -248,7 +248,7 @@ extension SportRadarRestAPIClient: Endpoint {
             let bodyString =
                         """
                         {
-                            "name": \(name)
+                            "name": "\(name)"
                         }
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
@@ -277,7 +277,7 @@ extension SportRadarRestAPIClient: Endpoint {
             let bodyString =
                         """
                         {
-                            "idfwAccountFavouriteCoupon": \(listId)
+                            "idfwAccountFavouriteCoupon": "\(listId)"
                         }
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
@@ -439,6 +439,12 @@ extension SportRadarRestAPIClient: Endpoint {
         case .addFavoriteList:
             return true
         case .addFavoriteToList:
+            return true
+        case .deleteFavoriteList:
+            return true
+        case .getFavoritesFromList:
+            return true
+        case .deleteFavoriteFromList:
             return true
         default:
             return false

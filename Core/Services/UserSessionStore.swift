@@ -516,7 +516,7 @@ extension UserSessionStore {
                 }
                 self?.isLoadingUserSessionPublisher.send(false)
             }, receiveValue: { loggedUser in
-                // Env.favoritesManager.getUserFavorites()
+                Env.favoritesManager.getUserFavorites()
             })
             .store(in: &cancellables)
         

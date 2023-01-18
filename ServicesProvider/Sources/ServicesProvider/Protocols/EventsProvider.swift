@@ -51,6 +51,11 @@ protocol EventsProvider {
     func getBanners() -> AnyPublisher<BannerResponse, ServiceProviderError>
     // Favorites
     func getFavoritesList() -> AnyPublisher<FavoritesListResponse, ServiceProviderError>
+    func addFavoritesList(name: String) -> AnyPublisher<FavoritesListAddResponse, ServiceProviderError>
+    func deleteFavoritesList(listId: Int) -> AnyPublisher<FavoritesListDeleteResponse, ServiceProviderError>
+    func addFavoriteToList(listId: Int, eventId: String) -> AnyPublisher<FavoriteAddResponse, ServiceProviderError>
+    func getFavoritesFromList(listId: Int) -> AnyPublisher<FavoriteEventResponse, ServiceProviderError>
+    func deleteFavoriteFromList(eventId: Int) -> AnyPublisher<FavoritesListDeleteResponse, ServiceProviderError>
 
     // Utilities
     func getDatesFilter(timeRange: String) -> [Date]

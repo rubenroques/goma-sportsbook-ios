@@ -123,7 +123,48 @@ extension SportRadarModelMapper {
     }
 
     static func favoriteList(fromInternalFavoriteList internalFavoriteList: SportRadarModels.FavoriteList) -> FavoriteList {
-        return FavoriteList(id: internalFavoriteList.id)
+        return FavoriteList(id: internalFavoriteList.id, name: internalFavoriteList.name, customerId: internalFavoriteList.customerId)
+    }
+
+    static func favoritesListAddResponse(fromInternalFavoritesListAddResponse internalFavoritesListAddResponse: SportRadarModels.FavoritesListAddResponse) -> FavoritesListAddResponse {
+
+        let favoritesListAddResponse = FavoritesListAddResponse(listId: internalFavoritesListAddResponse.listId)
+
+        return favoritesListAddResponse
+
+    }
+
+    static func favoritesListDeleteResponse(fromInternalFavoritesListDeleteResponse internalFavoritesListDeleteResponse: SportRadarModels.FavoritesListDeleteResponse) -> FavoritesListDeleteResponse {
+
+        let favoritesListDeleteResponse = FavoritesListDeleteResponse(listId: internalFavoritesListDeleteResponse.listId)
+
+        return favoritesListDeleteResponse
+
+    }
+
+    static func favoriteAddResponse(fromInternalFavoriteAddResponse internalFavoriteAddResponse: SportRadarModels.FavoriteAddResponse) -> FavoriteAddResponse {
+
+        let favoriteAddResponse = FavoriteAddResponse(displayOrder: internalFavoriteAddResponse.displayOrder, idAccountFavorite: internalFavoriteAddResponse.idAccountFavorite)
+
+        return favoriteAddResponse
+
+    }
+
+    static func favoritesEventResponse(fromInternalFavoritesEventResponse internalFavoritesEventResponse: SportRadarModels.FavoriteEventResponse) -> FavoriteEventResponse {
+
+        let favoritesEvent = internalFavoritesEventResponse.favoriteEvents.map({ favoriteEvent -> FavoriteEvent in
+            let favoriteEvent = Self.favoriteEvent(fromInternalFavoriteEvent: favoriteEvent)
+
+            return favoriteEvent
+
+        })
+
+        return FavoriteEventResponse(favoriteEvents: favoritesEvent)
+
+    }
+
+    static func favoriteEvent(fromInternalFavoriteEvent internalFavoriteEvent: SportRadarModels.FavoriteEvent) -> FavoriteEvent {
+        return FavoriteEvent(id: internalFavoriteEvent.id, name: internalFavoriteEvent.name, favoriteListId: internalFavoriteEvent.favoriteListId, accountFavoriteId: internalFavoriteEvent.accountFavoriteId)
     }
 
 }

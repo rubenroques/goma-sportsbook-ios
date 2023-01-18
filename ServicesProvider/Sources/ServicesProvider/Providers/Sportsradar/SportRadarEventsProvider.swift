@@ -684,6 +684,81 @@ extension SportRadarEventsProvider {
         })
         .eraseToAnyPublisher()
     }
+
+    func addFavoritesList(name: String) -> AnyPublisher<FavoritesListAddResponse, ServiceProviderError> {
+
+        let endpoint = SportRadarRestAPIClient.addFavoriteList(name: name)
+
+        let requestPublisher: AnyPublisher<SportRadarModels.FavoritesListAddResponse, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { favoritesListAddResponse -> FavoritesListAddResponse in
+
+            let mappedFavoritesListAddResponse = SportRadarModelMapper.favoritesListAddResponse(fromInternalFavoritesListAddResponse: favoritesListAddResponse)
+
+            return mappedFavoritesListAddResponse
+        })
+        .eraseToAnyPublisher()
+    }
+
+    func deleteFavoritesList(listId: Int) -> AnyPublisher<FavoritesListDeleteResponse, ServiceProviderError> {
+
+        let endpoint = SportRadarRestAPIClient.deleteFavoriteList(listId: listId)
+
+        let requestPublisher: AnyPublisher<SportRadarModels.FavoritesListDeleteResponse, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { favoritesListDeleteResponse -> FavoritesListDeleteResponse in
+
+            let mappedFavoritesListDeleteResponse = SportRadarModelMapper.favoritesListDeleteResponse(fromInternalFavoritesListDeleteResponse: favoritesListDeleteResponse)
+
+            return mappedFavoritesListDeleteResponse
+        })
+        .eraseToAnyPublisher()
+    }
+
+    func addFavoriteToList(listId: Int, eventId: String) -> AnyPublisher<FavoriteAddResponse, ServiceProviderError> {
+
+        let endpoint = SportRadarRestAPIClient.addFavoriteToList(listId: listId, eventId: eventId)
+
+        let requestPublisher: AnyPublisher<SportRadarModels.FavoriteAddResponse, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { favoriteAddResponse -> FavoriteAddResponse in
+
+            let mappedFavoriteAddResponse = SportRadarModelMapper.favoriteAddResponse(fromInternalFavoriteAddResponse: favoriteAddResponse)
+
+            return mappedFavoriteAddResponse
+        })
+        .eraseToAnyPublisher()
+    }
+
+    func getFavoritesFromList(listId: Int) -> AnyPublisher<FavoriteEventResponse, ServiceProviderError> {
+
+        let endpoint = SportRadarRestAPIClient.getFavoritesFromList(listId: listId)
+
+        let requestPublisher: AnyPublisher<SportRadarModels.FavoriteEventResponse, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { favoriteEventResponse -> FavoriteEventResponse in
+
+            let mappedFavoriteEventResponse = SportRadarModelMapper.favoritesEventResponse(fromInternalFavoritesEventResponse: favoriteEventResponse)
+
+            return mappedFavoriteEventResponse
+        })
+        .eraseToAnyPublisher()
+    }
+
+    func deleteFavoriteFromList(eventId: Int) -> AnyPublisher<FavoritesListDeleteResponse, ServiceProviderError> {
+
+        let endpoint = SportRadarRestAPIClient.deleteFavoriteFromList(eventId: eventId)
+
+        let requestPublisher: AnyPublisher<SportRadarModels.FavoritesListDeleteResponse, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { favoritesListDeleteResponse -> FavoritesListDeleteResponse in
+
+            let mappedFavoritesListDeleteResponse = SportRadarModelMapper.favoritesListDeleteResponse(fromInternalFavoritesListDeleteResponse: favoritesListDeleteResponse)
+
+            return mappedFavoritesListDeleteResponse
+        })
+        .eraseToAnyPublisher()
+    }
 }
 
 extension SportRadarEventsProvider: UnsubscriptionController {
