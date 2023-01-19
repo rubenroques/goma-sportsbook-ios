@@ -56,7 +56,7 @@ class SportRadarEventsProvider: EventsProvider {
     //private var eventsPublishers: [TopicIdentifier: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>] = [:]
     private var outrightDetailsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
 
-
+    private var eventSummaryPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
 
     //
     // Keep a reference for all the subscriptions. This allows the ServiceProvider to subscribe to the same content in two different app places
@@ -428,6 +428,41 @@ class SportRadarEventsProvider: EventsProvider {
 //        return publisher.eraseToAnyPublisher()
     }
 
+    func subscribeEventSummary(eventId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+
+        self.eventSummaryPublisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
+
+        guard
+            let sessionToken = socketConnector.token,
+            let publisher = self.eventSummaryPublisher
+        else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+
+        let contentType = ContentType.eventSummary
+
+        let contentRoute = ContentRoute.eventSummary(eventId: eventId)
+
+        let bodyData = self.createPayloadData(with: sessionToken, contentType: contentType, contentRoute: contentRoute)
+        let request = self.createSubscribeRequest(withHTTPBody: bodyData)
+
+        let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard
+                error == nil,
+                let httpResponse = response as? HTTPURLResponse,
+                (200...299).contains(httpResponse.statusCode)
+            else {
+                print("ServiceProvider subscribeEventSummary \(error) \(response)")
+                publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
+                return
+            }
+            // TODO: send subscription
+            // publisher.send(.connected)
+        }
+        sessionDataTask.resume()
+        return publisher.eraseToAnyPublisher()
+    }
+
 }
 
 extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
@@ -479,6 +514,11 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
         }
     }
 
+    func eventSummary(events: [EventsGroup]) {
+        if let eventSummaryPublisher = self.eventSummaryPublisher {
+            eventSummaryPublisher.send(.contentUpdate(content: events))
+        }
+    }
 }
 
 /* REST API Events
@@ -667,6 +707,21 @@ extension SportRadarEventsProvider {
         })
         .eraseToAnyPublisher()
 
+    }
+
+    func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
+
+        let endpoint = SportRadarRestAPIClient.eventSummary(eventId: eventId)
+
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.Event>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { sportRadarResponse -> Event in
+            let event = sportRadarResponse.data
+            let mappedEvent = SportRadarModelMapper.event(fromInternalEvent: event)
+
+            return mappedEvent
+        })
+        .eraseToAnyPublisher()
     }
 
     // Favorites

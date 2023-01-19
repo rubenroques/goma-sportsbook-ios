@@ -22,6 +22,7 @@ enum SportRadarRestAPIClient {
     case competitionMarketGroups(competitionId: String)
     case search(query: String, resultLimit: String, page: String)
     case banners
+    case eventSummary(eventId: String)
     case favoritesList
     case addFavoriteList(name: String)
     case addFavoriteToList(listId: Int, eventId: String)
@@ -58,6 +59,8 @@ extension SportRadarRestAPIClient: Endpoint {
             return "/services/content/get"
         case .banners:
             return "/services/content/get"
+        case .eventSummary:
+            return "/services/content/get"
         case .favoritesList:
             return "/API/favourites/fw/getAccountFavouriteCoupon"
         case .addFavoriteList:
@@ -86,6 +89,7 @@ extension SportRadarRestAPIClient: Endpoint {
         case .competitionMarketGroups: return nil
         case .search: return nil
         case .banners: return nil
+        case .eventSummary: return nil
         case .favoritesList: return nil
         case .addFavoriteList: return nil
         case .addFavoriteToList: return nil
@@ -108,6 +112,7 @@ extension SportRadarRestAPIClient: Endpoint {
         case .competitionMarketGroups: return .post
         case .search: return .post
         case .banners: return .post
+        case .eventSummary: return .post
         case .favoritesList: return .get
         case .addFavoriteList: return .post
         case .addFavoriteToList: return .post
@@ -244,6 +249,21 @@ extension SportRadarRestAPIClient: Endpoint {
                         }
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
+        case .eventSummary(let eventId):
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "eventSummary",
+                                "id": "\(eventId)"
+                            },
+                            "clientContext": {
+                                "language": "UK",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
         case .addFavoriteList(let name):
             let bodyString =
                         """
@@ -320,6 +340,8 @@ extension SportRadarRestAPIClient: Endpoint {
             return SportRadarConstants.bettingHostname
         case .banners:
             return SportRadarConstants.bettingHostname
+        case .eventSummary:
+            return SportRadarConstants.bettingHostname
         case .favoritesList:
             return SportRadarConstants.bettingHostname
         case .addFavoriteList:
@@ -366,6 +388,8 @@ extension SportRadarRestAPIClient: Endpoint {
         case .search:
             return defaultHeaders
         case .banners:
+            return defaultHeaders
+        case .eventSummary:
             return defaultHeaders
         case .favoritesList:
             return [

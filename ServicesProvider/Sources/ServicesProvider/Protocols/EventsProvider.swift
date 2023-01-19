@@ -31,6 +31,8 @@ protocol EventsProvider {
 
     func subscribeLiveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
 
+    func subscribeEventSummary(eventId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
+
     //
     func getAvailableSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportType], ServiceProviderError>
 
@@ -49,6 +51,8 @@ protocol EventsProvider {
     func getSearchEvents(query: String, resultLimit: String, page: String) -> AnyPublisher<EventsGroup, ServiceProviderError>
 
     func getBanners() -> AnyPublisher<BannerResponse, ServiceProviderError>
+
+    func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError>
     // Favorites
     func getFavoritesList() -> AnyPublisher<FavoritesListResponse, ServiceProviderError>
     func addFavoritesList(name: String) -> AnyPublisher<FavoritesListAddResponse, ServiceProviderError>

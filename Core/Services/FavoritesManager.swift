@@ -17,6 +17,9 @@ class FavoritesManager {
     // MARK: Public Properties
     var favoriteEventsIdPublisher: CurrentValueSubject<[String], Never>
 
+    var favoriteMatchesIdPublisher: CurrentValueSubject<[String], Never> = .init([])
+    var favoriteCompetitionsIdPublisher: CurrentValueSubject<[String], Never> = .init([])
+
     var finishedCompetitionsIds: CurrentValueSubject<Bool, Never> = .init(false)
     var finishedMatchesIds: CurrentValueSubject<Bool, Never> = .init(false)
 
@@ -37,6 +40,14 @@ class FavoritesManager {
                 if finishedCompetitionsids && finishedMatchesIds {
 
                     self.favoriteEventsIdPublisher.send(self.fetchedFavoriteEventIds)
+
+                    let fetchedMatches = Array(self.fetchedMatchesListIds.keys)
+                    let fetchedCompetitions = Array(self.fetchedCompetitionsListsIds.keys)
+
+                    self.favoriteMatchesIdPublisher.send(fetchedMatches)
+
+                    self.favoriteCompetitionsIdPublisher.send(fetchedCompetitions)
+
                 }
             })
             .store(in: &cancellables)
@@ -44,6 +55,7 @@ class FavoritesManager {
 
     // MARK: Functions
     func getUserFavorites() {
+        self.clearFavoritesData()
 //        Env.everyMatrixClient.getUserMetadata()
 //            .receive(on: DispatchQueue.main)
 //            .eraseToAnyPublisher()
@@ -102,6 +114,7 @@ class FavoritesManager {
                     ()
                 case .failure(let error):
                     print("FAVORITE EVENTS ERROR: \(error)")
+                    self?.finishedCompetitionsIds.send(true)
                 }
 
             }, receiveValue: { [weak self] favoriteEventsResponse in
@@ -133,7 +146,7 @@ class FavoritesManager {
 
             favoriteIds.append(favoriteId)
 
-            self.fetchedMatchesListIds[favoriteList.name] = favoriteList.id
+            self.fetchedMatchesListIds[favoriteId] = favoriteList.id
         }
 
         self.fetchedFavoriteEventIds.append(contentsOf: favoriteIds)
@@ -336,6 +349,17 @@ class FavoritesManager {
         favoriteEventsId.append(eventId)
         self.favoriteEventsIdPublisher.send(favoriteEventsId)
 
+        if favoriteType == .match {
+            var favoriteMatchesId = self.favoriteMatchesIdPublisher.value
+            favoriteMatchesId.append(eventId)
+            self.favoriteMatchesIdPublisher.send(favoriteMatchesId)
+        }
+        else if favoriteType == .competition {
+            var favoriteCompetitionsId = self.favoriteCompetitionsIdPublisher.value
+            favoriteCompetitionsId.append(eventId)
+            self.favoriteCompetitionsIdPublisher.send(favoriteCompetitionsId)
+        }
+
         self.postUserFavorites(favoriteEvents: favoriteEventsId, favoriteTypeChanged: favoriteType, eventId: eventId, favoriteAction: .add)
     }
 
@@ -349,11 +373,33 @@ class FavoritesManager {
             self.favoriteEventsIdPublisher.send(favoriteEventsId)
         }
 
+        if favoriteType == .match {
+            var favoriteMatchesId = self.favoriteMatchesIdPublisher.value
+
+            favoriteMatchesId = favoriteMatchesId.filter {$0 != eventId}
+
+            self.favoriteMatchesIdPublisher.send(favoriteMatchesId)
+        }
+        else if favoriteType == .competition {
+            var favoriteCompetitionsId = self.favoriteCompetitionsIdPublisher.value
+
+            favoriteCompetitionsId = favoriteCompetitionsId.filter {$0 != eventId}
+
+            self.favoriteCompetitionsIdPublisher.send(favoriteCompetitionsId)
+        }
+
         self.postUserFavorites(favoriteEvents: favoriteEventsId, favoriteTypeChanged: favoriteType, eventId: eventId, favoriteAction: .remove)
     }
 
     func isEventFavorite(eventId: String) -> Bool {
          return self.favoriteEventsIdPublisher.value.contains(eventId)
+    }
+
+    func clearFavoritesData() {
+        self.favoriteEventsIdPublisher.value = []
+        self.fetchedMatchesListIds = [:]
+        self.fetchedCompetitionsListsIds = [:]
+        self.fetchedFavoriteEventIds = []
     }
 
 }

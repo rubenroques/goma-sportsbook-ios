@@ -158,6 +158,15 @@ extension ServicesProviderClient {
         return eventsProvider.subscribeOutrightMarkets(forMarketGroupId: marketGroupId)
     }
 
+    public func subscribeEventSummary(eventId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeEventSummary(eventId: eventId)
+    }
+
 }
 
 extension ServicesProviderClient {
@@ -247,6 +256,16 @@ extension ServicesProviderClient {
         }
 
         return eventsProvider.getBanners()
+    }
+
+    public func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getEventSummary(eventId: eventId)
     }
 
     public func getFavoritesList() -> AnyPublisher<FavoritesListResponse, ServiceProviderError> {

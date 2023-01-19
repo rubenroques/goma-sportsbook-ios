@@ -24,7 +24,7 @@ extension SportRadarModels {
         case eventDetails(eventDetails: [SportRadarModels.Event])
         case eventGroup(contentIdentifier: ContentIdentifier, events: [SportRadarModels.Event])
         case outrightEventGroup(events: [SportRadarModels.Event])
-
+        case eventSummary(eventDetails: [SportRadarModels.Event])
     }
 
     struct RestResponse<T: Codable>: Codable {
@@ -131,6 +131,17 @@ extension SportRadarModels {
                         }
                         else {
                             content = .eventGroup(contentIdentifier: contentIdentifier, events: [])
+                        }
+                    case .eventSummary:
+                        // change key is optional
+                        if contentContainer.contains(.change) {
+                            let event: SportRadarModels.Event = try contentContainer.decode(SportRadarModels.Event.self, forKey: .change)
+
+                            content = .eventDetails(eventDetails: [event])
+                        }
+                        else {
+
+                            content = .eventDetails(eventDetails: [])
                         }
                     }
                     self = .contentChanges(content: content)

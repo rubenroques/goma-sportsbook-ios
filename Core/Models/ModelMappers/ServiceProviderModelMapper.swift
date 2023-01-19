@@ -86,6 +86,29 @@ extension ServiceProviderModelMapper {
         return nil
     }
 
+    static func match(fromEvent event: ServicesProvider.Event) -> Match {
+
+        var venue: Location?
+
+        if let venueCountry = event.venueCountry {
+            venue = Location(id: venueCountry.iso2Code, name: venueCountry.name, isoCode: venueCountry.iso2Code)
+        }
+
+        let match = Match(id: event.id,
+                          competitionId: event.competitionId,
+                          competitionName: event.competitionName,
+                          homeParticipant: Participant(id: "", name: event.homeTeamName),
+                          awayParticipant: Participant(id: "", name: event.awayTeamName),
+                          date: event.startDate,
+                          sportType: event.sportTypeName,
+                          venue: venue,
+                          numberTotalOfMarkets: 1,
+                          markets: Self.markets(fromServiceProviderMarkets: event.markets),
+                          rootPartId: "")
+        return match
+
+    }
+
     static func event(fromEventGroup eventGroup: EventsGroup) -> ServicesProvider.Event? {
         if let event = eventGroup.events[safe: 0] {
 

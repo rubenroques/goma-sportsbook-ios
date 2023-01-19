@@ -76,6 +76,30 @@ extension SportRadarModelMapper {
 
         return EventsGroup(events: events)
     }
+
+    static func event(fromInternalEvent internalEvent: SportRadarModels.Event) -> Event {
+
+        if let eventMarkets = internalEvent.markets {
+            let markets = eventMarkets.map(Self.market(fromInternalMarket:))
+            return Event(id: internalEvent.id,
+                         homeTeamName: internalEvent.homeName ?? "",
+                         awayTeamName: internalEvent.awayName ?? "",
+                         sportTypeName: internalEvent.sportTypeName ?? "",
+                         competitionId: internalEvent.competitionId ?? "",
+                         competitionName: internalEvent.competitionName ?? "",
+                         startDate: internalEvent.startDate ?? Date(),
+                         markets: markets,
+                         numberMarkets: internalEvent.numberMarkets)
+        }
+        return Event(id: internalEvent.id,
+                     homeTeamName: internalEvent.homeName ?? "",
+                     awayTeamName: internalEvent.awayName ?? "",
+                     sportTypeName: internalEvent.sportTypeName ?? "",
+                     competitionId: internalEvent.competitionId ?? "",
+                     competitionName: internalEvent.competitionName ?? "",
+                     startDate: internalEvent.startDate ?? Date(),
+                     markets: [],
+                     numberMarkets: internalEvent.numberMarkets)    }
     
     static func market(fromInternalMarket internalMarket: SportRadarModels.Market) -> Market {
         let outcomes = internalMarket.outcomes.map(Self.outcome(fromInternalOutcome:))
