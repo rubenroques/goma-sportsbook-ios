@@ -6,7 +6,9 @@
 //
 
 import UIKit
+import Theming
 import Extensions
+import Combine
 
 struct NamesFormStepViewModel {
 
@@ -33,7 +35,9 @@ class NamesFormStepView: FormStepView {
     private lazy var firstNameHeaderTextFieldView: HeaderTextFieldView = Self.createFirstNameHeaderTextFieldView()
     private lazy var lastNameHeaderTextFieldView: HeaderTextFieldView = Self.createLastNameHeaderTextFieldView()
 
-    let viewModel: NamesFormStepViewModel
+    private let viewModel: NamesFormStepViewModel
+
+    private var cancellables = Set<AnyCancellable>()
 
     init(viewModel: NamesFormStepViewModel) {
         self.viewModel = viewModel
@@ -41,6 +45,11 @@ class NamesFormStepView: FormStepView {
         super.init()
 
         self.configureSubviews()
+    }
+
+    private var isFormCompletedCurrentValue: CurrentValueSubject<Bool, Never> = .init(false)
+    override var isFormCompleted: AnyPublisher<Bool, Never> {
+        return isFormCompletedCurrentValue.eraseToAnyPublisher()
     }
 
     func configureSubviews() {
@@ -66,6 +75,16 @@ class NamesFormStepView: FormStepView {
         self.lastNameHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.lastNameHeaderTextFieldView.resignFirstResponder()
         }
+
+        Publishers.CombineLatest(self.firstNameHeaderTextFieldView.textPublisher, self.lastNameHeaderTextFieldView.textPublisher)
+            .map { (firstName, lastName) in
+                firstName.count > 1 && lastName.count > 1
+            }
+            .sink { [weak self] completed in
+                self?.isFormCompletedCurrentValue.send(completed)
+            }
+            .store(in: &self.cancellables)
+
     }
 
     public override func layoutSubviews() {
@@ -74,6 +93,14 @@ class NamesFormStepView: FormStepView {
 
     override func setupWithTheme() {
         super.setupWithTheme()
+
+        self.firstNameHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.firstNameHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
+        self.firstNameHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
+
+        self.lastNameHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.lastNameHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
+        self.lastNameHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
     }
 
 }

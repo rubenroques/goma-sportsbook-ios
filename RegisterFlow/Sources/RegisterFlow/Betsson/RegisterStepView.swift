@@ -6,12 +6,18 @@
 //
 
 import Foundation
+import ServicesProvider
 import UIKit
+import Combine
+import Extensions
+import Theming
 
 public struct RegisterStepViewModel {
 
-    public init() {
+    let serviceProvider: ServicesProviderClient
 
+    public init(serviceProvider: ServicesProviderClient) {
+        self.serviceProvider = serviceProvider
     }
 
 }
@@ -25,6 +31,18 @@ public class RegisterStepView: UIView {
 
     private let viewModel: RegisterStepViewModel
     private var formStepViews: [FormStepView] = []
+
+    private var cancellables = Set<AnyCancellable>()
+
+    var isRegisterStepCompleted: AnyPublisher<Bool, Never> {
+        let publishers = self.formStepViews.map(\.isFormCompleted)
+
+        return publishers.combineLatest()
+            .map { forms in
+                return forms.reduce(true, { $0 && $1 })
+            }
+            .eraseToAnyPublisher()
+    }
 
     public init(viewModel: RegisterStepViewModel) {
         self.viewModel = viewModel
@@ -55,10 +73,10 @@ public class RegisterStepView: UIView {
     }
 
     func setupWithTheme() {
-        self.backgroundColor = .black
+        self.backgroundColor = AppColor.backgroundPrimary
 
-        self.scrollView.backgroundColor = .black
-        self.scrollInnerView.backgroundColor = .purple
+        self.scrollView.backgroundColor = AppColor.backgroundPrimary
+        self.scrollInnerView.backgroundColor = AppColor.backgroundPrimary
     }
 
     func addFormView(formView: FormStepView) {
@@ -89,7 +107,7 @@ extension RegisterStepView {
     private static func createStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = 24
+        stackView.spacing = 8
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }
@@ -133,8 +151,6 @@ extension RegisterStepView {
             stepsViewCenterY,
             topConstraint
         ])
-
-
 
     }
 

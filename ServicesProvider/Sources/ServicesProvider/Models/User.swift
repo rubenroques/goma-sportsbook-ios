@@ -264,3 +264,9 @@ public struct UserWallet {
     
     
 }
+
+public struct UsernameValidation {
+    public var username: String
+    public var isAvailable: Bool
+    public var suggestedUsernames: [String]?
+}

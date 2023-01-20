@@ -42,6 +42,7 @@ enum OmegaAPIClient {
                           country: String?,
                           cardId: String?)
     case checkCredentialEmail(email: String)
+    case checkUsername(username: String)
     case quickSignup(email: String,
                      username: String,
                      password: String,
@@ -92,6 +93,8 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/updatePlayerInfo"
         case .checkCredentialEmail:
             return "/ps/ips/checkCredential"
+        case .checkUsername:
+            return "/ps/ips/getUserIdSuggestion"
         case .quickSignup:
             return "/ps/ips/quickSignup"
         case .resendVerificationCode:
@@ -125,9 +128,13 @@ extension OmegaAPIClient: Endpoint {
             return nil
         case .playerInfo:
             return nil
+
         case .checkCredentialEmail(let email):
             return [URLQueryItem(name: "field", value: "email"),
                     URLQueryItem(name: "value", value: email)]
+        case .checkUsername(let username):
+            return [URLQueryItem(name: "userId", value: username)]
+
         case .quickSignup(let email, let username, let password, let birthDate,
                           let mobilePrefix, let mobileNumber, let countryIsoCode, let currencyCode):
             let dateFormatter = DateFormatter()
@@ -253,6 +260,7 @@ extension OmegaAPIClient: Endpoint {
         case .playerInfo: return .get
         case .updatePlayerInfo: return .get
         case .checkCredentialEmail: return .get
+        case .checkUsername: return .get
         case .quickSignup: return .get
         case .resendVerificationCode: return .get
         case .signupConfirmation: return .get
@@ -284,6 +292,7 @@ extension OmegaAPIClient: Endpoint {
         case .playerInfo: return true
         case .updatePlayerInfo: return true
         case .checkCredentialEmail: return false
+        case .checkUsername: return false
         case .quickSignup: return false
         case .resendVerificationCode: return false
         case .signupConfirmation: return false

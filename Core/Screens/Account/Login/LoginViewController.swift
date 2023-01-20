@@ -3,6 +3,7 @@ import Combine
 import ServicesProvider
 import AppTrackingTransparency
 import AdSupport
+import RegisterFlow
 
 class LoginViewController: UIViewController {
 
@@ -257,8 +258,14 @@ class LoginViewController: UIViewController {
         }
 
     @objc private func didTapCreateAccount() {
-        let smallRegisterViewController = SimpleRegisterEmailCheckViewController()
-        self.navigationController?.pushViewController(smallRegisterViewController, animated: true)
+//        let smallRegisterViewController = SimpleRegisterEmailCheckViewController()
+//        self.navigationController?.pushViewController(smallRegisterViewController, animated: true)
+
+        let viewModel = SteppedRegistrationViewModel(currentStep: 0,
+                                                     numberOfSteps: 3,
+                                                     serviceProvider: Env.servicesProvider)
+        let steppedRegistrationViewController = SteppedRegistrationViewController(viewModel: viewModel)
+        self.navigationController?.pushViewController(steppedRegistrationViewController, animated: true)
     }
 
     @objc func rememberUserOptionTapped() {

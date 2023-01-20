@@ -7,6 +7,8 @@
 
 import UIKit
 import Extensions
+import Combine
+import Theming
 
 struct GenderFormStepViewModel {
 
@@ -23,6 +25,11 @@ class GenderFormStepView: FormStepView {
     private lazy var stackContainerView: UIView = Self.createStackContainerView()
     private lazy var buttonStackView: UIStackView = Self.createStackView()
 
+    private var isFormCompletedCurrentValue: CurrentValueSubject<Bool, Never> = .init(false)
+    override var isFormCompleted: AnyPublisher<Bool, Never> {
+        return isFormCompletedCurrentValue.eraseToAnyPublisher()
+    }
+
     let viewModel: GenderFormStepViewModel
 
     init(viewModel: GenderFormStepViewModel) {
@@ -32,6 +39,7 @@ class GenderFormStepView: FormStepView {
 
         self.configureSubviews()
     }
+
 
     func configureSubviews() {
 
@@ -61,25 +69,38 @@ class GenderFormStepView: FormStepView {
     override func setupWithTheme() {
         super.setupWithTheme()
 
-        self.maleButton.setTitleColor(.white, for: .normal)
-        self.femaleButton.setTitleColor(.white, for: .normal)
-        self.maleButton.setBackgroundColor(.darkGray, for: .normal)
-        self.femaleButton.setBackgroundColor(.darkGray, for: .normal)
+        self.maleButton.setTitleColor(AppColor.textSecondary, for: .normal)
+        self.femaleButton.setTitleColor(AppColor.textSecondary, for: .normal)
+        self.maleButton.setBackgroundColor(AppColor.backgroundSecondary, for: .normal)
+        self.femaleButton.setBackgroundColor(AppColor.backgroundSecondary, for: .normal)
 
-        self.maleButton.setTitleColor(.darkGray, for: .selected)
-        self.femaleButton.setTitleColor(.darkGray, for: .selected)
-        self.maleButton.setBackgroundColor(.lightGray, for: .selected)
-        self.femaleButton.setBackgroundColor(.lightGray, for: .selected)
+        self.maleButton.layer.borderColor = AppColor.textPrimary.cgColor
+        self.femaleButton.layer.borderColor = AppColor.textPrimary.cgColor
+
+        self.maleButton.setTitleColor(AppColor.textPrimary, for: .selected)
+        self.femaleButton.setTitleColor(AppColor.textPrimary, for: .selected)
+        self.maleButton.setBackgroundColor(AppColor.backgroundTertiary, for: .selected)
+        self.femaleButton.setBackgroundColor(AppColor.backgroundTertiary, for: .selected)
     }
 
     @objc func didTapMaleButton() {
         self.maleButton.isSelected = true
         self.femaleButton.isSelected = false
+
+        self.isFormCompletedCurrentValue.send(true)
+
+        self.maleButton.layer.borderWidth = 2
+        self.femaleButton.layer.borderWidth = 0
     }
 
     @objc func didTapFemaleButton() {
         self.maleButton.isSelected = false
         self.femaleButton.isSelected = true
+
+        self.isFormCompletedCurrentValue.send(true)
+
+        self.maleButton.layer.borderWidth = 0
+        self.femaleButton.layer.borderWidth = 2
     }
 
 }
@@ -89,7 +110,9 @@ extension GenderFormStepView {
     fileprivate static func createMaleButton() -> UIButton {
         let button = UIButton()
         button.setTitle("Male", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.layer.cornerRadius = 20
+        button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }
@@ -97,7 +120,9 @@ extension GenderFormStepView {
     fileprivate static func createFemaleButton() -> UIButton {
         let button = UIButton()
         button.setTitle("Female", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.layer.cornerRadius = 20
+        button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }

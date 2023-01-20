@@ -8,15 +8,19 @@
 import Foundation
 import Combine
 import UIKit
+import ServicesProvider
+import Theming
 
 public class SteppedRegistrationViewModel {
 
     var currentStep: CurrentValueSubject<Int, Never> = .init(0)
     var numberOfSteps: Int = 0
+    let serviceProvider: ServicesProviderClient
 
-    public init(currentStep: Int, numberOfSteps: Int) {
+    public init(currentStep: Int, numberOfSteps: Int, serviceProvider: ServicesProviderClient) {
         self.currentStep = .init(0)
         self.numberOfSteps = numberOfSteps
+        self.serviceProvider = serviceProvider
     }
 
     func scrollToPreviousStep() {
@@ -56,6 +60,8 @@ public class SteppedRegistrationViewController: UIViewController {
     private var currentStep: Int = 0
     private var stepsViews: [RegisterStepView] = []
 
+    private var registrationCompletionPublisher: AnyCancellable?
+
     private var cancellables = Set<AnyCancellable>()
 
     public init(viewModel: SteppedRegistrationViewModel) {
@@ -76,26 +82,57 @@ public class SteppedRegistrationViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        let publisher = self.viewModel.currentStep
+        let currentStepPublisher = self.viewModel.currentStep
             .removeDuplicates()
             .map { [weak self] (currentPage: Int) -> (currentPage: Int, yOffset: CGFloat) in
                 return (currentPage, (self?.contentBaseView.frame.height ?? 0.0) * CGFloat(currentPage))
             }
             .receive(on: DispatchQueue.main)
 
-        publisher.first()
+        currentStepPublisher.first()
             .sink { [weak self] pageTupple in
                 self?.scrollToItem(newPage: pageTupple.currentPage, offset: pageTupple.yOffset, animated: false)
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
-        publisher.dropFirst()
+        currentStepPublisher.dropFirst()
             .sink { [weak self] pageTupple in
                 self?.scrollToItem(newPage: pageTupple.currentPage, offset: pageTupple.yOffset, animated: true)
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
+
+        self.viewModel.currentStep
+            .removeDuplicates()
+            .sink { [weak self] currentStep in
+                let totalSteps = self?.stepsViews.count ?? 0
+                if totalSteps > 0 {
+                    let progress = Float(currentStep) / Float(totalSteps)
+                    self?.progressView.setProgress(progress, animated: true)
+                }
+                else {
+                    self?.progressView.setProgress(0.0, animated: false)
+                }
+            }
+            .store(in: &self.cancellables)
 
         self.createSteps()
+    }
+
+    func configureRegistrationCompletionPublisher() {
+
+        self.registrationCompletionPublisher?.cancel()
+
+        let registrationPerStepPublisher = self.stepsViews.map(\.isRegisterStepCompleted).combineLatest()
+        self.registrationCompletionPublisher = Publishers.CombineLatest(self.viewModel.currentStep, registrationPerStepPublisher)
+            .map { (currentPage, completionPerStepArray) -> Bool in
+                let isStepCompleted = completionPerStepArray[safe: currentPage] ?? false
+                return isStepCompleted
+            }
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isCurrentStepCompleted in
+                self?.continueButton.isEnabled = isCurrentStepCompleted
+            })
+
     }
 
     // MARK: - Layout and Theme
@@ -114,27 +151,41 @@ public class SteppedRegistrationViewController: UIViewController {
 
         self.backButton.tintColor = .white
         self.cancelButton.setTitleColor(.white, for: .normal)
-        self.continueButton.setTitleColor(.white, for: .normal)
-        self.continueButton.backgroundColor = .red
 
-        self.headerBaseView.backgroundColor = .black
-        self.progressView.backgroundColor = .black
-        self.contentBaseView.backgroundColor = .black
-        self.stepsScrollView.backgroundColor = .black
-        self.stepsContentStackView.backgroundColor = .black
-        self.footerBaseView.backgroundColor = .black
+        self.headerBaseView.backgroundColor = AppColor.backgroundPrimary
+        self.progressView.backgroundColor = AppColor.backgroundPrimary
+        self.contentBaseView.backgroundColor = AppColor.backgroundPrimary
+        self.stepsScrollView.backgroundColor = AppColor.backgroundPrimary
+        self.stepsContentStackView.backgroundColor = AppColor.backgroundPrimary
+        self.footerBaseView.backgroundColor = AppColor.backgroundPrimary
+
+        //
+        self.progressView.trackTintColor = AppColor.backgroundSecondary
+        self.progressView.progressTintColor = AppColor.highlightSecondary
+
+        // Continue button styling
+        self.continueButton.setTitleColor(AppColor.buttonTextPrimary, for: .normal)
+        self.continueButton.setTitleColor(AppColor.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.continueButton.setTitleColor(AppColor.buttonTextDisablePrimary.withAlphaComponent(0.39), for: .disabled)
+
+        self.continueButton.setBackgroundColor(AppColor.buttonBackgroundPrimary, for: .normal)
+        self.continueButton.setBackgroundColor(AppColor.buttonBackgroundSecondary, for: .highlighted)
+
+        self.continueButton.layer.cornerRadius = 8
+        self.continueButton.layer.masksToBounds = true
+        self.continueButton.backgroundColor = .clear
     }
 
     private func createSteps() {
 
-        let nameRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel())
+        let nameRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
 
         let genderFormStepView = GenderFormStepView(viewModel: GenderFormStepViewModel(title: "Gender",
                                                                                        selectedGender: nil))
 
         let namesFormStepView = NamesFormStepView(viewModel: NamesFormStepViewModel(title: "Names",
-                                                            firstNamePlaceholder: "First Name",
-                                                            lastNamePlaceholder: "Last Name"))
+                                                                                    firstNamePlaceholder: "First Name",
+                                                                                    lastNamePlaceholder: "Last Name"))
 
         nameRegisterStepView.addFormView(formView: genderFormStepView)
         nameRegisterStepView.addFormView(formView: namesFormStepView)
@@ -143,14 +194,15 @@ public class SteppedRegistrationViewController: UIViewController {
         //
 
         //
-        let avatarNickRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel())
+        let avatarNickRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
 
         let avatarFormStepView = AvatarFormStepView(viewModel: AvatarFormStepViewModel(title: "Avatar",
-                                                              avatarIconNames: []))
+                                                                                       avatarIconNames: []))
 
         let nicknameFormStepView = NicknameFormStepView(viewModel: NicknameFormStepViewModel(title: "Nickname",
-                                                                  nickname: nil,
-                                                                  nicknamePlaceholder: "Nickname"))
+                                                                                             nickname: nil,
+                                                                                             nicknamePlaceholder: "Nickname",
+                                                                                             serviceProvider: self.viewModel.serviceProvider))
 
         avatarNickRegisterStepView.addFormView(formView: avatarFormStepView)
         avatarNickRegisterStepView.addFormView(formView: nicknameFormStepView)
@@ -160,9 +212,10 @@ public class SteppedRegistrationViewController: UIViewController {
 
         //
 
+        self.configureRegistrationCompletionPublisher()
+
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
-
     }
 
     private func addStepView(registerStepView: RegisterStepView) {
@@ -243,9 +296,7 @@ public extension SteppedRegistrationViewController {
 
     private static func createProgressView() -> UIProgressView {
         let progressView = UIProgressView()
-        progressView.trackTintColor = .gray
-        progressView.progressTintColor = .blue
-        progressView.progress = 0.4
+        progressView.progress = 0.5
         progressView.translatesAutoresizingMaskIntoConstraints = false
         return progressView
     }
@@ -302,17 +353,7 @@ public extension SteppedRegistrationViewController {
 
         self.stepsScrollView.isScrollEnabled = false
 
-        self.headerBaseView.backgroundColor = .white
-
         self.backButton.addTarget(self, action: #selector(self.didTapBackButton), for: .primaryActionTriggered)
-
-        self.backButton.backgroundColor = .lightGray
-
-        self.contentBaseView.backgroundColor = .white
-        self.stepsScrollView.backgroundColor = .white
-        self.stepsContentStackView.backgroundColor = .white
-        self.footerBaseView.backgroundColor = .white
-
         self.continueButton.addTarget(self, action: #selector(self.didTapContinueButton), for: .primaryActionTriggered)
 
         self.initConstraints()

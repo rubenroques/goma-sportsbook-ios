@@ -7,6 +7,7 @@
 
 import UIKit
 import Extensions
+import Combine
 
 struct AvatarFormStepViewModel {
 
@@ -27,6 +28,10 @@ class AvatarFormStepView: FormStepView {
         self.configureSubviews()
     }
 
+    override var isFormCompleted: AnyPublisher<Bool, Never> {
+        return Just(true).eraseToAnyPublisher()
+    }
+    
     func configureSubviews() {
 
         self.titleLabel.text = self.viewModel.title

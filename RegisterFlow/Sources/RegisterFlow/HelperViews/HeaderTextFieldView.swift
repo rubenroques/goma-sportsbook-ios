@@ -32,6 +32,10 @@ class HeaderTextFieldView: NibView {
         return self.textField.textPublisher
     }
 
+    var contentCenterYConstraint: NSLayoutYAxisAnchor {
+        return self.containerView.centerYAnchor
+    }
+
     var didTapReturn: (() -> Void) = { }
     var didEndEditing: (() -> Void) = { }
 

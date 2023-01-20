@@ -7,8 +7,18 @@
 
 import Foundation
 import UIKit
+import Combine
+import Theming
 
-public class FormStepView: UIView {
+protocol FormStepController {
+    var isFormCompleted: AnyPublisher<Bool, Never> { get }
+}
+
+public class FormStepView: UIView, FormStepController {
+
+    var isFormCompleted: AnyPublisher<Bool, Never> {
+        return Just(true).eraseToAnyPublisher()
+    }
 
     lazy var contentView: UIView = Self.createContentView()
     lazy var stackView: UIStackView = Self.createStackView()
@@ -42,9 +52,10 @@ public class FormStepView: UIView {
     }
 
     func setupWithTheme() {
-        self.backgroundColor = .black
+        self.backgroundColor = AppColor.backgroundPrimary
 
-        self.contentView.backgroundColor = .gray
+        self.contentView.backgroundColor = AppColor.backgroundPrimary
+        self.stackView.backgroundColor = AppColor.backgroundPrimary
     }
 
 }
@@ -52,7 +63,7 @@ public class FormStepView: UIView {
 extension FormStepView {
 
     private static var headerHeight: CGFloat {
-        return 90
+        return 80
     }
 
     private static func createHeaderView() -> UIView {
@@ -115,9 +126,9 @@ extension FormStepView {
             self.titleLabel.topAnchor.constraint(equalTo: self.headerView.topAnchor, constant: 8),
 
             self.stackView.topAnchor.constraint(equalTo: self.headerView.bottomAnchor),
-            self.stackView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 34),
-            self.stackView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -34),
-            self.stackView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -16),
+            self.stackView.leadingAnchor.constraint(equalTo: self.titleLabel.leadingAnchor),
+            self.stackView.trailingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor),
+            self.stackView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -24),
         ])
 
     }
