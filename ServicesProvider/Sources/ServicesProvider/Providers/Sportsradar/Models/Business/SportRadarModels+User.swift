@@ -207,4 +207,38 @@ extension SportRadarModels {
             case error = "error"
         }
     }
+
+    struct CheckUsernameResponse: Codable {
+
+        let errors: [String]?
+        let status: String
+        let message: String?
+        let additionalInfos: [CheckUsernameAdditionalInfo]?
+
+        struct CheckUsernameAdditionalInfo: Codable {
+
+            let key: String
+            let value: String
+
+            init(from decoder: Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.key = try container.decode(String.self, forKey: .key)
+                self.value = try container.decode(String.self, forKey: .value)
+            }
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.errors = try container.decodeIfPresent([String].self, forKey: .errors)
+            self.status = try container.decode(String.self, forKey: .status)
+            self.message = try container.decodeIfPresent(String.self, forKey: .message)
+
+            self.additionalInfos = try? container.decodeIfPresent([CheckUsernameAdditionalInfo].self, forKey: .additionalInfos)
+        }
+        
+    }
+
+
+
+
 }

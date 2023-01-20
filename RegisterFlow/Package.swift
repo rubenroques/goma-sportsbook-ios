@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "Extensions",
+    name: "RegisterFlow",
     platforms: [
         .iOS(.v13),
         .macOS(.v12)
@@ -12,24 +12,28 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
-            name: "Extensions",
-            targets: ["Extensions"]),
+            name: "RegisterFlow",
+            targets: ["RegisterFlow"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
+        .package(name: "Extensions", path: "../Extensions"),
+        .package(name: "Theming", path: "../Theming"),
+        .package(name: "ServicesProvider", path: "../ServicesProvider"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
-            name: "Extensions",
-            dependencies: [],
-            path: "",
-            sources: ["Sources"]
-        ),
+            name: "RegisterFlow",
+            dependencies: [
+                "ServicesProvider",
+                "Extensions",
+                "Theming",
+            ]),
         .testTarget(
-            name: "ExtensionsTests",
-            dependencies: ["Extensions"]),
+            name: "RegisterFlowTests",
+            dependencies: ["RegisterFlow"]),
     ]
 )

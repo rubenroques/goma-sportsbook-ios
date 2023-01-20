@@ -310,6 +310,15 @@ extension ServicesProviderClient {
         return privilegedAccessManager.checkEmailRegistered(email)
     }
 
+    public func validateUsername(_ username: String) -> AnyPublisher<UsernameValidation, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.validateUsername(username)
+    }
+
     public func signupConfirmation(_ email: String, confirmationCode: String) -> AnyPublisher<Bool, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager

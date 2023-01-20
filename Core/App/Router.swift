@@ -73,6 +73,7 @@ class Router {
         let splashViewController = SplashViewController(loadingCompleted: {
             self.showPostLoadingFlow()
         })
+
         self.rootWindow.rootViewController = splashViewController
         self.rootWindow.makeKeyAndVisible()
     }

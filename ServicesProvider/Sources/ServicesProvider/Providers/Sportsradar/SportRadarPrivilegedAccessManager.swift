@@ -112,6 +112,43 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
 
     }
 
+    func validateUsername(_ username: String) -> AnyPublisher<UsernameValidation, ServiceProviderError> {
+        let endpoint = OmegaAPIClient.checkUsername(username: username)
+
+        let publisher: AnyPublisher<SportRadarModels.CheckUsernameResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ checkCredentialResponse -> AnyPublisher<UsernameValidation, ServiceProviderError> in
+
+            let suggestions = checkCredentialResponse.additionalInfos?
+                .compactMap({ $0 })
+                .map { additionalInfo -> String in
+                    return additionalInfo.value
+                }
+
+            if checkCredentialResponse.status == "SUCCESS", let suggestionsValue = suggestions, !suggestionsValue.isEmpty {
+                let usernameValidation = UsernameValidation(username: username,
+                                                            isAvailable: false,
+                                                            suggestedUsernames: suggestionsValue)
+                return Just(usernameValidation)
+                    .setFailureType(to: ServiceProviderError.self)
+                    .eraseToAnyPublisher()
+            }
+            else if checkCredentialResponse.status == "USERNAME_AVAILABLE" {
+                let usernameValidation = UsernameValidation(username: username,
+                                                            isAvailable: true,
+                                                            suggestedUsernames: nil)
+                return Just(usernameValidation)
+                    .setFailureType(to: ServiceProviderError.self)
+                    .eraseToAnyPublisher()
+            }
+
+            return Fail(outputType: UsernameValidation.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+
+
+    }
+
     func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.quickSignup(email: form.email,
