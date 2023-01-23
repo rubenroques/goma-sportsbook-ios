@@ -770,6 +770,7 @@
 		45452BEE290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
 		4554ED0A2976F7FE006942B3 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4554ED092976F7FE006942B3 /* IQKeyboardManagerSwift */; };
 		455A0C6B26BD902F00EC572D /* SportsbookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0C6A26BD902F00EC572D /* SportsbookTests.swift */; };
+		456237D9297EE5F600B3FA3A /* SharedModels in Frameworks */ = {isa = PBXBuildFile; productRef = 456237D8297EE5F600B3FA3A /* SharedModels */; };
 		4568B9662858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
 		4568B9672858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
 		4568B9682858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
@@ -4894,6 +4895,8 @@
 		45D871CF2710995700F5B87B /* AggregatorsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregatorsRepository.swift; sourceTree = "<group>"; };
 		45D9CBDD270F34D800B8C321 /* EveryMatrixModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EveryMatrixModel.swift; sourceTree = "<group>"; };
 		45D9CBE0270F3C8400B8C321 /* AppSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSession.swift; sourceTree = "<group>"; };
+		45DD5302297EBE6A00DBC2AA /* SharedModels */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SharedModels; sourceTree = "<group>"; };
+		45DD5303297ED57100DBC2AA /* CountrySelectionFeature */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CountrySelectionFeature; sourceTree = "<group>"; };
 		45DDBA8126F2146000A73E45 /* Gilroy-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-ExtraBold.ttf"; sourceTree = "<group>"; };
 		45DDBA8226F2146000A73E45 /* Gilroy-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Light.ttf"; sourceTree = "<group>"; };
 		45DDBA8326F2146000A73E45 /* Gilroy-Heavy.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Heavy.ttf"; sourceTree = "<group>"; };
@@ -5276,6 +5279,7 @@
 				450B7AA028F58574009229E3 /* SweeterSwift in Frameworks */,
 				450B7AA128F58574009229E3 /* Starscream in Frameworks */,
 				450B7AA228F58574009229E3 /* SocketIO in Frameworks */,
+				456237D9297EE5F600B3FA3A /* SharedModels in Frameworks */,
 				45BA77A5293CD60800B6ACA6 /* ServicesProvider in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5854,6 +5858,8 @@
 		455A0C4726BD902C00EC572D = {
 			isa = PBXGroup;
 			children = (
+				45DD5303297ED57100DBC2AA /* CountrySelectionFeature */,
+				45DD5302297EBE6A00DBC2AA /* SharedModels */,
 				454DC4502975C62300B48D9A /* Theming */,
 				45BA77A3293CD45500B6ACA6 /* ServicesProvider */,
 				45D3BBAA296EDA1A009E0D09 /* RegisterFlow */,
@@ -8441,6 +8447,7 @@
 				45BA77A4293CD60800B6ACA6 /* ServicesProvider */,
 				45D3BBAB296F13BB009E0D09 /* RegisterFlow */,
 				4554ED092976F7FE006942B3 /* IQKeyboardManagerSwift */,
+				456237D8297EE5F600B3FA3A /* SharedModels */,
 			);
 			productName = Sportsbook;
 			productReference = 450B7B2428F58574009229E3 /* SportRadar.app */;
@@ -14509,6 +14516,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4554ED082976F7FE006942B3 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
 			productName = IQKeyboardManagerSwift;
+		};
+		456237D8297EE5F600B3FA3A /* SharedModels */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SharedModels;
 		};
 		457CB9C6282D27D000ED0F00 /* Reachability */ = {
 			isa = XCSwiftPackageProductDependency;

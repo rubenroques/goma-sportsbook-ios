@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import GomaGamingSDK
+import SharedModels
 
 public class ServicesProviderClient {
 

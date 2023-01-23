@@ -56,6 +56,8 @@ public class FormStepView: UIView, FormStepController {
 
         self.contentView.backgroundColor = AppColor.backgroundPrimary
         self.stackView.backgroundColor = AppColor.backgroundPrimary
+
+        self.titleLabel.textColor = AppColor.textPrimary
     }
 
 }
@@ -75,7 +77,7 @@ extension FormStepView {
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.textAlignment = .left
-        label.font = UIFont.preferredFont(forTextStyle: .title1)
+        label.font = AppFont.with(type: .bold, size: 30)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }

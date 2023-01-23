@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SharedModels
 
 public struct EventsGroup {
     public var events: [Event]

@@ -265,7 +265,10 @@ class LoginViewController: UIViewController {
                                                      numberOfSteps: 3,
                                                      serviceProvider: Env.servicesProvider)
         let steppedRegistrationViewController = SteppedRegistrationViewController(viewModel: viewModel)
-        self.navigationController?.pushViewController(steppedRegistrationViewController, animated: true)
+
+        // steppedRegistrationViewController.isModalInPresentation = true
+
+        self.present(steppedRegistrationViewController, animated: true)
     }
 
     @objc func rememberUserOptionTapped() {

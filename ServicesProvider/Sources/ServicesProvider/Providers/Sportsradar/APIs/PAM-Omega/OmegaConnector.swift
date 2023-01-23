@@ -106,10 +106,10 @@ class OmegaConnector: Connector {
                 }
                 return ServiceProviderError.invalidResponse
             })
-//            .handleEvents(receiveOutput: { data in
-//                print("ServiceProvider-OmegaConnector [[ requesting ]] ", request,
-//                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
-//            })
+            .handleEvents(receiveOutput: { data in
+                print("ServiceProvider-OmegaConnector [[ requesting ]] ", request,
+                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
+            })
             .flatMap({ [weak self] (data: Data) -> AnyPublisher<T, ServiceProviderError> in
                 guard
                     let self = self

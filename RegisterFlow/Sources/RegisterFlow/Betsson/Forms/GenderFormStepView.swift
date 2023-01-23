@@ -1,6 +1,6 @@
 //
 //  AddressFormStepView.swift
-//  
+//
 //
 //  Created by Ruben Roques on 16/01/2023.
 //
@@ -69,6 +69,9 @@ class GenderFormStepView: FormStepView {
     override func setupWithTheme() {
         super.setupWithTheme()
 
+        self.maleButton.imageView?.tintColor = AppColor.textSecondary
+        self.femaleButton.imageView?.tintColor = AppColor.textSecondary
+
         self.maleButton.setTitleColor(AppColor.textSecondary, for: .normal)
         self.femaleButton.setTitleColor(AppColor.textSecondary, for: .normal)
         self.maleButton.setBackgroundColor(AppColor.backgroundSecondary, for: .normal)
@@ -89,6 +92,9 @@ class GenderFormStepView: FormStepView {
 
         self.isFormCompletedCurrentValue.send(true)
 
+        self.maleButton.imageView?.tintColor = AppColor.textPrimary
+        self.femaleButton.imageView?.tintColor = AppColor.textSecondary
+
         self.maleButton.layer.borderWidth = 2
         self.femaleButton.layer.borderWidth = 0
     }
@@ -98,6 +104,9 @@ class GenderFormStepView: FormStepView {
         self.femaleButton.isSelected = true
 
         self.isFormCompletedCurrentValue.send(true)
+
+        self.maleButton.imageView?.tintColor = AppColor.textSecondary
+        self.femaleButton.imageView?.tintColor = AppColor.textPrimary
 
         self.maleButton.layer.borderWidth = 0
         self.femaleButton.layer.borderWidth = 2
@@ -109,16 +118,30 @@ extension GenderFormStepView {
 
     fileprivate static func createMaleButton() -> UIButton {
         let button = UIButton()
+
+        let image = UIImage(named: "GenderMale", in: Bundle.module, with: nil)
+        button.setImage(image, for: .normal)
+
         button.setTitle("Male", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.layer.cornerRadius = 20
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
+
+        button.setInsets(forContentPadding: UIEdgeInsets(top: 2, left: 12, bottom: 2, right: 12),
+                         imageTitlePadding: 6)
         return button
     }
 
     fileprivate static func createFemaleButton() -> UIButton {
         let button = UIButton()
+
+        let image = UIImage(named: "GenderFemale", in: Bundle.module, with: nil)
+        button.setImage(image, for: .normal)
+
+        button.setInsets(forContentPadding: UIEdgeInsets(top: 2, left: 10, bottom: 2, right: 12),
+                         imageTitlePadding: 6)
+
         button.setTitle("Female", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.layer.cornerRadius = 20
@@ -143,3 +166,5 @@ extension GenderFormStepView {
     }
 
 }
+
+

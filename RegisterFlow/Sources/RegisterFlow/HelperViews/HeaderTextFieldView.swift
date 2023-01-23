@@ -286,6 +286,10 @@ class HeaderTextFieldView: NibView {
 
         self.textField.text = text
 
+        NotificationCenter.default
+            .post(name: UITextField.textDidChangeNotification,
+                  object: self.textField)
+
         if !text.isEmpty && slideUp {
             self.slideUp(animated: false)
         }
@@ -379,7 +383,7 @@ class HeaderTextFieldView: NibView {
 
     @objc func dateChanged() {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.dateFormat = "dd-MM-yyyy"
         let selectedDate = dateFormatter.string(from: datePicker.date)
         textField.text = "\(selectedDate)"
     }
@@ -422,7 +426,7 @@ class HeaderTextFieldView: NibView {
         textField.rightView = arrowDropdownImageView
         textField.rightViewMode = .always
 
-        dismissPickerView()
+        self.dismissPickerView()
     }
 
     func dismissPickerView() {

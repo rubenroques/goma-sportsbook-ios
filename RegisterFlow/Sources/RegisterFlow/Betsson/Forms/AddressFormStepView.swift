@@ -13,14 +13,6 @@ struct AddressFormStepViewModel {
 
     let title: String
 
-    let place: String?
-    let street: String?
-    let additionalStreet: String?
-
-    let placePlaceholder: String
-    let streetPlaceholder: String
-    let additionalStreetPlaceholder: String
-
 }
 
 class AddressFormStepView: FormStepView {
@@ -41,17 +33,38 @@ class AddressFormStepView: FormStepView {
 
     func configureSubviews() {
 
-
-
         self.stackView.addArrangedSubview(self.placeHeaderTextFieldView)
         self.stackView.addArrangedSubview(self.streetHeaderTextFieldView)
         self.stackView.addArrangedSubview(self.additionalStreetHeaderTextFieldView)
 
+
+        NSLayoutConstraint.activate([
+            self.placeHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
+            self.streetHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
+            self.additionalStreetHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
+        ])
+
         self.titleLabel.text = self.viewModel.title
 
-        self.placeHeaderTextFieldView.setPlaceholderText(self.viewModel.placePlaceholder)
-        self.streetHeaderTextFieldView.setPlaceholderText(self.viewModel.streetPlaceholder)
-        self.additionalStreetHeaderTextFieldView.setPlaceholderText(self.viewModel.additionalStreetPlaceholder)
+        self.placeHeaderTextFieldView.setPlaceholderText("Place/Commune")
+        self.streetHeaderTextFieldView.setPlaceholderText("Street line 1")
+        self.additionalStreetHeaderTextFieldView.setPlaceholderText("Street line 2")
+
+        self.placeHeaderTextFieldView.setReturnKeyType(.next)
+        self.placeHeaderTextFieldView.didTapReturn = { [weak self] in
+            self?.streetHeaderTextFieldView.becomeFirstResponder()
+        }
+
+        self.streetHeaderTextFieldView.setReturnKeyType(.continue)
+        self.streetHeaderTextFieldView.didTapReturn = { [weak self] in
+            self?.additionalStreetHeaderTextFieldView.becomeFirstResponder()
+        }
+
+
+        self.additionalStreetHeaderTextFieldView.setReturnKeyType(.continue)
+        self.additionalStreetHeaderTextFieldView.didTapReturn = { [weak self] in
+            self?.additionalStreetHeaderTextFieldView.resignFirstResponder()
+        }
 
     }
 
@@ -62,6 +75,17 @@ class AddressFormStepView: FormStepView {
     override func setupWithTheme() {
         super.setupWithTheme()
 
+        self.placeHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.placeHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
+        self.placeHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
+
+        self.streetHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.streetHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
+        self.streetHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
+
+        self.additionalStreetHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.additionalStreetHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
+        self.additionalStreetHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
     }
 
 }

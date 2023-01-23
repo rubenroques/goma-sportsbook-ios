@@ -215,10 +215,22 @@ extension SportRadarModels {
         let message: String?
         let additionalInfos: [CheckUsernameAdditionalInfo]?
 
+        enum CodingKeys: String, CodingKey {
+            case errors = "errors"
+            case status = "status"
+            case message = "message"
+            case additionalInfos = "additionalInfo"
+        }
+
         struct CheckUsernameAdditionalInfo: Codable {
 
             let key: String
             let value: String
+
+            enum CodingKeys: String, CodingKey {
+                case key
+                case value
+            }
 
             init(from decoder: Decoder) throws {
                 let container = try decoder.container(keyedBy: CodingKeys.self)

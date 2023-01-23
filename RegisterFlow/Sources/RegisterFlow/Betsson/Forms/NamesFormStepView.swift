@@ -53,29 +53,29 @@ class NamesFormStepView: FormStepView {
     }
 
     func configureSubviews() {
-
+        
         self.stackView.addArrangedSubview(self.firstNameHeaderTextFieldView)
         self.stackView.addArrangedSubview(self.lastNameHeaderTextFieldView)
-
+        
         NSLayoutConstraint.activate([
             self.firstNameHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
             self.lastNameHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
         ])
-
+        
         self.titleLabel.text = self.viewModel.title
-
+        
         self.firstNameHeaderTextFieldView.setReturnKeyType(.next)
         self.firstNameHeaderTextFieldView.setPlaceholderText(self.viewModel.firstNamePlaceholder)
         self.firstNameHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.lastNameHeaderTextFieldView.becomeFirstResponder()
         }
-
+        
         self.lastNameHeaderTextFieldView.setReturnKeyType(.continue)
         self.lastNameHeaderTextFieldView.setPlaceholderText(self.viewModel.lastNamePlaceholder)
         self.lastNameHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.lastNameHeaderTextFieldView.resignFirstResponder()
         }
-
+        
         Publishers.CombineLatest(self.firstNameHeaderTextFieldView.textPublisher, self.lastNameHeaderTextFieldView.textPublisher)
             .map { (firstName, lastName) in
                 firstName.count > 1 && lastName.count > 1
@@ -84,7 +84,6 @@ class NamesFormStepView: FormStepView {
                 self?.isFormCompletedCurrentValue.send(completed)
             }
             .store(in: &self.cancellables)
-
     }
 
     public override func layoutSubviews() {

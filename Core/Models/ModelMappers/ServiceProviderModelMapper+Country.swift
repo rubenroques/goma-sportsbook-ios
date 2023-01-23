@@ -7,10 +7,11 @@
 
 import Foundation
 import ServicesProvider
+import SharedModels
 
 extension ServiceProviderModelMapper {
     
-    static func country(fromServiceProviderCountry serviceProviderCountry: ServicesProvider.Country) -> Country {
+    static func country(fromServiceProviderCountry serviceProviderCountry: SharedModels.Country) -> Country {
         return Country(name: serviceProviderCountry.name,
                        capital: serviceProviderCountry.capital,
                        region: serviceProviderCountry.region,
@@ -20,8 +21,8 @@ extension ServiceProviderModelMapper {
                        phonePrefix: serviceProviderCountry.phonePrefix)
     }
     
-    static func country(fromCountry country: Country) -> ServicesProvider.Country? {
-        return ServicesProvider.Country(isoCode: country.iso2Code)
+    static func country(fromCountry country: Country) -> SharedModels.Country? {
+        return SharedModels.Country(isoCode: country.iso2Code)
     }
     
 }

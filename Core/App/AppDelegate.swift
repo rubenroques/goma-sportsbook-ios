@@ -45,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
         IQKeyboardManager.shared.keyboardDistanceFromTextField = 24.0
         IQKeyboardManager.shared.enable = true
-        IQKeyboardManager.shared.enableAutoToolbar = false
+        IQKeyboardManager.shared.enableAutoToolbar = true
         
         // Store device id
         if !UserDefaults.standard.isKeyPresentInUserDefaults(key: "device_id") {

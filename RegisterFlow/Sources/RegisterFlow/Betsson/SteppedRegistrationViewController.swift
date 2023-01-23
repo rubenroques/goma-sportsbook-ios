@@ -43,6 +43,8 @@ public class SteppedRegistrationViewModel {
 
 public class SteppedRegistrationViewController: UIViewController {
 
+    private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
+
     private lazy var headerBaseView: UIView = Self.createHeaderBaseView()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var progressView: UIProgressView = Self.createProgressView()
@@ -54,6 +56,8 @@ public class SteppedRegistrationViewController: UIViewController {
 
     private lazy var footerBaseView: UIView = Self.createFooterBaseView()
     private lazy var continueButton: UIButton = Self.createContinueButton()
+
+    private lazy var bottomSafeAreaView: UIView = Self.createBottomSafeAreaView()
 
     private let viewModel: SteppedRegistrationViewModel
 
@@ -149,15 +153,16 @@ public class SteppedRegistrationViewController: UIViewController {
 
     private func setupWithTheme() {
 
-        self.backButton.tintColor = .white
-        self.cancelButton.setTitleColor(.white, for: .normal)
+        self.cancelButton.setTitleColor(AppColor.highlightPrimary, for: .normal)
 
+        self.topSafeAreaView.backgroundColor = AppColor.backgroundPrimary
         self.headerBaseView.backgroundColor = AppColor.backgroundPrimary
         self.progressView.backgroundColor = AppColor.backgroundPrimary
         self.contentBaseView.backgroundColor = AppColor.backgroundPrimary
         self.stepsScrollView.backgroundColor = AppColor.backgroundPrimary
         self.stepsContentStackView.backgroundColor = AppColor.backgroundPrimary
         self.footerBaseView.backgroundColor = AppColor.backgroundPrimary
+        self.bottomSafeAreaView.backgroundColor = AppColor.backgroundPrimary
 
         //
         self.progressView.trackTintColor = AppColor.backgroundSecondary
@@ -178,6 +183,27 @@ public class SteppedRegistrationViewController: UIViewController {
 
     private func createSteps() {
 
+        //
+        let contactsRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
+        let contactsFormStepView = ContactsFormStepView(viewModel: ContactsFormStepViewModel(title: "Contacts", serviceProvider: self.viewModel.serviceProvider))
+
+        contactsRegisterStepView.addFormView(formView: contactsFormStepView)
+        self.addStepView(registerStepView: contactsRegisterStepView)
+        //
+
+        //
+        let ageCountryRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
+        let viewModel = AgeCountryFormStepViewModel.init(title: "Age and Country",
+                                                         countryState: .idle,
+                                                         birthDate: nil,
+                                                         serviceProvider: self.viewModel.serviceProvider)
+        ageCountryRegisterStepView.addFormView(formView: AgeCountryFormStepView(viewModel: viewModel))
+
+        self.addStepView(registerStepView: ageCountryRegisterStepView)
+        //
+
+
+        // Step 1
         let nameRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
 
         let genderFormStepView = GenderFormStepView(viewModel: GenderFormStepViewModel(title: "Gender",
@@ -193,11 +219,20 @@ public class SteppedRegistrationViewController: UIViewController {
         self.addStepView(registerStepView: nameRegisterStepView)
         //
 
-        //
+
+        // Step 2
         let avatarNickRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
 
         let avatarFormStepView = AvatarFormStepView(viewModel: AvatarFormStepViewModel(title: "Avatar",
-                                                                                       avatarIconNames: []))
+                                                                                       subtitle: "Choose one of our standard avatars for your icon.",
+                                                                                       avatarIconNames: [
+                                                                                        "avatar1",
+                                                                                        "avatar2",
+                                                                                        "avatar3",
+                                                                                        "avatar4",
+                                                                                        "avatar5",
+                                                                                        "avatar6",
+                                                                                       ]))
 
         let nicknameFormStepView = NicknameFormStepView(viewModel: NicknameFormStepViewModel(title: "Nickname",
                                                                                              nickname: nil,
@@ -210,8 +245,19 @@ public class SteppedRegistrationViewController: UIViewController {
         self.addStepView(registerStepView: avatarNickRegisterStepView)
         //
 
+
+        // -----
+
+        //
+        let addressRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
+        addressRegisterStepView.addFormView(formView: AddressFormStepView(viewModel: AddressFormStepViewModel(title: "Address")))
+
+        self.addStepView(registerStepView: addressRegisterStepView)
         //
 
+        // -----
+
+        //
         self.configureRegistrationCompletionPublisher()
 
         self.view.setNeedsLayout()
@@ -259,7 +305,7 @@ public class SteppedRegistrationViewController: UIViewController {
         let timingFunction = CAMediaTimingFunction(controlPoints: 0.23, 1, 0.32, 1)
         CATransaction.begin()
         CATransaction.setAnimationTimingFunction(timingFunction)
-        UIView.animate(withDuration: animated ? 0.85 : 0.0) {
+        UIView.animate(withDuration: animated ? 0.89 : 0.0) {
             self.stepsScrollView.contentOffset = CGPoint(x: 0.0, y: yPosition)
         }
         CATransaction.commit()
@@ -270,11 +316,11 @@ public class SteppedRegistrationViewController: UIViewController {
 public extension SteppedRegistrationViewController {
 
     private static var headerHeight: CGFloat {
-        80
+        68
     }
 
     private static var footerHeight: CGFloat {
-        80
+        76
     }
 
     private static func createHeaderBaseView() -> UIView {
@@ -285,12 +331,10 @@ public extension SteppedRegistrationViewController {
 
     private static func createBackButton() -> UIButton {
         let button = UIButton()
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 40, weight: .bold, scale: .large)
-        let largeBoldDoc = UIImage(systemName: "chevron.backward", withConfiguration: largeConfig)
-        button.setImage(largeBoldDoc, for: .normal)
-        button.imageView?.contentMode = .scaleAspectFit
+        let image = UIImage(named: "back_icon", in: Bundle.module, with: nil)
+        button.setImage(image, for: .normal)
+        button.setTitle(nil, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.imageEdgeInsets = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
         return button
     }
 
@@ -304,6 +348,7 @@ public extension SteppedRegistrationViewController {
     private static func createCancelButton() -> UIButton {
         let button = UIButton()
         button.setTitle("Close", for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }
@@ -337,13 +382,25 @@ public extension SteppedRegistrationViewController {
     private static func createContinueButton() -> UIButton {
         let button = UIButton()
         button.setTitle("Continue", for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 18)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 8
         return button
     }
 
-
     private static func createNavigationView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createTopSafeAreaView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createBottomSafeAreaView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -361,6 +418,8 @@ public extension SteppedRegistrationViewController {
 
     private func initConstraints() {
 
+        self.view.addSubview(self.topSafeAreaView)
+
         self.view.addSubview(self.headerBaseView)
         self.headerBaseView.addSubview(self.backButton)
         self.headerBaseView.addSubview(self.progressView)
@@ -373,24 +432,30 @@ public extension SteppedRegistrationViewController {
         self.view.addSubview(self.footerBaseView)
         self.footerBaseView.addSubview(self.continueButton)
 
+        self.view.addSubview(self.bottomSafeAreaView)
+
         NSLayoutConstraint.activate([
+            self.topSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.topSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.topSafeAreaView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.topSafeAreaView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+
             self.headerBaseView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             self.headerBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.headerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.headerBaseView.heightAnchor.constraint(equalToConstant: Self.headerHeight),
 
-            self.backButton.leadingAnchor.constraint(equalTo: self.headerBaseView.leadingAnchor, constant: 8),
+            self.backButton.leadingAnchor.constraint(equalTo: self.headerBaseView.leadingAnchor, constant: 18),
             self.backButton.centerYAnchor.constraint(equalTo: self.headerBaseView.centerYAnchor),
             self.backButton.widthAnchor.constraint(equalTo: self.backButton.heightAnchor),
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
 
             self.cancelButton.centerYAnchor.constraint(equalTo: self.headerBaseView.centerYAnchor),
-            self.cancelButton.trailingAnchor.constraint(equalTo: self.headerBaseView.trailingAnchor, constant: -8),
+            self.cancelButton.trailingAnchor.constraint(equalTo: self.headerBaseView.trailingAnchor, constant: -34),
 
             self.progressView.centerYAnchor.constraint(equalTo: self.headerBaseView.centerYAnchor),
-            self.progressView.centerXAnchor.constraint(equalTo: self.headerBaseView.centerXAnchor),
-            self.progressView.leadingAnchor.constraint(greaterThanOrEqualTo: self.backButton.trailingAnchor, constant: 20),
-            self.progressView.trailingAnchor.constraint(greaterThanOrEqualTo: self.cancelButton.leadingAnchor, constant: -20),
+            self.progressView.leadingAnchor.constraint(equalTo: self.backButton.trailingAnchor, constant: 7),
+            self.progressView.trailingAnchor.constraint(equalTo: self.cancelButton.leadingAnchor, constant: -19),
 
             self.contentBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.contentBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
@@ -416,6 +481,11 @@ public extension SteppedRegistrationViewController {
             self.continueButton.centerYAnchor.constraint(equalTo: self.footerBaseView.centerYAnchor),
             self.continueButton.leadingAnchor.constraint(equalTo: self.footerBaseView.leadingAnchor, constant: 24),
             self.continueButton.heightAnchor.constraint(equalToConstant: 50),
+
+            self.bottomSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.bottomSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.bottomSafeAreaView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            self.bottomSafeAreaView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
         ])
 
         let stepsViewCenterY = self.stepsContentStackView.centerYAnchor.constraint(equalTo: self.stepsScrollView.centerYAnchor)
