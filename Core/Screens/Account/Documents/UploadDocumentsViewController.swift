@@ -38,12 +38,16 @@ class UploadDocumentsViewModel {
 
     init() {
 
+        let file1 = DocumentFileInfo(id: "1", name: "proof_address_test.pdf", status: .pendingApproved)
+        let file2 = DocumentFileInfo(id: "2", name: "bank_note.pdf", status: .approved)
+        let file3 = DocumentFileInfo(id: "1", name: "proof_address_test2.pdf", status: .approved)
+
         // TEST
-        let documentInfo1 = DocumentInfo(id: "1", typeName: "Identification", status: .notReceived)
+        let documentInfo1 = DocumentInfo(id: "1", typeName: "Identification", status: .notReceived, uploadedFiles: [])
 
-        let documentInfo2 = DocumentInfo(id: "2", typeName: "Proof of address", status: .inProgress, uploadedFileName: "proof_address_test.pdf")
+        let documentInfo2 = DocumentInfo(id: "2", typeName: "Proof of address", status: .received, uploadedFiles: [file1, file3])
 
-        let documentInfo3 = DocumentInfo(id: "3", typeName: "Bank Note", status: .validated, uploadedFileName: "bank_note.pdf")
+        let documentInfo3 = DocumentInfo(id: "3", typeName: "Bank Note", status: .received, uploadedFiles: [file2])
 
         documents.append(documentInfo1)
         documents.append(documentInfo2)
@@ -65,7 +69,11 @@ class UploadDocumentsViewController: UIViewController {
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var tableView: UITableView = Self.createTableView()
-    private lazy var continueButton: UIButton = Self.createContinueButton()
+    private lazy var documentsStateView: UIView = Self.createDocumentsStateView()
+    private lazy var documentsStateTitleLabel: UILabel = Self.createDocumentsStateTitleLabel()
+    private lazy var statusView: UIView = Self.createStatusView()
+    private lazy var statusLabel: UILabel = Self.createStatusLabel()
+    private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
 
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
@@ -121,8 +129,6 @@ class UploadDocumentsViewController: UIViewController {
 
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
 
-        self.continueButton.addTarget(self, action: #selector(didTapContinueButton), for: .primaryActionTriggered)
-
         self.isLoading = false
 
         self.bind(toViewModel: self.viewModel)
@@ -132,6 +138,8 @@ class UploadDocumentsViewController: UIViewController {
     // MARK: - Layout and Theme
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+
+        self.statusView.layer.cornerRadius = CornerRadius.headerInput
 
     }
 
@@ -156,8 +164,15 @@ class UploadDocumentsViewController: UIViewController {
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
-        StyleHelper.styleButton(button: self.continueButton)
+        self.documentsStateView.backgroundColor = .clear
 
+        self.documentsStateTitleLabel.textColor = UIColor.App.textPrimary
+
+        self.separatorLineView.backgroundColor = UIColor.App.separatorLine
+
+        self.statusView.backgroundColor = UIColor.App.statsAway
+
+        self.statusLabel.textColor = UIColor.App.buttonTextPrimary
     }
 
     // MARK: - Bindings
@@ -176,14 +191,19 @@ class UploadDocumentsViewController: UIViewController {
         present(documentPicker, animated: true, completion: nil)
     }
 
+    private func reloadData() {
+        self.tableView.beginUpdates()
+        self.tableView.setNeedsDisplay()
+        self.tableView.endUpdates()
+
+        //self.tableView.reloadData()
+    }
+
     // MARK: Actions
     @objc func didTapCloseButton() {
         self.dismiss(animated: true)
     }
 
-    @objc func didTapContinueButton() {
-        print("CONTINUE")
-    }
 }
 
 extension UploadDocumentsViewController: UIDocumentPickerDelegate, UINavigationControllerDelegate {
@@ -230,6 +250,16 @@ extension UploadDocumentsViewController: UITableViewDataSource, UITableViewDeleg
                 self?.viewModel.selectedUploadDocumentCellId = documentId
                 self?.openFile()
             }
+
+            cell.finishedUploading = { [weak self] in
+
+                self?.reloadData()
+            }
+
+            cell.shouldRedrawViews = { [weak self] in
+
+                self?.reloadData()
+            }
         }
         else {
             let cellViewModel = UploadDocumentCellViewModel(documentInfo: documentInfo)
@@ -243,6 +273,15 @@ extension UploadDocumentsViewController: UITableViewDataSource, UITableViewDeleg
                 self?.openFile()
             }
 
+            cell.finishedUploading = { [weak self] in
+
+                self?.reloadData()
+            }
+
+            cell.shouldRedrawViews = { [weak self] in
+
+                self?.reloadData()
+            }
         }
 
         return cell
@@ -256,7 +295,7 @@ extension UploadDocumentsViewController: UITableViewDataSource, UITableViewDeleg
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
 
-        return 170
+        return 300
 
     }
 
@@ -330,13 +369,6 @@ extension UploadDocumentsViewController {
         return view
     }
 
-    private static func createContinueButton() -> UIButton {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("continue_"), for: .normal)
-        return button
-    }
-
     private static func createTableView() -> UITableView {
         let tableView = UITableView.init(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -349,6 +381,44 @@ extension UploadDocumentsViewController {
         let pickerView = DocumentPickerView()
         pickerView.translatesAutoresizingMaskIntoConstraints = false
         return pickerView
+    }
+
+    private static func createDocumentsStateView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createDocumentsStateTitleLabel() -> UILabel {
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.textColor = UIColor.App.textPrimary
+        titleLabel.font = AppFont.with(type: .bold, size: 21)
+        titleLabel.textAlignment = .left
+        titleLabel.text = localized("kyc_account_status")
+        return titleLabel
+    }
+
+    private static func createStatusView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createStatusLabel() -> UILabel {
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.textColor = UIColor.App.textPrimary
+        titleLabel.font = AppFont.with(type: .bold, size: 11)
+        titleLabel.textAlignment = .left
+        titleLabel.text = "Pending"
+        return titleLabel
+    }
+
+    private static func createSeparatorLineView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
 
     private static func createLoadingBaseView() -> UIView {
@@ -378,7 +448,13 @@ extension UploadDocumentsViewController {
 
         self.containerView.addSubview(self.tableView)
 
-        self.containerView.addSubview(self.continueButton)
+        self.containerView.addSubview(self.documentsStateView)
+
+        self.documentsStateView.addSubview(self.separatorLineView)
+        self.documentsStateView.addSubview(self.documentsStateTitleLabel)
+        self.documentsStateView.addSubview(self.statusView)
+
+        self.statusView.addSubview(self.statusLabel)
 
         self.view.addSubview(self.loadingBaseView)
         self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
@@ -423,10 +499,26 @@ extension UploadDocumentsViewController {
             self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
             self.titleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 50),
 
-            self.continueButton.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 35),
-            self.continueButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
-            self.continueButton.heightAnchor.constraint(equalToConstant: 50),
-            self.continueButton.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -40)
+            self.documentsStateView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 35),
+            self.documentsStateView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
+            self.documentsStateView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
+
+            self.separatorLineView.leadingAnchor.constraint(equalTo: self.documentsStateView.leadingAnchor),
+            self.separatorLineView.trailingAnchor.constraint(equalTo: self.documentsStateView.trailingAnchor),
+            self.separatorLineView.topAnchor.constraint(equalTo: self.documentsStateView.topAnchor),
+            self.separatorLineView.heightAnchor.constraint(equalToConstant: 1),
+
+            self.documentsStateTitleLabel.leadingAnchor.constraint(equalTo: self.documentsStateView.leadingAnchor),
+            self.documentsStateTitleLabel.topAnchor.constraint(equalTo: self.documentsStateView.topAnchor, constant: 40),
+            self.documentsStateTitleLabel.bottomAnchor.constraint(equalTo: self.documentsStateView.bottomAnchor, constant: -40),
+
+            self.statusView.trailingAnchor.constraint(equalTo: self.documentsStateView.trailingAnchor),
+            self.statusView.centerYAnchor.constraint(equalTo: self.documentsStateTitleLabel.centerYAnchor),
+
+            self.statusLabel.leadingAnchor.constraint(equalTo: self.statusView.leadingAnchor, constant: 12),
+            self.statusLabel.trailingAnchor.constraint(equalTo: self.statusView.trailingAnchor, constant: -12),
+            self.statusLabel.topAnchor.constraint(equalTo: self.statusView.topAnchor, constant: 6),
+            self.statusLabel.bottomAnchor.constraint(equalTo: self.statusView.bottomAnchor, constant: -6)
         ])
 
         // Tableview
@@ -434,7 +526,7 @@ extension UploadDocumentsViewController {
             self.tableView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 25),
             self.tableView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -25),
             self.tableView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 15),
-            self.tableView.bottomAnchor.constraint(equalTo: self.continueButton.topAnchor, constant: -15)
+            self.tableView.bottomAnchor.constraint(equalTo: self.documentsStateView.topAnchor, constant: -15)
         ])
 
         // Loading view
@@ -456,5 +548,28 @@ struct DocumentInfo {
     var id: String
     var typeName: String
     var status: DocumentState
-    var uploadedFileName: String?
+    var uploadedFiles: [DocumentFileInfo]
+}
+
+struct DocumentFileInfo {
+    var id: String
+    var name: String
+    var status: FileState
+}
+
+enum FileState {
+    case pendingApproved
+    case approved
+    case failed
+
+        var statusName: String {
+            switch self {
+            case .pendingApproved:
+                return "Pending Approved"
+            case .approved:
+                return "Approved"
+            case .failed:
+                return "Failed"
+            }
+        }
 }

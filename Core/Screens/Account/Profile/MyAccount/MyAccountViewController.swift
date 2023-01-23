@@ -105,6 +105,12 @@ extension MyAccountViewController {
 
     @objc private func didTapDocuments(sender: UITapGestureRecognizer) {
 
+        let uploadDocumentsViewModel = UploadDocumentsViewModel()
+
+        let uploadDocumentsViewController = UploadDocumentsViewController(viewModel: uploadDocumentsViewModel)
+
+        self.present(uploadDocumentsViewController, animated: true)
+
     }
 
     @objc private func didTapLimits(sender: UITapGestureRecognizer) {

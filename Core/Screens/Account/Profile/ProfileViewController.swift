@@ -284,18 +284,6 @@ class ProfileViewController: UIViewController {
         let copyCodeTap = UITapGestureRecognizer(target: self, action: #selector(self.tapCopyCode))
         self.userCodeStackView.addGestureRecognizer(copyCodeTap)
 
-        let testUploadTap = UITapGestureRecognizer(target: self, action: #selector(self.testTapUploadAction))
-        self.profilePictureBaseView.addGestureRecognizer(testUploadTap)
-
-    }
-
-    @objc func testTapUploadAction() {
-
-        let uploadDocumentsViewModel = UploadDocumentsViewModel()
-
-        let uploadDocumentsViewController = UploadDocumentsViewController(viewModel: uploadDocumentsViewModel)
-
-        self.present(uploadDocumentsViewController, animated: true)
     }
 
     @objc func tapCopyCode() {
