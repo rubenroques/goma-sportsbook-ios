@@ -17,14 +17,31 @@ class TermsCondFormStepViewModel {
     var isMarketingOn: CurrentValueSubject<Bool, Never> = .init(false)
     var isTermsOn: CurrentValueSubject<Bool, Never> = .init(false)
 
-    init(title: String, isMarketingOn: Bool = false, isTermsOn: Bool = false) {
+    private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
+
+    init(title: String,
+         isMarketingOn: Bool = false,
+         isTermsOn: Bool = false,
+         userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
         self.title = title
         self.isMarketingOn = .init(isMarketingOn)
         self.isTermsOn = .init(isTermsOn)
+        self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
+
     }
 
     var isFormCompleted: AnyPublisher<Bool, Never> {
         return isTermsOn.eraseToAnyPublisher()
+    }
+
+    func setIsTermsOn(_ isOn: Bool) {
+        self.isTermsOn.send(isOn)
+        self.userRegisterEnvelopUpdater.setAcceptedTerms(isOn)
+    }
+
+    func setIsMarketingOn(_ isOn: Bool) {
+        self.isMarketingOn.send(isOn)
+        self.userRegisterEnvelopUpdater.setAcceptedTerms(isOn)
     }
 
 }
@@ -99,6 +116,10 @@ class TermsCondFormStepView: FormStepView {
         self.marketingLabel.font = AppFont.with(type: .semibold, size: 14)
         self.termsLabel.font = AppFont.with(type: .semibold, size: 14)
 
+
+        self.termsSwitch.setOn(self.viewModel.isTermsOn.value, animated: false)
+        self.marketingSwitch.setOn(self.viewModel.isMarketingOn.value, animated: false)
+
         self.termsSwitch.addTarget(self, action: #selector(self.termsSwitchValueChanged(_:)), for: .valueChanged)
         self.marketingSwitch.addTarget(self, action: #selector(self.marketingSwitchValueChanged(_:)), for: .valueChanged)
 
@@ -117,11 +138,11 @@ class TermsCondFormStepView: FormStepView {
     }
 
     @objc private func marketingSwitchValueChanged(_ marketingSwitch: UISwitch) {
-        self.viewModel.isMarketingOn.send(marketingSwitch.isOn)
+        self.viewModel.setIsMarketingOn(marketingSwitch.isOn)
     }
 
     @objc private func termsSwitchValueChanged(_ termsSwitch: UISwitch) {
-        self.viewModel.isTermsOn.send(termsSwitch.isOn)
+        self.viewModel.setIsTermsOn(termsSwitch.isOn)
     }
 
 }

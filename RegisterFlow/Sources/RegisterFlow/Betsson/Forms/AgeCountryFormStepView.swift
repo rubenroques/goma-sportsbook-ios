@@ -17,10 +17,14 @@ class AgeCountryFormStepViewModel {
 
     let title: String
 
+
     var birthDate: CurrentValueSubject<Date?, Never>
+    var placeBirth: CurrentValueSubject<String?, Never>
+
     let defaultCountryIso3Code: String
 
-    private var selectedCountry: CurrentValueSubject<Country?, Never> = .init(nil)
+    var selectedCountry: CurrentValueSubject<Country?, Never> = .init(nil)
+
 
     var selectedCountryText: AnyPublisher<String?, Never> {
         return self.selectedCountry.map { country in
@@ -59,16 +63,19 @@ class AgeCountryFormStepViewModel {
     }
 
     var isFormCompleted: AnyPublisher<Bool, Never> {
-        return Publishers.CombineLatest(self.birthDate, self.selectedCountry)
-            .map { date, country -> Bool in
-                return date != nil && country != nil
+        return Publishers.CombineLatest3(self.birthDate, self.selectedCountry, self.placeBirth)
+            .map { date, country, place -> Bool in
+                return date != nil && country != nil && place != nil && !(place?.isEmpty ?? true)
             }.eraseToAnyPublisher()
     }
 
     init(title: String,
          defaultCountryIso3Code: String,
          countryState: CountryState = .idle,
-         birthDate: Date? = nil,
+         birthDate: Date?,
+         selectedCountry: Country?,
+         placeBirth: String?,
+
          serviceProvider: ServicesProviderClient,
          userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
 
@@ -76,7 +83,10 @@ class AgeCountryFormStepViewModel {
 
         self.defaultCountryIso3Code = defaultCountryIso3Code
         self.countryState = .init(countryState)
+
+        self.selectedCountry = .init(selectedCountry)
         self.birthDate = .init(birthDate)
+        self.placeBirth = .init(placeBirth)
 
         self.serviceProvider = serviceProvider
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
@@ -105,6 +115,11 @@ class AgeCountryFormStepViewModel {
     func setSelectedCountry(_ country: Country) {
         self.selectedCountry.send(country)
         self.userRegisterEnvelopUpdater.setCountryBirth(country)
+    }
+
+    func setPlaceOfBirth(_ place: String) {
+        self.placeBirth.send(place)
+        self.userRegisterEnvelopUpdater.setPlaceBirth(place)
     }
 
     private func formatIndicativeCountry(_ country: Country) -> String {
@@ -180,11 +195,12 @@ class AgeCountryFormStepView: FormStepView {
             self?.placeHeaderTextFieldView.resignFirstResponder()
         }
 
-        if let birthDate = self.viewModel.birthDate.value {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd-MM-yyyy"
-            self.dateHeaderTextFieldView.setText(dateFormatter.string(from: birthDate))
-        }
+
+        self.placeHeaderTextFieldView.textPublisher
+            .sink { [weak self] text in
+                self?.viewModel.setPlaceOfBirth(text)
+            }
+            .store(in: &self.cancellables)
 
         self.viewModel.selectedCountryText
             .receive(on: DispatchQueue.main)
@@ -203,6 +219,18 @@ class AgeCountryFormStepView: FormStepView {
                 }
             }
             .store(in: &self.cancellables)
+
+        if let placeOfBirth = self.viewModel.placeBirth.value {
+            self.placeHeaderTextFieldView.setText(placeOfBirth)
+        }
+
+        if let birthDate = self.viewModel.birthDate.value {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd-MM-yyyy"
+            self.dateHeaderTextFieldView.setText(dateFormatter.string(from: birthDate))
+        }
+
+
     }
 
     public override func layoutSubviews() {

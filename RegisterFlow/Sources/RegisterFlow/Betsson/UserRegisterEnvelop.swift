@@ -43,6 +43,9 @@ public final class UserRegisterEnvelop: Codable {
     public var promoCode: String?
     public var godfatherCode: String?
 
+    public var simpleRegistered: Bool
+    public var confirmationCode: String?
+
     public init(gender: Gender? = nil,
                 name: String? = nil,
                 surname: String? = nil,
@@ -61,7 +64,10 @@ public final class UserRegisterEnvelop: Codable {
                 acceptedMarketing: Bool = false,
                 acceptedTerms: Bool = false,
                 promoCode: String? = nil,
-                godfatherCode: String? = nil) {
+                godfatherCode: String? = nil,
+                simpleRegistered: Bool = false,
+                confirmationCode: String? = nil
+    ) {
 
         self.gender = gender
         self.name = name
@@ -82,31 +88,46 @@ public final class UserRegisterEnvelop: Codable {
         self.acceptedTerms = acceptedTerms
         self.promoCode = promoCode
         self.godfatherCode = godfatherCode
+        self.simpleRegistered = simpleRegistered
+        self.confirmationCode = confirmationCode
     }
 
     func currentRegisterStep() -> Int {
-        if self.gender == nil || self.name == nil || self.surname == nil {
+        if self.gender == nil || self.name.isEmptyOrNil || self.surname.isEmptyOrNil {
             return 0
         }
-        if self.avatarName == nil || self.nickname == nil {
+        if self.avatarName == nil || self.nickname.isEmptyOrNil {
             return 1
         }
-        if self.dateOfBirth == nil || self.countryBirth == nil || self.placeBirth == nil {
+        if self.dateOfBirth == nil || self.countryBirth == nil || self.placeBirth.isEmptyOrNil {
             return 2
         }
-        if self.placeAddress == nil || self.streetAddress == nil {
+        if self.placeAddress.isEmptyOrNil || self.streetAddress.isEmptyOrNil {
             return 3
         }
-        if self.email == nil || self.phonePrefixCountry == nil || self.phoneNumber == nil {
+        if self.email.isEmptyOrNil || self.phonePrefixCountry == nil || self.phoneNumber.isEmptyOrNil {
             return 4
         }
-        if self.password == nil {
+        if self.password.isEmptyOrNil {
             return 5
         }
         if !self.acceptedTerms {
             return 6
         }
+
+        if self.simpleRegistered {
+            return 8
+        }
+
         return 7
+    }
+
+}
+
+private extension Optional where Wrapped == String {
+
+    var isEmptyOrNil: Bool {
+        return self?.isEmpty ?? true
     }
 
 }

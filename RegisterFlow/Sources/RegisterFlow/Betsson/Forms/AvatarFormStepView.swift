@@ -15,7 +15,7 @@ struct AvatarFormStepViewModel {
     let title: String
     let subtitle: String
     let avatarIconNames: [String]
-
+    
     var avatarIconNameGroups: [[String]] {
         let count = self.avatarIconNames.count
         let size = 3

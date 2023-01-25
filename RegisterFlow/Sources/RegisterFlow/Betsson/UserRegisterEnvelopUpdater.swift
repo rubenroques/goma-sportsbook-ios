@@ -22,12 +22,12 @@ public class UserRegisterEnvelopUpdater {
         self.filledDataUpdated(self.userRegisterEnvelop)
     }
     
-    func setName(_ name: String) {
+    func setName(_ name: String?) {
         self.userRegisterEnvelop.name = name
         self.filledDataUpdated(self.userRegisterEnvelop)
     }
 
-    func setSurname(_ surname: String) {
+    func setSurname(_ surname: String?) {
         self.userRegisterEnvelop.surname = surname
         self.filledDataUpdated(self.userRegisterEnvelop)
     }
@@ -37,7 +37,7 @@ public class UserRegisterEnvelopUpdater {
         self.filledDataUpdated(self.userRegisterEnvelop)
     }
 
-    func setNickname(_ nickname: String) {
+    func setNickname(_ nickname: String?) {
         self.userRegisterEnvelop.nickname = nickname
         self.filledDataUpdated(self.userRegisterEnvelop)
     }
@@ -112,5 +112,14 @@ public class UserRegisterEnvelopUpdater {
         self.filledDataUpdated(self.userRegisterEnvelop)
     }
 
+    func setSimpleRegistered(_ registered: Bool) {
+        self.userRegisterEnvelop.simpleRegistered = registered
+        self.filledDataUpdated(self.userRegisterEnvelop)
+    }
+
+    func setConfirmationCode(_ code: String?) {
+        self.userRegisterEnvelop.confirmationCode = code
+        self.filledDataUpdated(self.userRegisterEnvelop)
+    }
 
 }

@@ -45,7 +45,7 @@ class AddressFormStepViewModel {
 
     func setPlace(_ place: String) {
         self.place.send(place)
-        self.userRegisterEnvelopUpdater.setPlaceBirth(place)
+        self.userRegisterEnvelopUpdater.setPlaceAddress(place)
     }
 
     func setStreet(_ street: String) {

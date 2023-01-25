@@ -83,9 +83,17 @@ class ContactsFormStepViewModel {
     }
 
 
-    init(title: String, email: String? = nil, phoneNumber: String? = nil, defaultCountryIso3Code: String, serviceProvider: ServicesProviderClient, userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
+    init(title: String,
+         email: String? = nil,
+         phoneNumber: String? = nil,
+         prefixCountry: Country?,
+         defaultCountryIso3Code: String,
+         serviceProvider: ServicesProviderClient,
+         userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
+
         self.title = title
 
+        self.selectedPrefixCountrySubject.send(prefixCountry)
         self.phoneNumber = .init(phoneNumber)
         self.email = .init(email)
 
@@ -316,7 +324,7 @@ class ContactsFormStepView: FormStepView {
 
             let countrySelectorViewController = CountrySelectionFeature.CountrySelectorViewController(countries: countries,
                                                                                                       originCountry: defaultCountry.first,
-                                                                                                      showIndicatives: false)
+                                                                                                      showIndicatives: true)
             countrySelectorViewController.modalPresentationStyle = .overCurrentContext
             countrySelectorViewController.didSelectCountry = { [weak self, weak countrySelectorViewController] (selectedCountry: SharedModels.Country) in
                 self?.viewModel.setSelectedPrefixCountry(selectedCountry)

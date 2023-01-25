@@ -9,10 +9,36 @@ import Foundation
 import UIKit
 import Theming
 import Extensions
+import Combine
 
-struct PromoCodeFormStepViewModel {
+class PromoCodeFormStepViewModel {
 
     let title: String
+    let promoCode: CurrentValueSubject<String?, Never>
+    var godfatherCode: CurrentValueSubject<String?, Never>
+
+    private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
+
+    init(title: String,
+         promoCode: String?,
+         godfatherCode: String?,
+         userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
+
+        self.title = title
+        self.promoCode = .init(promoCode)
+        self.godfatherCode = .init(godfatherCode)
+        self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
+    }
+
+    func setPromoCode(_ promoCode: String) {
+        self.promoCode.send(promoCode)
+        self.userRegisterEnvelopUpdater.setPromoCode(promoCode)
+    }
+
+    func setGodfatherCode(_ godfatherCode: String) {
+        self.godfatherCode.send(godfatherCode)
+        self.userRegisterEnvelopUpdater.setGodfatherCode(godfatherCode)
+    }
 
 }
 
@@ -22,6 +48,8 @@ class PromoCodeFormStepView: FormStepView {
     private lazy var godfatherHeaderTextFieldView: HeaderTextFieldView = Self.createGodfatherHeaderTextFieldView()
 
     let viewModel: PromoCodeFormStepViewModel
+
+    private var cancellables = Set<AnyCancellable>()
 
     init(viewModel: PromoCodeFormStepViewModel) {
         self.viewModel = viewModel
@@ -57,6 +85,21 @@ class PromoCodeFormStepView: FormStepView {
         self.godfatherHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.godfatherHeaderTextFieldView.resignFirstResponder()
         }
+
+        self.promoCodeHeaderTextFieldView.setText(self.viewModel.promoCode.value ?? "")
+        self.godfatherHeaderTextFieldView.setText(self.viewModel.godfatherCode.value ?? "")
+
+        self.promoCodeHeaderTextFieldView.textPublisher
+            .sink { [weak self] text in
+                self?.viewModel.setPromoCode(text)
+            }
+            .store(in: &self.cancellables)
+
+        self.godfatherHeaderTextFieldView.textPublisher
+            .sink { [weak self] text in
+                self?.viewModel.setGodfatherCode(text)
+            }
+            .store(in: &self.cancellables)
 
     }
 

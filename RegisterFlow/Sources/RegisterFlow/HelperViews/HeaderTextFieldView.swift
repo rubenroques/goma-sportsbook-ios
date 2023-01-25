@@ -385,18 +385,21 @@ class HeaderTextFieldView: NibView {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd-MM-yyyy"
         let selectedDate = dateFormatter.string(from: datePicker.date)
-        textField.text = "\(selectedDate)"
+
+        self.setText(selectedDate)
     }
 
     func setPickerArray(_ array: [String]) {
         selectionArray = array
         pickerView.selectRow(0, inComponent: 0, animated: true)
-        textField.text = selectionArray[0]
+
+        self.setText(selectionArray[0])
+
     }
 
     func setSelectedPickerOption(option: Int) {
         pickerView.selectRow(option, inComponent: 0, animated: true)
-        textField.text = selectionArray[option]
+        self.setText(selectionArray[option])
     }
 
     func setSelectionPicker(_ array: [String], headerVisible: Bool = false, defaultValue: Int = 0) {
@@ -413,8 +416,8 @@ class HeaderTextFieldView: NibView {
         }
 
         textField.inputView = pickerView
-        textField.text = selectionArray[defaultValue]
 
+        self.setText(selectionArray[defaultValue])
 
         // Set arrow image
         let arrowDropdownImageView = UIImageView()
@@ -578,6 +581,6 @@ extension HeaderTextFieldView: UIPickerViewDelegate, UIPickerViewDataSource {
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let selectedItem = selectionArray[row]
-        textField.text = selectedItem
+        self.setText(selectedItem)
     }
 }

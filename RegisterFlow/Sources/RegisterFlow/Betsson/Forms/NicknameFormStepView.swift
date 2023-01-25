@@ -14,8 +14,8 @@ import Extensions
 class NicknameFormStepViewModel {
 
     let title: String
-    let nickname: String?
-    let nicknamePlaceholder: String
+    let nickname: CurrentValueSubject<String?, Never>
+
 
     var suggestedUsernames: CurrentValueSubject<[String]?, Never> = .init(nil)
 
@@ -27,16 +27,36 @@ class NicknameFormStepViewModel {
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(title: String, nickname: String?, nicknamePlaceholder: String, serviceProvider: ServicesProviderClient, userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
+    init(title: String,
+         nickname: String?,
+         serviceProvider: ServicesProviderClient,
+         userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
         self.title = title
-        self.nickname = nickname
-        self.nicknamePlaceholder = nicknamePlaceholder
+        self.nickname = .init(nickname)
         self.serviceProvider = serviceProvider
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
+
+        self.userRegisterEnvelopUpdater.setAvatarName("avatar1")
+
+    }
+
+    var isFormCompleted: AnyPublisher<Bool, Never> {
+        return self.isValidUsername.map({ isValid in
+            if let isValid {
+                return isValid
+            }
+            return false
+        }).eraseToAnyPublisher()
+    }
+
+    func setNickname(_ nickname: String?) {
+        self.nickname.send(nickname)
+        self.userRegisterEnvelopUpdater.setNickname(nickname)
     }
 
     func resetValidation() {
         self.isValidUsername.send(nil)
+        self.setNickname(nil)
     }
 
     func validateUsername(_ username: String) {
@@ -57,6 +77,7 @@ class NicknameFormStepViewModel {
                 case .failure:
                     self?.suggestedUsernames.send(nil)
                     self?.isValidUsername.send(nil)
+                    self?.setNickname(nil)
                 case .finished:
                     ()
                 }
@@ -64,6 +85,14 @@ class NicknameFormStepViewModel {
             } receiveValue: { [weak self] usernameValidation in
                 self?.suggestedUsernames.send(usernameValidation.suggestedUsernames)
                 self?.isValidUsername.send(usernameValidation.isAvailable)
+
+                if usernameValidation.isAvailable {
+                    self?.setNickname(usernameValidation.username)
+                }
+                else {
+                    self?.setNickname(nil)
+                }
+
             }
             .store(in: &cancellables)
 
@@ -91,15 +120,6 @@ class NicknameFormStepView: FormStepView {
 
         self.configureSubviews()
         self.configureBindings()
-    }
-
-    override var isFormCompleted: AnyPublisher<Bool, Never> {
-        return self.viewModel.isValidUsername.map({ isValid in
-            if let isValid {
-                return isValid
-            }
-            return false
-        }).eraseToAnyPublisher()
     }
 
     func configureSubviews() {
@@ -132,11 +152,7 @@ class NicknameFormStepView: FormStepView {
 
     func configureBindings() {
         self.titleLabel.text = self.viewModel.title
-        self.nicknameHeaderTextFieldView.setPlaceholderText(self.viewModel.nicknamePlaceholder)
-
-        if let nickname = self.viewModel.nickname {
-            self.nicknameHeaderTextFieldView.setText(nickname, slideUp: true)
-        }
+        self.nicknameHeaderTextFieldView.setPlaceholderText("Nickname")
 
         self.nicknameHeaderTextFieldView
             .textPublisher
@@ -197,6 +213,9 @@ class NicknameFormStepView: FormStepView {
             }
             .store(in: &self.cancellables)
 
+        if let nickname = self.viewModel.nickname.value {
+            self.nicknameHeaderTextFieldView.setText(nickname, slideUp: true)
+        }
 
     }
 

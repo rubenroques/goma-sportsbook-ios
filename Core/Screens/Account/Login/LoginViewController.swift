@@ -194,10 +194,15 @@ class LoginViewController: UIViewController {
         self.checkPolicyLinks()
 
 
+        self.logoImageView.isUserInteractionEnabled = true
+
         let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
         debugLogoImageViewTap.numberOfTapsRequired = 3
-        self.logoImageView.isUserInteractionEnabled = true
         self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
+
+        let debug2LogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebug))
+        debug2LogoImageViewTap.numberOfTapsRequired = 2
+        self.logoImageView.addGestureRecognizer(debug2LogoImageViewTap)
 
     }
 
@@ -427,6 +432,13 @@ class LoginViewController: UIViewController {
 }
 
 extension LoginViewController {
+
+    @objc func didTapDebug() {
+        UserDefaults.standard.removeObject(forKey: "RegistrationFormDataKey")
+        UserDefaults.standard.synchronize()
+
+        UIAlertController.showMessage(title: "Debug", message: "Register cached data cleared", on: self)
+    }
 
     @objc func didTapDebugFormFill() {
         
