@@ -8,14 +8,6 @@
 import UIKit
 import Combine
 
-enum DocumentUploadState {
-    case preUpload
-    case uploading
-    case uploaded
-    case documentReceived
-    case addAnother
-}
-
 class DocumentView: UIView {
 
     // MARK: Private properties
@@ -52,25 +44,28 @@ class DocumentView: UIView {
                 self.uploadView.isHidden = true
                 self.postUploadView.isHidden = true
                 self.addAnotherBaseView.isHidden = true
-                self.containerView.layer.borderWidth = 1
             case .uploading:
                 self.preUploadView.isHidden = true
                 self.uploadView.isHidden = false
                 self.postUploadView.isHidden = true
                 self.addAnotherBaseView.isHidden = true
                 self.containerView.layer.borderWidth = 1
+                self.containerView.layer.borderColor = UIColor.App.separatorLine.cgColor
+                self.dashedSublayer?.removeFromSuperlayer()
             case .uploaded:
                 self.preUploadView.isHidden = true
                 self.uploadView.isHidden = true
                 self.postUploadView.isHidden = false
                 self.addAnotherBaseView.isHidden = true
                 self.containerView.layer.borderWidth = 1
+                self.containerView.layer.borderColor = UIColor.App.separatorLine.cgColor
             case .documentReceived:
                 self.preUploadView.isHidden = true
                 self.uploadView.isHidden = true
                 self.postUploadView.isHidden = false
                 self.addAnotherBaseView.isHidden = true
                 self.containerView.layer.borderWidth = 1
+                self.containerView.layer.borderColor = UIColor.App.separatorLine.cgColor
             case .addAnother:
                 self.preUploadView.isHidden = true
                 self.uploadView.isHidden = true
@@ -83,21 +78,15 @@ class DocumentView: UIView {
 
     var uploadValue: Float = 0 {
         didSet {
-            self.uploadProgressView.progress = uploadValue
-            self.uploadProgressTitleLabel.text = "Upload \(Int(uploadValue*100))%..."
 
-            if uploadValue == 1 {
-//                self.uploadView.isHidden = true
-//                self.postUploadView.isHidden = false
-                self.documentUploadState = .uploaded
-
-                self.postUploadTitleLabel.text = self.uploadTitleLabel.text
-
-                self.statusLabel.text = "Pending Approved"
-                self.statusView.backgroundColor = UIColor.App.statsAway
-                
-                self.finishedUploading?()
+            if uploadValue == 0 {
+                self.uploadProgressView.setProgress(uploadValue, animated: false)
             }
+            else {
+                self.uploadProgressView.setProgress(uploadValue, animated: true)
+                self.uploadProgressTitleLabel.text = "Upload \(Int(uploadValue*100))%..."
+            }
+
         }
     }
     var shouldStartUpload: Bool = false {
@@ -114,6 +103,13 @@ class DocumentView: UIView {
     var shouldRedrawView: (() -> Void)?
     
     var documentInfo: DocumentInfo?
+
+    var cancellables = Set<AnyCancellable>()
+
+    var hasFinishedUploadedFile: CurrentValueSubject<Bool, Never> = .init(false)
+    var hasFinishedProgressUpload: CurrentValueSubject<Bool, Never> = .init(false)
+
+    var dashedSublayer: CALayer?
 
     // MARK: - Lifetime and Cycle
     override init(frame: CGRect) {
@@ -140,6 +136,27 @@ class DocumentView: UIView {
         let addAnotherTap = UITapGestureRecognizer(target: self, action: #selector(self.testTapUploadAction))
 
         self.addAnotherBaseView.addGestureRecognizer(addAnotherTap)
+
+        Publishers.CombineLatest(self.hasFinishedUploadedFile, self.hasFinishedProgressUpload)
+            .sink(receiveValue: { [weak self] finishedUploaded, finishedProgress in
+                guard let self = self else {return}
+
+                if finishedUploaded && finishedProgress {
+                    self.documentUploadState = .uploaded
+
+                    self.postUploadTitleLabel.text = self.uploadTitleLabel.text
+
+                    self.statusLabel.text = "Pending Approved"
+                    self.statusView.backgroundColor = UIColor.App.statsAway
+
+                    self.finishedUploading?()
+
+                    self.hasFinishedUploadedFile.send(false)
+                    self.hasFinishedProgressUpload.send(false)
+                }
+            })
+            .store(in: &cancellables)
+
     }
 
     override func layoutSubviews() {
@@ -148,6 +165,12 @@ class DocumentView: UIView {
         self.containerView.layer.cornerRadius = CornerRadius.headerInput
 
         self.statusView.layer.cornerRadius = CornerRadius.headerInput
+
+        if self.documentUploadState == .preUpload {
+            let dashedBorder = self.containerView.addLineDashedStroke(pattern: [4, 4], radius: CornerRadius.headerInput, color: UIColor.App.separatorLine.cgColor)
+            self.containerView.layer.addSublayer(dashedBorder)
+            self.dashedSublayer = dashedBorder
+        }
 
     }
 
@@ -216,27 +239,53 @@ class DocumentView: UIView {
         }
     }
 
-    func startUpload(file: String) {
+    func startUpload(fileName: String, fileData: Data) {
 
-        self.uploadTitleLabel.text = file
+        self.uploadTitleLabel.text = fileName
 
         self.shouldStartUpload = true
 
         self.uploadValue = 0
 
-        // Simulate upload
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            let progress = 33.0/100
-            self.uploadValue = Float(progress)
+        if let documentInfo = self.documentInfo {
+            self.uploadFile(documentType: documentInfo.id, file: fileData, fileName: fileName)
+
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            let progress = 66.0/100
-            self.uploadValue = Float(progress)
+
+    }
+
+    private func uploadFile(documentType: String, file: Data, fileName: String) {
+
+        // TODO: Use actual uploading values later
+        // Simulate uploading values
+        var count = 0
+        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
+            if count == 100 {
+                self.hasFinishedProgressUpload.send(true)
+                timer.invalidate()
+            }
+            else {
+                count += 2
+                self.uploadValue = Float(count)/Float(100)
+            }
+
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            let progress = 100.0/100
-            self.uploadValue = Float(progress)
-        }
+
+        Env.servicesProvider.uploadUserDocument(documentType: documentType, file: file, fileName: fileName)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("UPLOAD FILE ERROR: \(error)")
+                }
+            }, receiveValue: { [weak self] uploadFileResponse in
+                print("UPLOAD FILE RESPONSE: \(uploadFileResponse)")
+                self?.hasFinishedUploadedFile.send(true)
+            })
+            .store(in: &cancellables)
+
     }
 
     private func setupFileUploadedState(fileState: FileState) {
@@ -273,8 +322,6 @@ extension DocumentView {
     private static func createContainerView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.App.separatorLine.cgColor
         return view
     }
 
@@ -372,6 +419,7 @@ extension DocumentView {
     private static func createStatusView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.setContentHuggingPriority(.required, for: .horizontal)
         return view
     }
 
@@ -513,7 +561,7 @@ extension DocumentView {
             self.postUploadTitleLabel.topAnchor.constraint(equalTo: self.postUploadView.topAnchor, constant: 18),
             self.postUploadTitleLabel.bottomAnchor.constraint(equalTo: self.postUploadView.bottomAnchor, constant: -18),
 
-            //self.statusView.leadingAnchor.constraint(equalTo: self.postUploadTitleLabel.trailingAnchor, constant: 4),
+            self.statusView.leadingAnchor.constraint(equalTo: self.postUploadTitleLabel.trailingAnchor, constant: 4),
             self.statusView.trailingAnchor.constraint(equalTo: self.postUploadView.trailingAnchor, constant: -15),
             self.statusView.centerYAnchor.constraint(equalTo: self.postUploadTitleLabel.centerYAnchor),
 

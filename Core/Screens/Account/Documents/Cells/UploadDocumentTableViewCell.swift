@@ -11,17 +11,6 @@ import Combine
 enum DocumentState {
     case notReceived
     case received
-
-//    var statusName: String {
-//        switch self {
-//        case .notReceived:
-//            return "Not Received"
-//        case .inProgress:
-//            return "In Progress"
-//        case .validated:
-//            return "Validated"
-//        }
-//    }
 }
 
 class UploadDocumentCellViewModel {
@@ -44,39 +33,17 @@ class UploadDocumentCellViewModel {
         self.documentTypeName = documentInfo.typeName
         self.documentState = documentInfo.status
 
-        //self.documentUploadedName = documentInfo.uploadedFileName
-        
     }
 
-    func startUpload(file: String) {
+    func startUpload(fileName: String, fileData: Data) {
 
-        self.documentUploadedName = file
+        self.documentUploadedName = fileName
 
         for cachedDocumentView in self.cachedDocumentViews {
             if cachedDocumentView.documentUploadState == .preUpload || cachedDocumentView.documentUploadState == .addAnother {
-                cachedDocumentView.startUpload(file: file)
+                cachedDocumentView.startUpload(fileName: fileName, fileData: fileData)
             }
         }
-
-//        self.shouldStartUpload.send(true)
-//
-//        self.uploadValue.send(0)
-//
-//        // Simulate upload
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//            let progress = 33.0/100
-//            self.uploadValue.send(Float(progress))
-//        }
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//            let progress = 66.0/100
-//            self.uploadValue.send(Float(progress))
-//
-//        }
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-//            let progress = 100.0/100
-//            self.uploadValue.send(Float(progress))
-//
-//        }
     }
 }
 
@@ -87,7 +54,6 @@ class UploadDocumentTableViewCell: UITableViewCell {
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var statusView: UIView = Self.createStatusView()
     private lazy var statusLabel: UILabel = Self.createStatusLabel()
-    //private lazy var uploadAreaView: UIView = Self.createUploadAreaView()
     private lazy var stackView: UIStackView = Self.createStackView()
 
     private var viewModel: UploadDocumentCellViewModel?
@@ -137,7 +103,6 @@ class UploadDocumentTableViewCell: UITableViewCell {
     }
 
     private func commonInit() {
-
     }
 
     private func setupWithTheme() {
@@ -152,8 +117,6 @@ class UploadDocumentTableViewCell: UITableViewCell {
 
         self.statusLabel.textColor = UIColor.App.buttonTextPrimary
 
-        //self.uploadAreaView.backgroundColor = .clear
-
         self.stackView.backgroundColor = .clear
     }
 
@@ -161,7 +124,7 @@ class UploadDocumentTableViewCell: UITableViewCell {
 
         self.viewModel = viewModel
 
-        self.setupDocumentState()
+        self.titleLabel.text = viewModel.documentTypeName
 
         if let documentView = viewModel.cachedDocumentViews.filter({
             $0.documentInfo?.id == viewModel.documentInfo.id
@@ -234,35 +197,6 @@ class UploadDocumentTableViewCell: UITableViewCell {
 
     private func showAddAnotherView() {
 
-        //let addAnotherDocumentView = AddAnotherDocumentView()
-
-//        addAnotherDocumentView.shouldAddNewDocument = { [weak self] in
-////            guard let self = self else {return}
-//
-//            self?.stackView.removeArrangedSubviewCompletely(addAnotherDocumentView)
-//
-//            let documentView = DocumentView()
-//            if let viewModel = self?.viewModel {
-//
-//                documentView.configure(documentInfo: viewModel.documentInfo)
-//
-//                documentView.shouldSelectFile = { [weak self] documentId in
-//                    self?.shouldSelectFile?(documentId)
-//                }
-//
-//                documentView.finishedUploading = { [weak self] in
-//                    self?.showAddAnotherView()
-//                    self?.finishedUploading?()
-//                }
-//
-//                viewModel.cachedDocumentViews.append(documentView)
-//
-//                self?.stackView.addArrangedSubview(documentView)
-//
-//                self?.shouldRedrawViews?()
-//            }
-//
-//        }
         if let viewModel = self.viewModel {
 
             let documentView = DocumentView()
@@ -287,31 +221,6 @@ class UploadDocumentTableViewCell: UITableViewCell {
         }
 
     }
-
-    private func setupDocumentState() {
-
-        if let viewModel = self.viewModel {
-
-//            switch viewModel.documentState {
-//            case .notReceived:
-//                self.statusView.backgroundColor = UIColor.App.alertError
-//
-//            case .inProgress:
-//                self.statusView.backgroundColor = UIColor.App.bubblesPrimary
-//
-//            case .validated:
-//                self.statusView.backgroundColor = UIColor.App.alertSuccess
-//
-//            }
-
-            self.titleLabel.text = viewModel.documentTypeName
-
-            //self.statusLabel.text = viewModel.documentState.statusName
-
-        }
-    }
-
-    // MARK: Action
 
 }
 

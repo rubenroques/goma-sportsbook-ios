@@ -88,6 +88,8 @@ public struct UserProfile: Codable {
     
     public let emailVerificationStatus: EmailVerificationStatus
     public let userRegistrationStatus: UserRegistrationStatus
+
+    public let kycStatus: String?
     
     public init(userIdentifier: String,
                 username: String,
@@ -104,7 +106,8 @@ public struct UserProfile: Codable {
                 city: String?,
                 postalCode: String?,
                 emailVerificationStatus: EmailVerificationStatus,
-                userRegistrationStatus: UserRegistrationStatus) {
+                userRegistrationStatus: UserRegistrationStatus,
+                kycStatus: String?) {
         
         self.userIdentifier = userIdentifier
         self.username = username
@@ -123,6 +126,8 @@ public struct UserProfile: Codable {
         
         self.emailVerificationStatus = emailVerificationStatus
         self.userRegistrationStatus = userRegistrationStatus
+
+        self.kycStatus = kycStatus
     }
     
 }
@@ -263,4 +268,58 @@ public struct UserWallet {
     }
     
     
+}
+
+public struct DocumentTypesResponse {
+    public var status: String
+    public var documentTypes: [DocumentType]
+
+    enum CodingKeys: String, CodingKey {
+        case status = "status"
+        case documentTypes = "documentTypes"
+    }
+}
+
+public struct DocumentType {
+    public var documentType: String
+    public var issueDateRequired: Bool?
+    public var expiryDateRequired: Bool?
+    public var documentNumberRequired: Bool?
+
+    enum CodingKeys: String, CodingKey {
+        case documentType = "documentType"
+        case expiryDateRequired = "expiryDateRequired"
+        case documentNumberRequired = "documentNumberRequired"
+        case issueDateRequired = "issueDateRequired"
+    }
+}
+
+public struct UserDocumentsResponse {
+    public var status: String
+    public var userDocuments: [UserDocument]
+
+    enum CodingKeys: String, CodingKey {
+        case status = "status"
+        case documentTypes = "userDocuments"
+    }
+}
+
+public struct UserDocument {
+    public var documentType: String
+    public var fileName: String
+    public var status: String
+
+    enum CodingKeys: String, CodingKey {
+        case documentType = "documentType"
+        case fileName = "fileName"
+        case status = "status"
+    }
+}
+
+public struct UploadDocumentResponse {
+    public var status: String
+
+    enum CodingKeys: String, CodingKey {
+        case status = "status"
+    }
 }

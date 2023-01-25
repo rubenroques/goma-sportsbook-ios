@@ -47,7 +47,8 @@ extension ServiceProviderModelMapper {
                            city: serviceProviderProfile.city,
                            postalCode: serviceProviderProfile.postalCode,
                            isEmailVerified: serviceProviderProfile.isEmailVerified,
-                           isRegistrationCompleted: serviceProviderProfile.isRegistrationCompleted)
+                           isRegistrationCompleted: serviceProviderProfile.isRegistrationCompleted,
+                           kycStatus: serviceProviderProfile.kycStatus)
     }
     
 }

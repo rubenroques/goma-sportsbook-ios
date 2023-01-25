@@ -208,3 +208,60 @@ extension SportRadarModels {
         }
     }
 }
+
+extension SportRadarModels {
+
+    struct DocumentTypesResponse: Codable {
+        var status: String
+        var documentTypes: [DocumentType]
+
+        enum CodingKeys: String, CodingKey {
+            case status = "status"
+            case documentTypes = "documentTypes"
+        }
+    }
+
+    struct DocumentType: Codable {
+        var documentType: String
+        var issueDateRequired: Bool?
+        var expiryDateRequired: Bool?
+        var documentNumberRequired: Bool?
+
+        enum CodingKeys: String, CodingKey {
+            case documentType = "documentType"
+            case expiryDateRequired = "expiryDateRequired"
+            case documentNumberRequired = "documentNumberRequired"
+            case issueDateRequired = "issueDateRequired"
+        }
+    }
+
+    struct UserDocumentsResponse: Codable {
+        var status: String
+        var userDocuments: [UserDocument]
+
+        enum CodingKeys: String, CodingKey {
+            case status = "status"
+            case userDocuments = "userDocuments"
+        }
+    }
+
+    struct UserDocument: Codable {
+        var documentType: String
+        var fileName: String
+        var status: String
+
+        enum CodingKeys: String, CodingKey {
+            case documentType = "documentType"
+            case fileName = "fileName"
+            case status = "status"
+        }
+    }
+
+    struct UploadDocumentResponse: Codable {
+        var status: String
+
+        enum CodingKeys: String, CodingKey {
+            case status = "status"
+        }
+    }
+}

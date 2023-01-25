@@ -34,7 +34,8 @@ extension SportRadarModelMapper {
                            city: playerInfoResponse.city,
                            postalCode: playerInfoResponse.postalCode,
                            emailVerificationStatus: EmailVerificationStatus(fromStringKey:  playerInfoResponse.emailVerificationStatus),
-                           userRegistrationStatus: userRegistrationStatus)
+                           userRegistrationStatus: userRegistrationStatus,
+                           kycStatus: playerInfoResponse.kycStatus)
 
     }
 
@@ -88,6 +89,48 @@ extension SportRadarModelMapper {
                            totalEscrow: playerInfoResponse.totalEscrowBalanceNumber)
     }
 
+}
+
+extension SportRadarModelMapper {
+
+    static func documentTypesResponse(fromDocumentTypesResponse internalDocumentTypesResponse: SportRadarModels.DocumentTypesResponse) -> DocumentTypesResponse {
+
+        let documentTypes = internalDocumentTypesResponse.documentTypes.map({ documentType -> DocumentType in
+            let documentType = Self.documentType(fromDocumentType: documentType)
+
+            return documentType
+
+        })
+
+        return DocumentTypesResponse(status: internalDocumentTypesResponse.status, documentTypes: documentTypes)
+    }
+
+    static func documentType(fromDocumentType internalDocumentType: SportRadarModels.DocumentType) -> DocumentType {
+
+        return DocumentType(documentType: internalDocumentType.documentType, issueDateRequired: internalDocumentType.issueDateRequired, expiryDateRequired: internalDocumentType.expiryDateRequired, documentNumberRequired: internalDocumentType.documentNumberRequired)
+    }
+
+    static func userDocumentsResponse(fromUserDocumentsResponse internalUserDocumentsResponse: SportRadarModels.UserDocumentsResponse) -> UserDocumentsResponse {
+
+        let userDocuments = internalUserDocumentsResponse.userDocuments.map({ userDocument -> UserDocument in
+            let userDocument = Self.userDocument(fromUserDocument: userDocument)
+
+            return userDocument
+
+        })
+
+        return UserDocumentsResponse(status: internalUserDocumentsResponse.status, userDocuments: userDocuments)
+    }
+
+    static func userDocument(fromUserDocument internalUserDocument: SportRadarModels.UserDocument) -> UserDocument {
+
+        return UserDocument(documentType: internalUserDocument.documentType, fileName: internalUserDocument.fileName, status: internalUserDocument.status)
+    }
+
+    static func uploadDocumentResponse(fromUploadDocumentResponse internalUploadDocumentResponse: SportRadarModels.UploadDocumentResponse) -> UploadDocumentResponse {
+
+        return UploadDocumentResponse(status: internalUploadDocumentResponse.status)
+    }
 }
 
 

@@ -277,7 +277,8 @@ struct UserProfile: Codable {
 
     var isEmailVerified: Bool
     var isRegistrationCompleted: Bool
-    
+
+    var kycStatus: String?
 }
 
 struct UserWallet {

@@ -60,6 +60,8 @@ class UserSessionStore {
     var isUserEmailVerified = CurrentValueSubject<Bool?, Never>(nil)
 
     private var pendingSignUpUserForm: ServicesProvider.SimpleSignUpForm?
+
+    var userProfilePublisher = CurrentValueSubject<UserProfile?, Never>(nil)
     
     init() {
 
@@ -212,6 +214,8 @@ class UserSessionStore {
                 return ServiceProviderModelMapper.userProfile(serviceProviderProfile)
             })
             .map { (userProfile: UserProfile) -> UserSession in
+                self.userProfilePublisher.send(userProfile)
+
                 return UserSession(username: userProfile.username,
                                    password: password,
                                    email: userProfile.email,

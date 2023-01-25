@@ -481,6 +481,40 @@ extension ServicesProviderClient {
 
 }
 
+// Documents
+extension ServicesProviderClient {
+
+    public func getDocumentTypes() -> AnyPublisher<DocumentTypesResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getDocumentTypes()
+    }
+
+    public func getUserDocuments() -> AnyPublisher<UserDocumentsResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getUserDocuments()
+    }
+
+    public func uploadUserDocument(documentType: String, file: Data, fileName: String) -> AnyPublisher<UploadDocumentResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.uploadUserDocument(documentType: documentType, file: file, fileName: fileName)
+    }
+}
+
 // Utilities
 extension ServicesProviderClient {
 

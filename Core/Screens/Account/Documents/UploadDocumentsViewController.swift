@@ -7,57 +7,7 @@
 
 import UIKit
 import Combine
-
-class UploadDocumentsViewModel {
-
-    let supportedTypes = ["com.apple.iwork.pages.pages",
-                          "com.apple.iwork.numbers.numbers",
-                          "com.apple.iwork.keynote.key",
-                          "public.image",
-                          "com.apple.application",
-                          "public.item",
-                          "public.data",
-                          "public.content",
-                          "public.audiovisual-content",
-                          "public.movie",
-                          "public.audiovisual-content",
-                          "public.video", "public.audio",
-                          "public.text", "public.data",
-                          "public.zip-archive",
-                          "com.pkware.zip-archive",
-                          "public.composite-content",
-                          "public.text"]
-
-    var selectedUploadDocumentCellId: String?
-
-    var cachedCellViewModels: [String: UploadDocumentCellViewModel] = [:]
-
-    var documents: [DocumentInfo] = []
-
-    var shouldReloadData: (() -> Void)?
-
-    init() {
-
-        let file1 = DocumentFileInfo(id: "1", name: "proof_address_test.pdf", status: .pendingApproved)
-        let file2 = DocumentFileInfo(id: "2", name: "bank_note.pdf", status: .approved)
-        let file3 = DocumentFileInfo(id: "1", name: "proof_address_test2.pdf", status: .approved)
-
-        // TEST
-        let documentInfo1 = DocumentInfo(id: "1", typeName: "Identification", status: .notReceived, uploadedFiles: [])
-
-        let documentInfo2 = DocumentInfo(id: "2", typeName: "Proof of address", status: .received, uploadedFiles: [file1, file3])
-
-        let documentInfo3 = DocumentInfo(id: "3", typeName: "Bank Note", status: .received, uploadedFiles: [file2])
-
-        documents.append(documentInfo1)
-        documents.append(documentInfo2)
-        documents.append(documentInfo3)
-
-        self.shouldReloadData?()
-
-    }
-
-}
+import ServicesProvider
 
 class UploadDocumentsViewController: UIViewController {
 
@@ -133,6 +83,8 @@ class UploadDocumentsViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
+        self.statusLabel.text = Env.userSessionStore.userProfilePublisher.value?.kycStatus ?? ""
+
     }
 
     // MARK: - Layout and Theme
@@ -181,6 +133,13 @@ class UploadDocumentsViewController: UIViewController {
         viewModel.shouldReloadData = { [weak self] in
             self?.tableView.reloadData()
         }
+
+        viewModel.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoading in
+                self?.isLoading = isLoading
+            })
+            .store(in: &cancellables)
     }
 
     private func openFile() {
@@ -196,7 +155,6 @@ class UploadDocumentsViewController: UIViewController {
         self.tableView.setNeedsDisplay()
         self.tableView.endUpdates()
 
-        //self.tableView.reloadData()
     }
 
     // MARK: Actions
@@ -208,14 +166,24 @@ class UploadDocumentsViewController: UIViewController {
 
 extension UploadDocumentsViewController: UIDocumentPickerDelegate, UINavigationControllerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        let fileUrl = urls[0].lastPathComponent
 
-        if let cellId = self.viewModel.selectedUploadDocumentCellId {
+        let fileUrl = urls[0]
+        let fileName = urls[0].lastPathComponent
 
-            if let cellViewModel = self.viewModel.cachedCellViewModels[cellId] {
-                cellViewModel.startUpload(file: fileUrl)
+        do {
+
+            let fileData = try Data(contentsOf: fileUrl)
+
+            if let cellId = self.viewModel.selectedUploadDocumentCellId {
+
+                if let cellViewModel = self.viewModel.cachedCellViewModels[cellId] {
+                    cellViewModel.startUpload(fileName: fileName, fileData: fileData)
+                }
+
             }
 
+        } catch {
+            print("No data")
         }
 
     }
@@ -542,34 +510,4 @@ extension UploadDocumentsViewController {
         ])
 
     }
-}
-
-struct DocumentInfo {
-    var id: String
-    var typeName: String
-    var status: DocumentState
-    var uploadedFiles: [DocumentFileInfo]
-}
-
-struct DocumentFileInfo {
-    var id: String
-    var name: String
-    var status: FileState
-}
-
-enum FileState {
-    case pendingApproved
-    case approved
-    case failed
-
-        var statusName: String {
-            switch self {
-            case .pendingApproved:
-                return "Pending Approved"
-            case .approved:
-                return "Approved"
-            case .failed:
-                return "Failed"
-            }
-        }
 }
