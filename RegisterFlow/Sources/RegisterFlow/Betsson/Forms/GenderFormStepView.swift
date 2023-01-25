@@ -13,7 +13,56 @@ import Theming
 struct GenderFormStepViewModel {
 
     let title: String
-    let selectedGender: Int?
+
+    var selectedGender: CurrentValueSubject<Gender?, Never> = .init(nil)
+
+    private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
+
+    enum Gender {
+        case male
+        case female
+    }
+
+    var isFormCompleted: AnyPublisher<Bool, Never> {
+        return self.selectedGender.map { genderString -> Bool in
+            if genderString != nil {
+                return true
+            }
+            return false
+        }.eraseToAnyPublisher()
+    }
+
+    init(title: String,
+         selectedGender: Gender?,
+         userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
+
+        self.title = title
+        self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
+
+        switch selectedGender {
+        case .none:
+            self.selectedGender = .init(nil)
+        case .some(let wrapped):
+            switch wrapped {
+            case .male:
+                self.selectedGender = .init(.male)
+            case .female:
+                self.selectedGender = .init(.female)
+            }
+        }
+    }
+
+    func setGender(_ gender: Gender) {
+        self.selectedGender.send(gender)
+
+        switch gender {
+        case .male:
+            self.userRegisterEnvelopUpdater.setGender(UserRegisterEnvelop.Gender.male)
+        case .female:
+            self.userRegisterEnvelopUpdater.setGender(UserRegisterEnvelop.Gender.female)
+        }
+
+    }
 
 }
 
@@ -25,9 +74,8 @@ class GenderFormStepView: FormStepView {
     private lazy var stackContainerView: UIView = Self.createStackContainerView()
     private lazy var buttonStackView: UIStackView = Self.createStackView()
 
-    private var isFormCompletedCurrentValue: CurrentValueSubject<Bool, Never> = .init(false)
     override var isFormCompleted: AnyPublisher<Bool, Never> {
-        return isFormCompletedCurrentValue.eraseToAnyPublisher()
+        return self.viewModel.isFormCompleted
     }
 
     let viewModel: GenderFormStepViewModel
@@ -39,7 +87,6 @@ class GenderFormStepView: FormStepView {
 
         self.configureSubviews()
     }
-
 
     func configureSubviews() {
 
@@ -64,6 +111,16 @@ class GenderFormStepView: FormStepView {
             self.buttonStackView.topAnchor.constraint(equalTo: self.stackContainerView.topAnchor),
             self.buttonStackView.bottomAnchor.constraint(equalTo: self.stackContainerView.bottomAnchor),
         ])
+
+        if let gender = self.viewModel.selectedGender.value {
+            switch gender {
+            case .male:
+                self.didTapMaleButton()
+            case .female:
+                self.didTapFemaleButton()
+            }
+        }
+
     }
 
     override func setupWithTheme() {
@@ -90,7 +147,7 @@ class GenderFormStepView: FormStepView {
         self.maleButton.isSelected = true
         self.femaleButton.isSelected = false
 
-        self.isFormCompletedCurrentValue.send(true)
+        self.viewModel.setGender(.male)
 
         self.maleButton.imageView?.tintColor = AppColor.textPrimary
         self.femaleButton.imageView?.tintColor = AppColor.textSecondary
@@ -103,7 +160,7 @@ class GenderFormStepView: FormStepView {
         self.maleButton.isSelected = false
         self.femaleButton.isSelected = true
 
-        self.isFormCompletedCurrentValue.send(true)
+        self.viewModel.setGender(.female)
 
         self.maleButton.imageView?.tintColor = AppColor.textSecondary
         self.femaleButton.imageView?.tintColor = AppColor.textPrimary

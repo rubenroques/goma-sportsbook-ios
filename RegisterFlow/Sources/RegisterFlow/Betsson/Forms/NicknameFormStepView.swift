@@ -23,14 +23,16 @@ class NicknameFormStepViewModel {
     var isValidUsername: CurrentValueSubject<Bool?, Never> = .init(nil)
 
     private let serviceProvider: ServicesProviderClient
+    private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(title: String, nickname: String?, nicknamePlaceholder: String, serviceProvider: ServicesProviderClient) {
+    init(title: String, nickname: String?, nicknamePlaceholder: String, serviceProvider: ServicesProviderClient, userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
         self.title = title
         self.nickname = nickname
         self.nicknamePlaceholder = nicknamePlaceholder
         self.serviceProvider = serviceProvider
+        self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
     }
 
     func resetValidation() {
@@ -254,6 +256,8 @@ extension NicknameFormStepView {
 
     private static func createNicknameHeaderTextFieldView() -> HeaderTextFieldView {
         let headerTextFieldView = HeaderTextFieldView()
+        headerTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
+        headerTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         headerTextFieldView.translatesAutoresizingMaskIntoConstraints = false
         return headerTextFieldView
     }

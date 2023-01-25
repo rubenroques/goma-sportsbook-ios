@@ -14,18 +14,42 @@ struct NamesFormStepViewModel {
 
     let title: String
 
-    let firstName: String?
-    let lastName: String?
+    let firstName: CurrentValueSubject<String?, Never>
+    let lastName: CurrentValueSubject<String?, Never>
 
-    let firstNamePlaceholder: String
-    let lastNamePlaceholder: String
+    private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
 
-    init(title: String, firstName: String? = nil, lastName: String? = nil, firstNamePlaceholder: String, lastNamePlaceholder: String) {
+    var isFormCompleted: AnyPublisher<Bool, Never> {
+        return Publishers.CombineLatest(self.firstName, self.lastName)
+            .map { (firstName, lastName) in
+                if let firstName, let lastName {
+                    return firstName.count > 1 && lastName.count > 1
+                }
+                return false
+            }
+            .eraseToAnyPublisher()
+    }
+
+    init(title: String,
+         firstName: String? = nil,
+         lastName: String? = nil,
+         userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
+
         self.title = title
-        self.firstName = firstName
-        self.lastName = lastName
-        self.firstNamePlaceholder = firstNamePlaceholder
-        self.lastNamePlaceholder = lastNamePlaceholder
+        self.firstName = .init(firstName)
+        self.lastName = .init(lastName)
+
+        self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
+    }
+
+    func setFirstName(_ firstName: String) {
+        self.firstName.send(firstName)
+        self.userRegisterEnvelopUpdater.setName(firstName)
+    }
+
+    func setLastName(_ lastName: String) {
+        self.lastName.send(lastName)
+        self.userRegisterEnvelopUpdater.setSurname(lastName)
     }
 
 }
@@ -47,9 +71,8 @@ class NamesFormStepView: FormStepView {
         self.configureSubviews()
     }
 
-    private var isFormCompletedCurrentValue: CurrentValueSubject<Bool, Never> = .init(false)
     override var isFormCompleted: AnyPublisher<Bool, Never> {
-        return isFormCompletedCurrentValue.eraseToAnyPublisher()
+        return self.viewModel.isFormCompleted
     }
 
     func configureSubviews() {
@@ -65,25 +88,33 @@ class NamesFormStepView: FormStepView {
         self.titleLabel.text = self.viewModel.title
         
         self.firstNameHeaderTextFieldView.setReturnKeyType(.next)
-        self.firstNameHeaderTextFieldView.setPlaceholderText(self.viewModel.firstNamePlaceholder)
+        self.firstNameHeaderTextFieldView.setPlaceholderText("First Name")
         self.firstNameHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.lastNameHeaderTextFieldView.becomeFirstResponder()
         }
         
         self.lastNameHeaderTextFieldView.setReturnKeyType(.continue)
-        self.lastNameHeaderTextFieldView.setPlaceholderText(self.viewModel.lastNamePlaceholder)
+        self.lastNameHeaderTextFieldView.setPlaceholderText("Last Name")
         self.lastNameHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.lastNameHeaderTextFieldView.resignFirstResponder()
         }
         
-        Publishers.CombineLatest(self.firstNameHeaderTextFieldView.textPublisher, self.lastNameHeaderTextFieldView.textPublisher)
-            .map { (firstName, lastName) in
-                firstName.count > 1 && lastName.count > 1
-            }
-            .sink { [weak self] completed in
-                self?.isFormCompletedCurrentValue.send(completed)
+        self.firstNameHeaderTextFieldView.setText(self.viewModel.firstName.value ?? "")
+        self.lastNameHeaderTextFieldView.setText(self.viewModel.lastName.value ?? "")
+
+        self.firstNameHeaderTextFieldView.textPublisher
+            .sink { [weak self] text in
+                self?.viewModel.setFirstName(text)
             }
             .store(in: &self.cancellables)
+
+
+        self.lastNameHeaderTextFieldView.textPublisher
+            .sink { [weak self] text in
+                self?.viewModel.setLastName(text)
+            }
+            .store(in: &self.cancellables)
+
     }
 
     public override func layoutSubviews() {
@@ -108,12 +139,16 @@ extension NamesFormStepView {
 
     fileprivate static func createFirstNameHeaderTextFieldView() -> HeaderTextFieldView {
         let headerTextFieldView = HeaderTextFieldView()
+        headerTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
+        headerTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         headerTextFieldView.translatesAutoresizingMaskIntoConstraints = false
         return headerTextFieldView
     }
 
     fileprivate static func createLastNameHeaderTextFieldView() -> HeaderTextFieldView {
         let headerTextFieldView = HeaderTextFieldView()
+        headerTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
+        headerTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         headerTextFieldView.translatesAutoresizingMaskIntoConstraints = false
         return headerTextFieldView
     }

@@ -18,18 +18,39 @@ class ContactsFormStepViewModel {
 
     let title: String
 
-    private var selectedPrefixCountry: SharedModels.Country? {
-        didSet {
-            if let selectedPrefixCountry = self.selectedPrefixCountry {
-                let countryString = self.formatIndicativeCountry(selectedPrefixCountry)
-                self.selectedPrefixText.send(countryString)
-            } else {
-                self.selectedPrefixText.send(nil)
-            }
-        }
+    let email: CurrentValueSubject<String?, Never>
+    let phoneNumber: CurrentValueSubject<String?, Never>
+
+    let defaultCountryIso3Code: String
+
+    private var selectedPrefixCountrySubject: CurrentValueSubject<SharedModels.Country?, Never> = .init(nil)
+
+    var selectedPrefixText: AnyPublisher<String?, Never> {
+        self.selectedPrefixCountrySubject
+            .map({ country -> String? in
+                if let selectedPrefixCountry = country {
+                    let countryString = self.formatIndicativeCountry(selectedPrefixCountry)
+                    return countryString
+                } else {
+                    return nil
+                }
+            })
+            .eraseToAnyPublisher()
     }
 
-    var selectedPrefixText: CurrentValueSubject<String?, Never> = .init(nil)
+    private var defaultCountrySubject: CurrentValueSubject<SharedModels.Country?, Never> = .init(nil)
+    var defaultCountryText: AnyPublisher<String?, Never> {
+        self.defaultCountrySubject
+            .map { country in
+                if let country {
+                    return self.formatIndicativeCountry(country)
+                }
+                else {
+                    return nil
+                }
+            }
+            .eraseToAnyPublisher()
+    }
 
     var countryState: CurrentValueSubject<CountryState, Never> = .init(.idle)
     var countries: [SharedModels.Country]? {
@@ -39,7 +60,20 @@ class ContactsFormStepViewModel {
         }
     }
 
+    var isFormCompleted: AnyPublisher<Bool, Never> {
+        return Publishers.CombineLatest3(self.email, self.phoneNumber, self.selectedPrefixCountrySubject)
+            .map { email, phoneNumber, prefixCountry -> Bool in
+                let isEmailValid = self.isValidEmailAddress(email ?? "")
+                let isPhoneNumberValid = self.isValidPhoneNumber(phoneNumber ?? "")
+                let hasPrefix = prefixCountry != nil
+                return isEmailValid && isPhoneNumberValid && hasPrefix
+            }
+            .eraseToAnyPublisher()
+    }
+
     private var serviceProvider: ServicesProviderClient
+    private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
+
     private var cancellables = Set<AnyCancellable>()
 
     enum CountryState {
@@ -49,9 +83,16 @@ class ContactsFormStepViewModel {
     }
 
 
-    init(title: String, serviceProvider: ServicesProviderClient) {
+    init(title: String, email: String? = nil, phoneNumber: String? = nil, defaultCountryIso3Code: String, serviceProvider: ServicesProviderClient, userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
         self.title = title
+
+        self.phoneNumber = .init(phoneNumber)
+        self.email = .init(email)
+
+        self.defaultCountryIso3Code = defaultCountryIso3Code
+
         self.serviceProvider = serviceProvider
+        self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
 
         self.loadCountries()
     }
@@ -60,17 +101,29 @@ class ContactsFormStepViewModel {
 
         self.countryState.send(.loading)
 
-        serviceProvider.getCountries()
+        self.serviceProvider.getCountries()
             .sink { completion in
 
             } receiveValue: { [weak self] countries in
+                self?.defaultCountrySubject.send(countries.first(where: { $0.iso3Code == self?.defaultCountryIso3Code}))
                 self?.countryState.send(.loaded(countries: countries))
             }
             .store(in: &self.cancellables)
     }
 
     func setSelectedPrefixCountry(_ country: Country) {
-        self.selectedPrefixCountry = country
+        self.selectedPrefixCountrySubject.send(country)
+        self.userRegisterEnvelopUpdater.setPhonePrefixCountry(country)
+    }
+
+    func setEmail(_ email: String) {
+        self.email.send(email)
+        self.userRegisterEnvelopUpdater.setEmail(email)
+    }
+
+    func setPhoneNumber(_ phoneNumber: String) {
+        self.phoneNumber.send(phoneNumber)
+        self.userRegisterEnvelopUpdater.setPhoneNumber(phoneNumber)
     }
 
     private func formatIndicativeCountry(_ country: Country) -> String {
@@ -79,6 +132,19 @@ class ContactsFormStepViewModel {
             stringCountry = "\(flag)  \(country.phonePrefix)"
         }
         return stringCountry
+    }
+
+    private func isValidEmailAddress(_ email: String) -> Bool {
+        let emailValidationRegex = "^[\\p{L}0-9!#$%&'*+\\/=?^_`{|}~-][\\p{L}0-9.!#$%&'*+\\/=?^_`{|}~-]{0,63}@[\\p{L}0-9-]+(?:\\.[\\p{L}0-9-]{2,7})*$"
+        let emailValidationPredicate = NSPredicate(format: "SELF MATCHES %@", emailValidationRegex)
+        return emailValidationPredicate.evaluate(with: email)
+    }
+
+    private func isValidPhoneNumber(_ phoneNumber: String) -> Bool {
+//        let phoneNumberValidationRegex = #"^(?:0|\+33 ?|0?0?33 ?|)([1-9] ?(?:[0-9] ?){8})$"#
+//        let phoneNumberValidationPredicate = NSPredicate(format: "SELF MATCHES %@", phoneNumberValidationRegex)
+//        return phoneNumberValidationPredicate.evaluate(with: phoneNumber)
+        return phoneNumber.count > 2
     }
 
 }
@@ -97,6 +163,10 @@ class ContactsFormStepView: FormStepView {
     private let viewModel: ContactsFormStepViewModel
 
     private var cancellables = Set<AnyCancellable>()
+
+    override var isFormCompleted: AnyPublisher<Bool, Never> {
+        return self.viewModel.isFormCompleted
+    }
 
     init(viewModel: ContactsFormStepViewModel) {
         self.viewModel = viewModel
@@ -132,9 +202,9 @@ class ContactsFormStepView: FormStepView {
             self.prefixContainerView.trailingAnchor.constraint(equalTo: prefixPlaceholderView.trailingAnchor),
 
             self.prefixDownIconImageView.widthAnchor.constraint(equalTo: self.prefixDownIconImageView.heightAnchor),
-            self.prefixDownIconImageView.widthAnchor.constraint(equalToConstant: 8),
+            self.prefixDownIconImageView.widthAnchor.constraint(equalToConstant: 13),
             self.prefixDownIconImageView.centerYAnchor.constraint(equalTo: self.prefixContainerView.centerYAnchor),
-            self.prefixDownIconImageView.trailingAnchor.constraint(equalTo: self.prefixContainerView.trailingAnchor, constant: -9),
+            self.prefixDownIconImageView.trailingAnchor.constraint(equalTo: self.prefixContainerView.trailingAnchor, constant: -11),
 
             self.prefixLabel.leadingAnchor.constraint(equalTo: self.prefixContainerView.leadingAnchor, constant: 15),
             self.prefixLabel.centerYAnchor.constraint(equalTo: self.prefixContainerView.centerYAnchor),
@@ -147,7 +217,7 @@ class ContactsFormStepView: FormStepView {
         self.titleLabel.text = self.viewModel.title
 
         self.emailHeaderTextFieldView.setKeyboardType(.emailAddress)
-        self.phoneHeaderTextFieldView.setKeyboardType(.phonePad)
+        self.phoneHeaderTextFieldView.setKeyboardType(.namePhonePad)
 
         self.emailHeaderTextFieldView.setPlaceholderText("Email")
         self.phoneHeaderTextFieldView.setPlaceholderText("Phone number")
@@ -162,6 +232,9 @@ class ContactsFormStepView: FormStepView {
             self?.phoneHeaderTextFieldView.resignFirstResponder()
         }
 
+        self.emailHeaderTextFieldView.setText(self.viewModel.email.value ?? "")
+        self.phoneHeaderTextFieldView.setText(self.viewModel.phoneNumber.value ?? "")
+
         self.viewModel.countryState
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
@@ -174,17 +247,33 @@ class ContactsFormStepView: FormStepView {
             }
             .store(in: &self.cancellables)
 
-        self.viewModel.selectedPrefixText
+        Publishers.CombineLatest(self.viewModel.selectedPrefixText, self.viewModel.defaultCountryText)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] prefixString in
+            .sink { [weak self] prefixString, defaultCountry in
                 if let prefixString {
                     self?.prefixLabel.textColor = AppColor.textPrimary
                     self?.prefixLabel.text = prefixString
                 }
+                else if let defaultCountry {
+                    self?.prefixLabel.textColor = AppColor.textPrimary
+                    self?.prefixLabel.text = defaultCountry
+                }
                 else {
-                    self?.prefixLabel.textColor = UIColor(hex: 0x3E4A59)
+                    self?.prefixLabel.textColor = AppColor.inputTextTitle
                     self?.prefixLabel.text = "Prefix"
                 }
+            }
+            .store(in: &self.cancellables)
+
+        self.emailHeaderTextFieldView.textPublisher
+            .sink { [weak self] text in
+                self?.viewModel.setEmail(text)
+            }
+            .store(in: &self.cancellables)
+
+        self.phoneHeaderTextFieldView.textPublisher
+            .sink { [weak self] text in
+                self?.viewModel.setPhoneNumber(text)
             }
             .store(in: &self.cancellables)
 
@@ -199,9 +288,11 @@ class ContactsFormStepView: FormStepView {
     override func setupWithTheme() {
         super.setupWithTheme()
 
-        self.prefixContainerView.layer.borderColor = AppColor.textPrimary.cgColor
+        self.prefixContainerView.layer.borderColor = AppColor.backgroundBorder.cgColor
 
-        self.prefixLabel.textColor = UIColor(hex: 0x3E4A59)
+        self.prefixLabel.textColor = AppColor.inputTextTitle
+
+        self.prefixDownIconImageView.tintColor = AppColor.textPrimary
 
         self.emailHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
         self.emailHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
@@ -210,7 +301,6 @@ class ContactsFormStepView: FormStepView {
         self.phoneHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
         self.phoneHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.phoneHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
-
     }
 
     @objc func didTapPrefixView() {
@@ -242,12 +332,16 @@ extension ContactsFormStepView {
 
     private static func createEmailHeaderTextFieldView() -> HeaderTextFieldView {
         let headerTextFieldView = HeaderTextFieldView()
+        headerTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
+        headerTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         headerTextFieldView.translatesAutoresizingMaskIntoConstraints = false
         return headerTextFieldView
     }
 
     private static func createPhoneHeaderTextFieldView() -> HeaderTextFieldView {
         let headerTextFieldView = HeaderTextFieldView()
+        headerTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
+        headerTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         headerTextFieldView.translatesAutoresizingMaskIntoConstraints = false
         return headerTextFieldView
     }
@@ -277,7 +371,7 @@ extension ContactsFormStepView {
     }
 
     private static func createPrefixDownIconImageView() -> UIImageView {
-        let imageView = UIImageView(image: UIImage(systemName: "arrow.down"))
+        let imageView = UIImageView(image: UIImage(systemName: "arrowtriangle.down.fill"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         return imageView

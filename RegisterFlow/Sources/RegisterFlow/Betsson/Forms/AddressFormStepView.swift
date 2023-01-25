@@ -8,10 +8,55 @@
 import UIKit
 import Theming
 import Extensions
+import Combine
 
-struct AddressFormStepViewModel {
+class AddressFormStepViewModel {
 
     let title: String
+
+    var place: CurrentValueSubject<String?, Never>
+    var street: CurrentValueSubject<String?, Never>
+    var additionalStreet: CurrentValueSubject<String?, Never>
+
+    private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
+
+    init(title: String,
+         place: String? = nil,
+         street: String? = nil,
+         additionalStreet: String? = nil,
+         userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
+
+        self.title = title
+        self.place = .init(place)
+        self.street = .init(street)
+        self.additionalStreet = .init(additionalStreet)
+        self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
+    }
+
+    var isFormCompleted: AnyPublisher<Bool, Never> {
+        return Publishers.CombineLatest3(self.place, self.street, self.additionalStreet)
+            .map { place, street, additionalStreet in
+                return (place ?? "").count > 0 &&
+                (street ?? "").count > 0 &&
+                (additionalStreet ?? "").count > 0
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func setPlace(_ place: String) {
+        self.place.send(place)
+        self.userRegisterEnvelopUpdater.setPlaceBirth(place)
+    }
+
+    func setStreet(_ street: String) {
+        self.street.send(street)
+        self.userRegisterEnvelopUpdater.setStreetAddress(street)
+    }
+
+    func setAdditionalStreet(_ additionalStreet: String) {
+        self.additionalStreet.send(additionalStreet)
+        self.userRegisterEnvelopUpdater.setAdditionalStreetAddress(additionalStreet)
+    }
 
 }
 
@@ -21,7 +66,12 @@ class AddressFormStepView: FormStepView {
     private lazy var streetHeaderTextFieldView: HeaderTextFieldView = Self.createStreetHeaderTextFieldView()
     private lazy var additionalStreetHeaderTextFieldView: HeaderTextFieldView = Self.createAdditionalStreetHeaderTextFieldView()
 
-    let viewModel: AddressFormStepViewModel
+    private let viewModel: AddressFormStepViewModel
+    private var cancellables = Set<AnyCancellable>()
+
+    override var isFormCompleted: AnyPublisher<Bool, Never> {
+        return self.viewModel.isFormCompleted
+    }
 
     init(viewModel: AddressFormStepViewModel) {
         self.viewModel = viewModel
@@ -66,6 +116,27 @@ class AddressFormStepView: FormStepView {
             self?.additionalStreetHeaderTextFieldView.resignFirstResponder()
         }
 
+        self.placeHeaderTextFieldView.setText(self.viewModel.place.value ?? "")
+        self.streetHeaderTextFieldView.setText(self.viewModel.street.value ?? "")
+        self.additionalStreetHeaderTextFieldView.setText(self.viewModel.additionalStreet.value ?? "")
+
+        self.placeHeaderTextFieldView.textPublisher
+            .sink { [weak self] place in
+                self?.viewModel.setPlace(place)
+            }
+            .store(in: &self.cancellables)
+
+        self.streetHeaderTextFieldView.textPublisher
+            .sink { [weak self] street in
+                self?.viewModel.setStreet(street)
+            }
+            .store(in: &self.cancellables)
+
+        self.additionalStreetHeaderTextFieldView.textPublisher
+            .sink { [weak self] additionalStreet in
+                self?.viewModel.setAdditionalStreet(additionalStreet)
+            }
+            .store(in: &self.cancellables)
     }
 
     public override func layoutSubviews() {
@@ -94,21 +165,26 @@ extension AddressFormStepView {
 
     fileprivate static func createPlaceHeaderTextFieldView() -> HeaderTextFieldView {
         let headerTextFieldView = HeaderTextFieldView()
+        headerTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
+        headerTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         headerTextFieldView.translatesAutoresizingMaskIntoConstraints = false
         return headerTextFieldView
     }
 
     fileprivate static func createStreetHeaderTextFieldView() -> HeaderTextFieldView {
         let headerTextFieldView = HeaderTextFieldView()
+        headerTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
+        headerTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         headerTextFieldView.translatesAutoresizingMaskIntoConstraints = false
         return headerTextFieldView
     }
 
     fileprivate static func createAdditionalStreetHeaderTextFieldView() -> HeaderTextFieldView {
         let headerTextFieldView = HeaderTextFieldView()
+        headerTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
+        headerTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         headerTextFieldView.translatesAutoresizingMaskIntoConstraints = false
         return headerTextFieldView
     }
-
 
 }

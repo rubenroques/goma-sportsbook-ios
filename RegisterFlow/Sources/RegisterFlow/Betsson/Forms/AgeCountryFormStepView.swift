@@ -17,21 +17,24 @@ class AgeCountryFormStepViewModel {
 
     let title: String
 
-    var birthDate: Date?
+    var birthDate: CurrentValueSubject<Date?, Never>
+    let defaultCountryIso3Code: String
 
-    private var selectedCountry: Country? {
-        didSet {
-            if let selectedCountry = self.selectedCountry {
-                let countryString = self.formatIndicativeCountry(selectedCountry)
-                self.selectedCountryText.send(countryString)
-            } else {
-                self.selectedCountryText.send(nil)
+    private var selectedCountry: CurrentValueSubject<Country?, Never> = .init(nil)
+
+    var selectedCountryText: AnyPublisher<String?, Never> {
+        return self.selectedCountry.map { country in
+            if let country {
+                return self.formatIndicativeCountry(country)
+            }
+            else {
+                return nil
             }
         }
+        .eraseToAnyPublisher()
     }
 
-    var selectedCountryText: CurrentValueSubject<String?, Never> = .init(nil)
-
+    
     var countryState: CurrentValueSubject<CountryState, Never> = .init(.idle)
     var countries: [SharedModels.Country]? {
         switch self.countryState.value {
@@ -40,7 +43,13 @@ class AgeCountryFormStepViewModel {
         }
     }
 
+    var defaultCountry: Country? {
+        self.countries?.first(where: { $0.iso3Code == self.defaultCountryIso3Code })
+    }
+
     private var serviceProvider: ServicesProviderClient
+    private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
+
     private var cancellables = Set<AnyCancellable>()
 
     enum CountryState {
@@ -49,13 +58,28 @@ class AgeCountryFormStepViewModel {
         case loaded(countries: [SharedModels.Country])
     }
 
-    init(title: String, countryState: CountryState = .idle, birthDate: Date? = nil, serviceProvider: ServicesProviderClient) {
+    var isFormCompleted: AnyPublisher<Bool, Never> {
+        return Publishers.CombineLatest(self.birthDate, self.selectedCountry)
+            .map { date, country -> Bool in
+                return date != nil && country != nil
+            }.eraseToAnyPublisher()
+    }
+
+    init(title: String,
+         defaultCountryIso3Code: String,
+         countryState: CountryState = .idle,
+         birthDate: Date? = nil,
+         serviceProvider: ServicesProviderClient,
+         userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
+
         self.title = title
 
+        self.defaultCountryIso3Code = defaultCountryIso3Code
         self.countryState = .init(countryState)
-        self.birthDate = birthDate
+        self.birthDate = .init(birthDate)
 
         self.serviceProvider = serviceProvider
+        self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
 
         self.loadCountries()
     }
@@ -64,7 +88,7 @@ class AgeCountryFormStepViewModel {
 
         self.countryState.send(.loading)
 
-        serviceProvider.getCountries()
+        self.serviceProvider.getCountries()
             .sink { completion in
 
             } receiveValue: { [weak self] countries in
@@ -73,10 +97,15 @@ class AgeCountryFormStepViewModel {
             .store(in: &self.cancellables)
     }
 
-    func setSelectedCountry(_ country: Country) {
-        self.selectedCountry = country
+    func setSelectedDate(_ date: Date) {
+        self.birthDate.send(date)
+        self.userRegisterEnvelopUpdater.setDateOfBirth(date)
     }
 
+    func setSelectedCountry(_ country: Country) {
+        self.selectedCountry.send(country)
+        self.userRegisterEnvelopUpdater.setCountryBirth(country)
+    }
 
     private func formatIndicativeCountry(_ country: Country) -> String {
         var stringCountry = "\(country.iso2Code) - \(country.name)"
@@ -106,9 +135,8 @@ class AgeCountryFormStepView: FormStepView {
         self.configureSubviews()
     }
 
-    private var isFormCompletedCurrentValue: CurrentValueSubject<Bool, Never> = .init(false)
     override var isFormCompleted: AnyPublisher<Bool, Never> {
-        return isFormCompletedCurrentValue.eraseToAnyPublisher()
+        return self.viewModel.isFormCompleted
     }
 
     func configureSubviews() {
@@ -151,13 +179,30 @@ class AgeCountryFormStepView: FormStepView {
         self.placeHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.placeHeaderTextFieldView.resignFirstResponder()
         }
-        
+
+        if let birthDate = self.viewModel.birthDate.value {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd-MM-yyyy"
+            self.dateHeaderTextFieldView.setText(dateFormatter.string(from: birthDate))
+        }
+
         self.viewModel.selectedCountryText
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] countryText in
                 self?.countryHeaderTextFieldView.setText(countryText ?? "")
             }
             .store(in: &self.cancellables)
 
+        self.dateHeaderTextFieldView.textPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] dateString in
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "dd-MM-yyyy"
+                if let date = dateFormatter.date(from: dateString) {
+                    self?.viewModel.setSelectedDate(date)
+                }
+            }
+            .store(in: &self.cancellables)
     }
 
     public override func layoutSubviews() {
@@ -182,13 +227,8 @@ class AgeCountryFormStepView: FormStepView {
 
     func showCountrySelector() {
         if let countries = self.viewModel.countries {
-
-            let defaultCountry = countries.filter { country in
-                country.iso3Code == "FRA"
-            }
-
             let countrySelectorViewController = CountrySelectionFeature.CountrySelectorViewController(countries: countries,
-                                                                                                      originCountry: defaultCountry.first,
+                                                                                                      originCountry: self.viewModel.defaultCountry,
                                                                                                       showIndicatives: false)
             countrySelectorViewController.modalPresentationStyle = .overCurrentContext
             countrySelectorViewController.didSelectCountry = { [weak self, weak countrySelectorViewController] (selectedCountry: SharedModels.Country) in
@@ -206,6 +246,8 @@ extension AgeCountryFormStepView {
 
     fileprivate static func createHeaderTextFieldView() -> HeaderTextFieldView {
         let headerTextFieldView = HeaderTextFieldView()
+        headerTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
+        headerTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         headerTextFieldView.translatesAutoresizingMaskIntoConstraints = false
         return headerTextFieldView
     }

@@ -258,15 +258,22 @@ class LoginViewController: UIViewController {
         }
 
     @objc private func didTapCreateAccount() {
-//        let smallRegisterViewController = SimpleRegisterEmailCheckViewController()
-//        self.navigationController?.pushViewController(smallRegisterViewController, animated: true)
 
-        let viewModel = SteppedRegistrationViewModel(currentStep: 0,
-                                                     numberOfSteps: 3,
-                                                     serviceProvider: Env.servicesProvider)
+        let registrationFormDataKey = "RegistrationFormDataKey"
+        let userRegisterEnvelop: UserRegisterEnvelop? = UserDefaults.standard.codable(forKey: registrationFormDataKey)
+        let userRegisterEnvelopValue: UserRegisterEnvelop = userRegisterEnvelop ?? UserRegisterEnvelop()
+
+        let userRegisterEnvelopUpdater = UserRegisterEnvelopUpdater(userRegisterEnvelop: userRegisterEnvelopValue)
+        userRegisterEnvelopUpdater.filledDataUpdated = { (updatedUserEnvelop: UserRegisterEnvelop) in
+            UserDefaults.standard.set(codable: updatedUserEnvelop, forKey: registrationFormDataKey)
+            UserDefaults.standard.synchronize()
+        }
+
+        let viewModel = SteppedRegistrationViewModel(userRegisterEnvelop: userRegisterEnvelopValue,
+                                                     serviceProvider: Env.servicesProvider,
+                                                     userRegisterEnvelopUpdater: userRegisterEnvelopUpdater)
+
         let steppedRegistrationViewController = SteppedRegistrationViewController(viewModel: viewModel)
-
-        // steppedRegistrationViewController.isModalInPresentation = true
 
         self.present(steppedRegistrationViewController, animated: true)
     }

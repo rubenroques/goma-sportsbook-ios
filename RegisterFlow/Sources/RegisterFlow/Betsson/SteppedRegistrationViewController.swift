@@ -15,12 +15,21 @@ public class SteppedRegistrationViewModel {
 
     var currentStep: CurrentValueSubject<Int, Never> = .init(0)
     var numberOfSteps: Int = 0
-    let serviceProvider: ServicesProviderClient
 
-    public init(currentStep: Int, numberOfSteps: Int, serviceProvider: ServicesProviderClient) {
-        self.currentStep = .init(0)
-        self.numberOfSteps = numberOfSteps
+    var userRegisterEnvelop: UserRegisterEnvelop
+
+    let serviceProvider: ServicesProviderClient
+    let userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
+
+    public init(userRegisterEnvelop: UserRegisterEnvelop,
+                serviceProvider: ServicesProviderClient,
+                userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
+
+        self.userRegisterEnvelop = userRegisterEnvelop
+        self.currentStep = .init( self.userRegisterEnvelop.currentRegisterStep() )
+        self.numberOfSteps = 0
         self.serviceProvider = serviceProvider
+        self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
     }
 
     func scrollToPreviousStep() {
@@ -43,6 +52,8 @@ public class SteppedRegistrationViewModel {
 
 public class SteppedRegistrationViewController: UIViewController {
 
+    public var didUpdateFilledData: (UserRegisterEnvelop) -> Void = { _ in }
+
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
 
     private lazy var headerBaseView: UIView = Self.createHeaderBaseView()
@@ -61,7 +72,6 @@ public class SteppedRegistrationViewController: UIViewController {
 
     private let viewModel: SteppedRegistrationViewModel
 
-    private var currentStep: Int = 0
     private var stepsViews: [RegisterStepView] = []
 
     private var registrationCompletionPublisher: AnyCancellable?
@@ -86,6 +96,26 @@ public class SteppedRegistrationViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
+        self.viewModel.currentStep
+            .removeDuplicates()
+            .sink { [weak self] currentStep in
+                let totalSteps = self?.stepsViews.count ?? 0
+                if totalSteps > 0 {
+                    let progress = Float(currentStep) / Float(totalSteps)
+                    self?.progressView.setProgress(progress, animated: true)
+                }
+                else {
+                    self?.progressView.setProgress(0.0, animated: false)
+                }
+            }
+            .store(in: &self.cancellables)
+
+        self.createSteps()
+    }
+
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
         let currentStepPublisher = self.viewModel.currentStep
             .removeDuplicates()
             .map { [weak self] (currentPage: Int) -> (currentPage: Int, yOffset: CGFloat) in
@@ -104,38 +134,6 @@ public class SteppedRegistrationViewController: UIViewController {
                 self?.scrollToItem(newPage: pageTupple.currentPage, offset: pageTupple.yOffset, animated: true)
             }
             .store(in: &self.cancellables)
-
-        self.viewModel.currentStep
-            .removeDuplicates()
-            .sink { [weak self] currentStep in
-                let totalSteps = self?.stepsViews.count ?? 0
-                if totalSteps > 0 {
-                    let progress = Float(currentStep) / Float(totalSteps)
-                    self?.progressView.setProgress(progress, animated: true)
-                }
-                else {
-                    self?.progressView.setProgress(0.0, animated: false)
-                }
-            }
-            .store(in: &self.cancellables)
-
-        self.createSteps()
-    }
-
-    func configureRegistrationCompletionPublisher() {
-
-        self.registrationCompletionPublisher?.cancel()
-
-        let registrationPerStepPublisher = self.stepsViews.map(\.isRegisterStepCompleted).combineLatest()
-        self.registrationCompletionPublisher = Publishers.CombineLatest(self.viewModel.currentStep, registrationPerStepPublisher)
-            .map { (currentPage, completionPerStepArray) -> Bool in
-                let isStepCompleted = completionPerStepArray[safe: currentPage] ?? false
-                return isStepCompleted
-            }
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] isCurrentStepCompleted in
-                self?.continueButton.isEnabled = isCurrentStepCompleted
-            })
 
     }
 
@@ -183,35 +181,28 @@ public class SteppedRegistrationViewController: UIViewController {
 
     private func createSteps() {
 
-        //
-        let contactsRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
-        let contactsFormStepView = ContactsFormStepView(viewModel: ContactsFormStepViewModel(title: "Contacts", serviceProvider: self.viewModel.serviceProvider))
-
-        contactsRegisterStepView.addFormView(formView: contactsFormStepView)
-        self.addStepView(registerStepView: contactsRegisterStepView)
-        //
-
-        //
-        let ageCountryRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
-        let viewModel = AgeCountryFormStepViewModel.init(title: "Age and Country",
-                                                         countryState: .idle,
-                                                         birthDate: nil,
-                                                         serviceProvider: self.viewModel.serviceProvider)
-        ageCountryRegisterStepView.addFormView(formView: AgeCountryFormStepView(viewModel: viewModel))
-
-        self.addStepView(registerStepView: ageCountryRegisterStepView)
-        //
-
+        let defaultCountryIso3Code = "FRA"
 
         // Step 1
         let nameRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
 
-        let genderFormStepView = GenderFormStepView(viewModel: GenderFormStepViewModel(title: "Gender",
-                                                                                       selectedGender: nil))
+        var gender: GenderFormStepViewModel.Gender? = nil
+        if let filledGender = self.viewModel.userRegisterEnvelop.gender {
+            switch filledGender {
+            case .male:
+                gender = .male
+            case .female:
+                gender = .female
+            }
+        }
+
+        let genderFormStepViewModel = GenderFormStepViewModel(title: "Gender", selectedGender: gender, userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater)
+        let genderFormStepView = GenderFormStepView(viewModel: genderFormStepViewModel)
 
         let namesFormStepView = NamesFormStepView(viewModel: NamesFormStepViewModel(title: "Names",
-                                                                                    firstNamePlaceholder: "First Name",
-                                                                                    lastNamePlaceholder: "Last Name"))
+                                                                                    firstName: self.viewModel.userRegisterEnvelop.name,
+                                                                                    lastName: self.viewModel.userRegisterEnvelop.surname,
+                                                                                    userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater))
 
         nameRegisterStepView.addFormView(formView: genderFormStepView)
         nameRegisterStepView.addFormView(formView: namesFormStepView)
@@ -235,9 +226,10 @@ public class SteppedRegistrationViewController: UIViewController {
                                                                                        ]))
 
         let nicknameFormStepView = NicknameFormStepView(viewModel: NicknameFormStepViewModel(title: "Nickname",
-                                                                                             nickname: nil,
+                                                                                             nickname: self.viewModel.userRegisterEnvelop.nickname,
                                                                                              nicknamePlaceholder: "Nickname",
-                                                                                             serviceProvider: self.viewModel.serviceProvider))
+                                                                                             serviceProvider: self.viewModel.serviceProvider,
+                                                                                             userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater))
 
         avatarNickRegisterStepView.addFormView(formView: avatarFormStepView)
         avatarNickRegisterStepView.addFormView(formView: nicknameFormStepView)
@@ -246,14 +238,74 @@ public class SteppedRegistrationViewController: UIViewController {
         //
 
 
+        // Step 3
+        //
+        let ageCountryRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
+        let viewModel = AgeCountryFormStepViewModel.init(title: "Age and Country",
+                                                         defaultCountryIso3Code: defaultCountryIso3Code,
+                                                         birthDate: self.viewModel.userRegisterEnvelop.dateOfBirth,
+                                                         serviceProvider: self.viewModel.serviceProvider,
+                                                         userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater)
+        ageCountryRegisterStepView.addFormView(formView: AgeCountryFormStepView(viewModel: viewModel))
+
+        self.addStepView(registerStepView: ageCountryRegisterStepView)
+        //
+
         // -----
 
-        //
+        // Step 4
         let addressRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
-        addressRegisterStepView.addFormView(formView: AddressFormStepView(viewModel: AddressFormStepViewModel(title: "Address")))
-
+        let addressFormStepView = AddressFormStepView(viewModel: AddressFormStepViewModel(title: "Address",
+                                                                                          place: self.viewModel.userRegisterEnvelop.placeAddress,
+                                                                                          street: self.viewModel.userRegisterEnvelop.streetAddress,
+                                                                                          additionalStreet: self.viewModel.userRegisterEnvelop.additionalStreetAddress,
+                                                                                          userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater))
+        addressRegisterStepView.addFormView(formView: addressFormStepView)
         self.addStepView(registerStepView: addressRegisterStepView)
         //
+
+
+        // Step 5
+        //
+        let contactsRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
+        let contactsFormStepView = ContactsFormStepView(viewModel: ContactsFormStepViewModel(title: "Contacts",
+                                                                                             email: self.viewModel.userRegisterEnvelop.email,
+                                                                                             phoneNumber: self.viewModel.userRegisterEnvelop.phoneNumber,
+                                                                                             defaultCountryIso3Code: defaultCountryIso3Code,
+                                                                                             serviceProvider: self.viewModel.serviceProvider,
+                                                                                             userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater))
+
+        contactsRegisterStepView.addFormView(formView: contactsFormStepView)
+        self.addStepView(registerStepView: contactsRegisterStepView)
+        //
+        //
+
+        // Step 6
+        //
+        let passwordRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
+        let passwordFormStepView = PasswordFormStepView(viewModel: PasswordFormStepViewModel(title: "Password",
+                                                                  password: self.viewModel.userRegisterEnvelop.password,
+                                                                  userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater))
+        passwordRegisterStepView.addFormView(formView: passwordFormStepView)
+        self.addStepView(registerStepView: passwordRegisterStepView)
+        //
+        //
+
+        // Step 7
+        //
+        let termsPromoRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
+
+        let termsCondFormStepView = TermsCondFormStepView(viewModel: TermsCondFormStepViewModel(title: "Terms and Conditions"))
+
+        let promoCodeFormStepView = PromoCodeFormStepView(viewModel: PromoCodeFormStepViewModel(title: "Promo"))
+
+        termsPromoRegisterStepView.addFormView(formView: termsCondFormStepView)
+        termsPromoRegisterStepView.addFormView(formView: promoCodeFormStepView)
+
+        self.addStepView(registerStepView: termsPromoRegisterStepView)
+        //
+        //
+
 
         // -----
 
@@ -265,12 +317,38 @@ public class SteppedRegistrationViewController: UIViewController {
     }
 
     private func addStepView(registerStepView: RegisterStepView) {
+
         registerStepView.alpha = 0.0
+
         self.stepsContentStackView.addArrangedSubview(registerStepView)
+
         NSLayoutConstraint.activate([
             registerStepView.heightAnchor.constraint(equalTo: self.contentBaseView.heightAnchor)
         ])
+
         self.stepsViews.append(registerStepView)
+
+        self.viewModel.numberOfSteps = self.stepsViews.count
+    }
+
+    func configureRegistrationCompletionPublisher() {
+
+        self.registrationCompletionPublisher?.cancel()
+
+        let registrationPerStepPublisher = self.stepsViews.map(\.isRegisterStepCompleted).combineLatest()
+        self.registrationCompletionPublisher = Publishers.CombineLatest(self.viewModel.currentStep, registrationPerStepPublisher)
+            .map { (currentPage, completionPerStepArray) -> Bool in
+                let isStepCompleted = completionPerStepArray[safe: currentPage] ?? false
+                return isStepCompleted
+            }
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isCurrentStepCompleted in
+                self?.continueButton.isEnabled = isCurrentStepCompleted
+                #if DEBUG
+                self?.continueButton.isEnabled = true
+                #endif
+            })
+
     }
 
     @objc private func didTapContinueButton() {
@@ -282,8 +360,10 @@ public class SteppedRegistrationViewController: UIViewController {
     }
 
     private func scrollToItem(newPage: Int, offset: CGFloat, animated: Bool) {
+
         self.scrollToItem(newPage: newPage, animated: animated)
         self.scrollToOffset(yPosition: offset, animated: animated)
+
     }
 
     private func scrollToItem(newPage: Int, animated: Bool) {
@@ -292,11 +372,13 @@ public class SteppedRegistrationViewController: UIViewController {
         CATransaction.setAnimationTimingFunction(timingFunction)
 
         UIView.animate(withDuration: animated ? 0.7 : 0.0, delay: animated ? 0.14 : 0.0) {
-            let oldStep = self.stepsViews[safe: self.currentStep]
-            let newStep = self.stepsViews[safe: newPage]
-            oldStep?.alpha = 0.0
-            newStep?.alpha = 1.0
-            self.currentStep = newPage
+            if self.viewModel.currentStep.value == newPage {
+                self.stepsViews[safe: newPage]?.alpha = 1.0
+            }
+            else {
+                self.stepsViews[safe: self.viewModel.currentStep.value]?.alpha = 0.0
+                self.stepsViews[safe: newPage]?.alpha = 1.0
+            }
         }
         CATransaction.commit()
     }
