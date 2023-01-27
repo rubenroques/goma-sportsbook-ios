@@ -12,6 +12,7 @@ import Combine
 import ServicesProvider
 import SharedModels
 import CountrySelectionFeature
+import AdresseFrancaise
 
 class AgeCountryFormStepViewModel {
 
@@ -61,6 +62,7 @@ class AgeCountryFormStepViewModel {
 
     private var serviceProvider: ServicesProviderClient
     private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
+    private var adresseFrancaiseClient: AdresseFrancaiseClient
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -85,7 +87,8 @@ class AgeCountryFormStepViewModel {
          placeBirth: String?,
 
          serviceProvider: ServicesProviderClient,
-         userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
+         userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater,
+         adresseFrancaiseClient: AdresseFrancaiseClient = AdresseFrancaiseClient()) {
 
         self.title = title
 
@@ -98,6 +101,8 @@ class AgeCountryFormStepViewModel {
 
         self.serviceProvider = serviceProvider
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
+
+        self.adresseFrancaiseClient = AdresseFrancaiseClient()
 
         self.loadCountries()
     }
@@ -143,6 +148,18 @@ class AgeCountryFormStepViewModel {
         self.userRegisterEnvelopUpdater.setPlaceBirth(place)
     }
 
+    func requestCommuneAutoCompletion(forQuery query: String) -> AnyPublisher<[String], Never> {
+        return self.adresseFrancaiseClient
+            .searchCommune(query: query)
+            .map { results in
+                let labels = results.map(\.label)
+                let uniqueLabels = NSOrderedSet(array: labels).prefix(4)
+                return Array(uniqueLabels) as! [String]
+            }
+            .replaceError(with: [String]() )
+            .eraseToAnyPublisher()
+    }
+
     private func formatIndicativeCountry(_ country: Country) -> String {
         var stringCountry = "\(country.iso2Code) - \(country.name)"
         if let flag = CountryFlagHelper.flag(forCode: country.iso2Code) {
@@ -157,7 +174,9 @@ class AgeCountryFormStepView: FormStepView {
 
     private lazy var dateHeaderTextFieldView: HeaderTextFieldView = Self.createHeaderTextFieldView()
     private lazy var countryHeaderTextFieldView: HeaderTextFieldView = Self.createHeaderTextFieldView()
+
     private lazy var placeHeaderTextFieldView: HeaderTextFieldView = Self.createHeaderTextFieldView()
+    private lazy var placeSearchCompletionView: SearchCompletionView = Self.createPlaceSearchCompletionView()
 
     private let viewModel: AgeCountryFormStepViewModel
 
@@ -178,17 +197,33 @@ class AgeCountryFormStepView: FormStepView {
     func configureSubviews() {
 
         self.dateHeaderTextFieldView.setDatePickerMode()
-        
-        self.stackView.addArrangedSubview(self.dateHeaderTextFieldView)
-        self.stackView.addArrangedSubview(self.countryHeaderTextFieldView)
-        self.stackView.addArrangedSubview(self.placeHeaderTextFieldView)
-        
+
+        let placeContainerView = UIView()
+        placeContainerView.translatesAutoresizingMaskIntoConstraints = false
+        placeContainerView.backgroundColor = .clear
+        placeContainerView.addSubview(self.placeHeaderTextFieldView)
+        placeContainerView.addSubview(self.placeSearchCompletionView)
+
         NSLayoutConstraint.activate([
             self.dateHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
             self.countryHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
+
             self.placeHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
+            placeContainerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 80),
+            self.placeHeaderTextFieldView.topAnchor.constraint(equalTo: placeContainerView.topAnchor),
+            self.placeHeaderTextFieldView.leadingAnchor.constraint(equalTo: placeContainerView.leadingAnchor),
+            self.placeHeaderTextFieldView.trailingAnchor.constraint(equalTo: placeContainerView.trailingAnchor),
+
+            self.placeSearchCompletionView.topAnchor.constraint(equalTo: self.placeHeaderTextFieldView.bottomAnchor, constant: -16),
+            self.placeSearchCompletionView.leadingAnchor.constraint(equalTo: self.placeHeaderTextFieldView.leadingAnchor),
+            self.placeSearchCompletionView.trailingAnchor.constraint(equalTo: self.placeHeaderTextFieldView.trailingAnchor),
+            self.placeSearchCompletionView.bottomAnchor.constraint(greaterThanOrEqualTo: placeContainerView.bottomAnchor),
         ])
-        
+
+        self.stackView.addArrangedSubview(self.dateHeaderTextFieldView)
+        self.stackView.addArrangedSubview(self.countryHeaderTextFieldView)
+        self.stackView.addArrangedSubview(placeContainerView)
+
         self.titleLabel.text = self.viewModel.title
         
         self.dateHeaderTextFieldView.setReturnKeyType(.next)
@@ -216,6 +251,38 @@ class AgeCountryFormStepView: FormStepView {
             self?.placeHeaderTextFieldView.resignFirstResponder()
         }
 
+
+        self.placeSearchCompletionView.didSelectSearchCompletion = { [weak self] searchCompletion in
+            self?.placeHeaderTextFieldView.setText(searchCompletion)
+            self?.placeHeaderTextFieldView.resignFirstResponder()
+            self?.placeSearchCompletionView.clearResults()
+        }
+
+        self.placeHeaderTextFieldView.didEndEditing = { [weak self] in
+            self?.placeSearchCompletionView.clearResults()
+        }
+
+        self.placeHeaderTextFieldView.textPublisher
+            .compactMap({ $0 })
+            .debounce(for: .seconds(0.6), scheduler: DispatchQueue.main)
+            .filter({ [weak self] _ in
+                return self?.placeHeaderTextFieldView.isFirstResponder ?? false
+            })
+            .flatMap { [weak self] query in
+                guard
+                    let self = self
+                else {
+                    return Just([String]()).eraseToAnyPublisher()
+                }
+                return self.viewModel.requestCommuneAutoCompletion(forQuery: query)
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] suggestions in
+                UIView.animate(withDuration: 0.1) {
+                    self?.placeSearchCompletionView.presentResults(suggestions)
+                }
+            }
+            .store(in: &self.cancellables)
 
         self.placeHeaderTextFieldView.textPublisher
             .sink { [weak self] text in
@@ -299,6 +366,12 @@ extension AgeCountryFormStepView {
         headerTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         headerTextFieldView.translatesAutoresizingMaskIntoConstraints = false
         return headerTextFieldView
+    }
+
+    fileprivate static func createPlaceSearchCompletionView() -> SearchCompletionView {
+        let searchCompletionView = SearchCompletionView()
+        searchCompletionView.translatesAutoresizingMaskIntoConstraints = false
+        return searchCompletionView
     }
 
 }

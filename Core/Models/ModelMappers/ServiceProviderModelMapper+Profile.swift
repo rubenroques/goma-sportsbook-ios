@@ -47,7 +47,11 @@ extension ServiceProviderModelMapper {
                            city: serviceProviderProfile.city,
                            postalCode: serviceProviderProfile.postalCode,
                            isEmailVerified: serviceProviderProfile.isEmailVerified,
-                           isRegistrationCompleted: serviceProviderProfile.isRegistrationCompleted)
+                           isRegistrationCompleted: serviceProviderProfile.isRegistrationCompleted,
+                           avatarName: serviceProviderProfile.avatarName,
+                           godfatherCode: serviceProviderProfile.godfatherCode,
+                           placeOfBirth: serviceProviderProfile.placeOfBirth,
+                           additionalStreetLine: serviceProviderProfile.additionalStreetLine)
     }
     
 }

@@ -19,6 +19,21 @@ extension SportRadarModelMapper {
         default: userRegistrationStatus = .quickOpen
         }
 
+        var avatarName: String?
+        var godfatherCode: String?
+        var placeOfBirth: String?
+        var additionalStreetLine: String?
+
+        for extraInfo in playerInfoResponse.extraInfos ?? [] {
+            switch extraInfo.key {
+            case "avatar": avatarName = extraInfo.value
+            case "godfatherCode": godfatherCode = extraInfo.value
+            case "placeOfBirth": placeOfBirth = extraInfo.value
+            case "streetLine2": additionalStreetLine = extraInfo.value
+            default: ()
+            }
+        }
+
         return UserProfile(userIdentifier: playerInfoResponse.partyId,
                            username: playerInfoResponse.userId,
                            email: playerInfoResponse.email,
@@ -34,7 +49,11 @@ extension SportRadarModelMapper {
                            city: playerInfoResponse.city,
                            postalCode: playerInfoResponse.postalCode,
                            emailVerificationStatus: EmailVerificationStatus(fromStringKey:  playerInfoResponse.emailVerificationStatus),
-                           userRegistrationStatus: userRegistrationStatus)
+                           userRegistrationStatus: userRegistrationStatus,
+                           avatarName: avatarName,
+                           godfatherCode: godfatherCode,
+                           placeOfBirth: placeOfBirth,
+                           additionalStreetLine: additionalStreetLine)
 
     }
 

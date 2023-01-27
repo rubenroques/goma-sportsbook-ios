@@ -263,6 +263,11 @@ class ContactsFormStepViewModel {
 //        let phoneNumberValidationRegex = #"^(?:0|\+33 ?|0?0?33 ?|)([1-9] ?(?:[0-9] ?){8})$"#
 //        let phoneNumberValidationPredicate = NSPredicate(format: "SELF MATCHES %@", phoneNumberValidationRegex)
 //        return phoneNumberValidationPredicate.evaluate(with: phoneNumber)
+
+        let numbersCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "0123456789")
+        if phoneNumber.rangeOfCharacter(from: numbersCharacterSet.inverted) != nil {
+            return false
+        }
         return phoneNumber.count > 2
     }
 
@@ -342,7 +347,7 @@ class ContactsFormStepView: FormStepView {
         self.titleLabel.text = self.viewModel.title
 
         self.emailHeaderTextFieldView.setKeyboardType(.emailAddress)
-        self.phoneHeaderTextFieldView.setKeyboardType(.namePhonePad)
+        self.phoneHeaderTextFieldView.setKeyboardType(.phonePad)
 
         self.emailHeaderTextFieldView.setPlaceholderText("Email")
         self.phoneHeaderTextFieldView.setPlaceholderText("Phone number")

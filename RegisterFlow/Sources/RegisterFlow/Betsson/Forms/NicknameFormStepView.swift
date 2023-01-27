@@ -138,9 +138,6 @@ class NicknameFormStepViewModel {
         if shouldUseGeneratedNickname {
             self.generatedNickname?.send(generatedNickname)
         }
-        else {
-            print("DEBUG-NICK: ignoring generated nickname \(generatedNickname)")
-        }
     }
 
     func setNickname(_ nickname: String?) {
@@ -286,8 +283,9 @@ class NicknameFormStepView: FormStepView {
 
         self.viewModel.generatedNickname?
             .receive(on: DispatchQueue.main)
+            .compactMap({ $0 })
             .sink { [weak self] generatedNickname in
-                if let generatedNickname, !generatedNickname.isEmpty {
+                if !generatedNickname.isEmpty {
                     self?.nicknameHeaderTextFieldView.setText(generatedNickname)
                 }
             }

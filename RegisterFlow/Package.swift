@@ -23,6 +23,7 @@ let package = Package(
         .package(name: "Theming", path: "../Theming"),
         .package(name: "ServicesProvider", path: "../ServicesProvider"),
         .package(name: "CountrySelectionFeature", path: "../CountrySelectionFeature"),
+        .package(name: "AdresseFrancaise", path: "../AdresseFrancaise"),
 
     ],
     targets: [
@@ -34,6 +35,7 @@ let package = Package(
                 "SharedModels",
                 "ServicesProvider",
                 "CountrySelectionFeature",
+                "AdresseFrancaise",
                 "Extensions",
                 "Theming",
             ]),

@@ -297,6 +297,10 @@ class HeaderTextFieldView: NibView {
         return true
     }
 
+    override var isFirstResponder: Bool {
+        return self.textField.isFirstResponder
+    }
+
     @objc func didTapContainerView() {
         self.textField.becomeFirstResponder()
     }

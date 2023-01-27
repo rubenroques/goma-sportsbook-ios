@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import SwiftUI
+import RegisterFlow
 
 enum Route {
     case openBet(id: String)
@@ -75,6 +76,7 @@ class Router {
         })
 
         self.rootWindow.rootViewController = splashViewController
+
         self.rootWindow.makeKeyAndVisible()
     }
 
@@ -95,9 +97,7 @@ class Router {
         else {
             bootRootViewController = Router.createLoginViewControllerFlow()
         }
-
         self.rootWindow.rootViewController = bootRootViewController
-
     }
 
     func subscribeToUserActionBlockers() {

@@ -166,14 +166,16 @@ class UserSessionStore {
         }
 
         UserDefaults.standard.userSession = nil
-                
         // self.unsubscribeWalletUpdates()
 
         Env.favoritesManager.clearCachedFavorites()
         Env.gomaSocialClient.clearUserChatroomsData()
 
+        // TODO: Migrate to UserDefaults extensions
         UserDefaults.standard.removeObject(forKey: "betslipOddValidationType")
-        
+        UserDefaults.standard.removeObject(forKey: "shouldRequestBiometrics")
+        UserDefaults.standard.removeObject(forKey: "RegistrationFormDataKey")
+
         Env.gomaNetworkClient.reconnectSession()
 
         Env.everyMatrixClient
@@ -218,7 +220,8 @@ class UserSessionStore {
                                    userId: userProfile.userIdentifier,
                                    birthDate: userProfile.birthDate.toString(),
                                    isEmailVerified: userProfile.isEmailVerified,
-                                   isProfileCompleted: userProfile.isRegistrationCompleted)
+                                   isProfileCompleted: userProfile.isRegistrationCompleted,
+                                   avatarName: userProfile.avatarName)
             }
             .handleEvents(receiveOutput: { [weak self] userSession in
                 self?.saveUserSession(userSession)
@@ -588,9 +591,15 @@ extension UserSessionStore {
 }
 
 extension UserSessionStore {
-    
+
+    func setShouldRequestFaceId(_ request: Bool) {
+        UserDefaults.standard.set(request, forKey: "shouldRequestBiometrics")
+        UserDefaults.standard.synchronize()
+    }
+
     func shouldRequestFaceId() -> Bool {
-        return UserSessionStore.isUserLogged()
+        let shouldRequest = UserDefaults.standard.bool(forKey: "shouldRequestBiometrics")
+        return shouldRequest && UserSessionStore.isUserLogged()
     }
     
 }

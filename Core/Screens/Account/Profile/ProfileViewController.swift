@@ -97,6 +97,10 @@ class ProfileViewController: UIViewController {
 
         if let user = self.userSession {
             self.usernameLabel.text = user.username
+
+            if let avatarName = user.avatarName {
+                self.profilePictureImageView.image = UIImage(named: avatarName)
+            }
             // self.userIdLabel.text = user.userId
         }
 

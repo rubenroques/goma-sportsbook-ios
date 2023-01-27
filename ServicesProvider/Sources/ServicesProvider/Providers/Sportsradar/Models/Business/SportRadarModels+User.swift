@@ -96,6 +96,210 @@ extension SportRadarModels {
         let unit: String?
         let floorNumber: String?
 
+        let extraInfos: [ExtraInfo]?
+
+        enum CodingKeys: String, CodingKey {
+            case status = "status"
+
+            case partyId = "partyId"
+            case userId = "userId"
+            case email = "email"
+
+            case firstName = "firstName"
+            case lastName = "lastName"
+            case nickname = "nickname"
+            case language = "language"
+            case phone = "phone"
+            case phoneCountryCode = "phoneCountryCode"
+            case phoneLocalNumber = "phoneLocalNumber"
+            case phoneNeedsReview = "phoneNeedsReview"
+            case birthDate = "birthDate"
+            case birthDateFormatted = "birthDateFormatted"
+            case regDate = "regDate"
+            case regDateFormatted = "regDateFormatted"
+            case mobilePhone = "mobilePhone"
+            case mobileCountryCode = "mobileCountryCode"
+            case mobileLocalNumber = "mobileLocalNumber"
+            case mobileNeedsReview = "mobileNeedsReview"
+            case currency = "currency"
+            case lastLogin = "lastLogin"
+            case lastLoginFormatted = "lastLoginFormatted"
+            case level = "level"
+            case parentID = "parentID"
+            case userType = "userType"
+            case isAutopay = "isAutopay"
+            case registrationStatus = "registrationStatus"
+            case sessionKey = "sessionKey"
+
+            case vipStatus = "vipStatus"
+            case kycStatus = "kycStatus"
+            case emailVerificationStatus = "emailVerificationStatus"
+            case verificationStatus = "verificationStatus"
+            case lockedStatus = "lockedStatus"
+
+            case gender = "gender"
+            case contactPreference = "contactPreference"
+            case verificationMethod = "verificationMethod"
+            case docNumber = "docNumber"
+            case readonlyFields = "readonlyFields"
+
+            case accountNumber = "accountNumber"
+            case idCardNumber = "idCardNumber"
+            case madeDeposit = "madeDeposit"
+            case testPlayer = "testPlayer"
+
+            case address = "address"
+            case city = "city"
+            case province = "province"
+            case postalCode = "postalCode"
+            case country = "country"
+            case nationality = "nationality"
+            case municipality = "municipality"
+            case streetNumber = "streetNumber"
+            case building = "building"
+            case unit = "unit"
+            case floorNumber = "floorNumber"
+
+            case extraInfos = "extraInfo"
+        }
+
+        struct ExtraInfo: Codable {
+
+            let key: String
+            let value: String
+
+            enum CodingKeys: String, CodingKey {
+                case key
+                case value
+            }
+
+            init(from decoder: Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.key = try container.decode(String.self, forKey: .key)
+                self.value = try container.decode(String.self, forKey: .value)
+            }
+        }
+
+        public init(status: String, partyId: String, userId: String, email: String, firstName: String?, lastName: String?, nickname: String?, language: String?, phone: String?, phoneCountryCode: String?, phoneLocalNumber: String?, phoneNeedsReview: Bool?, birthDate: String?, birthDateFormatted: Date, regDate: String?, regDateFormatted: Date?, mobilePhone: String?, mobileCountryCode: String?, mobileLocalNumber: String?, mobileNeedsReview: Bool?, currency: String?, lastLogin: String?, lastLoginFormatted: Date?, level: Int?, parentID: String?, userType: Int?, isAutopay: Bool?, registrationStatus: String?, sessionKey: String?, vipStatus: String?, kycStatus: String?, emailVerificationStatus: String, verificationStatus: String?, lockedStatus: String?, gender: String?, contactPreference: String?, verificationMethod: String?, docNumber: String?, readonlyFields: String?, accountNumber: String?, idCardNumber: String?, madeDeposit: Bool?, testPlayer: Bool?, address: String?, city: String?, province: String?, postalCode: String?, country: String?, nationality: String?, municipality: String?, streetNumber: String?, building: String?, unit: String?, floorNumber: String?) {
+
+            self.status = status
+            self.partyId = partyId
+            self.userId = userId
+            self.email = email
+            self.firstName = firstName
+            self.lastName = lastName
+            self.nickname = nickname
+            self.language = language
+            self.phone = phone
+            self.phoneCountryCode = phoneCountryCode
+            self.phoneLocalNumber = phoneLocalNumber
+            self.phoneNeedsReview = phoneNeedsReview
+            self.birthDate = birthDate
+            self.birthDateFormatted = birthDateFormatted
+            self.regDate = regDate
+            self.regDateFormatted = regDateFormatted
+            self.mobilePhone = mobilePhone
+            self.mobileCountryCode = mobileCountryCode
+            self.mobileLocalNumber = mobileLocalNumber
+            self.mobileNeedsReview = mobileNeedsReview
+            self.currency = currency
+            self.lastLogin = lastLogin
+            self.lastLoginFormatted = lastLoginFormatted
+            self.level = level
+            self.parentID = parentID
+            self.userType = userType
+            self.isAutopay = isAutopay
+            self.registrationStatus = registrationStatus
+            self.sessionKey = sessionKey
+            self.vipStatus = vipStatus
+            self.kycStatus = kycStatus
+            self.emailVerificationStatus = emailVerificationStatus
+            self.verificationStatus = verificationStatus
+            self.lockedStatus = lockedStatus
+            self.gender = gender
+            self.contactPreference = contactPreference
+            self.verificationMethod = verificationMethod
+            self.docNumber = docNumber
+            self.readonlyFields = readonlyFields
+            self.accountNumber = accountNumber
+            self.idCardNumber = idCardNumber
+            self.madeDeposit = madeDeposit
+            self.testPlayer = testPlayer
+            self.address = address
+            self.city = city
+            self.province = province
+            self.postalCode = postalCode
+            self.country = country
+            self.nationality = nationality
+            self.municipality = municipality
+            self.streetNumber = streetNumber
+            self.building = building
+            self.unit = unit
+            self.floorNumber = floorNumber
+            self.extraInfos = nil
+        }
+
+        init(from decoder: Decoder) throws {
+            let container: KeyedDecodingContainer<SportRadarModels.PlayerInfoResponse.CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
+
+            self.status = try container.decode(String.self, forKey: .status)
+            self.partyId = try container.decode(String.self, forKey: .partyId)
+            self.userId = try container.decode(String.self, forKey: .userId)
+            self.email = try container.decode(String.self, forKey: .email)
+            self.firstName = try container.decodeIfPresent(String.self, forKey: .firstName)
+            self.lastName = try container.decodeIfPresent(String.self, forKey: .lastName)
+            self.nickname = try container.decodeIfPresent(String.self, forKey: .nickname)
+            self.language = try container.decodeIfPresent(String.self, forKey: .language)
+            self.phone = try container.decodeIfPresent(String.self, forKey: .phone)
+            self.phoneCountryCode = try container.decodeIfPresent(String.self, forKey: .phoneCountryCode)
+            self.phoneLocalNumber = try container.decodeIfPresent(String.self, forKey: .phoneLocalNumber)
+            self.phoneNeedsReview = try container.decodeIfPresent(Bool.self, forKey: .phoneNeedsReview)
+            self.birthDate = try container.decodeIfPresent(String.self, forKey: .birthDate)
+            self.birthDateFormatted = try container.decode(Date.self, forKey: .birthDateFormatted)
+            self.regDate = try container.decodeIfPresent(String.self, forKey: .regDate)
+            self.regDateFormatted = try container.decodeIfPresent(Date.self, forKey: .regDateFormatted)
+            self.mobilePhone = try container.decodeIfPresent(String.self, forKey: .mobilePhone)
+            self.mobileCountryCode = try container.decodeIfPresent(String.self, forKey: .mobileCountryCode)
+            self.mobileLocalNumber = try container.decodeIfPresent(String.self, forKey: .mobileLocalNumber)
+            self.mobileNeedsReview = try container.decodeIfPresent(Bool.self, forKey: .mobileNeedsReview)
+            self.currency = try container.decodeIfPresent(String.self, forKey: .currency)
+            self.lastLogin = try container.decodeIfPresent(String.self, forKey: .lastLogin)
+            self.lastLoginFormatted = try container.decodeIfPresent(Date.self, forKey: .lastLoginFormatted)
+            self.level = try container.decodeIfPresent(Int.self, forKey: .level)
+            self.parentID = try container.decodeIfPresent(String.self, forKey: .parentID)
+            self.userType = try container.decodeIfPresent(Int.self, forKey: .userType)
+            self.isAutopay = try container.decodeIfPresent(Bool.self, forKey: .isAutopay)
+            self.registrationStatus = try container.decodeIfPresent(String.self, forKey: .registrationStatus)
+            self.sessionKey = try container.decodeIfPresent(String.self, forKey: .sessionKey)
+            self.vipStatus = try container.decodeIfPresent(String.self, forKey: .vipStatus)
+            self.kycStatus = try container.decodeIfPresent(String.self, forKey: .kycStatus)
+            self.emailVerificationStatus = try container.decode(String.self, forKey: .emailVerificationStatus)
+            self.verificationStatus = try container.decodeIfPresent(String.self, forKey: .verificationStatus)
+            self.lockedStatus = try container.decodeIfPresent(String.self, forKey: .lockedStatus)
+            self.gender = try container.decodeIfPresent(String.self, forKey: .gender)
+            self.contactPreference = try container.decodeIfPresent(String.self, forKey: .contactPreference)
+            self.verificationMethod = try container.decodeIfPresent(String.self, forKey: .verificationMethod)
+            self.docNumber = try container.decodeIfPresent(String.self, forKey: .docNumber)
+            self.readonlyFields = try container.decodeIfPresent(String.self, forKey: .readonlyFields)
+            self.accountNumber = try container.decodeIfPresent(String.self, forKey: .accountNumber)
+            self.idCardNumber = try container.decodeIfPresent(String.self, forKey: .idCardNumber)
+            self.madeDeposit = try container.decodeIfPresent(Bool.self, forKey: .madeDeposit)
+            self.testPlayer = try container.decodeIfPresent(Bool.self, forKey: .testPlayer)
+            self.address = try container.decodeIfPresent(String.self, forKey: .address)
+            self.city = try container.decodeIfPresent(String.self, forKey: .city)
+            self.province = try container.decodeIfPresent(String.self, forKey: .province)
+            self.postalCode = try container.decodeIfPresent(String.self, forKey: .postalCode)
+            self.country = try container.decodeIfPresent(String.self, forKey: .country)
+            self.nationality = try container.decodeIfPresent(String.self, forKey: .nationality)
+            self.municipality = try container.decodeIfPresent(String.self, forKey: .municipality)
+            self.streetNumber = try container.decodeIfPresent(String.self, forKey: .streetNumber)
+            self.building = try container.decodeIfPresent(String.self, forKey: .building)
+            self.unit = try container.decodeIfPresent(String.self, forKey: .unit)
+            self.floorNumber = try container.decodeIfPresent(String.self, forKey: .floorNumber)
+
+            self.extraInfos = try? container.decodeIfPresent([ExtraInfo].self, forKey: .extraInfos)
+        }
+
     }
     
     public struct CheckCredentialResponse: Codable {

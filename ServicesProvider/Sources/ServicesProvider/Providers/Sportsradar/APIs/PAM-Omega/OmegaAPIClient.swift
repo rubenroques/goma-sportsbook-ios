@@ -69,7 +69,14 @@ enum OmegaAPIClient {
                 countryIso2Code: String,
                 cardId: String?,
                 securityQuestion: String?,
-                securityAnswer: String?)
+                securityAnswer: String?,
+                bonusCode: String?,
+                receiveMarketingEmails: Bool?,
+                avatarName: String?,
+                placeOfBirth: String?,
+                additionalStreetAddress: String?,
+                godfatherCode: String?)
+
     case resendVerificationCode(username: String)
     case signupConfirmation(email: String,
                             confirmationCode: String)
@@ -172,14 +179,16 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "receiveEmail", value: "true"),
                 URLQueryItem(name: "country", value: countryIsoCode),
                 URLQueryItem(name: "birthDate", value: birthDateString),
-                URLQueryItem(name: "mobile", value: phoneNumber),
+                URLQueryItem(name: "mobile", value: phoneNumber)
             ]
 
         case .signUp(let email, let username, let password,
                      let birthDate, let mobilePrefix, let mobileNumber, let nationalityIso2Code,
                      let currencyCode, let firstName, let lastName,
                      let gender, let address, let province, let city, let postalCode, let countryIso2Code,
-                     let cardId, let securityQuestion, let securityAnswer):
+                     let cardId, let securityQuestion, let securityAnswer,
+                     let bonusCode, let receiveMarketingEmails, let avatarName,
+                     let placeOfBirth, let additionalStreetAddress, let godfatherCode):
 
             let phoneNumber = "\(mobilePrefix)\(mobileNumber)".replacingOccurrences(of: "+", with: "")
 
@@ -189,7 +198,7 @@ extension OmegaAPIClient: Endpoint {
             query.append(URLQueryItem(name: "password", value: password))
             query.append(URLQueryItem(name: "email", value: email))
             query.append(URLQueryItem(name: "currency", value: currencyCode))
-            query.append(URLQueryItem(name: "receiveEmail", value: "true"))
+            query.append(URLQueryItem(name: "receiveEmail", value:  "true" ))
             query.append(URLQueryItem(name: "nationality", value: nationalityIso2Code))
             query.append(URLQueryItem(name: "mobile", value: phoneNumber))
             query.append(URLQueryItem(name: "city", value: city))
@@ -205,10 +214,26 @@ extension OmegaAPIClient: Endpoint {
             if let gender = gender { query.append(URLQueryItem(name: "gender", value: gender)) }
             if let address = address { query.append(URLQueryItem(name: "address", value: address)) }
             if let province = province { query.append(URLQueryItem(name: "province", value: province)) }
+
             if let postalCode = postalCode { query.append(URLQueryItem(name: "postalCode", value: postalCode)) }
             if let cardId = cardId { query.append(URLQueryItem(name: "idCardNumber", value: cardId)) }
             if let securityQuestion = securityQuestion { query.append(URLQueryItem(name: "securityQuestion", value: securityQuestion)) }
             if let securityAnswer = securityAnswer { query.append(URLQueryItem(name: "securityAnswer", value: securityAnswer)) }
+
+            if let bonusCode = bonusCode { query.append(URLQueryItem(name: "bonusCode", value: bonusCode)) }
+            if let receiveMarketingEmails = receiveMarketingEmails {
+                query.append(URLQueryItem(name: "receiveEmail", value: receiveMarketingEmails ? "true" : "false"))
+            }
+
+            var extraInfo = """
+                            {
+                            "avatar":"\(avatarName ?? "")",
+                            "placeOfBirth":"\(placeOfBirth ?? "")",
+                            "streetLine2":"\(additionalStreetAddress ?? "")",
+                            "godfatherCode":"\(godfatherCode ?? "")"
+                            }
+                            """
+            query.append(URLQueryItem(name: "extraInfo", value: extraInfo))
 
             return query
 

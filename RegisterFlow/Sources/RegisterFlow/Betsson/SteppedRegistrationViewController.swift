@@ -30,7 +30,7 @@ public class SteppedRegistrationViewModel {
         return self.userRegisterEnvelopUpdater.didUpdateUserRegisterEnvelop
             .map { updatedUserRegisterEnvelop -> String? in
                 let firstLetter = (updatedUserRegisterEnvelop.name ?? "").first
-                let surname = updatedUserRegisterEnvelop.surname
+                let surname = updatedUserRegisterEnvelop.surname?.replacingOccurrences(of: " ", with: "")
                 if let firstLetter, let surname {
                     let suggestion = "\(String(firstLetter))\(surname)"
                     return suggestion.lowercased()
@@ -179,14 +179,13 @@ public class SteppedRegistrationViewModel {
             let password = envelop.password,
             let mobilePrefix = envelop.phonePrefixCountry?.phonePrefix,
             let mobileNumber = envelop.phoneNumber,
-            let nationalityIsoCode = envelop.countryBirth?.iso2Code,
+            let countryBirthIsoCode = envelop.countryBirth?.iso2Code,
             let firstName = envelop.name,
             let lastName = envelop.surname,
             let gender = envelop.gender,
-            let province = envelop.placeAddress,
-            let address = envelop.streetAddress,
+            let streetAddress = envelop.streetAddress,
             let birthDate = envelop.dateOfBirth,
-            let city = envelop.placeAddress
+            let placeAddress = envelop.placeAddress
         else {
             return nil
         }
@@ -205,38 +204,22 @@ public class SteppedRegistrationViewModel {
                                                 birthDate: birthDate,
                                                 mobilePrefix: mobilePrefix,
                                                 mobileNumber: mobileNumber,
-                                                nationalityIsoCode: nationalityIsoCode,
+                                                nationalityIsoCode: countryBirthIsoCode,
                                                 currencyCode: "EUR",
                                                 firstName: firstName,
                                                 lastName: lastName,
                                                 gender: genderString,
-                                                address: address,
-                                                province: province,
-                                                city: city,
-                                                countryIsoCode: nationalityIsoCode)
-
+                                                address: streetAddress,
+                                                province: nil,
+                                                city: placeAddress,
+                                                countryIsoCode: countryBirthIsoCode,
+                                                bonusCode: envelop.promoCode,
+                                                receiveMarketingEmails: envelop.acceptedMarketing,
+                                                avatarName: envelop.avatarName,
+                                                placeOfBirth: envelop.placeBirth,
+                                                additionalStreetAddress: envelop.additionalStreetAddress,
+                                                godfatherCode: envelop.godfatherCode)
     }
-//
-//    private func completeRegisterFormFromRegisterEnvelop(_ envelop: UserRegisterEnvelop) -> ServicesProvider.UpdateUserProfileForm? {
-//
-//        return UpdateUserProfileForm(username: username,
-//                              email: email,
-//                              firstName: firstName,
-//                              lastName: lastName,
-//                              birthDate: birthDate,
-//                              gender: genderString,
-//                              address: envelop.placeAddress,
-//                              province: envelop.streetAddress,
-//                              city: "EMPTY",
-//                              postalCode: "1229",
-//                              country: country,
-//                              cardId: "123344",
-//                              mobileNumber: fullMobileNumber,
-//                              securityQuestion: "Quest",
-//                              securityAnswer: "Answ")
-//
-//    }
-//
 
 }
 
@@ -305,12 +288,19 @@ public class SteppedRegistrationViewController: UIViewController {
         self.viewModel.currentStep
             .receive(on: DispatchQueue.main)
             .sink { currentStep in
-                if currentStep == 7 {
+                if currentStep == 0 {
+                    self.backButton.alpha = 0.5
+                    self.backButton.isHidden = false
+                    self.cancelButton.isHidden = false
+                    self.progressView.isHidden = false
+                }
+                else if currentStep == 7 {
                     self.backButton.isHidden = true
                     self.cancelButton.isHidden = true
                     self.progressView.isHidden = true
                 }
                 else {
+                    self.backButton.alpha = 1.0
                     self.backButton.isHidden = false
                     self.cancelButton.isHidden = false
                     self.progressView.isHidden = false
@@ -328,7 +318,7 @@ public class SteppedRegistrationViewController: UIViewController {
         self.viewModel.shouldPushSuccessStep
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
-                self?.showSuccessStep()
+                self?.didRegisteredUser()
             }
             .store(in: &self.cancellables)
 
@@ -533,7 +523,7 @@ public class SteppedRegistrationViewController: UIViewController {
         // Step 6
         //
         let passwordRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
-        let passwordFormStepView = PasswordFormStepView(viewModel: PasswordFormStepViewModel(title: "Password",
+        let passwordFormStepView = PasswordFormStepView(viewModel: PasswordFormStepViewModel(title: "Security",
                                                                   password: self.viewModel.userRegisterEnvelop.password,
                                                                   userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater))
         passwordRegisterStepView.addFormView(formView: passwordFormStepView)
@@ -582,13 +572,13 @@ public class SteppedRegistrationViewController: UIViewController {
 
         //
         // Step 8
-        let successSignUpRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
-        let successSignUpFormStepView = SuccessSignUpFormStepView(viewModel: SuccessSignUpFormStepViewModel(title: "Sign Up",
-                                                                                                            userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater))
-
-        successSignUpRegisterStepView.addFormView(formView: successSignUpFormStepView)
-        self.addStepView(registerStepView: successSignUpRegisterStepView)
-        //
+//        let successSignUpRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
+//        let successSignUpFormStepView = SuccessSignUpFormStepView(viewModel: SuccessSignUpFormStepViewModel(title: "Sign Up",
+//                                                                                                            userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater))
+//
+//        successSignUpRegisterStepView.addFormView(formView: successSignUpFormStepView)
+//        self.addStepView(registerStepView: successSignUpRegisterStepView)
+//        //
         //
 
         //
@@ -640,8 +630,6 @@ public extension SteppedRegistrationViewController {
         switch self.viewModel.currentStep.value {
         case 6:
             self.requestSignUp()
-        case 7:
-            self.didRegisteredUser()
         default:
             self.viewModel.scrollToNextStep()
         }
@@ -665,29 +653,7 @@ public extension SteppedRegistrationViewController {
 public extension SteppedRegistrationViewController {
 
     func requestSignUp() {
-        if self.viewModel.requestRegister() {
-            //
-        }
-        else {
-            // Show error. Not able to create the sign up form model
-        }
-    }
-//
-//    func requestPhoneConfirmation() {
-//        if self.viewModel.confirmPhoneCode() {
-//
-//        }
-//        else {
-//
-//        }
-//    }
-//
-//    func showPhoneVerification() {
-//        self.viewModel.scrollToIndex(7)
-//    }
-
-    func showSuccessStep() {
-        self.viewModel.scrollToIndex(7)
+        _ = self.viewModel.requestRegister()
     }
 
 }
@@ -914,7 +880,7 @@ public extension SteppedRegistrationViewController {
 
             self.continueButton.centerXAnchor.constraint(equalTo: self.footerBaseView.centerXAnchor),
             self.continueButton.centerYAnchor.constraint(equalTo: self.footerBaseView.centerYAnchor),
-            self.continueButton.leadingAnchor.constraint(equalTo: self.footerBaseView.leadingAnchor, constant: 24),
+            self.continueButton.leadingAnchor.constraint(equalTo: self.footerBaseView.leadingAnchor, constant: 34),
             self.continueButton.heightAnchor.constraint(equalToConstant: 50),
 
             self.bottomSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),

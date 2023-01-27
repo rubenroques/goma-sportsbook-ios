@@ -144,7 +144,7 @@
                                 <constraint firstAttribute="width" constant="22" id="PKS-O9-aGv"/>
                             </constraints>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Message label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G5t-DZ-vnS">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Message label Message label Message label Message label Message label " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="G5t-DZ-vnS">
                             <rect key="frame" x="30" y="0.0" width="287" height="22"/>
                             <fontDescription key="fontDescription" name="CircularStd-Book" family="Circular Std" pointSize="11"/>
                             <color key="textColor" name="TextColor1"/>

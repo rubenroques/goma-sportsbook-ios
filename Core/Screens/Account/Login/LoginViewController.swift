@@ -282,13 +282,68 @@ class LoginViewController: UIViewController {
 
         let steppedRegistrationViewController = SteppedRegistrationViewController(viewModel: viewModel)
 
+        let registerNavigationController = Router.navigationController(with: steppedRegistrationViewController)
+
         steppedRegistrationViewController.didRegisteredUserAction = { [weak self] registeredUser in
             if let nickname = registeredUser.nickname, let password = registeredUser.password {
                 self?.triggerLoginAfterRegister(username: nickname, password: password)
                 self?.deleteCachedRegistrationData()
+                self?.showRegisterFeedbackViewController(onNavigationController: registerNavigationController)
             }
         }
-        self.present(steppedRegistrationViewController, animated: true)
+
+        self.present(registerNavigationController, animated: true)
+    }
+
+    private func showRegisterFeedbackViewController(onNavigationController navigationController: UINavigationController) {
+        let registerFeedbackViewController = RegisterFeedbackViewController(viewModel: RegisterFeedbackViewModel(registerSuccess: true))
+        registerFeedbackViewController.didTapContinueButtonAction = { [weak self] in
+            self?.showBiometricPromptViewController(onNavigationController: navigationController)
+        }
+        navigationController.pushViewController(registerFeedbackViewController, animated: true)
+    }
+
+    private func showBiometricPromptViewController(onNavigationController navigationController: UINavigationController) {
+        let biometricPromptViewController = BiometricPromptViewController()
+        biometricPromptViewController.didTapBackButtonAction = {
+            navigationController.popViewController(animated: true)
+        }
+        biometricPromptViewController.didTapCancelButtonAction = { [weak self] in
+            self?.closeLoginRegisterFlow()
+        }
+        biometricPromptViewController.didTapActivateButtonAction = { [weak self] in
+            Env.userSessionStore.setShouldRequestFaceId(true)
+            self?.showLimitsOnRegisterViewController(onNavigationController: navigationController)
+        }
+        biometricPromptViewController.didTapLaterButtonAction = { [weak self] in
+            Env.userSessionStore.setShouldRequestFaceId(false)
+            self?.showLimitsOnRegisterViewController(onNavigationController: navigationController)
+        }
+        navigationController.pushViewController(biometricPromptViewController, animated: true)
+    }
+
+    private func showDepositOnRegisterViewController(onNavigationController navigationController: UINavigationController) {
+        self.closeLoginRegisterFlow()
+        let depositOnRegisterViewController = DepositOnRegisterViewController()
+        depositOnRegisterViewController.didTapBackButtonAction = {
+            navigationController.popViewController(animated: true)
+        }
+        depositOnRegisterViewController.didTapCancelButtonAction = { [weak self] in
+            self?.closeLoginRegisterFlow()
+        }
+        navigationController.pushViewController(depositOnRegisterViewController, animated: true)
+    }
+
+    private func showLimitsOnRegisterViewController(onNavigationController navigationController: UINavigationController) {
+        self.closeLoginRegisterFlow()
+        let limitsOnRegisterViewController = LimitsOnRegisterViewController()
+        limitsOnRegisterViewController.didTapBackButtonAction = {
+            navigationController.popViewController(animated: true)
+        }
+        limitsOnRegisterViewController.didTapCancelButtonAction = { [weak self] in
+            self?.closeLoginRegisterFlow()
+        }
+        navigationController.pushViewController(limitsOnRegisterViewController, animated: true)
     }
 
     private func deleteCachedRegistrationData() {
@@ -382,9 +437,9 @@ class LoginViewController: UIViewController {
         Env.userSessionStore.login(withUsername: username, password: password)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
-                print("triggerPendingLoginAfterRegister ", completion)
+                print("triggerLoginAfterRegister ", completion)
             } receiveValue: { [weak self] success in
-                self?.closeLoginRegisterFlow()
+                print("triggerLoginAfterRegister ", success)
             }
             .store(in: &cancellables)
     }

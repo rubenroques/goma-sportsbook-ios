@@ -25,6 +25,10 @@ class PasswordFormStepViewModel {
         case long
         case invalidChars
         case onlyNumbers
+        case needUppercase
+        case needLowercase
+        case needNumber
+        case needSpecial
         case valid
     }
     var passwordState: AnyPublisher<PasswordState, Never> {
@@ -32,7 +36,7 @@ class PasswordFormStepViewModel {
             .map { password in
                 guard let password else { return PasswordState.empty }
                 if password.isEmpty { return PasswordState.empty }
-                if password.count < 6 { return PasswordState.short }
+                if password.count < 8 { return PasswordState.short }
                 if password.count > 16 { return PasswordState.long }
 
                 let numbersCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "0123456789")
@@ -44,6 +48,24 @@ class PasswordFormStepViewModel {
                 if password.rangeOfCharacter(from: validCharacterSet.inverted) != nil {
                     return PasswordState.invalidChars
                 }
+
+                let specialCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "-!@$^&*")
+                let lowerCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyz")
+                let upperCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+                if password.rangeOfCharacter(from: lowerCharacterSet as CharacterSet) == nil {
+                    return PasswordState.needLowercase
+                }
+                if password.rangeOfCharacter(from: upperCharacterSet as CharacterSet) == nil {
+                    return PasswordState.needUppercase
+                }
+                if password.rangeOfCharacter(from: numbersCharacterSet as CharacterSet) == nil {
+                    return PasswordState.needNumber
+                }
+                if password.rangeOfCharacter(from: specialCharacterSet as CharacterSet) == nil {
+                    return PasswordState.needSpecial
+                }
+
                 return PasswordState.valid
             }
             .eraseToAnyPublisher()
@@ -119,24 +141,34 @@ class PasswordFormStepView: FormStepView {
 
         self.passwordHeaderTextFieldView.textPublisher
             .sink { [weak self] text in
+                self?.passwordHeaderTextFieldView.hideTipAndError()
                 self?.viewModel.setPassword(text)
             }
             .store(in: &self.cancellables)
 
         self.viewModel.passwordState
+            .debounce(for: .seconds(1.5), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .sink { passwordState in
                 switch passwordState {
                 case .empty:
                     self.passwordHeaderTextFieldView.hideTipAndError()
                 case .short:
-                    self.passwordHeaderTextFieldView.showErrorOnField(text: "Password is too short", color: AppColor.inputError)
+                    self.passwordHeaderTextFieldView.showErrorOnField(text: "The password is too short", color: AppColor.inputError)
                 case .long:
-                    self.passwordHeaderTextFieldView.showErrorOnField(text: "Password is too long", color: AppColor.inputError)
+                    self.passwordHeaderTextFieldView.showErrorOnField(text: "The password is too long", color: AppColor.inputError)
                 case  .invalidChars:
-                    self.passwordHeaderTextFieldView.showErrorOnField(text: "Password contains invalids characters", color: AppColor.inputError)
+                    self.passwordHeaderTextFieldView.showErrorOnField(text: "The password contains invalids characters", color: AppColor.inputError)
                 case .onlyNumbers:
-                    self.passwordHeaderTextFieldView.showErrorOnField(text: "Password can not be all numbers", color: AppColor.inputError)
+                    self.passwordHeaderTextFieldView.showErrorOnField(text: "The password can not be all numbers", color: AppColor.inputError)
+                case .needUppercase:
+                    self.passwordHeaderTextFieldView.showErrorOnField(text: "The password must contain an uppercase letter", color: AppColor.inputError)
+                case .needLowercase:
+                    self.passwordHeaderTextFieldView.showErrorOnField(text: "The password must contain a lowercase letter", color: AppColor.inputError)
+                case .needNumber:
+                    self.passwordHeaderTextFieldView.showErrorOnField(text: "The password must contain a number", color: AppColor.inputError)
+                case .needSpecial:
+                    self.passwordHeaderTextFieldView.showErrorOnField(text: "The password must contain a special character (-!@$^&*)", color: AppColor.inputError)
                 case .valid:
                     self.passwordHeaderTextFieldView.hideTipAndError()
                 }

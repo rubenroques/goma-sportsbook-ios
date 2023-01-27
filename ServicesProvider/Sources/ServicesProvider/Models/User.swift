@@ -85,11 +85,15 @@ public struct UserProfile: Codable {
     public let province: String?
     public let city: String?
     public let postalCode: String?
-    
-    
+
     public let emailVerificationStatus: EmailVerificationStatus
     public let userRegistrationStatus: UserRegistrationStatus
-    
+
+    public let avatarName: String?
+    public let godfatherCode: String?
+    public let placeOfBirth: String?
+    public let additionalStreetLine: String?
+
     public init(userIdentifier: String,
                 username: String,
                 email: String,
@@ -105,8 +109,12 @@ public struct UserProfile: Codable {
                 city: String?,
                 postalCode: String?,
                 emailVerificationStatus: EmailVerificationStatus,
-                userRegistrationStatus: UserRegistrationStatus) {
-        
+                userRegistrationStatus: UserRegistrationStatus,
+                avatarName: String?,
+                godfatherCode: String?,
+                placeOfBirth: String?,
+                additionalStreetLine: String?) {
+
         self.userIdentifier = userIdentifier
         self.username = username
         self.email = email
@@ -121,11 +129,15 @@ public struct UserProfile: Codable {
         self.province = province
         self.city = city
         self.postalCode = postalCode
-        
         self.emailVerificationStatus = emailVerificationStatus
         self.userRegistrationStatus = userRegistrationStatus
+
+        self.avatarName = avatarName
+        self.godfatherCode = godfatherCode
+        self.placeOfBirth = placeOfBirth
+        self.additionalStreetLine = additionalStreetLine
     }
-    
+
 }
 
 public extension UserProfile {
@@ -172,7 +184,7 @@ public struct SimpleSignUpForm {
 
 }
 
-public struct SignUpForm {
+public class SignUpForm {
 
     public var email: String
     public var username: String
@@ -192,10 +204,15 @@ public struct SignUpForm {
     public var city: String
     public var countryIsoCode: String
 
-    public init(email: String, username: String, password: String, birthDate: Date, mobilePrefix: String,
-                mobileNumber: String, nationalityIsoCode: String, currencyCode: String, firstName: String?,
-                lastName: String?, gender: String?, address: String?, province: String?, city: String, countryIsoCode: String) {
-        
+    public var bonusCode: String?
+    public var receiveMarketingEmails: Bool?
+
+    public var avatarName: String?
+    public var placeOfBirth: String?
+    public var additionalStreetAddress: String?
+    public var godfatherCode: String?
+
+    public init(email: String, username: String, password: String, birthDate: Date, mobilePrefix: String, mobileNumber: String, nationalityIsoCode: String, currencyCode: String, firstName: String? = nil, lastName: String? = nil, gender: String? = nil, address: String? = nil, province: String? = nil, city: String, countryIsoCode: String, bonusCode: String? = nil, receiveMarketingEmails: Bool? = nil, avatarName: String? = nil, placeOfBirth: String? = nil, additionalStreetAddress: String? = nil, godfatherCode: String? = nil) {
         self.email = email
         self.username = username
         self.password = password
@@ -211,6 +228,12 @@ public struct SignUpForm {
         self.province = province
         self.city = city
         self.countryIsoCode = countryIsoCode
+        self.bonusCode = bonusCode
+        self.receiveMarketingEmails = receiveMarketingEmails
+        self.avatarName = avatarName
+        self.placeOfBirth = placeOfBirth
+        self.additionalStreetAddress = additionalStreetAddress
+        self.godfatherCode = godfatherCode
     }
 
 }

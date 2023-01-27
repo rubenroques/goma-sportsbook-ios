@@ -4820,6 +4820,7 @@
 		45BA77A0293CD35700B6ACA6 /* Extensions */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Extensions; sourceTree = "<group>"; };
 		45BA77A2293CD42400B6ACA6 /* GomaGamingSDK */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = GomaGamingSDK; sourceTree = "<group>"; };
 		45BA77A3293CD45500B6ACA6 /* ServicesProvider */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ServicesProvider; sourceTree = "<group>"; };
+		45BB5542298351CD00684F83 /* AdresseFrancaise */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AdresseFrancaise; sourceTree = "<group>"; };
 		45BD39C5270213DE001DD51D /* KeychainInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainInterface.swift; sourceTree = "<group>"; };
 		45BEA47726F4DC9900680181 /* SimpleRegisterDetailsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SimpleRegisterDetailsViewController.xib; sourceTree = "<group>"; };
 		45BEA47826F4DC9900680181 /* SimpleRegisterEmailCheckViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleRegisterEmailCheckViewController.swift; sourceTree = "<group>"; };
@@ -5858,6 +5859,7 @@
 		455A0C4726BD902C00EC572D = {
 			isa = PBXGroup;
 			children = (
+				45BB5542298351CD00684F83 /* AdresseFrancaise */,
 				45DD5303297ED57100DBC2AA /* CountrySelectionFeature */,
 				45DD5302297EBE6A00DBC2AA /* SharedModels */,
 				454DC4502975C62300B48D9A /* Theming */,
@@ -13340,7 +13342,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00781;
+				CURRENT_PROJECT_VERSION = 00786;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -13366,7 +13368,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00781;
+				CURRENT_PROJECT_VERSION = 00786;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
