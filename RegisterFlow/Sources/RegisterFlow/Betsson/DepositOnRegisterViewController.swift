@@ -208,7 +208,7 @@ public extension DepositOnRegisterViewController {
             self.contentBaseView.leadingAnchor.constraint(equalTo: self.depositButton.leadingAnchor),
             self.contentBaseView.trailingAnchor.constraint(equalTo: self.depositButton.trailingAnchor),
 
-            self.contentBaseView.bottomAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -10),
+            self.contentBaseView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -10),
 
             self.footerBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.footerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),

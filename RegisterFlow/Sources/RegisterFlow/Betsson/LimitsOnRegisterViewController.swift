@@ -25,6 +25,12 @@ public class LimitsOnRegisterViewController: UIViewController {
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
 
+    private lazy var stackView: UIStackView = Self.createStackView()
+
+    private lazy var depositLimitHeaderTextFieldView: HeaderTextFieldView = Self.createHeaderTextFieldView()
+    private lazy var bettingLimitHeaderTextFieldView: HeaderTextFieldView = Self.createHeaderTextFieldView()
+    private lazy var autoPayoutHeaderTextFieldView: HeaderTextFieldView = Self.createHeaderTextFieldView()
+
     private lazy var footerBaseView: UIView = Self.createFooterBaseView()
     private lazy var continueButton: UIButton = Self.createContinueButton()
 
@@ -44,7 +50,7 @@ public class LimitsOnRegisterViewController: UIViewController {
         self.setupWithTheme()
 
         self.titleLabel.text = "Limits Management"
-        self.subtitleLabel.text = "What type of player"
+        self.subtitleLabel.text = "What type of playerare you?"
 
         self.continueButton.setTitle("Continue", for: .normal)
 
@@ -52,6 +58,30 @@ public class LimitsOnRegisterViewController: UIViewController {
 
         self.cancelButton.addTarget(self, action: #selector(didTapCancelButton), for: .primaryActionTriggered)
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
+
+        self.depositLimitHeaderTextFieldView.setPlaceholderText("Deposit Limit")
+        self.bettingLimitHeaderTextFieldView.setPlaceholderText("Betting Limit")
+        self.autoPayoutHeaderTextFieldView.setPlaceholderText("Auto Payout")
+
+        self.depositLimitHeaderTextFieldView.setKeyboardType(.numbersAndPunctuation)
+        self.bettingLimitHeaderTextFieldView.setKeyboardType(.numbersAndPunctuation)
+        self.autoPayoutHeaderTextFieldView.setKeyboardType(.numbersAndPunctuation)
+
+        self.depositLimitHeaderTextFieldView.setReturnKeyType(.next)
+        self.depositLimitHeaderTextFieldView.didTapReturn = { [weak self] in
+            self?.bettingLimitHeaderTextFieldView.becomeFirstResponder()
+        }
+
+        self.bettingLimitHeaderTextFieldView.setReturnKeyType(.next)
+        self.bettingLimitHeaderTextFieldView.didTapReturn = { [weak self] in
+            self?.autoPayoutHeaderTextFieldView.becomeFirstResponder()
+        }
+
+        self.autoPayoutHeaderTextFieldView.setReturnKeyType(.done)
+        self.autoPayoutHeaderTextFieldView.didTapReturn = { [weak self] in
+            self?.autoPayoutHeaderTextFieldView.resignFirstResponder()
+        }
+
     }
 
     override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -78,6 +108,18 @@ public class LimitsOnRegisterViewController: UIViewController {
         self.continueButton.layer.cornerRadius = 8
         self.continueButton.layer.masksToBounds = true
         self.continueButton.backgroundColor = .clear
+
+        self.depositLimitHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.depositLimitHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
+        self.depositLimitHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
+
+        self.bettingLimitHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.bettingLimitHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
+        self.bettingLimitHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
+
+        self.autoPayoutHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.autoPayoutHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
+        self.autoPayoutHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
 
     }
 
@@ -149,6 +191,23 @@ public extension LimitsOnRegisterViewController {
         return label
     }
 
+    private static func createStackView() -> UIStackView {
+        let stackview = UIStackView()
+        stackview.distribution = .fill
+        stackview.axis = .vertical
+        stackview.spacing = 22
+        stackview.translatesAutoresizingMaskIntoConstraints = false
+        return stackview
+    }
+
+    private static func createHeaderTextFieldView() -> HeaderTextFieldView {
+        let headerTextFieldView = HeaderTextFieldView()
+        headerTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
+        headerTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
+        headerTextFieldView.translatesAutoresizingMaskIntoConstraints = false
+        return headerTextFieldView
+    }
+
     private static func createFooterBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -173,6 +232,19 @@ public extension LimitsOnRegisterViewController {
         self.view.addSubview(self.contentBaseView)
         self.contentBaseView.addSubview(self.titleLabel)
         self.contentBaseView.addSubview(self.subtitleLabel)
+
+        let topPlaceholderView = UIView()
+        topPlaceholderView.translatesAutoresizingMaskIntoConstraints = false
+        topPlaceholderView.backgroundColor = .clear
+        NSLayoutConstraint.activate([
+            topPlaceholderView.heightAnchor.constraint(equalToConstant: 40)
+        ])
+        self.stackView.addArrangedSubview(topPlaceholderView)
+        self.stackView.addArrangedSubview(self.depositLimitHeaderTextFieldView)
+        self.stackView.addArrangedSubview(self.bettingLimitHeaderTextFieldView)
+        self.stackView.addArrangedSubview(self.autoPayoutHeaderTextFieldView)
+
+        self.contentBaseView.addSubview(self.stackView)
 
         self.view.addSubview(self.footerBaseView)
         self.footerBaseView.addSubview(self.continueButton)
@@ -203,12 +275,19 @@ public extension LimitsOnRegisterViewController {
             self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 28),
             self.subtitleLabel.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor),
             self.subtitleLabel.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor),
-            self.subtitleLabel.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor, constant: -8),
+
+            self.depositLimitHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
+            self.bettingLimitHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
+            self.autoPayoutHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
+
+            self.stackView.topAnchor.constraint(equalTo: self.subtitleLabel.bottomAnchor, constant: -12),
+            self.stackView.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor),
+            self.stackView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor),
+            self.stackView.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor, constant: -8),
 
             self.contentBaseView.leadingAnchor.constraint(equalTo: self.continueButton.leadingAnchor),
             self.contentBaseView.trailingAnchor.constraint(equalTo: self.continueButton.trailingAnchor),
-
-            self.contentBaseView.bottomAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -10),
+            self.contentBaseView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -10),
 
             self.footerBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.footerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),

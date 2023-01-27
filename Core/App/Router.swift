@@ -85,7 +85,6 @@ class Router {
     }
 
     func showPostLoadingFlow() {
-
         self.subscribeToUserActionBlockers()
         self.subscribeToURLRedirects()
         self.subscribeToNotificationsOpened()
