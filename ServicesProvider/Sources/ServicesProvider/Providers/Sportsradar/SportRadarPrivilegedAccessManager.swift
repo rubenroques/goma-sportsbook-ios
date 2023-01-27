@@ -371,5 +371,52 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             }
         }).eraseToAnyPublisher()
     }
+
+    func getPayments() -> AnyPublisher<SimplePaymentMethodsResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.getPayments
+        let publisher: AnyPublisher<SportRadarModels.PaymentsResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ paymentsResponse -> AnyPublisher<SimplePaymentMethodsResponse, ServiceProviderError> in
+            if paymentsResponse.status == "SUCCESS" {
+                let paymentsResponse = SportRadarModelMapper.paymentsResponse(fromPaymentsResponse: paymentsResponse)
+
+                // Aditional encoding/decoding data needed for Omega
+                if let paymentMethods = paymentsResponse.depositMethods[safe: 0]?.methods {
+
+                    let simplePaymentMethods = paymentMethods.map({ method -> SimplePaymentMethod in
+                        return SimplePaymentMethod(name: method.name, type: method.type)
+                    })
+
+                    let simplePaymentMethodsResponse = SimplePaymentMethodsResponse(paymentMethods: simplePaymentMethods)
+
+                    return Just(simplePaymentMethodsResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                }
+                else {
+                    return Fail(outputType: SimplePaymentMethodsResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+                }
+
+            }
+            else {
+                return Fail(outputType: SimplePaymentMethodsResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+
+    func processDeposit(paymentMethod: String, amount: Double, option: String) -> AnyPublisher<ProcessDepositResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.processDeposit(paymentMethod: paymentMethod, amount: amount, option: option)
+        let publisher: AnyPublisher<SportRadarModels.ProcessDepositResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ processDepositResponse -> AnyPublisher<ProcessDepositResponse, ServiceProviderError> in
+            if processDepositResponse.status == "CONTINUE_TO_PAYMENT_SITE" {
+                let processDepositResponse = SportRadarModelMapper.processDepositResponse(fromProcessDepositResponse: processDepositResponse)
+                return Just(processDepositResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else {
+                return Fail(outputType: ProcessDepositResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
 }
 

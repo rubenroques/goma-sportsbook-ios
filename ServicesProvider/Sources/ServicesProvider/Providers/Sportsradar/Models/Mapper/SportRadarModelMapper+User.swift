@@ -131,6 +131,45 @@ extension SportRadarModelMapper {
 
         return UploadDocumentResponse(status: internalUploadDocumentResponse.status)
     }
+
+    static func paymentsResponse(fromPaymentsResponse internalPaymentsResponse: SportRadarModels.PaymentsResponse) -> PaymentsResponse {
+
+        let depositMethods = internalPaymentsResponse.depositMethods.map({ depositMethod -> DepositMethod in
+            let depositMethod = Self.depositMethod(fromDepositMethod: depositMethod)
+
+            return depositMethod
+
+        })
+
+        return PaymentsResponse(status: internalPaymentsResponse.status, depositMethods: depositMethods)
+    }
+
+    static func depositMethod(fromDepositMethod internalDepositMethod: SportRadarModels.DepositMethod) -> DepositMethod {
+
+        if let methods = internalDepositMethod.methods {
+            let paymentMethods = methods.map({ paymentMethod -> PaymentMethod in
+                let paymentMethod = Self.paymentMethod(fromPaymentMethod: paymentMethod)
+
+                return paymentMethod
+
+            })
+
+            return DepositMethod(code: internalDepositMethod.code, paymentMethod: internalDepositMethod.paymentMethod, methods: paymentMethods)
+        }
+
+        return DepositMethod(code: internalDepositMethod.code, paymentMethod: internalDepositMethod.paymentMethod, methods: [])
+    }
+
+    static func paymentMethod(fromPaymentMethod internalPaymentMethod: SportRadarModels.PaymentMethod) -> PaymentMethod {
+
+        return PaymentMethod(name: internalPaymentMethod.name, type: internalPaymentMethod.type, brands: internalPaymentMethod.brands)
+    }
+
+    static func processDepositResponse(fromProcessDepositResponse internalProcessDepositResponse: SportRadarModels.ProcessDepositResponse) -> ProcessDepositResponse {
+
+        return ProcessDepositResponse(status: internalProcessDepositResponse.status, paymentId: internalProcessDepositResponse.paymentId, continueUrl: internalProcessDepositResponse.continueUrl, clientKey: internalProcessDepositResponse.clientKey, sessionId: internalProcessDepositResponse.sessionId)
+    }
+
 }
 
 

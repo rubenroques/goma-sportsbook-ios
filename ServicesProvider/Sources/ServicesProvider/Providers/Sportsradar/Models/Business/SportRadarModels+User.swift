@@ -264,4 +264,53 @@ extension SportRadarModels {
             case status = "status"
         }
     }
+
+    struct PaymentsResponse: Codable {
+        var status: String
+        var depositMethods: [DepositMethod]
+
+        enum CodingKeys: String, CodingKey {
+            case status = "status"
+            case depositMethods = "depositMethods"
+        }
+    }
+
+    struct DepositMethod: Codable {
+        var code: String
+        var paymentMethod: String
+        var methods: [PaymentMethod]?
+
+        enum CodingKeys: String, CodingKey {
+            case code = "code"
+            case paymentMethod = "paymentMethod"
+            case methods = "methods"
+        }
+    }
+
+    struct PaymentMethod: Codable {
+        var name: String
+        var type: String
+        var brands: [String]?
+
+        enum CodingKeys: String, CodingKey {
+            case name = "name"
+            case type = "type"
+            case brands = "brands"
+        }
+    }
+    struct ProcessDepositResponse: Codable {
+        var status: String
+        var paymentId: String?
+        var continueUrl: String?
+        var clientKey: String
+        var sessionId: String
+
+        enum CodingKeys: String, CodingKey {
+            case status = "status"
+            case paymentId = "paymentId"
+            case continueUrl = "continueUrl"
+            case clientKey = "clientKey"
+            case sessionId = "sessionId"
+        }
+    }
 }

@@ -648,3 +648,5 @@ Terms of use, Privacy Policy and EULA";
 "kyc_account_status" = "KYC Account Status:";
 "identification" = "Identification";
 "proof_of_address" = "Proof of address";
+
+"payments" = "Payments";

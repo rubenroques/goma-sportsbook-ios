@@ -7,6 +7,11 @@
 
 import UIKit
 import Combine
+import ServicesProvider
+import Adyen
+import AdyenDropIn
+import AdyenActions
+import AdyenComponents
 
 class DepositViewController: UIViewController {
 
@@ -48,6 +53,8 @@ class DepositViewController: UIViewController {
     var currentSelectedButton: UIButton?
     var cancellables = Set<AnyCancellable>()
 
+    var dropInComponent: DropInComponent?
+
     // MARK: Lifetime and Cycle
     init() {
         self.viewModel = DepositViewModel()
@@ -80,7 +87,6 @@ class DepositViewController: UIViewController {
 
         self.navigationLabel.text = localized("deposit")
         self.navigationLabel.font = AppFont.with(type: .bold, size: 17)
-
 
         self.navigationButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
@@ -169,7 +175,6 @@ class DepositViewController: UIViewController {
     }
 
     // MARK: Binding
-
     private func bind(toViewModel viewModel: DepositViewModel) {
 
         viewModel.isLoadingPublisher
@@ -198,6 +203,17 @@ class DepositViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+        viewModel.shouldShowPaymentDropIn
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] shouldShow in
+                if shouldShow {
+                    if let paymentsMethodResponse = viewModel.paymentMethodsResponse {
+                        self?.setupPaymentDropIn(paymentMethodsResponse: paymentsMethodResponse)
+                    }
+                }
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Functions
@@ -208,6 +224,28 @@ class DepositViewController: UIViewController {
                 self?.checkUserInputs()
             })
             .store(in: &cancellables)
+    }
+
+    private func setupPaymentDropIn(paymentMethodsResponse: ServicesProvider.SimplePaymentMethodsResponse) {
+
+        if let apiContext = try? APIContext(environment: Adyen.Environment.test, clientKey: "test_HNOW5H423JB7JEJYVXMQF655YAT7M5IB") {
+
+            if let paymentResponseData = try? JSONEncoder().encode(paymentMethodsResponse),
+                let paymentMethods = try? JSONDecoder().decode(PaymentMethods.self, from: paymentResponseData) {
+
+                // Optional Payment
+                let payment = Payment(amount: Amount(value: Int(self.viewModel.depositAmount) ?? 0, currencyCode: "EUR"), countryCode: "PT")
+
+                let dropInComponent = DropInComponent(paymentMethods: paymentMethods, context: AdyenContext(apiContext: apiContext, payment: payment))
+
+                dropInComponent.delegate = self
+
+                self.dropInComponent = dropInComponent
+
+                present(dropInComponent.viewController, animated: true)
+            }
+
+        }
     }
 
     private func createPaymentsLogosImageViews() {
@@ -524,4 +562,46 @@ enum BalanceErrorType {
     case wallet
     case deposit
     case withdraw
+}
+
+extension DepositViewController: DropInComponentDelegate {
+    func didSubmit(_ data: Adyen.PaymentComponentData, from component: Adyen.PaymentComponent, in dropInComponent: Adyen.AnyDropInComponent) {
+
+        print("PAYMENT SUBMIT")
+    }
+
+    func didFail(with error: Error, from component: Adyen.PaymentComponent, in dropInComponent: Adyen.AnyDropInComponent) {
+
+        print("PAYMENT FAIL: \(error)")
+
+        dropInComponent.viewController.dismiss(animated: true)
+
+    }
+
+    func didProvide(_ data: Adyen.ActionComponentData, from component: Adyen.ActionComponent, in dropInComponent: Adyen.AnyDropInComponent) {
+
+        print("PAYMENT PROVIDE: \(data)")
+
+    }
+
+    func didComplete(from component: Adyen.ActionComponent, in dropInComponent: Adyen.AnyDropInComponent) {
+
+        print("PAYMENT COMPLETE")
+
+    }
+
+    func didFail(with error: Error, from component: Adyen.ActionComponent, in dropInComponent: Adyen.AnyDropInComponent) {
+
+        print("PAYMENT FAIL 2: \(error)")
+
+    }
+
+    func didFail(with error: Error, from dropInComponent: Adyen.AnyDropInComponent) {
+
+        print("PAYMENT FAIL FULL: \(error)")
+
+        dropInComponent.viewController.dismiss(animated: true)
+
+    }
+
 }

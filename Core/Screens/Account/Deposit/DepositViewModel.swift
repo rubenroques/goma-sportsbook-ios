@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import ServicesProvider
 
 class DepositViewModel: NSObject {
     // MARK: Private Properties
@@ -17,6 +18,10 @@ class DepositViewModel: NSObject {
     var showErrorAlertTypePublisher: CurrentValueSubject<BalanceErrorType?, Never> = .init(nil)
     var cashierUrlPublisher: CurrentValueSubject<String?, Never> = .init(nil)
 
+    var paymentMethodsResponse: SimplePaymentMethodsResponse?
+    var shouldShowPaymentDropIn: CurrentValueSubject<Bool, Never> = .init(false)
+    var depositAmount: String = ""
+
     // MARK: Lifetime and Cycle
     override init() {
         super.init()
@@ -25,7 +30,7 @@ class DepositViewModel: NSObject {
 
     // MARK: Functions
     func getDepositInfo(amountText: String) {
-//        self.isLoadingPublisher.send(true)
+        self.isLoadingPublisher.send(true)
 //
 //        let amountText = amountText
 //        let amount = amountText.replacingOccurrences(of: ",", with: ".")
@@ -67,5 +72,36 @@ class DepositViewModel: NSObject {
 //
 //            })
 //            .store(in: &cancellables)
+
+        let amountText = amountText
+        if amountText.contains(",") {
+            let amount = amountText.replacingOccurrences(of: ",", with: "")
+            self.depositAmount = amount
+        }
+        else {
+            let amount = amountText.appending("00")
+            self.depositAmount = amount
+        }
+
+        Env.servicesProvider.getPayments()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("PAYMENTS RESPONSE ERROR: \(error)")
+                }
+            }, receiveValue: { [weak self] paymentsResponse in
+                print("PAYMENTS RESPONSE: \(paymentsResponse)")
+
+                self?.paymentMethodsResponse = paymentsResponse
+
+                self?.shouldShowPaymentDropIn.send(true)
+
+                self?.isLoadingPublisher.send(false)
+            })
+            .store(in: &cancellables)
     }
+
 }

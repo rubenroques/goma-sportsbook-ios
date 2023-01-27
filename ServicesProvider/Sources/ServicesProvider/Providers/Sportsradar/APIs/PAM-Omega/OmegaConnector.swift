@@ -177,7 +177,8 @@ class OmegaConnector: Connector {
                 else if loginResponse.status == "SUCCESS", let sessionKey = loginResponse.sessionKey {
                     self.cacheSessionKey(sessionKey)
                     self.sessionCredentials = OmegaSessionCredentials(username: username, password: password)
-                    self.openSession()
+                    // TODO: Enable when is available from new environment
+                    // self.openSession()
                     return Just(loginResponse)
                         .setFailureType(to: ServiceProviderError.self)
                         .eraseToAnyPublisher()

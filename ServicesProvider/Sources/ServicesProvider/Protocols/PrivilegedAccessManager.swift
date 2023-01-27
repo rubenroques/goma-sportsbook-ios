@@ -43,5 +43,7 @@ protocol PrivilegedAccessManager {
     func getDocumentTypes() -> AnyPublisher<DocumentTypesResponse, ServiceProviderError>
     func getUserDocuments() -> AnyPublisher<UserDocumentsResponse, ServiceProviderError>
     func uploadUserDocument(documentType: String, file: Data, fileName: String) -> AnyPublisher<UploadDocumentResponse, ServiceProviderError>
-    
+
+    func getPayments() -> AnyPublisher<SimplePaymentMethodsResponse, ServiceProviderError>
+    func processDeposit(paymentMethod: String, amount: Double, option: String) -> AnyPublisher<ProcessDepositResponse, ServiceProviderError>
 }

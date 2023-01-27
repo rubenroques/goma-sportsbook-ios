@@ -513,6 +513,26 @@ extension ServicesProviderClient {
 
         return privilegedAccessManager.uploadUserDocument(documentType: documentType, file: file, fileName: fileName)
     }
+
+    public func getPayments() -> AnyPublisher<SimplePaymentMethodsResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getPayments()
+    }
+
+    public func processDeposit(paymentMethod: String, amount: Double, option: String) -> AnyPublisher<ProcessDepositResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.processDeposit(paymentMethod: paymentMethod, amount: amount, option: option)
+    }
 }
 
 // Utilities
