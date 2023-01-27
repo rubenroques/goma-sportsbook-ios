@@ -34,11 +34,10 @@ class AddressFormStepViewModel {
     }
 
     var isFormCompleted: AnyPublisher<Bool, Never> {
-        return Publishers.CombineLatest3(self.place, self.street, self.additionalStreet)
-            .map { place, street, additionalStreet in
+        return Publishers.CombineLatest(self.place, self.street)
+            .map { place, street in
                 return (place ?? "").count > 0 &&
-                (street ?? "").count > 0 &&
-                (additionalStreet ?? "").count > 0
+                (street ?? "").count > 0
             }
             .eraseToAnyPublisher()
     }

@@ -25,7 +25,6 @@ class AgeCountryFormStepViewModel {
 
     var selectedCountry: CurrentValueSubject<Country?, Never> = .init(nil)
 
-
     var selectedCountryText: AnyPublisher<String?, Never> {
         return self.selectedCountry.map { country in
             if let country {
@@ -38,17 +37,26 @@ class AgeCountryFormStepViewModel {
         .eraseToAnyPublisher()
     }
 
-    
+    var defaultCountry: CurrentValueSubject<SharedModels.Country?, Never> = .init(nil)
+    var defaultCountryText: AnyPublisher<String?, Never> {
+        self.defaultCountry
+            .map { country in
+                if let country {
+                    return self.formatIndicativeCountry(country)
+                }
+                else {
+                    return nil
+                }
+            }
+            .eraseToAnyPublisher()
+    }
+
     var countryState: CurrentValueSubject<CountryState, Never> = .init(.idle)
     var countries: [SharedModels.Country]? {
         switch self.countryState.value {
         case .loaded(let countries): return countries
         default: return nil
         }
-    }
-
-    var defaultCountry: Country? {
-        self.countries?.first(where: { $0.iso3Code == self.defaultCountryIso3Code })
     }
 
     private var serviceProvider: ServicesProviderClient
@@ -103,8 +111,21 @@ class AgeCountryFormStepViewModel {
 
             } receiveValue: { [weak self] countries in
                 self?.countryState.send(.loaded(countries: countries))
+
+                self?.defaultCountry.send(countries.first(where: { $0.iso3Code == self?.defaultCountryIso3Code}))
+
             }
             .store(in: &self.cancellables)
+
+        self.defaultCountry
+            .compactMap({ $0 })
+            .sink { [weak self] defaultCountry in
+                if self?.selectedCountry.value == nil {
+                    self?.setSelectedCountry(defaultCountry)
+                }
+            }
+            .store(in: &self.cancellables)
+
     }
 
     func setSelectedDate(_ date: Date) {
@@ -256,7 +277,7 @@ class AgeCountryFormStepView: FormStepView {
     func showCountrySelector() {
         if let countries = self.viewModel.countries {
             let countrySelectorViewController = CountrySelectionFeature.CountrySelectorViewController(countries: countries,
-                                                                                                      originCountry: self.viewModel.defaultCountry,
+                                                                                                      originCountry: self.viewModel.defaultCountry.value,
                                                                                                       showIndicatives: false)
             countrySelectorViewController.modalPresentationStyle = .overCurrentContext
             countrySelectorViewController.didSelectCountry = { [weak self, weak countrySelectorViewController] (selectedCountry: SharedModels.Country) in

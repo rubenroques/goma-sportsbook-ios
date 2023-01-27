@@ -10,12 +10,16 @@ import Extensions
 import Combine
 import Theming
 
-struct AvatarFormStepViewModel {
+class AvatarFormStepViewModel {
 
     let title: String
     let subtitle: String
     let avatarIconNames: [String]
-    
+
+    var selectedAvatarName: CurrentValueSubject<String?, Never>
+
+    private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
+
     var avatarIconNameGroups: [[String]] {
         let count = self.avatarIconNames.count
         let size = 3
@@ -23,6 +27,28 @@ struct AvatarFormStepViewModel {
             Array(self.avatarIconNames[$0 ..< Swift.min($0 + size, count)])
         }
         return arrays
+    }
+
+    var isFormCompleted: AnyPublisher<Bool, Never> {
+        return self.selectedAvatarName.map({ $0 != nil }).eraseToAnyPublisher()
+    }
+
+    init(title: String,
+         subtitle: String,
+         avatarIconNames: [String],
+         selectedAvatarName: String?,
+         userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
+
+        self.title = title
+        self.subtitle = subtitle
+        self.avatarIconNames = avatarIconNames
+        self.selectedAvatarName = .init(selectedAvatarName)
+        self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
+    }
+
+    func setSelectedAvatarName(_ avatarName: String) {
+        self.selectedAvatarName.send(avatarName)
+        self.userRegisterEnvelopUpdater.setAvatarName(avatarName)
     }
 
 }
@@ -33,7 +59,14 @@ class AvatarFormStepView: FormStepView {
     private lazy var verticalStackView: UIStackView = Self.createVerticalStackView()
     private var horizontalStackViews: [UIStackView] = []
 
+    private var avatarViews: [String: UIView] = [:]
+    private var avatarViewsTags: [Int: String] = [:]
+
     let viewModel: AvatarFormStepViewModel
+
+    override var isFormCompleted: AnyPublisher<Bool, Never> {
+        return self.viewModel.isFormCompleted
+    }
 
     init(viewModel: AvatarFormStepViewModel) {
         self.viewModel = viewModel
@@ -41,10 +74,6 @@ class AvatarFormStepView: FormStepView {
         super.init()
 
         self.configureSubviews()
-    }
-
-    override var isFormCompleted: AnyPublisher<Bool, Never> {
-        return Just(true).eraseToAnyPublisher()
     }
     
     func configureSubviews() {
@@ -54,6 +83,7 @@ class AvatarFormStepView: FormStepView {
 
         self.stackView.addArrangedSubview(self.subtitleLabel)
 
+        var tagCounter = 0
         // Add avatars
         for avatarGroup in self.viewModel.avatarIconNameGroups {
             let lineStackView = Self.createHorizontalStackView()
@@ -61,6 +91,7 @@ class AvatarFormStepView: FormStepView {
 
                 let imageView = Self.createAvatarImageView()
                 imageView.image = UIImage(named: avatarName, in: Bundle.module, with: nil)
+                imageView.tag = tagCounter
 
                 NSLayoutConstraint.activate([
                     imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor),
@@ -68,14 +99,29 @@ class AvatarFormStepView: FormStepView {
                 ])
 
                 lineStackView.addArrangedSubview(imageView)
+
+                avatarViews[avatarName] = imageView
+                avatarViewsTags[tagCounter] = avatarName
+
+                imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapAvatarImageView(_:))))
+
+                tagCounter += 1
             }
             self.stackView.addArrangedSubview(lineStackView)
+        }
+
+        if let selectedName = self.viewModel.selectedAvatarName.value {
+            self.selectAvatarWithName(selectedName)
         }
 
     }
 
     public override func layoutSubviews() {
         super.layoutSubviews()
+
+        for avatarView in avatarViews.values {
+            avatarView.layer.cornerRadius = avatarView.frame.height/2
+        }
     }
 
     override func setupWithTheme() {
@@ -84,6 +130,28 @@ class AvatarFormStepView: FormStepView {
         self.titleLabel.textColor = AppColor.textPrimary
         self.subtitleLabel.textColor = AppColor.textPrimary
 
+    }
+
+    func selectAvatarWithName(_ name: String) {
+        for avatarView in avatarViews.values {
+            avatarView.layer.borderColor = UIColor.clear.cgColor
+            avatarView.alpha = 0.95
+        }
+
+        if let selectedView = avatarViews[name] {
+            selectedView.layer.borderColor = AppColor.highlightPrimary.cgColor
+            selectedView.alpha = 1.0
+        }
+
+        self.viewModel.setSelectedAvatarName(name)
+    }
+
+    @IBAction func didTapAvatarImageView(_ sender: UITapGestureRecognizer? = nil) {
+        guard let tag = sender?.view?.tag else { return }
+
+        if let name = avatarViewsTags[tag] {
+            self.selectAvatarWithName(name)
+        }
     }
 
 }
@@ -123,6 +191,11 @@ extension AvatarFormStepView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
+
+        imageView.layer.borderWidth = 4.0
+        imageView.layer.borderColor = UIColor.clear.cgColor
+        imageView.isUserInteractionEnabled = true
+
         return imageView
     }
 

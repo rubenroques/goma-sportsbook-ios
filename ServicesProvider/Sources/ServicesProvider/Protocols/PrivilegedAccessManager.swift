@@ -31,6 +31,7 @@ protocol PrivilegedAccessManager {
     func validateUsername(_ username: String) -> AnyPublisher<UsernameValidation, ServiceProviderError>
 
     func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError>
+    func signUp(form: SignUpForm) -> AnyPublisher<Bool, ServiceProviderError>
     
     func getCountries() -> AnyPublisher<[Country], ServiceProviderError>
     func getCurrentCountry() -> AnyPublisher<Country?, ServiceProviderError>

@@ -158,7 +158,7 @@ public struct SimpleSignUpForm {
     public var mobileNumber: String
     public var countryIsoCode: String
     public var currencyCode: String
-    
+
     public init(email: String, username: String, password: String, birthDate: Date, mobilePrefix: String, mobileNumber: String, countryIsoCode: String, currencyCode: String) {
         self.email = email
         self.username = username
@@ -169,7 +169,50 @@ public struct SimpleSignUpForm {
         self.countryIsoCode = countryIsoCode
         self.currencyCode = currencyCode
     }
-    
+
+}
+
+public struct SignUpForm {
+
+    public var email: String
+    public var username: String
+    public var password: String
+    public var birthDate: Date
+    public var mobilePrefix: String
+    public var mobileNumber: String
+    public var nationalityIsoCode: String
+    public var currencyCode: String
+
+    public var firstName: String?
+    public var lastName: String?
+
+    public var gender: String?
+    public var address: String?
+    public var province: String?
+    public var city: String
+    public var countryIsoCode: String
+
+    public init(email: String, username: String, password: String, birthDate: Date, mobilePrefix: String,
+                mobileNumber: String, nationalityIsoCode: String, currencyCode: String, firstName: String?,
+                lastName: String?, gender: String?, address: String?, province: String?, city: String, countryIsoCode: String) {
+        
+        self.email = email
+        self.username = username
+        self.password = password
+        self.birthDate = birthDate
+        self.mobilePrefix = mobilePrefix
+        self.mobileNumber = mobileNumber
+        self.nationalityIsoCode = nationalityIsoCode
+        self.currencyCode = currencyCode
+        self.firstName = firstName
+        self.lastName = lastName
+        self.gender = gender
+        self.address = address
+        self.province = province
+        self.city = city
+        self.countryIsoCode = countryIsoCode
+    }
+
 }
 
 public struct UpdateUserProfileForm {

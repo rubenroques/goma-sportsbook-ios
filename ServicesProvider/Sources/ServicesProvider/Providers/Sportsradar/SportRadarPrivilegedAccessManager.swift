@@ -183,6 +183,50 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         .eraseToAnyPublisher()
     }
 
+    func signUp(form: SignUpForm) -> AnyPublisher<Bool, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.signUp(email: form.email,
+                                             username: form.username,
+                                             password: form.password,
+                                             birthDate: form.birthDate,
+                                             mobilePrefix: form.mobilePrefix,
+                                             mobileNumber: form.mobileNumber,
+                                             nationalityIso2Code: form.nationalityIsoCode,
+                                             currencyCode: form.currencyCode,
+                                             firstName: form.firstName,
+                                             lastName: form.lastName,
+                                             gender: form.gender,
+                                             address: form.address,
+                                             province: form.province,
+                                             city: form.city,
+                                             postalCode: nil,
+                                             countryIso2Code: form.countryIsoCode,
+                                             cardId: nil,
+                                             securityQuestion: nil,
+                                             securityAnswer: nil)
+
+        let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ statusResponse -> AnyPublisher<Bool, ServiceProviderError> in
+            if statusResponse.status == "SUCCESS" {
+                return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else if let errors = statusResponse.errors {
+                if errors.contains(where: { $0.field == "username" }) {
+                    return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidSignUpUsername).eraseToAnyPublisher()
+                }
+                else if errors.contains(where: { $0.field == "email" }) {
+                    return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidSignUpEmail).eraseToAnyPublisher()
+                }
+                else if errors.contains(where: { $0.field == "password" }) {
+                    return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidSignUpPassword).eraseToAnyPublisher()
+                }
+            }
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+    }
+
     func updateUserProfile(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.updatePlayerInfo(username: form.username,

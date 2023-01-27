@@ -31,7 +31,7 @@ class HeaderTextFieldView: NibView {
     var textPublisher: AnyPublisher<String, Never> {
         return self.textField.textPublisher
     }
-
+    
     var contentCenterYConstraint: NSLayoutYAxisAnchor {
         return self.containerView.centerYAnchor
     }
@@ -152,12 +152,19 @@ class HeaderTextFieldView: NibView {
         super.init(frame: frame)
 
         self.setupWithTheme()
+        self.configureContainerViewTap()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
         self.setupWithTheme()
+        self.configureContainerViewTap()
+    }
+
+    func configureContainerViewTap() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapContainerView))
+        self.containerView.addGestureRecognizer(tapGesture)
     }
 
     func setupWithTheme() {
@@ -223,9 +230,13 @@ class HeaderTextFieldView: NibView {
         if headerLabel.text?.isEmpty ?? true {
             return
         }
+
         if self.isSlidedUp {
             return
         }
+
+        self.highlightColor = AppColor.textPrimary
+        self.containerView.layer.borderColor = self.highlightColor.cgColor
 
         // TODO: Fazer a conta de forma dinâmica
         // let placeholderYPosition = self.headerPlaceholderLabel.center.y
@@ -255,6 +266,10 @@ class HeaderTextFieldView: NibView {
             return
         }
 
+        if self.textField.text == nil || self.textField.text == "" {
+            self.containerView.layer.borderColor = self.highlightColor.withAlphaComponent(0).cgColor
+        }
+
         self.centerBottomConstraint.constant = 0
 
         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut) {
@@ -282,6 +297,10 @@ class HeaderTextFieldView: NibView {
         return true
     }
 
+    @objc func didTapContainerView() {
+        self.textField.becomeFirstResponder()
+    }
+
     func setText(_ text: String, slideUp: Bool = true) {
 
         self.textField.text = text
@@ -292,6 +311,13 @@ class HeaderTextFieldView: NibView {
 
         if !text.isEmpty && slideUp {
             self.slideUp(animated: false)
+        }
+
+        if self.textField.text == nil || self.textField.text == "" {
+            self.containerView.layer.borderColor = UIColor.clear.cgColor
+        }
+        else {
+            self.containerView.layer.borderColor = AppColor.textPrimary.cgColor
         }
     }
 
@@ -527,11 +553,7 @@ extension HeaderTextFieldView: UITextFieldDelegate {
             self.hideTipAndError()
         }
 
-        self.highlightColor = AppColor.textPrimary
-        self.containerView.layer.borderColor = self.highlightColor.cgColor
-
         self.slideUp()
-
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
@@ -539,19 +561,9 @@ extension HeaderTextFieldView: UITextFieldDelegate {
             self.slideDown()
         }
 
-        if self.textField.text == "" {
-            self.containerView.layer.borderColor = self.highlightColor.withAlphaComponent(0).cgColor
-        }
-
         self.isActive = false
 
-        if self.textField.text != "" {
-            self.didEndEditing()
-        }
-        else {
-            self.didEndEditing()
-        }
-
+        self.didEndEditing()
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

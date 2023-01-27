@@ -112,7 +112,7 @@ class TermsCondFormStepView: FormStepView {
 
         self.titleLabel.text = self.viewModel.title
 
-        self.readLabel.font = AppFont.with(type: .regular, size: 12)
+        self.readLabel.font = AppFont.with(type: .regular, size: 13)
         self.marketingLabel.font = AppFont.with(type: .semibold, size: 14)
         self.termsLabel.font = AppFont.with(type: .semibold, size: 14)
 
@@ -123,6 +123,19 @@ class TermsCondFormStepView: FormStepView {
         self.termsSwitch.addTarget(self, action: #selector(self.termsSwitchValueChanged(_:)), for: .valueChanged)
         self.marketingSwitch.addTarget(self, action: #selector(self.marketingSwitchValueChanged(_:)), for: .valueChanged)
 
+        self.readLabel.isUserInteractionEnabled = true
+        self.readLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapUnderlineLabel(gesture:))))
+
+        if let readTermsString = self.readLabel.text {
+            let attributedString = NSMutableAttributedString(string: readTermsString)
+            if let range = readTermsString.range(of: self.termsUnderlinedString) {
+                attributedString.addAttribute(.underlineStyle,
+                                              value: NSUnderlineStyle.single.rawValue,
+                                              range: NSRange(range, in: readTermsString))
+            }
+            self.readLabel.attributedText = attributedString
+        }
+        
     }
 
     public override func layoutSubviews() {
@@ -145,9 +158,28 @@ class TermsCondFormStepView: FormStepView {
         self.viewModel.setIsTermsOn(termsSwitch.isOn)
     }
 
+    @IBAction private func tapUnderlineLabel(gesture: UITapGestureRecognizer) {
+        let readTermsString = self.readLabel.attributedText?.string ?? ""
+        let underlineRange = (readTermsString as NSString).range(of: termsUnderlinedString)
+
+        if gesture.didTapAttributedTextInLabel(label: self.readLabel, inRange: underlineRange, alignment: .left) {
+            self.openTermWebPage()
+        }
+    }
+
+    func openTermWebPage() {
+        if let url = URL(string: "https://gomadevelopment.pt/") {
+            UIApplication.shared.open(url)
+        }
+    }
+
 }
 
 extension TermsCondFormStepView {
+
+    var termsUnderlinedString: String {
+        return "Terms and Conditions"
+    }
 
     //
     private static func createReadLabelBaseView() -> UIView {

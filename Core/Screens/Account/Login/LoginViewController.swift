@@ -34,6 +34,8 @@ class LoginViewController: UIViewController {
     // Variables
     var shouldRememberUser: Bool = true
 
+    private let registrationFormDataKey = "RegistrationFormDataKey"
+
     var cancellables = Set<AnyCancellable>()
 
     let spinnerViewController = SpinnerViewController()
@@ -264,15 +266,15 @@ class LoginViewController: UIViewController {
 
     @objc private func didTapCreateAccount() {
 
-        let registrationFormDataKey = "RegistrationFormDataKey"
-        let userRegisterEnvelop: UserRegisterEnvelop? = UserDefaults.standard.codable(forKey: registrationFormDataKey)
+        let userRegisterEnvelop: UserRegisterEnvelop? = UserDefaults.standard.codable(forKey: self.registrationFormDataKey)
         let userRegisterEnvelopValue: UserRegisterEnvelop = userRegisterEnvelop ?? UserRegisterEnvelop()
 
         let userRegisterEnvelopUpdater = UserRegisterEnvelopUpdater(userRegisterEnvelop: userRegisterEnvelopValue)
-        userRegisterEnvelopUpdater.filledDataUpdated = { (updatedUserEnvelop: UserRegisterEnvelop) in
-            UserDefaults.standard.set(codable: updatedUserEnvelop, forKey: registrationFormDataKey)
+        userRegisterEnvelopUpdater.didUpdateUserRegisterEnvelop.sink(receiveValue: { (updatedUserEnvelop: UserRegisterEnvelop) in
+            UserDefaults.standard.set(codable: updatedUserEnvelop, forKey: self.registrationFormDataKey)
             UserDefaults.standard.synchronize()
-        }
+        })
+        .store(in: &self.cancellables)
 
         let viewModel = SteppedRegistrationViewModel(userRegisterEnvelop: userRegisterEnvelopValue,
                                                      serviceProvider: Env.servicesProvider,
@@ -280,7 +282,18 @@ class LoginViewController: UIViewController {
 
         let steppedRegistrationViewController = SteppedRegistrationViewController(viewModel: viewModel)
 
+        steppedRegistrationViewController.didRegisteredUserAction = { [weak self] registeredUser in
+            if let nickname = registeredUser.nickname, let password = registeredUser.password {
+                self?.triggerLoginAfterRegister(username: nickname, password: password)
+                self?.deleteCachedRegistrationData()
+            }
+        }
         self.present(steppedRegistrationViewController, animated: true)
+    }
+
+    private func deleteCachedRegistrationData() {
+        UserDefaults.standard.removeObject(forKey: self.registrationFormDataKey)
+        UserDefaults.standard.synchronize()
     }
 
     @objc func rememberUserOptionTapped() {
@@ -363,7 +376,31 @@ class LoginViewController: UIViewController {
             })
             .store(in: &cancellables)
     }
-    
+
+
+    func triggerLoginAfterRegister(username: String, password: String) {
+        Env.userSessionStore.login(withUsername: username, password: password)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                print("triggerPendingLoginAfterRegister ", completion)
+            } receiveValue: { [weak self] success in
+                self?.closeLoginRegisterFlow()
+            }
+            .store(in: &cancellables)
+    }
+
+    func closeLoginRegisterFlow() {
+        if self.isModal {
+            self.dismiss(animated: true, completion: nil)
+        }
+        else {
+            self.presentedViewController?.dismiss(animated: true)
+
+            let mainScreenViewController = Router.mainScreenViewController()
+            self.navigationController?.pushViewController(mainScreenViewController, animated: true)
+        }
+    }
+
     func showLoadingSpinner() {
         view.addSubview(spinnerViewController.view)
         spinnerViewController.view.translatesAutoresizingMaskIntoConstraints = false

@@ -13,18 +13,37 @@ import Extensions
 
 class NicknameFormStepViewModel {
 
+    enum NicknameState: Equatable {
+        case empty
+        case needsValidation
+        case validating
+        case serverError
+        case alreadyInUse(suggestions: [String])
+        case valid
+    }
+
+
     let title: String
+
     let nickname: CurrentValueSubject<String?, Never>
+    let generatedNickname: CurrentValueSubject<String?, Never>?
 
+    let nicknameState: CurrentValueSubject<NicknameState, Never> = .init(.empty)
+    var shouldUseGeneratedNickname: Bool = true
 
-    var suggestedUsernames: CurrentValueSubject<[String]?, Never> = .init(nil)
-
-    var isLoading: CurrentValueSubject<Bool, Never> = .init(false)
-    var isValidUsername: CurrentValueSubject<Bool?, Never> = .init(nil)
+    var nicknameSuggestions: [String] {
+        switch self.nicknameState.value {
+        case let .alreadyInUse(suggestions):
+            return suggestions
+        default:
+            return []
+        }
+    }
 
     private let serviceProvider: ServicesProviderClient
     private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
 
+    private var validateNicknameCancellables: AnyCancellable?
     private var cancellables = Set<AnyCancellable>()
 
     init(title: String,
@@ -32,70 +51,128 @@ class NicknameFormStepViewModel {
          serviceProvider: ServicesProviderClient,
          userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
         self.title = title
+
         self.nickname = .init(nickname)
+
+        if nickname != nil {
+            self.shouldUseGeneratedNickname = false
+            self.generatedNickname = nil
+        }
+        else {
+            self.generatedNickname = .init(nickname)
+        }
+
         self.serviceProvider = serviceProvider
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
 
         self.userRegisterEnvelopUpdater.setAvatarName("avatar1")
 
+        //
+        let clearedEmailState = self.nicknameState.removeDuplicates()
+        let clearedEmail = self.nickname.removeDuplicates()
+
+        self.nickname
+            .removeDuplicates()
+            .print("DEBUG-NICK: 1 ")
+            .sink { [weak self] newNickname in
+
+                self?.userRegisterEnvelopUpdater.setNickname(nil)
+                self?.validateNicknameCancellables?.cancel()
+
+                guard
+                    let newNickname
+                else {
+                    self?.nicknameState.send(.empty)
+                    return
+                }
+
+                if newNickname.isEmpty {
+                    self?.nicknameState.send(.empty)
+                }
+                else {
+                    self?.nicknameState.send(.needsValidation)
+                }
+            }
+            .store(in: &self.cancellables)
+
+        Publishers.CombineLatest(clearedEmailState, clearedEmail)
+            .print("DEBUG-NICK: 2 ")
+            .filter { nicknameState, nickname in
+                return nicknameState == .needsValidation
+            }
+            .map { _, nickname -> String? in
+                return nickname
+            }
+            .compactMap({ $0 })
+            .debounce(for: .seconds(0.6), scheduler: DispatchQueue.main)
+            .sink { [weak self] nickname in
+                self?.validateNickname(nickname)
+            }
+            .store(in: &self.cancellables)
+
+        // Cache valid nickname
+        Publishers.CombineLatest(self.nicknameState, self.nickname)
+            .filter { nicknameState, nickname in
+                return nicknameState == .valid
+            }
+            .map { _, nickname -> String? in
+                return nickname
+            }
+            .compactMap({ $0 })
+            .print("DEBUG-NICK: 3 ")
+            .sink { validNickname in
+                self.userRegisterEnvelopUpdater.setNickname(validNickname)
+            }
+            .store(in: &self.cancellables)
     }
 
     var isFormCompleted: AnyPublisher<Bool, Never> {
-        return self.isValidUsername.map({ isValid in
-            if let isValid {
-                return isValid
+        return self.nicknameState
+            .map { nicknameState in
+                return nicknameState == .valid
             }
-            return false
-        }).eraseToAnyPublisher()
+            .eraseToAnyPublisher()
+    }
+
+    func setGeneratedNickname(_ generatedNickname: String?) {
+        if shouldUseGeneratedNickname {
+            self.generatedNickname?.send(generatedNickname)
+        }
+        else {
+            print("DEBUG-NICK: ignoring generated nickname \(generatedNickname)")
+        }
     }
 
     func setNickname(_ nickname: String?) {
         self.nickname.send(nickname)
-        self.userRegisterEnvelopUpdater.setNickname(nickname)
     }
 
-    func resetValidation() {
-        self.isValidUsername.send(nil)
-        self.setNickname(nil)
-    }
-
-    func validateUsername(_ username: String) {
-
-        if username.count < 3 {
-            self.suggestedUsernames.send(nil)
-            self.isValidUsername.send(nil)
-            self.isLoading.send(false)
+    func validateNickname(_ nickname: String) {
+        print("DEBUG-NICK: Will Validate \(nickname)")
+        if nickname.isEmpty {
+            self.nicknameState.send(.empty)
             return
         }
 
-        self.isLoading.send(true)
+        self.nicknameState.send(.validating)
 
-        serviceProvider
-            .validateUsername(username)
+        self.validateNicknameCancellables = self.serviceProvider
+            .validateUsername(nickname)
             .sink { [weak self]  completion in
                 switch completion {
                 case .failure:
-                    self?.suggestedUsernames.send(nil)
-                    self?.isValidUsername.send(nil)
-                    self?.setNickname(nil)
+                    self?.nicknameState.send(.serverError)
                 case .finished:
                     ()
                 }
-                self?.isLoading.send(false)
             } receiveValue: { [weak self] usernameValidation in
-                self?.suggestedUsernames.send(usernameValidation.suggestedUsernames)
-                self?.isValidUsername.send(usernameValidation.isAvailable)
-
                 if usernameValidation.isAvailable {
-                    self?.setNickname(usernameValidation.username)
+                    self?.nicknameState.send(.valid)
                 }
                 else {
-                    self?.setNickname(nil)
+                    self?.nicknameState.send(.alreadyInUse(suggestions: usernameValidation.suggestedUsernames ?? []))
                 }
-
             }
-            .store(in: &cancellables)
-
     }
 
 }
@@ -112,6 +189,10 @@ class NicknameFormStepView: FormStepView {
     let viewModel: NicknameFormStepViewModel
 
     private var cancellables = Set<AnyCancellable>()
+
+    override var isFormCompleted: AnyPublisher<Bool, Never> {
+        return self.viewModel.isFormCompleted
+    }
 
     init(viewModel: NicknameFormStepViewModel) {
         self.viewModel = viewModel
@@ -151,64 +232,50 @@ class NicknameFormStepView: FormStepView {
     }
 
     func configureBindings() {
+
         self.titleLabel.text = self.viewModel.title
         self.nicknameHeaderTextFieldView.setPlaceholderText("Nickname")
 
-        self.nicknameHeaderTextFieldView
-            .textPublisher
-            .removeDuplicates()
-            .sink { [weak self] _ in
-                self?.viewModel.resetValidation()
+        self.nicknameHeaderTextFieldView.textPublisher
+            .sink { newNickname in
+                self.viewModel.setNickname(newNickname)
             }
             .store(in: &self.cancellables)
 
-        self.nicknameHeaderTextFieldView
-            .textPublisher
-            .removeDuplicates()
-            .debounce(for: .seconds(0.6), scheduler: DispatchQueue.main)
-            .sink { [weak self] nickname in
-                self?.viewModel.validateUsername(nickname)
-            }
-            .store(in: &self.cancellables)
+        self.nicknameHeaderTextFieldView.shouldBeginEditing = { [weak self] in
+            self?.viewModel.shouldUseGeneratedNickname = false
+            return true
+        }
 
-        self.viewModel.isLoading
+        self.viewModel.nicknameState
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isLoading in
-                if isLoading {
-                    self?.loadingView.startAnimating()
-                }
-                else {
-                    self?.loadingView.stopAnimating()
-                }
-            }
-            .store(in: &self.cancellables)
-
-        self.viewModel.isValidUsername
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isValidUsername in
-                if let isValidUsername {
-                    if isValidUsername {
-                        self?.nicknameHeaderTextFieldView.hideTipAndError()
-                    }
-                    else {
-                        self?.nicknameHeaderTextFieldView.showErrorOnField(text: "This username is already in use.")
-                    }
-                }
-                else {
+            .sink { [weak self] nicknameState in
+                switch nicknameState {
+                case .empty:
                     self?.nicknameHeaderTextFieldView.hideTipAndError()
-                }
-            }
-            .store(in: &self.cancellables)
-
-        self.viewModel.suggestedUsernames
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] suggestions in
-                if let suggestions {
-                    self?.suggestionsLabelContainerView.isHidden = false
-                    self?.configureWithSuggestedNicknames(suggestions)
-                }
-                else {
                     self?.suggestionsLabelContainerView.isHidden = true
+                    self?.loadingView.stopAnimating()
+                case .needsValidation:
+                    self?.nicknameHeaderTextFieldView.hideTipAndError()
+                    self?.suggestionsLabelContainerView.isHidden = true
+                    self?.loadingView.stopAnimating()
+                case .validating:
+                    self?.nicknameHeaderTextFieldView.hideTipAndError()
+                    self?.suggestionsLabelContainerView.isHidden = true
+                    self?.loadingView.startAnimating()
+                case .serverError:
+                    self?.nicknameHeaderTextFieldView.showErrorOnField(text: "Sorry we could not validate this nickname.")
+                    self?.suggestionsLabelContainerView.isHidden = true
+                    self?.loadingView.stopAnimating()
+                case .alreadyInUse(let suggestions):
+                    self?.nicknameHeaderTextFieldView.showErrorOnField(text: "This nickname is already in use.")
+                    self?.configureWithSuggestedNicknames(suggestions)
+                    self?.suggestionsLabelContainerView.isHidden = false
+                    self?.loadingView.stopAnimating()
+                case .valid:
+                    self?.nicknameHeaderTextFieldView.hideTipAndError()
+                    self?.suggestionsLabelContainerView.isHidden = true
+                    self?.loadingView.stopAnimating()
                 }
             }
             .store(in: &self.cancellables)
@@ -217,6 +284,14 @@ class NicknameFormStepView: FormStepView {
             self.nicknameHeaderTextFieldView.setText(nickname, slideUp: true)
         }
 
+        self.viewModel.generatedNickname?
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] generatedNickname in
+                if let generatedNickname, !generatedNickname.isEmpty {
+                    self?.nicknameHeaderTextFieldView.setText(generatedNickname)
+                }
+            }
+            .store(in: &self.cancellables)
     }
 
     public override func layoutSubviews() {
@@ -258,11 +333,13 @@ class NicknameFormStepView: FormStepView {
 
     @IBAction private func tapUnderlineLabel(gesture: UITapGestureRecognizer) {
         let text = self.suggestionsLabel.attributedText?.string ?? ""
-        for suggestion in self.viewModel.suggestedUsernames.value ?? [] {
+        for suggestion in self.viewModel.nicknameSuggestions {
             let suggestionRange = (text as NSString).range(of: suggestion)
-
             if gesture.didTapAttributedTextInLabel(label: self.suggestionsLabel, inRange: suggestionRange, alignment: .left) {
+
                 self.nicknameHeaderTextFieldView.setText(suggestion, slideUp: true)
+                self.viewModel.shouldUseGeneratedNickname = false
+
                 break
             }
 

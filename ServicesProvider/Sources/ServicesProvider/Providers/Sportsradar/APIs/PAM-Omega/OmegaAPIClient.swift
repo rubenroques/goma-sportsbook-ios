@@ -51,6 +51,25 @@ enum OmegaAPIClient {
                      mobileNumber: String,
                      countryIsoCode: String,
                      currencyCode: String)
+    case signUp(email: String,
+                username: String,
+                password: String,
+                birthDate: Date,
+                mobilePrefix: String,
+                mobileNumber: String,
+                nationalityIso2Code: String,
+                currencyCode: String,
+                firstName: String?,
+                lastName: String?,
+                gender: String?,
+                address: String?,
+                province: String?,
+                city: String,
+                postalCode: String?,
+                countryIso2Code: String,
+                cardId: String?,
+                securityQuestion: String?,
+                securityAnswer: String?)
     case resendVerificationCode(username: String)
     case signupConfirmation(email: String,
                             confirmationCode: String)
@@ -97,6 +116,8 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/getUserIdSuggestion"
         case .quickSignup:
             return "/ps/ips/quickSignup"
+        case .signUp:
+            return "/ps/ips/signup"
         case .resendVerificationCode:
             return "/ps/ips/resendVerificationCode"
         case .signupConfirmation:
@@ -153,6 +174,44 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "birthDate", value: birthDateString),
                 URLQueryItem(name: "mobile", value: phoneNumber),
             ]
+
+        case .signUp(let email, let username, let password,
+                     let birthDate, let mobilePrefix, let mobileNumber, let nationalityIso2Code,
+                     let currencyCode, let firstName, let lastName,
+                     let gender, let address, let province, let city, let postalCode, let countryIso2Code,
+                     let cardId, let securityQuestion, let securityAnswer):
+
+            let phoneNumber = "\(mobilePrefix)\(mobileNumber)".replacingOccurrences(of: "+", with: "")
+
+            var query: [URLQueryItem] = []
+
+            query.append(URLQueryItem(name: "username", value: username))
+            query.append(URLQueryItem(name: "password", value: password))
+            query.append(URLQueryItem(name: "email", value: email))
+            query.append(URLQueryItem(name: "currency", value: currencyCode))
+            query.append(URLQueryItem(name: "receiveEmail", value: "true"))
+            query.append(URLQueryItem(name: "nationality", value: nationalityIso2Code))
+            query.append(URLQueryItem(name: "mobile", value: phoneNumber))
+            query.append(URLQueryItem(name: "city", value: city))
+            query.append(URLQueryItem(name: "country", value: countryIso2Code))
+
+            let dateFromatter = DateFormatter()
+            dateFromatter.dateFormat = "yyyy-MM-dd"
+            let birthDateString = dateFromatter.string(from: birthDate)
+            query.append(URLQueryItem(name: "birthDate", value: birthDateString))
+
+            if let firstName = firstName { query.append(URLQueryItem(name: "firstName", value: firstName)) }
+            if let lastName = lastName { query.append(URLQueryItem(name: "lastName", value: lastName)) }
+            if let gender = gender { query.append(URLQueryItem(name: "gender", value: gender)) }
+            if let address = address { query.append(URLQueryItem(name: "address", value: address)) }
+            if let province = province { query.append(URLQueryItem(name: "province", value: province)) }
+            if let postalCode = postalCode { query.append(URLQueryItem(name: "postalCode", value: postalCode)) }
+            if let cardId = cardId { query.append(URLQueryItem(name: "idCardNumber", value: cardId)) }
+            if let securityQuestion = securityQuestion { query.append(URLQueryItem(name: "securityQuestion", value: securityQuestion)) }
+            if let securityAnswer = securityAnswer { query.append(URLQueryItem(name: "securityAnswer", value: securityAnswer)) }
+
+            return query
+
         case .resendVerificationCode(let username):
             return [
                 URLQueryItem(name: "username", value: username),
@@ -262,6 +321,7 @@ extension OmegaAPIClient: Endpoint {
         case .checkCredentialEmail: return .get
         case .checkUsername: return .get
         case .quickSignup: return .get
+        case .signUp: return .get
         case .resendVerificationCode: return .get
         case .signupConfirmation: return .get
         case .getCountries: return .get
@@ -294,6 +354,7 @@ extension OmegaAPIClient: Endpoint {
         case .checkCredentialEmail: return false
         case .checkUsername: return false
         case .quickSignup: return false
+        case .signUp: return false
         case .resendVerificationCode: return false
         case .signupConfirmation: return false
         case .getCountries: return false

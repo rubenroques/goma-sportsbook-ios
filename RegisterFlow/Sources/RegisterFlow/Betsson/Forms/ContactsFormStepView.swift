@@ -16,20 +16,43 @@ import CountrySelectionFeature
 
 class ContactsFormStepViewModel {
 
+    enum EmailState {
+        case empty
+
+        case needsValidation
+        case validating
+
+        case serverError
+        case alreadyInUse
+        case invalidSyntax
+
+        case valid
+    }
+
+    enum CountriesState {
+        case idle
+        case loading
+        case loaded(countries: [SharedModels.Country])
+    }
+
     let title: String
+
+    let defaultCountryIso3Code: String
 
     let email: CurrentValueSubject<String?, Never>
     let phoneNumber: CurrentValueSubject<String?, Never>
 
-    let defaultCountryIso3Code: String
+    //
+    var emailState: CurrentValueSubject<EmailState, Never> = .init(.empty)
+    private var checkEmailRegisteredCancellables: AnyCancellable?
 
-    private var selectedPrefixCountrySubject: CurrentValueSubject<SharedModels.Country?, Never> = .init(nil)
-
+    //
+    var selectedCountry: CurrentValueSubject<SharedModels.Country?, Never>
     var selectedPrefixText: AnyPublisher<String?, Never> {
-        self.selectedPrefixCountrySubject
+        self.selectedCountry
             .map({ country -> String? in
-                if let selectedPrefixCountry = country {
-                    let countryString = self.formatIndicativeCountry(selectedPrefixCountry)
+                if let selectedCountry = country {
+                    let countryString = self.formatIndicativeCountry(selectedCountry)
                     return countryString
                 } else {
                     return nil
@@ -38,6 +61,7 @@ class ContactsFormStepViewModel {
             .eraseToAnyPublisher()
     }
 
+    //
     private var defaultCountrySubject: CurrentValueSubject<SharedModels.Country?, Never> = .init(nil)
     var defaultCountryText: AnyPublisher<String?, Never> {
         self.defaultCountrySubject
@@ -52,18 +76,19 @@ class ContactsFormStepViewModel {
             .eraseToAnyPublisher()
     }
 
-    var countryState: CurrentValueSubject<CountryState, Never> = .init(.idle)
+    //
+    var countriesState: CurrentValueSubject<CountriesState, Never> = .init(.idle)
     var countries: [SharedModels.Country]? {
-        switch self.countryState.value {
+        switch self.countriesState.value {
         case .loaded(let countries): return countries
         default: return nil
         }
     }
 
     var isFormCompleted: AnyPublisher<Bool, Never> {
-        return Publishers.CombineLatest3(self.email, self.phoneNumber, self.selectedPrefixCountrySubject)
-            .map { email, phoneNumber, prefixCountry -> Bool in
-                let isEmailValid = self.isValidEmailAddress(email ?? "")
+        return Publishers.CombineLatest3(self.emailState, self.phoneNumber, self.selectedCountry)
+            .map { emailState, phoneNumber, prefixCountry -> Bool in
+                let isEmailValid = emailState == .valid
                 let isPhoneNumberValid = self.isValidPhoneNumber(phoneNumber ?? "")
                 let hasPrefix = prefixCountry != nil
                 return isEmailValid && isPhoneNumberValid && hasPrefix
@@ -76,13 +101,6 @@ class ContactsFormStepViewModel {
 
     private var cancellables = Set<AnyCancellable>()
 
-    enum CountryState {
-        case idle
-        case loading
-        case loaded(countries: [SharedModels.Country])
-    }
-
-
     init(title: String,
          email: String? = nil,
          phoneNumber: String? = nil,
@@ -93,7 +111,7 @@ class ContactsFormStepViewModel {
 
         self.title = title
 
-        self.selectedPrefixCountrySubject.send(prefixCountry)
+        self.selectedCountry = .init(prefixCountry)
         self.phoneNumber = .init(phoneNumber)
         self.email = .init(email)
 
@@ -102,31 +120,124 @@ class ContactsFormStepViewModel {
         self.serviceProvider = serviceProvider
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
 
+        self.email
+            .removeDuplicates()
+            .sink { [weak self] newEmail in
+
+                self?.userRegisterEnvelopUpdater.setEmail(nil)
+                self?.checkEmailRegisteredCancellables?.cancel()
+
+                guard
+                    let newEmail
+                else {
+                    self?.emailState.send(.empty)
+                    return
+                }
+
+                if newEmail.isEmpty {
+                    self?.emailState.send(.empty)
+                }
+                else if self?.isValidEmailAddress(newEmail) ?? false {
+                    self?.emailState.send(.needsValidation)
+                }
+                else {
+                    self?.emailState.send(EmailState.invalidSyntax)
+                }
+            }
+            .store(in: &self.cancellables)
+
+        //
+        let clearedEmailState = self.emailState.removeDuplicates()
+        let clearedEmail = self.email.removeDuplicates()
+
+        Publishers.CombineLatest(clearedEmailState, clearedEmail)
+            .print("DEBUG-EMAIL: ")
+            .filter { emailState, email in
+                return emailState == .needsValidation
+            }
+            .map { _, email -> String? in
+                return email
+            }
+            .compactMap({ $0 })
+            .debounce(for: .seconds(0.6), scheduler: DispatchQueue.main)
+            .sink { [weak self] email in
+                self?.requestValidEmailCheck(email: email)
+            }
+            .store(in: &self.cancellables)
+
+        Publishers.CombineLatest(self.emailState, self.email)
+            .filter { emailState, email in
+                return emailState == .valid
+            }
+            .map { _, email -> String? in
+                return email
+            }
+            .compactMap({ $0 })
+            .sink { validEmail in
+                self.userRegisterEnvelopUpdater.setEmail(validEmail)
+            }
+            .store(in: &self.cancellables)
+
         self.loadCountries()
     }
 
     func loadCountries() {
 
-        self.countryState.send(.loading)
+        self.countriesState.send(.loading)
 
         self.serviceProvider.getCountries()
             .sink { completion in
 
             } receiveValue: { [weak self] countries in
                 self?.defaultCountrySubject.send(countries.first(where: { $0.iso3Code == self?.defaultCountryIso3Code}))
-                self?.countryState.send(.loaded(countries: countries))
+                self?.countriesState.send(.loaded(countries: countries))
+            }
+            .store(in: &self.cancellables)
+
+        self.defaultCountrySubject
+            .compactMap({ $0 })
+            .sink { [weak self] defaultCountry in
+                if self?.selectedCountry.value == nil {
+                    self?.setSelectedPrefixCountry(defaultCountry)
+                }
             }
             .store(in: &self.cancellables)
     }
 
+    func requestValidEmailCheck(email: String) {
+
+        self.checkEmailRegisteredCancellables?.cancel()
+
+        self.emailState.send(.validating)
+
+        self.checkEmailRegisteredCancellables = self.serviceProvider.checkEmailRegistered(email)
+                    .receive(on: DispatchQueue.main)
+                    .sink { [weak self] completion in
+                        switch completion {
+                        case .failure(_):
+                            self?.emailState.send(.serverError)
+                        case .finished:
+                            ()
+                        }
+                    }
+                    receiveValue: { [weak self] isEmailInUse in
+                        if isEmailInUse {
+                            self?.emailState.send(.alreadyInUse)
+                        }
+                        else {
+                            self?.emailState.send(.valid)
+                        }
+                    }
+
+    }
+
     func setSelectedPrefixCountry(_ country: Country) {
-        self.selectedPrefixCountrySubject.send(country)
+        self.selectedCountry.send(country)
         self.userRegisterEnvelopUpdater.setPhonePrefixCountry(country)
     }
 
     func setEmail(_ email: String) {
         self.email.send(email)
-        self.userRegisterEnvelopUpdater.setEmail(email)
     }
 
     func setPhoneNumber(_ phoneNumber: String) {
@@ -143,9 +254,9 @@ class ContactsFormStepViewModel {
     }
 
     private func isValidEmailAddress(_ email: String) -> Bool {
-        let emailValidationRegex = "^[\\p{L}0-9!#$%&'*+\\/=?^_`{|}~-][\\p{L}0-9.!#$%&'*+\\/=?^_`{|}~-]{0,63}@[\\p{L}0-9-]+(?:\\.[\\p{L}0-9-]{2,7})*$"
-        let emailValidationPredicate = NSPredicate(format: "SELF MATCHES %@", emailValidationRegex)
-        return emailValidationPredicate.evaluate(with: email)
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
+        return emailPred.evaluate(with: email)
     }
 
     private func isValidPhoneNumber(_ phoneNumber: String) -> Bool {
@@ -160,6 +271,7 @@ class ContactsFormStepViewModel {
 class ContactsFormStepView: FormStepView {
 
     private lazy var emailHeaderTextFieldView: HeaderTextFieldView = Self.createEmailHeaderTextFieldView()
+    private lazy var loadingView: UIActivityIndicatorView = Self.createLoadingView()
 
     private lazy var phoneStackView: UIStackView = Self.createPhoneStackView()
 
@@ -197,10 +309,15 @@ class ContactsFormStepView: FormStepView {
         self.phoneStackView.addArrangedSubview(prefixPlaceholderView)
         self.phoneStackView.addArrangedSubview(self.phoneHeaderTextFieldView)
 
+        self.emailHeaderTextFieldView.addSubview(self.loadingView)
+
         self.stackView.addArrangedSubview(self.emailHeaderTextFieldView)
         self.stackView.addArrangedSubview(self.phoneStackView)
 
         NSLayoutConstraint.activate([
+
+            self.loadingView.centerYAnchor.constraint(equalTo: self.emailHeaderTextFieldView.contentCenterYConstraint),
+            self.loadingView.trailingAnchor.constraint(equalTo: self.emailHeaderTextFieldView.trailingAnchor, constant: -10),
 
             self.prefixContainerView.heightAnchor.constraint(equalToConstant: 57),
             self.prefixContainerView.widthAnchor.constraint(equalToConstant: 114),
@@ -240,10 +357,7 @@ class ContactsFormStepView: FormStepView {
             self?.phoneHeaderTextFieldView.resignFirstResponder()
         }
 
-        self.emailHeaderTextFieldView.setText(self.viewModel.email.value ?? "")
-        self.phoneHeaderTextFieldView.setText(self.viewModel.phoneNumber.value ?? "")
-
-        self.viewModel.countryState
+        self.viewModel.countriesState
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
                 switch state {
@@ -280,13 +394,45 @@ class ContactsFormStepView: FormStepView {
             .store(in: &self.cancellables)
 
         self.phoneHeaderTextFieldView.textPublisher
-            .sink { [weak self] text in
-                self?.viewModel.setPhoneNumber(text)
+            .sink { [weak self] email in
+                self?.viewModel.setPhoneNumber(email)
             }
             .store(in: &self.cancellables)
 
-        self.prefixContainerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.didTapPrefixView)))
+        self.viewModel.emailState
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] emailState in
+                if emailState == .validating {
+                    self?.loadingView.startAnimating()
+                }
+                else {
+                    self?.loadingView.stopAnimating()
+                }
 
+                switch emailState {
+                case .empty:
+                    self?.emailHeaderTextFieldView.hideTipAndError()
+                case .needsValidation:
+                    self?.emailHeaderTextFieldView.hideTipAndError()
+                case .validating:
+                    self?.emailHeaderTextFieldView.hideTipAndError()
+                case .serverError:
+                    self?.emailHeaderTextFieldView.showErrorOnField(text: "Sorry we cannot verify this email", color: AppColor.inputError)
+                case .alreadyInUse:
+                    self?.emailHeaderTextFieldView.showErrorOnField(text: "This email is already used", color: AppColor.inputError)
+                case .invalidSyntax:
+                    self?.emailHeaderTextFieldView.hideTipAndError()
+                case .valid:
+                    self?.emailHeaderTextFieldView.hideTipAndError()
+                }
+
+            }
+            .store(in: &self.cancellables)
+
+        self.emailHeaderTextFieldView.setText(self.viewModel.email.value ?? "")
+        self.phoneHeaderTextFieldView.setText(self.viewModel.phoneNumber.value ?? "")
+
+        self.prefixContainerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.didTapPrefixView)))
     }
 
     public override func layoutSubviews() {
@@ -344,6 +490,14 @@ extension ContactsFormStepView {
         headerTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         headerTextFieldView.translatesAutoresizingMaskIntoConstraints = false
         return headerTextFieldView
+    }
+
+
+    private static func createLoadingView() -> UIActivityIndicatorView {
+        let loadingView = UIActivityIndicatorView(style: .medium)
+        loadingView.hidesWhenStopped = true
+        loadingView.translatesAutoresizingMaskIntoConstraints = false
+        return loadingView
     }
 
     private static func createPhoneHeaderTextFieldView() -> HeaderTextFieldView {

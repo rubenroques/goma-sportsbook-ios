@@ -19,6 +19,47 @@ class PasswordFormStepViewModel {
 
     private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
 
+    enum PasswordState {
+        case empty
+        case short
+        case long
+        case invalidChars
+        case onlyNumbers
+        case valid
+    }
+    var passwordState: AnyPublisher<PasswordState, Never> {
+        return self.password
+            .map { password in
+                guard let password else { return PasswordState.empty }
+                if password.isEmpty { return PasswordState.empty }
+                if password.count < 6 { return PasswordState.short }
+                if password.count > 16 { return PasswordState.long }
+
+                let numbersCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "0123456789")
+                if password.rangeOfCharacter(from: numbersCharacterSet.inverted) == nil {
+                    return PasswordState.onlyNumbers
+                }
+
+                let validCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "-!@$^&*abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+                if password.rangeOfCharacter(from: validCharacterSet.inverted) != nil {
+                    return PasswordState.invalidChars
+                }
+                return PasswordState.valid
+            }
+            .eraseToAnyPublisher()
+    }
+
+    var isFormCompleted: AnyPublisher<Bool, Never> {
+        return self.passwordState
+            .map({ passwordState in
+                switch passwordState {
+                case .valid: return true
+                default: return false
+                }
+            })
+            .eraseToAnyPublisher()
+    }
+
     init(title: String,
          password: String? = nil,
          userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
@@ -27,14 +68,6 @@ class PasswordFormStepViewModel {
         self.password = .init(password)
 
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
-    }
-
-    var isFormCompleted: AnyPublisher<Bool, Never> {
-        return self.password
-            .map { password in
-                return (password ?? "").count > 0
-            }
-            .eraseToAnyPublisher()
     }
 
     func setPassword(_ password: String) {
@@ -87,6 +120,26 @@ class PasswordFormStepView: FormStepView {
         self.passwordHeaderTextFieldView.textPublisher
             .sink { [weak self] text in
                 self?.viewModel.setPassword(text)
+            }
+            .store(in: &self.cancellables)
+
+        self.viewModel.passwordState
+            .receive(on: DispatchQueue.main)
+            .sink { passwordState in
+                switch passwordState {
+                case .empty:
+                    self.passwordHeaderTextFieldView.hideTipAndError()
+                case .short:
+                    self.passwordHeaderTextFieldView.showErrorOnField(text: "Password is too short", color: AppColor.inputError)
+                case .long:
+                    self.passwordHeaderTextFieldView.showErrorOnField(text: "Password is too long", color: AppColor.inputError)
+                case  .invalidChars:
+                    self.passwordHeaderTextFieldView.showErrorOnField(text: "Password contains invalids characters", color: AppColor.inputError)
+                case .onlyNumbers:
+                    self.passwordHeaderTextFieldView.showErrorOnField(text: "Password can not be all numbers", color: AppColor.inputError)
+                case .valid:
+                    self.passwordHeaderTextFieldView.hideTipAndError()
+                }
             }
             .store(in: &self.cancellables)
     }

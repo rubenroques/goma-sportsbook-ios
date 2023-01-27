@@ -14,7 +14,7 @@ import Theming
 public class SteppedRegistrationViewModel {
 
     var currentStep: CurrentValueSubject<Int, Never> = .init(0)
-    var numberOfSteps: Int = 0
+    var numberOfSteps: CurrentValueSubject<Int, Never> = .init(0)
 
     var userRegisterEnvelop: UserRegisterEnvelop
 
@@ -26,6 +26,20 @@ public class SteppedRegistrationViewModel {
     var shouldPushPhoneConfirmationStep: PassthroughSubject<Void, Never> = .init()
     var shouldPushSuccessStep: PassthroughSubject<Void, Never> = .init()
 
+    var suggestedNickname: AnyPublisher<String?, Never> {
+        return self.userRegisterEnvelopUpdater.didUpdateUserRegisterEnvelop
+            .map { updatedUserRegisterEnvelop -> String? in
+                let firstLetter = (updatedUserRegisterEnvelop.name ?? "").first
+                let surname = updatedUserRegisterEnvelop.surname
+                if let firstLetter, let surname {
+                    let suggestion = "\(String(firstLetter))\(surname)"
+                    return suggestion.lowercased()
+                }
+                return nil
+            }
+            .eraseToAnyPublisher()
+    }
+
     var confirmationCodeFilled: String?
 
     private var cancellables = Set<AnyCancellable>()
@@ -36,9 +50,10 @@ public class SteppedRegistrationViewModel {
 
         self.userRegisterEnvelop = userRegisterEnvelop
         self.currentStep = .init( self.userRegisterEnvelop.currentRegisterStep() )
-        self.numberOfSteps = 0
+        self.numberOfSteps = .init(0)
         self.serviceProvider = serviceProvider
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
+        
     }
 
     func scrollToPreviousStep() {
@@ -51,8 +66,8 @@ public class SteppedRegistrationViewModel {
 
     func scrollToNextStep() {
         var nextStep = currentStep.value + 1
-        if nextStep > numberOfSteps {
-            nextStep = numberOfSteps
+        if nextStep > numberOfSteps.value {
+            nextStep = numberOfSteps.value
         }
         self.currentStep.send(nextStep)
     }
@@ -61,7 +76,11 @@ public class SteppedRegistrationViewModel {
         self.currentStep.send(index)
     }
 
-    func requestSimpleRegister() -> Bool {
+    func setNumberOfSteps(_ totalSteps: Int) {
+        self.numberOfSteps.send(totalSteps)
+    }
+
+    func requestRegister() -> Bool {
 
         guard
             let form = self.registerFormFromRegisterEnvelop(self.userRegisterEnvelop)
@@ -71,7 +90,7 @@ public class SteppedRegistrationViewModel {
 
         self.isLoading.send(true)
 
-        serviceProvider.simpleSignUp(form: form)
+        serviceProvider.signUp(form: form)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
 
@@ -85,111 +104,89 @@ public class SteppedRegistrationViewModel {
             } receiveValue: { [weak self] userCreated in
                 if userCreated {
                     print("Created \(userCreated)")
-                    self?.shouldPushPhoneConfirmationStep.send()
+                    self?.shouldPushSuccessStep.send()
                 }
             }
             .store(in: &self.cancellables)
 
         return true
     }
+//
+//    func confirmPhoneCode() -> Bool {
+//        guard
+//            let email = self.userRegisterEnvelop.email,
+//            let code = self.confirmationCodeFilled
+//        else {
+//            return false
+//        }
+//
+//        self.isLoading.send(true)
+//
+//        serviceProvider
+//            .signupConfirmation(email, confirmationCode: code)
+//            .sink { [weak self] completion in
+//                switch completion {
+//                case .failure(let serviceProviderError):
+//                    print("Error \(serviceProviderError)")
+//                    self?.isLoading.send(false)
+//                case .finished:
+//                    print("Finished")
+//                }
+//            } receiveValue: { [weak self] phoneConfirmation in
+//                if self?.completeUserRegistration() ?? false {
+//                    // confirmation sent
+//                }
+//                else {
+//                    // send error on completion
+//                }
+//            }
+//            .store(in: &self.cancellables)
+//
+//        return true
+//    }
+//
+//    func completeUserRegistration() -> Bool {
+//
+//        guard
+//            let form = self.completeRegisterFormFromRegisterEnvelop(self.userRegisterEnvelop)
+//        else {
+//            return false
+//        }
+//
+//        self.serviceProvider.signUpCompletion(form: form)
+//            .sink { [weak self] completion in
+//                switch completion {
+//                case .failure(let serviceProviderError):
+//                    print("Error \(serviceProviderError)")
+//
+//                case .finished:
+//                    print("Finished")
+//                }
+//                self?.isLoading.send(false)
+//            } receiveValue: { [weak self] phoneConfirmation in
+//                self?.shouldPushSuccessStep.send()
+//            }
+//            .store(in: &self.cancellables)
+//
+//        return true
+//    }
 
-    func confirmPhoneCode() -> Bool {
-        guard
-            let email = self.userRegisterEnvelop.email,
-            let code = self.confirmationCodeFilled
-        else {
-            return false
-        }
-
-        self.isLoading.send(true)
-
-        serviceProvider
-            .signupConfirmation(email, confirmationCode: code)
-            .sink { [weak self] completion in
-                switch completion {
-                case .failure(let serviceProviderError):
-                    print("Error \(serviceProviderError)")
-                    self?.isLoading.send(false)
-                case .finished:
-                    print("Finished")
-                }
-            } receiveValue: { [weak self] phoneConfirmation in
-                if self?.completeUserRegistration() ?? false {
-                    // confirmation sent
-                }
-                else {
-                    // send error on completion
-                }
-            }
-            .store(in: &self.cancellables)
-
-        return true
-    }
-
-    func completeUserRegistration() -> Bool {
-
-        guard
-            let form = self.completeRegisterFormFromRegisterEnvelop(self.userRegisterEnvelop)
-        else {
-            return false
-        }
-
-        self.serviceProvider.signUpCompletion(form: form)
-            .sink { [weak self] completion in
-                switch completion {
-                case .failure(let serviceProviderError):
-                    print("Error \(serviceProviderError)")
-
-                case .finished:
-                    print("Finished")
-                }
-                self?.isLoading.send(false)
-            } receiveValue: { [weak self] phoneConfirmation in
-                self?.shouldPushSuccessStep.send()
-            }
-            .store(in: &self.cancellables)
-
-        return true
-    }
-
-    private func registerFormFromRegisterEnvelop(_ envelop: UserRegisterEnvelop) -> ServicesProvider.SimpleSignUpForm? {
+    private func registerFormFromRegisterEnvelop(_ envelop: UserRegisterEnvelop) -> ServicesProvider.SignUpForm? {
 
         guard
             let email = envelop.email,
             let username = envelop.nickname,
             let password = envelop.password,
-            let birthDate = envelop.dateOfBirth,
             let mobilePrefix = envelop.phonePrefixCountry?.phonePrefix,
             let mobileNumber = envelop.phoneNumber,
-            let countryIsoCode = envelop.countryBirth?.iso2Code
-        else {
-            return nil
-        }
-
-        return ServicesProvider.SimpleSignUpForm(email: email,
-                                                 username: username,
-                                                 password: password,
-                                                 birthDate: birthDate,
-                                                 mobilePrefix: mobilePrefix,
-                                                 mobileNumber: mobileNumber,
-                                                 countryIsoCode: countryIsoCode,
-                                                 currencyCode: "EUR")
-    }
-
-    private func completeRegisterFormFromRegisterEnvelop(_ envelop: UserRegisterEnvelop) -> ServicesProvider.UpdateUserProfileForm? {
-        guard
-            let email = envelop.email,
+            let nationalityIsoCode = envelop.countryBirth?.iso2Code,
             let firstName = envelop.name,
             let lastName = envelop.surname,
-            let username = envelop.nickname,
-            let password = envelop.password,
             let gender = envelop.gender,
             let province = envelop.placeAddress,
             let address = envelop.streetAddress,
             let birthDate = envelop.dateOfBirth,
-            let mobilePrefix = envelop.phonePrefixCountry?.phonePrefix,
-            let mobileNumber = envelop.phoneNumber,
-            let country = envelop.countryBirth
+            let city = envelop.placeAddress
         else {
             return nil
         }
@@ -202,32 +199,50 @@ public class SteppedRegistrationViewModel {
             genderString = "F"
         }
 
-        let fullMobileNumber: String = mobilePrefix + mobileNumber
-
-        return UpdateUserProfileForm(username: username,
-                              email: email,
-                              firstName: firstName,
-                              lastName: lastName,
-                              birthDate: birthDate,
-                              gender: genderString,
-                              address: envelop.placeAddress,
-                              province: envelop.streetAddress,
-                              city: "EMPTY",
-                              postalCode: "1229",
-                              country: country,
-                              cardId: "123344",
-                              mobileNumber: fullMobileNumber,
-                              securityQuestion: "Quest",
-                              securityAnswer: "Answ")
+        return ServicesProvider.SignUpForm.init(email: email,
+                                                username: username,
+                                                password: password,
+                                                birthDate: birthDate,
+                                                mobilePrefix: mobilePrefix,
+                                                mobileNumber: mobileNumber,
+                                                nationalityIsoCode: nationalityIsoCode,
+                                                currencyCode: "EUR",
+                                                firstName: firstName,
+                                                lastName: lastName,
+                                                gender: genderString,
+                                                address: address,
+                                                province: province,
+                                                city: city,
+                                                countryIsoCode: nationalityIsoCode)
 
     }
-
+//
+//    private func completeRegisterFormFromRegisterEnvelop(_ envelop: UserRegisterEnvelop) -> ServicesProvider.UpdateUserProfileForm? {
+//
+//        return UpdateUserProfileForm(username: username,
+//                              email: email,
+//                              firstName: firstName,
+//                              lastName: lastName,
+//                              birthDate: birthDate,
+//                              gender: genderString,
+//                              address: envelop.placeAddress,
+//                              province: envelop.streetAddress,
+//                              city: "EMPTY",
+//                              postalCode: "1229",
+//                              country: country,
+//                              cardId: "123344",
+//                              mobileNumber: fullMobileNumber,
+//                              securityQuestion: "Quest",
+//                              securityAnswer: "Answ")
+//
+//    }
+//
 
 }
 
 public class SteppedRegistrationViewController: UIViewController {
 
-    public var didUpdateFilledData: (UserRegisterEnvelop) -> Void = { _ in }
+    public var didRegisteredUserAction: (UserRegisterEnvelop) -> Void = { _ in }
 
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
 
@@ -274,10 +289,9 @@ public class SteppedRegistrationViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.viewModel.currentStep
-            .removeDuplicates()
-            .sink { [weak self] currentStep in
-                let totalSteps = self?.stepsViews.count ?? 0
+        Publishers.CombineLatest(self.viewModel.currentStep, self.viewModel.numberOfSteps)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] currentStep, totalSteps in
                 if totalSteps > 0 {
                     let progress = Float(currentStep) / Float(totalSteps)
                     self?.progressView.setProgress(progress, animated: true)
@@ -288,12 +302,28 @@ public class SteppedRegistrationViewController: UIViewController {
             }
             .store(in: &self.cancellables)
 
-        self.viewModel.shouldPushPhoneConfirmationStep
+        self.viewModel.currentStep
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                self?.showPhoneVerification()
+            .sink { currentStep in
+                if currentStep == 7 {
+                    self.backButton.isHidden = true
+                    self.cancelButton.isHidden = true
+                    self.progressView.isHidden = true
+                }
+                else {
+                    self.backButton.isHidden = false
+                    self.cancelButton.isHidden = false
+                    self.progressView.isHidden = false
+                }
             }
             .store(in: &self.cancellables)
+
+//        self.viewModel.shouldPushPhoneConfirmationStep
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] in
+//                self?.showPhoneVerification()
+//            }
+//            .store(in: &self.cancellables)
 
         self.viewModel.shouldPushSuccessStep
             .receive(on: DispatchQueue.main)
@@ -429,12 +459,24 @@ public class SteppedRegistrationViewController: UIViewController {
                                                                                         "avatar4",
                                                                                         "avatar5",
                                                                                         "avatar6",
-                                                                                       ]))
+                                                                                       ],
+                                                                                       selectedAvatarName: self.viewModel.userRegisterEnvelop.avatarName,
+                                                                                      userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater))
 
-        let nicknameFormStepView = NicknameFormStepView(viewModel: NicknameFormStepViewModel(title: "Nickname",
-                                                                                             nickname: self.viewModel.userRegisterEnvelop.nickname,
-                                                                                             serviceProvider: self.viewModel.serviceProvider,
-                                                                                             userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater))
+        let nicknameFormStepViewModel = NicknameFormStepViewModel(title: "Nickname",
+                                                                  nickname: self.viewModel.userRegisterEnvelop.nickname,
+                                                                  serviceProvider: self.viewModel.serviceProvider,
+                                                                  userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater)
+        let nicknameFormStepView = NicknameFormStepView(viewModel: nicknameFormStepViewModel)
+
+
+        self.viewModel.suggestedNickname
+            .removeDuplicates()
+            .compactMap({ $0 })
+            .sink { suggestedNickname in
+                nicknameFormStepViewModel.setGeneratedNickname(suggestedNickname)
+            }
+            .store(in: &self.cancellables)
 
         avatarNickRegisterStepView.addFormView(formView: avatarFormStepView)
         avatarNickRegisterStepView.addFormView(formView: nicknameFormStepView)
@@ -521,25 +563,25 @@ public class SteppedRegistrationViewController: UIViewController {
         //
         //
 
+//
+//        //
+//        // Step 8
+//        let confirmationCodeRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
+//
+//        let confirmationCodeFormStepViewModel = ConfirmationCodeFormStepViewModel(title: "Confirmation Code", userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater)
+//        let confirmationCodeFormStepView = ConfirmationCodeFormStepView(viewModel: confirmationCodeFormStepViewModel)
+//        confirmationCodeFormStepView.didUpdateConfirmationCode = { [weak self] code in
+//            self?.viewModel.confirmationCodeFilled = code
+//        }
+//
+//        confirmationCodeRegisterStepView.addFormView(formView: confirmationCodeFormStepView)
+//
+//        self.addStepView(registerStepView: confirmationCodeRegisterStepView)
+//        //
+//        //
 
         //
         // Step 8
-        let confirmationCodeRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
-
-        let confirmationCodeFormStepViewModel = ConfirmationCodeFormStepViewModel(title: "Confirmation Code", userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater)
-        let confirmationCodeFormStepView = ConfirmationCodeFormStepView(viewModel: confirmationCodeFormStepViewModel)
-        confirmationCodeFormStepView.didUpdateConfirmationCode = { [weak self] code in
-            self?.viewModel.confirmationCodeFilled = code
-        }
-
-        confirmationCodeRegisterStepView.addFormView(formView: confirmationCodeFormStepView)
-
-        self.addStepView(registerStepView: confirmationCodeRegisterStepView)
-        //
-        //
-
-        //
-        // Step 9
         let successSignUpRegisterStepView = RegisterStepView(viewModel: RegisterStepViewModel(serviceProvider: self.viewModel.serviceProvider))
         let successSignUpFormStepView = SuccessSignUpFormStepView(viewModel: SuccessSignUpFormStepViewModel(title: "Sign Up",
                                                                                                             userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater))
@@ -569,7 +611,7 @@ public class SteppedRegistrationViewController: UIViewController {
 
         self.stepsViews.append(registerStepView)
 
-        self.viewModel.numberOfSteps = self.stepsViews.count
+        self.viewModel.setNumberOfSteps(self.stepsViews.count)
     }
 
     func configureRegistrationCompletionPublisher() {
@@ -585,13 +627,9 @@ public class SteppedRegistrationViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isCurrentStepCompleted in
                 self?.continueButton.isEnabled = isCurrentStepCompleted
-                #if DEBUG
-                self?.continueButton.isEnabled = true
-                #endif
             })
 
     }
-
 
 }
 
@@ -601,9 +639,9 @@ public extension SteppedRegistrationViewController {
 
         switch self.viewModel.currentStep.value {
         case 6:
-            self.requestSimpleRegister()
+            self.requestSignUp()
         case 7:
-            self.requestPhoneConfirmation()
+            self.didRegisteredUser()
         default:
             self.viewModel.scrollToNextStep()
         }
@@ -614,37 +652,43 @@ public extension SteppedRegistrationViewController {
         self.viewModel.scrollToPreviousStep()
     }
 
+    @objc private func didTapCancelButton() {
+        self.dismiss(animated: true)
+    }
+
+    private func didRegisteredUser() {
+        self.didRegisteredUserAction(self.viewModel.userRegisterEnvelop)
+    }
+
 }
 
 public extension SteppedRegistrationViewController {
 
-    func requestSimpleRegister() {
-        if self.viewModel.requestSimpleRegister() {
+    func requestSignUp() {
+        if self.viewModel.requestRegister() {
             //
         }
         else {
             // Show error. Not able to create the sign up form model
         }
     }
-
-    func requestPhoneConfirmation() {
-        if self.viewModel.confirmPhoneCode() {
-
-        }
-        else {
-
-        }
-    }
-
-    func showPhoneVerification() {
-        self.viewModel.scrollToIndex(7)
-    }
-
+//
+//    func requestPhoneConfirmation() {
+//        if self.viewModel.confirmPhoneCode() {
+//
+//        }
+//        else {
+//
+//        }
+//    }
+//
+//    func showPhoneVerification() {
+//        self.viewModel.scrollToIndex(7)
+//    }
 
     func showSuccessStep() {
-        self.viewModel.scrollToIndex(8)
+        self.viewModel.scrollToIndex(7)
     }
-
 
 }
 
@@ -799,6 +843,7 @@ public extension SteppedRegistrationViewController {
 
         self.backButton.addTarget(self, action: #selector(self.didTapBackButton), for: .primaryActionTriggered)
         self.continueButton.addTarget(self, action: #selector(self.didTapContinueButton), for: .primaryActionTriggered)
+        self.cancelButton.addTarget(self, action: #selector(self.didTapCancelButton), for: .primaryActionTriggered)
 
         self.initConstraints()
     }

@@ -111,15 +111,8 @@ public final class UserRegisterEnvelop: Codable {
         if self.password.isEmptyOrNil {
             return 5
         }
-        if !self.acceptedTerms {
-            return 6
-        }
 
-        if self.simpleRegistered {
-            return 8
-        }
-
-        return 7
+        return 6
     }
 
 }
