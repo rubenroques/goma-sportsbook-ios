@@ -198,7 +198,6 @@ extension OmegaAPIClient: Endpoint {
             query.append(URLQueryItem(name: "password", value: password))
             query.append(URLQueryItem(name: "email", value: email))
             query.append(URLQueryItem(name: "currency", value: currencyCode))
-            query.append(URLQueryItem(name: "receiveEmail", value:  "true" ))
             query.append(URLQueryItem(name: "nationality", value: nationalityIso2Code))
             query.append(URLQueryItem(name: "mobile", value: phoneNumber))
             query.append(URLQueryItem(name: "city", value: city))

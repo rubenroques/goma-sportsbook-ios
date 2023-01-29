@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ServicesProvider
 import SharedModels
 
 public final class UserRegisterEnvelop: Codable {
@@ -113,6 +114,86 @@ public final class UserRegisterEnvelop: Codable {
         }
 
         return 6
+    }
+
+}
+
+public extension UserRegisterEnvelop {
+    static var debug: UserRegisterEnvelop {
+        return UserRegisterEnvelop(gender: Gender.male,
+                                   name: "R",
+                                   surname: "R",
+                                   avatarName: "avatar3",
+                                   nickname: "rroques1",
+                                   dateOfBirth: Date.init(timeIntervalSince1970: 1274848591),
+                                   countryBirth: Country.country(withISOCode: "FR"),
+                                   placeBirth: "p#=)(%#(/)%$/!ai",
+                                   placeAddress: "Long place name Long place name Long place name Long place name",
+                                   streetAddress: "Long street name Long street name Long street name Long street name ",
+                                   additionalStreetAddress: "Additional Street Address Additional Street Address",
+                                   email: "lobaj73851@crtsec.com",
+                                   phonePrefixCountry: Country.country(withISOCode: "FR"),
+                                   phoneNumber: "898437482",
+                                   password: "rokokokuben123",
+                                   acceptedMarketing: false,
+                                   acceptedTerms: false,
+                                   promoCode: nil,
+                                   godfatherCode: nil,
+                                   simpleRegistered: false,
+                                   confirmationCode: nil)
+    }
+}
+
+public extension UserRegisterEnvelop {
+
+    func convertToSignUpForm() -> ServicesProvider.SignUpForm? {
+
+        guard
+            let email = self.email,
+            let username = self.nickname,
+            let password = self.password,
+            let mobilePrefix = self.phonePrefixCountry?.phonePrefix,
+            let mobileNumber = self.phoneNumber,
+            let countryBirthIsoCode = self.countryBirth?.iso2Code,
+            let firstName = self.name,
+            let lastName = self.surname,
+            let gender = self.gender,
+            let streetAddress = self.streetAddress,
+            let birthDate = self.dateOfBirth,
+            let placeAddress = self.placeAddress
+        else {
+            return nil
+        }
+
+        var genderString = ""
+        switch gender {
+        case .male:
+            genderString = "M"
+        case .female:
+            genderString = "F"
+        }
+
+        return ServicesProvider.SignUpForm.init(email: email,
+                                                username: username,
+                                                password: password,
+                                                birthDate: birthDate,
+                                                mobilePrefix: mobilePrefix,
+                                                mobileNumber: mobileNumber,
+                                                nationalityIsoCode: countryBirthIsoCode,
+                                                currencyCode: "EUR",
+                                                firstName: firstName,
+                                                lastName: lastName,
+                                                gender: genderString,
+                                                address: streetAddress,
+                                                province: nil,
+                                                city: placeAddress,
+                                                countryIsoCode: countryBirthIsoCode,
+                                                bonusCode: self.promoCode,
+                                                receiveMarketingEmails: self.acceptedMarketing,
+                                                avatarName: self.avatarName,
+                                                placeOfBirth: self.placeBirth,
+                                                additionalStreetAddress: self.additionalStreetAddress,
+                                                godfatherCode: self.godfatherCode)
     }
 
 }

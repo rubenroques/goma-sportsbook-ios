@@ -27,6 +27,20 @@ public class LimitsOnRegisterViewController: UIViewController {
 
     private lazy var stackView: UIStackView = Self.createStackView()
 
+    private lazy var playerTypeStackView: UIStackView = Self.createPlayerTypeStackView()
+
+    private lazy var beginnerBaseView: UIView = Self.createPlayerTypeBaseView()
+    private lazy var beginnerImageView: UIImageView = Self.createPlayerTypeImageView()
+    private lazy var beginnerLabel: UILabel = Self.createPlayerTypeLabel()
+
+    private lazy var intermediateBaseView: UIView = Self.createPlayerTypeBaseView()
+    private lazy var intermediateImageView: UIImageView = Self.createPlayerTypeImageView()
+    private lazy var intermediateLabel: UILabel = Self.createPlayerTypeLabel()
+
+    private lazy var advancedBaseView: UIView = Self.createPlayerTypeBaseView()
+    private lazy var advancedImageView: UIImageView = Self.createPlayerTypeImageView()
+    private lazy var advancedLabel: UILabel = Self.createPlayerTypeLabel()
+
     private lazy var depositLimitHeaderTextFieldView: HeaderTextFieldView = Self.createHeaderTextFieldView()
     private lazy var bettingLimitHeaderTextFieldView: HeaderTextFieldView = Self.createHeaderTextFieldView()
     private lazy var autoPayoutHeaderTextFieldView: HeaderTextFieldView = Self.createHeaderTextFieldView()
@@ -161,6 +175,7 @@ public extension LimitsOnRegisterViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }
+
     private static func createContentBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -198,6 +213,37 @@ public extension LimitsOnRegisterViewController {
         stackview.spacing = 22
         stackview.translatesAutoresizingMaskIntoConstraints = false
         return stackview
+    }
+
+    private static func createPlayerTypeStackView() -> UIStackView {
+        let stackview = UIStackView()
+        stackview.distribution = .fillEqually
+        stackview.axis = .horizontal
+        stackview.spacing = 0
+        stackview.translatesAutoresizingMaskIntoConstraints = false
+        return stackview
+    }
+
+    private static func createPlayerTypeBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createPlayerTypeImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+
+    private static func createPlayerTypeLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
+        label.numberOfLines = 1
+        label.font = AppFont.with(type: .bold, size: 14.0)
+        return label
     }
 
     private static func createHeaderTextFieldView() -> HeaderTextFieldView {
@@ -239,7 +285,61 @@ public extension LimitsOnRegisterViewController {
         NSLayoutConstraint.activate([
             topPlaceholderView.heightAnchor.constraint(equalToConstant: 40)
         ])
+
+        self.cancelButton.setTitleColor(AppColor.highlightPrimary, for: .normal)
+
+        self.beginnerBaseView.addSubview(self.beginnerImageView)
+        self.beginnerBaseView.addSubview(self.beginnerLabel)
+
+        self.intermediateBaseView.addSubview(self.intermediateImageView)
+        self.intermediateBaseView.addSubview(self.intermediateLabel)
+
+        self.advancedBaseView.addSubview(self.advancedImageView)
+        self.advancedBaseView.addSubview(self.advancedLabel)
+
+        NSLayoutConstraint.activate([
+            self.beginnerImageView.topAnchor.constraint(equalTo: self.beginnerBaseView.topAnchor),
+            self.beginnerImageView.centerYAnchor.constraint(equalTo: self.beginnerBaseView.centerYAnchor),
+            self.beginnerImageView.widthAnchor.constraint(equalTo: self.beginnerImageView.heightAnchor),
+            self.beginnerImageView.widthAnchor.constraint(equalToConstant: 80),
+
+            self.beginnerLabel.topAnchor.constraint(equalTo: self.beginnerImageView.bottomAnchor, constant: 4),
+            self.beginnerLabel.leadingAnchor.constraint(equalTo: self.beginnerBaseView.leadingAnchor),
+            self.beginnerLabel.centerXAnchor.constraint(equalTo: self.beginnerBaseView.centerXAnchor),
+            self.beginnerLabel.bottomAnchor.constraint(equalTo: self.beginnerBaseView.bottomAnchor, constant: -4),
+            self.beginnerLabel.heightAnchor.constraint(equalToConstant: 18),
+
+            self.intermediateImageView.topAnchor.constraint(equalTo: self.intermediateBaseView.topAnchor),
+            self.intermediateImageView.centerXAnchor.constraint(equalTo: self.intermediateBaseView.centerXAnchor),
+            self.intermediateImageView.widthAnchor.constraint(equalTo: self.intermediateImageView.heightAnchor),
+            self.intermediateImageView.widthAnchor.constraint(equalToConstant: 80),
+
+            self.intermediateLabel.topAnchor.constraint(equalTo: self.intermediateImageView.bottomAnchor, constant: 4),
+            self.intermediateLabel.leadingAnchor.constraint(equalTo: self.intermediateBaseView.leadingAnchor),
+            self.intermediateLabel.centerXAnchor.constraint(equalTo: self.intermediateBaseView.centerXAnchor),
+            self.intermediateLabel.bottomAnchor.constraint(equalTo: self.intermediateBaseView.bottomAnchor, constant: -4),
+            self.intermediateLabel.heightAnchor.constraint(equalToConstant: 18),
+
+            self.advancedImageView.topAnchor.constraint(equalTo: self.advancedBaseView.topAnchor),
+            self.advancedImageView.centerXAnchor.constraint(equalTo: self.advancedBaseView.centerXAnchor),
+            self.advancedImageView.widthAnchor.constraint(equalTo: self.advancedImageView.heightAnchor),
+            self.advancedImageView.widthAnchor.constraint(equalToConstant: 80),
+
+            self.advancedLabel.topAnchor.constraint(equalTo: self.advancedImageView.bottomAnchor, constant: 4),
+            self.advancedLabel.leadingAnchor.constraint(equalTo: self.advancedBaseView.leadingAnchor),
+            self.advancedLabel.centerYAnchor.constraint(equalTo: self.advancedBaseView.centerYAnchor),
+            self.advancedLabel.bottomAnchor.constraint(equalTo: self.advancedBaseView.bottomAnchor, constant: -4),
+            self.advancedLabel.heightAnchor.constraint(equalToConstant: 18),
+        ])
+
+        self.playerTypeStackView.addArrangedSubview(self.beginnerBaseView)
+        self.playerTypeStackView.addArrangedSubview(self.intermediateBaseView)
+        self.playerTypeStackView.addArrangedSubview(self.advancedBaseView)
+
         self.stackView.addArrangedSubview(topPlaceholderView)
+
+        self.stackView.addArrangedSubview(self.playerTypeStackView)
+
         self.stackView.addArrangedSubview(self.depositLimitHeaderTextFieldView)
         self.stackView.addArrangedSubview(self.bettingLimitHeaderTextFieldView)
         self.stackView.addArrangedSubview(self.autoPayoutHeaderTextFieldView)

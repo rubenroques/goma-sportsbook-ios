@@ -188,6 +188,30 @@ class PasswordFormStepView: FormStepView {
         self.passwordHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
     }
 
+
+    override func canPresentError(forFormStep formStep: FormStep) -> Bool {
+        switch formStep {
+        case .password: return true
+        default: return false
+        }
+    }
+
+    override func presentError(_ error: RegisterError, forFormStep formStep: FormStep) {
+        if !self.canPresentError(forFormStep: formStep) { return }
+
+        switch (error.field, error.error) {
+        case ("password", "INVALID_LENGTH"):
+            self.passwordHeaderTextFieldView.showErrorOnField(text: "This password has an invalid length", color: AppColor.alertError)
+        case ("password", "INVALID_VALUE"):
+            self.passwordHeaderTextFieldView.showErrorOnField(text: "Please enter a valid Password", color: AppColor.alertError)
+        case ("password", _):
+            self.passwordHeaderTextFieldView.showErrorOnField(text: "Please enter a valid Password", color: AppColor.alertError)
+        default:
+            ()
+        }
+
+    }
+
 }
 
 extension PasswordFormStepView {

@@ -14,10 +14,10 @@ import Theming
 
 public struct RegisterStepViewModel {
 
-    let serviceProvider: ServicesProviderClient
+    let index: Int
 
-    public init(serviceProvider: ServicesProviderClient) {
-        self.serviceProvider = serviceProvider
+    public init(index: Int) {
+        self.index = index
     }
 
 }
@@ -66,6 +66,14 @@ public class RegisterStepView: UIView {
     private func commonInit() {
         self.setupSubviews()
 
+        let topPlaceholderView = UIView()
+        topPlaceholderView.translatesAutoresizingMaskIntoConstraints = false
+        topPlaceholderView.backgroundColor = .clear
+        NSLayoutConstraint.activate([
+            topPlaceholderView.heightAnchor.constraint(equalToConstant: 1)
+        ])
+
+        self.stackView.addArrangedSubview(topPlaceholderView)
     }
 
     public override func layoutSubviews() {

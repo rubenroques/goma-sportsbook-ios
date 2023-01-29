@@ -342,6 +342,29 @@ class AddressFormStepView: FormStepView {
         self.additionalStreetHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
     }
 
+    override func canPresentError(forFormStep formStep: FormStep) -> Bool {
+        switch formStep {
+        case .address: return true
+        default: return false
+        }
+    }
+
+    override func presentError(_ error: RegisterError, forFormStep formStep: FormStep) {
+        if !self.canPresentError(forFormStep: formStep) { return }
+        switch (error.field, error.error) {
+        case ("city", "INVALID_LENGTH"):
+            self.placeHeaderTextFieldView.showErrorOnField(text: "Place/Commune is too long", color: AppColor.alertError)
+        case ("address", "INVALID_LENGTH"):
+            self.streetHeaderTextFieldView.showErrorOnField(text: "Street name is too long", color: AppColor.alertError)
+        case ("city", _):
+            self.placeHeaderTextFieldView.showErrorOnField(text: "Please enter a valid Place/Commune", color: AppColor.alertError)
+        case ("address", _):
+            self.streetHeaderTextFieldView.showErrorOnField(text: "Please enter a valid Street", color: AppColor.alertError)
+        default:
+            ()
+        }
+    }
+    
 }
 
 extension AddressFormStepView {

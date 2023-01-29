@@ -54,23 +54,27 @@ class NicknameFormStepViewModel {
 
         self.nickname = .init(nickname)
 
-        if nickname != nil {
-            self.shouldUseGeneratedNickname = false
-            self.generatedNickname = nil
+        if nickname == nil {
+            self.generatedNickname = .init(nickname)
         }
         else {
-            self.generatedNickname = .init(nickname)
+            self.shouldUseGeneratedNickname = false
+            self.generatedNickname = nil
         }
 
         self.serviceProvider = serviceProvider
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
 
-        self.userRegisterEnvelopUpdater.setAvatarName("avatar1")
+        self.userRegisterEnvelopUpdater
+            .generatedNickname
+            .sink { [weak self] generatedNickname in
+                if self?.shouldUseGeneratedNickname ?? false {
+                    self?.generatedNickname?.send(generatedNickname)
+                }
+            }
+            .store(in: &self.cancellables)
 
         //
-        let clearedEmailState = self.nicknameState.removeDuplicates()
-        let clearedEmail = self.nickname.removeDuplicates()
-
         self.nickname
             .removeDuplicates()
             .print("DEBUG-NICK: 1 ")
@@ -94,6 +98,9 @@ class NicknameFormStepViewModel {
                 }
             }
             .store(in: &self.cancellables)
+
+        let clearedEmailState = self.nicknameState.removeDuplicates()
+        let clearedEmail = self.nickname.removeDuplicates()
 
         Publishers.CombineLatest(clearedEmailState, clearedEmail)
             .print("DEBUG-NICK: 2 ")
@@ -132,12 +139,6 @@ class NicknameFormStepViewModel {
                 return nicknameState == .valid
             }
             .eraseToAnyPublisher()
-    }
-
-    func setGeneratedNickname(_ generatedNickname: String?) {
-        if shouldUseGeneratedNickname {
-            self.generatedNickname?.send(generatedNickname)
-        }
     }
 
     func setNickname(_ nickname: String?) {
@@ -342,6 +343,29 @@ class NicknameFormStepView: FormStepView {
             }
 
         }
+    }
+
+    override func canPresentError(forFormStep formStep: FormStep) -> Bool {
+        switch formStep {
+        case .nickname: return true
+        default: return false
+        }
+    }
+
+    override func presentError(_ error: RegisterError, forFormStep formStep: FormStep) {
+        if !self.canPresentError(forFormStep: formStep) { return }
+
+        switch (error.field, error.error) {
+        case ("username", "INVALID_LENGTH"):
+            self.nicknameHeaderTextFieldView.showErrorOnField(text: "Nickname is too long", color: AppColor.alertError)
+        case ("username", "DUPLICATE"):
+            self.nicknameHeaderTextFieldView.showErrorOnField(text: "This nickname is already in use", color: AppColor.alertError)
+        case ("username", _):
+            self.nicknameHeaderTextFieldView.showErrorOnField(text: "Please enter a valid nickname", color: AppColor.alertError)
+        default:
+            ()
+        }
+
     }
 
 }

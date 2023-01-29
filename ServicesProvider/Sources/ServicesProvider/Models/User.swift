@@ -212,7 +212,13 @@ public class SignUpForm {
     public var additionalStreetAddress: String?
     public var godfatherCode: String?
 
-    public init(email: String, username: String, password: String, birthDate: Date, mobilePrefix: String, mobileNumber: String, nationalityIsoCode: String, currencyCode: String, firstName: String? = nil, lastName: String? = nil, gender: String? = nil, address: String? = nil, province: String? = nil, city: String, countryIsoCode: String, bonusCode: String? = nil, receiveMarketingEmails: Bool? = nil, avatarName: String? = nil, placeOfBirth: String? = nil, additionalStreetAddress: String? = nil, godfatherCode: String? = nil) {
+    public init(email: String, username: String, password: String, birthDate: Date,
+                mobilePrefix: String, mobileNumber: String, nationalityIsoCode: String,
+                currencyCode: String, firstName: String? = nil, lastName: String? = nil,
+                gender: String? = nil, address: String? = nil, province: String? = nil,
+                city: String, countryIsoCode: String, bonusCode: String? = nil,
+                receiveMarketingEmails: Bool? = nil, avatarName: String? = nil,
+                placeOfBirth: String? = nil, additionalStreetAddress: String? = nil, godfatherCode: String? = nil) {
         self.email = email
         self.username = username
         self.password = password
@@ -238,6 +244,23 @@ public class SignUpForm {
 
 }
 
+public struct SignUpResponse {
+
+    public struct SignUpError {
+        public var field: String
+        public var error: String
+    }
+
+    public var successful: Bool
+    public var errors: [SignUpError]?
+
+    public init(successful: Bool, errors: [SignUpError]? = nil) {
+        self.successful = successful
+        self.errors = errors
+    }
+    
+}
+
 public struct UpdateUserProfileForm {
     
     public var username: String?
@@ -257,7 +280,11 @@ public struct UpdateUserProfileForm {
     public var securityQuestion: String?
     public var securityAnswer: String?
     
-    public init(username: String? = nil, email: String? = nil, firstName: String? = nil, lastName: String? = nil, birthDate: Date? = nil, gender: String? = nil, address: String? = nil, province: String? = nil, city: String? = nil, postalCode: String? = nil, country: Country? = nil, cardId: String? = nil, mobileNumber: String? = nil, securityQuestion: String? = nil, securityAnswer: String? = nil) {
+    public init(username: String? = nil, email: String? = nil, firstName: String? = nil,
+                lastName: String? = nil, birthDate: Date? = nil, gender: String? = nil,
+                address: String? = nil, province: String? = nil, city: String? = nil,
+                postalCode: String? = nil, country: Country? = nil, cardId: String? = nil,
+                mobileNumber: String? = nil, securityQuestion: String? = nil, securityAnswer: String? = nil) {
         self.username = username
         self.email = email
         self.firstName = firstName

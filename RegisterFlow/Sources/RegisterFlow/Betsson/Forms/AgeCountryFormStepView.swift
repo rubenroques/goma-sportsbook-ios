@@ -355,6 +355,28 @@ class AgeCountryFormStepView: FormStepView {
         }
     }
 
+    override func canPresentError(forFormStep formStep: FormStep) -> Bool {
+        switch formStep {
+        case .ageCountry: return true
+        default: return false
+        }
+    }
+
+    override func presentError(_ error: RegisterError, forFormStep formStep: FormStep) {
+        if !self.canPresentError(forFormStep: formStep) { return }
+        switch (error.field, error.error) {
+        case ("birthDate", "BELOW_MINIMUM_AGE"):
+            self.dateHeaderTextFieldView.showErrorOnField(text: "Player is not old enough to be registered", color: AppColor.alertError)
+        case ("country", "INVALID_LENGTH"):
+            self.countryHeaderTextFieldView.showErrorOnField(text: "Country name is too long", color: AppColor.alertError)
+        case ("birthDate", _):
+            self.dateHeaderTextFieldView.showErrorOnField(text: "Please enter a valid birth date", color: AppColor.alertError)
+        case ("country", _):
+            self.countryHeaderTextFieldView.showErrorOnField(text: "Please enter a valid Country", color: AppColor.alertError)
+        default:
+            ()
+        }
+    }
 
 }
 

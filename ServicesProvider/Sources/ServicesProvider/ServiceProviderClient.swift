@@ -302,7 +302,7 @@ extension ServicesProviderClient {
         return privilegedAccessManager.simpleSignUp(form: form)
     }
 
-    public func signUp(form: SignUpForm) -> AnyPublisher<Bool, ServiceProviderError> {
+    public func signUp(form: SignUpForm) -> AnyPublisher<SignUpResponse, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {

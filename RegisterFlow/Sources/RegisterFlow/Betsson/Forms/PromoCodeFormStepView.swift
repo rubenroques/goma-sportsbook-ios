@@ -120,6 +120,26 @@ class PromoCodeFormStepView: FormStepView {
 
     }
 
+    override func canPresentError(forFormStep formStep: FormStep) -> Bool {
+        switch formStep {
+        case .promoCodes: return true
+        default: return false
+        }
+    }
+
+    override func presentError(_ error: RegisterError, forFormStep formStep: FormStep) {
+        if !self.canPresentError(forFormStep: formStep) { return }
+
+        switch (error.field, error.error) {
+        case ("bonusCode", "INVALID_LENGTH"):
+            self.promoCodeHeaderTextFieldView.showErrorOnField(text: "Promo Code is too long", color: AppColor.alertError)
+        case ("bonusCode", _):
+            self.promoCodeHeaderTextFieldView.showErrorOnField(text: "Please enter a valid Promo Code", color: AppColor.alertError)
+        default:
+            ()
+        }
+    }
+
 }
 
 extension PromoCodeFormStepView {

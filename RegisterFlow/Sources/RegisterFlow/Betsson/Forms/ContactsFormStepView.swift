@@ -424,7 +424,7 @@ class ContactsFormStepView: FormStepView {
                 case .serverError:
                     self?.emailHeaderTextFieldView.showErrorOnField(text: "Sorry we cannot verify this email", color: AppColor.inputError)
                 case .alreadyInUse:
-                    self?.emailHeaderTextFieldView.showErrorOnField(text: "This email is already used", color: AppColor.inputError)
+                    self?.emailHeaderTextFieldView.showErrorOnField(text: "This email is already in use", color: AppColor.inputError)
                 case .invalidSyntax:
                     self?.emailHeaderTextFieldView.hideTipAndError()
                 case .valid:
@@ -482,6 +482,34 @@ class ContactsFormStepView: FormStepView {
                 countrySelectorViewController?.animateDismissView()
             }
             self.viewController?.present(countrySelectorViewController, animated: true)
+        }
+    }
+
+    override func canPresentError(forFormStep formStep: FormStep) -> Bool {
+        switch formStep {
+        case .contacts: return true
+        default: return false
+        }
+    }
+
+    override func presentError(_ error: RegisterError, forFormStep formStep: FormStep) {
+        if !self.canPresentError(forFormStep: formStep) { return }
+
+        switch (error.field, error.error) {
+        case ("email", "INVALID_LENGTH"):
+            self.emailHeaderTextFieldView.showErrorOnField(text: "Place/Commune is too long", color: AppColor.alertError)
+        case ("mobile", "INVALID_LENGTH"):
+            self.phoneHeaderTextFieldView.showErrorOnField(text: "Street name is too long", color: AppColor.alertError)
+        case ("email", "DUPLICATE"):
+            self.emailHeaderTextFieldView.showErrorOnField(text: "This email is already in use", color: AppColor.alertError)
+        case ("mobile", "DUPLICATE"):
+            self.phoneHeaderTextFieldView.showErrorOnField(text: "This mobile number is already in use", color: AppColor.alertError)
+        case ("email", _):
+            self.emailHeaderTextFieldView.showErrorOnField(text: "Please enter a valid Email", color: AppColor.alertError)
+        case ("mobile", _):
+            self.phoneHeaderTextFieldView.showErrorOnField(text: "Please enter a valid Phone Number", color: AppColor.alertError)
+        default:
+            ()
         }
     }
 

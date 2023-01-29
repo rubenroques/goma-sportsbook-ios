@@ -15,6 +15,23 @@ public class UserRegisterEnvelopUpdater {
         return self.filledDataUpdated.eraseToAnyPublisher()
     }
 
+    public var generatedNickname: AnyPublisher<String, Never> {
+        return self.filledDataUpdated
+            .map { updatedUserRegisterEnvelop -> String? in
+                let firstLetter = (updatedUserRegisterEnvelop.name ?? "").first
+                let surname = updatedUserRegisterEnvelop.surname?.replacingOccurrences(of: " ", with: "")
+                if let firstLetter, let surname {
+                    let suggestion = "\(String(firstLetter))\(surname)"
+                    return suggestion.lowercased()
+                }
+                return nil
+            }
+            .removeDuplicates()
+            .compactMap({ $0 })
+            .eraseToAnyPublisher()
+    }
+
+
     private var filledDataUpdated: CurrentValueSubject<UserRegisterEnvelop, Never>
     private var userRegisterEnvelop: UserRegisterEnvelop
 

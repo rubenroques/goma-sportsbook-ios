@@ -146,8 +146,6 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             return Fail(outputType: UsernameValidation.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
         })
         .eraseToAnyPublisher()
-
-
     }
 
     func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError> {
@@ -183,7 +181,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         .eraseToAnyPublisher()
     }
 
-    func signUp(form: SignUpForm) -> AnyPublisher<Bool, ServiceProviderError> {
+    func signUp(form: SignUpForm) -> AnyPublisher<SignUpResponse, ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.signUp(email: form.email,
                               username: form.username,
@@ -213,22 +211,17 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
 
         let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.connector.request(endpoint)
 
-        return publisher.flatMap({ statusResponse -> AnyPublisher<Bool, ServiceProviderError> in
+        return publisher.flatMap({ (statusResponse: SportRadarModels.StatusResponse) -> AnyPublisher<SignUpResponse, ServiceProviderError> in
             if statusResponse.status == "SUCCESS" {
-                return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                return Just( SignUpResponse(successful: true) ).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
             else if let errors = statusResponse.errors {
-                if errors.contains(where: { $0.field == "username" }) {
-                    return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidSignUpUsername).eraseToAnyPublisher()
+                let mappedErrors = errors.map { error -> SignUpResponse.SignUpError in
+                    return SignUpResponse.SignUpError(field: error.field, error: error.error)
                 }
-                else if errors.contains(where: { $0.field == "email" }) {
-                    return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidSignUpEmail).eraseToAnyPublisher()
-                }
-                else if errors.contains(where: { $0.field == "password" }) {
-                    return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidSignUpPassword).eraseToAnyPublisher()
-                }
+                return Just( SignUpResponse(successful: false, errors: mappedErrors) ).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
-            return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+            return Fail(outputType: SignUpResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
         })
         .eraseToAnyPublisher()
     }

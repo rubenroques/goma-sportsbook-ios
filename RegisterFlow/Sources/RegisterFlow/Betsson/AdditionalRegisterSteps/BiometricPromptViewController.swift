@@ -72,6 +72,8 @@ public class BiometricPromptViewController: UIViewController {
         self.view.backgroundColor = AppColor.backgroundPrimary
         self.contentBaseView.backgroundColor = AppColor.backgroundPrimary
 
+        self.cancelButton.setTitleColor(AppColor.highlightPrimary, for: .normal)
+
         self.titleLabel.textColor = AppColor.textPrimary
         self.subtitleLabel.textColor = AppColor.textPrimary
         self.detailsLabel.textColor = AppColor.textSecondary

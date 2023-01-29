@@ -10,11 +10,16 @@ import UIKit
 import Combine
 import Theming
 
-protocol FormStepController {
+protocol FormStepCompleter {
     var isFormCompleted: AnyPublisher<Bool, Never> { get }
 }
 
-public class FormStepView: UIView, FormStepController {
+protocol RegisterErrorPresenter {
+    func canPresentError(forFormStep: FormStep) -> Bool
+    func presentError(_ error: RegisterError, forFormStep: FormStep)
+}
+
+public class FormStepView: UIView, FormStepCompleter, RegisterErrorPresenter {
 
     var isFormCompleted: AnyPublisher<Bool, Never> {
         return Just(true).eraseToAnyPublisher()
@@ -49,6 +54,14 @@ public class FormStepView: UIView, FormStepController {
 
     public override func layoutSubviews() {
         super.layoutSubviews()
+    }
+
+    func canPresentError(forFormStep: FormStep) -> Bool {
+        return false
+    }
+
+    func presentError(_ error: RegisterError, forFormStep: FormStep) {
+        
     }
 
     func setupWithTheme() {

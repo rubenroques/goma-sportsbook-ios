@@ -99,6 +99,17 @@ class ConfirmationCodeFormStepView: FormStepView {
         self.codeHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
     }
 
+    override func canPresentError(forFormStep formStep: FormStep) -> Bool {
+        switch formStep {
+        case .phoneConfirmation: return true
+        default: return false
+        }
+    }
+
+    override func presentError(_ error: RegisterError, forFormStep formStep: FormStep) {
+        if !self.canPresentError(forFormStep: formStep) { return }
+    }
+
 }
 
 extension ConfirmationCodeFormStepView {

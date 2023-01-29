@@ -154,6 +154,17 @@ class AvatarFormStepView: FormStepView {
         }
     }
 
+    override func canPresentError(forFormStep formStep: FormStep) -> Bool {
+        switch formStep {
+        case .avatar: return true
+        default: return false
+        }
+    }
+
+    override func presentError(_ error: RegisterError, forFormStep formStep: FormStep) {
+        if !self.canPresentError(forFormStep: formStep) { return }
+    }
+
 }
 
 extension AvatarFormStepView {

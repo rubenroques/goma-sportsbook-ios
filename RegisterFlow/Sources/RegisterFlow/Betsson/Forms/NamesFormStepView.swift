@@ -133,6 +133,29 @@ class NamesFormStepView: FormStepView {
         self.lastNameHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
     }
 
+    override func canPresentError(forFormStep formStep: FormStep) -> Bool {
+        switch formStep {
+        case .names: return true
+        default: return false
+        }
+    }
+
+    override func presentError(_ error: RegisterError, forFormStep formStep: FormStep) {
+        if !self.canPresentError(forFormStep: formStep) { return }
+        switch (error.field, error.error) {
+        case ("firstName", "INVALID_LENGTH"):
+            self.firstNameHeaderTextFieldView.showErrorOnField(text: "This name has an invalid length", color: AppColor.alertError)
+        case ("lastName", "INVALID_LENGTH"):
+            self.lastNameHeaderTextFieldView.showErrorOnField(text: "This last name has an invalid length", color: AppColor.alertError)
+        case ("firstName", _):
+            self.firstNameHeaderTextFieldView.showErrorOnField(text: "Please enter a valid name", color: AppColor.alertError)
+        case ("lastName", _):
+            self.lastNameHeaderTextFieldView.showErrorOnField(text: "Please enter a valid last name", color: AppColor.alertError)
+        default:
+            ()
+        }
+    }
+
 }
 
 extension NamesFormStepView {
