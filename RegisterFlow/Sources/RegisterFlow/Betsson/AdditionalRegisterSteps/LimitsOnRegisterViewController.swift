@@ -66,6 +66,19 @@ public class LimitsOnRegisterViewController: UIViewController {
         self.titleLabel.text = "Limits Management"
         self.subtitleLabel.text = "What type of playerare you?"
 
+
+        self.beginnerImageView.image = UIImage(named: "level_beginner", in: Bundle.module, with: nil)
+        self.intermediateImageView.image = UIImage(named: "level_intermediate", in: Bundle.module, with: nil)
+        self.advancedImageView.image = UIImage(named: "level_advanced", in: Bundle.module, with: nil)
+
+        self.beginnerLabel.text = "Beginner"
+        self.intermediateLabel.text = "Intermediate"
+        self.advancedLabel.text = "Advanced"
+
+        self.beginnerBaseView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.didTapBeginnerButton)))
+        self.intermediateBaseView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.didTapIntermediateButton)))
+        self.advancedBaseView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.didTapAdvancedButton)))
+
         self.continueButton.setTitle("Continue", for: .normal)
 
         self.continueButton.addTarget(self, action: #selector(didTapContinueButton), for: .primaryActionTriggered)
@@ -147,6 +160,24 @@ public class LimitsOnRegisterViewController: UIViewController {
 
     @objc func didTapContinueButton() {
         self.didTapContinueButtonAction()
+    }
+
+    @objc func didTapBeginnerButton() {
+        self.depositLimitHeaderTextFieldView.setText("40€")
+        self.bettingLimitHeaderTextFieldView.setText("40€")
+        self.autoPayoutHeaderTextFieldView.setText("40€")
+    }
+
+    @objc func didTapIntermediateButton() {
+        self.depositLimitHeaderTextFieldView.setText("400€")
+        self.bettingLimitHeaderTextFieldView.setText("400€")
+        self.autoPayoutHeaderTextFieldView.setText("400€")
+    }
+
+    @objc func didTapAdvancedButton() {
+        self.depositLimitHeaderTextFieldView.setText("4000€")
+        self.bettingLimitHeaderTextFieldView.setText("4000€")
+        self.autoPayoutHeaderTextFieldView.setText("4000€")
     }
 
 }
@@ -283,7 +314,7 @@ public extension LimitsOnRegisterViewController {
         topPlaceholderView.translatesAutoresizingMaskIntoConstraints = false
         topPlaceholderView.backgroundColor = .clear
         NSLayoutConstraint.activate([
-            topPlaceholderView.heightAnchor.constraint(equalToConstant: 40)
+            topPlaceholderView.heightAnchor.constraint(equalToConstant: 32)
         ])
 
         self.cancelButton.setTitleColor(AppColor.highlightPrimary, for: .normal)
@@ -299,14 +330,14 @@ public extension LimitsOnRegisterViewController {
 
         NSLayoutConstraint.activate([
             self.beginnerImageView.topAnchor.constraint(equalTo: self.beginnerBaseView.topAnchor),
-            self.beginnerImageView.centerYAnchor.constraint(equalTo: self.beginnerBaseView.centerYAnchor),
+            self.beginnerImageView.centerXAnchor.constraint(equalTo: self.beginnerBaseView.centerXAnchor),
             self.beginnerImageView.widthAnchor.constraint(equalTo: self.beginnerImageView.heightAnchor),
             self.beginnerImageView.widthAnchor.constraint(equalToConstant: 80),
 
-            self.beginnerLabel.topAnchor.constraint(equalTo: self.beginnerImageView.bottomAnchor, constant: 4),
+            self.beginnerLabel.topAnchor.constraint(equalTo: self.beginnerImageView.bottomAnchor, constant: 8),
             self.beginnerLabel.leadingAnchor.constraint(equalTo: self.beginnerBaseView.leadingAnchor),
             self.beginnerLabel.centerXAnchor.constraint(equalTo: self.beginnerBaseView.centerXAnchor),
-            self.beginnerLabel.bottomAnchor.constraint(equalTo: self.beginnerBaseView.bottomAnchor, constant: -4),
+            self.beginnerLabel.bottomAnchor.constraint(equalTo: self.beginnerBaseView.bottomAnchor, constant: -10),
             self.beginnerLabel.heightAnchor.constraint(equalToConstant: 18),
 
             self.intermediateImageView.topAnchor.constraint(equalTo: self.intermediateBaseView.topAnchor),
@@ -314,10 +345,10 @@ public extension LimitsOnRegisterViewController {
             self.intermediateImageView.widthAnchor.constraint(equalTo: self.intermediateImageView.heightAnchor),
             self.intermediateImageView.widthAnchor.constraint(equalToConstant: 80),
 
-            self.intermediateLabel.topAnchor.constraint(equalTo: self.intermediateImageView.bottomAnchor, constant: 4),
+            self.intermediateLabel.topAnchor.constraint(equalTo: self.intermediateImageView.bottomAnchor, constant: 8),
             self.intermediateLabel.leadingAnchor.constraint(equalTo: self.intermediateBaseView.leadingAnchor),
             self.intermediateLabel.centerXAnchor.constraint(equalTo: self.intermediateBaseView.centerXAnchor),
-            self.intermediateLabel.bottomAnchor.constraint(equalTo: self.intermediateBaseView.bottomAnchor, constant: -4),
+            self.intermediateLabel.bottomAnchor.constraint(equalTo: self.intermediateBaseView.bottomAnchor, constant: -10),
             self.intermediateLabel.heightAnchor.constraint(equalToConstant: 18),
 
             self.advancedImageView.topAnchor.constraint(equalTo: self.advancedBaseView.topAnchor),
@@ -325,10 +356,10 @@ public extension LimitsOnRegisterViewController {
             self.advancedImageView.widthAnchor.constraint(equalTo: self.advancedImageView.heightAnchor),
             self.advancedImageView.widthAnchor.constraint(equalToConstant: 80),
 
-            self.advancedLabel.topAnchor.constraint(equalTo: self.advancedImageView.bottomAnchor, constant: 4),
+            self.advancedLabel.topAnchor.constraint(equalTo: self.advancedImageView.bottomAnchor, constant: 8),
             self.advancedLabel.leadingAnchor.constraint(equalTo: self.advancedBaseView.leadingAnchor),
-            self.advancedLabel.centerYAnchor.constraint(equalTo: self.advancedBaseView.centerYAnchor),
-            self.advancedLabel.bottomAnchor.constraint(equalTo: self.advancedBaseView.bottomAnchor, constant: -4),
+            self.advancedLabel.centerXAnchor.constraint(equalTo: self.advancedBaseView.centerXAnchor),
+            self.advancedLabel.bottomAnchor.constraint(equalTo: self.advancedBaseView.bottomAnchor, constant: -10),
             self.advancedLabel.heightAnchor.constraint(equalToConstant: 18),
         ])
 
@@ -398,8 +429,8 @@ public extension LimitsOnRegisterViewController {
             self.continueButton.centerYAnchor.constraint(equalTo: self.footerBaseView.centerYAnchor),
             self.continueButton.leadingAnchor.constraint(equalTo: self.footerBaseView.leadingAnchor, constant: 34),
             self.continueButton.heightAnchor.constraint(equalToConstant: 50),
-
         ])
+
     }
 
 }

@@ -21,9 +21,19 @@ public class DepositOnRegisterViewController: UIViewController {
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var cancelButton: UIButton = Self.createCancelButton()
 
+    private lazy var promoImageView: UIImageView = Self.createPromoImageView()
+
     private lazy var contentBaseView: UIView = Self.createContentBaseView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
+
+    private lazy var depositHeaderTextFieldView: HeaderTextFieldView = Self.createHeaderTextFieldView()
+
+    private lazy var amountButtonsStackView: UIStackView = Self.createAmountButtonsStackView()
+    private lazy var amountButton1: UIButton = Self.createAmountButton()
+    private lazy var amountButton2: UIButton = Self.createAmountButton()
+    private lazy var amountButton3: UIButton = Self.createAmountButton()
+    private lazy var amountButton4: UIButton = Self.createAmountButton()
 
     private lazy var footerBaseView: UIView = Self.createFooterBaseView()
     private lazy var depositButton: UIButton = Self.createDepositButton()
@@ -121,6 +131,15 @@ public extension DepositOnRegisterViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }
+
+    private static func createPromoImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 8
+        return imageView
+    }
+
     private static func createContentBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -157,6 +176,29 @@ public extension DepositOnRegisterViewController {
         return view
     }
 
+    private static func createHeaderTextFieldView() -> HeaderTextFieldView {
+        let headerTextFieldView = HeaderTextFieldView()
+        headerTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
+        headerTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
+        headerTextFieldView.translatesAutoresizingMaskIntoConstraints = false
+        return headerTextFieldView
+    }
+
+    private static func createAmountButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }
+
+    private static func createAmountButtonsStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+        stackView.distribution = .fillEqually
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }
+
     private static func createDepositButton() -> UIButton {
         let button = UIButton()
         button.setTitle("Continue", for: .normal)
@@ -176,8 +218,19 @@ public extension DepositOnRegisterViewController {
         self.contentBaseView.addSubview(self.titleLabel)
         self.contentBaseView.addSubview(self.subtitleLabel)
 
+        self.view.addSubview(self.depositHeaderTextFieldView)
+
+        self.amountButtonsStackView.addArrangedSubview(self.amountButton1)
+        self.amountButtonsStackView.addArrangedSubview(self.amountButton2)
+        self.amountButtonsStackView.addArrangedSubview(self.amountButton3)
+        self.amountButtonsStackView.addArrangedSubview(self.amountButton4)
+        self.view.addSubview(self.amountButtonsStackView)
+
         self.view.addSubview(self.footerBaseView)
         self.footerBaseView.addSubview(self.depositButton)
+
+
+
 
         self.initConstraints()
     }
