@@ -20,15 +20,36 @@ class DepositViewModel: NSObject {
 
     var paymentMethodsResponse: SimplePaymentMethodsResponse?
     var shouldShowPaymentDropIn: CurrentValueSubject<Bool, Never> = .init(false)
-    var depositAmount: String = ""
+    var hasPaymentOptions: CurrentValueSubject<Bool, Never> = .init(false)
+    var hasProcessedDeposit: CurrentValueSubject<Bool, Never> = .init(false)
+
+    var dropInDepositAmount: String = ""
+    var depositAmount: Double = 0.0
+    var clientKey: String?
+    var paymentId: String?
 
     // MARK: Lifetime and Cycle
     override init() {
         super.init()
 
+        self.setupPublishers()
     }
 
     // MARK: Functions
+    private func setupPublishers() {
+
+        Publishers.CombineLatest(self.hasProcessedDeposit, self.hasPaymentOptions)
+            .sink(receiveValue: { [weak self] hasProcessedDeposit, hasPaymentOptions in
+
+                if hasProcessedDeposit && hasPaymentOptions {
+                    self?.shouldShowPaymentDropIn.send(true)
+
+                    self?.isLoadingPublisher.send(false)
+                }
+            })
+            .store(in: &cancellables)
+    }
+
     func getDepositInfo(amountText: String) {
         self.isLoadingPublisher.send(true)
 //
@@ -75,13 +96,55 @@ class DepositViewModel: NSObject {
 
         let amountText = amountText
         if amountText.contains(",") {
-            let amount = amountText.replacingOccurrences(of: ",", with: "")
-            self.depositAmount = amount
+            let dropInAmount = amountText.replacingOccurrences(of: ",", with: "")
+            let amount = amountText.replacingOccurrences(of: ",", with: ".")
+            self.dropInDepositAmount = dropInAmount
+            self.depositAmount = Double(amount) ?? 0.0
         }
         else {
-            let amount = amountText.appending("00")
-            self.depositAmount = amount
+            let dropInAmount = amountText.appending("00")
+            self.dropInDepositAmount = dropInAmount
+            self.depositAmount = Double(amountText) ?? 0.0
         }
+
+        self.processDepositResponse(amount: self.depositAmount)
+
+    }
+
+    private func processDepositResponse(amount: Double) {
+
+        Env.servicesProvider.processDeposit(paymentMethod: "ADYEN_IDEAL", amount: amount, option: "DROP_IN")
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("PROCESS DEPOSIT RESPONSE ERROR: \(error)")
+                    switch error {
+                    case .errorMessage(let message):
+                        self?.showErrorAlertTypePublisher.send(.error(message: message))
+                    default:
+                        ()
+                    }
+                    self?.isLoadingPublisher.send(false)
+                }
+            }, receiveValue: { [weak self] processDepositResponse in
+                print("PROCESS DEPOSIT RESPONSE: \(processDepositResponse)")
+
+                self?.clientKey = processDepositResponse.clientKey
+
+                self?.paymentId = processDepositResponse.paymentId
+                
+                self?.getPaymentMethods()
+
+                self?.hasProcessedDeposit.send(true)
+            })
+            .store(in: &cancellables)
+
+    }
+
+    private func getPaymentMethods() {
 
         Env.servicesProvider.getPayments()
             .receive(on: DispatchQueue.main)
@@ -91,15 +154,16 @@ class DepositViewModel: NSObject {
                     ()
                 case .failure(let error):
                     print("PAYMENTS RESPONSE ERROR: \(error)")
+                    self?.isLoadingPublisher.send(false)
                 }
             }, receiveValue: { [weak self] paymentsResponse in
                 print("PAYMENTS RESPONSE: \(paymentsResponse)")
 
                 self?.paymentMethodsResponse = paymentsResponse
 
-                self?.shouldShowPaymentDropIn.send(true)
+                self?.hasPaymentOptions.send(true)
 
-                self?.isLoadingPublisher.send(false)
+
             })
             .store(in: &cancellables)
     }

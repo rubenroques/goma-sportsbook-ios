@@ -170,6 +170,16 @@ extension SportRadarModelMapper {
         return ProcessDepositResponse(status: internalProcessDepositResponse.status, paymentId: internalProcessDepositResponse.paymentId, continueUrl: internalProcessDepositResponse.continueUrl, clientKey: internalProcessDepositResponse.clientKey, sessionId: internalProcessDepositResponse.sessionId)
     }
 
+    static func updatePaymentResponse(fromUpdatePaymentResponse internalUpdatePaymentResponse: SportRadarModels.UpdatePaymentResponse) -> UpdatePaymentResponse {
+
+        return UpdatePaymentResponse(resultCode: internalUpdatePaymentResponse.resultCode, action: Self.updatePaymentAction(fromUpdatePaymentAction: internalUpdatePaymentResponse.action))
+    }
+
+    static func updatePaymentAction(fromUpdatePaymentAction internalUpdatePaymentAction: SportRadarModels.UpdatePaymentAction) -> UpdatePaymentAction {
+
+        return UpdatePaymentAction(paymentMethodType: internalUpdatePaymentAction.paymentMethodType, url: internalUpdatePaymentAction.url, method: internalUpdatePaymentAction.method, type: internalUpdatePaymentAction.type)
+    }
+
 }
 
 

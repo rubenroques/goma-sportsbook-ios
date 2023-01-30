@@ -533,6 +533,16 @@ extension ServicesProviderClient {
 
         return privilegedAccessManager.processDeposit(paymentMethod: paymentMethod, amount: amount, option: option)
     }
+
+    public func updatePayment(paymentMethod: String, amount: Double, paymentId: String, type: String, issuer: String) -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.updatePayment(paymentMethod: paymentMethod, amount: amount, paymentId: paymentId, type: type, issuer: issuer)
+    }
 }
 
 // Utilities

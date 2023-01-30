@@ -208,8 +208,9 @@ class DepositViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] shouldShow in
                 if shouldShow {
-                    if let paymentsMethodResponse = viewModel.paymentMethodsResponse {
-                        self?.setupPaymentDropIn(paymentMethodsResponse: paymentsMethodResponse)
+                    if let paymentsMethodResponse = viewModel.paymentMethodsResponse,
+                       let clientKey = viewModel.clientKey {
+                        self?.setupPaymentDropIn(paymentMethodsResponse: paymentsMethodResponse, clientKey: clientKey)
                     }
                 }
             })
@@ -226,15 +227,15 @@ class DepositViewController: UIViewController {
             .store(in: &cancellables)
     }
 
-    private func setupPaymentDropIn(paymentMethodsResponse: ServicesProvider.SimplePaymentMethodsResponse) {
+    private func setupPaymentDropIn(paymentMethodsResponse: ServicesProvider.SimplePaymentMethodsResponse, clientKey: String) {
 
-        if let apiContext = try? APIContext(environment: Adyen.Environment.test, clientKey: "test_HNOW5H423JB7JEJYVXMQF655YAT7M5IB") {
+        if let apiContext = try? APIContext(environment: Adyen.Environment.test, clientKey: clientKey) {
 
             if let paymentResponseData = try? JSONEncoder().encode(paymentMethodsResponse),
                 let paymentMethods = try? JSONDecoder().decode(PaymentMethods.self, from: paymentResponseData) {
 
                 // Optional Payment
-                let payment = Payment(amount: Amount(value: Int(self.viewModel.depositAmount) ?? 0, currencyCode: "EUR"), countryCode: "PT")
+                let payment = Payment(amount: Amount(value: Int(self.viewModel.dropInDepositAmount) ?? 0, currencyCode: "EUR"), countryCode: "PT")
 
                 let dropInComponent = DropInComponent(paymentMethods: paymentMethods, context: AdyenContext(apiContext: apiContext, payment: payment))
 
@@ -514,14 +515,20 @@ class DepositViewController: UIViewController {
         var errorTitle = ""
         var errorMessage = ""
 
-        if errorType == .wallet {
+        switch errorType {
+        case .wallet:
             errorTitle = localized("wallet_error")
             errorMessage = localized("wallet_error_message")
-        }
-        else if errorType == .deposit {
+        case .deposit:
             errorTitle = localized("deposit_error")
             errorMessage = localized("deposit_error_message")
+        case .error(let message):
+            errorTitle = localized("deposit_error")
+            errorMessage = message
+        default:
+            ()
         }
+
         let alert = UIAlertController(title: errorTitle,
                                       message: errorMessage,
                                       preferredStyle: .alert)
@@ -562,12 +569,42 @@ enum BalanceErrorType {
     case wallet
     case deposit
     case withdraw
+    case error(message: String)
 }
 
 extension DepositViewController: DropInComponentDelegate {
     func didSubmit(_ data: Adyen.PaymentComponentData, from component: Adyen.PaymentComponent, in dropInComponent: Adyen.AnyDropInComponent) {
 
-        print("PAYMENT SUBMIT")
+        if let paymentIssuerType = data.paymentMethod.dictionary.value?["type"],
+           let paymentId = self.viewModel.paymentId {
+
+            let paymentIssuer = "\(paymentIssuerType)"
+            let amount = self.viewModel.depositAmount
+
+            Env.servicesProvider.updatePayment(paymentMethod: "ADYEN_IDEAL", amount: amount, paymentId: paymentId, type: "ideal", issuer: paymentIssuer)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+                    switch completion {
+                    case .finished:
+                        ()
+                    case .failure(let error):
+                        print("UPDATE PAYMENT RESPONSE ERROR: \(error)")
+                        switch error {
+                        case .errorMessage(let message):
+                            self?.showErrorAlert(errorType: .error(message: message))
+                        default:
+                            ()
+                        }
+                    }
+
+                }, receiveValue: { [weak self] updatePaymentResponse in
+                    print("UPDATE PAYMENT RESPONSE: \(updatePaymentResponse)")
+                })
+                .store(in: &cancellables)
+        }
+
+
+
     }
 
     func didFail(with error: Error, from component: Adyen.PaymentComponent, in dropInComponent: Adyen.AnyDropInComponent) {

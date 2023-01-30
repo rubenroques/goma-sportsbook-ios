@@ -318,13 +318,18 @@ class WithdrawViewController: UIViewController {
         var errorTitle = ""
         var errorMessage = ""
 
-        if errorType == .wallet {
+        switch errorType {
+        case .wallet:
             errorTitle = localized("wallet_error")
             errorMessage = localized("wallet_error_message")
-        }
-        else if errorType == .withdraw {
+        case .withdraw:
             errorTitle = localized("withdraw_error")
             errorMessage = localized("withdraw_error_message")
+        case .error(let message):
+            errorTitle = localized("deposit_error")
+            errorMessage = message
+        default:
+            ()
         }
         
         let alert = UIAlertController(title: errorTitle,

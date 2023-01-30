@@ -414,7 +414,25 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
                 return Just(processDepositResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
             else {
-                return Fail(outputType: ProcessDepositResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+                return Fail(outputType: ProcessDepositResponse.self, failure: ServiceProviderError.errorMessage(message: processDepositResponse.message ?? "Error")).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+
+    func updatePayment(paymentMethod: String, amount: Double, paymentId: String, type: String, issuer: String) -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.updatePayment(paymentMethod: paymentMethod, amount: amount, paymentId: paymentId, type: type, issuer: issuer)
+        let publisher: AnyPublisher<SportRadarModels.UpdatePaymentResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ updatePaymentResponse -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError> in
+
+            if updatePaymentResponse.resultCode == "RedirectShopper" {
+
+                let updatePaymentResponse = SportRadarModelMapper.updatePaymentResponse(fromUpdatePaymentResponse: updatePaymentResponse)
+                return Just(updatePaymentResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else {
+                return Fail(outputType: UpdatePaymentResponse.self, failure: ServiceProviderError.errorMessage(message: "Update Payment Error")).eraseToAnyPublisher()
             }
         }).eraseToAnyPublisher()
     }

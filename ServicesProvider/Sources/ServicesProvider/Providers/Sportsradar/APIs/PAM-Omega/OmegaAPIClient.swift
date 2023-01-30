@@ -81,6 +81,7 @@ enum OmegaAPIClient {
 
     case getPayments
     case processDeposit(paymentMethod: String, amount: Double, option: String)
+    case updatePayment(paymentMethod: String, amount: Double, paymentId: String, type: String, issuer: String)
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -128,6 +129,8 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/getDepositMethods"
         case .processDeposit:
             return "/ps/ips/processDeposit"
+        case .updatePayment:
+            return "/ps/ips/updatePayment"
         }
     }
     
@@ -267,16 +270,24 @@ extension OmegaAPIClient: Endpoint {
             return nil
 
         case .getPayments:
-//            return [
-//                URLQueryItem(name: "sessionKey", value: sessionKey)
-//            ]
+
             return nil
         case .processDeposit(let paymentMethod, let amount, let option):
             return [
-//                URLQueryItem(name: "sessionKey", value: sessionKey),
+
                 URLQueryItem(name: "paymentMethod", value: paymentMethod),
                 URLQueryItem(name: "amount", value: "\(amount)"),
                 URLQueryItem(name: "option", value: option)
+            ]
+
+        case .updatePayment(let paymentMethod, let amount, let paymentId, let type, let issuer):
+            return [
+
+                URLQueryItem(name: "paymentMethod", value: paymentMethod),
+                URLQueryItem(name: "amount", value: "\(amount)"),
+                URLQueryItem(name: "paymentId", value: paymentId),
+                URLQueryItem(name: "type", value: type),
+                URLQueryItem(name: "issuer", value: issuer)
             ]
         }
     }
@@ -305,6 +316,7 @@ extension OmegaAPIClient: Endpoint {
 
         case .getPayments: return .get
         case .processDeposit: return .post
+        case .updatePayment: return .post
         }
     }
     
@@ -359,18 +371,12 @@ extension OmegaAPIClient: Endpoint {
 
         case .getPayments: return true
         case .processDeposit: return true
+        case .updatePayment: return true
         }
     }
     
     var url: String {
-//        switch self {
-//        case .getPayments:
-//            return SportRadarConstants.newPamHostname
-//        case .processDeposit:
-//            return SportRadarConstants.newPamHostname
-//        default:
-//            return SportRadarConstants.pamHostname
-//        }
+
         return SportRadarConstants.pamHostname
     }
     

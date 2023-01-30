@@ -373,8 +373,9 @@ public struct ProcessDepositResponse: Codable {
     public var status: String
     public var paymentId: String?
     public var continueUrl: String?
-    public var clientKey: String
-    public var sessionId: String
+    public var clientKey: String?
+    public var sessionId: String?
+    public var message: String?
 
     enum CodingKeys: String, CodingKey {
         case status = "status"
@@ -382,5 +383,30 @@ public struct ProcessDepositResponse: Codable {
         case continueUrl = "continueUrl"
         case clientKey = "clientKey"
         case sessionId = "sessionId"
+        case message = "message"
+    }
+}
+
+public struct UpdatePaymentResponse: Codable {
+    public var resultCode: String
+    public var action: UpdatePaymentAction
+
+    enum CodingKeys: String, CodingKey {
+        case resultCode = "resultCode"
+        case action = "action"
+    }
+}
+
+public struct UpdatePaymentAction: Codable {
+    public var paymentMethodType: String
+    public var url: String
+    public var method: String
+    public var type: String
+
+    enum CodingKeys: String, CodingKey {
+        case paymentMethodType = "paymentMethodType"
+        case url = "url"
+        case method = "method"
+        case type = "type"
     }
 }

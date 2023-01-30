@@ -302,8 +302,9 @@ extension SportRadarModels {
         var status: String
         var paymentId: String?
         var continueUrl: String?
-        var clientKey: String
-        var sessionId: String
+        var clientKey: String?
+        var sessionId: String?
+        var message: String?
 
         enum CodingKeys: String, CodingKey {
             case status = "status"
@@ -311,6 +312,31 @@ extension SportRadarModels {
             case continueUrl = "continueUrl"
             case clientKey = "clientKey"
             case sessionId = "sessionId"
+            case message = "message"
+        }
+    }
+
+    struct UpdatePaymentResponse: Codable {
+        var resultCode: String
+        var action: UpdatePaymentAction
+
+        enum CodingKeys: String, CodingKey {
+            case resultCode = "resultCode"
+            case action = "action"
+        }
+    }
+
+    struct UpdatePaymentAction: Codable {
+        var paymentMethodType: String
+        var url: String
+        var method: String
+        var type: String
+
+        enum CodingKeys: String, CodingKey {
+            case paymentMethodType = "paymentMethodType"
+            case url = "url"
+            case method = "method"
+            case type = "type"
         }
     }
 }
