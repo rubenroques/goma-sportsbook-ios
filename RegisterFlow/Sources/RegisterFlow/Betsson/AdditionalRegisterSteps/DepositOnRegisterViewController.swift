@@ -71,6 +71,8 @@ public class DepositOnRegisterViewController: UIViewController {
         self.amountButton3.titleLabel?.font = AppFont.with(type: .bold, size: 16)
         self.amountButton4.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
+        self.depositHeaderTextFieldView.setCurrencyMode(true, currencySymbol: "€")
+
         self.amountButton1.setTitle("€10", for: .normal)
         self.amountButton2.setTitle("€20", for: .normal)
         self.amountButton3.setTitle("€50", for: .normal)
@@ -103,11 +105,11 @@ public class DepositOnRegisterViewController: UIViewController {
 
         self.depositSubtitleLabel.textColor = AppColor.textSecondary
 
-        self.applyButtonStyle(self.depositButton)
-        self.applyButtonStyle(self.amountButton1)
-        self.applyButtonStyle(self.amountButton2)
-        self.applyButtonStyle(self.amountButton3)
-        self.applyButtonStyle(self.amountButton4)
+        self.configureStyleOnButton(self.depositButton)
+        self.configureStyleOnButton(self.amountButton1)
+        self.configureStyleOnButton(self.amountButton2)
+        self.configureStyleOnButton(self.amountButton3)
+        self.configureStyleOnButton(self.amountButton4)
 
     }
 
@@ -123,7 +125,23 @@ public class DepositOnRegisterViewController: UIViewController {
         self.didTapDepositButtonAction()
     }
 
-    func applyButtonStyle(_ button: UIButton) {
+    @objc func didTapAmountButton1() {
+        self.depositHeaderTextFieldView.setText("10€")
+    }
+
+    @objc func didTapAmountButton2() {
+        self.depositHeaderTextFieldView.setText("20€")
+    }
+
+    @objc func didTapAmountButton3() {
+        self.depositHeaderTextFieldView.setText("50€")
+    }
+
+    @objc func didTapAmountButton4() {
+        self.depositHeaderTextFieldView.setText("100€")
+    }
+
+    private func configureStyleOnButton(_ button: UIButton) {
 
         button.setTitleColor(AppColor.buttonTextPrimary, for: .normal)
         button.setTitleColor(AppColor.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
@@ -172,6 +190,7 @@ public extension DepositOnRegisterViewController {
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 8
         imageView.backgroundColor = .lightGray
+        imageView.image = UIImage(named: "depositPromo", in: Bundle.module, compatibleWith: nil)
         return imageView
     }
 
@@ -296,9 +315,9 @@ public extension DepositOnRegisterViewController {
             self.promoImageView.topAnchor.constraint(equalTo: self.headerBaseView.bottomAnchor, constant: 8),
             self.promoImageView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 34),
             self.promoImageView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -34),
-            self.promoImageView.heightAnchor.constraint(equalToConstant: 110),
+            self.promoImageView.heightAnchor.constraint(equalTo: self.promoImageView.widthAnchor, multiplier: 0.32),
 
-            self.titleLabel.topAnchor.constraint(equalTo: self.promoImageView.bottomAnchor, constant: 16),
+            self.titleLabel.topAnchor.constraint(equalTo: self.promoImageView.bottomAnchor, constant: 32),
             self.titleLabel.leadingAnchor.constraint(equalTo: self.promoImageView.leadingAnchor),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.promoImageView.trailingAnchor),
 

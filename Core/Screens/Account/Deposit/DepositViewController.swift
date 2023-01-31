@@ -81,7 +81,6 @@ class DepositViewController: UIViewController {
         self.navigationLabel.text = localized("deposit")
         self.navigationLabel.font = AppFont.with(type: .bold, size: 17)
 
-
         self.navigationButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         self.navigationButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
@@ -182,11 +181,9 @@ class DepositViewController: UIViewController {
         viewModel.showErrorAlertTypePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] errorAlertType in
-
                 if let errorAlertType = errorAlertType {
                     self?.showErrorAlert(errorType: errorAlertType)
                 }
-                
             })
             .store(in: &cancellables)
 
@@ -342,19 +339,16 @@ class DepositViewController: UIViewController {
                 self.amount20Button.backgroundColor = UIColor.App.buttonBackgroundPrimary
                 self.amount20Button.layer.borderColor = UIColor.App.buttonBackgroundPrimary.cgColor
                 currentSelectedButton = self.amount20Button
-
             }
             else if depositHeaderTextFieldView.text == "50" {
                 self.amount50Button.backgroundColor = UIColor.App.buttonBackgroundPrimary
                 self.amount50Button.layer.borderColor = UIColor.App.buttonBackgroundPrimary.cgColor
                 currentSelectedButton = self.amount50Button
-
             }
             else if depositHeaderTextFieldView.text == "100" {
                 self.amount100Button.backgroundColor = UIColor.App.buttonBackgroundPrimary
                 self.amount100Button.layer.borderColor = UIColor.App.buttonBackgroundPrimary.cgColor
                 currentSelectedButton = self.amount100Button
-
             }
             else {
                 self.amount10Button.backgroundColor = .clear
@@ -368,13 +362,11 @@ class DepositViewController: UIViewController {
 
                 self.amount100Button.backgroundColor = .clear
                 self.amount100Button.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
-
             }
         }
         else {
             self.nextButton.isEnabled = false
         }
-
     }
 
     func setDepositAmountButtonDesign(button: UIButton, title: String) {
@@ -448,7 +440,6 @@ class DepositViewController: UIViewController {
         self.depositHeaderTextFieldView.setText("50")
         self.nextButton.isEnabled = true
         self.showRightLabelCustom()
-
     }
 
     @IBAction private func didTap100Button() {
@@ -462,7 +453,6 @@ class DepositViewController: UIViewController {
         self.depositHeaderTextFieldView.setText("100")
         self.nextButton.isEnabled = true
         self.showRightLabelCustom()
-
     }
 
     @IBAction private func didTapNextButton() {
@@ -487,6 +477,7 @@ class DepositViewController: UIViewController {
         let alert = UIAlertController(title: errorTitle,
                                       message: errorMessage,
                                       preferredStyle: .alert)
+        
         alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
