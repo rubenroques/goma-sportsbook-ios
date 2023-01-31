@@ -10,7 +10,6 @@ import Combine
 import ServicesProvider
 import Adyen
 import AdyenDropIn
-import AdyenActions
 import AdyenComponents
 
 class DepositViewController: UIViewController {
@@ -208,10 +207,7 @@ class DepositViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] shouldShow in
                 if shouldShow {
-                    if let paymentsMethodResponse = viewModel.paymentMethodsResponse,
-                       let clientKey = viewModel.clientKey {
-                        self?.setupPaymentDropIn(paymentMethodsResponse: paymentsMethodResponse, clientKey: clientKey)
-                    }
+                        self?.getPaymentDropIn()
                 }
             })
             .store(in: &cancellables)
@@ -227,23 +223,36 @@ class DepositViewController: UIViewController {
             .store(in: &cancellables)
     }
 
-    private func setupPaymentDropIn(paymentMethodsResponse: ServicesProvider.SimplePaymentMethodsResponse, clientKey: String) {
+    private func getPaymentDropIn() {
 
-        if let apiContext = try? APIContext(environment: Adyen.Environment.test, clientKey: clientKey) {
+//        if let paymentDropIn = self.viewModel.paymentsDropIn.setupPaymentDropIn() {
+//
+//            paymentDropIn.delegate = self
+//
+//            self.dropInComponent = paymentDropIn
+//
+//            present(paymentDropIn.viewController, animated: true)
+//        }
+
+        if let paymentMethodsResponse = self.viewModel.paymentsDropIn.paymentMethodsResponse,
+           let clientKey = self.viewModel.paymentsDropIn.clientKey,
+           let apiContext = try? APIContext(environment: Adyen.Environment.test, clientKey: clientKey) {
 
             if let paymentResponseData = try? JSONEncoder().encode(paymentMethodsResponse),
-                let paymentMethods = try? JSONDecoder().decode(PaymentMethods.self, from: paymentResponseData) {
+               let paymentMethods = try? JSONDecoder().decode(PaymentMethods.self, from: paymentResponseData) {
 
                 // Optional Payment
-                let payment = Payment(amount: Amount(value: Int(self.viewModel.dropInDepositAmount) ?? 0, currencyCode: "EUR"), countryCode: "PT")
+                let payment = Payment(amount: Amount(value: Int(self.viewModel.paymentsDropIn.dropInDepositAmount) ?? 0, currencyCode: "EUR"), countryCode: "PT")
 
                 let dropInComponent = DropInComponent(paymentMethods: paymentMethods, context: AdyenContext(apiContext: apiContext, payment: payment))
 
-                dropInComponent.delegate = self
-
                 self.dropInComponent = dropInComponent
 
-                present(dropInComponent.viewController, animated: true)
+                self.dropInComponent?.delegate = self
+
+                if let dropInComponent = self.dropInComponent {
+                    present(dropInComponent.viewController, animated: true)
+                }
             }
 
         }
@@ -576,34 +585,33 @@ extension DepositViewController: DropInComponentDelegate {
     func didSubmit(_ data: Adyen.PaymentComponentData, from component: Adyen.PaymentComponent, in dropInComponent: Adyen.AnyDropInComponent) {
 
         if let paymentIssuerType = data.paymentMethod.dictionary.value?["type"],
-           let paymentId = self.viewModel.paymentId {
+           let paymentId = self.viewModel.paymentsDropIn.paymentId {
 
             let paymentIssuer = "\(paymentIssuerType)"
-            let amount = self.viewModel.depositAmount
+            let amount = self.viewModel.paymentsDropIn.depositAmount
 
-            Env.servicesProvider.updatePayment(paymentMethod: "ADYEN_IDEAL", amount: amount, paymentId: paymentId, type: "ideal", issuer: paymentIssuer)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { [weak self] completion in
-                    switch completion {
-                    case .finished:
-                        ()
-                    case .failure(let error):
-                        print("UPDATE PAYMENT RESPONSE ERROR: \(error)")
-                        switch error {
-                        case .errorMessage(let message):
-                            self?.showErrorAlert(errorType: .error(message: message))
-                        default:
-                            ()
-                        }
-                    }
-
-                }, receiveValue: { [weak self] updatePaymentResponse in
-                    print("UPDATE PAYMENT RESPONSE: \(updatePaymentResponse)")
-                })
-                .store(in: &cancellables)
+            // TODO: Not working, enable later
+//            Env.servicesProvider.updatePayment(paymentMethod: "ADYEN_IDEAL", amount: amount, paymentId: paymentId, type: "ideal", issuer: paymentIssuer)
+//                .receive(on: DispatchQueue.main)
+//                .sink(receiveCompletion: { [weak self] completion in
+//                    switch completion {
+//                    case .finished:
+//                        ()
+//                    case .failure(let error):
+//                        print("UPDATE PAYMENT RESPONSE ERROR: \(error)")
+//                        switch error {
+//                        case .errorMessage(let message):
+//                            self?.showErrorAlert(errorType: .error(message: message))
+//                        default:
+//                            ()
+//                        }
+//                    }
+//
+//                }, receiveValue: { [weak self] updatePaymentResponse in
+//                    print("UPDATE PAYMENT RESPONSE: \(updatePaymentResponse)")
+//                })
+//                .store(in: &cancellables)
         }
-
-
 
     }
 
@@ -611,7 +619,7 @@ extension DepositViewController: DropInComponentDelegate {
 
         print("PAYMENT FAIL: \(error)")
 
-        dropInComponent.viewController.dismiss(animated: true)
+        self.dropInComponent?.viewController.dismiss(animated: true)
 
     }
 
@@ -637,8 +645,12 @@ extension DepositViewController: DropInComponentDelegate {
 
         print("PAYMENT FAIL FULL: \(error)")
 
-        dropInComponent.viewController.dismiss(animated: true)
+        self.dropInComponent?.viewController.dismiss(animated: true)
 
+    }
+
+    func didCancel(component: PaymentComponent, from dropInComponent: AnyDropInComponent) {
+        print("PAYMENT CANCEL")
     }
 
 }
