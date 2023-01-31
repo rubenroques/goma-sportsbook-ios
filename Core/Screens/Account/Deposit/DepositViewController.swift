@@ -10,8 +10,8 @@ import Combine
 import ServicesProvider
 import Adyen
 import AdyenDropIn
-import AdyenActions
-import AdyenComponents
+// import AdyenActions
+// import AdyenComponents
 
 class DepositViewController: UIViewController {
 
@@ -438,9 +438,7 @@ class DepositViewController: UIViewController {
 
     private func showDepositWebView(cashierUrl: String) {
         let depositWebViewController = DepositWebViewController(depositUrl: cashierUrl)
-
         self.navigationController?.pushViewController(depositWebViewController, animated: true)
-
     }
 
     @IBAction private func didTap10Button() {

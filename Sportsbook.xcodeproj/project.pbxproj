@@ -2593,6 +2593,14 @@
 		4589C9E12820279E00243547 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4589C9DA282025C400243547 /* Colors.xcassets */; };
 		4589C9E2282027A100243547 /* GOMASports-Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4589C9DB282025C400243547 /* GOMASports-Assets.xcassets */; };
 		4589C9E4282029F700243547 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4589C9E3282029F700243547 /* GoogleService-Info.plist */; };
+		45A3301C298935F6008181E9 /* Adyen in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3301B298935F6008181E9 /* Adyen */; };
+		45A3301E298935F6008181E9 /* AdyenActions in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3301D298935F6008181E9 /* AdyenActions */; };
+		45A33020298935F6008181E9 /* AdyenCard in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3301F298935F6008181E9 /* AdyenCard */; };
+		45A33022298935F6008181E9 /* AdyenComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33021298935F6008181E9 /* AdyenComponents */; };
+		45A33024298935F6008181E9 /* AdyenEncryption in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33023298935F6008181E9 /* AdyenEncryption */; };
+		45A33026298935F6008181E9 /* AdyenSession in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33025298935F6008181E9 /* AdyenSession */; };
+		45A33028298935F6008181E9 /* AdyenSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33027298935F6008181E9 /* AdyenSwiftUI */; };
+		45A3302A298935F6008181E9 /* AdyenWeChatPay in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33029298935F6008181E9 /* AdyenWeChatPay */; };
 		45A6BB7A28202E6B00D9B416 /* LaunchScreen-GOMA.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A6BB7728202E6800D9B416 /* LaunchScreen-GOMA.storyboard */; };
 		45A6BB7B28213FEA00D9B416 /* SocialModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D246B28180586003EEDEC /* SocialModels.swift */; };
 		45A6BB7C2821400000D9B416 /* ConversationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D24792818519A003EEDEC /* ConversationsViewModel.swift */; };
@@ -5343,12 +5351,20 @@
 				A96FAEF329829F9D00A0751F /* AdyenDropIn in Frameworks */,
 				450B7A9428F58574009229E3 /* DictionaryCoding in Frameworks */,
 				450B7A9528F58574009229E3 /* Reachability in Frameworks */,
+				45A33022298935F6008181E9 /* AdyenComponents in Frameworks */,
 				4554ED0A2976F7FE006942B3 /* IQKeyboardManagerSwift in Frameworks */,
 				450B7A9628F58574009229E3 /* Kingfisher in Frameworks */,
 				450B7A9928F58574009229E3 /* FirebaseAuth in Frameworks */,
+				45A33020298935F6008181E9 /* AdyenCard in Frameworks */,
 				450B7A9A28F58574009229E3 /* Collections in Frameworks */,
+				45A33024298935F6008181E9 /* AdyenEncryption in Frameworks */,
+				45A3301E298935F6008181E9 /* AdyenActions in Frameworks */,
 				450B7A9B28F58574009229E3 /* CombineCocoa in Frameworks */,
 				450B7A9C28F58574009229E3 /* SwiftyBeaver in Frameworks */,
+				45A33028298935F6008181E9 /* AdyenSwiftUI in Frameworks */,
+				45A3302A298935F6008181E9 /* AdyenWeChatPay in Frameworks */,
+				45A3301C298935F6008181E9 /* Adyen in Frameworks */,
+				45A33026298935F6008181E9 /* AdyenSession in Frameworks */,
 				450B7A9D28F58574009229E3 /* FirebaseCrashlytics in Frameworks */,
 				450B7A9E28F58574009229E3 /* FirebaseAnalytics in Frameworks */,
 				450B7A9F28F58574009229E3 /* OrderedCollections in Frameworks */,
@@ -8583,6 +8599,14 @@
 				4554ED092976F7FE006942B3 /* IQKeyboardManagerSwift */,
 				456237D8297EE5F600B3FA3A /* SharedModels */,
 				A96FAEF229829F9D00A0751F /* AdyenDropIn */,
+				45A3301B298935F6008181E9 /* Adyen */,
+				45A3301D298935F6008181E9 /* AdyenActions */,
+				45A3301F298935F6008181E9 /* AdyenCard */,
+				45A33021298935F6008181E9 /* AdyenComponents */,
+				45A33023298935F6008181E9 /* AdyenEncryption */,
+				45A33025298935F6008181E9 /* AdyenSession */,
+				45A33027298935F6008181E9 /* AdyenSwiftUI */,
+				45A33029298935F6008181E9 /* AdyenWeChatPay */,
 			);
 			productName = Sportsbook;
 			productReference = 450B7B2428F58574009229E3 /* SportRadar.app */;
@@ -14950,6 +14974,46 @@
 			package = 4589C773282024E400243547 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
 			productName = SwiftyBeaver;
 		};
+		45A3301B298935F6008181E9 /* Adyen */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = Adyen;
+		};
+		45A3301D298935F6008181E9 /* AdyenActions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenActions;
+		};
+		45A3301F298935F6008181E9 /* AdyenCard */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenCard;
+		};
+		45A33021298935F6008181E9 /* AdyenComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenComponents;
+		};
+		45A33023298935F6008181E9 /* AdyenEncryption */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenEncryption;
+		};
+		45A33025298935F6008181E9 /* AdyenSession */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenSession;
+		};
+		45A33027298935F6008181E9 /* AdyenSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenSwiftUI;
+		};
+		45A33029298935F6008181E9 /* AdyenWeChatPay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenWeChatPay;
+		};
 		45A6BB80282140D100D9B416 /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SocketIO;
@@ -15052,6 +15116,7 @@
 		45D3BBAB296F13BB009E0D09 /* RegisterFlow */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RegisterFlow;
+		};
 		A96FAEE029829CCB00A0751F /* Adyen */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
