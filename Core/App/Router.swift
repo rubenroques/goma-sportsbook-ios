@@ -75,7 +75,7 @@ class Router {
             self.showPostLoadingFlow()
         })
 
-        self.rootWindow.rootViewController = DepositOnRegisterViewController() // splashViewController
+        self.rootWindow.rootViewController = splashViewController
 
         self.rootWindow.makeKeyAndVisible()
     }
