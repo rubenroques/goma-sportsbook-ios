@@ -9,6 +9,7 @@ import UIKit
 import Combine
 import WebKit
 import LocalAuthentication
+import RegisterFlow
 
 class RootViewController: UIViewController {
 
@@ -720,6 +721,14 @@ class RootViewController: UIViewController {
     }
 
     @IBAction private func didTapSearchButton() {
+
+//        #if DEBUG
+//        let viewModel = LimitsOnRegisterViewModel(servicesProvider: Env.servicesProvider)
+//        let limitsOnRegisterViewController = LimitsOnRegisterViewController(viewModel: viewModel)
+//        self.present(limitsOnRegisterViewController, animated: true)
+//        return
+//        #endif
+
         let searchViewController = SearchViewController()
         let navigationViewController = Router.navigationController(with: searchViewController)
         self.present(navigationViewController, animated: true, completion: nil)

@@ -13,12 +13,6 @@ import Combine
 
 class PasswordFormStepViewModel {
 
-    let title: String
-
-    var password: CurrentValueSubject<String?, Never>
-
-    private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
-
     enum PasswordState {
         case empty
         case short
@@ -31,6 +25,14 @@ class PasswordFormStepViewModel {
         case needSpecial
         case valid
     }
+
+    let title: String
+
+    var password: CurrentValueSubject<String?, Never>
+
+    private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
+    private var cancellables = Set<AnyCancellable>()
+
     var passwordState: AnyPublisher<PasswordState, Never> {
         return self.password
             .map { password in
@@ -90,11 +92,21 @@ class PasswordFormStepViewModel {
         self.password = .init(password)
 
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
+
+        Publishers.CombineLatest(self.passwordState, self.password)
+            .sink { passwordState, password in
+                if passwordState == .valid {
+                    self.userRegisterEnvelopUpdater.setPassword(password)
+                }
+                else {
+                    self.userRegisterEnvelopUpdater.setPassword(nil)
+                }
+            }
+            .store(in: &self.cancellables)
     }
 
     func setPassword(_ password: String) {
         self.password.send(password)
-        self.userRegisterEnvelopUpdater.setPassword(password)
     }
 
 }

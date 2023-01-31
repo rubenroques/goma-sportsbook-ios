@@ -9,6 +9,77 @@ import Foundation
 import Foundation
 import UIKit
 import Theming
+import ServicesProvider
+import Combine
+
+public class LimitsOnRegisterViewModel {
+
+    public enum LimitsOnRegisterError: Error {
+        case depositFormatError
+        case bettingFormatError
+        case depositServerError
+        case bettingServerError
+    }
+
+    let servicesProvider: ServicesProviderClient
+
+    private var isLoadingSubject: CurrentValueSubject<Bool, Never> = .init(false)
+    var isLoading: AnyPublisher<Bool, Never> {
+        return self.isLoadingSubject.eraseToAnyPublisher()
+    }
+
+    private var cancellables = Set<AnyCancellable>()
+
+    public init(servicesProvider: ServicesProviderClient) {
+        self.servicesProvider = servicesProvider
+    }
+
+    public func updateLimits(depositLimitString: String?, bettingLimitString: String?, autoPayoutLimitString: String?)
+    -> AnyPublisher<Bool, LimitsOnRegisterError> {
+
+        self.isLoadingSubject.send(true)
+
+        var clearDepositLimitString = (depositLimitString ?? "").replacingOccurrences(of: "€", with: "")
+        clearDepositLimitString = clearDepositLimitString.replacingOccurrences(of: "$", with: "")
+
+        var clearBettingLimitString = (bettingLimitString ?? "").replacingOccurrences(of: "€", with: "")
+        clearBettingLimitString = clearBettingLimitString.replacingOccurrences(of: "$", with: "")
+
+        guard
+            let depositLimit = Double(clearDepositLimitString)
+        else {
+            self.isLoadingSubject.send(false)
+            return Fail(error: LimitsOnRegisterError.depositFormatError).eraseToAnyPublisher()
+        }
+
+        guard
+            let bettingLimit = Double(clearBettingLimitString)
+        else {
+            self.isLoadingSubject.send(false)
+            return Fail(error: LimitsOnRegisterError.bettingFormatError).eraseToAnyPublisher()
+        }
+
+        let depositPublisher = servicesProvider.updateWeeklyDepositLimits(newLimit: depositLimit)
+            .mapError { _ in
+                return LimitsOnRegisterError.depositServerError
+            }
+
+        let bettingPublisher = servicesProvider.updateWeeklyBettingLimits(newLimit: bettingLimit)
+            .mapError { _ in
+                return LimitsOnRegisterError.bettingServerError
+            }
+
+        return Publishers.Zip(depositPublisher, bettingPublisher)
+            .map { (depositSuccess, bettingSuccess) in
+                return depositSuccess && bettingSuccess
+            }
+            .handleEvents(receiveCompletion: { [weak self] _ in
+                self?.isLoadingSubject.send(false)
+            })
+            .eraseToAnyPublisher()
+    }
+
+}
 
 public class LimitsOnRegisterViewController: UIViewController {
 
@@ -48,7 +119,15 @@ public class LimitsOnRegisterViewController: UIViewController {
     private lazy var footerBaseView: UIView = Self.createFooterBaseView()
     private lazy var continueButton: UIButton = Self.createContinueButton()
 
-    public init() {
+    private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
+    private lazy var loadingView: UIActivityIndicatorView = Self.createLoadingView()
+
+    private let viewModel: LimitsOnRegisterViewModel
+    private var cancellables = Set<AnyCancellable>()
+
+    public init(viewModel: LimitsOnRegisterViewModel) {
+        self.viewModel = viewModel
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -64,8 +143,7 @@ public class LimitsOnRegisterViewController: UIViewController {
         self.setupWithTheme()
 
         self.titleLabel.text = "Limits Management"
-        self.subtitleLabel.text = "What type of playerare you?"
-
+        self.subtitleLabel.text = "What type of player are you?"
 
         self.beginnerImageView.image = UIImage(named: "level_beginner", in: Bundle.module, with: nil)
         self.intermediateImageView.image = UIImage(named: "level_intermediate", in: Bundle.module, with: nil)
@@ -94,6 +172,10 @@ public class LimitsOnRegisterViewController: UIViewController {
         self.bettingLimitHeaderTextFieldView.setKeyboardType(.numbersAndPunctuation)
         self.autoPayoutHeaderTextFieldView.setKeyboardType(.numbersAndPunctuation)
 
+        self.depositLimitHeaderTextFieldView.setCurrencyMode(true, currencySymbol: "€")
+        self.bettingLimitHeaderTextFieldView.setCurrencyMode(true, currencySymbol: "€")
+        self.autoPayoutHeaderTextFieldView.setCurrencyMode(true, currencySymbol: "€")
+
         self.depositLimitHeaderTextFieldView.setReturnKeyType(.next)
         self.depositLimitHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.bettingLimitHeaderTextFieldView.becomeFirstResponder()
@@ -108,6 +190,22 @@ public class LimitsOnRegisterViewController: UIViewController {
         self.autoPayoutHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.autoPayoutHeaderTextFieldView.resignFirstResponder()
         }
+
+        self.backButton.isHidden = true
+
+        self.viewModel.isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] loading in
+                self?.loadingBaseView.isHidden = !loading
+
+                if loading {
+                    self?.loadingView.startAnimating()
+                }
+                else {
+                    self?.loadingView.stopAnimating()
+                }
+            }
+            .store(in: &self.cancellables)
 
     }
 
@@ -159,25 +257,55 @@ public class LimitsOnRegisterViewController: UIViewController {
     }
 
     @objc func didTapContinueButton() {
-        self.didTapContinueButtonAction()
+        self.saveNewLimits()
     }
 
     @objc func didTapBeginnerButton() {
-        self.depositLimitHeaderTextFieldView.setText("40€")
-        self.bettingLimitHeaderTextFieldView.setText("40€")
-        self.autoPayoutHeaderTextFieldView.setText("40€")
+        self.depositLimitHeaderTextFieldView.setText("40")
+        self.bettingLimitHeaderTextFieldView.setText("40")
+        self.autoPayoutHeaderTextFieldView.setText("40")
     }
 
     @objc func didTapIntermediateButton() {
-        self.depositLimitHeaderTextFieldView.setText("400€")
-        self.bettingLimitHeaderTextFieldView.setText("400€")
-        self.autoPayoutHeaderTextFieldView.setText("400€")
+        self.depositLimitHeaderTextFieldView.setText("400")
+        self.bettingLimitHeaderTextFieldView.setText("400")
+        self.autoPayoutHeaderTextFieldView.setText("400")
     }
 
     @objc func didTapAdvancedButton() {
-        self.depositLimitHeaderTextFieldView.setText("4000€")
-        self.bettingLimitHeaderTextFieldView.setText("4000€")
-        self.autoPayoutHeaderTextFieldView.setText("4000€")
+        self.depositLimitHeaderTextFieldView.setText("4000")
+        self.bettingLimitHeaderTextFieldView.setText("4000")
+        self.autoPayoutHeaderTextFieldView.setText("4000")
+    }
+
+    func saveNewLimits() {
+        self.viewModel.updateLimits(depositLimitString: self.depositLimitHeaderTextFieldView.text,
+                                    bettingLimitString: self.bettingLimitHeaderTextFieldView.text,
+                                    autoPayoutLimitString: self.autoPayoutHeaderTextFieldView.text)
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] completion in
+            switch completion {
+            case .failure(let limitsOnRegisterError):
+                switch limitsOnRegisterError {
+                case .depositFormatError:
+                    self?.depositLimitHeaderTextFieldView.showErrorOnField(text: "This value is not valid.", color: AppColor.alertError)
+                case .bettingFormatError:
+                    self?.bettingLimitHeaderTextFieldView.showErrorOnField(text: "This value is not valid.", color: AppColor.alertError)
+                case .depositServerError:
+                    self?.depositLimitHeaderTextFieldView.showErrorOnField(text: "There was a problem setting this value", color: AppColor.alertError)
+                case .bettingServerError:
+                    self?.bettingLimitHeaderTextFieldView.showErrorOnField(text: "There was a problem setting this value", color: AppColor.alertError)
+                }
+            case .finished:
+                ()
+            }
+        } receiveValue: { [weak self] success in
+            if success {
+                self?.didTapContinueButtonAction()
+            }
+        }
+        .store(in: &self.cancellables)
+
     }
 
 }
@@ -300,6 +428,20 @@ public extension LimitsOnRegisterViewController {
         return button
     }
 
+    private static func createLoadingBaseView() -> UIView {
+        let view = UIView()
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createLoadingView() -> UIActivityIndicatorView {
+        let view = UIActivityIndicatorView(style: .medium)
+        view.hidesWhenStopped = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
     private func setupSubviews() {
 
         self.view.addSubview(self.headerBaseView)
@@ -380,6 +522,9 @@ public extension LimitsOnRegisterViewController {
         self.view.addSubview(self.footerBaseView)
         self.footerBaseView.addSubview(self.continueButton)
 
+        self.loadingBaseView.addSubview(self.loadingView)
+        self.view.addSubview(self.loadingBaseView)
+
         self.initConstraints()
     }
 
@@ -429,6 +574,14 @@ public extension LimitsOnRegisterViewController {
             self.continueButton.centerYAnchor.constraint(equalTo: self.footerBaseView.centerYAnchor),
             self.continueButton.leadingAnchor.constraint(equalTo: self.footerBaseView.leadingAnchor, constant: 34),
             self.continueButton.heightAnchor.constraint(equalToConstant: 50),
+
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.loadingView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
+            self.loadingView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
         ])
 
     }

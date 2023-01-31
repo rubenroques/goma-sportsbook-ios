@@ -129,20 +129,32 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             if checkCredentialResponse.status == "SUCCESS", let suggestionsValue = suggestions, !suggestionsValue.isEmpty {
                 let usernameValidation = UsernameValidation(username: username,
                                                             isAvailable: false,
-                                                            suggestedUsernames: suggestionsValue)
+                                                            suggestedUsernames: suggestionsValue,
+                                                            hasErrors: false)
                 return Just(usernameValidation)
                     .setFailureType(to: ServiceProviderError.self)
                     .eraseToAnyPublisher()
             }
             else if checkCredentialResponse.status == "USERNAME_AVAILABLE" {
-                let usernameValidation = UsernameValidation(username: username,
-                                                            isAvailable: true,
-                                                            suggestedUsernames: nil)
-                return Just(usernameValidation)
-                    .setFailureType(to: ServiceProviderError.self)
-                    .eraseToAnyPublisher()
+                if (checkCredentialResponse.errors ?? []).isEmpty {
+                    let usernameValidation = UsernameValidation(username: username,
+                                                                isAvailable: true,
+                                                                suggestedUsernames: nil,
+                                                                hasErrors: false)
+                    return Just(usernameValidation)
+                        .setFailureType(to: ServiceProviderError.self)
+                        .eraseToAnyPublisher()
+                }
+                else {
+                    let usernameValidation = UsernameValidation(username: username,
+                                                                isAvailable: true,
+                                                                suggestedUsernames: nil,
+                                                                hasErrors: true)
+                    return Just(usernameValidation)
+                        .setFailureType(to: ServiceProviderError.self)
+                        .eraseToAnyPublisher()
+                }
             }
-
             return Fail(outputType: UsernameValidation.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
         })
         .eraseToAnyPublisher()
@@ -326,6 +338,36 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             if statusResponse.status == "SUCCESS" {
                 return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
+
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+
+    }
+
+    func updateWeeklyDepositLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError> {
+        let endpoint = OmegaAPIClient.updateWeeklyDepositLimits(newLimit: newLimit)
+        let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+
+        return publisher.flatMap({ statusResponse -> AnyPublisher<Bool, ServiceProviderError> in
+            if statusResponse.status == "SUCCESS" {
+                return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+    }
+
+    func updateWeeklyBettingLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError> {
+        let endpoint = OmegaAPIClient.updateWeeklyBettingLimits(newLimit: newLimit)
+        let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ statusResponse -> AnyPublisher<Bool, ServiceProviderError> in
+            if statusResponse.status == "SUCCESS" {
+                return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
             if let fieldError = statusResponse.errors?[0] {
                 let messageError = fieldError.error
 
@@ -335,8 +377,8 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
         })
         .eraseToAnyPublisher()
-
     }
+
 
     func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError> {
         let endpoint = OmegaAPIClient.getBalance

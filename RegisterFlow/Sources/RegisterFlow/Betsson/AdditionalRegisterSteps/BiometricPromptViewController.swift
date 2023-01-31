@@ -91,9 +91,9 @@ public class BiometricPromptViewController: UIViewController {
         self.continueButton.backgroundColor = .clear
 
         // Continue button styling
-        self.laterButton.setTitleColor(AppColor.buttonTextPrimary, for: .normal)
-        self.laterButton.setTitleColor(AppColor.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        self.laterButton.setTitleColor(AppColor.buttonTextDisablePrimary.withAlphaComponent(0.39), for: .disabled)
+        self.laterButton.setTitleColor(AppColor.textPrimary, for: .normal)
+        self.laterButton.setTitleColor(AppColor.textPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.laterButton.setTitleColor(AppColor.textPrimary.withAlphaComponent(0.39), for: .disabled)
 
         self.laterButton.setBackgroundColor(UIColor.clear, for: .normal)
         self.laterButton.setBackgroundColor(UIColor.clear, for: .highlighted)

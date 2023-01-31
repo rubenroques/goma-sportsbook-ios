@@ -322,8 +322,24 @@ class LoginViewController: UIViewController {
         navigationController.pushViewController(biometricPromptViewController, animated: true)
     }
 
+
+    private func showLimitsOnRegisterViewController(onNavigationController navigationController: UINavigationController) {
+        let viewModel = LimitsOnRegisterViewModel(servicesProvider: Env.servicesProvider)
+        let limitsOnRegisterViewController = LimitsOnRegisterViewController(viewModel: viewModel)
+        limitsOnRegisterViewController.didTapBackButtonAction = {
+            navigationController.popViewController(animated: true)
+        }
+        limitsOnRegisterViewController.didTapCancelButtonAction = { [weak self] in
+            self?.closeLoginRegisterFlow()
+        }
+        limitsOnRegisterViewController.didTapContinueButtonAction = { [weak self] in
+            self?.showDepositOnRegisterViewController(onNavigationController: navigationController)
+        }
+        navigationController.pushViewController(limitsOnRegisterViewController, animated: true)
+    }
+
+
     private func showDepositOnRegisterViewController(onNavigationController navigationController: UINavigationController) {
-        self.closeLoginRegisterFlow()
         let depositOnRegisterViewController = DepositOnRegisterViewController()
         depositOnRegisterViewController.didTapBackButtonAction = {
             navigationController.popViewController(animated: true)
@@ -334,17 +350,6 @@ class LoginViewController: UIViewController {
         navigationController.pushViewController(depositOnRegisterViewController, animated: true)
     }
 
-    private func showLimitsOnRegisterViewController(onNavigationController navigationController: UINavigationController) {
-        self.closeLoginRegisterFlow()
-        let limitsOnRegisterViewController = LimitsOnRegisterViewController()
-        limitsOnRegisterViewController.didTapBackButtonAction = {
-            navigationController.popViewController(animated: true)
-        }
-        limitsOnRegisterViewController.didTapCancelButtonAction = { [weak self] in
-            self?.closeLoginRegisterFlow()
-        }
-        navigationController.pushViewController(limitsOnRegisterViewController, animated: true)
-    }
 
     private func deleteCachedRegistrationData() {
         UserDefaults.standard.removeObject(forKey: self.registrationFormDataKey)
@@ -446,13 +451,16 @@ class LoginViewController: UIViewController {
 
     func closeLoginRegisterFlow() {
         if self.isModal {
-            self.dismiss(animated: true, completion: nil)
+//            self.dismiss(animated: true, completion: nil)
+//            self.presentedViewController?.dismiss(animated: true)
+
+            self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
         }
         else {
-            self.presentedViewController?.dismiss(animated: true)
-
             let mainScreenViewController = Router.mainScreenViewController()
             self.navigationController?.pushViewController(mainScreenViewController, animated: true)
+
+            self.presentedViewController?.dismiss(animated: true)
         }
     }
 

@@ -28,6 +28,7 @@ public class DepositOnRegisterViewController: UIViewController {
     private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
 
     private lazy var depositHeaderTextFieldView: HeaderTextFieldView = Self.createHeaderTextFieldView()
+    private lazy var depositSubtitleLabel: UILabel = Self.createDepositSubtitleLabel()
 
     private lazy var amountButtonsStackView: UIStackView = Self.createAmountButtonsStackView()
     private lazy var amountButton1: UIButton = Self.createAmountButton()
@@ -62,6 +63,22 @@ public class DepositOnRegisterViewController: UIViewController {
 
         self.cancelButton.addTarget(self, action: #selector(didTapCancelButton), for: .primaryActionTriggered)
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
+
+        self.backButton.isHidden = true
+
+        self.amountButton1.titleLabel?.font = AppFont.with(type: .bold, size: 16)
+        self.amountButton2.titleLabel?.font = AppFont.with(type: .bold, size: 16)
+        self.amountButton3.titleLabel?.font = AppFont.with(type: .bold, size: 16)
+        self.amountButton4.titleLabel?.font = AppFont.with(type: .bold, size: 16)
+
+        self.amountButton1.setTitle("€10", for: .normal)
+        self.amountButton2.setTitle("€20", for: .normal)
+        self.amountButton3.setTitle("€50", for: .normal)
+        self.amountButton4.setTitle("€100", for: .normal)
+
+        self.depositHeaderTextFieldView.setPlaceholderText("Deposit Value")
+        self.depositSubtitleLabel.text = "Minimum Value: 10€"
+
     }
 
     override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -79,17 +96,18 @@ public class DepositOnRegisterViewController: UIViewController {
         self.titleLabel.textColor = AppColor.textPrimary
         self.subtitleLabel.textColor = AppColor.textPrimary
 
-        // Continue button styling
-        self.depositButton.setTitleColor(AppColor.buttonTextPrimary, for: .normal)
-        self.depositButton.setTitleColor(AppColor.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        self.depositButton.setTitleColor(AppColor.buttonTextDisablePrimary.withAlphaComponent(0.39), for: .disabled)
 
-        self.depositButton.setBackgroundColor(AppColor.buttonBackgroundPrimary, for: .normal)
-        self.depositButton.setBackgroundColor(AppColor.buttonBackgroundSecondary, for: .highlighted)
+        self.depositHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.depositHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
+        self.depositHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
 
-        self.depositButton.layer.cornerRadius = 8
-        self.depositButton.layer.masksToBounds = true
-        self.depositButton.backgroundColor = .clear
+        self.depositSubtitleLabel.textColor = AppColor.textSecondary
+
+        self.applyButtonStyle(self.depositButton)
+        self.applyButtonStyle(self.amountButton1)
+        self.applyButtonStyle(self.amountButton2)
+        self.applyButtonStyle(self.amountButton3)
+        self.applyButtonStyle(self.amountButton4)
 
     }
 
@@ -103,6 +121,21 @@ public class DepositOnRegisterViewController: UIViewController {
 
     @objc func didTapDepositButton() {
         self.didTapDepositButtonAction()
+    }
+
+    func applyButtonStyle(_ button: UIButton) {
+
+        button.setTitleColor(AppColor.buttonTextPrimary, for: .normal)
+        button.setTitleColor(AppColor.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        button.setTitleColor(AppColor.buttonTextDisablePrimary.withAlphaComponent(0.39), for: .disabled)
+
+        button.setBackgroundColor(AppColor.buttonBackgroundPrimary, for: .normal)
+        button.setBackgroundColor(AppColor.buttonBackgroundSecondary, for: .highlighted)
+
+        button.layer.cornerRadius = 8
+        button.layer.masksToBounds = true
+        button.backgroundColor = .clear
+
     }
 
 }
@@ -134,9 +167,11 @@ public extension DepositOnRegisterViewController {
 
     private static func createPromoImageView() -> UIImageView {
         let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 8
+        imageView.backgroundColor = .lightGray
         return imageView
     }
 
@@ -184,6 +219,14 @@ public extension DepositOnRegisterViewController {
         return headerTextFieldView
     }
 
+    private static func createDepositSubtitleLabel() -> UILabel {
+        let label = UILabel()
+        label.font = AppFont.with(type: .semibold, size: 12)
+        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }
+
     private static func createAmountButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -214,11 +257,13 @@ public extension DepositOnRegisterViewController {
         self.headerBaseView.addSubview(self.backButton)
         self.headerBaseView.addSubview(self.cancelButton)
 
-        self.view.addSubview(self.contentBaseView)
-        self.contentBaseView.addSubview(self.titleLabel)
-        self.contentBaseView.addSubview(self.subtitleLabel)
+        self.view.addSubview(self.promoImageView)
+
+        self.view.addSubview(self.titleLabel)
+        self.view.addSubview(self.subtitleLabel)
 
         self.view.addSubview(self.depositHeaderTextFieldView)
+        self.view.addSubview(self.depositSubtitleLabel)
 
         self.amountButtonsStackView.addArrangedSubview(self.amountButton1)
         self.amountButtonsStackView.addArrangedSubview(self.amountButton2)
@@ -229,9 +274,6 @@ public extension DepositOnRegisterViewController {
         self.view.addSubview(self.footerBaseView)
         self.footerBaseView.addSubview(self.depositButton)
 
-
-
-
         self.initConstraints()
     }
 
@@ -241,7 +283,7 @@ public extension DepositOnRegisterViewController {
             self.headerBaseView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             self.headerBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.headerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.headerBaseView.heightAnchor.constraint(equalToConstant: 68),
+            self.headerBaseView.heightAnchor.constraint(equalToConstant: 60),
 
             self.backButton.leadingAnchor.constraint(equalTo: self.headerBaseView.leadingAnchor, constant: 18),
             self.backButton.centerYAnchor.constraint(equalTo: self.headerBaseView.centerYAnchor),
@@ -251,19 +293,33 @@ public extension DepositOnRegisterViewController {
             self.cancelButton.centerYAnchor.constraint(equalTo: self.headerBaseView.centerYAnchor),
             self.cancelButton.trailingAnchor.constraint(equalTo: self.headerBaseView.trailingAnchor, constant: -34),
 
-            self.titleLabel.topAnchor.constraint(equalTo: self.contentBaseView.topAnchor, constant: 8),
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor),
+            self.promoImageView.topAnchor.constraint(equalTo: self.headerBaseView.bottomAnchor, constant: 8),
+            self.promoImageView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 34),
+            self.promoImageView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -34),
+            self.promoImageView.heightAnchor.constraint(equalToConstant: 110),
 
-            self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 28),
-            self.subtitleLabel.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor),
-            self.subtitleLabel.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor),
-            self.subtitleLabel.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor, constant: -8),
+            self.titleLabel.topAnchor.constraint(equalTo: self.promoImageView.bottomAnchor, constant: 16),
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.promoImageView.leadingAnchor),
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.promoImageView.trailingAnchor),
 
-            self.contentBaseView.leadingAnchor.constraint(equalTo: self.depositButton.leadingAnchor),
-            self.contentBaseView.trailingAnchor.constraint(equalTo: self.depositButton.trailingAnchor),
+            self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 16),
+            self.subtitleLabel.leadingAnchor.constraint(equalTo: self.promoImageView.leadingAnchor),
+            self.subtitleLabel.trailingAnchor.constraint(equalTo: self.promoImageView.trailingAnchor),
 
-            self.contentBaseView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -10),
+            self.depositHeaderTextFieldView.topAnchor.constraint(equalTo: self.subtitleLabel.bottomAnchor, constant: 32),
+            self.depositHeaderTextFieldView.leadingAnchor.constraint(equalTo: self.promoImageView.leadingAnchor),
+            self.depositHeaderTextFieldView.trailingAnchor.constraint(equalTo: self.promoImageView.trailingAnchor),
+            self.depositHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
+
+            self.depositSubtitleLabel.leadingAnchor.constraint(equalTo: self.promoImageView.leadingAnchor),
+            self.depositSubtitleLabel.trailingAnchor.constraint(equalTo: self.promoImageView.trailingAnchor),
+            self.depositSubtitleLabel.topAnchor.constraint(equalTo: self.depositHeaderTextFieldView.bottomAnchor, constant: -13),
+            self.depositSubtitleLabel.heightAnchor.constraint(equalToConstant: 14),
+
+            self.amountButtonsStackView.topAnchor.constraint(equalTo: self.depositHeaderTextFieldView.bottomAnchor, constant: 26),
+            self.amountButtonsStackView.leadingAnchor.constraint(equalTo: self.promoImageView.leadingAnchor),
+            self.amountButtonsStackView.trailingAnchor.constraint(equalTo: self.promoImageView.trailingAnchor),
+            self.amountButtonsStackView.heightAnchor.constraint(equalToConstant: 46),
 
             self.footerBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.footerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),

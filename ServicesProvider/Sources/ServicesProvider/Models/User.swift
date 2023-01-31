@@ -363,4 +363,5 @@ public struct UsernameValidation {
     public var username: String
     public var isAvailable: Bool
     public var suggestedUsernames: [String]?
+    public var hasErrors: Bool
 }

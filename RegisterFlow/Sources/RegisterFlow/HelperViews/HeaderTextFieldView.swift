@@ -52,6 +52,9 @@ class HeaderTextFieldView: NibView {
     var isTipPermanent: Bool = false
     var isSlidedUp: Bool = false
 
+    private var isCurrencyMode = false
+    private var currencySymbol: String?
+
     var showingTipLabel: Bool = false
 
     private var isSecureField = false {
@@ -189,7 +192,9 @@ class HeaderTextFieldView: NibView {
         self.fieldState = .hidden
 
         self.tipLabel.alpha = 0.0
-        self.tipLabel.numberOfLines = 0
+        self.tipLabel.numberOfLines = 2
+        self.tipLabel.adjustsFontSizeToFitWidth = true
+        self.tipLabel.minimumScaleFactor = 0.5
 
         tipImageView.isHidden = true
 
@@ -337,6 +342,12 @@ class HeaderTextFieldView: NibView {
     func setSecureField(_ isSecure: Bool) {
         self.isSecureField = isSecure
     }
+
+    func setCurrencyMode(_ isCurrency: Bool, currencySymbol: String?) {
+        self.isCurrencyMode = isCurrency
+        self.currencySymbol = currencySymbol
+    }
+
 
     func showPasswordLabelVisible(visible: Bool) {
         self.showPasswordLabel.isHidden = !visible
@@ -576,8 +587,16 @@ extension HeaderTextFieldView: UITextFieldDelegate {
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if self.isCurrencyMode {
+            let decimals = CharacterSet(charactersIn: "0123456789.")
+            if string.rangeOfCharacter(from: decimals) == nil && string != "" {
+                return false
+            }
+        }
+
         return true
     }
+
 }
 
 extension HeaderTextFieldView: UIPickerViewDelegate, UIPickerViewDataSource {

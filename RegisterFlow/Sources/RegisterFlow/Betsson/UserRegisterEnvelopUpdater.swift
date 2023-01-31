@@ -111,7 +111,7 @@ public class UserRegisterEnvelopUpdater {
         self.filledDataUpdated.send(self.userRegisterEnvelop)
     }
 
-    func setPassword(_ password: String) {
+    func setPassword(_ password: String?) {
         self.userRegisterEnvelop.password = password
         self.filledDataUpdated.send(self.userRegisterEnvelop)
     }

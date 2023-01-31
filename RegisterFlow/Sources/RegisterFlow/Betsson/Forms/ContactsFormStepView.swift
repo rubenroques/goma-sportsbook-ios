@@ -18,14 +18,11 @@ class ContactsFormStepViewModel {
 
     enum EmailState {
         case empty
-
         case needsValidation
         case validating
-
         case serverError
         case alreadyInUse
         case invalidSyntax
-
         case valid
     }
 
@@ -152,6 +149,7 @@ class ContactsFormStepViewModel {
 
         Publishers.CombineLatest(clearedEmailState, clearedEmail)
             .print("DEBUG-EMAIL: ")
+            .debounce(for: .seconds(0.6), scheduler: DispatchQueue.main)
             .filter { emailState, email in
                 return emailState == .needsValidation
             }
@@ -159,7 +157,6 @@ class ContactsFormStepViewModel {
                 return email
             }
             .compactMap({ $0 })
-            .debounce(for: .seconds(0.6), scheduler: DispatchQueue.main)
             .sink { [weak self] email in
                 self?.requestValidEmailCheck(email: email)
             }
@@ -401,6 +398,17 @@ class ContactsFormStepView: FormStepView {
         self.phoneHeaderTextFieldView.textPublisher
             .sink { [weak self] email in
                 self?.viewModel.setPhoneNumber(email)
+            }
+            .store(in: &self.cancellables)
+
+        self.viewModel.emailState
+            .receive(on: DispatchQueue.main)
+            .debounce(for: .seconds(2.0), scheduler: DispatchQueue.main)
+            .filter({ state in
+                return state == .invalidSyntax
+            })
+            .sink { [weak self] _ in
+                self?.emailHeaderTextFieldView.showErrorOnField(text: "Please insert a valid email format", color: AppColor.inputError)
             }
             .store(in: &self.cancellables)
 

@@ -414,7 +414,7 @@ extension SportRadarModels {
 
     struct CheckUsernameResponse: Codable {
 
-        let errors: [String]?
+        let errors: [CheckUsernameError]?
         let status: String
         let message: String?
         let additionalInfos: [CheckUsernameAdditionalInfo]?
@@ -443,9 +443,26 @@ extension SportRadarModels {
             }
         }
 
+        struct CheckUsernameError: Codable {
+
+            let field: String
+            let error: String
+
+            enum CodingKeys: String, CodingKey {
+                case field
+                case error
+            }
+
+            init(from decoder: Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.field = try container.decode(String.self, forKey: .field)
+                self.error = try container.decode(String.self, forKey: .error)
+            }
+        }
+
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            self.errors = try container.decodeIfPresent([String].self, forKey: .errors)
+            self.errors = try container.decodeIfPresent([CheckUsernameError].self, forKey: .errors)
             self.status = try container.decode(String.self, forKey: .status)
             self.message = try container.decodeIfPresent(String.self, forKey: .message)
 

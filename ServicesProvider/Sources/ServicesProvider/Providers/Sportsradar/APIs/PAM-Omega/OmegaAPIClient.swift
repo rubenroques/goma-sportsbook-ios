@@ -87,6 +87,11 @@ enum OmegaAPIClient {
                         secretAnswer: String? = nil)
     case updatePassword(oldPassword: String,
                         newPassword: String)
+
+
+    case updateWeeklyDepositLimits(newLimit: Double)
+    case updateWeeklyBettingLimits(newLimit: Double)
+
     case getBalance
     case quickSignupCompletion(firstName: String?,
                                lastName: String?,
@@ -137,6 +142,12 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/forgotPasswordStep1And2"
         case .updatePassword:
             return "/ps/ips/updatePassword"
+
+        case .updateWeeklyDepositLimits:
+            return "/ps/ips/setPersonalDepositLimits"
+        case .updateWeeklyBettingLimits:
+            return "/ps/ips/updateWagerLimit"
+
         case .getBalance:
             return "/ps/ips/getBalanceSimple"
         case .quickSignupCompletion:
@@ -299,6 +310,14 @@ extension OmegaAPIClient: Endpoint {
             return [URLQueryItem(name: "oldPassword", value: oldPassword),
                     URLQueryItem(name: "newPassword", value: newPassword)
             ]
+
+        case .updateWeeklyDepositLimits(let newLimit):
+            let limitFormated = String(format: "%.2f", newLimit)
+            return [URLQueryItem(name: "weeklyLimit", value: limitFormated)]
+        case .updateWeeklyBettingLimits(let newLimit):
+            let limitFormated = String(format: "%.2f", newLimit)
+            return [URLQueryItem(name: "limit", value: limitFormated)]
+
         case .getBalance:
             return nil
         case .quickSignupCompletion(let firstName, let lastName, let birthDate, let gender, let mobileNumber,
@@ -352,6 +371,8 @@ extension OmegaAPIClient: Endpoint {
         case .getCurrentCountry: return .get
         case .forgotPassword: return .get
         case .updatePassword: return .get
+        case .updateWeeklyDepositLimits: return .get
+        case .updateWeeklyBettingLimits: return .get
         case .getBalance: return .get
         case .quickSignupCompletion: return .get
         }
@@ -385,6 +406,8 @@ extension OmegaAPIClient: Endpoint {
         case .getCurrentCountry: return false
         case .forgotPassword: return false
         case .updatePassword: return true
+        case .updateWeeklyDepositLimits: return true
+        case .updateWeeklyBettingLimits: return true
         case .getBalance: return true
         case .quickSignupCompletion: return true
         }

@@ -15,6 +15,8 @@ class NicknameFormStepViewModel {
 
     enum NicknameState: Equatable {
         case empty
+        case tooShort
+        case invalidSyntax
         case needsValidation
         case validating
         case serverError
@@ -146,11 +148,19 @@ class NicknameFormStepViewModel {
     }
 
     func validateNickname(_ nickname: String) {
-        print("DEBUG-NICK: Will Validate \(nickname)")
+
         if nickname.isEmpty {
             self.nicknameState.send(.empty)
             return
         }
+
+        if nickname.count < 4 {
+            self.nicknameState.send(.tooShort)
+            return
+        }
+
+        print("DEBUG-NICK: Will Validate \(nickname)")
+        self.validateNicknameCancellables?.cancel()
 
         self.nicknameState.send(.validating)
 
@@ -164,7 +174,10 @@ class NicknameFormStepViewModel {
                     ()
                 }
             } receiveValue: { [weak self] usernameValidation in
-                if usernameValidation.isAvailable {
+                if usernameValidation.hasErrors {
+                    self?.nicknameState.send(.invalidSyntax)
+                }
+                else if usernameValidation.isAvailable {
                     self?.nicknameState.send(.valid)
                 }
                 else {
@@ -247,9 +260,23 @@ class NicknameFormStepView: FormStepView {
 
         self.viewModel.nicknameState
             .receive(on: DispatchQueue.main)
+            .debounce(for: .seconds(2.0), scheduler: DispatchQueue.main)
+            .filter({ state in
+                return state == .tooShort
+            })
+            .sink { [weak self] _ in
+                self?.nicknameHeaderTextFieldView.showErrorOnField(text: "Nickname is too short.")
+                self?.suggestionsLabelContainerView.isHidden = true
+                self?.configureWithSuggestedNicknames([])
+                self?.loadingView.stopAnimating()
+            }
+            .store(in: &self.cancellables)
+
+        self.viewModel.nicknameState
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] nicknameState in
                 switch nicknameState {
-                case .empty:
+                case .empty, .tooShort:
                     self?.nicknameHeaderTextFieldView.hideTipAndError()
                     self?.suggestionsLabelContainerView.isHidden = true
                     self?.loadingView.stopAnimating()
@@ -269,6 +296,11 @@ class NicknameFormStepView: FormStepView {
                     self?.nicknameHeaderTextFieldView.showErrorOnField(text: "This nickname is already in use.")
                     self?.configureWithSuggestedNicknames(suggestions)
                     self?.suggestionsLabelContainerView.isHidden = false
+                    self?.loadingView.stopAnimating()
+                case .invalidSyntax:
+                    self?.nicknameHeaderTextFieldView.showErrorOnField(text: "Please insert a valid nickname.")
+                    self?.suggestionsLabelContainerView.isHidden = true
+                    self?.configureWithSuggestedNicknames([])
                     self?.loadingView.stopAnimating()
                 case .valid:
                     self?.nicknameHeaderTextFieldView.hideTipAndError()
