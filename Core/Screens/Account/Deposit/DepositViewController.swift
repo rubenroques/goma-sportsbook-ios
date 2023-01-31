@@ -207,7 +207,7 @@ class DepositViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] shouldShow in
                 if shouldShow {
-                        self?.getPaymentDropIn()
+                    self?.getPaymentDropIn()
                 }
             })
             .store(in: &cancellables)
@@ -225,37 +225,15 @@ class DepositViewController: UIViewController {
 
     private func getPaymentDropIn() {
 
-//        if let paymentDropIn = self.viewModel.paymentsDropIn.setupPaymentDropIn() {
-//
-//            paymentDropIn.delegate = self
-//
-//            self.dropInComponent = paymentDropIn
-//
-//            present(paymentDropIn.viewController, animated: true)
-//        }
+        if let paymentDropIn = self.viewModel.paymentsDropIn.setupPaymentDropIn() {
 
-        if let paymentMethodsResponse = self.viewModel.paymentsDropIn.paymentMethodsResponse,
-           let clientKey = self.viewModel.paymentsDropIn.clientKey,
-           let apiContext = try? APIContext(environment: Adyen.Environment.test, clientKey: clientKey) {
+            paymentDropIn.delegate = self
 
-            if let paymentResponseData = try? JSONEncoder().encode(paymentMethodsResponse),
-               let paymentMethods = try? JSONDecoder().decode(PaymentMethods.self, from: paymentResponseData) {
+            self.dropInComponent = paymentDropIn
 
-                // Optional Payment
-                let payment = Payment(amount: Amount(value: Int(self.viewModel.paymentsDropIn.dropInDepositAmount) ?? 0, currencyCode: "EUR"), countryCode: "PT")
-
-                let dropInComponent = DropInComponent(paymentMethods: paymentMethods, context: AdyenContext(apiContext: apiContext, payment: payment))
-
-                self.dropInComponent = dropInComponent
-
-                self.dropInComponent?.delegate = self
-
-                if let dropInComponent = self.dropInComponent {
-                    present(dropInComponent.viewController, animated: true)
-                }
-            }
-
+            present(paymentDropIn.viewController, animated: true)
         }
+
     }
 
     private func createPaymentsLogosImageViews() {
@@ -645,12 +623,14 @@ extension DepositViewController: DropInComponentDelegate {
 
         print("PAYMENT FAIL FULL: \(error)")
 
-        self.dropInComponent?.viewController.dismiss(animated: true)
+        dropInComponent.viewController.dismiss(animated: true)
 
     }
 
     func didCancel(component: PaymentComponent, from dropInComponent: AnyDropInComponent) {
         print("PAYMENT CANCEL")
+
+        dropInComponent.viewController.dismiss(animated: true)
     }
 
 }

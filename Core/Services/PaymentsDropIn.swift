@@ -44,6 +44,9 @@ class PaymentsDropIn {
                     self?.shouldShowPaymentDropIn.send(true)
 
                     self?.isLoadingPublisher.send(false)
+
+                    self?.hasProcessedDeposit.value = false
+                    self?.hasPaymentOptions.value = false
                 }
             })
             .store(in: &cancellables)
@@ -61,7 +64,7 @@ class PaymentsDropIn {
             if let decimals = amountSplit[safe: 1],
                let numbers = amountSplit[safe: 0] {
                 if decimals.count == 1 {
-                    var fullDecimal = "\(decimals)0"
+                    let fullDecimal = "\(decimals)0"
                     dropInAmount = "\(numbers)\(fullDecimal)"
                 }
                 else {
