@@ -108,4 +108,22 @@ extension SportRadarModelMapper {
         return Banner(id: internalBanner.id, name: internalBanner.name, title: internalBanner.title, imageUrl: internalBanner.imageUrl, bodyText: internalBanner.bodyText, type: internalBanner.type)
     }
 
+    // Favorites
+    static func favoritesListResponse(fromInternalFavoritesListResponse internalFavoritesListResponse: SportRadarModels.FavoritesListResponse) -> FavoritesListResponse {
+
+        let favoritesList = internalFavoritesListResponse.favoritesList.map({ favoriteList -> FavoriteList in
+            let favoriteList = Self.favoriteList(fromInternalFavoriteList: favoriteList)
+
+            return favoriteList
+
+        })
+
+        return FavoritesListResponse(favoritesList: favoritesList)
+
+    }
+
+    static func favoriteList(fromInternalFavoriteList internalFavoriteList: SportRadarModels.FavoriteList) -> FavoriteList {
+        return FavoriteList(id: internalFavoriteList.id)
+    }
+
 }

@@ -423,5 +423,76 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
 
     }
 
+    // Documents
+    func getDocumentTypes() -> AnyPublisher<DocumentTypesResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.getDocumentTypes
+        let publisher: AnyPublisher<SportRadarModels.DocumentTypesResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ documentTypesResponse -> AnyPublisher<DocumentTypesResponse, ServiceProviderError> in
+            if documentTypesResponse.status == "SUCCESS" {
+                let documentTypesResponse = SportRadarModelMapper.documentTypesResponse(fromDocumentTypesResponse: documentTypesResponse)
+                return Just(documentTypesResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else {
+                return Fail(outputType: DocumentTypesResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+
+    func getUserDocuments() -> AnyPublisher<UserDocumentsResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.getUserDocuments
+        let publisher: AnyPublisher<SportRadarModels.UserDocumentsResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ userDocumentsResponse -> AnyPublisher<UserDocumentsResponse, ServiceProviderError> in
+            if userDocumentsResponse.status == "SUCCESS" {
+                let userDocumentsResponse = SportRadarModelMapper.userDocumentsResponse(fromUserDocumentsResponse: userDocumentsResponse)
+                return Just(userDocumentsResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else {
+                return Fail(outputType: UserDocumentsResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+
+    func uploadUserDocument(documentType: String, file: Data, fileName: String) -> AnyPublisher<UploadDocumentResponse, ServiceProviderError> {
+
+        var multipart = MultipartRequest()
+
+        let mimeType = mimeType(for: file)
+
+        multipart.add(key: "documentType", value: documentType)
+
+        multipart.add(
+            key: "file",
+            fileName: fileName,
+            fileMimeType: mimeType,
+            fileData: file
+        )
+
+        if documentType == "IDENTITY_CARD" {
+            multipart.add(key: "issueDate", value: "2022-12-01")
+            multipart.add(key: "expiryDate", value: "2024-08-01")
+            multipart.add(key: "documentNumber", value: "123456789")
+        }
+        else if documentType == "Utility Bill " {
+            multipart.add(key: "expiryDate", value: "2024-08-01")
+        }
+
+        let endpoint = OmegaAPIClient.uploadUserDocument(documentType: documentType, file: file, body: multipart.httpBody, header: multipart.httpContentTypeHeaderValue)
+
+        let publisher: AnyPublisher<SportRadarModels.UploadDocumentResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ uploadDocumentResponse -> AnyPublisher<UploadDocumentResponse, ServiceProviderError> in
+            if uploadDocumentResponse.status == "SUCCESS" {
+                let uploadDocumentResponse = SportRadarModelMapper.uploadDocumentResponse(fromUploadDocumentResponse: uploadDocumentResponse)
+                return Just(uploadDocumentResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else {
+                return Fail(outputType: UploadDocumentResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
 }
 

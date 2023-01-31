@@ -106,6 +106,10 @@ enum OmegaAPIClient {
                                cardId: String?,
                                securityQuestion: String?,
                                securityAnswer: String?)
+
+    case getDocumentTypes
+    case getUserDocuments
+    case uploadUserDocument(documentType: String, file: Data, body: Data, header: String)
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -152,6 +156,12 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/getBalanceSimple"
         case .quickSignupCompletion:
             return "/ps/ips/quickSignupCompletion"
+        case .getDocumentTypes:
+            return "/ps/ips/getDocumentTypes"
+        case .getUserDocuments:
+            return "/ps/ips/getUserDocuments"
+        case .uploadUserDocument:
+            return "/ps/ips/uploadUserDocument"
         }
     }
     
@@ -350,6 +360,12 @@ extension OmegaAPIClient: Endpoint {
             
             
             return query
+        case .getDocumentTypes:
+            return nil
+        case .getUserDocuments:
+            return nil
+        case .uploadUserDocument:
+            return nil
         }
     }
     
@@ -375,11 +391,20 @@ extension OmegaAPIClient: Endpoint {
         case .updateWeeklyBettingLimits: return .get
         case .getBalance: return .get
         case .quickSignupCompletion: return .get
+        case .getDocumentTypes: return .get
+        case .getUserDocuments: return .get
+        case .uploadUserDocument: return .post
         }
     }
     
     var body: Data? {
-        return nil
+        switch self {
+        case .uploadUserDocument( _, _, let body, _):
+            return body
+        default:
+            return nil
+        }
+        //return nil
         /*
          let body = """
          {"type": "\(type)","text": "\(message)"}
@@ -410,6 +435,9 @@ extension OmegaAPIClient: Endpoint {
         case .updateWeeklyBettingLimits: return true
         case .getBalance: return true
         case .quickSignupCompletion: return true
+        case .getDocumentTypes: return false
+        case .getUserDocuments: return true
+        case .uploadUserDocument: return true
         }
     }
     
@@ -418,12 +446,21 @@ extension OmegaAPIClient: Endpoint {
     }
     
     var headers: HTTP.Headers? {
-        let defaultHeaders = [
-            "Accept-Encoding": "gzip, deflate",
-            "Content-Type": "application/json; charset=UTF-8",
-            "Accept": "application/json"
-        ]
-        return defaultHeaders
+        switch self {
+        case .uploadUserDocument( _, _, _, let header):
+            let customHeaders = [
+                "Content-Type": header
+            ]
+            return customHeaders
+        default:
+            let defaultHeaders = [
+                "Accept-Encoding": "gzip, deflate",
+                "Content-Type": "application/json; charset=UTF-8",
+                "Accept": "application/json"
+            ]
+            return defaultHeaders
+        }
+
     }
     
     var cachePolicy: URLRequest.CachePolicy {

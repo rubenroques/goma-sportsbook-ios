@@ -283,10 +283,12 @@ struct UserProfile: Codable {
     var placeOfBirth: String?
     var additionalStreetLine: String?
 
+    var kycStatus: String?
+    
     init(userIdentifier: String, username: String, email: String, firstName: String? = nil, lastName: String? = nil, birthDate: Date,
          nationality: Country?, country: Country?, gender: String?, title: UserTitle?, personalIdNumber: String?, address: String?,
          province: String?, city: String?, postalCode: String?, isEmailVerified: Bool, isRegistrationCompleted: Bool, avatarName: String?,
-         godfatherCode: String?, placeOfBirth: String?, additionalStreetLine: String?) {
+         godfatherCode: String?, placeOfBirth: String?, additionalStreetLine: String?, kycStatus: String?) {
         self.userIdentifier = userIdentifier
         self.username = username
         self.email = email
@@ -308,7 +310,9 @@ struct UserProfile: Codable {
         self.godfatherCode = godfatherCode
         self.placeOfBirth = placeOfBirth
         self.additionalStreetLine = additionalStreetLine
+        self.kycStatus = kycStatus
     }
+    
 }
 
 struct UserWallet {

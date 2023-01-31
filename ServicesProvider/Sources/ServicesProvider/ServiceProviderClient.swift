@@ -249,6 +249,16 @@ extension ServicesProviderClient {
 
         return eventsProvider.getBanners()
     }
+
+    public func getFavoritesList() -> AnyPublisher<FavoritesListResponse, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getFavoritesList()
+    }
 }
 
 
@@ -506,6 +516,40 @@ extension ServicesProviderClient {
         return bettingProvider.getBetDetails(identifier: identifier)
     }
 
+}
+
+// Documents
+extension ServicesProviderClient {
+
+    public func getDocumentTypes() -> AnyPublisher<DocumentTypesResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getDocumentTypes()
+    }
+
+    public func getUserDocuments() -> AnyPublisher<UserDocumentsResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getUserDocuments()
+    }
+
+    public func uploadUserDocument(documentType: String, file: Data, fileName: String) -> AnyPublisher<UploadDocumentResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.uploadUserDocument(documentType: documentType, file: file, fileName: fileName)
+    }
 }
 
 // Utilities

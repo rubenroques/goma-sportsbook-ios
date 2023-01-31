@@ -90,6 +90,7 @@ class ProfileViewController: UIViewController {
         self.commonInit()
         self.setupWithTheme()
 
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -322,6 +323,16 @@ class ProfileViewController: UIViewController {
                                                            alertType: .profile)
 
             alertsArray.append(completeProfileAlertData)
+            showActivationAlertScrollableView = true
+        }
+
+        if let isUserKycVerified = Env.userSessionStore.isUserKycVerified.value, !isUserKycVerified {
+            let uploadDocumentsAlertData = ActivationAlert(title: localized("document_validation_required"),
+                                                           description: localized("document_validation_required_description"),
+                                                           linkLabel: localized("complete_verification"),
+                                                           alertType: .documents)
+
+            alertsArray.append(uploadDocumentsAlertData)
             showActivationAlertScrollableView = true
         }
 

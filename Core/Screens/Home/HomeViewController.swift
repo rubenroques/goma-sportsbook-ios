@@ -639,7 +639,13 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         }
 
         if let imageName = self.viewModel.iconName(forSection: section) {
-            sportImageView.image = UIImage(named: "sport_type_icon_\(imageName)")
+            if let sportIconImage = UIImage(named: "sport_type_icon_\(imageName)") {
+                sportImageView.image = sportIconImage
+            }
+            else {
+                sportImageView.image = UIImage(named: "sport_type_icon_default")
+
+            }
         }
         else {
             sportImageView.isHidden = true

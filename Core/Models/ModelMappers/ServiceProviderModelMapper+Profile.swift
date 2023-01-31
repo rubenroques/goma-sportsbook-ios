@@ -51,7 +51,8 @@ extension ServiceProviderModelMapper {
                            avatarName: serviceProviderProfile.avatarName,
                            godfatherCode: serviceProviderProfile.godfatherCode,
                            placeOfBirth: serviceProviderProfile.placeOfBirth,
-                           additionalStreetLine: serviceProviderProfile.additionalStreetLine)
+                           additionalStreetLine: serviceProviderProfile.additionalStreetLine,
+                           kycStatus: serviceProviderProfile.kycStatus)
     }
     
 }

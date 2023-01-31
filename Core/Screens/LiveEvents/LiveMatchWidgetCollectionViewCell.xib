@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -415,11 +415,28 @@
                                     <constraint firstItem="Thh-yZ-s6v" firstAttribute="centerX" secondItem="DoR-hW-9XB" secondAttribute="centerX" id="X8d-gM-cyI"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zqs-ix-zch">
+                                <rect key="frame" x="12" y="104" width="545" height="40"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Suspended" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w9K-wA-Bfc">
+                                        <rect key="frame" x="238.5" y="13.5" width="68.5" height="13"/>
+                                        <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="13"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="w9K-wA-Bfc" firstAttribute="centerY" secondItem="zqs-ix-zch" secondAttribute="centerY" id="Ge1-77-pI8"/>
+                                    <constraint firstItem="w9K-wA-Bfc" firstAttribute="centerX" secondItem="zqs-ix-zch" secondAttribute="centerX" id="xO1-9k-kla"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="DoR-hW-9XB" firstAttribute="trailing" secondItem="hqr-8r-9MW" secondAttribute="trailing" id="27A-W8-5pX"/>
                             <constraint firstItem="kTP-cv-RCw" firstAttribute="leading" secondItem="T2w-ri-ozy" secondAttribute="leading" constant="12" id="4Ve-ok-zLQ"/>
+                            <constraint firstItem="zqs-ix-zch" firstAttribute="top" secondItem="3W6-fO-bs3" secondAttribute="top" id="AOv-Ds-lbH"/>
                             <constraint firstItem="DoR-hW-9XB" firstAttribute="leading" secondItem="3W6-fO-bs3" secondAttribute="leading" id="Ax4-bg-dJC"/>
                             <constraint firstItem="fML-Z9-21w" firstAttribute="centerY" secondItem="hjz-Yg-JGd" secondAttribute="centerY" id="Cb3-h2-DMo"/>
                             <constraint firstItem="DoR-hW-9XB" firstAttribute="bottom" secondItem="3W6-fO-bs3" secondAttribute="bottom" id="Cre-3Z-4R0"/>
@@ -430,8 +447,11 @@
                             <constraint firstItem="DoR-hW-9XB" firstAttribute="top" secondItem="3W6-fO-bs3" secondAttribute="top" id="RFZ-uY-sN0"/>
                             <constraint firstItem="Ll0-G9-s03" firstAttribute="top" secondItem="T2w-ri-ozy" secondAttribute="top" constant="11" id="Rin-Ge-cb1"/>
                             <constraint firstItem="kTP-cv-RCw" firstAttribute="top" secondItem="D8R-G1-Yk3" secondAttribute="bottom" constant="5" id="VV9-JI-uRu"/>
+                            <constraint firstItem="zqs-ix-zch" firstAttribute="trailing" secondItem="hqr-8r-9MW" secondAttribute="trailing" id="ers-Nq-a8Y"/>
                             <constraint firstAttribute="bottom" secondItem="kTP-cv-RCw" secondAttribute="bottom" constant="12" id="jPE-gz-w4d"/>
                             <constraint firstItem="Ll0-G9-s03" firstAttribute="leading" secondItem="kTP-cv-RCw" secondAttribute="leading" id="muk-zd-b2Z"/>
+                            <constraint firstItem="zqs-ix-zch" firstAttribute="leading" secondItem="3W6-fO-bs3" secondAttribute="leading" id="n7I-Yl-rpf"/>
+                            <constraint firstItem="zqs-ix-zch" firstAttribute="bottom" secondItem="3W6-fO-bs3" secondAttribute="bottom" id="oQ5-0k-Hew"/>
                             <constraint firstAttribute="trailing" secondItem="kTP-cv-RCw" secondAttribute="trailing" constant="12" id="oUB-LZ-QCO"/>
                             <constraint firstItem="WZf-bd-zho" firstAttribute="centerY" secondItem="Ll0-G9-s03" secondAttribute="centerY" id="stQ-y3-xc4"/>
                             <constraint firstItem="WZf-bd-zho" firstAttribute="trailing" secondItem="kTP-cv-RCw" secondAttribute="trailing" id="xgA-xU-Asf"/>
@@ -486,6 +506,8 @@
                 <outlet property="oddsStackView" destination="kTP-cv-RCw" id="eW7-Jc-Rg3"/>
                 <outlet property="participantsBaseView" destination="D8R-G1-Yk3" id="aY2-CN-ELb"/>
                 <outlet property="resultLabel" destination="Jgd-2r-wV6" id="J3B-Ut-377"/>
+                <outlet property="seeAllBaseView" destination="zqs-ix-zch" id="rye-z7-JYf"/>
+                <outlet property="seeAllLabel" destination="w9K-wA-Bfc" id="wf9-dh-hZo"/>
                 <outlet property="suspendedBaseView" destination="DoR-hW-9XB" id="LMj-qE-4w7"/>
                 <outlet property="suspendedLabel" destination="Thh-yZ-s6v" id="YKM-tF-V5e"/>
                 <outlet property="teamsHeightConstraint" destination="z8d-Rq-wRX" id="Bvt-1m-Wra"/>

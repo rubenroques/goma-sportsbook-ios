@@ -190,18 +190,21 @@ class StaticHomeViewTemplateDataSource {
 
     func requestSports() {
 
-        Env.servicesProvider.getAvailableSportTypes()
-            .map({ sportTypesArray in
-                return sportTypesArray.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
-            })
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { (completion: Subscribers.Completion<ServiceProviderError>) in
-                () // TODO:  allSportTypes Handle completion with error
-            }, receiveValue: { (sportTypes: [Sport]) in
-                self.sportsToFetch = Array(sportTypes.prefix(10))
-                self.refreshPublisher.send()
-            })
-            .store(in: &cancellables)
+        self.sportsToFetch = Array(Env.sportsStore.getAvailableSports().prefix(10))
+        self.refreshPublisher.send()
+        
+//        Env.servicesProvider.getAvailableSportTypes()
+//            .map({ sportTypesArray in
+//                return sportTypesArray.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
+//            })
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { (completion: Subscribers.Completion<ServiceProviderError>) in
+//                () // TODO:  allSportTypes Handle completion with error
+//            }, receiveValue: { (sportTypes: [Sport]) in
+//                self.sportsToFetch = Array(sportTypes.prefix(10))
+//                self.refreshPublisher.send()
+//            })
+//            .store(in: &cancellables)
 
 //        let language = "en"
 //        Env.everyMatrixClient.getDisciplines(language: language)
@@ -252,6 +255,14 @@ class StaticHomeViewTemplateDataSource {
                                                            linkLabel: localized("finish_up_profile"),
                                                            alertType: .profile)
             alertsArray.append(completeProfileAlertData)
+        }
+        if let isUserKycVerified = Env.userSessionStore.isUserKycVerified.value, !isUserKycVerified {
+            let uploadDocumentsAlertData = ActivationAlert(title: localized("document_validation_required"),
+                                                           description: localized("document_validation_required_description"),
+                                                           linkLabel: localized("complete_verification"),
+                                                           alertType: .documents)
+
+            alertsArray.append(uploadDocumentsAlertData)
         }
     }
 

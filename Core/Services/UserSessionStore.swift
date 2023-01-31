@@ -58,8 +58,11 @@ class UserSessionStore {
 
     var isUserProfileComplete = CurrentValueSubject<Bool?, Never>(nil)
     var isUserEmailVerified = CurrentValueSubject<Bool?, Never>(nil)
+    var isUserKycVerified = CurrentValueSubject<Bool?, Never>(nil)
 
     private var pendingSignUpUserForm: ServicesProvider.SimpleSignUpForm?
+
+    var userProfilePublisher = CurrentValueSubject<UserProfile?, Never>(nil)
     
     init() {
 
@@ -191,6 +194,7 @@ class UserSessionStore {
 
         self.isUserProfileComplete.send(nil)
         self.isUserEmailVerified.send(nil)
+        self.isUserKycVerified.send(nil)
 
         self.userWalletPublisher.send(nil)
         
@@ -214,6 +218,15 @@ class UserSessionStore {
                 return ServiceProviderModelMapper.userProfile(serviceProviderProfile)
             })
             .map { (userProfile: UserProfile) -> UserSession in
+                self.userProfilePublisher.send(userProfile)
+
+                if userProfile.kycStatus == "PASS" {
+                    self.isUserKycVerified.send(true)
+                }
+                else {
+                    self.isUserKycVerified.send(false)
+                }
+                
                 return UserSession(username: userProfile.username,
                                    password: password,
                                    email: userProfile.email,
@@ -519,7 +532,7 @@ extension UserSessionStore {
                 }
                 self?.isLoadingUserSessionPublisher.send(false)
             }, receiveValue: { loggedUser in
-                
+                // Env.favoritesManager.getUserFavorites()
             })
             .store(in: &cancellables)
         

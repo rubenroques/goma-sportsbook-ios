@@ -46,5 +46,9 @@ protocol PrivilegedAccessManager {
 
     func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError>
     func signUpCompletion(form: ServicesProvider.UpdateUserProfileForm)  -> AnyPublisher<Bool, ServiceProviderError>
+
+    func getDocumentTypes() -> AnyPublisher<DocumentTypesResponse, ServiceProviderError>
+    func getUserDocuments() -> AnyPublisher<UserDocumentsResponse, ServiceProviderError>
+    func uploadUserDocument(documentType: String, file: Data, fileName: String) -> AnyPublisher<UploadDocumentResponse, ServiceProviderError>
     
 }

@@ -63,6 +63,7 @@ class MyFavoritesViewModel: NSObject {
 
         self.getLocations()
 
+        Env.favoritesManager.getUserFavorites()
     }
     
     private func unregisterEndpoints() {

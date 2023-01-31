@@ -273,6 +273,23 @@ extension SportRadarModels {
             case type = "idfwheadlinetype"
         }
     }
+
+    // Favorites
+    struct FavoritesListResponse: Codable {
+        var favoritesList: [FavoriteList]
+
+        enum CodingKeys: String, CodingKey {
+            case favoritesList = "accountFavouriteCoupons"
+        }
+    }
+
+    struct FavoriteList: Codable {
+        var id: String?
+
+        enum CodingKeys: String, CodingKey {
+            case id = "id"
+        }
+    }
     
 }
 

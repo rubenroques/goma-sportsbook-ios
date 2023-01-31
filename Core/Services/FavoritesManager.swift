@@ -24,15 +24,32 @@ class FavoritesManager {
 
     // MARK: Functions
     func getUserFavorites() {
-        Env.everyMatrixClient.getUserMetadata()
+//        Env.everyMatrixClient.getUserMetadata()
+//            .receive(on: DispatchQueue.main)
+//            .eraseToAnyPublisher()
+//            .sink { _ in
+//            } receiveValue: { [weak self] userMetadata in
+//                if let userMetadataRecords = userMetadata.records[0].value {
+//                    self?.favoriteEventsIdPublisher.send(userMetadataRecords)
+//                }
+//            }
+//            .store(in: &cancellables)
+
+        Env.servicesProvider.getFavoritesList()
             .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
-            .sink { _ in
-            } receiveValue: { [weak self] userMetadata in
-                if let userMetadataRecords = userMetadata.records[0].value {
-                    self?.favoriteEventsIdPublisher.send(userMetadataRecords)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("FAVORITES LIST ERROR: \(error)")
                 }
-            }
+
+            }, receiveValue: { [weak self] favoritesListResponse in
+
+                print("FAVORITES LIST RESPONSE: \(favoritesListResponse)")
+
+            })
             .store(in: &cancellables)
     }
 

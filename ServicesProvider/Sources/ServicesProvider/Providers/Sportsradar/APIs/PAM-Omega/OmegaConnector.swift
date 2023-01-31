@@ -201,6 +201,7 @@ class OmegaConnector: Connector {
         else {
             return
         }
+        print("SESSION KEY: \(sessionKey)")
         self.session.dataTaskPublisher(for: request)
             .tryMap { result in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {

@@ -49,6 +49,8 @@ protocol EventsProvider {
     func getSearchEvents(query: String, resultLimit: String, page: String) -> AnyPublisher<EventsGroup, ServiceProviderError>
 
     func getBanners() -> AnyPublisher<BannerResponse, ServiceProviderError>
+    // Favorites
+    func getFavoritesList() -> AnyPublisher<FavoritesListResponse, ServiceProviderError>
 
     // Utilities
     func getDatesFilter(timeRange: String) -> [Date]

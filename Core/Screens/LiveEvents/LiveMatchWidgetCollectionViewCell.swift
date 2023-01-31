@@ -54,6 +54,9 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var suspendedBaseView: UIView!
     @IBOutlet private weak var suspendedLabel: UILabel!
 
+    @IBOutlet private weak var seeAllBaseView: UIView!
+    @IBOutlet private weak var seeAllLabel: UILabel!
+
     //
     // Design Constraints
     @IBOutlet private weak var topMarginSpaceConstraint: NSLayoutConstraint!
@@ -72,8 +75,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var awayRedCardView: UIView!
     @IBOutlet private weak var awayRedCardLabel: UILabel!
     @IBOutlet private weak var awayRedCardImage: UIImageView!
-    
-    
+
     private var cancellables = Set<AnyCancellable>()
     
     private var cachedCardsStyle: CardsStyle?
@@ -114,11 +116,9 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     
     private var goalsRegister: EndpointPublisherIdentifiable?
     private var goalsSubscription: AnyCancellable?
-    
-    
+
     private var homeRedCardPublisher: CurrentValueSubject<String, Never> = .init("0")
     private var awayRedCardPublisher: CurrentValueSubject<String, Never> = .init("0")
-    
 
     private var isLeftOutcomeButtonSelected: Bool = false {
         didSet {
@@ -161,6 +161,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.drawBaseView.layer.cornerRadius = 4.5
         self.awayBaseView.layer.cornerRadius = 4.5
 
+        self.seeAllBaseView.layer.cornerRadius = 4.5
+
         self.homeUpChangeOddValueImage.alpha = 0.0
         self.homeDownChangeOddValueImage.alpha = 0.0
         self.drawUpChangeOddValueImage.alpha = 0.0
@@ -180,6 +182,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.locationFlagImageView.image = nil
         self.suspendedBaseView.isHidden = true
+        self.seeAllBaseView.isHidden = true
 
         self.baseView.bringSubviewToFront(self.suspendedBaseView)
 
@@ -318,7 +321,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.locationFlagImageView.image = nil
 
         self.oddsStackView.alpha = 1.0
-        
+        self.oddsStackView.isHidden = false
+
         self.awayBaseView.isHidden = false
 
         self.isFavorite = false
@@ -327,7 +331,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.middleOutcomeDisabled = false
         self.rightOutcomeDisabled = false
         self.suspendedBaseView.isHidden = true
-        
+        self.seeAllBaseView.isHidden = true
 
         self.adjustDesignToCardStyle()
         self.setupWithTheme()
@@ -355,6 +359,9 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.suspendedBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
         self.suspendedLabel.textColor = UIColor.App.textDisablePrimary
+
+        self.seeAllBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
+        self.seeAllLabel.textColor = UIColor.App.textPrimary
 
         if isLeftOutcomeButtonSelected {
             self.homeBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
@@ -724,9 +731,12 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
             Logger.log("No markets found")
             oddsStackView.alpha = 0.2
 
-            self.homeOddValueLabel.text = localized("empty")
-            self.drawOddValueLabel.text = localized("empty")
-            self.awayOddValueLabel.text = localized("empty")
+//            self.homeOddValueLabel.text = localized("empty")
+//            self.drawOddValueLabel.text = localized("empty")
+//            self.awayOddValueLabel.text = localized("empty")
+
+            self.showSeeAllView()
+
 
         }
 
@@ -813,6 +823,12 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     private func showClosedView() {
         self.suspendedLabel.text = localized("closed_market")
         self.suspendedBaseView.isHidden = false
+    }
+
+    private func showSeeAllView() {
+        self.seeAllLabel.text = localized("see_all")
+        self.seeAllBaseView.isHidden = false
+        self.oddsStackView.isHidden = true
     }
 
     //

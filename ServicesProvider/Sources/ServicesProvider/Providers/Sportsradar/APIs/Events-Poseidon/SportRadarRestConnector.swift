@@ -12,6 +12,8 @@ class SportRadarRestConnector {
     
     private let session: URLSession
     private let decoder: JSONDecoder
+
+    var token: SportRadarSessionAccessToken?
     
     init(session: URLSession = URLSession(configuration: URLSessionConfiguration.default), decoder: JSONDecoder = JSONDecoder()) {
         self.session = session
@@ -23,9 +25,20 @@ class SportRadarRestConnector {
     }
 
     func request<T: Codable>(_ endpoint: Endpoint) -> AnyPublisher<T, ServiceProviderError> {
-       
+
+        var additionalHeaders: HTTP.Headers?
+        if endpoint.requireSessionKey {
+            if let sessionKey = self.retrieveSessionKey() {
+                additionalHeaders = ["Authorization": sessionKey]
+            }
+            else {
+                return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+            }
+        }
+
         guard
-            let request = endpoint.request()
+            //let request = endpoint.request()
+            let request = endpoint.request(aditionalHeaders: additionalHeaders)
         else {
             let error = ServiceProviderError.invalidRequestFormat
             return AnyPublisher(Fail<T, ServiceProviderError>(error: error))
@@ -56,5 +69,16 @@ class SportRadarRestConnector {
             }
             .eraseToAnyPublisher()
     }
-    
+
+    func clearSessionKey() {
+        return self.token = nil
+    }
+
+    func saveSessionKey(_ sessionKey: String) {
+        return self.token = SportRadarSessionAccessToken(hash: sessionKey)
+    }
+
+    func retrieveSessionKey() -> String? {
+        return self.token?.hash
+    }
 }
