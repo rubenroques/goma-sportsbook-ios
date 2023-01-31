@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import SwiftUI
+import RegisterFlow
 
 enum Route {
     case openBet(id: String)
@@ -73,7 +74,9 @@ class Router {
         let splashViewController = SplashViewController(loadingCompleted: {
             self.showPostLoadingFlow()
         })
+
         self.rootWindow.rootViewController = splashViewController
+
         self.rootWindow.makeKeyAndVisible()
     }
 
@@ -82,7 +85,6 @@ class Router {
     }
 
     func showPostLoadingFlow() {
-
         self.subscribeToUserActionBlockers()
         self.subscribeToURLRedirects()
         self.subscribeToNotificationsOpened()
@@ -94,9 +96,7 @@ class Router {
         else {
             bootRootViewController = Router.createLoginViewControllerFlow()
         }
-
         self.rootWindow.rootViewController = bootRootViewController
-
     }
 
     func subscribeToUserActionBlockers() {

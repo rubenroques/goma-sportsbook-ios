@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SharedModels
 
 public enum KnowYourClientStatus: String, Codable {
     case open
@@ -84,13 +85,17 @@ public struct UserProfile: Codable {
     public let province: String?
     public let city: String?
     public let postalCode: String?
-    
-    
+
     public let emailVerificationStatus: EmailVerificationStatus
     public let userRegistrationStatus: UserRegistrationStatus
 
     public let kycStatus: String?
-    
+
+    public let avatarName: String?
+    public let godfatherCode: String?
+    public let placeOfBirth: String?
+    public let additionalStreetLine: String?
+
     public init(userIdentifier: String,
                 username: String,
                 email: String,
@@ -107,6 +112,10 @@ public struct UserProfile: Codable {
                 postalCode: String?,
                 emailVerificationStatus: EmailVerificationStatus,
                 userRegistrationStatus: UserRegistrationStatus,
+                avatarName: String?,
+                godfatherCode: String?,
+                placeOfBirth: String?,
+                additionalStreetLine: String?,
                 kycStatus: String?) {
         
         self.userIdentifier = userIdentifier
@@ -123,13 +132,17 @@ public struct UserProfile: Codable {
         self.province = province
         self.city = city
         self.postalCode = postalCode
-        
         self.emailVerificationStatus = emailVerificationStatus
         self.userRegistrationStatus = userRegistrationStatus
 
         self.kycStatus = kycStatus
+
+        self.avatarName = avatarName
+        self.godfatherCode = godfatherCode
+        self.placeOfBirth = placeOfBirth
+        self.additionalStreetLine = additionalStreetLine
     }
-    
+
 }
 
 public extension UserProfile {
@@ -162,7 +175,7 @@ public struct SimpleSignUpForm {
     public var mobileNumber: String
     public var countryIsoCode: String
     public var currencyCode: String
-    
+
     public init(email: String, username: String, password: String, birthDate: Date, mobilePrefix: String, mobileNumber: String, countryIsoCode: String, currencyCode: String) {
         self.email = email
         self.username = username
@@ -172,6 +185,83 @@ public struct SimpleSignUpForm {
         self.mobileNumber = mobileNumber
         self.countryIsoCode = countryIsoCode
         self.currencyCode = currencyCode
+    }
+
+}
+
+public class SignUpForm {
+
+    public var email: String
+    public var username: String
+    public var password: String
+    public var birthDate: Date
+    public var mobilePrefix: String
+    public var mobileNumber: String
+    public var nationalityIsoCode: String
+    public var currencyCode: String
+
+    public var firstName: String?
+    public var lastName: String?
+
+    public var gender: String?
+    public var address: String?
+    public var province: String?
+    public var city: String
+    public var countryIsoCode: String
+
+    public var bonusCode: String?
+    public var receiveMarketingEmails: Bool?
+
+    public var avatarName: String?
+    public var placeOfBirth: String?
+    public var additionalStreetAddress: String?
+    public var godfatherCode: String?
+
+    public init(email: String, username: String, password: String, birthDate: Date,
+                mobilePrefix: String, mobileNumber: String, nationalityIsoCode: String,
+                currencyCode: String, firstName: String? = nil, lastName: String? = nil,
+                gender: String? = nil, address: String? = nil, province: String? = nil,
+                city: String, countryIsoCode: String, bonusCode: String? = nil,
+                receiveMarketingEmails: Bool? = nil, avatarName: String? = nil,
+                placeOfBirth: String? = nil, additionalStreetAddress: String? = nil, godfatherCode: String? = nil) {
+        self.email = email
+        self.username = username
+        self.password = password
+        self.birthDate = birthDate
+        self.mobilePrefix = mobilePrefix
+        self.mobileNumber = mobileNumber
+        self.nationalityIsoCode = nationalityIsoCode
+        self.currencyCode = currencyCode
+        self.firstName = firstName
+        self.lastName = lastName
+        self.gender = gender
+        self.address = address
+        self.province = province
+        self.city = city
+        self.countryIsoCode = countryIsoCode
+        self.bonusCode = bonusCode
+        self.receiveMarketingEmails = receiveMarketingEmails
+        self.avatarName = avatarName
+        self.placeOfBirth = placeOfBirth
+        self.additionalStreetAddress = additionalStreetAddress
+        self.godfatherCode = godfatherCode
+    }
+
+}
+
+public struct SignUpResponse {
+
+    public struct SignUpError {
+        public var field: String
+        public var error: String
+    }
+
+    public var successful: Bool
+    public var errors: [SignUpError]?
+
+    public init(successful: Bool, errors: [SignUpError]? = nil) {
+        self.successful = successful
+        self.errors = errors
     }
     
 }
@@ -195,7 +285,11 @@ public struct UpdateUserProfileForm {
     public var securityQuestion: String?
     public var securityAnswer: String?
     
-    public init(username: String? = nil, email: String? = nil, firstName: String? = nil, lastName: String? = nil, birthDate: Date? = nil, gender: String? = nil, address: String? = nil, province: String? = nil, city: String? = nil, postalCode: String? = nil, country: Country? = nil, cardId: String? = nil, mobileNumber: String? = nil, securityQuestion: String? = nil, securityAnswer: String? = nil) {
+    public init(username: String? = nil, email: String? = nil, firstName: String? = nil,
+                lastName: String? = nil, birthDate: Date? = nil, gender: String? = nil,
+                address: String? = nil, province: String? = nil, city: String? = nil,
+                postalCode: String? = nil, country: Country? = nil, cardId: String? = nil,
+                mobileNumber: String? = nil, securityQuestion: String? = nil, securityAnswer: String? = nil) {
         self.username = username
         self.email = email
         self.firstName = firstName
@@ -270,6 +364,12 @@ public struct UserWallet {
     
 }
 
+public struct UsernameValidation {
+    public var username: String
+    public var isAvailable: Bool
+    public var suggestedUsernames: [String]?
+}
+
 public struct DocumentTypesResponse {
     public var status: String
     public var documentTypes: [DocumentType]
@@ -323,3 +423,5 @@ public struct UploadDocumentResponse {
         case status = "status"
     }
 }
+
+

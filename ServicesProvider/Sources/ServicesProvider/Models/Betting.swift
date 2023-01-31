@@ -13,8 +13,14 @@ public struct BettingHistory: Codable {
 
 public struct Bet: Codable {
     public var identifier: String
+    public var type: String
+    public var state: BetState
+    public var result: BetResult
+    public var stake: Double
+    public var totalOdd: Double
     public var selections: [BetSelection]
     public var potentialReturn: Double
+    public var date: Date
 }
 
 public struct BetSelection: Codable {
@@ -26,6 +32,7 @@ public struct BetSelection: Codable {
     public var awayTeamName: String
     public var marketName: String
     public var outcomeName: String
+    public var odd: OddFormat
 }
 
 public enum BetResult: String, Codable {
@@ -34,6 +41,7 @@ public enum BetResult: String, Codable {
     case drawn
     case open
     case void
+    case pending
     case notSpecified
 }
 
@@ -154,10 +162,12 @@ public struct PlacedBetsResponse: Codable {
 }
 
 public struct PlacedBetEntry: Codable {
+
     public var identifier: String
     public var potentialReturn: Double
     public var placeStake: Double
     public var betLegs: [PlacedBetLeg]
+
     enum CodingKeys: String, CodingKey {
         case identifier = "idFOBet"
         case betLegs = "betLegs"
@@ -176,11 +186,13 @@ public struct PlacedBetEntry: Codable {
 public struct PlacedBetLeg: Codable {
     public var identifier: String
     public var priceType: String
+
     public var odd: Double {
         let priceNumerator = Double(self.priceNumerator)
         let priceDenominator = Double(self.priceDenominator)
         return (priceNumerator/priceDenominator) + 1.0
     }
+
     private var priceNumerator: Int
     private var priceDenominator: Int
 

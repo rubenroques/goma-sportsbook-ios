@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SharedModels
 
 public enum CountryCode: String, CaseIterable {
     case AF
@@ -260,17 +261,7 @@ public enum CountryCode: String, CaseIterable {
     case ZW
 }
 
-public struct Country: Codable {
-    public var name: String
-    public var capital: String?
-    public var region: String
-    public var iso2Code: String
-    public var iso3Code: String
-    public var numericCode: String
-    public var phonePrefix: String
-}
-
-public extension Country {
+public extension SharedModels.Country {
     
     init?(countryCode: CountryCode) {
         if let country = Self.country(withCountryCode: countryCode) {

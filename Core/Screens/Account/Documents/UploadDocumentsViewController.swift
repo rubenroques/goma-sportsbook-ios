@@ -182,7 +182,8 @@ extension UploadDocumentsViewController: UIDocumentPickerDelegate, UINavigationC
 
             }
 
-        } catch {
+        }
+        catch {
             print("No data")
         }
 
@@ -379,7 +380,7 @@ extension UploadDocumentsViewController {
         titleLabel.textColor = UIColor.App.textPrimary
         titleLabel.font = AppFont.with(type: .bold, size: 11)
         titleLabel.textAlignment = .left
-        titleLabel.text = "Pending"
+        titleLabel.text = localized("pending")
         return titleLabel
     }
 

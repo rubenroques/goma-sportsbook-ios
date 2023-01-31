@@ -249,12 +249,12 @@ class OutcomeSelectionButtonView: NibView {
                                           outcomeId: outcome.id,
                                           marketId: marketId,
                                           matchId: match.id,
-                                          decimalOdd: outcome.bettingOffer.decimalOdd,
                                           isAvailable: outcome.bettingOffer.isAvailable,
                                           statusId: "1",
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
-                                          outcomeDescription: outcomeDescription)
+                                          outcomeDescription: outcomeDescription,
+                                          odd: outcome.bettingOffer.odd)
         }
         else {
             let marketName = outcome.marketName ?? ""
@@ -272,12 +272,12 @@ class OutcomeSelectionButtonView: NibView {
                                           outcomeId: outcome.id,
                                           marketId: marketId,
                                           matchId: "",
-                                          decimalOdd: outcome.bettingOffer.decimalOdd,
                                           isAvailable: outcome.bettingOffer.isAvailable,
                                           statusId: "1",
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
-                                          outcomeDescription: outcomeDescription)
+                                          outcomeDescription: outcomeDescription,
+                                          odd: outcome.bettingOffer.odd)
         }
 
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
@@ -324,12 +324,12 @@ class OutcomeSelectionButtonView: NibView {
                                               outcomeId: outcome.id,
                                               marketId: marketId,
                                               matchId: match.id,
-                                              decimalOdd: outcome.bettingOffer.decimalOdd,
                                               isAvailable: outcome.bettingOffer.isAvailable,
                                               statusId: "1",
                                               matchDescription: matchDescription,
                                               marketDescription: marketDescription,
-                                              outcomeDescription: outcomeDescription)
+                                              outcomeDescription: outcomeDescription,
+                                              odd: outcome.bettingOffer.odd)
             }
             else {
                 let marketName = outcome.marketName ?? ""
@@ -347,12 +347,12 @@ class OutcomeSelectionButtonView: NibView {
                                               outcomeId: outcome.id,
                                               marketId: marketId,
                                               matchId: "",
-                                              decimalOdd: outcome.bettingOffer.decimalOdd,
                                               isAvailable: outcome.bettingOffer.isAvailable,
                                               statusId: "1",
                                               matchDescription: matchDescription,
                                               marketDescription: marketDescription,
-                                              outcomeDescription: outcomeDescription)
+                                              outcomeDescription: outcomeDescription,
+                                              odd: outcome.bettingOffer.odd)
             }
 
             self.didLongPressOdd?(bettingTicket)

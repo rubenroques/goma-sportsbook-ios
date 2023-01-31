@@ -11,6 +11,7 @@ import FirebaseMessaging
 import SwiftyBeaver
 import SwiftUI
 import ServicesProvider
+import IQKeyboardManagerSwift
 
 let swiftyBeaverLog = SwiftyBeaver.self
 
@@ -42,6 +43,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
         Logger.log("App Started")
 
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 24.0
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        
         // Store device id
         if !UserDefaults.standard.isKeyPresentInUserDefaults(key: "device_id") {
             let deviceId = UIDevice.current.identifierForVendor?.uuidString

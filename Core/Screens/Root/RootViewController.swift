@@ -294,19 +294,26 @@ class RootViewController: UIViewController {
                 if let userSession = userSession {
                     self.screenState = .logged(user: userSession)
 
-                    Env.everyMatrixClient.getUserMetadata()
-                        .receive(on: DispatchQueue.main)
-                        .eraseToAnyPublisher()
-                        .sink { _ in
-                        } receiveValue: { [weak self] userMetadata in
-                            if let userMetadataFavorites = userMetadata.records[0].value {
-                                Env.favoritesManager.favoriteEventsIdPublisher.send(userMetadataFavorites)
-                            }
+                    if let avatarName = userSession.avatarName {
+                        self.profilePictureImageView.image = UIImage(named: avatarName)
+                    }
+                    else {
+                        self.profilePictureImageView.image = UIImage(named: "empty_user_image")
+                    }
 
-                            if self?.preLiveViewControllerLoaded ?? false {
-                                self?.preLiveViewController.reloadData()
-                            }                        }
-                        .store(in: &self.cancellables)
+//                    Env.everyMatrixClient.getUserMetadata()
+//                        .receive(on: DispatchQueue.main)
+//                        .eraseToAnyPublisher()
+//                        .sink { _ in
+//                        } receiveValue: { [weak self] userMetadata in
+//                            if let userMetadataFavorites = userMetadata.records[0].value {
+//                                Env.favoritesManager.favoriteEventsIdPublisher.send(userMetadataFavorites)
+//                            }
+//
+//                            if self?.preLiveViewControllerLoaded ?? false {
+//                                self?.preLiveViewController.reloadData()
+//                            }                        }
+//                        .store(in: &self.cancellables)
                 }
                 else {
                     self.screenState = .anonymous

@@ -22,7 +22,7 @@ struct SportRadarConstants {
     static var socketLanguageCode = "UK"
 
     // PAM
-    static var pamHostname = "https://ps.omegasys.eu"
+    static var pamHostname = "https://bfr-ps.omegasys.eu/"
 
     // Betting
     static var bettingHostname = "https://www-sportbook-goma-int.optimahq.com"

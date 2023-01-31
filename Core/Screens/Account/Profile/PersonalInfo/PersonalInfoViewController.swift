@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import ServicesProvider
+import SharedModels
 
 class PersonalInfoViewController: UIViewController {
 
@@ -247,8 +248,8 @@ class PersonalInfoViewController: UIViewController {
         .store(in: &cancellables)
         
         Env.servicesProvider.getCountries()
-            .map { (serviceProviderCountries: [ServicesProvider.Country]) -> [Country] in
-                serviceProviderCountries.map({ (serviceProviderCountry: ServicesProvider.Country) -> Country in
+            .map { (serviceProviderCountries: [SharedModels.Country]) -> [Country] in
+                serviceProviderCountries.map({ (serviceProviderCountry: SharedModels.Country) -> Country in
                     return ServiceProviderModelMapper.country(fromServiceProviderCountry: serviceProviderCountry)
                 })
             }
@@ -326,7 +327,7 @@ class PersonalInfoViewController: UIViewController {
         
         let city = self.profile?.city
         
-        var serviceProviderCountry: ServicesProvider.Country?
+        var serviceProviderCountry: SharedModels.Country?
         if let countryValue = self.profile?.country {
             serviceProviderCountry = ServiceProviderModelMapper.country(fromCountry: countryValue)
         }

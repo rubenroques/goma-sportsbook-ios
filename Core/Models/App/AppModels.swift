@@ -279,6 +279,40 @@ struct UserProfile: Codable {
     var isRegistrationCompleted: Bool
 
     var kycStatus: String?
+
+    var avatarName: String?
+    var godfatherCode: String?
+    var placeOfBirth: String?
+    var additionalStreetLine: String?
+
+    init(userIdentifier: String, username: String, email: String, firstName: String? = nil, lastName: String? = nil, birthDate: Date,
+         nationality: Country?, country: Country?, gender: String?, title: UserTitle?, personalIdNumber: String?, address: String?,
+         province: String?, city: String?, postalCode: String?, isEmailVerified: Bool, isRegistrationCompleted: Bool, avatarName: String?,
+         godfatherCode: String?, placeOfBirth: String?, additionalStreetLine: String?, kycStatus: String?) {
+        self.userIdentifier = userIdentifier
+        self.username = username
+        self.email = email
+        self.firstName = firstName
+        self.lastName = lastName
+        self.birthDate = birthDate
+        self.nationality = nationality
+        self.country = country
+        self.gender = gender
+        self.title = title
+        self.personalIdNumber = personalIdNumber
+        self.address = address
+        self.province = province
+        self.city = city
+        self.postalCode = postalCode
+        self.isEmailVerified = isEmailVerified
+        self.isRegistrationCompleted = isRegistrationCompleted
+        self.avatarName = avatarName
+        self.godfatherCode = godfatherCode
+        self.placeOfBirth = placeOfBirth
+        self.additionalStreetLine = additionalStreetLine
+        self.kycStatus = kycStatus
+
+    }
 }
 
 struct UserWallet {

@@ -98,6 +98,10 @@ class ProfileViewController: UIViewController {
 
         if let user = self.userSession {
             self.usernameLabel.text = user.username
+
+            if let avatarName = user.avatarName {
+                self.profilePictureImageView.image = UIImage(named: avatarName)
+            }
             // self.userIdLabel.text = user.userId
         }
 
@@ -343,6 +347,11 @@ class ProfileViewController: UIViewController {
                 else if alertType == ActivationAlertType.profile {
                     let fullRegisterViewController = FullRegisterPersonalInfoViewController()
                     self.navigationController?.pushViewController(fullRegisterViewController, animated: true)
+                }
+                else if alertType == ActivationAlertType.documents {
+                    let uploadDocumentsViewModel = UploadDocumentsViewModel()
+                    let uploadDocumentsViewController = UploadDocumentsViewController(viewModel: uploadDocumentsViewModel)
+                    self.present(uploadDocumentsViewController, animated: true, completion: nil)
                 }
             }
         }

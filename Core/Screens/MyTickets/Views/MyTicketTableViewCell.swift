@@ -90,6 +90,9 @@ class MyTicketTableViewCell: UITableViewCell {
         
         self.baseView.layer.masksToBounds = true
 
+        self.titleLabel.text = ""
+        self.subtitleLabel.text = ""
+
         self.totalOddSubtitleLabel.text = localized("empty")
         self.betAmountSubtitleLabel.text = localized("empty")
         self.winningsSubtitleLabel.text = localized("empty")
@@ -114,8 +117,8 @@ class MyTicketTableViewCell: UITableViewCell {
         self.isLoadingCellDataSubscription?.cancel()
         self.isLoadingCellDataSubscription = nil
 
-        self.titleLabel.text = localized("empty_value")
-        self.subtitleLabel.text = localized("empty_value")
+        self.titleLabel.text = ""
+        self.subtitleLabel.text = ""
 
         self.totalOddTitleLabel.text = localized("total_odd")
         self.betAmountTitleLabel.text = localized("bet_amount")
@@ -246,6 +249,12 @@ class MyTicketTableViewCell: UITableViewCell {
         }
         else if betHistoryEntry.type == "SYSTEM" {
             self.titleLabel.text = localized("system")+" - \(betHistoryEntry.systemBetType?.capitalized ?? "") - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))"
+        }
+        else {
+            self.titleLabel.text = String([betHistoryEntry.type, betHistoryEntry.status]
+                .compactMap({ $0 })
+                .map({ $0.capitalized })
+                .joined(separator: " - "))
         }
 
         if let date = betHistoryEntry.placedDate {

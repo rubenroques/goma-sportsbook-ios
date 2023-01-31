@@ -48,6 +48,10 @@ extension ServiceProviderModelMapper {
                            postalCode: serviceProviderProfile.postalCode,
                            isEmailVerified: serviceProviderProfile.isEmailVerified,
                            isRegistrationCompleted: serviceProviderProfile.isRegistrationCompleted,
+                           avatarName: serviceProviderProfile.avatarName,
+                           godfatherCode: serviceProviderProfile.godfatherCode,
+                           placeOfBirth: serviceProviderProfile.placeOfBirth,
+                           additionalStreetLine: serviceProviderProfile.additionalStreetLine,
                            kycStatus: serviceProviderProfile.kycStatus)
     }
     

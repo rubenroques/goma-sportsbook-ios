@@ -25,7 +25,7 @@ class BettingConnector: Connector {
         self.decoder = decoder
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss" // 2003-12-31 00:00:00
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss'.0'" // 2003-12-31 00:00:00
         self.decoder.dateDecodingStrategy = .formatted(dateFormatter)
     }
 

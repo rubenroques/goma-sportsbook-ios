@@ -169,14 +169,16 @@ class UserSessionStore {
         }
 
         UserDefaults.standard.userSession = nil
-                
         // self.unsubscribeWalletUpdates()
 
         Env.favoritesManager.clearCachedFavorites()
         Env.gomaSocialClient.clearUserChatroomsData()
 
+        // TODO: Migrate to UserDefaults extensions
         UserDefaults.standard.removeObject(forKey: "betslipOddValidationType")
-        
+        UserDefaults.standard.removeObject(forKey: "shouldRequestBiometrics")
+        UserDefaults.standard.removeObject(forKey: "RegistrationFormDataKey")
+
         Env.gomaNetworkClient.reconnectSession()
 
         Env.everyMatrixClient
@@ -217,13 +219,6 @@ class UserSessionStore {
             })
             .map { (userProfile: UserProfile) -> UserSession in
                 self.userProfilePublisher.send(userProfile)
-
-                if userProfile.kycStatus == "PASS" {
-                    self.isUserKycVerified.send(true)
-                }
-                else {
-                    self.isUserKycVerified.send(false)
-                }
                 
                 return UserSession(username: userProfile.username,
                                    password: password,
@@ -231,7 +226,9 @@ class UserSessionStore {
                                    userId: userProfile.userIdentifier,
                                    birthDate: userProfile.birthDate.toString(),
                                    isEmailVerified: userProfile.isEmailVerified,
-                                   isProfileCompleted: userProfile.isRegistrationCompleted)
+                                   isProfileCompleted: userProfile.isRegistrationCompleted,
+                                   avatarName: userProfile.avatarName,
+                                   isKycVerified: userProfile.kycStatus == "PASS" ? true : false)
             }
             .handleEvents(receiveOutput: { [weak self] userSession in
                 self?.saveUserSession(userSession)
@@ -241,6 +238,7 @@ class UserSessionStore {
                 
                 Env.userSessionStore.isUserProfileComplete.send(userSession.isProfileCompleted)
                 Env.userSessionStore.isUserEmailVerified.send(userSession.isEmailVerified)
+                Env.userSessionStore.isUserKycVerified.send(userSession.isKycVerified)
             })
             .eraseToAnyPublisher()
         
@@ -601,9 +599,15 @@ extension UserSessionStore {
 }
 
 extension UserSessionStore {
-    
+
+    func setShouldRequestFaceId(_ request: Bool) {
+        UserDefaults.standard.set(request, forKey: "shouldRequestBiometrics")
+        UserDefaults.standard.synchronize()
+    }
+
     func shouldRequestFaceId() -> Bool {
-        return UserSessionStore.isUserLogged()
+        let shouldRequest = UserDefaults.standard.bool(forKey: "shouldRequestBiometrics")
+        return shouldRequest && UserSessionStore.isUserLogged()
     }
     
 }

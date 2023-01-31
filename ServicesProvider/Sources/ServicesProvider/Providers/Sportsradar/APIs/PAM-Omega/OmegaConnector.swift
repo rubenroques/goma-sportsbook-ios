@@ -33,7 +33,7 @@ class OmegaConnector: Connector {
         self.decoder = decoder
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss" // 2003-12-31 00:00:00
+        dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss" // 2003-12-31 00:00:00
         self.decoder.dateDecodingStrategy = .formatted(dateFormatter)
     }
 
@@ -106,10 +106,10 @@ class OmegaConnector: Connector {
                 }
                 return ServiceProviderError.invalidResponse
             })
-//            .handleEvents(receiveOutput: { data in
-//                print("ServiceProvider-OmegaConnector [[ requesting ]] ", request,
-//                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
-//            })
+            .handleEvents(receiveOutput: { data in
+                print("ServiceProvider-OmegaConnector [[ requesting ]] ", request,
+                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
+            })
             .flatMap({ [weak self] (data: Data) -> AnyPublisher<T, ServiceProviderError> in
                 guard
                     let self = self
