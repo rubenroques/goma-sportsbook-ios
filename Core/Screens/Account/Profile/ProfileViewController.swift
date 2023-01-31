@@ -287,7 +287,6 @@ class ProfileViewController: UIViewController {
 
         let copyCodeTap = UITapGestureRecognizer(target: self, action: #selector(self.tapCopyCode))
         self.userCodeStackView.addGestureRecognizer(copyCodeTap)
-
     }
 
     @objc func tapCopyCode() {
@@ -461,20 +460,23 @@ class ProfileViewController: UIViewController {
     }
 
     @IBAction private func didTapDepositButton() {
-        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete.value {
-            if isUserProfileComplete {
-                let depositViewController = DepositViewController()
-                let navigationViewController = Router.navigationController(with: depositViewController)
-                self.present(navigationViewController, animated: true, completion: nil)
-            }
-            else {
-                let alert = UIAlertController(title: localized("profile_incomplete"),
-                                              message: localized("profile_incomplete_deposit"),
-                                              preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            }
-        }
+//        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete.value {
+//            if isUserProfileComplete {
+//                let depositViewController = DepositViewController()
+//                let navigationViewController = Router.navigationController(with: depositViewController)
+//                self.present(navigationViewController, animated: true, completion: nil)
+//            }
+//            else {
+//                let alert = UIAlertController(title: localized("profile_incomplete"),
+//                                              message: localized("profile_incomplete_deposit"),
+//                                              preferredStyle: .alert)
+//                alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+//                self.present(alert, animated: true, completion: nil)
+//            }
+//        }
+        let depositViewController = DepositViewController()
+        let navigationViewController = Router.navigationController(with: depositViewController)
+        self.present(navigationViewController, animated: true, completion: nil)
     }
 
     @IBAction private func didTapWithdrawButton() {

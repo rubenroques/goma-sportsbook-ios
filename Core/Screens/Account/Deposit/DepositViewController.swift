@@ -7,6 +7,11 @@
 
 import UIKit
 import Combine
+import ServicesProvider
+import Adyen
+import AdyenDropIn
+import AdyenActions
+import AdyenComponents
 
 class DepositViewController: UIViewController {
 
@@ -47,6 +52,8 @@ class DepositViewController: UIViewController {
     // MARK: Public Properties
     var currentSelectedButton: UIButton?
     var cancellables = Set<AnyCancellable>()
+
+    var dropInComponent: DropInComponent?
 
     // MARK: Lifetime and Cycle
     init() {
@@ -168,7 +175,6 @@ class DepositViewController: UIViewController {
     }
 
     // MARK: Binding
-
     private func bind(toViewModel viewModel: DepositViewModel) {
 
         viewModel.isLoadingPublisher
@@ -195,6 +201,18 @@ class DepositViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+        viewModel.shouldShowPaymentDropIn
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] shouldShow in
+                if shouldShow {
+                    if let paymentsMethodResponse = viewModel.paymentMethodsResponse,
+                       let clientKey = viewModel.clientKey {
+                        self?.setupPaymentDropIn(paymentMethodsResponse: paymentsMethodResponse, clientKey: clientKey)
+                    }
+                }
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Functions
@@ -205,6 +223,28 @@ class DepositViewController: UIViewController {
                 self?.checkUserInputs()
             })
             .store(in: &cancellables)
+    }
+
+    private func setupPaymentDropIn(paymentMethodsResponse: ServicesProvider.SimplePaymentMethodsResponse, clientKey: String) {
+
+        if let apiContext = try? APIContext(environment: Adyen.Environment.test, clientKey: clientKey) {
+
+            if let paymentResponseData = try? JSONEncoder().encode(paymentMethodsResponse),
+                let paymentMethods = try? JSONDecoder().decode(PaymentMethods.self, from: paymentResponseData) {
+
+                // Optional Payment
+                let payment = Payment(amount: Amount(value: Int(self.viewModel.dropInDepositAmount) ?? 0, currencyCode: "EUR"), countryCode: "PT")
+
+                let dropInComponent = DropInComponent(paymentMethods: paymentMethods, context: AdyenContext(apiContext: apiContext, payment: payment))
+
+                dropInComponent.delegate = self
+
+                self.dropInComponent = dropInComponent
+
+                present(dropInComponent.viewController, animated: true)
+            }
+
+        }
     }
 
     private func createPaymentsLogosImageViews() {
@@ -466,14 +506,20 @@ class DepositViewController: UIViewController {
         var errorTitle = ""
         var errorMessage = ""
 
-        if errorType == .wallet {
+        switch errorType {
+        case .wallet:
             errorTitle = localized("wallet_error")
             errorMessage = localized("wallet_error_message")
-        }
-        else if errorType == .deposit {
+        case .deposit:
             errorTitle = localized("deposit_error")
             errorMessage = localized("deposit_error_message")
+        case .error(let message):
+            errorTitle = localized("deposit_error")
+            errorMessage = message
+        default:
+            ()
         }
+
         let alert = UIAlertController(title: errorTitle,
                                       message: errorMessage,
                                       preferredStyle: .alert)
@@ -515,4 +561,76 @@ enum BalanceErrorType {
     case wallet
     case deposit
     case withdraw
+    case error(message: String)
+}
+
+extension DepositViewController: DropInComponentDelegate {
+    func didSubmit(_ data: Adyen.PaymentComponentData, from component: Adyen.PaymentComponent, in dropInComponent: Adyen.AnyDropInComponent) {
+
+        if let paymentIssuerType = data.paymentMethod.dictionary.value?["type"],
+           let paymentId = self.viewModel.paymentId {
+
+            let paymentIssuer = "\(paymentIssuerType)"
+            let amount = self.viewModel.depositAmount
+
+            Env.servicesProvider.updatePayment(paymentMethod: "ADYEN_IDEAL", amount: amount, paymentId: paymentId, type: "ideal", issuer: paymentIssuer)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+                    switch completion {
+                    case .finished:
+                        ()
+                    case .failure(let error):
+                        print("UPDATE PAYMENT RESPONSE ERROR: \(error)")
+                        switch error {
+                        case .errorMessage(let message):
+                            self?.showErrorAlert(errorType: .error(message: message))
+                        default:
+                            ()
+                        }
+                    }
+
+                }, receiveValue: { [weak self] updatePaymentResponse in
+                    print("UPDATE PAYMENT RESPONSE: \(updatePaymentResponse)")
+                })
+                .store(in: &cancellables)
+        }
+
+
+
+    }
+
+    func didFail(with error: Error, from component: Adyen.PaymentComponent, in dropInComponent: Adyen.AnyDropInComponent) {
+
+        print("PAYMENT FAIL: \(error)")
+
+        dropInComponent.viewController.dismiss(animated: true)
+
+    }
+
+    func didProvide(_ data: Adyen.ActionComponentData, from component: Adyen.ActionComponent, in dropInComponent: Adyen.AnyDropInComponent) {
+
+        print("PAYMENT PROVIDE: \(data)")
+
+    }
+
+    func didComplete(from component: Adyen.ActionComponent, in dropInComponent: Adyen.AnyDropInComponent) {
+
+        print("PAYMENT COMPLETE")
+
+    }
+
+    func didFail(with error: Error, from component: Adyen.ActionComponent, in dropInComponent: Adyen.AnyDropInComponent) {
+
+        print("PAYMENT FAIL 2: \(error)")
+
+    }
+
+    func didFail(with error: Error, from dropInComponent: Adyen.AnyDropInComponent) {
+
+        print("PAYMENT FAIL FULL: \(error)")
+
+        dropInComponent.viewController.dismiss(animated: true)
+
+    }
+
 }

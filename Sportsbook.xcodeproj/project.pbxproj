@@ -3420,6 +3420,23 @@
 		A96FAEDC2981912100A0751F /* UploadDocuments.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAED72981912100A0751F /* UploadDocuments.swift */; };
 		A96FAEDD2981912100A0751F /* UploadDocuments.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAED72981912100A0751F /* UploadDocuments.swift */; };
 		A96FAEDE2981912100A0751F /* UploadDocuments.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAED72981912100A0751F /* UploadDocuments.swift */; };
+		A96FAEE129829CCB00A0751F /* Adyen in Frameworks */ = {isa = PBXBuildFile; productRef = A96FAEE029829CCB00A0751F /* Adyen */; };
+		A96FAEE329829CCB00A0751F /* AdyenActions in Frameworks */ = {isa = PBXBuildFile; productRef = A96FAEE229829CCB00A0751F /* AdyenActions */; };
+		A96FAEE529829CCB00A0751F /* AdyenCard in Frameworks */ = {isa = PBXBuildFile; productRef = A96FAEE429829CCB00A0751F /* AdyenCard */; };
+		A96FAEE729829CCB00A0751F /* AdyenComponents in Frameworks */ = {isa = PBXBuildFile; productRef = A96FAEE629829CCB00A0751F /* AdyenComponents */; };
+		A96FAEE929829CCB00A0751F /* AdyenDropIn in Frameworks */ = {isa = PBXBuildFile; productRef = A96FAEE829829CCB00A0751F /* AdyenDropIn */; };
+		A96FAEEB29829CCB00A0751F /* AdyenEncryption in Frameworks */ = {isa = PBXBuildFile; productRef = A96FAEEA29829CCB00A0751F /* AdyenEncryption */; };
+		A96FAEED29829CCB00A0751F /* AdyenSession in Frameworks */ = {isa = PBXBuildFile; productRef = A96FAEEC29829CCB00A0751F /* AdyenSession */; };
+		A96FAEEF29829CCB00A0751F /* AdyenSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = A96FAEEE29829CCB00A0751F /* AdyenSwiftUI */; };
+		A96FAEF129829CCB00A0751F /* AdyenWeChatPay in Frameworks */ = {isa = PBXBuildFile; productRef = A96FAEF029829CCB00A0751F /* AdyenWeChatPay */; };
+		A96FAEF329829F9D00A0751F /* AdyenDropIn in Frameworks */ = {isa = PBXBuildFile; productRef = A96FAEF229829F9D00A0751F /* AdyenDropIn */; };
+		A96FAEF62982A06B00A0751F /* PaymentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEF52982A06B00A0751F /* PaymentsViewController.swift */; };
+		A96FAEF72982A06B00A0751F /* PaymentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEF52982A06B00A0751F /* PaymentsViewController.swift */; };
+		A96FAEF82982A06B00A0751F /* PaymentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEF52982A06B00A0751F /* PaymentsViewController.swift */; };
+		A96FAEF92982A06B00A0751F /* PaymentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEF52982A06B00A0751F /* PaymentsViewController.swift */; };
+		A96FAEFA2982A06B00A0751F /* PaymentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEF52982A06B00A0751F /* PaymentsViewController.swift */; };
+		A96FAEFB2982A06B00A0751F /* PaymentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEF52982A06B00A0751F /* PaymentsViewController.swift */; };
+		A96FAEFC2982A06B00A0751F /* PaymentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEF52982A06B00A0751F /* PaymentsViewController.swift */; };
 		A9829599283B94D00014066A /* ConversationBetSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9829596283B94CF0014066A /* ConversationBetSelectionViewController.swift */; };
 		A982959A283B94D00014066A /* ConversationBetSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9829596283B94CF0014066A /* ConversationBetSelectionViewController.swift */; };
 		A982959B283B94D00014066A /* ConversationBetSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9829596283B94CF0014066A /* ConversationBetSelectionViewController.swift */; };
@@ -5036,6 +5053,7 @@
 		A96FAEC629804C0600A0751F /* Data+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extensions.swift"; sourceTree = "<group>"; };
 		A96FAECF2981908900A0751F /* UploadDocumentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadDocumentsViewModel.swift; sourceTree = "<group>"; };
 		A96FAED72981912100A0751F /* UploadDocuments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadDocuments.swift; sourceTree = "<group>"; };
+		A96FAEF52982A06B00A0751F /* PaymentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewController.swift; sourceTree = "<group>"; };
 		A979CA52275E6C0B00230E93 /* MatchOddsContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchOddsContent.swift; sourceTree = "<group>"; };
 		A979CA552762247900230E93 /* SuggestedBetSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedBetSummary.swift; sourceTree = "<group>"; };
 		A97D24612812BA47003EEDEC /* NewGroupManagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupManagementViewModel.swift; sourceTree = "<group>"; };
@@ -5322,6 +5340,7 @@
 				45D3BBAC296F13BB009E0D09 /* RegisterFlow in Frameworks */,
 				450B7A9128F58574009229E3 /* FirebaseMessaging in Frameworks */,
 				450B7A9228F58574009229E3 /* FirebaseDatabase in Frameworks */,
+				A96FAEF329829F9D00A0751F /* AdyenDropIn in Frameworks */,
 				450B7A9428F58574009229E3 /* DictionaryCoding in Frameworks */,
 				450B7A9528F58574009229E3 /* Reachability in Frameworks */,
 				4554ED0A2976F7FE006942B3 /* IQKeyboardManagerSwift in Frameworks */,
@@ -5400,7 +5419,12 @@
 			files = (
 				45B7BD5028E5B080007832C2 /* ServiceProvider in Frameworks */,
 				4589C93B282024E400243547 /* FirebaseMessaging in Frameworks */,
+				A96FAEE729829CCB00A0751F /* AdyenComponents in Frameworks */,
+				A96FAEE129829CCB00A0751F /* Adyen in Frameworks */,
+				A96FAEE529829CCB00A0751F /* AdyenCard in Frameworks */,
 				4589C93C282024E400243547 /* FirebaseDatabase in Frameworks */,
+				A96FAEED29829CCB00A0751F /* AdyenSession in Frameworks */,
+				A96FAEE329829CCB00A0751F /* AdyenActions in Frameworks */,
 				4589C93E282024E400243547 /* DictionaryCoding in Frameworks */,
 				4589C93F282024E400243547 /* Reachability in Frameworks */,
 				4589C940282024E400243547 /* Kingfisher in Frameworks */,
@@ -5408,10 +5432,14 @@
 				4589C944282024E400243547 /* Collections in Frameworks */,
 				4589C945282024E400243547 /* CombineCocoa in Frameworks */,
 				4589C946282024E400243547 /* SwiftyBeaver in Frameworks */,
+				A96FAEF129829CCB00A0751F /* AdyenWeChatPay in Frameworks */,
+				A96FAEE929829CCB00A0751F /* AdyenDropIn in Frameworks */,
+				A96FAEEF29829CCB00A0751F /* AdyenSwiftUI in Frameworks */,
 				4589C947282024E400243547 /* FirebaseCrashlytics in Frameworks */,
 				4589C948282024E400243547 /* FirebaseAnalytics in Frameworks */,
 				4589C949282024E400243547 /* OrderedCollections in Frameworks */,
 				4589C94A282024E400243547 /* SweeterSwift in Frameworks */,
+				A96FAEEB29829CCB00A0751F /* AdyenEncryption in Frameworks */,
 				4589C94B282024E400243547 /* Starscream in Frameworks */,
 				45A6BB81282140D100D9B416 /* SocketIO in Frameworks */,
 			);
@@ -6543,6 +6571,7 @@
 		4589F3EA26BF017A005DF543 /* Account */ = {
 			isa = PBXGroup;
 			children = (
+				A96FAEF42982A04200A0751F /* Payments */,
 				A9958C6429703157001474E2 /* Documents */,
 				4589F3EB26BF017A005DF543 /* Welcome */,
 				4589F3F126BF017A005DF543 /* Login */,
@@ -7394,6 +7423,14 @@
 				A96FAECF2981908900A0751F /* UploadDocumentsViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		A96FAEF42982A04200A0751F /* Payments */ = {
+			isa = PBXGroup;
+			children = (
+				A96FAEF52982A06B00A0751F /* PaymentsViewController.swift */,
+			);
+			path = Payments;
 			sourceTree = "<group>";
 		};
 		A97D246A28180566003EEDEC /* GGAPI */ = {
@@ -8545,6 +8582,7 @@
 				45D3BBAB296F13BB009E0D09 /* RegisterFlow */,
 				4554ED092976F7FE006942B3 /* IQKeyboardManagerSwift */,
 				456237D8297EE5F600B3FA3A /* SharedModels */,
+				A96FAEF229829F9D00A0751F /* AdyenDropIn */,
 			);
 			productName = Sportsbook;
 			productReference = 450B7B2428F58574009229E3 /* SportRadar.app */;
@@ -8670,6 +8708,15 @@
 				4589C772282024E400243547 /* SwiftyBeaver */,
 				45A6BB80282140D100D9B416 /* SocketIO */,
 				45B7BD4F28E5B080007832C2 /* ServiceProvider */,
+				A96FAEE029829CCB00A0751F /* Adyen */,
+				A96FAEE229829CCB00A0751F /* AdyenActions */,
+				A96FAEE429829CCB00A0751F /* AdyenCard */,
+				A96FAEE629829CCB00A0751F /* AdyenComponents */,
+				A96FAEE829829CCB00A0751F /* AdyenDropIn */,
+				A96FAEEA29829CCB00A0751F /* AdyenEncryption */,
+				A96FAEEC29829CCB00A0751F /* AdyenSession */,
+				A96FAEEE29829CCB00A0751F /* AdyenSwiftUI */,
+				A96FAEF029829CCB00A0751F /* AdyenWeChatPay */,
 			);
 			productName = Sportsbook;
 			productReference = 4589C9CD282024E400243547 /* GOMASports.app */;
@@ -8784,6 +8831,7 @@
 				45EF50E5282E6AA4008180CA /* XCRemoteSwiftPackageReference "socket" */,
 				45EF50E8282E6AD7008180CA /* XCRemoteSwiftPackageReference "Starscream" */,
 				4554ED082976F7FE006942B3 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
+				A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -10097,6 +10145,7 @@
 				450B79B528F58574009229E3 /* NewGroupManagementViewModel.swift in Sources */,
 				450B79B628F58574009229E3 /* EveryMatrixSocketResponse.swift in Sources */,
 				450B79B728F58574009229E3 /* MyTicketCellViewModel.swift in Sources */,
+				A96FAEF72982A06B00A0751F /* PaymentsViewController.swift in Sources */,
 				450B79B828F58574009229E3 /* FavoritesAggregatorRepository.swift in Sources */,
 				450B79B928F58574009229E3 /* FriendsListViewController.swift in Sources */,
 				450B79BA28F58574009229E3 /* Observable.swift in Sources */,
@@ -10372,6 +10421,7 @@
 				A98708C928DA278F00F27348 /* UserProfileInfoViewController.swift in Sources */,
 				A9DF8DFF28DDC1D80083BF56 /* UserInfoSimpleCardView.swift in Sources */,
 				A9958C6C29703184001474E2 /* UploadDocumentsViewController.swift in Sources */,
+				A96FAEFC2982A06B00A0751F /* PaymentsViewController.swift in Sources */,
 				A98708B028D3451C00F27348 /* RankingsViewModel.swift in Sources */,
 				A9DF8E2828E45C300083BF56 /* UserProfileInfoViewModel.swift in Sources */,
 				A9DF8E5428E7071B0083BF56 /* UserNotificationInviteTableViewCell.swift in Sources */,
@@ -10480,6 +10530,7 @@
 				457CBA2C282D27D000ED0F00 /* AggregatorRepositoryType.swift in Sources */,
 				457CBA2D282D27D000ED0F00 /* UnsubscribeSSWampMessage.swift in Sources */,
 				457CBA2E282D27D000ED0F00 /* PopularDetailsViewController.swift in Sources */,
+				A96FAEFA2982A06B00A0751F /* PaymentsViewController.swift in Sources */,
 				457CBA2F282D27D000ED0F00 /* SocialModels.swift in Sources */,
 				A9B331D7288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */,
 				457CBA30282D27D000ED0F00 /* BonusRootViewController.swift in Sources */,
@@ -11502,6 +11553,7 @@
 				457CBE1B282D2CD100ED0F00 /* RegisteredSSWampMessage.swift in Sources */,
 				457CBE1C282D2CD100ED0F00 /* HomeFilterOptions.swift in Sources */,
 				457CBE1D282D2CD100ED0F00 /* Aggregator.swift in Sources */,
+				A96FAEFB2982A06B00A0751F /* PaymentsViewController.swift in Sources */,
 				457CBE1E282D2CD100ED0F00 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				457CBE1F282D2CD100ED0F00 /* BonusActiveCellViewModel.swift in Sources */,
 				457CBE20282D2CD100ED0F00 /* CompetitionFilterHeaderView.swift in Sources */,
@@ -11985,6 +12037,7 @@
 				4589C892282024E400243547 /* NewGroupManagementViewModel.swift in Sources */,
 				4589C893282024E400243547 /* EveryMatrixSocketResponse.swift in Sources */,
 				4589C894282024E400243547 /* MyTicketCellViewModel.swift in Sources */,
+				A96FAEF62982A06B00A0751F /* PaymentsViewController.swift in Sources */,
 				4589C895282024E400243547 /* FavoritesAggregatorRepository.swift in Sources */,
 				4589C896282024E400243547 /* FriendsListViewController.swift in Sources */,
 				4589C897282024E400243547 /* Observable.swift in Sources */,
@@ -12785,6 +12838,7 @@
 				A9958C6929703184001474E2 /* UploadDocumentsViewController.swift in Sources */,
 				45A6BD7D28246A7500D9B416 /* BonusSwitchView.swift in Sources */,
 				A9958C7B2970641D001474E2 /* UploadDocumentTableViewCell.swift in Sources */,
+				A96FAEF92982A06B00A0751F /* PaymentsViewController.swift in Sources */,
 				45A6BD7E28246A7500D9B416 /* ReceivedMessageTableViewCell.swift in Sources */,
 				45A6BD7F28246A7500D9B416 /* RecentSearchHeaderView.swift in Sources */,
 				45C10F9D28772DA700037BBE /* DefaultShiftAnimation.swift in Sources */,
@@ -13405,6 +13459,7 @@
 				A9C342DB28F9A74A0055360B /* Endpoint.swift in Sources */,
 				A9C342DC28F9A74A0055360B /* OutrightMarketDetailsStore.swift in Sources */,
 				A9C342DD28F9A74A0055360B /* RecentSearchTableViewCell.swift in Sources */,
+				A96FAEF82982A06B00A0751F /* PaymentsViewController.swift in Sources */,
 				A9C342DE28F9A74A0055360B /* TestsViewController.swift in Sources */,
 				A9C342DF28F9A74A0055360B /* SubmitedBetslipViewController.swift in Sources */,
 				A9C342E028F9A74A0055360B /* Odd.swift in Sources */,
@@ -14493,6 +14548,14 @@
 				minimumVersion = 4.0.0;
 			};
 		};
+		A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Adyen/adyen-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
 		A9B8418F26E2359800269B05 /* XCRemoteSwiftPackageReference "DictionaryCoding" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/elegantchaos/DictionaryCoding.git";
@@ -14989,6 +15052,55 @@
 		45D3BBAB296F13BB009E0D09 /* RegisterFlow */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RegisterFlow;
+		A96FAEE029829CCB00A0751F /* Adyen */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = Adyen;
+		};
+		A96FAEE229829CCB00A0751F /* AdyenActions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenActions;
+		};
+		A96FAEE429829CCB00A0751F /* AdyenCard */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenCard;
+		};
+		A96FAEE629829CCB00A0751F /* AdyenComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenComponents;
+		};
+		A96FAEE829829CCB00A0751F /* AdyenDropIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenDropIn;
+		};
+		A96FAEEA29829CCB00A0751F /* AdyenEncryption */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenEncryption;
+		};
+		A96FAEEC29829CCB00A0751F /* AdyenSession */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenSession;
+		};
+		A96FAEEE29829CCB00A0751F /* AdyenSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenSwiftUI;
+		};
+		A96FAEF029829CCB00A0751F /* AdyenWeChatPay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenWeChatPay;
+		};
+		A96FAEF229829F9D00A0751F /* AdyenDropIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenDropIn;
 		};
 		A9C3407F28F9A74A0055360B /* Reachability */ = {
 			isa = XCSwiftPackageProductDependency;

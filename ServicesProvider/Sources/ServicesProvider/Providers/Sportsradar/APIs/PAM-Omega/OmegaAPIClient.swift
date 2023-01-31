@@ -110,6 +110,10 @@ enum OmegaAPIClient {
     case getDocumentTypes
     case getUserDocuments
     case uploadUserDocument(documentType: String, file: Data, body: Data, header: String)
+
+    case getPayments
+    case processDeposit(paymentMethod: String, amount: Double, option: String)
+    case updatePayment(paymentMethod: String, amount: Double, paymentId: String, type: String, issuer: String)
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -162,6 +166,13 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/getUserDocuments"
         case .uploadUserDocument:
             return "/ps/ips/uploadUserDocument"
+
+        case .getPayments:
+            return "/ps/ips/getDepositMethods"
+        case .processDeposit:
+            return "/ps/ips/processDeposit"
+        case .updatePayment:
+            return "/ps/ips/updatePayment"
         }
     }
     
@@ -366,6 +377,27 @@ extension OmegaAPIClient: Endpoint {
             return nil
         case .uploadUserDocument:
             return nil
+
+        case .getPayments:
+
+            return nil
+        case .processDeposit(let paymentMethod, let amount, let option):
+            return [
+
+                URLQueryItem(name: "paymentMethod", value: paymentMethod),
+                URLQueryItem(name: "amount", value: "\(amount)"),
+                URLQueryItem(name: "option", value: option)
+            ]
+
+        case .updatePayment(let paymentMethod, let amount, let paymentId, let type, let issuer):
+            return [
+
+                URLQueryItem(name: "paymentMethod", value: paymentMethod),
+                URLQueryItem(name: "amount", value: "\(amount)"),
+                URLQueryItem(name: "paymentId", value: paymentId),
+                URLQueryItem(name: "type", value: type),
+                URLQueryItem(name: "issuer", value: issuer)
+            ]
         }
     }
     
@@ -394,6 +426,10 @@ extension OmegaAPIClient: Endpoint {
         case .getDocumentTypes: return .get
         case .getUserDocuments: return .get
         case .uploadUserDocument: return .post
+
+        case .getPayments: return .get
+        case .processDeposit: return .post
+        case .updatePayment: return .post
         }
     }
     
@@ -401,6 +437,17 @@ extension OmegaAPIClient: Endpoint {
         switch self {
         case .uploadUserDocument( _, _, let body, _):
             return body
+//        case .processDeposit(let sessionKey, let paymentMethod, let amount, let option):
+//            let bodyString =
+//                        """
+//                        {
+//                            "sessionKey": "\(sessionKey)",
+//                            "paymentMethod": "\(paymentMethod)",
+//                            "amount": \(amount),
+//                            "option": "\(option)"
+//                        }
+//                        """
+//            return bodyString.data(using: String.Encoding.utf8) ?? Data()
         default:
             return nil
         }
@@ -438,10 +485,15 @@ extension OmegaAPIClient: Endpoint {
         case .getDocumentTypes: return false
         case .getUserDocuments: return true
         case .uploadUserDocument: return true
+
+        case .getPayments: return true
+        case .processDeposit: return true
+        case .updatePayment: return true
         }
     }
     
     var url: String {
+
         return SportRadarConstants.pamHostname
     }
     

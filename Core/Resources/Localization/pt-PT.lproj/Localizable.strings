@@ -655,6 +655,4 @@ Terms of use, Privacy Policy and EULA";
 "identification" = "Identification";
 "proof_of_address" = "Proof of address";
 
-"document_validation_required" = "Document Validation Required";
-"document_validation_required_description" = "To access all features of our platform, we require you to submit your valid documents for verification.";
-"complete_verification" = "Complete your verification";
+"payments" = "Payments";

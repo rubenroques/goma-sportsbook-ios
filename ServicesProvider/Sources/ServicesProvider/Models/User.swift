@@ -425,3 +425,89 @@ public struct UploadDocumentResponse {
     }
 }
 
+public struct PaymentsResponse: Codable {
+    public var status: String
+    public var depositMethods: [DepositMethod]
+
+    enum CodingKeys: String, CodingKey {
+        case status = "status"
+        case depositMethods = "depositMethods"
+    }
+}
+
+public struct DepositMethod: Codable {
+    public var code: String
+    public var paymentMethod: String
+    public var methods: [PaymentMethod]?
+
+    enum CodingKeys: String, CodingKey {
+        case code = "code"
+        case paymentMethod = "paymentMethod"
+        case methods = "methods"
+    }
+}
+
+public struct PaymentMethod: Codable {
+    public var name: String
+    public var type: String
+    public var brands: [String]?
+
+    enum CodingKeys: String, CodingKey {
+        case name = "name"
+        case type = "type"
+        case brands = "brands"
+    }
+}
+
+public struct SimplePaymentMethodsResponse: Codable {
+
+    public var paymentMethods: [SimplePaymentMethod]
+
+}
+
+public struct SimplePaymentMethod: Codable {
+    public var name: String
+    public var type: String
+}
+
+public struct ProcessDepositResponse: Codable {
+    public var status: String
+    public var paymentId: String?
+    public var continueUrl: String?
+    public var clientKey: String?
+    public var sessionId: String?
+    public var message: String?
+
+    enum CodingKeys: String, CodingKey {
+        case status = "status"
+        case paymentId = "paymentId"
+        case continueUrl = "continueUrl"
+        case clientKey = "clientKey"
+        case sessionId = "sessionId"
+        case message = "message"
+    }
+}
+
+public struct UpdatePaymentResponse: Codable {
+    public var resultCode: String
+    public var action: UpdatePaymentAction
+
+    enum CodingKeys: String, CodingKey {
+        case resultCode = "resultCode"
+        case action = "action"
+    }
+}
+
+public struct UpdatePaymentAction: Codable {
+    public var paymentMethodType: String
+    public var url: String
+    public var method: String
+    public var type: String
+
+    enum CodingKeys: String, CodingKey {
+        case paymentMethodType = "paymentMethodType"
+        case url = "url"
+        case method = "method"
+        case type = "type"
+    }
+}
