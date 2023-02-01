@@ -476,8 +476,9 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             multipart.add(key: "expiryDate", value: "2024-08-01")
             multipart.add(key: "documentNumber", value: "123456789")
         }
-        else if documentType == "Utility Bill " {
+        else if documentType == "OTHERS" {
             multipart.add(key: "expiryDate", value: "2024-08-01")
+            multipart.add(key: "documentNumber", value: "120123128")
         }
 
         let endpoint = OmegaAPIClient.uploadUserDocument(documentType: documentType, file: file, body: multipart.httpBody, header: multipart.httpContentTypeHeaderValue)

@@ -41,11 +41,11 @@ enum FileState {
     var statusName: String {
         switch self {
         case .pendingApproved:
-            return "Pending Approved"
+            return localized("pending_approved")
         case .approved:
-            return "Approved"
+            return localized("approved")
         case .failed:
-            return "Failed"
+            return localized("failed")
         }
     }
 }
@@ -59,7 +59,7 @@ enum DocumentTypeCode {
         if code == "IDENTITY_CARD" {
             self = .identification
         }
-        else if code == "Utility Bill " {
+        else if code == "OTHERS" {
             self = .proofAddress
         }
         else {
@@ -70,9 +70,9 @@ enum DocumentTypeCode {
     var codeName: String {
         switch self {
         case .identification:
-            return "Identification"
+            return localized("identification")
         case .proofAddress:
-            return "Proof of address"
+            return localized("proof_of_address")
         }
     }
 }

@@ -347,6 +347,11 @@ class ProfileViewController: UIViewController {
                     let fullRegisterViewController = FullRegisterPersonalInfoViewController()
                     self.navigationController?.pushViewController(fullRegisterViewController, animated: true)
                 }
+                else if alertType == ActivationAlertType.documents {
+                    let uploadDocumentsViewModel = UploadDocumentsViewModel()
+                    let uploadDocumentsViewController = UploadDocumentsViewController(viewModel: uploadDocumentsViewModel)
+                    self.present(uploadDocumentsViewController, animated: true, completion: nil)
+                }
             }
         }
         else {
