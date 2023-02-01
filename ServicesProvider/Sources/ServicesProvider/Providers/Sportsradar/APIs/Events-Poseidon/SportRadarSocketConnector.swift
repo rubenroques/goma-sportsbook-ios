@@ -19,7 +19,7 @@ protocol SportRadarConnectorSubscriber: AnyObject {
     func eventDetailsUpdated(events: [EventsGroup])
     func eventGroups(forContentIdentifier identifier: ContentIdentifier, withEvents: [EventsGroup])
     func outrightEventGroups(events: [EventsGroup])
-
+    func eventSummary(events: [EventsGroup])
 }
 
 class SportRadarSocketConnector: NSObject, Connector {
@@ -178,6 +178,11 @@ extension SportRadarSocketConnector: WebSocketDelegate {
                 if let subscriber = self.messageSubscriber {
                     let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
                     subscriber.outrightEventGroups(events: [eventsGroup])
+                }
+            case .eventSummary(let events):
+                if let subscriber = self.messageSubscriber {
+                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
+                    subscriber.eventSummary(events: [eventsGroup])
                 }
             }
         case .unknown:

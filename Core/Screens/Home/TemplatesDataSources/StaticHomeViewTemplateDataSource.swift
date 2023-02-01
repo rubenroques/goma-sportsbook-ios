@@ -192,7 +192,7 @@ class StaticHomeViewTemplateDataSource {
 
         self.sportsToFetch = Array(Env.sportsStore.getAvailableSports().prefix(10))
         self.refreshPublisher.send()
-        
+
 //        Env.servicesProvider.getAvailableSportTypes()
 //            .map({ sportTypesArray in
 //                return sportTypesArray.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
@@ -331,46 +331,81 @@ class StaticHomeViewTemplateDataSource {
     // Favorites
     private func fetchFavoriteMatches() {
 
-        if let favoriteMatchesRegister = favoriteMatchesRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteMatchesRegister)
+        self.favoriteMatches = []
+
+        let favoriteEventsId = Env.favoritesManager.favoriteEventsIdPublisher.value
+
+        for eventId in favoriteEventsId {
+            
+            Env.servicesProvider.getEventSummary(eventId: eventId)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+                    switch completion {
+                    case .finished:
+                        ()
+                    case .failure(let error):
+                        print("EVENT SUMMARY ERROR: \(error)")
+                    }
+
+                }, receiveValue: { [weak self] eventSummary in
+
+                    guard let self = self else {return}
+
+                    print("EVENT SUMMARY: \(eventSummary)")
+
+                    if eventSummary.homeTeamName != "" || eventSummary.awayTeamName != "" {
+                        let match = ServiceProviderModelMapper.match(fromEvent: eventSummary)
+
+                        if !self.favoriteMatches.contains(where: {
+                            $0.id == match.id
+                        }) {
+                            self.favoriteMatches.append(match)
+                        }
+                    }
+
+                })
+                .store(in: &cancellables)
         }
-
-        guard let userId = Env.userSessionStore.userSessionPublisher.value?.userId else { return }
-
-        let endpoint = TSRouter.favoriteMatchesPublisher(operatorId: Env.appSession.operatorId,
-                                                      language: "en",
-                                                      userId: userId)
-
-        self.favoriteMatchesPublisher?.cancel()
-        self.favoriteMatchesPublisher = nil
-
-        self.favoriteMatchesPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving Favorite data!")
-
-                case .finished:
-                    print("Favorite Data retrieved!")
-                }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    print("PreLiveEventsViewModel favoriteMatchesPublisher connect")
-                    self?.favoriteMatchesRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    print("PreLiveEventsViewModel favoriteMatchesPublisher initialContent")
-                    self?.setupFavoriteMatchesAggregatorProcessor(aggregator: aggregator)
-                case .updatedContent(let aggregatorUpdates):
-                    print("PreLiveEventsViewModel favoriteMatchesPublisher updatedContent")
-                    self?.updateFavoriteMatchesAggregatorProcessor(aggregator: aggregatorUpdates)
-                case .disconnect:
-                    print("PreLiveEventsViewModel favoriteMatchesPublisher disconnect")
-                }
-
-            })
+//        if let favoriteMatchesRegister = favoriteMatchesRegister {
+//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteMatchesRegister)
+//        }
+//
+//        guard let userId = Env.userSessionStore.userSessionPublisher.value?.userId else { return }
+//
+//        let endpoint = TSRouter.favoriteMatchesPublisher(operatorId: Env.appSession.operatorId,
+//                                                      language: "en",
+//                                                      userId: userId)
+//
+//        self.favoriteMatchesPublisher?.cancel()
+//        self.favoriteMatchesPublisher = nil
+//
+//        self.favoriteMatchesPublisher = Env.everyMatrixClient.manager
+//            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure:
+//                    print("Error retrieving Favorite data!")
+//
+//                case .finished:
+//                    print("Favorite Data retrieved!")
+//                }
+//            }, receiveValue: { [weak self] state in
+//                switch state {
+//                case .connect(let publisherIdentifiable):
+//                    print("PreLiveEventsViewModel favoriteMatchesPublisher connect")
+//                    self?.favoriteMatchesRegister = publisherIdentifiable
+//                case .initialContent(let aggregator):
+//                    print("PreLiveEventsViewModel favoriteMatchesPublisher initialContent")
+//                    self?.setupFavoriteMatchesAggregatorProcessor(aggregator: aggregator)
+//                case .updatedContent(let aggregatorUpdates):
+//                    print("PreLiveEventsViewModel favoriteMatchesPublisher updatedContent")
+//                    self?.updateFavoriteMatchesAggregatorProcessor(aggregator: aggregatorUpdates)
+//                case .disconnect:
+//                    print("PreLiveEventsViewModel favoriteMatchesPublisher disconnect")
+//                }
+//
+//            })
     }
 
     private func setupFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {

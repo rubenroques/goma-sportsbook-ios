@@ -101,6 +101,7 @@ public enum ContentType: String, Codable {
 
     case eventDetails = "event"
     case eventGroup = "eventGroup"
+    case eventSummary = "eventSummary"
 }
 
 public enum ContentRoute {
@@ -113,6 +114,7 @@ public enum ContentRoute {
 
     case eventDetails(eventId: String)
     case eventGroup(marketGroupId: String)
+    case eventSummary(eventId: String)
 
     var fullRoute: String {
         switch self {
@@ -132,6 +134,8 @@ public enum ContentRoute {
             return eventId
         case .eventGroup(let marketGroupId):
             return marketGroupId
+        case .eventSummary(let eventId):
+            return eventId
         }
     }
 
@@ -150,6 +154,8 @@ public enum ContentRoute {
             return ""
         case .eventGroup:
             return ""
+        case .eventSummary:
+            return ""
         }
     }
 
@@ -166,6 +172,8 @@ public enum ContentRoute {
         case .eventDetails(_):
             return nil
         case .eventGroup:
+            return nil
+        case .eventSummary(_):
             return nil
         }
     }
@@ -254,6 +262,8 @@ public class ContentIdentifier: Decodable, Hashable, Equatable, Identifiable {
             self.contentRoute = ContentRoute.eventDetails(eventId: contentRouteRawString)
         case .eventGroup:
             self.contentRoute = ContentRoute.eventGroup(marketGroupId: contentRouteRawString)
+        case .eventSummary:
+            self.contentRoute = ContentRoute.eventSummary(eventId: contentRouteRawString)
         }
 
         self.id = "\(contentType)-\(contentRoute.fullRoute)".MD5()

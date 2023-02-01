@@ -284,11 +284,64 @@ extension SportRadarModels {
     }
 
     struct FavoriteList: Codable {
-        var id: String?
+        var id: Int
+        var name: String
+        var customerId: Int
 
         enum CodingKeys: String, CodingKey {
-            case id = "id"
+            case id = "idfwAccountFavouriteCoupon"
+            case name = "name"
+            case customerId = "idmmCustomer"
         }
+    }
+
+    struct FavoritesListAddResponse: Codable {
+        var listId: Int
+
+        enum CodingKeys: String, CodingKey {
+            case listId = "addAccountFavouriteCouponResult"
+        }
+    }
+
+    struct FavoritesListDeleteResponse: Codable {
+        var listId: String?
+
+        enum CodingKeys: String, CodingKey {
+            case listId = "addAccountFavouriteCouponResult"
+        }
+    }
+
+    struct FavoriteAddResponse: Codable {
+        var displayOrder: Int?
+        var idAccountFavorite: Int?
+
+        enum CodingKeys: String, CodingKey {
+            case displayOrder = "displayOrder"
+            case idAccountFavorite = "idAccountFavourite"
+        }
+    }
+
+    struct FavoriteEventResponse: Codable {
+        var favoriteEvents: [FavoriteEvent]
+
+        enum CodingKeys: String, CodingKey {
+            case favoriteEvents = "accountFavourites"
+        }
+    }
+
+    struct FavoriteEvent: Codable {
+        var id: String
+        var name: String
+        var favoriteListId: Int
+        var accountFavoriteId: Int
+
+        enum CodingKeys: String, CodingKey {
+            case id = "favouriteId"
+            case name = "favouriteName"
+            case favoriteListId = "idfwAccountFavouriteCoupon"
+            case accountFavoriteId = "idfwAccountFavourites"
+        }
+
     }
     
 }

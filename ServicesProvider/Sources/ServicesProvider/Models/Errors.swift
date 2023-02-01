@@ -31,6 +31,7 @@ public enum ServiceProviderError: Error {
     case unauthorized
     case forbidden
     case invalidResponse
+    case emptyData
 
     case decodingError(message: String)
     case errorMessage(message: String)

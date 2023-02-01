@@ -51,6 +51,10 @@ class SportRadarRestConnector {
                 else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 403 {
                     throw ServiceProviderError.forbidden
                 }
+                else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 204 {
+                    // SUCCESS EMPTY DATA
+                    throw ServiceProviderError.emptyData
+                }
                 else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode != 200 {
                     throw ServiceProviderError.unknown
                 }
@@ -65,6 +69,11 @@ class SportRadarRestConnector {
             .mapError { error in
                 // Debug helper
                 print("ServiceProvider-NetworkManager Error \(error)")
+                
+                if "\(error)" == "emptyData" {
+                    return ServiceProviderError.emptyData
+                }
+
                 return ServiceProviderError.invalidResponse
             }
             .eraseToAnyPublisher()

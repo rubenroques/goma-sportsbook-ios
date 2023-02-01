@@ -256,9 +256,62 @@ public struct FavoritesListResponse: Codable {
 }
 
 public struct FavoriteList: Codable {
-    public var id: String?
+    public var id: Int
+    public var name: String
+    public var customerId: Int
 
     enum CodingKeys: String, CodingKey {
-        case id = "id"
+        case id = "idfwAccountFavouriteCoupon"
+        case name = "name"
+        case customerId = "idmmCustomer"
     }
+}
+
+public struct FavoritesListAddResponse: Codable {
+    public var listId: Int
+
+    enum CodingKeys: String, CodingKey {
+        case listId = "addAccountFavouriteCouponResult"
+    }
+}
+
+public struct FavoritesListDeleteResponse: Codable {
+    public var listId: String?
+
+    enum CodingKeys: String, CodingKey {
+        case listId = "addAccountFavouriteCouponResult"
+    }
+}
+
+public struct FavoriteAddResponse: Codable {
+    public var displayOrder: Int?
+    public var idAccountFavorite: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case displayOrder = "displayOrder"
+        case idAccountFavorite = "idAccountFavourite"
+    }
+}
+
+public struct FavoriteEventResponse: Codable {
+    public var favoriteEvents: [FavoriteEvent]
+
+    enum CodingKeys: String, CodingKey {
+        case favoriteEvents = "accountFavourites"
+    }
+}
+
+public struct FavoriteEvent: Codable {
+    public var id: String
+    public var name: String
+    public var favoriteListId: Int
+    public var accountFavoriteId: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id = "favouriteId"
+        case name = "favouriteName"
+        case favoriteListId = "idfwAccountFavouriteCoupon"
+        case accountFavoriteId = "idfwAccountFavourites"
+    }
+
 }
