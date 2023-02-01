@@ -1,0 +1,755 @@
+//
+//  SteppedRegistrationViewController.swift
+//  
+//
+//  Created by Ruben Roques on 11/01/2023.
+//
+
+import Foundation
+import Combine
+import UIKit
+import ServicesProvider
+import Theming
+
+public enum FormStep: String {
+    case gender
+    case names
+    case avatar
+    case nickname
+    case ageCountry
+    case address
+    case contacts
+    case password
+    case terms
+    case promoCodes
+    case phoneConfirmation
+}
+
+public struct RegisterStep {
+    var forms: [FormStep]
+}
+
+public struct RegisterError {
+
+    var field: String
+    var error: String
+
+    var associatedFormStep: FormStep? {
+        switch field {
+        case "gender": return .gender
+        case "firstName", "lastName": return .names
+        case "username": return .nickname
+        case "password": return .password
+        case "email", "mobile": return .contacts
+        case "birthDate", "nationality", "country": return .ageCountry
+        case "city", "address", "province": return .address
+        case "bonusCode": return .promoCodes
+        case "receiveEmail": return .terms
+        default:
+            return nil
+        }
+    }
+    
+}
+
+public class SteppedRegistrationViewModel {
+
+    var registerSteps: [RegisterStep]
+
+    var currentStep: CurrentValueSubject<Int, Never> = .init(0)
+    var numberOfSteps: Int {
+        return self.registerSteps.count
+    }
+
+    var progressPercentage: AnyPublisher<Float, Never> {
+        return self.currentStep.map { [weak self] currentStep in
+            let totalSteps = self?.numberOfSteps ?? 0
+            if totalSteps > 0 {
+                return Float(currentStep) / Float(totalSteps)
+            }
+            return Float(0.0)
+        }.eraseToAnyPublisher()
+    }
+
+    var userRegisterEnvelop: UserRegisterEnvelop
+
+    let serviceProvider: ServicesProviderClient
+    let userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
+
+    var isLoading: CurrentValueSubject<Bool, Never> = .init(false)
+
+    var shouldPushSuccessStep: PassthroughSubject<Void, Never> = .init()
+    var showRegisterErrors: CurrentValueSubject<[RegisterError]?, Never> = .init(nil)
+
+    var confirmationCodeFilled: String?
+
+    private var cancellables = Set<AnyCancellable>()
+
+    public init(registerSteps: [RegisterStep]? = nil,
+                currentStep: Int? = nil,
+                userRegisterEnvelop: UserRegisterEnvelop,
+                serviceProvider: ServicesProviderClient,
+                userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater) {
+
+        if let registerSteps {
+            self.registerSteps = registerSteps
+        }
+        else {
+            self.registerSteps = Self.defaultRegisterSteps()
+        }
+
+        self.userRegisterEnvelop = userRegisterEnvelop
+
+        if let currentStep {
+            self.currentStep = .init(currentStep)
+        }
+        else {
+            self.currentStep = .init(self.userRegisterEnvelop.currentRegisterStep())
+        }
+
+        self.serviceProvider = serviceProvider
+        self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
+    }
+
+    private static func defaultRegisterSteps() -> [RegisterStep] {
+        return [
+            RegisterStep(forms: [.gender, .names]),
+            RegisterStep(forms: [.avatar, .nickname]),
+            RegisterStep(forms: [.ageCountry]),
+            RegisterStep(forms: [.address]),
+            RegisterStep(forms: [.contacts]),
+            RegisterStep(forms: [.password]),
+            RegisterStep(forms: [.terms, .promoCodes])
+        ]
+    }
+
+    func scrollToPreviousStep() {
+        var nextStep = currentStep.value - 1
+        if nextStep < 0 {
+            nextStep = 0
+        }
+        self.currentStep.send(nextStep)
+    }
+
+    func scrollToNextStep() {
+        var nextStep = currentStep.value + 1
+        if nextStep > numberOfSteps {
+            nextStep = numberOfSteps
+        }
+        self.currentStep.send(nextStep)
+    }
+
+    func scrollToIndex(_ index: Int) {
+        self.currentStep.send(index)
+    }
+
+    func isLastStep(index: Int) -> Bool {
+        return index == self.numberOfSteps-1
+    }
+
+    func indexForFormStep(_ formStep: FormStep) -> Int? {
+        for (index, registerStep) in registerSteps.enumerated() {
+            if registerStep.forms.contains(formStep) {
+                return index
+            }
+        }
+        return nil
+    }
+
+    func requestRegister() -> Bool {
+
+        guard
+            let form = self.userRegisterEnvelop.convertToSignUpForm()
+        else {
+            return false
+        }
+
+        self.isLoading.send(true)
+
+        serviceProvider.signUp(form: form)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+
+                switch completion {
+                case .failure(let error):
+                    print("Error \(error)")
+                case .finished:
+                    ()
+                }
+                self?.isLoading.send(false)
+            } receiveValue: { [weak self] signUpResponse in
+                if signUpResponse.successful {
+                    self?.shouldPushSuccessStep.send()
+                }
+                else {
+                    if let signUpErrors = signUpResponse.errors {
+                        let errorsDictionary = signUpErrors.map { error in
+                            return RegisterError(field: error.field, error: error.error)
+                        }
+                        self?.showRegisterErrors.send(errorsDictionary)
+                    }
+                }
+            }
+            .store(in: &self.cancellables)
+
+        return true
+    }
+
+}
+
+public class SteppedRegistrationViewController: UIViewController {
+
+    public var didRegisteredUserAction: (UserRegisterEnvelop) -> Void = { _ in }
+
+    private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
+
+    private lazy var headerBaseView: UIView = Self.createHeaderBaseView()
+    private lazy var backButton: UIButton = Self.createBackButton()
+    private lazy var progressView: UIProgressView = Self.createProgressView()
+    private lazy var cancelButton: UIButton = Self.createCancelButton()
+
+    private lazy var contentBaseView: UIView = Self.createContentBaseView()
+    private lazy var stepsScrollView: UIScrollView = Self.createStepsScrollView()
+    private lazy var stepsContentStackView: UIStackView = Self.createStepsContentStackView()
+
+    private lazy var footerBaseView: UIView = Self.createFooterBaseView()
+    private lazy var continueButton: UIButton = Self.createContinueButton()
+
+    private lazy var bottomSafeAreaView: UIView = Self.createBottomSafeAreaView()
+
+    private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
+    private lazy var loadingView: UIActivityIndicatorView = Self.createLoadingView()
+
+    private let viewModel: SteppedRegistrationViewModel
+
+    private var registerStepViews: [RegisterStepView] = []
+    private var formStepViews: [FormStepView] = []
+
+    private var registrationCompletionPublisher: AnyCancellable?
+
+    private var cancellables = Set<AnyCancellable>()
+
+    public init(viewModel: SteppedRegistrationViewModel) {
+
+        self.viewModel = viewModel
+
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override public func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.setupSubviews()
+        self.setupWithTheme()
+
+        self.viewModel.progressPercentage
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] progressPercentage in
+                self?.progressView.setProgress(progressPercentage, animated: true)
+            }
+            .store(in: &self.cancellables)
+
+        self.viewModel.currentStep
+            .receive(on: DispatchQueue.main)
+            .sink { currentStep in
+                if currentStep == 0 {
+                    self.backButton.alpha = 0.5
+                    self.backButton.isHidden = false
+                    self.cancelButton.isHidden = false
+                    self.progressView.isHidden = false
+                }
+                else if currentStep == 7 {
+                    self.backButton.isHidden = true
+                    self.cancelButton.isHidden = true
+                    self.progressView.isHidden = true
+                }
+                else {
+                    self.backButton.alpha = 1.0
+                    self.backButton.isHidden = false
+                    self.cancelButton.isHidden = false
+                    self.progressView.isHidden = false
+                }
+            }
+            .store(in: &self.cancellables)
+
+//        self.viewModel.shouldPushPhoneConfirmationStep
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] in
+//                self?.showPhoneVerification()
+//            }
+//            .store(in: &self.cancellables)
+
+        self.viewModel.shouldPushSuccessStep
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.didRegisteredUser()
+            }
+            .store(in: &self.cancellables)
+
+        self.viewModel.isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] loading in
+                self?.loadingBaseView.isHidden = !loading
+
+                if loading {
+                    self?.loadingView.startAnimating()
+                }
+                else {
+                    self?.loadingView.stopAnimating()
+                }
+            }
+            .store(in: &self.cancellables)
+
+        self.viewModel.showRegisterErrors
+            .compactMap({ $0 })
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] errors in
+                self?.presentRegisterErrors(errors)
+            }
+            .store(in: &self.cancellables)
+
+        self.createSteps()
+    }
+
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        let currentStepPublisher = self.viewModel.currentStep
+            .removeDuplicates()
+            .map { [weak self] (currentPage: Int) -> (currentPage: Int, yOffset: CGFloat) in
+                return (currentPage, (self?.contentBaseView.frame.height ?? 0.0) * CGFloat(currentPage))
+            }
+            .receive(on: DispatchQueue.main)
+
+        currentStepPublisher.first()
+            .sink { [weak self] pageTupple in
+                self?.scrollToItem(newPage: pageTupple.currentPage, offset: pageTupple.yOffset, animated: false)
+            }
+            .store(in: &self.cancellables)
+
+        currentStepPublisher.dropFirst()
+            .sink { [weak self] pageTupple in
+                self?.scrollToItem(newPage: pageTupple.currentPage, offset: pageTupple.yOffset, animated: true)
+            }
+            .store(in: &self.cancellables)
+
+    }
+
+    // MARK: - Layout and Theme
+    override public func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+    }
+
+    override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        self.setupWithTheme()
+    }
+
+    private func setupWithTheme() {
+
+        self.cancelButton.setTitleColor(AppColor.highlightPrimary, for: .normal)
+
+        self.topSafeAreaView.backgroundColor = AppColor.backgroundPrimary
+        self.headerBaseView.backgroundColor = AppColor.backgroundPrimary
+        self.progressView.backgroundColor = AppColor.backgroundPrimary
+        self.contentBaseView.backgroundColor = AppColor.backgroundPrimary
+        self.stepsScrollView.backgroundColor = AppColor.backgroundPrimary
+        self.stepsContentStackView.backgroundColor = AppColor.backgroundPrimary
+        self.footerBaseView.backgroundColor = AppColor.backgroundPrimary
+        self.bottomSafeAreaView.backgroundColor = AppColor.backgroundPrimary
+
+        //
+        self.progressView.trackTintColor = AppColor.backgroundSecondary
+        self.progressView.progressTintColor = AppColor.highlightSecondary
+
+        // Continue button styling
+        self.continueButton.setTitleColor(AppColor.buttonTextPrimary, for: .normal)
+        self.continueButton.setTitleColor(AppColor.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.continueButton.setTitleColor(AppColor.buttonTextDisablePrimary.withAlphaComponent(0.39), for: .disabled)
+
+        self.continueButton.setBackgroundColor(AppColor.buttonBackgroundPrimary, for: .normal)
+        self.continueButton.setBackgroundColor(AppColor.buttonBackgroundSecondary, for: .highlighted)
+
+        self.continueButton.layer.cornerRadius = 8
+        self.continueButton.layer.masksToBounds = true
+        self.continueButton.backgroundColor = .clear
+    }
+
+    private func createSteps() {
+        for (index, registerStep) in self.viewModel.registerSteps.enumerated() {
+
+            let registerStepViewModel = RegisterStepViewModel(index: index)
+            let registerStepView = RegisterStepView(viewModel: registerStepViewModel)
+
+            for formStep in registerStep.forms {
+                let formStepView = FormStepViewFactory.formStepView(forFormStep: formStep,
+                                                                    serviceProvider: self.viewModel.serviceProvider,
+                                                                    userRegisterEnvelop: self.viewModel.userRegisterEnvelop,
+                                                                    userRegisterEnvelopUpdater: self.viewModel.userRegisterEnvelopUpdater)
+                registerStepView.addFormView(formView: formStepView)
+                self.formStepViews.append(formStepView)
+            }
+
+            self.addStepView(registerStepView: registerStepView)
+        }
+
+        self.configureRegistrationCompletionPublisher()
+
+        self.view.setNeedsLayout()
+        self.view.layoutIfNeeded()
+    }
+
+
+    private func addStepView(registerStepView: RegisterStepView) {
+
+        registerStepView.alpha = 0.0
+
+        self.stepsContentStackView.addArrangedSubview(registerStepView)
+
+        NSLayoutConstraint.activate([
+            registerStepView.heightAnchor.constraint(equalTo: self.contentBaseView.heightAnchor)
+        ])
+
+        self.registerStepViews.append(registerStepView)
+    }
+
+    func configureRegistrationCompletionPublisher() {
+
+        self.registrationCompletionPublisher?.cancel()
+
+        let registrationPerStepPublisher = self.registerStepViews.map(\.isRegisterStepCompleted).combineLatest()
+        self.registrationCompletionPublisher = Publishers.CombineLatest(self.viewModel.currentStep, registrationPerStepPublisher)
+            .map { (currentPage, completionPerStepArray) -> Bool in
+                let isStepCompleted = completionPerStepArray[safe: currentPage] ?? false
+                return isStepCompleted
+            }
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isCurrentStepCompleted in
+                self?.continueButton.isEnabled = isCurrentStepCompleted
+            })
+
+    }
+
+}
+
+public extension SteppedRegistrationViewController {
+
+    @objc private func didTapContinueButton() {
+        if self.viewModel.isLastStep(index: self.viewModel.currentStep.value) {
+            self.requestSignUp()
+        }
+        else {
+            self.viewModel.scrollToNextStep()
+        }
+    }
+
+    @objc private func didTapBackButton() {
+        self.viewModel.scrollToPreviousStep()
+    }
+
+    @objc private func didTapCancelButton() {
+        self.dismiss(animated: true)
+    }
+
+    private func didRegisteredUser() {
+        self.didRegisteredUserAction(self.viewModel.userRegisterEnvelop)
+    }
+
+}
+
+public extension SteppedRegistrationViewController {
+
+    func requestSignUp() {
+        _ = self.viewModel.requestRegister()
+    }
+
+    func presentRegisterErrors(_ registerErrors: [RegisterError]) {
+
+        for registerError in registerErrors {
+            for formStepView in self.formStepViews {
+                if let associatedFormStep = registerError.associatedFormStep {
+                    formStepView.presentError(registerError, forFormStep: associatedFormStep)
+                }
+            }
+        }
+
+        for formStepView in self.formStepViews {
+            for registerError in registerErrors {
+                if let associatedFormStep = registerError.associatedFormStep {
+                    if formStepView.canPresentError(forFormStep: associatedFormStep),
+                       let firstErrorIndex = self.viewModel.indexForFormStep(associatedFormStep)
+                    {
+                        self.viewModel.scrollToIndex(firstErrorIndex)
+                        return
+                    }
+                }
+            }
+        }
+
+    }
+
+}
+
+public extension SteppedRegistrationViewController {
+
+    private func scrollToItem(newPage: Int, offset: CGFloat, animated: Bool) {
+
+        self.scrollToItem(newPage: newPage, animated: animated)
+        self.scrollToOffset(yPosition: offset, animated: animated)
+
+    }
+
+    private func scrollToItem(newPage: Int, animated: Bool) {
+        let timingFunction = CAMediaTimingFunction(controlPoints: 0.23, 1, 0.32, 1)
+        CATransaction.begin()
+        CATransaction.setAnimationTimingFunction(timingFunction)
+
+        UIView.animate(withDuration: animated ? 0.7 : 0.0, delay: animated ? 0.14 : 0.0) {
+            for (index, registerStepView) in self.registerStepViews.enumerated() {
+                if index == newPage {
+                    registerStepView.alpha = 1.0
+                }
+                else {
+                    registerStepView.alpha = 0.0
+                }
+            }
+
+        }
+        CATransaction.commit()
+    }
+
+    private func scrollToOffset(yPosition: CGFloat, animated: Bool) {
+        let timingFunction = CAMediaTimingFunction(controlPoints: 0.23, 1, 0.32, 1)
+        CATransaction.begin()
+        CATransaction.setAnimationTimingFunction(timingFunction)
+        UIView.animate(withDuration: animated ? 0.89 : 0.0) {
+            self.stepsScrollView.contentOffset = CGPoint(x: 0.0, y: yPosition)
+        }
+        CATransaction.commit()
+    }
+
+}
+
+public extension SteppedRegistrationViewController {
+
+    private static var headerHeight: CGFloat {
+        68
+    }
+
+    private static var footerHeight: CGFloat {
+        76
+    }
+
+    private static func createHeaderBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createBackButton() -> UIButton {
+        let button = UIButton()
+        let image = UIImage(named: "back_icon", in: Bundle.module, with: nil)
+        button.setImage(image, for: .normal)
+        button.setTitle(nil, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }
+
+    private static func createProgressView() -> UIProgressView {
+        let progressView = UIProgressView()
+        progressView.progress = 0.5
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        return progressView
+    }
+
+    private static func createCancelButton() -> UIButton {
+        let button = UIButton()
+        button.setTitle("Close", for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }
+
+    private static func createContentBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createStepsScrollView() -> UIScrollView {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }
+
+    private static func createStepsContentStackView() -> UIStackView {
+        let stackview = UIStackView()
+        stackview.distribution = .fill
+        stackview.axis = .vertical
+        stackview.translatesAutoresizingMaskIntoConstraints = false
+        return stackview
+    }
+
+    private static func createFooterBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createContinueButton() -> UIButton {
+        let button = UIButton()
+        button.setTitle("Continue", for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 18)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 8
+        return button
+    }
+
+    private static func createNavigationView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createTopSafeAreaView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createBottomSafeAreaView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createLoadingBaseView() -> UIView {
+        let view = UIView()
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createLoadingView() -> UIActivityIndicatorView {
+        let view = UIActivityIndicatorView(style: .medium)
+        view.hidesWhenStopped = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private func setupSubviews() {
+
+        self.stepsScrollView.isScrollEnabled = false
+
+        self.backButton.addTarget(self, action: #selector(self.didTapBackButton), for: .primaryActionTriggered)
+        self.continueButton.addTarget(self, action: #selector(self.didTapContinueButton), for: .primaryActionTriggered)
+        self.cancelButton.addTarget(self, action: #selector(self.didTapCancelButton), for: .primaryActionTriggered)
+
+        self.initConstraints()
+    }
+
+    private func initConstraints() {
+
+        self.view.addSubview(self.topSafeAreaView)
+
+        self.view.addSubview(self.headerBaseView)
+        self.headerBaseView.addSubview(self.backButton)
+        self.headerBaseView.addSubview(self.progressView)
+        self.headerBaseView.addSubview(self.cancelButton)
+
+        self.view.addSubview(self.contentBaseView)
+        self.contentBaseView.addSubview(self.stepsScrollView)
+        self.stepsScrollView.addSubview(self.stepsContentStackView)
+
+        self.view.addSubview(self.footerBaseView)
+        self.footerBaseView.addSubview(self.continueButton)
+
+        self.view.addSubview(self.bottomSafeAreaView)
+
+        self.loadingBaseView.addSubview(self.loadingView)
+        self.view.addSubview(self.loadingBaseView)
+
+        NSLayoutConstraint.activate([
+            self.topSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.topSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.topSafeAreaView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.topSafeAreaView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+
+            self.headerBaseView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.headerBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.headerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.headerBaseView.heightAnchor.constraint(equalToConstant: Self.headerHeight),
+
+            self.backButton.leadingAnchor.constraint(equalTo: self.headerBaseView.leadingAnchor, constant: 18),
+            self.backButton.centerYAnchor.constraint(equalTo: self.headerBaseView.centerYAnchor),
+            self.backButton.widthAnchor.constraint(equalTo: self.backButton.heightAnchor),
+            self.backButton.widthAnchor.constraint(equalToConstant: 40),
+
+            self.cancelButton.centerYAnchor.constraint(equalTo: self.headerBaseView.centerYAnchor),
+            self.cancelButton.trailingAnchor.constraint(equalTo: self.headerBaseView.trailingAnchor, constant: -34),
+
+            self.progressView.centerYAnchor.constraint(equalTo: self.headerBaseView.centerYAnchor),
+            self.progressView.leadingAnchor.constraint(equalTo: self.backButton.trailingAnchor, constant: 7),
+            self.progressView.trailingAnchor.constraint(equalTo: self.cancelButton.leadingAnchor, constant: -19),
+
+            self.contentBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.contentBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.contentBaseView.topAnchor.constraint(equalTo: self.headerBaseView.bottomAnchor),
+            self.contentBaseView.bottomAnchor.constraint(equalTo: self.footerBaseView.topAnchor),
+
+            self.stepsScrollView.frameLayoutGuide.topAnchor.constraint(equalTo: self.contentBaseView.topAnchor),
+            self.stepsScrollView.frameLayoutGuide.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor),
+            self.stepsScrollView.frameLayoutGuide.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor),
+            self.stepsScrollView.frameLayoutGuide.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor),
+
+            self.stepsContentStackView.topAnchor.constraint(equalTo: self.stepsScrollView.topAnchor),
+            self.stepsContentStackView.bottomAnchor.constraint(equalTo: self.stepsScrollView.bottomAnchor),
+            self.stepsContentStackView.leadingAnchor.constraint(equalTo: self.stepsScrollView.leadingAnchor),
+            self.stepsContentStackView.trailingAnchor.constraint(equalTo: self.stepsScrollView.trailingAnchor),
+
+            self.footerBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.footerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.footerBaseView.heightAnchor.constraint(equalToConstant: Self.footerHeight),
+            self.footerBaseView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+
+            self.continueButton.centerXAnchor.constraint(equalTo: self.footerBaseView.centerXAnchor),
+            self.continueButton.centerYAnchor.constraint(equalTo: self.footerBaseView.centerYAnchor),
+            self.continueButton.leadingAnchor.constraint(equalTo: self.footerBaseView.leadingAnchor, constant: 34),
+            self.continueButton.heightAnchor.constraint(equalToConstant: 50),
+
+            self.bottomSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.bottomSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.bottomSafeAreaView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            self.bottomSafeAreaView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.loadingView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
+            self.loadingView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
+        ])
+
+        let stepsViewCenterY = self.stepsContentStackView.centerYAnchor.constraint(equalTo: self.stepsScrollView.centerYAnchor)
+        stepsViewCenterY.priority = .defaultLow
+
+        let stepsViewHeight = self.stepsContentStackView.heightAnchor.constraint(greaterThanOrEqualTo: self.contentBaseView.heightAnchor)
+        stepsViewHeight.priority = .defaultLow
+
+        NSLayoutConstraint.activate([
+            self.stepsContentStackView.centerXAnchor.constraint(equalTo: self.stepsScrollView.centerXAnchor),
+            stepsViewCenterY,
+            stepsViewHeight
+        ])
+
+    }
+
+}

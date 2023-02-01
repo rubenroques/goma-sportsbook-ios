@@ -93,5 +93,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+
+    <key>NSUserTrackingUsageDescription</key>
+    <string>This information will be used to deliver personalized ads to you.</string>
+
 </dict>
 </plist>

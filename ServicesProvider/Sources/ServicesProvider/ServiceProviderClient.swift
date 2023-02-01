@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import GomaGamingSDK
+import SharedModels
 
 public class ServicesProviderClient {
 
@@ -311,6 +312,15 @@ extension ServicesProviderClient {
         return privilegedAccessManager.simpleSignUp(form: form)
     }
 
+    public func signUp(form: SignUpForm) -> AnyPublisher<SignUpResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.signUp(form: form)
+    }
+
     public func checkEmailRegistered(_ email: String) -> AnyPublisher<Bool, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
@@ -318,6 +328,15 @@ extension ServicesProviderClient {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.checkEmailRegistered(email)
+    }
+
+    public func validateUsername(_ username: String) -> AnyPublisher<UsernameValidation, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.validateUsername(username)
     }
 
     public func signupConfirmation(_ email: String, confirmationCode: String) -> AnyPublisher<Bool, ServiceProviderError> {
@@ -345,6 +364,24 @@ extension ServicesProviderClient {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.updatePassword(oldPassword: oldPassword, newPassword: newPassword)
+    }
+
+    public func updateWeeklyDepositLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.updateWeeklyDepositLimits(newLimit: newLimit)
+    }
+
+    public func updateWeeklyBettingLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.updateWeeklyBettingLimits(newLimit: newLimit)
     }
 
     public func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError> {

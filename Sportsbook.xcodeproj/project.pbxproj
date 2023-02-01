@@ -768,7 +768,9 @@
 		45452BEC290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
 		45452BED290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
 		45452BEE290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
+		4554ED0A2976F7FE006942B3 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4554ED092976F7FE006942B3 /* IQKeyboardManagerSwift */; };
 		455A0C6B26BD902F00EC572D /* SportsbookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0C6A26BD902F00EC572D /* SportsbookTests.swift */; };
+		456237D9297EE5F600B3FA3A /* SharedModels in Frameworks */ = {isa = PBXBuildFile; productRef = 456237D8297EE5F600B3FA3A /* SharedModels */; };
 		4568B9662858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
 		4568B9672858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
 		4568B9682858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
@@ -2591,6 +2593,14 @@
 		4589C9E12820279E00243547 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4589C9DA282025C400243547 /* Colors.xcassets */; };
 		4589C9E2282027A100243547 /* GOMASports-Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4589C9DB282025C400243547 /* GOMASports-Assets.xcassets */; };
 		4589C9E4282029F700243547 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4589C9E3282029F700243547 /* GoogleService-Info.plist */; };
+		45A3301C298935F6008181E9 /* Adyen in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3301B298935F6008181E9 /* Adyen */; };
+		45A3301E298935F6008181E9 /* AdyenActions in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3301D298935F6008181E9 /* AdyenActions */; };
+		45A33020298935F6008181E9 /* AdyenCard in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3301F298935F6008181E9 /* AdyenCard */; };
+		45A33022298935F6008181E9 /* AdyenComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33021298935F6008181E9 /* AdyenComponents */; };
+		45A33024298935F6008181E9 /* AdyenEncryption in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33023298935F6008181E9 /* AdyenEncryption */; };
+		45A33026298935F6008181E9 /* AdyenSession in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33025298935F6008181E9 /* AdyenSession */; };
+		45A33028298935F6008181E9 /* AdyenSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33027298935F6008181E9 /* AdyenSwiftUI */; };
+		45A3302A298935F6008181E9 /* AdyenWeChatPay in Frameworks */ = {isa = PBXBuildFile; productRef = 45A33029298935F6008181E9 /* AdyenWeChatPay */; };
 		45A6BB7A28202E6B00D9B416 /* LaunchScreen-GOMA.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A6BB7728202E6800D9B416 /* LaunchScreen-GOMA.storyboard */; };
 		45A6BB7B28213FEA00D9B416 /* SocialModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D246B28180586003EEDEC /* SocialModels.swift */; };
 		45A6BB7C2821400000D9B416 /* ConversationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D24792818519A003EEDEC /* ConversationsViewModel.swift */; };
@@ -3380,6 +3390,7 @@
 		45D1ED5E28A150C2001E18E5 /* BusinessModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */; };
 		45D1ED5F28A150C2001E18E5 /* BusinessModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */; };
 		45D1ED6028A150C2001E18E5 /* BusinessModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */; };
+		45D3BBAC296F13BB009E0D09 /* RegisterFlow in Frameworks */ = {isa = PBXBuildFile; productRef = 45D3BBAB296F13BB009E0D09 /* RegisterFlow */; };
 		45E8E29828C88E1300A09B02 /* UserRankingPositionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29528C88E1300A09B02 /* UserRankingPositionTableViewCell.swift */; };
 		45E8E29928C88E1300A09B02 /* UserRankingPositionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29528C88E1300A09B02 /* UserRankingPositionTableViewCell.swift */; };
 		45E8E29A28C88E1300A09B02 /* UserRankingPositionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29528C88E1300A09B02 /* UserRankingPositionTableViewCell.swift */; };
@@ -4623,6 +4634,7 @@
 		454990CE27163D3200D57CE2 /* CollapsibleGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleGroupView.swift; sourceTree = "<group>"; };
 		454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaGamingServiceClient.swift; sourceTree = "<group>"; };
 		454A7A6226DA300900E6E74E /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = SOURCE_ROOT; };
+		454DC4502975C62300B48D9A /* Theming */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Theming; sourceTree = "<group>"; };
 		454E090727EB831600391560 /* SocialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialViewController.swift; sourceTree = "<group>"; };
 		454E090A27EC7A0300391560 /* ConversationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsViewController.swift; sourceTree = "<group>"; };
 		454E090D27EC7C1100391560 /* FriendsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListViewController.swift; sourceTree = "<group>"; };
@@ -4889,6 +4901,7 @@
 		45BA77A0293CD35700B6ACA6 /* Extensions */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Extensions; sourceTree = "<group>"; };
 		45BA77A2293CD42400B6ACA6 /* GomaGamingSDK */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = GomaGamingSDK; sourceTree = "<group>"; };
 		45BA77A3293CD45500B6ACA6 /* ServicesProvider */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ServicesProvider; sourceTree = "<group>"; };
+		45BB5542298351CD00684F83 /* AdresseFrancaise */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AdresseFrancaise; sourceTree = "<group>"; };
 		45BD39C5270213DE001DD51D /* KeychainInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainInterface.swift; sourceTree = "<group>"; };
 		45BEA47726F4DC9900680181 /* SimpleRegisterDetailsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SimpleRegisterDetailsViewController.xib; sourceTree = "<group>"; };
 		45BEA47826F4DC9900680181 /* SimpleRegisterEmailCheckViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleRegisterEmailCheckViewController.swift; sourceTree = "<group>"; };
@@ -4941,6 +4954,7 @@
 		45CD7B56271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeeMoreMarketsCollectionViewCell.swift; sourceTree = "<group>"; };
 		45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SeeMoreMarketsCollectionViewCell.xib; sourceTree = "<group>"; };
 		45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessModules.swift; sourceTree = "<group>"; };
+		45D3BBAA296EDA1A009E0D09 /* RegisterFlow */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RegisterFlow; sourceTree = "<group>"; };
 		45D3DE322714889200717124 /* Date+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		45D3DE35271492E000717124 /* BannerInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerInfo.swift; sourceTree = "<group>"; };
 		45D3DE38271499DB00717124 /* BannerScrollTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerScrollTableViewCell.swift; sourceTree = "<group>"; };
@@ -4963,6 +4977,8 @@
 		45D871CF2710995700F5B87B /* AggregatorsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregatorsRepository.swift; sourceTree = "<group>"; };
 		45D9CBDD270F34D800B8C321 /* EveryMatrixModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EveryMatrixModel.swift; sourceTree = "<group>"; };
 		45D9CBE0270F3C8400B8C321 /* AppSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSession.swift; sourceTree = "<group>"; };
+		45DD5302297EBE6A00DBC2AA /* SharedModels */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SharedModels; sourceTree = "<group>"; };
+		45DD5303297ED57100DBC2AA /* CountrySelectionFeature */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CountrySelectionFeature; sourceTree = "<group>"; };
 		45DDBA8126F2146000A73E45 /* Gilroy-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-ExtraBold.ttf"; sourceTree = "<group>"; };
 		45DDBA8226F2146000A73E45 /* Gilroy-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Light.ttf"; sourceTree = "<group>"; };
 		45DDBA8326F2146000A73E45 /* Gilroy-Heavy.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Heavy.ttf"; sourceTree = "<group>"; };
@@ -5337,22 +5353,33 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45D3BBAC296F13BB009E0D09 /* RegisterFlow in Frameworks */,
 				450B7A9128F58574009229E3 /* FirebaseMessaging in Frameworks */,
 				450B7A9228F58574009229E3 /* FirebaseDatabase in Frameworks */,
 				A96FAEF329829F9D00A0751F /* AdyenDropIn in Frameworks */,
 				450B7A9428F58574009229E3 /* DictionaryCoding in Frameworks */,
 				450B7A9528F58574009229E3 /* Reachability in Frameworks */,
+				45A33022298935F6008181E9 /* AdyenComponents in Frameworks */,
+				4554ED0A2976F7FE006942B3 /* IQKeyboardManagerSwift in Frameworks */,
 				450B7A9628F58574009229E3 /* Kingfisher in Frameworks */,
 				450B7A9928F58574009229E3 /* FirebaseAuth in Frameworks */,
+				45A33020298935F6008181E9 /* AdyenCard in Frameworks */,
 				450B7A9A28F58574009229E3 /* Collections in Frameworks */,
+				45A33024298935F6008181E9 /* AdyenEncryption in Frameworks */,
+				45A3301E298935F6008181E9 /* AdyenActions in Frameworks */,
 				450B7A9B28F58574009229E3 /* CombineCocoa in Frameworks */,
 				450B7A9C28F58574009229E3 /* SwiftyBeaver in Frameworks */,
+				45A33028298935F6008181E9 /* AdyenSwiftUI in Frameworks */,
+				45A3302A298935F6008181E9 /* AdyenWeChatPay in Frameworks */,
+				45A3301C298935F6008181E9 /* Adyen in Frameworks */,
+				45A33026298935F6008181E9 /* AdyenSession in Frameworks */,
 				450B7A9D28F58574009229E3 /* FirebaseCrashlytics in Frameworks */,
 				450B7A9E28F58574009229E3 /* FirebaseAnalytics in Frameworks */,
 				450B7A9F28F58574009229E3 /* OrderedCollections in Frameworks */,
 				450B7AA028F58574009229E3 /* SweeterSwift in Frameworks */,
 				450B7AA128F58574009229E3 /* Starscream in Frameworks */,
 				450B7AA228F58574009229E3 /* SocketIO in Frameworks */,
+				456237D9297EE5F600B3FA3A /* SharedModels in Frameworks */,
 				45BA77A5293CD60800B6ACA6 /* ServicesProvider in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5940,7 +5967,12 @@
 		455A0C4726BD902C00EC572D = {
 			isa = PBXGroup;
 			children = (
+				45BB5542298351CD00684F83 /* AdresseFrancaise */,
+				45DD5303297ED57100DBC2AA /* CountrySelectionFeature */,
+				45DD5302297EBE6A00DBC2AA /* SharedModels */,
+				454DC4502975C62300B48D9A /* Theming */,
 				45BA77A3293CD45500B6ACA6 /* ServicesProvider */,
+				45D3BBAA296EDA1A009E0D09 /* RegisterFlow */,
 				45BA77A2293CD42400B6ACA6 /* GomaGamingSDK */,
 				45BA77A0293CD35700B6ACA6 /* Extensions */,
 				455A0C5226BD902C00EC572D /* Core */,
@@ -7533,11 +7565,11 @@
 		A9875792276CA4ED0099990D /* Deposit */ = {
 			isa = PBXGroup;
 			children = (
+				A9A2E7E527F5ED1F00D35A9D /* DepositViewModel.swift */,
 				A9875793276CA50F0099990D /* DepositViewController.swift */,
 				A9875794276CA50F0099990D /* DepositViewController.xib */,
 				A9875799276CD3660099990D /* DepositWebViewController.swift */,
 				A987579A276CD3660099990D /* DepositWebViewController.xib */,
-				A9A2E7E527F5ED1F00D35A9D /* DepositViewModel.swift */,
 			);
 			path = Deposit;
 			sourceTree = "<group>";
@@ -8572,7 +8604,18 @@
 				450B783F28F58574009229E3 /* SwiftyBeaver */,
 				450B784128F58574009229E3 /* SocketIO */,
 				45BA77A4293CD60800B6ACA6 /* ServicesProvider */,
+				45D3BBAB296F13BB009E0D09 /* RegisterFlow */,
+				4554ED092976F7FE006942B3 /* IQKeyboardManagerSwift */,
+				456237D8297EE5F600B3FA3A /* SharedModels */,
 				A96FAEF229829F9D00A0751F /* AdyenDropIn */,
+				45A3301B298935F6008181E9 /* Adyen */,
+				45A3301D298935F6008181E9 /* AdyenActions */,
+				45A3301F298935F6008181E9 /* AdyenCard */,
+				45A33021298935F6008181E9 /* AdyenComponents */,
+				45A33023298935F6008181E9 /* AdyenEncryption */,
+				45A33025298935F6008181E9 /* AdyenSession */,
+				45A33027298935F6008181E9 /* AdyenSwiftUI */,
+				45A33029298935F6008181E9 /* AdyenWeChatPay */,
 			);
 			productName = Sportsbook;
 			productReference = 450B7B2428F58574009229E3 /* SportRadar.app */;
@@ -8820,6 +8863,7 @@
 				457EDAC12791D39B00DDCD83 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
 				45EF50E5282E6AA4008180CA /* XCRemoteSwiftPackageReference "socket" */,
 				45EF50E8282E6AD7008180CA /* XCRemoteSwiftPackageReference "Starscream" */,
+				4554ED082976F7FE006942B3 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
@@ -13537,7 +13581,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00740;
+				CURRENT_PROJECT_VERSION = 00786;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -13563,7 +13607,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00740;
+				CURRENT_PROJECT_VERSION = 00786;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -14192,6 +14236,14 @@
 				minimumVersion = 7.0.0;
 			};
 		};
+		4554ED082976F7FE006942B3 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
 		457CB9C7282D27D000ED0F00 /* XCRemoteSwiftPackageReference "Reachability" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ashleymills/Reachability.swift";
@@ -14709,6 +14761,15 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = SocketIO;
 		};
+		4554ED092976F7FE006942B3 /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4554ED082976F7FE006942B3 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
+		};
+		456237D8297EE5F600B3FA3A /* SharedModels */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SharedModels;
+		};
 		457CB9C6282D27D000ED0F00 /* Reachability */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 457CB9C7282D27D000ED0F00 /* XCRemoteSwiftPackageReference "Reachability" */;
@@ -14929,6 +14990,46 @@
 			package = 4589C773282024E400243547 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
 			productName = SwiftyBeaver;
 		};
+		45A3301B298935F6008181E9 /* Adyen */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = Adyen;
+		};
+		45A3301D298935F6008181E9 /* AdyenActions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenActions;
+		};
+		45A3301F298935F6008181E9 /* AdyenCard */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenCard;
+		};
+		45A33021298935F6008181E9 /* AdyenComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenComponents;
+		};
+		45A33023298935F6008181E9 /* AdyenEncryption */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenEncryption;
+		};
+		45A33025298935F6008181E9 /* AdyenSession */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenSession;
+		};
+		45A33027298935F6008181E9 /* AdyenSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenSwiftUI;
+		};
+		45A33029298935F6008181E9 /* AdyenWeChatPay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenWeChatPay;
+		};
 		45A6BB80282140D100D9B416 /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SocketIO;
@@ -15027,6 +15128,10 @@
 		45BA77A4293CD60800B6ACA6 /* ServicesProvider */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ServicesProvider;
+		};
+		45D3BBAB296F13BB009E0D09 /* RegisterFlow */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RegisterFlow;
 		};
 		A96FAEE029829CCB00A0751F /* Adyen */ = {
 			isa = XCSwiftPackageProductDependency;

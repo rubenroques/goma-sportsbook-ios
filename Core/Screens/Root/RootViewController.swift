@@ -9,6 +9,7 @@ import UIKit
 import Combine
 import WebKit
 import LocalAuthentication
+import RegisterFlow
 
 class RootViewController: UIViewController {
 
@@ -294,19 +295,26 @@ class RootViewController: UIViewController {
                 if let userSession = userSession {
                     self.screenState = .logged(user: userSession)
 
-                    Env.everyMatrixClient.getUserMetadata()
-                        .receive(on: DispatchQueue.main)
-                        .eraseToAnyPublisher()
-                        .sink { _ in
-                        } receiveValue: { [weak self] userMetadata in
-                            if let userMetadataFavorites = userMetadata.records[0].value {
-                                Env.favoritesManager.favoriteEventsIdPublisher.send(userMetadataFavorites)
-                            }
+                    if let avatarName = userSession.avatarName {
+                        self.profilePictureImageView.image = UIImage(named: avatarName)
+                    }
+                    else {
+                        self.profilePictureImageView.image = UIImage(named: "empty_user_image")
+                    }
 
-                            if self?.preLiveViewControllerLoaded ?? false {
-                                self?.preLiveViewController.reloadData()
-                            }                        }
-                        .store(in: &self.cancellables)
+//                    Env.everyMatrixClient.getUserMetadata()
+//                        .receive(on: DispatchQueue.main)
+//                        .eraseToAnyPublisher()
+//                        .sink { _ in
+//                        } receiveValue: { [weak self] userMetadata in
+//                            if let userMetadataFavorites = userMetadata.records[0].value {
+//                                Env.favoritesManager.favoriteEventsIdPublisher.send(userMetadataFavorites)
+//                            }
+//
+//                            if self?.preLiveViewControllerLoaded ?? false {
+//                                self?.preLiveViewController.reloadData()
+//                            }                        }
+//                        .store(in: &self.cancellables)
                 }
                 else {
                     self.screenState = .anonymous
@@ -713,6 +721,14 @@ class RootViewController: UIViewController {
     }
 
     @IBAction private func didTapSearchButton() {
+
+//        #if DEBUG
+//        let viewModel = LimitsOnRegisterViewModel(servicesProvider: Env.servicesProvider)
+//        let limitsOnRegisterViewController = LimitsOnRegisterViewController(viewModel: viewModel)
+//        self.present(limitsOnRegisterViewController, animated: true)
+//        return
+//        #endif
+
         let searchViewController = SearchViewController()
         let navigationViewController = Router.navigationController(with: searchViewController)
         self.present(navigationViewController, animated: true, completion: nil)

@@ -62,6 +62,10 @@ class DepositViewModel: NSObject {
                 self?.showErrorAlertTypePublisher.send(errorType)
             })
             .store(in: &cancellables)
+
+        self.paymentsDropIn.shouldProccessPayment = { [weak self] paymentInfo in
+            print(paymentInfo)
+        }
     }
 
     func getDepositInfo(amountText: String) {

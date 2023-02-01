@@ -15,6 +15,7 @@ extension SportRadarModels {
         case drawn = "Drawn"
         case open = "Open"
         case void = "Void"
+        case pending = "Pending"
         case notSpecified = "NotSpecified"
     }
     
@@ -26,6 +27,23 @@ extension SportRadarModels {
         case cancelled = "Cancelled"
         case allStates = "AllStates"
         case undefined = "Undefined"
+
+        init?(rawValue: String) {
+            switch rawValue.lowercased() {
+            case "attempted", "attempt":
+                self = .attempted
+            case "opened", "open":
+                self = .opened
+            case  "closed":
+                self = .closed
+            case  "settled":
+                self = .settled
+            case  "cancelled":
+                self = .cancelled
+            default:
+                self = .undefined
+            }
+        }
     }
     
     struct BettingHistory: Codable {
@@ -39,23 +57,41 @@ extension SportRadarModels {
         var homeTeamName: String
         var awayTeamName: String
         var sportTypeName: String
+        var type: String
         var state: BetState
         var result: BetResult
         var marketName: String
         var outcomeName: String
         var potentialReturn: Double
-        
+        var totalOdd: Double
+        var totalStake: Double
+        var attemptedDate: Date
+
+        var oddNumerator: Double
+        var oddDenominator: Double
+
+        var order: Int
+
         enum CodingKeys: String, CodingKey {
             case identifier = "idFOBet"
             case eventName
             case homeTeamName = "participantHome"
             case awayTeamName = "participantAway"
             case sportTypeName = "idFOSportType"
+            case type = "betTypeName"
             case state = "betLegStatus"
             case result = "betResult"
             case marketName
             case outcomeName = "selectionName"
             case potentialReturn
+            case totalOdd = "totalMultiBetOdds"
+            case totalStake = "totalStake"
+            case attemptedDate = "tsAttempted"
+
+            case oddDenominator = "ownPriceDown"
+            case oddNumerator = "ownPriceUp"
+
+            case order = "legOrder"
         }
 
         init(from decoder: Decoder) throws {
@@ -70,11 +106,23 @@ extension SportRadarModels {
             self.outcomeName = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.outcomeName)
             self.potentialReturn = try container.decode(Double.self, forKey: SportRadarModels.Bet.CodingKeys.potentialReturn)
 
+            self.type = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.type)
+
             let stateString = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.state)
             self.state = BetState(rawValue: stateString) ?? .undefined
 
             let resultString = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.result)
             self.result = BetResult(rawValue: resultString) ?? .notSpecified
+
+            self.totalOdd = try container.decode(Double.self, forKey: SportRadarModels.Bet.CodingKeys.totalOdd)
+            self.totalStake = try container.decode(Double.self, forKey: SportRadarModels.Bet.CodingKeys.totalStake)
+
+            self.attemptedDate = try container.decode(Date.self, forKey: SportRadarModels.Bet.CodingKeys.attemptedDate)
+
+            self.oddNumerator = try container.decode(Double.self, forKey: SportRadarModels.Bet.CodingKeys.oddNumerator)
+            self.oddDenominator = try container.decode(Double.self, forKey: SportRadarModels.Bet.CodingKeys.oddDenominator)
+
+            self.order = (try? container.decode(Int.self, forKey: SportRadarModels.Bet.CodingKeys.order)) ?? 999
         }
 
     }

@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import ServicesProvider
+import SharedModels
 
 class SimpleRegisterDetailsViewController: UIViewController {
 
@@ -210,7 +211,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
         
         Env.servicesProvider.getCurrentCountry()
             .compactMap({ $0 })
-            .map({ (serviceProviderCountry: ServicesProvider.Country) -> Country in
+            .map({ (serviceProviderCountry: SharedModels.Country) -> Country in
                 return Country(name: serviceProviderCountry.name,
                                capital: serviceProviderCountry.capital,
                                region: serviceProviderCountry.region,
@@ -231,8 +232,8 @@ class SimpleRegisterDetailsViewController: UIViewController {
             .store(in: &cancellables)
         
         Env.servicesProvider.getCountries()
-            .map { (serviceProviderCountries: [ServicesProvider.Country]) -> [Country] in
-                serviceProviderCountries.map({ (serviceProviderCountry: ServicesProvider.Country) -> Country in
+            .map { (serviceProviderCountries: [SharedModels.Country]) -> [Country] in
+                serviceProviderCountries.map({ (serviceProviderCountry: SharedModels.Country) -> Country in
                     return Country(name: serviceProviderCountry.name,
                                    capital: serviceProviderCountry.capital,
                                    region: serviceProviderCountry.region,

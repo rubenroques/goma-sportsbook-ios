@@ -1,6 +1,12 @@
 import UIKit
 import Combine
 import ServicesProvider
+import AppTrackingTransparency
+import AdSupport
+import RegisterFlow
+import Adyen
+import AdyenDropIn
+import AdyenComponents
 
 class LoginViewController: UIViewController {
 
@@ -31,9 +37,15 @@ class LoginViewController: UIViewController {
     // Variables
     var shouldRememberUser: Bool = true
 
+    private let registrationFormDataKey = "RegistrationFormDataKey"
+
     var cancellables = Set<AnyCancellable>()
 
     let spinnerViewController = SpinnerViewController()
+
+    var dropInComponent: DropInComponent?
+    var paymentsDropIn: PaymentsDropIn?
+    var depositOnRegisterViewController: DepositOnRegisterViewController?
 
     init() {
         super.init(nibName: "LoginViewController", bundle: nil)
@@ -69,6 +81,36 @@ class LoginViewController: UIViewController {
                 self?.loginButton.isEnabled = validFields
             })
             .store(in: &cancellables)
+
+        self.paymentsDropIn = PaymentsDropIn()
+
+        if let paymentsDropIn = self.paymentsDropIn {
+
+            paymentsDropIn.shouldShowPaymentDropIn
+                .sink(receiveValue: { [weak self] shouldShowDropIn in
+                    if shouldShowDropIn {
+                        self?.getPaymentDropIn()
+                    }
+                })
+                .store(in: &cancellables)
+
+            paymentsDropIn.isLoadingPublisher.sink(receiveValue: { [weak self] isLoading in
+                self?.depositOnRegisterViewController?.isLoading = isLoading
+            })
+            .store(in: &cancellables)
+
+            paymentsDropIn.showErrorAlertTypePublisher
+                .sink(receiveValue: { [weak self] depositError in
+                    switch depositError {
+                    case .error(let message):
+                        self?.depositOnRegisterViewController?.showErrorAlert(errorMessage: message)
+                    default:
+                        ()
+                    }
+                })
+                .store(in: &cancellables)
+        }
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -81,6 +123,34 @@ class LoginViewController: UIViewController {
         else {
             self.skipButton.isHidden = false
             self.dismissButton.isHidden = true
+        }
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+
+        if #available(iOS 14, *) {
+            ATTrackingManager.requestTrackingAuthorization { status in
+                switch status {
+                case .authorized:
+                    // Tracking authorization dialog was shown
+                    // and we are authorized
+                    print("Authorized")
+
+                    // Now that we are authorized we can get the IDFA
+                    print(ASIdentifierManager.shared().advertisingIdentifier)
+                case .denied:
+                    // Tracking authorization dialog was
+                    // shown and permission is denied
+                    print("Denied")
+                case .notDetermined:
+                    // Tracking authorization dialog has not been shown
+                    print("Not Determined")
+                case .restricted:
+                    print("Restricted")
+                @unknown default:
+                    print("Unknown")
+                }
+            }
         }
     }
     
@@ -162,11 +232,15 @@ class LoginViewController: UIViewController {
 
         self.checkPolicyLinks()
 
+        self.logoImageView.isUserInteractionEnabled = true
 
         let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
         debugLogoImageViewTap.numberOfTapsRequired = 3
-        self.logoImageView.isUserInteractionEnabled = true
         self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
+
+        let debug2LogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebug))
+        debug2LogoImageViewTap.numberOfTapsRequired = 2
+        self.logoImageView.addGestureRecognizer(debug2LogoImageViewTap)
 
     }
 
@@ -227,8 +301,98 @@ class LoginViewController: UIViewController {
         }
 
     @objc private func didTapCreateAccount() {
-        let smallRegisterViewController = SimpleRegisterEmailCheckViewController()
-        self.navigationController?.pushViewController(smallRegisterViewController, animated: true)
+
+        let userRegisterEnvelop: UserRegisterEnvelop? = UserDefaults.standard.codable(forKey: self.registrationFormDataKey)
+        let userRegisterEnvelopValue: UserRegisterEnvelop = userRegisterEnvelop ?? UserRegisterEnvelop()
+
+        let userRegisterEnvelopUpdater = UserRegisterEnvelopUpdater(userRegisterEnvelop: userRegisterEnvelopValue)
+        userRegisterEnvelopUpdater.didUpdateUserRegisterEnvelop.sink(receiveValue: { (updatedUserEnvelop: UserRegisterEnvelop) in
+            UserDefaults.standard.set(codable: updatedUserEnvelop, forKey: self.registrationFormDataKey)
+            UserDefaults.standard.synchronize()
+        })
+        .store(in: &self.cancellables)
+
+        let viewModel = SteppedRegistrationViewModel(userRegisterEnvelop: userRegisterEnvelopValue,
+                                                     serviceProvider: Env.servicesProvider,
+                                                     userRegisterEnvelopUpdater: userRegisterEnvelopUpdater)
+
+        let steppedRegistrationViewController = SteppedRegistrationViewController(viewModel: viewModel)
+
+        let registerNavigationController = Router.navigationController(with: steppedRegistrationViewController)
+
+        steppedRegistrationViewController.didRegisteredUserAction = { [weak self] registeredUser in
+            if let nickname = registeredUser.nickname, let password = registeredUser.password {
+                self?.triggerLoginAfterRegister(username: nickname, password: password)
+                self?.deleteCachedRegistrationData()
+                self?.showRegisterFeedbackViewController(onNavigationController: registerNavigationController)
+            }
+        }
+
+        self.present(registerNavigationController, animated: true)
+    }
+
+    private func showRegisterFeedbackViewController(onNavigationController navigationController: UINavigationController) {
+        let registerFeedbackViewController = RegisterFeedbackViewController(viewModel: RegisterFeedbackViewModel(registerSuccess: true))
+        registerFeedbackViewController.didTapContinueButtonAction = { [weak self] in
+            self?.showBiometricPromptViewController(onNavigationController: navigationController)
+        }
+        navigationController.pushViewController(registerFeedbackViewController, animated: true)
+    }
+
+    private func showBiometricPromptViewController(onNavigationController navigationController: UINavigationController) {
+        let biometricPromptViewController = BiometricPromptViewController()
+        biometricPromptViewController.didTapBackButtonAction = {
+            navigationController.popViewController(animated: true)
+        }
+        biometricPromptViewController.didTapCancelButtonAction = { [weak self] in
+            self?.closeLoginRegisterFlow()
+        }
+        biometricPromptViewController.didTapActivateButtonAction = { [weak self] in
+            Env.userSessionStore.setShouldRequestFaceId(true)
+            self?.showLimitsOnRegisterViewController(onNavigationController: navigationController)
+        }
+        biometricPromptViewController.didTapLaterButtonAction = { [weak self] in
+            Env.userSessionStore.setShouldRequestFaceId(false)
+            self?.showLimitsOnRegisterViewController(onNavigationController: navigationController)
+        }
+        navigationController.pushViewController(biometricPromptViewController, animated: true)
+    }
+
+
+    private func showLimitsOnRegisterViewController(onNavigationController navigationController: UINavigationController) {
+        let viewModel = LimitsOnRegisterViewModel(servicesProvider: Env.servicesProvider)
+        let limitsOnRegisterViewController = LimitsOnRegisterViewController(viewModel: viewModel)
+        limitsOnRegisterViewController.didTapBackButtonAction = {
+            navigationController.popViewController(animated: true)
+        }
+        limitsOnRegisterViewController.didTapCancelButtonAction = { [weak self] in
+            self?.closeLoginRegisterFlow()
+        }
+        limitsOnRegisterViewController.didTapContinueButtonAction = { [weak self] in
+            self?.showDepositOnRegisterViewController(onNavigationController: navigationController)
+        }
+        navigationController.pushViewController(limitsOnRegisterViewController, animated: true)
+    }
+
+    private func showDepositOnRegisterViewController(onNavigationController navigationController: UINavigationController) {
+        let depositOnRegisterViewController = DepositOnRegisterViewController()
+        depositOnRegisterViewController.didTapBackButtonAction = {
+            navigationController.popViewController(animated: true)
+        }
+        depositOnRegisterViewController.didTapCancelButtonAction = { [weak self] in
+            self?.closeLoginRegisterFlow()
+        }
+
+        depositOnRegisterViewController.didTapDepositButtonAction = { [weak self] amount in
+            print("AMOUNT: \(amount)")
+            self?.paymentsDropIn?.getDepositInfo(amountText: amount)
+        }
+        navigationController.pushViewController(depositOnRegisterViewController, animated: true)
+    }
+
+    private func deleteCachedRegistrationData() {
+        UserDefaults.standard.removeObject(forKey: self.registrationFormDataKey)
+        UserDefaults.standard.synchronize()
     }
 
     @objc func rememberUserOptionTapped() {
@@ -311,7 +475,34 @@ class LoginViewController: UIViewController {
             })
             .store(in: &cancellables)
     }
-    
+
+
+    func triggerLoginAfterRegister(username: String, password: String) {
+        Env.userSessionStore.login(withUsername: username, password: password)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                print("triggerLoginAfterRegister ", completion)
+            } receiveValue: { [weak self] success in
+                print("triggerLoginAfterRegister ", success)
+            }
+            .store(in: &cancellables)
+    }
+
+    func closeLoginRegisterFlow() {
+        if self.isModal {
+//            self.dismiss(animated: true, completion: nil)
+//            self.presentedViewController?.dismiss(animated: true)
+
+            self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+        }
+        else {
+            let mainScreenViewController = Router.mainScreenViewController()
+            self.navigationController?.pushViewController(mainScreenViewController, animated: true)
+
+            self.presentedViewController?.dismiss(animated: true)
+        }
+    }
+
     func showLoadingSpinner() {
         view.addSubview(spinnerViewController.view)
         spinnerViewController.view.translatesAutoresizingMaskIntoConstraints = false
@@ -377,9 +568,32 @@ class LoginViewController: UIViewController {
         self.navigationController?.pushViewController(recoverPasswordViewController, animated: true)
     }
 
+    private func getPaymentDropIn() {
+
+        if let paymentDropIn = self.paymentsDropIn?.setupPaymentDropIn() {
+
+            paymentDropIn.delegate = self.paymentsDropIn.self
+
+            self.dropInComponent = paymentDropIn
+
+            if let depositOnRegisterViewController {
+                depositOnRegisterViewController.present(paymentDropIn.viewController, animated: true)
+            }
+
+        }
+
+    }
+
 }
 
 extension LoginViewController {
+
+    @objc func didTapDebug() {
+        UserDefaults.standard.removeObject(forKey: "RegistrationFormDataKey")
+        UserDefaults.standard.synchronize()
+
+        UIAlertController.showMessage(title: "Debug", message: "Register cached data cleared", on: self)
+    }
 
     @objc func didTapDebugFormFill() {
         

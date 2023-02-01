@@ -22,6 +22,7 @@ class PaymentsDropIn {
     var hasProcessedDeposit: CurrentValueSubject<Bool, Never> = .init(false)
     var showErrorAlertTypePublisher: CurrentValueSubject<BalanceErrorType?, Never> = .init(nil)
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var shouldProccessPayment: ((String) -> Void)?
 
     var dropInDepositAmount: String = ""
     var depositAmount: Double = 0.0
@@ -75,6 +76,24 @@ class PaymentsDropIn {
             let amount = amountText.replacingOccurrences(of: ",", with: ".")
             self.dropInDepositAmount = dropInAmount
             self.depositAmount = Double(amount) ?? 0.0
+        }
+        else if amountText.contains(".") {
+            var dropInAmount = ""
+            let amountSplit = amountText.split(separator: ".")
+
+            if let decimals = amountSplit[safe: 1],
+               let numbers = amountSplit[safe: 0] {
+                if decimals.count == 1 {
+                    let fullDecimal = "\(decimals)0"
+                    dropInAmount = "\(numbers)\(fullDecimal)"
+                }
+                else {
+                    dropInAmount = amountText.replacingOccurrences(of: ".", with: "")
+                }
+            }
+
+            self.dropInDepositAmount = dropInAmount
+            self.depositAmount = Double(amountText) ?? 0.0
         }
         else {
             let dropInAmount = amountText.appending("00")
@@ -164,4 +183,81 @@ class PaymentsDropIn {
 
         return nil
     }
+}
+
+extension PaymentsDropIn: DropInComponentDelegate {
+    func didSubmit(_ data: Adyen.PaymentComponentData, from component: Adyen.PaymentComponent, in dropInComponent: Adyen.AnyDropInComponent) {
+
+        if let paymentIssuerType = data.paymentMethod.dictionary.value?["type"],
+           let paymentId = self.paymentId {
+
+            let paymentIssuer = "\(paymentIssuerType)"
+            let amount = self.depositAmount
+
+            // TODO: Not working, enable later
+            self.shouldProccessPayment?("\(paymentIssuer) - \(amount)")
+//            Env.servicesProvider.updatePayment(paymentMethod: "ADYEN_IDEAL", amount: amount, paymentId: paymentId, type: "ideal", issuer: paymentIssuer)
+//                .receive(on: DispatchQueue.main)
+//                .sink(receiveCompletion: { [weak self] completion in
+//                    switch completion {
+//                    case .finished:
+//                        ()
+//                    case .failure(let error):
+//                        print("UPDATE PAYMENT RESPONSE ERROR: \(error)")
+//                        switch error {
+//                        case .errorMessage(let message):
+//                            self?.showErrorAlert(errorType: .error(message: message))
+//                        default:
+//                            ()
+//                        }
+//                    }
+//
+//                }, receiveValue: { [weak self] updatePaymentResponse in
+//                    print("UPDATE PAYMENT RESPONSE: \(updatePaymentResponse)")
+//                })
+//                .store(in: &cancellables)
+        }
+
+    }
+
+    func didFail(with error: Error, from component: Adyen.PaymentComponent, in dropInComponent: Adyen.AnyDropInComponent) {
+
+        print("PAYMENT FAIL: \(error)")
+
+        dropInComponent.viewController.dismiss(animated: true)
+
+    }
+
+    func didProvide(_ data: Adyen.ActionComponentData, from component: Adyen.ActionComponent, in dropInComponent: Adyen.AnyDropInComponent) {
+
+        print("PAYMENT PROVIDE: \(data)")
+
+    }
+
+    func didComplete(from component: Adyen.ActionComponent, in dropInComponent: Adyen.AnyDropInComponent) {
+
+        print("PAYMENT COMPLETE")
+
+    }
+
+    func didFail(with error: Error, from component: Adyen.ActionComponent, in dropInComponent: Adyen.AnyDropInComponent) {
+
+        print("PAYMENT FAIL 2: \(error)")
+
+    }
+
+    func didFail(with error: Error, from dropInComponent: Adyen.AnyDropInComponent) {
+
+        print("PAYMENT FAIL FULL: \(error)")
+
+        dropInComponent.viewController.dismiss(animated: true)
+
+    }
+
+    func didCancel(component: PaymentComponent, from dropInComponent: AnyDropInComponent) {
+        print("PAYMENT CANCEL")
+
+        dropInComponent.viewController.dismiss(animated: true)
+    }
+
 }

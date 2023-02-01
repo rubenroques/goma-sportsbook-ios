@@ -17,4 +17,5 @@ struct ActivationAlert {
 enum ActivationAlertType {
     case email
     case profile
+    case documents
 }

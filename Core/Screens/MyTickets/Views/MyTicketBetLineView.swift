@@ -86,6 +86,9 @@ class MyTicketBetLineView: NibView {
 
     override func commonInit() {
 
+        self.marketLabel.text = ""
+        self.oddValueLabel.text = " - "
+
         self.liveIconImage.isHidden = true
         
         self.baseView.clipsToBounds = true
@@ -121,7 +124,7 @@ class MyTicketBetLineView: NibView {
             self.locationImageView.isHidden = true
         }
 
-        self.marketLabel.text = ""
+
         if let marketName = self.betHistoryEntrySelection.marketName, let partName = self.betHistoryEntrySelection.bettingTypeEventPartName {
             self.marketLabel.text = "\(marketName) (\(partName))"
         }

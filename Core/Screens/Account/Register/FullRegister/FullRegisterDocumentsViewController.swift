@@ -9,6 +9,7 @@ import UIKit
 import UniformTypeIdentifiers
 import Combine
 import ServicesProvider
+import SharedModels
 
 class FullRegisterDocumentsViewController: UIViewController {
 
@@ -259,7 +260,7 @@ class FullRegisterDocumentsViewController: UIViewController {
 //                                           securityQuestion: registerForm.securityQuestion,
 //                                           securityAnswer: registerForm.securityAnswer)
 //
-        var serviceProviderCountry: ServicesProvider.Country?
+        var serviceProviderCountry: SharedModels.Country?
         if let countryValue = self.registerForm.country {
             serviceProviderCountry = ServiceProviderModelMapper.country(fromCountry: countryValue)
         }

@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SharedModels
 
 enum UserSessionStatus {
     case anonymous
@@ -26,8 +27,11 @@ protocol PrivilegedAccessManager {
     func updateUserProfile(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError>
     
     func checkEmailRegistered(_ email: String) -> AnyPublisher<Bool, ServiceProviderError>
-    
+
+    func validateUsername(_ username: String) -> AnyPublisher<UsernameValidation, ServiceProviderError>
+
     func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError>
+    func signUp(form: SignUpForm) -> AnyPublisher<SignUpResponse, ServiceProviderError>
     
     func getCountries() -> AnyPublisher<[Country], ServiceProviderError>
     func getCurrentCountry() -> AnyPublisher<Country?, ServiceProviderError>
@@ -36,6 +40,9 @@ protocol PrivilegedAccessManager {
 
     func forgotPassword(email: String, secretQuestion: String?, secretAnswer: String?) -> AnyPublisher<Bool, ServiceProviderError>
     func updatePassword(oldPassword: String, newPassword: String) -> AnyPublisher<Bool, ServiceProviderError>
+
+    func updateWeeklyDepositLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError>
+    func updateWeeklyBettingLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError>
 
     func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError>
     func signUpCompletion(form: ServicesProvider.UpdateUserProfileForm)  -> AnyPublisher<Bool, ServiceProviderError>

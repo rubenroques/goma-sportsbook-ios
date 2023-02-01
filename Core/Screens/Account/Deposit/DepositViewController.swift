@@ -186,11 +186,9 @@ class DepositViewController: UIViewController {
         viewModel.showErrorAlertTypePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] errorAlertType in
-
                 if let errorAlertType = errorAlertType {
                     self?.showErrorAlert(errorType: errorAlertType)
                 }
-                
             })
             .store(in: &cancellables)
 
@@ -227,7 +225,7 @@ class DepositViewController: UIViewController {
 
         if let paymentDropIn = self.viewModel.paymentsDropIn.setupPaymentDropIn() {
 
-            paymentDropIn.delegate = self
+            paymentDropIn.delegate = self.viewModel.paymentsDropIn.self
 
             self.dropInComponent = paymentDropIn
 
@@ -368,19 +366,16 @@ class DepositViewController: UIViewController {
                 self.amount20Button.backgroundColor = UIColor.App.buttonBackgroundPrimary
                 self.amount20Button.layer.borderColor = UIColor.App.buttonBackgroundPrimary.cgColor
                 currentSelectedButton = self.amount20Button
-
             }
             else if depositHeaderTextFieldView.text == "50" {
                 self.amount50Button.backgroundColor = UIColor.App.buttonBackgroundPrimary
                 self.amount50Button.layer.borderColor = UIColor.App.buttonBackgroundPrimary.cgColor
                 currentSelectedButton = self.amount50Button
-
             }
             else if depositHeaderTextFieldView.text == "100" {
                 self.amount100Button.backgroundColor = UIColor.App.buttonBackgroundPrimary
                 self.amount100Button.layer.borderColor = UIColor.App.buttonBackgroundPrimary.cgColor
                 currentSelectedButton = self.amount100Button
-
             }
             else {
                 self.amount10Button.backgroundColor = .clear
@@ -394,13 +389,11 @@ class DepositViewController: UIViewController {
 
                 self.amount100Button.backgroundColor = .clear
                 self.amount100Button.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
-
             }
         }
         else {
             self.nextButton.isEnabled = false
         }
-
     }
 
     func setDepositAmountButtonDesign(button: UIButton, title: String) {
@@ -432,9 +425,7 @@ class DepositViewController: UIViewController {
 
     private func showDepositWebView(cashierUrl: String) {
         let depositWebViewController = DepositWebViewController(depositUrl: cashierUrl)
-
         self.navigationController?.pushViewController(depositWebViewController, animated: true)
-
     }
 
     @IBAction private func didTap10Button() {
@@ -474,7 +465,6 @@ class DepositViewController: UIViewController {
         self.depositHeaderTextFieldView.setText("50")
         self.nextButton.isEnabled = true
         self.showRightLabelCustom()
-
     }
 
     @IBAction private func didTap100Button() {
@@ -488,7 +478,6 @@ class DepositViewController: UIViewController {
         self.depositHeaderTextFieldView.setText("100")
         self.nextButton.isEnabled = true
         self.showRightLabelCustom()
-
     }
 
     @IBAction private func didTapNextButton() {
@@ -519,6 +508,7 @@ class DepositViewController: UIViewController {
         let alert = UIAlertController(title: errorTitle,
                                       message: errorMessage,
                                       preferredStyle: .alert)
+
         alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
@@ -557,80 +547,4 @@ enum BalanceErrorType {
     case deposit
     case withdraw
     case error(message: String)
-}
-
-extension DepositViewController: DropInComponentDelegate {
-    func didSubmit(_ data: Adyen.PaymentComponentData, from component: Adyen.PaymentComponent, in dropInComponent: Adyen.AnyDropInComponent) {
-
-        if let paymentIssuerType = data.paymentMethod.dictionary.value?["type"],
-           let paymentId = self.viewModel.paymentsDropIn.paymentId {
-
-            let paymentIssuer = "\(paymentIssuerType)"
-            let amount = self.viewModel.paymentsDropIn.depositAmount
-
-            // TODO: Not working, enable later
-//            Env.servicesProvider.updatePayment(paymentMethod: "ADYEN_IDEAL", amount: amount, paymentId: paymentId, type: "ideal", issuer: paymentIssuer)
-//                .receive(on: DispatchQueue.main)
-//                .sink(receiveCompletion: { [weak self] completion in
-//                    switch completion {
-//                    case .finished:
-//                        ()
-//                    case .failure(let error):
-//                        print("UPDATE PAYMENT RESPONSE ERROR: \(error)")
-//                        switch error {
-//                        case .errorMessage(let message):
-//                            self?.showErrorAlert(errorType: .error(message: message))
-//                        default:
-//                            ()
-//                        }
-//                    }
-//
-//                }, receiveValue: { [weak self] updatePaymentResponse in
-//                    print("UPDATE PAYMENT RESPONSE: \(updatePaymentResponse)")
-//                })
-//                .store(in: &cancellables)
-        }
-
-    }
-
-    func didFail(with error: Error, from component: Adyen.PaymentComponent, in dropInComponent: Adyen.AnyDropInComponent) {
-
-        print("PAYMENT FAIL: \(error)")
-
-        self.dropInComponent?.viewController.dismiss(animated: true)
-
-    }
-
-    func didProvide(_ data: Adyen.ActionComponentData, from component: Adyen.ActionComponent, in dropInComponent: Adyen.AnyDropInComponent) {
-
-        print("PAYMENT PROVIDE: \(data)")
-
-    }
-
-    func didComplete(from component: Adyen.ActionComponent, in dropInComponent: Adyen.AnyDropInComponent) {
-
-        print("PAYMENT COMPLETE")
-
-    }
-
-    func didFail(with error: Error, from component: Adyen.ActionComponent, in dropInComponent: Adyen.AnyDropInComponent) {
-
-        print("PAYMENT FAIL 2: \(error)")
-
-    }
-
-    func didFail(with error: Error, from dropInComponent: Adyen.AnyDropInComponent) {
-
-        print("PAYMENT FAIL FULL: \(error)")
-
-        dropInComponent.viewController.dismiss(animated: true)
-
-    }
-
-    func didCancel(component: PaymentComponent, from dropInComponent: AnyDropInComponent) {
-        print("PAYMENT CANCEL")
-
-        dropInComponent.viewController.dismiss(animated: true)
-    }
-
 }
