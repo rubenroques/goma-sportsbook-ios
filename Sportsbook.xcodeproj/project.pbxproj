@@ -4154,6 +4154,13 @@
 		45E8E29F28C8A79C00A09B02 /* RankingTypeTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29C28C8A79C00A09B02 /* RankingTypeTableHeaderView.swift */; };
 		45E8E2A028C8A79C00A09B02 /* RankingTypeTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29C28C8A79C00A09B02 /* RankingTypeTableHeaderView.swift */; };
 		45E8E2A128C8A79C00A09B02 /* RankingTypeTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29C28C8A79C00A09B02 /* RankingTypeTableHeaderView.swift */; };
+		45F2F9A9298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
+		45F2F9AA298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
+		45F2F9AB298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
+		45F2F9AC298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
+		45F2F9AD298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
+		45F2F9AE298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
+		45F2F9AF298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
 		A90229A228AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
 		A90229A328AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
 		A90229A428AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
@@ -5757,6 +5764,7 @@
 		45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchFiltersViewController.swift; sourceTree = "<group>"; };
 		45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchFiltersViewController.xib; sourceTree = "<group>"; };
 		45EF543A270C664100D1E13E /* CollapsibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleView.swift; sourceTree = "<group>"; };
+		45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = StaticColors.xcassets; sourceTree = "<group>"; };
 		45F8B156274BFF710087652B /* SystemBetResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemBetResponse.swift; sourceTree = "<group>"; };
 		A902299F28AFD41100972863 /* QuickBetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickBetViewController.swift; sourceTree = "<group>"; };
 		A90229B028B6892300972863 /* QuickBetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickBetViewModel.swift; sourceTree = "<group>"; };
@@ -6859,6 +6867,7 @@
 				455A0CAB26BD981900EC572D /* SharedAssets.xcassets */,
 				45D871CB27108F5900F5B87B /* CountryFlags.xcassets */,
 				454990CB2716333F00D57CE2 /* SportsTypes.xcassets */,
+				45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -9775,6 +9784,7 @@
 				450B7AA628F58574009229E3 /* BetslipErrorView.xib in Resources */,
 				450B7AA728F58574009229E3 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				450B7AA828F58574009229E3 /* DebugViewController.xib in Resources */,
+				45F2F9AA298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				450B7AA928F58574009229E3 /* CountryFlags.xcassets in Resources */,
 				450B7AAA28F58574009229E3 /* FilterSliderCollapseView.xib in Resources */,
 				450B7AAB28F58574009229E3 /* TournamentTableViewHeader.xib in Resources */,
@@ -9914,6 +9924,7 @@
 				457CBBD1282D27D000ED0F00 /* BetslipErrorView.xib in Resources */,
 				457CBBD2282D27D000ED0F00 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				457CBBD3282D27D000ED0F00 /* DebugViewController.xib in Resources */,
+				45F2F9AE298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				457CBBD4282D27D000ED0F00 /* CountryFlags.xcassets in Resources */,
 				457CBBD5282D27D000ED0F00 /* FilterSliderCollapseView.xib in Resources */,
 				457CBC6B282D2AE800ED0F00 /* LaunchScreen-EveryMatrix.storyboard in Resources */,
@@ -10046,6 +10057,7 @@
 				457CBE78282D2CD100ED0F00 /* BetslipErrorView.xib in Resources */,
 				457CBE79282D2CD100ED0F00 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				457CBE7A282D2CD100ED0F00 /* DebugViewController.xib in Resources */,
+				45F2F9AF298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				457CBE7B282D2CD100ED0F00 /* CountryFlags.xcassets in Resources */,
 				457CBE7C282D2CD100ED0F00 /* FilterSliderCollapseView.xib in Resources */,
 				457CBE7E282D2CD100ED0F00 /* TournamentTableViewHeader.xib in Resources */,
@@ -10178,6 +10190,7 @@
 				4589C94F282024E400243547 /* BetslipErrorView.xib in Resources */,
 				4589C950282024E400243547 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				4589C951282024E400243547 /* DebugViewController.xib in Resources */,
+				45F2F9AB298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				4589C952282024E400243547 /* CountryFlags.xcassets in Resources */,
 				4589C953282024E400243547 /* FilterSliderCollapseView.xib in Resources */,
 				4589C954282024E400243547 /* TournamentTableViewHeader.xib in Resources */,
@@ -10402,6 +10415,7 @@
 				45A33329298976BA008181E9 /* SportSelectionCollectionViewCell.xib in Resources */,
 				45A3332A298976BA008181E9 /* TestsViewController.xib in Resources */,
 				45A3332B298976BA008181E9 /* PasswordUpdateViewController.xib in Resources */,
+				45F2F9A9298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				45A3332C298976BA008181E9 /* CheckboxToggleView.xib in Resources */,
 				45A3332D298976BA008181E9 /* MatchStatsCollectionViewCell.xib in Resources */,
 				45A3332E298976BA008181E9 /* ProfileViewController.xib in Resources */,
@@ -10443,6 +10457,7 @@
 				45A6BDA828246A7500D9B416 /* BetslipErrorView.xib in Resources */,
 				45A6BDA928246A7500D9B416 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				45A6BDAA28246A7500D9B416 /* DebugViewController.xib in Resources */,
+				45F2F9AD298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				45A6BDAB28246A7500D9B416 /* CountryFlags.xcassets in Resources */,
 				45A6BDAC28246A7500D9B416 /* FilterSliderCollapseView.xib in Resources */,
 				45A6BDAD28246A7500D9B416 /* TournamentTableViewHeader.xib in Resources */,
@@ -10667,6 +10682,7 @@
 				A9C3435828F9A74A0055360B /* SportSelectionCollectionViewCell.xib in Resources */,
 				A9C3435928F9A74A0055360B /* TestsViewController.xib in Resources */,
 				A9C3435A28F9A74A0055360B /* PasswordUpdateViewController.xib in Resources */,
+				45F2F9AC298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				A9C3435B28F9A74A0055360B /* CheckboxToggleView.xib in Resources */,
 				A9C3435C28F9A74A0055360B /* MatchStatsCollectionViewCell.xib in Resources */,
 				A9C3435D28F9A74A0055360B /* ProfileViewController.xib in Resources */,

@@ -81,7 +81,7 @@ public class RegisterFeedbackViewController: UIViewController {
         // Continue button styling
         self.continueButton.setTitleColor(AppColor.buttonTextPrimary, for: .normal)
         self.continueButton.setTitleColor(AppColor.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        self.continueButton.setTitleColor(AppColor.buttonTextDisablePrimary.withAlphaComponent(0.39), for: .disabled)
+        self.continueButton.setTitleColor(AppColor.buttonTextDisablePrimary, for: .disabled)
 
         self.continueButton.setBackgroundColor(AppColor.buttonBackgroundPrimary, for: .normal)
         self.continueButton.setBackgroundColor(AppColor.buttonBackgroundSecondary, for: .highlighted)

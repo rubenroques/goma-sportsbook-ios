@@ -1,55 +1,51 @@
 #!/bin/bash
 
 # Read the CSV file with the list of colors
-while IFS=',' read -r colorName lightTheme darkTheme; do
+while IFS=',' read -r colorName lightTheme darkTheme || [[ -n "$colorName" ]]; do
   # Create the folder structure for each color
-  mkdir -p "Output/${colorName}.colorset"
+  mkdir -p "Colors.xcassets/${colorName}.colorset"
+
+  echo "${colorName}" 
 
   # Create the Contents.json file for each color
-  cat > "Output/${colorName}.colorset/Contents.json" << EOF
+  cat > "Colors.xcassets/${colorName}.colorset/Contents.json" << EOF
 {
-  "info": {
-    "version": 1,
-    "author": "xcode"
-  },
-  "colors": [
+  "colors" : [
     {
-      "idiom": "universal",
-      "color": {
-        "color-space": "srgb",
-        "components": {
-          "red": "$(echo $lightTheme | cut -c2-3 | xxd -p -r | hexdump -v -e '1/1 "%.2X"')",
-          "green": "$(echo $lightTheme | cut -c4-5 | xxd -p -r | hexdump -v -e '1/1 "%.2X"')",
-          "blue": "$(echo $lightTheme | cut -c6-7 | xxd -p -r | hexdump -v -e '1/1 "%.2X"')",
-          "alpha": "FF"
+      "color" : {
+        "color-space" : "srgb",
+        "components" : {
+          "alpha" : "1.000",
+          "red": "0x$(echo $darkTheme | cut -c2-3)",
+          "green": "0x$(echo $darkTheme | cut -c4-5)",
+          "blue": "0x$(echo $darkTheme | cut -c6-7)",
         }
       },
-      " appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "light"
-        }
-      ]
+      "idiom" : "universal"
     },
     {
-      "idiom": "universal",
-      "color": {
-        "color-space": "srgb",
-        "components": {
-          "red": "$(echo $darkTheme | cut -c2-3 | xxd -p -r | hexdump -v -e '1/1 "%.2X"')",
-          "green": "$(echo $darkTheme | cut -c4-5 | xxd -p -r | hexdump -v -e '1/1 "%.2X"')",
-          "blue": "$(echo $darkTheme | cut -c6-7 | xxd -p -r | hexdump -v -e '1/1 "%.2X"')",
-          "alpha": "FF"
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "color" : {
+        "color-space" : "srgb",
+        "components" : {
+          "alpha" : "1.000",
+          "red": "0x$(echo $lightTheme | cut -c2-3)",
+          "green": "0x$(echo $lightTheme | cut -c4-5)",
+          "blue": "0x$(echo $lightTheme | cut -c6-7)",
         }
       },
-      " appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ]
+      "idiom" : "universal"
     }
-  ]
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
 }
 EOF
 

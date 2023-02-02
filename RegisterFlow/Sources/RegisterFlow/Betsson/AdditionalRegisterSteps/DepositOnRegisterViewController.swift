@@ -145,7 +145,7 @@ public class DepositOnRegisterViewController: UIViewController {
 
         button.setTitleColor(AppColor.buttonTextPrimary, for: .normal)
         button.setTitleColor(AppColor.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        button.setTitleColor(AppColor.buttonTextDisablePrimary.withAlphaComponent(0.39), for: .disabled)
+        button.setTitleColor(AppColor.buttonTextDisablePrimary, for: .disabled)
 
         button.setBackgroundColor(AppColor.buttonBackgroundPrimary, for: .normal)
         button.setBackgroundColor(AppColor.buttonBackgroundSecondary, for: .highlighted)
