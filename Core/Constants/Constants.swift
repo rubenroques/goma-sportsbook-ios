@@ -110,4 +110,14 @@ enum UserTitle: String, Codable, CaseIterable {
     }
     // static let titles = ["Mr.", "Ms.", "Mrs.", "Miss"]
 }
+
+enum UserGender: String, Codable, CaseIterable {
+    case male = "M"
+    case female = "F"
+
+    static var titles: [String] {
+        return Self.allCases.map(\.rawValue)
+    }
+
+}
 // swiftlint:enable line_length
