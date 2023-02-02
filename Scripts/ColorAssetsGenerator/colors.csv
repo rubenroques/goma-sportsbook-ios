@@ -1,0 +1,63 @@
+colorName, lightTheme, darkTheme
+alertError,#ED4F63,#ED4F63
+alertSuccess,#21BA45,#21BA45
+alertWarning, #F2C037,#F2C037
+backgroundBorder,#FFD7BD,#2A2D60
+backgroundCards,#FFFFFF,#1F2147
+backgroundDisabledOdds,#FFF0E6,#2A2D60
+backgroundDrop,#FFF0E6,#03061B
+backgroundGradientDark,#FFF0E6,#192024
+backgroundGradientLight,#FFF0E6,#03061B
+backgroundOdds,#FFD1B3,#434799
+backgroundPrimary,#FFFFFF,#03061B
+backgroundSecondary,#FFF0E6,#161732
+backgroundTertiary,#FFE3D1,#161732
+borderDrop,#FFD7BD ,#2A2D60 
+bubblesPrimary,#ED4F63,#ED4F63
+buttonActiveHoverPrimary,#FF7E29,#FF7E29
+buttonActiveHoverSecondary,#FFD7BD,#434799
+buttonActiveHoverTertiary,#FFF0E6,#2A2D60
+buttonBackgroundPrimary,#FF6600,#FF6600
+buttonBackgroundSecondary,#FFF0E6,#2A2D60
+buttonBorderTertiary,#FFF0E6,#2A2D60
+buttonDisablePrimary,#FFD7BD,#5C2500
+buttonTextDisablePrimary,#FFF0E6,#943B00
+buttonTextPrimary,#FFFFFF,#FFFFFF
+buttonTextSecondary,#000114,#FFFFFF
+highlightPrimary,#FF6600 ,#FF6600
+highlightPrimaryContrast,#000114,#FFFFFF
+highlightSecondary,#404CFF,#404CFF
+iconPrimary,#000114,#FFFFFF
+iconSecond,#393C84,#5559B4
+inputBackground,#FFF0E6,#1F2147
+inputBackgroundDisable,#FFE3D1,#161732
+inputBackgroundSecondary,#FFFFFF,#03061B
+inputBorderActive,#FFD7BD,#FFFFFF
+inputBorderDisable,#FFE3D1,#161732 
+inputError,#ED4F63 ,#ED4F63 
+inputText,#000114,#ED4F63 
+inputTextDisable,#FFD7BD,#FFFFFF
+inputTextTitle,#FFC49E,#393D83
+inputTextTitleDisable,#FFD7BD,#6A6EBE
+myTicketsLost,#60111B,#393D83
+myTicketsLostFaded,#50424B,#60111B
+myTicketsOther,#946F00,#50424B
+myTicketsOther,#946F00,#946F00
+myTicketsWon,#0F5531,#0F5531
+myTicketsWonFaded,#5B6D6D,#5B6D6D
+navBanner,#FF9C5C,#2A2D60
+navBannerActive,#FFF0E6,#ADAFDB
+scroll,#FFD7BD,#393D83
+separatorLine,#FFD7BD,#2A2D60  
+separatorLineHighlightPrimary,#7A83FF,#7A83FF
+separatorLineHighlightSecondary,#FF9D5C,#FF9D5C
+separatorLineSecond,#FFC49E,#393D83
+shadow,#FFF0E6 ,#03061B 
+shadowDarker,#FFE3D1,#03061B
+shadowMedium,#FFFFFF ,#161732 
+statsAway,#46C1A7,#46C1A7
+statsHome, #D99F00,#D99F00
+textDisablePrimary,#FFD7BD,#434799
+textHeadlinePrimary,#000114,#FFFFFF
+textPrimary,#000114,#FFFFFF
+textSecond,#393C84,#6A6EBE
