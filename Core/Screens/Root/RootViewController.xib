@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -79,11 +79,11 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7JK-Qm-Mkc">
-                    <rect key="frame" x="0.0" y="0.0" width="515" height="44"/>
+                    <rect key="frame" x="0.0" y="0.0" width="515" height="48"/>
                     <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HKG-0A-qeh">
-                    <rect key="frame" x="0.0" y="44" width="515" height="64"/>
+                    <rect key="frame" x="0.0" y="48" width="515" height="64"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="4ku-wm-eUk">
                             <rect key="frame" x="16" y="0.0" width="41" height="64"/>
@@ -261,17 +261,17 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WA3-hd-SH4">
-                    <rect key="frame" x="0.0" y="108" width="515" height="729"/>
+                    <rect key="frame" x="0.0" y="112" width="515" height="725"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e31-vV-LiP">
-                            <rect key="frame" x="515" y="0.0" width="515" height="729"/>
+                            <rect key="frame" x="515" y="0.0" width="515" height="725"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yX5-sK-euo">
-                                    <rect key="frame" x="0.0" y="0.0" width="515" height="677"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="515" height="673"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TwO-uo-g7m">
-                                    <rect key="frame" x="0.0" y="677" width="515" height="52"/>
+                                    <rect key="frame" x="0.0" y="673" width="515" height="52"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tbw-wl-ySe">
                                             <rect key="frame" x="0.0" y="3" width="78" height="46"/>
@@ -319,23 +319,23 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jjz-Pf-kyV">
-                            <rect key="frame" x="0.0" y="0.0" width="515" height="729"/>
+                            <rect key="frame" x="0.0" y="0.0" width="515" height="725"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Su0-qa-MeF">
-                                    <rect key="frame" x="0.0" y="0.0" width="515" height="677"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="515" height="673"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fxl-nZ-JeH">
-                                            <rect key="frame" x="0.0" y="0.0" width="515" height="677"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="515" height="673"/>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kSr-MY-svK">
-                                            <rect key="frame" x="0.0" y="0.0" width="515" height="677"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="515" height="673"/>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xew-dh-4hf">
-                                            <rect key="frame" x="0.0" y="0.0" width="515" height="677"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="515" height="673"/>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         </view>
                                         <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wEK-PC-Y6d">
-                                            <rect key="frame" x="0.0" y="0.0" width="515" height="677"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="515" height="673"/>
                                         </view>
                                     </subviews>
                                     <constraints>
@@ -358,7 +358,7 @@
                                     </constraints>
                                 </view>
                                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KmS-Xh-sK7">
-                                    <rect key="frame" x="0.0" y="677" width="515" height="52"/>
+                                    <rect key="frame" x="0.0" y="673" width="515" height="52"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="DgF-9v-Tmt">
                                             <rect key="frame" x="0.0" y="0.0" width="442" height="52"/>
@@ -563,7 +563,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="515" height="871"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WtU-rI-FNG">
-                            <rect key="frame" x="184" y="420" width="147.5" height="31"/>
+                            <rect key="frame" x="172.5" y="418.5" width="170" height="34.5"/>
                             <state key="normal" title="Button"/>
                             <buttonConfiguration key="configuration" style="filled" title="Unlock Sportsbook"/>
                             <connections>
@@ -610,23 +610,23 @@
         <image name="empty_user_image" width="100" height="100"/>
         <image name="logo_horizontal_left" width="77" height="37"/>
         <image name="plus_small_icon" width="16" height="16"/>
-        <image name="search_bar_icon" width="24" height="24"/>
+        <image name="search_bar_icon" width="23" height="23"/>
         <image name="sportsbook_icon" width="28" height="28"/>
-        <image name="tabbar_home_icon" width="25" height="25"/>
+        <image name="tabbar_home_icon" width="23" height="24"/>
         <image name="tabbar_live_icon" width="25" height="23"/>
-        <image name="tabbar_sports_icon" width="28" height="23"/>
+        <image name="tabbar_sports_icon" width="23" height="19"/>
         <image name="tabbar_tips_icon" width="22" height="22"/>
         <namedColor name="alertError">
             <color red="0.92941176470588238" green="0.30980392156862746" blue="0.38823529411764707" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="backgroundPrimary">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.043137254901960784" green="0.043137254901960784" blue="0.043137254901960784" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="bubblesPrimary">
             <color red="0.92941176470588238" green="0.30980392156862746" blue="0.38823529411764707" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="iconSecondary">
-            <color red="0.46274509803921571" green="0.5725490196078431" blue="0.63529411764705879" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.58039215686274515" green="0.62352941176470589" blue="0.67843137254901964" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

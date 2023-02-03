@@ -11,7 +11,7 @@ import FirebaseMessaging
 import SwiftyBeaver
 import SwiftUI
 
-let swiftyBeaverLog = SwiftyBeaver.self
+// let swiftyBeaverLog = SwiftyBeaver.self
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
@@ -23,13 +23,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-        let file = FileDestination()  // log to default swiftybeaver.log file
-        let cloud = SBPlatformDestination(appID: "jxEpzL",
-                                          appSecret: "Zgv4mfejLv3Es3fzlBacHja9yznw2ytr",
-                                          encryptionKey: "7vxwxubvlRtgrtaAwybl5hdxstrns8Ik") // to cloud
+       //  let file = FileDestination()  // log to default swiftybeaver.log file
+//        let cloud = SBPlatformDestination(appID: "jxEpzL",
+//                                          appSecret: "Zgv4mfejLv3Es3fzlBacHja9yznw2ytr",
+//                                          encryptionKey: "7vxwxubvlRtgrtaAwybl5hdxstrns8Ik") // to cloud
 
-        swiftyBeaverLog.addDestination(file)
-        swiftyBeaverLog.addDestination(cloud)
+        // swiftyBeaverLog.addDestination(file)
+        // swiftyBeaverLog.addDestination(cloud)
 
         
          
