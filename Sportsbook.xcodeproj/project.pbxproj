@@ -765,6 +765,13 @@
 		451E1F6F2825636F000E957B /* InternalBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451E1F6B2825636F000E957B /* InternalBrowserViewController.swift */; };
 		451E1F7328290DE2000E957B /* PictureInPictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451E1F7028290DE2000E957B /* PictureInPictureView.swift */; };
 		451E1F7428290DE2000E957B /* PictureInPictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451E1F7028290DE2000E957B /* PictureInPictureView.swift */; };
+		451F51EC298D2D7D00994660 /* Gradients.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 451F51EB298D2D7D00994660 /* Gradients.xcassets */; };
+		451F51ED298D2D7D00994660 /* Gradients.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 451F51EB298D2D7D00994660 /* Gradients.xcassets */; };
+		451F51EE298D2D7D00994660 /* Gradients.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 451F51EB298D2D7D00994660 /* Gradients.xcassets */; };
+		451F51EF298D2D7D00994660 /* Gradients.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 451F51EB298D2D7D00994660 /* Gradients.xcassets */; };
+		451F51F0298D2D7D00994660 /* Gradients.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 451F51EB298D2D7D00994660 /* Gradients.xcassets */; };
+		451F51F1298D2D7D00994660 /* Gradients.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 451F51EB298D2D7D00994660 /* Gradients.xcassets */; };
+		451F51F2298D2D7D00994660 /* Gradients.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 451F51EB298D2D7D00994660 /* Gradients.xcassets */; };
 		45452BEC290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
 		45452BED290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
 		45452BEE290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
@@ -5376,6 +5383,7 @@
 		451B0A44286AFDC700005FA5 /* SupportTicketResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportTicketResponse.swift; sourceTree = "<group>"; };
 		451E1F6B2825636F000E957B /* InternalBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternalBrowserViewController.swift; sourceTree = "<group>"; };
 		451E1F7028290DE2000E957B /* PictureInPictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureInPictureView.swift; sourceTree = "<group>"; };
+		451F51EB298D2D7D00994660 /* Gradients.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Gradients.xcassets; sourceTree = "<group>"; };
 		4520365A26EF9B7F000BCFA6 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = SOURCE_ROOT; };
 		452047B827036D3900B277B5 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		452047B927036D3900B277B5 /* SplashViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SplashViewController.xib; sourceTree = "<group>"; };
@@ -7598,6 +7606,7 @@
 			children = (
 				45A3335C298976E3008181E9 /* Betsson-Assets.xcassets */,
 				45A3335D298976E3008181E9 /* Colors.xcassets */,
+				451F51EB298D2D7D00994660 /* Gradients.xcassets */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -9786,6 +9795,7 @@
 				450B7AA828F58574009229E3 /* DebugViewController.xib in Resources */,
 				45F2F9AA298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				450B7AA928F58574009229E3 /* CountryFlags.xcassets in Resources */,
+				451F51ED298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				450B7AAA28F58574009229E3 /* FilterSliderCollapseView.xib in Resources */,
 				450B7AAB28F58574009229E3 /* TournamentTableViewHeader.xib in Resources */,
 				450B7AAC28F58574009229E3 /* BetSubmissionSuccessViewController.xib in Resources */,
@@ -9926,6 +9936,7 @@
 				457CBBD3282D27D000ED0F00 /* DebugViewController.xib in Resources */,
 				45F2F9AE298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				457CBBD4282D27D000ED0F00 /* CountryFlags.xcassets in Resources */,
+				451F51F1298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				457CBBD5282D27D000ED0F00 /* FilterSliderCollapseView.xib in Resources */,
 				457CBC6B282D2AE800ED0F00 /* LaunchScreen-EveryMatrix.storyboard in Resources */,
 				457CBBD6282D27D000ED0F00 /* TournamentTableViewHeader.xib in Resources */,
@@ -10059,6 +10070,7 @@
 				457CBE7A282D2CD100ED0F00 /* DebugViewController.xib in Resources */,
 				45F2F9AF298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				457CBE7B282D2CD100ED0F00 /* CountryFlags.xcassets in Resources */,
+				451F51F2298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				457CBE7C282D2CD100ED0F00 /* FilterSliderCollapseView.xib in Resources */,
 				457CBE7E282D2CD100ED0F00 /* TournamentTableViewHeader.xib in Resources */,
 				4568B9692858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */,
@@ -10192,6 +10204,7 @@
 				4589C951282024E400243547 /* DebugViewController.xib in Resources */,
 				45F2F9AB298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				4589C952282024E400243547 /* CountryFlags.xcassets in Resources */,
+				451F51EE298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				4589C953282024E400243547 /* FilterSliderCollapseView.xib in Resources */,
 				4589C954282024E400243547 /* TournamentTableViewHeader.xib in Resources */,
 				4589C955282024E400243547 /* BetSubmissionSuccessViewController.xib in Resources */,
@@ -10397,6 +10410,7 @@
 				45A33317298976BA008181E9 /* OddDoubleCollectionViewCell.xib in Resources */,
 				45A33318298976BA008181E9 /* SearchTitleSectionHeaderView.xib in Resources */,
 				45A33319298976BA008181E9 /* MarketDetailCollectionViewCell.xib in Resources */,
+				451F51EC298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				45A3331A298976BA008181E9 /* SearchViewController.xib in Resources */,
 				45A33360298976E3008181E9 /* Betsson-Info.plist in Resources */,
 				45A3331B298976BA008181E9 /* ForbiddenLocationViewController.xib in Resources */,
@@ -10459,6 +10473,7 @@
 				45A6BDAA28246A7500D9B416 /* DebugViewController.xib in Resources */,
 				45F2F9AD298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				45A6BDAB28246A7500D9B416 /* CountryFlags.xcassets in Resources */,
+				451F51F0298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				45A6BDAC28246A7500D9B416 /* FilterSliderCollapseView.xib in Resources */,
 				45A6BDAD28246A7500D9B416 /* TournamentTableViewHeader.xib in Resources */,
 				45A6BDAE28246A7500D9B416 /* BetSubmissionSuccessViewController.xib in Resources */,
@@ -10664,6 +10679,7 @@
 				A9C3434628F9A74A0055360B /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				A9C3434728F9A74A0055360B /* OddDoubleCollectionViewCell.xib in Resources */,
 				A9C3434828F9A74A0055360B /* SearchTitleSectionHeaderView.xib in Resources */,
+				451F51EF298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				A9C3434928F9A74A0055360B /* MarketDetailCollectionViewCell.xib in Resources */,
 				A9C3434A28F9A74A0055360B /* SearchViewController.xib in Resources */,
 				A9C3434B28F9A74A0055360B /* ForbiddenLocationViewController.xib in Resources */,

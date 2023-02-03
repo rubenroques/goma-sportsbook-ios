@@ -208,6 +208,8 @@ class LiveEventsViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
 
+        tableView.clipsToBounds = false
+
         tableView.estimatedRowHeight = 155
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
@@ -302,6 +304,10 @@ class LiveEventsViewController: UIViewController {
     }
 
     private func setupWithTheme() {
+        self.view.backgroundColor = .clear
+
+        self.tableView.backgroundColor = .clear
+        self.tableView.backgroundView?.backgroundColor = .clear
 
         self.leftGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.rightGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
@@ -330,17 +336,9 @@ class LiveEventsViewController: UIViewController {
         //
         //
 
-        self.tableView.backgroundColor = .clear
-        self.tableView.backgroundView?.backgroundColor = .clear
-
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
-
         self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
         self.filtersButtonView.backgroundColor = UIColor.App.backgroundTertiary
-
-        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
-        self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
 
         self.filtersCollectionView.backgroundColor = UIColor.App.backgroundSecondary
 

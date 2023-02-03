@@ -296,6 +296,8 @@ class PreLiveEventsViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
 
+        tableView.clipsToBounds = false
+        
         tableView.estimatedRowHeight = 155
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
@@ -511,7 +513,7 @@ class PreLiveEventsViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = .red // UIColor.App.backgroundPrimary
 
         self.competitionsFiltersDarkBackgroundView.backgroundColor = UIColor.App.backgroundPrimary
 

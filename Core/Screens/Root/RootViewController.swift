@@ -16,9 +16,26 @@ class RootViewController: UIViewController {
     @IBOutlet private var topSafeAreaView: UIView!
     @IBOutlet private var topBarView: UIView!
 
+    private let topBarGradientLayer = CAGradientLayer()
+
     @IBOutlet private var containerView: UIView!
+    @IBOutlet private var mainContainerView: UIView!
+
+    private let mainContainerGradientLayer = CAGradientLayer()
+    private lazy var mainContainerGradientView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    private lazy var bottomBackgroundView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
     @IBOutlet private var leadingSportsBookContentConstriant: NSLayoutConstraint!
+
 
     @IBOutlet private var sportsBookContentView: UIView!
     @IBOutlet private var casinoContentView: UIView!
@@ -96,10 +113,10 @@ class RootViewController: UIViewController {
     var isLocalAuthenticationCoveringView: Bool = true {
         didSet {
             if isLocalAuthenticationCoveringView {
-                self.localAuthenticationBaseView.alpha = 1.0
+                self.localAuthenticationBaseView.isHidden = false
             }
             else {
-                self.localAuthenticationBaseView.alpha = 0.0
+                self.localAuthenticationBaseView.isHidden = true
             }
         }
     }
@@ -226,7 +243,10 @@ class RootViewController: UIViewController {
         self.view.sendSubviewToBack(tabBarView)
 
         self.commonInit()
-        self.loadChildViewControllerIfNeeded(tab: self.selectedTabItem)
+        // self.loadChildViewControllerIfNeeded(tab: )
+
+        let initialTab = self.selectedTabItem
+        self.selectedTabItem = initialTab
 
         //
          self.pictureInPictureView = PictureInPictureView()
@@ -363,7 +383,6 @@ class RootViewController: UIViewController {
         self.localAuthenticationBaseView.backgroundColor = .clear
 
         let blurEffect = UIBlurEffect(style: .regular)
-
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -454,6 +473,10 @@ class RootViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
+        self.topBarGradientLayer.frame = self.topBarView.bounds
+
+        self.mainContainerGradientLayer.frame = self.mainContainerGradientView.bounds
+
         self.profilePictureBaseView.layer.cornerRadius = profilePictureBaseView.frame.size.width/2
         self.profilePictureImageView.layer.cornerRadius = profilePictureImageView.frame.size.width/2
         self.profilePictureImageView.layer.borderWidth = 1
@@ -481,11 +504,8 @@ class RootViewController: UIViewController {
         if let image = self.logoImageView.image {
 
             let maxAllowedWidth = CGFloat(150)
-
             let defaultHeight = self.logoImageHeightConstraint.constant
-
             let ratio = image.size.height / image.size.width
-
             let newWidth = defaultHeight / ratio
 
             if newWidth > maxAllowedWidth {
@@ -497,7 +517,6 @@ class RootViewController: UIViewController {
                  self.logoImageWidthConstraint.constant = newWidth
                  self.logoImageHeightConstraint.constant = defaultHeight
             }
-
             self.view.layoutIfNeeded()
         }
 
@@ -565,15 +584,59 @@ class RootViewController: UIViewController {
             self.tipsButtonBaseView.isHidden = true
         }
 
+        self.mainContainerView.insertSubview(self.mainContainerGradientView, at: 0)
+        self.mainContainerView.insertSubview(self.bottomBackgroundView, belowSubview: self.tabBarView)
+
+        NSLayoutConstraint.activate([
+            self.mainContainerGradientView.leadingAnchor.constraint(equalTo: self.mainContainerView.leadingAnchor),
+            self.mainContainerGradientView.trailingAnchor.constraint(equalTo: self.mainContainerView.trailingAnchor),
+            self.mainContainerGradientView.topAnchor.constraint(equalTo: self.mainContainerView.topAnchor),
+            self.mainContainerGradientView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.bottomBackgroundView.leadingAnchor.constraint(equalTo: self.bottomSafeAreaView.leadingAnchor),
+            self.bottomBackgroundView.trailingAnchor.constraint(equalTo: self.bottomSafeAreaView.trailingAnchor),
+            self.bottomBackgroundView.topAnchor.constraint(equalTo: self.tabBarView.topAnchor),
+            self.bottomBackgroundView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.bottomAnchor),
+        ])
+
+        self.mainContainerGradientLayer.locations = [0.0, 1.0]
+        self.mainContainerGradientView.backgroundColor = .red
+        self.mainContainerGradientView.layer.insertSublayer(self.mainContainerGradientLayer, at: 0)
+
+        if TargetVariables.shouldUserBlurEffectTabBar {
+
+            self.bottomBackgroundView.backgroundColor = .clear
+
+            let blurEffect = UIBlurEffect(style: .regular)
+            let blurEffectView = UIVisualEffectView(effect: blurEffect)
+            blurEffectView.translatesAutoresizingMaskIntoConstraints = false
+
+            self.bottomBackgroundView.insertSubview(blurEffectView, at: 0)
+
+            NSLayoutConstraint.activate([
+                blurEffectView.leadingAnchor.constraint(equalTo: self.bottomBackgroundView.leadingAnchor),
+                blurEffectView.trailingAnchor.constraint(equalTo: self.bottomBackgroundView.trailingAnchor),
+                blurEffectView.topAnchor.constraint(equalTo: self.bottomBackgroundView.topAnchor),
+                blurEffectView.bottomAnchor.constraint(equalTo: self.bottomBackgroundView.bottomAnchor),
+            ])
+
+        }
+
     }
 
     func setupWithTheme() {
 
-        self.homeBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        self.preLiveBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        self.liveBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        self.tipsBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        self.casinoBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = .black
+
+        self.containerView.backgroundColor = .clear
+        self.mainContainerView.backgroundColor = .clear
+        self.mainContainerGradientView.backgroundColor = .clear
+
+        self.homeBaseView.backgroundColor = .clear
+        self.preLiveBaseView.backgroundColor = .clear
+        self.liveBaseView.backgroundColor = .clear
+        self.tipsBaseView.backgroundColor = .clear
+        self.casinoBaseView.backgroundColor = .clear
 
         self.homeTitleLabel.textColor = UIColor.App.highlightPrimary
         self.liveTitleLabel.textColor = UIColor.App.highlightPrimary
@@ -584,9 +647,18 @@ class RootViewController: UIViewController {
 
         self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
         self.topBarView.backgroundColor = UIColor.App.backgroundPrimary
-        self.sportsBookContentView.backgroundColor = UIColor.App.backgroundPrimary
-        self.tabBarView.backgroundColor = UIColor.App.backgroundPrimary
-        self.bottomSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.mainContainerGradientLayer.colors = [UIColor.App.backgroundGradient1.cgColor,
+                                                  UIColor.App.backgroundGradient2.cgColor]
+
+        if TargetVariables.shouldUserBlurEffectTabBar {
+            self.tabBarView.backgroundColor = .clear
+            self.bottomSafeAreaView.backgroundColor = .clear
+        }
+        else {
+            self.tabBarView.backgroundColor = UIColor.App.backgroundPrimary
+            self.bottomSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
+        }
 
         self.tabBarView.layer.shadowRadius = 20
         self.tabBarView.layer.shadowOffset = .zero
@@ -598,10 +670,11 @@ class RootViewController: UIViewController {
         self.topBarView.layer.shadowColor = UIColor.black.cgColor
         self.topBarView.layer.shadowOpacity = 0.25
 
-        self.homeButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        self.sportsButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        self.liveButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        self.tipsButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.homeButtonBaseView.backgroundColor = .clear // UIColor.App.backgroundPrimary
+        self.sportsButtonBaseView.backgroundColor = .clear // UIColor.App.backgroundPrimary
+        self.liveButtonBaseView.backgroundColor = .clear // UIColor.App.backgroundPrimary
+        self.tipsButtonBaseView.backgroundColor = .clear // UIColor.App.backgroundPrimary
+
         self.profilePictureBaseView.backgroundColor = UIColor.App.highlightPrimary
 
         self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
@@ -609,6 +682,7 @@ class RootViewController: UIViewController {
         self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
         self.loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
         self.loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
+
         self.loginButton.layer.cornerRadius = CornerRadius.view
         self.loginButton.layer.masksToBounds = true
 
@@ -617,10 +691,10 @@ class RootViewController: UIViewController {
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
 
         self.casinoButtonBaseView.alpha = self.activeButtonAlpha
-        self.casinoIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+        self.casinoIconImageView.setImageColor(color: UIColor.App.iconPrimary)
 
         self.sportsbookButtonBaseView.alpha = self.activeButtonAlpha
-        self.sportsbookIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+        self.sportsbookIconImageView.setImageColor(color: UIColor.App.iconPrimary)
 
         self.redrawButtonButtons()
 
@@ -1083,53 +1157,53 @@ extension RootViewController {
             homeButtonBaseView.alpha = self.activeButtonAlpha
             homeTitleLabel.textColor = UIColor.App.highlightPrimary
             homeIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
-            sportsTitleLabel.textColor = UIColor.App.iconSecondary
-            sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
-            liveTitleLabel.textColor = UIColor.App.iconSecondary
-            liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
-            tipsTitleLabel.textColor = UIColor.App.iconSecondary
-            tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            sportsTitleLabel.textColor = UIColor.App.iconPrimary
+            sportsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            liveTitleLabel.textColor = UIColor.App.iconPrimary
+            liveIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            tipsTitleLabel.textColor = UIColor.App.iconPrimary
+            tipsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
 
         case .preLive:
             sportsButtonBaseView.alpha = self.activeButtonAlpha
-            homeTitleLabel.textColor = UIColor.App.iconSecondary
-            homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            homeTitleLabel.textColor = UIColor.App.iconPrimary
+            homeIconImageView.setImageColor(color: UIColor.App.iconPrimary)
             sportsTitleLabel.textColor = UIColor.App.highlightPrimary
             sportsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
-            liveTitleLabel.textColor = UIColor.App.iconSecondary
-            liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
-            tipsTitleLabel.textColor = UIColor.App.iconSecondary
-            tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            liveTitleLabel.textColor = UIColor.App.iconPrimary
+            liveIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            tipsTitleLabel.textColor = UIColor.App.iconPrimary
+            tipsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
 
         case .live:
             liveButtonBaseView.alpha = self.activeButtonAlpha
-            homeTitleLabel.textColor = UIColor.App.iconSecondary
-            homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
-            sportsTitleLabel.textColor = UIColor.App.iconSecondary
-            sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            homeTitleLabel.textColor = UIColor.App.iconPrimary
+            homeIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            sportsTitleLabel.textColor = UIColor.App.iconPrimary
+            sportsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
             liveTitleLabel.textColor = UIColor.App.highlightPrimary
             liveIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
-            tipsTitleLabel.textColor = UIColor.App.iconSecondary
-            tipsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            tipsTitleLabel.textColor = UIColor.App.iconPrimary
+            tipsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
 
         case .tips:
             tipsButtonBaseView.alpha = self.activeButtonAlpha
-            homeTitleLabel.textColor = UIColor.App.iconSecondary
-            homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
-            sportsTitleLabel.textColor = UIColor.App.iconSecondary
-            sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
-            liveTitleLabel.textColor = UIColor.App.iconSecondary
-            liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            homeTitleLabel.textColor = UIColor.App.iconPrimary
+            homeIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            sportsTitleLabel.textColor = UIColor.App.iconPrimary
+            sportsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            liveTitleLabel.textColor = UIColor.App.iconPrimary
+            liveIconImageView.setImageColor(color: UIColor.App.iconPrimary)
             tipsTitleLabel.textColor = UIColor.App.highlightPrimary
             tipsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
 
         case .casino:
-            homeTitleLabel.textColor = UIColor.App.iconSecondary
-            homeIconImageView.setImageColor(color: UIColor.App.iconSecondary)
-            sportsTitleLabel.textColor = UIColor.App.iconSecondary
-            sportsIconImageView.setImageColor(color: UIColor.App.iconSecondary)
-            liveTitleLabel.textColor = UIColor.App.iconSecondary
-            liveIconImageView.setImageColor(color: UIColor.App.iconSecondary)
+            homeTitleLabel.textColor = UIColor.App.iconPrimary
+            homeIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            sportsTitleLabel.textColor = UIColor.App.iconPrimary
+            sportsIconImageView.setImageColor(color: UIColor.App.iconPrimary)
+            liveTitleLabel.textColor = UIColor.App.iconPrimary
+            liveIconImageView.setImageColor(color: UIColor.App.iconPrimary)
         }
 
     }

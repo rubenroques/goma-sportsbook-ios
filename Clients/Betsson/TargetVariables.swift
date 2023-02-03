@@ -63,4 +63,9 @@ struct TargetVariables: SportsbookTarget {
     static var features: [SportsbookTargetFeatures] {
         return []
     }
+
+    static var shouldUseGradientBackgrounds: Bool {
+        return true
+    }
+
 }
