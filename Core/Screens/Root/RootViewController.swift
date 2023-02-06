@@ -16,7 +16,12 @@ class RootViewController: UIViewController {
     @IBOutlet private var topSafeAreaView: UIView!
     @IBOutlet private var topBarView: UIView!
 
-    private let topBarGradientLayer = CAGradientLayer()
+    private let topBackgroundGradientLayer = CAGradientLayer()
+    private lazy var topGradientBackgroundView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var mainContainerView: UIView!
@@ -238,9 +243,6 @@ class RootViewController: UIViewController {
         super.viewDidLoad()
 
         AnalyticsClient.sendEvent(event: .appStart)
-
-        self.view.sendSubviewToBack(topBarView)
-        self.view.sendSubviewToBack(tabBarView)
 
         self.commonInit()
         // self.loadChildViewControllerIfNeeded(tab: )
@@ -473,7 +475,7 @@ class RootViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        self.topBarGradientLayer.frame = self.topBarView.bounds
+        self.topBackgroundGradientLayer.frame = self.topGradientBackgroundView.bounds
 
         self.mainContainerGradientLayer.frame = self.mainContainerGradientView.bounds
 
@@ -584,10 +586,17 @@ class RootViewController: UIViewController {
             self.tipsButtonBaseView.isHidden = true
         }
 
+        self.view.insertSubview(self.topGradientBackgroundView, belowSubview: self.topSafeAreaView)
+
         self.mainContainerView.insertSubview(self.mainContainerGradientView, at: 0)
         self.mainContainerView.insertSubview(self.bottomBackgroundView, belowSubview: self.tabBarView)
 
         NSLayoutConstraint.activate([
+            self.topGradientBackgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.topGradientBackgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.topGradientBackgroundView.topAnchor.constraint(equalTo: self.topSafeAreaView.topAnchor),
+            self.topGradientBackgroundView.bottomAnchor.constraint(equalTo: self.topBarView.bottomAnchor),
+
             self.mainContainerGradientView.leadingAnchor.constraint(equalTo: self.mainContainerView.leadingAnchor),
             self.mainContainerGradientView.trailingAnchor.constraint(equalTo: self.mainContainerView.trailingAnchor),
             self.mainContainerGradientView.topAnchor.constraint(equalTo: self.mainContainerView.topAnchor),
@@ -600,8 +609,15 @@ class RootViewController: UIViewController {
         ])
 
         self.mainContainerGradientLayer.locations = [0.0, 1.0]
-        self.mainContainerGradientView.backgroundColor = .red
+        self.mainContainerGradientView.backgroundColor = .white
         self.mainContainerGradientView.layer.insertSublayer(self.mainContainerGradientLayer, at: 0)
+
+        self.topBackgroundGradientLayer.locations = [0.0, 0.41, 1.0]
+        self.topBackgroundGradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+        self.topBackgroundGradientLayer.endPoint = CGPoint(x: 1.0, y: 0.4)
+        self.topGradientBackgroundView.backgroundColor = .white
+        self.topGradientBackgroundView.layer.insertSublayer(self.topBackgroundGradientLayer, at: 0)
+
 
         if TargetVariables.shouldUserBlurEffectTabBar {
 
@@ -628,9 +644,20 @@ class RootViewController: UIViewController {
 
         self.view.backgroundColor = .black
 
+
+        self.topSafeAreaView.backgroundColor = .clear
+        self.topBarView.backgroundColor = .clear
+
+        self.topGradientBackgroundView.backgroundColor = .clear
+        self.topBackgroundGradientLayer.colors = [UIColor.App.headerGradient1.cgColor,
+                                                  UIColor.App.headerGradient2.cgColor,
+                                                  UIColor.App.headerGradient3.cgColor]
+
         self.containerView.backgroundColor = .clear
         self.mainContainerView.backgroundColor = .clear
         self.mainContainerGradientView.backgroundColor = .clear
+        self.mainContainerGradientLayer.colors = [UIColor.App.backgroundGradient1.cgColor,
+                                                  UIColor.App.backgroundGradient2.cgColor]
 
         self.homeBaseView.backgroundColor = .clear
         self.preLiveBaseView.backgroundColor = .clear
@@ -645,11 +672,6 @@ class RootViewController: UIViewController {
         self.casinoTitleLabel.textColor = UIColor.App.textSecondary
         self.sportsbookTitleLabel.textColor = UIColor.App.textSecondary
 
-        self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
-        self.topBarView.backgroundColor = UIColor.App.backgroundPrimary
-
-        self.mainContainerGradientLayer.colors = [UIColor.App.backgroundGradient1.cgColor,
-                                                  UIColor.App.backgroundGradient2.cgColor]
 
         if TargetVariables.shouldUserBlurEffectTabBar {
             self.tabBarView.backgroundColor = .clear
@@ -659,16 +681,6 @@ class RootViewController: UIViewController {
             self.tabBarView.backgroundColor = UIColor.App.backgroundPrimary
             self.bottomSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
         }
-
-        self.tabBarView.layer.shadowRadius = 20
-        self.tabBarView.layer.shadowOffset = .zero
-        self.tabBarView.layer.shadowColor = UIColor.black.cgColor
-        self.tabBarView.layer.shadowOpacity = 0.25
-
-        self.topBarView.layer.shadowRadius = 20
-        self.topBarView.layer.shadowOffset = .zero
-        self.topBarView.layer.shadowColor = UIColor.black.cgColor
-        self.topBarView.layer.shadowOpacity = 0.25
 
         self.homeButtonBaseView.backgroundColor = .clear // UIColor.App.backgroundPrimary
         self.sportsButtonBaseView.backgroundColor = .clear // UIColor.App.backgroundPrimary

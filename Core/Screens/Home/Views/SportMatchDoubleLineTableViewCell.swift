@@ -126,11 +126,11 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
         self.firstBackView.backgroundColor = UIColor.App.buttonBackgroundSecondary
         self.secondBackView.backgroundColor = UIColor.App.buttonBackgroundSecondary
 
-        self.seeAllView.backgroundColor = UIColor.App.backgroundPrimary
+        self.seeAllView.backgroundColor = .clear
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
-        self.seeAllLabel.textColor = UIColor.App.highlightPrimary
+        self.seeAllLabel.textColor = UIColor.App.highlightSecondary
     }
 
     func configure(withViewModel viewModel: SportMatchLineViewModel) {

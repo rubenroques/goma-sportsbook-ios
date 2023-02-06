@@ -108,8 +108,8 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
 
         self.backView.backgroundColor = UIColor.App.buttonBackgroundSecondary
 
-        self.seeAllView.backgroundColor = UIColor.App.backgroundPrimary
-        self.seeAllLabel.textColor = UIColor.App.highlightPrimary
+        self.seeAllView.backgroundColor = .clear
+        self.seeAllLabel.textColor = UIColor.App.highlightSecondary
 
     }
 

@@ -278,9 +278,6 @@ class PreLiveEventsViewController: UIViewController {
         filtersCountLabel.layer.masksToBounds = true
         filtersCountLabel.backgroundColor = UIColor.App.highlightSecondary
 
-        tableView.backgroundColor = .clear
-        tableView.backgroundView?.backgroundColor = .clear
-
         tableView.separatorStyle = .none
 
         tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
@@ -513,7 +510,7 @@ class PreLiveEventsViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = .red // UIColor.App.backgroundPrimary
+        self.view.backgroundColor = .clear // UIColor.App.backgroundPrimary
 
         self.competitionsFiltersDarkBackgroundView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -524,8 +521,8 @@ class PreLiveEventsViewController: UIViewController {
         self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
 
-        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
-        self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
+        self.tableView.backgroundColor = .clear // UIColor.App.backgroundPrimary
+        self.tableView.backgroundView?.backgroundColor = .clear // UIColor.App.backgroundPrimary
 
         self.emptyBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary

@@ -17,6 +17,8 @@ class OutrightMarketDetailsViewController: UIViewController {
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var navigationView: UIView = Self.createNavigationView()
+    private lazy var backgroundGradientView: GradientView = Self.createBackgroundGradientView()
+
     private lazy var flagImageView: UIImageView = Self.createFlagImageView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var backButton: UIButton = Self.createBackButton()
@@ -141,7 +143,10 @@ class OutrightMarketDetailsViewController: UIViewController {
         self.accountValueLabel.textColor = UIColor.App.textPrimary
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
         self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
-        
+
+        self.backgroundGradientView.colors = [(UIColor.App.backgroundGradient1, 0.0),
+                                              (UIColor.App.backgroundGradient2, 1.0)]
+
         self.unavailableMarketsView.backgroundColor = UIColor.App.backgroundPrimary
         self.unavailableMarketsLabel.textColor = UIColor.App.textPrimary
     }
@@ -639,10 +644,17 @@ extension OutrightMarketDetailsViewController {
         return label
     }
 
+    private static func createBackgroundGradientView() -> GradientView {
+        let view = GradientView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
     private func setupSubviews() {
 
         self.view.addSubview(self.topSafeAreaView)
         self.view.addSubview(self.navigationView)
+        self.view.addSubview(self.backgroundGradientView)
 
         self.navigationView.addSubview(self.backButton)
         self.navigationView.addSubview(self.flagImageView)
@@ -692,6 +704,11 @@ extension OutrightMarketDetailsViewController {
             self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
             self.navigationView.heightAnchor.constraint(equalToConstant: 40),
+
+            self.backgroundGradientView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.backgroundGradientView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.backgroundGradientView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.backgroundGradientView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
             self.backButton.widthAnchor.constraint(equalTo: self.backButton.heightAnchor),
             self.backButton.widthAnchor.constraint(equalToConstant: 40),

@@ -75,7 +75,7 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
 
         self.contentView.backgroundColor = .clear
 
-        self.containerView.backgroundColor = UIColor.App.backgroundSecondary
+        self.containerView.backgroundColor = UIColor.App.backgroundCards
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 

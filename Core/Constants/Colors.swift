@@ -89,14 +89,14 @@ extension UIColor {
             return UIColor(named: "backgroundGradient2") ?? Self.backgroundPrimary
         }
 
-        static var headerGradient1: UIColor? {
-            return UIColor(named: "headerGradient1")
+        static var headerGradient1: UIColor {
+            return UIColor(named: "headerGradient1") ?? Self.backgroundPrimary
         }
-        static var headerGradient2: UIColor? {
-            return UIColor(named: "headerGradient2")
+        static var headerGradient2: UIColor {
+            return UIColor(named: "headerGradient2") ?? Self.backgroundPrimary
         }
-        static var headerGradient3: UIColor? {
-            return UIColor(named: "headerGradient3")
+        static var headerGradient3: UIColor {
+            return UIColor(named: "headerGradient3") ?? Self.backgroundPrimary
         }
 
     }

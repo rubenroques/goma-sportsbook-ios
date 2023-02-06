@@ -591,7 +591,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
         let titleView = UIView()
-        titleView.backgroundColor = .clear
+        titleView.backgroundColor = UIColor.App.backgroundSecondary
 
         let titleStackView = UIStackView()
         titleStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -609,9 +609,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         titleLabel.font = AppFont.with(type: .bold, size: 17)
 
         let seeAllLabel = UILabel()
+        seeAllLabel.backgroundColor = .clear
         seeAllLabel.translatesAutoresizingMaskIntoConstraints = false
         seeAllLabel.font = AppFont.with(type: .semibold, size: 12)
-        seeAllLabel.textColor = UIColor.App.highlightPrimary
+        seeAllLabel.textColor = UIColor.App.highlightSecondary
         seeAllLabel.text = localized("see_all")
         seeAllLabel.isUserInteractionEnabled = true
 

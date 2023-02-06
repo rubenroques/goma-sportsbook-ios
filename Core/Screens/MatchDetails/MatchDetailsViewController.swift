@@ -73,7 +73,14 @@ class MatchDetailsViewController: UIViewController {
     
     @IBOutlet private var marketTypesCollectionView: UICollectionView!
     @IBOutlet private var tableView: UITableView!
-    
+
+
+    private lazy var backgroundGradientView: GradientView = {
+        let view = GradientView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
     @IBOutlet private var marketGroupsPagedBaseView: UIView!
     private var marketGroupsPagedViewController: UIPageViewController
     
@@ -283,7 +290,18 @@ class MatchDetailsViewController: UIViewController {
         
         //
         self.addChildViewController(marketGroupsPagedViewController, toView: marketGroupsPagedBaseView)
-        
+
+        //
+        self.view.insertSubview(self.backgroundGradientView, at: 0)
+
+        NSLayoutConstraint.activate([
+            self.backgroundGradientView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.backgroundGradientView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.backgroundGradientView.topAnchor.constraint(equalTo: self.headerDetailView.bottomAnchor),
+            self.backgroundGradientView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+        ])
+        //
+
         //
         self.matchFieldWebViewHeight.constant = 0
         
@@ -531,7 +549,12 @@ class MatchDetailsViewController: UIViewController {
         self.accountValueLabel.textColor = UIColor.App.textPrimary
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
         self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
-        
+
+        //
+        self.backgroundGradientView.colors = [(UIColor.App.backgroundGradient1, 0.0),
+                                              (UIColor.App.backgroundGradient2, 1.0)]
+
+        self.marketGroupsPagedBaseView.backgroundColor = .clear
         // Market List CollectionView
         self.marketTypesCollectionView.backgroundColor = UIColor.App.backgroundSecondary
         
@@ -541,10 +564,10 @@ class MatchDetailsViewController: UIViewController {
         self.matchFieldBaseView.backgroundColor = UIColor.App.backgroundTertiary
         self.matchFieldWebView.backgroundColor = UIColor.App.backgroundTertiary
         
-        self.matchNotAvailableView.backgroundColor = UIColor.App.backgroundPrimary
+        self.matchNotAvailableView.backgroundColor = .clear
         self.matchNotAvailableLabel.textColor = UIColor.App.textPrimary
 
-        self.marketsNotAvailableView.backgroundColor = UIColor.App.backgroundPrimary
+        self.marketsNotAvailableView.backgroundColor = .clear
         self.marketsNotAvailableLabel.textColor = UIColor.App.textPrimary
 
         self.matchFieldLoadingView.tintColor = .gray
@@ -1075,7 +1098,9 @@ class MatchDetailsViewController: UIViewController {
     
     func showMatchNotAvailableView() {
         self.shareButton.isHidden = true
-        
+
+        self.marketTypesCollectionView.isHidden = true
+
         self.matchNotAvailableView.isHidden = false
     }
 
