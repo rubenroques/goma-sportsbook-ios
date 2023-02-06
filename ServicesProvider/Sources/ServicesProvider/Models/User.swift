@@ -512,4 +512,64 @@ public struct UpdatePaymentAction: Codable {
     }
 }
 
+public struct PersonalDepositLimitResponse: Codable {
 
+    public var status: String
+    public var dailyLimit: String?
+    public var weeklyLimit: String?
+    public var monthlyLimit: String?
+    public var currency: String
+    public var hasPendingWeeklyLimit: String?
+    public var pendingWeeklyLimit: String?
+    public var pendingWeeklyLimitEffectiveDate: String?
+
+    enum CodingKeys: String, CodingKey {
+        case status = "status"
+        case dailyLimit = "dailyLimit"
+        case weeklyLimit = "weeklyLimit"
+        case monthlyLimit = "monthlyLimit"
+        case currency = "currency"
+        case hasPendingWeeklyLimit = "hasPendingWeeklyLimit"
+        case pendingWeeklyLimit = "pendingWeeklyLimit"
+        case pendingWeeklyLimitEffectiveDate = "pendingWeeklyLimitEffectiveDate"
+    }
+}
+
+public struct LimitsResponse: Codable {
+
+    public var status: String
+    public var wagerLimit: Double?
+    public var lossLimit: Double?
+    public var currency: String
+
+    enum CodingKeys: String, CodingKey {
+        case status = "status"
+        case wagerLimit = "wagerLimit"
+        case lossLimit = "lossLimit"
+        case currency = "currency"
+    }
+}
+
+public struct Limit {
+    public var updatable: Bool
+    public var current: LimitInfo?
+
+    public init(updatable: Bool, current: LimitInfo) {
+        self.updatable = updatable
+        self.current = current
+    }
+}
+
+public struct LimitInfo {
+    public var period: String
+    public var currency: String
+    public var amount: Double
+    public var expiryDate: String?
+
+    public init(period: String, currency: String, amount: Double, expiryDate: String? = nil) {
+        self.period = period
+        self.currency = currency
+        self.amount = amount
+        self.expiryDate = expiryDate
+    }
+}

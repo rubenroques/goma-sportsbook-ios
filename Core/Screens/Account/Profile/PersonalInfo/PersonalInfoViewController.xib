@@ -88,7 +88,7 @@
                     <rect key="frame" x="0.0" y="100" width="414" height="1102"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1gG-hR-Fft">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="1173"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="997"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RSd-Yc-g2A" customClass="HeaderTextFieldView" customModule="Crocobet" customModuleProvider="target">
                                     <rect key="frame" x="16" y="88" width="382" height="80"/>
@@ -236,6 +236,7 @@
                                 <constraint firstItem="O1P-Mb-hlb" firstAttribute="leading" secondItem="1gG-hR-Fft" secondAttribute="leading" constant="16" id="nQ5-QU-5lI"/>
                                 <constraint firstItem="Zvu-Rc-BwZ" firstAttribute="top" secondItem="hb2-tJ-haa" secondAttribute="bottom" constant="8" id="nWB-eO-HVi"/>
                                 <constraint firstItem="6rd-p4-die" firstAttribute="width" secondItem="CP6-gF-fhM" secondAttribute="width" id="qvF-KS-deI"/>
+                                <constraint firstAttribute="bottom" secondItem="hb2-tJ-haa" secondAttribute="bottom" constant="40" id="sXs-CS-cw2"/>
                                 <constraint firstItem="6rd-p4-die" firstAttribute="top" secondItem="hVs-Yj-IdY" secondAttribute="bottom" constant="8" id="u94-tq-IVc"/>
                                 <constraint firstItem="Lvj-YW-x7r" firstAttribute="leading" secondItem="1gG-hR-Fft" secondAttribute="leading" constant="16" id="uSb-W9-PdV"/>
                                 <constraint firstAttribute="trailing" secondItem="4bo-qc-VHQ" secondAttribute="trailing" constant="16" id="wd6-Ll-7Yw"/>
@@ -245,6 +246,15 @@
                                 <constraint firstAttribute="bottom" secondItem="Lvj-YW-x7r" secondAttribute="bottom" constant="40" id="yrS-cP-bb3"/>
                                 <constraint firstItem="vZS-jN-qxW" firstAttribute="top" secondItem="O1P-Mb-hlb" secondAttribute="bottom" constant="8" id="zVE-jw-NHy"/>
                             </constraints>
+                            <variation key="default">
+                                <mask key="subviews">
+                                    <exclude reference="Zvu-Rc-BwZ"/>
+                                    <exclude reference="Lvj-YW-x7r"/>
+                                </mask>
+                                <mask key="constraints">
+                                    <exclude reference="nWB-eO-HVi"/>
+                                </mask>
+                            </variation>
                         </view>
                     </subviews>
                     <constraints>

@@ -43,6 +43,8 @@ protocol PrivilegedAccessManager {
 
     func updateWeeklyDepositLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError>
     func updateWeeklyBettingLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError>
+    func getPersonalDepositLimits() -> AnyPublisher<PersonalDepositLimitResponse, ServiceProviderError>
+    func getLimits() -> AnyPublisher<LimitsResponse, ServiceProviderError>
 
     func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError>
     func signUpCompletion(form: ServicesProvider.UpdateUserProfileForm)  -> AnyPublisher<Bool, ServiceProviderError>

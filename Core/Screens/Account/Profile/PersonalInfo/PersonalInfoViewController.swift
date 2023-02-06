@@ -180,6 +180,7 @@ class PersonalInfoViewController: UIViewController {
         countryHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         countryHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
         countryHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
+        countryHeaderTextFieldView.isDisabled = true
 
         birthDateHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
         birthDateHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
@@ -431,7 +432,7 @@ class PersonalInfoViewController: UIViewController {
                 }
                 self.hideLoadingView()
             } receiveValue: { _ in
-                self.showAlert(type: .success, text: localized("profile_updated_success"))
+                //self.showAlert(type: .success, text: localized("profile_updated_success"))
             }
             .store(in: &cancellables)
         

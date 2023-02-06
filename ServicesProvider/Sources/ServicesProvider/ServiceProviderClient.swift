@@ -454,6 +454,26 @@ extension ServicesProviderClient {
         return privilegedAccessManager.updateWeeklyBettingLimits(newLimit: newLimit)
     }
 
+    public func getPersonalDepositLimits() -> AnyPublisher<PersonalDepositLimitResponse, ServiceProviderError> {
+
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.getPersonalDepositLimits()
+    }
+
+    public func getLimits() -> AnyPublisher<LimitsResponse, ServiceProviderError> {
+
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.getLimits()
+    }
+
     public func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager

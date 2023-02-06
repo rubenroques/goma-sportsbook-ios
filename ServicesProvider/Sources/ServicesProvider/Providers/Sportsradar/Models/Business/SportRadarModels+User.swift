@@ -606,4 +606,43 @@ extension SportRadarModels {
             case type = "type"
         }
     }
+
+    struct PersonalDepositLimitResponse: Codable {
+
+        var status: String
+        var dailyLimit: String?
+        var weeklyLimit: String?
+        var monthlyLimit: String?
+        var currency: String
+        var hasPendingWeeklyLimit: String?
+        var pendingWeeklyLimit: String?
+        var pendingWeeklyLimitEffectiveDate: String?
+
+        enum CodingKeys: String, CodingKey {
+            case status = "status"
+            case dailyLimit = "dailyLimit"
+            case weeklyLimit = "weeklyLimit"
+            case monthlyLimit = "monthlyLimit"
+            case currency = "currency"
+            case hasPendingWeeklyLimit = "hasPendingWeeklyLimit"
+            case pendingWeeklyLimit = "pendingWeeklyLimit"
+            case pendingWeeklyLimitEffectiveDate = "pendingWeeklyLimitEffectiveDate"
+        }
+    }
+
+    struct LimitsResponse: Codable {
+
+        var status: String
+        var wagerLimit: Double?
+        var lossLimit: Double?
+        var currency: String
+
+        enum CodingKeys: String, CodingKey {
+            case status = "status"
+            case wagerLimit = "wagerLimit"
+            case lossLimit = "lossLimit"
+            case currency = "currency"
+        }
+    }
+
 }

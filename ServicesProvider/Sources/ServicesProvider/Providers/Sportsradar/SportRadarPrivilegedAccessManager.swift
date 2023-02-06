@@ -379,6 +379,40 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         .eraseToAnyPublisher()
     }
 
+    func getPersonalDepositLimits() -> AnyPublisher<PersonalDepositLimitResponse, ServiceProviderError> {
+        let endpoint = OmegaAPIClient.getPersonalDepositLimits
+        let publisher: AnyPublisher<SportRadarModels.PersonalDepositLimitResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ personalDepositLimitResponse -> AnyPublisher<PersonalDepositLimitResponse, ServiceProviderError> in
+            if personalDepositLimitResponse.status == "SUCCESS" {
+
+                let personalDepositLimitResponse = SportRadarModelMapper.personalDepositLimitsResponse(fromPersonalDepositLimitsResponse: personalDepositLimitResponse)
+
+                return Just(personalDepositLimitResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+
+            return Fail(outputType: PersonalDepositLimitResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+    }
+
+    func getLimits() -> AnyPublisher<LimitsResponse, ServiceProviderError> {
+        let endpoint = OmegaAPIClient.getLimits
+
+        let publisher: AnyPublisher<SportRadarModels.LimitsResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ limitsResponse -> AnyPublisher<LimitsResponse, ServiceProviderError> in
+            if limitsResponse.status == "SUCCESS" {
+
+                let limitsResponse = SportRadarModelMapper.limitsResponse(fromInternalLimitsResponse: limitsResponse)
+
+                return Just(limitsResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+
+            return Fail(outputType: LimitsResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+    }
 
     func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError> {
         let endpoint = OmegaAPIClient.getBalance
