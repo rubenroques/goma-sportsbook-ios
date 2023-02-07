@@ -42,6 +42,7 @@ extension SportRadarRestAPIClient: Endpoint {
 
         case .marketsFilter:
             return "/sportradar/sportsbook/config/marketsFilter_v2.json"
+            
         case .fieldWidgetId:
             return "/services/content/get"
         case .sportsBoNavigationList:
@@ -58,18 +59,19 @@ extension SportRadarRestAPIClient: Endpoint {
             return "/services/content/get"
         case .banners:
             return "/services/content/get"
+
         case .favoritesList:
-            return "/API/favourites/fw/getAccountFavouriteCoupon"
+            return "/api/favourites/fw/getAccountFavouriteCoupon"
         case .addFavoriteList:
-            return "/API/favourites/fw/addAccountFavouriteCoupon"
+            return "/api/favourites/fw/addAccountFavouriteCoupon"
         case .addFavoriteToList:
-            return "/API/favourites/fw/addAccountFavourite"
+            return "/api/favourites/fw/addAccountFavourite"
         case .getFavoritesFromList:
-            return "/API/favourites/fw/getFavouritesForCustomer"
+            return "/api/favourites/fw/getFavouritesForCustomer"
         case .deleteFavoriteList:
-            return "/API/favourites/fw/deleteAccountFavouriteCoupon"
+            return "/api/favourites/fw/deleteAccountFavouriteCoupon"
         case .deleteFavoriteFromList:
-            return "/API/favourites/fw/deleteAccountFavourite"
+            return "/api/favourites/fw/deleteAccountFavourite"
         }
     }
 

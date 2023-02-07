@@ -224,7 +224,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher.flatMap({ (statusResponse: SportRadarModels.StatusResponse) -> AnyPublisher<SignUpResponse, ServiceProviderError> in
-            if statusResponse.status == "SUCCESS" {
+            if statusResponse.status == "SUCCESS" || statusResponse.status == "BONUSPLAN_NOT_FOUND" {
                 return Just( SignUpResponse(successful: true) ).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
             else if let errors = statusResponse.errors {

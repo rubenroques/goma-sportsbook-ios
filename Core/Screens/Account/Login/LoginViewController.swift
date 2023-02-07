@@ -322,7 +322,6 @@ class LoginViewController: UIViewController {
         navigationController.pushViewController(biometricPromptViewController, animated: true)
     }
 
-
     private func showLimitsOnRegisterViewController(onNavigationController navigationController: UINavigationController) {
         let viewModel = LimitsOnRegisterViewModel(servicesProvider: Env.servicesProvider)
         let limitsOnRegisterViewController = LimitsOnRegisterViewController(viewModel: viewModel)
@@ -338,7 +337,6 @@ class LoginViewController: UIViewController {
         navigationController.pushViewController(limitsOnRegisterViewController, animated: true)
     }
 
-
     private func showDepositOnRegisterViewController(onNavigationController navigationController: UINavigationController) {
         let depositOnRegisterViewController = DepositOnRegisterViewController()
         depositOnRegisterViewController.didTapBackButtonAction = {
@@ -349,7 +347,6 @@ class LoginViewController: UIViewController {
         }
         navigationController.pushViewController(depositOnRegisterViewController, animated: true)
     }
-
 
     private func deleteCachedRegistrationData() {
         UserDefaults.standard.removeObject(forKey: self.registrationFormDataKey)

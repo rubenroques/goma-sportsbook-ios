@@ -6,8 +6,8 @@
 
 */
 
-"languange_code" = "pt";
-"languange_code_complete" = "pt-pt";
+"languange_code" = "es";
+"languange_code_complete" = "es-es";
 
 "update_available" = "Update available";
 "maintenance_mode" = "Temporarily Down For Maintenance";
@@ -42,6 +42,7 @@
 "invalid_email" = "This email format appears to be invalid.";
 "email_already_registered" = "This email address is already registered.";
 "username_already_registered" = "This username is already registered.";
+"invalid_username" = "This email format appears to be invalid.";
 "forgot" = "Forgot Password?";
 
 "new_create_account" = "New here? Create a new account";
@@ -316,6 +317,7 @@ Terms of use, Privacy Policy and EULA";
 "wallet_error" = "Wallet Error";
 "wallet_error_message" = "There was an error trying to get your wallet settings. Try again later.";
 "email_address_or_username" = "Email or Username";
+"email_address_placeholder" = "Email";
 "app_version_profile" = "App Version %s (%s)\nSportsbook® All Rights Reserved";
 "daily" = "Daily";
 "weekly" = "Weekly";
@@ -541,7 +543,7 @@ Terms of use, Privacy Policy and EULA";
 "send_friends_groups" = "Send to friends and groups";
 "send" = "Send";
 
-"check_this_bet_made" = "Check out this bet I just made!";
+"check_this_bet_made" = "Check out this bet I made!";
 "ticket_url_pasteboard" = "Ticket link was copied.";
 
 "send_to_chat" = "Send to chat";
@@ -583,24 +585,15 @@ Terms of use, Privacy Policy and EULA";
 "bet" = "Bet";
 
 "follow" = "Follow";
-"following" = "Following";
 "total_odds" = "Total Odds";
 "number_selections" = "Number of selections";
 "bet_same" = "Bet the same";
 "show_full_tip" = "Show full tip";
 "featured_tips" = "Featured Tips";
 "tips" = "Tips";
-"no_tips" = "There’s no tips here!";
-"no_tips_to_display" = "There are no tips currently to be displayed.";
-
-"rankings" = "Rankings";
-"top_tipsters" = "Top Tipsters";
-"top_tips" = "Top Tips";
 
 "no_login_tips" = "You need to be logged in to be able to see tips";
 "no_login_rankings" = "You need to be logged in to be able to see rankings";
-"no_rankings" = "There’s no rankings here!";
-"no_rankings_to_display" = "There are no rankings currently to be displayed.";
 
 "add_friends_tip" = "You need to add some friends to see what kind of tips they share.";
 "select" = "Select";
@@ -612,3 +605,52 @@ Terms of use, Privacy Policy and EULA";
 "no_value" = "-.--€";
 "empty_value" = "";
 "empty" = "-";
+"unfollow" = "Unfollow";
+
+"accumulated_odds_winning" = "Accumulated odd of winning";
+"best_consecutive_wins" = "Best number of consecutive wins";
+"highest_odd" = "Highest odd";
+"percentage_sports" = "Percentage of bets per sport";
+
+"friend_request_sent" = "Friend Request Sent!";
+"block_user" = "Block User";
+
+"latest_tips" = "Latest Tips";
+"rankings" = "Rankings";
+"top_tips" = "Top Tips";
+"friends" = "Friends";
+"following" = "Following";
+"top_tipsters" = "Top Tipsters";
+"suggested_bets" = "Suggested Bets";
+
+"anonymous_tips_info" = "Anonymous Tips (Your bets will be shared as an anonymous user)";
+"anonymous_tips" = "Anonymous Tips";
+
+"accept" = "Accept";
+"reject" = "Reject";
+"read_all" = "Read all";
+
+"email_verification" = "Email Verification";
+"betbuilder_enabled" = "BetBuilder Enabled";
+
+"code_verification_error" = "Code Verification Error";
+"proceed" = "Proceed";
+"forgot_password" = "Forgot Password";
+"email_associated_account" = "Please enter your Email associated with your Account";
+
+"recover_password_sent" = "Recover Password Sent";
+"recover_password_sent_message" = "If the information provided is correct, a confirmation email will be sent to the registered email address. \nClick the link or Input the verification code in the email to complete the password reset process & create a new password.";
+"current_password_incorrect" = "Current password incorrect.";
+
+"markets_not_available" = "Markets not available.";
+
+"upload_documents" = "Upload Documents";
+"kyc_account_status" = "KYC Account Status:";
+"identification" = "Identification";
+"proof_of_address" = "Proof of address";
+
+"document_validation_required" = "Document Validation Required";
+"document_validation_required_description" = "To access all features of our platform, we require you to submit your valid documents for verification.";
+"complete_verification" = "Complete your verification";
+
+"payments" = "Payments";

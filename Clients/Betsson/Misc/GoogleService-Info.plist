@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>844144342615-ip11fp6pv8dkdh6utn6rs65o7hdiqjbl.apps.googleusercontent.com</string>
+	<string>844144342615-kd80slb4n26m7i1rrue50ggq8ubb4f8q.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.844144342615-ip11fp6pv8dkdh6utn6rs65o7hdiqjbl</string>
+	<string>com.googleusercontent.apps.844144342615-kd80slb4n26m7i1rrue50ggq8ubb4f8q</string>
 	<key>API_KEY</key>
 	<string>AIzaSyDNv7AlyZSGqPd9_VVqjXYPlpuvx-WyYZM</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.gomagaming.goma</string>
+	<string>com.gomagaming.betsson</string>
 	<key>PROJECT_ID</key>
 	<string>goma-sportsbook</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:844144342615:ios:17f6d6c21bc0d4be8a9512</string>
+	<string>1:844144342615:ios:9d61f3eb24c40f4f8a9512</string>
 	<key>DATABASE_URL</key>
 	<string>https://goma-sportsbook-default-rtdb.europe-west1.firebasedatabase.app</string>
 </dict>

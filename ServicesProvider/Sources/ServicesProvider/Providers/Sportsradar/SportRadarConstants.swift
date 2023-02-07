@@ -13,7 +13,8 @@ struct SportRadarConstants {
 //       GOMA ENV
 //    =======================================
 
-//    //Events via socket
+//    Events via socket
+//
 //    static var socketHostname = "wss://velnt-spor-int.optimahq.com"
 //    static var socketURL: String {
 //        return socketHostname + "/notification/listen/websocket"
@@ -34,24 +35,23 @@ struct SportRadarConstants {
 //    ===================================================================================================================
 
 
-
 //    =======================================
 //       BETSSON
 //    =======================================
-
+//
 //    //Events via socket
     static var socketHostname = "wss://velnt-bson-ssb-ua.betsson.fr"
     static var socketURL: String {
         return socketHostname + "/notification/listen/websocket"
     }
-    static var socketRestHostname = "https://velsv-bson-ssb-ua.betsson.fr" // To subscribe to contentIDs
+    static var socketRestHostname = "https://www-bson-ssb-ua.betsson.fr" // To subscribe to contentIDs
     static var socketLanguageCode = "UK"
 
     // PAM
     // //static var pamHostname = "https://ps.omegasys.eu"
     static var pamHostname = "https://bfr-ps.omegasys.eu"
     // Betting
-    static var bettingHostname = "https://velsv-bson-ssb-ua.betsson.fr"
+    static var bettingHostname = "https://www-bson-ssb-ua.betsson.fr"
 
     // Others
     static var sportRadarFrontEndURL = "https://cdn1.optimahq.com"
@@ -62,8 +62,9 @@ struct SportRadarConstants {
 //    =======================================
 //       DEMO VIDEO ENV
 //    =======================================
-
-    //Events via socket
+//
+//    Events via socket
+//
 //    static var socketHostname = "wss://velnt-spor-uat.optimahq.com"
 //    static var socketURL: String {
 //        return socketHostname + "/notification/listen/websocket"
