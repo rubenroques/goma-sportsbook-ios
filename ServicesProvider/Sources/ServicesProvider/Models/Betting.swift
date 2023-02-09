@@ -69,7 +69,7 @@ public enum BetGroupingType: Codable {
             return identifier
         case .multiple(let identifier):
             return identifier
-        case .system(let identifier, let name):
+        case .system(let identifier, _):
             return identifier
         }
     }

@@ -605,8 +605,7 @@ class MatchDetailsViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] userWallet in
                 if let userWallet = userWallet,
-                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: userWallet.total))
-                {
+                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: userWallet.total)) {
                     self?.accountValueLabel.text = formattedTotalString
                 }
                 else {
@@ -614,58 +613,25 @@ class MatchDetailsViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
-//
-//        Env.userSessionStore.userBalanceWallet
-//            .compactMap({$0})
-//            .map(\.amount)
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] value in
-//                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
-//                    let accountValue = bonusWallet.amount + value
-//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-//
-//                }
-//                else {
-//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
-//                }
-//            }
-//            .store(in: &cancellables)
-//
-//        Env.userSessionStore.userBonusBalanceWallet
-//            .compactMap({$0})
-//            .map(\.amount)
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] value in
-//                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
-//                    let accountValue = currentWallet.amount + value
-//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-//                }
-//            }
-//            .store(in: &cancellables)
-        
-        self.viewModel.isLoadingMarketGroups
-            .removeDuplicates()
+
+        self.viewModel.marketGroupsState
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isLoading in
-                if isLoading {
+            .sink { [weak self] marketGroupState in
+                switch marketGroupState {
+                case .idle:
                     self?.loadingView.startAnimating()
-                }
-                else {
+                case .loading:
+                    self?.loadingView.startAnimating()
+                case let .loaded(marketGroups):
                     self?.loadingView.stopAnimating()
-                }
-            }
-            .store(in: &cancellables)
-        
-        self.viewModel.marketGroupsPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] marketGroups in
-                self?.reloadMarketGroupDetails(marketGroups)
-                self?.reloadCollectionView()
-
-                if marketGroups.isEmpty {
+                    self?.showMarkets()
+                    self?.reloadMarketGroupDetails(marketGroups)
+                case .failed:
+                    self?.loadingView.stopAnimating()
                     self?.showMarketsNotAvailableView()
+                    self?.reloadMarketGroupDetails([])
                 }
-
+                self?.reloadCollectionView()
             }
             .store(in: &cancellables)
         
@@ -685,12 +651,11 @@ class MatchDetailsViewController: UIViewController {
             .sink(receiveValue: { [weak self] loadableMatch in
                 switch loadableMatch {
                 case .idle, .loading:
-                    self?.hideContentViews()
+                    ()
                 case .loaded:
                     self?.setupHeaderDetails()
                     self?.setupMatchField()
                     self?.statsCollectionView.reloadData()
-                    self?.showMarkets()
                 case .failed:
                     self?.showMatchNotAvailableView()
                 }
@@ -1000,52 +965,14 @@ class MatchDetailsViewController: UIViewController {
     }
     
     func updateHeaderDetails() {
-        
-        guard let match = self.viewModel.match else {
-            return
-        }
-        
-        let matchId = self.viewModel.matchId
-        
+
         var homeGoals = ""
         var awayGoals = ""
         var minutes = ""
         var matchPart = ""
-        
-        if let matchInfoArray = self.viewModel.store.matchesInfoForMatch[matchId] {
-            for matchInfoId in matchInfoArray {
-                if let matchInfo = self.viewModel.store.matchesInfo[matchInfoId] {
-                    if (matchInfo.typeId ?? "") == "1" && (matchInfo.eventPartId ?? "") == match.rootPartId {
-                        // Goals
-                        if let homeGoalsFloat = matchInfo.paramFloat1 {
-                            if match.homeParticipant.id == matchInfo.paramParticipantId1 {
-                                homeGoals = "\(homeGoalsFloat)"
-                            }
-                            else if match.awayParticipant.id == matchInfo.paramParticipantId1 {
-                                awayGoals = "\(homeGoalsFloat)"
-                            }
-                        }
-                        if let awayGoalsFloat = matchInfo.paramFloat2 {
-                            if match.homeParticipant.id == matchInfo.paramParticipantId2 {
-                                homeGoals = "\(awayGoalsFloat)"
-                            }
-                            else if match.awayParticipant.id == matchInfo.paramParticipantId2 {
-                                awayGoals = "\(awayGoalsFloat)"
-                            }
-                        }
-                    }
-                    else if (matchInfo.typeId ?? "") == "95", let minutesFloat = matchInfo.paramFloat1 {
-                        // Match Minutes
-                        minutes = "\(minutesFloat)"
-                    }
-                    else if (matchInfo.typeId ?? "") == "92", let eventPartName = matchInfo.paramEventPartName1 {
-                        // Status Part
-                        matchPart = eventPartName
-                    }
-                }
-            }
-        }
-        
+
+        // TODO: Request and Update Match info
+
         if homeGoals.isNotEmpty && awayGoals.isNotEmpty {
             self.headerDetailLiveTopLabel.text = "\(homeGoals) - \(awayGoals)"
         }
@@ -1062,11 +989,9 @@ class MatchDetailsViewController: UIViewController {
     }
 
     @objc func didTapMarkets() {
-
         if self.shouldShowLiveFieldWebView {
             self.contentScrollView.setContentOffset(CGPoint.zero, animated: true)
         }
-
     }
     
     @objc func didTapLiveButtonHeaderView() {
@@ -1094,13 +1019,6 @@ class MatchDetailsViewController: UIViewController {
         case .stats:
             self.headerBarSelection = .none
         }
-    }
-
-    func hideContentViews() {
-        self.marketGroupsPagedBaseView.isHidden = true
-        self.marketTypesCollectionView.isHidden = true
-        self.marketsNotAvailableView.isHidden = true
-        self.matchNotAvailableView.isHidden = true
     }
 
     func showMarkets() {

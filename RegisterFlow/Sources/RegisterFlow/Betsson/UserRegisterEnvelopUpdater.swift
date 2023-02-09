@@ -68,7 +68,6 @@ public class UserRegisterEnvelopUpdater {
     }
 
     func setNickname(_ nickname: String?) {
-        print("DEBUG NICKNAME: saving \(nickname)")
         self.userRegisterEnvelop.nickname = nickname
         self.filledDataUpdated.send(self.userRegisterEnvelop)
     }

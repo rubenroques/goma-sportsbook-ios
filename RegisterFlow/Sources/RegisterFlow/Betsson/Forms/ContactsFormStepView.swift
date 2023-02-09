@@ -148,7 +148,6 @@ class ContactsFormStepViewModel {
         let clearedEmail = self.email.removeDuplicates()
 
         Publishers.CombineLatest(clearedEmailState, clearedEmail)
-            .print("DEBUG-EMAIL: ")
             .debounce(for: .seconds(0.6), scheduler: DispatchQueue.main)
             .filter { emailState, email in
                 return emailState == .needsValidation

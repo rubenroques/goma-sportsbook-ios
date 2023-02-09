@@ -256,7 +256,7 @@ extension OmegaAPIClient: Endpoint {
                 query.append(URLQueryItem(name: "receiveEmail", value: receiveMarketingEmails ? "true" : "false"))
             }
 
-            var extraInfo = """
+            let extraInfo = """
                             {
                             "avatar":"\(avatarName ?? "")",
                             "placeOfBirth":"\(placeOfBirth ?? "")",

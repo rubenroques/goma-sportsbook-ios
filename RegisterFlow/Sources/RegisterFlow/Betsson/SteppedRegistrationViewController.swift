@@ -169,10 +169,9 @@ public class SteppedRegistrationViewModel {
         serviceProvider.signUp(form: form)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
-
                 switch completion {
                 case .failure(let error):
-                    print("Error \(error)")
+                    print("RegisterFlow ServiceProvider.signUp Error \(error)")
                 case .finished:
                     ()
                 }
