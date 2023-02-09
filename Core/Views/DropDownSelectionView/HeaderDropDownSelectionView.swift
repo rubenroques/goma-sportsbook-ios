@@ -311,6 +311,7 @@ class HeaderDropDownSelectionView: UIView {
     }
 
     @objc func datePickerDone() {
+        self.textPublisher.send(text)
         self.resignFirstResponder()
     }
 

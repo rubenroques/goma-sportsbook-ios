@@ -538,25 +538,41 @@ public struct PersonalDepositLimitResponse: Codable {
 public struct LimitsResponse: Codable {
 
     public var status: String
-    public var wagerLimit: Double?
-    public var lossLimit: Double?
+    public var wagerLimit: String?
+    public var lossLimit: String?
     public var currency: String
+    public var pendingWagerLimit: LimitPending?
 
     enum CodingKeys: String, CodingKey {
         case status = "status"
         case wagerLimit = "wagerLimit"
         case lossLimit = "lossLimit"
         case currency = "currency"
+        case pendingWagerLimit = "pendingWagerLimit"
+    }
+}
+
+public struct LimitPending: Codable {
+    public var effectiveDate: String
+    public var limit: String
+    public var limitNumber: Double
+
+    enum CodingKeys: String, CodingKey {
+        case effectiveDate = "effectiveDate"
+        case limit = "limit"
+        case limitNumber = "limitNumber"
     }
 }
 
 public struct Limit {
     public var updatable: Bool
     public var current: LimitInfo?
+    public var queued: LimitInfo?
 
-    public init(updatable: Bool, current: LimitInfo) {
+    public init(updatable: Bool, current: LimitInfo?, queued: LimitInfo?) {
         self.updatable = updatable
         self.current = current
+        self.queued = queued
     }
 }
 
@@ -571,5 +587,15 @@ public struct LimitInfo {
         self.currency = currency
         self.amount = amount
         self.expiryDate = expiryDate
+    }
+}
+
+public struct BasicResponse: Codable {
+    public var status: String
+    public var message: String?
+
+    enum CodingKeys: String, CodingKey {
+        case status = "status"
+        case message = "message"
     }
 }

@@ -633,15 +633,39 @@ extension SportRadarModels {
     struct LimitsResponse: Codable {
 
         var status: String
-        var wagerLimit: Double?
-        var lossLimit: Double?
+        var wagerLimit: String?
+        var lossLimit: String?
         var currency: String
+        var pendingWagerLimit: LimitPending?
 
         enum CodingKeys: String, CodingKey {
             case status = "status"
             case wagerLimit = "wagerLimit"
             case lossLimit = "lossLimit"
             case currency = "currency"
+            case pendingWagerLimit = "pendingWagerLimit"
+        }
+    }
+
+    struct LimitPending: Codable {
+        var effectiveDate: String
+        var limit: String
+        var limitNumber: Double
+
+        enum CodingKeys: String, CodingKey {
+            case effectiveDate = "effectiveDate"
+            case limit = "limit"
+            case limitNumber = "limitNumber"
+        }
+    }
+
+    struct BasicResponse: Codable {
+        var status: String
+        var message: String?
+
+        enum CodingKeys: String, CodingKey {
+            case status = "status"
+            case message = "message"
         }
     }
 

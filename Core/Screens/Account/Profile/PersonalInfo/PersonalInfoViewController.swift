@@ -111,7 +111,7 @@ class PersonalInfoViewController: UIViewController {
         birthDateHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
         birthDateHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .regular, size: 15))
         birthDateHeaderTextFieldView.setPlaceholderTextColor(UIColor.App.inputTextTitle)
-        birthDateHeaderTextFieldView.shouldBeginEditing = { return false }
+        birthDateHeaderTextFieldView.shouldBeginEditing = { return true }
 
         adress1HeaderTextFieldView.setPlaceholderText(localized("address_1"))
 
@@ -186,7 +186,8 @@ class PersonalInfoViewController: UIViewController {
         birthDateHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         birthDateHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
         birthDateHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
-        birthDateHeaderTextFieldView.isDisabled = true
+//        birthDateHeaderTextFieldView.isDisabled = true
+        birthDateHeaderTextFieldView.setDatePickerMode()
         
         adress1HeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
         adress1HeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
@@ -226,7 +227,7 @@ class PersonalInfoViewController: UIViewController {
         placeOfBirthHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
         placeOfBirthHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         placeOfBirthHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
-        placeOfBirthHeaderTextFieldView.isDisabled = true
+//        placeOfBirthHeaderTextFieldView.isDisabled = true
 
     }
 
@@ -296,7 +297,6 @@ class PersonalInfoViewController: UIViewController {
 
     }
 
-    
     func generateFormHash() -> String {
         return [self.titleHeaderTextFieldView.text,
                 self.firstNameHeaderTextFieldView.text,
@@ -343,13 +343,15 @@ class PersonalInfoViewController: UIViewController {
 
 //        let city = self.profile?.city
         let city = cityHeaderTextFieldView.text
+
+        let placeOfBirth = placeOfBirthHeaderTextFieldView.text
         
         var serviceProviderCountry: SharedModels.Country?
         if let countryValue = self.profile?.country {
             serviceProviderCountry = ServiceProviderModelMapper.country(fromCountry: countryValue)
         }
         
-        let date = DateFormatter(format: "dd-MM-yyyy").date(from: birthDateString)
+        let date = DateFormatter(format: "yyyy-MM-dd").date(from: birthDateString)
 //        let securityQuestion = profile?.securityQuestion ?? ""
 //        let securityAnswer = profile?.securityAnswer ?? ""
 
@@ -435,6 +437,25 @@ class PersonalInfoViewController: UIViewController {
                 //self.showAlert(type: .success, text: localized("profile_updated_success"))
             }
             .store(in: &cancellables)
+
+        if address2 != "" || placeOfBirth != "" {
+            Env.servicesProvider.updateExtraInfo(placeOfBirth: placeOfBirth, address2: address2)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+                    switch completion {
+                    case .finished:
+                        ()
+                    case .failure(let error):
+                        print("EXTRA INFO ERROR: \(error)")
+                    }
+
+                }, receiveValue: { [weak self] limitsResponse in
+
+                    print("EXTRA INFO RESPONSE: \(limitsResponse)")
+
+                })
+                .store(in: &cancellables)
+        }
         
     }
 
@@ -517,7 +538,7 @@ class PersonalInfoViewController: UIViewController {
             self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country, showName: true), slideUp: true)
         }
         
-        self.birthDateHeaderTextFieldView.setText(profile.birthDate.toString(formatString: "dd-MM-yyyy"))
+        self.birthDateHeaderTextFieldView.setText(profile.birthDate.toString(formatString: "yyyy-MM-dd"))
         self.adress1HeaderTextFieldView.setText(profile.address ?? "-")
         self.adress2HeaderTextFieldView.setText(profile.province ?? "-")
         self.cityHeaderTextFieldView.setText(profile.city ?? "-")

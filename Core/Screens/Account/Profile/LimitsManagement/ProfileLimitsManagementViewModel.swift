@@ -44,6 +44,8 @@ class ProfileLimitsManagementViewModel: NSObject {
     var pendingWageringLimitMessage: String?
     var pendingLossLimitMessage: String?
 
+    var isLockedPlayer: CurrentValueSubject<Bool, Never> = .init(false)
+
     var personalDepositLimitLoaded: CurrentValueSubject<Bool, Never> = .init(false)
     var limitsLoaded: CurrentValueSubject<Bool, Never> = .init(false)
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
@@ -55,6 +57,8 @@ class ProfileLimitsManagementViewModel: NSObject {
         self.setupPublishers()
 
         self.getLimits()
+
+        self.isLockedPlayer.send(false)
     }
 
     private func setupPublishers() {
@@ -132,9 +136,7 @@ class ProfileLimitsManagementViewModel: NSObject {
 
         let depositLimitInfo = LimitInfo(period: "weekly", currency: depositLimitResponse.currency, amount: Double(depositLimitResponse.weeklyLimit ?? "0") ?? 0)
 
-        let depositLimit = Limit(updatable: true, current: depositLimitInfo)
-
-        self.depositLimit = depositLimit
+        var depositLimit = Limit(updatable: true, current: depositLimitInfo, queued: nil)
 
         if let hasPendingLimit = depositLimitResponse.hasPendingWeeklyLimit, hasPendingLimit == "true" {
 
@@ -143,21 +145,44 @@ class ProfileLimitsManagementViewModel: NSObject {
             let currency = depositLimitResponse.currency
 
             self.pendingDepositLimitMessage = "There is a pending limit of: \(pendingLimit) \(currency). The current limit is valid until: \(pendingLimitDate)"
+
+            let queuedDepositLimitInfo = LimitInfo(period: "weekly", currency: depositLimitResponse.currency, amount: Double(depositLimitResponse.pendingWeeklyLimit ?? "0") ?? 0)
+
+            depositLimit.queued = queuedDepositLimitInfo
+            depositLimit.updatable = false
         }
+
+        self.depositLimit = depositLimit
 
         self.personalDepositLimitLoaded.send(true)
     }
 
     private func processLimits(limitsResponse: LimitsResponse) {
 
-        let wagerLimitInfo = LimitInfo(period: "weekly", currency: limitsResponse.currency, amount: limitsResponse.wagerLimit ?? 0)
+        let wagerLimitInfo = LimitInfo(period: "weekly", currency: limitsResponse.currency, amount: Double(limitsResponse.wagerLimit ?? "0") ?? 0)
 
-        let wagerLimit = Limit(updatable: true, current: wagerLimitInfo)
+        var wagerLimit = Limit(updatable: true, current: wagerLimitInfo, queued: nil)
+
+        if let pendingLimit = limitsResponse.pendingWagerLimit {
+
+            let pendingLimitDate = pendingLimit.effectiveDate
+            let currency = limitsResponse.currency
+
+            self.pendingWageringLimitMessage = "There is a pending limit of: \(pendingLimit.limitNumber) \(currency). The current limit is valid until: \(pendingLimitDate)"
+
+            let queuedDepositLimitInfo = LimitInfo(period: "weekly", currency: currency, amount: pendingLimit.limitNumber)
+
+            wagerLimit.queued = queuedDepositLimitInfo
+            wagerLimit.updatable = false
+        }
 
         self.wageringLimit = wagerLimit
-//        let lossLimitInfo = LimitInfo(period: "weekly", currency: limitsResponse.currency, amount: limitsResponse.lossLimit ?? 0)
+
+        // PAYOUT NOT YET IMPLEMENTED
+        //        let lossLimitInfo = LimitInfo(period: "weekly", currency: limitsResponse.currency, amount: limitsResponse.lossLimit ?? 0)
 //
 //        let lossLimit = Limit(updatable: true, current: lossLimitInfo)
+        self.lossLimit = Limit(updatable: false, current: nil, queued: nil)
 
         self.limitsLoadedPublisher.send(true)
 
@@ -233,6 +258,60 @@ class ProfileLimitsManagementViewModel: NSObject {
                 })
                 .store(in: &cancellables)
         }
+    }
+
+    func lockPlayer(isPermanent: Bool, lockPeriodUnit: String, lockPeriod: String) {
+
+        var lockPeriodUnitCode = ""
+
+        if lockPeriodUnit == localized("days") {
+            lockPeriodUnitCode = "DAY"
+        }
+        else if lockPeriodUnit == localized("weeks") {
+            lockPeriodUnitCode = "WEEK"
+
+        }
+        else if lockPeriodUnit == localized("months") {
+            lockPeriodUnitCode = "MONTH"
+        }
+
+//        if isPermanent {
+//            Env.servicesProvider.lockPlayer(isPermanent: isPermanent)
+//                .receive(on: DispatchQueue.main)
+//                .sink(receiveCompletion: { [weak self] completion in
+//                    switch completion {
+//                    case .finished:
+//                        ()
+//                    case .failure(let error):
+//                        print("LOCK PLAYER ERROR: \(error)")
+//                    }
+//
+//                }, receiveValue: { [weak self] lockPlayerResponse in
+//
+//                    print("LOCK PLAYER RESPONSE: \(lockPlayerResponse)")
+//                })
+//                .store(in: &cancellables)
+//        }
+//        else {
+//            Env.servicesProvider.lockPlayer(lockPeriodUnit: lockPeriodUnitCode, lockPeriod: lockPeriod)
+//                .receive(on: DispatchQueue.main)
+//                .sink(receiveCompletion: { [weak self] completion in
+//                    switch completion {
+//                    case .finished:
+//                        ()
+//                    case .failure(let error):
+//                        print("LOCK PLAYER ERROR: \(error)")
+//                    }
+//
+//                }, receiveValue: { [weak self] lockPlayerResponse in
+//
+//                    print("LOCK PLAYER RESPONSE: \(lockPlayerResponse)")
+//                })
+//                .store(in: &cancellables)
+//        }
+
+        self.isLockedPlayer.send(true)
+
     }
 
     func sendLimit(limitType: String, period: String, amount: String, currency: String) {

@@ -264,6 +264,24 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         .eraseToAnyPublisher()
     }
 
+    func updateExtraInfo(placeOfBirth: String?, address2: String?) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.updateExtraInfo(placeOfBirth: placeOfBirth, address2: address2)
+
+        let publisher: AnyPublisher<SportRadarModels.BasicResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ basicResponse -> AnyPublisher<BasicResponse, ServiceProviderError> in
+            if basicResponse.status == "SUCCESS" {
+
+                let basicResponse = SportRadarModelMapper.basicResponse(fromInternalBasicResponse: basicResponse)
+
+                return Just(basicResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            return Fail(outputType: BasicResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+    }
+
     public func getCountries() -> AnyPublisher<[Country], ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.getCountries
@@ -410,6 +428,24 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             }
 
             return Fail(outputType: LimitsResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+    }
+
+    func lockPlayer(isPermanent: Bool? = nil, lockPeriodUnit: String? = nil, lockPeriod: String? = nil) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+        let endpoint = OmegaAPIClient.lockPlayer(isPermanent: isPermanent, lockPeriodUnit: lockPeriodUnit, lockPeriod: lockPeriod)
+
+        let publisher: AnyPublisher<SportRadarModels.BasicResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ lockPlayerResponse -> AnyPublisher<BasicResponse, ServiceProviderError> in
+            if lockPlayerResponse.status == "SUCCESS" {
+
+                let lockPlayerResponse = SportRadarModelMapper.basicResponse(fromInternalBasicResponse: lockPlayerResponse)
+
+                return Just(lockPlayerResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+
+            return Fail(outputType: BasicResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
         })
         .eraseToAnyPublisher()
     }

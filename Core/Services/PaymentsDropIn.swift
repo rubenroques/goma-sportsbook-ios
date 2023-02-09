@@ -164,7 +164,7 @@ class PaymentsDropIn {
 
         if let paymentMethodsResponse = self.paymentMethodsResponse,
            let clientKey = self.clientKey,
-           let apiContext = try? APIContext(environment: Adyen.Environment.test, clientKey: clientKey) {
+           let apiContext = try? APIContext(environment: Adyen.Environment.test, clientKey: "test_HNOW5H423JB7JEJYVXMQF655YAT7M5IB") {
 
             if let paymentResponseData = try? JSONEncoder().encode(paymentMethodsResponse),
                 let paymentMethods = try? JSONDecoder().decode(PaymentMethods.self, from: paymentResponseData) {

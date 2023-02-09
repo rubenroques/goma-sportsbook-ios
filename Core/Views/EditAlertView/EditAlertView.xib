@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EditAlertView" customModule="ShowcaseBeta" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EditAlertView" customModule="Crocobet" customModuleProvider="target">
             <connections>
                 <outlet property="alertImageView" destination="xHH-Rw-ITf" id="xdY-0r-WjN"/>
                 <outlet property="alertLabel" destination="VGy-xp-cSC" id="g5h-Ba-XOU"/>
@@ -34,7 +34,7 @@
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VGy-xp-cSC">
-                            <rect key="frame" x="59" y="23" width="42" height="21"/>
+                            <rect key="frame" x="59" y="23" width="296" height="21"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -64,6 +64,7 @@
                         <constraint firstItem="VGy-xp-cSC" firstAttribute="centerY" secondItem="xHH-Rw-ITf" secondAttribute="centerY" id="GAQ-4q-Pas"/>
                         <constraint firstItem="VGy-xp-cSC" firstAttribute="leading" secondItem="xHH-Rw-ITf" secondAttribute="trailing" constant="8" id="arT-It-FpM"/>
                         <constraint firstItem="xHH-Rw-ITf" firstAttribute="top" secondItem="maw-8t-KIg" secondAttribute="top" constant="16" id="bqD-zt-iSY"/>
+                        <constraint firstItem="U0O-zn-KyK" firstAttribute="leading" secondItem="VGy-xp-cSC" secondAttribute="trailing" constant="8" id="ia0-ZH-U4E"/>
                         <constraint firstAttribute="trailing" secondItem="U0O-zn-KyK" secondAttribute="trailing" constant="16" id="kGb-0c-d01"/>
                         <constraint firstItem="uj3-bg-yOB" firstAttribute="top" secondItem="xHH-Rw-ITf" secondAttribute="bottom" constant="8" id="lBT-SJ-Ujr"/>
                         <constraint firstItem="U0O-zn-KyK" firstAttribute="top" secondItem="maw-8t-KIg" secondAttribute="top" constant="8" id="nRj-LK-iMs"/>
