@@ -169,26 +169,16 @@ class UserSessionStore {
         }
 
         UserDefaults.standard.userSession = nil
-        // self.unsubscribeWalletUpdates()
+        UserDefaults.standard.biometricAuthenticationEnabled = false
 
         Env.favoritesManager.clearCachedFavorites()
         Env.gomaSocialClient.clearUserChatroomsData()
 
         // TODO: Migrate to UserDefaults extensions
         UserDefaults.standard.removeObject(forKey: "betslipOddValidationType")
-        UserDefaults.standard.removeObject(forKey: "shouldRequestBiometrics")
         UserDefaults.standard.removeObject(forKey: "RegistrationFormDataKey")
 
         Env.gomaNetworkClient.reconnectSession()
-
-        Env.everyMatrixClient
-            .logout()
-            .sink(receiveCompletion: { completion in
-                Logger.log("User logout \(completion)")
-            }, receiveValue: { _ in
-
-            })
-            .store(in: &cancellables)
 
         self.userSessionPublisher.send(nil)
 
@@ -322,32 +312,7 @@ class UserSessionStore {
 }
 
 extension UserSessionStore {
-    
-    /*
-    func forceWalletUpdate() {
-        let route = TSRouter.getUserBalance
-        Env.everyMatrixClient.manager.getModel(router: route, decodingType: EveryMatrix.UserBalance.self)
-            .sink { _ in
-                
-            } receiveValue: { userBalance in
-                var realWallet: EveryMatrix.UserBalanceWallet?
-                var bonusWallet: EveryMatrix.UserBalanceWallet?
-                
-                for wallet in userBalance.wallets {
-                    if wallet.vendor == "CasinoWallet" {
-                        realWallet = wallet
-                        self.userBalanceWallet.send(realWallet)
-                    }
-                    else if wallet.vendor == "UBS" {
-                        bonusWallet = wallet
-                        self.userBonusBalanceWallet.send(bonusWallet)
-                    }
-                }
-            }
-            .store(in: &cancellables)
-    }
-    */
-    
+
     // =====================================
     //
     func requestNotificationsUserSettings() {
@@ -391,77 +356,7 @@ extension UserSessionStore {
     private func storeBettingUserSettings(bettingUserSettings: BettingUserSettings) {
         UserDefaults.standard.bettingUserSettings = bettingUserSettings
     }
-/*
-    // =====================================
-    //
-    func subscribeAccountBalanceWatcher() {
-        let route = TSRouter.getUserBalance
-        Env.everyMatrixClient.manager.getModel(router: route, decodingType: EveryMatrix.UserBalance.self)
-            .sink { _ in
 
-            } receiveValue: { userBalance in
-                var realWallet: EveryMatrix.UserBalanceWallet?
-                for wallet in userBalance.wallets where wallet.vendor == "CasinoWallet" {
-                    realWallet = wallet
-                    break
-                }
-                self.userBalanceWallet.send(realWallet)
-                self.setupAccountBalanceWatcher()
-            }
-            .store(in: &cancellables)
-    }
-
-    func setupAccountBalanceWatcher() {
-        Env.everyMatrixClient.getAccountBalanceWatcher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
-            }, receiveValue: { [weak self] value in
-                print("\(value)")
-                self?.subscribeWalletUpdates()
-            })
-            .store(in: &cancellables)
-    }
-
-    func subscribeWalletUpdates() {
-        let endpoint = TSRouter.accountBalancePublisher
-
-        self.userWalletPublisher?.cancel()
-        self.userWalletPublisher = nil
-
-        self.userWalletPublisher = Env.everyMatrixClient.manager
-            .subscribeEndpoint(endpoint, decodingType: EveryMatrix.AccountBalance.self)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("userWalletPublisher Error retrieving data!")
-                case .finished:
-                    print("userWalletPublisher Data retrieved!")
-                }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    print("userWalletPublisher connect")
-                    self?.userWalletRegister = publisherIdentifiable
-                case .initialContent(_):
-                    print("userWalletPublisher initialContent")
-                case .updatedContent(let walletUpdates):
-                    print("userWalletPublisher updatedContent")
-
-                    let updatedUserBalanceWallet = Env.userSessionStore.userBalanceWallet.value?.userBalanceWalletUpdated(amount: walletUpdates.amount)
-                    Env.userSessionStore.userBalanceWallet.send(updatedUserBalanceWallet)
-                case .disconnect:
-                    print("userWalletPublisher disconnect")
-                }
-            })
-    }
-
-    func unsubscribeWalletUpdates() {
-        if let walletRegister = self.userWalletRegister {
-            Env.everyMatrixClient.manager.unsubscribeFromEndpoint(endpointPublisherIdentifiable: walletRegister)
-        }
-    }
-*/
-    
     func refreshUserWallet() {
         Env.servicesProvider.getUserBalance()
             .receive(on: DispatchQueue.main)
@@ -535,27 +430,6 @@ extension UserSessionStore {
                 // Env.favoritesManager.getUserFavorites()
             })
             .store(in: &cancellables)
-        
-//        Env.everyMatrixClient.login(username: user.username, password: userPassword)
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] completion in
-//                switch completion {
-//                case .finished:
-//                    Env.favoritesManager.getUserFavorites()
-//                    self?.loginGomaAPI(username: user.username, password: user.userId)
-//                case .failure(let error):
-//                    if error.localizedDescription.lowercased().contains("you are already logged in") {
-//                        Env.favoritesManager.getUserFavorites()
-//                        self?.loginGomaAPI(username: user.username, password: user.userId)
-//                    }
-//                    print("error \(error)")
-//                }
-//                self?.isLoadingUserSessionPublisher.send(false)
-//            } receiveValue: { account in
-//                Env.userSessionStore.isUserProfileIncomplete.send(account.isProfileIncomplete)
-//                Env.userSessionStore.isUserEmailVerified.send(account.isEmailVerified)
-//            }
-//            .store(in: &cancellables)
     }
 
 }
@@ -605,14 +479,12 @@ extension UserSessionStore {
 
 extension UserSessionStore {
 
-    func setShouldRequestFaceId(_ request: Bool) {
-        UserDefaults.standard.set(request, forKey: "shouldRequestBiometrics")
-        UserDefaults.standard.synchronize()
+    func setShouldRequestFaceId(_ newValue: Bool) {
+        UserDefaults.standard.biometricAuthenticationEnabled = newValue
     }
 
     func shouldRequestFaceId() -> Bool {
-        let shouldRequest = UserDefaults.standard.bool(forKey: "shouldRequestBiometrics")
-        return shouldRequest && UserSessionStore.isUserLogged()
+        return UserDefaults.standard.biometricAuthenticationEnabled
     }
     
 }

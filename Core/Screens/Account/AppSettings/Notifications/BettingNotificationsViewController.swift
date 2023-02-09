@@ -82,16 +82,16 @@ class BettingNotificationsViewController: UIViewController {
         betsFinalView.hasSeparatorLineView = true
         betsFinalView.hasSwitchButton = true
         self.viewModel.setBetsSelectedOption(view: betsFinalView, settingType: .betFinal)
-        betsFinalView.didTappedSwitch = { [weak self] in
-            self?.viewModel.updateBetsSetting(isSettingEnabled: betsFinalView.isSwitchOn, settingType: .betFinal)
+        betsFinalView.didTappedSwitch = { [weak self] isSwitchOn in
+            self?.viewModel.updateBetsSetting(isSettingEnabled: isSwitchOn, settingType: .betFinal)
         }
 
         let betsOptionsView = SettingsRowView()
         betsOptionsView.setTitle(title: localized("notify_bets_options_results"))
         betsOptionsView.hasSwitchButton = true
         self.viewModel.setBetsSelectedOption(view: betsOptionsView, settingType: .betSelection)
-        betsOptionsView.didTappedSwitch = { [weak self] in
-            self?.viewModel.updateBetsSetting(isSettingEnabled: betsOptionsView.isSwitchOn, settingType: .betSelection)
+        betsOptionsView.didTappedSwitch = { [weak self] isSwitchOn in
+            self?.viewModel.updateBetsSetting(isSettingEnabled: isSwitchOn, settingType: .betSelection)
         }
 
         self.topStackView.addArrangedSubview(betsFinalView)

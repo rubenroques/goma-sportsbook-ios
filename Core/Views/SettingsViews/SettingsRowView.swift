@@ -61,7 +61,7 @@ class SettingsRowView: UIView {
         }
     }
 
-    var didTappedSwitch: (() -> Void)?
+    var didTappedSwitch: ((Bool) -> Void)?
 
     // MARK: Lifetime and Cycle
     override init(frame: CGRect) {
@@ -111,7 +111,7 @@ class SettingsRowView: UIView {
         let switchValue = settingSwitch.isOn
         self.isSwitchOn = switchValue
 
-        self.didTappedSwitch?()
+        self.didTappedSwitch?(self.isSwitchOn)
     }
 
 }

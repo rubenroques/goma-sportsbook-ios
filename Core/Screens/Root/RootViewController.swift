@@ -1278,10 +1278,10 @@ extension RootViewController {
 
     func showLocalAuthenticationCoveringViewIfNeeded() {
 
-        #if DEBUG
-        self.isLocalAuthenticationCoveringView = false
-        return
-        #endif
+//        #if DEBUG
+//        self.isLocalAuthenticationCoveringView = false
+//        return
+//        #endif
 
         if Env.userSessionStore.shouldRequestFaceId() {
             self.isLocalAuthenticationCoveringView = true
@@ -1313,10 +1313,10 @@ extension RootViewController {
     }
 
     func authenticateUser() {
-
-        #if DEBUG
-        return
-        #endif
+//
+//        #if DEBUG
+//        return
+//        #endif
 
         if !Env.userSessionStore.shouldRequestFaceId() {
             return

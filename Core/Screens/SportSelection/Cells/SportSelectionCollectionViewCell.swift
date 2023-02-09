@@ -27,7 +27,7 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
             }
         }
     }
-    var sport: Sport?
+
     private var cancellable = Set<AnyCancellable>()
     private var currentLiveSportsPublisher: AnyCancellable?
     var viewModel: SportSelectionCollectionViewCellViewModel?
@@ -43,7 +43,6 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
         self.iconImageView.image = nil
         self.nameLabel.text = localized("empty_value")
-        self.sport = nil
         self.eventCountLabel.text = localized("empty_value")
         self.currentLiveSportsPublisher?.cancel()
     }
@@ -85,7 +84,6 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
     func configureCell(viewModel: SportSelectionCollectionViewCellViewModel) {
 
         self.viewModel = viewModel
-        self.sport = viewModel.sport
         self.nameLabel.text = viewModel.sportName
 
         if let sportIconName = viewModel.sportIconName, let sportIconImage = UIImage(named: sportIconName) {

@@ -90,13 +90,13 @@ class LoginViewController: UIViewController {
     }
 
     override func viewDidAppear(_ animated: Bool) {
-
+        super.viewDidAppear(animated)
+        
         if #available(iOS 14, *) {
             ATTrackingManager.requestTrackingAuthorization { status in
                 switch status {
                 case .authorized:
-                    // Tracking authorization dialog was shown
-                    // and we are authorized
+                    // Tracking authorization dialog was shown and we are authorized
                     print("Authorized")
 
                     // Now that we are authorized we can get the IDFA

@@ -94,7 +94,7 @@ class ConfirmationCodeFormStepView: FormStepView {
     override func setupWithTheme() {
         super.setupWithTheme()
 
-        self.codeHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.codeHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.codeHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.codeHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
     }

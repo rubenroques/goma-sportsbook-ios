@@ -161,7 +161,7 @@ class ConversationBetSelectionRootViewController: UIViewController {
         self.navigationLineSeparatorView.backgroundColor = UIColor.App.separatorLine
 
         self.topBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        self.ticketTypesCollectionView.backgroundColor = UIColor.App.backgroundSecondary
+        self.ticketTypesCollectionView.backgroundColor = UIColor.App.pillNavigation
 
         self.messageInputBaseView.backgroundColor = UIColor.App.backgroundPrimary
 

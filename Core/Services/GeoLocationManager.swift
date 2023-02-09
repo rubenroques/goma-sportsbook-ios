@@ -114,31 +114,34 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
     }
 
     func checkValidLocation(_ location: CLLocation) {
+        self.locationStatus.send(.valid)
 
-        Logger.log("checkValidLocation \(location.coordinate) | \(CLLocationManager.authorizationStatus())")
+        // TODO: Check if the user location is valid
 
-        Env.gomaNetworkClient.requestGeoLocation(deviceId: Env.deviceId,
-                                                 latitude: location.coordinate.latitude,
-                                                 longitude: location.coordinate.longitude)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    self.locationStatus.send(.notDetermined)
-                case .finished:
-                    Logger.log("checkValidLocation publisher finished ok#")
-                }
-            },
-            receiveValue: { validLocation in
-                if validLocation {
-                    self.locationStatus.send(.valid)
-                }
-                else {
-                    self.locationStatus.send(.invalid)
-                }
-
-            })
-            .store(in: &cancellables)
+//        Logger.log("checkValidLocation \(location.coordinate) | \(CLLocationManager.authorizationStatus())")
+//
+//        Env.gomaNetworkClient.requestGeoLocation(deviceId: Env.deviceId,
+//                                                 latitude: location.coordinate.latitude,
+//                                                 longitude: location.coordinate.longitude)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure:
+//                    self.locationStatus.send(.notDetermined)
+//                case .finished:
+//                    Logger.log("checkValidLocation publisher finished ok#")
+//                }
+//            },
+//            receiveValue: { validLocation in
+//                if validLocation {
+//                    self.locationStatus.send(.valid)
+//                }
+//                else {
+//                    self.locationStatus.send(.invalid)
+//                }
+//
+//            })
+//            .store(in: &cancellables)
 
     }
 }

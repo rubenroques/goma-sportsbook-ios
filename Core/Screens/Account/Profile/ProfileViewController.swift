@@ -105,9 +105,13 @@ class ProfileViewController: UIViewController {
             // self.userIdLabel.text = user.userId
         }
 
-        if let userCode = Env.gomaNetworkClient.getCurrentToken()?.code {
+        if TargetVariables.hasFeatureEnabled(feature: .chat), let userCode = Env.gomaNetworkClient.getCurrentToken()?.code {
             let userCodeString = localized("user_code").replacingOccurrences(of: "%s", with: userCode)
             self.userIdLabel.text = userCodeString
+            self.userCodeStackView.isHidden = false
+        }
+        else {
+            self.userCodeStackView.isHidden = true
         }
         
         Env.userSessionStore.userSessionPublisher

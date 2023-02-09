@@ -251,7 +251,7 @@ class PreLiveEventsViewController: UIViewController {
         rightGradientBaseView.layer.mask = rightGradientMaskLayer
 
         filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        filtersCollectionView.backgroundColor = UIColor.App.backgroundSecondary
+        filtersCollectionView.backgroundColor = UIColor.App.pillNavigation
 
         sportsSelectorButtonView.backgroundColor = UIColor.App.highlightPrimary
         sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
@@ -415,29 +415,20 @@ class PreLiveEventsViewController: UIViewController {
                 case .noEmptyNoFilter:
                     self?.emptyBaseView.isHidden = true
                     self?.tableView.isHidden = false
+
                 case .emptyNoFilter:
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
-                    if self?.viewModel.matchListTypePublisher.value == .popular ||
-                        self?.viewModel.matchListTypePublisher.value ==  .upcoming ||
-                        self?.viewModel.matchListTypePublisher.value == .competitions {
-                        self?.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
-                                                    secondLabelText: localized("second_empty_list"),
-                                                    isUserLoggedIn: true)
-                    }
+                    self?.setEmptyStateBaseView(firstLabelText: localized("empty_list"), secondLabelText: localized("second_empty_list"), isUserLoggedIn: true)
+
                 case .noEmptyAndFilter:
                     self?.emptyBaseView.isHidden = true
                     self?.tableView.isHidden = false
+
                 case .emptyAndFilter:
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
-                    if self?.viewModel.matchListTypePublisher.value == .popular ||
-                        self?.viewModel.matchListTypePublisher.value ==  .upcoming ||
-                        self?.viewModel.matchListTypePublisher.value == .competitions {
-                        self?.setEmptyStateBaseView(firstLabelText: localized("empty_list_with_filters"),
-                                                    secondLabelText: localized("second_empty_list_with_filters"),
-                                                    isUserLoggedIn: true)
-                    }
+                    self?.setEmptyStateBaseView(firstLabelText: localized("empty_list_with_filters"), secondLabelText: localized("second_empty_list_with_filters"), isUserLoggedIn: true)
                 }
             })
             .store(in: &cancellables)
@@ -524,7 +515,9 @@ class PreLiveEventsViewController: UIViewController {
         self.tableView.backgroundColor = .clear // UIColor.App.backgroundPrimary
         self.tableView.backgroundView?.backgroundColor = .clear // UIColor.App.backgroundPrimary
 
-        self.emptyBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.emptyBaseView.backgroundColor = .clear
+        self.loadingBaseView.backgroundColor = .clear
+
         self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
         self.secondTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
         self.emptyStateButton.backgroundColor = UIColor.App.buttonBackgroundPrimary

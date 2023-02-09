@@ -309,7 +309,8 @@ class MatchDetailsViewController: UIViewController {
         self.matchNotAvailableView.isHidden = true
 
         self.marketsNotAvailableView.isHidden = true
-        
+        self.marketsNotAvailableLabel.text = localized("markets_not_available")
+
         self.matchFieldBaseView.isHidden = false
         self.statsBaseView.isHidden = false
         
@@ -374,7 +375,7 @@ class MatchDetailsViewController: UIViewController {
         
         self.marketGroupsPagedViewController.delegate = self
         self.marketGroupsPagedViewController.dataSource = self
-        
+
         //
         // account balance
         self.accountValueView.isHidden = true
@@ -556,7 +557,7 @@ class MatchDetailsViewController: UIViewController {
 
         self.marketGroupsPagedBaseView.backgroundColor = .clear
         // Market List CollectionView
-        self.marketTypesCollectionView.backgroundColor = UIColor.App.backgroundSecondary
+        self.marketTypesCollectionView.backgroundColor = UIColor.App.pillNavigation
         
         // TableView
         self.tableView.backgroundColor = .clear
@@ -660,6 +661,11 @@ class MatchDetailsViewController: UIViewController {
             .sink { [weak self] marketGroups in
                 self?.reloadMarketGroupDetails(marketGroups)
                 self?.reloadCollectionView()
+
+                if marketGroups.isEmpty {
+                    self?.showMarketsNotAvailableView()
+                }
+
             }
             .store(in: &cancellables)
         
@@ -679,11 +685,12 @@ class MatchDetailsViewController: UIViewController {
             .sink(receiveValue: { [weak self] loadableMatch in
                 switch loadableMatch {
                 case .idle, .loading:
-                    ()
+                    self?.hideContentViews()
                 case .loaded:
                     self?.setupHeaderDetails()
                     self?.setupMatchField()
                     self?.statsCollectionView.reloadData()
+                    self?.showMarkets()
                 case .failed:
                     self?.showMatchNotAvailableView()
                 }
@@ -834,8 +841,6 @@ class MatchDetailsViewController: UIViewController {
                     self?.autoScrollEnabled = true
                 }
 
-
-                print("MatchDetailsMarkets - marketGroupDetailsViewController: \(groupKey)")
                 self.marketGroupsViewControllers.append(marketGroupDetailsViewController)
             }
         }
@@ -846,12 +851,7 @@ class MatchDetailsViewController: UIViewController {
                                                                     animated: false,
                                                                     completion: nil)
         }
-        
-        print("MatchDetailsMarkets - \(self.marketGroupsViewControllers.count)")
 
-        if marketGroups.isEmpty {
-            self.showMarketsNotAvailableView()
-        }
     }
     
     func reloadMarketGroupDetailsContent() {
@@ -1095,12 +1095,29 @@ class MatchDetailsViewController: UIViewController {
             self.headerBarSelection = .none
         }
     }
-    
+
+    func hideContentViews() {
+        self.marketGroupsPagedBaseView.isHidden = true
+        self.marketTypesCollectionView.isHidden = true
+        self.marketsNotAvailableView.isHidden = true
+        self.matchNotAvailableView.isHidden = true
+    }
+
+    func showMarkets() {
+        self.marketGroupsPagedBaseView.isHidden = false
+        self.marketTypesCollectionView.isHidden = false
+        self.marketsNotAvailableView.isHidden = true
+        self.matchNotAvailableView.isHidden = true
+    }
+
     func showMatchNotAvailableView() {
+        self.tableView.isHidden = true
+
         self.shareButton.isHidden = true
 
+        self.marketGroupsPagedBaseView.isHidden = true
         self.marketTypesCollectionView.isHidden = true
-
+        self.marketsNotAvailableView.isHidden = true
         self.matchNotAvailableView.isHidden = false
     }
 
@@ -1108,11 +1125,12 @@ class MatchDetailsViewController: UIViewController {
 
         self.tableView.isHidden = true
 
+        self.marketGroupsPagedBaseView.isHidden = true
         self.marketTypesCollectionView.isHidden = true
-
         self.marketsNotAvailableView.isHidden = false
+        self.matchNotAvailableView.isHidden = true
 
-        self.marketsNotAvailableLabel.text = localized("markets_not_available")
+
     }
     
     @objc func didTapBetslipView() {

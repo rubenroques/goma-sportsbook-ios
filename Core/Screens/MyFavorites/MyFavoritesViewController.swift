@@ -177,7 +177,8 @@ class MyFavoritesViewController: UIViewController {
         self.backButton.tintColor = UIColor.App.textHeadlinePrimary
 
         self.topTitleLabel.textColor = UIColor.App.textPrimary
-        self.topSliderCollectionView.backgroundColor = UIColor.App.backgroundSecondary
+        self.topSliderCollectionView.backgroundColor = UIColor.App.pillNavigation
+        
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
         self.loadingScreenBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
         self.emptyStateView.backgroundColor = UIColor.App.backgroundPrimary

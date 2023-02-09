@@ -332,7 +332,7 @@ class NicknameFormStepView: FormStepView {
     override func setupWithTheme() {
         super.setupWithTheme()
 
-        self.nicknameHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.nicknameHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.nicknameHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.nicknameHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
     }

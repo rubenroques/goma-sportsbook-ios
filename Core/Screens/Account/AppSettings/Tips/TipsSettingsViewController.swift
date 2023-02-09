@@ -127,8 +127,8 @@ class TipsSettingsViewController: UIViewController {
         anonymousTipsView.setTitle(title: localized("anonymous_tips"))
         anonymousTipsView.hasSwitchButton = true
 
-        anonymousTipsView.didTappedSwitch = {
-            self.viewModel.updateAnonymousTipsSetting(enabled: anonymousTipsView.isSwitchOn)
+        anonymousTipsView.didTappedSwitch = { [weak self] isSwitchOn in
+            self?.viewModel.updateAnonymousTipsSetting(enabled: isSwitchOn)
         }
 
         // Check options

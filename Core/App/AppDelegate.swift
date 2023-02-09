@@ -8,12 +8,9 @@
 import UIKit
 import Firebase
 import FirebaseMessaging
-import SwiftyBeaver
 import SwiftUI
 import ServicesProvider
 import IQKeyboardManagerSwift
-
-let swiftyBeaverLog = SwiftyBeaver.self
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
@@ -24,22 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-
-        let file = FileDestination()  // log to default swiftybeaver.log file
-        let cloud = SBPlatformDestination(appID: "jxEpzL",
-                                          appSecret: "Zgv4mfejLv3Es3fzlBacHja9yznw2ytr",
-                                          encryptionKey: "7vxwxubvlRtgrtaAwybl5hdxstrns8Ik") // to cloud
-
-        swiftyBeaverLog.addDestination(file)
-        swiftyBeaverLog.addDestination(cloud)
-
-        // This is used to disable temporarly auto layout Unsatisfiable constraints logs
-        // This should be deleted, unsatisfiable constraints must be fixed
-        #if XCODE_ACTION_install
-            // Is archiving
-        #else
-            UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
-        #endif
 
         Logger.log("App Started")
 

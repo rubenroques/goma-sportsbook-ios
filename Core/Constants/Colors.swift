@@ -20,7 +20,10 @@ extension UIColor {
         static let backgroundPopup: UIColor = UIColor(named: "backgroundPopup")!
 
         static let backgroundCards = UIColor(named: "backgroundCards")!
-        
+        static var backgroundHeader: UIColor {
+            return UIColor(named: "backgroundHeader") ?? Self.backgroundPrimary
+        }
+
         static let textPrimary = UIColor(named: "textPrimary")!
         static let textHeadlinePrimary = UIColor(named: "textHeadlinePrimary")!
         static let textDisablePrimary = UIColor(named: "textDisablePrimary")!
@@ -32,7 +35,17 @@ extension UIColor {
         static let separatorLine = UIColor(named: "separatorLine")!
 
         static let scroll = UIColor(named: "scroll")!
-        
+
+        static var pillBackground: UIColor {
+            return UIColor(named: "pillBackground") ?? Self.backgroundPrimary
+        }
+        static var pillNavigation: UIColor {
+            return UIColor(named: "pillNavigation") ?? Self.backgroundSecondary
+        }
+        static var pillSettings: UIColor {
+            return UIColor(named: "pillSettings") ?? Self.backgroundTertiary
+        }
+
         static let inputBackground = UIColor(named: "inputBackground")!
         static let inputBorderActive = UIColor(named: "inputBorderActive")!
         static let inputTextTitle = UIColor(named: "inputTextTitle")!

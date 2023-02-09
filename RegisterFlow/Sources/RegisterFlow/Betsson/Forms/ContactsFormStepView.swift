@@ -461,11 +461,11 @@ class ContactsFormStepView: FormStepView {
 
         self.prefixDownIconImageView.tintColor = AppColor.textPrimary
 
-        self.emailHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.emailHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.emailHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.emailHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
 
-        self.phoneHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.phoneHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.phoneHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.phoneHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
     }

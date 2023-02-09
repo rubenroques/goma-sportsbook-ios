@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import LocalAuthentication
 
 class AppSettingsViewController: UIViewController {
 
@@ -115,21 +116,33 @@ class AppSettingsViewController: UIViewController {
 
     private func setupBottomStackView() {
 
-        let fingerprintView = SettingsRowView()
-        fingerprintView.setTitle(title: localized("fingerprint_login"))
-        fingerprintView.hasSeparatorLineView = true
-        fingerprintView.hasSwitchButton = true
+        if #available(iOS 11, *) {
+            let authContext = LAContext()
+            let _ = authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+            switch authContext.biometryType {
+            case .touchID:
+                let fingerprintView = SettingsRowView()
+                fingerprintView.setTitle(title: localized("fingerprint_login"))
+                fingerprintView.hasSwitchButton = Env.userSessionStore.shouldRequestFaceId()
+                fingerprintView.didTappedSwitch = { isSwitchOn in
+                    Env.userSessionStore.setShouldRequestFaceId(isSwitchOn)
+                }
+                self.bottomStackView.addArrangedSubview(fingerprintView)
+            case .faceID:
+                let faceIdView = SettingsRowView()
+                faceIdView.setTitle(title: localized("face_id_login"))
+                faceIdView.hasSwitchButton = Env.userSessionStore.shouldRequestFaceId()
+                faceIdView.didTappedSwitch = { isSwitchOn in
+                    Env.userSessionStore.setShouldRequestFaceId(isSwitchOn)
+                }
+                self.bottomStackView.addArrangedSubview(faceIdView)
+            case .none:
+                self.bottomStackView.isHidden = true
+            @unknown default:
+                self.bottomStackView.isHidden = true
+            }
+        }
 
-        let faceIdView = SettingsRowView()
-        faceIdView.setTitle(title: localized("face_id_login"))
-        faceIdView.hasSwitchButton = true
-
-        self.bottomStackView.addArrangedSubview(fingerprintView)
-        self.bottomStackView.addArrangedSubview(faceIdView)
-
-        // Disable for now
-        self.bottomStackView.alpha = 0.7
-        self.bottomStackView.isUserInteractionEnabled = false
     }
 
 }

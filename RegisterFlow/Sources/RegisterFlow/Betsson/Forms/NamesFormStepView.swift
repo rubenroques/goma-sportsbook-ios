@@ -124,11 +124,11 @@ class NamesFormStepView: FormStepView {
     override func setupWithTheme() {
         super.setupWithTheme()
 
-        self.firstNameHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.firstNameHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.firstNameHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.firstNameHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
 
-        self.lastNameHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.lastNameHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.lastNameHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.lastNameHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
     }

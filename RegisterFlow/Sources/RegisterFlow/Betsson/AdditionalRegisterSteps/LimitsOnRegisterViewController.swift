@@ -234,15 +234,15 @@ public class LimitsOnRegisterViewController: UIViewController {
         self.continueButton.layer.masksToBounds = true
         self.continueButton.backgroundColor = .clear
 
-        self.depositLimitHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.depositLimitHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.depositLimitHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.depositLimitHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
 
-        self.bettingLimitHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.bettingLimitHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.bettingLimitHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.bettingLimitHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
 
-        self.autoPayoutHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.autoPayoutHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.autoPayoutHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.autoPayoutHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
 

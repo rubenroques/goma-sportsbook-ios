@@ -20,7 +20,7 @@ class BonusSwitchView: UIView {
     // MARK: Public Properties
     var bonusType: GrantedBonusType = .standard
     // var didTapCloseButtonAction: (() -> Void)?
-    var didTappedSwitch: (() -> Void)?
+    var didTappedSwitch: ((Bool) -> Void) = { _ in }
 
     var isSwitchOn: Bool = false {
         didSet {
@@ -110,7 +110,7 @@ extension BonusSwitchView {
         let switchValue = settingSwitch.isOn
         self.isSwitchOn = switchValue
 
-        self.didTappedSwitch?()
+        self.didTappedSwitch(self.isSwitchOn)
     }
 }
 

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SharedModels
 
 extension SportRadarModelMapper {
 
@@ -51,6 +52,9 @@ extension SportRadarModelMapper {
     static func eventsGroup(fromInternalEvents internalEvents: [SportRadarModels.Event]) -> EventsGroup {
 
         let events = internalEvents.map({ event -> Event in
+
+            let country: Country? = Country.country(withName: event.tournamentCountryName ?? "")
+
             if let eventMarkets = event.markets {
                 let markets = eventMarkets.map(Self.market(fromInternalMarket:))
                 return Event(id: event.id,
@@ -61,6 +65,7 @@ extension SportRadarModelMapper {
                              competitionName: event.competitionName ?? "",
                              startDate: event.startDate ?? Date(),
                              markets: markets,
+                             venueCountry: country,
                              numberMarkets: event.numberMarkets)
             }
             return Event(id: event.id,
@@ -71,6 +76,7 @@ extension SportRadarModelMapper {
                          competitionName: event.competitionName ?? "",
                          startDate: event.startDate ?? Date(),
                          markets: [],
+                         venueCountry: country,
                          numberMarkets: event.numberMarkets)
         })
 

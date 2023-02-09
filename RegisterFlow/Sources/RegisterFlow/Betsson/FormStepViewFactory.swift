@@ -70,6 +70,7 @@ struct FormStepViewFactory {
             //
         case .address:
             return AddressFormStepView(viewModel: AddressFormStepViewModel(title: "Address",
+                                                                           countryCodeForSuggestions: defaultCountryIso3Code,
                                                                            place: userRegisterEnvelop.placeAddress,
                                                                            street: userRegisterEnvelop.streetAddress,
                                                                            additionalStreet: userRegisterEnvelop.additionalStreetAddress,

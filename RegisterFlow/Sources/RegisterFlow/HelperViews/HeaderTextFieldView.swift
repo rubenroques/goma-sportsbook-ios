@@ -172,11 +172,12 @@ class HeaderTextFieldView: NibView {
 
     func setupWithTheme() {
 
-        containerView.backgroundColor = AppColor.backgroundSecondary
-        containerView.layer.cornerRadius = 10.0
+        self.backgroundColor = .clear
 
-        containerView.layer.borderWidth = 1
-        containerView.layer.borderColor = AppColor.backgroundSecondary.cgColor
+        self.containerView.backgroundColor = AppColor.backgroundSecondary
+        self.containerView.layer.cornerRadius = 10.0
+        self.containerView.layer.borderWidth = 2
+        self.containerView.layer.borderColor = UIColor.clear.cgColor
 
         self.textField.autocorrectionType = .no
         self.textField.keyboardType = self.keyboardType
@@ -196,7 +197,7 @@ class HeaderTextFieldView: NibView {
         self.tipLabel.adjustsFontSizeToFitWidth = true
         self.tipLabel.minimumScaleFactor = 0.5
 
-        tipImageView.isHidden = true
+        self.tipImageView.isHidden = true
 
         self.headerPlaceholderLabel.alpha = 0.0
         self.textField.delegate = self
@@ -206,20 +207,20 @@ class HeaderTextFieldView: NibView {
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapShowPassword))
         self.showPassImageView.addGestureRecognizer(tapGestureRecognizer)
 
-        showPasswordLabel.text = Localization.localized("show")
-        showPasswordLabel.font = AppFont.with(type: .regular, size: 14.0)
-        showPasswordLabel.textColor =  AppColor.textPrimary
+        self.showPasswordLabel.text = Localization.localized("show")
+        self.showPasswordLabel.font = AppFont.with(type: .regular, size: 14.0)
+        self.showPasswordLabel.textColor =  AppColor.textPrimary
 
         let text = Localization.localized("show")
         let underlineAttriString = NSMutableAttributedString(string: text)
         let range = (text as NSString).range(of: Localization.localized("show"))
         underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range)
-        showPasswordLabel.attributedText = underlineAttriString
-        showPasswordLabel.isHidden = true
-        showPasswordLabel.isUserInteractionEnabled = true
-        showPasswordLabel.addGestureRecognizer(tapGestureRecognizer)
+        self.showPasswordLabel.attributedText = underlineAttriString
+        self.showPasswordLabel.isHidden = true
+        self.showPasswordLabel.isUserInteractionEnabled = true
+        self.showPasswordLabel.addGestureRecognizer(tapGestureRecognizer)
 
-        tipLabel.font = AppFont.with(type: .semibold, size: 12)
+        self.tipLabel.font = AppFont.with(type: .semibold, size: 12)
 
     }
 
@@ -241,7 +242,6 @@ class HeaderTextFieldView: NibView {
         }
 
         self.highlightColor = AppColor.textPrimary
-        self.containerView.layer.borderColor = self.highlightColor.cgColor
 
         // TODO: Fazer a conta de forma dinâmica
         // let placeholderYPosition = self.headerPlaceholderLabel.center.y
@@ -269,10 +269,6 @@ class HeaderTextFieldView: NibView {
         }
         if !self.isSlidedUp {
             return
-        }
-
-        if self.textField.text == nil || self.textField.text == "" {
-            self.containerView.layer.borderColor = self.highlightColor.withAlphaComponent(0).cgColor
         }
 
         self.centerBottomConstraint.constant = 0
@@ -322,12 +318,6 @@ class HeaderTextFieldView: NibView {
             self.slideUp(animated: false)
         }
 
-        if self.textField.text == nil || self.textField.text == "" {
-            self.containerView.layer.borderColor = UIColor.clear.cgColor
-        }
-        else {
-            self.containerView.layer.borderColor = AppColor.textPrimary.cgColor
-        }
     }
 
     func setPlaceholderText(_ placeholder: String) {
@@ -363,10 +353,6 @@ class HeaderTextFieldView: NibView {
 
     func setViewColor(_ color: UIColor) {
         self.containerView.backgroundColor = color
-    }
-
-    func setViewBorderColor(_ color: UIColor) {
-        self.containerView.layer.borderColor = color.cgColor
     }
 
     func setImageTextField(_ image: UIImage, size: CGFloat = 30) {
@@ -419,7 +405,8 @@ class HeaderTextFieldView: NibView {
     }
 
     @objc func datePickerDone() {
-        textField.resignFirstResponder()
+        self.dateChanged()
+        self.textField.resignFirstResponder()
     }
 
     @objc func dateChanged() {
@@ -539,7 +526,9 @@ class HeaderTextFieldView: NibView {
 
         tipLabel.text = Localization.localized("empty_value")
         tipLabel.textColor = .black
-        containerView.layer.borderColor = highlightColor.cgColor
+
+        containerView.layer.borderColor = UIColor.clear.cgColor
+
         fieldState = .hidden
 
         UIView.animate(withDuration: 0.1) {
@@ -560,14 +549,13 @@ extension HeaderTextFieldView: UITextFieldDelegate {
         self.isActive = shouldBeginEditing
         return shouldBeginEditing
     }
+
     func textFieldDidBeginEditing(_ textField: UITextField) {
-
         self.isActive = true
-
         if !isTipPermanent {
             self.hideTipAndError()
         }
-
+        self.containerView.layer.borderColor = AppColor.inputBorderActive.cgColor
         self.slideUp()
     }
 
@@ -577,6 +565,8 @@ extension HeaderTextFieldView: UITextFieldDelegate {
         }
 
         self.isActive = false
+
+        self.containerView.layer.borderColor = UIColor.clear.cgColor
 
         self.didEndEditing()
     }
@@ -593,14 +583,13 @@ extension HeaderTextFieldView: UITextFieldDelegate {
                 return false
             }
         }
-
         return true
     }
 
 }
 
 extension HeaderTextFieldView: UIPickerViewDelegate, UIPickerViewDataSource {
-    // PickerView override methods
+
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -618,4 +607,5 @@ extension HeaderTextFieldView: UIPickerViewDelegate, UIPickerViewDataSource {
         let selectedItem = selectionArray[row]
         self.setText(selectedItem)
     }
+
 }

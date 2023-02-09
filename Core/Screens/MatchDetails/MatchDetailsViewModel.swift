@@ -17,6 +17,13 @@ class MatchDetailsViewModel: NSObject {
         case live
     }
 
+    enum ScreenState {
+        case idle
+        case loading
+        case loaded
+        case failed
+    }
+
     var matchId: String
     var homeRedCardsScorePublisher: CurrentValueSubject<String, Never> = .init("0")
     var awayRedCardsScorePublisher: CurrentValueSubject<String, Never> = .init("0")
@@ -69,7 +76,6 @@ class MatchDetailsViewModel: NSObject {
         self.matchStatsViewModel = MatchStatsViewModel(matchId: match.id)
 
         self.store = MatchDetailsAggregatorRepository(matchId: match.id)
-        self.matchPublisher.send(.idle) // .loaded(match))
 
         self.matchModePublisher.send(matchMode)
 
@@ -152,11 +158,10 @@ class MatchDetailsViewModel: NSObject {
 
         Env.servicesProvider.getMarketFilters(event: event)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: {[weak self] completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 ()
             }, receiveValue: { [weak self] marketGroup in
-                print("MARKET GROUP: \(marketGroup)")
-                self?.fetchMarketGroupsPublisher(marketGroups: marketGroup)
+                self?.storeMarketGorups(marketGroup)
             })
             .store(in: &cancellables)
     }
@@ -182,13 +187,6 @@ class MatchDetailsViewModel: NSObject {
             }
             .store(in: &cancellables)
 
-        Env.everyMatrixClient.serviceStatusPublisher
-            .filter({ $0 == .connected })
-            .sink(receiveValue: { _ in
-                self.fetchMatchData()
-            })
-            .store(in: &cancellables)
-
         self.matchStatsViewModel.statsTypePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] statsJSON in
@@ -201,25 +199,6 @@ class MatchDetailsViewModel: NSObject {
     }
 
     func getFieldWidget(isDarkTheme: Bool) {
-//        Env.servicesProvider.getFieldWidgetId(eventId: eventId)?
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                switch completion {
-//
-//                case .finished:
-//                    print("FIELD WIDGET ID FINISHED")
-//                case .failure(let error):
-//                    print("FIELD WIDGET ID ERROR: \(error)")
-//
-//                }
-//            }, receiveValue: { [weak self] fieldWidgetResponse in
-//                print("FIELD WIDGET ID RESPONSE: \(fieldWidgetResponse)")
-//
-//                if let fieldWidgetId = fieldWidgetResponse.data {
-//                    self?.fieldWidgetIdPublisher.send(fieldWidgetId)
-//                }
-//            })
-//            .store(in: &cancellables)
 
         Env.servicesProvider.getFieldWidget(eventId: self.matchId, isDarkTheme: isDarkTheme)
             .receive(on: DispatchQueue.main)
@@ -240,95 +219,11 @@ class MatchDetailsViewModel: NSObject {
             .store(in: &cancellables)
     }
 
-    func fetchMatchData() {
-        self.fetchLocations()
-            .sink { [weak self] locations in
-                self?.store.storeLocations(locations: locations)
-                self?.fetchMatchDetailsPublisher()
-            }
-            .store(in: &cancellables)
-    }
-    
-    func fetchLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {
-        let router = TSRouter.getLocations(language: "en", sortByPopularity: false)
-        return Env.everyMatrixClient.manager.getModel(router: router, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
-            .map(\.records)
-            .compactMap({$0})
-            .replaceError(with: [EveryMatrix.Location]())
-            .eraseToAnyPublisher()
-
-    }
-
-    func fetchMatchDetailsPublisher() {
-        if let matchDetailsRegister = matchDetailsRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchDetailsRegister)
-        }
-
-        let endpoint = TSRouter.matchDetailsAggregatorPublisher(operatorId: Env.appSession.operatorId,
-                                                                language: "en",
-                                                                matchId: self.matchId)
-
-        self.matchDetailsAggregatorPublisher?.cancel()
-        self.matchDetailsAggregatorPublisher = nil
-
-        self.matchDetailsAggregatorPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving match detail data!")
-                case .finished:
-                    print("Data retrieved!")
-                }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher connect")
-                    self?.matchDetailsRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher initialContent")
-                    self?.setupMatchDetailAggregatorProcessor(aggregator: aggregator)
-                case .updatedContent(let aggregatorUpdates):
-                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher updatedContent")
-                    self?.updateMatchDetailAggregatorProcessor(aggregator: aggregatorUpdates)
-                case .disconnect:
-                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher disconnect")
-                }
-            })
-    }
-
-    private func setupMatchDetailAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-
-        self.store.processAggregatorForMatchDetail(aggregator)
-
-        if let match = self.store.match {
-            if !self.store.matchesInfoForMatch.isEmpty {
-                self.matchModePublisher.send(.live)
-            }
-            self.matchPublisher.send(.loaded(match))
-
-            //self.fetchMarketGroupsPublisher()
-        }
-        else {
-            self.matchPublisher.send(.failed)
-        }
-
-    }
-
-    private func updateMatchDetailAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        self.store.processContentUpdateAggregatorForMatchDetail(aggregator)
-        if !self.store.matchesInfoForMatch.isEmpty {
-            self.matchModePublisher.send(.live)
-        }
-    }
-
     //
     //
-    private func fetchMarketGroupsPublisher(marketGroups: [ServicesProvider.MarketGroup]) {
+    private func storeMarketGorups(_ marketGroups: [ServicesProvider.MarketGroup]) {
 
         let marketGroups = marketGroups.map { rawMarketGroup in
-
             MarketGroup(id: rawMarketGroup.id,
                         type: rawMarketGroup.type,
                         groupKey: rawMarketGroup.groupKey,
@@ -345,47 +240,6 @@ class MatchDetailsViewModel: NSObject {
         self.marketGroupsPublisher.send(sortedMarketGroups)
 
         self.isLoadingMarketGroups.send(false)
-
-//        let language = "en"
-//        let mainMarketsEndpoint = TSRouter.matchMarketGroupsPublisher(operatorId: Env.appSession.operatorId,
-//                                                                   language: language,
-//                                                                      matchId: self.matchId)
-//
-//        if let matchMarketGroupsRegister = self.matchMarketGroupsRegister {
-//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchMarketGroupsRegister)
-//        }
-//
-//        self.matchMarketGroupsPublisher?.cancel()
-//        self.matchMarketGroupsPublisher = nil
-//
-//        self.matchMarketGroupsPublisher = Env.everyMatrixClient.manager
-//            .registerOnEndpoint(mainMarketsEndpoint, decodingType: EveryMatrix.Aggregator.self)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                switch completion {
-//                case .failure:
-//                    print("Error retrieving data!")
-//                case .finished:
-//                    print("Data retrieved!")
-//                }
-//                self?.isLoadingMarketGroups.send(false)
-//
-//            }, receiveValue: { [weak self] state in
-//                switch state {
-//                case .connect(let publisherIdentifiable):
-//                    print("MatchDetailsViewModel competitionsMatchesPublisher connect")
-//                    self?.matchMarketGroupsRegister = publisherIdentifiable
-//
-//                case .initialContent(let aggregator):
-//                    print("MatchDetailsViewModel competitionsMatchesPublisher initialContent")
-//                    self?.storeMarketGroups(fromAggregator: aggregator)
-//
-//                case .updatedContent:
-//                    print("MatchDetailsViewModel competitionsMatchesPublisher updatedContent")
-//
-//                case .disconnect:
-//                    print("MatchDetailsViewModel competitionsMatchesPublisher disconnect")
-//                }
-//            })
     }
 
     func storeMarketGroups(fromAggregator aggregator: EveryMatrix.Aggregator) {

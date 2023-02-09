@@ -24,6 +24,10 @@ class AgeCountryFormStepViewModel {
 
     let defaultCountryIso3Code: String
 
+    var shouldSuggestAddresses: Bool {
+        return (self.selectedCountry.value?.iso3Code ?? "") == defaultCountryIso3Code
+    }
+
     var selectedCountry: CurrentValueSubject<Country?, Never> = .init(nil)
 
     var selectedCountryText: AnyPublisher<String?, Never> {
@@ -266,7 +270,8 @@ class AgeCountryFormStepView: FormStepView {
             .compactMap({ $0 })
             .debounce(for: .seconds(0.6), scheduler: DispatchQueue.main)
             .filter({ [weak self] _ in
-                return self?.placeHeaderTextFieldView.isFirstResponder ?? false
+                guard let self else { return false }
+                return self.viewModel.shouldSuggestAddresses && self.placeHeaderTextFieldView.isFirstResponder
             })
             .flatMap { [weak self] query in
                 guard
@@ -328,15 +333,15 @@ class AgeCountryFormStepView: FormStepView {
     override func setupWithTheme() {
         super.setupWithTheme()
 
-        self.dateHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.dateHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.dateHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.dateHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
 
-        self.countryHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.countryHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.countryHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.countryHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
 
-        self.placeHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.placeHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.placeHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.placeHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
     }

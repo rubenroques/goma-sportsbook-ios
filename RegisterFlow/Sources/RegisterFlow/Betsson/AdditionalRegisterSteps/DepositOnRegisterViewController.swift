@@ -99,7 +99,7 @@ public class DepositOnRegisterViewController: UIViewController {
         self.subtitleLabel.textColor = AppColor.textPrimary
 
 
-        self.depositHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.depositHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.depositHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.depositHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
 

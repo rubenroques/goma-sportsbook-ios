@@ -77,22 +77,6 @@ class LoggerService {
         printToConsole(prefix + logMessage)
         printToDestination(prefix + logMessage)
 
-        swiftyBeaverLog.info(logMessage)
-
-//        var type = ""
-//        switch logType {
-//        case .info:
-//            type = "info"
-//        case .debug:
-//            type = "debug"
-//        case .warning:
-//            type = "info"
-//        case .error:
-//            type = "error"
-//        }
-//
-//        printToServer(type, logMessage: logMessage)
-
     }
 }
 
