@@ -571,6 +571,7 @@ extension SportRadarModels {
         var continueUrl: String?
         var clientKey: String?
         var sessionId: String?
+        var sessionData: String?
         var message: String?
 
         enum CodingKeys: String, CodingKey {
@@ -579,6 +580,7 @@ extension SportRadarModels {
             case continueUrl = "continueUrl"
             case clientKey = "clientKey"
             case sessionId = "sessionId"
+            case sessionData = "sessionData"
             case message = "message"
         }
     }

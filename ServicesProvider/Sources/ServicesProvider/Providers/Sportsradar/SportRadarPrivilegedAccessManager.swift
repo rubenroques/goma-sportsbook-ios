@@ -363,6 +363,15 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
 
     }
 
+    func getPasswordPolicy() -> AnyPublisher<PasswordPolicy, ServiceProviderError> {
+
+        let passwordPolicy = PasswordPolicy(regularExpression: "", message: "Your password must be between 8-16 characters long, have uppercase and lowercase letters, a number and one special character.")
+
+        let publisher = Just(passwordPolicy).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
+        return publisher
+    }
+
     func updateWeeklyDepositLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError> {
         let endpoint = OmegaAPIClient.updateWeeklyDepositLimits(newLimit: newLimit)
         let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.connector.request(endpoint)

@@ -8,6 +8,7 @@
 import Foundation
 import Adyen
 import AdyenDropIn
+import AdyenSession
 import Combine
 import ServicesProvider
 
@@ -20,6 +21,7 @@ class PaymentsDropIn {
     var shouldShowPaymentDropIn: CurrentValueSubject<Bool, Never> = .init(false)
     var hasPaymentOptions: CurrentValueSubject<Bool, Never> = .init(false)
     var hasProcessedDeposit: CurrentValueSubject<Bool, Never> = .init(false)
+    var hasSessionInitialized: CurrentValueSubject<Bool, Never> = .init(false)
     var showErrorAlertTypePublisher: CurrentValueSubject<BalanceErrorType?, Never> = .init(nil)
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var shouldProccessPayment: ((String) -> Void)?
@@ -28,7 +30,13 @@ class PaymentsDropIn {
     var depositAmount: Double = 0.0
     var clientKey: String?
     var paymentId: String?
+    var sessionId: String?
+    var sessionData: String?
+    var adyenSession: AdyenSession?
+    var apiContext: APIContext?
+    var payment: Payment?
     var paymentMethodsResponse: SimplePaymentMethodsResponse?
+    var dropInComponent: DropInComponent?
 
     // MARK: Lifetime and Cycle
     init() {
@@ -42,15 +50,58 @@ class PaymentsDropIn {
             .sink(receiveValue: { [weak self] hasProcessedDeposit, hasPaymentOptions in
 
                 if hasProcessedDeposit && hasPaymentOptions {
-                    self?.shouldShowPaymentDropIn.send(true)
 
-                    self?.isLoadingPublisher.send(false)
+                    self?.setupSession()
 
                     self?.hasProcessedDeposit.value = false
                     self?.hasPaymentOptions.value = false
                 }
             })
             .store(in: &cancellables)
+
+        self.hasSessionInitialized
+            .sink(receiveValue: { [weak self] hasSession in
+
+                if hasSession {
+                    self?.shouldShowPaymentDropIn.send(true)
+                    self?.isLoadingPublisher.send(false)
+                }
+            })
+            .store(in: &cancellables)
+    }
+
+    private func setupSession() {
+
+        if let clientKey = self.clientKey,
+           let apiContext = try? APIContext(environment: Adyen.Environment.test, clientKey: "test_HNOW5H423JB7JEJYVXMQF655YAT7M5IB") {
+
+            self.apiContext = apiContext
+
+            if let sessionId = self.sessionId,
+               let sessionData = self.sessionData {
+
+                // Optional Payment
+                let payment = Payment(amount: Amount(value: Int(self.dropInDepositAmount) ?? 0, currencyCode: "EUR"), countryCode: "PT")
+
+                self.payment = payment
+
+                let adyenSessionConfiguration = AdyenSession.Configuration(sessionIdentifier: sessionId,
+                                                                           initialSessionData: sessionData,
+                                                                           context: AdyenContext(apiContext: apiContext, payment: payment))
+
+                AdyenSession.initialize(with: adyenSessionConfiguration, delegate: self, presentationDelegate: self) { [weak self] result in
+                        switch result {
+                        case let .success(session):
+                            //Store the session object.
+                            self?.adyenSession = session
+                            self?.hasSessionInitialized.send(true)
+                        case let .failure(error):
+                            //Handle the error.
+                            print("ADYEN SESSION INIT FAILURE: \(error)")
+                        }
+                    }
+            }
+        }
     }
 
     func getDepositInfo(amountText: String) {
@@ -129,6 +180,10 @@ class PaymentsDropIn {
 
                 self?.paymentId = processDepositResponse.paymentId
 
+                self?.sessionId = processDepositResponse.sessionId
+
+                self?.sessionData = processDepositResponse.sessionData
+
                 self?.getPaymentMethods()
 
                 self?.hasProcessedDeposit.send(true)
@@ -164,7 +219,8 @@ class PaymentsDropIn {
 
         if let paymentMethodsResponse = self.paymentMethodsResponse,
            let clientKey = self.clientKey,
-           let apiContext = try? APIContext(environment: Adyen.Environment.test, clientKey: "test_HNOW5H423JB7JEJYVXMQF655YAT7M5IB") {
+           let apiContext = self.apiContext,
+           let payment = self.payment {
 
             if let paymentResponseData = try? JSONEncoder().encode(paymentMethodsResponse),
                 let paymentMethods = try? JSONDecoder().decode(PaymentMethods.self, from: paymentResponseData) {
@@ -173,6 +229,10 @@ class PaymentsDropIn {
                 let payment = Payment(amount: Amount(value: Int(self.dropInDepositAmount) ?? 0, currencyCode: "EUR"), countryCode: "PT")
 
                 let dropInComponent = DropInComponent(paymentMethods: paymentMethods, context: AdyenContext(apiContext: apiContext, payment: payment))
+
+                dropInComponent.delegate = self.adyenSession
+
+                self.dropInComponent = dropInComponent
 
                 return dropInComponent
 
@@ -185,7 +245,8 @@ class PaymentsDropIn {
     }
 }
 
-extension PaymentsDropIn: DropInComponentDelegate {
+extension PaymentsDropIn: DropInComponentDelegate, AdyenSessionDelegate, PresentationDelegate {
+
     func didSubmit(_ data: Adyen.PaymentComponentData, from component: Adyen.PaymentComponent, in dropInComponent: Adyen.AnyDropInComponent) {
 
         if let paymentIssuerType = data.paymentMethod.dictionary.value?["type"],
@@ -260,4 +321,25 @@ extension PaymentsDropIn: DropInComponentDelegate {
         dropInComponent.viewController.dismiss(animated: true)
     }
 
+    // ADYEN SESSION
+    func didComplete(with resultCode: SessionPaymentResultCode, component: Adyen.Component, session: AdyenSession) {
+
+        print("ADYEN SESSION RESULT: \(resultCode)")
+
+        if resultCode.rawValue == "refused" {
+            self.dropInComponent?.viewController.dismiss(animated: true)
+        }
+
+    }
+
+    func didFail(with error: Error, from component: Adyen.Component, session: AdyenSession) {
+
+        print("ADYEN SESSION FAIL: \(error)")
+        self.dropInComponent?.viewController.dismiss(animated: true)
+
+    }
+
+    func present(component: Adyen.PresentableComponent) {
+        ()
+    }
 }

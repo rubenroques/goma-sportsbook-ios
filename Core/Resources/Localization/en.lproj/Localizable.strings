@@ -674,3 +674,5 @@ Terms of use, Privacy Policy and EULA";
 "invalid_period_value" = "Invalid Period Value";
 "auto_payout_limit" = "Auto Payout Limit";
 "custom" = "Custom";
+
+"password_policy" = "Your password must be between 8-16 characters long, have uppercase and lowercase letters, a number and one special character.";

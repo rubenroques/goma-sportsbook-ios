@@ -446,6 +446,15 @@ extension ServicesProviderClient {
         return privilegedAccessManager.updatePassword(oldPassword: oldPassword, newPassword: newPassword)
     }
 
+    public func getPasswordPolicy() -> AnyPublisher<PasswordPolicy, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.getPasswordPolicy()
+    }
+
     public func updateWeeklyDepositLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager

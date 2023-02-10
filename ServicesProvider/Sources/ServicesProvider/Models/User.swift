@@ -476,6 +476,7 @@ public struct ProcessDepositResponse: Codable {
     public var continueUrl: String?
     public var clientKey: String?
     public var sessionId: String?
+    public var sessionData: String?
     public var message: String?
 
     enum CodingKeys: String, CodingKey {
@@ -484,6 +485,7 @@ public struct ProcessDepositResponse: Codable {
         case continueUrl = "continueUrl"
         case clientKey = "clientKey"
         case sessionId = "sessionId"
+        case sessionData = "sessionData"
         case message = "message"
     }
 }
@@ -597,5 +599,15 @@ public struct BasicResponse: Codable {
     enum CodingKeys: String, CodingKey {
         case status = "status"
         case message = "message"
+    }
+}
+
+public struct PasswordPolicy {
+    public var regularExpression: String?
+    public var message: String
+
+    public init(regularExpression: String? = nil, message: String) {
+        self.regularExpression = regularExpression
+        self.message = message
     }
 }

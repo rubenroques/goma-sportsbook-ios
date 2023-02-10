@@ -225,8 +225,6 @@ class DepositViewController: UIViewController {
 
         if let paymentDropIn = self.viewModel.paymentsDropIn.setupPaymentDropIn() {
 
-            paymentDropIn.delegate = self.viewModel.paymentsDropIn.self
-
             self.dropInComponent = paymentDropIn
 
             present(paymentDropIn.viewController, animated: true)
