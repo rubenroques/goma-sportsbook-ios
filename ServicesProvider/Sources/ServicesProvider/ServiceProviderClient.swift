@@ -699,6 +699,16 @@ extension ServicesProviderClient {
 
         return privilegedAccessManager.updatePayment(paymentMethod: paymentMethod, amount: amount, paymentId: paymentId, type: type, issuer: issuer)
     }
+
+    public func getTransactionsHistory() -> AnyPublisher<TransactionsHistoryResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getTransactionsHistory()
+    }
 }
 
 // Utilities

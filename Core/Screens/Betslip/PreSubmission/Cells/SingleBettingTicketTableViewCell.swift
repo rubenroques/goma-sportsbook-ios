@@ -237,7 +237,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.outcomeNameLabel.textColor = UIColor.App.textPrimary
         self.marketNameLabel.textColor = UIColor.App.textPrimary
         self.matchDetailLabel.textColor = UIColor.App.textSecondary
-        self.returnsValueLabel.textColor = UIColor.App.textDisablePrimary
+        self.returnsValueLabel.textColor = UIColor.App.textPrimary
         
         self.oddBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.oddValueLabel.backgroundColor = UIColor.App.backgroundPrimary
@@ -247,7 +247,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.amountTextfield.textColor = UIColor.App.textPrimary
         self.amountTextfield.attributedPlaceholder = NSAttributedString(string: localized("amount"), attributes: [
             NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14),
-            NSAttributedString.Key.foregroundColor: UIColor.App.textDisablePrimary
+            NSAttributedString.Key.foregroundColor: UIColor.App.inputTextTitle
         ])
 
         self.amountBaseView.backgroundColor = UIColor.App.backgroundTertiary

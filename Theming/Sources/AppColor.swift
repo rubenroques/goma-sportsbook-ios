@@ -67,4 +67,6 @@ public enum AppColor {
 
     public static let highlightPrimaryContrast = UIColor(named: "highlightPrimaryContrast")!
 
+    public static let gameHeader = UIColor(named: "gameHeader")!
+
 }

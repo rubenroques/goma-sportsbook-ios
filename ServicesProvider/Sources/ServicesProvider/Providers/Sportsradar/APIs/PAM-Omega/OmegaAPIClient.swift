@@ -118,6 +118,8 @@ enum OmegaAPIClient {
     case getPayments
     case processDeposit(paymentMethod: String, amount: Double, option: String)
     case updatePayment(paymentMethod: String, amount: Double, paymentId: String, type: String, issuer: String)
+
+    case getTransactionsHistory
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -185,6 +187,8 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/processDeposit"
         case .updatePayment:
             return "/ps/ips/updatePayment"
+        case .getTransactionsHistory:
+            return "/ps/ips/getTransactionHistory"
         }
     }
     
@@ -447,6 +451,9 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "type", value: type),
                 URLQueryItem(name: "issuer", value: issuer)
             ]
+
+        case .getTransactionsHistory:
+            return nil
         }
     }
     
@@ -484,6 +491,8 @@ extension OmegaAPIClient: Endpoint {
         case .getPayments: return .get
         case .processDeposit: return .post
         case .updatePayment: return .post
+
+        case .getTransactionsHistory: return .get
         }
     }
     
@@ -548,6 +557,8 @@ extension OmegaAPIClient: Endpoint {
         case .getPayments: return true
         case .processDeposit: return true
         case .updatePayment: return true
+
+        case .getTransactionsHistory: return true
         }
     }
     

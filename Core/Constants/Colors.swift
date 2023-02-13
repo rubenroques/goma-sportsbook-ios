@@ -112,6 +112,10 @@ extension UIColor {
             return UIColor(named: "headerGradient3") ?? Self.backgroundPrimary
         }
 
+        static var gameHeader: UIColor {
+            return UIColor(named: "gameHeader") ?? Self.backgroundSecondary
+        }
+
     }
 
 }

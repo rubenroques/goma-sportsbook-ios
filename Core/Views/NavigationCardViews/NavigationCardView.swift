@@ -63,9 +63,9 @@ class NavigationCardView: UIView {
     private func setupWithTheme() {
         self.backgroundColor = .clear
 
-        self.containerView.backgroundColor = UIColor.App.backgroundSecondary
+        self.containerView.backgroundColor = UIColor.App.backgroundTertiary
 
-        self.iconBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.iconBaseView.backgroundColor = UIColor.App.backgroundBorder
 
         self.iconImageView.backgroundColor = .clear
 

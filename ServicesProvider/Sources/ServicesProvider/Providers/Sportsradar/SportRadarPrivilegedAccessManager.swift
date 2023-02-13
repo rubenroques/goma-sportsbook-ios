@@ -639,5 +639,24 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             }
         }).eraseToAnyPublisher()
     }
+
+    func getTransactionsHistory() -> AnyPublisher<TransactionsHistoryResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.getTransactionsHistory
+        let publisher: AnyPublisher<SportRadarModels.TransactionsHistoryResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ transactionsHistoryResponse -> AnyPublisher<TransactionsHistoryResponse, ServiceProviderError> in
+            if transactionsHistoryResponse.status == "SUCCESS" {
+
+                let transactionsHistoryResponse = SportRadarModelMapper.transactionsHistoryResponse(fromTransactionsHistoryResponse: transactionsHistoryResponse)
+
+                return Just(transactionsHistoryResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
+            }
+            else {
+                return Fail(outputType: TransactionsHistoryResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
 }
 

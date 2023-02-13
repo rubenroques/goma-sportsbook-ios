@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ServicesProvider
 
 class TransactionsTableViewCell: UITableViewCell {
 
@@ -58,7 +59,7 @@ class TransactionsTableViewCell: UITableViewCell {
         self.transactionIdLabel.font = AppFont.with(type: .medium, size: 12)
     }
 
-    func configure(withTransactionHistoryEntry transactionHistoryEntry: EveryMatrix.TransactionHistory,
+    func configure(withTransactionHistoryEntry transactionHistoryEntry: TransactionHistory,
                    transactionType: TransactionsHistoryViewModel.TransactionsType) {
 
         if let date = DateFormatter.init(format: "yyyy-MM-dd'T'HH:mm:ss.SSS").date(from: transactionHistoryEntry.time) {

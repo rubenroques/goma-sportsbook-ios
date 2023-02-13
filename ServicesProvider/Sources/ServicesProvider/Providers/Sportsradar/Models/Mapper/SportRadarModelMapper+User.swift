@@ -229,6 +229,35 @@ extension SportRadarModelMapper {
 
         return BasicResponse(status: internalBasicResponse.status, message: internalBasicResponse.message)
     }
+
+    static func transactionsHistoryResponse(fromTransactionsHistoryResponse internalTransactionsHistoryResponse: SportRadarModels.TransactionsHistoryResponse) -> TransactionsHistoryResponse {
+
+        if let transactionDetails = internalTransactionsHistoryResponse.transactions {
+
+            let transactions = transactionDetails.map({ transactionDetail -> TransactionDetail in
+                let transactionDetail = Self.transactionDetail(fromInternalTransactionDetail: transactionDetail)
+
+                return transactionDetail
+
+            })
+
+            return TransactionsHistoryResponse(status: internalTransactionsHistoryResponse.status, transactions: transactions)
+        }
+
+        return TransactionsHistoryResponse(status: internalTransactionsHistoryResponse.status, transactions: [])
+    }
+
+    static func transactionDetail(fromInternalTransactionDetail internalTransactionDetail: SportRadarModels.TransactionDetail) -> TransactionDetail {
+
+        return TransactionDetail(id: internalTransactionDetail.id,
+                                 timestamp: internalTransactionDetail.timestamp,
+                                 type: internalTransactionDetail.type,
+                                 amount: internalTransactionDetail.amount,
+                                 postBalance: internalTransactionDetail.postBalance,
+                                 amountBonus: internalTransactionDetail.amountBonus,
+                                 postBalanceBonus: internalTransactionDetail.postBalanceBonus,
+                                 currency: internalTransactionDetail.currency)
+    }
 }
 
 
