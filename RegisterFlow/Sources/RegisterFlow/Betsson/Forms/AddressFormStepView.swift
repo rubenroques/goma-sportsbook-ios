@@ -9,20 +9,28 @@ import UIKit
 import Theming
 import Extensions
 import Combine
+import SharedModels
 import AdresseFrancaise
 
 class AddressFormStepViewModel {
 
     let title: String
 
+    var countryCodeForSuggestions: String
     var place: CurrentValueSubject<String?, Never>
     var street: CurrentValueSubject<String?, Never>
     var additionalStreet: CurrentValueSubject<String?, Never>
 
+    var shouldSuggestAddresses: Bool = true
+
     private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
     private var adresseFrancaiseClient: AdresseFrancaiseClient
 
+    private var cancellables = Set<AnyCancellable>()
+
+
     init(title: String,
+         countryCodeForSuggestions: String,
          place: String? = nil,
          street: String? = nil,
          additionalStreet: String? = nil,
@@ -30,11 +38,26 @@ class AddressFormStepViewModel {
          adresseFrancaiseClient: AdresseFrancaiseClient = AdresseFrancaiseClient()) {
 
         self.title = title
+        self.countryCodeForSuggestions = countryCodeForSuggestions
         self.place = .init(place)
         self.street = .init(street)
         self.additionalStreet = .init(additionalStreet)
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
         self.adresseFrancaiseClient = AdresseFrancaiseClient()
+
+         self.userRegisterEnvelopUpdater.selectedCountry
+            .map { [weak self] country -> Bool in
+            if let countryValue = country {
+                return countryValue.iso3Code == (self?.countryCodeForSuggestions ?? "")
+            }
+            else {
+                return false
+            }
+        }
+        .sink(receiveValue: { [weak self] shouldSuggest in
+            self?.shouldSuggestAddresses = shouldSuggest
+        })
+        .store(in: &self.cancellables)
 
     }
 
@@ -144,7 +167,7 @@ class AddressFormStepView: FormStepView {
             self.placeSearchCompletionView.topAnchor.constraint(equalTo: self.placeHeaderTextFieldView.bottomAnchor, constant: -16),
             self.placeSearchCompletionView.leadingAnchor.constraint(equalTo: self.placeHeaderTextFieldView.leadingAnchor),
             self.placeSearchCompletionView.trailingAnchor.constraint(equalTo: self.placeHeaderTextFieldView.trailingAnchor),
-            self.placeSearchCompletionView.bottomAnchor.constraint(greaterThanOrEqualTo: placeContainerView.bottomAnchor),
+            placeContainerView.bottomAnchor.constraint(greaterThanOrEqualTo: self.placeSearchCompletionView.bottomAnchor),
 
             streetContainerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 80),
             self.streetHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
@@ -155,7 +178,7 @@ class AddressFormStepView: FormStepView {
             self.streetSearchCompletionView.topAnchor.constraint(equalTo: self.streetHeaderTextFieldView.bottomAnchor, constant: -16),
             self.streetSearchCompletionView.leadingAnchor.constraint(equalTo: self.streetHeaderTextFieldView.leadingAnchor),
             self.streetSearchCompletionView.trailingAnchor.constraint(equalTo: self.streetHeaderTextFieldView.trailingAnchor),
-            self.streetSearchCompletionView.bottomAnchor.constraint(greaterThanOrEqualTo: streetContainerView.bottomAnchor),
+            streetContainerView.bottomAnchor.constraint(greaterThanOrEqualTo: self.streetSearchCompletionView.bottomAnchor),
 
             additionalStreetContainerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 80),
             self.additionalStreetHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
@@ -166,7 +189,7 @@ class AddressFormStepView: FormStepView {
             self.additionalStreetSearchCompletionView.topAnchor.constraint(equalTo: self.additionalStreetHeaderTextFieldView.bottomAnchor, constant: -16),
             self.additionalStreetSearchCompletionView.leadingAnchor.constraint(equalTo: self.additionalStreetHeaderTextFieldView.leadingAnchor),
             self.additionalStreetSearchCompletionView.trailingAnchor.constraint(equalTo: self.additionalStreetHeaderTextFieldView.trailingAnchor),
-            self.additionalStreetSearchCompletionView.bottomAnchor.constraint(greaterThanOrEqualTo: additionalStreetContainerView.bottomAnchor),
+            additionalStreetContainerView.bottomAnchor.constraint(greaterThanOrEqualTo: self.additionalStreetSearchCompletionView.bottomAnchor),
         ])
 
         self.stackView.addArrangedSubview(placeContainerView)
@@ -247,7 +270,8 @@ class AddressFormStepView: FormStepView {
             .compactMap({ $0 })
             .debounce(for: .seconds(0.6), scheduler: DispatchQueue.main)
             .filter({ [weak self] _ in
-                return self?.placeHeaderTextFieldView.isFirstResponder ?? false
+                guard let self else { return false }
+                return self.viewModel.shouldSuggestAddresses && self.placeHeaderTextFieldView.isFirstResponder
             })
             .flatMap { [weak self] query in
                 guard
@@ -273,7 +297,8 @@ class AddressFormStepView: FormStepView {
             .compactMap({ $0 })
             .debounce(for: .seconds(0.6), scheduler: DispatchQueue.main)
             .filter({ [weak self] _ in
-                return self?.streetHeaderTextFieldView.isFirstResponder ?? false
+                guard let self else { return false }
+                return self.viewModel.shouldSuggestAddresses && self.streetHeaderTextFieldView.isFirstResponder
             })
             .flatMap { [weak self] query in
                 guard
@@ -299,7 +324,8 @@ class AddressFormStepView: FormStepView {
             .compactMap({ $0 })
             .debounce(for: .seconds(0.6), scheduler: DispatchQueue.main)
             .filter({ [weak self] _ in
-                return self?.additionalStreetHeaderTextFieldView.isFirstResponder ?? false
+                guard let self else { return false }
+                return self.viewModel.shouldSuggestAddresses && self.additionalStreetHeaderTextFieldView.isFirstResponder
             })
             .flatMap { [weak self] query in
                 guard
@@ -329,15 +355,15 @@ class AddressFormStepView: FormStepView {
     override func setupWithTheme() {
         super.setupWithTheme()
 
-        self.placeHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.placeHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.placeHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.placeHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
 
-        self.streetHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.streetHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.streetHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.streetHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
 
-        self.additionalStreetHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.additionalStreetHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.additionalStreetHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.additionalStreetHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
     }

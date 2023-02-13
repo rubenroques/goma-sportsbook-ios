@@ -13,7 +13,8 @@ extension ServiceProviderModelMapper {
     // Sports
     static func sport(fromServiceProviderSportType sportType: ServicesProvider.SportType) -> Sport {
 
-        let sport = Sport(id: sportType.iconId ?? "0",
+        let identifier = sportType.iconId ?? sportType.alphaId ?? sportType.numericId ?? "0"
+        let sport = Sport(id: identifier,
                           name: sportType.name,
                           alphaId: sportType.alphaId,
                           numericId: sportType.numericId,

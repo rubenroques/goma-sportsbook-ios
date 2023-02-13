@@ -31,6 +31,13 @@ public class UserRegisterEnvelopUpdater {
             .eraseToAnyPublisher()
     }
 
+    public var selectedCountry: AnyPublisher<SharedModels.Country?, Never> {
+        return self.filledDataUpdated
+            .map { updatedUserRegisterEnvelop -> SharedModels.Country? in
+                return updatedUserRegisterEnvelop.countryBirth
+            }
+            .eraseToAnyPublisher()
+    }
 
     private var filledDataUpdated: CurrentValueSubject<UserRegisterEnvelop, Never>
     private var userRegisterEnvelop: UserRegisterEnvelop
@@ -61,7 +68,6 @@ public class UserRegisterEnvelopUpdater {
     }
 
     func setNickname(_ nickname: String?) {
-        print("DEBUG NICKNAME: saving \(nickname)")
         self.userRegisterEnvelop.nickname = nickname
         self.filledDataUpdated.send(self.userRegisterEnvelop)
     }

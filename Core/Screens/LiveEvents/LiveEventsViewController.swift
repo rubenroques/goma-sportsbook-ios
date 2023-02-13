@@ -36,9 +36,6 @@ class LiveEventsViewController: UIViewController {
     @IBOutlet private weak var liveEventsCountView: UIView!
     @IBOutlet private weak var liveEventsCountLabel: UILabel!
 
-    var turnTimeRangeOn: Bool = false
-    var isLiveEventsMarkets: Bool = true
-
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
     private static func createFloatingShortcutsView() -> FloatingShortcutsView {
         let floatingShortcutsView = FloatingShortcutsView()
@@ -48,11 +45,11 @@ class LiveEventsViewController: UIViewController {
 
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
+
     private let refreshControl = UIRefreshControl()
 
-    var cancellables = Set<AnyCancellable>()
-
-    var viewModel: LiveEventsViewModel
+    var turnTimeRangeOn: Bool = false
+    var isLiveEventsMarkets: Bool = true
 
     var filterSelectedOption: Int = 0
     var selectedSport: Sport {
@@ -73,6 +70,9 @@ class LiveEventsViewController: UIViewController {
     var didTapChatButtonAction: (() -> Void)?
     var didTapBetslipButtonAction: (() -> Void)?
 
+    private var viewModel: LiveEventsViewModel
+    private var cancellables = Set<AnyCancellable>()
+
     init(selectedSport: Sport) {
         self.selectedSport = selectedSport
         self.viewModel = LiveEventsViewModel(selectedSport: self.selectedSport)
@@ -92,6 +92,7 @@ class LiveEventsViewController: UIViewController {
         self.commonInit()
         self.setupWithTheme()
         self.connectPublishers()
+        
         self.viewModel.fetchLiveMatches()
 
         self.viewModel.didSelectMatchAction = { match in
@@ -101,16 +102,6 @@ class LiveEventsViewController: UIViewController {
 
         self.tableView.isHidden = false
         self.emptyBaseView.isHidden = true
-
-//        self.viewModel.didTapFavoriteMatchAction = { match in
-//            if !UserSessionStore.isUserLogged() {
-//                self.presentLoginViewController()
-//            }
-//            else {
-//                self.viewModel.markAsFavorite(match: match)
-//                self.tableView.reloadData()
-//            }
-//        }
 
         self.viewModel.didLongPressOdd = { [weak self] bettingTicket in
             self?.openQuickbet(bettingTicket)
@@ -208,6 +199,8 @@ class LiveEventsViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
 
+        tableView.clipsToBounds = false
+
         tableView.estimatedRowHeight = 155
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
@@ -250,17 +243,6 @@ class LiveEventsViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        self.viewModel.isLoading
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isLoading in
-                self?.loadingBaseView.isHidden = !isLoading
-
-                if !isLoading {
-                    self?.refreshControl.endRefreshing()
-                }
-            }
-            .store(in: &cancellables)
-
         self.viewModel.dataDidChangedAction = { [unowned self] in
             self.tableView.reloadData()
         }
@@ -278,18 +260,32 @@ class LiveEventsViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        self.viewModel.screenStatePublisher
+        Publishers.CombineLatest(self.viewModel.screenStatePublisher, self.viewModel.isLoading)
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] screenState in
+            .sink(receiveValue: { [weak self] screenState, isLoading in
+
+                if isLoading {
+                    self?.loadingBaseView.isHidden = false
+                    self?.emptyBaseView.isHidden = true
+                    self?.tableView.isHidden = true
+                    return
+
+                }
+
+                self?.refreshControl.endRefreshing()
+                self?.loadingBaseView.isHidden = true
+
                 switch screenState {
                 case .contentNoFilter, .contentAndFilter:
                     self?.emptyBaseView.isHidden = true
                     self?.tableView.isHidden = false
+
                 case .emptyNoFilter:
                     self?.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
                                                 secondLabelText: localized("second_empty_list"), isUserLoggedIn: true)
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
+
                 case .emptyAndFilter:
                     self?.setEmptyStateBaseView(firstLabelText: localized("empty_list_with_filters"),
                                                 secondLabelText: localized("second_empty_list_with_filters"), isUserLoggedIn: true)
@@ -302,6 +298,10 @@ class LiveEventsViewController: UIViewController {
     }
 
     private func setupWithTheme() {
+        self.view.backgroundColor = .clear
+
+        self.tableView.backgroundColor = .clear
+        self.tableView.backgroundView?.backgroundColor = .clear
 
         self.leftGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.rightGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
@@ -330,24 +330,18 @@ class LiveEventsViewController: UIViewController {
         //
         //
 
-        self.tableView.backgroundColor = .clear
-        self.tableView.backgroundView?.backgroundColor = .clear
-
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
-
         self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
         self.filtersButtonView.backgroundColor = UIColor.App.backgroundTertiary
 
-        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
-        self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
+        self.filtersCollectionView.backgroundColor = UIColor.App.pillNavigation
 
-        self.filtersCollectionView.backgroundColor = UIColor.App.backgroundSecondary
-
-        self.emptyBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.emptyBaseView.backgroundColor = .clear
         self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
         self.secondTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
         self.emptyStateButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
+
+        self.loadingBaseView.backgroundColor = .clear
 
         self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         self.sportsSelectorExpandImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
@@ -510,16 +504,7 @@ extension LiveEventsViewController: UICollectionViewDelegate, UICollectionViewDa
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
         self.filterSelectedOption = indexPath.row
-
-        switch indexPath.row {
-        case 0:
-            self.viewModel.setMatchListType(.liveMatches)
-        default:
-            ()
-        }
-
         self.filtersCollectionView.reloadData()
         self.filtersCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }

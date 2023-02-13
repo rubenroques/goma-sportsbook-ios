@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>The app needs permission to use your photo library.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -55,6 +53,10 @@
 	<string>The app needs your permission to use your location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>The app needs localization permission when in use</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>The app needs permission to use your photo library.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>This information will be used to deliver personalized ads to you.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Gilroy-Bold.ttf</string>
@@ -75,7 +77,7 @@
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
-	<string>l</string>
+	<string>LaunchScreen-SportRadar</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -93,9 +95,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-
-    <key>NSUserTrackingUsageDescription</key>
-    <string>This information will be used to deliver personalized ads to you.</string>
-
 </dict>
 </plist>

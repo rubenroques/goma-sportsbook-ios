@@ -129,10 +129,10 @@ class HomeViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = .clear
 
-        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
-        self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
+        self.tableView.backgroundColor = .clear
+        self.tableView.backgroundView?.backgroundColor = .clear
 
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.loadingActivityIndicatorView.tintColor = UIColor.gray
@@ -596,7 +596,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
         let titleView = UIView()
-        titleView.backgroundColor = UIColor.App.backgroundPrimary
+        titleView.backgroundColor = UIColor.App.backgroundSecondary
 
         let titleStackView = UIStackView()
         titleStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -614,9 +614,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         titleLabel.font = AppFont.with(type: .bold, size: 17)
 
         let seeAllLabel = UILabel()
+        seeAllLabel.backgroundColor = .clear
         seeAllLabel.translatesAutoresizingMaskIntoConstraints = false
         seeAllLabel.font = AppFont.with(type: .semibold, size: 12)
-        seeAllLabel.textColor = UIColor.App.highlightPrimary
+        seeAllLabel.textColor = UIColor.App.highlightSecondary
         seeAllLabel.text = localized("see_all")
         seeAllLabel.isUserInteractionEnabled = true
 
@@ -748,6 +749,7 @@ extension HomeViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
+        tableView.clipsToBounds = false
         tableView.contentInsetAdjustmentBehavior = .never
         if #available(iOS 15.0, *) {
             tableView.sectionHeaderTopPadding = 0

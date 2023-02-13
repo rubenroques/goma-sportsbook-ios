@@ -113,22 +113,24 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
     func setupWithTheme() {
         self.backgroundColor = .clear
         self.backgroundView?.backgroundColor = .clear
-        self.contentView.backgroundColor = UIColor.App.backgroundPrimary
+        self.contentView.backgroundColor = .clear
 
-        self.titleLabel.textColor = UIColor.App.textPrimary
-        self.linesStackView.backgroundColor = UIColor.App.backgroundPrimary
+        self.linesStackView.backgroundColor = .clear
 
-        self.topCollectionView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
-        self.topCollectionView.backgroundColor = UIColor.App.backgroundPrimary
+        self.topCollectionView.backgroundView?.backgroundColor = .clear
+        self.topCollectionView.backgroundColor = .clear
 
-        self.bottomCollectionView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
-        self.bottomCollectionView.backgroundColor = UIColor.App.backgroundPrimary
+        self.bottomCollectionView.backgroundView?.backgroundColor = .clear
+        self.bottomCollectionView.backgroundColor = .clear
 
         self.firstBackView.backgroundColor = UIColor.App.buttonBackgroundSecondary
         self.secondBackView.backgroundColor = UIColor.App.buttonBackgroundSecondary
 
-        self.seeAllView.backgroundColor = UIColor.App.backgroundPrimary
-        self.seeAllLabel.textColor = UIColor.App.highlightPrimary
+        self.seeAllView.backgroundColor = .clear
+
+        self.titleLabel.textColor = UIColor.App.textPrimary
+
+        self.seeAllLabel.textColor = UIColor.App.highlightSecondary
     }
 
     func configure(withViewModel viewModel: SportMatchLineViewModel) {

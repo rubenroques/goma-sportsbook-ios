@@ -91,7 +91,6 @@ class SportTypeStore {
 
             switch subscribableContent {
             case .connected(let subscription):
-                //self?.subscriptions.insert(subscription)
                 self?.liveSports = []
             case .contentUpdate(let sportTypes):
                 let sports = sportTypes.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
@@ -112,8 +111,6 @@ class SportTypeStore {
             case .finished:
                 ()
             case .failure(let error):
-                print("SPORT LIST ERROR: \(error)")
-                // TODO: Retry the request
 
                 self?.preLiveSportsRequestRetries += 1
 

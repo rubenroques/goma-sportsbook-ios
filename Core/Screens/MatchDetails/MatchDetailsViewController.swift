@@ -73,7 +73,14 @@ class MatchDetailsViewController: UIViewController {
     
     @IBOutlet private var marketTypesCollectionView: UICollectionView!
     @IBOutlet private var tableView: UITableView!
-    
+
+
+    private lazy var backgroundGradientView: GradientView = {
+        let view = GradientView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
     @IBOutlet private var marketGroupsPagedBaseView: UIView!
     private var marketGroupsPagedViewController: UIPageViewController
     
@@ -283,7 +290,18 @@ class MatchDetailsViewController: UIViewController {
         
         //
         self.addChildViewController(marketGroupsPagedViewController, toView: marketGroupsPagedBaseView)
-        
+
+        //
+        self.view.insertSubview(self.backgroundGradientView, at: 0)
+
+        NSLayoutConstraint.activate([
+            self.backgroundGradientView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.backgroundGradientView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.backgroundGradientView.topAnchor.constraint(equalTo: self.headerDetailView.bottomAnchor),
+            self.backgroundGradientView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+        ])
+        //
+
         //
         self.matchFieldWebViewHeight.constant = 0
         
@@ -291,7 +309,8 @@ class MatchDetailsViewController: UIViewController {
         self.matchNotAvailableView.isHidden = true
 
         self.marketsNotAvailableView.isHidden = true
-        
+        self.marketsNotAvailableLabel.text = localized("markets_not_available")
+
         self.matchFieldBaseView.isHidden = false
         self.statsBaseView.isHidden = false
         
@@ -356,7 +375,7 @@ class MatchDetailsViewController: UIViewController {
         
         self.marketGroupsPagedViewController.delegate = self
         self.marketGroupsPagedViewController.dataSource = self
-        
+
         //
         // account balance
         self.accountValueView.isHidden = true
@@ -531,9 +550,14 @@ class MatchDetailsViewController: UIViewController {
         self.accountValueLabel.textColor = UIColor.App.textPrimary
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
         self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
-        
+
+        //
+        self.backgroundGradientView.colors = [(UIColor.App.backgroundGradient1, 0.0),
+                                              (UIColor.App.backgroundGradient2, 1.0)]
+
+        self.marketGroupsPagedBaseView.backgroundColor = .clear
         // Market List CollectionView
-        self.marketTypesCollectionView.backgroundColor = UIColor.App.backgroundSecondary
+        self.marketTypesCollectionView.backgroundColor = UIColor.App.pillNavigation
         
         // TableView
         self.tableView.backgroundColor = .clear
@@ -541,10 +565,10 @@ class MatchDetailsViewController: UIViewController {
         self.matchFieldBaseView.backgroundColor = UIColor.App.backgroundTertiary
         self.matchFieldWebView.backgroundColor = UIColor.App.backgroundTertiary
         
-        self.matchNotAvailableView.backgroundColor = UIColor.App.backgroundPrimary
+        self.matchNotAvailableView.backgroundColor = .clear
         self.matchNotAvailableLabel.textColor = UIColor.App.textPrimary
 
-        self.marketsNotAvailableView.backgroundColor = UIColor.App.backgroundPrimary
+        self.marketsNotAvailableView.backgroundColor = .clear
         self.marketsNotAvailableLabel.textColor = UIColor.App.textPrimary
 
         self.matchFieldLoadingView.tintColor = .gray
@@ -581,8 +605,7 @@ class MatchDetailsViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] userWallet in
                 if let userWallet = userWallet,
-                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: userWallet.total))
-                {
+                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: userWallet.total)) {
                     self?.accountValueLabel.text = formattedTotalString
                 }
                 else {
@@ -590,52 +613,24 @@ class MatchDetailsViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
-//
-//        Env.userSessionStore.userBalanceWallet
-//            .compactMap({$0})
-//            .map(\.amount)
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] value in
-//                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
-//                    let accountValue = bonusWallet.amount + value
-//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-//
-//                }
-//                else {
-//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
-//                }
-//            }
-//            .store(in: &cancellables)
-//
-//        Env.userSessionStore.userBonusBalanceWallet
-//            .compactMap({$0})
-//            .map(\.amount)
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] value in
-//                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
-//                    let accountValue = currentWallet.amount + value
-//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-//                }
-//            }
-//            .store(in: &cancellables)
-        
-        self.viewModel.isLoadingMarketGroups
-            .removeDuplicates()
+
+        self.viewModel.marketGroupsState
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isLoading in
-                if isLoading {
+            .sink { [weak self] marketGroupState in
+                switch marketGroupState {
+                case .idle:
                     self?.loadingView.startAnimating()
-                }
-                else {
+                case .loading:
+                    self?.loadingView.startAnimating()
+                case let .loaded(marketGroups):
                     self?.loadingView.stopAnimating()
+                    self?.showMarkets()
+                    self?.reloadMarketGroupDetails(marketGroups)
+                case .failed:
+                    self?.loadingView.stopAnimating()
+                    self?.showMarketsNotAvailableView()
+                    self?.reloadMarketGroupDetails([])
                 }
-            }
-            .store(in: &cancellables)
-        
-        self.viewModel.marketGroupsPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] marketGroups in
-                self?.reloadMarketGroupDetails(marketGroups)
                 self?.reloadCollectionView()
             }
             .store(in: &cancellables)
@@ -811,8 +806,6 @@ class MatchDetailsViewController: UIViewController {
                     self?.autoScrollEnabled = true
                 }
 
-
-                print("MatchDetailsMarkets - marketGroupDetailsViewController: \(groupKey)")
                 self.marketGroupsViewControllers.append(marketGroupDetailsViewController)
             }
         }
@@ -823,12 +816,7 @@ class MatchDetailsViewController: UIViewController {
                                                                     animated: false,
                                                                     completion: nil)
         }
-        
-        print("MatchDetailsMarkets - \(self.marketGroupsViewControllers.count)")
 
-        if marketGroups.isEmpty {
-            self.showMarketsNotAvailableView()
-        }
     }
     
     func reloadMarketGroupDetailsContent() {
@@ -977,52 +965,14 @@ class MatchDetailsViewController: UIViewController {
     }
     
     func updateHeaderDetails() {
-        
-        guard let match = self.viewModel.match else {
-            return
-        }
-        
-        let matchId = self.viewModel.matchId
-        
+
         var homeGoals = ""
         var awayGoals = ""
         var minutes = ""
         var matchPart = ""
-        
-        if let matchInfoArray = self.viewModel.store.matchesInfoForMatch[matchId] {
-            for matchInfoId in matchInfoArray {
-                if let matchInfo = self.viewModel.store.matchesInfo[matchInfoId] {
-                    if (matchInfo.typeId ?? "") == "1" && (matchInfo.eventPartId ?? "") == match.rootPartId {
-                        // Goals
-                        if let homeGoalsFloat = matchInfo.paramFloat1 {
-                            if match.homeParticipant.id == matchInfo.paramParticipantId1 {
-                                homeGoals = "\(homeGoalsFloat)"
-                            }
-                            else if match.awayParticipant.id == matchInfo.paramParticipantId1 {
-                                awayGoals = "\(homeGoalsFloat)"
-                            }
-                        }
-                        if let awayGoalsFloat = matchInfo.paramFloat2 {
-                            if match.homeParticipant.id == matchInfo.paramParticipantId2 {
-                                homeGoals = "\(awayGoalsFloat)"
-                            }
-                            else if match.awayParticipant.id == matchInfo.paramParticipantId2 {
-                                awayGoals = "\(awayGoalsFloat)"
-                            }
-                        }
-                    }
-                    else if (matchInfo.typeId ?? "") == "95", let minutesFloat = matchInfo.paramFloat1 {
-                        // Match Minutes
-                        minutes = "\(minutesFloat)"
-                    }
-                    else if (matchInfo.typeId ?? "") == "92", let eventPartName = matchInfo.paramEventPartName1 {
-                        // Status Part
-                        matchPart = eventPartName
-                    }
-                }
-            }
-        }
-        
+
+        // TODO: Request and Update Match info
+
         if homeGoals.isNotEmpty && awayGoals.isNotEmpty {
             self.headerDetailLiveTopLabel.text = "\(homeGoals) - \(awayGoals)"
         }
@@ -1039,11 +989,9 @@ class MatchDetailsViewController: UIViewController {
     }
 
     @objc func didTapMarkets() {
-
         if self.shouldShowLiveFieldWebView {
             self.contentScrollView.setContentOffset(CGPoint.zero, animated: true)
         }
-
     }
     
     @objc func didTapLiveButtonHeaderView() {
@@ -1072,10 +1020,22 @@ class MatchDetailsViewController: UIViewController {
             self.headerBarSelection = .none
         }
     }
-    
+
+    func showMarkets() {
+        self.marketGroupsPagedBaseView.isHidden = false
+        self.marketTypesCollectionView.isHidden = false
+        self.marketsNotAvailableView.isHidden = true
+        self.matchNotAvailableView.isHidden = true
+    }
+
     func showMatchNotAvailableView() {
+        self.tableView.isHidden = true
+
         self.shareButton.isHidden = true
-        
+
+        self.marketGroupsPagedBaseView.isHidden = true
+        self.marketTypesCollectionView.isHidden = true
+        self.marketsNotAvailableView.isHidden = true
         self.matchNotAvailableView.isHidden = false
     }
 
@@ -1083,11 +1043,12 @@ class MatchDetailsViewController: UIViewController {
 
         self.tableView.isHidden = true
 
+        self.marketGroupsPagedBaseView.isHidden = true
         self.marketTypesCollectionView.isHidden = true
-
         self.marketsNotAvailableView.isHidden = false
+        self.matchNotAvailableView.isHidden = true
 
-        self.marketsNotAvailableLabel.text = localized("markets_not_available")
+
     }
     
     @objc func didTapBetslipView() {

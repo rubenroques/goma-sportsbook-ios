@@ -169,10 +169,9 @@ public class SteppedRegistrationViewModel {
         serviceProvider.signUp(form: form)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
-
                 switch completion {
                 case .failure(let error):
-                    print("Error \(error)")
+                    print("RegisterFlow ServiceProvider.signUp Error \(error)")
                 case .finished:
                     ()
                 }
@@ -372,7 +371,7 @@ public class SteppedRegistrationViewController: UIViewController {
         // Continue button styling
         self.continueButton.setTitleColor(AppColor.buttonTextPrimary, for: .normal)
         self.continueButton.setTitleColor(AppColor.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        self.continueButton.setTitleColor(AppColor.buttonTextDisablePrimary.withAlphaComponent(0.39), for: .disabled)
+        self.continueButton.setTitleColor(AppColor.buttonTextDisablePrimary, for: .disabled)
 
         self.continueButton.setBackgroundColor(AppColor.buttonBackgroundPrimary, for: .normal)
         self.continueButton.setBackgroundColor(AppColor.buttonBackgroundSecondary, for: .highlighted)
@@ -380,6 +379,10 @@ public class SteppedRegistrationViewController: UIViewController {
         self.continueButton.layer.cornerRadius = 8
         self.continueButton.layer.masksToBounds = true
         self.continueButton.backgroundColor = .clear
+
+        self.registerStepViews.forEach { registerStepView in
+            registerStepView.setupWithTheme()
+        }
     }
 
     private func createSteps() {
@@ -704,15 +707,17 @@ public extension SteppedRegistrationViewController {
             self.contentBaseView.topAnchor.constraint(equalTo: self.headerBaseView.bottomAnchor),
             self.contentBaseView.bottomAnchor.constraint(equalTo: self.footerBaseView.topAnchor),
 
-            self.stepsScrollView.frameLayoutGuide.topAnchor.constraint(equalTo: self.contentBaseView.topAnchor),
-            self.stepsScrollView.frameLayoutGuide.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor),
-            self.stepsScrollView.frameLayoutGuide.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor),
-            self.stepsScrollView.frameLayoutGuide.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor),
+            self.stepsScrollView.topAnchor.constraint(equalTo: self.contentBaseView.topAnchor),
+            self.stepsScrollView.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor),
+            self.stepsScrollView.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor),
+            self.stepsScrollView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor),
 
-            self.stepsContentStackView.topAnchor.constraint(equalTo: self.stepsScrollView.topAnchor),
-            self.stepsContentStackView.bottomAnchor.constraint(equalTo: self.stepsScrollView.bottomAnchor),
-            self.stepsContentStackView.leadingAnchor.constraint(equalTo: self.stepsScrollView.leadingAnchor),
-            self.stepsContentStackView.trailingAnchor.constraint(equalTo: self.stepsScrollView.trailingAnchor),
+            self.stepsContentStackView.leadingAnchor.constraint(equalTo: self.stepsScrollView.contentLayoutGuide.leadingAnchor),
+            self.stepsContentStackView.topAnchor.constraint(equalTo: self.stepsScrollView.contentLayoutGuide.topAnchor),
+            self.stepsContentStackView.trailingAnchor.constraint(equalTo: self.stepsScrollView.contentLayoutGuide.trailingAnchor),
+            self.stepsContentStackView.bottomAnchor.constraint(equalTo: self.stepsScrollView.contentLayoutGuide.bottomAnchor),
+
+            self.stepsContentStackView.widthAnchor.constraint(equalTo: self.stepsScrollView.frameLayoutGuide.widthAnchor),
 
             self.footerBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.footerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
@@ -737,19 +742,6 @@ public extension SteppedRegistrationViewController {
             self.loadingView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
             self.loadingView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
         ])
-
-        let stepsViewCenterY = self.stepsContentStackView.centerYAnchor.constraint(equalTo: self.stepsScrollView.centerYAnchor)
-        stepsViewCenterY.priority = .defaultLow
-
-        let stepsViewHeight = self.stepsContentStackView.heightAnchor.constraint(greaterThanOrEqualTo: self.contentBaseView.heightAnchor)
-        stepsViewHeight.priority = .defaultLow
-
-        NSLayoutConstraint.activate([
-            self.stepsContentStackView.centerXAnchor.constraint(equalTo: self.stepsScrollView.centerXAnchor),
-            stepsViewCenterY,
-            stepsViewHeight
-        ])
-
     }
 
 }

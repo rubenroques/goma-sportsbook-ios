@@ -148,7 +148,6 @@ class ContactsFormStepViewModel {
         let clearedEmail = self.email.removeDuplicates()
 
         Publishers.CombineLatest(clearedEmailState, clearedEmail)
-            .print("DEBUG-EMAIL: ")
             .debounce(for: .seconds(0.6), scheduler: DispatchQueue.main)
             .filter { emailState, email in
                 return emailState == .needsValidation
@@ -461,11 +460,11 @@ class ContactsFormStepView: FormStepView {
 
         self.prefixDownIconImageView.tintColor = AppColor.textPrimary
 
-        self.emailHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.emailHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.emailHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.emailHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
 
-        self.phoneHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.phoneHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.phoneHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.phoneHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
     }

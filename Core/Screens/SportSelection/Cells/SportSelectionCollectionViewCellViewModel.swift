@@ -10,13 +10,17 @@ import Combine
 
 class SportSelectionCollectionViewCellViewModel: NSObject {
 
-    var sport: Sport
+    private var sport: Sport
     var isLive: Bool
     
     var sportPublisher: AnyCancellable?
     var sportName: String?
     var sportIconName: String?
     var numberOfLiveEvents: String?
+
+    var sportId: String {
+        return self.sport.id
+    }
 
     init(sport: Sport, isLive: Bool) {
         self.sport = sport

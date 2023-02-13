@@ -110,11 +110,11 @@ class PromoCodeFormStepView: FormStepView {
     override func setupWithTheme() {
         super.setupWithTheme()
 
-        self.promoCodeHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.promoCodeHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.promoCodeHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.promoCodeHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
 
-        self.godfatherHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.godfatherHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.godfatherHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.godfatherHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
 

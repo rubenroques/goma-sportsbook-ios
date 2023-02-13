@@ -79,7 +79,6 @@ class NicknameFormStepViewModel {
         //
         self.nickname
             .removeDuplicates()
-            .print("DEBUG-NICK: 1 ")
             .sink { [weak self] newNickname in
 
                 self?.userRegisterEnvelopUpdater.setNickname(nil)
@@ -105,7 +104,6 @@ class NicknameFormStepViewModel {
         let clearedEmail = self.nickname.removeDuplicates()
 
         Publishers.CombineLatest(clearedEmailState, clearedEmail)
-            .print("DEBUG-NICK: 2 ")
             .filter { nicknameState, nickname in
                 return nicknameState == .needsValidation
             }
@@ -128,7 +126,6 @@ class NicknameFormStepViewModel {
                 return nickname
             }
             .compactMap({ $0 })
-            .print("DEBUG-NICK: 3 ")
             .sink { validNickname in
                 self.userRegisterEnvelopUpdater.setNickname(validNickname)
             }
@@ -159,7 +156,6 @@ class NicknameFormStepViewModel {
             return
         }
 
-        print("DEBUG-NICK: Will Validate \(nickname)")
         self.validateNicknameCancellables?.cancel()
 
         self.nicknameState.send(.validating)
@@ -332,7 +328,7 @@ class NicknameFormStepView: FormStepView {
     override func setupWithTheme() {
         super.setupWithTheme()
 
-        self.nicknameHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.nicknameHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.nicknameHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.nicknameHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
     }

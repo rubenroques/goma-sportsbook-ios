@@ -17,7 +17,9 @@ enum UserDefaultsKey: String {
     
     case bettingUserSettings = "bettingUserSettings"
     case notificationsUserSettings = "notificationsUserSettings"
-    
+
+    case biometricAuthentication
+
     var key: String {
         return self.rawValue
     }
@@ -145,11 +147,27 @@ extension UserDefaults {
         }
     }
 
+    var biometricAuthenticationEnabled: Bool {
+        get {
+            if let biometric = self.value(forKey: UserDefaultsKey.biometricAuthentication.key) as? Bool {
+                return biometric
+            }
+            self.setValue(false, forKey: UserDefaultsKey.biometricAuthentication.key)
+            self.synchronize()
+            return false
+        }
+        set {
+            self.setValue(newValue, forKey: UserDefaultsKey.biometricAuthentication.key)
+            self.synchronize()
+        }
+    }
+
     func clear() {
         let domain = Bundle.main.bundleIdentifier!
         self.removePersistentDomain(forName: domain)
         self.synchronize()
     }
+
 }
 
 extension UserDefaults {

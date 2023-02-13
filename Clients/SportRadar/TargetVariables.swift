@@ -63,4 +63,5 @@ struct TargetVariables: SportsbookTarget {
     static var features: [SportsbookTargetFeatures] {
         return []
     }
+    
 }

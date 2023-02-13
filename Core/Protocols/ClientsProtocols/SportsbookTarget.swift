@@ -38,6 +38,8 @@ protocol SportsbookTarget {
 
     static func hasFeatureEnabled(feature: SportsbookTargetFeatures) -> Bool
 
+    static var shouldUserBlurEffectTabBar: Bool { get }
+
 }
 
 enum SportsbookTargetFeatures: CaseIterable {
@@ -63,6 +65,7 @@ enum SportsbookTargetFeatures: CaseIterable {
 }
 
 extension SportsbookTarget {
+
     static func hasFeatureEnabled(feature: SportsbookTargetFeatures) -> Bool {
         for enabledFeature in Self.features {
             if feature == enabledFeature {
@@ -71,4 +74,9 @@ extension SportsbookTarget {
         }
         return false
     }
+
+    static var shouldUserBlurEffectTabBar: Bool {
+        return true
+    }
+
 }

@@ -116,7 +116,7 @@ public class DepositOnRegisterViewController: UIViewController {
         self.subtitleLabel.textColor = AppColor.textPrimary
 
 
-        self.depositHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.depositHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.depositHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.depositHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
 
@@ -165,7 +165,7 @@ public class DepositOnRegisterViewController: UIViewController {
 
         button.setTitleColor(AppColor.buttonTextPrimary, for: .normal)
         button.setTitleColor(AppColor.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        button.setTitleColor(AppColor.buttonTextDisablePrimary.withAlphaComponent(0.39), for: .disabled)
+        button.setTitleColor(AppColor.buttonTextDisablePrimary, for: .disabled)
 
         button.setBackgroundColor(AppColor.buttonBackgroundPrimary, for: .normal)
         button.setBackgroundColor(AppColor.buttonBackgroundSecondary, for: .highlighted)

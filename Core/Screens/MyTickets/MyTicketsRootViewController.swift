@@ -102,7 +102,7 @@ class MyTicketsRootViewController: UIViewController {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         self.topBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        self.ticketTypesCollectionView.backgroundColor = UIColor.App.backgroundSecondary
+        self.ticketTypesCollectionView.backgroundColor = UIColor.App.pillNavigation
 
         self.noLoginBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.noLoginTitleLabel.textColor = UIColor.App.textPrimary

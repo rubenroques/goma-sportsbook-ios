@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,7 +13,7 @@
         </array>
     </customFonts>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LiveEventsViewController" customModule="DAZN" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LiveEventsViewController" customModule="Betsson" customModuleProvider="target">
             <connections>
                 <outlet property="emptyBaseView" destination="jqE-LG-SYC" id="mdO-dn-XBO"/>
                 <outlet property="emptyStateButton" destination="kUU-B5-fgT" id="Oy4-1c-nMN"/>
@@ -99,6 +99,10 @@
                         <constraint firstItem="S3Z-e2-gBX" firstAttribute="centerY" secondItem="MFb-Vr-zVA" secondAttribute="centerY" id="aIY-j2-y9d"/>
                     </constraints>
                 </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="l7X-fl-RkH">
+                    <rect key="frame" x="0.0" y="70" width="346" height="723"/>
+                    <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </tableView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="paD-vp-Qmi">
                     <rect key="frame" x="0.0" y="0.0" width="346" height="70"/>
                     <subviews>
@@ -229,10 +233,6 @@
                         <constraint firstAttribute="trailing" secondItem="lTR-Hc-701" secondAttribute="trailing" id="yTV-dp-cgL"/>
                     </constraints>
                 </view>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="l7X-fl-RkH">
-                    <rect key="frame" x="0.0" y="70" width="346" height="723"/>
-                    <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                </tableView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="ivl-fB-BeX"/>
             <constraints>
@@ -258,7 +258,7 @@
     </objects>
     <resources>
         <image name="expand_top_down_arrows_icon" width="10" height="13"/>
-        <image name="match_filters_icons" width="21" height="22"/>
+        <image name="match_filters_icons" width="23" height="24"/>
         <image name="no_content_icon" width="161" height="161"/>
         <image name="sport_type_soccer_icon" width="23" height="23"/>
     </resources>

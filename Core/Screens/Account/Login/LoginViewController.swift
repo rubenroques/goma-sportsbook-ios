@@ -127,13 +127,13 @@ class LoginViewController: UIViewController {
     }
 
     override func viewDidAppear(_ animated: Bool) {
-
+        super.viewDidAppear(animated)
+        
         if #available(iOS 14, *) {
             ATTrackingManager.requestTrackingAuthorization { status in
                 switch status {
                 case .authorized:
-                    // Tracking authorization dialog was shown
-                    // and we are authorized
+                    // Tracking authorization dialog was shown and we are authorized
                     print("Authorized")
 
                     // Now that we are authorized we can get the IDFA
@@ -234,13 +234,13 @@ class LoginViewController: UIViewController {
 
         self.logoImageView.isUserInteractionEnabled = true
 
-        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
-        debugLogoImageViewTap.numberOfTapsRequired = 3
-        self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
-
-        let debug2LogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebug))
-        debug2LogoImageViewTap.numberOfTapsRequired = 2
-        self.logoImageView.addGestureRecognizer(debug2LogoImageViewTap)
+//        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
+//        debugLogoImageViewTap.numberOfTapsRequired = 3
+//        self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
+//
+//        let debug2LogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebug))
+//        debug2LogoImageViewTap.numberOfTapsRequired = 2
+//        self.logoImageView.addGestureRecognizer(debug2LogoImageViewTap)
 
     }
 
@@ -357,7 +357,6 @@ class LoginViewController: UIViewController {
         }
         navigationController.pushViewController(biometricPromptViewController, animated: true)
     }
-
 
     private func showLimitsOnRegisterViewController(onNavigationController navigationController: UINavigationController) {
         let viewModel = LimitsOnRegisterViewModel(servicesProvider: Env.servicesProvider)

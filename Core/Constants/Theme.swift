@@ -36,4 +36,12 @@ extension Theme {
             return 1
         }
     }
+
+    var isDarkMode: Bool {
+        if UIScreen.main.traitCollection.userInterfaceStyle == .dark {
+            return true
+        } else {
+            return false
+        }
+    }
 }

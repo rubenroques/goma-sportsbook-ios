@@ -268,7 +268,7 @@ extension OmegaAPIClient: Endpoint {
                 query.append(URLQueryItem(name: "receiveEmail", value: receiveMarketingEmails ? "true" : "false"))
             }
 
-            var extraInfo = """
+            let extraInfo = """
                             {
                             "avatar":"\(avatarName ?? "")",
                             "placeOfBirth":"\(placeOfBirth ?? "")",
@@ -481,7 +481,6 @@ extension OmegaAPIClient: Endpoint {
         case .getDocumentTypes: return .get
         case .getUserDocuments: return .get
         case .uploadUserDocument: return .post
-
         case .getPayments: return .get
         case .processDeposit: return .post
         case .updatePayment: return .post
@@ -546,7 +545,6 @@ extension OmegaAPIClient: Endpoint {
         case .getDocumentTypes: return false
         case .getUserDocuments: return true
         case .uploadUserDocument: return true
-
         case .getPayments: return true
         case .processDeposit: return true
         case .updatePayment: return true

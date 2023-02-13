@@ -97,19 +97,19 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
     func setupWithTheme() {
         self.backgroundColor = .clear
         self.backgroundView?.backgroundColor = .clear
-        self.contentView.backgroundColor = UIColor.App.backgroundPrimary
+        self.contentView.backgroundColor = .clear
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
-        self.linesStackView.backgroundColor = UIColor.App.backgroundPrimary
+        self.linesStackView.backgroundColor = .clear
 
-        self.collectionView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
-        self.collectionView.backgroundColor = UIColor.App.backgroundPrimary
+        self.collectionView.backgroundView?.backgroundColor = .clear
+        self.collectionView.backgroundColor = .clear
 
         self.backView.backgroundColor = UIColor.App.buttonBackgroundSecondary
 
-        self.seeAllView.backgroundColor = UIColor.App.backgroundPrimary
-        self.seeAllLabel.textColor = UIColor.App.highlightPrimary
+        self.seeAllView.backgroundColor = .clear
+        self.seeAllLabel.textColor = UIColor.App.highlightSecondary
 
     }
 

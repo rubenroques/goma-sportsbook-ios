@@ -16,6 +16,8 @@ class CompetitionDetailsViewController: UIViewController {
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var navigationView: UIView = Self.createNavigationView()
+    private lazy var backgroundGradientView: GradientView = Self.createBackgroundGradientView()
+
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var tableView: UITableView = Self.createTableView()
@@ -118,7 +120,9 @@ class CompetitionDetailsViewController: UIViewController {
         self.accountValueLabel.textColor = UIColor.App.textPrimary
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
         self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
-        
+
+        self.backgroundGradientView.colors = [(UIColor.App.backgroundGradient1, 0.0),
+                                              (UIColor.App.backgroundGradient2, 1.0)]
     }
 
 
@@ -557,10 +561,18 @@ extension CompetitionDetailsViewController {
         return label
     }
 
+    private static func createBackgroundGradientView() -> GradientView {
+        let view = GradientView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
     private func setupSubviews() {
 
         self.view.addSubview(self.topSafeAreaView)
         self.view.addSubview(self.navigationView)
+        self.view.addSubview(self.backgroundGradientView)
+
         self.navigationView.addSubview(self.backButton)
         self.navigationView.addSubview(self.titleLabel)
 
@@ -596,6 +608,11 @@ extension CompetitionDetailsViewController {
             self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
             self.navigationView.heightAnchor.constraint(equalToConstant: 44),
+
+            self.backgroundGradientView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.backgroundGradientView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.backgroundGradientView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.backgroundGradientView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
             self.titleLabel.leadingAnchor.constraint(equalTo: self.backButton.trailingAnchor, constant: 8),
             self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),

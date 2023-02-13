@@ -61,23 +61,25 @@ extension SportRadarModels {
             self.markets = container.contains(.markets) ? try container.decode([Market].self, forKey: .markets) : nil
             self.numberMarkets = container.contains(.numberMarkets) ? try container.decode(Int.self, forKey: .numberMarkets) : nil
 
+            self.tournamentCountryName = try container.decodeIfPresent(String.self, forKey: .tournamentCountryName)
+
             let dateString = container.contains(.startDate) ? try container.decode(String.self, forKey: .startDate) : nil
 
-            if let dateString {
-                let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-                if let date = formatter.date(from: dateString) {
-                    self.startDate = date
-                } else {
-                    throw DecodingError.dataCorruptedError(forKey: .startDate,
-                                                           in: container,
-                                                           debugDescription: "Date string does not match format expected by formatter.")
-                }
+            if let dateString, let date = Self.dateFormatter.date(from: dateString) {
+                self.startDate = date
+            } else {
+                throw DecodingError.dataCorruptedError(forKey: .startDate,
+                                                       in: container,
+                                                       debugDescription: "Date string does not match format expected by formatter.")
             }
 
+        }
 
-          }
-        
+        private static var dateFormatter: DateFormatter {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+            return formatter
+        }
     }
     
     struct Market: Codable {

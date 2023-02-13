@@ -293,13 +293,14 @@ extension BetslipManager {
 
     func requestAllowedBetTypes(withBettingTickets bettingTickets: [BettingTicket]) {
         let betTicketSelections: [ServicesProvider.BetTicketSelection] = bettingTickets.map { bettingTicket -> ServicesProvider.BetTicketSelection in
+            let convertedOdd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
             let betTicketSelection = ServicesProvider.BetTicketSelection(identifier: bettingTicket.id,
                                                                          eventName: "",
                                                                          homeTeamName: "",
                                                                          awayTeamName: "",
                                                                          marketName: "",
                                                                          outcomeName: "",
-                                                                         odd: .european(odd: bettingTicket.decimalOdd),
+                                                                         odd: convertedOdd,
                                                                          stake: 1)
             return betTicketSelection
         }

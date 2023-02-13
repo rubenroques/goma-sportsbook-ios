@@ -108,9 +108,9 @@ class GamesNotificationViewController: UIViewController {
         myGamesView.hasSeparatorLineView = true
         myGamesView.hasSwitchButton = true
         self.viewModel.setGamesSelectedOption(view: myGamesView, settingType: .gamesWatchList)
-        myGamesView.didTappedSwitch = { [weak self] in
+        myGamesView.didTappedSwitch = { [weak self] isSwitchOn in
             self?.viewModel.checkBottomStackViewDisableState()
-            self?.viewModel.updateGamesSetting(isSettingEnabled: myGamesView.isSwitchOn, settingType: .gamesWatchList)
+            self?.viewModel.updateGamesSetting(isSettingEnabled: isSwitchOn, settingType: .gamesWatchList)
         }
         self.viewModel.notificationsEnabledViews.append(myGamesView)
 
@@ -118,9 +118,9 @@ class GamesNotificationViewController: UIViewController {
         myCompetitionsView.setTitle(title: localized("allow_mycompetitions_notifications"))
         myCompetitionsView.hasSwitchButton = true
         self.viewModel.setGamesSelectedOption(view: myCompetitionsView, settingType: .competitionWatchList)
-        myCompetitionsView.didTappedSwitch = { [weak self] in
+        myCompetitionsView.didTappedSwitch = { [weak self] isSwitchOn in
             self?.viewModel.checkBottomStackViewDisableState()
-            self?.viewModel.updateGamesSetting(isSettingEnabled: myCompetitionsView.isSwitchOn, settingType: .competitionWatchList)
+            self?.viewModel.updateGamesSetting(isSettingEnabled: isSwitchOn, settingType: .competitionWatchList)
         }
         self.viewModel.notificationsEnabledViews.append(myCompetitionsView)
 
@@ -141,8 +141,8 @@ class GamesNotificationViewController: UIViewController {
         startGameView.hasSwitchButton = true
         startGameView.hasSeparatorLineView = true
         self.viewModel.setGamesSelectedOption(view: startGameView, settingType: .startGame)
-        startGameView.didTappedSwitch = {
-            self.viewModel.updateGamesSetting(isSettingEnabled: startGameView.isSwitchOn, settingType: .startGame)
+        startGameView.didTappedSwitch = { [weak self] isSwitchOn in
+            self?.viewModel.updateGamesSetting(isSettingEnabled: isSwitchOn, settingType: .startGame)
         }
 
         let goalsView = SettingsRowView()
@@ -150,8 +150,8 @@ class GamesNotificationViewController: UIViewController {
         goalsView.hasSwitchButton = true
         goalsView.hasSeparatorLineView = true
         self.viewModel.setGamesSelectedOption(view: goalsView, settingType: .goals)
-        goalsView.didTappedSwitch = {
-            self.viewModel.updateGamesSetting(isSettingEnabled: goalsView.isSwitchOn, settingType: .goals)
+        goalsView.didTappedSwitch = { [weak self] isSwitchOn in
+            self?.viewModel.updateGamesSetting(isSettingEnabled: isSwitchOn, settingType: .goals)
         }
 
         let halfTimeView = SettingsRowView()
@@ -159,8 +159,8 @@ class GamesNotificationViewController: UIViewController {
         halfTimeView.hasSwitchButton = true
         halfTimeView.hasSeparatorLineView = true
         self.viewModel.setGamesSelectedOption(view: halfTimeView, settingType: .halfTime)
-        halfTimeView.didTappedSwitch = {
-            self.viewModel.updateGamesSetting(isSettingEnabled: halfTimeView.isSwitchOn, settingType: .halfTime)
+        halfTimeView.didTappedSwitch = { [weak self] isSwitchOn in
+            self?.viewModel.updateGamesSetting(isSettingEnabled: isSwitchOn, settingType: .halfTime)
         }
 
         let secondHalfTimeView = SettingsRowView()
@@ -168,8 +168,8 @@ class GamesNotificationViewController: UIViewController {
         secondHalfTimeView.hasSwitchButton = true
         secondHalfTimeView.hasSeparatorLineView = true
         self.viewModel.setGamesSelectedOption(view: secondHalfTimeView, settingType: .secondHalfTime)
-        secondHalfTimeView.didTappedSwitch = {
-            self.viewModel.updateGamesSetting(isSettingEnabled: secondHalfTimeView.isSwitchOn, settingType: .secondHalfTime)
+        secondHalfTimeView.didTappedSwitch = { [weak self] isSwitchOn in
+            self?.viewModel.updateGamesSetting(isSettingEnabled: isSwitchOn, settingType: .secondHalfTime)
         }
 
         let fullTimeView = SettingsRowView()
@@ -177,16 +177,16 @@ class GamesNotificationViewController: UIViewController {
         fullTimeView.hasSwitchButton = true
         fullTimeView.hasSeparatorLineView = true
         self.viewModel.setGamesSelectedOption(view: fullTimeView, settingType: .fullTime)
-        fullTimeView.didTappedSwitch = {
-            self.viewModel.updateGamesSetting(isSettingEnabled: fullTimeView.isSwitchOn, settingType: .fullTime)
+        fullTimeView.didTappedSwitch = { [weak self] isSwitchOn in
+            self?.viewModel.updateGamesSetting(isSettingEnabled: isSwitchOn, settingType: .fullTime)
         }
 
         let redCardsView = SettingsRowView()
         redCardsView.setTitle(title: localized("red_cards"))
         redCardsView.hasSwitchButton = true
         self.viewModel.setGamesSelectedOption(view: redCardsView, settingType: .redCard)
-        redCardsView.didTappedSwitch = {
-            self.viewModel.updateGamesSetting(isSettingEnabled: redCardsView.isSwitchOn, settingType: .redCard)
+        redCardsView.didTappedSwitch = { [weak self] isSwitchOn in
+            self?.viewModel.updateGamesSetting(isSettingEnabled: isSwitchOn, settingType: .redCard)
         }
 
         self.bottomStackView.addArrangedSubview(notifyAboutView)

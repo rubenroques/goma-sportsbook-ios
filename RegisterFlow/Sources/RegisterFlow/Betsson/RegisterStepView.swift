@@ -85,6 +85,10 @@ public class RegisterStepView: UIView {
 
         self.scrollView.backgroundColor = AppColor.backgroundPrimary
         self.scrollInnerView.backgroundColor = AppColor.backgroundPrimary
+
+        self.formStepViews.forEach { formStepView in
+            formStepView.setupWithTheme()
+        }
     }
 
     func addFormView(formView: FormStepView) {
@@ -121,30 +125,27 @@ extension RegisterStepView {
     }
 
     private func setupSubviews() {
-
         self.initConstraints()
     }
 
     private func initConstraints() {
-
         self.addSubview(self.scrollView)
         self.scrollView.addSubview(self.scrollInnerView)
 
         self.scrollInnerView.addSubview(self.stackView)
 
-        let topConstraint = self.scrollView.contentLayoutGuide.topAnchor.constraint(greaterThanOrEqualTo: self.scrollInnerView.topAnchor)
+        let topConstraint = self.scrollInnerView.topAnchor.constraint(greaterThanOrEqualTo: self.scrollView.contentLayoutGuide.topAnchor, constant: 0)
         topConstraint.priority = UILayoutPriority.init(rawValue: 1000)
 
-        let stepsViewCenterY = self.scrollView.centerYAnchor.constraint(equalTo: self.scrollInnerView.centerYAnchor)
-        stepsViewCenterY.priority = UILayoutPriority.init(990)
+        let stepsViewCenterY = self.scrollView.centerYAnchor.constraint(equalTo: self.scrollInnerView.centerYAnchor, constant: 40)
+        stepsViewCenterY.priority = UILayoutPriority.init(rawValue: 999)
 
         NSLayoutConstraint.activate([
-            self.scrollView.topAnchor.constraint(equalTo: self.topAnchor),
-            self.scrollView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            self.scrollView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            self.scrollView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            self.scrollView.frameLayoutGuide.topAnchor.constraint(equalTo: self.topAnchor),
+            self.scrollView.frameLayoutGuide.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            self.scrollView.frameLayoutGuide.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.scrollView.frameLayoutGuide.trailingAnchor.constraint(equalTo: self.trailingAnchor),
 
-            self.scrollView.contentLayoutGuide.topAnchor.constraint(equalTo: self.scrollInnerView.topAnchor),
             self.scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: self.scrollInnerView.bottomAnchor),
             self.scrollView.contentLayoutGuide.leadingAnchor.constraint(equalTo: self.scrollInnerView.leadingAnchor),
             self.scrollView.contentLayoutGuide.trailingAnchor.constraint(equalTo: self.scrollInnerView.trailingAnchor),
@@ -159,9 +160,7 @@ extension RegisterStepView {
             stepsViewCenterY,
             topConstraint
         ])
-
     }
-
 }
 
 

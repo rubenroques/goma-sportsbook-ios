@@ -401,51 +401,6 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        /*
-        Env.betslipManager.bettingTicketsPublisher
-            .receive(on: DispatchQueue.main)
-            .map(Array.init)
-            .map(\.count)
-            .removeDuplicates()
-            .sink { [weak self] ticketsCount in
-
-                let oldSegmentIndex = self?.betTypeSegmentControlView?.selectedItemIndex
-                switch ticketsCount {
-                case 0...1:
-                    self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 0, animated: true)
-                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 0, isEnabled: true)
-                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 1, isEnabled: false)
-                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 2, isEnabled: false)
-                case 2:
-                    self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 1, animated: true)
-                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 0, isEnabled: true)
-                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 1, isEnabled: true)
-                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 2, isEnabled: false)
-                case 3...8:
-                    if self?.userSelectedSystemBet ?? false {
-                        self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 2, animated: true)
-                    }
-                    else {
-                        self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 1, animated: true)
-                    }
-                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 0, isEnabled: true)
-                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 1, isEnabled: true)
-                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 2, isEnabled: true)
-                default:
-                    self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 1, animated: true)
-                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 0, isEnabled: true)
-                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 1, isEnabled: true)
-                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 2, isEnabled: false)
-                }
-
-                if let newSegmentIndex = self?.betTypeSegmentControlView?.selectedItemIndex, newSegmentIndex != oldSegmentIndex {
-                    self?.didChangeSelectedSegmentItem(toIndex: newSegmentIndex)
-                }
-                
-            }
-            .store(in: &cancellables)
-        */
-
         Publishers.CombineLatest(Env.betslipManager.bettingTicketsPublisher, Env.betslipManager.allowedBetTypesPublisher)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] betTickets, betTypes in

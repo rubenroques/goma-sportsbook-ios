@@ -12,6 +12,8 @@ import OrderedCollections
 
 class MarketGroupDetailsViewController: UIViewController {
 
+    private lazy var backgroundGradientView: GradientView = Self.createBackgroundGradientView()
+
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
@@ -81,9 +83,12 @@ class MarketGroupDetailsViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = .clear
 
         self.tableView.backgroundColor = .clear
+
+        self.backgroundGradientView.colors = [(UIColor.App.backgroundGradient1, 0.0),
+                                              (UIColor.App.backgroundGradient2, 1.0)]
     }
 
     override func viewDidLayoutSubviews() {
@@ -343,8 +348,16 @@ extension MarketGroupDetailsViewController {
         return activityIndicatorView
     }
 
+
+    private static func createBackgroundGradientView() -> GradientView {
+        let view = GradientView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
     private func setupSubviews() {
 
+        self.view.addSubview(self.backgroundGradientView)
         self.view.addSubview(self.tableView)
 
         self.view.addSubview(self.loadingBaseView)
@@ -359,6 +372,12 @@ extension MarketGroupDetailsViewController {
     private func initConstraints() {
 
         NSLayoutConstraint.activate([
+
+            self.backgroundGradientView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.backgroundGradientView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.backgroundGradientView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.backgroundGradientView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.tableView.topAnchor.constraint(equalTo: self.view.topAnchor),

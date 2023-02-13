@@ -1,7 +1,7 @@
 import Combine
 import Foundation
 
-public enum AdresseFrancaiseError: Error {
+public enum AdresseFrancaiseError: Error, Equatable {
     case invalidQuery
     case shortQuery
     case serverError(details: String)

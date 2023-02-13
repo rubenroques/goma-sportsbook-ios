@@ -33,7 +33,7 @@ class OmegaConnector: Connector {
         self.decoder = decoder
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss" // 2003-12-31 00:00:00
+        dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss" // old format: 2003-12-31 00:00:00 // new format: 31-12-2003 00:00:00
         self.decoder.dateDecodingStrategy = .formatted(dateFormatter)
     }
 
@@ -88,6 +88,10 @@ class OmegaConnector: Connector {
         }
         
         return self.session.dataTaskPublisher(for: request)
+            .handleEvents(receiveOutput: { result in
+                print("ServiceProvider-OmegaConnector login [[ requesting ]] ", request,
+                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
+            })
             .tryMap { result -> Data in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     throw ServiceProviderError.unauthorized
@@ -105,10 +109,6 @@ class OmegaConnector: Connector {
                     return typedError
                 }
                 return ServiceProviderError.invalidResponse
-            })
-            .handleEvents(receiveOutput: { data in
-                print("ServiceProvider-OmegaConnector [[ requesting ]] ", request,
-                      " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
             })
             .flatMap({ [weak self] (data: Data) -> AnyPublisher<T, ServiceProviderError> in
                 guard
@@ -149,6 +149,10 @@ class OmegaConnector: Connector {
         }
         
         return self.session.dataTaskPublisher(for: request)
+            .handleEvents(receiveOutput: { result in
+                print("ServiceProvider-OmegaConnector login [[ requesting ]] ", request,
+                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
+            })
             .tryMap { result in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     throw ServiceProviderError.unauthorized
@@ -166,6 +170,7 @@ class OmegaConnector: Connector {
                 print("ServiceProvider-OmegaConnector Error \(error)")
                 return ServiceProviderError.invalidResponse
             }
+        
             .flatMap({ loginResponse -> AnyPublisher<SportRadarModels.LoginResponse, ServiceProviderError> in
                 if loginResponse.status == "FAIL_UN_PW" {
                     self.logout()
@@ -177,8 +182,8 @@ class OmegaConnector: Connector {
                 else if loginResponse.status == "SUCCESS", let sessionKey = loginResponse.sessionKey {
                     self.cacheSessionKey(sessionKey)
                     self.sessionCredentials = OmegaSessionCredentials(username: username, password: password)
-                    // TODO: Enable when is available from new environment
-                    // self.openSession()
+
+                    self.openSession()
                     return Just(loginResponse)
                         .setFailureType(to: ServiceProviderError.self)
                         .eraseToAnyPublisher()
@@ -204,6 +209,10 @@ class OmegaConnector: Connector {
         }
         print("SESSION KEY: \(sessionKey)")
         self.session.dataTaskPublisher(for: request)
+            .handleEvents(receiveOutput: { result in
+                print("ServiceProvider-OmegaConnector openSession [[ requesting ]] ", request,
+                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
+            })
             .tryMap { result in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     throw ServiceProviderError.unauthorized
@@ -219,6 +228,7 @@ class OmegaConnector: Connector {
             .decode(type: SportRadarModels.OpenSessionResponse.self, decoder: self.decoder)
             .mapError { error in
                 // Debug helper
+
                 print("ServiceProvider-OmegaConnector Error \(error)")
                 return ServiceProviderError.invalidResponse
             }

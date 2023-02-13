@@ -195,7 +195,7 @@ class PasswordFormStepView: FormStepView {
     override func setupWithTheme() {
         super.setupWithTheme()
 
-        self.passwordHeaderTextFieldView.backgroundColor = AppColor.backgroundPrimary
+        self.passwordHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.passwordHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.passwordHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
     }

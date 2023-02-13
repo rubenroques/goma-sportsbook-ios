@@ -107,16 +107,16 @@ class NotificationsViewController: UIViewController {
         smsView.hasSeparatorLineView = true
         smsView.hasSwitchButton = true
 
-        smsView.didTappedSwitch = {
-            self.viewModel.updateSmsSetting(enabled: smsView.isSwitchOn)
+        smsView.didTappedSwitch = { [weak self] isSwitchOn in
+            self?.viewModel.updateSmsSetting(enabled: isSwitchOn)
         }
 
         let emailView = SettingsRowView()
         emailView.setTitle(title: localized("email"))
         emailView.hasSwitchButton = true
 
-        emailView.didTappedSwitch = {
-            self.viewModel.updateEmailSetting(enabled: emailView.isSwitchOn)
+        emailView.didTappedSwitch = { [weak self] isSwitchOn in
+            self?.viewModel.updateEmailSetting(enabled: isSwitchOn)
         }
 
         // Check options

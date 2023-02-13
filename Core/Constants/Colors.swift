@@ -20,7 +20,10 @@ extension UIColor {
         static let backgroundPopup: UIColor = UIColor(named: "backgroundPopup")!
 
         static let backgroundCards = UIColor(named: "backgroundCards")!
-        
+        static var backgroundHeader: UIColor {
+            return UIColor(named: "backgroundHeader") ?? Self.backgroundPrimary
+        }
+
         static let textPrimary = UIColor(named: "textPrimary")!
         static let textHeadlinePrimary = UIColor(named: "textHeadlinePrimary")!
         static let textDisablePrimary = UIColor(named: "textDisablePrimary")!
@@ -32,14 +35,28 @@ extension UIColor {
         static let separatorLine = UIColor(named: "separatorLine")!
 
         static let scroll = UIColor(named: "scroll")!
-        
+
+        static var pillBackground: UIColor {
+            return UIColor(named: "pillBackground") ?? Self.backgroundPrimary
+        }
+        static var pillNavigation: UIColor {
+            return UIColor(named: "pillNavigation") ?? Self.backgroundSecondary
+        }
+        static var pillSettings: UIColor {
+            return UIColor(named: "pillSettings") ?? Self.backgroundTertiary
+        }
+
         static let inputBackground = UIColor(named: "inputBackground")!
         static let inputBorderActive = UIColor(named: "inputBorderActive")!
         static let inputTextTitle = UIColor(named: "inputTextTitle")!
         static let inputText = UIColor(named: "inputText")!
         static let inputError = UIColor(named: "inputError")!
+
+        static var iconPrimary: UIColor {
+            return UIColor(named: "iconPrimary") ?? Self.textPrimary
+        }
         static let iconSecondary = UIColor(named: "iconSecondary")!
-        
+
         static let backgroundDrop: UIColor = UIColor(named: "backgroundDrop")!
         static let borderDrop = UIColor(named: "borderDrop")!
         
@@ -77,7 +94,23 @@ extension UIColor {
         static let statsAway = UIColor(named: "statsAway")!
         
         static let highlightPrimaryContrast = UIColor(named: "highlightPrimaryContrast")!
-        
+
+        static var backgroundGradient1: UIColor {
+            return UIColor(named: "backgroundGradient1") ?? Self.backgroundPrimary
+        }
+        static var backgroundGradient2: UIColor {
+            return UIColor(named: "backgroundGradient2") ?? Self.backgroundPrimary
+        }
+
+        static var headerGradient1: UIColor {
+            return UIColor(named: "headerGradient1") ?? Self.backgroundPrimary
+        }
+        static var headerGradient2: UIColor {
+            return UIColor(named: "headerGradient2") ?? Self.backgroundPrimary
+        }
+        static var headerGradient3: UIColor {
+            return UIColor(named: "headerGradient3") ?? Self.backgroundPrimary
+        }
 
     }
 

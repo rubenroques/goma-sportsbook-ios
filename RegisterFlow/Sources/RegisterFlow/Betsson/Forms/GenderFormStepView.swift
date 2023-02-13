@@ -134,11 +134,15 @@ class GenderFormStepView: FormStepView {
         self.maleButton.setBackgroundColor(AppColor.backgroundSecondary, for: .normal)
         self.femaleButton.setBackgroundColor(AppColor.backgroundSecondary, for: .normal)
 
-        self.maleButton.layer.borderColor = AppColor.textPrimary.cgColor
-        self.femaleButton.layer.borderColor = AppColor.textPrimary.cgColor
+        self.maleButton.imageView?.tintColor = AppColor.textSecondary
+        self.femaleButton.imageView?.tintColor = AppColor.textSecondary
+
+        self.maleButton.layer.borderColor = AppColor.highlightPrimary.cgColor
+        self.femaleButton.layer.borderColor = AppColor.highlightPrimary.cgColor
 
         self.maleButton.setTitleColor(AppColor.textPrimary, for: .selected)
         self.femaleButton.setTitleColor(AppColor.textPrimary, for: .selected)
+
         self.maleButton.setBackgroundColor(AppColor.backgroundTertiary, for: .selected)
         self.femaleButton.setBackgroundColor(AppColor.backgroundTertiary, for: .selected)
     }
@@ -187,7 +191,7 @@ extension GenderFormStepView {
     fileprivate static func createMaleButton() -> UIButton {
         let button = UIButton()
 
-        let image = UIImage(named: "GenderMale", in: Bundle.module, with: nil)
+        let image = UIImage(named: "GenderMale", in: Bundle.module, with: nil)?.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
 
         button.setTitle("Male", for: .normal)
@@ -204,7 +208,7 @@ extension GenderFormStepView {
     fileprivate static func createFemaleButton() -> UIButton {
         let button = UIButton()
 
-        let image = UIImage(named: "GenderFemale", in: Bundle.module, with: nil)
+        let image = UIImage(named: "GenderFemale", in: Bundle.module, with: nil)?.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
 
         button.setInsets(forContentPadding: UIEdgeInsets(top: 2, left: 10, bottom: 2, right: 12),

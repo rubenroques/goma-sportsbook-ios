@@ -444,18 +444,18 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
             self.buttonsBaseView.isUserInteractionEnabled = false
         }
 
-        self.freeBetView.didTappedSwitch = {
-            if self.freeBetView.isSwitchOn {
-                self.currentValue = Int(freeBet.freeBetAmount * 100.0)
-                self.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freeBet.freeBetAmount))
-                self.buttonsBaseView.isUserInteractionEnabled = false
-                self.isFreeBetSelected?(true)
+        self.freeBetView.didTappedSwitch = { [weak self] isSwitchOn in
+            if isSwitchOn {
+                self?.currentValue = Int(freeBet.freeBetAmount * 100.0)
+                self?.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freeBet.freeBetAmount))
+                self?.buttonsBaseView.isUserInteractionEnabled = false
+                self?.isFreeBetSelected?(true)
             }
             else {
-                self.currentValue = 0
-                self.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: 0))
-                self.buttonsBaseView.isUserInteractionEnabled = true
-                self.isFreeBetSelected?(false)
+                self?.currentValue = 0
+                self?.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: 0))
+                self?.buttonsBaseView.isUserInteractionEnabled = true
+                self?.isFreeBetSelected?(false)
             }
         }
 
@@ -499,15 +499,13 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
         }
 
-        self.oddsBoostView.didTappedSwitch = {
-            if self.oddsBoostView.isSwitchOn {
-
-                self.isOddsBoostSelected?(true)
+        self.oddsBoostView.didTappedSwitch = { [weak self] isSwitchOn in
+            if isSwitchOn {
+                self?.isOddsBoostSelected?(true)
             }
             else {
-
-                self.isOddsBoostSelected?(false)
-                self.oldOddLabel.isHidden = true
+                self?.isOddsBoostSelected?(false)
+                self?.oldOddLabel.isHidden = true
             }
         }
 

@@ -133,8 +133,8 @@ class HistoryViewController: UIViewController {
         
         self.topSliderSeparatorView.backgroundColor = UIColor.App.separatorLine
                 
-        self.topSliderCollectionView.backgroundView?.backgroundColor = .clear
-        self.topSliderCollectionView.backgroundColor = UIColor.App.backgroundSecondary
+        self.topSliderCollectionView.backgroundView?.backgroundColor = UIColor.App.pillNavigation
+        self.topSliderCollectionView.backgroundColor = UIColor.App.pillNavigation
 
         self.filterBaseView.backgroundColor = UIColor.App.backgroundTertiary
 

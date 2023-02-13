@@ -102,7 +102,7 @@ class TipsViewController: UIViewController {
 
         self.topBaseView.backgroundColor = UIColor.App.backgroundSecondary
         
-        self.shortcutsCollectionView.backgroundColor = UIColor.App.backgroundSecondary
+        self.shortcutsCollectionView.backgroundColor = UIColor.App.pillNavigation
 
         self.noLoginBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.noLoginTitleLabel.textColor = UIColor.App.textPrimary

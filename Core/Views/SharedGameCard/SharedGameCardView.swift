@@ -190,40 +190,6 @@ class SharedGameCardView: UIView {
         var minutes = ""
         var matchPart = ""
 
-        if let match = viewModel.match, let matchInfoArray = viewModel.store.matchesInfoForMatch[match.id] {
-            for matchInfoId in matchInfoArray {
-                if let matchInfo = viewModel.store.matchesInfo[matchInfoId] {
-                    if (matchInfo.typeId ?? "") == "1" && (matchInfo.eventPartId ?? "") == match.rootPartId {
-                        // Goals
-                        if let homeGoalsFloat = matchInfo.paramFloat1 {
-                            if match.homeParticipant.id == matchInfo.paramParticipantId1 {
-                                homeGoals = "\(homeGoalsFloat)"
-                            }
-                            else if match.awayParticipant.id == matchInfo.paramParticipantId1 {
-                                awayGoals = "\(homeGoalsFloat)"
-                            }
-                        }
-                        if let awayGoalsFloat = matchInfo.paramFloat2 {
-                            if match.homeParticipant.id == matchInfo.paramParticipantId2 {
-                                homeGoals = "\(awayGoalsFloat)"
-                            }
-                            else if match.awayParticipant.id == matchInfo.paramParticipantId2 {
-                                awayGoals = "\(awayGoalsFloat)"
-                            }
-                        }
-                    }
-                    else if (matchInfo.typeId ?? "") == "95", let minutesFloat = matchInfo.paramFloat1 {
-                        // Match Minutes
-                        minutes = "\(minutesFloat)"
-                    }
-                    else if (matchInfo.typeId ?? "") == "92", let eventPartName = matchInfo.paramEventPartName1 {
-                        // Status Part
-                        matchPart = eventPartName
-                    }
-                }
-            }
-        }
-
         if homeGoals.isNotEmpty && awayGoals.isNotEmpty {
             self.liveTopLabel.text = "\(homeGoals) - \(awayGoals)"
         }

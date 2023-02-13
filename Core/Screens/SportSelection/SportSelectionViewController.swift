@@ -218,9 +218,9 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
 
         cell.configureCell(viewModel: viewModel)
 
-        if cell.viewModel?.sport.id == self.defaultSport.id {
+        if cell.viewModel?.sportId == self.defaultSport.id {
             cell.isSelected = true
-            collectionView.selectItem(at: indexPath, animated: true, scrollPosition: UICollectionView.ScrollPosition.centeredHorizontally)
+            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: UICollectionView.ScrollPosition.centeredHorizontally)
         }
         
         return cell
