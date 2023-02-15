@@ -57,7 +57,7 @@ class MarketGroupDetailsViewController: UIViewController {
         self.tableView.register(ThreeAwayMarketDetailTableViewCell.nib, forCellReuseIdentifier: ThreeAwayMarketDetailTableViewCell.identifier)
         self.tableView.register(OverUnderMarketDetailTableViewCell.nib, forCellReuseIdentifier: OverUnderMarketDetailTableViewCell.identifier)
 
-        self.tableView.bounces = false
+//        self.tableView.bounces = false
 
         self.showLoading()
 

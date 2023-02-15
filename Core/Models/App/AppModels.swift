@@ -83,10 +83,12 @@ struct Market {
     var marketTypeId: String?
     var eventName: String?
     var isMainOutright: Bool?
+    var eventMarketCount: Int?
 
     init( id: String, typeId: String, name: String,
           nameDigit1: Double?, nameDigit2: Double?, nameDigit3: Double?,
-          eventPartId: String?, bettingTypeId: String?, outcomes: [Outcome], marketTypeId: String? = nil, eventName: String? = nil, isMainOutright: Bool? = nil) {
+          eventPartId: String?, bettingTypeId: String?, outcomes: [Outcome], marketTypeId: String? = nil, eventName: String? = nil, isMainOutright: Bool? = nil,
+          eventMarketCount: Int? = nil) {
         self.id = id
         self.typeId = typeId
         self.name = name
@@ -99,6 +101,7 @@ struct Market {
         self.marketTypeId = marketTypeId
         self.eventName = eventName
         self.isMainOutright = isMainOutright
+        self.eventMarketCount = eventMarketCount
     }
 }
 

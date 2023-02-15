@@ -299,6 +299,10 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 }
 
                 cell.configureWithSubtitleString(marketString)
+
+                if match.numberTotalOfMarkets == 0 {
+                    cell.hideSubtitle()
+                }
             }
             cell.tappedAction = {
                 self.tappedMatchLineAction?()

@@ -27,7 +27,11 @@ public struct Event: Codable {
 
     public var venueCountry: Country?
     public var numberMarkets: Int?
-    
+
+    public var eventMarketCount: Int {
+        return markets.first?.eventMarketCount ?? 0
+    }
+
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case homeTeamName = "homeName"
@@ -52,6 +56,7 @@ public struct Market: Codable {
     public var eventMarketTypeId: String?
     public var eventName: String?
     public var isMainOutright: Bool?
+    public var eventMarketCount: Int?
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -61,6 +66,7 @@ public struct Market: Codable {
         case eventMarketTypeId = "eventMarketTypeId"
         case eventName = "eventName"
         case isMainOutright = "ismainoutright"
+        case eventMarketCount = "eventMarketCount"
     }
     
 }

@@ -87,6 +87,8 @@ extension SportRadarModelMapper {
 
         if let eventMarkets = internalEvent.markets {
             let markets = eventMarkets.map(Self.market(fromInternalMarket:))
+            let eventMarketCount = markets.first?.eventMarketCount
+
             return Event(id: internalEvent.id,
                          homeTeamName: internalEvent.homeName ?? "",
                          awayTeamName: internalEvent.awayName ?? "",
@@ -95,7 +97,7 @@ extension SportRadarModelMapper {
                          competitionName: internalEvent.competitionName ?? "",
                          startDate: internalEvent.startDate ?? Date(),
                          markets: markets,
-                         numberMarkets: internalEvent.numberMarkets)
+                         numberMarkets: internalEvent.numberMarkets != nil ? internalEvent.numberMarkets : eventMarketCount)
         }
         return Event(id: internalEvent.id,
                      homeTeamName: internalEvent.homeName ?? "",
@@ -105,11 +107,13 @@ extension SportRadarModelMapper {
                      competitionName: internalEvent.competitionName ?? "",
                      startDate: internalEvent.startDate ?? Date(),
                      markets: [],
-                     numberMarkets: internalEvent.numberMarkets)    }
+                     numberMarkets: internalEvent.numberMarkets)
+
+    }
     
     static func market(fromInternalMarket internalMarket: SportRadarModels.Market) -> Market {
         let outcomes = internalMarket.outcomes.map(Self.outcome(fromInternalOutcome:))
-        return Market(id: internalMarket.id, name: internalMarket.name, outcomes: outcomes, marketTypeId: internalMarket.marketTypeId, eventMarketTypeId: internalMarket.eventMarketTypeId, eventName: internalMarket.eventName)
+        return Market(id: internalMarket.id, name: internalMarket.name, outcomes: outcomes, marketTypeId: internalMarket.marketTypeId, eventMarketTypeId: internalMarket.eventMarketTypeId, eventName: internalMarket.eventName, eventMarketCount: internalMarket.eventMarketCount)
     }
 
     static func outcome(fromInternalOutcome internalOutcome: SportRadarModels.Outcome) -> Outcome {
