@@ -9,8 +9,8 @@ import UIKit
 
 class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
-    var outrightCompetitions: [Competition]? = []
     var matches: [Match] = []
+    var outrightCompetitions: [Competition]? = []
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
@@ -21,10 +21,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
 
-    init(matches: [Match], outrightCompetitions: [Competition]? = nil) {
-        self.matches = matches
-        self.outrightCompetitions = outrightCompetitions
-
+    override init() {
         super.init()
     }
 
@@ -87,14 +84,9 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
                 cell.tappedMatchLineAction = {
                     self.didSelectMatchAction?(match)
                 }
-
                 cell.didLongPressOdd = { [weak self] bettingTicket in
                     self?.didLongPressOdd?(bettingTicket)
                 }
-                
-//                cell.didTapFavoriteMatchAction = { [weak self] match in
-//                    self?.didTapFavoriteMatchAction?(match)
-//                }
                 return cell
             }
         case 2:
