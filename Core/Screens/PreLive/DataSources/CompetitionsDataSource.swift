@@ -23,8 +23,8 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
-    init(competitions: [Competition]) {
-        self.competitions = competitions
+    override init() {
+        super.init()
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {

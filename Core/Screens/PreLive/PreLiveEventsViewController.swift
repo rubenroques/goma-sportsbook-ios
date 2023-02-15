@@ -374,17 +374,16 @@ class PreLiveEventsViewController: UIViewController {
 //            .store(in: &cancellables)
 
         self.viewModel.dataChangedPublisher
-            .receive(on: DispatchQueue.main).sink(receiveValue: { [weak self] in
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                print("SB-DEBUG dataChangedPublisher reloadData")
                 self?.reloadData()
             })
             .store(in: &cancellables)
 
         Publishers.CombineLatest(self.viewModel.screenStatePublisher, self.viewModel.isLoadingEvents)
-
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] screenState, isLoadingEvents in
-
-                print("SB.DEBUG PreLiveEventsViewModel.ScreenState:\(screenState), isLoadingEvents:\(isLoadingEvents)")
 
                 if isLoadingEvents {
                     self?.loadingBaseView.isHidden = false
@@ -428,6 +427,7 @@ class PreLiveEventsViewController: UIViewController {
 
         self.viewModel.matchListTypePublisher
             .map {  $0 == .competitions }
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isCompetitionTab in
 
@@ -452,7 +452,7 @@ class PreLiveEventsViewController: UIViewController {
             }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] competitions in
-                //self?.competitionsFiltersView.competitions = competitions.filter { $0.cells.isNotEmpty }
+                print("SB-DEBUG competitionGroupsPublisher competitions: \(competitions.count)")
                 self?.competitionsFiltersView.competitions = competitions
             }
             .store(in: &cancellables)
@@ -468,6 +468,7 @@ class PreLiveEventsViewController: UIViewController {
             .compactMap({ $0.isEmpty })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] shouldShowOpen in
+                print("SB-DEBUG competitionsFiltersView shouldShowOpen: \(shouldShowOpen)")
                 if shouldShowOpen {
                     self?.openCompetitionsFilters()
                 }

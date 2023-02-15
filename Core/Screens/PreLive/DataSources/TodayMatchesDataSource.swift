@@ -21,9 +21,8 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
 
-    init(todayMatches: [Match], outrightCompetitions: [Competition]? = nil) {
-        self.todayMatches = todayMatches
-        self.outrightCompetitions = outrightCompetitions
+    override init() {
+        super.init()
     }
 
     func shouldShowOutrightMarkets() -> Bool {

@@ -83,12 +83,12 @@ class OutrightCompetitionLargeLineTableViewCell: UITableViewCell {
     func setupWithTheme() {
         self.backgroundColor = .clear
         self.backgroundView?.backgroundColor = .clear
-        self.contentView.backgroundColor = UIColor.App.backgroundPrimary
+        self.contentView.backgroundColor = .clear
 
-        self.linesStackView.backgroundColor = UIColor.App.backgroundPrimary
+        self.linesStackView.backgroundColor = .clear
 
-        self.collectionView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
-        self.collectionView.backgroundColor = UIColor.App.backgroundPrimary
+        self.collectionView.backgroundView?.backgroundColor = .clear
+        self.collectionView.backgroundColor = .clear
    }
 
     func configure(withViewModel viewModel: OutrightCompetitionLargeLineViewModel) {

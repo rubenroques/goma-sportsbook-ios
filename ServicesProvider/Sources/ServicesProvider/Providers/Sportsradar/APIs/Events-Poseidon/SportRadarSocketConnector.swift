@@ -124,7 +124,7 @@ extension SportRadarSocketConnector: WebSocketDelegate {
         case .viabilityChanged(_):
             break
         case .reconnectSuggested(_):
-            break
+            self.refreshConnection()
         case .cancelled:
             self.isConnected = false
         case .error(let error):

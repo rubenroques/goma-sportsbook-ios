@@ -8,6 +8,7 @@
 import Foundation
 
 public struct SportType {
+
     public var name: String
     public var numericId: String?
     public var alphaId: String?
@@ -34,6 +35,7 @@ public struct SportType {
         self.numberOutrightEvents = numberOutrightEvents
         self.numberOutrightMarkets = numberOutrightMarkets
     }
+    
 }
 
 // TODO: TASK André - Este devia ser o unico modelo publico

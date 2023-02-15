@@ -10,10 +10,19 @@ import SharedModels
 
 public struct EventsGroup {
     public var events: [Event]
+
+    public init(events: [Event]) {
+        self.events = events
+    }
+}
+
+public enum EventType: String {
+    case match
+    case competition
 }
 
 public struct Event: Codable {
-    
+
     public var id: String
     public var homeTeamName: String
     public var awayTeamName: String
@@ -27,7 +36,16 @@ public struct Event: Codable {
 
     public var venueCountry: Country?
     public var numberMarkets: Int?
-    
+
+    public var type: EventType {
+        if self.homeTeamName.isEmpty && self.awayTeamName.isEmpty {
+            return .competition
+        }
+        else {
+            return .match
+        }
+    }
+
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case homeTeamName = "homeName"
@@ -40,7 +58,34 @@ public struct Event: Codable {
         case venueCountry = "venueCountry"
         case numberMarkets = "numMarkets"
     }
-    
+
+    public init(id: String, homeTeamName: String, awayTeamName: String, sportTypeName: String, competitionId: String, competitionName: String, startDate: Date, markets: [Market], venueCountry: Country? = nil, numberMarkets: Int? = nil) {
+        self.id = id
+        self.homeTeamName = homeTeamName
+        self.awayTeamName = awayTeamName
+        self.sportTypeName = sportTypeName
+        self.competitionId = competitionId
+        self.competitionName = competitionName
+        self.startDate = startDate
+        self.markets = markets
+        self.venueCountry = venueCountry
+        self.numberMarkets = numberMarkets
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(String.self, forKey: .id)
+        self.homeTeamName = try container.decode(String.self, forKey: .homeTeamName)
+        self.awayTeamName = try container.decode(String.self, forKey: .awayTeamName)
+        self.competitionId = try container.decode(String.self, forKey: .competitionId)
+        self.competitionName = try container.decode(String.self, forKey: .competitionName)
+        self.sportTypeName = try container.decode(String.self, forKey: .sportTypeName)
+        self.startDate = try container.decode(Date.self, forKey: .startDate)
+        self.markets = try container.decode([Market].self, forKey: .markets)
+        self.venueCountry = try container.decodeIfPresent(Country.self, forKey: .venueCountry)
+        self.numberMarkets = try container.decodeIfPresent(Int.self, forKey: .numberMarkets)
+    }
+
 }
 
 public struct Market: Codable {
