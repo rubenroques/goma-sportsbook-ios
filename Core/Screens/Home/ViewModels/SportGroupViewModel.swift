@@ -61,6 +61,18 @@ class SportGroupViewModel {
         return self.matchTypes.count
     }
 
+    func shouldShowGroup() -> Bool {
+        var shouldShowGroup = false
+        for type in self.matchTypes {
+            let sportMatchLineViewModel = self.sportMatchLineViewModel(forType: type)
+            if sportMatchLineViewModel.shouldShowLine() {
+                shouldShowGroup = true
+                break
+            }
+        }
+        return shouldShowGroup
+    }
+
     func sportMatchLineViewModel(forIndex index: Int) -> SportMatchLineViewModel? {
         if let matchType = self.matchTypes[safe: index] {
             return self.sportMatchLineViewModel(forType: matchType)
@@ -94,4 +106,3 @@ class SportGroupViewModel {
     }
 
 }
-
