@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import OrderedCollections
+import ServicesProvider
 
 class TransactionsHistoryViewModel {
 
@@ -33,10 +34,13 @@ class TransactionsHistoryViewModel {
     var transactionTypePublisher: CurrentValueSubject<TransactionsType, Never> = .init(.deposit)
     var startDatePublisher: CurrentValueSubject<Date, Never> = .init(Date())
     var endDatePublisher: CurrentValueSubject<Date, Never> = .init(Date())
-    var transactionsPublisher: CurrentValueSubject<[EveryMatrix.TransactionHistory], Never> = .init([])
+//    var transactionsPublisher: CurrentValueSubject<[EveryMatrix.TransactionHistory], Never> = .init([])
+//    var depositTransactions: CurrentValueSubject<[EveryMatrix.TransactionHistory], Never> = .init([])
+//    var withdrawTransactions: CurrentValueSubject<[EveryMatrix.TransactionHistory], Never> = .init([])
+    var transactionsPublisher: CurrentValueSubject<[TransactionHistory], Never> = .init([])
 
-    var depositTransactions: CurrentValueSubject<[EveryMatrix.TransactionHistory], Never> = .init([])
-    var withdrawTransactions: CurrentValueSubject<[EveryMatrix.TransactionHistory], Never> = .init([])
+    var depositTransactions: CurrentValueSubject<[TransactionHistory], Never> = .init([])
+    var withdrawTransactions: CurrentValueSubject<[TransactionHistory], Never> = .init([])
 
     // MARK: - Private Properties
     private var depositPage = 0
@@ -122,44 +126,110 @@ class TransactionsHistoryViewModel {
     }
 
     func loadDeposits(page: Int) {
-        self.listStatePublisher.send(.loading)
-        let depositsRoute = TSRouter.getTransactionHistory(type: "Deposit",
-                                                           startTime: convertDateToString(date: self.startDatePublisher.value),
-                                                           endTime: convertDateToString(date: self.endDatePublisher.value),
-                                                           pageIndex: page,
-                                                           pageSize: recordsPerPage)
 
-        Env.everyMatrixClient.manager.getModel(router: depositsRoute, decodingType: EveryMatrix.TransactionsHistoryResponse.self)
-            .map(\.transactions)
+        self.listStatePublisher.send(.loading)
+
+        Env.servicesProvider.getTransactionsHistory()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
+
                 switch completion {
-                case .failure(let apiError):
-                    self?.transactionsPublisher.send([])
-                    switch apiError {
-                    case .requestError(let value) where value.lowercased().contains("must be logged in to perform this action"):
-                        self?.listStatePublisher.send(.noUserFoundError)
-                    case .notConnected:
-                        self?.listStatePublisher.send(.noUserFoundError)
-                    default:
-                        self?.listStatePublisher.send(.serverError)
-                    }
                 case .finished:
                     ()
+                case .failure(let error):
+                    print("TRANSACTIONS HISTORY ERROR: \(error)")
+
+                    self?.transactionsPublisher.send([])
+
+                    self?.listStatePublisher.send(.serverError)
+
                 }
-            }, receiveValue: { [weak self] depositsTransactions in
-                let deposits = depositsTransactions
-                self?.depositTransactions.send(depositsTransactions)
-                //self?.transactionsPublisher.send(depositsTransactions)
-                if depositsTransactions.isEmpty {
-                    self?.listStatePublisher.send(.empty)
+            }, receiveValue: { [weak self] transactionsHistoryResponse in
+
+                let transactionsHistoryResponse = transactionsHistoryResponse
+
+                if let depositTransactions = transactionsHistoryResponse.transactions {
+
+                    let transactions = depositTransactions.map { transactionDetail -> TransactionHistory in
+
+                        let transactionHistory = TransactionHistory(transactionID: "\(transactionDetail.id)",
+                                                                    time: transactionDetail.timestamp,
+                                                                    debit: DebitCredit(currency: transactionDetail.currency,
+                                                                                       amount: Double(transactionDetail.amount) ?? 0,
+                                                                                       name: "Debit"),
+                                                                    credit: DebitCredit(currency: transactionDetail.currency,
+                                                                                        amount: Double(transactionDetail.amount) ?? 0,
+                                                                                        name: "Credit"),
+                                                                    fees: [],
+                                                                    status: nil,
+                                                                    transactionReference: nil,
+                                                                    id: "\(transactionDetail.id)",
+                                                                    isRallbackAllowed: nil)
+
+                        return transactionHistory
+                    }
+
+                    self?.depositTransactions.send(transactions)
+                    self?.transactionsPublisher.send(transactions)
+
+                    if transactions.isEmpty {
+                        self?.listStatePublisher.send(.empty)
+                    }
+                    else {
+                        self?.listStatePublisher.send(.loaded)
+                    }
                 }
                 else {
-                    self?.listStatePublisher.send(.loaded)
+                    self?.depositTransactions.send([])
+                    self?.transactionsPublisher.send([])
+                    self?.listStatePublisher.send(.empty)
                 }
+
+
+
             })
             .store(in: &cancellables)
     }
+
+//    func loadDeposits(page: Int) {
+//        self.listStatePublisher.send(.loading)
+//        let depositsRoute = TSRouter.getTransactionHistory(type: "Deposit",
+//                                                           startTime: convertDateToString(date: self.startDatePublisher.value),
+//                                                           endTime: convertDateToString(date: self.endDatePublisher.value),
+//                                                           pageIndex: page,
+//                                                           pageSize: recordsPerPage)
+//
+//        Env.everyMatrixClient.manager.getModel(router: depositsRoute, decodingType: EveryMatrix.TransactionsHistoryResponse.self)
+//            .map(\.transactions)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let apiError):
+//                    self?.transactionsPublisher.send([])
+//                    switch apiError {
+//                    case .requestError(let value) where value.lowercased().contains("must be logged in to perform this action"):
+//                        self?.listStatePublisher.send(.noUserFoundError)
+//                    case .notConnected:
+//                        self?.listStatePublisher.send(.noUserFoundError)
+//                    default:
+//                        self?.listStatePublisher.send(.serverError)
+//                    }
+//                case .finished:
+//                    ()
+//                }
+//            }, receiveValue: { [weak self] depositsTransactions in
+//                let deposits = depositsTransactions
+//                self?.depositTransactions.send(depositsTransactions)
+//                //self?.transactionsPublisher.send(depositsTransactions)
+//                if depositsTransactions.isEmpty {
+//                    self?.listStatePublisher.send(.empty)
+//                }
+//                else {
+//                    self?.listStatePublisher.send(.loaded)
+//                }
+//            })
+//            .store(in: &cancellables)
+//    }
     
     func convertDateToString(date: Date) -> String{
         let auxDate = "\(date)"
@@ -171,40 +241,43 @@ class TransactionsHistoryViewModel {
     func loadWithdraws(page: Int) {
         self.listStatePublisher.send(.loading)
 
-        let withdrawsRoute = TSRouter.getTransactionHistory(type: "Withdraw",
-                                                            startTime: convertDateToString(date: self.startDatePublisher.value),
-                                                            endTime: convertDateToString(date: self.endDatePublisher.value),
-                                                            pageIndex: page,
-                                                            pageSize: recordsPerPage)
-        Env.everyMatrixClient.manager.getModel(router: withdrawsRoute, decodingType: EveryMatrix.TransactionsHistoryResponse.self)
-            .map(\.transactions)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let apiError):
-                    self?.transactionsPublisher.send([])
-                    switch apiError {
-                    case .requestError(let value) where value.lowercased().contains("must be logged in to perform this action"):
-                        self?.listStatePublisher.send(.noUserFoundError)
-                    case .notConnected:
-                        self?.listStatePublisher.send(.noUserFoundError)
-                    default:
-                        self?.listStatePublisher.send(.serverError)
-                    }
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { [weak self] withdrawsTransactions in
-                self?.withdrawTransactions.send(withdrawsTransactions)
-                //self?.transactionsPublisher.send(withdrawsTransactions)
-                if withdrawsTransactions.isEmpty {
-                    self?.listStatePublisher.send(.empty)
-                }
-                else {
-                    self?.listStatePublisher.send(.loaded)
-                }
-            })
-            .store(in: &cancellables)
+        self.transactionsPublisher.send([])
+        self.withdrawTransactions.send([])
+        self.listStatePublisher.send(.empty)
+//        let withdrawsRoute = TSRouter.getTransactionHistory(type: "Withdraw",
+//                                                            startTime: convertDateToString(date: self.startDatePublisher.value),
+//                                                            endTime: convertDateToString(date: self.endDatePublisher.value),
+//                                                            pageIndex: page,
+//                                                            pageSize: recordsPerPage)
+//        Env.everyMatrixClient.manager.getModel(router: withdrawsRoute, decodingType: EveryMatrix.TransactionsHistoryResponse.self)
+//            .map(\.transactions)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let apiError):
+//                    self?.transactionsPublisher.send([])
+//                    switch apiError {
+//                    case .requestError(let value) where value.lowercased().contains("must be logged in to perform this action"):
+//                        self?.listStatePublisher.send(.noUserFoundError)
+//                    case .notConnected:
+//                        self?.listStatePublisher.send(.noUserFoundError)
+//                    default:
+//                        self?.listStatePublisher.send(.serverError)
+//                    }
+//                case .finished:
+//                    ()
+//                }
+//            }, receiveValue: { [weak self] withdrawsTransactions in
+//                self?.withdrawTransactions.send(withdrawsTransactions)
+//                //self?.transactionsPublisher.send(withdrawsTransactions)
+//                if withdrawsTransactions.isEmpty {
+//                    self?.listStatePublisher.send(.empty)
+//                }
+//                else {
+//                    self?.listStatePublisher.send(.loaded)
+//                }
+//            })
+//            .store(in: &cancellables)
     }
 
     func requestNextPage() {
@@ -246,7 +319,7 @@ extension TransactionsHistoryViewModel {
         //return self.transactionsPublisher.value.count
     }
 
-    func transactionForRow(atIndex index: Int) -> EveryMatrix.TransactionHistory? {
+    func transactionForRow(atIndex index: Int) -> TransactionHistory? {
         switch self.transactionsType {
         case .deposit:
             return self.depositTransactions.value[safe: index]

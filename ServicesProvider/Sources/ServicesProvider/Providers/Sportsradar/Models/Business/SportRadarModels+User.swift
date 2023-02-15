@@ -571,6 +571,7 @@ extension SportRadarModels {
         var continueUrl: String?
         var clientKey: String?
         var sessionId: String?
+        var sessionData: String?
         var message: String?
 
         enum CodingKeys: String, CodingKey {
@@ -579,6 +580,7 @@ extension SportRadarModels {
             case continueUrl = "continueUrl"
             case clientKey = "clientKey"
             case sessionId = "sessionId"
+            case sessionData = "sessionData"
             case message = "message"
         }
     }
@@ -606,4 +608,67 @@ extension SportRadarModels {
             case type = "type"
         }
     }
+
+    struct PersonalDepositLimitResponse: Codable {
+
+        var status: String
+        var dailyLimit: String?
+        var weeklyLimit: String?
+        var monthlyLimit: String?
+        var currency: String
+        var hasPendingWeeklyLimit: String?
+        var pendingWeeklyLimit: String?
+        var pendingWeeklyLimitEffectiveDate: String?
+
+        enum CodingKeys: String, CodingKey {
+            case status = "status"
+            case dailyLimit = "dailyLimit"
+            case weeklyLimit = "weeklyLimit"
+            case monthlyLimit = "monthlyLimit"
+            case currency = "currency"
+            case hasPendingWeeklyLimit = "hasPendingWeeklyLimit"
+            case pendingWeeklyLimit = "pendingWeeklyLimit"
+            case pendingWeeklyLimitEffectiveDate = "pendingWeeklyLimitEffectiveDate"
+        }
+    }
+
+    struct LimitsResponse: Codable {
+
+        var status: String
+        var wagerLimit: String?
+        var lossLimit: String?
+        var currency: String
+        var pendingWagerLimit: LimitPending?
+
+        enum CodingKeys: String, CodingKey {
+            case status = "status"
+            case wagerLimit = "wagerLimit"
+            case lossLimit = "lossLimit"
+            case currency = "currency"
+            case pendingWagerLimit = "pendingWagerLimit"
+        }
+    }
+
+    struct LimitPending: Codable {
+        var effectiveDate: String
+        var limit: String
+        var limitNumber: Double
+
+        enum CodingKeys: String, CodingKey {
+            case effectiveDate = "effectiveDate"
+            case limit = "limit"
+            case limitNumber = "limitNumber"
+        }
+    }
+
+    struct BasicResponse: Codable {
+        var status: String
+        var message: String?
+
+        enum CodingKeys: String, CodingKey {
+            case status = "status"
+            case message = "message"
+        }
+    }
+
 }

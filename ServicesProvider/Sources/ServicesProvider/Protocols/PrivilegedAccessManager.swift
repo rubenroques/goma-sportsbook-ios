@@ -32,6 +32,7 @@ protocol PrivilegedAccessManager {
 
     func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError>
     func signUp(form: SignUpForm) -> AnyPublisher<SignUpResponse, ServiceProviderError>
+    func updateExtraInfo(placeOfBirth: String?, address2: String?) -> AnyPublisher<BasicResponse, ServiceProviderError>
     
     func getCountries() -> AnyPublisher<[Country], ServiceProviderError>
     func getCurrentCountry() -> AnyPublisher<Country?, ServiceProviderError>
@@ -40,9 +41,13 @@ protocol PrivilegedAccessManager {
 
     func forgotPassword(email: String, secretQuestion: String?, secretAnswer: String?) -> AnyPublisher<Bool, ServiceProviderError>
     func updatePassword(oldPassword: String, newPassword: String) -> AnyPublisher<Bool, ServiceProviderError>
+    func getPasswordPolicy() -> AnyPublisher<PasswordPolicy, ServiceProviderError>
 
     func updateWeeklyDepositLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError>
     func updateWeeklyBettingLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError>
+    func getPersonalDepositLimits() -> AnyPublisher<PersonalDepositLimitResponse, ServiceProviderError>
+    func getLimits() -> AnyPublisher<LimitsResponse, ServiceProviderError>
+    func lockPlayer(isPermanent: Bool?, lockPeriodUnit: String?, lockPeriod: String?) -> AnyPublisher<BasicResponse, ServiceProviderError>
 
     func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError>
     func signUpCompletion(form: ServicesProvider.UpdateUserProfileForm)  -> AnyPublisher<Bool, ServiceProviderError>
@@ -54,4 +59,6 @@ protocol PrivilegedAccessManager {
     func getPayments() -> AnyPublisher<SimplePaymentMethodsResponse, ServiceProviderError>
     func processDeposit(paymentMethod: String, amount: Double, option: String) -> AnyPublisher<ProcessDepositResponse, ServiceProviderError>
     func updatePayment(paymentMethod: String, amount: Double, paymentId: String, type: String, issuer: String) -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError>
+
+    func getTransactionsHistory() -> AnyPublisher<TransactionsHistoryResponse, ServiceProviderError>
 }

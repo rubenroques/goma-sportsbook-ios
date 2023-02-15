@@ -34,6 +34,7 @@ class PersonalInfoViewController: UIViewController {
     @IBOutlet private var cardIdHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var bankIdHeaderTextFieldView: HeaderTextFieldView!
 
+    @IBOutlet private var placeOfBirthHeaderTextFieldView: HeaderTextFieldView!
     // Variables
 
     private var cancellables = Set<AnyCancellable>()
@@ -83,7 +84,8 @@ class PersonalInfoViewController: UIViewController {
         editButton.setTitle(localized("save"), for: .normal)
         editButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
-        titleHeaderTextFieldView.setPlaceholderText(localized("title"))
+//        titleHeaderTextFieldView.setPlaceholderText(localized("title"))
+        titleHeaderTextFieldView.setPlaceholderText(localized("gender"))
         titleHeaderTextFieldView.setSelectionPicker(["---"], headerVisible: true)
         titleHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
         titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
@@ -109,7 +111,7 @@ class PersonalInfoViewController: UIViewController {
         birthDateHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
         birthDateHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .regular, size: 15))
         birthDateHeaderTextFieldView.setPlaceholderTextColor(UIColor.App.inputTextTitle)
-        birthDateHeaderTextFieldView.shouldBeginEditing = { return false }
+        birthDateHeaderTextFieldView.shouldBeginEditing = { return true }
 
         adress1HeaderTextFieldView.setPlaceholderText(localized("address_1"))
 
@@ -127,6 +129,8 @@ class PersonalInfoViewController: UIViewController {
 
         bankIdHeaderTextFieldView.setPlaceholderText(localized("bank_id"))
 
+        placeOfBirthHeaderTextFieldView.setPlaceholderText(localized("place_of_birth"))
+
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackgroundView))
         self.view.addGestureRecognizer(tapGestureRecognizer)
 
@@ -140,6 +144,8 @@ class PersonalInfoViewController: UIViewController {
         let maxDate = calendar.date(byAdding: components, to: Date())!
         birthDateHeaderTextFieldView.datePicker.maximumDate = maxDate
 
+        self.cardIdHeaderTextFieldView.isHidden = true
+        self.bankIdHeaderTextFieldView.isHidden = true
     }
 
     func setupWithTheme() {
@@ -174,12 +180,14 @@ class PersonalInfoViewController: UIViewController {
         countryHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         countryHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
         countryHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
+        countryHeaderTextFieldView.isDisabled = true
 
         birthDateHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
         birthDateHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         birthDateHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
         birthDateHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
-        birthDateHeaderTextFieldView.isDisabled = true
+//        birthDateHeaderTextFieldView.isDisabled = true
+        birthDateHeaderTextFieldView.setDatePickerMode()
         
         adress1HeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
         adress1HeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
@@ -216,6 +224,11 @@ class PersonalInfoViewController: UIViewController {
         bankIdHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         bankIdHeaderTextFieldView.isDisabled = true
 
+        placeOfBirthHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        placeOfBirthHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        placeOfBirthHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
+//        placeOfBirthHeaderTextFieldView.isDisabled = true
+
     }
 
     private func setupPublishers() {
@@ -232,7 +245,8 @@ class PersonalInfoViewController: UIViewController {
                              self.usernameHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
                              self.emailHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
                              self.cardIdHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
-                             self.bankIdHeaderTextFieldView.textPublisher.eraseToAnyPublisher())
+                             self.bankIdHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
+                             self.placeOfBirthHeaderTextFieldView.textPublisher.eraseToAnyPublisher())
         .flatMap({ [weak self] _ -> AnyPublisher<Bool, Never> in
             let newHash = self?.generateFormHash()
             if let originalHash = self?.originalFormHash {
@@ -283,7 +297,6 @@ class PersonalInfoViewController: UIViewController {
 
     }
 
-    
     func generateFormHash() -> String {
         return [self.titleHeaderTextFieldView.text,
                 self.firstNameHeaderTextFieldView.text,
@@ -297,7 +310,8 @@ class PersonalInfoViewController: UIViewController {
                 self.usernameHeaderTextFieldView.text,
                 self.emailHeaderTextFieldView.text,
                 self.cardIdHeaderTextFieldView.text,
-                self.bankIdHeaderTextFieldView.text].joined().MD5
+                self.bankIdHeaderTextFieldView.text,
+                self.placeOfBirthHeaderTextFieldView.text].joined().MD5
     }
 
     @IBAction private func didTapBackButton() {
@@ -310,7 +324,9 @@ class PersonalInfoViewController: UIViewController {
 
         // let username = usernameHeaderTextFieldView.text
         // let email = emailHeaderTextFieldView.text
-        let gender = titleHeaderTextFieldView.text == UserTitle.mister.rawValue ? "M" : "F"
+        //let gender = titleHeaderTextFieldView.text == UserTitle.mister.rawValue ? "M" : "F"
+        let gender = titleHeaderTextFieldView.text == UserGender.male.rawValue ? "M" : "F"
+
         let firstName = firstNameHeaderTextFieldView.text
         let lastName = lastNameHeaderTextFieldView.text
         let birthDateString = birthDateHeaderTextFieldView.text
@@ -324,15 +340,18 @@ class PersonalInfoViewController: UIViewController {
         
         let postalCode = postalCodeHeaderTextFieldView.text
         let personalId = cardIdHeaderTextFieldView.text
-        
-        let city = self.profile?.city
+
+//        let city = self.profile?.city
+        let city = cityHeaderTextFieldView.text
+
+        let placeOfBirth = placeOfBirthHeaderTextFieldView.text
         
         var serviceProviderCountry: SharedModels.Country?
         if let countryValue = self.profile?.country {
             serviceProviderCountry = ServiceProviderModelMapper.country(fromCountry: countryValue)
         }
         
-        let date = DateFormatter(format: "dd-MM-yyyy").date(from: birthDateString)
+        let date = DateFormatter(format: "yyyy-MM-dd").date(from: birthDateString)
 //        let securityQuestion = profile?.securityQuestion ?? ""
 //        let securityAnswer = profile?.securityAnswer ?? ""
 
@@ -415,9 +434,28 @@ class PersonalInfoViewController: UIViewController {
                 }
                 self.hideLoadingView()
             } receiveValue: { _ in
-                // self.showAlert(type: .success, text: localized("profile_updated_success"))
+                //self.showAlert(type: .success, text: localized("profile_updated_success"))
             }
             .store(in: &cancellables)
+
+        if address2 != "" || placeOfBirth != "" {
+            Env.servicesProvider.updateExtraInfo(placeOfBirth: placeOfBirth, address2: address2)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+                    switch completion {
+                    case .finished:
+                        ()
+                    case .failure(let error):
+                        print("EXTRA INFO ERROR: \(error)")
+                    }
+
+                }, receiveValue: { [weak self] limitsResponse in
+
+                    print("EXTRA INFO RESPONSE: \(limitsResponse)")
+
+                })
+                .store(in: &cancellables)
+        }
         
     }
 
@@ -466,16 +504,28 @@ class PersonalInfoViewController: UIViewController {
         
         self.profile = profile
         
-        if let optionIndex = UserTitle.titles.firstIndex(of: profile.title?.rawValue ?? "") {
-            self.titleHeaderTextFieldView.setSelectionPicker(UserTitle.titles, headerVisible: true)
+//        if let optionIndex = UserTitle.titles.firstIndex(of: profile.title?.rawValue ?? "") {
+//            self.titleHeaderTextFieldView.setSelectionPicker(UserTitle.titles, headerVisible: true)
+//            self.titleHeaderTextFieldView.setSelectedPickerOption(option: optionIndex)
+//        }
+//        else {
+//            self.titleHeaderTextFieldView.setText("")
+//
+//            self.titleHeaderTextFieldView.setSelectionPicker(UserTitle.titles, headerVisible: true)
+//            self.titleHeaderTextFieldView.setSelectedPickerOption(option: UserTitle.titles.startIndex)
+//
+//        }
+
+        if let optionIndex = UserGender.titles.firstIndex(of: profile.title?.genderAbbreviation ?? "") {
+            self.titleHeaderTextFieldView.setSelectionPicker(UserGender.titles, headerVisible: true)
             self.titleHeaderTextFieldView.setSelectedPickerOption(option: optionIndex)
         }
         else {
             self.titleHeaderTextFieldView.setText("")
-            
-            self.titleHeaderTextFieldView.setSelectionPicker(UserTitle.titles, headerVisible: true)
-            self.titleHeaderTextFieldView.setSelectedPickerOption(option: UserTitle.titles.startIndex)
-            
+
+            self.titleHeaderTextFieldView.setSelectionPicker(UserGender.titles, headerVisible: true)
+            self.titleHeaderTextFieldView.setSelectedPickerOption(option: UserGender.titles.startIndex)
+
         }
         
         self.usernameHeaderTextFieldView.setText(profile.username)
@@ -484,17 +534,19 @@ class PersonalInfoViewController: UIViewController {
         self.firstNameHeaderTextFieldView.setText(profile.firstName ?? "-")
         self.lastNameHeaderTextFieldView.setText(profile.lastName ?? "-")
         
-        if let country = profile.nationality {
-            self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country), slideUp: true)
+        if let country = profile.country {
+            self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country, showName: true), slideUp: true)
         }
         
-        self.birthDateHeaderTextFieldView.setText(profile.birthDate.toString(formatString: "dd-MM-yyyy"))
+        self.birthDateHeaderTextFieldView.setText(profile.birthDate.toString(formatString: "yyyy-MM-dd"))
         self.adress1HeaderTextFieldView.setText(profile.address ?? "-")
         self.adress2HeaderTextFieldView.setText(profile.province ?? "-")
         self.cityHeaderTextFieldView.setText(profile.city ?? "-")
         self.postalCodeHeaderTextFieldView.setText(profile.postalCode ?? "-")
         
         self.cardIdHeaderTextFieldView.setText(profile.personalIdNumber ?? "-")
+
+        self.placeOfBirthHeaderTextFieldView.setText(profile.placeOfBirth ?? "-")
         
         self.originalFormHash = self.generateFormHash()
         
@@ -671,13 +723,21 @@ extension PersonalInfoViewController {
         self.countryHeaderTextFieldView.setText(formatIndicativeCountry(country), slideUp: true)
     }
 
-    private func formatIndicativeCountry(_ country: Country) -> String {
+    private func formatIndicativeCountry(_ country: Country, showName: Bool? = false) -> String {
         var stringCountry = "\(country.phonePrefix)"
         let isoCode = country.iso2Code
-        
-        stringCountry = "\(isoCode) - \(country.phonePrefix)"
-        if let flag = CountryFlagHelper.flag(forCode: isoCode) {
-            stringCountry = "\(flag) \(country.phonePrefix)"
+
+        if let showName, !showName {
+            stringCountry = "\(isoCode) - \(country.phonePrefix)"
+            if let flag = CountryFlagHelper.flag(forCode: isoCode) {
+                stringCountry = "\(flag) \(country.phonePrefix)"
+            }
+        }
+        else {
+            stringCountry = "\(isoCode) - \(country.name)"
+            if let flag = CountryFlagHelper.flag(forCode: isoCode) {
+                stringCountry = "\(flag) \(country.name)"
+            }
         }
         
         return stringCountry

@@ -28,6 +28,17 @@ class SportTypeStore {
         }
     }
 
+    var defaultSportWithCodeId: Sport {
+        if let firstSportWithCodeId = self.sports.first(where: {
+            $0.numericId != nil
+        }) {
+            return firstSportWithCodeId
+        }
+        else {
+            return Sport(id: "1", name: "Football", alphaId: "FBL", numericId: "19781.1", showEventCategory: false, liveEventsCount: 0)
+        }
+    }
+
     private var cancellables = Set<AnyCancellable>()
     private var sports = [Sport]()
     private var preLiveSports = [Sport]()

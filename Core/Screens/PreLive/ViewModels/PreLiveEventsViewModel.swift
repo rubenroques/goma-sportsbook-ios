@@ -733,10 +733,14 @@ class PreLiveEventsViewModel: NSObject {
     }
 
     private func processCompetitionOutrights(competitionInfo: SportCompetitionInfo) {
+
+        // Temp fix
+        let numberOutrightMarkets = competitionInfo.numberOutrightMarkets == "0" ? 1 : Int(competitionInfo.numberOutrightMarkets) ?? 0
+
         let newCompetition = Competition(id: competitionInfo.id,
                                          name: competitionInfo.name,
                                          matches: [],
-                                         numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
+                                         numberOutrightMarkets:  numberOutrightMarkets,
         competitionInfo: competitionInfo)
 
         self.competitions.append(newCompetition)

@@ -82,6 +82,30 @@ extension SportRadarModelMapper {
 
         return EventsGroup(events: events)
     }
+
+    static func event(fromInternalEvent internalEvent: SportRadarModels.Event) -> Event {
+
+        if let eventMarkets = internalEvent.markets {
+            let markets = eventMarkets.map(Self.market(fromInternalMarket:))
+            return Event(id: internalEvent.id,
+                         homeTeamName: internalEvent.homeName ?? "",
+                         awayTeamName: internalEvent.awayName ?? "",
+                         sportTypeName: internalEvent.sportTypeName ?? "",
+                         competitionId: internalEvent.competitionId ?? "",
+                         competitionName: internalEvent.competitionName ?? "",
+                         startDate: internalEvent.startDate ?? Date(),
+                         markets: markets,
+                         numberMarkets: internalEvent.numberMarkets)
+        }
+        return Event(id: internalEvent.id,
+                     homeTeamName: internalEvent.homeName ?? "",
+                     awayTeamName: internalEvent.awayName ?? "",
+                     sportTypeName: internalEvent.sportTypeName ?? "",
+                     competitionId: internalEvent.competitionId ?? "",
+                     competitionName: internalEvent.competitionName ?? "",
+                     startDate: internalEvent.startDate ?? Date(),
+                     markets: [],
+                     numberMarkets: internalEvent.numberMarkets)    }
     
     static func market(fromInternalMarket internalMarket: SportRadarModels.Market) -> Market {
         let outcomes = internalMarket.outcomes.map(Self.outcome(fromInternalOutcome:))
@@ -129,7 +153,48 @@ extension SportRadarModelMapper {
     }
 
     static func favoriteList(fromInternalFavoriteList internalFavoriteList: SportRadarModels.FavoriteList) -> FavoriteList {
-        return FavoriteList(id: internalFavoriteList.id)
+        return FavoriteList(id: internalFavoriteList.id, name: internalFavoriteList.name, customerId: internalFavoriteList.customerId)
+    }
+
+    static func favoritesListAddResponse(fromInternalFavoritesListAddResponse internalFavoritesListAddResponse: SportRadarModels.FavoritesListAddResponse) -> FavoritesListAddResponse {
+
+        let favoritesListAddResponse = FavoritesListAddResponse(listId: internalFavoritesListAddResponse.listId)
+
+        return favoritesListAddResponse
+
+    }
+
+    static func favoritesListDeleteResponse(fromInternalFavoritesListDeleteResponse internalFavoritesListDeleteResponse: SportRadarModels.FavoritesListDeleteResponse) -> FavoritesListDeleteResponse {
+
+        let favoritesListDeleteResponse = FavoritesListDeleteResponse(listId: internalFavoritesListDeleteResponse.listId)
+
+        return favoritesListDeleteResponse
+
+    }
+
+    static func favoriteAddResponse(fromInternalFavoriteAddResponse internalFavoriteAddResponse: SportRadarModels.FavoriteAddResponse) -> FavoriteAddResponse {
+
+        let favoriteAddResponse = FavoriteAddResponse(displayOrder: internalFavoriteAddResponse.displayOrder, idAccountFavorite: internalFavoriteAddResponse.idAccountFavorite)
+
+        return favoriteAddResponse
+
+    }
+
+    static func favoritesEventResponse(fromInternalFavoritesEventResponse internalFavoritesEventResponse: SportRadarModels.FavoriteEventResponse) -> FavoriteEventResponse {
+
+        let favoritesEvent = internalFavoritesEventResponse.favoriteEvents.map({ favoriteEvent -> FavoriteEvent in
+            let favoriteEvent = Self.favoriteEvent(fromInternalFavoriteEvent: favoriteEvent)
+
+            return favoriteEvent
+
+        })
+
+        return FavoriteEventResponse(favoriteEvents: favoritesEvent)
+
+    }
+
+    static func favoriteEvent(fromInternalFavoriteEvent internalFavoriteEvent: SportRadarModels.FavoriteEvent) -> FavoriteEvent {
+        return FavoriteEvent(id: internalFavoriteEvent.id, name: internalFavoriteEvent.name, favoriteListId: internalFavoriteEvent.favoriteListId, accountFavoriteId: internalFavoriteEvent.accountFavoriteId)
     }
 
 }

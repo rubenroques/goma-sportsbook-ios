@@ -6,13 +6,12 @@
 //
 
 import Foundation
-import Foundation
 import UIKit
 import Theming
 
 public class DepositOnRegisterViewController: UIViewController {
 
-    public var didTapDepositButtonAction: () -> Void = { }
+    public var didTapDepositButtonAction: (String) -> Void = { amount in }
 
     public var didTapBackButtonAction: () -> Void = { }
     public var didTapCancelButtonAction: () -> Void = { }
@@ -38,6 +37,15 @@ public class DepositOnRegisterViewController: UIViewController {
 
     private lazy var footerBaseView: UIView = Self.createFooterBaseView()
     private lazy var depositButton: UIButton = Self.createDepositButton()
+
+    private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
+    private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
+
+    public var isLoading: Bool = false {
+        didSet {
+            self.loadingBaseView.isHidden = !isLoading
+        }
+    }
 
     public init() {
         super.init(nibName: nil, bundle: nil)
@@ -78,8 +86,17 @@ public class DepositOnRegisterViewController: UIViewController {
         self.amountButton3.setTitle("€50", for: .normal)
         self.amountButton4.setTitle("€100", for: .normal)
 
+        self.amountButton1.addTarget(self, action: #selector(didTapAmountButton1), for: .primaryActionTriggered)
+        self.amountButton2.addTarget(self, action: #selector(didTapAmountButton2), for: .primaryActionTriggered)
+        self.amountButton3.addTarget(self, action: #selector(didTapAmountButton3), for: .primaryActionTriggered)
+        self.amountButton4.addTarget(self, action: #selector(didTapAmountButton4), for: .primaryActionTriggered)
+
+
         self.depositHeaderTextFieldView.setPlaceholderText("Deposit Value")
+        self.depositHeaderTextFieldView.setKeyboardType(.decimalPad)
         self.depositSubtitleLabel.text = "Minimum Value: 10€"
+
+        self.isLoading = false
 
     }
 
@@ -111,6 +128,8 @@ public class DepositOnRegisterViewController: UIViewController {
         self.configureStyleOnButton(self.amountButton3)
         self.configureStyleOnButton(self.amountButton4)
 
+        self.loadingBaseView.backgroundColor = AppColor.backgroundPrimary.withAlphaComponent(0.7)
+
     }
 
     @objc func didTapBackButton() {
@@ -122,23 +141,24 @@ public class DepositOnRegisterViewController: UIViewController {
     }
 
     @objc func didTapDepositButton() {
-        self.didTapDepositButtonAction()
+        let amount = self.depositHeaderTextFieldView.text
+        self.didTapDepositButtonAction(amount)
     }
 
     @objc func didTapAmountButton1() {
-        self.depositHeaderTextFieldView.setText("10€")
+        self.depositHeaderTextFieldView.setText("10")
     }
 
     @objc func didTapAmountButton2() {
-        self.depositHeaderTextFieldView.setText("20€")
+        self.depositHeaderTextFieldView.setText("20")
     }
 
     @objc func didTapAmountButton3() {
-        self.depositHeaderTextFieldView.setText("50€")
+        self.depositHeaderTextFieldView.setText("50")
     }
 
     @objc func didTapAmountButton4() {
-        self.depositHeaderTextFieldView.setText("100€")
+        self.depositHeaderTextFieldView.setText("100")
     }
 
     private func configureStyleOnButton(_ button: UIButton) {
@@ -154,6 +174,19 @@ public class DepositOnRegisterViewController: UIViewController {
         button.layer.masksToBounds = true
         button.backgroundColor = .clear
 
+    }
+
+    public func showErrorAlert(errorMessage: String) {
+
+        let errorTitle = "Deposit Error"
+        let errorMessage = errorMessage
+
+        let alert = UIAlertController(title: errorTitle,
+                                      message: errorMessage,
+                                      preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 
 }
@@ -270,6 +303,20 @@ public extension DepositOnRegisterViewController {
         return button
     }
 
+    private static func createLoadingBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createActivityIndicatorView() -> UIActivityIndicatorView {
+        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.startAnimating()
+        return activityIndicatorView
+    }
+
     private func setupSubviews() {
 
         self.view.addSubview(self.headerBaseView)
@@ -292,6 +339,10 @@ public extension DepositOnRegisterViewController {
 
         self.view.addSubview(self.footerBaseView)
         self.footerBaseView.addSubview(self.depositButton)
+
+        self.view.addSubview(self.loadingBaseView)
+
+        self.loadingBaseView.addSubview(self.activityIndicatorView)
 
         self.initConstraints()
     }
@@ -350,6 +401,17 @@ public extension DepositOnRegisterViewController {
             self.depositButton.leadingAnchor.constraint(equalTo: self.footerBaseView.leadingAnchor, constant: 34),
             self.depositButton.heightAnchor.constraint(equalToConstant: 50),
 
+        ])
+
+        // Loading Screen
+        NSLayoutConstraint.activate([
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
+            self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor)
         ])
     }
 

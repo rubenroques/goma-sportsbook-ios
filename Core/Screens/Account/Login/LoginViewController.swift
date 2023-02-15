@@ -4,6 +4,9 @@ import ServicesProvider
 import AppTrackingTransparency
 import AdSupport
 import RegisterFlow
+import Adyen
+import AdyenDropIn
+import AdyenComponents
 
 class LoginViewController: UIViewController {
 
@@ -40,6 +43,10 @@ class LoginViewController: UIViewController {
 
     let spinnerViewController = SpinnerViewController()
 
+    var dropInComponent: DropInComponent?
+    var paymentsDropIn: PaymentsDropIn?
+    var depositOnRegisterViewController: DepositOnRegisterViewController?
+
     init() {
         super.init(nibName: "LoginViewController", bundle: nil)
     }
@@ -74,6 +81,36 @@ class LoginViewController: UIViewController {
                 self?.loginButton.isEnabled = validFields
             })
             .store(in: &cancellables)
+
+        self.paymentsDropIn = PaymentsDropIn()
+
+        if let paymentsDropIn = self.paymentsDropIn {
+
+            paymentsDropIn.shouldShowPaymentDropIn
+                .sink(receiveValue: { [weak self] shouldShowDropIn in
+                    if shouldShowDropIn {
+                        self?.getPaymentDropIn()
+                    }
+                })
+                .store(in: &cancellables)
+
+            paymentsDropIn.isLoadingPublisher.sink(receiveValue: { [weak self] isLoading in
+                self?.depositOnRegisterViewController?.isLoading = isLoading
+            })
+            .store(in: &cancellables)
+
+            paymentsDropIn.showErrorAlertTypePublisher
+                .sink(receiveValue: { [weak self] depositError in
+                    switch depositError {
+                    case .error(let message):
+                        self?.depositOnRegisterViewController?.showErrorAlert(errorMessage: message)
+                    default:
+                        ()
+                    }
+                })
+                .store(in: &cancellables)
+        }
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -194,7 +231,6 @@ class LoginViewController: UIViewController {
         self.dismissButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         self.checkPolicyLinks()
-
 
         self.logoImageView.isUserInteractionEnabled = true
 
@@ -344,6 +380,11 @@ class LoginViewController: UIViewController {
         }
         depositOnRegisterViewController.didTapCancelButtonAction = { [weak self] in
             self?.closeLoginRegisterFlow()
+        }
+
+        depositOnRegisterViewController.didTapDepositButtonAction = { [weak self] amount in
+            print("AMOUNT: \(amount)")
+            self?.paymentsDropIn?.getDepositInfo(amountText: amount)
         }
         navigationController.pushViewController(depositOnRegisterViewController, animated: true)
     }
@@ -524,6 +565,22 @@ class LoginViewController: UIViewController {
         let recoverPasswordViewController = RecoverPasswordViewController(viewModel: recoverPasswordViewModel)
 
         self.navigationController?.pushViewController(recoverPasswordViewController, animated: true)
+    }
+
+    private func getPaymentDropIn() {
+
+        if let paymentDropIn = self.paymentsDropIn?.setupPaymentDropIn() {
+
+            paymentDropIn.delegate = self.paymentsDropIn.self
+
+            self.dropInComponent = paymentDropIn
+
+            if let depositOnRegisterViewController {
+                depositOnRegisterViewController.present(paymentDropIn.viewController, animated: true)
+            }
+
+        }
+
     }
 
 }

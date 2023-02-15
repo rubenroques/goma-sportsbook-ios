@@ -520,8 +520,8 @@ class MatchDetailsViewController: UIViewController {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
         self.marketTypeSeparator.backgroundColor = UIColor.App.separatorLine
         
-        self.topView.backgroundColor = UIColor.App.backgroundPrimary
-        self.headerDetailView.backgroundColor = UIColor.App.backgroundPrimary
+        self.topView.backgroundColor = UIColor.App.gameHeader
+        self.headerDetailView.backgroundColor = UIColor.App.gameHeader
         self.headerDetailTopView.backgroundColor = .clear
         self.backButton.tintColor = UIColor.App.textPrimary
         
@@ -546,7 +546,7 @@ class MatchDetailsViewController: UIViewController {
         self.headerLiveButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
         self.headerStatsButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
         
-        self.accountValueView.backgroundColor = UIColor.App.backgroundSecondary
+        self.accountValueView.backgroundColor = UIColor.App.backgroundBorder
         self.accountValueLabel.textColor = UIColor.App.textPrimary
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
         self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)

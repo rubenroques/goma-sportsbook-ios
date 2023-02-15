@@ -39,6 +39,13 @@ class ProfileLimitsManagementViewController: UIViewController {
     @IBOutlet private var exclusionLabel: UILabel!
     @IBOutlet private var exclusionSelectTextFieldView: DropDownSelectionView!
 
+    @IBOutlet private var periodOptionsView: UIView!
+    @IBOutlet private var periodLabel: UILabel!
+
+    @IBOutlet private var periodValuesView: UIView!
+    @IBOutlet private var periodTypeSelectTextFieldView: DropDownSelectionView!
+    @IBOutlet private var periodValueHeaderTextFieldView: HeaderTextFieldView!
+
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
@@ -95,6 +102,30 @@ class ProfileLimitsManagementViewController: UIViewController {
         }
     }
 
+    var shouldShowDepositPeriods: Bool = true {
+        didSet {
+            if shouldShowDepositPeriods {
+                self.depositFrequencySelectTextFieldView.isHidden = false
+                self.bettingFrequencySelectTextFieldView.isHidden = false
+                self.lossFrequencySelectHeaderTextFieldView.isHidden = false
+            }
+            else {
+                self.depositFrequencySelectTextFieldView.isHidden = true
+                self.bettingFrequencySelectTextFieldView.isHidden = true
+                self.lossFrequencySelectHeaderTextFieldView.isHidden = true
+            }
+        }
+    }
+
+    var shouldShowPeriodOptions: Bool = false {
+        didSet {
+            self.periodOptionsView.isHidden = !shouldShowPeriodOptions
+        }
+    }
+
+    var periodTypeSelected: String?
+    var isValidPeriodValue: CurrentValueSubject<Bool, Never> = .init(false)
+
     init() {
         self.viewModel = ProfileLimitsManagementViewModel()
 
@@ -115,6 +146,8 @@ class ProfileLimitsManagementViewController: UIViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+
+        self.shouldShowDepositPeriods = false
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -149,7 +182,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         depositHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         depositHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         depositHeaderTextFieldView.setSecureField(false)
-        depositHeaderTextFieldView.setRemoveTextField()
+        //depositHeaderTextFieldView.setRemoveTextField()
 
         depositLineView.backgroundColor = UIColor.App.inputTextTitle.withAlphaComponent(0.2)
 
@@ -161,7 +194,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         bettingHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         bettingHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         bettingHeaderTextFieldView.setSecureField(false)
-        bettingHeaderTextFieldView.setRemoveTextField()
+        //bettingHeaderTextFieldView.setRemoveTextField()
 
         bettingLineView.backgroundColor = UIColor.App.inputTextTitle.withAlphaComponent(0.2)
 
@@ -173,7 +206,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         lossHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         lossHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         lossHeaderTextFieldView.setSecureField(false)
-        lossHeaderTextFieldView.setRemoveTextField()
+        //lossHeaderTextFieldView.setRemoveTextField()
 
         lossLineView.backgroundColor = UIColor.App.inputTextTitle.withAlphaComponent(0.2)
 
@@ -201,6 +234,21 @@ class ProfileLimitsManagementViewController: UIViewController {
         exclusionSelectTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
         exclusionSelectTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
 
+        periodOptionsView.backgroundColor = .clear
+
+        periodLabel.textColor = UIColor.App.textPrimary
+
+        periodValuesView.backgroundColor = .clear
+
+        periodTypeSelectTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        periodTypeSelectTextFieldView.setTextFieldColor(UIColor.App.inputText)
+        periodTypeSelectTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
+        periodTypeSelectTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
+
+        periodValueHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        periodValueHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        periodValueHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
+        periodValueHeaderTextFieldView.setSecureField(false)
     }
 
     func commonInit() {
@@ -215,10 +263,10 @@ class ProfileLimitsManagementViewController: UIViewController {
 
         //
         //
-        depositLabel.text = localized("deposit_limit")
+        depositLabel.text = localized("weekly_deposit_limit")
         depositLabel.font = AppFont.with(type: .semibold, size: 17)
 
-        depositHeaderTextFieldView.setPlaceholderText(localized("deposit_limit"))
+        depositHeaderTextFieldView.setPlaceholderText(localized("weekly_deposit_limit"))
         if let infoImage = UIImage(named: "question_circle_icon") {
             depositHeaderTextFieldView.setImageTextField(infoImage)
         }
@@ -238,10 +286,10 @@ class ProfileLimitsManagementViewController: UIViewController {
 
         //
         //
-        bettingLabel.text = localized("betting_limit")
+        bettingLabel.text = localized("weekly_betting_limit")
         bettingLabel.font = AppFont.with(type: .semibold, size: 17)
 
-        bettingHeaderTextFieldView.setPlaceholderText(localized("betting_limit"))
+        bettingHeaderTextFieldView.setPlaceholderText(localized("weekly_betting_limit"))
         if let infoImage = UIImage(named: "question_circle_icon") {
             bettingHeaderTextFieldView.setImageTextField(infoImage)
         }
@@ -261,10 +309,10 @@ class ProfileLimitsManagementViewController: UIViewController {
 
         //
         //
-        lossLabel.text = localized("loss_limit")
+        lossLabel.text = localized("auto_payout")
         lossLabel.font = AppFont.with(type: .semibold, size: 17)
 
-        lossHeaderTextFieldView.setPlaceholderText(localized("loss_limit"))
+        lossHeaderTextFieldView.setPlaceholderText(localized("auto_payout"))
         if let infoImage = UIImage(named: "question_circle_icon") {
             lossHeaderTextFieldView.setImageTextField(infoImage)
         }
@@ -286,8 +334,17 @@ class ProfileLimitsManagementViewController: UIViewController {
         exclusionLabel.text = localized("auto_exclusion")
         exclusionLabel.font = AppFont.with(type: .semibold, size: 17)
 
-        exclusionSelectTextFieldView.setSelectionPicker([localized("active"), localized("limited"), localized("permanent")])
-        exclusionSelectTextFieldView.isDisabled = true
+        exclusionSelectTextFieldView.setSelectionPicker([localized("not_excluded"), localized("custom"), localized("permanent")])
+        //exclusionSelectTextFieldView.isDisabled = true
+
+        periodLabel.font = AppFont.with(type: .semibold, size: 17)
+        periodLabel.text = localized("period_type_value")
+
+        periodTypeSelectTextFieldView.setSelectionPicker([localized("days"), localized("weeks"), localized("months")])
+
+        periodValueHeaderTextFieldView.setPlaceholderText(localized("period_value"))
+
+        periodValueHeaderTextFieldView.setKeyboardType(.numberPad)
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
@@ -314,7 +371,7 @@ class ProfileLimitsManagementViewController: UIViewController {
             .sink(receiveValue: { [weak self] limitOptions in
                 if let viewModel = self?.viewModel {
                     if limitOptions == viewModel.limitOptionsSet && viewModel.limitOptionsSet.isNotEmpty {
-                        self?.isLoading = false
+                        self?.viewModel.isLoadingPublisher.send(false)
                         self?.showAlert(type: .success)
                     }
                 }
@@ -329,6 +386,126 @@ class ProfileLimitsManagementViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+        self.viewModel.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoading in
+
+                self?.isLoading = isLoading
+            })
+            .store(in: &cancellables)
+
+        exclusionSelectTextFieldView.textPublisher
+            .sink(receiveValue: { [weak self] textOption in
+                if textOption == localized("custom") {
+                    print("SHOW OPTIONS")
+                    self?.shouldShowPeriodOptions = true
+                }
+                else {
+                    self?.shouldShowPeriodOptions = false
+                }
+            })
+            .store(in: &cancellables)
+
+        Publishers.CombineLatest(periodTypeSelectTextFieldView.textPublisher, periodValueHeaderTextFieldView.textPublisher)
+            .sink(receiveValue: { [weak self] periodType, periodValue in
+
+                if let periodTypeSelected = self?.periodTypeSelected {
+
+                    if periodType != periodTypeSelected {
+                        self?.periodValueHeaderTextFieldView.setText("1")
+                        self?.periodTypeSelected = periodType
+                        return
+                    }
+                }
+                else {
+                    self?.periodTypeSelected = periodType
+                    self?.periodValueHeaderTextFieldView.setText("1")
+                }
+
+                if let periodNumber = Int(periodValue ?? "") {
+
+                    if periodType == localized("days") {
+                        if periodNumber > 0 && periodNumber <= 365 {
+
+                            self?.isValidPeriodValue.send(true)
+                        }
+                        else if periodNumber <= 0 {
+                            self?.periodValueHeaderTextFieldView.setText("1")
+                            self?.showPeriodError(periodValueTypeError: .lowValue, periodValue: "1")
+                        }
+                        else if periodNumber > 365 {
+                            self?.periodValueHeaderTextFieldView.setText("365")
+                            self?.showPeriodError(periodValueTypeError: .highValue, periodValue: "365")
+                        }
+
+                    }
+                    else if periodType == localized("weeks") {
+
+                        if periodNumber > 0 && periodNumber <= 52 {
+
+                            self?.isValidPeriodValue.send(true)
+
+                        }
+                        else if periodNumber <= 0 {
+                            self?.periodValueHeaderTextFieldView.setText("1")
+                            self?.showPeriodError(periodValueTypeError: .lowValue, periodValue: "1")
+                        }
+                        else if periodNumber > 52 {
+                            self?.periodValueHeaderTextFieldView.setText("52")
+                            self?.showPeriodError(periodValueTypeError: .highValue, periodValue: "52")
+                        }
+                    }
+                    else if periodType == localized("months") {
+                        if periodNumber > 0 && periodNumber <= 12 {
+
+                            self?.isValidPeriodValue.send(true)
+
+                        }
+                        else if periodNumber <= 0 {
+                            self?.periodValueHeaderTextFieldView.setText("1")
+                            self?.showPeriodError(periodValueTypeError: .lowValue, periodValue: "1")
+                        }
+                        else if periodNumber > 12 {
+                            self?.periodValueHeaderTextFieldView.setText("12")
+                            self?.showPeriodError(periodValueTypeError: .highValue, periodValue: "12")
+                        }
+                    }
+                }
+            })
+            .store(in: &cancellables)
+
+        self.viewModel.isLockedPlayer
+            .sink(receiveValue: { [weak self] isLocked in
+                if isLocked {
+                    //self?.navigationController?.popToRootViewController(animated: true)
+                    self?.dismiss(animated: true)
+                }
+            })
+            .store(in: &cancellables)
+
+    }
+
+    private func showPeriodError(periodValueTypeError: PeriodValueTypeError, periodValue: String) {
+
+        var message = ""
+
+        switch periodValueTypeError {
+        case .lowValue:
+            message = "Value cannot be lower than \(periodValue)"
+        case .highValue:
+            message = "Value cannot be higher than \(periodValue)"
+        }
+
+        let periodAlert = UIAlertController(title: localized("invalid_period_value"),
+                                                 message: message,
+                                                 preferredStyle: UIAlertController.Style.alert)
+
+        periodAlert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
+            periodAlert.dismiss(animated: true)
+        }))
+
+        self.present(periodAlert, animated: true, completion: nil)
 
     }
 
@@ -346,7 +523,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         }
         else if alertType == LimitType.loss.identifier.lowercased() {
             let alertText = self.viewModel.getAlertInfoText(alertType: alertType)
-            let alertTitle = localized("loss_limit")
+            let alertTitle = localized("auto_payout_limit")
             self.showFieldInfo(view: self.lossView, alertTitle: alertTitle, alertText: alertText)
         }
 
@@ -354,16 +531,13 @@ class ProfileLimitsManagementViewController: UIViewController {
 
     private func setupLimitsInfo() {
         let currencyFormatter = CurrencyFormater()
+
         // Check deposit infot
         if let depositLimit = self.viewModel.depositLimit {
             if let limitAmount = depositLimit.current?.amount {
                 let amountString = "\(limitAmount)"
                 let amountFormatted = currencyFormatter.currencyTypeFormatting(string: amountString)
                 self.depositHeaderTextFieldView.setText(amountFormatted)
-            }
-
-            if let limitPeriod = depositLimit.current?.period {
-                self.depositFrequencySelectTextFieldView.setText(limitPeriod.lowercased())
             }
 
             if depositLimit.updatable {
@@ -375,15 +549,11 @@ class ProfileLimitsManagementViewController: UIViewController {
         }
 
         // Check wagering info
-        if let wageringLimit = self.viewModel.getWageringOption() {
+        if let wageringLimit = self.viewModel.wageringLimit {
             if let wageringAmount = wageringLimit.current?.amount {
                 let amountString = "\(wageringAmount)"
                 let amountFormatted = currencyFormatter.currencyTypeFormatting(string: amountString)
                 self.bettingHeaderTextFieldView.setText(amountFormatted)
-            }
-
-            if let wageringPeriod = wageringLimit.current?.period {
-                self.bettingFrequencySelectTextFieldView.setText(wageringPeriod.lowercased())
             }
 
             if wageringLimit.updatable {
@@ -394,18 +564,15 @@ class ProfileLimitsManagementViewController: UIViewController {
             }
         }
 
-        if let lossLimit = self.viewModel.getLossOption() {
-            if let lossAmount = lossLimit.current?.amount {
-                let amountString = "\(lossAmount)"
+        // Auto payout limit
+        if let autoPayoutLimit = self.viewModel.autoPayoutLimit {
+            if let autoPayoutAmount = autoPayoutLimit.current?.amount {
+                let amountString = "\(autoPayoutAmount)"
                 let amountFormatted = currencyFormatter.currencyTypeFormatting(string: amountString)
                 self.lossHeaderTextFieldView.setText(amountFormatted)
             }
 
-            if let lossPeriod = lossLimit.current?.period {
-                self.lossFrequencySelectHeaderTextFieldView.setText(lossPeriod.lowercased())
-            }
-
-            if lossLimit.updatable {
+            if autoPayoutLimit.updatable {
                 self.isLossUpdatable = true
             }
             else {
@@ -413,8 +580,72 @@ class ProfileLimitsManagementViewController: UIViewController {
             }
         }
 
-        self.isLoading = false
+        self.viewModel.isLoadingPublisher.send(false)
     }
+
+//    private func setupLimitsInfo() {
+//        let currencyFormatter = CurrencyFormater()
+//        // Check deposit infot
+//        if let depositLimit = self.viewModel.depositLimit {
+//            if let limitAmount = depositLimit.current?.amount {
+//                let amountString = "\(limitAmount)"
+//                let amountFormatted = currencyFormatter.currencyTypeFormatting(string: amountString)
+//                self.depositHeaderTextFieldView.setText(amountFormatted)
+//            }
+//
+//            if let limitPeriod = depositLimit.current?.period {
+//                self.depositFrequencySelectTextFieldView.setText(limitPeriod.lowercased())
+//            }
+//
+//            if depositLimit.updatable {
+//                self.isDepositUpdatable = true
+//            }
+//            else {
+//                self.isDepositUpdatable = false
+//            }
+//        }
+//
+//        // Check wagering info
+//        if let wageringLimit = self.viewModel.getWageringOption() {
+//            if let wageringAmount = wageringLimit.current?.amount {
+//                let amountString = "\(wageringAmount)"
+//                let amountFormatted = currencyFormatter.currencyTypeFormatting(string: amountString)
+//                self.bettingHeaderTextFieldView.setText(amountFormatted)
+//            }
+//
+//            if let wageringPeriod = wageringLimit.current?.period {
+//                self.bettingFrequencySelectTextFieldView.setText(wageringPeriod.lowercased())
+//            }
+//
+//            if wageringLimit.updatable {
+//                self.isWageringUpdatable = true
+//            }
+//            else {
+//                self.isWageringUpdatable = false
+//            }
+//        }
+//
+//        if let lossLimit = self.viewModel.getLossOption() {
+//            if let lossAmount = lossLimit.current?.amount {
+//                let amountString = "\(lossAmount)"
+//                let amountFormatted = currencyFormatter.currencyTypeFormatting(string: amountString)
+//                self.lossHeaderTextFieldView.setText(amountFormatted)
+//            }
+//
+//            if let lossPeriod = lossLimit.current?.period {
+//                self.lossFrequencySelectHeaderTextFieldView.setText(lossPeriod.lowercased())
+//            }
+//
+//            if lossLimit.updatable {
+//                self.isLossUpdatable = true
+//            }
+//            else {
+//                self.isLossUpdatable = false
+//            }
+//        }
+//
+//        self.isLoading = false
+//    }
 
     func showFieldInfo(view: UIView, alertTitle: String = "", alertText: String = "") {
         let infoView = EditAlertView()
@@ -466,12 +697,14 @@ class ProfileLimitsManagementViewController: UIViewController {
     }
 
     private func saveLimitsOptions() {
-        self.isLoading = true
+        self.viewModel.isLoadingPublisher.send(true)
 
         // TODO: SportRadar Currency for wallet
         // TODO: SportRadar limits configuration
         
         let acceptedInputs = Set("0123456789.,")
+
+        var updatedLimits = false
 
         if self.viewModel.canUpdateDeposit {
             let period = self.depositFrequencySelectTextFieldView.text
@@ -481,10 +714,13 @@ class ProfileLimitsManagementViewController: UIViewController {
 
             let currency = "EUR" // Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
 
-            self.viewModel.sendLimit(limitType: LimitType.deposit.identifier, period: period, amount: amount, currency: currency)
+            //self.viewModel.sendLimit(limitType: LimitType.deposit.identifier, period: period, amount: amount, currency: currency)
+            self.viewModel.updateDepositLimit(amount: amount)
 
+            updatedLimits = true
         }
-        else if self.viewModel.canUpdateWagering {
+
+        if self.viewModel.canUpdateWagering {
             let period = self.bettingFrequencySelectTextFieldView.text
             let amountString = self.bettingHeaderTextFieldView.text
             let amountFiltered = String( amountString.filter{ acceptedInputs.contains($0)} )
@@ -492,10 +728,14 @@ class ProfileLimitsManagementViewController: UIViewController {
 
             let currency = "EUR" // Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
 
-            self.viewModel.sendLimit(limitType: LimitType.wagering.identifier, period: period, amount: amount, currency: currency)
+//            self.viewModel.sendLimit(limitType: LimitType.wagering.identifier, period: period, amount: amount, currency: currency)
+            self.viewModel.updateBettingLimit(amount: amount)
+
+            updatedLimits = true
 
         }
-        else if self.viewModel.canUpdateLoss {
+
+        if self.viewModel.canUpdateLoss {
             let period = self.lossFrequencySelectHeaderTextFieldView.text
             let amountString = self.lossHeaderTextFieldView.text
             let amountFiltered = String( amountString.filter{ acceptedInputs.contains($0)} )
@@ -505,6 +745,24 @@ class ProfileLimitsManagementViewController: UIViewController {
 
             self.viewModel.sendLimit(limitType: LimitType.loss.identifier, period: period, amount: amount, currency: currency)
 
+            updatedLimits = true
+
+        }
+
+        if self.exclusionSelectTextFieldView.textPublisher.value != localized("not_excluded") {
+            print("LOCK PLAYER!")
+
+            let isPermanent = self.exclusionSelectTextFieldView.textPublisher.value == localized("permanent") ? true : false
+
+            let lockPeriodUnit = self.periodTypeSelected ?? ""
+
+            let lockPeriod = self.periodValueHeaderTextFieldView.text
+
+            self.viewModel.lockPlayer(isPermanent: isPermanent, lockPeriodUnit: lockPeriodUnit, lockPeriod: lockPeriod)
+        }
+
+        if !updatedLimits {
+            self.viewModel.isLoadingPublisher.send(false)
         }
     }
 
@@ -524,18 +782,30 @@ class ProfileLimitsManagementViewController: UIViewController {
 
         self.viewModel.checkLimitUpdatableStatus(limitType: LimitType.deposit.identifier.lowercased(),
                                                  limitAmount: self.depositHeaderTextFieldView.text,
-                                                 limitPeriod: self.depositFrequencySelectTextFieldView.text,
                                                  isLimitUpdatable: isDepositUpdatable)
 
         self.viewModel.checkLimitUpdatableStatus(limitType: LimitType.wagering.identifier.lowercased(),
                                                  limitAmount: self.bettingHeaderTextFieldView.text,
-                                                 limitPeriod: self.bettingFrequencySelectTextFieldView.text,
                                                  isLimitUpdatable: isWageringUpdatable)
 
         self.viewModel.checkLimitUpdatableStatus(limitType: LimitType.loss.identifier.lowercased(),
                                                  limitAmount: self.lossHeaderTextFieldView.text,
-                                                 limitPeriod: self.lossFrequencySelectHeaderTextFieldView.text,
                                                  isLimitUpdatable: isLossUpdatable)
+
+//        self.viewModel.checkLimitUpdatableStatus(limitType: LimitType.deposit.identifier.lowercased(),
+//                                                 limitAmount: self.depositHeaderTextFieldView.text,
+//                                                 limitPeriod: self.depositFrequencySelectTextFieldView.text,
+//                                                 isLimitUpdatable: isDepositUpdatable)
+//
+//        self.viewModel.checkLimitUpdatableStatus(limitType: LimitType.wagering.identifier.lowercased(),
+//                                                 limitAmount: self.bettingHeaderTextFieldView.text,
+//                                                 limitPeriod: self.bettingFrequencySelectTextFieldView.text,
+//                                                 isLimitUpdatable: isWageringUpdatable)
+//
+//        self.viewModel.checkLimitUpdatableStatus(limitType: LimitType.loss.identifier.lowercased(),
+//                                                 limitAmount: self.lossHeaderTextFieldView.text,
+//                                                 limitPeriod: self.lossFrequencySelectHeaderTextFieldView.text,
+//                                                 isLimitUpdatable: isLossUpdatable)
 
         self.saveLimitsOptions()
 
@@ -600,4 +870,9 @@ extension ProfileLimitsManagementViewController {
             self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor)
         ])
     }
+}
+
+enum PeriodValueTypeError {
+    case lowValue
+    case highValue
 }

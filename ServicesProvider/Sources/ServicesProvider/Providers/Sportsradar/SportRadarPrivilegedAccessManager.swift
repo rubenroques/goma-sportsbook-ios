@@ -264,6 +264,24 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         .eraseToAnyPublisher()
     }
 
+    func updateExtraInfo(placeOfBirth: String?, address2: String?) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.updateExtraInfo(placeOfBirth: placeOfBirth, address2: address2)
+
+        let publisher: AnyPublisher<SportRadarModels.BasicResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ basicResponse -> AnyPublisher<BasicResponse, ServiceProviderError> in
+            if basicResponse.status == "SUCCESS" {
+
+                let basicResponse = SportRadarModelMapper.basicResponse(fromInternalBasicResponse: basicResponse)
+
+                return Just(basicResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            return Fail(outputType: BasicResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+    }
+
     public func getCountries() -> AnyPublisher<[Country], ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.getCountries
@@ -345,6 +363,15 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
 
     }
 
+    func getPasswordPolicy() -> AnyPublisher<PasswordPolicy, ServiceProviderError> {
+
+        let passwordPolicy = PasswordPolicy(regularExpression: "", message: "Your password must be between 8-16 characters long, have uppercase and lowercase letters, a number and one special character.")
+
+        let publisher = Just(passwordPolicy).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
+        return publisher
+    }
+
     func updateWeeklyDepositLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError> {
         let endpoint = OmegaAPIClient.updateWeeklyDepositLimits(newLimit: newLimit)
         let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.connector.request(endpoint)
@@ -379,6 +406,58 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         .eraseToAnyPublisher()
     }
 
+    func getPersonalDepositLimits() -> AnyPublisher<PersonalDepositLimitResponse, ServiceProviderError> {
+        let endpoint = OmegaAPIClient.getPersonalDepositLimits
+        let publisher: AnyPublisher<SportRadarModels.PersonalDepositLimitResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ personalDepositLimitResponse -> AnyPublisher<PersonalDepositLimitResponse, ServiceProviderError> in
+            if personalDepositLimitResponse.status == "SUCCESS" {
+
+                let personalDepositLimitResponse = SportRadarModelMapper.personalDepositLimitsResponse(fromPersonalDepositLimitsResponse: personalDepositLimitResponse)
+
+                return Just(personalDepositLimitResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+
+            return Fail(outputType: PersonalDepositLimitResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+    }
+
+    func getLimits() -> AnyPublisher<LimitsResponse, ServiceProviderError> {
+        let endpoint = OmegaAPIClient.getLimits
+
+        let publisher: AnyPublisher<SportRadarModels.LimitsResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ limitsResponse -> AnyPublisher<LimitsResponse, ServiceProviderError> in
+            if limitsResponse.status == "SUCCESS" {
+
+                let limitsResponse = SportRadarModelMapper.limitsResponse(fromInternalLimitsResponse: limitsResponse)
+
+                return Just(limitsResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+
+            return Fail(outputType: LimitsResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+    }
+
+    func lockPlayer(isPermanent: Bool? = nil, lockPeriodUnit: String? = nil, lockPeriod: String? = nil) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+        let endpoint = OmegaAPIClient.lockPlayer(isPermanent: isPermanent, lockPeriodUnit: lockPeriodUnit, lockPeriod: lockPeriod)
+
+        let publisher: AnyPublisher<SportRadarModels.BasicResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ lockPlayerResponse -> AnyPublisher<BasicResponse, ServiceProviderError> in
+            if lockPlayerResponse.status == "SUCCESS" {
+
+                let lockPlayerResponse = SportRadarModelMapper.basicResponse(fromInternalBasicResponse: lockPlayerResponse)
+
+                return Just(lockPlayerResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+
+            return Fail(outputType: BasicResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+    }
 
     func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError> {
         let endpoint = OmegaAPIClient.getBalance
@@ -476,8 +555,9 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             multipart.add(key: "expiryDate", value: "2024-08-01")
             multipart.add(key: "documentNumber", value: "123456789")
         }
-        else if documentType == "Utility Bill " {
+        else if documentType == "OTHERS" {
             multipart.add(key: "expiryDate", value: "2024-08-01")
+            multipart.add(key: "documentNumber", value: "120123128")
         }
 
         let endpoint = OmegaAPIClient.uploadUserDocument(documentType: documentType, file: file, body: multipart.httpBody, header: multipart.httpContentTypeHeaderValue)
@@ -556,6 +636,25 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             }
             else {
                 return Fail(outputType: UpdatePaymentResponse.self, failure: ServiceProviderError.errorMessage(message: "Update Payment Error")).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+
+    func getTransactionsHistory() -> AnyPublisher<TransactionsHistoryResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.getTransactionsHistory
+        let publisher: AnyPublisher<SportRadarModels.TransactionsHistoryResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ transactionsHistoryResponse -> AnyPublisher<TransactionsHistoryResponse, ServiceProviderError> in
+            if transactionsHistoryResponse.status == "SUCCESS" {
+
+                let transactionsHistoryResponse = SportRadarModelMapper.transactionsHistoryResponse(fromTransactionsHistoryResponse: transactionsHistoryResponse)
+
+                return Just(transactionsHistoryResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
+            }
+            else {
+                return Fail(outputType: TransactionsHistoryResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
             }
         }).eraseToAnyPublisher()
     }

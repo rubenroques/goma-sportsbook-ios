@@ -110,28 +110,56 @@ class PasswordUpdateViewController: UIViewController {
         self.passwordPolicyLabel.text = localized("empty_value")
         self.passwordPolicyLabel.font = AppFont.with(type: .semibold, size: 12)
         self.passwordPolicyLabel.numberOfLines = 0
+        self.passwordPolicyLabel.isHidden = false
 
-        Publishers.CombineLatest3(self.oldPasswordHeaderTextFieldView.textPublisher,
+        Publishers.CombineLatest4(self.oldPasswordHeaderTextFieldView.textPublisher,
                                   self.newPasswordHeaderTextFieldView.textPublisher,
-                                  self.confirmPasswordHeaderTextFieldView.textPublisher)
-            .map { oldPassword, new, confirm in
-                if self.passwordRegex == "" {
+                                  self.confirmPasswordHeaderTextFieldView.textPublisher,
+                                  self.viewModel.passwordState)
+            .map { oldPassword, newPassword, confirmPassword, passwordState in
+
+                if let newPassword {
+                    self.viewModel.setPassword(newPassword)
+                }
+
+                if let newPassword,
+                   let confirmPassword {
+
+                    if passwordState == .valid && confirmPassword != newPassword {
+                        self.confirmPasswordHeaderTextFieldView.showErrorOnField(text: localized("password_not_match"))
+                    }
+                }
+
+//                if self.passwordRegex == "" {
+//
+//                    self.canSavePassword = false
+//
+//                    return false
+//                }
+
+                if (newPassword ?? "") != (confirmPassword ?? "") {
 
                     self.canSavePassword = false
 
                     return false
                 }
-                if oldPassword == "" ||
-                    new?.range(of: self.passwordRegex, options: .regularExpression) == nil ||
-                    confirm?.range(of: self.passwordRegex, options: .regularExpression) == nil {
+
+//                if oldPassword == "" ||
+//                    new?.range(of: self.passwordRegex, options: .regularExpression) == nil ||
+//                    confirm?.range(of: self.passwordRegex, options: .regularExpression) == nil {
+//
+//                    self.canSavePassword = false
+//
+//                    return false
+//                }
+                if oldPassword == "" {
 
                     self.canSavePassword = false
 
                     return false
                 }
-                if (new ?? "") != (confirm ?? "") {
-                    self.confirmPasswordHeaderTextFieldView.showErrorOnField(text: localized("password_not_match"))
 
+                if passwordState != .valid {
                     self.canSavePassword = false
 
                     return false
@@ -139,6 +167,7 @@ class PasswordUpdateViewController: UIViewController {
 
                 self.newPasswordHeaderTextFieldView.hideTipAndError()
                 self.confirmPasswordHeaderTextFieldView.hideTipAndError()
+                self.oldPasswordHeaderTextFieldView.hideTipAndError()
 
                 self.canSavePassword = true
 
@@ -231,7 +260,7 @@ class PasswordUpdateViewController: UIViewController {
             .sink(receiveValue: { [weak self] policy in
                 if let policy = policy {
 
-                    self?.passwordRegex = policy.regularExpression
+                    self?.passwordRegex = policy.regularExpression ?? ""
                     self?.passwordRegexMessage = policy.message
 
                     self?.passwordPolicyLabel.text = self?.passwordRegexMessage ?? ""
@@ -271,6 +300,52 @@ class PasswordUpdateViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+        viewModel.passwordState
+            .debounce(for: .seconds(1.5), scheduler: DispatchQueue.main)
+            .receive(on: DispatchQueue.main)
+            .sink { passwordState in
+                switch passwordState {
+                case .empty:
+                    self.newPasswordHeaderTextFieldView.hideTipAndError()
+                    self.passwordPolicyLabel.isHidden = false
+                case .short:
+                    self.newPasswordHeaderTextFieldView.showErrorOnField(text: "The password is too short", color: UIColor.App.inputError)
+                    self.passwordPolicyLabel.isHidden = true
+                case .long:
+                    self.newPasswordHeaderTextFieldView.showErrorOnField(text: "The password is too long", color: UIColor.App.inputError)
+                    self.passwordPolicyLabel.isHidden = true
+
+                case  .invalidChars:
+                    self.newPasswordHeaderTextFieldView.showErrorOnField(text: "The password contains invalids characters", color: UIColor.App.inputError)
+                    self.passwordPolicyLabel.isHidden = true
+
+                case .onlyNumbers:
+                    self.newPasswordHeaderTextFieldView.showErrorOnField(text: "The password can not be all numbers", color: UIColor.App.inputError)
+                    self.passwordPolicyLabel.isHidden = true
+
+                case .needUppercase:
+                    self.newPasswordHeaderTextFieldView.showErrorOnField(text: "The password must contain an uppercase letter", color: UIColor.App.inputError)
+                    self.passwordPolicyLabel.isHidden = true
+
+                case .needLowercase:
+                    self.newPasswordHeaderTextFieldView.showErrorOnField(text: "The password must contain a lowercase letter", color: UIColor.App.inputError)
+                    self.passwordPolicyLabel.isHidden = true
+
+                case .needNumber:
+                    self.newPasswordHeaderTextFieldView.showErrorOnField(text: "The password must contain a number", color: UIColor.App.inputError)
+                    self.passwordPolicyLabel.isHidden = true
+
+                case .needSpecial:
+                    self.newPasswordHeaderTextFieldView.showErrorOnField(text: "The password must contain a special character (-!@$^&*)", color: UIColor.App.inputError)
+                    self.passwordPolicyLabel.isHidden = true
+
+                case .valid:
+                    self.newPasswordHeaderTextFieldView.hideTipAndError()
+                    self.passwordPolicyLabel.isHidden = true
+                }
+            }
+            .store(in: &self.cancellables)
     }
 
     private func setupProfileSecurity(profile: EveryMatrix.UserProfile) {
@@ -352,15 +427,15 @@ class PasswordUpdateViewController: UIViewController {
         newPasswordHeaderTextFieldView.hideTipAndError()
         confirmPasswordHeaderTextFieldView.hideTipAndError()
 
-        if newPasswordHeaderTextFieldView.text.range(of: self.passwordRegex, options: .regularExpression) == nil {
-            newPasswordHeaderTextFieldView.showErrorOnField(text: self.passwordRegexMessage)
-            validFields = false
-        }
-
-        if confirmPasswordHeaderTextFieldView.text.range(of: self.passwordRegex, options: .regularExpression) == nil {
-            confirmPasswordHeaderTextFieldView.showErrorOnField(text: self.passwordRegexMessage)
-            validFields = false
-        }
+//        if newPasswordHeaderTextFieldView.text.range(of: self.passwordRegex, options: .regularExpression) == nil {
+//            newPasswordHeaderTextFieldView.showErrorOnField(text: self.passwordRegexMessage)
+//            validFields = false
+//        }
+//
+//        if confirmPasswordHeaderTextFieldView.text.range(of: self.passwordRegex, options: .regularExpression) == nil {
+//            confirmPasswordHeaderTextFieldView.showErrorOnField(text: self.passwordRegexMessage)
+//            validFields = false
+//        }
 
         if validFields {
             self.viewModel.savePassword(oldPassword: oldPasswordHeaderTextFieldView.text,
@@ -371,8 +446,8 @@ class PasswordUpdateViewController: UIViewController {
 
     private func saveSecurityInfo() {
 
-        self.viewModel.saveSecurityInfo(securityQuestion: self.securityQuestionHeaderTextFieldView.text,
-                                        securityAnswer: self.securityAnswerHeaderTextFieldView.text)
+//        self.viewModel.saveSecurityInfo(securityQuestion: self.securityQuestionHeaderTextFieldView.text,
+//                                        securityAnswer: self.securityAnswerHeaderTextFieldView.text)
 
     }
 

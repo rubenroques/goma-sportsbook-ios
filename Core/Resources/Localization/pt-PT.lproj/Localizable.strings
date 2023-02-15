@@ -324,6 +324,7 @@ Terms of use, Privacy Policy and EULA";
 "active" = "Active";
 "limited" = "Limited";
 "permanent" = "Permanent";
+"not_excluded" = "Not Excluded";
 "suggested_country" = "Suggested Country";
 "available_countries" = "Available Countries";
 "suggested_bets" = "Here are your Suggested Bets!";
@@ -655,8 +656,29 @@ Terms of use, Privacy Policy and EULA";
 "identification" = "Identification";
 "proof_of_address" = "Proof of address";
 
+"pending_approved" = "Pending Approved";
+"approved" = "Approved";
+"failed" = "Failed";
+"pending" = "Pending";
+
 "document_validation_required" = "Document Validation Required";
 "document_validation_required_description" = "To access all features of our platform, we require you to submit your valid documents for verification.";
 "complete_verification" = "Complete your verification";
 
 "payments" = "Payments";
+"place_of_birth" = "Place of Birth";
+"gender" = "Gender";
+
+"weekly_deposit_limit" = "Weekly Deposit Limit";
+"weekly_betting_limit" = "Weekly Betting Limit";
+"auto_payout" = "Auto Payout";
+"period_type_value" = "Period Type and Value";
+"period_value" = "Period Value";
+"days" = "Days";
+"weeks" = "Weeks";
+"months" = "Months";
+"invalid_period_value" = "Invalid Period Value";
+"auto_payout_limit" = "Auto Payout Limit";
+"custom" = "Custom";
+
+"password_policy" = "Your password must be between 8-16 characters long, have uppercase and lowercase letters, a number and one special character.";

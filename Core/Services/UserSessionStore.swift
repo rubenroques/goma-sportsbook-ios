@@ -209,13 +209,6 @@ class UserSessionStore {
             })
             .map { (userProfile: UserProfile) -> UserSession in
                 self.userProfilePublisher.send(userProfile)
-
-                if userProfile.kycStatus == "PASS" {
-                    self.isUserKycVerified.send(true)
-                }
-                else {
-                    self.isUserKycVerified.send(false)
-                }
                 
                 return UserSession(username: userProfile.username,
                                    password: password,
@@ -224,7 +217,8 @@ class UserSessionStore {
                                    birthDate: userProfile.birthDate.toString(),
                                    isEmailVerified: userProfile.isEmailVerified,
                                    isProfileCompleted: userProfile.isRegistrationCompleted,
-                                   avatarName: userProfile.avatarName)
+                                   avatarName: userProfile.avatarName,
+                                   isKycVerified: userProfile.kycStatus == "PASS" ? true : false)
             }
             .handleEvents(receiveOutput: { [weak self] userSession in
                 self?.saveUserSession(userSession)
@@ -234,6 +228,7 @@ class UserSessionStore {
                 
                 Env.userSessionStore.isUserProfileComplete.send(userSession.isProfileCompleted)
                 Env.userSessionStore.isUserEmailVerified.send(userSession.isEmailVerified)
+                Env.userSessionStore.isUserKycVerified.send(userSession.isKycVerified)
             })
             .eraseToAnyPublisher()
         
@@ -427,7 +422,7 @@ extension UserSessionStore {
                 }
                 self?.isLoadingUserSessionPublisher.send(false)
             }, receiveValue: { loggedUser in
-                // Env.favoritesManager.getUserFavorites()
+                Env.favoritesManager.getUserFavorites()
             })
             .store(in: &cancellables)
     }

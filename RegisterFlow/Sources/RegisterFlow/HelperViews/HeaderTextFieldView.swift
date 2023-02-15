@@ -578,7 +578,7 @@ extension HeaderTextFieldView: UITextFieldDelegate {
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if self.isCurrencyMode {
-            let decimals = CharacterSet(charactersIn: "0123456789.")
+            let decimals = CharacterSet(charactersIn: "0123456789.,")
             if string.rangeOfCharacter(from: decimals) == nil && string != "" {
                 return false
             }

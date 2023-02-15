@@ -476,6 +476,7 @@ public struct ProcessDepositResponse: Codable {
     public var continueUrl: String?
     public var clientKey: String?
     public var sessionId: String?
+    public var sessionData: String?
     public var message: String?
 
     enum CodingKeys: String, CodingKey {
@@ -484,6 +485,7 @@ public struct ProcessDepositResponse: Codable {
         case continueUrl = "continueUrl"
         case clientKey = "clientKey"
         case sessionId = "sessionId"
+        case sessionData = "sessionData"
         case message = "message"
     }
 }
@@ -509,5 +511,103 @@ public struct UpdatePaymentAction: Codable {
         case url = "url"
         case method = "method"
         case type = "type"
+    }
+}
+
+public struct PersonalDepositLimitResponse: Codable {
+
+    public var status: String
+    public var dailyLimit: String?
+    public var weeklyLimit: String?
+    public var monthlyLimit: String?
+    public var currency: String
+    public var hasPendingWeeklyLimit: String?
+    public var pendingWeeklyLimit: String?
+    public var pendingWeeklyLimitEffectiveDate: String?
+
+    enum CodingKeys: String, CodingKey {
+        case status = "status"
+        case dailyLimit = "dailyLimit"
+        case weeklyLimit = "weeklyLimit"
+        case monthlyLimit = "monthlyLimit"
+        case currency = "currency"
+        case hasPendingWeeklyLimit = "hasPendingWeeklyLimit"
+        case pendingWeeklyLimit = "pendingWeeklyLimit"
+        case pendingWeeklyLimitEffectiveDate = "pendingWeeklyLimitEffectiveDate"
+    }
+}
+
+public struct LimitsResponse: Codable {
+
+    public var status: String
+    public var wagerLimit: String?
+    public var lossLimit: String?
+    public var currency: String
+    public var pendingWagerLimit: LimitPending?
+
+    enum CodingKeys: String, CodingKey {
+        case status = "status"
+        case wagerLimit = "wagerLimit"
+        case lossLimit = "lossLimit"
+        case currency = "currency"
+        case pendingWagerLimit = "pendingWagerLimit"
+    }
+}
+
+public struct LimitPending: Codable {
+    public var effectiveDate: String
+    public var limit: String
+    public var limitNumber: Double
+
+    enum CodingKeys: String, CodingKey {
+        case effectiveDate = "effectiveDate"
+        case limit = "limit"
+        case limitNumber = "limitNumber"
+    }
+}
+
+public struct Limit {
+    public var updatable: Bool
+    public var current: LimitInfo?
+    public var queued: LimitInfo?
+
+    public init(updatable: Bool, current: LimitInfo?, queued: LimitInfo?) {
+        self.updatable = updatable
+        self.current = current
+        self.queued = queued
+    }
+}
+
+public struct LimitInfo {
+    public var period: String
+    public var currency: String
+    public var amount: Double
+    public var expiryDate: String?
+
+    public init(period: String, currency: String, amount: Double, expiryDate: String? = nil) {
+        self.period = period
+        self.currency = currency
+        self.amount = amount
+        self.expiryDate = expiryDate
+    }
+}
+
+public struct BasicResponse: Codable {
+    public var status: String
+    public var message: String?
+
+    enum CodingKeys: String, CodingKey {
+        case status = "status"
+        case message = "message"
+    }
+}
+
+public struct PasswordPolicy {
+    public var regularExpression: String?
+    public var message: String
+
+    public init(regularExpression: String? = nil, message: String) {
+        self.regularExpression = regularExpression
+        self.message = message
     }
 }

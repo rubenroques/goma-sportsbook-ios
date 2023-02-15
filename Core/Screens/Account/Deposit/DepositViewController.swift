@@ -10,8 +10,7 @@ import Combine
 import ServicesProvider
 import Adyen
 import AdyenDropIn
-// import AdyenActions
-// import AdyenComponents
+import AdyenComponents
 
 class DepositViewController: UIViewController {
 
@@ -206,10 +205,7 @@ class DepositViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] shouldShow in
                 if shouldShow {
-                    if let paymentsMethodResponse = viewModel.paymentMethodsResponse,
-                       let clientKey = viewModel.clientKey {
-                        self?.setupPaymentDropIn(paymentMethodsResponse: paymentsMethodResponse, clientKey: clientKey)
-                    }
+                    self?.getPaymentDropIn()
                 }
             })
             .store(in: &cancellables)
@@ -225,26 +221,15 @@ class DepositViewController: UIViewController {
             .store(in: &cancellables)
     }
 
-    private func setupPaymentDropIn(paymentMethodsResponse: ServicesProvider.SimplePaymentMethodsResponse, clientKey: String) {
+    private func getPaymentDropIn() {
 
-        if let apiContext = try? APIContext(environment: Adyen.Environment.test, clientKey: clientKey) {
+        if let paymentDropIn = self.viewModel.paymentsDropIn.setupPaymentDropIn() {
 
-            if let paymentResponseData = try? JSONEncoder().encode(paymentMethodsResponse),
-                let paymentMethods = try? JSONDecoder().decode(PaymentMethods.self, from: paymentResponseData) {
+            self.dropInComponent = paymentDropIn
 
-                // Optional Payment
-                let payment = Payment(amount: Amount(value: Int(self.viewModel.dropInDepositAmount) ?? 0, currencyCode: "EUR"), countryCode: "PT")
-
-                let dropInComponent = DropInComponent(paymentMethods: paymentMethods, context: AdyenContext(apiContext: apiContext, payment: payment))
-
-                dropInComponent.delegate = self
-
-                self.dropInComponent = dropInComponent
-
-                present(dropInComponent.viewController, animated: true)
-            }
-
+            present(paymentDropIn.viewController, animated: true)
         }
+
     }
 
     private func createPaymentsLogosImageViews() {
@@ -560,75 +545,4 @@ enum BalanceErrorType {
     case deposit
     case withdraw
     case error(message: String)
-}
-
-extension DepositViewController: DropInComponentDelegate {
-    func didSubmit(_ data: Adyen.PaymentComponentData, from component: Adyen.PaymentComponent, in dropInComponent: Adyen.AnyDropInComponent) {
-
-        if let paymentIssuerType = data.paymentMethod.dictionary.value?["type"],
-           let paymentId = self.viewModel.paymentId {
-
-            let paymentIssuer = "\(paymentIssuerType)"
-            let amount = self.viewModel.depositAmount
-
-            Env.servicesProvider.updatePayment(paymentMethod: "ADYEN_IDEAL", amount: amount, paymentId: paymentId, type: "ideal", issuer: paymentIssuer)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { [weak self] completion in
-                    switch completion {
-                    case .finished:
-                        ()
-                    case .failure(let error):
-                        print("UPDATE PAYMENT RESPONSE ERROR: \(error)")
-                        switch error {
-                        case .errorMessage(let message):
-                            self?.showErrorAlert(errorType: .error(message: message))
-                        default:
-                            ()
-                        }
-                    }
-
-                }, receiveValue: { [weak self] updatePaymentResponse in
-                    print("UPDATE PAYMENT RESPONSE: \(updatePaymentResponse)")
-                })
-                .store(in: &cancellables)
-        }
-
-
-
-    }
-
-    func didFail(with error: Error, from component: Adyen.PaymentComponent, in dropInComponent: Adyen.AnyDropInComponent) {
-
-        print("PAYMENT FAIL: \(error)")
-
-        dropInComponent.viewController.dismiss(animated: true)
-
-    }
-
-    func didProvide(_ data: Adyen.ActionComponentData, from component: Adyen.ActionComponent, in dropInComponent: Adyen.AnyDropInComponent) {
-
-        print("PAYMENT PROVIDE: \(data)")
-
-    }
-
-    func didComplete(from component: Adyen.ActionComponent, in dropInComponent: Adyen.AnyDropInComponent) {
-
-        print("PAYMENT COMPLETE")
-
-    }
-
-    func didFail(with error: Error, from component: Adyen.ActionComponent, in dropInComponent: Adyen.AnyDropInComponent) {
-
-        print("PAYMENT FAIL 2: \(error)")
-
-    }
-
-    func didFail(with error: Error, from dropInComponent: Adyen.AnyDropInComponent) {
-
-        print("PAYMENT FAIL FULL: \(error)")
-
-        dropInComponent.viewController.dismiss(animated: true)
-
-    }
-
 }

@@ -77,16 +77,13 @@ class UploadDocumentsViewModel {
                 case .finished:
                     ()
                 case .failure(let error):
-                    print("DOCUMENT TYPES RESPONSE ERROR: \(error)")
                     self?.isLoadingPublisher.send(false)
                 }
 
             }, receiveValue: { [weak self] documentTypesResponse in
 
-                print("DOCUMENT TYPES RESPONSE: \(documentTypesResponse)")
-
                 let requiredDocumentTypes = documentTypesResponse.documentTypes.filter({
-                    $0.documentType == "IDENTITY_CARD" || $0.documentType == "Utility Bill "
+                    $0.documentType == "IDENTITY_CARD" || $0.documentType == "OTHERS"
                 })
 
                 self?.requiredDocumentTypes.append(contentsOf: requiredDocumentTypes)
@@ -107,7 +104,6 @@ class UploadDocumentsViewModel {
                 case .finished:
                     ()
                 case .failure(let error):
-                    print("USER DOCUMENTS RESPONSE ERROR: \(error)")
                     self?.isLoadingPublisher.send(false)
                 }
 
@@ -137,7 +133,7 @@ class UploadDocumentsViewModel {
 
                 let userDocumentStatus = FileState(code: userDocument.status)
 
-                return DocumentFileInfo(id: userDocument.documentType, name: userDocument.fileName ?? "", status: userDocumentStatus ?? .pendingApproved)
+                return DocumentFileInfo(id: userDocument.documentType, name: userDocument.fileName, status: userDocumentStatus ?? .pendingApproved)
             })
 
             let documentInfo = DocumentInfo(id: documentType.documentType,

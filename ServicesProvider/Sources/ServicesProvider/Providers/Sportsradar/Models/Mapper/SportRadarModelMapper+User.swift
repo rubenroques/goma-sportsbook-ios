@@ -186,7 +186,8 @@ extension SportRadarModelMapper {
 
     static func processDepositResponse(fromProcessDepositResponse internalProcessDepositResponse: SportRadarModels.ProcessDepositResponse) -> ProcessDepositResponse {
 
-        return ProcessDepositResponse(status: internalProcessDepositResponse.status, paymentId: internalProcessDepositResponse.paymentId, continueUrl: internalProcessDepositResponse.continueUrl, clientKey: internalProcessDepositResponse.clientKey, sessionId: internalProcessDepositResponse.sessionId)
+        return ProcessDepositResponse(status: internalProcessDepositResponse.status, paymentId: internalProcessDepositResponse.paymentId, continueUrl: internalProcessDepositResponse.continueUrl, clientKey: internalProcessDepositResponse.clientKey, sessionId: internalProcessDepositResponse.sessionId,
+                                      sessionData: internalProcessDepositResponse.sessionData)
     }
 
     static func updatePaymentResponse(fromUpdatePaymentResponse internalUpdatePaymentResponse: SportRadarModels.UpdatePaymentResponse) -> UpdatePaymentResponse {
@@ -199,6 +200,64 @@ extension SportRadarModelMapper {
         return UpdatePaymentAction(paymentMethodType: internalUpdatePaymentAction.paymentMethodType, url: internalUpdatePaymentAction.url, method: internalUpdatePaymentAction.method, type: internalUpdatePaymentAction.type)
     }
 
+    static func personalDepositLimitsResponse(fromPersonalDepositLimitsResponse internalPersonalDepositLimitsResponse: SportRadarModels.PersonalDepositLimitResponse) -> PersonalDepositLimitResponse {
+
+        return PersonalDepositLimitResponse(status: internalPersonalDepositLimitsResponse.status, dailyLimit: internalPersonalDepositLimitsResponse.dailyLimit, weeklyLimit: internalPersonalDepositLimitsResponse.weeklyLimit, monthlyLimit: internalPersonalDepositLimitsResponse.monthlyLimit, currency: internalPersonalDepositLimitsResponse.currency,
+                                            hasPendingWeeklyLimit: internalPersonalDepositLimitsResponse.hasPendingWeeklyLimit,
+                                            pendingWeeklyLimit: internalPersonalDepositLimitsResponse.pendingWeeklyLimit,
+                                            pendingWeeklyLimitEffectiveDate: internalPersonalDepositLimitsResponse.pendingWeeklyLimitEffectiveDate)
+    }
+
+    static func limitsResponse(fromInternalLimitsResponse internalLimitsResponse: SportRadarModels.LimitsResponse) -> LimitsResponse {
+
+        if let limitPending = internalLimitsResponse.pendingWagerLimit {
+
+            return LimitsResponse(status: internalLimitsResponse.status, wagerLimit: internalLimitsResponse.wagerLimit, lossLimit: internalLimitsResponse.lossLimit, currency: internalLimitsResponse.currency,
+                                  pendingWagerLimit: Self.limitPending(fromInternalLimitPending: limitPending))
+        }
+
+        return LimitsResponse(status: internalLimitsResponse.status, wagerLimit: internalLimitsResponse.wagerLimit, lossLimit: internalLimitsResponse.lossLimit, currency: internalLimitsResponse.currency,
+                              pendingWagerLimit: nil)
+    }
+
+    static func limitPending(fromInternalLimitPending internalLimitPending: SportRadarModels.LimitPending) -> LimitPending {
+
+        return LimitPending(effectiveDate: internalLimitPending.effectiveDate, limit: internalLimitPending.limit, limitNumber: internalLimitPending.limitNumber)
+    }
+
+    static func basicResponse(fromInternalBasicResponse internalBasicResponse: SportRadarModels.BasicResponse) -> BasicResponse {
+
+        return BasicResponse(status: internalBasicResponse.status, message: internalBasicResponse.message)
+    }
+
+    static func transactionsHistoryResponse(fromTransactionsHistoryResponse internalTransactionsHistoryResponse: SportRadarModels.TransactionsHistoryResponse) -> TransactionsHistoryResponse {
+
+        if let transactionDetails = internalTransactionsHistoryResponse.transactions {
+
+            let transactions = transactionDetails.map({ transactionDetail -> TransactionDetail in
+                let transactionDetail = Self.transactionDetail(fromInternalTransactionDetail: transactionDetail)
+
+                return transactionDetail
+
+            })
+
+            return TransactionsHistoryResponse(status: internalTransactionsHistoryResponse.status, transactions: transactions)
+        }
+
+        return TransactionsHistoryResponse(status: internalTransactionsHistoryResponse.status, transactions: [])
+    }
+
+    static func transactionDetail(fromInternalTransactionDetail internalTransactionDetail: SportRadarModels.TransactionDetail) -> TransactionDetail {
+
+        return TransactionDetail(id: internalTransactionDetail.id,
+                                 timestamp: internalTransactionDetail.timestamp,
+                                 type: internalTransactionDetail.type,
+                                 amount: internalTransactionDetail.amount,
+                                 postBalance: internalTransactionDetail.postBalance,
+                                 amountBonus: internalTransactionDetail.amountBonus,
+                                 postBalanceBonus: internalTransactionDetail.postBalanceBonus,
+                                 currency: internalTransactionDetail.currency)
+    }
 }
 
 

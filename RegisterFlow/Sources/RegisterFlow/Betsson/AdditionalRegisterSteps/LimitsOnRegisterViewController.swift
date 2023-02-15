@@ -164,8 +164,8 @@ public class LimitsOnRegisterViewController: UIViewController {
         self.cancelButton.addTarget(self, action: #selector(didTapCancelButton), for: .primaryActionTriggered)
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
-        self.depositLimitHeaderTextFieldView.setPlaceholderText("Deposit Limit")
-        self.bettingLimitHeaderTextFieldView.setPlaceholderText("Betting Limit")
+        self.depositLimitHeaderTextFieldView.setPlaceholderText("Weekly Deposit Limit")
+        self.bettingLimitHeaderTextFieldView.setPlaceholderText("Weekly Betting Limit")
         self.autoPayoutHeaderTextFieldView.setPlaceholderText("Auto Payout")
 
         self.depositLimitHeaderTextFieldView.setKeyboardType(.numbersAndPunctuation)

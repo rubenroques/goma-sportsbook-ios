@@ -156,6 +156,8 @@ class DropDownSelectionView: UIView {
         self.textField.text = self.selectionArray[defaultValue]
         self.textLabel.text = self.selectionArray[defaultValue]
 
+        self.textPublisher.send(self.selectionArray[defaultValue])
+        
         self.dismissPickerView()
     }
     

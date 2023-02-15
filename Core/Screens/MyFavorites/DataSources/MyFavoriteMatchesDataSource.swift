@@ -142,7 +142,7 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
 
             if let favoriteMatch = self.userFavoritesBySportsArray[section].matches.first {
 
-                let sportName = favoriteMatch.sportName ?? ""
+                let sportName = favoriteMatch.sportName ?? favoriteMatch.sportType
                 let sportTypeId = favoriteMatch.sportType
 
                 headerView.configureHeader(title: sportName, sportTypeId: sportTypeId)
