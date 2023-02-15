@@ -59,7 +59,8 @@ extension SportRadarModels {
             self.competitionName = container.contains(.competitionName) ? try container.decode(String.self, forKey: .competitionName) : nil
             self.sportTypeName = container.contains(.sportTypeName) ? try container.decode(String.self, forKey: .sportTypeName) : nil
             self.markets = container.contains(.markets) ? try container.decode([Market].self, forKey: .markets) : nil
-            self.numberMarkets = container.contains(.numberMarkets) ? try container.decode(Int.self, forKey: .numberMarkets) : nil
+
+            self.numberMarkets = container.contains(.numberMarkets) ? try container.decode(Int.self, forKey: .numberMarkets) : self.markets?.first?.eventMarketCount
 
             self.tournamentCountryName = try container.decodeIfPresent(String.self, forKey: .tournamentCountryName)
 

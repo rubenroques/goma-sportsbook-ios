@@ -33,7 +33,7 @@ extension ServiceProviderModelMapper {
                                      date: event.startDate,
                                      sportType: event.sportTypeName,
                                      venue: venue,
-                                     numberTotalOfMarkets: event.eventMarketCount,
+                                     numberTotalOfMarkets: event.numberMarkets ?? 0,
                                      markets: Self.markets(fromServiceProviderMarkets: event.markets),
                                      rootPartId: ""))
             }
