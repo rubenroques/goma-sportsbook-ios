@@ -912,22 +912,6 @@ extension SportRadarEventsProvider {
             }
         }
 
-        // TODO: TASK André - Falar com o pedro sobre este merge
-        // Merge Football and Soccer - TEMP
-        if uniqueSportsArray.contains(where: { $0.name == "Soccer" }),
-           let soccerSportType = uniqueSportsArray.filter({ $0.name == "Soccer" }).first,
-           let footballIndex = uniqueSportsArray.firstIndex(where: { $0.name == "Football" }) {
-
-            let newSport = SportRadarModels.SportType(name: uniqueSportsArray[footballIndex].name,
-                                                      numericId: uniqueSportsArray[footballIndex].numericId,
-                                                      alphaId: soccerSportType.alphaId,
-                                                      numberEvents: uniqueSportsArray[footballIndex].numberEvents,
-                                                      numberOutrightEvents: uniqueSportsArray[footballIndex].numberOutrightEvents,
-                                                      numberOutrightMarkets: uniqueSportsArray[footballIndex].numberOutrightMarkets)
-
-            uniqueSportsArray[footballIndex] = newSport
-            uniqueSportsArray.removeAll(where: {$0 == soccerSportType})
-        }
         return uniqueSportsArray
     }
 

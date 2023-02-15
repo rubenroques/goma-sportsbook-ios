@@ -33,33 +33,13 @@ extension ServiceProviderModelMapper {
                                      date: event.startDate,
                                      sportType: event.sportTypeName,
                                      venue: venue,
-                                     numberTotalOfMarkets: 1,
+                                     numberTotalOfMarkets: event.numberMarkets ?? 0,
                                      markets: Self.markets(fromServiceProviderMarkets: event.markets),
                                      rootPartId: ""))
             }
         }
         return matches
     }
-
-//    static func matches(fromEvents events: [Event]) -> [Match] {
-//        var matches = [Match]()
-//
-//        for event in events {
-//            matches.append(Match(id: event.id,
-//                                 competitionId: event.competitionId,
-//                                 competitionName: event.competitionName,
-//                                 homeParticipant: Participant(id: "", name: event.homeTeamName),
-//                                 awayParticipant: Participant(id: "", name: event.awayTeamName),
-//                                 date: event.startDate,
-//                                 sportType: event.sportTypeName,
-//                                 numberTotalOfMarkets: 1,
-//                                 markets: Self.markets(fromServiceProviderMarkets: event.markets),
-//                                 rootPartId: "")
-//            )
-//        }
-//
-//        return matches
-//    }
 
     static func match(fromEventGroup eventGroup: EventsGroup) -> Match? {
         if let event = eventGroup.events[safe: 0] {
@@ -77,7 +57,7 @@ extension ServiceProviderModelMapper {
                               date: event.startDate,
                               sportType: event.sportTypeName,
                               venue: venue,
-                              numberTotalOfMarkets: 1,
+                              numberTotalOfMarkets: event.numberMarkets ?? 0,
                               markets: Self.markets(fromServiceProviderMarkets: event.markets),
                               rootPartId: "")
             return match
@@ -102,7 +82,7 @@ extension ServiceProviderModelMapper {
                           date: event.startDate,
                           sportType: event.sportTypeName,
                           venue: venue,
-                          numberTotalOfMarkets: 1,
+                          numberTotalOfMarkets: event.numberMarkets ?? 0,
                           markets: Self.markets(fromServiceProviderMarkets: event.markets),
                           rootPartId: "")
         return match
@@ -135,7 +115,8 @@ extension ServiceProviderModelMapper {
                       outcomes: Self.outcomes(fromServiceProviderOutcomes: market.outcomes),
                       marketTypeId: market.marketTypeId,
                       eventName: market.eventName,
-                      isMainOutright: market.isMainOutright)
+                      isMainOutright: market.isMainOutright,
+                      eventMarketCount: market.eventMarketCount)
     }
 
     static func optionalMarkets(fromServiceProviderMarkets markets: [ServicesProvider.Market]?) -> [Market]? {

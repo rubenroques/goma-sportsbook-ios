@@ -57,7 +57,7 @@ class MarketGroupDetailsViewController: UIViewController {
         self.tableView.register(ThreeAwayMarketDetailTableViewCell.nib, forCellReuseIdentifier: ThreeAwayMarketDetailTableViewCell.identifier)
         self.tableView.register(OverUnderMarketDetailTableViewCell.nib, forCellReuseIdentifier: OverUnderMarketDetailTableViewCell.identifier)
 
-        self.tableView.bounces = false
+//        self.tableView.bounces = false
 
         self.showLoading()
 
@@ -306,6 +306,8 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
         let scrollViewTop = scrollView.frame.origin.y
+        let currentYPosition = scrollView.contentOffset.y
+        let currentBottomYPosition = scrollView.frame.size.height + currentYPosition
 
         if scrollViewTop == scrollView.contentOffset.y && self.lastContentOffset != 0 {
             self.shouldScrollToTop?(true)
@@ -313,6 +315,16 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
         }
         else if self.lastContentOffset > scrollViewTop {
             self.shouldScrollToTop?(false)
+        }
+
+        if scrollView.contentOffset.y > self.lastContentOffset {
+            self.tableView.bounces = true
+        }
+        else {
+            if currentBottomYPosition < scrollView.contentSize.height + scrollView.contentInset.bottom {
+
+                self.tableView.bounces = false
+            }
         }
 
         self.lastContentOffset = scrollView.contentOffset.y

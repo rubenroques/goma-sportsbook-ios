@@ -48,7 +48,7 @@ extension SportRadarModelMapper {
                            province: playerInfoResponse.province,
                            city: playerInfoResponse.city,
                            postalCode: playerInfoResponse.postalCode,
-                           emailVerificationStatus: EmailVerificationStatus(fromStringKey:  playerInfoResponse.emailVerificationStatus),
+                           emailVerificationStatus: EmailVerificationStatus(fromStringKey:  playerInfoResponse.emailVerificationStatus.uppercased()),
                            userRegistrationStatus: userRegistrationStatus,
                            avatarName: avatarName,
                            godfatherCode: godfatherCode,
