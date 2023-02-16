@@ -483,8 +483,43 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
 
     func liveSportsUpdated(withSportTypes sportTypes: [SportRadarModels.SportType]) {
         if let liveSportTypesPublisher = self.liveSportTypesPublisher {
-            let sports = sportTypes.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
-            liveSportTypesPublisher.send(.contentUpdate(content: sports))
+
+            let externalSports = sportTypes.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
+
+            // Navigation Sports
+            let sportsEndpoint = SportRadarRestAPIClient.sportsBoNavigationList
+            let sportsRequestPublisher: AnyPublisher<SportRadarModels.RestResponse<SportRadarModels.SportsList>, ServiceProviderError> = self.restConnector.request(sportsEndpoint)
+            sportsRequestPublisher
+                .sink { _ in
+
+                } receiveValue: { numericSports in
+                    var compleatedExternalSportTypes = [SportType]()
+                    let newNumericSports = (numericSports.data?.sportNodes ?? []).map(SportRadarModelMapper.sportType(fromSportNode:))
+                    for externalSport in externalSports {
+                        var numericSportId: String?
+                        for numericSport in newNumericSports { // Try to find a numeric Id from the boNavigationList of sports
+                            if externalSport.name.lowercased() == numericSport.name.lowercased() {
+                                numericSportId = numericSport.numericId
+                            }
+                        }
+
+                        let compleatedExternalSportType = SportType(name: externalSport.name,
+                                  numericId: numericSportId,
+                                  alphaId: externalSport.alphaId,
+                                  iconId: externalSport.iconId,
+                                  showEventCategory: externalSport.showEventCategory,
+                                  numberEvents: externalSport.numberEvents,
+                                  numberOutrightEvents: externalSport.numberOutrightEvents,
+                                  numberOutrightMarkets: externalSport.numberOutrightMarkets)
+
+                        compleatedExternalSportTypes.append(compleatedExternalSportType)
+
+                    }
+
+                    liveSportTypesPublisher.send(.contentUpdate(content: compleatedExternalSportTypes))
+                }
+                .store(in: &self.cancellables)
+
         }
     }
 
@@ -578,7 +613,6 @@ extension SportRadarEventsProvider {
 
         })
         .eraseToAnyPublisher()
-
 
     }
 

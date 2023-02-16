@@ -144,16 +144,6 @@ class PreLiveEventsViewController: UIViewController {
             self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
         }
 
-//        self.viewModel.didTapFavoriteMatchAction = { match in
-//            if !UserSessionStore.isUserLogged(){
-//                self.presentLoginViewController()
-//            }
-//            else{
-//                self.viewModel.markAsFavorite(match: match)
-//                self.tableView.reloadData()
-//            }
-//        }
-
         self.viewModel.didSelectCompetitionAction = { competition in
             let viewModel = OutrightMarketDetailsViewModel(competition: competition, store: OutrightMarketDetailsStore())
             let outrightMarketDetailsViewController = OutrightMarketDetailsViewController(viewModel: viewModel)
@@ -162,15 +152,6 @@ class PreLiveEventsViewController: UIViewController {
 
         self.tableView.isHidden = false
         self.emptyBaseView.isHidden = true
-
-//        self.viewModel.isUserLoggedPublisher.receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] isLogged in
-//                if !isLogged {
-//                    let loginViewController = Router.navigationController(with: LoginViewController())
-//                    self?.present(loginViewController, animated: true, completion: nil)
-//                }
-//            })
-//            .store(in: &self.cancellables)
 
         self.viewModel.didLongPressOddAction = { [weak self] bettingTicket in
             self?.openQuickbet(bettingTicket)
@@ -385,30 +366,38 @@ class PreLiveEventsViewController: UIViewController {
 //            }
 //            .store(in: &cancellables)
 
-        self.viewModel.isLoadingEvents
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] isLoadingEvents in
-                self?.loadingBaseView.isHidden = !isLoadingEvents
-                if !isLoadingEvents {
-                    self?.refreshControl.endRefreshing()
-                }
-            })
-            .store(in: &cancellables)
+//        self.viewModel.isLoadingEvents
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] isLoadingEvents in
+//
+//            })
+//            .store(in: &cancellables)
 
         self.viewModel.dataChangedPublisher
-            .receive(on: DispatchQueue.main).sink(receiveValue: { [weak self] in
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                print("SB-DEBUG dataChangedPublisher reloadData")
                 self?.reloadData()
             })
             .store(in: &cancellables)
 
-        Publishers.CombineLatest(self.viewModel.screenStatePublisher, self.viewModel.isLoading)
+        Publishers.CombineLatest(self.viewModel.screenStatePublisher, self.viewModel.isLoadingEvents)
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] screenState, isLoading in
+            .sink(receiveValue: { [weak self] screenState, isLoadingEvents in
 
-                if isLoading {
+                if isLoadingEvents {
+                    self?.loadingBaseView.isHidden = false
+                    self?.loadingView.startAnimating()
+
                     self?.emptyBaseView.isHidden = true
                     self?.tableView.isHidden = false
                     return
+                }
+                else {
+                    self?.loadingView.stopAnimating()
+                    self?.loadingBaseView.isHidden = true
+
+                    self?.refreshControl.endRefreshing()
                 }
 
                 switch screenState {
@@ -419,8 +408,9 @@ class PreLiveEventsViewController: UIViewController {
                 case .emptyNoFilter:
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
-                    self?.setEmptyStateBaseView(firstLabelText: localized("empty_list"), secondLabelText: localized("second_empty_list"), isUserLoggedIn: true)
-
+                    self?.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
+                                                secondLabelText: localized("second_empty_list"),
+                                                isUserLoggedIn: true)
                 case .noEmptyAndFilter:
                     self?.emptyBaseView.isHidden = true
                     self?.tableView.isHidden = false
@@ -428,13 +418,16 @@ class PreLiveEventsViewController: UIViewController {
                 case .emptyAndFilter:
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
-                    self?.setEmptyStateBaseView(firstLabelText: localized("empty_list_with_filters"), secondLabelText: localized("second_empty_list_with_filters"), isUserLoggedIn: true)
+                    self?.setEmptyStateBaseView(firstLabelText: localized("empty_list_with_filters"),
+                                                secondLabelText: localized("second_empty_list_with_filters"),
+                                                isUserLoggedIn: true)
                 }
             })
             .store(in: &cancellables)
 
         self.viewModel.matchListTypePublisher
             .map {  $0 == .competitions }
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isCompetitionTab in
 
@@ -459,7 +452,7 @@ class PreLiveEventsViewController: UIViewController {
             }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] competitions in
-                //self?.competitionsFiltersView.competitions = competitions.filter { $0.cells.isNotEmpty }
+                print("SB-DEBUG competitionGroupsPublisher competitions: \(competitions.count)")
                 self?.competitionsFiltersView.competitions = competitions
             }
             .store(in: &cancellables)
@@ -475,6 +468,7 @@ class PreLiveEventsViewController: UIViewController {
             .compactMap({ $0.isEmpty })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] shouldShowOpen in
+                print("SB-DEBUG competitionsFiltersView shouldShowOpen: \(shouldShowOpen)")
                 if shouldShowOpen {
                     self?.openCompetitionsFilters()
                 }
@@ -660,7 +654,7 @@ class PreLiveEventsViewController: UIViewController {
 
     private func openQuickbet(_ bettingTicket: BettingTicket) {
 
-        if let userSession = UserSessionStore.loggedUserSession() {
+        if UserSessionStore.isUserLogged() {
             let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
 
             let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)
@@ -853,21 +847,21 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
         case 0:
             AnalyticsClient.sendEvent(event: .myGamesScreen)
             self.viewModel.setMatchListType(.popular)
-            turnTimeRangeOn = false
+            self.turnTimeRangeOn = false
             self.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
                                        secondLabelText: localized("second_empty_list"),
                                        isUserLoggedIn: true)
         case 1:
             AnalyticsClient.sendEvent(event: .todayScreen)
             self.viewModel.setMatchListType(.upcoming)
-            turnTimeRangeOn = true
+            self.turnTimeRangeOn = true
             self.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
                                        secondLabelText: localized("second_empty_list"),
                                        isUserLoggedIn: true)
         case 2:
             AnalyticsClient.sendEvent(event: .competitionsScreen)
             self.viewModel.setMatchListType(.competitions)
-            turnTimeRangeOn = false
+            self.turnTimeRangeOn = false
             self.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
                                        secondLabelText: localized("second_empty_list"),
                                        isUserLoggedIn: true)

@@ -168,6 +168,7 @@ class SportSelectionViewController: UIViewController {
         self.liveSportsPublisher = nil
 
         self.liveSportsPublisher = Env.servicesProvider.subscribeLiveSportTypes()
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 print("Env.servicesProvider.liveSportTypes completed \(completion)")
                 self?.isLoading = false

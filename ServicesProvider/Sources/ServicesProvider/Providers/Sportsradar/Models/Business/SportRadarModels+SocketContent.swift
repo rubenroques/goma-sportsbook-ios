@@ -74,27 +74,24 @@ extension SportRadarModels {
                     
                     let contentTypeContainer = try contentContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
                     let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
-                    
-//                    let contentIdsArray = ((try? contentTypeContainer.decode(String.self, forKey: .contentId)) ?? "").components(separatedBy: "/")
-
                     let contentIdentifier = try contentContainer.decode(ContentIdentifier.self, forKey: .content)
                     var content: ContentContainer
                     
                     switch contentType {
                     case .liveEvents:
-                        let events: [SportRadarModels.Event] = try contentContainer.decode([SportRadarModels.Event].self, forKey: .change)
-                        content = .liveEvents(contentIdentifier: contentIdentifier, events: events)
+                        let events: [FailableDecodable<SportRadarModels.Event>] = try contentContainer.decode([FailableDecodable<SportRadarModels.Event>].self, forKey: .change)
+                        content = .liveEvents(contentIdentifier: contentIdentifier, events: events.compactMap({ $0.content }))
                         
                     case .liveSports:
-                        let sportsTypeDetails: [SportRadarModels.SportTypeDetails] = try contentContainer.decode([SportRadarModels.SportTypeDetails].self, forKey: .change)
-                        let sportsTypes = sportsTypeDetails.map(\.sportType)
+                        let sportsTypeDetails: [FailableDecodable<SportRadarModels.SportTypeDetails>] = try contentContainer.decode([FailableDecodable<SportRadarModels.SportTypeDetails>].self, forKey: .change)
+                        let sportsTypes = sportsTypeDetails.compactMap({ $0.content }).map(\.sportType)
                         content = .liveSports(sportsTypes: sportsTypes)
                         
                     case .preLiveSports:
                         // change key is optional
                         if contentContainer.contains(.change) {
-                            let sportsTypes: [SportRadarModels.SportType] = try contentContainer.decode([SportRadarModels.SportType].self, forKey: .change)
-                            content = .preLiveSports(sportsTypes: sportsTypes)
+                            let sportsTypes: [FailableDecodable<SportRadarModels.SportType>] = try contentContainer.decode([FailableDecodable<SportRadarModels.SportType>].self, forKey: .change)
+                            content = .preLiveSports(sportsTypes: sportsTypes.compactMap({ $0.content }))
                         }
                         else {
                             let sportsTypes: [SportType] = []
@@ -104,8 +101,8 @@ extension SportRadarModels {
                     case .preLiveEvents:
                         // change key is optional
                         if contentContainer.contains(.change) {
-                            let events: [SportRadarModels.Event] = try contentContainer.decode([SportRadarModels.Event].self, forKey: .change)
-                            content = .preLiveEvents(contentIdentifier: contentIdentifier, events: events)
+                            let events: [FailableDecodable<SportRadarModels.Event>] = try contentContainer.decode([FailableDecodable<SportRadarModels.Event>].self, forKey: .change)
+                            content = .preLiveEvents(contentIdentifier: contentIdentifier, events: events.compactMap({ $0.content }) )
                         }
                         else {
                             content = .preLiveEvents(contentIdentifier: contentIdentifier, events: [])

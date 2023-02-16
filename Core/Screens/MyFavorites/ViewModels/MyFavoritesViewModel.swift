@@ -333,11 +333,7 @@ class MyFavoritesViewModel: NSObject {
 
     func fetchFavoriteCompetitionsMatchesWithIds(_ ids: [String]) {
 
-
         self.selectedCompetitionsInfoPublisher.value = [:]
-//        self.competitionsMatchesSubscriptions.value = [:]
-//
-//        self.expectedCompetitionsPublisher.send(ids.count)
 
         for competitionId in ids {
             Env.servicesProvider.getCompetitionMarketGroups(competitionId: competitionId)
@@ -358,75 +354,7 @@ class MyFavoritesViewModel: NSObject {
                 .store(in: &cancellables)
         }
 
-//        self.competitionsMatchesPublisher = Env.serviceProvider.subscribeCompetitionMatches(forSportType: sportType)
-//            .sink(receiveCompletion: { completion in
-//                print("Env.serviceProvider.subscribeCompetitionMatches completed \(completion)")
-//            }, receiveValue: { (subscribableContent: SubscribableContent<[EventsGroup]>) in
-//                print("Env.serviceProvider.subscribeCompetitionMatches value \(subscribableContent)")
-//                switch subscribableContent {
-//                case .connected:
-//                    print("Connected to ws")
-//                case .contentUpdate(let eventsGroups):
-//                    self.competitions = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups)
-//                    self.competitionsDataSource.competitions = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups)
-//                    self.filteredOutrightCompetitionsDataSource.outrightCompetitions = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups)
-//                    self.isLoadingCompetitionMatches.send(false)
-//                    self.updateContentList()
-//                case .disconnected:
-//                    print("Disconnected from ws")
-//                }
-//            })
-
-//        self.competitionsDataSource.competitions = []
-//        self.competitions = []
-//        self.filteredOutrightCompetitionsDataSource.outrightCompetitions = []
-        //self.isLoadingCompetitionMatches.send(false)
-
     }
-
-//    private func fetchFavoriteMatches() {
-//
-//        if let favoriteMatchesRegister = favoriteMatchesRegister {
-//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteMatchesRegister)
-//        }
-//
-//        guard let userId = Env.userSessionStore.userSessionPublisher.value?.userId else { return }
-//
-//        let endpoint = TSRouter.favoriteMatchesPublisher(operatorId: Env.appSession.operatorId,
-//                                                      language: "en",
-//                                                      userId: userId)
-//
-//        self.favoriteMatchesPublisher?.cancel()
-//        self.favoriteMatchesPublisher = nil
-//
-//        self.favoriteMatchesPublisher = Env.everyMatrixClient.manager
-//            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                switch completion {
-//                case .failure:
-//                    print("Error retrieving Favorite data!")
-//                    self?.dataChangedPublisher.send()
-//                case .finished:
-//                    print("Favorite Data retrieved!")
-//                }
-//            }, receiveValue: { [weak self] state in
-//                switch state {
-//                case .connect(let publisherIdentifiable):
-//                    print("MyFavoritesViewModel favoriteMatchesPublisher connect")
-//                    self?.favoriteMatchesRegister = publisherIdentifiable
-//                case .initialContent(let aggregator):
-//                    print("MyFavoritesViewModel favoriteMatchesPublisher initialContent")
-//                    self?.setupFavoriteMatchesAggregatorProcessor(aggregator: aggregator)
-//                case .updatedContent(let aggregatorUpdates):
-//                    print("MyFavoritesViewModel favoriteMatchesPublisher updatedContent")
-//                    self?.updateFavoriteMatchesAggregatorProcessor(aggregator: aggregatorUpdates)
-//                case .disconnect:
-//                    print("MyFavoritesViewModel favoriteMatchesPublisher disconnect")
-//                }
-//
-//            })
-//    }
 
     private func setupFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
 

@@ -154,7 +154,7 @@ extension ServiceProviderModelMapper {
     static func outcome(fromServiceProviderOutcome outcome: ServicesProvider.Outcome) -> Outcome {
         let oddFormat: OddFormat = Self.oddFormat(fromServiceProviderOddFormat: outcome.odd)
         let bettingOffer = BettingOffer(id: outcome.id,
-                                        odd:  oddFormat,
+                                        odd: oddFormat,
                                         statusId: "",
                                         isLive: true,
                                         isAvailable: true)
@@ -195,7 +195,9 @@ extension ServiceProviderModelMapper {
         if let event = eventsGroups.first {
 
             let mappedCompetitions = event.events.map({ event in
-                let competition = Competition(id: event.id, name: event.competitionName, numberOutrightMarkets: event.markets.count,
+                let competition = Competition(id: event.id,
+                                              name: event.competitionName,
+                                              numberOutrightMarkets: event.markets.count,
                                               outrightMarkets: ServiceProviderModelMapper.markets(fromServiceProviderMarkets: event.markets))
                 return competition
             })

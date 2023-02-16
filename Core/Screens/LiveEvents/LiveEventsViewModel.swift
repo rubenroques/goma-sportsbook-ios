@@ -109,6 +109,7 @@ class LiveEventsViewModel: NSObject {
     func subscribeToLiveSports() {
 
         self.liveSportsCancellable = Env.servicesProvider.subscribeLiveSportTypes()
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 print("LiveEventsViewModel subscribeLiveSportTypes completed \(completion)")
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in

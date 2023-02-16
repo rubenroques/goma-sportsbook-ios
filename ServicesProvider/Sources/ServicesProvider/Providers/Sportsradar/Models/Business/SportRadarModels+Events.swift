@@ -49,36 +49,35 @@ extension SportRadarModels {
             case numberMarkets = "numMarkets"
         }
 
+
         init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let container: KeyedDecodingContainer<SportRadarModels.Event.CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
             self.id = try container.decode(String.self, forKey: .id)
-
-            self.homeName = container.contains(.homeName) ? try container.decode(String.self, forKey: .homeName) : nil
-            self.awayName = container.contains(.awayName) ? try container.decode(String.self, forKey: .awayName) : nil
-            self.competitionId = container.contains(.competitionId) ? try container.decode(String.self, forKey: .competitionId) : nil
-            self.competitionName = container.contains(.competitionName) ? try container.decode(String.self, forKey: .competitionName) : nil
-            self.sportTypeName = container.contains(.sportTypeName) ? try container.decode(String.self, forKey: .sportTypeName) : nil
-            self.markets = container.contains(.markets) ? try container.decode([Market].self, forKey: .markets) : nil
-
-            self.numberMarkets = container.contains(.numberMarkets) ? try container.decode(Int.self, forKey: .numberMarkets) : self.markets?.first?.eventMarketCount
-
+            self.homeName = try container.decodeIfPresent(String.self, forKey: .homeName)
+            self.awayName = try container.decodeIfPresent(String.self, forKey: .awayName)
+            self.competitionId = try container.decodeIfPresent(String.self, forKey: .competitionId)
+            self.competitionName = try container.decodeIfPresent(String.self, forKey: .competitionName)
+            self.sportTypeName = try container.decodeIfPresent(String.self, forKey: .sportTypeName)
+            self.markets = try container.decodeIfPresent([SportRadarModels.Market].self, forKey: .markets)
             self.tournamentCountryName = try container.decodeIfPresent(String.self, forKey: .tournamentCountryName)
-
-            let dateString = container.contains(.startDate) ? try container.decode(String.self, forKey: .startDate) : nil
-
-            if let dateString, let date = Self.dateFormatter.date(from: dateString) {
-                self.startDate = date
-            } else {
-                throw DecodingError.dataCorruptedError(forKey: .startDate,
-                                                       in: container,
-                                                       debugDescription: "Date string does not match format expected by formatter.")
+            self.numberMarkets = container.contains(.numberMarkets) ? try container.decode(Int.self, forKey: .numberMarkets) : self.markets?.first?.eventMarketCount
+            
+            if let startDateString = try container.decodeIfPresent(String.self, forKey: .startDate) {
+                if let date = Self.dateFormatter.date(from: startDateString) {
+                    self.startDate = date
+                }
+                else {
+                    throw DecodingError.dataCorruptedError(forKey: .startDate, in: container, debugDescription: "Start date with wrong format.")
+                }
             }
-
+            else {
+                throw DecodingError.dataCorruptedError(forKey: .startDate, in: container, debugDescription: "Not start date found.")
+            }
         }
 
         private static var dateFormatter: DateFormatter {
             let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+            formatter.dateFormat =  "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
             return formatter
         }
     }

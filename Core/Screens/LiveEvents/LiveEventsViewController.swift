@@ -382,8 +382,7 @@ class LiveEventsViewController: UIViewController {
     }
 
     @objc func handleSportsSelectionTap() {
-        let sportSelectionViewController = SportSelectionViewController(defaultSport: self.selectedSport,
-                                                            isLiveSport: true)
+        let sportSelectionViewController = SportSelectionViewController(defaultSport: self.selectedSport, isLiveSport: true)
         sportSelectionViewController.selectionDelegate = self
         self.present(sportSelectionViewController, animated: true, completion: nil)
     }

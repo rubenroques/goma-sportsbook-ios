@@ -107,14 +107,13 @@ extension SportRadarSocketConnector: WebSocketDelegate {
             self.isConnected = false
             print("ServiceProvider - SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
-
             print("ServiceProvider - SportRadarSocketConnector websocket recieved text: \(string)")
-            
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)
             }
         case .binary(let data):
+            print("ServiceProvider - SportRadarSocketConnector websocket recieved binary: \(String(data: data, encoding: .utf8) ?? "--")")
             if let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)
             }
@@ -125,7 +124,7 @@ extension SportRadarSocketConnector: WebSocketDelegate {
         case .viabilityChanged(_):
             break
         case .reconnectSuggested(_):
-            break
+            self.refreshConnection()
         case .cancelled:
             self.isConnected = false
         case .error(let error):
