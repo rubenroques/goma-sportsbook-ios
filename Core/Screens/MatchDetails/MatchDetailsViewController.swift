@@ -176,7 +176,7 @@ class MatchDetailsViewController: UIViewController {
             }
             else {
                 self.fieldExpandImageView.image = UIImage(named: "arrow_down_icon")
-                self.fieldExpandImageView.setImageColor(color: UIColor.App.textSecondary)
+                self.fieldExpandImageView.setImageColor(color: UIColor.App.textPrimary)
                 self.matchFieldWebViewHeight.constant = 0
             }
             
@@ -202,9 +202,9 @@ class MatchDetailsViewController: UIViewController {
             switch self.headerBarSelection {
             case .none:
                 self.headerLiveButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
-                self.liveButtonLabel.textColor = UIColor.App.textSecondary
-                self.liveButtonImageView.setImageColor(color: UIColor.App.textSecondary)
-                self.fieldExpandImageView.setImageColor(color: UIColor.App.textSecondary)
+                self.liveButtonLabel.textColor = UIColor.App.textPrimary
+                self.liveButtonImageView.setImageColor(color: UIColor.App.textPrimary)
+                self.fieldExpandImageView.setImageColor(color: UIColor.App.textPrimary)
                 //
                 self.headerStatsButtonBaseView.backgroundColor = UIColor.App.backgroundTertiary
                 self.statsButtonLabel.textColor = UIColor.App.textSecondary
@@ -579,15 +579,12 @@ class MatchDetailsViewController: UIViewController {
         self.statsBackSliderView.backgroundColor = UIColor.App.buttonBackgroundSecondary
         self.statsNotFoundLabel.textColor = UIColor.App.textPrimary
 
-        self.fieldExpandImageView.setImageColor(color: UIColor.App.textSecondary)
-        self.fieldExpandImageView.tintColor = UIColor.App.textSecondary
+        self.fieldExpandImageView.setImageColor(color: UIColor.App.textPrimary)
+        self.fieldExpandImageView.tintColor = UIColor.App.textPrimary
     }
     
     // MARK: - Bindings
     private func bind(toViewModel viewModel: MatchDetailsViewModel) {
-
-        let theme = self.traitCollection.userInterfaceStyle
-        viewModel.getFieldWidget(isDarkTheme: theme == .dark ? true : false)
         
         Env.userSessionStore.userSessionPublisher
             .receive(on: DispatchQueue.main)
@@ -654,7 +651,8 @@ class MatchDetailsViewController: UIViewController {
                     ()
                 case .loaded:
                     self?.setupHeaderDetails()
-                    self?.setupMatchField()
+                    let theme = self?.traitCollection.userInterfaceStyle
+                    viewModel.getFieldWidget(isDarkTheme: theme == .dark ? true : false)
                     self?.statsCollectionView.reloadData()
                 case .failed:
                     self?.showMatchNotAvailableView()
@@ -734,6 +732,7 @@ class MatchDetailsViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
     }
 
     func setTableViewHeight() {
@@ -878,60 +877,75 @@ class MatchDetailsViewController: UIViewController {
         guard let match = self.viewModel.match else {
             return
         }
-        
-        if self.viewModel.matchModePublisher.value == .live && self.isValidStatsSport {
 
-            // let request = URLRequest(url: URL(string: "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)")!)
+        if let fieldWidget = self.viewModel.fieldWidgetRenderDataType {
+            self.shouldShowLiveFieldWebView = true
+            self.isLiveFieldReady = false
 
-            if let fieldWidget = self.viewModel.fieldWidgetRenderDataType {
-                self.shouldShowLiveFieldWebView = true
-                self.isLiveFieldReady = false
+            switch fieldWidget {
+            case .url(let url):
 
-                // let urlString = "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)"
+                let urlRequest = URLRequest(url: url)
+                self.matchFieldWebView.load(urlRequest)
 
-                switch fieldWidget {
-                case .url(let url):
+            case .htmlString(let url, let htmlString):
 
-                    let urlRequest = URLRequest(url: url)
-                    self.matchFieldWebView.load(urlRequest)
+                self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
 
-                case .htmlString(let url, let htmlString):
-
-                    self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
-
-                }
-                
-            }
-            else {
-                self.shouldShowLiveFieldWebView = false
             }
 
         }
-        else if self.viewModel.matchModePublisher.value == .preLive {
-            // self.shouldShowLiveFieldWebView = false
-
-            // TEST
-            if let fieldWidget = self.viewModel.fieldWidgetRenderDataType {
-                self.shouldShowLiveFieldWebView = true
-                self.isLiveFieldReady = false
-
-                switch fieldWidget {
-                case .url(let url):
-
-                    let urlRequest = URLRequest(url: url)
-                    self.matchFieldWebView.load(urlRequest)
-
-                case .htmlString(let url, let htmlString):
-
-                    self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
-
-                }
-
-            }
-            else {
-                self.shouldShowLiveFieldWebView = false
-            }
+        else {
+            self.shouldShowLiveFieldWebView = false
         }
+
+//        if self.viewModel.matchModePublisher.value == .live && self.isValidStatsSport {
+//
+//            if let fieldWidget = self.viewModel.fieldWidgetRenderDataType {
+//                self.shouldShowLiveFieldWebView = true
+//                self.isLiveFieldReady = false
+//
+//                switch fieldWidget {
+//                case .url(let url):
+//
+//                    let urlRequest = URLRequest(url: url)
+//                    self.matchFieldWebView.load(urlRequest)
+//
+//                case .htmlString(let url, let htmlString):
+//
+//                    self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
+//
+//                }
+//
+//            }
+//            else {
+//                self.shouldShowLiveFieldWebView = false
+//            }
+//
+//        }
+//        else if self.viewModel.matchModePublisher.value == .preLive {
+//
+//            if let fieldWidget = self.viewModel.fieldWidgetRenderDataType {
+//                self.shouldShowLiveFieldWebView = true
+//                self.isLiveFieldReady = false
+//
+//                switch fieldWidget {
+//                case .url(let url):
+//
+//                    let urlRequest = URLRequest(url: url)
+//                    self.matchFieldWebView.load(urlRequest)
+//
+//                case .htmlString(let url, let htmlString):
+//
+//                    self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
+//
+//                }
+//
+//            }
+//            else {
+//                self.shouldShowLiveFieldWebView = false
+//            }
+//        }
 
     }
     
@@ -1047,7 +1061,6 @@ class MatchDetailsViewController: UIViewController {
         self.marketTypesCollectionView.isHidden = true
         self.marketsNotAvailableView.isHidden = false
         self.matchNotAvailableView.isHidden = true
-
 
     }
     
@@ -1273,25 +1286,19 @@ extension MatchDetailsViewController: WKNavigationDelegate {
                 }
             })
         }
-//        self.matchFieldWebView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { height, error in
-//            if let heightFloat = height as? CGFloat {
-//                if heightFloat < 100 {
-//                    self.recalculateWebview()
-//                }
-//                else {
-//                    self.redrawWebView(withHeight: heightFloat)
-//                }
-//            }
-//            if let error = error {
-//                Logger.log("Match details WKWebView didFinish error \(error)")
-//            }
-//        })
+
     }
     
     private func redrawWebView(withHeight heigth: CGFloat) {
-        self.matchFielHeight = heigth
-        
-        self.isLiveFieldReady = true
+        if heigth < 100 {
+            self.recalculateWebview()
+        }
+        else {
+            self.matchFielHeight = heigth
+
+            self.isLiveFieldReady = true
+        }
+
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {

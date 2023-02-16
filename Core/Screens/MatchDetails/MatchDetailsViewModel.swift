@@ -53,6 +53,7 @@ class MatchDetailsViewModel: NSObject {
 
     var marketFilters: [EventMarket]?
     var availableMarkets: [String: [String]] = [:]
+    var marketGroups: [MarketGroup] = []
 
     private var statsJSON: JSON?
     let matchStatsViewModel: MatchStatsViewModel
@@ -139,16 +140,30 @@ class MatchDetailsViewModel: NSObject {
                 case .connected(let subscription):
                     self?.subscriptions.insert(subscription)
                 case .contentUpdate(let events):
-                    if let eventGroup = events[safe: 0],
-                       let match = ServiceProviderModelMapper.match(fromEventGroup: eventGroup) {
-                        self?.matchPublisher.send(.loaded(match))
-                        if let eventMapped = ServiceProviderModelMapper.event(fromEventGroup: eventGroup){
-                            self?.getMarketGroups(event: eventMapped)
+                    guard let self = self else { return }
+
+                    if self.match == nil {
+                        if let eventGroup = events[safe: 0],
+                           let match = ServiceProviderModelMapper.match(fromEventGroup: eventGroup) {
+                            self.matchPublisher.send(.loaded(match))
+
+                            if self.marketGroups.isEmpty {
+
+                                if let eventMapped = ServiceProviderModelMapper.event(fromEventGroup: eventGroup) {
+
+                                    self.getMarketGroups(event: eventMapped)
+                                }
+                            }
+                            else {
+                                let marketGroups = self.marketGroups
+
+                                self.marketGroupsState.send(.loaded(marketGroups))
+                            }
                         }
-                    }
-                    else {
-                        self?.matchPublisher.send(.failed)
-                        self?.marketGroupsState.send(.failed)
+                        else {
+                            self.matchPublisher.send(.failed)
+                            self.marketGroupsState.send(.failed)
+                        }
                     }
                 case .disconnected:
                     print("Disconnected from ws")
@@ -172,6 +187,7 @@ class MatchDetailsViewModel: NSObject {
                     self?.marketGroupsState.send(.failed)
                 }
             }, receiveValue: { [weak self] marketGroups in
+                self?.marketGroups = marketGroups
                 self?.marketGroupsState.send(.loaded(marketGroups))
             })
             .store(in: &cancellables)
@@ -200,7 +216,7 @@ class MatchDetailsViewModel: NSObject {
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
-                    print("FIELD WIDGET RENDER DATA FINISHED")
+                    ()
                 case .failure(let error):
                     print("FIELD WIDGET RENDER DATA ERROR: \(error)")
 

@@ -232,7 +232,7 @@ class PreLiveEventsViewController: UIViewController {
         rightGradientBaseView.layer.mask = rightGradientMaskLayer
 
         filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        filtersCollectionView.backgroundColor = UIColor.App.pillNavigation
+        filtersCollectionView.backgroundColor = UIColor.App.pillSettings
 
         sportsSelectorButtonView.backgroundColor = UIColor.App.highlightPrimary
         sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
