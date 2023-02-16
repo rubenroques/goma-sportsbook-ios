@@ -46,7 +46,9 @@ class PreLiveEventsViewModel: NSObject {
         }
         didSet {
             if didChangeSport {
-                self.resetScrollPositionAction?()
+                if self.matchListTypePublisher.value != .competitions {
+                    self.resetScrollPositionAction?()
+                }
                 self.homeFilterOptions = nil
             }
             self.fetchData()
