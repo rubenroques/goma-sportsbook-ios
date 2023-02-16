@@ -9,17 +9,6 @@ import UIKit
 import Combine
 import ServicesProvider
 
-class RecoverPasswordViewModel {
-
-    init() {
-
-    }
-
-    func submitRecoverPassword(email: String, secrestQuestion: String? = nil, secrestAnswer: String? = nil) -> AnyPublisher<Bool, ServiceProviderError> {
-        return Env.servicesProvider.forgotPassword(email: email, secretQuestion: secrestQuestion, secrestAnswer: secrestAnswer)
-    }
-}
-
 class RecoverPasswordViewController: UIViewController {
 
     // MARK: Private properties
@@ -133,13 +122,25 @@ class RecoverPasswordViewController: UIViewController {
     private func setupPublishers() {
 
         self.emailTextField.textPublisher
+            .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] codeText in
-                if codeText != "" {
-                    self?.proceedButton.isEnabled = true
+            .sink(receiveValue: { [weak self] emailText in
+                guard let self = self else { return }
+
+                if let emailText,
+                   emailText != "" {
+
+                    if emailText.isValidEmailAddress() {
+                        self.emailTextField.hideTipAndError()
+                        self.proceedButton.isEnabled = true
+                    }
+                    else {
+                        self.emailTextField.showErrorOnField(text: "Incorrect email format")
+                        self.proceedButton.isEnabled = false
+                    }
                 }
                 else {
-                    self?.proceedButton.isEnabled = false
+                    self.emailTextField.hideTipAndError()
                 }
             })
             .store(in: &cancellables)
@@ -159,6 +160,12 @@ class RecoverPasswordViewController: UIViewController {
     private func closeScreen() {
         self.navigationController?.popViewController(animated: true)
     }
+
+//    private func isValidEmailAddress(_ email: String) -> Bool {
+//        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+//        let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
+//        return emailPred.evaluate(with: email)
+//    }
 
     // MARK: Actions
     @objc func didTapBackButton() {
