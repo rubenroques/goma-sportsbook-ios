@@ -287,7 +287,6 @@ class PreLiveEventsViewModel: NSObject {
         case .upcoming:
             self.fetchTodayMatches()
         case .competitions:
-            print("SB-DEBUG fetchData competitions")
             self.fetchCompetitionsFilters()
             if self.lastCompetitionsMatchesRequested.isNotEmpty {
                 self.fetchCompetitionsMatchesWithIds(lastCompetitionsMatchesRequested)
@@ -296,9 +295,6 @@ class PreLiveEventsViewModel: NSObject {
     }
 
     private func clearOldSportData() {
-
-        print("SB-DEBUG clearOldSportData")
-
         self.competitions = []
         self.competitionsDataSource.competitions = []
 
