@@ -57,7 +57,9 @@ class ActivationAlertCollectionViewCell: UICollectionViewCell {
 
     func setupWithTheme() {
 
-        containerView.backgroundColor = UIColor.App.backgroundCards
+        containerView.backgroundColor = UIColor.App.backgroundTertiary
+        containerView.layer.borderWidth = 1
+        containerView.layer.borderColor = UIColor.App.iconSecondary.cgColor
 
         titleLabel.textColor = UIColor.App.textPrimary
         titleLabel.font = AppFont.with(type: .bold, size: 16)
@@ -77,10 +79,6 @@ class ActivationAlertCollectionViewCell: UICollectionViewCell {
 
     @objc func labelTapped(_ sender: UITapGestureRecognizer) {
         self.linkLabelAction?()
-    }
-
-    override var intrinsicContentSize: CGSize {
-        return CGSize(width: self.frame.width, height: 100)
     }
 
 }

@@ -273,8 +273,11 @@ class LiveEventsViewModel: NSObject {
             .store(in: &cancellables)
     }
 
-
     func fetchLiveMatches() {
+
+        if didChangeSportType {
+            self.clearOldSportData()
+        }
 
         self.liveMatchesHasMorePages = true
         self.liveMatchesSubscriber?.cancel()
@@ -326,6 +329,14 @@ class LiveEventsViewModel: NSObject {
                 }
             }
         }
+    }
+
+    private func clearOldSportData() {
+
+        self.liveMatches = []
+        self.liveMatchesViewModelDataSource.matches = []
+
+        self.updateContentList()
     }
 
 }

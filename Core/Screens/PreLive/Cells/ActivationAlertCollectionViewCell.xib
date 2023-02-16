@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,7 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="ActivationAlertCollectionViewCell" customModule="ShowcaseBeta" customModuleProvider="target">
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="ActivationAlertCollectionViewCell" customModule="Betsson" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="300" height="110"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -19,7 +19,7 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ST7-n0-qvj">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="110"/>
+                        <rect key="frame" x="0.0" y="2" width="300" height="106"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fMz-9V-1fS">
                                 <rect key="frame" x="12" y="12" width="280" height="21"/>
@@ -34,7 +34,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YS8-PY-Ny1">
-                                <rect key="frame" x="12" y="77" width="280" height="21"/>
+                                <rect key="frame" x="12" y="73" width="280" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -57,8 +57,10 @@
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <constraints>
-                <constraint firstItem="ST7-n0-qvj" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="PCX-eo-cmj"/>
-                <constraint firstAttribute="bottom" secondItem="ST7-n0-qvj" secondAttribute="bottom" id="QcE-I3-A6B"/>
+                <constraint firstAttribute="bottom" secondItem="ST7-n0-qvj" secondAttribute="bottom" constant="2" id="Duh-Of-B3W"/>
+                <constraint firstItem="ST7-n0-qvj" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="2" id="cOi-a8-mtT"/>
+                <constraint firstAttribute="trailing" secondItem="ST7-n0-qvj" secondAttribute="trailing" id="eIK-pR-J8S"/>
+                <constraint firstItem="ST7-n0-qvj" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="g3h-Z6-PfC"/>
                 <constraint firstItem="ST7-n0-qvj" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="rQh-xk-TsR"/>
                 <constraint firstAttribute="trailing" secondItem="ST7-n0-qvj" secondAttribute="trailing" id="xHZ-Iq-Zjo"/>
             </constraints>
