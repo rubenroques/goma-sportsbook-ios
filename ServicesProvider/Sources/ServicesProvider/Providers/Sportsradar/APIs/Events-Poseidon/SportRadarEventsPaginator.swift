@@ -162,6 +162,7 @@ class SportRadarEventsPaginator {
             return self.eventsSubject.eraseToAnyPublisher()
         }
     }
+
 }
 
 extension SportRadarEventsPaginator: UnsubscriptionController {

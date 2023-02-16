@@ -227,7 +227,7 @@ extension SportMatchLineViewModel {
     }
 
     func shouldShowLine() -> Bool {
-        return !self.matches.isEmpty
+        return !self.matches.isEmpty || !self.outrightCompetitions.isEmpty
     }
 
     func competitionViewModel(forIndex index: Int) -> CompetitionWidgetViewModel? {

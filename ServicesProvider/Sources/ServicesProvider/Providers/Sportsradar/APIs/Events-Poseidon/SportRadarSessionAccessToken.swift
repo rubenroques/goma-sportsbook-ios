@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct SportRadarSessionAccessToken {
+struct SportRadarSessionAccessToken: Equatable {
     var hash: String
 }

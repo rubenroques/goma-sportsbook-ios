@@ -85,7 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        Env.everyMatrixClient.reconnectSocket()
+        Env.servicesProvider.reconnectIfNeeded()
     }
 
     // Universal Links
