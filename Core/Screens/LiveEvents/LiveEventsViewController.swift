@@ -334,7 +334,7 @@ class LiveEventsViewController: UIViewController {
         self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
         self.filtersButtonView.backgroundColor = UIColor.App.backgroundTertiary
 
-        self.filtersCollectionView.backgroundColor = UIColor.App.pillNavigation
+        self.filtersCollectionView.backgroundColor = UIColor.App.pillSettings
 
         self.emptyBaseView.backgroundColor = .clear
         self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
