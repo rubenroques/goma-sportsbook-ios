@@ -526,7 +526,7 @@ class MatchDetailsViewController: UIViewController {
         self.backButton.tintColor = UIColor.App.textPrimary
         
         self.headerCompetitionDetailView.backgroundColor = .clear
-        self.headerCompetitionLabel.textColor = UIColor.App.textPrimary
+        self.headerCompetitionLabel.textColor = UIColor.App.textSecondary
         self.headerDetailStackView.backgroundColor = .clear
         self.headerDetailHomeView.backgroundColor = .clear
         self.headerDetailHomeLabel.textColor = UIColor.App.textPrimary
@@ -535,11 +535,11 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailMiddleView.backgroundColor = .clear
         self.headerDetailMiddleStackView.backgroundColor = .clear
         self.headerDetailPreliveView.backgroundColor = .clear
-        self.headerDetailPreliveTopLabel.textColor = UIColor.App.textPrimary.withAlphaComponent(0.5)
+        self.headerDetailPreliveTopLabel.textColor = UIColor.App.textSecondary
         self.headerDetailPreliveBottomLabel.textColor = UIColor.App.textPrimary
         self.headerDetailLiveView.backgroundColor = .clear
         self.headerDetailLiveTopLabel.textColor = UIColor.App.textPrimary
-        self.headerDetailLiveBottomLabel.textColor = UIColor.App.textPrimary.withAlphaComponent(0.5)
+        self.headerDetailLiveBottomLabel.textColor = UIColor.App.textSecondary
         
         self.headerButtonsBaseView.backgroundColor = UIColor.App.separatorLine
         self.headerButtonsStackView.backgroundColor = UIColor.App.backgroundPrimary
