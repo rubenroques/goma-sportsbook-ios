@@ -958,7 +958,10 @@ extension SportRadarEventsProvider {
             }
         }
 
-        return uniqueSportsArray
+        return uniqueSportsArray.filter { sportType in
+            sportType.alphaId != nil
+        }
+
     }
 
     private func processMarketFilters(marketFilter: MarketFilter, match: Event) -> [MarketGroup] {
