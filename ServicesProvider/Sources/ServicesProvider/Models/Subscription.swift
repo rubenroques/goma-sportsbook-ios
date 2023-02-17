@@ -42,7 +42,7 @@ public class Subscription: Hashable, Identifiable {
     }
     
     deinit {
-        print("ServerProvider.Subscription.Debug dinit \(self.id)")
+        print("ServerProvider.Subscription.Debug dinit \(self.id) \(contentIdentifier.contentType) \(contentIdentifier.contentRoute.fullRoute)")
         unsubscriber?.unsubscribe(subscription: self)
     }
 

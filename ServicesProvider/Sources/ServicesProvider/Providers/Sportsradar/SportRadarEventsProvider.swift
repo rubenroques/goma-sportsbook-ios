@@ -43,13 +43,14 @@ class SportRadarEventsProvider: EventsProvider {
             .removeDuplicates()
             .compactMap({ $0 })
             .withPrevious()
-            .sink(receiveValue: { (oldToken, newToken) in
-                print("SportRadarSocketConnector: \(oldToken) \(newToken)")
+            .sink(receiveValue: { [weak self] (oldToken, newToken) in
+
                 if let oldToken, oldToken != newToken {
-                    print("SportRadarSocketConnector: Has reconnected")
+                    print("ServiceProvider SportRadarSocketConnector: [\(oldToken)] -> [\(newToken)] Has reconnected")
+                    self?.reconnectIfNeeded()
                 }
                 else {
-                    print("SportRadarSocketConnector: initial connection")
+                    print("ServiceProvider SportRadarSocketConnector: [\(newToken)] initial connection")
                 }
             })
             .store(in: &self.cancellables)
@@ -93,11 +94,17 @@ class SportRadarEventsProvider: EventsProvider {
 
         // Get the session
         guard
-            let sportId = sportType.alphaId,
             let sessionToken = socketConnector.token
         else {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
+
+        guard
+            let sportId = sportType.alphaId
+        else {
+            return Fail(error: ServiceProviderError.incompletedSportData).eraseToAnyPublisher()
+        }
+
 
         let eventCountValue = eventCount ?? self.defaultEventCount
 
@@ -129,9 +136,15 @@ class SportRadarEventsProvider: EventsProvider {
     func requestPreLiveMatchesNextPage(forSportType sportType: SportType, initialDate: Date? = nil, endDate: Date? = nil, sortType: EventListSort) -> AnyPublisher<Bool, ServiceProviderError> {
         // Get the session
         guard
+            socketConnector.token != nil
+        else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+
+        guard
             let sportId = sportType.alphaId
         else {
-            return Fail(outputType: Bool.self, failure: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.incompletedSportData).eraseToAnyPublisher()
         }
         // contentType -> eventListBySportTypeDate
         let contentType = ContentType.preLiveEvents
@@ -159,10 +172,15 @@ class SportRadarEventsProvider: EventsProvider {
 
         // Get the session
         guard
-            let sportId = sportType.alphaId,
             let sessionToken = socketConnector.token
         else {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+
+        guard
+            let sportId = sportType.alphaId
+        else {
+            return Fail(error: ServiceProviderError.incompletedSportData).eraseToAnyPublisher()
         }
 
         // contentType -> liveDataSummaryAdvancedListBySportType
@@ -188,9 +206,15 @@ class SportRadarEventsProvider: EventsProvider {
     func requestLiveMatchesNextPage(forSportType sportType: SportType) -> AnyPublisher<Bool, ServiceProviderError> {
         // Get the session
         guard
+            socketConnector.token != nil
+        else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+
+        guard
             let sportId = sportType.alphaId
         else {
-            return Fail(outputType: Bool.self, failure: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.incompletedSportData).eraseToAnyPublisher()
         }
 
         // contentType -> liveDataSummaryAdvancedListBySportType
@@ -205,10 +229,6 @@ class SportRadarEventsProvider: EventsProvider {
         else {
             return Fail(outputType: Bool.self, failure: ServiceProviderError.subscriptionNotFound).eraseToAnyPublisher()
         }
-    }
-
-    func reconnect() {
-
     }
 
     //
@@ -630,12 +650,9 @@ extension SportRadarEventsProvider {
             if let fieldWidgetId = fieldWidget.data,
                let replacedHtmlContent = emailTemplate?.replacingOccurrences(of: "@eventId", with: fieldWidgetId),
                let bundleUrl = Bundle.main.url(forResource: fileStringSplit[0], withExtension: fileStringSplit[1]) {
-
-                //let fieldWidgetRenderData = FieldWidgetRenderData(url: bundleUrl, htmlString: replacedHtmlContent)
+                // let fieldWidgetRenderData = FieldWidgetRenderData(url: bundleUrl, htmlString: replacedHtmlContent)
                 let fieldWidgetRenderDataType = FieldWidgetRenderDataType.htmlString(url: bundleUrl, htmlString: replacedHtmlContent)
-
                 return Just(fieldWidgetRenderDataType).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-
             }
 
             return Fail(outputType: FieldWidgetRenderDataType.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()

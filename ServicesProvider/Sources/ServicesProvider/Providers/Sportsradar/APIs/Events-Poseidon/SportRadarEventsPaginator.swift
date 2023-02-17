@@ -17,7 +17,11 @@ class SportRadarEventsPaginator {
 
     var hasNextPage: Bool = false
 
-    var subscription: Subscription?
+    weak var subscription: Subscription?
+    var isActive: Bool {
+        return self.subscription != nil
+    }
+    
     let contentIdentifier: ContentIdentifier
 
     var sessionToken: String

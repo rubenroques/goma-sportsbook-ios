@@ -374,7 +374,8 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         switch section {
         case 0:
             return 0
-        case 1:
+        case 1: return self.alertsArray.isEmpty ? 0 : 1
+        case 2:
             if let bannersLineViewModel = self.bannersLineViewModel,
                bannersLineViewModel.banners.isNotEmpty {
                 return 1
@@ -382,7 +383,6 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             else {
                 return 0
             }
-        case 2: return self.alertsArray.isEmpty ? 0 : 1
         case 3: return self.favoriteMatches.count
         // case 4 is the first sport from the sports list
         case 5: return self.featuredTips.isEmpty ? 0 : 1
@@ -466,8 +466,8 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func contentType(forSection section: Int) -> HomeViewModel.Content? {
         switch section {
         case 0: return HomeViewModel.Content.userMessage
-        case 1: return HomeViewModel.Content.bannerLine
-        case 2: return HomeViewModel.Content.userProfile
+        case 1: return HomeViewModel.Content.userProfile
+        case 2: return HomeViewModel.Content.bannerLine
         case 3: return HomeViewModel.Content.userFavorites
         // case 4 is the first sport from the sports list
         case 5: return HomeViewModel.Content.featuredTips
