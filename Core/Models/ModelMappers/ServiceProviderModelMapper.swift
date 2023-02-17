@@ -175,8 +175,12 @@ extension ServiceProviderModelMapper {
         if let event = eventsGroups.first {
 
             let mappedCompetitions = event.events.map({ event in
+
+                let location = Location(id: event.venueCountry?.capital ?? "", name: event.venueCountry?.name ?? "", isoCode: event.venueCountry?.iso2Code ?? "")
+
                 let competition = Competition(id: event.id,
-                                              name: event.competitionName,
+                                              name: event.name ?? event.competitionName,
+                                              venue: location,
                                               numberOutrightMarkets: event.markets.count,
                                               outrightMarkets: ServiceProviderModelMapper.markets(fromServiceProviderMarkets: event.markets))
                 return competition

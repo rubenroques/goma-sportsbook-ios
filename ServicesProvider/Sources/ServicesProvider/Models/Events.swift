@@ -37,6 +37,8 @@ public struct Event: Codable {
     public var venueCountry: Country?
     public var numberMarkets: Int?
 
+    public var name: String?
+
     public var type: EventType {
         if self.homeTeamName.isEmpty && self.awayTeamName.isEmpty {
             return .competition
@@ -59,7 +61,7 @@ public struct Event: Codable {
         case numberMarkets = "numMarkets"
     }
 
-    public init(id: String, homeTeamName: String, awayTeamName: String, sportTypeName: String, competitionId: String, competitionName: String, startDate: Date, markets: [Market], venueCountry: Country? = nil, numberMarkets: Int? = nil) {
+    public init(id: String, homeTeamName: String, awayTeamName: String, sportTypeName: String, competitionId: String, competitionName: String, startDate: Date, markets: [Market], venueCountry: Country? = nil, numberMarkets: Int? = nil, name: String? = nil) {
         self.id = id
         self.homeTeamName = homeTeamName
         self.awayTeamName = awayTeamName
@@ -70,6 +72,7 @@ public struct Event: Codable {
         self.markets = markets
         self.venueCountry = venueCountry
         self.numberMarkets = numberMarkets
+        self.name = name
     }
 
     public init(from decoder: Decoder) throws {

@@ -306,7 +306,7 @@ class LiveEventsViewController: UIViewController {
         self.leftGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.rightGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.sportsSelectorButtonView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        self.sportsSelectorButtonView.backgroundColor = UIColor.App.pillSettings
         self.sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
 
         self.filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
@@ -332,9 +332,9 @@ class LiveEventsViewController: UIViewController {
 
         self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
-        self.filtersButtonView.backgroundColor = UIColor.App.backgroundTertiary
+        self.filtersButtonView.backgroundColor = UIColor.App.pillSettings
 
-        self.filtersCollectionView.backgroundColor = UIColor.App.pillSettings
+        self.filtersCollectionView.backgroundColor = UIColor.App.pillNavigation
 
         self.emptyBaseView.backgroundColor = .clear
         self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
@@ -343,8 +343,10 @@ class LiveEventsViewController: UIViewController {
 
         self.loadingBaseView.backgroundColor = .clear
 
-        self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
-        self.sportsSelectorExpandImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
+        self.sportTypeIconImageView.tintColor = UIColor.App.textPrimary
+        self.sportsSelectorExpandImageView.setImageColor(color: UIColor.App.textPrimary)
+        self.sportsSelectorExpandImageView.tintColor = UIColor.App.textPrimary
     }
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {

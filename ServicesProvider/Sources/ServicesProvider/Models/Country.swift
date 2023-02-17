@@ -799,6 +799,7 @@ public extension SharedModels.Country {
           case "Yemen".lowercased(): return Country(name: "Yemen", capital: "Sana'a", region: "Asia", iso2Code: "YE", iso3Code: "YEM", numericCode: "887", phonePrefix: "+967")
           case "Zambia".lowercased(): return Country(name: "Zambia", capital: "Lusaka", region: "Africa", iso2Code: "ZM", iso3Code: "ZMB", numericCode: "894", phonePrefix: "+260")
           case "Zimbabwe".lowercased(): return Country(name: "Zimbabwe", capital: "Harare", region: "Africa", iso2Code: "ZW", iso3Code: "ZWE", numericCode: "716", phonePrefix: "+263")
+          case "International".lowercased(): return Country(name: "International", capital: "", region: "", iso2Code: "", iso3Code: "", numericCode: "", phonePrefix: "")
           default: return nil
           }
 

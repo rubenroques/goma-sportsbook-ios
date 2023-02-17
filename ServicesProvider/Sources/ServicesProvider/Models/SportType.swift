@@ -234,6 +234,12 @@ enum SportTypeInfo: CaseIterable {
     case emptyBets
     case lotteries
 
+    //
+    case esportscounterstrikego
+    case mmaFighting
+    case counterStrike
+    case aussieRules
+
     public init?(id: String) {
         switch id {
         // Initial list from EveryMatrix
@@ -584,7 +590,7 @@ enum SportTypeInfo: CaseIterable {
         case .virtualCycling: return "168"
         case .virtualSpeedSkating: return "169"
         case .virtualHockeyShots: return "170"
-        //
+            //
         case .gaelicHurling: return "900"
         case .gaelicSports: return "901"
         case .rinkHockey: return "902"
@@ -618,6 +624,11 @@ enum SportTypeInfo: CaseIterable {
         case .numbers: return "930"
         case .emptyBets: return "931"
         case .lotteries: return "932"
+
+        case .esportscounterstrikego: return "980"
+        case .mmaFighting: return "981"
+        case .counterStrike: return "982"
+        case .aussieRules: return "983"
         }
     }
     
@@ -810,6 +821,10 @@ enum SportTypeInfo: CaseIterable {
         case .numbers: return "Numbers"
         case .emptyBets: return "Empty Bets"
         case .lotteries: return "Lotteries"
+        case .esportscounterstrikego: return "eSports - Counter Strike GO"
+        case .mmaFighting: return "MMA Fighting"
+        case .counterStrike: return "Counter-Strike"
+        case .aussieRules: return "Aussie Rules"
         }
     }
 }

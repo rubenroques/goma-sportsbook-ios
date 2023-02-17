@@ -87,13 +87,46 @@ class PopularDetailsViewModel {
                 case .connected(let subscription):
                     self?.subscriptions.insert(subscription)
                 case .contentUpdate(let eventsGroups):
-                    let allMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
-                    self?.setupWithMatches(allMatches)
+
+                    guard let self = self else { return }
+
+                    let splittedEventGroups = self.splitEventsGroups(eventsGroups)
+
+                    let outrightCompetitions = ServiceProviderModelMapper.competitions(fromEventsGroups: splittedEventGroups.competitionsEventGroups)
+
+                    self.outrightCompetitions = outrightCompetitions
+
+                    let allMatches = ServiceProviderModelMapper.matches(fromEventsGroups: splittedEventGroups.matchesEventGroups)
+
+                    self.setupWithMatches(allMatches)
+
                 case .disconnected:
                     Logger.log("subscribePreLiveMatches subscribableContent disconnected")
                 }
             })
 
+    }
+
+    private func splitEventsGroups(_ eventsGroups: [EventsGroup]) -> (matchesEventGroups: [EventsGroup], competitionsEventGroups: [EventsGroup]) {
+
+        var matchEventsGroups: [EventsGroup] = []
+        for eventGroup in eventsGroups {
+            let matchEvents = eventGroup.events.filter { event in
+                event.type == .match
+            }
+            matchEventsGroups.append(EventsGroup(events: matchEvents))
+        }
+
+        //
+        var competitionEventsGroups: [EventsGroup] = []
+        for eventGroup in eventsGroups {
+            let competitionEvents = eventGroup.events.filter { event in
+                event.type == .competition
+            }
+            competitionEventsGroups.append(EventsGroup(events: competitionEvents))
+        }
+
+        return (matchEventsGroups, competitionEventsGroups)
     }
 
     private func closeOutrightCompetitionsConnection() {
@@ -102,6 +135,11 @@ class PopularDetailsViewModel {
 
     private func fetchOutrightCompetitions() {
 
+        self.titlePublisher.send("\(self.sport.name) - Outright Competitions")
+
+        self.isLoading.send(false)
+        self.refreshPublisher.send()
+        
     }
 
     private func setupWithMatches(_ matches: [Match]) {
