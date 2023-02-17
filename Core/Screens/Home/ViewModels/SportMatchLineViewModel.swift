@@ -216,6 +216,9 @@ extension SportMatchLineViewModel {
         if let lineMatch = self.matches[safe: lineIndex] {
             return lineMatch.numberTotalOfMarkets
         }
+        else if let lineOutright = self.outrightCompetitions[safe: lineIndex] {
+            return lineOutright.numberOutrightMarkets
+        }
         return 0
     }
 
@@ -282,7 +285,7 @@ extension SportMatchLineViewModel {
         let serviceProviderSportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
 
         Env.servicesProvider.subscribePreLiveMatches(forSportType: serviceProviderSportType,
-                                                    eventCount: 2,
+                                                    eventCount: 5,
                                                     sortType: .popular)
         .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
             switch completion {
@@ -295,54 +298,21 @@ extension SportMatchLineViewModel {
             switch subscribableContent {
             case .connected(let subscription):
                 self?.subscriptions.insert(subscription)
-                self?.storeMatches([])
+                self?.matches = []
             case .contentUpdate(let eventsGroups):
-                self?.processEvents(eventsGroups: eventsGroups)
-//                let matches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
-//                self?.storeMatches(matches)
+                guard let self = self else { return }
+
+                let splittedEventGroups = self.splitEventsGroups(eventsGroups)
+
+                self.processEvents(matchesEventsGroups: splittedEventGroups.matchesEventGroups, competitionsEventsGroups: splittedEventGroups.competitionsEventGroups)
+
             case .disconnected:
-                self?.storeMatches([])
+                self?.matches = []
             }
             self?.updatedContent()
         }
         .store(in: &cancellables)
 
-//
-//        if let popularMatchesRegister = popularMatchesRegister {
-//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: popularMatchesRegister)
-//        }
-//
-//        let endpoint = TSRouter.popularMatchesPublisher(operatorId: Env.appSession.operatorId,
-//                                                        language: "en",
-//                                                        sportId: self.sport.id,
-//                                                        matchesCount: 2)
-//        self.popularMatchesPublisher?.cancel()
-//        self.popularMatchesPublisher = nil
-//
-//        self.popularMatchesPublisher = Env.everyMatrixClient.manager
-//            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                switch completion {
-//                case .failure:
-//                    self?.finishedWithError()
-//                case .finished:
-//                    print("Data retrieved!")
-//                }
-//
-//            }, receiveValue: { [weak self] state in
-//                switch state {
-//                case .connect(let publisherIdentifiable):
-//                    self?.popularMatchesRegister = publisherIdentifiable
-//                case .initialContent(let aggregator):
-//                    self?.storeMatches(fromAggregator: aggregator)
-//                    self?.updatedContent()
-//                case .updatedContent(let aggregatorUpdates):
-//                    self?.updateMatches(fromAggregator: aggregatorUpdates)
-//                case .disconnect:
-//                    ()
-//                }
-//            })
     }
 
     private func fetchLiveMatches() {
@@ -361,12 +331,12 @@ extension SportMatchLineViewModel {
                 switch subscribableContent {
                 case .connected(let subscription):
                     self?.subscriptions.insert(subscription)
-                    self?.storeMatches([])
+                    self?.matches = []
                 case .contentUpdate(let eventsGroups):
                     let matches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
-                    self?.storeMatches(matches)
+                    self?.matches = matches
                 case .disconnected:
-                    self?.storeMatches([])
+                    self?.matches = []
                 }
                 self?.updatedContent()
             }
@@ -378,73 +348,48 @@ extension SportMatchLineViewModel {
 
         return
 
-        // EM TEMP SHUTDOWN
-        /*
-        let language = "en"
-        let endpoint = TSRouter.getCustomTournaments(language: language, sportId: self.sport.id)
-
-        Env.everyMatrixClient.manager
-            .getModel(router: endpoint, decodingType: EveryMatrixSocketResponse<EveryMatrix.Tournament>.self)
-            .map(\.records)
-            .compactMap({ $0 })
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure:
-                    self?.finishedWithError()
-                case .finished:
-                    print("Data retrieved!")
-                }
-            }, receiveValue: {  [weak self] tournaments in
-                self?.topCompetitions = nil
-
-                let rawTopCompetitions = tournaments.filter({ $0.sportId == self?.sport.id })
-                let topCompetitions = rawTopCompetitions.map { topCompetition -> Competition in
-                    var location: Location?
-                    if let rawLocation = self?.store.location(forId: topCompetition.venueId ?? "") {
-                        location = Location(id: rawLocation.id,
-                                            name: rawLocation.name ?? "",
-                                            isoCode: rawLocation.code ?? "")
-                    }
-                    return Competition(id: topCompetition.id,
-                                       name: topCompetition.name ?? "",
-                                       venue: location,
-                                       outrightMarkets: topCompetition.numberOfOutrightMarkets ?? 0)
-                }
-
-                if topCompetitions.isNotEmpty {
-                    self?.topCompetitions = topCompetitions
-                }
-
-                self?.updatedContent()
-            })
-            .store(in: &cancellables)
-         */
     }
 
-    private func fetchOutrightCompetitions(eventsGroups: [EventsGroup]? = nil) {
+    private func fetchOutrightCompetitions(eventsGroups: [EventsGroup]) {
+        let competitions = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups)
+        self.outrightCompetitions = Array(competitions.prefix(2))
+        self.updatedContent()
+    }
 
-        // EM TEMP SHUTDOWN
-        // TODO: fetchOutrightCompetitions
+    func processEvents(matchesEventsGroups: [EventsGroup], competitionsEventsGroups: [EventsGroup]) {
 
-        if let eventsGroups {
-            let competitions = ServiceProviderModelMapper.competitions(fromEventsGroups: eventsGroups)
+        let matches = ServiceProviderModelMapper.matches(fromEventsGroups: matchesEventsGroups)
 
-            self.outrightCompetitions = Array(competitions.prefix(2))
-            self.updatedContent()
+        if case .popular = self.matchesType, matches.isEmpty, self.outrightCompetitions.isEmpty {
+            self.fetchOutrightCompetitions(eventsGroups: competitionsEventsGroups)
+            return
         }
+
+        self.matches = Array(matches.prefix(2))
+
 
     }
 
-    func processEvents(eventsGroups: [EventsGroup]) {
-        if let event = eventsGroups.first?.events.first,
-           event.homeTeamName == "" || event.awayTeamName == "" {
-            let matches = [Match]()
-            self.storeMatches(matches, eventsGroups: eventsGroups)
+    private func splitEventsGroups(_ eventsGroups: [EventsGroup]) -> (matchesEventGroups: [EventsGroup], competitionsEventGroups: [EventsGroup]) {
+
+        var matchEventsGroups: [EventsGroup] = []
+        for eventGroup in eventsGroups {
+            let matchEvents = eventGroup.events.filter { event in
+                event.type == .match
+            }
+            matchEventsGroups.append(EventsGroup(events: matchEvents))
         }
-        else {
-            let matches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
-            self.storeMatches(matches)
+
+        //
+        var competitionEventsGroups: [EventsGroup] = []
+        for eventGroup in eventsGroups {
+            let competitionEvents = eventGroup.events.filter { event in
+                event.type == .competition
+            }
+            competitionEventsGroups.append(EventsGroup(events: competitionEvents))
         }
+
+        return (matchEventsGroups, competitionEventsGroups)
     }
 
     func storeOutrightCompetitions(aggregator: EveryMatrix.Aggregator) {
@@ -467,16 +412,6 @@ extension SportMatchLineViewModel {
 
         self.outrightCompetitions = Array(localOutrightCompetitions.prefix(2))
         self.updatedContent()
-    }
-
-    func storeMatches(_ matches: [Match], eventsGroups: [EventsGroup]? = nil) {
-        
-        if case .popular = self.matchesType, matches.isEmpty, self.outrightCompetitions.isEmpty {
-            self.fetchOutrightCompetitions(eventsGroups: eventsGroups)
-            return
-        }
-
-        self.matches = Array(matches.prefix(2))
     }
 
     private func finishedWithError() {

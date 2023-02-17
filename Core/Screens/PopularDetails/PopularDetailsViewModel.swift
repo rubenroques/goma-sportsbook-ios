@@ -93,11 +93,9 @@ class PopularDetailsViewModel {
                     let splittedEventGroups = self.splitEventsGroups(eventsGroups)
 
                     let outrightCompetitions = ServiceProviderModelMapper.competitions(fromEventsGroups: splittedEventGroups.competitionsEventGroups)
-
                     self.outrightCompetitions = outrightCompetitions
 
                     let allMatches = ServiceProviderModelMapper.matches(fromEventsGroups: splittedEventGroups.matchesEventGroups)
-
                     self.setupWithMatches(allMatches)
 
                 case .disconnected:
@@ -228,7 +226,10 @@ extension PopularDetailsViewModel {
         case 0:
             return self.matches.count
         case 1:
-            return self.outrightCompetitions?.count ?? 0
+            if self.matches.isEmpty {
+                return self.outrightCompetitions?.count ?? 0
+            }
+            return 0
         case 2:
             return self.shouldShowLoadingCell() ? 1 : 0
         default:
