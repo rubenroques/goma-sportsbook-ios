@@ -67,11 +67,11 @@ class PreLiveEventsViewController: UIViewController {
 
             if let sportIconImage = UIImage(named: "sport_type_mono_icon_\( selectedSport.id)") {
                 self.sportTypeIconImageView.image = sportIconImage
-                self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+                self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
             }
             else {
                 self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_default")
-                self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+                self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
             }
 
             self.competitionsFiltersView.resetSelection()
@@ -199,8 +199,6 @@ class PreLiveEventsViewController: UIViewController {
 
     private func commonInit() {
 
-        //self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_1")
-        //self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         if let sportIconImage = UIImage(named: "sport_type_mono_icon_\( selectedSport.id)") {
             self.sportTypeIconImageView.image = sportIconImage
         }
@@ -208,7 +206,8 @@ class PreLiveEventsViewController: UIViewController {
             self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_default")
         }
 
-        self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
+        self.sportTypeIconImageView.tintColor = UIColor.App.textPrimary
 
         let color = UIColor.App.backgroundPrimary
 
@@ -232,9 +231,9 @@ class PreLiveEventsViewController: UIViewController {
         rightGradientBaseView.layer.mask = rightGradientMaskLayer
 
         filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        filtersCollectionView.backgroundColor = UIColor.App.pillSettings
+        filtersCollectionView.backgroundColor = UIColor.App.pillNavigation
 
-        sportsSelectorButtonView.backgroundColor = UIColor.App.highlightPrimary
+        sportsSelectorButtonView.backgroundColor = UIColor.App.pillSettings
         sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
 
         filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
@@ -502,7 +501,7 @@ class PreLiveEventsViewController: UIViewController {
         self.leftGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.rightGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.filtersButtonView.backgroundColor = UIColor.App.backgroundTertiary
+        self.filtersButtonView.backgroundColor = UIColor.App.pillSettings
         self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
 
@@ -516,8 +515,10 @@ class PreLiveEventsViewController: UIViewController {
         self.secondTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
         self.emptyStateButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
 
-        self.sportsSelectorExpandImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        self.sportsSelectorExpandImageView.setImageColor(color: UIColor.App.textPrimary)
+        self.sportsSelectorExpandImageView.tintColor = UIColor.App.textPrimary
         self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        self.sportTypeIconImageView.tintColor = UIColor.App.textPrimary
 
     }
 

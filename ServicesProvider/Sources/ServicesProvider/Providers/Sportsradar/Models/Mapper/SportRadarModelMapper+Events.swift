@@ -66,7 +66,8 @@ extension SportRadarModelMapper {
                              startDate: event.startDate ?? Date(),
                              markets: markets,
                              venueCountry: country,
-                             numberMarkets: event.numberMarkets)
+                             numberMarkets: event.numberMarkets,
+                             name: event.name)
             }
             return Event(id: event.id,
                          homeTeamName: event.homeName ?? "",
@@ -77,7 +78,8 @@ extension SportRadarModelMapper {
                          startDate: event.startDate ?? Date(),
                          markets: [],
                          venueCountry: country,
-                         numberMarkets: event.numberMarkets)
+                         numberMarkets: event.numberMarkets,
+                         name: event.name)
         })
 
         return EventsGroup(events: events)
@@ -97,7 +99,8 @@ extension SportRadarModelMapper {
                          competitionName: internalEvent.competitionName ?? "",
                          startDate: internalEvent.startDate ?? Date(),
                          markets: markets,
-                         numberMarkets: internalEvent.numberMarkets)
+                         numberMarkets: internalEvent.numberMarkets,
+                         name: internalEvent.name)
         }
         return Event(id: internalEvent.id,
                      homeTeamName: internalEvent.homeName ?? "",
@@ -107,7 +110,8 @@ extension SportRadarModelMapper {
                      competitionName: internalEvent.competitionName ?? "",
                      startDate: internalEvent.startDate ?? Date(),
                      markets: [],
-                     numberMarkets: internalEvent.numberMarkets)
+                     numberMarkets: internalEvent.numberMarkets,
+                     name: internalEvent.name)
 
     }
     

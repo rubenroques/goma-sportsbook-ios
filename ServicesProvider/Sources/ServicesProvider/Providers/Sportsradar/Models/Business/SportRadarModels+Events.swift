@@ -25,7 +25,7 @@ extension SportRadarModels {
         var homeName: String?
         var awayName: String?
         var sportTypeName: String?
-        
+
         var competitionId: String?
         var competitionName: String?
         var startDate: Date?
@@ -35,6 +35,7 @@ extension SportRadarModels {
         var tournamentCountryName: String?
         
         var numberMarkets: Int?
+        var name: String?
 
         enum CodingKeys: String, CodingKey {
             case id = "idfoevent"
@@ -47,6 +48,7 @@ extension SportRadarModels {
             case markets = "markets"
             case tournamentCountryName = "tournamentcountryname"
             case numberMarkets = "numMarkets"
+            case name = "name"
         }
 
 
@@ -61,6 +63,7 @@ extension SportRadarModels {
             self.markets = try container.decodeIfPresent([SportRadarModels.Market].self, forKey: .markets)
             self.tournamentCountryName = try container.decodeIfPresent(String.self, forKey: .tournamentCountryName)
             self.numberMarkets = container.contains(.numberMarkets) ? try container.decode(Int.self, forKey: .numberMarkets) : self.markets?.first?.eventMarketCount
+            self.name = try container.decodeIfPresent(String.self, forKey: .name)
             
             if let startDateString = try container.decodeIfPresent(String.self, forKey: .startDate) {
                 if let date = Self.dateFormatter.date(from: startDateString) {
