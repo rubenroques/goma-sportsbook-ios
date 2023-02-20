@@ -51,7 +51,6 @@ extension SportRadarModels {
             case name = "name"
         }
 
-
         init(from decoder: Decoder) throws {
             let container: KeyedDecodingContainer<SportRadarModels.Event.CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
             self.id = try container.decode(String.self, forKey: .id)
@@ -62,9 +61,11 @@ extension SportRadarModels {
             self.sportTypeName = try container.decodeIfPresent(String.self, forKey: .sportTypeName)
             self.markets = try container.decodeIfPresent([SportRadarModels.Market].self, forKey: .markets)
             self.tournamentCountryName = try container.decodeIfPresent(String.self, forKey: .tournamentCountryName)
+
             self.numberMarkets = container.contains(.numberMarkets) ? try container.decode(Int.self, forKey: .numberMarkets) : self.markets?.first?.eventMarketCount
+
             self.name = try container.decodeIfPresent(String.self, forKey: .name)
-            
+
             if let startDateString = try container.decodeIfPresent(String.self, forKey: .startDate) {
                 if let date = Self.dateFormatter.date(from: startDateString) {
                     self.startDate = date

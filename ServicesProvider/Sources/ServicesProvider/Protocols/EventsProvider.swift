@@ -9,7 +9,9 @@ import Foundation
 import Combine
 
 protocol EventsProvider {
-    
+
+    func reconnectIfNeeded()
+
     func subscribeLiveMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
 
     func requestLiveMatchesNextPage(forSportType sportType: SportType) -> AnyPublisher<Bool, ServiceProviderError>

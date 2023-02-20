@@ -82,7 +82,7 @@ class FilterHistoryViewController: UIViewController {
         cancelButton.isUserInteractionEnabled = true
         cancelButton.addGestureRecognizer(tapCancelButton)
 
-        let tapResetButton = UITapGestureRecognizer(target: self, action: #selector(self.resetAction))
+        let tapResetButton = UITapGestureRecognizer(target: self, action: #selector(self.didTapResetButton))
         resetButton.isUserInteractionEnabled = true
         resetButton.addGestureRecognizer(tapResetButton)
         
@@ -223,7 +223,7 @@ class FilterHistoryViewController: UIViewController {
     }
 
     // MARK: - Convenience
-    @IBAction private func resetAction() {
+    @IBAction private func didTapResetButton() {
         for view in self.filterRowViews {
             view.isChecked = false
             // Default filter selected

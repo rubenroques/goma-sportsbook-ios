@@ -323,20 +323,6 @@ class RootViewController: UIViewController {
                     else {
                         self.profilePictureImageView.image = UIImage(named: "empty_user_image")
                     }
-
-//                    Env.everyMatrixClient.getUserMetadata()
-//                        .receive(on: DispatchQueue.main)
-//                        .eraseToAnyPublisher()
-//                        .sink { _ in
-//                        } receiveValue: { [weak self] userMetadata in
-//                            if let userMetadataFavorites = userMetadata.records[0].value {
-//                                Env.favoritesManager.favoriteEventsIdPublisher.send(userMetadataFavorites)
-//                            }
-//
-//                            if self?.preLiveViewControllerLoaded ?? false {
-//                                self?.preLiveViewController.reloadData()
-//                            }                        }
-//                        .store(in: &self.cancellables)
                 }
                 else {
                     self.screenState = .anonymous
@@ -975,11 +961,13 @@ extension RootViewController {
 extension RootViewController {
 
     func requestPopUpContent() {
-        Env.gomaNetworkClient.requestPopUpInfo(deviceId: Env.deviceId)
-            .compactMap({$0})
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: showPopUp(_:))
-            .store(in: &cancellables)
+        if TargetVariables.hasFeatureEnabled(feature: .homePopUps) {
+            Env.gomaNetworkClient.requestPopUpInfo(deviceId: Env.deviceId)
+                .compactMap({$0})
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: showPopUp(_:))
+                .store(in: &cancellables)
+        }
     }
 
     func showPopUp(_ details: PopUpDetails) {
@@ -1305,6 +1293,8 @@ extension RootViewController {
     @objc func appDidBecomeActive() {
         // self.authenticateUser()
         print("LocalAuth Active")
+
+        self.reloadChildViewControllersData()
     }
 
     @objc func appWillResignActive() {

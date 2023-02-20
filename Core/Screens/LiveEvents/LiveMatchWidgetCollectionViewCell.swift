@@ -195,9 +195,9 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                     self?.homeRedCardLabel.text = homeScoreValue
                     self?.homeRedCardLabel.isHidden = false
                 }
-               else {
+                else {
                     self?.homeRedCardImage.isHidden = true
-                   self?.homeRedCardLabel.isHidden = true
+                    self?.homeRedCardLabel.isHidden = true
                 }
             })
             .store(in: &cancellables)
@@ -552,9 +552,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
             self.requestRedCards(forMatchWithId: matchId.id)
             
         }
-        
 
-        
         if let market = match.markets.first {
 
             if let marketPublisher = viewModel.store.marketPublisher(withId: market.id) {
@@ -784,9 +782,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                         // Status
                         matchPart = eventPartName
                     }
-                    
-                   
-                    
+
                 }
             }
            

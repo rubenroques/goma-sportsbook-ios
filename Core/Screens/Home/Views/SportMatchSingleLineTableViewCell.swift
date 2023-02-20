@@ -299,7 +299,7 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
 
             if viewModel.isMatchLineLive() {
                 guard
-                    let cell = collectionView.dequeueCellType(LiveMatchWidgetCollectionViewCell.self, indexPath: indexPath)
+                    let cell = collectionView.dequeueCellType(MatchWidgetCollectionViewCell.self, indexPath: indexPath)
                 else {
                     fatalError()
                 }

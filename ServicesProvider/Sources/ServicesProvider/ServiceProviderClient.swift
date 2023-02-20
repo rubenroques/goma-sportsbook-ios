@@ -55,6 +55,10 @@ public class ServicesProviderClient {
 
     }
 
+    public func reconnectIfNeeded() {
+        self.eventsProvider?.reconnectIfNeeded()
+    }
+
 }
 
 extension ServicesProviderClient {

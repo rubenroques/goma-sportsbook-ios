@@ -173,50 +173,15 @@ class StaticHomeViewTemplateDataSource {
         self.fetchSuggestedBets()
         self.fetchAlerts()
 
-//        self.fetchLocations()
-//            .sink { [weak self] locations in
-//                self?.store.storeLocations(locations: locations)
-//
-//                self?.requestSports()
-//                self?.fetchBanners()
-//                self?.fetchFavoriteMatches()
-//                self?.fetchTips()
-//                self?.fetchSuggestedBets()
-//                self?.fetchAlerts()
-//            }
-//            .store(in: &cancellables)
-
     }
 
     func requestSports() {
 
-        self.sportsToFetch = Array(Env.sportsStore.getAvailableSports().prefix(10))
+        let allSports = Env.sportsStore.getAvailableSports()
+        let prefixSports = allSports.filter({ $0.alphaId != nil }).prefix(10)
+        self.sportsToFetch = Array(prefixSports)
         self.refreshPublisher.send()
 
-//        Env.servicesProvider.getAvailableSportTypes()
-//            .map({ sportTypesArray in
-//                return sportTypesArray.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
-//            })
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { (completion: Subscribers.Completion<ServiceProviderError>) in
-//                () // TODO:  allSportTypes Handle completion with error
-//            }, receiveValue: { (sportTypes: [Sport]) in
-//                self.sportsToFetch = Array(sportTypes.prefix(10))
-//                self.refreshPublisher.send()
-//            })
-//            .store(in: &cancellables)
-
-//        let language = "en"
-//        Env.everyMatrixClient.getDisciplines(language: language)
-//            .map(\.records)
-//            .compactMap({ $0 })
-//            .sink(receiveCompletion: { _ in
-//
-//            }, receiveValue: { response in
-//                self.sportsToFetch = Array(response.map(Sport.init(discipline:)).prefix(10))
-//                self.refreshPublisher.send()
-//            })
-//            .store(in: &cancellables)
     }
 
     func fetchLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {
@@ -272,37 +237,6 @@ class StaticHomeViewTemplateDataSource {
 
         self.banners = []
 
-        // TODO: Fetch banners
-//        let endpoint = TSRouter.bannersInfoPublisher(operatorId: Env.appSession.operatorId, language: "en")
-//
-//        self.bannersInfoPublisher = Env.everyMatrixClient.manager
-//            .registerOnEndpoint(endpoint, decodingType: EveryMatrixSocketResponse<EveryMatrix.BannerInfo>.self)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { _ in
-//
-//            }, receiveValue: { [weak self] state in
-//                switch state {
-//                case .connect(let publisherIdentifiable):
-//                    self?.bannersInfoRegister = publisherIdentifiable
-//                case .initialContent(let responde):
-//                    print("HomeViewModel bannersInfo initialContent")
-//                    let sortedBanners = (responde.records ?? []).sorted {
-//                        $0.priorityOrder ?? 0 < $1.priorityOrder ?? 1
-//                    }
-//                    self?.banners = sortedBanners.map({
-//                        BannerInfo(type: $0.type,
-//                                   id: $0.id,
-//                                   matchId: $0.matchID,
-//                                   imageURL: $0.imageURL,
-//                                   priorityOrder: $0.priorityOrder)
-//                    })
-//                    self?.stopBannerUpdates()
-//                case .updatedContent:
-//                    ()
-//                case .disconnect:
-//                    ()
-//                }
-//            })
         Env.servicesProvider.getBanners()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -312,18 +246,12 @@ class StaticHomeViewTemplateDataSource {
                 case .failure(let error):
                     print("BANNERS ERROR: \(error)")
                 }
-
             }, receiveValue: { [weak self] bannersResponse in
-
                 let banners = bannersResponse.bannerItems.map({
-
                     let bannerInfo = BannerInfo(type: $0.type, id: $0.id, imageURL: $0.imageUrl)
-
                     return bannerInfo
                 })
-
                 self?.banners = banners
-
             })
             .store(in: &cancellables)
     }
@@ -346,7 +274,6 @@ class StaticHomeViewTemplateDataSource {
                     case .failure(let error):
                         print("EVENT SUMMARY ERROR: \(error)")
                     }
-
                 }, receiveValue: { [weak self] eventSummary in
 
                     guard let self = self else {return}
@@ -366,46 +293,7 @@ class StaticHomeViewTemplateDataSource {
                 })
                 .store(in: &cancellables)
         }
-//        if let favoriteMatchesRegister = favoriteMatchesRegister {
-//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteMatchesRegister)
-//        }
-//
-//        guard let userId = Env.userSessionStore.userSessionPublisher.value?.userId else { return }
-//
-//        let endpoint = TSRouter.favoriteMatchesPublisher(operatorId: Env.appSession.operatorId,
-//                                                      language: "en",
-//                                                      userId: userId)
-//
-//        self.favoriteMatchesPublisher?.cancel()
-//        self.favoriteMatchesPublisher = nil
-//
-//        self.favoriteMatchesPublisher = Env.everyMatrixClient.manager
-//            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .failure:
-//                    print("Error retrieving Favorite data!")
-//
-//                case .finished:
-//                    print("Favorite Data retrieved!")
-//                }
-//            }, receiveValue: { [weak self] state in
-//                switch state {
-//                case .connect(let publisherIdentifiable):
-//                    print("PreLiveEventsViewModel favoriteMatchesPublisher connect")
-//                    self?.favoriteMatchesRegister = publisherIdentifiable
-//                case .initialContent(let aggregator):
-//                    print("PreLiveEventsViewModel favoriteMatchesPublisher initialContent")
-//                    self?.setupFavoriteMatchesAggregatorProcessor(aggregator: aggregator)
-//                case .updatedContent(let aggregatorUpdates):
-//                    print("PreLiveEventsViewModel favoriteMatchesPublisher updatedContent")
-//                    self?.updateFavoriteMatchesAggregatorProcessor(aggregator: aggregatorUpdates)
-//                case .disconnect:
-//                    print("PreLiveEventsViewModel favoriteMatchesPublisher disconnect")
-//                }
-//
-//            })
+
     }
 
     private func setupFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
@@ -427,7 +315,6 @@ class StaticHomeViewTemplateDataSource {
         self.store.updateContent(fromAggregator: aggregator)
     }
 
-    // Tips TEST
     func fetchTips() {
         // TODO: Usar enum no betType,
         Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE")
@@ -479,7 +366,7 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func numberOfSections() -> Int {
-        return itemsBeforeSports + sportsToFetch.count - 1 // minus the fist sport
+        return itemsBeforeSports + sportsToFetch.count - 1 // minus the first sport
         // return itemsBeforeSports
     }
 
@@ -487,7 +374,8 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         switch section {
         case 0:
             return 0
-        case 1:
+        case 1: return self.alertsArray.isEmpty ? 0 : 1
+        case 2:
             if let bannersLineViewModel = self.bannersLineViewModel,
                bannersLineViewModel.banners.isNotEmpty {
                 return 1
@@ -495,7 +383,6 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             else {
                 return 0
             }
-        case 2: return self.alertsArray.isEmpty ? 0 : 1
         case 3: return self.favoriteMatches.count
         // case 4 is the first sport from the sports list
         case 5: return self.featuredTips.isEmpty ? 0 : 1
@@ -552,8 +439,9 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 5: return self.featuredTips.isNotEmpty
         case 6: return self.suggestedBets.isNotEmpty
         default:
-            if self.sportForSection(section) != nil {
-                return true
+            if let sportGroupViewModel = self.sportGroupViewModel(forSection: section) {
+                let shouldShowGroup = sportGroupViewModel.shouldShowGroup()
+                return shouldShowGroup
             }
             else {
                 return false
@@ -578,8 +466,8 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     func contentType(forSection section: Int) -> HomeViewModel.Content? {
         switch section {
         case 0: return HomeViewModel.Content.userMessage
-        case 1: return HomeViewModel.Content.bannerLine
-        case 2: return HomeViewModel.Content.userProfile
+        case 1: return HomeViewModel.Content.userProfile
+        case 2: return HomeViewModel.Content.bannerLine
         case 3: return HomeViewModel.Content.userFavorites
         // case 4 is the first sport from the sports list
         case 5: return HomeViewModel.Content.featuredTips

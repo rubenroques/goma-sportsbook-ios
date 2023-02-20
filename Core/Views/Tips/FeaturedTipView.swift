@@ -98,8 +98,6 @@ class FeaturedTipView: UIView {
             self.countryIconImageView.image = UIImage(named: gameFlag)
 
         }
-
-
     }
 }
 

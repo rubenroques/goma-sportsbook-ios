@@ -20,7 +20,8 @@ public enum ServiceProviderError: Error {
     case invalidSignUpEmail
     case invalidSignUpUsername
     case invalidSignUpPassword
-    
+
+    case incompletedSportData
     case userSessionNotFound
     
     case onSubscribe

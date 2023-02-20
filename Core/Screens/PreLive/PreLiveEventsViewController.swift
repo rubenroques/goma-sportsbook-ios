@@ -375,7 +375,6 @@ class PreLiveEventsViewController: UIViewController {
         self.viewModel.dataChangedPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
-                print("SB-DEBUG dataChangedPublisher reloadData")
                 self?.reloadData()
             })
             .store(in: &cancellables)
@@ -444,14 +443,15 @@ class PreLiveEventsViewController: UIViewController {
             .store(in: &cancellables)
 
         self.viewModel.competitionGroupsPublisher
-            .map {
-                $0.enumerated().map {
-                    CompetitionFilterSectionViewModel(index: $0.offset, competitionGroup: $0.element)
-                }
+            .map { competitionGroups in
+                competitionGroups
+                    .enumerated()
+                    .map {
+                        CompetitionFilterSectionViewModel(index: $0.offset, competitionGroup: $0.element)
+                    }
             }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] competitions in
-                print("SB-DEBUG competitionGroupsPublisher competitions: \(competitions.count)")
                 self?.competitionsFiltersView.competitions = competitions
             }
             .store(in: &cancellables)
@@ -467,19 +467,11 @@ class PreLiveEventsViewController: UIViewController {
             .compactMap({ $0.isEmpty })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] shouldShowOpen in
-                print("SB-DEBUG competitionsFiltersView shouldShowOpen: \(shouldShowOpen)")
                 if shouldShowOpen {
                     self?.openCompetitionsFilters()
                 }
             })
             .store(in: &cancellables)
-
-//        Env.userSessionStore.isUserProfileComplete
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { _ in
-//                self.reloadData()
-//            })
-//            .store(in: &cancellables)
 
     }
 

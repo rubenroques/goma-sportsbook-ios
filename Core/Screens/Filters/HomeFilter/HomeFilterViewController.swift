@@ -451,7 +451,8 @@ class HomeFilterViewController: UIViewController {
         highBoundTimeRange = homeFilterOptions.highBoundTimeRange
         timeRangeMultiSlider?.value = [homeFilterOptions.lowerBoundTimeRange, homeFilterOptions.highBoundTimeRange]
         oddRangeMultiSlider?.value = [homeFilterOptions.lowerBoundOddsRange, homeFilterOptions.highBoundOddsRange]
-        
+
+
         if let oddRangeMultiSlider = oddRangeMultiSlider {
             lowerBoundOddsRange = oddRangeMultiSlider.value[0].round(to: 1)
             highBoundOddsRange = oddRangeMultiSlider.value[1].round(to: 1)
@@ -483,6 +484,13 @@ class HomeFilterViewController: UIViewController {
                 
             }
         }
+
+        UserDefaults.standard.cardsStyle = .normal
+        NotificationCenter.default.post(name: .cardsStyleChanged, object: nil)
+
+        self.smallCardStyleOption.isChecked = false
+        self.normalCardStyleOption.isChecked = true
+
         countFilters = 0
     }
 

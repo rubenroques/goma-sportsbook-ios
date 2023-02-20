@@ -24,7 +24,14 @@ protocol SportRadarConnectorSubscriber: AnyObject {
 
 class SportRadarSocketConnector: NSObject, Connector {
     
-    var token: SportRadarSessionAccessToken?
+    var token: SportRadarSessionAccessToken? {
+        return self.tokenSubject.value
+    }
+
+    private var tokenSubject: CurrentValueSubject<SportRadarSessionAccessToken?, Never> = .init(nil)
+    var tokenPublisher: AnyPublisher<SportRadarSessionAccessToken?, Never> {
+        return tokenSubject.eraseToAnyPublisher()
+    }
 
     weak var messageSubscriber: SportRadarConnectorSubscriber?
     
@@ -105,33 +112,40 @@ extension SportRadarSocketConnector: WebSocketDelegate {
             print("ServiceProvider - SportRadarSocketConnector websocket is connected: \(headers)")
         case .disconnected(let reason, let code):
             self.isConnected = false
+            self.refreshConnection()
             print("ServiceProvider - SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
-            print("ServiceProvider - SportRadarSocketConnector websocket recieved text: \(string)")
+            // print("ServiceProvider - SportRadarSocketConnector websocket recieved text: \(string)")
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)
             }
         case .binary(let data):
-            print("ServiceProvider - SportRadarSocketConnector websocket recieved binary: \(String(data: data, encoding: .utf8) ?? "--")")
+            // print("ServiceProvider - SportRadarSocketConnector websocket recieved binary: \(String(data: data, encoding: .utf8) ?? "--")")
             if let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)
             }
         case .ping(_):
+            print("ServiceProvider - SportRadarSocketConnector ping")
             break
         case .pong(_):
+            print("ServiceProvider - SportRadarSocketConnector pong")
             break
         case .viabilityChanged(_):
+            print("ServiceProvider - SportRadarSocketConnector viabilityChanged")
             break
         case .reconnectSuggested(_):
             self.refreshConnection()
+            print("ServiceProvider - SportRadarSocketConnector reconnectSuggested")
         case .cancelled:
             self.isConnected = false
+            print("ServiceProvider - SportRadarSocketConnector cancelled")
         case .error(let error):
             self.isConnected = false
             print("ServiceProvider - SportRadarSocketConnector websocket Error \(error.debugDescription)")
             self.refreshConnection()
         }
+        
     }
     
     func handleContentMessage(_ messageType: SportRadarModels.NotificationType, messageData: Data) {
@@ -139,8 +153,9 @@ extension SportRadarSocketConnector: WebSocketDelegate {
         switch messageType {
         case .listeningStarted(let sessionTokenId):
             self.isConnected = true
-            self.token = SportRadarSessionAccessToken(hash: sessionTokenId)
+            self.tokenSubject.send(SportRadarSessionAccessToken(hash: sessionTokenId))
             self.connectionStateSubject.send(.connected)
+
         case .contentChanges(let content):
             switch content {
             case .liveEvents(let contentIdentifier, let events):

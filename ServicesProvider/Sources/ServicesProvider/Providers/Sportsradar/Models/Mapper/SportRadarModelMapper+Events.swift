@@ -89,7 +89,6 @@ extension SportRadarModelMapper {
 
         if let eventMarkets = internalEvent.markets {
             let markets = eventMarkets.map(Self.market(fromInternalMarket:))
-            //let eventMarketCount = markets.first?.eventMarketCount
 
             return Event(id: internalEvent.id,
                          homeTeamName: internalEvent.homeName ?? "",
@@ -117,7 +116,13 @@ extension SportRadarModelMapper {
     
     static func market(fromInternalMarket internalMarket: SportRadarModels.Market) -> Market {
         let outcomes = internalMarket.outcomes.map(Self.outcome(fromInternalOutcome:))
-        return Market(id: internalMarket.id, name: internalMarket.name, outcomes: outcomes, marketTypeId: internalMarket.marketTypeId, eventMarketTypeId: internalMarket.eventMarketTypeId, eventName: internalMarket.eventName, eventMarketCount: internalMarket.eventMarketCount)
+        return Market(id: internalMarket.id,
+                      name: internalMarket.name,
+                      outcomes: outcomes,
+                      marketTypeId: internalMarket.marketTypeId,
+                      eventMarketTypeId: internalMarket.eventMarketTypeId,
+                      eventName: internalMarket.eventName,
+                      eventMarketCount: internalMarket.eventMarketCount)
     }
 
     static func outcome(fromInternalOutcome internalOutcome: SportRadarModels.Outcome) -> Outcome {

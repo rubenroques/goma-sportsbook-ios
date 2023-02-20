@@ -388,7 +388,7 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
 
             if self.viewModel?.isMatchLineLive() ?? false {
                 guard
-                    let cell = collectionView.dequeueCellType(LiveMatchWidgetCollectionViewCell.self, indexPath: indexPath)
+                    let cell = collectionView.dequeueCellType(MatchWidgetCollectionViewCell.self, indexPath: indexPath)
                 else {
                     fatalError()
                 }
