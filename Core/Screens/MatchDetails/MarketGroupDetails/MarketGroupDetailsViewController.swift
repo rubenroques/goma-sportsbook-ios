@@ -359,8 +359,6 @@ extension MarketGroupDetailsViewController {
         activityIndicatorView.stopAnimating()
         return activityIndicatorView
     }
-
-
     private static func createBackgroundGradientView() -> GradientView {
         let view = GradientView()
         view.translatesAutoresizingMaskIntoConstraints = false

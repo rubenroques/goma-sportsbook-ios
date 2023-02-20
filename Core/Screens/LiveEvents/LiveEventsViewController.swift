@@ -56,11 +56,11 @@ class LiveEventsViewController: UIViewController {
         didSet {
             if let sportIconImage = UIImage(named: "sport_type_mono_icon_\( selectedSport.id)") {
                 self.sportTypeIconImageView.image = sportIconImage
-                self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+                self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
             }
             else {
                 self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_default")
-                self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+                self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
             }
             self.viewModel.selectedSport = selectedSport
         }
@@ -345,6 +345,7 @@ class LiveEventsViewController: UIViewController {
 
         self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
         self.sportTypeIconImageView.tintColor = UIColor.App.textPrimary
+
         self.sportsSelectorExpandImageView.setImageColor(color: UIColor.App.textPrimary)
         self.sportsSelectorExpandImageView.tintColor = UIColor.App.textPrimary
     }

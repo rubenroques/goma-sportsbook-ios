@@ -129,7 +129,6 @@ class SearchViewModel: NSObject {
         self.isEmptySearch = false
 
         // EM TEMP SHUTDOWN
-        //self.hasDoneSearch = true
         Env.servicesProvider.getSearchEvents(query: searchQuery, resultLimit: "20", page: "0")
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -138,11 +137,12 @@ class SearchViewModel: NSObject {
                     ()
                 case .failure(let error):
                     print("SEARCH ERROR: \(error)")
+                    self?.searchMatchesPublisher.send([:])
+                    self?.hasDoneSearch = true
                 }
 
             }, receiveValue: { [weak self] eventsGroup in
 
-                print("SEARCH RESPONSE: \(eventsGroup)")
                 self?.processEvents(eventsGroup: eventsGroup)
             })
             .store(in: &cancellables)
