@@ -119,7 +119,7 @@ enum OmegaAPIClient {
     case processDeposit(paymentMethod: String, amount: Double, option: String)
     case updatePayment(paymentMethod: String, amount: Double, paymentId: String, type: String, issuer: String)
 
-    case getTransactionsHistory
+    case getTransactionsHistory(date: String? = nil)
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -452,9 +452,15 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "issuer", value: issuer)
             ]
 
-        case .getTransactionsHistory:
-            return nil
-        }
+        case .getTransactionsHistory(let date):
+            var queryItemsURL: [URLQueryItem] = []
+
+            if let date {
+                let queryItem = URLQueryItem(name: "date", value: date)
+                queryItemsURL.append(queryItem)
+            }
+
+            return queryItemsURL        }
     }
     
     

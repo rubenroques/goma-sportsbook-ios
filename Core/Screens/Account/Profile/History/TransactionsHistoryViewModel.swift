@@ -129,7 +129,7 @@ class TransactionsHistoryViewModel {
 
         self.listStatePublisher.send(.loading)
 
-        Env.servicesProvider.getTransactionsHistory()
+        Env.servicesProvider.getTransactionsDeposits(date: "2023-02-22")
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
 
@@ -137,58 +137,115 @@ class TransactionsHistoryViewModel {
                 case .finished:
                     ()
                 case .failure(let error):
-                    print("TRANSACTIONS HISTORY ERROR: \(error)")
+                    print("TRANSACTIONS DEPOSITS ERROR: \(error)")
 
                     self?.transactionsPublisher.send([])
 
                     self?.listStatePublisher.send(.serverError)
 
                 }
-            }, receiveValue: { [weak self] transactionsHistoryResponse in
+            }, receiveValue: { [weak self] transactionsDeposits in
 
-                let transactionsHistoryResponse = transactionsHistoryResponse
-
-                if let depositTransactions = transactionsHistoryResponse.transactions {
-
-                    let transactions = depositTransactions.map { transactionDetail -> TransactionHistory in
-
-                        let transactionHistory = TransactionHistory(transactionID: "\(transactionDetail.id)",
-                                                                    time: transactionDetail.timestamp,
-                                                                    debit: DebitCredit(currency: transactionDetail.currency,
-                                                                                       amount: Double(transactionDetail.amount) ?? 0,
-                                                                                       name: "Debit"),
-                                                                    credit: DebitCredit(currency: transactionDetail.currency,
-                                                                                        amount: Double(transactionDetail.amount) ?? 0,
-                                                                                        name: "Credit"),
-                                                                    fees: [],
-                                                                    status: nil,
-                                                                    transactionReference: nil,
-                                                                    id: "\(transactionDetail.id)",
-                                                                    isRallbackAllowed: nil)
-
-                        return transactionHistory
-                    }
-
-                    self?.depositTransactions.send(transactions)
-                    self?.transactionsPublisher.send(transactions)
-
-                    if transactions.isEmpty {
-                        self?.listStatePublisher.send(.empty)
-                    }
-                    else {
-                        self?.listStatePublisher.send(.loaded)
-                    }
-                }
-                else {
-                    self?.depositTransactions.send([])
-                    self?.transactionsPublisher.send([])
-                    self?.listStatePublisher.send(.empty)
-                }
-
-
+                self?.processTransactions(transactions: transactionsDeposits, transactionType: .deposit)
 
             })
             .store(in: &cancellables)
+
+//        Env.servicesProvider.getTransactionsHistory()
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//
+//                switch completion {
+//                case .finished:
+//                    ()
+//                case .failure(let error):
+//                    print("TRANSACTIONS HISTORY ERROR: \(error)")
+//
+//                    self?.transactionsPublisher.send([])
+//
+//                    self?.listStatePublisher.send(.serverError)
+//
+//                }
+//            }, receiveValue: { [weak self] transactionsHistoryResponse in
+//
+//                let transactionsHistoryResponse = transactionsHistoryResponse
+//
+//                if let transactions = transactionsHistoryResponse.transactions {
+//
+//                    self?.processTransactions(transactions: transactions)
+//                }
+//                else {
+//                    self?.depositTransactions.send([])
+//                    self?.transactionsPublisher.send([])
+//                    self?.listStatePublisher.send(.empty)
+//                }
+//
+//            })
+//            .store(in: &cancellables)
+    }
+
+    func processTransactions(transactions: [TransactionDetail], transactionType: TransactionsType) {
+
+//        var transactionsHistory = [TransactionHistory]()
+//
+//        for transactionDetail in transactions {
+//
+//            if transactionDetail.type.contains("CANCEL") {
+//                continue
+//            }
+//
+//            let transactionHistory = TransactionHistory(transactionID: "\(transactionDetail.id)",
+//                                                        time: transactionDetail.timestamp,
+//                                                        debit: DebitCredit(currency: transactionDetail.currency,
+//                                                                           amount: Double(transactionDetail.amount) ?? 0,
+//                                                                           name: "Debit"),
+//                                                        credit: DebitCredit(currency: transactionDetail.currency,
+//                                                                            amount: Double(transactionDetail.amount) ?? 0,
+//                                                                            name: "Credit"),
+//                                                        fees: [],
+//                                                        status: nil,
+//                                                        transactionReference: nil,
+//                                                        id: "\(transactionDetail.id)",
+//                                                        isRallbackAllowed: nil)
+//
+//            transactionsHistory.append(transactionHistory)
+//        }
+
+        let transactions = transactions.map { transactionDetail -> TransactionHistory in
+
+                let transactionHistory = TransactionHistory(transactionID: "\(transactionDetail.id)",
+                                                            time: transactionDetail.timestamp,
+                                                            debit: DebitCredit(currency: transactionDetail.currency,
+                                                                               amount: Double(transactionDetail.amount) ?? 0,
+                                                                               name: "Debit"),
+                                                            credit: DebitCredit(currency: transactionDetail.currency,
+                                                                                amount: Double(transactionDetail.amount) ?? 0,
+                                                                                name: "Credit"),
+                                                            fees: [],
+                                                            status: nil,
+                                                            transactionReference: nil,
+                                                            id: "\(transactionDetail.id)",
+                                                            isRallbackAllowed: nil)
+
+                return transactionHistory
+            }
+
+        switch transactionType {
+        case .deposit:
+            self.depositTransactions.send(transactions)
+        case .withdraw:
+            self.withdrawTransactions.send(transactions)
+        }
+
+        self.transactionsPublisher.send(transactions)
+
+        if transactions.isEmpty {
+            self.listStatePublisher.send(.empty)
+        }
+        else {
+            self.listStatePublisher.send(.loaded)
+        }
+
     }
 
 //    func loadDeposits(page: Int) {
@@ -241,9 +298,29 @@ class TransactionsHistoryViewModel {
     func loadWithdraws(page: Int) {
         self.listStatePublisher.send(.loading)
 
-        self.transactionsPublisher.send([])
-        self.withdrawTransactions.send([])
-        self.listStatePublisher.send(.empty)
+        self.listStatePublisher.send(.loading)
+
+        Env.servicesProvider.getTransactionsWithdrawals()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("TRANSACTIONS WITHDRAWALS ERROR: \(error)")
+
+                    self?.transactionsPublisher.send([])
+
+                    self?.listStatePublisher.send(.serverError)
+
+                }
+            }, receiveValue: { [weak self] transactionsWithdrawals in
+
+                self?.processTransactions(transactions: transactionsWithdrawals, transactionType: .withdraw)
+
+            })
+            .store(in: &cancellables)
 //        let withdrawsRoute = TSRouter.getTransactionHistory(type: "Withdraw",
 //                                                            startTime: convertDateToString(date: self.startDatePublisher.value),
 //                                                            endTime: convertDateToString(date: self.endDatePublisher.value),

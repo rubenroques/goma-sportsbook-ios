@@ -60,5 +60,7 @@ protocol PrivilegedAccessManager {
     func processDeposit(paymentMethod: String, amount: Double, option: String) -> AnyPublisher<ProcessDepositResponse, ServiceProviderError>
     func updatePayment(paymentMethod: String, amount: Double, paymentId: String, type: String, issuer: String) -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError>
 
-    func getTransactionsHistory() -> AnyPublisher<TransactionsHistoryResponse, ServiceProviderError>
+    func getTransactionsHistory(date: String?) -> AnyPublisher<TransactionsHistoryResponse, ServiceProviderError>
+    func getTransactionsDeposits(date: String?) -> AnyPublisher<[TransactionDetail], ServiceProviderError>
+    func getTransactionsWithdrawals(date: String?) -> AnyPublisher<[TransactionDetail], ServiceProviderError>
 }

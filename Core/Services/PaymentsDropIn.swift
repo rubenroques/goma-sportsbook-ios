@@ -25,6 +25,7 @@ class PaymentsDropIn {
     var showErrorAlertTypePublisher: CurrentValueSubject<BalanceErrorType?, Never> = .init(nil)
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var shouldProccessPayment: ((String) -> Void)?
+    var showPaymentStatus: ((PaymentStatus) -> Void)?
 
     var dropInDepositAmount: String = ""
     var depositAmount: Double = 0.0
@@ -326,8 +327,14 @@ extension PaymentsDropIn: DropInComponentDelegate, AdyenSessionDelegate, Present
 
         print("ADYEN SESSION RESULT: \(resultCode)")
 
-        if resultCode.rawValue == "refused" {
+        if resultCode.rawValue == "Refused" {
             self.dropInComponent?.viewController.dismiss(animated: true)
+            self.showPaymentStatus?(.refused)
+        }
+
+        if resultCode.rawValue == "Authorised" {
+            self.dropInComponent?.viewController.dismiss(animated: true)
+            self.showPaymentStatus?(.authorised)
         }
 
     }
