@@ -27,14 +27,14 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DLP-f6-ESf">
-                                <rect key="frame" x="12" y="43" width="238" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="247" verticalHuggingPriority="247" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="DLP-f6-ESf">
+                                <rect key="frame" x="12" y="37" width="238" height="33"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YS8-PY-Ny1">
-                                <rect key="frame" x="12" y="73" width="280" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="253" verticalHuggingPriority="253" horizontalCompressionResistancePriority="752" verticalCompressionResistancePriority="752" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YS8-PY-Ny1">
+                                <rect key="frame" x="12" y="74" width="280" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -43,11 +43,12 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="YS8-PY-Ny1" firstAttribute="leading" secondItem="ST7-n0-qvj" secondAttribute="leading" constant="12" id="3lR-3S-a8t"/>
-                            <constraint firstItem="DLP-f6-ESf" firstAttribute="top" secondItem="fMz-9V-1fS" secondAttribute="bottom" constant="10" id="8WM-wM-SsU"/>
+                            <constraint firstItem="DLP-f6-ESf" firstAttribute="top" secondItem="fMz-9V-1fS" secondAttribute="bottom" constant="4" id="8WM-wM-SsU"/>
+                            <constraint firstItem="YS8-PY-Ny1" firstAttribute="top" secondItem="DLP-f6-ESf" secondAttribute="bottom" constant="4" id="GxS-i7-xEf"/>
                             <constraint firstAttribute="trailing" secondItem="fMz-9V-1fS" secondAttribute="trailing" constant="8" id="IZi-5O-qjm"/>
                             <constraint firstItem="fMz-9V-1fS" firstAttribute="leading" secondItem="ST7-n0-qvj" secondAttribute="leading" constant="12" id="dD2-E5-6H8"/>
                             <constraint firstItem="fMz-9V-1fS" firstAttribute="top" secondItem="ST7-n0-qvj" secondAttribute="top" constant="12" id="ioh-IL-i7Y"/>
-                            <constraint firstAttribute="bottom" secondItem="YS8-PY-Ny1" secondAttribute="bottom" constant="12" id="mGf-Cu-ZRA"/>
+                            <constraint firstAttribute="bottom" secondItem="YS8-PY-Ny1" secondAttribute="bottom" constant="11" id="mGf-Cu-ZRA"/>
                             <constraint firstAttribute="trailing" secondItem="DLP-f6-ESf" secondAttribute="trailing" constant="50" id="mzN-2i-BKb"/>
                             <constraint firstItem="DLP-f6-ESf" firstAttribute="leading" secondItem="ST7-n0-qvj" secondAttribute="leading" constant="12" id="tVU-X0-Mly"/>
                             <constraint firstAttribute="trailing" secondItem="YS8-PY-Ny1" secondAttribute="trailing" constant="8" id="xla-Fv-UHp"/>

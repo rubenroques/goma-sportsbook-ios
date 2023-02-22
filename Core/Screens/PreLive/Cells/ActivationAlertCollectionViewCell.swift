@@ -28,9 +28,9 @@ class ActivationAlertCollectionViewCell: UICollectionViewCell {
         containerView.layer.cornerRadius = CornerRadius.button
         containerView.layer.masksToBounds = true
 
-        titleLabel.text = "Lorem Ipsum"
+        titleLabel.text = ""
 
-        descriptionLabel.text = "Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum"
+        descriptionLabel.text = ""
         descriptionLabel.numberOfLines = 0
 
         linkLabel.text = "Click here"
@@ -65,7 +65,7 @@ class ActivationAlertCollectionViewCell: UICollectionViewCell {
         titleLabel.font = AppFont.with(type: .bold, size: 16)
 
         descriptionLabel.textColor = UIColor.App.textPrimary
-        descriptionLabel.font = AppFont.with(type: .semibold, size: 14)
+        descriptionLabel.font = AppFont.with(type: .semibold, size: 13)
 
         linkLabel.textColor = UIColor.App.highlightPrimary
         linkLabel.font = AppFont.with(type: .semibold, size: 14)

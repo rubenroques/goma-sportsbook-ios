@@ -278,6 +278,7 @@ class PreLiveEventsViewModel: NSObject {
 
         if didChangeSport {
             self.clearOldSportData()
+            self.didChangeSport = false
         }
 
         self.popularMatchesHasNextPage = true
@@ -542,9 +543,9 @@ class PreLiveEventsViewModel: NSObject {
         self.competitions = []
         self.competitionsDataSource.competitions = []
 
+        // TODO: André, esta é a unica forma de fazer isto? parece demasiado hardcoded
         for competitionInfo in competitionInfos {
-            if let marketGroup = competitionInfo.marketGroups.filter({ $0.name == "Main" })
-                .first {
+            if let marketGroup = competitionInfo.marketGroups.filter({ $0.name == "Main" }).first {
                 self.subscribeCompetitionMatches(forMarketGroupId: marketGroup.id, competitionInfo: competitionInfo)
             }
             else {
