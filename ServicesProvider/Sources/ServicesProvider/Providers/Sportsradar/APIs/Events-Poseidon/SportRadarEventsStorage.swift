@@ -15,5 +15,9 @@ class SportRadarEventsStorage {
     init() {
 
     }
-    
+
+    func reset() {
+        self.events = []
+    }
+
 }

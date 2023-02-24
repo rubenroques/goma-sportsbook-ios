@@ -45,9 +45,11 @@ class SportRadarEventsProvider: EventsProvider {
             .withPrevious()
             .sink(receiveValue: { [weak self] (oldToken, newToken) in
 
+                self?.sessionCoordinator.saveToken(newToken.hash, withKey: .socketSessionToken)
+
                 if let oldToken, oldToken != newToken {
                     print("ServiceProvider SportRadarSocketConnector: [\(oldToken)] -> [\(newToken)] Has reconnected")
-                    self?.reconnectIfNeeded()
+                    self?.subscribePreviousTopics(withNewSocketToken: newToken.hash)
                 }
                 else {
                     print("ServiceProvider SportRadarSocketConnector: [\(newToken)] initial connection")
@@ -86,8 +88,14 @@ class SportRadarEventsProvider: EventsProvider {
 //        self.allSportTypesPublisher?.send(.disconnected)
 //        self.allSportTypesPublisher = nil
 //
-//        self.socketConnector.refreshConnection()
+        self.socketConnector.refreshConnection()
+    }
 
+    func subscribePreviousTopics(withNewSocketToken newSocketToken: String) {
+        self.eventsPaginators = self.eventsPaginators.filter { $0.value.isActive }
+        for paginator in self.eventsPaginators.values where paginator.isActive {
+            paginator.reconnect(withNewSessionToken: newSocketToken)
+        }
     }
 
     func subscribePreLiveMatches(forSportType sportType: SportType, initialDate: Date? = nil, endDate: Date? = nil, eventCount: Int? = nil, sortType: EventListSort) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
@@ -120,7 +128,7 @@ class SportRadarEventsProvider: EventsProvider {
 
         let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
 
-        if let paginator = self.eventsPaginators[contentIdentifier.pageableId] {
+        if let paginator = self.eventsPaginators[contentIdentifier.pageableId], paginator.isActive {
             return paginator.eventsPublisher()
         }
         else {
@@ -159,14 +167,13 @@ class SportRadarEventsProvider: EventsProvider {
 
         let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
 
-        if let paginator = self.eventsPaginators[contentIdentifier.pageableId] {
+        if let paginator = self.eventsPaginators[contentIdentifier.pageableId], paginator.isActive {
             return paginator.requestNextPage().eraseToAnyPublisher()
         }
         else {
             return Fail(outputType: Bool.self, failure: ServiceProviderError.subscriptionNotFound).eraseToAnyPublisher()
         }
     }
-
 
     func subscribeLiveMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
 
@@ -190,7 +197,7 @@ class SportRadarEventsProvider: EventsProvider {
 
         let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
 
-        if let paginator = self.eventsPaginators[contentIdentifier.pageableId] {
+        if let paginator = self.eventsPaginators[contentIdentifier.pageableId], paginator.isActive {
             return paginator.eventsPublisher()
         }
         else {
@@ -513,7 +520,7 @@ class SportRadarEventsProvider: EventsProvider {
 extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
 
     func liveEventsUpdated(forContentIdentifier identifier: ContentIdentifier, withEvents events: [EventsGroup]) {
-        print("ServiceProvider - SportRadarSocketConnector liveEventsUpdated forContentIdentifier \(identifier.contentType) \(identifier.contentRoute.fullRoute)")
+        // print("ServiceProvider - SportRadarSocketConnector liveEventsUpdated forContentIdentifier \(identifier)")
         if let eventPaginator = self.eventsPaginators[identifier.pageableId] {
             let flattenedEvents = events.flatMap({ $0.events })
             eventPaginator.updateEventsList(events: flattenedEvents)
@@ -521,7 +528,7 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
     }
 
     func preLiveEventsUpdated(forContentIdentifier identifier: ContentIdentifier, withEvents events: [EventsGroup]) {
-        print("ServiceProvider - SportRadarSocketConnector preLiveEventsUpdated forContentIdentifier \(identifier.contentType) \(identifier.contentRoute.fullRoute)")
+        // print("ServiceProvider - SportRadarSocketConnector preLiveEventsUpdated forContentIdentifier \(identifier)")
         if let eventPaginator = self.eventsPaginators[identifier.pageableId] {
             let flattenedEvents = events.flatMap({ $0.events })
             eventPaginator.updateEventsList(events: flattenedEvents)
@@ -529,7 +536,7 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
     }
 
     func liveSportsUpdated(withSportTypes sportTypes: [SportRadarModels.SportType]) {
-        print("ServiceProvider - SportRadarSocketConnector liveSportsUpdated")
+        // print("ServiceProvider - SportRadarSocketConnector liveSportsUpdated")
         if let liveSportTypesPublisher = self.liveSportTypesPublisher {
 
             let externalSports = sportTypes.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
@@ -572,7 +579,7 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
     }
 
     func preLiveSportsUpdated(withSportTypes sportTypes: [SportRadarModels.SportType]) {
-        print("ServiceProvider - SportRadarSocketConnector preLiveSportsUpdated")
+        // print("ServiceProvider - SportRadarSocketConnector preLiveSportsUpdated")
         if let allSportTypesPublisher = self.allSportTypesPublisher {
             let sports = sportTypes.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
             allSportTypesPublisher.send(.contentUpdate(content: sports))

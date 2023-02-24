@@ -27,7 +27,10 @@ public struct Event: Codable {
     public var homeTeamName: String
     public var awayTeamName: String
     public var sportTypeName: String
-    
+
+    public var homeTeamScore: Int?
+    public var awayTeamScore: Int?
+
     public var competitionId: String
     public var competitionName: String
     public var startDate: Date
@@ -61,10 +64,27 @@ public struct Event: Codable {
         case numberMarkets = "numMarkets"
     }
 
-    public init(id: String, homeTeamName: String, awayTeamName: String, sportTypeName: String, competitionId: String, competitionName: String, startDate: Date, markets: [Market], venueCountry: Country? = nil, numberMarkets: Int? = nil, name: String? = nil) {
+    public init(id: String,
+                homeTeamName: String,
+                awayTeamName: String,
+                homeTeamScore: Int?,
+                awayTeamScore: Int?,
+                sportTypeName: String,
+                competitionId: String,
+                competitionName: String,
+                startDate: Date,
+                markets: [Market],
+                venueCountry: Country? = nil,
+                numberMarkets: Int? = nil,
+                name: String? = nil) {
+
         self.id = id
         self.homeTeamName = homeTeamName
         self.awayTeamName = awayTeamName
+
+        self.homeTeamScore = homeTeamScore
+        self.awayTeamScore = awayTeamScore
+
         self.sportTypeName = sportTypeName
         self.competitionId = competitionId
         self.competitionName = competitionName
@@ -72,6 +92,7 @@ public struct Event: Codable {
         self.markets = markets
         self.venueCountry = venueCountry
         self.numberMarkets = numberMarkets
+
         self.name = name
     }
 

@@ -73,8 +73,8 @@ class VideoPreviewCollectionViewCell: UICollectionViewCell {
         self.imageView.kf.cancelDownloadTask()
         self.imageView.image = nil
 
-        self.titleLabel.text = localized("empty_value")
-        self.subtitleLabel.text = localized("empty_value")
+        self.titleLabel.text = ""
+        self.subtitleLabel.text = ""
     }
 
     override func layoutSubviews() {
@@ -147,7 +147,7 @@ extension VideoPreviewCollectionViewCell {
         let titleLabel = UILabel()
         titleLabel.numberOfLines = 2
         titleLabel.textAlignment = .left
-        titleLabel.text = localized("empty_value")
+        titleLabel.text = ""
         titleLabel.font = AppFont.with(type: .bold, size: 13)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         return titleLabel
@@ -157,7 +157,7 @@ extension VideoPreviewCollectionViewCell {
         let titleLabel = UILabel()
         titleLabel.numberOfLines = 1
         titleLabel.textAlignment = .left
-        titleLabel.text = localized("empty_value")
+        titleLabel.text = ""
         titleLabel.font = AppFont.with(type: .regular, size: 12)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         return titleLabel

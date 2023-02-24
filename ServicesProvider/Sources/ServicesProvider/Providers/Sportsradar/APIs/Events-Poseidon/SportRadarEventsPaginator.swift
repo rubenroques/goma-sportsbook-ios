@@ -167,6 +167,46 @@ class SportRadarEventsPaginator {
         }
     }
 
+    func reconnect(withNewSessionToken newSessionToken: String) {
+
+        // Update the socket session token
+        self.sessionToken = newSessionToken
+        print("SportRadarEventsPaginator: reconnect withNewSessionToken \(newSessionToken)")
+
+        guard let subscription = self.subscription else { return }
+
+        // Reset the storage, we will recieve every info again
+        self.storage.reset()
+
+        // Include the self subscription in the array
+        var allSubscriptions = [subscription]
+        allSubscriptions.append(contentsOf: subscription.associatedSubscriptions)
+
+        // Send the REST subscribe request again
+        for subscription in allSubscriptions {
+
+            let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: self.sessionToken,
+                                                             contentIdentifier: subscription.contentIdentifier)
+
+            guard let request = endpoint.request() else { continue }
+            let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+
+                if let error {
+                    print("SportRadarEventsPaginator: reconnect dataTask contentIdentifier \(subscription.contentIdentifier) error \(error)")
+                }
+//                if let response {
+//                    print("SportRadarEventsPaginator: reconnect dataTask response \(response)")
+//                }
+                if let data, let dataString = String(data: data, encoding: .utf8) {
+                    print("SportRadarEventsPaginator: reconnect dataTask contentIdentifier \(subscription.contentIdentifier) data \(dataString)")
+                }
+            }
+            sessionDataTask.resume()
+
+        }
+
+    }
+
 }
 
 extension SportRadarEventsPaginator: UnsubscriptionController {

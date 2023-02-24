@@ -524,7 +524,7 @@ class HeaderTextFieldView: NibView {
 
         showingTipLabel = false
 
-        tipLabel.text = Localization.localized("empty_value")
+        tipLabel.text = ""
         tipLabel.textColor = .black
 
         containerView.layer.borderColor = UIColor.clear.cgColor

@@ -10,45 +10,6 @@ import SharedModels
 
 extension SportRadarModelMapper {
 
-//    static func eventsGroup(fromInternalEvents internalEvents: [SportRadarModels.Event]) -> EventsGroup {
-//        let events = internalEvents.map({ event -> Event in
-//            let country: Country? = Country.country(withName: event.tournamentCountryName ?? "")
-//
-//            if let eventMarkets = event.markets {
-//                let markets = eventMarkets.map(Self.market(fromInternalMarket:))
-//                return Event(id: event.id,
-//                             homeTeamName: event.homeName ?? "",
-//                             awayTeamName: event.awayName ?? "",
-//                             sportTypeName: event.sportTypeName ?? "",
-//                             competitionId: event.competitionId ?? "",
-//                             competitionName: event.competitionName ?? "",
-//                             startDate: event.startDate ?? Date(),
-//                             markets: markets,
-//                             venueCountry: country,
-//                             numberMarkets: event.numberMarkets)
-//            }
-//            else {
-//                return Event(id: event.id,
-//                             homeTeamName: event.homeName ?? "",
-//                             awayTeamName: event.awayName ?? "",
-//                             sportTypeName: event.sportTypeName ?? "",
-//                             competitionId: event.competitionId ?? "",
-//                             competitionName: event.competitionName ?? "",
-//                             startDate: event.startDate ?? Date(),
-//                             markets: [],
-//                             numberMarkets: event.numberMarkets)
-//            }
-//        })
-//
-//        let filterEvents = events.filter({
-//            !$0.markets.isEmpty
-//        })
-//
-//        return EventsGroup(events: filterEvents)
-//    }
-
-
-    // TODO: André - o model mapper não serve para manituplar assim os dados, é apenas para mappear
     static func eventsGroup(fromInternalEvents internalEvents: [SportRadarModels.Event]) -> EventsGroup {
 
         let events = internalEvents.map({ event -> Event in
@@ -60,6 +21,8 @@ extension SportRadarModelMapper {
                 return Event(id: event.id,
                              homeTeamName: event.homeName ?? "",
                              awayTeamName: event.awayName ?? "",
+                             homeTeamScore: event.homeScore,
+                             awayTeamScore: event.awayScore,
                              sportTypeName: event.sportTypeName ?? "",
                              competitionId: event.competitionId ?? "",
                              competitionName: event.competitionName ?? "",
@@ -72,6 +35,8 @@ extension SportRadarModelMapper {
             return Event(id: event.id,
                          homeTeamName: event.homeName ?? "",
                          awayTeamName: event.awayName ?? "",
+                         homeTeamScore: event.homeScore,
+                         awayTeamScore: event.awayScore,
                          sportTypeName: event.sportTypeName ?? "",
                          competitionId: event.competitionId ?? "",
                          competitionName: event.competitionName ?? "",
@@ -93,6 +58,8 @@ extension SportRadarModelMapper {
             return Event(id: internalEvent.id,
                          homeTeamName: internalEvent.homeName ?? "",
                          awayTeamName: internalEvent.awayName ?? "",
+                         homeTeamScore: internalEvent.homeScore,
+                         awayTeamScore: internalEvent.awayScore,
                          sportTypeName: internalEvent.sportTypeName ?? "",
                          competitionId: internalEvent.competitionId ?? "",
                          competitionName: internalEvent.competitionName ?? "",
@@ -104,6 +71,8 @@ extension SportRadarModelMapper {
         return Event(id: internalEvent.id,
                      homeTeamName: internalEvent.homeName ?? "",
                      awayTeamName: internalEvent.awayName ?? "",
+                     homeTeamScore: internalEvent.homeScore,
+                     awayTeamScore: internalEvent.awayScore,
                      sportTypeName: internalEvent.sportTypeName ?? "",
                      competitionId: internalEvent.competitionId ?? "",
                      competitionName: internalEvent.competitionName ?? "",

@@ -506,7 +506,7 @@ extension OutrightMarketDetailsViewController {
         titleLabel.textColor = UIColor.App.textPrimary
         titleLabel.font = AppFont.with(type: .semibold, size: 14)
         titleLabel.textAlignment = .left
-        titleLabel.text = localized("empty_value")
+        titleLabel.text = ""
         titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return titleLabel
     }

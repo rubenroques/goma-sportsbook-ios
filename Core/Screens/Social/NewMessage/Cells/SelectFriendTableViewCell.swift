@@ -55,7 +55,7 @@ class SelectFriendTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        self.titleLabel.text = localized("empty_value")
+        self.titleLabel.text = ""
 
         self.isOnline = false
 

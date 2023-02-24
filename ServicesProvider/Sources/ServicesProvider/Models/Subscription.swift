@@ -23,7 +23,7 @@ public class Subscription: Hashable, Identifiable {
     public var contentIdentifier: ContentIdentifier
     public var sessionToken: String
 
-    private var associatedSubscriptions: [Subscription] = []
+    var associatedSubscriptions: [Subscription] = []
     private weak var unsubscriber: UnsubscriptionController?
 
     init(contentIdentifier: ContentIdentifier, sessionToken: String, unsubscriber: UnsubscriptionController) {
@@ -42,7 +42,7 @@ public class Subscription: Hashable, Identifiable {
     }
     
     deinit {
-        print("ServerProvider.Subscription.Debug dinit \(self.id) \(contentIdentifier.contentType) \(contentIdentifier.contentRoute.fullRoute)")
+        print("ServerProvider.Subscription.Debug dinit \(self.id) \(contentIdentifier)")
         unsubscriber?.unsubscribe(subscription: self)
     }
 
@@ -279,6 +279,12 @@ public class ContentIdentifier: Decodable, Hashable, Equatable, Identifiable {
         return lhs.id == rhs.id && lhs.pageableId == rhs.pageableId
     }
 
+}
+
+extension ContentIdentifier: CustomStringConvertible {
+    public var description: String {
+        return "[\(self.contentType.rawValue)] \(self.contentRoute.fullRoute)"
+    }
 }
 
 struct ContentDateFormatter {

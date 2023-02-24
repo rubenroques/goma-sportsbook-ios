@@ -37,6 +37,9 @@ extension SportRadarModels {
         var numberMarkets: Int?
         var name: String?
 
+        var homeScore: Int?
+        var awayScore: Int?
+
         enum CodingKeys: String, CodingKey {
             case id = "idfoevent"
             case homeName = "participantname_home"
@@ -65,6 +68,9 @@ extension SportRadarModels {
             self.numberMarkets = container.contains(.numberMarkets) ? try container.decode(Int.self, forKey: .numberMarkets) : self.markets?.first?.eventMarketCount
 
             self.name = try container.decodeIfPresent(String.self, forKey: .name)
+
+            self.homeScore = nil
+            self.awayScore = nil
 
             if let startDateString = try container.decodeIfPresent(String.self, forKey: .startDate) {
                 if let date = Self.dateFormatter.date(from: startDateString) {

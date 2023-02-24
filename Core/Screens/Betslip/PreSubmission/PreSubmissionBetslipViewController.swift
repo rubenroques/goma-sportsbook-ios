@@ -347,7 +347,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.systemBetTypeLoadingView.hidesWhenStopped = true
         self.systemBetTypeLoadingView.stopAnimating()
 
-        self.systemBetTypeLabel.text = localized("empty_value")
+        self.systemBetTypeLabel.text = ""
 
         let tapSystemBetTypeSelector = UITapGestureRecognizer(target: self, action: #selector(didTapSystemBetTypeSelector))
         self.systemBetInteriorView.addGestureRecognizer(tapSystemBetTypeSelector)

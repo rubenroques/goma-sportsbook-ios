@@ -170,15 +170,15 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayUpChangeOddValueImage.alpha = 0.0
         self.awayDownChangeOddValueImage.alpha = 0.0
 
-        self.homeOddTitleLabel.text = localized("empty")
-        self.drawOddTitleLabel.text = localized("empty")
-        self.awayOddTitleLabel.text = localized("empty")
+        self.homeOddTitleLabel.text = "-"
+        self.drawOddTitleLabel.text = "-"
+        self.awayOddTitleLabel.text = "-"
 
-        self.eventNameLabel.text = localized("empty_value")
-        self.homeParticipantNameLabel.text = localized("empty_value")
-        self.awayParticipantNameLabel.text = localized("empty_value")
-        self.matchTimeLabel.text = localized("empty_value")
-        self.resultLabel.text = localized("empty_value")
+        self.eventNameLabel.text = ""
+        self.homeParticipantNameLabel.text = ""
+        self.awayParticipantNameLabel.text = ""
+        self.matchTimeLabel.text = ""
+        self.resultLabel.text = ""
 
         self.locationFlagImageView.image = nil
         self.suspendedBaseView.isHidden = true
@@ -270,19 +270,19 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.middleOutcome = nil
         self.rightOutcome = nil
 
-        self.eventNameLabel.text = localized("empty_value")
-        self.homeParticipantNameLabel.text = localized("empty_value")
-        self.awayParticipantNameLabel.text = localized("empty_value")
-        self.matchTimeLabel.text = localized("empty_value")
-        self.resultLabel.text = localized("empty_value")
+        self.eventNameLabel.text = ""
+        self.homeParticipantNameLabel.text = ""
+        self.awayParticipantNameLabel.text = ""
+        self.matchTimeLabel.text = ""
+        self.resultLabel.text = ""
 
-        self.homeOddTitleLabel.text = localized("empty")
-        self.drawOddTitleLabel.text = localized("empty")
-        self.awayOddTitleLabel.text = localized("empty")
+        self.homeOddTitleLabel.text = "-"
+        self.drawOddTitleLabel.text = "-"
+        self.awayOddTitleLabel.text = "-"
 
-        self.homeOddValueLabel.text = localized("empty_value")
-        self.drawOddValueLabel.text = localized("empty_value")
-        self.awayOddValueLabel.text = localized("empty_value")
+        self.homeOddValueLabel.text = ""
+        self.drawOddValueLabel.text = ""
+        self.awayOddValueLabel.text = ""
 
         self.homeBaseView.isUserInteractionEnabled = true
         self.drawBaseView.isUserInteractionEnabled = true
@@ -531,8 +531,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
         self.awayParticipantNameLabel.text = "\(viewModel.awayTeamName)"
 
-        self.resultLabel.text = localized("empty_value")
-        self.matchTimeLabel.text = localized("empty_value")
+        self.resultLabel.text = ""
+        self.matchTimeLabel.text = ""
 
        // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
         if viewModel.countryISOCode != "" {
@@ -591,7 +591,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                         if !bettingOffer.isOpen {
                             weakSelf.homeBaseView.isUserInteractionEnabled = false
                             weakSelf.homeBaseView.alpha = 0.5
-                            weakSelf.homeOddValueLabel.text = localized("empty")
+                            weakSelf.homeOddValueLabel.text = "-"
                         }
                         else {
                             weakSelf.homeBaseView.isUserInteractionEnabled = true
@@ -640,7 +640,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                         if !bettingOffer.isOpen {
                             weakSelf.drawBaseView.isUserInteractionEnabled = false
                             weakSelf.drawBaseView.alpha = 0.5
-                            weakSelf.drawOddValueLabel.text = localized("empty")
+                            weakSelf.drawOddValueLabel.text = "-"
                         }
                         else {
                             weakSelf.drawBaseView.isUserInteractionEnabled = true
@@ -688,7 +688,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                         if !bettingOffer.isOpen {
                             weakSelf.awayBaseView.isUserInteractionEnabled = false
                             weakSelf.awayBaseView.alpha = 0.5
-                            weakSelf.awayOddValueLabel.text = localized("empty")
+                            weakSelf.awayOddValueLabel.text = "-"
                         }
                         else {
                             weakSelf.awayBaseView.isUserInteractionEnabled = true
@@ -729,9 +729,9 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
             Logger.log("No markets found")
             oddsStackView.alpha = 0.2
 
-//            self.homeOddValueLabel.text = localized("empty")
-//            self.drawOddValueLabel.text = localized("empty")
-//            self.awayOddValueLabel.text = localized("empty")
+//            self.homeOddValueLabel.text = "-"
+//            self.drawOddValueLabel.text = "-"
+//            self.awayOddValueLabel.text = "-"
 
             self.showSeeAllView()
 

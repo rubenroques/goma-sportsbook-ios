@@ -140,7 +140,7 @@ class MyTicketBetLineView: NibView {
             self.oddValueLabel.text = OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
         }
 
-        self.dateLabel.text = localized("empty_value")
+        self.dateLabel.text = ""
         if let statusId = self.betHistoryEntrySelection.eventStatusId {
             if statusId == "2" {
                 self.dateLabel.isHidden = true
@@ -161,8 +161,8 @@ class MyTicketBetLineView: NibView {
             self.dateLabel.isHidden = false
         }
               
-        self.homeTeamScoreLabel.text = localized("empty_value")
-        self.awayTeamScoreLabel.text = localized("empty_value")
+        self.homeTeamScoreLabel.text = ""
+        self.awayTeamScoreLabel.text = ""
 
         self.homeResultSubscription = self.viewModel?.homeScore
             .removeDuplicates()
@@ -253,11 +253,11 @@ class MyTicketBetLineView: NibView {
             self.separatorView.isHidden = false
         case .open:
             self.dateLabel.isHidden = false
-            self.indicatorLabel.text = localized("empty_value")
+            self.indicatorLabel.text = ""
             self.indicatorBaseView.isHidden = true
         case .undefined:
             self.dateLabel.isHidden = true
-            self.indicatorLabel.text = localized("empty_value")
+            self.indicatorLabel.text = ""
             self.indicatorBaseView.isHidden = false
         }
     }
