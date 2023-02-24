@@ -119,7 +119,9 @@ enum OmegaAPIClient {
     case processDeposit(paymentMethod: String, amount: Double, option: String)
     case updatePayment(paymentMethod: String, amount: Double, paymentId: String, type: String, issuer: String)
 
-    case getTransactionsHistory(date: String? = nil)
+    case getWithdrawalsMethods
+
+    case getTransactionsHistory(startDate: String, endDate: String, transactionType: String? = nil, pageNumber: Int? = nil, pageSize: Int? = nil)
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -187,8 +189,12 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/processDeposit"
         case .updatePayment:
             return "/ps/ips/updatePayment"
+
+        case .getWithdrawalsMethods:
+            return "/ps/ips/getWithdrawalMethods"
+
         case .getTransactionsHistory:
-            return "/ps/ips/getTransactionHistory"
+            return "/ps/ips/getTransactionHistoryByCurrency"
         }
     }
     
@@ -452,15 +458,36 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "issuer", value: issuer)
             ]
 
-        case .getTransactionsHistory(let date):
+        case .getWithdrawalsMethods:
+            return nil
+
+        case .getTransactionsHistory(let startDate, let endDate, let transactionType, let pageNumber, let pageSize):
             var queryItemsURL: [URLQueryItem] = []
 
-            if let date {
-                let queryItem = URLQueryItem(name: "date", value: date)
+            let startDateQueryItem = URLQueryItem(name: "startDateTime", value: startDate)
+            queryItemsURL.append(startDateQueryItem)
+
+            let endDateQueryItem = URLQueryItem(name: "endDateTime", value: endDate)
+            queryItemsURL.append(endDateQueryItem)
+
+            if let transactionType {
+                let queryItem = URLQueryItem(name: "tranType", value: transactionType)
                 queryItemsURL.append(queryItem)
             }
 
-            return queryItemsURL        }
+            if let pageNumber {
+                let queryItem = URLQueryItem(name: "pageNum", value: "\(pageNumber)")
+                queryItemsURL.append(queryItem)
+            }
+
+            if let pageSize {
+                let queryItem = URLQueryItem(name: "pageSize", value: "\(pageSize)")
+                queryItemsURL.append(queryItem)
+            }
+
+            return queryItemsURL
+
+        }
     }
     
     
@@ -494,9 +521,12 @@ extension OmegaAPIClient: Endpoint {
         case .getDocumentTypes: return .get
         case .getUserDocuments: return .get
         case .uploadUserDocument: return .post
+
         case .getPayments: return .get
         case .processDeposit: return .post
         case .updatePayment: return .post
+
+        case .getWithdrawalsMethods: return .get
 
         case .getTransactionsHistory: return .get
         }
@@ -560,9 +590,12 @@ extension OmegaAPIClient: Endpoint {
         case .getDocumentTypes: return false
         case .getUserDocuments: return true
         case .uploadUserDocument: return true
+
         case .getPayments: return true
         case .processDeposit: return true
         case .updatePayment: return true
+
+        case .getWithdrawalsMethods: return true
 
         case .getTransactionsHistory: return true
         }

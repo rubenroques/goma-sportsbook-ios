@@ -28,14 +28,16 @@ class TransactionsHistoryRootViewModel {
     }
 
     func numberOfShortcuts(forSection section: Int) -> Int {
-        return 2
+        return 3
     }
 
     func shortcutTitle(forIndex index: Int) -> String {
         switch index {
         case 0:
-            return localized("deposits")
+            return localized("all")
         case 1:
+            return localized("deposits")
+        case 2:
             return localized("withdraws")
         default:
             return ""
@@ -100,6 +102,7 @@ class TransactionsHistoryRootViewController: UIViewController {
                 if let viewControllers = self?.viewControllers {
                     if viewControllers.isEmpty {
                         self?.viewControllers = [
+                            TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .all, filterApplied: filterApplied)),
                             TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .deposit, filterApplied: filterApplied)),
                             TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .withdraw, filterApplied: filterApplied)),
                         ]
@@ -131,7 +134,6 @@ class TransactionsHistoryRootViewController: UIViewController {
         self.filterBaseView.addGestureRecognizer(tapFilterGesture)
         self.filterBaseView.isUserInteractionEnabled = true
 
-        
         self.noLoginButton.addTarget(self, action: #selector(didTapLoginButton), for: .primaryActionTriggered)
 
         self.reloadCollectionView()

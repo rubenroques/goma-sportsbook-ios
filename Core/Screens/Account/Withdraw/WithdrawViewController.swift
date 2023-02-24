@@ -80,6 +80,7 @@ class WithdrawViewController: UIViewController {
 
         tipLabel.text = localized("minimum_withdraw_value")
         tipLabel.font = AppFont.with(type: .semibold, size: 12)
+        tipLabel.isHidden = true
 
         StyleHelper.styleButton(button: self.nextButton)
         self.nextButton.setTitle(localized("next"), for: .normal)
@@ -174,6 +175,19 @@ class WithdrawViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+        viewModel.minimumValue
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] minimumValue in
+
+                if minimumValue != "" {
+                    self?.tipLabel.text = "Minimum Value: \(minimumValue)€"
+                    self?.tipLabel.isHidden = false
+                }
+
+            })
+            .store(in: &cancellables)
+
     }
 
     // MARK: Functions

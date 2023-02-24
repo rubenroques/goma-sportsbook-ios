@@ -195,6 +195,23 @@ extension SportRadarModelMapper {
         return UpdatePaymentResponse(resultCode: internalUpdatePaymentResponse.resultCode, action: Self.updatePaymentAction(fromUpdatePaymentAction: internalUpdatePaymentResponse.action))
     }
 
+    static func withdrawalMethodsResponse(fromWithdrawalMethodsResponse internalWithdrawalMethodsResponse: SportRadarModels.WithdrawalMethodsResponse) -> WithdrawalMethodsResponse {
+
+        let withdrawalMethods = internalWithdrawalMethodsResponse.withdrawalMethods.map({ withdrawalMethod -> WithdrawalMethod in
+            let withdrawalMethod = Self.withdrawalMethod(fromWithdrawalMethod: withdrawalMethod)
+
+            return withdrawalMethod
+
+        })
+
+        return WithdrawalMethodsResponse(status: internalWithdrawalMethodsResponse.status, withdrawalMethods: withdrawalMethods)
+    }
+
+    static func withdrawalMethod(fromWithdrawalMethod internalWithdrawalMethod: SportRadarModels.WithdrawalMethod) -> WithdrawalMethod {
+
+        return WithdrawalMethod(code: internalWithdrawalMethod.code, paymentMethod: internalWithdrawalMethod.paymentMethod, minimumWithdrawal: internalWithdrawalMethod.minimumWithdrawal, maximumWithdrawal: internalWithdrawalMethod.maximumWithdrawal)
+    }
+
     static func updatePaymentAction(fromUpdatePaymentAction internalUpdatePaymentAction: SportRadarModels.UpdatePaymentAction) -> UpdatePaymentAction {
 
         return UpdatePaymentAction(paymentMethodType: internalUpdatePaymentAction.paymentMethodType, url: internalUpdatePaymentAction.url, method: internalUpdatePaymentAction.method, type: internalUpdatePaymentAction.type)
@@ -250,7 +267,7 @@ extension SportRadarModelMapper {
     static func transactionDetail(fromInternalTransactionDetail internalTransactionDetail: SportRadarModels.TransactionDetail) -> TransactionDetail {
 
         return TransactionDetail(id: internalTransactionDetail.id,
-                                 timestamp: internalTransactionDetail.timestamp,
+                                 dateTime: internalTransactionDetail.dateTime,
                                  type: internalTransactionDetail.type,
                                  amount: internalTransactionDetail.amount,
                                  postBalance: internalTransactionDetail.postBalance,

@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import ServicesProvider
 
 class BettingHistoryViewModel {
 
@@ -83,13 +84,15 @@ class BettingHistoryViewModel {
 
         self.calculateDate(filterApplied: filterApplied)
    
-        Env.everyMatrixClient.serviceStatusPublisher
-            .sink { serviceStatus in
-                if serviceStatus == .connected {
-                    self.initialContentLoad()
-                }
-            }
-            .store(in: &cancellables)
+//        Env.everyMatrixClient.serviceStatusPublisher
+//            .sink { serviceStatus in
+//                if serviceStatus == .connected {
+//                    self.initialContentLoad()
+//                }
+//            }
+//            .store(in: &cancellables)
+
+        self.initialContentLoad()
         
     }
 
@@ -159,6 +162,28 @@ class BettingHistoryViewModel {
 
     func loadOpenedTickets(page: Int) {
         // TODO: ServiceProvider get My Bets
+
+        self.listStatePublisher.send(.loading)
+
+        Env.servicesProvider.getOpenBetsHistory(pageIndex: page)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("BETTING OPEN HISTORY ERROR: \(error)")
+                    self?.listStatePublisher.send(.serverError)
+
+                }
+            }, receiveValue: { [weak self] bettingHistory in
+
+                print("BETTING OPEN HISTORY: \(bettingHistory)")
+                self?.listStatePublisher.send(.loaded)
+            })
+            .store(in: &cancellables)
+
 /*
         self.listStatePublisher.send(.loading)
 
@@ -229,10 +254,28 @@ class BettingHistoryViewModel {
 
     func loadResolvedTickets(page: Int) {
         // TODO: ServiceProvider get My Bets
-/*
         self.listStatePublisher.send(.loading)
 
-        let openedRoute = TSRouter.getMyTickets(language: "en",
+        Env.servicesProvider.getResolvedBetsHistory(pageIndex: page)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("BETTING RESOLVED HISTORY ERROR: \(error)")
+                    self?.listStatePublisher.send(.serverError)
+
+                }
+            }, receiveValue: { [weak self] bettingHistory in
+
+                print("BETTING RESOLVED HISTORY: \(bettingHistory)")
+                self?.listStatePublisher.send(.loaded)
+            })
+            .store(in: &cancellables)
+
+        /*let openedRoute = TSRouter.getMyTickets(language: "en",
                                                 ticketsType: EveryMatrix.MyTicketsType.resolved,
                                                 records: recordsPerPage,
                                                 page: page,
@@ -298,10 +341,28 @@ class BettingHistoryViewModel {
 
     func loadWonTickets(page: Int) {
         // TODO: ServiceProvider get My Bets
-/*
         self.listStatePublisher.send(.loading)
 
-        let openedRoute = TSRouter.getMyTickets(language: "en",
+        Env.servicesProvider.getWonBetsHistory(pageIndex: page)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("BETTING WON HISTORY ERROR: \(error)")
+                    self?.listStatePublisher.send(.serverError)
+
+                }
+            }, receiveValue: { [weak self] bettingHistory in
+
+                print("BETTING WON HISTORY: \(bettingHistory)")
+                self?.listStatePublisher.send(.loaded)
+            })
+            .store(in: &cancellables)
+
+        /*let openedRoute = TSRouter.getMyTickets(language: "en",
                                                 ticketsType: EveryMatrix.MyTicketsType.won,
                                                 records: recordsPerPage,
                                                 page: page,
@@ -372,10 +433,28 @@ class BettingHistoryViewModel {
     }
     func loadCashoutTickets(page: Int) {
         // TODO: ServiceProvider get My Bets
-/*
         self.listStatePublisher.send(.loading)
 
-        let openedRoute = TSRouter.getMyTickets(language: "en",
+        Env.servicesProvider.getBettingHistory(pageIndex: page)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("BETTING CASHOUT HISTORY ERROR: \(error)")
+                    self?.listStatePublisher.send(.serverError)
+
+                }
+            }, receiveValue: { [weak self] bettingHistory in
+
+                print("BETTING CASHOUT HISTORY: \(bettingHistory)")
+                self?.listStatePublisher.send(.loaded)
+            })
+            .store(in: &cancellables)
+
+        /*let openedRoute = TSRouter.getMyTickets(language: "en",
                                                 ticketsType: EveryMatrix.MyTicketsType.resolved,
                                                 records: recordsPerPage,
                                                 page: page,

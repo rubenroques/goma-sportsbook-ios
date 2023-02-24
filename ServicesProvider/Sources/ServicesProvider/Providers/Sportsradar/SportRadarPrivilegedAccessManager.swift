@@ -640,28 +640,29 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         }).eraseToAnyPublisher()
     }
 
-    func getTransactionsHistory(date: String? = nil) -> AnyPublisher<TransactionsHistoryResponse, ServiceProviderError> {
+    func getWithdrawalMethods() -> AnyPublisher<[WithdrawalMethod], ServiceProviderError> {
 
-        let endpoint = OmegaAPIClient.getTransactionsHistory(date: date)
-        let publisher: AnyPublisher<SportRadarModels.TransactionsHistoryResponse, ServiceProviderError> = self.connector.request(endpoint)
+        let endpoint = OmegaAPIClient.getWithdrawalsMethods
+        let publisher: AnyPublisher<SportRadarModels.WithdrawalMethodsResponse, ServiceProviderError> = self.connector.request(endpoint)
 
-        return publisher.flatMap({ transactionsHistoryResponse -> AnyPublisher<TransactionsHistoryResponse, ServiceProviderError> in
-            if transactionsHistoryResponse.status == "SUCCESS" {
+        return publisher.flatMap({ withdrawalMethodsResponse -> AnyPublisher<[WithdrawalMethod], ServiceProviderError> in
+            if withdrawalMethodsResponse.status == "SUCCESS" {
 
-                let transactionsHistoryResponse = SportRadarModelMapper.transactionsHistoryResponse(fromTransactionsHistoryResponse: transactionsHistoryResponse)
+                let withdrawalMethodsResponse = SportRadarModelMapper.withdrawalMethodsResponse(fromWithdrawalMethodsResponse: withdrawalMethodsResponse)
 
-                return Just(transactionsHistoryResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                return Just(withdrawalMethodsResponse.withdrawalMethods).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
 
             }
             else {
-                return Fail(outputType: TransactionsHistoryResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+                return Fail(outputType: [WithdrawalMethod].self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
             }
         }).eraseToAnyPublisher()
     }
 
-    func getTransactionsDeposits(date: String? = nil) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
+    func getTransactionsHistory(startDate: String, endDate: String, transactionType: String? = nil, pageNumber: Int? = nil) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
 
-        let endpoint = OmegaAPIClient.getTransactionsHistory(date: date)
+        let endpoint = OmegaAPIClient.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: transactionType, pageNumber: pageNumber, pageSize: 10)
+
         let publisher: AnyPublisher<SportRadarModels.TransactionsHistoryResponse, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher.flatMap({ transactionsHistoryResponse -> AnyPublisher<[TransactionDetail], ServiceProviderError> in
@@ -671,42 +672,11 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
 
                 if let transactions = transactionsHistoryResponse.transactions {
 
-                    let deposits = transactions.filter({
-                        $0.type.contains("DEPOSIT")
-                    })
-
-                    return Just(deposits).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                    return Just(transactions).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
                 }
 
                 return Just([]).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-
-            }
-            else {
-                return Fail(outputType: [TransactionDetail].self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
-            }
-        }).eraseToAnyPublisher()
-    }
-
-    func getTransactionsWithdrawals(date: String? = nil) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
-
-        let endpoint = OmegaAPIClient.getTransactionsHistory(date: date)
-        let publisher: AnyPublisher<SportRadarModels.TransactionsHistoryResponse, ServiceProviderError> = self.connector.request(endpoint)
-
-        return publisher.flatMap({ transactionsHistoryResponse -> AnyPublisher<[TransactionDetail], ServiceProviderError> in
-            if transactionsHistoryResponse.status == "SUCCESS" {
-
-                let transactionsHistoryResponse = SportRadarModelMapper.transactionsHistoryResponse(fromTransactionsHistoryResponse: transactionsHistoryResponse)
-
-                if let transactions = transactionsHistoryResponse.transactions {
-
-                    let deposits = transactions.filter({
-                        $0.type.contains("WITHDRAWAL")
-                    })
-
-                    return Just(deposits).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-                }
-
-                return Just([]).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+//                return Just(transactionsHistoryResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
 
             }
             else {

@@ -54,6 +54,8 @@ class TransactionsHistoryViewController: UIViewController {
 
         self.tableView.register(TransactionsTableViewCell.self, forCellReuseIdentifier: TransactionsTableViewCell.identifier)
 
+        self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
+
         self.emptyStateButton.addTarget(self, action: #selector(self.didTapMakeDeposit), for: .primaryActionTriggered)
 
         self.tableView.isHidden = false
@@ -136,7 +138,6 @@ class TransactionsHistoryViewController: UIViewController {
             })
             .store(in: &self.cancellables)
 
-        
     }
 
     private func showLoading() {

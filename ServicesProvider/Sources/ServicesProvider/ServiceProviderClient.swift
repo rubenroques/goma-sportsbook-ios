@@ -704,34 +704,25 @@ extension ServicesProviderClient {
         return privilegedAccessManager.updatePayment(paymentMethod: paymentMethod, amount: amount, paymentId: paymentId, type: type, issuer: issuer)
     }
 
-    public func getTransactionsHistory(date: String? = nil) -> AnyPublisher<TransactionsHistoryResponse, ServiceProviderError> {
+    public func getWithdrawalMethods() -> AnyPublisher<[WithdrawalMethod], ServiceProviderError> {
+
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
 
-        return privilegedAccessManager.getTransactionsHistory(date: date)
+        return privilegedAccessManager.getWithdrawalMethods()
     }
 
-    public func getTransactionsDeposits(date: String? = nil) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
+    public func getTransactionsHistory(startDate: String, endDate: String, transactionType: String? = nil, pageNumber: Int? = nil) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
 
-        return privilegedAccessManager.getTransactionsDeposits(date: date)
-    }
-
-    public func getTransactionsWithdrawals(date: String? = nil) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
-        guard
-            let privilegedAccessManager = self.privilegedAccessManager
-        else {
-            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
-        }
-
-        return privilegedAccessManager.getTransactionsWithdrawals(date: date)
+        return privilegedAccessManager.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: transactionType, pageNumber: pageNumber)
     }
 }
 

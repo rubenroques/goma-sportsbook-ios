@@ -67,19 +67,41 @@ class TransactionsTableViewCell: UITableViewCell {
         }
         self.transactionIdLabel.text = transactionHistoryEntry.transactionID
 
-        switch transactionType {
-        case .deposit:
+//        switch transactionType {
+//        case .deposit:
+//            self.transactionIcon.image = UIImage(named: "deposit_icon")
+//            self.transactionTypeLabel.text = localized("deposit")
+//            if let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: transactionHistoryEntry.debit.amount)) {
+//                self.transactionValueLabel.text = "+ " + amount
+//            }
+//        case .withdraw:
+//            self.transactionIcon.image = UIImage(named: "withdraw_icon")
+//            self.transactionTypeLabel.text = localized("withdraw")
+//            if let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: transactionHistoryEntry.credit.amount)) {
+//                self.transactionValueLabel.text = "- " + amount
+//            }
+//        }
+
+        switch transactionHistoryEntry.valueType {
+        case .won:
             self.transactionIcon.image = UIImage(named: "deposit_icon")
-            self.transactionTypeLabel.text = localized("deposit")
+            self.transactionTypeLabel.text = transactionHistoryEntry.type
             if let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: transactionHistoryEntry.debit.amount)) {
                 self.transactionValueLabel.text = "+ " + amount
             }
-        case .withdraw:
+        case .loss:
             self.transactionIcon.image = UIImage(named: "withdraw_icon")
-            self.transactionTypeLabel.text = localized("withdraw")
-            if let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: transactionHistoryEntry.credit.amount)) {
+            self.transactionTypeLabel.text = transactionHistoryEntry.type
+            if let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: transactionHistoryEntry.debit.amount)) {
                 self.transactionValueLabel.text = "- " + amount
             }
+        case .neutral:
+            self.transactionIcon.image = UIImage(named: "neutral_icon")
+            self.transactionTypeLabel.text = transactionHistoryEntry.type
+            if let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: transactionHistoryEntry.debit.amount)) {
+                self.transactionValueLabel.text = amount
+            }
+
         }
 
     }

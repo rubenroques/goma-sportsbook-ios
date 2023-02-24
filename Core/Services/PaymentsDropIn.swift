@@ -347,6 +347,7 @@ extension PaymentsDropIn: DropInComponentDelegate, AdyenSessionDelegate, Present
     }
 
     func present(component: Adyen.PresentableComponent) {
-        ()
+        print("ADYEN SESSION PRESENT")
+
     }
 }

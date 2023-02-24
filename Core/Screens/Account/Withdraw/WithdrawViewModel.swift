@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import ServicesProvider
 
 class WithdrawViewModel: NSObject {
     // MARK: Private Properties
@@ -17,20 +18,32 @@ class WithdrawViewModel: NSObject {
     var showErrorAlertTypePublisher: CurrentValueSubject<BalanceErrorType?, Never> = .init(nil)
     var cashierUrlPublisher: CurrentValueSubject<String?, Never> = .init(nil)
 
+    var withdrawalMethods: [WithdrawalMethod] = []
+    var minimumValue: CurrentValueSubject<String, Never> = .init("")
+    var maximumValue: CurrentValueSubject<String, Never> = .init("")
+
     // MARK: Lifetime and Cycle
     override init() {
         super.init()
 
+        self.getWithdrawalMethods()
     }
 
     // MARK: Functions
     func getWithdrawInfo(amountText: String) {
-//        self.isLoadingPublisher.send(true)
-//
-//        // TODO: Withdraw not working
-//
-//        let amountText = amountText
-//        let amount = amountText.replacingOccurrences(of: ",", with: ".")
+        self.isLoadingPublisher.send(true)
+
+        let amountText = amountText
+        var amount = ""
+
+        if amountText.contains(",") {
+            amount = amountText.replacingOccurrences(of: ",", with: ".")
+        }
+        else {
+            amount = amountText
+        }
+
+        self.isLoadingPublisher.send(false)
 //        var currency = ""
 //        var gamingAccountId = ""
 //
@@ -67,5 +80,39 @@ class WithdrawViewModel: NSObject {
 //            })
 //            .store(in: &cancellables)
 //
+    }
+
+    private func getWithdrawalMethods() {
+
+        Env.servicesProvider.getWithdrawalMethods()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("WITHDRAWAL METHODS ERROR: \(error)")
+                    self?.isLoadingPublisher.send(false)
+                }
+
+            }, receiveValue: { [weak self] withdrawalMethods in
+                print("WITHDRAWAL METHODS: \(withdrawalMethods)")
+
+                // Bank transfer only
+                let methods = withdrawalMethods.filter({
+                    $0.code == "ADYEN_BANK_TRANSFER"
+                })
+
+                self?.withdrawalMethods = methods
+
+                if let method = methods.first {
+                    self?.minimumValue.send(method.minimumWithdrawal.replacingFirstOccurrence(of: ",", with: ""))
+
+                    self?.maximumValue.send(method.maximumWithdrawal.replacingFirstOccurrence(of: ",", with: ""))
+                }
+
+            })
+            .store(in: &cancellables)
     }
 }
