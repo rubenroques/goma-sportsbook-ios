@@ -8,6 +8,7 @@
 import Foundation
 
 public struct MarketFilter: Codable {
+
     public var allMarkets: MarketInfo
     public var popularMarkets: MarketInfo
     public var totalMarkets: MarketInfo

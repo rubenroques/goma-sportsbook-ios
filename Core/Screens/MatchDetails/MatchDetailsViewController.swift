@@ -771,10 +771,13 @@ class MatchDetailsViewController: UIViewController {
         
         for marketGroup in marketGroups {
             if let groupKey = marketGroup.groupKey {
+
                 let viewModel = MarketGroupDetailsViewModel(match: match, marketGroupId: groupKey)
+
                 if let groupMarkets = marketGroup.markets {
                     viewModel.availableMarkets = groupMarkets
                 }
+
                 let marketGroupDetailsViewController = MarketGroupDetailsViewController(viewModel: viewModel)
 
                 marketGroupDetailsViewController.shouldScrollToTop = { [weak self] scrollTop in

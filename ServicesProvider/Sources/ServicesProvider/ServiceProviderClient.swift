@@ -175,13 +175,21 @@ extension ServicesProviderClient {
 }
 
 extension ServicesProviderClient {
-    public func getMarketFilters(event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError> {
+    public func getMarketsFilters(event: Event) -> AnyPublisher<[MarketGroup], Never> {
         guard
             let eventsProvider = self.eventsProvider
         else {
-            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+            let defaultMarketGroup = [MarketGroup.init(type: "0",
+                                                       id: "0",
+                                                       groupKey: "All Markets",
+                                                       translatedName: "All Markets",
+                                                       position: 0,
+                                                       isDefault: true,
+                                                       numberOfMarkets: nil,
+                                                       markets: event.markets)]
+            return Just(defaultMarketGroup).eraseToAnyPublisher()
         }
-        return eventsProvider.getMarketsFilter(event: event)
+        return eventsProvider.getMarketsFilters(event: event)
     }
 
     public func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError> {

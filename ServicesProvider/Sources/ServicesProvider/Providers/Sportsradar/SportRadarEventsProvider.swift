@@ -557,7 +557,6 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
                                 numericSportId = numericSport.numericId
                             }
                         }
-
                         let compleatedExternalSportType = SportType(name: externalSport.name,
                                   numericId: numericSportId,
                                   alphaId: externalSport.alphaId,
@@ -568,9 +567,7 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
                                   numberOutrightMarkets: externalSport.numberOutrightMarkets)
 
                         compleatedExternalSportTypes.append(compleatedExternalSportType)
-
                     }
-
                     liveSportTypesPublisher.send(.contentUpdate(content: compleatedExternalSportTypes))
                 }
                 .store(in: &self.cancellables)
@@ -616,18 +613,25 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
  */
 extension SportRadarEventsProvider {
 
-    func getMarketsFilter(event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError> {
+    func getMarketsFilters(event: Event) -> AnyPublisher<[MarketGroup], Never> {
+
+        let defaultMarketGroups = [MarketGroup.init(type: "0",
+                                                   id: "0",
+                                                   groupKey: "All Markets",
+                                                   translatedName: "All Markets",
+                                                   position: 0,
+                                                   isDefault: true,
+                                                   numberOfMarkets: nil,
+                                                   markets: event.markets)]
 
         let endpoint = SportRadarRestAPIClient.marketsFilter
         let requestPublisher: AnyPublisher<MarketFilter, ServiceProviderError> = self.restConnector.request(endpoint)
 
         return requestPublisher.flatMap({ marketFilters -> AnyPublisher<[MarketGroup], ServiceProviderError> in
-
-            let marketGroups = self.processMarketFilters(marketFilter: marketFilters, match: event)
-
+            var marketGroups = self.processMarketFilters(marketFilter: marketFilters, match: event)
             return Just(marketGroups).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-
         })
+        .replaceError(with: defaultMarketGroups)
         .eraseToAnyPublisher()
 
     }
