@@ -659,6 +659,24 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         }).eraseToAnyPublisher()
     }
 
+    func processWithdrawal(paymentMethod: String, amount: Double) -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.processWithdrawal(withdrawalMethod: paymentMethod, amount: amount)
+        let publisher: AnyPublisher<SportRadarModels.ProcessWithdrawalResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ processWithdrawalResponse -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError> in
+            if processWithdrawalResponse.status == "SUCCESS" {
+
+                let processWithdrawalResponse = SportRadarModelMapper.processWithdrawalResponse(fromProcessWithdrawalResponse: processWithdrawalResponse)
+
+                return Just(processWithdrawalResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else {
+                return Fail(outputType: ProcessWithdrawalResponse.self, failure: ServiceProviderError.errorMessage(message: processWithdrawalResponse.message ?? "Error")).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+
     func getTransactionsHistory(startDate: String, endDate: String, transactionType: String? = nil, pageNumber: Int? = nil) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: transactionType, pageNumber: pageNumber, pageSize: 10)

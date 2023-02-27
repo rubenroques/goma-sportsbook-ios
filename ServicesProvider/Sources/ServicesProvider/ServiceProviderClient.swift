@@ -715,6 +715,16 @@ extension ServicesProviderClient {
         return privilegedAccessManager.getWithdrawalMethods()
     }
 
+    public func processWithdrawal(paymentMethod: String, amount: Double) -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.processWithdrawal(paymentMethod: paymentMethod, amount: amount)
+    }
+
     public func getTransactionsHistory(startDate: String, endDate: String, transactionType: String? = nil, pageNumber: Int? = nil) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager

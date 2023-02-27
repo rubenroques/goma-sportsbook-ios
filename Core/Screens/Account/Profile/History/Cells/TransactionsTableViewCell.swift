@@ -87,13 +87,18 @@ class TransactionsTableViewCell: UITableViewCell {
             self.transactionIcon.image = UIImage(named: "deposit_icon")
             self.transactionTypeLabel.text = transactionHistoryEntry.type
             if let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: transactionHistoryEntry.debit.amount)) {
-                self.transactionValueLabel.text = "+ " + amount
+                self.transactionValueLabel.text = "+" + amount
             }
         case .loss:
             self.transactionIcon.image = UIImage(named: "withdraw_icon")
             self.transactionTypeLabel.text = transactionHistoryEntry.type
             if let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: transactionHistoryEntry.debit.amount)) {
-                self.transactionValueLabel.text = "- " + amount
+                if transactionHistoryEntry.debit.amount > 0 {
+                    self.transactionValueLabel.text = "-" + amount
+                }
+                else {
+                    self.transactionValueLabel.text = amount
+                }
             }
         case .neutral:
             self.transactionIcon.image = UIImage(named: "neutral_icon")

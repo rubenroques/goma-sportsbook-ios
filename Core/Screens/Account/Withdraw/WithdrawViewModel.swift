@@ -21,6 +21,7 @@ class WithdrawViewModel: NSObject {
     var withdrawalMethods: [WithdrawalMethod] = []
     var minimumValue: CurrentValueSubject<String, Never> = .init("")
     var maximumValue: CurrentValueSubject<String, Never> = .init("")
+    var showWithdrawalStatus: (() -> Void)?
 
     // MARK: Lifetime and Cycle
     override init() {
@@ -43,7 +44,38 @@ class WithdrawViewModel: NSObject {
             amount = amountText
         }
 
-        self.isLoadingPublisher.send(false)
+        if let withdrawalAmount = Double(amount),
+           let withdrawalMethod = self.withdrawalMethods.first?.paymentMethod {
+
+            Env.servicesProvider.processWithdrawal(paymentMethod: withdrawalMethod, amount: withdrawalAmount)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+
+                    switch completion {
+                    case .finished:
+                        ()
+                    case .failure(let error):
+                        print("PROCESS WITHDRAWAL ERROR: \(error)")
+                        switch error {
+                        case .errorMessage(let message):
+                            self?.showErrorAlertTypePublisher.send(.error(message: message))
+                        default:
+                            ()
+                        }
+                        self?.isLoadingPublisher.send(false)
+                    }
+
+                }, receiveValue: { [weak self] processWithdrawalResponse in
+
+                    print("PROCESS WITHDRAWAL RESPONSE: \(processWithdrawalResponse)")
+
+                    self?.showWithdrawalStatus?()
+
+                    self?.isLoadingPublisher.send(false)
+                })
+                .store(in: &cancellables)
+        }
+
 //        var currency = ""
 //        var gamingAccountId = ""
 //

@@ -102,6 +102,7 @@ class DepositViewController: UIViewController {
 
         depositTipLabel.text = localized("minimum_deposit_value")
         depositTipLabel.font = AppFont.with(type: .semibold, size: 12)
+        depositTipLabel.isHidden = true
 
         self.setDepositAmountButtonDesign(button: self.amount10Button, title: "€10")
         self.setDepositAmountButtonDesign(button: self.amount20Button, title: "€20")
@@ -214,6 +215,15 @@ class DepositViewController: UIViewController {
             
             self?.showPaymentStatusAlert(paymentStatus: paymentStatus)
         }
+
+        viewModel.minimumValue
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] minimumValue in
+                let depositTipText = localized("minimum_deposit_value").replacingFirstOccurrence(of: "%s", with: minimumValue)
+                self?.depositTipLabel.text = depositTipText
+                self?.depositTipLabel.isHidden = false
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Functions
@@ -310,7 +320,12 @@ class DepositViewController: UIViewController {
                                       message: alertMessage,
                                       preferredStyle: .alert)
 
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+
+            if paymentStatus == .authorised {
+                self.dismiss(animated: true)
+            }
+        }))
         self.present(alert, animated: true, completion: nil)
     }
 

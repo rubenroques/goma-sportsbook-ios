@@ -212,6 +212,11 @@ extension SportRadarModelMapper {
         return WithdrawalMethod(code: internalWithdrawalMethod.code, paymentMethod: internalWithdrawalMethod.paymentMethod, minimumWithdrawal: internalWithdrawalMethod.minimumWithdrawal, maximumWithdrawal: internalWithdrawalMethod.maximumWithdrawal)
     }
 
+    static func processWithdrawalResponse(fromProcessWithdrawalResponse internalProcessWithdrawalResponse: SportRadarModels.ProcessWithdrawalResponse) -> ProcessWithdrawalResponse {
+
+        return ProcessWithdrawalResponse(status: internalProcessWithdrawalResponse.status, paymentId: internalProcessWithdrawalResponse.paymentId, message: internalProcessWithdrawalResponse.message)
+    }
+
     static func updatePaymentAction(fromUpdatePaymentAction internalUpdatePaymentAction: SportRadarModels.UpdatePaymentAction) -> UpdatePaymentAction {
 
         return UpdatePaymentAction(paymentMethodType: internalUpdatePaymentAction.paymentMethodType, url: internalUpdatePaymentAction.url, method: internalUpdatePaymentAction.method, type: internalUpdatePaymentAction.type)
