@@ -86,7 +86,7 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         self.viewModel = nil
 
         self.selectedImageView.image = UIImage(named: "checkbox_unselected_icon")!
-        self.titleLabel.text = localized("empty_value")
+        self.titleLabel.text = ""
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

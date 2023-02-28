@@ -327,7 +327,7 @@ class MatchDetailsViewController: UIViewController {
         self.shareButton.setTitle("", for: .normal)
         self.shareButton.setImage(UIImage(named: "more_options_icon"), for: .normal)
         
-        self.headerCompetitionLabel.text = localized("empty_value")
+        self.headerCompetitionLabel.text = ""
         self.headerCompetitionLabel.font = AppFont.with(type: .semibold, size: 11)
         
         self.headerCompetitionImageView.image = nil
@@ -771,10 +771,13 @@ class MatchDetailsViewController: UIViewController {
         
         for marketGroup in marketGroups {
             if let groupKey = marketGroup.groupKey {
+
                 let viewModel = MarketGroupDetailsViewModel(match: match, marketGroupId: groupKey)
+
                 if let groupMarkets = marketGroup.markets {
                     viewModel.availableMarkets = groupMarkets
                 }
+
                 let marketGroupDetailsViewController = MarketGroupDetailsViewController(viewModel: viewModel)
 
                 marketGroupDetailsViewController.shouldScrollToTop = { [weak self] scrollTop in

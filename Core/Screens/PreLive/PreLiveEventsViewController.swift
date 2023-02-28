@@ -509,9 +509,9 @@ class PreLiveEventsViewController: UIViewController {
 
         self.sportsSelectorExpandImageView.setImageColor(color: UIColor.App.textPrimary)
         self.sportsSelectorExpandImageView.tintColor = UIColor.App.textPrimary
+
         self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         self.sportTypeIconImageView.tintColor = UIColor.App.textPrimary
-
     }
 
     private func openTab(atIndex index: Int) {

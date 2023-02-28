@@ -95,9 +95,9 @@ class FeaturedTipCollectionViewCell: UICollectionViewCell {
 
         self.viewModel = nil
         
-        self.usernameLabel.text = localized("empty_value")
-        self.totalOddsValueLabel.text = localized("empty_value")
-        self.selectionsValueLabel.text = localized("empty_value")
+        self.usernameLabel.text = ""
+        self.totalOddsValueLabel.text = ""
+        self.selectionsValueLabel.text = ""
         
         self.tipsStackView.removeAllArrangedSubviews()
 

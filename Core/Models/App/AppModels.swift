@@ -42,6 +42,7 @@ struct Competition {
 }
 
 struct Match {
+
     var id: String
     var competitionId: String
     var competitionName: String
@@ -54,7 +55,67 @@ struct Match {
     var markets: [Market]
     var rootPartId: String
     var sportName: String?
+
+    var status: Status
+
+    var homeParticipantScore: Int?
+    var awayParticipantScore: Int?
+
+    var matchTime: String?
+
+    enum Status {
+        case unknown
+        case notStarted
+        case inProgress(String)
+        case ended
+
+        func description() -> String {
+            switch self {
+            case .unknown: return ""
+            case .notStarted: return "Not started"
+            case .inProgress(let details): return "\(details)"
+            case .ended: return "Ended"
+            }
+        }
+    }
+
+    init(id: String,
+         competitionId: String,
+         competitionName: String,
+         homeParticipant: Participant,
+         awayParticipant: Participant,
+         homeParticipantScore: Int? = nil,
+         awayParticipantScore: Int? = nil,
+         date: Date? = nil,
+         sportType: String,
+         venue: Location? = nil,
+         numberTotalOfMarkets: Int,
+         markets: [Market],
+         rootPartId: String,
+         sportName: String? = nil,
+         status: Status,
+         matchTime: String? = nil) {
+
+        self.id = id
+        self.competitionId = competitionId
+        self.competitionName = competitionName
+        self.homeParticipant = homeParticipant
+        self.awayParticipant = awayParticipant
+        self.homeParticipantScore = homeParticipantScore
+        self.awayParticipantScore = awayParticipantScore
+        self.date = date
+        self.sportType = sportType
+        self.venue = venue
+        self.numberTotalOfMarkets = numberTotalOfMarkets
+        self.markets = markets
+        self.rootPartId = rootPartId
+        self.sportName = sportName
+        self.status = status
+        self.matchTime = matchTime
+    }
+
 }
+
 
 struct Location {
     var id: String
@@ -84,11 +145,23 @@ struct Market {
     var eventName: String?
     var isMainOutright: Bool?
     var eventMarketCount: Int?
+    var isAvailable: Bool
 
-    init( id: String, typeId: String, name: String,
-          nameDigit1: Double?, nameDigit2: Double?, nameDigit3: Double?,
-          eventPartId: String?, bettingTypeId: String?, outcomes: [Outcome], marketTypeId: String? = nil, eventName: String? = nil, isMainOutright: Bool? = nil,
-          eventMarketCount: Int? = nil) {
+    init(id: String,
+         typeId: String,
+         name: String,
+         nameDigit1: Double?,
+         nameDigit2: Double?,
+         nameDigit3: Double?,
+         eventPartId: String?,
+         bettingTypeId: String?,
+         outcomes: [Outcome],
+         marketTypeId: String? = nil,
+         eventName: String? = nil,
+         isMainOutright: Bool? = nil,
+         eventMarketCount: Int? = nil,
+         isAvailable: Bool = true) {
+        
         self.id = id
         self.typeId = typeId
         self.name = name
@@ -102,6 +175,7 @@ struct Market {
         self.eventName = eventName
         self.isMainOutright = isMainOutright
         self.eventMarketCount = eventMarketCount
+        self.isAvailable = isAvailable
     }
 }
 
@@ -195,7 +269,13 @@ struct BettingOffer {
     var decimalOdd: Double {
         switch self.odd {
         case .fraction(let numerator, let denominator):
-            return (Double(numerator)/Double(denominator)) + 1.0
+            let decimal = (Double(numerator)/Double(denominator)) + 1.0
+            if decimal.isNaN {
+                return decimal
+            }
+            else {
+                return decimal
+            }
         case .decimal(let odd):
             return odd
         }

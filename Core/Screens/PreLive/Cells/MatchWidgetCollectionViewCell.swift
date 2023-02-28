@@ -9,6 +9,7 @@ import UIKit
 import Kingfisher
 import LinkPresentation
 import Combine
+import ServicesProvider
 
 class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
@@ -28,6 +29,11 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var homeParticipantNameLabel: UILabel!
     @IBOutlet private weak var awayParticipantNameLabel: UILabel!
 
+    @IBOutlet private weak var resultStackView: UIStackView!
+    @IBOutlet private weak var resultLabel: UILabel!
+    @IBOutlet private weak var matchTimeLabel: UILabel!
+
+    @IBOutlet private weak var dateStackView: UIStackView!
     @IBOutlet private weak var dateLabel: UILabel!
     @IBOutlet private weak var timeLabel: UILabel!
 
@@ -97,6 +103,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     private var middleOddButtonSubscriber: AnyCancellable?
     private var rightOddButtonSubscriber: AnyCancellable?
 
+    private var matchSubscriber: AnyCancellable?
     private var marketSubscriber: AnyCancellable?
 
     private var leftOutcome: Outcome?
@@ -159,15 +166,20 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.seeAllBaseView.layer.cornerRadius = 4.5
 
-        self.homeOddTitleLabel.text = localized("empty")
-        self.drawOddTitleLabel.text = localized("empty")
-        self.awayOddTitleLabel.text = localized("empty")
+        self.homeOddTitleLabel.text = "-"
+        self.drawOddTitleLabel.text = "-"
+        self.awayOddTitleLabel.text = "-"
 
-        self.eventNameLabel.text = localized("empty_value")
-        self.homeParticipantNameLabel.text = localized("empty_value")
-        self.awayParticipantNameLabel.text = localized("empty_value")
-        self.dateLabel.text = localized("empty_value")
-        self.timeLabel.text = localized("empty_value")
+        self.eventNameLabel.text = ""
+        self.homeParticipantNameLabel.text = ""
+        self.awayParticipantNameLabel.text = ""
+
+        self.matchTimeLabel.text = ""
+        self.resultLabel.text = ""
+
+        self.dateLabel.text = ""
+        self.timeLabel.text = ""
+
         self.locationFlagImageView.image = nil
         self.suspendedBaseView.isHidden = true
         self.seeAllBaseView.isHidden = true
@@ -240,21 +252,30 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.isMiddleOutcomeButtonSelected = false
         self.isRightOutcomeButtonSelected = false
 
-        self.dateLabel.isHidden = false
-        
-        self.eventNameLabel.text = localized("empty_value")
-        self.homeParticipantNameLabel.text = localized("empty_value")
-        self.awayParticipantNameLabel.text = localized("empty_value")
-        self.dateLabel.text = localized("empty_value")
-        self.timeLabel.text = localized("empty_value")
+        self.eventNameLabel.text = ""
+        self.homeParticipantNameLabel.text = ""
+        self.awayParticipantNameLabel.text = ""
 
-        self.homeOddTitleLabel.text = localized("empty")
-        self.drawOddTitleLabel.text = localized("empty")
-        self.awayOddTitleLabel.text = localized("empty")
+        //
+        self.dateStackView.isHidden = false
+        self.resultStackView.isHidden = true
+
+        self.dateLabel.isHidden = false
+
+        self.dateLabel.text = ""
+        self.timeLabel.text = ""
+
+        self.matchTimeLabel.text = ""
+        self.resultLabel.text = ""
+
+        //
+        self.homeOddTitleLabel.text = "-"
+        self.drawOddTitleLabel.text = "-"
+        self.awayOddTitleLabel.text = "-"
         
-        self.homeOddValueLabel.text = localized("empty_value")
-        self.drawOddValueLabel.text = localized("empty_value")
-        self.awayOddValueLabel.text = localized("empty_value")
+        self.homeOddValueLabel.text = ""
+        self.drawOddValueLabel.text = ""
+        self.awayOddValueLabel.text = ""
 
         self.homeBaseView.isUserInteractionEnabled = true
         self.drawBaseView.isUserInteractionEnabled = true
@@ -291,8 +312,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.eventNameLabel.textColor = UIColor.App.textSecondary
         self.homeParticipantNameLabel.textColor = UIColor.App.textPrimary
         self.awayParticipantNameLabel.textColor = UIColor.App.textPrimary
+
+        self.matchTimeLabel.textColor = UIColor.App.textPrimary
+        self.resultLabel.textColor = UIColor.App.textPrimary
+
         self.dateLabel.textColor = UIColor.App.textPrimary
         self.timeLabel.textColor = UIColor.App.textPrimary
+
         self.homeOddTitleLabel.textColor = UIColor.App.textPrimary
         self.homeOddValueLabel.textColor = UIColor.App.textPrimary
         self.drawOddTitleLabel.textColor = UIColor.App.textPrimary
@@ -417,12 +443,26 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.viewModel = viewModel
 
+        if viewModel.isLiveCard {
+            self.dateStackView.isHidden = true
+            self.resultStackView.isHidden = false
+        }
+        else {
+            self.dateStackView.isHidden = false
+            self.resultStackView.isHidden = true
+        }
+
         self.eventNameLabel.text = "\(viewModel.competitionName)"
+
         self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
         self.awayParticipantNameLabel.text = "\(viewModel.awayTeamName)"
+
         self.dateLabel.text = "\(viewModel.startDateString)"
         self.timeLabel.text = "\(viewModel.startTimeString)"
 
+        self.resultLabel.text = "\(viewModel.matchScore)"
+        self.matchTimeLabel.text = viewModel.matchTimeDetails
+        
         if viewModel.countryISOCode != "" {
             self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
         }
@@ -435,26 +475,45 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         else {
             return
         }
+
+
+        self.matchSubscriber?.cancel()
+        self.matchSubscriber = nil
+
+        self.matchSubscriber = Env.servicesProvider.subscribeToEventUpdates(withId: match.id)
+            .compactMap({ $0 })
+            .map(ServiceProviderModelMapper.match(fromEvent:))
+            .sink(receiveCompletion: { completion in
+                print("matchSubscriber subscribeToEventUpdates completion: \(completion)")
+            }, receiveValue: { [weak self] updatedMatch in
+                self?.viewModel?.match = updatedMatch
+
+                self?.dateLabel.text = "\(viewModel.startDateString)"
+                self?.timeLabel.text = "\(viewModel.startTimeString)"
+
+                self?.resultLabel.text = "\(viewModel.matchScore)"
+                self?.matchTimeLabel.text = viewModel.matchTimeDetails
+            })
         
         if let market = match.markets.first {
-            if let marketPublisher = viewModel.store.marketPublisher(withId: market.id) {
-                self.marketSubscriber = marketPublisher
-                    .receive(on: DispatchQueue.main)
-                    .sink { [weak self] marketUpdate in
-                        if marketUpdate.isAvailable ?? true {
-                            self?.showMarketButtons()
-                        }
-                        else {
-                            if marketUpdate.isClosed ?? false {
-                                self?.showClosedView()
-                            }
-                            else {
-                                self?.showSuspendedView()
-                            }
-                        }
+
+            self.marketSubscriber = Env.servicesProvider.subscribeToMarketUpdates(withId: market.id)
+                .compactMap({ $0 })
+                .map({ (serviceProviderMarket: ServicesProvider.Market) -> Market in
+                    return ServiceProviderModelMapper.market(fromServiceProviderMarket: serviceProviderMarket)
+                })
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { completion in
+                    print("marketSubscriber subscribeToMarketUpdates completion: \(completion)")
+                }, receiveValue: { [weak self] (marketUpdated: Market) in
+                    if marketUpdated.isAvailable {
+                        self?.showMarketButtons()
                     }
-            }
-            
+                    else {
+                        self?.showSuspendedView() // self?.showClosedView()
+                    }
+                })
+
             if let outcome = market.outcomes[safe: 0] {
                 
                 self.homeOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
@@ -463,37 +522,36 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
                 // Check for SportRadar invalid odd
                 if !outcome.bettingOffer.decimalOdd.isNaN {
-                self.homeOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
+                    self.homeOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
                 }
                 else {
                     self.homeBaseView.isUserInteractionEnabled = false
                     self.homeBaseView.alpha = 0.5
                     self.homeOddValueLabel.text = "-"
                 }
-                
-                self.leftOddButtonSubscriber = viewModel.store
-                    .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
+
+                self.leftOddButtonSubscriber = Env.servicesProvider
+                    .subscribeToOutcomeUpdates(withId: outcome.bettingOffer.id)
                     .compactMap({ $0 })
+                    .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
+                    .map(\.bettingOffer)
                     .receive(on: DispatchQueue.main)
-                    .sink(receiveValue: { [weak self] bettingOffer in
-                        
+                    .sink(receiveCompletion: { completion in
+                        print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                    }, receiveValue: { [weak self] bettingOffer in
                         guard let weakSelf = self else { return }
                         
-                        if !bettingOffer.isOpen {
+                        if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
                             weakSelf.homeBaseView.isUserInteractionEnabled = false
                             weakSelf.homeBaseView.alpha = 0.5
-                            weakSelf.homeOddValueLabel.text = localized("empty")
+                            weakSelf.homeOddValueLabel.text = "-"
                         }
                         else {
                             weakSelf.homeBaseView.isUserInteractionEnabled = true
                             weakSelf.homeBaseView.alpha = 1.0
-                            
-                            guard
-                                let newOddValue = bettingOffer.oddsValue
-                            else {
-                                return
-                            }
-                            
+
+                            let newOddValue = bettingOffer.decimalOdd
+
                             if let currentOddValue = weakSelf.currentHomeOddValue {
                                 if newOddValue > currentOddValue {
                                     weakSelf.highlightOddChangeUp(animated: true,
@@ -528,30 +586,29 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     self.drawBaseView.alpha = 0.5
                     self.drawOddValueLabel.text = "-"
                 }
-                
-                self.middleOddButtonSubscriber = viewModel.store
-                    .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
+
+                self.middleOddButtonSubscriber = Env.servicesProvider
+                    .subscribeToOutcomeUpdates(withId: outcome.bettingOffer.id)
                     .compactMap({ $0 })
+                    .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
+                    .map(\.bettingOffer)
                     .receive(on: DispatchQueue.main)
-                    .sink(receiveValue: { [weak self] bettingOffer in
+                    .sink(receiveCompletion: { completion in
+                        print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                    }, receiveValue: { [weak self] bettingOffer in
                         
                         guard let weakSelf = self else { return }
                         
-                        if !bettingOffer.isOpen {
+                        if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
                             weakSelf.drawBaseView.isUserInteractionEnabled = false
                             weakSelf.drawBaseView.alpha = 0.5
-                            weakSelf.drawOddValueLabel.text = localized("empty")
+                            weakSelf.drawOddValueLabel.text = "-"
                         }
                         else {
                             weakSelf.drawBaseView.isUserInteractionEnabled = true
                             weakSelf.drawBaseView.alpha = 1.0
                             
-                            guard
-                                let newOddValue = bettingOffer.oddsValue
-                            else {
-                                return
-                            }
-                            
+                            let newOddValue = bettingOffer.decimalOdd
                             if let currentOddValue = weakSelf.currentDrawOddValue {
                                 if newOddValue > currentOddValue {
                                     weakSelf.highlightOddChangeUp(animated: true,
@@ -575,6 +632,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.awayOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
                 self.rightOutcome = outcome
                 self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+
                 // Check for SportRadar invalid odd
                 if !outcome.bettingOffer.decimalOdd.isNaN {
                     self.awayOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
@@ -585,29 +643,28 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     self.awayOddValueLabel.text = "-"
                 }
 
-                self.rightOddButtonSubscriber = viewModel.store
-                    .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
+                self.rightOddButtonSubscriber = Env.servicesProvider
+                    .subscribeToOutcomeUpdates(withId: outcome.bettingOffer.id)
                     .compactMap({ $0 })
+                    .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
+                    .map(\.bettingOffer)
                     .receive(on: DispatchQueue.main)
-                    .sink(receiveValue: { [weak self] bettingOffer in
+                    .sink(receiveCompletion: { completion in
+                        print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                    }, receiveValue: { [weak self] bettingOffer in
                         
                         guard let weakSelf = self else { return }
                         
-                        if !bettingOffer.isOpen {
+                        if !bettingOffer.isAvailable || bettingOffer.decimalOdd.isNaN {
                             weakSelf.awayBaseView.isUserInteractionEnabled = false
                             weakSelf.awayBaseView.alpha = 0.5
-                            weakSelf.awayOddValueLabel.text = localized("empty")
+                            weakSelf.awayOddValueLabel.text = "-"
                         }
                         else {
                             weakSelf.awayBaseView.isUserInteractionEnabled = true
                             weakSelf.awayBaseView.alpha = 1.0
                             
-                            guard
-                                let newOddValue = bettingOffer.oddsValue
-                            else {
-                                return
-                            }
-                            
+                            let newOddValue = bettingOffer.decimalOdd
                             if let currentOddValue = weakSelf.currentAwayOddValue {
                                 if newOddValue > currentOddValue {
                                     weakSelf.highlightOddChangeUp(animated: true,
@@ -634,14 +691,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             
         }
         else {
-            Logger.log("No markets found")
             oddsStackView.alpha = 0.2
-            
-//            self.homeOddValueLabel.text = localized("empty")
-//            self.drawOddValueLabel.text = localized("empty")
-//            self.awayOddValueLabel.text = localized("empty")
             self.showSeeAllView()
-            
         }
 
         self.isFavorite = Env.favoritesManager.isEventFavorite(eventId: match.id)

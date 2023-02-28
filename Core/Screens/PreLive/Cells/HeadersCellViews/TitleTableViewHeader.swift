@@ -20,7 +20,7 @@ class TitleTableViewHeader: UITableViewHeaderFooterView {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        self.sectionTitleLabel.text = localized("empty_value")
+        self.sectionTitleLabel.text = ""
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

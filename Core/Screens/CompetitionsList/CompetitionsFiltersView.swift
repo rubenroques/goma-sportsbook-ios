@@ -651,7 +651,7 @@ extension CompetitionsFiltersView: UISearchBarDelegate {
     }
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        self.searchBarView.text = localized("empty_value")
+        self.searchBarView.text = ""
         self.applyFilters()
     }
 }

@@ -449,7 +449,7 @@ extension SportMatchSingleLineTableViewCell {
     private static func createTitleLabel() -> UILabel {
         let titleLabel = UILabel()
         titleLabel.numberOfLines = 1
-        titleLabel.text = localized("empty_value")
+        titleLabel.text = ""
         titleLabel.font = AppFont.with(type: .semibold, size: 13)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         return titleLabel

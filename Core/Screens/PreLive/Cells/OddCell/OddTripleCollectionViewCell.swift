@@ -126,12 +126,12 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.middleBaseView.layer.cornerRadius = 4.5
         self.rightBaseView.layer.cornerRadius = 4.5
 
-        self.participantsNameLabel.text = localized("empty_value")
-        self.marketNameLabel.text = localized("empty_value")
+        self.participantsNameLabel.text = ""
+        self.marketNameLabel.text = ""
 
-        self.leftOddValueLabel.text = localized("empty")
-        self.middleOddValueLabel.text = localized("empty")
-        self.rightOddValueLabel.text = localized("empty")
+        self.leftOddValueLabel.text = "-"
+        self.middleOddValueLabel.text = "-"
+        self.rightOddValueLabel.text = "-"
 
         self.suspendedBaseView.isHidden = true
 
@@ -142,8 +142,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.rightUpChangeOddValueImage.alpha = 0.0
         self.rightDownChangeOddValueImage.alpha = 0.0
 
-        self.homeNameCaptionLabel.text = localized("empty_value")
-        self.awayNameCaptionLabel.text = localized("empty_value")
+        self.homeNameCaptionLabel.text = ""
+        self.awayNameCaptionLabel.text = ""
 
         let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
         self.leftBaseView.addGestureRecognizer(tapLeftOddButton)
@@ -211,17 +211,17 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.isRightOutcomeButtonSelected = false
 
         self.statsBaseView.isHidden = true
-        self.homeNameCaptionLabel.text = localized("empty_value")
-        self.awayNameCaptionLabel.text = localized("empty_value")
+        self.homeNameCaptionLabel.text = ""
+        self.awayNameCaptionLabel.text = ""
 
-        self.marketNameLabel.text = localized("empty_value")
-        self.participantsNameLabel.text = localized("empty_value")
-        self.leftOddTitleLabel.text = localized("empty_value")
-        self.leftOddValueLabel.text = localized("empty_value")
-        self.middleOddTitleLabel.text = localized("empty_value")
-        self.middleOddValueLabel.text = localized("empty_value")
-        self.rightOddTitleLabel.text = localized("empty_value")
-        self.rightOddValueLabel.text = localized("empty_value")
+        self.marketNameLabel.text = ""
+        self.participantsNameLabel.text = ""
+        self.leftOddTitleLabel.text = ""
+        self.leftOddValueLabel.text = ""
+        self.middleOddTitleLabel.text = ""
+        self.middleOddValueLabel.text = ""
+        self.rightOddTitleLabel.text = ""
+        self.rightOddValueLabel.text = ""
 
         self.leftBaseView.isUserInteractionEnabled = true
         self.middleBaseView.isUserInteractionEnabled = true
@@ -452,7 +452,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
                     if !bettingOffer.isOpen {
                         weakSelf.leftBaseView.isUserInteractionEnabled = false
                         weakSelf.leftBaseView.alpha = 0.5
-                        weakSelf.leftOddValueLabel.text = localized("empty")
+                        weakSelf.leftOddValueLabel.text = "-"
                     }
                     else {
                         weakSelf.leftBaseView.isUserInteractionEnabled = true
@@ -505,7 +505,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
                     if !bettingOffer.isOpen {
                         weakSelf.middleBaseView.isUserInteractionEnabled = false
                         weakSelf.middleBaseView.alpha = 0.5
-                        weakSelf.middleOddValueLabel.text = localized("empty")
+                        weakSelf.middleOddValueLabel.text = "-"
                     }
                     else {
                         weakSelf.middleBaseView.isUserInteractionEnabled = true
@@ -558,7 +558,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
                     if !bettingOffer.isOpen {
                         weakSelf.rightBaseView.isUserInteractionEnabled = false
                         weakSelf.rightBaseView.alpha = 0.5
-                        weakSelf.rightOddValueLabel.text = localized("empty")
+                        weakSelf.rightOddValueLabel.text = "-"
                     }
                     else {
                         weakSelf.rightBaseView.isUserInteractionEnabled = true

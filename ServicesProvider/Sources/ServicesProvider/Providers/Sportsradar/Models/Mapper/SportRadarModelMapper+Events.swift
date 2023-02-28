@@ -10,108 +10,47 @@ import SharedModels
 
 extension SportRadarModelMapper {
 
-//    static func eventsGroup(fromInternalEvents internalEvents: [SportRadarModels.Event]) -> EventsGroup {
-//        let events = internalEvents.map({ event -> Event in
-//            let country: Country? = Country.country(withName: event.tournamentCountryName ?? "")
-//
-//            if let eventMarkets = event.markets {
-//                let markets = eventMarkets.map(Self.market(fromInternalMarket:))
-//                return Event(id: event.id,
-//                             homeTeamName: event.homeName ?? "",
-//                             awayTeamName: event.awayName ?? "",
-//                             sportTypeName: event.sportTypeName ?? "",
-//                             competitionId: event.competitionId ?? "",
-//                             competitionName: event.competitionName ?? "",
-//                             startDate: event.startDate ?? Date(),
-//                             markets: markets,
-//                             venueCountry: country,
-//                             numberMarkets: event.numberMarkets)
-//            }
-//            else {
-//                return Event(id: event.id,
-//                             homeTeamName: event.homeName ?? "",
-//                             awayTeamName: event.awayName ?? "",
-//                             sportTypeName: event.sportTypeName ?? "",
-//                             competitionId: event.competitionId ?? "",
-//                             competitionName: event.competitionName ?? "",
-//                             startDate: event.startDate ?? Date(),
-//                             markets: [],
-//                             numberMarkets: event.numberMarkets)
-//            }
-//        })
-//
-//        let filterEvents = events.filter({
-//            !$0.markets.isEmpty
-//        })
-//
-//        return EventsGroup(events: filterEvents)
-//    }
-
-
-    // TODO: André - o model mapper não serve para manituplar assim os dados, é apenas para mappear
     static func eventsGroup(fromInternalEvents internalEvents: [SportRadarModels.Event]) -> EventsGroup {
-
-        let events = internalEvents.map({ event -> Event in
-
-            let country: Country? = Country.country(withName: event.tournamentCountryName ?? "")
-
-            if let eventMarkets = event.markets {
-                let markets = eventMarkets.map(Self.market(fromInternalMarket:))
-                return Event(id: event.id,
-                             homeTeamName: event.homeName ?? "",
-                             awayTeamName: event.awayName ?? "",
-                             sportTypeName: event.sportTypeName ?? "",
-                             competitionId: event.competitionId ?? "",
-                             competitionName: event.competitionName ?? "",
-                             startDate: event.startDate ?? Date(),
-                             markets: markets,
-                             venueCountry: country,
-                             numberMarkets: event.numberMarkets,
-                             name: event.name)
-            }
-            return Event(id: event.id,
-                         homeTeamName: event.homeName ?? "",
-                         awayTeamName: event.awayName ?? "",
-                         sportTypeName: event.sportTypeName ?? "",
-                         competitionId: event.competitionId ?? "",
-                         competitionName: event.competitionName ?? "",
-                         startDate: event.startDate ?? Date(),
-                         markets: [],
-                         venueCountry: country,
-                         numberMarkets: event.numberMarkets,
-                         name: event.name)
-        })
-
+        let events = internalEvents.map(Self.event(fromInternalEvent:))
         return EventsGroup(events: events)
     }
 
     static func event(fromInternalEvent internalEvent: SportRadarModels.Event) -> Event {
 
-        if let eventMarkets = internalEvent.markets {
-            let markets = eventMarkets.map(Self.market(fromInternalMarket:))
+        let country: Country? = Country.country(withName: internalEvent.tournamentCountryName ?? "")
 
-            return Event(id: internalEvent.id,
-                         homeTeamName: internalEvent.homeName ?? "",
-                         awayTeamName: internalEvent.awayName ?? "",
-                         sportTypeName: internalEvent.sportTypeName ?? "",
-                         competitionId: internalEvent.competitionId ?? "",
-                         competitionName: internalEvent.competitionName ?? "",
-                         startDate: internalEvent.startDate ?? Date(),
-                         markets: markets,
-                         numberMarkets: internalEvent.numberMarkets,
-                         name: internalEvent.name)
-        }
+        let eventMarkets = internalEvent.markets ?? []
+        let markets = eventMarkets.map(Self.market(fromInternalMarket:))
+
         return Event(id: internalEvent.id,
                      homeTeamName: internalEvent.homeName ?? "",
                      awayTeamName: internalEvent.awayName ?? "",
+                     homeTeamScore: internalEvent.homeScore,
+                     awayTeamScore: internalEvent.awayScore,
                      sportTypeName: internalEvent.sportTypeName ?? "",
                      competitionId: internalEvent.competitionId ?? "",
                      competitionName: internalEvent.competitionName ?? "",
                      startDate: internalEvent.startDate ?? Date(),
-                     markets: [],
+                     markets: markets,
+                     venueCountry: country,
                      numberMarkets: internalEvent.numberMarkets,
-                     name: internalEvent.name)
+                     name: internalEvent.name,
+                     status: Self.eventStatus(fromInternalEvent: internalEvent.status),
+                     matchTime: internalEvent.matchTime)
 
+    }
+
+    static func eventStatus(fromInternalEvent internalEventStatus: SportRadarModels.Event.Status) -> Event.Status? {
+        switch internalEventStatus {
+        case .unknown:
+            return nil
+        case .notStarted:
+            return Event.Status.notStarted
+        case .inProgress(let detail):
+            return Event.Status.inProgress(detail)
+        case .ended:
+            return Event.Status.ended
+        }
     }
     
     static func market(fromInternalMarket internalMarket: SportRadarModels.Market) -> Market {
@@ -122,7 +61,9 @@ extension SportRadarModelMapper {
                       marketTypeId: internalMarket.marketTypeId,
                       eventMarketTypeId: internalMarket.eventMarketTypeId,
                       eventName: internalMarket.eventName,
-                      eventMarketCount: internalMarket.eventMarketCount)
+                      isMainOutright: false,
+                      eventMarketCount: internalMarket.eventMarketCount,
+                      isTradable: internalMarket.isTradable ?? true)
     }
 
     static func outcome(fromInternalOutcome internalOutcome: SportRadarModels.Outcome) -> Outcome {
@@ -131,7 +72,8 @@ extension SportRadarModelMapper {
                        odd: internalOutcome.odd,
                        marketId: internalOutcome.marketId,
                        orderValue: internalOutcome.orderValue,
-                       externalReference: internalOutcome.externalReference)
+                       externalReference: internalOutcome.externalReference,
+                       isTradable: internalOutcome.isTradable ?? true)
     }
 
     static func bannerResponse(fromInternalBannerResponse internalBannerResponse: SportRadarModels.BannerResponse) -> BannerResponse {

@@ -179,7 +179,7 @@ class MatchDetailsViewModel: NSObject {
 
         self.marketGroupsState.send(.loading)
 
-        Env.servicesProvider.getMarketFilters(event: event)
+        Env.servicesProvider.getMarketsFilters(event: event)
             .map(self.convertMarketGroups(_:))
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in

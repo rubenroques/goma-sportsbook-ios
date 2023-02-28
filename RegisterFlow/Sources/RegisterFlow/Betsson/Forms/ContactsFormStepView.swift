@@ -345,6 +345,9 @@ class ContactsFormStepView: FormStepView {
         self.emailHeaderTextFieldView.setKeyboardType(.emailAddress)
         self.phoneHeaderTextFieldView.setKeyboardType(.phonePad)
 
+        self.emailHeaderTextFieldView.setContextType(.emailAddress)
+        self.phoneHeaderTextFieldView.setContextType(.telephoneNumber)
+
         self.emailHeaderTextFieldView.setPlaceholderText("Email")
         self.phoneHeaderTextFieldView.setPlaceholderText("Phone number")
 

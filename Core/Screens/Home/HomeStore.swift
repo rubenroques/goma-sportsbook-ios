@@ -282,7 +282,8 @@ class HomeStore {
                               venue: location,
                               numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
                               markets: sortedMarkets,
-                              rootPartId: rawMatch.rootPartId ?? "")
+                              rootPartId: rawMatch.rootPartId ?? "",
+                              status: .unknown)
 
             return match
         }

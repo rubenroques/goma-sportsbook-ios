@@ -97,7 +97,7 @@ class ChatTicketSelectionView: UIView {
         self.matchLabel.text = participants
         
         if participants.isEmpty {
-            self.marketLabel.text = localized("empty_value")
+            self.marketLabel.text = ""
             self.matchLabel.text = marketText
             self.marketLabel.isHidden = true
         }

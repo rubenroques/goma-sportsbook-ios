@@ -29,7 +29,7 @@ class DateHeaderFooterView: UITableViewHeaderFooterView {
         super.prepareForReuse()
 
         self.setupWithTheme()
-        self.titleLabel.text = localized("empty_value")
+        self.titleLabel.text = ""
     }
 
     // MARK: - Layout and Theme
@@ -70,7 +70,7 @@ extension DateHeaderFooterView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
-        label.text = localized("empty_value")
+        label.text = ""
         label.font = AppFont.with(type: .bold, size: 9)
         label.textAlignment = .center
         return label

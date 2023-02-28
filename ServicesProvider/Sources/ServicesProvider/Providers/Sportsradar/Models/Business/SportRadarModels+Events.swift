@@ -37,6 +37,27 @@ extension SportRadarModels {
         var numberMarkets: Int?
         var name: String?
 
+        var homeScore: Int
+        var awayScore: Int
+
+        var matchTime: String?
+        var status: Status
+
+        enum Status {
+            case unknown
+            case notStarted
+            case inProgress(String)
+            case ended
+
+            init(value: String) {
+                switch value {
+                case "not_started": self = .notStarted
+                case "ended": self = .ended
+                default: self = .inProgress(value)
+                }
+            }
+        }
+
         enum CodingKeys: String, CodingKey {
             case id = "idfoevent"
             case homeName = "participantname_home"
@@ -49,6 +70,18 @@ extension SportRadarModels {
             case tournamentCountryName = "tournamentcountryname"
             case numberMarkets = "numMarkets"
             case name = "name"
+
+            case liveDataSummary = "liveDataSummary"
+
+            case scoresContainer = "scores"
+            case currentScores = "CURRENT_SCORE"
+            case matchScores = "MATCH_SCORE"
+            case homeScore = "home"
+            case awayScore = "away"
+
+            case eventStatus = "status"
+
+            case matchTime = "matchTime"
         }
 
         init(from decoder: Decoder) throws {
@@ -77,6 +110,58 @@ extension SportRadarModels {
             else {
                 throw DecodingError.dataCorruptedError(forKey: .startDate, in: container, debugDescription: "Not start date found.")
             }
+
+            //  ---  Live Data  ---
+            //
+            if let liveDataInfoContainer = try? container.nestedContainer(keyedBy: CodingKeys.self, forKey: .liveDataSummary) {
+
+                let fullMatchTime = try liveDataInfoContainer.decodeIfPresent(String.self, forKey: .matchTime) ?? ""
+                let minutesPart = SocketMessageParseHelper.extractMatchMinutes(from: fullMatchTime)
+                self.matchTime = minutesPart
+
+                // Status
+                self.status = .unknown
+                if let statusString = try? liveDataInfoContainer.decode(String.self, forKey: .eventStatus) {
+                    self.status = Self.Status.init(value: statusString)
+                }
+
+                // Scores
+                self.homeScore = 0
+                self.awayScore = 0
+
+                if let scoresContainer = try? liveDataInfoContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .scoresContainer),
+                    let currentScoresContainer = try? scoresContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .currentScores) {
+
+                    if let homeScore = try? currentScoresContainer.decode(Int.self, forKey: .homeScore) {
+                        self.homeScore = homeScore
+                    }
+                    if let awayScore = try? currentScoresContainer.decode(Int.self, forKey: .awayScore) {
+                        self.awayScore = awayScore
+                    }
+                }
+
+                if let scoresContainer = try? liveDataInfoContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .scoresContainer),
+                    let matchScoresContainer = try? scoresContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .matchScores) {
+
+                    if let homeScore = try? matchScoresContainer.decode(Int.self, forKey: .homeScore) {
+                        self.homeScore = homeScore
+                    }
+                    if let awayScore = try? matchScoresContainer.decode(Int.self, forKey: .awayScore) {
+                        self.awayScore = awayScore
+                    }
+                }
+
+            }
+            else {
+                // No live information
+                self.status = .unknown
+                self.homeScore = 0
+                self.awayScore = 0
+            }
+        }
+
+        func encode(to encoder: Encoder) throws {
+
         }
 
         private static var dateFormatter: DateFormatter {
@@ -96,6 +181,7 @@ extension SportRadarModels {
         var eventName: String?
         var isMainOutright: Bool?
         var eventMarketCount: Int?
+        var isTradable: Bool?
 
         enum CodingKeys: String, CodingKey {
             case id = "idfomarket"
@@ -106,6 +192,32 @@ extension SportRadarModels {
             case eventName = "eventname"
             case isMainOutright = "ismainoutright"
             case eventMarketCount = "eventMarketCount"
+            case isTradable = "istradable"
+        }
+
+        init(id: String, name: String, outcomes: [Outcome], marketTypeId: String? = nil, eventMarketTypeId: String? = nil, eventName: String? = nil, isMainOutright: Bool? = nil, eventMarketCount: Int? = nil, isTradable: Bool? = nil) {
+            self.id = id
+            self.name = name
+            self.outcomes = outcomes
+            self.marketTypeId = marketTypeId
+            self.eventMarketTypeId = eventMarketTypeId
+            self.eventName = eventName
+            self.isMainOutright = isMainOutright
+            self.eventMarketCount = eventMarketCount
+            self.isTradable = isTradable
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: SportRadarModels.Market.CodingKeys.self)
+            self.id = try container.decode(String.self, forKey: .id)
+            self.name = try container.decode(String.self, forKey: .name)
+            self.outcomes = try container.decode([SportRadarModels.Outcome].self, forKey: .outcomes)
+            self.marketTypeId = try container.decodeIfPresent(String.self, forKey: .marketTypeId)
+            self.eventMarketTypeId = try container.decodeIfPresent(String.self, forKey: .eventMarketTypeId)
+            self.eventName = try container.decodeIfPresent(String.self, forKey: .eventName)
+            self.isMainOutright = try container.decodeIfPresent(Bool.self, forKey: .isMainOutright)
+            self.eventMarketCount = try container.decodeIfPresent(Int.self, forKey: .eventMarketCount)
+            self.isTradable = try container.decodeIfPresent(Bool.self, forKey: .isTradable)
         }
         
     }
@@ -123,7 +235,9 @@ extension SportRadarModels {
         
         private var priceNumerator: String?
         private var priceDenominator: String?
-        
+
+        var isTradable: Bool?
+
         enum CodingKeys: String, CodingKey {
             case id = "idfoselection"
             case name = "name"
@@ -133,6 +247,7 @@ extension SportRadarModels {
             case marketId = "idfomarket"
             case orderValue = "hadvalue"
             case externalReference = "externalreference"
+            case isTradable = "istradable"
         }
 
         init(from decoder: Decoder) throws {
@@ -150,6 +265,7 @@ extension SportRadarModels {
             let denominator = Double(self.priceDenominator ?? "0.0") ?? 1.0
 
             self.odd = .fraction(numerator: Int(numerator), denominator: Int(denominator) )
+            self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? true
         }
 
     }
