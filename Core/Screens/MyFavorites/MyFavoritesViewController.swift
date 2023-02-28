@@ -570,6 +570,11 @@ extension MyFavoritesViewController {
     @objc private func didTapAccountValue() {
         let depositViewController = DepositViewController()
         let navigationViewController = Router.navigationController(with: depositViewController)
+
+        depositViewController.shouldRefreshUserWallet = { [weak self] in
+            Env.userSessionStore.refreshUserWallet()
+        }
+        
         self.present(navigationViewController, animated: true, completion: nil)
     }
 

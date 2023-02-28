@@ -375,6 +375,11 @@ extension HistoryViewController {
     
     @objc func didTapMakeDeposit(sender: UITapGestureRecognizer) {
         let depositViewController = Router.navigationController(with: DepositViewController())
+
+//        depositViewController.shouldRefreshUserWallet = { [weak self] in
+//            Env.userSessionStore.refreshUserWallet()
+//        }
+        
         self.present(depositViewController, animated: true, completion: nil)
     }
 

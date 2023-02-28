@@ -101,10 +101,31 @@ class TransactionsHistoryRootViewController: UIViewController {
 
                 if let viewControllers = self?.viewControllers {
                     if viewControllers.isEmpty {
+
+                        let allTransactionsViewModel = TransactionsHistoryViewModel(transactionsType: .all, filterApplied: filterApplied)
+                        let allTransactionsViewController = TransactionsHistoryViewController(viewModel: allTransactionsViewModel)
+
+                        let depositTransactionsViewModel = TransactionsHistoryViewModel(transactionsType: .deposit, filterApplied: filterApplied)
+                        let depositTransactionsViewController = TransactionsHistoryViewController(viewModel: depositTransactionsViewModel)
+
+                        let withdrawTransactionsViewModel = TransactionsHistoryViewModel(transactionsType: .withdraw, filterApplied: filterApplied)
+                        let withdrawTransactionsViewController = TransactionsHistoryViewController(viewModel: withdrawTransactionsViewModel)
+
+                        // Callbacks for data reload needed
+                        allTransactionsViewModel.shouldReloadData = { [weak self] in
+                            allTransactionsViewModel.refreshContent(withUserWalletRefresh: true)
+                            withdrawTransactionsViewModel.refreshContent(withUserWalletRefresh: true)
+                        }
+
+                        withdrawTransactionsViewModel.shouldReloadData = { [weak self] in
+                            withdrawTransactionsViewModel.refreshContent(withUserWalletRefresh: true)
+                            allTransactionsViewModel.refreshContent(withUserWalletRefresh: true)
+                        }
+
                         self?.viewControllers = [
-                            TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .all, filterApplied: filterApplied)),
-                            TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .deposit, filterApplied: filterApplied)),
-                            TransactionsHistoryViewController(viewModel: TransactionsHistoryViewModel(transactionsType: .withdraw, filterApplied: filterApplied)),
+                            allTransactionsViewController,
+                            depositTransactionsViewController,
+                            withdrawTransactionsViewController
                         ]
                     }
                     else {

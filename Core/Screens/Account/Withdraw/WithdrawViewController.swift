@@ -42,6 +42,8 @@ class WithdrawViewController: UIViewController {
         }
     }
 
+    var shouldRefreshUserWallet: (() -> Void)?
+
     // MARK: Lifetime and Cycle
     init() {
         self.viewModel = WithdrawViewModel()
@@ -367,6 +369,7 @@ class WithdrawViewController: UIViewController {
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
 
+            self.shouldRefreshUserWallet?()
             self.dismiss(animated: true)
 
         }))

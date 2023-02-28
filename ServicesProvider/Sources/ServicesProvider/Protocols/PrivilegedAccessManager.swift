@@ -62,6 +62,8 @@ protocol PrivilegedAccessManager {
 
     func getWithdrawalMethods() -> AnyPublisher<[WithdrawalMethod], ServiceProviderError>
     func processWithdrawal(paymentMethod: String, amount: Double) -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError>
+    func getPendingWithdrawals() -> AnyPublisher<[PendingWithdrawal], ServiceProviderError>
+    func cancelWithdrawal(paymentId: Int) -> AnyPublisher<CancelWithdrawalResponse, ServiceProviderError>
 
     func getTransactionsHistory(startDate: String, endDate: String, transactionType: String?, pageNumber: Int?) -> AnyPublisher<[TransactionDetail], ServiceProviderError>
 }

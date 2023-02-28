@@ -121,6 +121,8 @@ enum OmegaAPIClient {
 
     case getWithdrawalsMethods
     case processWithdrawal(withdrawalMethod: String, amount: Double)
+    case getPendingWithdrawals
+    case cancelWithdrawal(paymentId: Int)
 
     case getTransactionsHistory(startDate: String, endDate: String, transactionType: String? = nil, pageNumber: Int? = nil, pageSize: Int? = nil)
 }
@@ -195,6 +197,10 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/getWithdrawalMethods"
         case .processWithdrawal:
             return "/ps/ips/processWithdrawal"
+        case .getPendingWithdrawals:
+            return "/ps/ips/getPendingWithdrawals"
+        case .cancelWithdrawal:
+            return "/ps/ips/cancelWithdrawal"
 
         case .getTransactionsHistory:
             return "/ps/ips/getTransactionHistoryByCurrency"
@@ -457,6 +463,13 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "paymentMethod", value: withdrawalMethod),
                 URLQueryItem(name: "amount", value: "\(amount)")
             ]
+        case .getPendingWithdrawals:
+            return nil
+        case .cancelWithdrawal(let paymentId):
+            return [
+
+                URLQueryItem(name: "paymentId", value: "\(paymentId)")
+            ]
 
         case .updatePayment(let paymentMethod, let amount, let paymentId, let type, let issuer):
             return [
@@ -538,6 +551,8 @@ extension OmegaAPIClient: Endpoint {
 
         case .getWithdrawalsMethods: return .get
         case .processWithdrawal: return .post
+        case .getPendingWithdrawals: return .get
+        case .cancelWithdrawal: return .post
 
         case .getTransactionsHistory: return .get
         }
@@ -608,6 +623,8 @@ extension OmegaAPIClient: Endpoint {
 
         case .getWithdrawalsMethods: return true
         case .processWithdrawal: return true
+        case .getPendingWithdrawals: return true
+        case .cancelWithdrawal: return true
 
         case .getTransactionsHistory: return true
         }

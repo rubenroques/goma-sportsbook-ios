@@ -30,6 +30,7 @@ extension SportRadarModels {
         var amountBonus: Double
         var postBalanceBonus: Double
         var currency: String
+        var paymentId: Int?
 
         enum CodingKeys: String, CodingKey {
             case id = "id"
@@ -40,6 +41,7 @@ extension SportRadarModels {
             case amountBonus = "amountBonus"
             case postBalanceBonus = "postBalanceBonus"
             case currency = "currency"
+            case paymentId = "paymentId"
         }
     }
 }

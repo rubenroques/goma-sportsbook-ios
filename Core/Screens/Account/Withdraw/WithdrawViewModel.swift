@@ -67,8 +67,6 @@ class WithdrawViewModel: NSObject {
 
                 }, receiveValue: { [weak self] processWithdrawalResponse in
 
-                    print("PROCESS WITHDRAWAL RESPONSE: \(processWithdrawalResponse)")
-
                     self?.showWithdrawalStatus?()
 
                     self?.isLoadingPublisher.send(false)

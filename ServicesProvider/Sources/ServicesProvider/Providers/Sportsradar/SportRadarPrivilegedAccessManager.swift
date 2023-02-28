@@ -677,6 +677,43 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         }).eraseToAnyPublisher()
     }
 
+    func getPendingWithdrawals() -> AnyPublisher<[PendingWithdrawal], ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.getPendingWithdrawals
+        let publisher: AnyPublisher<SportRadarModels.PendingWithdrawalResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ pendingWithdrawalsResponse -> AnyPublisher<[PendingWithdrawal], ServiceProviderError> in
+            if pendingWithdrawalsResponse.status == "SUCCESS" {
+
+                let pendingWithdrawalsResponse = SportRadarModelMapper.pendingWithdrawalResponse(fromPendingWithdrawalResponse: pendingWithdrawalsResponse)
+
+                return Just(pendingWithdrawalsResponse.pendingWithdrawals).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
+            }
+            else {
+                return Fail(outputType: [PendingWithdrawal].self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+
+    func cancelWithdrawal(paymentId: Int) -> AnyPublisher<CancelWithdrawalResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.cancelWithdrawal(paymentId: paymentId)
+        let publisher: AnyPublisher<SportRadarModels.CancelWithdrawalResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ cancelWithdrawalResponse -> AnyPublisher<CancelWithdrawalResponse, ServiceProviderError> in
+            if cancelWithdrawalResponse.status == "SUCCESS" {
+
+                let cancelWithdrawalResponse = SportRadarModelMapper.cancelWithdrawalResponse(fromCancelWithdrawalResponse: cancelWithdrawalResponse)
+
+                return Just(cancelWithdrawalResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else {
+                return Fail(outputType: CancelWithdrawalResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+
     func getTransactionsHistory(startDate: String, endDate: String, transactionType: String? = nil, pageNumber: Int? = nil) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: transactionType, pageNumber: pageNumber, pageSize: 10)

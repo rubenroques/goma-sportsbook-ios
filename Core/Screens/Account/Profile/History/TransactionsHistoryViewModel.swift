@@ -43,6 +43,9 @@ class TransactionsHistoryViewModel {
     var allTransactions: CurrentValueSubject<[TransactionHistory], Never> = .init([])
     var depositTransactions: CurrentValueSubject<[TransactionHistory], Never> = .init([])
     var withdrawTransactions: CurrentValueSubject<[TransactionHistory], Never> = .init([])
+    var pendingWithdrawals = [PendingWithdrawal]()
+
+    var shouldReloadData: (() -> Void)?
 
     // MARK: - Private Properties
     private var allPage = 1
@@ -52,6 +55,7 @@ class TransactionsHistoryViewModel {
     private var cancellables = Set<AnyCancellable>()
 
     private var transactionsHasNextPage = true
+    private var hasLoadedPendingWithdrawals: CurrentValueSubject<Bool, Never> = .init(false)
 
     private let dateFormatter = DateFormatter()
 
@@ -79,14 +83,48 @@ class TransactionsHistoryViewModel {
 //                }
 //            }
 //            .store(in: &cancellables)
-
+        self.setupPublishers()
         self.initialContentLoad()
        
+    }
+
+    private func setupPublishers() {
+
+        Publishers.CombineLatest(self.transactionsPublisher, self.hasLoadedPendingWithdrawals)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] transactions, hasLoadedPendingWithdrawals in
+
+                guard let self = self else { return }
+
+                if self.transactionsType != .deposit {
+                    if hasLoadedPendingWithdrawals {
+                        if transactions.isEmpty {
+                            self.listStatePublisher.send(.empty)
+                        }
+                        else {
+                            self.listStatePublisher.send(.loaded)
+                        }
+
+                        self.hasLoadedPendingWithdrawals.send(false)
+                    }
+                }
+                else {
+                    if transactions.isEmpty {
+                        self.listStatePublisher.send(.empty)
+                    }
+                    else {
+                        self.listStatePublisher.send(.loaded)
+                    }
+                }
+
+            })
+            .store(in: &cancellables)
     }
 
     func initialContentLoad() {
         self.listStatePublisher.send(.loading)
         self.transactionsPublisher.send([])
+        self.allTransactions.send([])
         self.depositTransactions.send([])
         self.withdrawTransactions.send([])
 
@@ -101,10 +139,19 @@ class TransactionsHistoryViewModel {
 
     }
 
-    func refreshContent() {
+    func refreshContent(withUserWalletRefresh: Bool = false) {
+
+        if withUserWalletRefresh {
+            Env.userSessionStore.refreshUserWallet()
+            self.allPage = 1
+            self.depositPage = 1
+            self.withdrawPage = 1
+        }
+
         self.transactionsHasNextPage = true
         self.calculateDate(filterApplied: filterApplied)
         self.initialContentLoad()
+
     }
     
     func calculateDate(filterApplied: FilterHistoryViewModel.FilterValue) {
@@ -137,6 +184,26 @@ class TransactionsHistoryViewModel {
 
         }
 
+    }
+
+    func getPendingWithdrawals() {
+
+        Env.servicesProvider.getPendingWithdrawals()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("PENDING WITHDRAWALS ERROR: \(error)")
+                }
+            }, receiveValue: { [weak self] pendingWithdrawals in
+
+                self?.pendingWithdrawals = pendingWithdrawals
+                self?.hasLoadedPendingWithdrawals.send(true)
+            })
+            .store(in: &cancellables)
     }
 
     func loadAll(page: Int, isNextPage: Bool = false) {
@@ -347,10 +414,15 @@ class TransactionsHistoryViewModel {
                                                             status: nil,
                                                             transactionReference: nil,
                                                             id: "\(transactionDetail.id)",
-                                                            isRallbackAllowed: nil)
+                                                            isRallbackAllowed: nil,
+                                                            paymentId: transactionDetail.paymentId)
 
                 return transactionHistory
             }
+
+        if transactions.count < self.recordsPerPage {
+            self.transactionsHasNextPage = false
+        }
 
         switch transactionType {
         case .all:
@@ -364,6 +436,9 @@ class TransactionsHistoryViewModel {
                 self.allTransactions.send(nextTransactions)
                 self.transactionsPublisher.send(nextTransactions)
             }
+
+            self.getPendingWithdrawals()
+
         case .deposit:
             if self.depositTransactions.value.isEmpty {
                 self.depositTransactions.send(transactions)
@@ -387,18 +462,29 @@ class TransactionsHistoryViewModel {
                 self.transactionsPublisher.send(nextTransactions)
             }
 
+            self.getPendingWithdrawals()
+
         }
 
-        if transactions.count < self.recordsPerPage {
-            self.transactionsHasNextPage = false
-        }
+    }
 
-        if self.transactionsPublisher.value.isEmpty {
-            self.listStatePublisher.send(.empty)
-        }
-        else {
-            self.listStatePublisher.send(.loaded)
-        }
+    func cancelPendingTransaction(paymentId: Int) {
+
+        Env.servicesProvider.cancelWithdrawal(paymentId: paymentId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("CANCEL WITHDRAWAL ERROR: \(error)")
+                }
+            }, receiveValue: { [weak self] cancelWithdrawalResponse in
+
+                self?.shouldReloadData?()
+            })
+            .store(in: &cancellables)
 
     }
 

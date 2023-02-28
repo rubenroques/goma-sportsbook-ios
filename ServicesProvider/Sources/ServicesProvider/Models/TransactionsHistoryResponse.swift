@@ -28,6 +28,7 @@ public struct TransactionDetail: Codable {
     public var amountBonus: Double
     public var postBalanceBonus: Double
     public var currency: String
+    public var paymentId: Int?
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -38,6 +39,7 @@ public struct TransactionDetail: Codable {
         case amountBonus = "amountBonus"
         case postBalanceBonus = "postBalanceBonus"
         case currency = "currency"
+        case paymentId = "paymentId"
     }
 }
 
@@ -53,8 +55,9 @@ public struct TransactionHistory {
     public let transactionReference: String?
     public let id: String?
     public let isRallbackAllowed: Bool?
+    public let paymentId: Int?
 
-    public init(transactionID: String, time: String, type: String, valueType: TransactionValueType, debit: DebitCredit, credit: DebitCredit, fees: [Fees], status: String?, transactionReference: String?, id: String?, isRallbackAllowed: Bool?) {
+    public init(transactionID: String, time: String, type: String, valueType: TransactionValueType, debit: DebitCredit, credit: DebitCredit, fees: [Fees], status: String?, transactionReference: String?, id: String?, isRallbackAllowed: Bool?, paymentId: Int?) {
         self.transactionID = transactionID
         self.time = time
         self.type = type
@@ -66,6 +69,7 @@ public struct TransactionHistory {
         self.transactionReference = transactionReference
         self.id = id
         self.isRallbackAllowed = isRallbackAllowed
+        self.paymentId = paymentId
     }
 }
 

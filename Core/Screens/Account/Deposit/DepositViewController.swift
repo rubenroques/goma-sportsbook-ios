@@ -54,6 +54,8 @@ class DepositViewController: UIViewController {
 
     var dropInComponent: DropInComponent?
 
+    var shouldRefreshUserWallet: (() -> Void)?
+
     // MARK: Lifetime and Cycle
     init() {
         self.viewModel = DepositViewModel()
@@ -212,7 +214,11 @@ class DepositViewController: UIViewController {
             .store(in: &cancellables)
 
         viewModel.paymentsDropIn.showPaymentStatus = { [weak self] paymentStatus in
-            
+
+            if paymentStatus == .authorised {
+                Env.userSessionStore.refreshUserWallet()
+            }
+
             self?.showPaymentStatusAlert(paymentStatus: paymentStatus)
         }
 
@@ -323,6 +329,7 @@ class DepositViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
 
             if paymentStatus == .authorised {
+                self.shouldRefreshUserWallet?()
                 self.dismiss(animated: true)
             }
         }))

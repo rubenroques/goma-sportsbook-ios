@@ -217,6 +217,29 @@ extension SportRadarModelMapper {
         return ProcessWithdrawalResponse(status: internalProcessWithdrawalResponse.status, paymentId: internalProcessWithdrawalResponse.paymentId, message: internalProcessWithdrawalResponse.message)
     }
 
+    static func pendingWithdrawalResponse(fromPendingWithdrawalResponse internalPendingWithdrawalResponse: SportRadarModels.PendingWithdrawalResponse) -> PendingWithdrawalResponse {
+
+        let pendingWithdrawals = internalPendingWithdrawalResponse.pendingWithdrawals.map({ pendingWithdrawal -> PendingWithdrawal in
+            let pendingWithdrawal = Self.pendingWithdrawal(fromPendingWithdrawal: pendingWithdrawal)
+
+            return pendingWithdrawal
+
+        })
+
+        return PendingWithdrawalResponse(status: internalPendingWithdrawalResponse.status,
+                                         pendingWithdrawals: pendingWithdrawals)
+    }
+
+    static func pendingWithdrawal(fromPendingWithdrawal internalPendingWithdrawal: SportRadarModels.PendingWithdrawal) -> PendingWithdrawal {
+
+        return PendingWithdrawal(status: internalPendingWithdrawal.status, paymentId: internalPendingWithdrawal.paymentId, amount: internalPendingWithdrawal.amount)
+    }
+
+    static func cancelWithdrawalResponse(fromCancelWithdrawalResponse internalCancelWithdrawalResponse: SportRadarModels.CancelWithdrawalResponse) -> CancelWithdrawalResponse {
+
+        return CancelWithdrawalResponse(status: internalCancelWithdrawalResponse.status, amount: internalCancelWithdrawalResponse.amount, currency: internalCancelWithdrawalResponse.currency)
+    }
+
     static func updatePaymentAction(fromUpdatePaymentAction internalUpdatePaymentAction: SportRadarModels.UpdatePaymentAction) -> UpdatePaymentAction {
 
         return UpdatePaymentAction(paymentMethodType: internalUpdatePaymentAction.paymentMethodType, url: internalUpdatePaymentAction.url, method: internalUpdatePaymentAction.method, type: internalUpdatePaymentAction.type)
@@ -278,7 +301,8 @@ extension SportRadarModelMapper {
                                  postBalance: internalTransactionDetail.postBalance,
                                  amountBonus: internalTransactionDetail.amountBonus,
                                  postBalanceBonus: internalTransactionDetail.postBalanceBonus,
-                                 currency: internalTransactionDetail.currency)
+                                 currency: internalTransactionDetail.currency,
+                                 paymentId: internalTransactionDetail.paymentId)
     }
 }
 
