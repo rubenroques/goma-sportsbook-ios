@@ -54,6 +54,8 @@ class DepositViewController: UIViewController {
 
     var dropInComponent: DropInComponent?
 
+    var shouldRefreshUserWallet: (() -> Void)?
+
     // MARK: Lifetime and Cycle
     init() {
         self.viewModel = DepositViewModel()
@@ -102,6 +104,7 @@ class DepositViewController: UIViewController {
 
         depositTipLabel.text = localized("minimum_deposit_value")
         depositTipLabel.font = AppFont.with(type: .semibold, size: 12)
+        depositTipLabel.isHidden = true
 
         self.setDepositAmountButtonDesign(button: self.amount10Button, title: "€10")
         self.setDepositAmountButtonDesign(button: self.amount20Button, title: "€20")
@@ -209,6 +212,24 @@ class DepositViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+        viewModel.paymentsDropIn.showPaymentStatus = { [weak self] paymentStatus in
+
+            if paymentStatus == .authorised {
+                Env.userSessionStore.refreshUserWallet()
+            }
+
+            self?.showPaymentStatusAlert(paymentStatus: paymentStatus)
+        }
+
+        viewModel.minimumValue
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] minimumValue in
+                let depositTipText = localized("minimum_deposit_value").replacingFirstOccurrence(of: "%s", with: minimumValue)
+                self?.depositTipLabel.text = depositTipText
+                self?.depositTipLabel.isHidden = false
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Functions
@@ -219,6 +240,7 @@ class DepositViewController: UIViewController {
                 self?.checkUserInputs()
             })
             .store(in: &cancellables)
+
     }
 
     private func getPaymentDropIn() {
@@ -285,6 +307,33 @@ class DepositViewController: UIViewController {
         responsibleGamingLabel.attributedText = underlineAttriString
         responsibleGamingLabel.isUserInteractionEnabled = true
         responsibleGamingLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapResponsabibleGamingUnderlineLabel(gesture:))))
+    }
+
+    private func showPaymentStatusAlert(paymentStatus: PaymentStatus) {
+        var alertTitle = ""
+        var alertMessage = ""
+
+        switch paymentStatus {
+        case .authorised:
+            alertTitle = "Payment Authorized"
+            alertMessage = "Your payment was authorized. Your deposit should be available in your account."
+        case .refused:
+            alertTitle = "Payment Refused"
+            alertMessage = "Your payment was refused. Please try again later. If the problem persists contact our Customer Support."
+        }
+
+        let alert = UIAlertController(title: alertTitle,
+                                      message: alertMessage,
+                                      preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+
+            if paymentStatus == .authorised {
+                self.shouldRefreshUserWallet?()
+                self.dismiss(animated: true)
+            }
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
 
     @IBAction private func tapResponsabibleGamingUnderlineLabel(gesture: UITapGestureRecognizer) {

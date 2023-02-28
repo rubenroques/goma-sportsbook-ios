@@ -119,7 +119,12 @@ enum OmegaAPIClient {
     case processDeposit(paymentMethod: String, amount: Double, option: String)
     case updatePayment(paymentMethod: String, amount: Double, paymentId: String, type: String, issuer: String)
 
-    case getTransactionsHistory
+    case getWithdrawalsMethods
+    case processWithdrawal(withdrawalMethod: String, amount: Double)
+    case getPendingWithdrawals
+    case cancelWithdrawal(paymentId: Int)
+
+    case getTransactionsHistory(startDate: String, endDate: String, transactionType: String? = nil, pageNumber: Int? = nil, pageSize: Int? = nil)
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -187,8 +192,18 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/processDeposit"
         case .updatePayment:
             return "/ps/ips/updatePayment"
+
+        case .getWithdrawalsMethods:
+            return "/ps/ips/getWithdrawalMethods"
+        case .processWithdrawal:
+            return "/ps/ips/processWithdrawal"
+        case .getPendingWithdrawals:
+            return "/ps/ips/getPendingWithdrawals"
+        case .cancelWithdrawal:
+            return "/ps/ips/cancelWithdrawal"
+
         case .getTransactionsHistory:
-            return "/ps/ips/getTransactionHistory"
+            return "/ps/ips/getTransactionHistoryByCurrency"
         }
     }
     
@@ -442,6 +457,20 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "option", value: option)
             ]
 
+        case .processWithdrawal(let withdrawalMethod, let amount):
+            return [
+
+                URLQueryItem(name: "paymentMethod", value: withdrawalMethod),
+                URLQueryItem(name: "amount", value: "\(amount)")
+            ]
+        case .getPendingWithdrawals:
+            return nil
+        case .cancelWithdrawal(let paymentId):
+            return [
+
+                URLQueryItem(name: "paymentId", value: "\(paymentId)")
+            ]
+
         case .updatePayment(let paymentMethod, let amount, let paymentId, let type, let issuer):
             return [
 
@@ -452,8 +481,35 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "issuer", value: issuer)
             ]
 
-        case .getTransactionsHistory:
+        case .getWithdrawalsMethods:
             return nil
+
+        case .getTransactionsHistory(let startDate, let endDate, let transactionType, let pageNumber, let pageSize):
+            var queryItemsURL: [URLQueryItem] = []
+
+            let startDateQueryItem = URLQueryItem(name: "startDateTime", value: startDate)
+            queryItemsURL.append(startDateQueryItem)
+
+            let endDateQueryItem = URLQueryItem(name: "endDateTime", value: endDate)
+            queryItemsURL.append(endDateQueryItem)
+
+            if let transactionType {
+                let queryItem = URLQueryItem(name: "tranType", value: transactionType)
+                queryItemsURL.append(queryItem)
+            }
+
+            if let pageNumber {
+                let queryItem = URLQueryItem(name: "pageNum", value: "\(pageNumber)")
+                queryItemsURL.append(queryItem)
+            }
+
+            if let pageSize {
+                let queryItem = URLQueryItem(name: "pageSize", value: "\(pageSize)")
+                queryItemsURL.append(queryItem)
+            }
+
+            return queryItemsURL
+
         }
     }
     
@@ -488,9 +544,15 @@ extension OmegaAPIClient: Endpoint {
         case .getDocumentTypes: return .get
         case .getUserDocuments: return .get
         case .uploadUserDocument: return .post
+
         case .getPayments: return .get
         case .processDeposit: return .post
         case .updatePayment: return .post
+
+        case .getWithdrawalsMethods: return .get
+        case .processWithdrawal: return .post
+        case .getPendingWithdrawals: return .get
+        case .cancelWithdrawal: return .post
 
         case .getTransactionsHistory: return .get
         }
@@ -554,9 +616,15 @@ extension OmegaAPIClient: Endpoint {
         case .getDocumentTypes: return false
         case .getUserDocuments: return true
         case .uploadUserDocument: return true
+
         case .getPayments: return true
         case .processDeposit: return true
         case .updatePayment: return true
+
+        case .getWithdrawalsMethods: return true
+        case .processWithdrawal: return true
+        case .getPendingWithdrawals: return true
+        case .cancelWithdrawal: return true
 
         case .getTransactionsHistory: return true
         }

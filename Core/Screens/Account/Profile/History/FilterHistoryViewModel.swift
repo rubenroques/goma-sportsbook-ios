@@ -46,6 +46,7 @@ class FilterHistoryViewModel {
     private var cancellables = Set<AnyCancellable>()
     var startTimeFilterPublisher: CurrentValueSubject<Date, Never> = .init(Date())
     var endTimeFilterPublisher: CurrentValueSubject<Date, Never> = .init(Date())
+    let dateFormatter = DateFormatter()
     
     // MARK: - Life Cycle
      init() {
@@ -78,7 +79,6 @@ class FilterHistoryViewModel {
     
     func formatDate(dateString: String) -> Date? {
         
-        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         return dateFormatter.date(from: dateString)
     }

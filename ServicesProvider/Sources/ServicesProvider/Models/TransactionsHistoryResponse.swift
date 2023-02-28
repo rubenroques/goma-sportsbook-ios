@@ -21,29 +21,33 @@ public struct TransactionsHistoryResponse: Codable {
 public struct TransactionDetail: Codable {
 
     public var id: Int
-    public var timestamp: String
+    public var dateTime: String
     public var type: String
-    public var amount: String
-    public var postBalance: String
-    public var amountBonus: String
-    public var postBalanceBonus: String
+    public var amount: Double
+    public var postBalance: Double
+    public var amountBonus: Double
+    public var postBalanceBonus: Double
     public var currency: String
+    public var paymentId: Int?
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
-        case timestamp = "timestamp"
+        case dateTime = "dateTime"
         case type = "tranType"
         case amount = "amount"
         case postBalance = "postBalance"
         case amountBonus = "amountBonus"
         case postBalanceBonus = "postBalanceBonus"
         case currency = "currency"
+        case paymentId = "paymentId"
     }
 }
 
 public struct TransactionHistory {
     public let transactionID: String
     public let time: String
+    public let type: String
+    public let valueType: TransactionValueType
     public let debit: DebitCredit
     public let credit: DebitCredit
     public let fees: [Fees]
@@ -51,10 +55,13 @@ public struct TransactionHistory {
     public let transactionReference: String?
     public let id: String?
     public let isRallbackAllowed: Bool?
+    public let paymentId: Int?
 
-    public init(transactionID: String, time: String, debit: DebitCredit, credit: DebitCredit, fees: [Fees], status: String?, transactionReference: String?, id: String?, isRallbackAllowed: Bool?) {
+    public init(transactionID: String, time: String, type: String, valueType: TransactionValueType, debit: DebitCredit, credit: DebitCredit, fees: [Fees], status: String?, transactionReference: String?, id: String?, isRallbackAllowed: Bool?, paymentId: Int?) {
         self.transactionID = transactionID
         self.time = time
+        self.type = type
+        self.valueType = valueType
         self.debit = debit
         self.credit = credit
         self.fees = fees
@@ -62,6 +69,7 @@ public struct TransactionHistory {
         self.transactionReference = transactionReference
         self.id = id
         self.isRallbackAllowed = isRallbackAllowed
+        self.paymentId = paymentId
     }
 }
 
@@ -85,4 +93,10 @@ public struct Fees {
         self.currency = currency
         self.amount = amount
     }
+}
+
+public enum TransactionValueType {
+    case won
+    case loss
+    case neutral
 }

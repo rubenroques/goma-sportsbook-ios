@@ -128,8 +128,6 @@ class SearchViewModel: NSObject {
         self.clearData()
         self.isEmptySearch = false
 
-        // EM TEMP SHUTDOWN
-        // self.hasDoneSearch = true
         Env.servicesProvider.getSearchEvents(query: searchQuery, resultLimit: "20", page: "0")
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -138,45 +136,15 @@ class SearchViewModel: NSObject {
                     ()
                 case .failure(let error):
                     print("SEARCH ERROR: \(error)")
+                    self?.searchMatchesPublisher.send([:])
+                    self?.hasDoneSearch = true
                 }
 
             }, receiveValue: { [weak self] eventsGroup in
 
-                print("SEARCH RESPONSE: \(eventsGroup)")
                 self?.processEvents(eventsGroup: eventsGroup)
             })
             .store(in: &cancellables)
-
-//        let searchRoute = TSRouter.searchV2(language: "en",
-//                                            limit: 20,
-//                                            query: searchQuery,
-//                                            eventStatuses: eventStatuses,
-//                                            include: includeSettings,
-//                                            bettingTypeIds: bettingTypeIdsSettings,
-//                                            dataWithoutOdds: false)
-//
-//        Env.everyMatrixClient.manager.getModel(router: searchRoute, decodingType: SearchV2Response.self)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .failure(let apiError):
-//                    switch apiError {
-//                    case .requestError(let value):
-//                        print("Search request error: \(value)")
-//                    case .notConnected:
-//                        ()
-//                    default:
-//                        ()
-//                    }
-//                case .finished:
-//                    ()
-//                }
-//            },
-//            receiveValue: { [weak self] searchResponse in
-//                self?.processSearchResponse(searchResponse: searchResponse)
-//
-//            })
-//            .store(in: &cancellables)
 
     }
 

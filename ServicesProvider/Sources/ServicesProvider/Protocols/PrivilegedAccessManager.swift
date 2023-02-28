@@ -60,5 +60,10 @@ protocol PrivilegedAccessManager {
     func processDeposit(paymentMethod: String, amount: Double, option: String) -> AnyPublisher<ProcessDepositResponse, ServiceProviderError>
     func updatePayment(paymentMethod: String, amount: Double, paymentId: String, type: String, issuer: String) -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError>
 
-    func getTransactionsHistory() -> AnyPublisher<TransactionsHistoryResponse, ServiceProviderError>
+    func getWithdrawalMethods() -> AnyPublisher<[WithdrawalMethod], ServiceProviderError>
+    func processWithdrawal(paymentMethod: String, amount: Double) -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError>
+    func getPendingWithdrawals() -> AnyPublisher<[PendingWithdrawal], ServiceProviderError>
+    func cancelWithdrawal(paymentId: Int) -> AnyPublisher<CancelWithdrawalResponse, ServiceProviderError>
+
+    func getTransactionsHistory(startDate: String, endDate: String, transactionType: String?, pageNumber: Int?) -> AnyPublisher<[TransactionDetail], ServiceProviderError>
 }

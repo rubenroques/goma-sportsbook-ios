@@ -42,6 +42,8 @@ class WithdrawViewController: UIViewController {
         }
     }
 
+    var shouldRefreshUserWallet: (() -> Void)?
+
     // MARK: Lifetime and Cycle
     init() {
         self.viewModel = WithdrawViewModel()
@@ -80,6 +82,7 @@ class WithdrawViewController: UIViewController {
 
         tipLabel.text = localized("minimum_withdraw_value")
         tipLabel.font = AppFont.with(type: .semibold, size: 12)
+        tipLabel.isHidden = true
 
         StyleHelper.styleButton(button: self.nextButton)
         self.nextButton.setTitle(localized("next"), for: .normal)
@@ -174,6 +177,26 @@ class WithdrawViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+        viewModel.minimumValue
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] minimumValue in
+
+                if minimumValue != "" {
+                    let tipText = localized("minimum_withdraw_value").replacingFirstOccurrence(of: "%s", with: minimumValue)
+                    self?.tipLabel.text = tipText
+                    self?.tipLabel.isHidden = false
+                }
+
+            })
+            .store(in: &cancellables)
+
+        viewModel.showWithdrawalStatus = { [weak self] in
+
+            self?.showAlert()
+
+        }
+
     }
 
     // MARK: Functions
@@ -326,7 +349,7 @@ class WithdrawViewController: UIViewController {
             errorTitle = localized("withdraw_error")
             errorMessage = localized("withdraw_error_message")
         case .error(let message):
-            errorTitle = localized("deposit_error")
+            errorTitle = "Withdraw Error"
             errorMessage = message
         default:
             ()
@@ -336,6 +359,20 @@ class WithdrawViewController: UIViewController {
                                       message: errorMessage,
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    private func showAlert() {
+
+        let alert = UIAlertController(title: "Withdrawal Status",
+                                      message: "Your withdrawal request was added. In the next days the request will be processed and you'll receive an update.",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
+
+            self.shouldRefreshUserWallet?()
+            self.dismiss(animated: true)
+
+        }))
         self.present(alert, animated: true, completion: nil)
     }
 

@@ -497,8 +497,8 @@ class PreLiveEventsViewController: UIViewController {
         self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
 
-        self.tableView.backgroundColor = .clear // UIColor.App.backgroundPrimary
-        self.tableView.backgroundView?.backgroundColor = .clear // UIColor.App.backgroundPrimary
+        self.tableView.backgroundColor = .clear
+        self.tableView.backgroundView?.backgroundColor = .clear
 
         self.emptyBaseView.backgroundColor = .clear
         self.loadingBaseView.backgroundColor = .clear

@@ -17,6 +17,7 @@ class DepositViewModel: NSObject {
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var showErrorAlertTypePublisher: CurrentValueSubject<BalanceErrorType?, Never> = .init(nil)
     var cashierUrlPublisher: CurrentValueSubject<String?, Never> = .init(nil)
+    var minimumValue: CurrentValueSubject<String, Never> = .init("")
 
 //    var paymentMethodsResponse: SimplePaymentMethodsResponse?
     var shouldShowPaymentDropIn: CurrentValueSubject<Bool, Never> = .init(false)
@@ -66,6 +67,8 @@ class DepositViewModel: NSObject {
         self.paymentsDropIn.shouldProccessPayment = { [weak self] paymentInfo in
             print(paymentInfo)
         }
+
+        self.minimumValue.send("50.00")
     }
 
     func getDepositInfo(amountText: String) {

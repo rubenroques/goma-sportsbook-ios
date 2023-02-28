@@ -195,6 +195,51 @@ extension SportRadarModelMapper {
         return UpdatePaymentResponse(resultCode: internalUpdatePaymentResponse.resultCode, action: Self.updatePaymentAction(fromUpdatePaymentAction: internalUpdatePaymentResponse.action))
     }
 
+    static func withdrawalMethodsResponse(fromWithdrawalMethodsResponse internalWithdrawalMethodsResponse: SportRadarModels.WithdrawalMethodsResponse) -> WithdrawalMethodsResponse {
+
+        let withdrawalMethods = internalWithdrawalMethodsResponse.withdrawalMethods.map({ withdrawalMethod -> WithdrawalMethod in
+            let withdrawalMethod = Self.withdrawalMethod(fromWithdrawalMethod: withdrawalMethod)
+
+            return withdrawalMethod
+
+        })
+
+        return WithdrawalMethodsResponse(status: internalWithdrawalMethodsResponse.status, withdrawalMethods: withdrawalMethods)
+    }
+
+    static func withdrawalMethod(fromWithdrawalMethod internalWithdrawalMethod: SportRadarModels.WithdrawalMethod) -> WithdrawalMethod {
+
+        return WithdrawalMethod(code: internalWithdrawalMethod.code, paymentMethod: internalWithdrawalMethod.paymentMethod, minimumWithdrawal: internalWithdrawalMethod.minimumWithdrawal, maximumWithdrawal: internalWithdrawalMethod.maximumWithdrawal)
+    }
+
+    static func processWithdrawalResponse(fromProcessWithdrawalResponse internalProcessWithdrawalResponse: SportRadarModels.ProcessWithdrawalResponse) -> ProcessWithdrawalResponse {
+
+        return ProcessWithdrawalResponse(status: internalProcessWithdrawalResponse.status, paymentId: internalProcessWithdrawalResponse.paymentId, message: internalProcessWithdrawalResponse.message)
+    }
+
+    static func pendingWithdrawalResponse(fromPendingWithdrawalResponse internalPendingWithdrawalResponse: SportRadarModels.PendingWithdrawalResponse) -> PendingWithdrawalResponse {
+
+        let pendingWithdrawals = internalPendingWithdrawalResponse.pendingWithdrawals.map({ pendingWithdrawal -> PendingWithdrawal in
+            let pendingWithdrawal = Self.pendingWithdrawal(fromPendingWithdrawal: pendingWithdrawal)
+
+            return pendingWithdrawal
+
+        })
+
+        return PendingWithdrawalResponse(status: internalPendingWithdrawalResponse.status,
+                                         pendingWithdrawals: pendingWithdrawals)
+    }
+
+    static func pendingWithdrawal(fromPendingWithdrawal internalPendingWithdrawal: SportRadarModels.PendingWithdrawal) -> PendingWithdrawal {
+
+        return PendingWithdrawal(status: internalPendingWithdrawal.status, paymentId: internalPendingWithdrawal.paymentId, amount: internalPendingWithdrawal.amount)
+    }
+
+    static func cancelWithdrawalResponse(fromCancelWithdrawalResponse internalCancelWithdrawalResponse: SportRadarModels.CancelWithdrawalResponse) -> CancelWithdrawalResponse {
+
+        return CancelWithdrawalResponse(status: internalCancelWithdrawalResponse.status, amount: internalCancelWithdrawalResponse.amount, currency: internalCancelWithdrawalResponse.currency)
+    }
+
     static func updatePaymentAction(fromUpdatePaymentAction internalUpdatePaymentAction: SportRadarModels.UpdatePaymentAction) -> UpdatePaymentAction {
 
         return UpdatePaymentAction(paymentMethodType: internalUpdatePaymentAction.paymentMethodType, url: internalUpdatePaymentAction.url, method: internalUpdatePaymentAction.method, type: internalUpdatePaymentAction.type)
@@ -250,13 +295,14 @@ extension SportRadarModelMapper {
     static func transactionDetail(fromInternalTransactionDetail internalTransactionDetail: SportRadarModels.TransactionDetail) -> TransactionDetail {
 
         return TransactionDetail(id: internalTransactionDetail.id,
-                                 timestamp: internalTransactionDetail.timestamp,
+                                 dateTime: internalTransactionDetail.dateTime,
                                  type: internalTransactionDetail.type,
                                  amount: internalTransactionDetail.amount,
                                  postBalance: internalTransactionDetail.postBalance,
                                  amountBonus: internalTransactionDetail.amountBonus,
                                  postBalanceBonus: internalTransactionDetail.postBalanceBonus,
-                                 currency: internalTransactionDetail.currency)
+                                 currency: internalTransactionDetail.currency,
+                                 paymentId: internalTransactionDetail.paymentId)
     }
 }
 

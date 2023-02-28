@@ -19,15 +19,13 @@ class FilterHistoryViewController: UIViewController {
     private lazy var filterBaseView: UIView = Self.createBaseView()
     private lazy var cancelButton: UILabel = Self.createTopLabel()
     private lazy var topLabel: UILabel = Self.createTopLabel()
-    private lazy var dateRangeView: UILabel = Self.createTopLabel()
     private lazy var bottomBaseView: UIView = Self.createBottomView()
     private lazy var applyButton: UIButton = Self.createButton()
-    private lazy var dateRangeBaseView: UIView = Self.createBottomView()
     private lazy var bottomSeparatorView: UIView = Self.createSimpleView()
     private lazy var dateRangeStackView: UIStackView = Self.createHorizontalStackView()
-    private lazy var dateRangeVerticalStackView: UIStackView = Self.createVerticalStackView()
     private lazy var startTimeHeaderTextView: HeaderTextFieldView = HeaderTextFieldView()
     private lazy var endTimeHeaderTextView: HeaderTextFieldView = HeaderTextFieldView()
+    private lazy var filterBaseStackView: UIStackView = Self.createFilterBaseStackView()
 
     var filterHistoryViewModel = FilterHistoryViewModel()
     var filterRowViews: [FilterRowView] = []
@@ -63,13 +61,25 @@ class FilterHistoryViewController: UIViewController {
         
         self.startTimeHeaderTextView.setPlaceholderText("From")
         self.startTimeHeaderTextView.setImageTextField(UIImage(named: "calendar_regular_icon")!)
-        self.startTimeHeaderTextView.isDisabled = false
+        //self.startTimeHeaderTextView.isDisabled = false
         self.startTimeHeaderTextView.setDatePickerMode()
         
         self.endTimeHeaderTextView.setPlaceholderText("To")
         self.endTimeHeaderTextView.setImageTextField(UIImage(named: "calendar_regular_icon")!)
-        self.endTimeHeaderTextView.isDisabled = false
+        //self.endTimeHeaderTextView.isDisabled = false
         self.endTimeHeaderTextView.setDatePickerMode()
+
+        let calendar = Calendar(identifier: .gregorian)
+        var components = DateComponents()
+        components.calendar = calendar
+        components.year = -2
+        let minDate = calendar.date(byAdding: components, to: Date())!
+
+        startTimeHeaderTextView.datePicker.minimumDate = minDate
+        startTimeHeaderTextView.datePicker.maximumDate = Date()
+
+        endTimeHeaderTextView.datePicker.minimumDate = minDate
+        endTimeHeaderTextView.datePicker.maximumDate = Date()
 
         self.resetButton.text = localized("reset")
         self.cancelButton.text = localized("cancel")
@@ -109,7 +119,6 @@ class FilterHistoryViewController: UIViewController {
     // MARK: - Layout and Theme
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -140,6 +149,7 @@ class FilterHistoryViewController: UIViewController {
 
         self.startTimeHeaderTextView.setPlaceholderColor(UIColor.App.textPrimary)
         self.endTimeHeaderTextView.setPlaceholderColor(UIColor.App.textPrimary)
+
     }
 
     // MARK: - Bindings
@@ -172,6 +182,7 @@ class FilterHistoryViewController: UIViewController {
             .sink(receiveValue: { [weak self] startDate in
           
                 self?.startDate = startDate
+
                 if let endDate = self?.endDate,
                    endDate <= startDate,
                    let afterStartDateValue = Calendar.current.date(byAdding: .day, value: 1, to: startDate) {
@@ -184,12 +195,7 @@ class FilterHistoryViewController: UIViewController {
                     self?.viewModel.setEndTime(dateString: endDate)
                     
                 }
-                else {
-                    if let afterStartDateValue = Calendar.current.date(byAdding: .day, value: 1, to: startDate) {
-                        self?.viewModel.setStartTime(dateString: afterStartDateValue)
-                    }
-                    
-                }
+
             })
             .store(in: &cancellables)
 
@@ -198,7 +204,9 @@ class FilterHistoryViewController: UIViewController {
             .map(toDate)
             .compactMap({ $0 })
             .sink(receiveValue: { [weak self] endDate in
+
                 self?.endDate = endDate
+
                 if let startDate = self?.startDate,
                    startDate >= endDate,
                    let beforeEndDateValue = Calendar.current.date(byAdding: .day, value: -1, to: endDate) {
@@ -212,11 +220,7 @@ class FilterHistoryViewController: UIViewController {
                     self?.viewModel.setEndTime(dateString: endDate)
                                                
                 }
-                else {
-                    if let beforeEndDateValue = Calendar.current.date(byAdding: .day, value: 1, to: endDate) {
-                        self?.viewModel.setEndTime(dateString: beforeEndDateValue)
-                    }
-                }
+
             })
             .store(in: &cancellables)
 
@@ -485,27 +489,45 @@ extension FilterHistoryViewController {
         return activityIndicatorView
     }
 
+    private static func createFilterBaseStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 4
+
+        return stackView
+    }
+
     private func setupSubviews() {
 
         // Add subviews to self.view or each other
+
+        self.view.addSubview(self.navigationBaseView)
+        self.view.addSubview(self.filterBaseView)
+        self.view.addSubview(self.bottomSeparatorView)
+        self.view.addSubview(self.bottomBaseView)
 
         self.navigationBaseView.addSubview(self.topLabel)
         self.navigationBaseView.addSubview(self.resetButton)
         self.navigationBaseView.addSubview(self.cancelButton)
         
         self.bottomBaseView.addSubview(self.applyButton)
-        self.dateRangeBaseView.addSubview(self.dateRangeStackView)
-        
+
+        self.filterBaseView.addSubview(self.filterBaseStackView)
+
+        self.filterBaseStackView.addArrangedSubview(self.filterCollapseView)
+        self.filterBaseStackView.addArrangedSubview(self.dateRangeStackView)
+
+//        self.filterBaseView.addSubview(self.filterCollapseView)
+//        self.filterBaseView.addSubview(self.dateRangeStackView)
+
+//        self.dateRangeBaseView.addSubview(self.dateRangeStackView)
+
         self.dateRangeStackView.addArrangedSubview(self.startTimeHeaderTextView)
         self.dateRangeStackView.addArrangedSubview(self.endTimeHeaderTextView)
         
-        self.filterBaseView.addSubview(self.filterCollapseView)
-        self.filterBaseView.addSubview(self.dateRangeBaseView)
-        
-        self.view.addSubview(self.navigationBaseView)
-        self.view.addSubview(self.filterBaseView)
-        self.view.addSubview(self.bottomSeparatorView)
-        self.view.addSubview(self.bottomBaseView)
+
 
         // Initialize constraints
         self.initConstraints()
@@ -534,28 +556,33 @@ extension FilterHistoryViewController {
             self.filterBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
             self.filterBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
             self.filterBaseView.topAnchor.constraint(equalTo: self.navigationBaseView.bottomAnchor, constant: 30),
-            //self.filterBaseView.bottomAnchor.constraint(equalTo: self.dateRangeStackView.bottomAnchor),
-            
-            self.filterCollapseView.leadingAnchor.constraint(equalTo: self.filterBaseView.leadingAnchor, constant: 2),
-            self.filterCollapseView.trailingAnchor.constraint(equalTo: self.filterBaseView.trailingAnchor, constant: -2),
-            self.filterCollapseView.topAnchor.constraint(equalTo: self.filterBaseView.topAnchor, constant: 2),
+
+            self.filterBaseStackView.leadingAnchor.constraint(equalTo: self.filterBaseView.leadingAnchor),
+            self.filterBaseStackView.trailingAnchor.constraint(equalTo: self.filterBaseView.trailingAnchor),
+            self.filterBaseStackView.topAnchor.constraint(equalTo: self.filterBaseView.topAnchor),
+            self.filterBaseStackView.bottomAnchor.constraint(equalTo: self.filterBaseView.bottomAnchor),
+
+            self.filterCollapseView.leadingAnchor.constraint(equalTo: self.filterBaseStackView.leadingAnchor, constant: 2),
+            self.filterCollapseView.trailingAnchor.constraint(equalTo: self.filterBaseStackView.trailingAnchor, constant: -2),
+//            self.filterCollapseView.topAnchor.constraint(equalTo: self.filterBaseView.topAnchor, constant: 2),
+
         ])
 
         NSLayoutConstraint.activate([
             
-            self.dateRangeBaseView.leadingAnchor.constraint(equalTo: self.filterBaseView.leadingAnchor),
-            self.dateRangeBaseView.trailingAnchor.constraint(equalTo: self.filterBaseView.trailingAnchor),
-            self.dateRangeBaseView.topAnchor.constraint(equalTo: self.filterCollapseView.bottomAnchor),
-            self.dateRangeBaseView.bottomAnchor.constraint(equalTo: self.filterBaseView.bottomAnchor),
+//            self.dateRangeBaseView.leadingAnchor.constraint(equalTo: self.filterBaseView.leadingAnchor),
+//            self.dateRangeBaseView.trailingAnchor.constraint(equalTo: self.filterBaseView.trailingAnchor),
+//            self.dateRangeBaseView.topAnchor.constraint(equalTo: self.filterCollapseView.bottomAnchor),
+//            self.dateRangeBaseView.bottomAnchor.constraint(equalTo: self.filterBaseView.bottomAnchor),
             
-            self.dateRangeStackView.leadingAnchor.constraint(equalTo: self.dateRangeBaseView.leadingAnchor),
-            self.dateRangeStackView.trailingAnchor.constraint(equalTo: self.dateRangeBaseView.trailingAnchor),
-            self.dateRangeStackView.topAnchor.constraint(equalTo: self.dateRangeBaseView.topAnchor),
+            self.dateRangeStackView.leadingAnchor.constraint(equalTo: self.filterBaseStackView.leadingAnchor, constant: 20),
+            self.dateRangeStackView.trailingAnchor.constraint(equalTo: self.filterBaseStackView.trailingAnchor, constant: -20),
+//            self.dateRangeStackView.topAnchor.constraint(equalTo: self.filterCollapseView.bottomAnchor),
+//            self.dateRangeStackView.bottomAnchor.constraint(equalTo: self.filterBaseView.bottomAnchor),
             
             self.endTimeHeaderTextView.heightAnchor.constraint(equalToConstant: 80),
-            self.startTimeHeaderTextView.leadingAnchor.constraint(equalTo: self.dateRangeStackView.leadingAnchor, constant: 16),
-            self.endTimeHeaderTextView.trailingAnchor.constraint(equalTo: self.dateRangeStackView.trailingAnchor, constant: -16),
-            self.startTimeHeaderTextView.heightAnchor.constraint(equalToConstant: 80),
+
+            self.startTimeHeaderTextView.heightAnchor.constraint(equalToConstant: 80)
         ])
         
         NSLayoutConstraint.activate([

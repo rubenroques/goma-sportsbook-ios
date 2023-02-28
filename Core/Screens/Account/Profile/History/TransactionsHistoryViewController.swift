@@ -54,6 +54,8 @@ class TransactionsHistoryViewController: UIViewController {
 
         self.tableView.register(TransactionsTableViewCell.self, forCellReuseIdentifier: TransactionsTableViewCell.identifier)
 
+        self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
+
         self.emptyStateButton.addTarget(self, action: #selector(self.didTapMakeDeposit), for: .primaryActionTriggered)
 
         self.tableView.isHidden = false
@@ -136,7 +138,6 @@ class TransactionsHistoryViewController: UIViewController {
             })
             .store(in: &self.cancellables)
 
-        
     }
 
     private func showLoading() {
@@ -187,6 +188,17 @@ extension TransactionsHistoryViewController: UITableViewDelegate, UITableViewDat
                 fatalError("")
             }
             cell.configure(withTransactionHistoryEntry: transaction, transactionType: viewModel.transactionsType)
+
+            if self.viewModel.pendingWithdrawals.contains(where: {
+                $0.paymentId == transaction.paymentId
+            }) {
+                cell.hasPendingTransaction = true
+
+                cell.shouldCancelPendingTransaction = { [weak self] paymentId in
+                    self?.viewModel.cancelPendingTransaction(paymentId: paymentId)
+                }
+            }
+            
             return cell
         case 1:
             if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
@@ -200,6 +212,10 @@ extension TransactionsHistoryViewController: UITableViewDelegate, UITableViewDat
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
 
@@ -221,8 +237,14 @@ extension TransactionsHistoryViewController: UITableViewDelegate, UITableViewDat
 extension TransactionsHistoryViewController {
 
     @objc func didTapMakeDeposit(sender: UITapGestureRecognizer) {
-        let depositViewController = Router.navigationController(with: DepositViewController())
-        self.present(depositViewController, animated: true, completion: nil)
+        let depositViewController = DepositViewController()
+        let navigationViewController = Router.navigationController(with: depositViewController)
+
+        depositViewController.shouldRefreshUserWallet = { [weak self] in
+            Env.userSessionStore.refreshUserWallet()
+        }
+        
+        self.present(navigationViewController, animated: true, completion: nil)
     }
 
 }

@@ -12,7 +12,8 @@ import Combine
 class SearchViewController: UIViewController {
 
     @IBOutlet private weak var topView: UIView!
-    @IBOutlet private weak var containerView: UIView!
+    @IBOutlet private weak var bottomView: UIView!
+    @IBOutlet private weak var containerView: GradientView!
     @IBOutlet private weak var searchView: UIView!
     @IBOutlet private weak var searchBarView: UISearchBar!
     @IBOutlet private weak var cancelButton: UIButton!
@@ -105,11 +106,15 @@ class SearchViewController: UIViewController {
 
     func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.view.backgroundColor = .clear
 
         self.topView.backgroundColor = .clear
 
-        self.containerView.backgroundColor = UIColor.App.backgroundTertiary
+        self.bottomView.backgroundColor = UIColor.App.backgroundTertiary
+
+        //self.containerView.backgroundColor = UIColor.App.backgroundTertiary
+        self.containerView.colors = [(UIColor.App.backgroundGradient1, NSNumber(value: 0.0)),
+                                     (UIColor.App.backgroundGradient2, NSNumber(value: 1.0))]
 
         self.searchView.backgroundColor = .clear
 
@@ -124,6 +129,9 @@ class SearchViewController: UIViewController {
 
         self.noResultsLabel.textColor = UIColor.App.textPrimary
 
+        self.tableView.backgroundColor = .clear
+        self.tableView.backgroundView?.backgroundColor = .clear
+
         self.activityIndicatorBaseView.backgroundColor = UIColor.App.backgroundTertiary
 
     }
@@ -132,14 +140,14 @@ class SearchViewController: UIViewController {
 
         self.searchBarView.searchBarStyle = UISearchBar.Style.prominent
         self.searchBarView.sizeToFit()
-        self.searchBarView.isTranslucent = false
+        self.searchBarView.isTranslucent = true
         self.searchBarView.backgroundImage = UIImage()
-        self.searchBarView.tintColor = .white
-        self.searchBarView.barTintColor = .white
-        self.searchBarView.backgroundImage = UIColor.App.backgroundTertiary.image()
+        self.searchBarView.tintColor = .clear
+        self.searchBarView.barTintColor = .clear
+        self.searchBarView.backgroundColor = .clear
 
         if let textfield = searchBarView.value(forKey: "searchField") as? UITextField {
-            textfield.backgroundColor = UIColor.App.backgroundSecondary
+            textfield.backgroundColor = UIColor.App.backgroundTertiary
             textfield.textColor = UIColor.App.textPrimary
             textfield.tintColor = UIColor.App.textPrimary
             textfield.font = AppFont.with(type: .semibold, size: 14)
@@ -162,7 +170,7 @@ class SearchViewController: UIViewController {
         self.cancelButton.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
 
         // TableView
-        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
+        self.tableView.backgroundColor = .clear
         self.tableView.backgroundView?.backgroundColor = .clear
 
         self.tableView.separatorStyle = .none
