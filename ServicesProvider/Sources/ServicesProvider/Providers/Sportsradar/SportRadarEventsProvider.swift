@@ -515,6 +515,33 @@ class SportRadarEventsProvider: EventsProvider {
         return publisher.eraseToAnyPublisher()
     }
 
+    public func subscribeToEventUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
+        for paginator in self.eventsPaginators.values {
+            if paginator.containsEvent(withid: id), let publisher = paginator.subscribeToEventUpdates(withId: id) {
+                return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+        }
+        return Just(nil).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+    }
+
+    public func subscribeToMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
+        for paginator in self.eventsPaginators.values {
+            if paginator.containsMarket(withid: id), let publisher = paginator.subscribeToMarketUpdates(withId: id) {
+                return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+        }
+        return Just(nil).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+    }
+
+    public func subscribeToOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
+        for paginator in self.eventsPaginators.values {
+            if paginator.containsOutcome(withid: id), let publisher = paginator.subscribeToOutcomeUpdates(withId: id) {
+                return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+        }
+        return Just(nil).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+    }
+
 }
 
 extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
@@ -607,6 +634,16 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
             eventSummaryPublisher.send(.contentUpdate(content: events))
         }
     }
+
+    func didReceiveGenericUpdate(content: SportRadarModels.ContentContainer) {
+        if let contentIdentifier = content.contentIdentifier,
+            let contentIdentifierPaginator = self.eventsPaginators[contentIdentifier.pageableId] {
+
+            print("ServiceProvider - SportRadarSocketConnector didReceiveGenericUpdate \(contentIdentifier)")
+            contentIdentifierPaginator.handleContentUpdate(content)
+        }
+    }
+
 }
 
 /* REST API Events

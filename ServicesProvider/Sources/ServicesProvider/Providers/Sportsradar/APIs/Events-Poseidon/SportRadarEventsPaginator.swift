@@ -44,6 +44,42 @@ class SportRadarEventsPaginator {
         // self.activeSubscriptions = .init(keyOptions: .strongMemory , valueOptions: .weakMemory)
     }
 
+    //
+    func requestInitialPage() -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+
+        let publisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
+
+        let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: self.sessionToken,
+                                                         contentIdentifier: self.contentIdentifier)
+        guard
+            let request = endpoint.request()
+        else {
+            return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
+        }
+
+        let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard
+                (error == nil),
+                let httpResponse = response as? HTTPURLResponse,
+                (200...299).contains(httpResponse.statusCode)
+            else {
+                print("SportRadarEventsPaginator: requestInitialPage - error on subscribe to topic \(error) \(response)")
+                publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
+                return
+            }
+            let subscription = Subscription(contentIdentifier: self.contentIdentifier,
+                                            sessionToken: self.sessionToken,
+                                               unsubscriber: self)
+            publisher.send(.connected(subscription: subscription))
+            self.subscription = subscription
+        }
+        sessionDataTask.resume()
+
+        self.eventsSubject = publisher
+
+        return self.eventsSubject.eraseToAnyPublisher()
+    }
+
     // Return as boolean indicating if there is more pages
     func requestNextPage() -> AnyPublisher<Bool, ServiceProviderError> {
 
@@ -100,48 +136,13 @@ class SportRadarEventsPaginator {
         return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
     }
 
-    func requestInitialPage() -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
-
-        let publisher = CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>.init(.disconnected)
-
-        let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: self.sessionToken,
-                                                         contentIdentifier: self.contentIdentifier)
-        guard
-            let request = endpoint.request()
-        else {
-            return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
-        }
-
-        let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard
-                (error == nil),
-                let httpResponse = response as? HTTPURLResponse,
-                (200...299).contains(httpResponse.statusCode)
-            else {
-                print("SportRadarEventsPaginator: requestInitialPage - error on subscribe to topic \(error) \(response)")
-                publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
-                return
-            }
-            let subscription = Subscription(contentIdentifier: self.contentIdentifier,
-                                            sessionToken: self.sessionToken,
-                                               unsubscriber: self)
-            publisher.send(.connected(subscription: subscription))
-            self.subscription = subscription
-        }
-        sessionDataTask.resume()
-
-        self.eventsSubject = publisher
-
-        return self.eventsSubject.eraseToAnyPublisher()
-    }
-
     func updateEventsList(events: [Event]) {
         // If the number of recieved events is >= than eventsPerPage it means we can try request more
         self.hasNextPage = events.count >= self.eventsPerPage
 
-        self.storage.events.append(contentsOf: events)
+        self.storage.storeEvents(events)
 
-        let storedEvents = self.storage.events
+        let storedEvents = self.storage.storedEvents()
         let storedEventsGroup = EventsGroup(events: storedEvents)
         self.eventsSubject.send(.contentUpdate(content: [storedEventsGroup]))
     }
@@ -205,6 +206,58 @@ class SportRadarEventsPaginator {
 
         }
 
+    }
+
+}
+
+extension SportRadarEventsPaginator {
+
+    func handleContentUpdate(_ content: SportRadarModels.ContentContainer) {
+        switch content {
+        case .updateOutcomeOdd(_, let selectionId, let newOddNumerator, let newOddDenominator):
+            self.storage.updateOutcomeOdd(withId: selectionId, newOddNumerator: newOddNumerator, newOddDenominator: newOddDenominator)
+
+        case .updateMarketTradability(_, let marketId, let isTradable):
+            self.storage.updateMarketTradability(withId: marketId, isTradable: isTradable)
+
+        case .updateEventState(_, let eventId, let newStatus):
+            self.storage.updateEventStatus(withId: eventId, newStatus: newStatus)
+        case .updateEventTime(_, let eventId, let newTime):
+            self.storage.updateEventTime(withId: eventId, newTime: newTime)
+        case .updateEventScore(_, let eventId, let homeScore, let awayScore):
+            self.storage.updateEventScore(withId: eventId, newHomeScore: homeScore, newAwayScore: awayScore)
+
+        default:
+            () // Ignore other cases
+        }
+    }
+
+}
+
+extension SportRadarEventsPaginator {
+
+    func subscribeToEventUpdates(withId id: String) -> AnyPublisher<Event, Never>? {
+        return self.storage.subscribeToEventUpdates(withId: id)
+    }
+
+    func subscribeToMarketUpdates(withId id: String) -> AnyPublisher<Market, Never>? {
+        return self.storage.subscribeToMarketUpdates(withId: id)
+    }
+
+    func subscribeToOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome, Never>? {
+        return self.storage.subscribeToOutcomeUpdates(withId: id)
+    }
+
+    func containsEvent(withid id: String) -> Bool {
+        return self.storage.containsEvent(withid: id)
+    }
+
+    func containsMarket(withid id: String) -> Bool {
+        return self.storage.containsMarket(withid: id)
+    }
+
+    func containsOutcome(withid id: String) -> Bool {
+        return self.storage.containsOutcome(withid: id)
     }
 
 }

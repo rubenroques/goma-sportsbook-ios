@@ -354,7 +354,6 @@ class LiveEventsViewController: UIViewController {
         let homeFilterViewController = HomeFilterViewController(liveEventsViewModel: self.viewModel)
         homeFilterViewController.delegate = self
         self.present(homeFilterViewController, animated: true, completion: nil)
-
     }
 
     func reloadData() {

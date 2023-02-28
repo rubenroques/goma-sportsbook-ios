@@ -383,6 +383,10 @@ class HeaderTextFieldView: NibView {
         self.textField.keyboardType = keyboard
     }
 
+    func setContextType(_ textContentType: UITextContentType) {
+        self.textField.textContentType = textContentType
+    }
+
     func setReturnKeyType(_ returnKeyType: UIReturnKeyType) {
         self.textField.returnKeyType = returnKeyType
     }

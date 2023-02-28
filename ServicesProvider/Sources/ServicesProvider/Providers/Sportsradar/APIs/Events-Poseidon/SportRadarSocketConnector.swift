@@ -20,6 +20,8 @@ protocol SportRadarConnectorSubscriber: AnyObject {
     func eventGroups(forContentIdentifier identifier: ContentIdentifier, withEvents: [EventsGroup])
     func outrightEventGroups(events: [EventsGroup])
     func eventSummary(events: [EventsGroup])
+
+    func didReceiveGenericUpdate(content: SportRadarModels.ContentContainer)
 }
 
 class SportRadarSocketConnector: NSObject, Connector {
@@ -200,7 +202,9 @@ extension SportRadarSocketConnector: WebSocketDelegate {
                         subscriber.eventSummary(events: [eventsGroup])
                     }
                 default:
-                    print("Uknown contentChanges type")
+                    if let subscriber = self.messageSubscriber {
+                        subscriber.didReceiveGenericUpdate(content: content)
+                    }
                 }
             }
         case .unknown:

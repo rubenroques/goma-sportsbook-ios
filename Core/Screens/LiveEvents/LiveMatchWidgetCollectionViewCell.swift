@@ -9,6 +9,7 @@ import UIKit
 import Kingfisher
 import LinkPresentation
 import Combine
+import ServicesProvider
 
 class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
@@ -273,6 +274,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.eventNameLabel.text = ""
         self.homeParticipantNameLabel.text = ""
         self.awayParticipantNameLabel.text = ""
+
         self.matchTimeLabel.text = ""
         self.resultLabel.text = ""
 
@@ -344,8 +346,10 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.eventNameLabel.textColor = UIColor.App.textSecondary
         self.homeParticipantNameLabel.textColor = UIColor.App.textPrimary
         self.awayParticipantNameLabel.textColor = UIColor.App.textPrimary
+
         self.matchTimeLabel.textColor = UIColor.App.textPrimary
         self.resultLabel.textColor = UIColor.App.textPrimary
+
         self.homeOddTitleLabel.textColor = UIColor.App.textPrimary
         self.homeOddValueLabel.textColor = UIColor.App.textPrimary
         self.drawOddTitleLabel.textColor = UIColor.App.textPrimary
@@ -580,15 +584,19 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
                 self.homeOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
 
-                self.leftOddButtonSubscriber = viewModel.store
-                    .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
+                self.leftOddButtonSubscriber = Env.servicesProvider
+                    .subscribeToOutcomeUpdates(withId: outcome.bettingOffer.id)
                     .compactMap({ $0 })
+                    .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
+                    .map(\.bettingOffer)
                     .receive(on: DispatchQueue.main)
-                    .sink(receiveValue: { [weak self] bettingOffer in
+                    .sink(receiveCompletion: { completion in
+                        print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                    }, receiveValue: { [weak self] bettingOffer in
 
                         guard let weakSelf = self else { return }
 
-                        if !bettingOffer.isOpen {
+                        if !bettingOffer.isAvailable {
                             weakSelf.homeBaseView.isUserInteractionEnabled = false
                             weakSelf.homeBaseView.alpha = 0.5
                             weakSelf.homeOddValueLabel.text = "-"
@@ -597,12 +605,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                             weakSelf.homeBaseView.isUserInteractionEnabled = true
                             weakSelf.homeBaseView.alpha = 1.0
 
-                            guard
-                                let newOddValue = bettingOffer.oddsValue
-                            else {
-                                return
-                            }
-
+                            let newOddValue = bettingOffer.decimalOdd
                             if let currentOddValue = weakSelf.currentHomeOddValue {
                                 if newOddValue > currentOddValue {
                                     weakSelf.highlightOddChangeUp(animated: true,
@@ -614,9 +617,12 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                                                                     downChangeOddValueImage: weakSelf.homeDownChangeOddValueImage,
                                                                     baseView: weakSelf.homeBaseView)
                                 }
+                                print("Cell Event liveDataSummary updateOutcomeOdd \(currentOddValue) -> \(newOddValue)")
                             }
+
                             weakSelf.currentHomeOddValue = newOddValue
                             weakSelf.homeOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+
                         }
                     })
 
@@ -629,15 +635,19 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
                 self.drawOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
 
-                self.middleOddButtonSubscriber = viewModel.store
-                    .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
+                self.middleOddButtonSubscriber = Env.servicesProvider
+                    .subscribeToOutcomeUpdates(withId: outcome.bettingOffer.id)
                     .compactMap({ $0 })
+                    .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
+                    .map(\.bettingOffer)
                     .receive(on: DispatchQueue.main)
-                    .sink(receiveValue: { [weak self] bettingOffer in
+                    .sink(receiveCompletion: { completion in
+                        print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                    }, receiveValue: { [weak self] bettingOffer in
 
                         guard let weakSelf = self else { return }
 
-                        if !bettingOffer.isOpen {
+                        if !bettingOffer.isAvailable {
                             weakSelf.drawBaseView.isUserInteractionEnabled = false
                             weakSelf.drawBaseView.alpha = 0.5
                             weakSelf.drawOddValueLabel.text = "-"
@@ -646,12 +656,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                             weakSelf.drawBaseView.isUserInteractionEnabled = true
                             weakSelf.drawBaseView.alpha = 1.0
 
-                            guard
-                                let newOddValue = bettingOffer.oddsValue
-                            else {
-                                return
-                            }
-
+                            let newOddValue = bettingOffer.decimalOdd
                             if let currentOddValue = weakSelf.currentDrawOddValue {
                                 if newOddValue > currentOddValue {
                                     weakSelf.highlightOddChangeUp(animated: true,
@@ -663,6 +668,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                                                                     downChangeOddValueImage: weakSelf.drawDownChangeOddValueImage,
                                                                     baseView: weakSelf.drawBaseView)
                                 }
+                                print("Cell Event liveDataSummary updateOutcomeOdd \(currentOddValue) -> \(newOddValue)")
                             }
                             weakSelf.currentDrawOddValue = newOddValue
                             weakSelf.drawOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
@@ -677,15 +683,19 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
                 self.awayOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
 
-                self.rightOddButtonSubscriber = viewModel.store
-                    .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
+                self.rightOddButtonSubscriber = Env.servicesProvider
+                    .subscribeToOutcomeUpdates(withId: outcome.bettingOffer.id)
                     .compactMap({ $0 })
+                    .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
+                    .map(\.bettingOffer)
                     .receive(on: DispatchQueue.main)
-                    .sink(receiveValue: { [weak self] bettingOffer in
+                    .sink(receiveCompletion: { completion in
+                        print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                    }, receiveValue: { [weak self] bettingOffer in
 
                         guard let weakSelf = self else { return }
 
-                        if !bettingOffer.isOpen {
+                        if !bettingOffer.isAvailable {
                             weakSelf.awayBaseView.isUserInteractionEnabled = false
                             weakSelf.awayBaseView.alpha = 0.5
                             weakSelf.awayOddValueLabel.text = "-"
@@ -694,12 +704,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                             weakSelf.awayBaseView.isUserInteractionEnabled = true
                             weakSelf.awayBaseView.alpha = 1.0
 
-                            guard
-                                let newOddValue = bettingOffer.oddsValue
-                            else {
-                                return
-                            }
-
+                            let newOddValue = bettingOffer.decimalOdd
                             if let currentOddValue = weakSelf.currentAwayOddValue {
                                 if newOddValue > currentOddValue {
                                     weakSelf.highlightOddChangeUp(animated: true,
@@ -711,6 +716,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                                                                     downChangeOddValueImage: weakSelf.awayDownChangeOddValueImage,
                                                                     baseView: weakSelf.awayBaseView)
                                 }
+                                print("Cell Event liveDataSummary updateOutcomeOdd \(currentOddValue) -> \(newOddValue)")
                             }
 
                             weakSelf.currentAwayOddValue = newOddValue

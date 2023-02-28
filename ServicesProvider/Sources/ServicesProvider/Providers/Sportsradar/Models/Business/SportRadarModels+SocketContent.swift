@@ -33,12 +33,57 @@ extension SportRadarModels {
         case addMarket(contentIdentifier: ContentIdentifier, market: SportRadarModels.Market)
         case removeMarket(contentIdentifier: ContentIdentifier, marketId: String)
 
-        case updateOutcomeOdd(contentIdentifier: ContentIdentifier, selectionId: String, newOddNumerator: String?, newOddDenominator: String?)
         case updateEventState(contentIdentifier: ContentIdentifier, eventId: String, state: String)
+        case updateEventTime(contentIdentifier: ContentIdentifier, eventId: String, newTime: String)
         case updateEventScore(contentIdentifier: ContentIdentifier, eventId: String, homeScore: Int?, awayScore: Int?)
+
+        case updateMarketTradability(contentIdentifier: ContentIdentifier, marketId: String, isTradable: Bool)
         case updateEventMarketCount(contentIdentifier: ContentIdentifier, eventId: String, newMarketCount: Int)
 
-        enum CodingKeys: String, CodingKey {
+        case updateOutcomeOdd(contentIdentifier: ContentIdentifier, selectionId: String, newOddNumerator: String?, newOddDenominator: String?)
+
+        var contentIdentifier: ContentIdentifier? {
+            switch self {
+            case .liveEvents(let contentIdentifier, _):
+                return contentIdentifier
+            case .preLiveEvents(let contentIdentifier, _):
+                return contentIdentifier
+            case .liveSports(_):
+                return nil
+            case .preLiveSports(_):
+                return nil
+            case .eventDetails(_):
+                return nil
+            case .eventGroup(let contentIdentifier, _):
+                return contentIdentifier
+            case .outrightEventGroup(_):
+                return nil
+            case .eventSummary(_):
+                return nil
+            case .addEvent(let contentIdentifier, _):
+                return contentIdentifier
+            case .removeEvent(let contentIdentifier, _):
+                return contentIdentifier
+            case .addMarket(let contentIdentifier, _):
+                return contentIdentifier
+            case .removeMarket(let contentIdentifier, _):
+                return contentIdentifier
+            case .updateOutcomeOdd(let contentIdentifier, _, _, _):
+                return contentIdentifier
+            case .updateEventState(let contentIdentifier, _, _):
+                return contentIdentifier
+            case .updateEventTime(let contentIdentifier, _, _):
+                return contentIdentifier
+            case .updateEventScore(let contentIdentifier, _, _, _):
+                return contentIdentifier
+            case .updateEventMarketCount(let contentIdentifier, _, _):
+                return contentIdentifier
+            case .updateMarketTradability(let contentIdentifier, _, _):
+                return contentIdentifier
+            }
+        }
+
+        private enum CodingKeys: String, CodingKey {
             case data = "data"
 
             case content = "contentId"
@@ -51,13 +96,13 @@ extension SportRadarModels {
             case change = "change"
         }
 
-        enum SelectionUpdateCodingKeys: String, CodingKey {
+        private enum SelectionUpdateCodingKeys: String, CodingKey {
             case oddNumerator = "currentpriceup"
             case oddDenominator = "currentpricedown"
             case selectionId = "idfoselection"
         }
 
-        enum ScoreUpdateCodingKeys: String, CodingKey {
+        private enum ScoreUpdateCodingKeys: String, CodingKey {
             case home = "home"
             case away = "away"
         }
@@ -85,7 +130,8 @@ extension SportRadarModels {
             switch contentType {
             case .liveEvents:
                 let events: [FailableDecodable<SportRadarModels.Event>] = try container.decode([FailableDecodable<SportRadarModels.Event>].self, forKey: .change)
-                return .liveEvents(contentIdentifier: contentIdentifier, events: events.compactMap({ $0.content }))
+                let validEvents = events.compactMap({ $0.content })
+                return .liveEvents(contentIdentifier: contentIdentifier, events: validEvents)
 
             case .liveSports:
                 let sportsTypeDetails: [FailableDecodable<SportRadarModels.SportTypeDetails>] = try container.decode([FailableDecodable<SportRadarModels.SportTypeDetails>].self, forKey: .change)
@@ -107,7 +153,8 @@ extension SportRadarModels {
                 // change key is optional
                 if container.contains(.change) {
                     let events: [FailableDecodable<SportRadarModels.Event>] = try container.decode([FailableDecodable<SportRadarModels.Event>].self, forKey: .change)
-                    return .preLiveEvents(contentIdentifier: contentIdentifier, events: events.compactMap({ $0.content }) )
+                    let validEvents = events.compactMap({ $0.content })
+                    return .preLiveEvents(contentIdentifier: contentIdentifier, events: validEvents)
                 }
                 else {
                     return .preLiveEvents(contentIdentifier: contentIdentifier, events: [])
@@ -162,7 +209,7 @@ extension SportRadarModels {
                 let newMarket = try container.decode(SportRadarModels.Market.self, forKey: .change)
                 return .addMarket(contentIdentifier: contentIdentifier, market: newMarket)
             }
-            else if path.contains("idfoevent") && path.contains("idfomarket") && changeType.contains("removed"), let marketId = Self.extractMarketId(path)  {
+            else if path.contains("idfoevent") && path.contains("idfomarket") && changeType.contains("removed"), let marketId = SocketMessageParseHelper.extractMarketId(path)  {
                 // removed a Market
                 return .removeMarket(contentIdentifier: contentIdentifier, marketId: marketId)
             }
@@ -176,25 +223,28 @@ extension SportRadarModels {
                 let selectionId = try changeContainer.decode(String.self, forKey: .selectionId)
                 return .updateOutcomeOdd(contentIdentifier: contentIdentifier, selectionId: selectionId, newOddNumerator: oddNumerator, newOddDenominator: oddDenominator)
             }
-            else if path.contains("idfoevent") && path.contains("numMarkets") && changeType.contains("updated"), let eventId = Self.extractEventId(path) {
+            else if path.contains("idfoevent") && path.contains("numMarkets") && changeType.contains("updated"), let eventId = SocketMessageParseHelper.extractEventId(path) {
                 // Changed the number of markets for an event
                 let newMarketCount = try container.decode(Int.self, forKey: .change)
                 return .updateEventMarketCount(contentIdentifier: contentIdentifier, eventId: eventId, newMarketCount: newMarketCount)
             }
-            else if path.contains("scores") && path.contains("liveDataSummary"), let eventId = Self.extractEventId(path) {
+            else if path.contains("scores") && path.contains("liveDataSummary"), let eventId = SocketMessageParseHelper.extractEventId(path) {
                 // Updated score information
                 let changeContainer = try container.nestedContainer(keyedBy: ScoreUpdateCodingKeys.self, forKey: .change)
                 let homeScore = try changeContainer.decodeIfPresent(Int.self, forKey: .home)
                 let awayScore = try changeContainer.decodeIfPresent(Int.self, forKey: .away)
                 return .updateEventScore(contentIdentifier: contentIdentifier, eventId: eventId, homeScore: homeScore, awayScore: awayScore)
             }
-            else if path.contains("matchTime") && path.contains("liveDataSummary"), changeType.contains("updated"), let eventId = Self.extractEventId(path) {
+            else if path.contains("matchTime") && path.contains("liveDataSummary"), changeType.contains("updated"), let eventId = SocketMessageParseHelper.extractEventId(path) {
                 // Match time
                 let matchTime = try container.decode(String.self, forKey: .change)
-                let minutesPart = Self.extractMatchMinutes(from: matchTime)
-                print("Event liveDataSummary matchTime \(matchTime) [\(minutesPart)] [eventId:\(eventId)]")
+                if let minutesPart = SocketMessageParseHelper.extractMatchMinutes(from: matchTime) {
+                    return .updateEventTime(contentIdentifier: contentIdentifier, eventId: eventId, newTime: minutesPart)
+                    print("Event liveDataSummary matchTime \(matchTime) [\(minutesPart)] [eventId:\(eventId)]")
+                }
+                print("Event liveDataSummary matchTime \(matchTime) [couldn't extract] [eventId:\(eventId)]")
             }
-            else if path.contains("status") && path.contains("liveDataSummary"), let eventId = Self.extractEventId(path) {
+            else if path.contains("status") && path.contains("liveDataSummary"), let eventId = SocketMessageParseHelper.extractEventId(path) {
                 let newStatus = try container.decode(String.self, forKey: .change)
                 print("Event liveDataSummary status \(newStatus) [eventId:\(eventId)]")
             }
@@ -203,54 +253,6 @@ extension SportRadarModels {
             throw DecodingError.valueNotFound(ContentRoute.self, context)
         }
 
-
-        private static func extractEventId(_ inputString: String) -> String? {
-            let regex = try! NSRegularExpression(pattern: "\\[idfoevent=(\\d+(\\.\\d+)?)\\]")
-            let range = NSRange(location: 0, length: inputString.utf16.count)
-            if let match = regex.firstMatch(in: inputString, options: [], range: range) {
-                let id = (inputString as NSString).substring(with: match.range(at: 1))
-                return id
-            }
-            return nil
-        }
-
-        private static func extractMarketId(_ inputString: String) -> String? {
-            let regex = try! NSRegularExpression(pattern: "\\[idfomarket=(\\d+(\\.\\d+)?)\\]")
-            let range = NSRange(location: 0, length: inputString.utf16.count)
-            if let match = regex.firstMatch(in: inputString, options: [], range: range) {
-                let id = (inputString as NSString).substring(with: match.range(at: 1))
-                return id
-            }
-            return nil
-        }
-
-        private static func extractSelectionId(_ inputString: String) -> String? {
-            let regex = try! NSRegularExpression(pattern: "\\[idfoselection=(\\d+(\\.\\d+)?)\\]")
-            let range = NSRange(location: 0, length: inputString.utf16.count)
-            if let match = regex.firstMatch(in: inputString, options: [], range: range) {
-                let id = (inputString as NSString).substring(with: match.range(at: 1))
-                return id
-            }
-            return nil
-        }
-
-        private static func extractMatchMinutes(from matchTime: String) -> String {
-            let pattern = #"(?<=^|\s)(\d{1,2}):(\d{2})(?:\s\+(\d{1,2}:\d{2}))?(?=$|\s)"#
-            guard let range = matchTime.range(of: pattern, options: .regularExpression) else {
-                return ""
-            }
-
-            let minuteString = String(matchTime[range])
-            let components = minuteString.components(separatedBy: ":")
-            let minutes = Int(components[0]) ?? 0
-
-            if let extraTimeRange = minuteString.range(of: #"\s\+([\d:]+)"#, options: .regularExpression),
-                let extraTime = Int(String(minuteString[extraTimeRange].dropFirst(2)).components(separatedBy: ":").first ?? "") {
-                return "\(minutes)+\(extraTime)'"
-            }
-
-            return "\(minutes)'"
-        }
 
     }
 
