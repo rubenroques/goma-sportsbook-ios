@@ -172,16 +172,51 @@ extension ServicesProviderClient {
         return eventsProvider.subscribeEventSummary(eventId: eventId)
     }
 
-}
-
-extension ServicesProviderClient {
-    public func getMarketFilters(event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError> {
+    public func subscribeToEventUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
-            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
-        return eventsProvider.getMarketsFilter(event: event)
+        return eventsProvider.subscribeToEventUpdates(withId: id)
+    }
+
+    public func subscribeToMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeToMarketUpdates(withId: id)
+    }
+
+    public func subscribeToOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeToOutcomeUpdates(withId: id)
+    }
+
+}
+
+extension ServicesProviderClient {
+    public func getMarketsFilters(event: Event) -> AnyPublisher<[MarketGroup], Never> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            let defaultMarketGroup = [MarketGroup.init(type: "0",
+                                                       id: "0",
+                                                       groupKey: "All Markets",
+                                                       translatedName: "All Markets",
+                                                       position: 0,
+                                                       isDefault: true,
+                                                       numberOfMarkets: nil,
+                                                       markets: event.markets)]
+            return Just(defaultMarketGroup).eraseToAnyPublisher()
+        }
+        return eventsProvider.getMarketsFilters(event: event)
     }
 
     public func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError> {

@@ -78,7 +78,7 @@ class CompetitionWidgetCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
 
         self.viewModel = nil
-        self.titleLabel.text = localized("empty_value")
+        self.titleLabel.text = ""
         self.flagImageView.image = nil
 
         self.setupWithTheme()

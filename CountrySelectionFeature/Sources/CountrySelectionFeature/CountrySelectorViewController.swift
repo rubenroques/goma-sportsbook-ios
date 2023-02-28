@@ -363,7 +363,7 @@ extension CountrySelectorViewController: UISearchBarDelegate {
     }
     
     public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        self.searchBar.text = Localization.localized("empty_value")
+        self.searchBar.text = ""
         self.applyFilters()
     }
     

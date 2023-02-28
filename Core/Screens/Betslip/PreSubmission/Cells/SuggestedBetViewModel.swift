@@ -432,7 +432,8 @@ class SuggestedBetViewModel: NSObject {
                           venue: location,
                           numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
                           markets: sortedMarkets,
-                          rootPartId: rawMatch.rootPartId ?? "")
+                          rootPartId: rawMatch.rootPartId ?? "",
+                          status: .unknown)
 
         processedMatch = match
 

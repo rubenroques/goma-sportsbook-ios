@@ -288,7 +288,7 @@ extension NewGroupViewController: UISearchBarDelegate {
     }
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        self.searchBar.text = localized("empty_value")
+        self.searchBar.text = ""
         self.searchUsers()
     }
 }

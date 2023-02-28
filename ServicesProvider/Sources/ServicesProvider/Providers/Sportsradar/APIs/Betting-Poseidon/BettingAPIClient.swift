@@ -229,7 +229,7 @@ extension BettingAPIClient: Endpoint {
             "Accept-Encoding": "gzip, deflate",
             "Content-Type": "application/json; charset=UTF-8",
             "Accept": "application/json",
-            "X-MGS-BusinessUnit": "10013",
+            "X-MGS-BusinessUnit": "3",
             "X-MGS-Location": "UK",
         ]
         return defaultHeaders

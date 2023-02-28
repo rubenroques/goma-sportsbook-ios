@@ -71,8 +71,8 @@ class BannerCellViewModel {
                 self.imageURL = URL(string: EveryMatrixInfo.staticHost + imageURLString)
             }
 
-            self.requestMatchInfo(matchId)
-            self.requestMatchOdds()
+            // self.requestMatchInfo(matchId)
+            // self.requestMatchOdds()
         }
         else {
             self.presentationType = .image
@@ -100,16 +100,16 @@ class BannerCellViewModel {
 
         case .match(let id):
             self.imageURL = URL(string: EveryMatrixInfo.staticHost + imageURLString)
-            self.requestMatchInfo(id)
-            self.requestMatchOdds()
+            // self.requestMatchInfo(id)
+            // self.requestMatchOdds()
 
         case .externalMatch(let contentId, let imageURLString, let eventPartId, let betTypeId):
             self.matchId = contentId
             self.imageURL = URL(string: imageURLString)
             self.eventPartId = eventPartId
             self.betTypeId = betTypeId
-            self.requestMatchInfo(contentId)
-            self.requestMatchOdds()
+            // self.requestMatchInfo(contentId)
+            // self.requestMatchOdds()
 
         case .externalLink(let imageURLString, _):
             self.imageURL = URL(string: imageURLString)
@@ -117,185 +117,6 @@ class BannerCellViewModel {
         case .externalStream(let imageURLString, _):
             self.imageURL = URL(string: imageURLString)
         }
-
-    }
-
-    func requestMatchOdds() {
-        print("Banner requesting odds \(self.matchId ?? "-")")
-        guard let matchId = self.matchId else {return}
-
-        let betTypeIdValue = self.betTypeId ?? "69"
-
-        let matchPublisher = Env.everyMatrixClient.manager
-            .getModel(router: TSRouter.getMatchOdds(language: "en",
-                                                    matchId: matchId,
-                                                    bettingTypeId: betTypeIdValue),
-                      decodingType: EveryMatrix.MatchOdds.self)
-            .eraseToAnyPublisher()
-
-        matchPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { _ in
-            } receiveValue: { value in
-                self.processOddAggregator(value)
-            }
-        .store(in: &cancellables)
-
-    }
-
-    func requestMatchInfo(_ matchId: String) {
-        print("Banner requesting match info \(matchId)")
-        let language = "en"
-        Env.everyMatrixClient.getMatchDetails(language: language, matchId: matchId)
-            .sink { _ in
-
-            } receiveValue: { response in
-                if let match = response.records?.first {
-                    self.match.send(match)
-                }
-            }
-            .store(in: &cancellables)
-    }
-
-    func processOddAggregator(_ aggregator: EveryMatrix.MatchOdds, shouldClear: Bool = false) {
-
-        for content in aggregator.content ?? [] {
-            switch content {
-
-            case .match(let matchContent):
-
-                matches[matchContent.id] = matchContent
-
-            case .market(let marketContent):
-
-                // markets[marketContent.id] = marketContent
-                marketsPublishers[marketContent.id] = CurrentValueSubject<EveryMatrix.Market, Never>.init(marketContent)
-
-                if let matchId = marketContent.eventId {
-                    if var marketsForIterationMatch = marketsForMatch[matchId] {
-                        marketsForIterationMatch.insert(marketContent.id)
-                        marketsForMatch[matchId] = marketsForIterationMatch
-                    }
-                    else {
-                        var newSet = Set<String>.init()
-                        newSet.insert(marketContent.id)
-                        marketsForMatch[matchId] = newSet
-                    }
-                }
-            case .betOutcome(let betOutcomeContent):
-                betOutcomes[betOutcomeContent.id] = betOutcomeContent
-
-            case .bettingOffer(let bettingOfferContent):
-                if let outcomeIdValue = bettingOfferContent.outcomeId {
-                    bettingOffers[outcomeIdValue] = bettingOfferContent
-                }
-                bettingOfferPublishers[bettingOfferContent.id] = CurrentValueSubject<EveryMatrix.BettingOffer, Never>.init(bettingOfferContent)
-
-            case .marketOutcomeRelation(let marketOutcomeRelationContent):
-                marketOutcomeRelations[marketOutcomeRelationContent.id] = marketOutcomeRelationContent
-
-                if let marketId = marketOutcomeRelationContent.marketId, let outcomeId = marketOutcomeRelationContent.outcomeId {
-                    if var outcomesForMatch = bettingOutcomesForMarket[marketId] {
-                        outcomesForMatch.insert(outcomeId)
-                        bettingOutcomesForMarket[marketId] = outcomesForMatch
-                    }
-                    else {
-                        var newSet = Set<String>.init()
-                        newSet.insert(outcomeId)
-                        bettingOutcomesForMarket[marketId] = newSet
-                    }
-                }
-            
-            case .unknown:
-                () // print("Unknown type ignored")
-
-            }
-        }
-
-        self.joinMatchMarkets()
-    }
-
-    func joinMatchMarkets() {
-
-        var matchMarkets: [Market] = []
-
-        guard let rawMatch = self.match.value else {return}
-
-        let marketsIds = self.marketsForMatch[rawMatch.id] ?? []
-        let rawMarketsList = marketsIds.map { id in
-            return self.marketsPublishers[id]?.value
-        }
-        .compactMap({$0})
-
-        let eventFilterIdValue = self.eventPartId ?? "3" // 1X2 Ordinary Time default
-
-        for rawMarket  in rawMarketsList where rawMarket.eventPartId == eventFilterIdValue {
-
-                let rawOutcomeIds = self.bettingOutcomesForMarket[rawMarket.id] ?? []
-
-                let rawOutcomesList = rawOutcomeIds.map { id in
-                    return self.betOutcomes[id]
-                }
-                .compactMap({$0})
-
-                var outcomes: [Outcome] = []
-                for rawOutcome in rawOutcomesList {
-
-                    if let rawBettingOffer = self.bettingOffers[rawOutcome.id] {
-                        let bettingOffer = BettingOffer(id: rawBettingOffer.id,
-                                                        decimalOdd: rawBettingOffer.oddsValue ?? 0.0,
-                                                        statusId: rawBettingOffer.statusId ?? "1",
-                                                        isLive: rawBettingOffer.isLive ?? false,
-                                                        isAvailable: rawBettingOffer.isAvailable ?? true)
-
-                        let outcome = Outcome(id: rawOutcome.id,
-                                              codeName: rawOutcome.headerNameKey ?? "",
-                                              typeName: rawOutcome.headerName ?? "",
-                                              translatedName: rawOutcome.translatedName ?? "",
-                                              nameDigit1: rawOutcome.paramFloat1,
-                                              nameDigit2: rawOutcome.paramFloat2,
-                                              nameDigit3: rawOutcome.paramFloat3,
-                                              paramBoolean1: rawOutcome.paramBoolean1,
-                                              marketName: rawMarket.shortName ?? "",
-                                              bettingOffer: bettingOffer)
-                        outcomes.append(outcome)
-                    }
-            }
-
-            let sortedOutcomes = outcomes.sorted { out1, out2 in
-                let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1.codeName)
-                let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2.codeName)
-                return out1Value < out2Value
-            }
-
-            let market = Market(id: rawMarket.id,
-                                typeId: rawMarket.bettingTypeId ?? "",
-                                name: rawMarket.shortName ?? "",
-                                nameDigit1: rawMarket.paramFloat1,
-                                nameDigit2: rawMarket.paramFloat2,
-                                nameDigit3: rawMarket.paramFloat3,
-                                eventPartId: rawMarket.eventPartId,
-                                bettingTypeId: rawMarket.bettingTypeId,
-                                outcomes: sortedOutcomes)
-            matchMarkets.append(market)
-
-        }
-
-        let match = Match(id: rawMatch.id,
-                          competitionId: rawMatch.parentId ?? "",
-                          competitionName: rawMatch.parentName ?? "",
-                          homeParticipant: Participant(id: rawMatch.homeParticipantId ?? "",
-                                                       name: rawMatch.homeParticipantName ?? ""),
-                          awayParticipant: Participant(id: rawMatch.awayParticipantId ?? "",
-                                                       name: rawMatch.awayParticipantName ?? ""),
-                          date: rawMatch.startDate ?? Date(timeIntervalSince1970: 0),
-                          sportType: rawMatch.sportId ?? "",
-                          numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
-                          markets: matchMarkets,
-                          rootPartId: rawMatch.rootPartId ?? ""
-                          )
-
-        self.completeMatch.send(match)
 
     }
 

@@ -597,7 +597,8 @@ class MatchDetailsAggregatorRepository: NSObject {
                                        venue: location,
                                        numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
                                        markets: [],
-                                       rootPartId: rawMatch.rootPartId ?? "")
+                                       rootPartId: rawMatch.rootPartId ?? "",
+                                       status: .unknown)
 
             return matchProcessed
         }

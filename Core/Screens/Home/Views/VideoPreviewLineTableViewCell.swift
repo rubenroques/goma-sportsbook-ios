@@ -67,7 +67,7 @@ class VideoPreviewLineTableViewCell: UITableViewCell {
 
         self.collectionView.setContentOffset(CGPoint(x: -16, y: 0), animated: false)
 
-        self.titleLabel.text = localized("empty_value")
+        self.titleLabel.text = ""
         self.viewModel = nil
     }
 
@@ -166,7 +166,7 @@ extension VideoPreviewLineTableViewCell {
         let titleLabel = UILabel()
         titleLabel.numberOfLines = 1
         titleLabel.textAlignment = .left
-        titleLabel.text = localized("empty_value")
+        titleLabel.text = ""
         titleLabel.font = AppFont.with(type: .semibold, size: 13)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         return titleLabel

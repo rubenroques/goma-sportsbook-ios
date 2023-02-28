@@ -54,7 +54,7 @@ public class TabularBarButton: UIControl {
 //        label.setContentHuggingPriority(UILayoutPriority.defaultLow, for: .vertical)
 //        label.setContentHuggingPriority(UILayoutPriority.defaultLow, for: .horizontal)
 //        
-        label.text = localized("empty_value")
+        label.text = ""
         return label
     }()
 

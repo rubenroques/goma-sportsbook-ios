@@ -345,6 +345,7 @@ class LiveEventsViewController: UIViewController {
 
         self.sportTypeIconImageView.setImageColor(color: UIColor.App.textPrimary)
         self.sportTypeIconImageView.tintColor = UIColor.App.textPrimary
+
         self.sportsSelectorExpandImageView.setImageColor(color: UIColor.App.textPrimary)
         self.sportsSelectorExpandImageView.tintColor = UIColor.App.textPrimary
     }
@@ -353,7 +354,6 @@ class LiveEventsViewController: UIViewController {
         let homeFilterViewController = HomeFilterViewController(liveEventsViewModel: self.viewModel)
         homeFilterViewController.delegate = self
         self.present(homeFilterViewController, animated: true, completion: nil)
-
     }
 
     func reloadData() {

@@ -392,58 +392,13 @@ extension SportRadarRestAPIClient: Endpoint {
             return defaultHeaders
         case .eventSummary:
             return defaultHeaders
-        case .favoritesList:
+        case .favoritesList, .addFavoriteList, .addFavoriteToList, .getFavoritesFromList, .deleteFavoriteList, .deleteFavoriteFromList:
             return [
                 "Accept-Encoding": "gzip, deflate, br",
                 "Content-Type": "application/json; charset=UTF-8",
                 "Media-Type": "application/json",
                 "Accept": "application/json",
-                "X-MGS-BusinessUnit": "10013",
-                "X-MGS-Location": "UK",
-            ]
-        case .addFavoriteList:
-            return [
-                "Accept-Encoding": "gzip, deflate, br",
-                "Content-Type": "application/json; charset=UTF-8",
-                "Media-Type": "application/json",
-                "Accept": "application/json",
-                "X-MGS-BusinessUnit": "10013",
-                "X-MGS-Location": "UK",
-            ]
-        case .addFavoriteToList:
-            return [
-                "Accept-Encoding": "gzip, deflate, br",
-                "Content-Type": "application/json; charset=UTF-8",
-                "Media-Type": "application/json",
-                "Accept": "application/json",
-                "X-MGS-BusinessUnit": "10013",
-                "X-MGS-Location": "UK",
-            ]
-        case .getFavoritesFromList:
-            return [
-                "Accept-Encoding": "gzip, deflate, br",
-                "Content-Type": "application/json; charset=UTF-8",
-                "Media-Type": "application/json",
-                "Accept": "application/json",
-                "X-MGS-BusinessUnit": "10013",
-                "X-MGS-Location": "UK",
-            ]
-        case .deleteFavoriteList:
-            return [
-                "Accept-Encoding": "gzip, deflate, br",
-                "Content-Type": "application/json; charset=UTF-8",
-                "Media-Type": "application/json",
-                "Accept": "application/json",
-                "X-MGS-BusinessUnit": "10013",
-                "X-MGS-Location": "UK",
-            ]
-        case .deleteFavoriteFromList:
-            return [
-                "Accept-Encoding": "gzip, deflate, br",
-                "Content-Type": "application/json; charset=UTF-8",
-                "Media-Type": "application/json",
-                "Accept": "application/json",
-                "X-MGS-BusinessUnit": "10013",
+                "X-MGS-BusinessUnit": "3",
                 "X-MGS-Location": "UK",
             ]
         }

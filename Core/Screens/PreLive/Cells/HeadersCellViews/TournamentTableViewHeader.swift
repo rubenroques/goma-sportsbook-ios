@@ -77,7 +77,7 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
 
         self.collapseImageView.image = UIImage(named: "arrow_up_icon")
 
-        self.nameTitleLabel.text = localized("empty_value")
+        self.nameTitleLabel.text = ""
         self.sectionIndex = nil
 
         self.isFavorite = false

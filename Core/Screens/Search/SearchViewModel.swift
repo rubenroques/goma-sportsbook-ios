@@ -129,7 +129,7 @@ class SearchViewModel: NSObject {
         self.isEmptySearch = false
 
         // EM TEMP SHUTDOWN
-        //self.hasDoneSearch = true
+        // self.hasDoneSearch = true
         Env.servicesProvider.getSearchEvents(query: searchQuery, resultLimit: "20", page: "0")
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -181,23 +181,20 @@ class SearchViewModel: NSObject {
     }
 
     func processEvents(eventsGroup: EventsGroup) {
-
         for event in eventsGroup.events {
-
             let match = Match(id: event.id,
                               competitionId: event.competitionId ?? "",
                               competitionName: event.competitionName ?? "",
-                              homeParticipant: Participant(id: "",
-                                                           name: event.homeTeamName ?? ""),
-                              awayParticipant: Participant(id: "",
-                                                           name: event.awayTeamName ?? ""),
+                              homeParticipant: Participant(id: "", name: event.homeTeamName ?? ""),
+                              awayParticipant: Participant(id: "", name: event.awayTeamName ?? ""),
                               date: event.startDate ?? Date(timeIntervalSince1970: 0),
                               sportType: event.sportTypeName ?? "",
                               venue: nil,
                               numberTotalOfMarkets: event.numberMarkets != nil ? event.numberMarkets ?? 0 : event.markets.count,
                               markets: ServiceProviderModelMapper.markets(fromServiceProviderMarkets: event.markets),
                               rootPartId: "",
-                              sportName: event.sportTypeName)
+                              sportName: event.sportTypeName,
+                              status: ServiceProviderModelMapper.matchStatus(fromInternalEvent: event.status))
 
             if self.searchMatchesPublisher.value[match.sportType] != nil {
                 let searchMatch = SearchEvent.match(match)
@@ -208,29 +205,20 @@ class SearchViewModel: NSObject {
                 self.searchMatchesPublisher.value[match.sportType] = [searchMatch]
             }
         }
-
         self.setSportMatchesArray()
-
     }
 
     func processSearchResponse(searchResponse: SearchV2Response) {
-
         let searchRecords = searchResponse.records
-
         for record in searchRecords {
-
             switch record {
             case .tournament(let tournamentContent):
-
                 tournaments.append(tournamentContent)
-
             case .match(let matchContent):
-
                 matches.append(matchContent)
             default:
                 ()
             }
-
         }
 
         if let searchContents = searchResponse.includedData {
@@ -406,7 +394,8 @@ class SearchViewModel: NSObject {
                               numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
                               markets: sortedMarkets,
                               rootPartId: rawMatch.rootPartId ?? "",
-                              sportName: rawMatch.sportName)
+                              sportName: rawMatch.sportName,
+                              status: .unknown)
 
             // Set Match
             if self.searchMatchesPublisher.value[match.sportType] != nil {

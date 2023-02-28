@@ -75,7 +75,7 @@ class SubmitedBetTableViewCell: UITableViewCell {
         self.cashoutTitleLabel.text = localized("cashout_available")
         self.cashoutTitleLabel.font = AppFont.with(type: .semibold, size: 12)
 
-        self.cashoutValueLabel.text = localized("empty_value")
+        self.cashoutValueLabel.text = ""
         self.cashoutValueLabel.font = AppFont.with(type: .semibold, size: 14)
 
         self.cashoutButton.setTitle(localized("cashout"), for: .normal)
@@ -112,12 +112,12 @@ class SubmitedBetTableViewCell: UITableViewCell {
         self.betHistoryEntry = nil
 
         self.oddValueLabel.text = "-.--"
-        self.betTypeLabel.text = localized("empty_value")
-        self.possibleWinningsValueLabel.text = localized("empty_value")
+        self.betTypeLabel.text = ""
+        self.possibleWinningsValueLabel.text = ""
 
         self.stackView.removeAllArrangedSubviews()
 
-        self.cashoutValueLabel.text = localized("empty_value")
+        self.cashoutValueLabel.text = ""
 
         self.viewModel = nil
         self.cashoutEnabledSubscription = nil

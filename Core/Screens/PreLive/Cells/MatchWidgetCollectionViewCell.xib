@@ -22,7 +22,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="MatchWidgetCollectionViewCell" customModule="Crocobet" customModuleProvider="target">
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="MatchWidgetCollectionViewCell" customModule="Betsson" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="331" height="189"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -317,13 +317,37 @@
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </stackView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Manchester United" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rwv-VC-F8F">
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="iph-Xc-owq">
+                                        <rect key="frame" x="127" y="26" width="53" height="27"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="760" verticalCompressionResistancePriority="760" text="89-29" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wmf-LZ-bWj">
+                                                <rect key="frame" x="0.0" y="0.0" width="53" height="15"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="15" id="efw-H1-vSz"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="757" verticalCompressionResistancePriority="757" text="30:51 - 1st Half" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o7L-x9-JEu">
+                                                <rect key="frame" x="0.0" y="17" width="53" height="10"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="10" id="X6L-db-NQv"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="8"/>
+                                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </stackView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="747" verticalCompressionResistancePriority="747" text="Manchester United" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rwv-VC-F8F">
                                         <rect key="frame" x="197" y="4" width="110" height="59"/>
                                         <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="14"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Young Boys" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jak-MM-0V4">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="747" verticalCompressionResistancePriority="747" text="Young Boys" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jak-MM-0V4">
                                         <rect key="frame" x="0.0" y="4" width="110.5" height="59"/>
                                         <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="14"/>
                                         <nil key="textColor"/>
@@ -335,6 +359,7 @@
                                     <constraint firstItem="0C8-cR-9rM" firstAttribute="centerY" secondItem="D8R-G1-Yk3" secondAttribute="centerY" id="2Mu-Hz-yGt"/>
                                     <constraint firstItem="0C8-cR-9rM" firstAttribute="centerX" secondItem="D8R-G1-Yk3" secondAttribute="centerX" id="9A0-rI-tex"/>
                                     <constraint firstItem="jak-MM-0V4" firstAttribute="centerY" secondItem="D8R-G1-Yk3" secondAttribute="centerY" id="GjL-gu-UQX"/>
+                                    <constraint firstItem="Wmf-LZ-bWj" firstAttribute="centerY" secondItem="D8R-G1-Yk3" secondAttribute="centerY" id="Jxv-Tx-Z5X"/>
                                     <constraint firstItem="rwv-VC-F8F" firstAttribute="leading" secondItem="0C8-cR-9rM" secondAttribute="trailing" constant="10" id="KEd-Rf-vlw"/>
                                     <constraint firstAttribute="trailing" secondItem="rwv-VC-F8F" secondAttribute="trailing" id="Ll5-Dk-XAf"/>
                                     <constraint firstItem="jak-MM-0V4" firstAttribute="leading" secondItem="D8R-G1-Yk3" secondAttribute="leading" id="Rzd-jP-jeT"/>
@@ -342,6 +367,7 @@
                                     <constraint firstItem="rwv-VC-F8F" firstAttribute="top" secondItem="D8R-G1-Yk3" secondAttribute="top" constant="4" id="aIx-bo-x7K"/>
                                     <constraint firstItem="rwv-VC-F8F" firstAttribute="centerY" secondItem="D8R-G1-Yk3" secondAttribute="centerY" id="d3E-63-Daf"/>
                                     <constraint firstItem="jak-MM-0V4" firstAttribute="top" secondItem="D8R-G1-Yk3" secondAttribute="top" constant="4" id="eLH-bI-eAm"/>
+                                    <constraint firstItem="iph-Xc-owq" firstAttribute="centerX" secondItem="D8R-G1-Yk3" secondAttribute="centerX" id="eih-VX-8b9"/>
                                     <constraint firstItem="0C8-cR-9rM" firstAttribute="leading" secondItem="jak-MM-0V4" secondAttribute="trailing" constant="10" id="gh6-nU-IiK"/>
                                 </constraints>
                             </view>
@@ -406,6 +432,7 @@
                 <outlet property="bottomMarginSpaceConstraint" destination="jPE-gz-w4d" id="EGE-mc-Tip"/>
                 <outlet property="buttonsHeightConstraint" destination="Yes-UE-fhZ" id="ftJ-A1-loa"/>
                 <outlet property="dateLabel" destination="t8t-gn-c1f" id="LHy-qf-qwM"/>
+                <outlet property="dateStackView" destination="0C8-cR-9rM" id="gKN-uO-HWS"/>
                 <outlet property="drawBaseView" destination="wiF-3k-PPt" id="eM9-Pp-eYx"/>
                 <outlet property="drawDownChangeOddValueImage" destination="Bdg-3s-SKe" id="Qz1-09-A5n"/>
                 <outlet property="drawOddTitleLabel" destination="4Ee-wU-100" id="vIy-fz-a5e"/>
@@ -423,10 +450,13 @@
                 <outlet property="homeUpChangeOddValueImage" destination="Sdg-bV-HK8" id="BrH-s1-Nfu"/>
                 <outlet property="leadingMarginSpaceConstraint" destination="4Ve-ok-zLQ" id="VnT-oc-VH7"/>
                 <outlet property="locationFlagImageView" destination="BvN-9q-msd" id="Z8B-jh-Ehe"/>
+                <outlet property="matchTimeLabel" destination="o7L-x9-JEu" id="Wqr-Tz-D0H"/>
                 <outlet property="numberOfBetsLabels" destination="WZf-bd-zho" id="vW7-9c-537"/>
                 <outlet property="oddsStackView" destination="kTP-cv-RCw" id="WXr-a6-clg"/>
                 <outlet property="participantsBaseView" destination="D8R-G1-Yk3" id="n6Q-CP-41c"/>
                 <outlet property="resultCenterConstraint" destination="2Mu-Hz-yGt" id="FU2-6y-yee"/>
+                <outlet property="resultLabel" destination="Wmf-LZ-bWj" id="w2a-KP-uad"/>
+                <outlet property="resultStackView" destination="iph-Xc-owq" id="dsH-Vl-Cvd"/>
                 <outlet property="seeAllBaseView" destination="Xel-CJ-cY5" id="Dfl-gY-KSc"/>
                 <outlet property="seeAllLabel" destination="Vrs-dD-HHo" id="3Bb-90-ubx"/>
                 <outlet property="suspendedBaseView" destination="DoR-hW-9XB" id="30i-gU-w3n"/>

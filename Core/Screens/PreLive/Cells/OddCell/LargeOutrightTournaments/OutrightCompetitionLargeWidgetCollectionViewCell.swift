@@ -94,7 +94,7 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
 
         self.viewModel = nil
-        self.titleLabel.text = localized("empty_value")
+        self.titleLabel.text = ""
 
         self.setupWithTheme()
         self.adjustDesignToCardStyle()

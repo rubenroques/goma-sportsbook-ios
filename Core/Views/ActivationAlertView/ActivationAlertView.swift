@@ -45,7 +45,7 @@ class ActivationAlertView: NibView {
     }
 
     override func commonInit() {
-        self.titleLabel.text = localized("empty_value")
+        self.titleLabel.text = ""
 
         self.closeButton.setImage(UIImage(named: "small_close_cross_icon"), for: .normal)
         if let image = self.closeButton.imageView?.image?.withRenderingMode(.alwaysTemplate) {
@@ -55,10 +55,10 @@ class ActivationAlertView: NibView {
 
         hasCloseAction = false
 
-        self.infoLabel.text = localized("empty_value")
+        self.infoLabel.text = ""
         self.infoLabel.numberOfLines = 0
 
-        self.linkLabel.text = localized("empty_value")
+        self.linkLabel.text = ""
 
         let labelTap = UITapGestureRecognizer(target: self, action: #selector(self.labelTapped(_:)))
         self.linkLabel.isUserInteractionEnabled = true

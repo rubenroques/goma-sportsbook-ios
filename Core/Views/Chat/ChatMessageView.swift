@@ -97,7 +97,7 @@ class ChatMessageView: UIView {
     }
 
     func clearTextView() {
-        self.inputTextView.text = localized("empty_value")
+        self.inputTextView.text = ""
     }
 
     @discardableResult

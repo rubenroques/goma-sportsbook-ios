@@ -383,6 +383,10 @@ class HeaderTextFieldView: NibView {
         self.textField.keyboardType = keyboard
     }
 
+    func setContextType(_ textContentType: UITextContentType) {
+        self.textField.textContentType = textContentType
+    }
+
     func setReturnKeyType(_ returnKeyType: UIReturnKeyType) {
         self.textField.returnKeyType = returnKeyType
     }
@@ -524,7 +528,7 @@ class HeaderTextFieldView: NibView {
 
         showingTipLabel = false
 
-        tipLabel.text = Localization.localized("empty_value")
+        tipLabel.text = ""
         tipLabel.textColor = .black
 
         containerView.layer.borderColor = UIColor.clear.cgColor

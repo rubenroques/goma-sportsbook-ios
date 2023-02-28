@@ -324,7 +324,8 @@ class FavoritesAggregatorsRepository {
                               numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
                               markets: sortedMarkets,
                               rootPartId: rawMatch.rootPartId ?? "",
-                              sportName: rawMatch.sportName ?? "")
+                              sportName: rawMatch.sportName ?? "",
+                              status: .unknown)
 
             matchesList.append(match)
         }

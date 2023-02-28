@@ -17,8 +17,8 @@ class CountrySelectorTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        self.nameLabel.text = localized("empty_value")
-        self.prefixLabel.text = localized("empty_value")
+        self.nameLabel.text = ""
+        self.prefixLabel.text = ""
 
         self.setupWithTheme()
     }
@@ -30,10 +30,10 @@ class CountrySelectorTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        self.nameLabel.text = localized("empty_value")
+        self.nameLabel.text = ""
         
         self.prefixLabel.isHidden = true
-        self.prefixLabel.text = localized("empty_value")
+        self.prefixLabel.text = ""
 
         self.setupWithTheme()
     }
