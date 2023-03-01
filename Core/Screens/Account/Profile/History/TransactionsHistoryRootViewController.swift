@@ -112,12 +112,22 @@ class TransactionsHistoryRootViewController: UIViewController {
                         let withdrawTransactionsViewController = TransactionsHistoryViewController(viewModel: withdrawTransactionsViewModel)
 
                         // Callbacks for data reload needed
-                        allTransactionsViewModel.shouldReloadData = { [weak self] in
+//                        allTransactionsViewModel.shouldReloadData = { [weak self] in
+//                            allTransactionsViewModel.refreshContent(withUserWalletRefresh: true)
+//                            withdrawTransactionsViewModel.refreshContent(withUserWalletRefresh: true)
+//                        }
+//
+//                        withdrawTransactionsViewModel.shouldReloadData = { [weak self] in
+//                            withdrawTransactionsViewModel.refreshContent(withUserWalletRefresh: true)
+//                            allTransactionsViewModel.refreshContent(withUserWalletRefresh: true)
+//                        }
+
+                        allTransactionsViewController.shouldReloadData = { [weak self] in
                             allTransactionsViewModel.refreshContent(withUserWalletRefresh: true)
                             withdrawTransactionsViewModel.refreshContent(withUserWalletRefresh: true)
                         }
 
-                        withdrawTransactionsViewModel.shouldReloadData = { [weak self] in
+                        withdrawTransactionsViewController.shouldReloadData = { [weak self] in
                             withdrawTransactionsViewModel.refreshContent(withUserWalletRefresh: true)
                             allTransactionsViewModel.refreshContent(withUserWalletRefresh: true)
                         }

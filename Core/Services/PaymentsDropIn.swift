@@ -175,7 +175,6 @@ class PaymentsDropIn {
                     self?.isLoadingPublisher.send(false)
                 }
             }, receiveValue: { [weak self] processDepositResponse in
-                print("PROCESS DEPOSIT RESPONSE: \(processDepositResponse)")
 
                 self?.clientKey = processDepositResponse.clientKey
 
@@ -206,7 +205,6 @@ class PaymentsDropIn {
                     self?.isLoadingPublisher.send(false)
                 }
             }, receiveValue: { [weak self] paymentsResponse in
-                print("PAYMENTS RESPONSE: \(paymentsResponse)")
 
                 self?.paymentMethodsResponse = paymentsResponse
 
