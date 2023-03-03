@@ -315,18 +315,18 @@ class DepositViewController: UIViewController {
 
         switch paymentStatus {
         case .authorised:
-            alertTitle = "Payment Authorized"
-            alertMessage = "Your payment was authorized. Your deposit should be available in your account."
+            alertTitle = localized("payment_authorized")
+            alertMessage = localized("payment_authorized_message")
         case .refused:
-            alertTitle = "Payment Refused"
-            alertMessage = "Your payment was refused. Please try again later. If the problem persists contact our Customer Support."
+            alertTitle = localized("payment_refused")
+            alertMessage = localized("payment_refused_message")
         }
 
         let alert = UIAlertController(title: alertTitle,
                                       message: alertMessage,
                                       preferredStyle: .alert)
 
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
 
             if paymentStatus == .authorised {
                 self.shouldRefreshUserWallet?()

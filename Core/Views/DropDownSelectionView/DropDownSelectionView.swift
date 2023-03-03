@@ -82,10 +82,10 @@ class DropDownSelectionView: UIView {
     
     // MARK: - Lifetime and Cycle
 
-    @available(iOS, unavailable)
-    convenience init() {
-        self.init(frame: .zero)
-    }
+//    @available(iOS, unavailable)
+//    convenience init() {
+//        self.init(frame: .zero)
+//    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)

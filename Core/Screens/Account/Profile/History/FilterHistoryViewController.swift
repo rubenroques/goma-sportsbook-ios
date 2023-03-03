@@ -182,7 +182,8 @@ class FilterHistoryViewController: UIViewController {
             .sink(receiveValue: { [weak self] startDate in
           
                 self?.startDate = startDate
-
+                self?.viewModel.setStartTime(dateString: startDate)
+                
                 if let endDate = self?.endDate,
                    endDate <= startDate,
                    let afterStartDateValue = Calendar.current.date(byAdding: .day, value: 1, to: startDate) {
@@ -206,6 +207,7 @@ class FilterHistoryViewController: UIViewController {
             .sink(receiveValue: { [weak self] endDate in
 
                 self?.endDate = endDate
+                self?.viewModel.setEndTime(dateString: endDate)
 
                 if let startDate = self?.startDate,
                    startDate >= endDate,

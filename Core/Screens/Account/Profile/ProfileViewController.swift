@@ -439,7 +439,7 @@ class ProfileViewController: UIViewController {
 
         let messagesView = NavigationCardView()
         messagesView.hasNotifications = true
-        messagesView.setupView(title: localized("messages"), iconTitle: "messages_profile_icon")
+        messagesView.setupView(title: localized("promotions"), iconTitle: "messages_profile_icon")
         let messagesTap = UITapGestureRecognizer(target: self, action: #selector(messagesViewTapped(sender:)))
         messagesView.addGestureRecognizer(messagesTap)
 
@@ -447,6 +447,11 @@ class ProfileViewController: UIViewController {
         historyView.setupView(title: localized("history"), iconTitle: "history_profile_icon")
         let historyTap = UITapGestureRecognizer(target: self, action: #selector(historyViewTapped(sender:)))
         historyView.addGestureRecognizer(historyTap)
+
+        let responsibleGamingView = NavigationCardView()
+        responsibleGamingView.setupView(title: localized("responsible_gaming"), iconTitle: "responsible_gaming_icon")
+        let responsibleGamingTap = UITapGestureRecognizer(target: self, action: #selector(responsibleGamingViewTapped(sender:)))
+        responsibleGamingView.addGestureRecognizer(responsibleGamingTap)
 
         let settingsView = NavigationCardView()
         settingsView.setupView(title: localized("app_settings"), iconTitle: "app_settings_profile_icon")
@@ -463,6 +468,7 @@ class ProfileViewController: UIViewController {
         self.stackView.addArrangedSubview(bonusView)
         self.stackView.addArrangedSubview(messagesView)
         self.stackView.addArrangedSubview(historyView)
+        self.stackView.addArrangedSubview(responsibleGamingView)
         self.stackView.addArrangedSubview(settingsView)
         self.stackView.addArrangedSubview(supportView)
 
@@ -561,6 +567,11 @@ extension ProfileViewController {
     @objc func historyViewTapped(sender: UITapGestureRecognizer) {
         let historyRootViewController = HistoryRootViewController()
         self.navigationController?.pushViewController(historyRootViewController, animated: true)
+    }
+
+    @objc func responsibleGamingViewTapped(sender: UITapGestureRecognizer) {
+        let responsibleGamingViewController = ResponsibleGamingViewController()
+        self.navigationController?.pushViewController(responsibleGamingViewController, animated: true)
     }
 //
 //    @objc func limitsViewTapped() {

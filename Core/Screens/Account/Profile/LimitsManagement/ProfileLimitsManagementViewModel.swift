@@ -44,8 +44,6 @@ class ProfileLimitsManagementViewModel: NSObject {
     var pendingWageringLimitMessage: String?
     var pendingLossLimitMessage: String?
 
-    var isLockedPlayer: CurrentValueSubject<Bool, Never> = .init(false)
-
     var personalDepositLimitLoaded: CurrentValueSubject<Bool, Never> = .init(false)
     var limitsLoaded: CurrentValueSubject<Bool, Never> = .init(false)
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
@@ -58,7 +56,6 @@ class ProfileLimitsManagementViewModel: NSObject {
 
         self.getLimits()
 
-        self.isLockedPlayer.send(false)
     }
 
     private func setupPublishers() {
@@ -258,60 +255,6 @@ class ProfileLimitsManagementViewModel: NSObject {
                 })
                 .store(in: &cancellables)
         }
-    }
-
-    func lockPlayer(isPermanent: Bool, lockPeriodUnit: String, lockPeriod: String) {
-
-        var lockPeriodUnitCode = ""
-
-        if lockPeriodUnit == localized("days") {
-            lockPeriodUnitCode = "DAY"
-        }
-        else if lockPeriodUnit == localized("weeks") {
-            lockPeriodUnitCode = "WEEK"
-
-        }
-        else if lockPeriodUnit == localized("months") {
-            lockPeriodUnitCode = "MONTH"
-        }
-
-//        if isPermanent {
-//            Env.servicesProvider.lockPlayer(isPermanent: isPermanent)
-//                .receive(on: DispatchQueue.main)
-//                .sink(receiveCompletion: { [weak self] completion in
-//                    switch completion {
-//                    case .finished:
-//                        ()
-//                    case .failure(let error):
-//                        print("LOCK PLAYER ERROR: \(error)")
-//                    }
-//
-//                }, receiveValue: { [weak self] lockPlayerResponse in
-//
-//                    print("LOCK PLAYER RESPONSE: \(lockPlayerResponse)")
-//                })
-//                .store(in: &cancellables)
-//        }
-//        else {
-//            Env.servicesProvider.lockPlayer(lockPeriodUnit: lockPeriodUnitCode, lockPeriod: lockPeriod)
-//                .receive(on: DispatchQueue.main)
-//                .sink(receiveCompletion: { [weak self] completion in
-//                    switch completion {
-//                    case .finished:
-//                        ()
-//                    case .failure(let error):
-//                        print("LOCK PLAYER ERROR: \(error)")
-//                    }
-//
-//                }, receiveValue: { [weak self] lockPlayerResponse in
-//
-//                    print("LOCK PLAYER RESPONSE: \(lockPlayerResponse)")
-//                })
-//                .store(in: &cancellables)
-//        }
-
-        self.isLockedPlayer.send(true)
-
     }
 
     func sendLimit(limitType: String, period: String, amount: String, currency: String) {

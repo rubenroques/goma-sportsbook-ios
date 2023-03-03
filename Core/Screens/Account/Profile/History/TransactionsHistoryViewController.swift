@@ -13,6 +13,7 @@ class TransactionsHistoryViewController: UIViewController {
     // MARK: - Private Properties
     // Sub Views
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
+    private lazy var bottomSafeAreaView: UIView = Self.createBottomSafeAreaView()
     private lazy var tableView: UITableView = Self.createTableView()
 
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
@@ -112,6 +113,8 @@ class TransactionsHistoryViewController: UIViewController {
 
         self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
 
+        self.bottomSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
+
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -143,7 +146,9 @@ class TransactionsHistoryViewController: UIViewController {
 
         viewModel.shouldShowAlert = { [weak self] alertType in
 
-            self?.showAlert(type: alertType)
+            let alertMessage = alertType == .success ? localized("cancel_withdraw_success") : localized("cancel_withdraw_error")
+
+            self?.showAlert(alertType: alertType, text: alertMessage)
         }
 
     }
@@ -163,28 +168,77 @@ class TransactionsHistoryViewController: UIViewController {
         self.viewModel.refreshContent()
     }
 
-    private func showAlert(type: AlertType) {
-        switch type {
-        case .success:
-            let alert = UIAlertController(title: "Pending Withdrawal Cancel Success",
-                                          message: "Your pending withdrawal request was cancelled with success.",
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
+    private func showAlert(alertType: AlertType, text: String) {
 
-                self.shouldReloadData?()
+        let alertView = GenericAlertView()
 
-            }))
-            self.present(alert, animated: true, completion: nil)
-        case .error:
-            let alert = UIAlertController(title: "Pending Withdrawal Cancel Error",
-                                          message: "Your pending withdrawal request could not be cancelled. Please try again later, if the problem persists contact our customer support.",
-                                          preferredStyle: .alert)
+        alertView.configure(alertType: alertType, text: text)
+        
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
+            alertView.alpha = 1
+        }, completion: { _ in
+        })
 
-            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+        alertView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(alertView)
 
-            self.present(alert, animated: true, completion: nil)
+        NSLayoutConstraint.activate([
+            alertView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            alertView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            alertView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
+                alertView.alpha = 0
+            }, completion: { _ in
+                alertView.removeFromSuperview()
+            })
         }
 
+        self.view.bringSubviewToFront(alertView)
+
+        if alertType == .success {
+            self.shouldReloadData?()
+        }
+    }
+
+//    private func showAlert(type: AlertType) {
+//        switch type {
+//        case .success:
+//            let alert = UIAlertController(title: localized("pending_withdrawal_cancel_success"),
+//                                          message: localized("pending_withdrawal_cancel_success_message"),
+//                                          preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
+//
+//                self.shouldReloadData?()
+//
+//            }))
+//            self.present(alert, animated: true, completion: nil)
+//        case .error:
+//            let alert = UIAlertController(title: localized("pending_withdrawal_cancel_error"),
+//                                          message: localized("pending_withdrawal_cancel_success_message"),
+//                                          preferredStyle: .alert)
+//
+//            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+//
+//            self.present(alert, animated: true, completion: nil)
+//        }
+//
+//    }
+
+    private func showCancelConfirmationAlert(paymentId: Int) {
+        let alert = UIAlertController(title: localized("cancel_withdraw"),
+                                      message: localized("cancel_withdraw_message"),
+                                      preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+            self?.viewModel.cancelPendingTransaction(paymentId: paymentId)
+        }))
+
+        alert.addAction(UIAlertAction(title: localized("go_back"), style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
@@ -226,7 +280,8 @@ extension TransactionsHistoryViewController: UITableViewDelegate, UITableViewDat
                 cell.hasPendingTransaction = true
 
                 cell.shouldCancelPendingTransaction = { [weak self] paymentId in
-                    self?.viewModel.cancelPendingTransaction(paymentId: paymentId)
+
+                    self?.showCancelConfirmationAlert(paymentId: paymentId)
                 }
             }
             
@@ -286,6 +341,12 @@ extension TransactionsHistoryViewController {
 extension TransactionsHistoryViewController {
 
     private static func createTopSafeAreaView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createBottomSafeAreaView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -358,6 +419,7 @@ extension TransactionsHistoryViewController {
     private func setupSubviews() {
 
         self.view.addSubview(self.topSafeAreaView)
+        self.view.addSubview(self.bottomSafeAreaView)
         self.view.addSubview(self.tableView)
         self.view.addSubview(self.emptyStateBaseView)
         self.view.addSubview(self.loadingBaseView)
@@ -378,7 +440,12 @@ extension TransactionsHistoryViewController {
             self.topSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.topSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.topSafeAreaView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.topSafeAreaView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor)
+            self.topSafeAreaView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+
+            self.bottomSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.bottomSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.bottomSafeAreaView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            self.bottomSafeAreaView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
 
         NSLayoutConstraint.activate([

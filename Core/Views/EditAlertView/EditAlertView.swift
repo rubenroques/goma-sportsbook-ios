@@ -37,7 +37,7 @@ class EditAlertView: NibView {
                 alertLabel.text = localized("error")
                 alertTextLabel.text = localized("error_edit")
             case .info:
-                alertImageView.image = UIImage(named: "question_circle_icon")
+                alertImageView.image = UIImage(named: "info_blue_icon")
                 alertLabel.textColor = UIColor.App.textPrimary
                 alertLabel.text = localized("info")
                 alertTextLabel.text = localized("info_text")

@@ -60,6 +60,8 @@ class TransactionsHistoryRootViewController: UIViewController {
     private lazy var noLoginSubtitleLabel: UILabel = Self.createNoLoginSubtitleLabel()
     private lazy var noLoginButton: UIButton = Self.createNoLoginButton()
 
+    private lazy var bottomSafeAreaView: UIView = Self.createBottomSafeAreaView()
+
     private var pagedViewController: UIPageViewController
 
     private var viewControllers = [UIViewController]()
@@ -205,6 +207,8 @@ class TransactionsHistoryRootViewController: UIViewController {
         self.filterBaseView.backgroundColor = UIColor.App.backgroundTertiary
 
         StyleHelper.styleButton(button: self.noLoginButton)
+
+        self.bottomSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
     }
 
     // MARK: - Bindings
@@ -460,6 +464,12 @@ extension TransactionsHistoryRootViewController {
         return imageView
     }
 
+    private static func createBottomSafeAreaView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
     private func setupSubviews() {
 
         self.topBaseView.addSubview(self.shortcutsCollectionView)
@@ -480,6 +490,8 @@ extension TransactionsHistoryRootViewController {
 
         self.addChildViewController(self.pagedViewController, toView: self.pagesBaseView)
 
+        self.view.addSubview(self.bottomSafeAreaView)
+
         self.initConstraints()
 
         // NOTE: Force layout pending
@@ -488,6 +500,13 @@ extension TransactionsHistoryRootViewController {
     }
 
     private func initConstraints() {
+
+        NSLayoutConstraint.activate([
+            self.bottomSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.bottomSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.bottomSafeAreaView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            self.bottomSafeAreaView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+        ])
 
         NSLayoutConstraint.activate([
             self.topBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),

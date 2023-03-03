@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ProfileLimitsManagementViewController" customModule="Crocobet" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ProfileLimitsManagementViewController" customModule="Betsson" customModuleProvider="target">
             <connections>
                 <outlet property="backButton" destination="Nd4-8H-Igy" id="SbD-Bz-p9X"/>
                 <outlet property="bettingFrequencySelectTextFieldView" destination="ZeO-nV-Ihm" id="xTW-Sp-bWY"/>
@@ -24,9 +24,6 @@
                 <outlet property="depositLineView" destination="GBR-xz-Wiy" id="i6F-DS-q7z"/>
                 <outlet property="depositView" destination="Dt9-UA-KBE" id="Woh-oo-nf0"/>
                 <outlet property="editButton" destination="8eU-k9-fvt" id="XsO-Sg-uQa"/>
-                <outlet property="exclusionLabel" destination="Pon-pZ-URQ" id="pgn-yi-h6P"/>
-                <outlet property="exclusionSelectTextFieldView" destination="pCb-On-vjj" id="idf-iI-In5"/>
-                <outlet property="exclusionView" destination="plc-Mg-bpl" id="1WR-eg-fgH"/>
                 <outlet property="headerLabel" destination="hhA-V0-VE1" id="Rp2-Se-8qm"/>
                 <outlet property="headerView" destination="vdJ-he-o2z" id="0bN-AD-soK"/>
                 <outlet property="lossFrequencySelectHeaderTextFieldView" destination="jka-6d-va1" id="OaJ-gL-Dce"/>
@@ -34,11 +31,6 @@
                 <outlet property="lossLabel" destination="RfM-ds-a6T" id="Hrz-Ep-09M"/>
                 <outlet property="lossLineView" destination="Lkz-kv-yMX" id="efI-0j-P0I"/>
                 <outlet property="lossView" destination="n9B-DI-jLq" id="3cx-XT-Nar"/>
-                <outlet property="periodLabel" destination="5BC-jG-ydp" id="w4F-VY-h7L"/>
-                <outlet property="periodOptionsView" destination="hPB-Fx-uyY" id="OXD-OG-5So"/>
-                <outlet property="periodTypeSelectTextFieldView" destination="tEy-5K-BXn" id="D7C-VQ-7T8"/>
-                <outlet property="periodValueHeaderTextFieldView" destination="TTl-05-tgO" id="7VA-0d-JU1"/>
-                <outlet property="periodValuesView" destination="0EL-tm-YjC" id="PsL-3Q-yh2"/>
                 <outlet property="scrollView" destination="3uj-Qe-j3L" id="Yt6-hM-kRf"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -109,14 +101,14 @@
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="nmc-Ff-R0M">
                                             <rect key="frame" x="0.0" y="36.5" width="382" height="148"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gFU-ul-7N1" customClass="HeaderTextFieldView" customModule="Crocobet" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gFU-ul-7N1" customClass="HeaderTextFieldView" customModule="Betsson" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="382" height="80"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="80" id="gLN-hv-FAS"/>
                                                     </constraints>
                                                 </view>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ueC-zl-out" customClass="DropDownSelectionView" customModule="Crocobet" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ueC-zl-out" customClass="DropDownSelectionView" customModule="Betsson" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="88" width="382" height="60"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
@@ -159,14 +151,14 @@
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="OHp-Ug-PKi">
                                             <rect key="frame" x="0.0" y="36.5" width="382" height="148"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mq2-gj-Skp" customClass="HeaderTextFieldView" customModule="Crocobet" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mq2-gj-Skp" customClass="HeaderTextFieldView" customModule="Betsson" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="382" height="80"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="80" id="Afq-Jn-UpC"/>
                                                     </constraints>
                                                 </view>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZeO-nV-Ihm" customClass="DropDownSelectionView" customModule="Crocobet" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZeO-nV-Ihm" customClass="DropDownSelectionView" customModule="Betsson" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="88" width="382" height="60"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
@@ -209,14 +201,14 @@
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="7AC-ZH-oeE">
                                             <rect key="frame" x="0.0" y="36.5" width="382" height="148"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AKN-vK-CRV" customClass="HeaderTextFieldView" customModule="Crocobet" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AKN-vK-CRV" customClass="HeaderTextFieldView" customModule="Betsson" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="382" height="80"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="80" id="TH3-co-WC5"/>
                                                     </constraints>
                                                 </view>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jka-6d-va1" customClass="DropDownSelectionView" customModule="Crocobet" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jka-6d-va1" customClass="DropDownSelectionView" customModule="Betsson" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="88" width="382" height="60"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
@@ -247,98 +239,14 @@
                                         <constraint firstAttribute="trailing" secondItem="7AC-ZH-oeE" secondAttribute="trailing" id="v1K-cj-GHL"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="plc-Mg-bpl">
-                                    <rect key="frame" x="16" y="648.5" width="382" height="104.5"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pon-pZ-URQ">
-                                            <rect key="frame" x="0.0" y="0.0" width="382" height="20.5"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pCb-On-vjj" customClass="DropDownSelectionView" customModule="Crocobet" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="36.5" width="382" height="60"/>
-                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="60" id="4kT-Qe-KRT"/>
-                                            </constraints>
-                                        </view>
-                                    </subviews>
-                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                    <constraints>
-                                        <constraint firstAttribute="bottom" secondItem="pCb-On-vjj" secondAttribute="bottom" constant="8" id="1lS-kC-iWR"/>
-                                        <constraint firstItem="pCb-On-vjj" firstAttribute="leading" secondItem="plc-Mg-bpl" secondAttribute="leading" id="1pz-hT-1oT"/>
-                                        <constraint firstAttribute="trailing" secondItem="pCb-On-vjj" secondAttribute="trailing" id="5u2-aK-UTU"/>
-                                        <constraint firstItem="Pon-pZ-URQ" firstAttribute="leading" secondItem="plc-Mg-bpl" secondAttribute="leading" id="Dby-u2-jOH"/>
-                                        <constraint firstAttribute="trailing" secondItem="Pon-pZ-URQ" secondAttribute="trailing" id="MWh-KR-1G4"/>
-                                        <constraint firstItem="pCb-On-vjj" firstAttribute="top" secondItem="Pon-pZ-URQ" secondAttribute="bottom" constant="16" id="eTp-0w-eTZ"/>
-                                        <constraint firstItem="Pon-pZ-URQ" firstAttribute="top" secondItem="plc-Mg-bpl" secondAttribute="top" id="w7S-0o-cgq"/>
-                                    </constraints>
-                                </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hPB-Fx-uyY">
-                                    <rect key="frame" x="16" y="761" width="382" height="120.5"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5BC-jG-ydp">
-                                            <rect key="frame" x="0.0" y="4" width="382" height="20.5"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0EL-tm-YjC">
-                                            <rect key="frame" x="0.0" y="32.5" width="382" height="88"/>
-                                            <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tEy-5K-BXn" customClass="DropDownSelectionView" customModule="Crocobet" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="8" width="187" height="60"/>
-                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="60" id="5em-Ju-JEw"/>
-                                                    </constraints>
-                                                </view>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TTl-05-tgO" customClass="HeaderTextFieldView" customModule="Crocobet" customModuleProvider="target">
-                                                    <rect key="frame" x="195" y="16" width="187" height="75"/>
-                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="75" id="n6I-td-iKI"/>
-                                                    </constraints>
-                                                </view>
-                                            </subviews>
-                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                            <constraints>
-                                                <constraint firstAttribute="centerX" secondItem="tEy-5K-BXn" secondAttribute="trailing" constant="4" id="2bL-nu-a7H"/>
-                                                <constraint firstItem="tEy-5K-BXn" firstAttribute="top" secondItem="0EL-tm-YjC" secondAttribute="top" constant="8" id="4pb-51-0LP"/>
-                                                <constraint firstItem="TTl-05-tgO" firstAttribute="leading" secondItem="0EL-tm-YjC" secondAttribute="centerX" constant="4" id="JKV-cG-HPW"/>
-                                                <constraint firstAttribute="trailing" secondItem="TTl-05-tgO" secondAttribute="trailing" id="LKt-U3-jML"/>
-                                                <constraint firstAttribute="bottom" secondItem="tEy-5K-BXn" secondAttribute="bottom" constant="20" id="XAY-LB-pRW"/>
-                                                <constraint firstItem="tEy-5K-BXn" firstAttribute="leading" secondItem="0EL-tm-YjC" secondAttribute="leading" id="d5F-P4-eDh"/>
-                                                <constraint firstItem="TTl-05-tgO" firstAttribute="top" secondItem="tEy-5K-BXn" secondAttribute="top" constant="8" id="q5o-2x-h2Y"/>
-                                            </constraints>
-                                        </view>
-                                    </subviews>
-                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                    <constraints>
-                                        <constraint firstItem="5BC-jG-ydp" firstAttribute="leading" secondItem="hPB-Fx-uyY" secondAttribute="leading" id="0YV-rf-ib8"/>
-                                        <constraint firstItem="0EL-tm-YjC" firstAttribute="top" secondItem="5BC-jG-ydp" secondAttribute="bottom" constant="8" id="SON-IV-Ag6"/>
-                                        <constraint firstAttribute="trailing" secondItem="0EL-tm-YjC" secondAttribute="trailing" id="Z8e-Eb-7SJ"/>
-                                        <constraint firstAttribute="bottom" secondItem="0EL-tm-YjC" secondAttribute="bottom" id="dNU-hh-lkG"/>
-                                        <constraint firstItem="5BC-jG-ydp" firstAttribute="top" secondItem="hPB-Fx-uyY" secondAttribute="top" constant="4" id="eAV-zG-OgV"/>
-                                        <constraint firstItem="0EL-tm-YjC" firstAttribute="leading" secondItem="hPB-Fx-uyY" secondAttribute="leading" id="q60-0X-24X"/>
-                                        <constraint firstAttribute="trailing" secondItem="5BC-jG-ydp" secondAttribute="trailing" id="vZm-Ne-gPp"/>
-                                    </constraints>
-                                </view>
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
-                                <constraint firstItem="hPB-Fx-uyY" firstAttribute="top" secondItem="plc-Mg-bpl" secondAttribute="bottom" constant="8" id="5RZ-fi-at9"/>
-                                <constraint firstItem="plc-Mg-bpl" firstAttribute="top" secondItem="n9B-DI-jLq" secondAttribute="bottom" constant="8" id="5XX-LQ-8y8"/>
-                                <constraint firstItem="plc-Mg-bpl" firstAttribute="leading" secondItem="NOI-aO-DNs" secondAttribute="leading" constant="16" id="6Tj-KA-ut1"/>
                                 <constraint firstItem="aCZ-5Z-EYH" firstAttribute="leading" secondItem="NOI-aO-DNs" secondAttribute="leading" constant="16" id="7ab-2g-mpb"/>
                                 <constraint firstAttribute="trailing" secondItem="aCZ-5Z-EYH" secondAttribute="trailing" constant="16" id="8R1-5W-C2s"/>
                                 <constraint firstAttribute="trailing" secondItem="n9B-DI-jLq" secondAttribute="trailing" constant="16" id="CV9-TW-tdk"/>
                                 <constraint firstItem="n9B-DI-jLq" firstAttribute="top" secondItem="aCZ-5Z-EYH" secondAttribute="bottom" constant="20" id="KHO-Ax-eMM"/>
-                                <constraint firstAttribute="trailing" secondItem="plc-Mg-bpl" secondAttribute="trailing" constant="16" id="LO4-4a-Om3"/>
                                 <constraint firstItem="Dt9-UA-KBE" firstAttribute="top" secondItem="NOI-aO-DNs" secondAttribute="top" id="OIH-a2-SVf"/>
-                                <constraint firstAttribute="trailing" secondItem="hPB-Fx-uyY" secondAttribute="trailing" constant="16" id="ZXm-hH-hZz"/>
-                                <constraint firstItem="hPB-Fx-uyY" firstAttribute="leading" secondItem="NOI-aO-DNs" secondAttribute="leading" constant="16" id="bgV-LN-So3"/>
                                 <constraint firstAttribute="trailing" secondItem="Dt9-UA-KBE" secondAttribute="trailing" constant="16" id="cih-kp-AWp"/>
                                 <constraint firstItem="Dt9-UA-KBE" firstAttribute="leading" secondItem="NOI-aO-DNs" secondAttribute="leading" constant="16" id="gGu-Ye-lIV"/>
                                 <constraint firstItem="aCZ-5Z-EYH" firstAttribute="top" secondItem="Dt9-UA-KBE" secondAttribute="bottom" constant="16" id="lmZ-ir-Ymj"/>

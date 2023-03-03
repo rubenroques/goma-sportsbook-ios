@@ -35,17 +35,6 @@ class ProfileLimitsManagementViewController: UIViewController {
     @IBOutlet private var lossFrequencySelectHeaderTextFieldView: DropDownSelectionView!
     @IBOutlet private var lossLineView: UIView!
 
-    @IBOutlet private var exclusionView: UIView!
-    @IBOutlet private var exclusionLabel: UILabel!
-    @IBOutlet private var exclusionSelectTextFieldView: DropDownSelectionView!
-
-    @IBOutlet private var periodOptionsView: UIView!
-    @IBOutlet private var periodLabel: UILabel!
-
-    @IBOutlet private var periodValuesView: UIView!
-    @IBOutlet private var periodTypeSelectTextFieldView: DropDownSelectionView!
-    @IBOutlet private var periodValueHeaderTextFieldView: HeaderTextFieldView!
-
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
@@ -117,15 +106,6 @@ class ProfileLimitsManagementViewController: UIViewController {
         }
     }
 
-    var shouldShowPeriodOptions: Bool = false {
-        didSet {
-            self.periodOptionsView.isHidden = !shouldShowPeriodOptions
-        }
-    }
-
-    var periodTypeSelected: String?
-    var isValidPeriodValue: CurrentValueSubject<Bool, Never> = .init(false)
-
     init() {
         self.viewModel = ProfileLimitsManagementViewModel()
 
@@ -148,6 +128,8 @@ class ProfileLimitsManagementViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
 
         self.shouldShowDepositPeriods = false
+
+        self.lossLineView.isHidden = true
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -210,10 +192,6 @@ class ProfileLimitsManagementViewController: UIViewController {
 
         lossLineView.backgroundColor = UIColor.App.inputTextTitle.withAlphaComponent(0.2)
 
-        exclusionView.backgroundColor = UIColor.App.backgroundPrimary
-
-        exclusionLabel.textColor = UIColor.App.textPrimary
-
         depositFrequencySelectTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
         depositFrequencySelectTextFieldView.setTextFieldColor(UIColor.App.inputText)
         depositFrequencySelectTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
@@ -229,33 +207,13 @@ class ProfileLimitsManagementViewController: UIViewController {
         lossFrequencySelectHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
         lossFrequencySelectHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
 
-        exclusionSelectTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
-        exclusionSelectTextFieldView.setTextFieldColor(UIColor.App.inputText)
-        exclusionSelectTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
-        exclusionSelectTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
-
-        periodOptionsView.backgroundColor = .clear
-
-        periodLabel.textColor = UIColor.App.textPrimary
-
-        periodValuesView.backgroundColor = .clear
-
-        periodTypeSelectTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
-        periodTypeSelectTextFieldView.setTextFieldColor(UIColor.App.inputText)
-        periodTypeSelectTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
-        periodTypeSelectTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
-
-        periodValueHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
-        periodValueHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
-        periodValueHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
-        periodValueHeaderTextFieldView.setSecureField(false)
     }
 
     func commonInit() {
 
         self.isLoading = false
 
-        headerLabel.font = AppFont.with(type: .semibold, size: 17)
+        headerLabel.font = AppFont.with(type: .bold, size: 20)
         headerLabel.text = localized("limits_management")
 
         editButton.titleLabel?.font = AppFont.with(type: .bold, size: 15)
@@ -267,7 +225,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         depositLabel.font = AppFont.with(type: .semibold, size: 17)
 
         depositHeaderTextFieldView.setPlaceholderText(localized("weekly_deposit_limit"))
-        if let infoImage = UIImage(named: "question_circle_icon") {
+        if let infoImage = UIImage(named: "info_blue_icon") {
             depositHeaderTextFieldView.setImageTextField(infoImage)
         }
         depositHeaderTextFieldView.setKeyboardType(.decimalPad)
@@ -290,7 +248,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         bettingLabel.font = AppFont.with(type: .semibold, size: 17)
 
         bettingHeaderTextFieldView.setPlaceholderText(localized("weekly_betting_limit"))
-        if let infoImage = UIImage(named: "question_circle_icon") {
+        if let infoImage = UIImage(named: "info_blue_icon") {
             bettingHeaderTextFieldView.setImageTextField(infoImage)
         }
         bettingHeaderTextFieldView.setKeyboardType(.numberPad)
@@ -313,7 +271,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         lossLabel.font = AppFont.with(type: .semibold, size: 17)
 
         lossHeaderTextFieldView.setPlaceholderText(localized("auto_payout"))
-        if let infoImage = UIImage(named: "question_circle_icon") {
+        if let infoImage = UIImage(named: "info_blue_icon") {
             lossHeaderTextFieldView.setImageTextField(infoImage)
         }
         lossHeaderTextFieldView.setKeyboardType(.numberPad)
@@ -328,23 +286,6 @@ class ProfileLimitsManagementViewController: UIViewController {
             }
         }
         lossFrequencySelectHeaderTextFieldView.setSelectionPicker([localized("daily"), localized("weekly"), localized("monthly")])
-
-        //
-        //
-        exclusionLabel.text = localized("auto_exclusion")
-        exclusionLabel.font = AppFont.with(type: .semibold, size: 17)
-
-        exclusionSelectTextFieldView.setSelectionPicker([localized("not_excluded"), localized("custom"), localized("permanent")])
-        //exclusionSelectTextFieldView.isDisabled = true
-
-        periodLabel.font = AppFont.with(type: .semibold, size: 17)
-        periodLabel.text = localized("period_type_value")
-
-        periodTypeSelectTextFieldView.setSelectionPicker([localized("days"), localized("weeks"), localized("months")])
-
-        periodValueHeaderTextFieldView.setPlaceholderText(localized("period_value"))
-
-        periodValueHeaderTextFieldView.setKeyboardType(.numberPad)
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
@@ -394,118 +335,6 @@ class ProfileLimitsManagementViewController: UIViewController {
                 self?.isLoading = isLoading
             })
             .store(in: &cancellables)
-
-        exclusionSelectTextFieldView.textPublisher
-            .sink(receiveValue: { [weak self] textOption in
-                if textOption == localized("custom") {
-                    print("SHOW OPTIONS")
-                    self?.shouldShowPeriodOptions = true
-                }
-                else {
-                    self?.shouldShowPeriodOptions = false
-                }
-            })
-            .store(in: &cancellables)
-
-        Publishers.CombineLatest(periodTypeSelectTextFieldView.textPublisher, periodValueHeaderTextFieldView.textPublisher)
-            .sink(receiveValue: { [weak self] periodType, periodValue in
-
-                if let periodTypeSelected = self?.periodTypeSelected {
-
-                    if periodType != periodTypeSelected {
-                        self?.periodValueHeaderTextFieldView.setText("1")
-                        self?.periodTypeSelected = periodType
-                        return
-                    }
-                }
-                else {
-                    self?.periodTypeSelected = periodType
-                    self?.periodValueHeaderTextFieldView.setText("1")
-                }
-
-                if let periodNumber = Int(periodValue ?? "") {
-
-                    if periodType == localized("days") {
-                        if periodNumber > 0 && periodNumber <= 365 {
-
-                            self?.isValidPeriodValue.send(true)
-                        }
-                        else if periodNumber <= 0 {
-                            self?.periodValueHeaderTextFieldView.setText("1")
-                            self?.showPeriodError(periodValueTypeError: .lowValue, periodValue: "1")
-                        }
-                        else if periodNumber > 365 {
-                            self?.periodValueHeaderTextFieldView.setText("365")
-                            self?.showPeriodError(periodValueTypeError: .highValue, periodValue: "365")
-                        }
-
-                    }
-                    else if periodType == localized("weeks") {
-
-                        if periodNumber > 0 && periodNumber <= 52 {
-
-                            self?.isValidPeriodValue.send(true)
-
-                        }
-                        else if periodNumber <= 0 {
-                            self?.periodValueHeaderTextFieldView.setText("1")
-                            self?.showPeriodError(periodValueTypeError: .lowValue, periodValue: "1")
-                        }
-                        else if periodNumber > 52 {
-                            self?.periodValueHeaderTextFieldView.setText("52")
-                            self?.showPeriodError(periodValueTypeError: .highValue, periodValue: "52")
-                        }
-                    }
-                    else if periodType == localized("months") {
-                        if periodNumber > 0 && periodNumber <= 12 {
-
-                            self?.isValidPeriodValue.send(true)
-
-                        }
-                        else if periodNumber <= 0 {
-                            self?.periodValueHeaderTextFieldView.setText("1")
-                            self?.showPeriodError(periodValueTypeError: .lowValue, periodValue: "1")
-                        }
-                        else if periodNumber > 12 {
-                            self?.periodValueHeaderTextFieldView.setText("12")
-                            self?.showPeriodError(periodValueTypeError: .highValue, periodValue: "12")
-                        }
-                    }
-                }
-            })
-            .store(in: &cancellables)
-
-        self.viewModel.isLockedPlayer
-            .sink(receiveValue: { [weak self] isLocked in
-                if isLocked {
-                    //self?.navigationController?.popToRootViewController(animated: true)
-                    self?.dismiss(animated: true)
-                }
-            })
-            .store(in: &cancellables)
-
-    }
-
-    private func showPeriodError(periodValueTypeError: PeriodValueTypeError, periodValue: String) {
-
-        var message = ""
-
-        switch periodValueTypeError {
-        case .lowValue:
-            message = "Value cannot be lower than \(periodValue)"
-        case .highValue:
-            message = "Value cannot be higher than \(periodValue)"
-        }
-
-        let periodAlert = UIAlertController(title: localized("invalid_period_value"),
-                                                 message: message,
-                                                 preferredStyle: UIAlertController.Style.alert)
-
-        periodAlert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
-            periodAlert.dismiss(animated: true)
-        }))
-
-        self.present(periodAlert, animated: true, completion: nil)
 
     }
 
@@ -747,18 +576,6 @@ class ProfileLimitsManagementViewController: UIViewController {
 
             updatedLimits = true
 
-        }
-
-        if self.exclusionSelectTextFieldView.textPublisher.value != localized("not_excluded") {
-            print("LOCK PLAYER!")
-
-            let isPermanent = self.exclusionSelectTextFieldView.textPublisher.value == localized("permanent") ? true : false
-
-            let lockPeriodUnit = self.periodTypeSelected ?? ""
-
-            let lockPeriod = self.periodValueHeaderTextFieldView.text
-
-            self.viewModel.lockPlayer(isPermanent: isPermanent, lockPeriodUnit: lockPeriodUnit, lockPeriod: lockPeriod)
         }
 
         if !updatedLimits {

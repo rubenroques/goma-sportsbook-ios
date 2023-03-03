@@ -116,6 +116,18 @@ extension UIColor {
             return UIColor(named: "gameHeader") ?? Self.backgroundSecondary
         }
 
+        static var separatorLineHighlightPrimary: UIColor {
+            return UIColor(named: "separatorLineHighlightPrimary") ?? Self.separatorLine
+        }
+
+        static var separatorLineHighlightSecondary: UIColor {
+            return UIColor(named: "separatorLineHighlightSecondary") ?? Self.separatorLine
+        }
+
+        static var separatorLineSecondary: UIColor {
+            return UIColor(named: "separatorLineSecondary") ?? Self.separatorLine
+        }
+
     }
 
 }

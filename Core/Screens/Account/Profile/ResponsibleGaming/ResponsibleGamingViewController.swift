@@ -1,13 +1,13 @@
 //
-//  MyAccountViewController.swift
+//  ResponsibleGamingViewController.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 22/03/2022.
+//  Created by André Lascas on 01/03/2023.
 //
 
 import UIKit
 
-class MyAccountViewController: UIViewController {
+class ResponsibleGamingViewController: UIViewController {
 
     // MARK: Private Properties
     private lazy var topView: UIView = Self.createTopView()
@@ -24,6 +24,7 @@ class MyAccountViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -51,68 +52,90 @@ class MyAccountViewController: UIViewController {
     }
 
     // MARK: Functions
-
     private func setupStackView() {
-        let personalInfoView = NavigationCardView()
-        personalInfoView.setupView(title: localized("personal_info"), iconTitle: "card_id_profile_icon")
-        let personalInfoTap = UITapGestureRecognizer(target: self, action: #selector(didTapPersonalInfo(sender:)))
-        personalInfoView.addGestureRecognizer(personalInfoTap)
+        let casualGamblingView = NavigationCardView()
+        casualGamblingView.setupView(title: localized("casual_vs_pathologic_gambling"), iconTitle: "casual_gambling_icon")
+        let casualGamblingTap = UITapGestureRecognizer(target: self, action: #selector(didTapCasualGambling(sender:)))
+        casualGamblingView.addGestureRecognizer(casualGamblingTap)
 
-        let accountSecurityView = NavigationCardView()
-        accountSecurityView.setupView(title: localized("account_security"), iconTitle: "password_profile_icon")
-        let accountSecurityTap = UITapGestureRecognizer(target: self, action: #selector(didTapAccountSecurity(sender:)))
-        accountSecurityView.addGestureRecognizer(accountSecurityTap)
+        let tipsControlView = NavigationCardView()
+        tipsControlView.setupView(title: localized("tips_keep_control"), iconTitle: "responsible_gaming_icon")
+        let tipsControlTap = UITapGestureRecognizer(target: self, action: #selector(didTapTipsControl(sender:)))
+        tipsControlView.addGestureRecognizer(tipsControlTap)
 
-        let documentsView = NavigationCardView()
-        documentsView.setupView(title: localized("documents"), iconTitle: "documents_profile_icon")
-        let documentsTap = UITapGestureRecognizer(target: self, action: #selector(didTapDocuments(sender:)))
-        documentsView.addGestureRecognizer(documentsTap)
+        let limitsView = NavigationCardView()
+        limitsView.setupView(title: localized("limits_management"), iconTitle: "limits_profile_icon")
+        let limitsTap = UITapGestureRecognizer(target: self, action: #selector(didTapLimits(sender:)))
+        limitsView.addGestureRecognizer(limitsTap)
 
-        self.stackView.addArrangedSubview(personalInfoView)
-        self.stackView.addArrangedSubview(accountSecurityView)
-        self.stackView.addArrangedSubview(documentsView)
+        let selfExclusionView = NavigationCardView()
+        selfExclusionView.setupView(title: localized("self_exclusion"), iconTitle: "self_exclusion_icon")
+        let selfExclusionTap = UITapGestureRecognizer(target: self, action: #selector(didTapSelfExclusion(sender:)))
+        selfExclusionView.addGestureRecognizer(selfExclusionTap)
+
+        let closeAccountView = NavigationCardView()
+        closeAccountView.setupView(title: localized("close_account"), iconTitle: "close_account_icon")
+        let closeAccountTap = UITapGestureRecognizer(target: self, action: #selector(didTapCloseAccount(sender:)))
+        closeAccountView.addGestureRecognizer(closeAccountTap)
+
+        self.stackView.addArrangedSubview(casualGamblingView)
+        self.stackView.addArrangedSubview(tipsControlView)
+        self.stackView.addArrangedSubview(limitsView)
+        self.stackView.addArrangedSubview(selfExclusionView)
+        self.stackView.addArrangedSubview(closeAccountView)
 
     }
-
 }
 
 //
 // MARK: - Actions
 //
-extension MyAccountViewController {
+extension ResponsibleGamingViewController {
     @objc private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
     }
 
-    @objc private func didTapPersonalInfo(sender: UITapGestureRecognizer) {
-        let userSession = UserSessionStore.loggedUserSession()
+    @objc private func didTapCasualGambling(sender: UITapGestureRecognizer) {
+        let casualGamblingViewController = CasualGamblingViewController()
 
-        let personalInfoViewController = PersonalInfoViewController(userSession: userSession)
-        self.navigationController?.pushViewController(personalInfoViewController, animated: true)
+        self.navigationController?.pushViewController(casualGamblingViewController, animated: true)
     }
 
-    @objc private func didTapAccountSecurity(sender: UITapGestureRecognizer) {
+    @objc private func didTapTipsControl(sender: UITapGestureRecognizer) {
 
-        let passwordViewController = PasswordUpdateViewController()
-        self.navigationController?.pushViewController(passwordViewController, animated: true)
-    }
+        let tipsControlViewController = TipsControlViewController()
 
-    @objc private func didTapDocuments(sender: UITapGestureRecognizer) {
-
-        let uploadDocumentsViewModel = UploadDocumentsViewModel()
-
-        let uploadDocumentsViewController = UploadDocumentsViewController(viewModel: uploadDocumentsViewModel)
-
-        self.present(uploadDocumentsViewController, animated: true)
+        self.navigationController?.pushViewController(tipsControlViewController, animated: true)
 
     }
-    
+
+    @objc private func didTapLimits(sender: UITapGestureRecognizer) {
+        let profileLimitsManagementViewController = ProfileLimitsManagementViewController()
+
+        self.navigationController?.pushViewController(profileLimitsManagementViewController, animated: true)
+    }
+
+    @objc private func didTapSelfExclusion(sender: UITapGestureRecognizer) {
+
+        let selfExclusionViewModel = SelfExclusionViewModel()
+
+        let selfExclusionViewController = SelfExclusionViewController(viewModel: selfExclusionViewModel)
+
+        self.navigationController?.pushViewController(selfExclusionViewController, animated: true)
+
+    }
+
+    @objc private func didTapCloseAccount(sender: UITapGestureRecognizer) {
+
+        print("CLOSE ACCOUNT")
+
+    }
 }
 
 //
 // MARK: Subviews initialization and setup
 //
-extension MyAccountViewController {
+extension ResponsibleGamingViewController {
 
     private static func createTopView() -> UIView {
         let view = UIView()
@@ -132,8 +155,8 @@ extension MyAccountViewController {
     private static func createTopTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("my_account")
-        label.font = AppFont.with(type: .bold, size: 17)
+        label.text = localized("responsible_gaming")
+        label.font = AppFont.with(type: .bold, size: 20)
         label.textAlignment = .center
         return label
     }

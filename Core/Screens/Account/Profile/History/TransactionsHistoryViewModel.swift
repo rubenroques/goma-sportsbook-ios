@@ -143,10 +143,11 @@ class TransactionsHistoryViewModel {
 
         if withUserWalletRefresh {
             Env.userSessionStore.refreshUserWallet()
-            self.allPage = 1
-            self.depositPage = 1
-            self.withdrawPage = 1
         }
+
+        self.allPage = 1
+        self.depositPage = 1
+        self.withdrawPage = 1
 
         self.transactionsHasNextPage = true
         self.calculateDate(filterApplied: filterApplied)
@@ -562,13 +563,12 @@ class TransactionsHistoryViewModel {
             withdrawPage += 1
             self.loadWithdraws(page: withdrawPage, isNextPage: true)
         }
-        //self.fetchNextPage()
     }
 
     private func getDateString(date: Date) -> String {
         self.dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
 
-        var dateString = self.dateFormatter.string(from: date).appending("Z")
+        let dateString = self.dateFormatter.string(from: date).appending("Z")
 
         return dateString
     }

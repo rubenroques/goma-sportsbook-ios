@@ -349,7 +349,7 @@ class WithdrawViewController: UIViewController {
             errorTitle = localized("withdraw_error")
             errorMessage = localized("withdraw_error_message")
         case .error(let message):
-            errorTitle = "Withdraw Error"
+            errorTitle = localized("withdrawal_error")
             errorMessage = message
         default:
             ()
@@ -364,8 +364,8 @@ class WithdrawViewController: UIViewController {
 
     private func showAlert() {
 
-        let alert = UIAlertController(title: "Withdrawal Status",
-                                      message: "Your withdrawal request was added. In the next days the request will be processed and you'll receive an update.",
+        let alert = UIAlertController(title: localized("withdrawal_status"),
+                                      message: localized("withdrawal_status_message"),
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
 
