@@ -248,8 +248,9 @@ class MatchDetailsViewController: UIViewController {
     
     private var isLiveFieldReady: Bool = false {
         didSet {
-            if isLiveFieldReady {
+            if self.isLiveFieldReady {
                 self.matchFieldLoadingView.stopAnimating()
+                self.expandLiveFieldIfNeeded()
             }
             else {
                 self.matchFieldLoadingView.startAnimating()
@@ -327,7 +328,7 @@ class MatchDetailsViewController: UIViewController {
         self.shareButton.setTitle("", for: .normal)
         self.shareButton.setImage(UIImage(named: "more_options_icon"), for: .normal)
         
-        self.headerCompetitionLabel.text = localized("empty_value")
+        self.headerCompetitionLabel.text = ""
         self.headerCompetitionLabel.font = AppFont.with(type: .semibold, size: 11)
         
         self.headerCompetitionImageView.image = nil
@@ -354,7 +355,12 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailLiveBottomLabel.text = localized("match_start_label_default")
         self.headerDetailLiveBottomLabel.font = AppFont.with(type: .semibold, size: 12)
         self.headerDetailLiveBottomLabel.numberOfLines = 0
-        
+
+        self.homeRedCardImage.isHidden = true
+        self.awayRedCardImage.isHidden = true
+        self.homeRedCardLabel.isHidden = true
+        self.awayRedCardsLabel.isHidden = true
+
         // Default to Pre Live
         self.headerDetailLiveView.isHidden = true
         self.headerDetailPreliveView.isHidden = false
@@ -698,7 +704,7 @@ class MatchDetailsViewController: UIViewController {
                 }
                else {
                     self?.homeRedCardImage.isHidden = true
-                   self?.homeRedCardLabel.isHidden = true
+                    self?.homeRedCardLabel.isHidden = true
                 }
             })
             .store(in: &cancellables)
@@ -771,10 +777,13 @@ class MatchDetailsViewController: UIViewController {
         
         for marketGroup in marketGroups {
             if let groupKey = marketGroup.groupKey {
+
                 let viewModel = MarketGroupDetailsViewModel(match: match, marketGroupId: groupKey)
+
                 if let groupMarkets = marketGroup.markets {
                     viewModel.availableMarkets = groupMarkets
                 }
+
                 let marketGroupDetailsViewController = MarketGroupDetailsViewController(viewModel: viewModel)
 
                 marketGroupDetailsViewController.shouldScrollToTop = { [weak self] scrollTop in
@@ -881,71 +890,17 @@ class MatchDetailsViewController: UIViewController {
         if let fieldWidget = self.viewModel.fieldWidgetRenderDataType {
             self.shouldShowLiveFieldWebView = true
             self.isLiveFieldReady = false
-
             switch fieldWidget {
             case .url(let url):
-
                 let urlRequest = URLRequest(url: url)
                 self.matchFieldWebView.load(urlRequest)
-
             case .htmlString(let url, let htmlString):
-
                 self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
-
             }
-
         }
         else {
             self.shouldShowLiveFieldWebView = false
         }
-
-//        if self.viewModel.matchModePublisher.value == .live && self.isValidStatsSport {
-//
-//            if let fieldWidget = self.viewModel.fieldWidgetRenderDataType {
-//                self.shouldShowLiveFieldWebView = true
-//                self.isLiveFieldReady = false
-//
-//                switch fieldWidget {
-//                case .url(let url):
-//
-//                    let urlRequest = URLRequest(url: url)
-//                    self.matchFieldWebView.load(urlRequest)
-//
-//                case .htmlString(let url, let htmlString):
-//
-//                    self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
-//
-//                }
-//
-//            }
-//            else {
-//                self.shouldShowLiveFieldWebView = false
-//            }
-//
-//        }
-//        else if self.viewModel.matchModePublisher.value == .preLive {
-//
-//            if let fieldWidget = self.viewModel.fieldWidgetRenderDataType {
-//                self.shouldShowLiveFieldWebView = true
-//                self.isLiveFieldReady = false
-//
-//                switch fieldWidget {
-//                case .url(let url):
-//
-//                    let urlRequest = URLRequest(url: url)
-//                    self.matchFieldWebView.load(urlRequest)
-//
-//                case .htmlString(let url, let htmlString):
-//
-//                    self.matchFieldWebView.loadHTMLString(htmlString, baseURL: url)
-//
-//                }
-//
-//            }
-//            else {
-//                self.shouldShowLiveFieldWebView = false
-//            }
-//        }
 
     }
     
@@ -999,6 +954,12 @@ class MatchDetailsViewController: UIViewController {
         }
         else if matchPart.isNotEmpty {
             self.headerDetailLiveBottomLabel.text = "\(matchPart)"
+        }
+    }
+
+    func expandLiveFieldIfNeeded() {
+        if self.viewModel.isLiveMatch {
+            self.headerBarSelection = .live
         }
     }
 
@@ -1275,7 +1236,6 @@ extension MatchDetailsViewController: UIPageViewControllerDelegate, UIPageViewCo
             self.selectMarketType(atIndex: 0)
         }
     }
-    
 }
 
 extension MatchDetailsViewController: WKNavigationDelegate {
@@ -1291,7 +1251,6 @@ extension MatchDetailsViewController: WKNavigationDelegate {
                 }
             })
         }
-
     }
     
     private func redrawWebView(withHeight heigth: CGFloat) {
@@ -1300,10 +1259,8 @@ extension MatchDetailsViewController: WKNavigationDelegate {
         }
         else {
             self.matchFielHeight = heigth
-
             self.isLiveFieldReady = true
         }
-
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {

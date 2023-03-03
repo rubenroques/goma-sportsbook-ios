@@ -432,10 +432,10 @@ class PreLiveEventsViewModel: NSObject {
         // self.isLoadingPopularList.send(true)
         self.isLoadingEvents.send(true)
 
-        let sport = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
 
         self.popularMatchesPublisher?.cancel()
-        self.popularMatchesPublisher = Env.servicesProvider.subscribePreLiveMatches(forSportType: sport, sortType: .popular)
+        self.popularMatchesPublisher = Env.servicesProvider.subscribePreLiveMatches(forSportType: sportType, sortType: .popular)
             .sink(receiveCompletion: { [weak self] completion in
                 print("Prelive subscribePopularMatches completed \(completion)")
                 switch completion {
@@ -491,11 +491,11 @@ class PreLiveEventsViewModel: NSObject {
 
         self.isLoadingEvents.send(true)
 
-        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
+        let selectedSportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
         let datesFilter = Env.servicesProvider.getDatesFilter(timeRange: timeRange)
 
         self.todayMatchesPublisher?.cancel()
-        self.todayMatchesPublisher = Env.servicesProvider.subscribePreLiveMatches(forSportType: sportType,
+        self.todayMatchesPublisher = Env.servicesProvider.subscribePreLiveMatches(forSportType: selectedSportType,
                                                                                   initialDate: datesFilter[safe: 0],
                                                                                   endDate: datesFilter[safe: 1],
                                                                                   sortType: .date)
@@ -518,7 +518,6 @@ class PreLiveEventsViewModel: NSObject {
                     guard let self = self else { return }
 
                     let splittedEventGroups = self.splitEventsGroups(eventsGroups)
-
                     self.todayOutrightCompetitions = ServiceProviderModelMapper.competitions(fromEventsGroups: splittedEventGroups.competitionsEventGroups)
 
                     let todayMatches = ServiceProviderModelMapper.matches(fromEventsGroups: splittedEventGroups.matchesEventGroups)

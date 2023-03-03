@@ -16,10 +16,11 @@ protocol SportRadarConnectorSubscriber: AnyObject {
     func liveSportsUpdated(withSportTypes: [SportRadarModels.SportType])
     func preLiveSportsUpdated(withSportTypes: [SportRadarModels.SportType])
 
-    func eventDetailsUpdated(events: [EventsGroup])
+    func eventDetailsUpdated(forContentIdentifier identifier: ContentIdentifier, event: Event)
     func eventGroups(forContentIdentifier identifier: ContentIdentifier, withEvents: [EventsGroup])
     func outrightEventGroups(events: [EventsGroup])
-    func eventSummary(events: [EventsGroup])
+
+    func didReceiveGenericUpdate(content: SportRadarModels.ContentContainer)
 }
 
 class SportRadarSocketConnector: NSObject, Connector {
@@ -66,7 +67,14 @@ class SportRadarSocketConnector: NSObject, Connector {
         
         // TODO: ipAddress is empty, and language is hardcoded
         let body = """
-                   {"subscriberId":null,"versionList":[],"clientContext":{"language":"\(SportRadarConstants.socketLanguageCode)","ipAddress":""}}
+                   {
+                     "subscriberId":null,
+                     "versionList":[],
+                     "clientContext":{
+                       "language":"\(SportRadarConstants.socketLanguageCode)",
+                       "ipAddress":""
+                     }
+                   }
                    """
         
         self.socket.write(string: body) {
@@ -115,7 +123,7 @@ extension SportRadarSocketConnector: WebSocketDelegate {
             self.refreshConnection()
             print("ServiceProvider - SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
-            // print("ServiceProvider - SportRadarSocketConnector websocket recieved text: \(string)")
+            // print("ServiceProvider - SportRadarSocketConnector websocket recieved text: \n \(string) \n\n ------------- ")
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)
@@ -156,51 +164,53 @@ extension SportRadarSocketConnector: WebSocketDelegate {
             self.tokenSubject.send(SportRadarSessionAccessToken(hash: sessionTokenId))
             self.connectionStateSubject.send(.connected)
 
-        case .contentChanges(let content):
-            switch content {
-            case .liveEvents(let contentIdentifier, let events):
-                if let subscriber = self.messageSubscriber {
-                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-                    subscriber.liveEventsUpdated(forContentIdentifier: contentIdentifier, withEvents: [eventsGroup])
-                }
-            case .preLiveEvents(let contentIdentifier, let events):
-                if let subscriber = self.messageSubscriber {
-                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-                    subscriber.preLiveEventsUpdated(forContentIdentifier: contentIdentifier, withEvents: [eventsGroup])
-                }
+        case .contentChanges(let contents):
+            for content in contents {
+                switch content {
+                case .liveEvents(let contentIdentifier, let events):
+                    if let subscriber = self.messageSubscriber {
+                        let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
+                        subscriber.liveEventsUpdated(forContentIdentifier: contentIdentifier, withEvents: [eventsGroup])
+                    }
+                case .preLiveEvents(let contentIdentifier, let events):
+                    if let subscriber = self.messageSubscriber {
+                        let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
+                        subscriber.preLiveEventsUpdated(forContentIdentifier: contentIdentifier, withEvents: [eventsGroup])
+                    }
 
-            case .liveSports(let sportsTypes):
-                if let subscriber = self.messageSubscriber {
-                    subscriber.liveSportsUpdated(withSportTypes: sportsTypes)
-                }
-            case .preLiveSports(let sportsTypes):
-                if let subscriber = self.messageSubscriber {
-                    subscriber.preLiveSportsUpdated(withSportTypes: sportsTypes)
-                }
+                case .liveSports(let sportsTypes):
+                    if let subscriber = self.messageSubscriber {
+                        subscriber.liveSportsUpdated(withSportTypes: sportsTypes)
+                    }
+                case .preLiveSports(let sportsTypes):
+                    if let subscriber = self.messageSubscriber {
+                        subscriber.preLiveSportsUpdated(withSportTypes: sportsTypes)
+                    }
 
-            case .eventDetails(let events):
-                if let subscriber = self.messageSubscriber {
-                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-                    subscriber.eventDetailsUpdated(events: [eventsGroup])
-                }
-            case .eventGroup(let contentIdentifier, let events):
-                if let subscriber = self.messageSubscriber {
-                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-                    subscriber.eventGroups(forContentIdentifier: contentIdentifier, withEvents: [eventsGroup])
-                }
-            case .outrightEventGroup(let events):
-                if let subscriber = self.messageSubscriber {
-                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-                    subscriber.outrightEventGroups(events: [eventsGroup])
-                }
-            case .eventSummary(let events):
-                if let subscriber = self.messageSubscriber {
-                    let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-                    subscriber.eventSummary(events: [eventsGroup])
+                case .eventDetails(let contentIdentifier, let event):
+                    if let subscriber = self.messageSubscriber, let eventValue = event {
+                        let mappedEvent = SportRadarModelMapper.event(fromInternalEvent: eventValue)
+                        subscriber.eventDetailsUpdated(forContentIdentifier: contentIdentifier, event: mappedEvent)
+                    }
+                case .eventGroup(let contentIdentifier, let events):
+                    if let subscriber = self.messageSubscriber {
+                        let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
+                        subscriber.eventGroups(forContentIdentifier: contentIdentifier, withEvents: [eventsGroup])
+                    }
+                case .outrightEventGroup(let events):
+                    if let subscriber = self.messageSubscriber {
+                        let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
+                        subscriber.outrightEventGroups(events: [eventsGroup])
+                    }
+                default:
+                    if let subscriber = self.messageSubscriber {
+                        subscriber.didReceiveGenericUpdate(content: content)
+                    }
                 }
             }
         case .unknown:
-            print("Uknown Response")
+            ()
+            print("Uknown Response \( String(data: messageData, encoding: .utf8) ?? "" )")
         }
         
     }

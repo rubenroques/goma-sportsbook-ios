@@ -369,7 +369,7 @@ extension FloatingShortcutsView {
         chatCountLabel.textAlignment = .center
         chatCountLabel.clipsToBounds = true
         chatCountLabel.layer.masksToBounds = true
-        chatCountLabel.text = localized("empty_value")
+        chatCountLabel.text = ""
         return chatCountLabel
     }
 

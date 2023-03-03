@@ -191,9 +191,9 @@ class SelectChatroomTableViewCell: UITableViewCell {
 
         self.isCheckboxSelected = false
 
-        self.titleLabel.text = localized("empty_value")
+        self.titleLabel.text = ""
 
-        self.subtitleLabel.text = localized("empty_value")
+        self.subtitleLabel.text = ""
 
         self.isOnline = false
 

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  MarketFilter.swift
 //  
 //
 //  Created by André Lascas on 02/11/2022.
@@ -7,22 +7,38 @@
 
 import Foundation
 
+public struct DynamicCodingKeys: CodingKey {
+
+    // Use for string-keyed dictionary
+    public var stringValue: String
+
+    public init?(stringValue: String) {
+        self.stringValue = stringValue
+    }
+
+    // Use for integer-keyed dictionary
+    public var intValue: Int?
+
+    public init?(intValue: Int) {
+        return nil
+    }
+}
+
 public struct MarketFilter: Codable {
-    public var allMarkets: MarketInfo
-    public var popularMarkets: MarketInfo
-    public var totalMarkets: MarketInfo
-    public var goalMarkets: MarketInfo
-    public var handicapMarkets: MarketInfo
-    public var otherMarkets: MarketInfo
 
-    enum CodingKeys: String, CodingKey {
-        case allMarkets = "All Markets"
-        case popularMarkets = "Popular Markets"
-        case totalMarkets = "Totals"
-        case goalMarkets = "Goal Markets"
-        case handicapMarkets = "Handicap Markets"
-        case otherMarkets = "Other Markets"
+    public var marketFilters: [MarketInfo]
 
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: DynamicCodingKeys.self)
+
+        var tempArray = [MarketInfo]()
+
+        for key in container.allKeys {
+            let decodedObject = try container.decode(MarketInfo.self, forKey: DynamicCodingKeys(stringValue: key.stringValue)!)
+            tempArray.append(decodedObject)
+        }
+
+        self.marketFilters = tempArray
     }
 }
 
@@ -41,7 +57,7 @@ public struct MarketInfo: Codable {
 public struct TranslationInfo: Codable {
     public var english: String
     public var spanish: String
-    public var chinese: String
+    public var chinese: String?
 
     enum CodingKeys: String, CodingKey {
         case english = "UK"
@@ -52,10 +68,21 @@ public struct TranslationInfo: Codable {
 }
 
 public struct MarketSportType: Codable {
-    public var all: [MarketSport]
 
-    enum CodingKeys: String, CodingKey {
-        case all = "ALL"
+    public var marketSports: [String: [MarketSport]]
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: DynamicCodingKeys.self)
+
+        var tempArray = [String: [MarketSport]]()
+
+        for key in container.allKeys {
+
+            let decodedObject = try container.decode([MarketSport].self, forKey: DynamicCodingKeys(stringValue: key.stringValue)!)
+            tempArray[key.stringValue] = decodedObject
+        }
+
+        self.marketSports = tempArray
     }
 }
 

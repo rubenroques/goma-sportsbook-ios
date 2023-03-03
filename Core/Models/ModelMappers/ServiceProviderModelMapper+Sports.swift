@@ -19,19 +19,20 @@ extension ServiceProviderModelMapper {
                           alphaId: sportType.alphaId,
                           numericId: sportType.numericId,
                           showEventCategory: sportType.showEventCategory,
-                          liveEventsCount: sportType.numberEvents)
+                          liveEventsCount: sportType.numberEvents,
+                          outrightEventsCount: sportType.numberOutrightEvents)
         return sport
     }
 
     static func serviceProviderSportType(fromSport sport: Sport) -> ServicesProvider.SportType {
         let serviceProviderSportType = ServicesProvider.SportType(name: sport.name,
-                                                                 numericId: sport.numericId,
-                                                                 alphaId: sport.alphaId,
-                                                                 iconId: sport.id,
-                                                                 showEventCategory: sport.showEventCategory,
-                                                                 numberEvents: sport.liveEventsCount,
-                                                                 numberOutrightEvents: 0,
-                                                                 numberOutrightMarkets: 0)
+                                                                  numericId: sport.numericId,
+                                                                  alphaId: sport.alphaId,
+                                                                  iconId: sport.id,
+                                                                  showEventCategory: sport.showEventCategory,
+                                                                  numberEvents: sport.liveEventsCount,
+                                                                  numberOutrightEvents: sport.outrightEventsCount,
+                                                                  numberOutrightMarkets: 0)
         return serviceProviderSportType
     }
 

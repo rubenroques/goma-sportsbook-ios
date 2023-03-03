@@ -36,6 +36,7 @@ class SportSelectionViewController: UIViewController {
     var selectionDelegate: SportTypeSelectionViewDelegate?
 
     var cancellables = Set<AnyCancellable>()
+    private var sportsSubscription: ServicesProvider.Subscription?
 
     var isLoading: Bool = false {
         didSet {
@@ -172,10 +173,11 @@ class SportSelectionViewController: UIViewController {
             .sink(receiveCompletion: { [weak self] completion in
                 print("Env.servicesProvider.liveSportTypes completed \(completion)")
                 self?.isLoading = false
+                self?.configureWithSports([])
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
                 switch subscribableContent {
-                case .connected:
-                    self?.configureWithSports([])
+                case .connected(subscription: let subscription):
+                    self?.sportsSubscription = subscription
                 case .contentUpdate(let sportTypes):
                     self?.configureWithSports(sportTypes)
                     self?.isLoading = false

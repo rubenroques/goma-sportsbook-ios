@@ -10,35 +10,45 @@ import Combine
 
 protocol EventsProvider {
 
+    //
+    //
     func reconnectIfNeeded()
 
+    //
+    //
     func subscribeLiveMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
-
     func requestLiveMatchesNextPage(forSportType sportType: SportType) -> AnyPublisher<Bool, ServiceProviderError>
 
     //
+    //
     func subscribePreLiveMatches(forSportType sportType: SportType, initialDate: Date?, endDate: Date?,  eventCount: Int?, sortType: EventListSort) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
-
     func requestPreLiveMatchesNextPage(forSportType sportType: SportType, initialDate: Date?, endDate: Date?, sortType: EventListSort) -> AnyPublisher<Bool, ServiceProviderError>
 
+    //
+    //
     func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
 
     //
-    func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
-
+    //
+    func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>
+    func subscribeEventSummary(eventId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
     func subscribeOutrightMarkets(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
 
     //
+    //
     func subscribePreLiveSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
-
     func subscribeLiveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
 
-    func subscribeEventSummary(eventId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>
+    //
+    func subscribeToEventUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError>
+    func subscribeToMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError>
+    func subscribeToOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError>
 
+    //
     //
     func getAvailableSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportType], ServiceProviderError>
 
-    func getMarketsFilter(event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError>
+    func getMarketsFilters(event: Event) -> AnyPublisher<[MarketGroup], Never>
     
     func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError>
     
@@ -55,6 +65,8 @@ protocol EventsProvider {
     func getBanners() -> AnyPublisher<BannerResponse, ServiceProviderError>
 
     func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError>
+
+    //
     // Favorites
     func getFavoritesList() -> AnyPublisher<FavoritesListResponse, ServiceProviderError>
     func addFavoritesList(name: String) -> AnyPublisher<FavoritesListAddResponse, ServiceProviderError>
@@ -63,6 +75,8 @@ protocol EventsProvider {
     func getFavoritesFromList(listId: Int) -> AnyPublisher<FavoriteEventResponse, ServiceProviderError>
     func deleteFavoriteFromList(eventId: Int) -> AnyPublisher<FavoritesListDeleteResponse, ServiceProviderError>
 
+    //
     // Utilities
     func getDatesFilter(timeRange: String) -> [Date]
+
 }

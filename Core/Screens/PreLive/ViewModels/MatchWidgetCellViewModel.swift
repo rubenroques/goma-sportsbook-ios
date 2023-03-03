@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MatchWidgetCellViewModel {
+class MatchWidgetCellViewModel {
 
     var homeTeamName: String
     var awayTeamName: String
@@ -20,6 +20,60 @@ struct MatchWidgetCellViewModel {
     var store: AggregatorStore
     
     var match: Match?
+
+    var isLiveCard: Bool {
+        if let match = self.match {
+            switch match.status {
+            case .notStarted, .unknown:
+                return false
+            case .inProgress(_), .ended:
+                return true
+            }
+        }
+        return false
+    }
+
+    var isLiveMatch: Bool {
+        if let match = self.match {
+            switch match.status {
+            case .notStarted, .ended, .unknown:
+                return false
+            case .inProgress(_):
+                return true
+            }
+        }
+        return false
+    }
+
+    var inProgressStatusString: String? {
+        if let match = self.match {
+            switch match.status {
+            case .ended, .notStarted, .unknown:
+                return nil
+            case .inProgress(let progress):
+                return progress
+            }
+        }
+        return nil
+    }
+
+    var matchScore: String {
+        var homeScore = "0"
+        var awayScore = "0"
+        if let match = self.match, let homeScoreInt = match.homeParticipantScore {
+            homeScore = "\(homeScoreInt)"
+        }
+        if let match = self.match, let awayScoreInt = match.awayParticipantScore {
+            awayScore = "\(awayScoreInt)"
+        }
+        return "\(homeScore) - \(awayScore)"
+    }
+
+    var matchTimeDetails: String? {
+        return [self.match?.matchTime, self.match?.status.description()]
+            .compactMap({ $0 })
+            .joined(separator: " - ")
+    }
 
     init(match: Match, store: AggregatorStore) {
 

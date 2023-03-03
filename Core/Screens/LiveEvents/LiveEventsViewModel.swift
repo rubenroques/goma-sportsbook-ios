@@ -78,8 +78,10 @@ class LiveEventsViewModel: NSObject {
     private var liveMatchesHasMorePages = true
 
     private var cancellables = Set<AnyCancellable>()
-    private var subscriptions = Set<ServicesProvider.Subscription>()
-    
+
+    private var eventsSubscription: ServicesProvider.Subscription?
+    private var sportsSubscription: ServicesProvider.Subscription?
+
     init(selectedSport: Sport) {
 
         self.selectedSport = selectedSport
@@ -108,15 +110,17 @@ class LiveEventsViewModel: NSObject {
 
     func subscribeToLiveSports() {
 
+        self.sportsSubscription = nil
+        
         self.liveSportsCancellable = Env.servicesProvider.subscribeLiveSportTypes()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 print("LiveEventsViewModel subscribeLiveSportTypes completed \(completion)")
+                self?.liveSports = []
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
                 switch subscribableContent {
                 case .connected(let subscription):
-                    self?.subscriptions.insert(subscription)
-                    self?.liveSports = []
+                    self?.sportsSubscription = subscription
                 case .contentUpdate(let sportTypes):
                     let sports = sportTypes.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
                     self?.liveSports = sports
@@ -282,6 +286,8 @@ class LiveEventsViewModel: NSObject {
         self.liveMatchesHasMorePages = true
         self.liveMatchesSubscriber?.cancel()
 
+        self.eventsSubscription = nil
+
         self.isLoadingSubject.send(true)
 
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
@@ -303,7 +309,7 @@ class LiveEventsViewModel: NSObject {
                 switch subscribableContent {
                 case .connected(let subscription):
                     Logger.log("subscribeLiveMatches connected")
-                    self?.subscriptions.insert(subscription)
+                    self?.eventsSubscription = subscription
                 case .contentUpdate(let eventsGroups):
                     Logger.log("subscribeLiveMatches content")
                     self?.liveMatches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)

@@ -21,13 +21,18 @@ public enum EventType: String {
     case competition
 }
 
-public struct Event: Codable {
+public class Event: Codable {
 
     public var id: String
     public var homeTeamName: String
     public var awayTeamName: String
     public var sportTypeName: String
-    
+
+    public var homeTeamScore: Int?
+    public var awayTeamScore: Int?
+
+    public var sportTypeCode: String?
+
     public var competitionId: String
     public var competitionName: String
     public var startDate: Date
@@ -39,6 +44,10 @@ public struct Event: Codable {
 
     public var name: String?
 
+    public var status: Status?
+
+    public var matchTime: String?
+
     public var type: EventType {
         if self.homeTeamName.isEmpty && self.awayTeamName.isEmpty {
             return .competition
@@ -47,6 +56,22 @@ public struct Event: Codable {
             return .match
         }
     }
+
+    public enum Status {
+        case unknown
+        case notStarted
+        case inProgress(String)
+        case ended
+
+        public init(value: String) {
+            switch value {
+            case "not_started": self = .notStarted
+            case "ended": self = .ended
+            default: self = .inProgress(value)
+            }
+        }
+    }
+
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -59,12 +84,33 @@ public struct Event: Codable {
         case markets = "markets"
         case venueCountry = "venueCountry"
         case numberMarkets = "numMarkets"
+        case sportTypeCode = "idfosporttype"
     }
 
-    public init(id: String, homeTeamName: String, awayTeamName: String, sportTypeName: String, competitionId: String, competitionName: String, startDate: Date, markets: [Market], venueCountry: Country? = nil, numberMarkets: Int? = nil, name: String? = nil) {
+    public init(id: String,
+                homeTeamName: String,
+                awayTeamName: String,
+                homeTeamScore: Int?,
+                awayTeamScore: Int?,
+                sportTypeName: String,
+                competitionId: String,
+                competitionName: String,
+                startDate: Date,
+                markets: [Market],
+                venueCountry: Country? = nil,
+                numberMarkets: Int? = nil,
+                name: String? = nil,
+                status: Status?,
+                matchTime: String?,
+                sportTypeCode: String?) {
+
         self.id = id
         self.homeTeamName = homeTeamName
         self.awayTeamName = awayTeamName
+
+        self.homeTeamScore = homeTeamScore
+        self.awayTeamScore = awayTeamScore
+
         self.sportTypeName = sportTypeName
         self.competitionId = competitionId
         self.competitionName = competitionName
@@ -72,10 +118,15 @@ public struct Event: Codable {
         self.markets = markets
         self.venueCountry = venueCountry
         self.numberMarkets = numberMarkets
+
         self.name = name
+        self.status = status
+        self.matchTime = matchTime
+        
+        self.sportTypeCode = sportTypeCode
     }
 
-    public init(from decoder: Decoder) throws {
+    required public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(String.self, forKey: .id)
         self.homeTeamName = try container.decode(String.self, forKey: .homeTeamName)
@@ -87,11 +138,12 @@ public struct Event: Codable {
         self.markets = try container.decode([Market].self, forKey: .markets)
         self.venueCountry = try container.decodeIfPresent(Country.self, forKey: .venueCountry)
         self.numberMarkets = try container.decodeIfPresent(Int.self, forKey: .numberMarkets)
+        self.sportTypeCode = try container.decodeIfPresent(String.self, forKey: .sportTypeCode)
     }
 
 }
 
-public struct Market: Codable {
+public class Market: Codable {
     
     public var id: String
     public var name: String
@@ -101,7 +153,8 @@ public struct Market: Codable {
     public var eventName: String?
     public var isMainOutright: Bool?
     public var eventMarketCount: Int?
-    
+    public var isTradable: Bool
+
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case name = "name"
@@ -111,11 +164,46 @@ public struct Market: Codable {
         case eventName = "eventName"
         case isMainOutright = "ismainoutright"
         case eventMarketCount = "eventMarketCount"
+        case isTradable = "isTradable"
     }
-    
+
+    public init(id: String,
+                name: String,
+                outcomes: [Outcome],
+                marketTypeId: String?,
+                eventMarketTypeId: String?,
+                eventName: String?,
+                isMainOutright: Bool?,
+                eventMarketCount: Int?,
+                isTradable: Bool) {
+
+        self.id = id
+        self.name = name
+        self.outcomes = outcomes
+        self.marketTypeId = marketTypeId
+        self.eventMarketTypeId = eventMarketTypeId
+        self.eventName = eventName
+        self.isMainOutright = isMainOutright
+        self.eventMarketCount = eventMarketCount
+        self.isTradable = isTradable
+    }
+
+    required public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(String.self, forKey: .id)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.outcomes = try container.decode([Outcome].self, forKey: .outcomes)
+        self.marketTypeId = try container.decodeIfPresent(String.self, forKey: .marketTypeId)
+        self.eventMarketTypeId = try container.decodeIfPresent(String.self, forKey: .eventMarketTypeId)
+        self.eventName = try container.decodeIfPresent(String.self, forKey: .eventName)
+        self.isMainOutright = try container.decodeIfPresent(Bool.self, forKey: .isMainOutright)
+        self.eventMarketCount = try container.decodeIfPresent(Int.self, forKey: .eventMarketCount)
+        self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? false
+    }
+
 }
 
-public struct Outcome: Codable {
+public class Outcome: Codable {
     
     public var id: String
     public var name: String
@@ -123,7 +211,8 @@ public struct Outcome: Codable {
     public var marketId: String?
     public var orderValue: String?
     public var externalReference: String?
-    
+    public var isTradable: Bool
+
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case name = "name"
@@ -131,8 +220,37 @@ public struct Outcome: Codable {
         case marketId = "marketId"
         case orderValue = "orderValue"
         case externalReference = "externalReference"
+        case isTradable = "isTradable"
     }
-    
+
+    public init(id: String,
+         name: String,
+         odd: OddFormat,
+         marketId: String?,
+         orderValue: String?,
+         externalReference: String?,
+         isTradable: Bool) {
+
+        self.id = id
+        self.name = name
+        self.odd = odd
+        self.marketId = marketId
+        self.orderValue = orderValue
+        self.externalReference = externalReference
+        self.isTradable = isTradable
+    }
+
+    required public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(String.self, forKey: .id)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.odd = try container.decode(OddFormat.self, forKey: .odd)
+        self.marketId = try container.decodeIfPresent(String.self, forKey: .marketId)
+        self.orderValue = try container.decodeIfPresent(String.self, forKey: .orderValue)
+        self.externalReference = try container.decodeIfPresent(String.self, forKey: .externalReference)
+        self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? false
+    }
+
 }
 
 public struct FieldWidget: Codable {
@@ -168,6 +286,7 @@ public struct MarketGroup {
     public var isDefault: Bool?
     public var numberOfMarkets: Int?
     public var markets: [Market]?
+    
 }
 
 public struct FieldWidgetRenderData {

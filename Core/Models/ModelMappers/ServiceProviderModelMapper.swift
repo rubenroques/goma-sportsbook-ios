@@ -19,23 +19,7 @@ extension ServiceProviderModelMapper {
         var matches = [Match]()
         for eventsGroup in eventsGroups {
             for event in eventsGroup.events {
-
-                var venue: Location?
-                if let venueCountry = event.venueCountry {
-                    venue = Location(id: venueCountry.iso2Code, name: venueCountry.name, isoCode: venueCountry.iso2Code)
-                }
-
-                matches.append(Match(id: event.id,
-                                     competitionId: event.competitionId,
-                                     competitionName: event.competitionName,
-                                     homeParticipant: Participant(id: "", name: event.homeTeamName),
-                                     awayParticipant: Participant(id: "", name: event.awayTeamName),
-                                     date: event.startDate,
-                                     sportType: event.sportTypeName,
-                                     venue: venue,
-                                     numberTotalOfMarkets: event.numberMarkets ?? 0,
-                                     markets: Self.markets(fromServiceProviderMarkets: event.markets),
-                                     rootPartId: ""))
+                matches.append(Self.match(fromEvent: event))
             }
         }
         return matches
@@ -43,61 +27,50 @@ extension ServiceProviderModelMapper {
 
     static func match(fromEventGroup eventGroup: EventsGroup) -> Match? {
         if let event = eventGroup.events[safe: 0] {
-
-            var venue: Location?
-            if let venueCountry = event.venueCountry {
-                venue = Location(id: venueCountry.iso2Code, name: venueCountry.name, isoCode: venueCountry.iso2Code)
-            }
-
-            let match = Match(id: event.id,
-                              competitionId: event.competitionId,
-                              competitionName: event.competitionName,
-                              homeParticipant: Participant(id: "", name: event.homeTeamName),
-                              awayParticipant: Participant(id: "", name: event.awayTeamName),
-                              date: event.startDate,
-                              sportType: event.sportTypeName,
-                              venue: venue,
-                              numberTotalOfMarkets: event.numberMarkets ?? 0,
-                              markets: Self.markets(fromServiceProviderMarkets: event.markets),
-                              rootPartId: "")
-            return match
+            return Self.match(fromEvent: event)
         }
-        
         return nil
     }
 
     static func match(fromEvent event: ServicesProvider.Event) -> Match {
 
         var venue: Location?
-
         if let venueCountry = event.venueCountry {
             venue = Location(id: venueCountry.iso2Code, name: venueCountry.name, isoCode: venueCountry.iso2Code)
         }
-
         let match = Match(id: event.id,
                           competitionId: event.competitionId,
                           competitionName: event.competitionName,
                           homeParticipant: Participant(id: "", name: event.homeTeamName),
                           awayParticipant: Participant(id: "", name: event.awayTeamName),
+                          homeParticipantScore: event.homeTeamScore,
+                          awayParticipantScore: event.awayTeamScore,
                           date: event.startDate,
                           sportType: event.sportTypeName,
                           venue: venue,
                           numberTotalOfMarkets: event.numberMarkets ?? 0,
                           markets: Self.markets(fromServiceProviderMarkets: event.markets),
-                          rootPartId: "")
+                          rootPartId: "",
+                          status: Self.matchStatus(fromInternalEvent: event.status),
+                          matchTime: event.matchTime)
         return match
-
     }
 
-    static func event(fromEventGroup eventGroup: EventsGroup) -> ServicesProvider.Event? {
-        if let event = eventGroup.events[safe: 0] {
+    static func matchStatus(fromInternalEvent internalEventStatus: ServicesProvider.Event.Status?) -> Match.Status {
+        guard let internalEventStatus else { return Match.Status.notStarted }
 
-            return event
+        switch internalEventStatus {
+        case .unknown:
+            return Match.Status.unknown
+        case .notStarted:
+            return Match.Status.notStarted
+        case .inProgress(let detail):
+            return Match.Status.inProgress(detail)
+        case .ended:
+            return Match.Status.ended
         }
-
-        return nil
     }
-    
+
     // Market
     static func markets(fromServiceProviderMarkets markets: [ServicesProvider.Market]) -> [Market] {
         return markets.map(Self.market(fromServiceProviderMarket:))
@@ -116,7 +89,8 @@ extension ServiceProviderModelMapper {
                       marketTypeId: market.marketTypeId,
                       eventName: market.eventName,
                       isMainOutright: market.isMainOutright,
-                      eventMarketCount: market.eventMarketCount)
+                      eventMarketCount: market.eventMarketCount,
+                      isAvailable: market.isTradable)
     }
 
     static func optionalMarkets(fromServiceProviderMarkets markets: [ServicesProvider.Market]?) -> [Market]? {
@@ -137,7 +111,7 @@ extension ServiceProviderModelMapper {
                                         odd: oddFormat,
                                         statusId: "",
                                         isLive: true,
-                                        isAvailable: true)
+                                        isAvailable: outcome.isTradable)
         
         let outcome = Outcome(id: outcome.id,
                               codeName: outcome.name,

@@ -12,10 +12,6 @@ public protocol UnsubscriptionController: AnyObject {
     func unsubscribe(subscription: Subscription)
 }
 
-//public protocol AnySubscription: Hashable, Identifiable {
-//
-//}
-
 public class Subscription: Hashable, Identifiable {
     
     public var id: String
@@ -23,7 +19,7 @@ public class Subscription: Hashable, Identifiable {
     public var contentIdentifier: ContentIdentifier
     public var sessionToken: String
 
-    private var associatedSubscriptions: [Subscription] = []
+    var associatedSubscriptions: [Subscription] = []
     private weak var unsubscriber: UnsubscriptionController?
 
     init(contentIdentifier: ContentIdentifier, sessionToken: String, unsubscriber: UnsubscriptionController) {
@@ -42,7 +38,7 @@ public class Subscription: Hashable, Identifiable {
     }
     
     deinit {
-        print("ServerProvider.Subscription.Debug dinit \(self.id) \(contentIdentifier.contentType) \(contentIdentifier.contentRoute.fullRoute)")
+        print("ServiceProvider.Subscription.Debug dinit \(self)")
         unsubscriber?.unsubscribe(subscription: self)
     }
 
@@ -66,30 +62,11 @@ public class Subscription: Hashable, Identifiable {
         
 }
 
-public class SubscriptionGroup: Hashable, Identifiable {
 
-    public var id: String
-    private var subscriptions: [Subscription]
-
-    init(id: String) {
-        self.id = id
-        self.subscriptions = []
+extension Subscription: CustomStringConvertible {
+    public var description: String {
+        return "Subscription: \(self.id) \(self.contentIdentifier)"
     }
-
-    deinit {
-        print("ServerProvider.SubscriptionGroup.Debug dinit \(self.id)")
-        print("ServerProvider.SubscriptionGroup.Debug subscription init will be called too")
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(subscriptions)
-        hasher.combine(id)
-    }
-
-    public static func == (lhs: SubscriptionGroup, rhs: SubscriptionGroup) -> Bool {
-        return lhs.id == rhs.id && lhs.subscriptions == rhs.subscriptions
-    }
-
 }
 
 public enum ContentType: String, Codable {
@@ -279,6 +256,12 @@ public class ContentIdentifier: Decodable, Hashable, Equatable, Identifiable {
         return lhs.id == rhs.id && lhs.pageableId == rhs.pageableId
     }
 
+}
+
+extension ContentIdentifier: CustomStringConvertible {
+    public var description: String {
+        return "[\(self.contentType.rawValue)] \(self.contentRoute.fullRoute)"
+    }
 }
 
 struct ContentDateFormatter {

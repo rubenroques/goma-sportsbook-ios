@@ -55,11 +55,23 @@ class MatchDetailsViewModel: NSObject {
     var availableMarkets: [String: [String]] = [:]
     var marketGroups: [MarketGroup] = []
 
+    var isLiveMatch: Bool {
+        if let match = self.match {
+            switch match.status {
+            case .notStarted, .ended, .unknown:
+                return false
+            case .inProgress(_):
+                return true
+            }
+        }
+        return false
+    }
+
     private var statsJSON: JSON?
     let matchStatsViewModel: MatchStatsViewModel
 
     private var cancellables = Set<AnyCancellable>()
-    private var subscriptions = Set<ServicesProvider.Subscription>()
+    private var subscription: ServicesProvider.Subscription?
 
     init(matchMode: MatchMode = .preLive, match: Match) {
         self.matchId = match.id
@@ -135,42 +147,29 @@ class MatchDetailsViewModel: NSObject {
                     self?.matchPublisher.send(.failed)
                     self?.marketGroupsState.send(.failed)
                 }
-            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
+            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<ServicesProvider.Event>) in
                 switch subscribableContent {
                 case .connected(let subscription):
-                    self?.subscriptions.insert(subscription)
-                case .contentUpdate(let events):
+                    self?.subscription = subscription
+                case .contentUpdate(let serviceProviderEvent):
                     guard let self = self else { return }
 
-                    if self.match == nil {
-                        if let eventGroup = events[safe: 0],
-                           let match = ServiceProviderModelMapper.match(fromEventGroup: eventGroup) {
-                            self.matchPublisher.send(.loaded(match))
+                    let match = ServiceProviderModelMapper.match(fromEvent: serviceProviderEvent)
+                    self.matchPublisher.send(.loaded(match))
 
-                            if self.marketGroups.isEmpty {
-
-                                if let eventMapped = ServiceProviderModelMapper.event(fromEventGroup: eventGroup) {
-
-                                    self.getMarketGroups(event: eventMapped)
-                                }
-                            }
-                            else {
-                                let marketGroups = self.marketGroups
-
-                                self.marketGroupsState.send(.loaded(marketGroups))
-                            }
-                        }
-                        else {
-                            self.matchPublisher.send(.failed)
-                            self.marketGroupsState.send(.failed)
-                        }
+                    if self.marketGroups.isEmpty {
+                        self.getMarketGroups(event: serviceProviderEvent)
                     }
+                    else {
+                        let marketGroups = self.marketGroups
+                        self.marketGroupsState.send(.loaded(marketGroups))
+                    }
+
                 case .disconnected:
                     print("Disconnected from ws")
                 }
             })
             .store(in: &cancellables)
-
     }
 
     //
@@ -179,7 +178,7 @@ class MatchDetailsViewModel: NSObject {
 
         self.marketGroupsState.send(.loading)
 
-        Env.servicesProvider.getMarketFilters(event: event)
+        Env.servicesProvider.getMarketsFilters(event: event)
             .map(self.convertMarketGroups(_:))
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -193,7 +192,7 @@ class MatchDetailsViewModel: NSObject {
             .store(in: &cancellables)
     }
 
-    private func convertMarketGroups(_ marketGroups: [ServicesProvider.MarketGroup]) -> [MarketGroup]{
+    private func convertMarketGroups(_ marketGroups: [ServicesProvider.MarketGroup]) -> [MarketGroup] {
         let marketGroups = marketGroups.map { rawMarketGroup in
             MarketGroup(id: rawMarketGroup.id,
                         type: rawMarketGroup.type,

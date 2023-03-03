@@ -41,8 +41,8 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         self.upChangeOddValueImage.alpha = 0.0
         self.downChangeOddValueImage.alpha = 0.0
 
-        self.marketTypeLabel.text = localized("empty_value")
-        self.marketOddLabel.text = localized("empty_value")
+        self.marketTypeLabel.text = ""
+        self.marketOddLabel.text = ""
 
         let tapOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapOddButton))
         self.containerView.addGestureRecognizer(tapOddButton)
@@ -56,8 +56,8 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        self.marketTypeLabel.text = localized("empty_value")
-        self.marketOddLabel.text = localized("empty_value")
+        self.marketTypeLabel.text = ""
+        self.marketOddLabel.text = ""
 
         self.match = nil
         self.market = nil
@@ -194,7 +194,7 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         else {
             self.isUserInteractionEnabled = false
             self.containerView.alpha = 0.4
-            self.marketOddLabel.text = localized("empty")
+            self.marketOddLabel.text = "-"
         }
 
     }

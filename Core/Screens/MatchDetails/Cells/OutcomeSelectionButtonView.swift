@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import ServicesProvider
 
 class OutcomeSelectionButtonView: NibView {
 
@@ -29,8 +30,6 @@ class OutcomeSelectionButtonView: NibView {
     var oddValue: Double?
     var isAvailableForBet: Bool?
 
-    var debouncerSubscription: Debouncer?
-
     var didLongPressOdd: ((BettingTicket) -> Void)?
 
     private var isOutcomeButtonSelected: Bool = false {
@@ -40,8 +39,7 @@ class OutcomeSelectionButtonView: NibView {
     }
 
     private var oddUpdatesPublisher: AnyCancellable?
-    private var oddUpdatesRegister: EndpointPublisherIdentifiable?
-    
+
     convenience init() {
         self.init(frame: .zero)
     }
@@ -58,8 +56,6 @@ class OutcomeSelectionButtonView: NibView {
 
     override func commonInit() {
 
-        self.debouncerSubscription = Debouncer(timeInterval: 1, clearHandler: true)
-
         self.translatesAutoresizingMaskIntoConstraints = false
 
         self.backgroundColor = .clear
@@ -67,8 +63,8 @@ class OutcomeSelectionButtonView: NibView {
         self.upChangeOddValueImage.alpha = 0.0
         self.downChangeOddValueImage.alpha = 0.0
 
-        self.marketTypeLabel.text = localized("empty_value")
-        self.marketOddLabel.text = localized("empty_value")
+        self.marketTypeLabel.text = ""
+        self.marketOddLabel.text = ""
 
         let tapOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapOddButton))
         self.containerView.addGestureRecognizer(tapOddButton)
@@ -81,12 +77,6 @@ class OutcomeSelectionButtonView: NibView {
 
     deinit {
 
-        self.debouncerSubscription?.cancel()
-        self.debouncerSubscription = nil
-
-        if let oddUpdatesRegister = oddUpdatesRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: oddUpdatesRegister)
-        }
     }
 
     override var intrinsicContentSize: CGSize {
@@ -116,103 +106,58 @@ class OutcomeSelectionButtonView: NibView {
         self.bettingOffer = outcome.bettingOffer
         self.marketTypeLabel.text = outcome.translatedName
 
-        self.updateBettingOffer(value: outcome.bettingOffer.decimalOdd,
-                                statusId: outcome.bettingOffer.statusId,
-                                isAvailableForBetting: outcome.bettingOffer.isAvailable)
-
         self.isOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-        let endpoint = TSRouter.bettingOfferPublisher(operatorId: Env.appSession.operatorId,
-                                                      language: "en",
-                                                      bettingOfferId: outcome.bettingOffer.id)
-
-        self.debouncerSubscription?.handler = { [weak self] in
-            print(" debouncerSubscription called ")
-            self?.oddUpdatesPublisher = Env.everyMatrixClient.manager.registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
-                    switch completion {
-                    case .failure:
-                        print("Error retrieving data!")
-                    case .finished:
-                        print("Data retrieved!")
-                    }
-                }, receiveValue: { [weak self] state in
-                    switch state {
-                    case .connect(let oddUpdatesRegister):
-                        self?.oddUpdatesRegister = oddUpdatesRegister
-                    case .initialContent(let aggregator):
-
-                        if let content = aggregator.content {
-                            for contentType in content {
-                                if case let .bettingOffer(bettingOffer) = contentType, let oddsValue = bettingOffer.oddsValue {
-                                    self?.oddValue =  nil
-                                    self?.updateBettingOffer(value: oddsValue,
-                                                             statusId: bettingOffer.statusId ?? "1",
-                                                             isAvailableForBetting: bettingOffer.isAvailable ?? true)
-                                    break
-                                }
-                            }
-                        }
-
-                    case .updatedContent(let aggregatorUpdates):
-                        if let content = aggregatorUpdates.contentUpdates {
-                            for contentType in content {
-                                if case let .bettingOfferUpdate(_, statusId, odd, _, isAvailable) = contentType {
-                                    self?.updateBettingOffer(value: odd, statusId: statusId, isAvailableForBetting: isAvailable)
-                                }
-                            }
-                        }
-
-                    case .disconnect:
-                        print("MarketDetailCell odd update - disconnect")
-                    }
-                })
-        }
-
-        // TEMP SPORTRADAR INFO
-        if let bettingOffer = self.bettingOffer {
-            self.updateBettingOffer(value: bettingOffer.decimalOdd,
-                                    statusId: bettingOffer.statusId == "" ? "1" : bettingOffer.statusId,
-                                     isAvailableForBetting: bettingOffer.isAvailable)
-        }
-
-        self.debouncerSubscription?.call()
-
-    }
-
-    private func updateBettingOffer(value: Double?, statusId: String?, isAvailableForBetting available: Bool?) {
-
-        if let currentOddValue = self.oddValue, let newOddValue = value {
-            if newOddValue > currentOddValue {
-                self.highlightOddChangeUp(animated: true,
-                                          upChangeOddValueImage: self.upChangeOddValueImage,
-                                          baseView: self.containerView)
-            }
-            else if newOddValue < currentOddValue {
-                self.highlightOddChangeDown(animated: true,
-                                            downChangeOddValueImage: self.downChangeOddValueImage,
-                                            baseView: self.containerView)
-            }
-        }
-
-        let oddValue = (value ?? self.oddValue) ?? 0.0
-        let isAvailable = (statusId ?? "1") == "1" && (available ?? self.isAvailableForBet) ?? true
-
-        self.oddValue = oddValue
-        self.isAvailableForBet = isAvailable
-
-        if isAvailable && OddFormatter.isValidOdd(withValue: oddValue) {
+        // Check for SportRadar invalid odd
+        if !outcome.bettingOffer.decimalOdd.isNaN {
             self.containerView.isUserInteractionEnabled = true
             self.containerView.alpha = 1.0
-            // self.marketOddLabel.text = OddFormatter.formatOdd(withValue: oddValue)
-            self.marketOddLabel.text = OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
+            self.marketOddLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
         }
         else {
             self.containerView.isUserInteractionEnabled = false
-            self.containerView.alpha = 0.4
-            self.marketOddLabel.text = localized("empty")
+            self.containerView.alpha = 0.5
+            self.marketOddLabel.text = "-"
         }
+
+        self.oddUpdatesPublisher = Env.servicesProvider
+            .subscribeToOutcomeUpdates(withId: outcome.bettingOffer.id)
+            .compactMap({ $0 })
+            .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
+            .map(\.bettingOffer)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                print("oddUpdatesPublisher subscribeToOutcomeUpdates completion: \(completion)")
+            }, receiveValue: { [weak self] (updatedBettingOffer: BettingOffer) in
+                guard let weakSelf = self else { return }
+
+                if !updatedBettingOffer.isAvailable || updatedBettingOffer.decimalOdd.isNaN {
+                    weakSelf.containerView.isUserInteractionEnabled = false
+                    weakSelf.containerView.alpha = 0.5
+                    weakSelf.marketOddLabel.text = "-"
+                }
+                else {
+                    weakSelf.containerView.isUserInteractionEnabled = true
+                    weakSelf.containerView.alpha = 1.0
+
+                    let newOddValue = updatedBettingOffer.decimalOdd
+
+                    if let currentOddValue = weakSelf.oddValue {
+                        if newOddValue > currentOddValue {
+                            weakSelf.highlightOddChangeUp(animated: true,
+                                                          upChangeOddValueImage: weakSelf.upChangeOddValueImage,
+                                                          baseView: weakSelf.containerView)
+                        }
+                        else if newOddValue < currentOddValue {
+                            weakSelf.highlightOddChangeDown(animated: true,
+                                                            downChangeOddValueImage: weakSelf.downChangeOddValueImage,
+                                                            baseView: weakSelf.containerView)
+                        }
+                    }
+                    weakSelf.oddValue = newOddValue
+                    weakSelf.marketOddLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+                }
+            })
 
     }
 
@@ -232,7 +177,6 @@ class OutcomeSelectionButtonView: NibView {
 
         guard
             let outcome = self.outcome,
-            //let marketId = outcome.marketId
             let marketId = self.marketId
         else {
             return
