@@ -54,7 +54,9 @@ struct SportRadarConstants {
     static var bettingHostname = "https://www-bson-ssb-ua.betsson.fr"
 
     // Others
-    static var sportRadarFrontEndURL = "https://cdn1.optimahq.com"
+    static var sportRadarFrontEndURL = "https://cdn1-bson-ssb-ua.betsson.fr"
+//    static var sportRadarFrontEndURL = "https://cdn1.optimahq.com"
+
 
 //    ===================================================================================================================
 

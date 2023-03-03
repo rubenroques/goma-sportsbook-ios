@@ -27,7 +27,8 @@ public struct Event: Codable {
     public var homeTeamName: String
     public var awayTeamName: String
     public var sportTypeName: String
-    
+    public var sportTypeCode: String?
+
     public var competitionId: String
     public var competitionName: String
     public var startDate: Date
@@ -59,9 +60,10 @@ public struct Event: Codable {
         case markets = "markets"
         case venueCountry = "venueCountry"
         case numberMarkets = "numMarkets"
+        case sportTypeCode = "idfosporttype"
     }
 
-    public init(id: String, homeTeamName: String, awayTeamName: String, sportTypeName: String, competitionId: String, competitionName: String, startDate: Date, markets: [Market], venueCountry: Country? = nil, numberMarkets: Int? = nil, name: String? = nil) {
+    public init(id: String, homeTeamName: String, awayTeamName: String, sportTypeName: String, competitionId: String, competitionName: String, startDate: Date, markets: [Market], venueCountry: Country? = nil, numberMarkets: Int? = nil, name: String? = nil, sportTypeCode: String) {
         self.id = id
         self.homeTeamName = homeTeamName
         self.awayTeamName = awayTeamName
@@ -73,6 +75,7 @@ public struct Event: Codable {
         self.venueCountry = venueCountry
         self.numberMarkets = numberMarkets
         self.name = name
+        self.sportTypeCode = sportTypeCode
     }
 
     public init(from decoder: Decoder) throws {
@@ -87,6 +90,7 @@ public struct Event: Codable {
         self.markets = try container.decode([Market].self, forKey: .markets)
         self.venueCountry = try container.decodeIfPresent(Country.self, forKey: .venueCountry)
         self.numberMarkets = try container.decodeIfPresent(Int.self, forKey: .numberMarkets)
+        self.sportTypeCode = try container.decode(String.self, forKey: .sportTypeCode)
     }
 
 }

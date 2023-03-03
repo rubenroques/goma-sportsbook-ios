@@ -25,6 +25,7 @@ extension SportRadarModels {
         var homeName: String?
         var awayName: String?
         var sportTypeName: String?
+        var sportTypeCode: String?
 
         var competitionId: String?
         var competitionName: String?
@@ -49,6 +50,7 @@ extension SportRadarModels {
             case tournamentCountryName = "tournamentcountryname"
             case numberMarkets = "numMarkets"
             case name = "name"
+            case sportTypeCode = "idfosporttype"
         }
 
         init(from decoder: Decoder) throws {
@@ -65,6 +67,8 @@ extension SportRadarModels {
             self.numberMarkets = container.contains(.numberMarkets) ? try container.decode(Int.self, forKey: .numberMarkets) : self.markets?.first?.eventMarketCount
 
             self.name = try container.decodeIfPresent(String.self, forKey: .name)
+
+            self.sportTypeCode = try container.decodeIfPresent(String.self, forKey: .sportTypeCode)
 
             if let startDateString = try container.decodeIfPresent(String.self, forKey: .startDate) {
                 if let date = Self.dateFormatter.date(from: startDateString) {

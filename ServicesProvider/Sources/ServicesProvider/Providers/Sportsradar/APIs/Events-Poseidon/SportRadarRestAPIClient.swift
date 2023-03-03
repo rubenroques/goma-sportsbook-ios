@@ -42,7 +42,7 @@ extension SportRadarRestAPIClient: Endpoint {
             return "/services/content/unsubscribe"
 
         case .marketsFilter:
-            return "/sportradar/sportsbook/config/marketsFilter_v2.json"
+            return "/sportsbook/config/marketsFilter_v2.json"
             
         case .fieldWidgetId:
             return "/services/content/get"
