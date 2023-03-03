@@ -4249,6 +4249,14 @@
 		A90FB80829B0F8B100D08A7C /* GenericAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90FB80229B0F8B100D08A7C /* GenericAlertView.swift */; };
 		A90FB80929B0F8B100D08A7C /* GenericAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90FB80229B0F8B100D08A7C /* GenericAlertView.swift */; };
 		A90FB80A29B0F8B100D08A7C /* GenericAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90FB80229B0F8B100D08A7C /* GenericAlertView.swift */; };
+		A90FB80C29B2474700D08A7C /* TransactionTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90FB80B29B2474700D08A7C /* TransactionTypeMapper.swift */; };
+		A90FB80D29B2474700D08A7C /* TransactionTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90FB80B29B2474700D08A7C /* TransactionTypeMapper.swift */; };
+		A90FB80E29B2474700D08A7C /* TransactionTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90FB80B29B2474700D08A7C /* TransactionTypeMapper.swift */; };
+		A90FB80F29B2474700D08A7C /* TransactionTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90FB80B29B2474700D08A7C /* TransactionTypeMapper.swift */; };
+		A90FB81029B2474700D08A7C /* TransactionTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90FB80B29B2474700D08A7C /* TransactionTypeMapper.swift */; };
+		A90FB81129B2474700D08A7C /* TransactionTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90FB80B29B2474700D08A7C /* TransactionTypeMapper.swift */; };
+		A90FB81229B2474700D08A7C /* TransactionTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90FB80B29B2474700D08A7C /* TransactionTypeMapper.swift */; };
+		A90FB81329B2474700D08A7C /* TransactionTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90FB80B29B2474700D08A7C /* TransactionTypeMapper.swift */; };
 		A96FAEC729804C0600A0751F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEC629804C0600A0751F /* Data+Extensions.swift */; };
 		A96FAEC829804C0600A0751F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEC629804C0600A0751F /* Data+Extensions.swift */; };
 		A96FAEC929804C0600A0751F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEC629804C0600A0751F /* Data+Extensions.swift */; };
@@ -5894,6 +5902,7 @@
 		A90FB7EE29B0C53800D08A7C /* TipsControlViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsControlViewController.swift; sourceTree = "<group>"; };
 		A90FB7F829B0CB4400D08A7C /* TipInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipInfoView.swift; sourceTree = "<group>"; };
 		A90FB80229B0F8B100D08A7C /* GenericAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericAlertView.swift; sourceTree = "<group>"; };
+		A90FB80B29B2474700D08A7C /* TransactionTypeMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionTypeMapper.swift; sourceTree = "<group>"; };
 		A91F4B2927BE918C008C7510 /* LinkPresentationItemSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkPresentationItemSource.swift; sourceTree = "<group>"; };
 		A91F4B2D27BEAF0F008C7510 /* NotificationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsViewController.swift; sourceTree = "<group>"; };
 		A91F4B3127BFB8FB008C7510 /* AppearanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceViewController.swift; sourceTree = "<group>"; };
@@ -7889,6 +7898,7 @@
 				A96FAED72981912100A0751F /* UploadDocuments.swift */,
 				A99DE67329A643F800AA24AA /* PaymentStatus.swift */,
 				A90FB7BC29AF67B000D08A7C /* AlertType.swift */,
+				A90FB80B29B2474700D08A7C /* TransactionTypeMapper.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -11302,6 +11312,7 @@
 				450B794128F58574009229E3 /* GameSuggestedView.swift in Sources */,
 				450B794228F58574009229E3 /* UIStackView+Extensions.swift in Sources */,
 				A96FAED12981908900A0751F /* UploadDocumentsViewModel.swift in Sources */,
+				A90FB80D29B2474700D08A7C /* TransactionTypeMapper.swift in Sources */,
 				450B794328F58574009229E3 /* AggregatorRepository.swift in Sources */,
 				450B794428F58574009229E3 /* LoadingMoreTableViewCell.swift in Sources */,
 				450B794528F58574009229E3 /* UserInfoSimpleCardView.swift in Sources */,
@@ -11707,6 +11718,7 @@
 				A9C1C09D2873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
 				A9B331EA28904F4800D097F0 /* MessageDetailViewController.swift in Sources */,
 				A9863ED9286F01E500A4A1A2 /* ShareTicketChoiceViewController.swift in Sources */,
+				A90FB81329B2474700D08A7C /* TransactionTypeMapper.swift in Sources */,
 				A9FB6D4728C61D2100E3FE58 /* TipsRootViewController.swift in Sources */,
 				A98EC7E22889B0AA0044FC46 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				A98EC7EB288AF2C00044FC46 /* NewGroupHeaderFooterView.swift in Sources */,
@@ -12307,6 +12319,7 @@
 				A9B331E828904F4800D097F0 /* MessageDetailViewController.swift in Sources */,
 				457CBB98282D27D000ED0F00 /* ActivationAlert.swift in Sources */,
 				457CBB99282D27D000ED0F00 /* AddFriendCellViewModel.swift in Sources */,
+				A90FB81129B2474700D08A7C /* TransactionTypeMapper.swift in Sources */,
 				457CBB9A282D27D000ED0F00 /* Debounce.swift in Sources */,
 				457CBB9B282D27D000ED0F00 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				45B6E235284151E5001B570C /* EditGroupAddUserViewController.swift in Sources */,
@@ -12451,6 +12464,7 @@
 				A9B331D8288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */,
 				457CBCD6282D2CD100ED0F00 /* SocialModels.swift in Sources */,
 				457CBCD7282D2CD100ED0F00 /* BonusRootViewController.swift in Sources */,
+				A90FB81229B2474700D08A7C /* TransactionTypeMapper.swift in Sources */,
 				457CBCD8282D2CD100ED0F00 /* Router.swift in Sources */,
 				457CBCD9282D2CD100ED0F00 /* Date+Extension.swift in Sources */,
 				A9958C7D2970641D001474E2 /* UploadDocumentTableViewCell.swift in Sources */,
@@ -13241,6 +13255,7 @@
 				4589C839282024E400243547 /* UIStackView+Extensions.swift in Sources */,
 				4589C83A282024E400243547 /* AggregatorRepository.swift in Sources */,
 				A96FAED02981908900A0751F /* UploadDocumentsViewModel.swift in Sources */,
+				A90FB80E29B2474700D08A7C /* TransactionTypeMapper.swift in Sources */,
 				4589C83B282024E400243547 /* LoadingMoreTableViewCell.swift in Sources */,
 				A9DF8DFB28DDC1D80083BF56 /* UserInfoSimpleCardView.swift in Sources */,
 				4589C83C282024E400243547 /* FavoriteGoma.swift in Sources */,
@@ -13863,6 +13878,7 @@
 				45A33157298976BA008181E9 /* AppSettingsViewController.swift in Sources */,
 				45A33158298976BA008181E9 /* GameSuggestedView.swift in Sources */,
 				45A33159298976BA008181E9 /* UIStackView+Extensions.swift in Sources */,
+				A90FB80C29B2474700D08A7C /* TransactionTypeMapper.swift in Sources */,
 				45A3315A298976BA008181E9 /* UploadDocumentsViewModel.swift in Sources */,
 				45A3315B298976BA008181E9 /* AggregatorRepository.swift in Sources */,
 				45A3315C298976BA008181E9 /* LoadingMoreTableViewCell.swift in Sources */,
@@ -14709,6 +14725,7 @@
 				45B6E205283E3F21001B570C /* EditContactViewModel.swift in Sources */,
 				45A6BD3628246A7500D9B416 /* Logger.swift in Sources */,
 				45C10F8B28772DA700037BBE /* ShiftViewOptions.swift in Sources */,
+				A90FB81029B2474700D08A7C /* TransactionTypeMapper.swift in Sources */,
 				450B782028F56BA5009229E3 /* ServiceProviderModelMapper.swift in Sources */,
 				45A6BD3728246A7500D9B416 /* GamesNotificationViewModel.swift in Sources */,
 				45A6BD3828246A7500D9B416 /* SearchTitleSectionHeaderView.swift in Sources */,
@@ -15409,6 +15426,7 @@
 				A9C342C028F9A74A0055360B /* AddFriendCellViewModel.swift in Sources */,
 				A9C342C128F9A74A0055360B /* Debounce.swift in Sources */,
 				A9C342C228F9A74A0055360B /* UITapGestureRecognizer+Extensions.swift in Sources */,
+				A90FB80F29B2474700D08A7C /* TransactionTypeMapper.swift in Sources */,
 				A9C342C428F9A74A0055360B /* ConversationsViewController.swift in Sources */,
 				A9C342C528F9A74A0055360B /* WithdrawResponse.swift in Sources */,
 				A9C342C628F9A74A0055360B /* NavigationCardView.swift in Sources */,

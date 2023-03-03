@@ -96,7 +96,6 @@ class TransactionsHistoryViewModel {
 
                 guard let self = self else { return }
 
-                if self.transactionsType != .deposit {
                     if hasLoadedPendingWithdrawals {
                         if transactions.isEmpty {
                             self.listStatePublisher.send(.empty)
@@ -107,15 +106,6 @@ class TransactionsHistoryViewModel {
 
                         self.hasLoadedPendingWithdrawals.send(false)
                     }
-                }
-                else {
-                    if transactions.isEmpty {
-                        self.listStatePublisher.send(.empty)
-                    }
-                    else {
-                        self.listStatePublisher.send(.loaded)
-                    }
-                }
 
             })
             .store(in: &cancellables)
@@ -378,48 +368,37 @@ class TransactionsHistoryViewModel {
 
             var valueType = TransactionValueType.neutral
 
-            let transactionType = transactionDetail.type
+            let transactionType = TransactionTypeMapper.init(transactionType: transactionDetail.type)?.transactionName ?? transactionDetail.type
 
-            if transactionType.contains("DEPOSIT") {
-                valueType = .won
-            }
-            else if transactionType.contains("WITHDRAW") {
+            if transactionDetail.amount < 0.0 {
                 valueType = .loss
             }
-            else if transactionType.contains("CANCEL") {
-                valueType = .neutral
+            else if transactionDetail.amount > 0.0 {
+                valueType = .won
             }
             else {
-                if transactionDetail.amount < 0.0 {
-                    valueType = .loss
-                }
-                else if transactionDetail.amount > 0.0 {
-                    valueType = .won
-                }
-                else {
-                    valueType = .neutral
-                }
+                valueType = .neutral
             }
 
-                let transactionHistory = TransactionHistory(transactionID: "\(transactionDetail.id)",
-                                                            time: transactionDetail.dateTime,
-                                                            type: transactionDetail.type,
-                                                            valueType: valueType,
-                                                            debit: DebitCredit(currency: transactionDetail.currency,
-                                                                               amount: transactionDetail.amount,
-                                                                               name: "Debit"),
-                                                            credit: DebitCredit(currency: transactionDetail.currency,
-                                                                                amount: transactionDetail.amount,
-                                                                                name: "Credit"),
-                                                            fees: [],
-                                                            status: nil,
-                                                            transactionReference: nil,
-                                                            id: "\(transactionDetail.id)",
-                                                            isRallbackAllowed: nil,
-                                                            paymentId: transactionDetail.paymentId)
+            let transactionHistory = TransactionHistory(transactionID: "\(transactionDetail.id)",
+                                                        time: transactionDetail.dateTime,
+                                                        type: transactionType,
+                                                        valueType: valueType,
+                                                        debit: DebitCredit(currency: transactionDetail.currency,
+                                                                           amount: transactionDetail.amount,
+                                                                           name: "Debit"),
+                                                        credit: DebitCredit(currency: transactionDetail.currency,
+                                                                            amount: transactionDetail.amount,
+                                                                            name: "Credit"),
+                                                        fees: [],
+                                                        status: nil,
+                                                        transactionReference: nil,
+                                                        id: "\(transactionDetail.id)",
+                                                        isRallbackAllowed: nil,
+                                                        paymentId: transactionDetail.paymentId)
 
-                return transactionHistory
-            }
+            return transactionHistory
+        }
 
         if transactions.count < self.recordsPerPage {
             self.transactionsHasNextPage = false
@@ -451,6 +430,8 @@ class TransactionsHistoryViewModel {
                 self.depositTransactions.send(nextTransactions)
                 self.transactionsPublisher.send(nextTransactions)
             }
+
+            self.hasLoadedPendingWithdrawals.send(true)
         case .withdraw:
             if self.withdrawTransactions.value.isEmpty {
                 self.withdrawTransactions.send(transactions)

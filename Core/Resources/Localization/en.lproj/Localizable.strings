@@ -721,3 +721,9 @@ Terms of use, Privacy Policy and EULA";
 
 "cancel_withdraw_success" = "Your withdraw was canceled.";
 "cancel_withdraw_error" = "There was an error trying to cancel your withdraw. Please try again later.";
+
+"withdrawal" = "Withdrawal";
+"bonus_credit" = "Bonus Credit";
+"bonus_expired" = "Bonus Expired";
+"deposit_cancel" = "Deposit Cancel";
+"withdrawal_cancel" = "Withdrawal Cancel";

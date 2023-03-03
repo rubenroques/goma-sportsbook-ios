@@ -60,7 +60,7 @@ class TransactionsTableViewCell: UITableViewCell {
 
         self.baseView.layer.cornerRadius = 10
 
-        self.baseView.backgroundColor = UIColor.App.backgroundCards
+        self.baseView.backgroundColor = UIColor.App.backgroundSecondary
         self.transactionTypeLabel.textColor = UIColor.App.textPrimary
         
         self.transactionIdLabel.textColor = UIColor.App.textSecondary

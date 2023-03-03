@@ -180,6 +180,7 @@ class BettingHistoryViewModel {
             }, receiveValue: { [weak self] bettingHistory in
 
                 print("BETTING OPEN HISTORY: \(bettingHistory)")
+                
                 self?.listStatePublisher.send(.loaded)
             })
             .store(in: &cancellables)
