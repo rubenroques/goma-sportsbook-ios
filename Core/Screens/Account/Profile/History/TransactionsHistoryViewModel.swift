@@ -45,7 +45,7 @@ class TransactionsHistoryViewModel {
     var withdrawTransactions: CurrentValueSubject<[TransactionHistory], Never> = .init([])
     var pendingWithdrawals = [PendingWithdrawal]()
 
-    var shouldReloadData: (() -> Void)?
+    var shouldShowAlert: ((AlertType) -> Void)?
 
     // MARK: - Private Properties
     private var allPage = 1
@@ -479,10 +479,12 @@ class TransactionsHistoryViewModel {
                     ()
                 case .failure(let error):
                     print("CANCEL WITHDRAWAL ERROR: \(error)")
+                    self?.shouldShowAlert?(.error)
+
                 }
             }, receiveValue: { [weak self] cancelWithdrawalResponse in
 
-                self?.shouldReloadData?()
+                self?.shouldShowAlert?(.success)
             })
             .store(in: &cancellables)
 

@@ -31,6 +31,8 @@ public class Event: Codable {
     public var homeTeamScore: Int?
     public var awayTeamScore: Int?
 
+    public var sportTypeCode: String?
+
     public var competitionId: String
     public var competitionName: String
     public var startDate: Date
@@ -82,6 +84,7 @@ public class Event: Codable {
         case markets = "markets"
         case venueCountry = "venueCountry"
         case numberMarkets = "numMarkets"
+        case sportTypeCode = "idfosporttype"
     }
 
     public init(id: String,
@@ -98,7 +101,8 @@ public class Event: Codable {
                 numberMarkets: Int? = nil,
                 name: String? = nil,
                 status: Status?,
-                matchTime: String?) {
+                matchTime: String?,
+                sportTypeCode: String?) {
 
         self.id = id
         self.homeTeamName = homeTeamName
@@ -118,6 +122,8 @@ public class Event: Codable {
         self.name = name
         self.status = status
         self.matchTime = matchTime
+        
+        self.sportTypeCode = sportTypeCode
     }
 
     required public init(from decoder: Decoder) throws {
@@ -132,6 +138,7 @@ public class Event: Codable {
         self.markets = try container.decode([Market].self, forKey: .markets)
         self.venueCountry = try container.decodeIfPresent(Country.self, forKey: .venueCountry)
         self.numberMarkets = try container.decodeIfPresent(Int.self, forKey: .numberMarkets)
+        self.sportTypeCode = try container.decodeIfPresent(String.self, forKey: .sportTypeCode)
     }
 
 }

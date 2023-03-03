@@ -1016,82 +1016,28 @@ extension SportRadarEventsProvider {
 
         var availableMarketGroups: [String: [AvailableMarket]] = [:]
 
-        // All Market
-        let allMarket = marketFilter.allMarkets
-        let allEventMarket = EventMarket(id: "\(allMarket.displayOrder)", name: allMarket.translations?.english ?? "", marketIds: [])
-        eventMarkets.append(allEventMarket)
+        // NEW PARSE
+        for marketFilter in marketFilter.marketFilters {
+            // SPECIFIC MARKET IDS
+            var selectedMarketIds: [String] = []
 
-        // Popular Market
-        let popularMarket = marketFilter.popularMarkets
-        var popularMarketIds: [String] = []
-        if let popularMarketSportsIds = popularMarket.marketsSportType?.all {
+            if let selectedMarketSports = marketFilter.marketsSportType?.marketSports {
 
-            for marketId in popularMarketSportsIds {
-                let marketSportId = marketId.ids[0]
-                popularMarketIds.append(marketSportId)
+                for marketSportType in selectedMarketSports {
+                    let eventSportCode = match.sportTypeCode ?? ""
+                    
+                    for marketSport in marketSportType.value {
 
+                        if eventSportCode.contains(marketSportType.key) || marketSportType.key.lowercased() == "all" {
+                            let marketSportId = marketSport.ids[0]
+                            selectedMarketIds.append(marketSportId)
+                        }
+                    }
+                }
             }
+            let eventMarket = EventMarket(id: "\(marketFilter.displayOrder)", name: marketFilter.translations?.english ?? "", marketIds: selectedMarketIds)
+            eventMarkets.append(eventMarket)
         }
-        let popularEventMarket = EventMarket(id: "\(popularMarket.displayOrder)", name: popularMarket.translations?.english ?? "", marketIds: popularMarketIds)
-        eventMarkets.append(popularEventMarket)
-
-        // Total Market
-        let totalMarket = marketFilter.totalMarkets
-        var totalMarketIds: [String] = []
-        if let totalMarketSportsIds = totalMarket.marketsSportType?.all {
-
-            for marketId in totalMarketSportsIds {
-                let marketSportId = marketId.ids[0]
-                totalMarketIds.append(marketSportId)
-
-            }
-        }
-        let totalEventMarket = EventMarket(id: "\(totalMarket.displayOrder)", name: totalMarket.translations?.english ?? "", marketIds: totalMarketIds)
-        eventMarkets.append(totalEventMarket)
-
-        // Total Market
-        let goalMarket = marketFilter.goalMarkets
-        var goalMarketIds: [String] = []
-        if let goalMarketSportsIds = goalMarket.marketsSportType?.all {
-
-            for marketId in goalMarketSportsIds {
-                let marketSportId = marketId.ids[0]
-                goalMarketIds.append(marketSportId)
-
-            }
-        }
-        let goalEventMarket = EventMarket(id: "\(goalMarket.displayOrder)", name: goalMarket.translations?.english ?? "", marketIds: goalMarketIds)
-        eventMarkets.append(goalEventMarket)
-
-        // Handicap Market
-        let handicapMarket = marketFilter.handicapMarkets
-        var handicapMarketIds: [String] = []
-        if let handicapMarketSportsIds = handicapMarket.marketsSportType?.all {
-
-            for marketId in handicapMarketSportsIds {
-                let marketSportId = marketId.ids[0]
-                handicapMarketIds.append(marketSportId)
-
-            }
-        }
-        let handicapEventMarket = EventMarket(id: "\(handicapMarket.displayOrder)", name: handicapMarket.translations?.english ?? "", marketIds: handicapMarketIds)
-        eventMarkets.append(handicapEventMarket)
-
-        // Other Market
-        let otherMarket = marketFilter.otherMarkets
-        var otherMarketIds: [String] = []
-        if let otherMarketSportsIds = otherMarket.marketsSportType?.all {
-
-            for marketId in otherMarketSportsIds {
-                let marketSportId = marketId.ids[0]
-                otherMarketIds.append(marketSportId)
-
-            }
-        }
-        let otherEventMarket = EventMarket(id: "\(otherMarket.displayOrder)", name: otherMarket.translations?.english ?? "", marketIds: otherMarketIds)
-        eventMarkets.append(otherEventMarket)
-
-        //self.eventMarketsPublisher.send(self.eventMarkets)
 
         let matchMarkets = match.markets
 

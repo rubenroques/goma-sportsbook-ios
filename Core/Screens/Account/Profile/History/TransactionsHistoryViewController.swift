@@ -31,6 +31,9 @@ class TransactionsHistoryViewController: UIViewController {
 
     private let rightGradientMaskLayer = CAGradientLayer()
 
+    // MARK: Public Properties
+    var shouldReloadData: (() -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(viewModel: TransactionsHistoryViewModel = TransactionsHistoryViewModel(transactionsType: .deposit, filterApplied: .past30Days)) {
         self.viewModel = viewModel
@@ -138,6 +141,11 @@ class TransactionsHistoryViewController: UIViewController {
             })
             .store(in: &self.cancellables)
 
+        viewModel.shouldShowAlert = { [weak self] alertType in
+
+            self?.showAlert(type: alertType)
+        }
+
     }
 
     private func showLoading() {
@@ -155,6 +163,29 @@ class TransactionsHistoryViewController: UIViewController {
         self.viewModel.refreshContent()
     }
 
+    private func showAlert(type: AlertType) {
+        switch type {
+        case .success:
+            let alert = UIAlertController(title: "Pending Withdrawal Cancel Success",
+                                          message: "Your pending withdrawal request was cancelled with success.",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
+
+                self.shouldReloadData?()
+
+            }))
+            self.present(alert, animated: true, completion: nil)
+        case .error:
+            let alert = UIAlertController(title: "Pending Withdrawal Cancel Error",
+                                          message: "Your pending withdrawal request could not be cancelled. Please try again later, if the problem persists contact our customer support.",
+                                          preferredStyle: .alert)
+
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+
+            self.present(alert, animated: true, completion: nil)
+        }
+
+    }
 }
 
 //

@@ -25,6 +25,7 @@ extension SportRadarModels {
         var homeName: String?
         var awayName: String?
         var sportTypeName: String?
+        var sportTypeCode: String?
 
         var competitionId: String?
         var competitionName: String?
@@ -82,6 +83,8 @@ extension SportRadarModels {
             case eventStatus = "status"
 
             case matchTime = "matchTime"
+            
+            case sportTypeCode = "idfosporttype"
         }
 
         init(from decoder: Decoder) throws {
@@ -98,7 +101,7 @@ extension SportRadarModels {
             self.competitionName = try container.decodeIfPresent(String.self, forKey: .competitionName)
             self.sportTypeName = try container.decodeIfPresent(String.self, forKey: .sportTypeName)
             self.tournamentCountryName = try container.decodeIfPresent(String.self, forKey: .tournamentCountryName)
-
+            self.sportTypeCode = try container.decodeIfPresent(String.self, forKey: .sportTypeCode)
             self.numberMarkets = container.contains(.numberMarkets) ? try container.decode(Int.self, forKey: .numberMarkets) : self.markets?.first?.eventMarketCount
 
             self.name = try container.decodeIfPresent(String.self, forKey: .name)
@@ -106,6 +109,7 @@ extension SportRadarModels {
             // print("parselog Event: \(self.name)")
 
             self.markets = try container.decodeIfPresent([SportRadarModels.Market].self, forKey: .markets)
+
 
             if let startDateString = try container.decodeIfPresent(String.self, forKey: .startDate) {
                 if let date = Self.dateFormatter.date(from: startDateString) {

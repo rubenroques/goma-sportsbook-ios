@@ -36,7 +36,8 @@ extension SportRadarModelMapper {
                      numberMarkets: internalEvent.numberMarkets,
                      name: internalEvent.name,
                      status: Self.eventStatus(fromInternalEvent: internalEvent.status),
-                     matchTime: internalEvent.matchTime)
+                     matchTime: internalEvent.matchTime,
+                     sportTypeCode: event.sportTypeCode ?? "")
 
     }
 
