@@ -21,10 +21,10 @@ extension SportRadarModels {
         case liveSports(sportsTypes: [SportType])
         case preLiveSports(sportsTypes: [SportType]) 
         
-        case eventDetails(eventDetails: [SportRadarModels.Event])
+        case eventDetails(contentIdentifier: ContentIdentifier, event: SportRadarModels.Event?)
         case eventGroup(contentIdentifier: ContentIdentifier, events: [SportRadarModels.Event])
         case outrightEventGroup(events: [SportRadarModels.Event])
-        case eventSummary(eventDetails: [SportRadarModels.Event])
+        case eventSummary(contentIdentifier: ContentIdentifier, eventDetails: [SportRadarModels.Event])
 
         //
         case addEvent(contentIdentifier: ContentIdentifier, event: SportRadarModels.Event)
@@ -52,14 +52,14 @@ extension SportRadarModels {
                 return nil
             case .preLiveSports(_):
                 return nil
-            case .eventDetails(_):
-                return nil
+            case .eventDetails(let contentIdentifier, _):
+                return contentIdentifier
             case .eventGroup(let contentIdentifier, _):
                 return contentIdentifier
             case .outrightEventGroup(_):
                 return nil
-            case .eventSummary(_):
-                return nil
+            case .eventSummary(let contentIdentifier, _):
+                return contentIdentifier
             case .addEvent(let contentIdentifier, _):
                 return contentIdentifier
             case .removeEvent(let contentIdentifier, _):
@@ -164,10 +164,10 @@ extension SportRadarModels {
                 // change key is optional
                 if container.contains(.change) {
                     let event: SportRadarModels.Event = try container.decode(SportRadarModels.Event.self, forKey: .change)
-                    return .eventDetails(eventDetails: [event])
+                    return .eventDetails(contentIdentifier: contentIdentifier, event: event)
                 }
                 else {
-                    return .eventDetails(eventDetails: [])
+                    return .eventDetails(contentIdentifier: contentIdentifier, event: nil)
                 }
             case .eventGroup:
                 if container.contains(.change) {
@@ -178,14 +178,15 @@ extension SportRadarModels {
                 else {
                     return .eventGroup(contentIdentifier: contentIdentifier, events: [])
                 }
+
             case .eventSummary:
                 // change key is optional
                 if container.contains(.change) {
                     let event: SportRadarModels.Event = try container.decode(SportRadarModels.Event.self, forKey: .change)
-                    return .eventDetails(eventDetails: [event])
+                    return .eventSummary(contentIdentifier: contentIdentifier, eventDetails: [event])
                 }
                 else {
-                    return .eventDetails(eventDetails: [])
+                    return .eventSummary(contentIdentifier: contentIdentifier, eventDetails: [])
                 }
             }
         }
@@ -197,11 +198,8 @@ extension SportRadarModels {
             let path: String = (try? container.decode(String.self, forKey: .path)) ?? ""
             let changeType: String = (try? container.decode(String.self, forKey: .changeType)) ?? ""
 
-            print("Path \(path)")
-
             if path.contains("idfoevent") && changeType.contains("added") {
                 // Added a new event
-
             }
             // Markets
             else if path.contains("idfoevent") && path.contains("idfomarket") && changeType.contains("added") {
@@ -228,7 +226,7 @@ extension SportRadarModels {
                 let newMarketCount = try container.decode(Int.self, forKey: .change)
                 return .updateEventMarketCount(contentIdentifier: contentIdentifier, eventId: eventId, newMarketCount: newMarketCount)
             }
-            else if path.contains("scores") && path.contains("liveDataSummary"), let eventId = SocketMessageParseHelper.extractEventId(path) {
+            else if path.contains("scores") && path.contains("liveDataSummary") && (path.contains("MATCH_SCORE") || path.contains("CURRENT_SCORE")), let eventId = SocketMessageParseHelper.extractEventId(path) {
                 // Updated score information
                 let changeContainer = try container.nestedContainer(keyedBy: ScoreUpdateCodingKeys.self, forKey: .change)
                 let homeScore = try changeContainer.decodeIfPresent(Int.self, forKey: .home)
@@ -240,17 +238,14 @@ extension SportRadarModels {
                 let matchTime = try container.decode(String.self, forKey: .change)
                 if let minutesPart = SocketMessageParseHelper.extractMatchMinutes(from: matchTime) {
                     return .updateEventTime(contentIdentifier: contentIdentifier, eventId: eventId, newTime: minutesPart)
-                    print("Event liveDataSummary matchTime \(matchTime) [\(minutesPart)] [eventId:\(eventId)]")
                 }
-                print("Event liveDataSummary matchTime \(matchTime) [couldn't extract] [eventId:\(eventId)]")
             }
             else if path.contains("status") && path.contains("liveDataSummary"), let eventId = SocketMessageParseHelper.extractEventId(path) {
                 let newStatus = try container.decode(String.self, forKey: .change)
-                print("Event liveDataSummary status \(newStatus) [eventId:\(eventId)]")
             }
 
-            let context = DecodingError.Context(codingPath: [CodingKeys.content], debugDescription: "Uknown ContentContainer \(path)")
-            throw DecodingError.valueNotFound(ContentRoute.self, context)
+            print("ContentContainer ignored update for \(path) and associated change \(changeType)")
+            throw SportRadarError.ignoredContentUpdate
         }
 
 
@@ -270,12 +265,6 @@ extension SportRadarModels {
         enum CodingKeys: String, CodingKey {
             case notificationType = "notificationType"
             case data = "data"
-            
-            case content = "contentId"
-            case contentType = "type"
-            case contentId = "id"
-
-            case change = "change"
         }
         
         init(from decoder: Decoder) throws {
@@ -289,7 +278,8 @@ extension SportRadarModels {
                 self = .listeningStarted(sessionTokenId: sessionTokenId)
             case "CONTENT_CHANGES":
                 let contents = try container.decode([FailableDecodable<SportRadarModels.ContentContainer>].self, forKey: .data)
-                self = .contentChanges(contents: contents.compactMap({ $0.content }))
+                let validContents = contents.compactMap({ $0.content })
+                self = .contentChanges(contents: validContents)
             default:
                 self = .unknown
             }

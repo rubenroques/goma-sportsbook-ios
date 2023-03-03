@@ -12,10 +12,6 @@ public protocol UnsubscriptionController: AnyObject {
     func unsubscribe(subscription: Subscription)
 }
 
-//public protocol AnySubscription: Hashable, Identifiable {
-//
-//}
-
 public class Subscription: Hashable, Identifiable {
     
     public var id: String
@@ -42,7 +38,7 @@ public class Subscription: Hashable, Identifiable {
     }
     
     deinit {
-        print("ServiceProvider.Subscription.Debug dinit \(self.id) \(contentIdentifier)")
+        print("ServiceProvider.Subscription.Debug dinit \(self)")
         unsubscriber?.unsubscribe(subscription: self)
     }
 
@@ -66,30 +62,11 @@ public class Subscription: Hashable, Identifiable {
         
 }
 
-public class SubscriptionGroup: Hashable, Identifiable {
 
-    public var id: String
-    private var subscriptions: [Subscription]
-
-    init(id: String) {
-        self.id = id
-        self.subscriptions = []
+extension Subscription: CustomStringConvertible {
+    public var description: String {
+        return "Subscription: \(self.id) \(self.contentIdentifier)"
     }
-
-    deinit {
-        print("ServerProvider.SubscriptionGroup.Debug dinit \(self.id)")
-        print("ServerProvider.SubscriptionGroup.Debug subscription init will be called too")
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(subscriptions)
-        hasher.combine(id)
-    }
-
-    public static func == (lhs: SubscriptionGroup, rhs: SubscriptionGroup) -> Bool {
-        return lhs.id == rhs.id && lhs.subscriptions == rhs.subscriptions
-    }
-
 }
 
 public enum ContentType: String, Codable {

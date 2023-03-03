@@ -51,7 +51,7 @@ enum SocketMessageParseHelper {
 
         if let extraTimeRange = minuteString.range(of: #"\s\+([\d:]+)"#, options: .regularExpression),
             let extraTime = Int(String(minuteString[extraTimeRange].dropFirst(2)).components(separatedBy: ":").first ?? "") {
-            return "\(minutes)+\(extraTime)'"
+            return "\(minutes)'+\(extraTime)"
         }
 
         return "\(minutes)'"

@@ -10,7 +10,11 @@ import UIKit
 class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
     var matches: [Match] = []
-    var outrightCompetitions: [Competition]? = []
+    var outrightCompetitions: [Competition]? = [] {
+        didSet {
+            print("didSet outrightCompetitions")
+        }
+    }
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 

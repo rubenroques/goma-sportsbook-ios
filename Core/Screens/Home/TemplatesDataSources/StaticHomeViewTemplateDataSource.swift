@@ -176,14 +176,10 @@ class StaticHomeViewTemplateDataSource {
     }
 
     func requestSports() {
-
-//        let allSports = Env.sportsStore.getAvailableSports()
-//        let prefixSports = allSports.filter({ $0.alphaId != nil }).prefix(10)
-//        self.sportsToFetch = Array(prefixSports)
-        self.sportsToFetch = []
-
+        let allSports = Env.sportsStore.getAvailableSports()
+        let prefixSports = allSports.filter({ $0.alphaId != nil }).prefix(10)
+        self.sportsToFetch = Array(prefixSports)
         self.refreshPublisher.send()
-
     }
 
     func fetchLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {

@@ -87,28 +87,38 @@ extension SportRadarModels {
         init(from decoder: Decoder) throws {
             let container: KeyedDecodingContainer<SportRadarModels.Event.CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
             self.id = try container.decode(String.self, forKey: .id)
+
+            if self.id == "_TOKEN_" {
+                throw DecodingError.dataCorruptedError(forKey: .id, in: container, debugDescription: "_TOKEN_ event found - Invalid Event on list ")
+            }
+
             self.homeName = try container.decodeIfPresent(String.self, forKey: .homeName)
             self.awayName = try container.decodeIfPresent(String.self, forKey: .awayName)
             self.competitionId = try container.decodeIfPresent(String.self, forKey: .competitionId)
             self.competitionName = try container.decodeIfPresent(String.self, forKey: .competitionName)
             self.sportTypeName = try container.decodeIfPresent(String.self, forKey: .sportTypeName)
-            self.markets = try container.decodeIfPresent([SportRadarModels.Market].self, forKey: .markets)
             self.tournamentCountryName = try container.decodeIfPresent(String.self, forKey: .tournamentCountryName)
 
             self.numberMarkets = container.contains(.numberMarkets) ? try container.decode(Int.self, forKey: .numberMarkets) : self.markets?.first?.eventMarketCount
 
             self.name = try container.decodeIfPresent(String.self, forKey: .name)
 
+            // print("parselog Event: \(self.name)")
+
+            self.markets = try container.decodeIfPresent([SportRadarModels.Market].self, forKey: .markets)
+
             if let startDateString = try container.decodeIfPresent(String.self, forKey: .startDate) {
                 if let date = Self.dateFormatter.date(from: startDateString) {
                     self.startDate = date
                 }
                 else {
-                    throw DecodingError.dataCorruptedError(forKey: .startDate, in: container, debugDescription: "Start date with wrong format.")
+                    let context = DecodingError.Context(codingPath: [CodingKeys.startDate], debugDescription: "Start date with wrong format.")
+                    throw DecodingError.typeMismatch(Self.self, context)
                 }
             }
             else {
-                throw DecodingError.dataCorruptedError(forKey: .startDate, in: container, debugDescription: "Not start date found.")
+                let context = DecodingError.Context(codingPath: [CodingKeys.startDate], debugDescription: "Not start date found.")
+                throw DecodingError.valueNotFound(Self.self, context)
             }
 
             //  ---  Live Data  ---
@@ -139,8 +149,7 @@ extension SportRadarModels {
                         self.awayScore = awayScore
                     }
                 }
-
-                if let scoresContainer = try? liveDataInfoContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .scoresContainer),
+                else if let scoresContainer = try? liveDataInfoContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .scoresContainer),
                     let matchScoresContainer = try? scoresContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .matchScores) {
 
                     if let homeScore = try? matchScoresContainer.decode(Int.self, forKey: .homeScore) {
@@ -181,7 +190,7 @@ extension SportRadarModels {
         var eventName: String?
         var isMainOutright: Bool?
         var eventMarketCount: Int?
-        var isTradable: Bool?
+        var isTradable: Bool
 
         enum CodingKeys: String, CodingKey {
             case id = "idfomarket"
@@ -195,7 +204,7 @@ extension SportRadarModels {
             case isTradable = "istradable"
         }
 
-        init(id: String, name: String, outcomes: [Outcome], marketTypeId: String? = nil, eventMarketTypeId: String? = nil, eventName: String? = nil, isMainOutright: Bool? = nil, eventMarketCount: Int? = nil, isTradable: Bool? = nil) {
+        init(id: String, name: String, outcomes: [Outcome], marketTypeId: String? = nil, eventMarketTypeId: String? = nil, eventName: String? = nil, isMainOutright: Bool? = nil, eventMarketCount: Int? = nil, isTradable: Bool) {
             self.id = id
             self.name = name
             self.outcomes = outcomes
@@ -211,13 +220,16 @@ extension SportRadarModels {
             let container = try decoder.container(keyedBy: SportRadarModels.Market.CodingKeys.self)
             self.id = try container.decode(String.self, forKey: .id)
             self.name = try container.decode(String.self, forKey: .name)
-            self.outcomes = try container.decode([SportRadarModels.Outcome].self, forKey: .outcomes)
             self.marketTypeId = try container.decodeIfPresent(String.self, forKey: .marketTypeId)
             self.eventMarketTypeId = try container.decodeIfPresent(String.self, forKey: .eventMarketTypeId)
             self.eventName = try container.decodeIfPresent(String.self, forKey: .eventName)
             self.isMainOutright = try container.decodeIfPresent(Bool.self, forKey: .isMainOutright)
             self.eventMarketCount = try container.decodeIfPresent(Int.self, forKey: .eventMarketCount)
-            self.isTradable = try container.decodeIfPresent(Bool.self, forKey: .isTradable)
+            self.isTradable = try container.decodeIfPresent(Bool.self, forKey: .isTradable) ?? true
+
+            // print("parselog    |----- Market: \(self.name), isTradable:\(self.isTradable)")
+
+            self.outcomes = try container.decode([SportRadarModels.Outcome].self, forKey: .outcomes)
         }
         
     }
@@ -266,6 +278,8 @@ extension SportRadarModels {
 
             self.odd = .fraction(numerator: Int(numerator), denominator: Int(denominator) )
             self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? true
+
+            // print("parselog        |---- Outcome: \(self.name)")
         }
 
     }

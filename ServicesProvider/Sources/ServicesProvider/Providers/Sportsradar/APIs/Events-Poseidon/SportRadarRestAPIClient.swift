@@ -22,7 +22,7 @@ enum SportRadarRestAPIClient {
     case competitionMarketGroups(competitionId: String)
     case search(query: String, resultLimit: String, page: String)
     case banners
-    case eventSummary(eventId: String)
+    case getEventSummary(eventId: String)
     case favoritesList
     case addFavoriteList(name: String)
     case addFavoriteToList(listId: Int, eventId: String)
@@ -35,15 +35,16 @@ extension SportRadarRestAPIClient: Endpoint {
 
     var endpoint: String {
         switch self {
-
+        //
         case .subscribe:
             return "/services/content/subscribe" 
         case .unsubscribe:
             return "/services/content/unsubscribe"
-
+        //
         case .marketsFilter:
-            return "/sportradar/sportsbook/config/marketsFilter_v2.json"
-            
+            return "/sportsbook/config/marketsFilter_v2.json"
+
+        //
         case .fieldWidgetId:
             return "/services/content/get"
         case .sportsBoNavigationList:
@@ -60,8 +61,10 @@ extension SportRadarRestAPIClient: Endpoint {
             return "/services/content/get"
         case .banners:
             return "/services/content/get"
-        case .eventSummary:
+        case .getEventSummary:
             return "/services/content/get"
+
+        //
         case .favoritesList:
             return "/api/favourites/fw/getAccountFavouriteCoupon"
         case .addFavoriteList:
@@ -90,7 +93,7 @@ extension SportRadarRestAPIClient: Endpoint {
         case .competitionMarketGroups: return nil
         case .search: return nil
         case .banners: return nil
-        case .eventSummary: return nil
+        case .getEventSummary: return nil
         case .favoritesList: return nil
         case .addFavoriteList: return nil
         case .addFavoriteToList: return nil
@@ -113,7 +116,7 @@ extension SportRadarRestAPIClient: Endpoint {
         case .competitionMarketGroups: return .post
         case .search: return .post
         case .banners: return .post
-        case .eventSummary: return .post
+        case .getEventSummary: return .post
         case .favoritesList: return .get
         case .addFavoriteList: return .post
         case .addFavoriteToList: return .post
@@ -250,7 +253,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         }
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
-        case .eventSummary(let eventId):
+        case .getEventSummary(let eventId):
             let bodyString =
                         """
                         {
@@ -341,7 +344,7 @@ extension SportRadarRestAPIClient: Endpoint {
             return SportRadarConstants.bettingHostname
         case .banners:
             return SportRadarConstants.bettingHostname
-        case .eventSummary:
+        case .getEventSummary:
             return SportRadarConstants.bettingHostname
         case .favoritesList:
             return SportRadarConstants.bettingHostname
@@ -390,7 +393,7 @@ extension SportRadarRestAPIClient: Endpoint {
             return defaultHeaders
         case .banners:
             return defaultHeaders
-        case .eventSummary:
+        case .getEventSummary:
             return defaultHeaders
         case .favoritesList, .addFavoriteList, .addFavoriteToList, .getFavoritesFromList, .deleteFavoriteList, .deleteFavoriteFromList:
             return [

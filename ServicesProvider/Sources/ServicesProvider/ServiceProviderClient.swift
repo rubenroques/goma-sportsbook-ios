@@ -134,7 +134,7 @@ extension ServicesProviderClient {
                                                       sortType: sortType)
     }
 
-    public func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+    public func subscribeMatchDetails(matchId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {

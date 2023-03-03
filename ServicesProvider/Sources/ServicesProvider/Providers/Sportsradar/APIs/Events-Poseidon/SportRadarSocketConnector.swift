@@ -16,10 +16,9 @@ protocol SportRadarConnectorSubscriber: AnyObject {
     func liveSportsUpdated(withSportTypes: [SportRadarModels.SportType])
     func preLiveSportsUpdated(withSportTypes: [SportRadarModels.SportType])
 
-    func eventDetailsUpdated(events: [EventsGroup])
+    func eventDetailsUpdated(forContentIdentifier identifier: ContentIdentifier, event: Event)
     func eventGroups(forContentIdentifier identifier: ContentIdentifier, withEvents: [EventsGroup])
     func outrightEventGroups(events: [EventsGroup])
-    func eventSummary(events: [EventsGroup])
 
     func didReceiveGenericUpdate(content: SportRadarModels.ContentContainer)
 }
@@ -68,7 +67,14 @@ class SportRadarSocketConnector: NSObject, Connector {
         
         // TODO: ipAddress is empty, and language is hardcoded
         let body = """
-                   {"subscriberId":null,"versionList":[],"clientContext":{"language":"\(SportRadarConstants.socketLanguageCode)","ipAddress":""}}
+                   {
+                     "subscriberId":null,
+                     "versionList":[],
+                     "clientContext":{
+                       "language":"\(SportRadarConstants.socketLanguageCode)",
+                       "ipAddress":""
+                     }
+                   }
                    """
         
         self.socket.write(string: body) {
@@ -117,7 +123,7 @@ extension SportRadarSocketConnector: WebSocketDelegate {
             self.refreshConnection()
             print("ServiceProvider - SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
-            print("ServiceProvider - SportRadarSocketConnector websocket recieved text: \(string)")
+            // print("ServiceProvider - SportRadarSocketConnector websocket recieved text: \n \(string) \n\n ------------- ")
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)
@@ -181,10 +187,10 @@ extension SportRadarSocketConnector: WebSocketDelegate {
                         subscriber.preLiveSportsUpdated(withSportTypes: sportsTypes)
                     }
 
-                case .eventDetails(let events):
-                    if let subscriber = self.messageSubscriber {
-                        let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-                        subscriber.eventDetailsUpdated(events: [eventsGroup])
+                case .eventDetails(let contentIdentifier, let event):
+                    if let subscriber = self.messageSubscriber, let eventValue = event {
+                        let mappedEvent = SportRadarModelMapper.event(fromInternalEvent: eventValue)
+                        subscriber.eventDetailsUpdated(forContentIdentifier: contentIdentifier, event: mappedEvent)
                     }
                 case .eventGroup(let contentIdentifier, let events):
                     if let subscriber = self.messageSubscriber {
@@ -195,11 +201,6 @@ extension SportRadarSocketConnector: WebSocketDelegate {
                     if let subscriber = self.messageSubscriber {
                         let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
                         subscriber.outrightEventGroups(events: [eventsGroup])
-                    }
-                case .eventSummary(let events):
-                    if let subscriber = self.messageSubscriber {
-                        let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
-                        subscriber.eventSummary(events: [eventsGroup])
                     }
                 default:
                     if let subscriber = self.messageSubscriber {

@@ -279,6 +279,7 @@ public struct MarketGroup {
     public var isDefault: Bool?
     public var numberOfMarkets: Int?
     public var markets: [Market]?
+    
 }
 
 public struct FieldWidgetRenderData {

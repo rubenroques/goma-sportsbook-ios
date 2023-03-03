@@ -114,13 +114,13 @@ class LiveEventsViewModel: NSObject {
         
         self.liveSportsCancellable = Env.servicesProvider.subscribeLiveSportTypes()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 print("LiveEventsViewModel subscribeLiveSportTypes completed \(completion)")
+                self?.liveSports = []
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
                 switch subscribableContent {
                 case .connected(let subscription):
                     self?.sportsSubscription = subscription
-                    self?.liveSports = []
                 case .contentUpdate(let sportTypes):
                     let sports = sportTypes.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
                     self?.liveSports = sports

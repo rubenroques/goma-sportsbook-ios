@@ -80,25 +80,14 @@ class OutrightMarketDetailsViewModel {
                     case .failure(let error):
                         print("OUTRIGHTS DETAILS ERROR: \(error)")
                     }
-                }, receiveValue: { (subscribableContent: SubscribableContent<[EventsGroup]>) in
+                }, receiveValue: { (subscribableContent: SubscribableContent<ServicesProvider.Event>) in
                     print("Env.servicesProvider.subscribeEventDetails value \(subscribableContent)")
                     switch subscribableContent {
                     case .connected(let subscription):
                         print("Connected to ws")
-                    case .contentUpdate(let events):
-                        //self.isLoadingMarketGroups.send(true)
-                        if let eventGroup = events[safe: 0] {
-
-                            if let eventMapped = ServiceProviderModelMapper.event(fromEventGroup: eventGroup){
-                                //self.getMarketGroups(event: eventMapped)
-                                let markets = ServiceProviderModelMapper.markets(fromServiceProviderMarkets: eventMapped.markets)
-                                self.storeMarkets(markets: markets)
-                            }
-                        }
-                        //                    else {
-                        //                        self.isLoadingMarketGroups.send(false)
-                        //                    }
-
+                    case .contentUpdate(let serviceProviderEvent):
+                        let eventMapped = ServiceProviderModelMapper.match(fromEvent: serviceProviderEvent)
+                        self.storeMarkets(markets: eventMapped.markets)
                     case .disconnected:
                         print("Disconnected from ws")
 
@@ -119,51 +108,11 @@ class OutrightMarketDetailsViewModel {
                     }
 
                 }, receiveValue: { [weak self] competitionInfo in
-
                     self?.subscribeOutrightMarkets(competition: competition)
-
                 })
                 .store(in: &cancellables)
         }
 
-
-        // EM
-//        let language = "en"
-//        let endpoint = TSRouter.tournamentOddsPublisher(operatorId: Env.appSession.operatorId,
-//                                                        language: language,
-//                                                        eventId: competition.id)
-//
-//        if let competitionMarketRegister = self.competitionMarketRegister {
-//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: competitionMarketRegister)
-//        }
-//
-//        self.competitionMarketPublisher?.cancel()
-//        self.competitionMarketPublisher = nil
-//
-//        self.competitionMarketPublisher = Env.everyMatrixClient.manager
-//            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .failure:
-//                    print("Error retrieving data!")
-//                case .finished:
-//                    print("Data retrieved!")
-//                }
-//                self.isLoadingPublisher.send(false)
-//            }, receiveValue: { [weak self] state in
-//                switch state {
-//                case .connect(let publisherIdentifiable):
-//                    self?.competitionMarketRegister = publisherIdentifiable
-//                case .initialContent(let aggregator):
-//                    self?.storeAggregator(aggregator)
-//                case .updatedContent(let aggregatorUpdates):
-//                    self?.updateWithAggregator(aggregatorUpdates)
-//                case .disconnect:
-//                    ()
-//
-//                }
-//            })
-        //self.isLoadingPublisher.send(false)
     }
 
     private func subscribeOutrightMarkets(competition: Competition) {
@@ -199,35 +148,7 @@ class OutrightMarketDetailsViewModel {
                 }
                 .store(in: &cancellables)
         }
-//        else {
-//            if let markets = competition.outrightMarkets {
-//                self.storeMarkets(markets: markets)
-//            }
-//        }
     }
-
-//    private func fetchMarketGroupsPublisher(marketGroups: [ServicesProvider.MarketGroup]) {
-//
-//        let marketGroups = marketGroups.map { rawMarketGroup in
-//
-//            MarketGroup(id: rawMarketGroup.id,
-//                        type: rawMarketGroup.type,
-//                        groupKey: rawMarketGroup.groupKey,
-//                        translatedName: rawMarketGroup.translatedName,
-//                        isDefault: rawMarketGroup.isDefault,
-//                        markets: ServiceProviderModelMapper.optionalMarkets(fromServiceProviderMarkets: rawMarketGroup.markets))
-//
-//        }
-//
-//        let sortedMarketGroups = marketGroups.sorted(by: {
-//            $0.id < $1.id
-//        })
-//
-//        self.marketGroupsPublisher.send(sortedMarketGroups)
-//
-//        self.isLoadingMarketGroups.send(false)
-//
-//    }
 
     private func storeMarkets(markets: [Market]) {
         self.store.storeMarketGroupDetailsFromMarkets(markets: markets, onMarketGroup: "MarketKey")

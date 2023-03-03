@@ -10,5 +10,6 @@ import Foundation
 enum SportRadarError: Error {
     case unkownSportId
     case unkownContentId
+    case ignoredContentUpdate
 }
 

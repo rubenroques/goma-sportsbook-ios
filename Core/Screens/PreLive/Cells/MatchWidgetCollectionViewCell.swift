@@ -32,6 +32,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var resultStackView: UIStackView!
     @IBOutlet private weak var resultLabel: UILabel!
     @IBOutlet private weak var matchTimeLabel: UILabel!
+    @IBOutlet private weak var liveMatchDotBaseView: UIView!
+    @IBOutlet private weak var liveMatchDotImageView: UIView!
 
     @IBOutlet private weak var dateStackView: UIStackView!
     @IBOutlet private weak var dateLabel: UILabel!
@@ -181,8 +183,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.timeLabel.text = ""
 
         self.locationFlagImageView.image = nil
+
+        self.oddsStackView.isHidden = false
         self.suspendedBaseView.isHidden = true
         self.seeAllBaseView.isHidden = true
+
+        self.bringSubviewToFront(self.suspendedBaseView)
+        self.bringSubviewToFront(self.seeAllBaseView)
 
         let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
         self.homeBaseView.addGestureRecognizer(tapLeftOddButton)
@@ -265,6 +272,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.dateLabel.text = ""
         self.timeLabel.text = ""
 
+        self.liveMatchDotBaseView.isHidden = true
+
         self.matchTimeLabel.text = ""
         self.resultLabel.text = ""
 
@@ -298,6 +307,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.leftOutcomeDisabled = false
         self.middleOutcomeDisabled = false
         self.rightOutcomeDisabled = false
+
         self.suspendedBaseView.isHidden = true
         self.seeAllBaseView.isHidden = true
 
@@ -315,6 +325,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.matchTimeLabel.textColor = UIColor.App.textPrimary
         self.resultLabel.textColor = UIColor.App.textPrimary
+
+        self.liveMatchDotBaseView.backgroundColor = .clear
+        self.liveMatchDotImageView.backgroundColor = .clear
 
         self.dateLabel.textColor = UIColor.App.textPrimary
         self.timeLabel.textColor = UIColor.App.textPrimary
@@ -452,6 +465,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.resultStackView.isHidden = true
         }
 
+        if viewModel.isLiveMatch {
+            self.liveMatchDotBaseView.isHidden = false
+        }
+        else {
+            self.liveMatchDotBaseView.isHidden = true
+        }
+
         self.eventNameLabel.text = "\(viewModel.competitionName)"
 
         self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
@@ -488,11 +508,19 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }, receiveValue: { [weak self] updatedMatch in
                 self?.viewModel?.match = updatedMatch
 
+                
                 self?.dateLabel.text = "\(viewModel.startDateString)"
                 self?.timeLabel.text = "\(viewModel.startTimeString)"
 
                 self?.resultLabel.text = "\(viewModel.matchScore)"
                 self?.matchTimeLabel.text = viewModel.matchTimeDetails
+
+                if viewModel.isLiveMatch {
+                    self?.liveMatchDotBaseView.isHidden = false
+                }
+                else {
+                    self?.liveMatchDotBaseView.isHidden = true
+                }
             })
         
         if let market = match.markets.first {
@@ -701,17 +729,23 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     //
     //
     private func showMarketButtons() {
+        self.oddsStackView.isHidden = false
         self.suspendedBaseView.isHidden = true
+        self.seeAllBaseView.isHidden = true
     }
 
     private func showSuspendedView() {
         self.suspendedLabel.text = localized("suspended_market")
         self.suspendedBaseView.isHidden = false
+        self.seeAllBaseView.isHidden = true
+        self.oddsStackView.isHidden = true
     }
 
     private func showClosedView() {
         self.suspendedLabel.text = localized("closed_market")
         self.suspendedBaseView.isHidden = false
+        self.seeAllBaseView.isHidden = true
+        self.oddsStackView.isHidden = true
     }
 
     private func showSeeAllView() {

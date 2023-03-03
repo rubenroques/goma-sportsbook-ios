@@ -71,15 +71,6 @@ extension ServiceProviderModelMapper {
         }
     }
 
-    static func event(fromEventGroup eventGroup: EventsGroup) -> ServicesProvider.Event? {
-        if let event = eventGroup.events[safe: 0] {
-
-            return event
-        }
-
-        return nil
-    }
-    
     // Market
     static func markets(fromServiceProviderMarkets markets: [ServicesProvider.Market]) -> [Market] {
         return markets.map(Self.market(fromServiceProviderMarket:))

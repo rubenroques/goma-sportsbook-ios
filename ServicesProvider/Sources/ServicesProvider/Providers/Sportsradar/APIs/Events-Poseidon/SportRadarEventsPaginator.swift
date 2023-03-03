@@ -41,7 +41,6 @@ class SportRadarEventsPaginator {
         self.currentPage = 0
 
         self.eventsSubject = .init(.disconnected)
-        // self.activeSubscriptions = .init(keyOptions: .strongMemory , valueOptions: .weakMemory)
     }
 
     //
