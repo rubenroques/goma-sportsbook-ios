@@ -71,6 +71,7 @@ extension SportRadarModels {
             case tournamentCountryName = "tournamentcountryname"
             case numberMarkets = "numMarkets"
             case name = "name"
+            case sportTypeCode = "idfosporttype"
 
             case liveDataSummary = "liveDataSummary"
 
@@ -79,12 +80,8 @@ extension SportRadarModels {
             case matchScores = "MATCH_SCORE"
             case homeScore = "home"
             case awayScore = "away"
-
             case eventStatus = "status"
-
             case matchTime = "matchTime"
-            
-            case sportTypeCode = "idfosporttype"
         }
 
         init(from decoder: Decoder) throws {
