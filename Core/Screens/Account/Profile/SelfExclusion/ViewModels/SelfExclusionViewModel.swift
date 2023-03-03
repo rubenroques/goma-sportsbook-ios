@@ -10,6 +10,9 @@ import Combine
 
 class SelfExclusionViewModel {
 
+    // MARK: Private Properties
+    private var cancellables: Set<AnyCancellable> = []
+
     // MARK: Public Properties
     var isLockedPlayer: CurrentValueSubject<Bool, Never> = .init(false)
 
@@ -33,42 +36,43 @@ class SelfExclusionViewModel {
             lockPeriodUnitCode = "MONTH"
         }
 
-//        if isPermanent {
-//            Env.servicesProvider.lockPlayer(isPermanent: isPermanent)
-//                .receive(on: DispatchQueue.main)
-//                .sink(receiveCompletion: { [weak self] completion in
-//                    switch completion {
-//                    case .finished:
-//                        ()
-//                    case .failure(let error):
-//                        print("LOCK PLAYER ERROR: \(error)")
-//                    }
-//
-//                }, receiveValue: { [weak self] lockPlayerResponse in
-//
-//                    print("LOCK PLAYER RESPONSE: \(lockPlayerResponse)")
-//                })
-//                .store(in: &cancellables)
-//        }
-//        else {
-//            Env.servicesProvider.lockPlayer(lockPeriodUnit: lockPeriodUnitCode, lockPeriod: lockPeriod)
-//                .receive(on: DispatchQueue.main)
-//                .sink(receiveCompletion: { [weak self] completion in
-//                    switch completion {
-//                    case .finished:
-//                        ()
-//                    case .failure(let error):
-//                        print("LOCK PLAYER ERROR: \(error)")
-//                    }
-//
-//                }, receiveValue: { [weak self] lockPlayerResponse in
-//
-//                    print("LOCK PLAYER RESPONSE: \(lockPlayerResponse)")
-//                })
-//                .store(in: &cancellables)
-//        }
+                if isPermanent {
+                    Env.servicesProvider.lockPlayer(isPermanent: isPermanent)
+                        .receive(on: DispatchQueue.main)
+                        .sink(receiveCompletion: { [weak self] completion in
+                            switch completion {
+                            case .finished:
+                                ()
+                            case .failure(let error):
+                                print("LOCK PLAYER ERROR: \(error)")
+                            }
 
-        self.isLockedPlayer.send(true)
+                        }, receiveValue: { [weak self] lockPlayerResponse in
+
+                            print("LOCK PLAYER RESPONSE: \(lockPlayerResponse)")
+
+                            self?.isLockedPlayer.send(true)
+
+                        })
+                        .store(in: &cancellables)
+                }
+                else {
+                    Env.servicesProvider.lockPlayer(lockPeriodUnit: lockPeriodUnitCode, lockPeriod: lockPeriod)
+                        .receive(on: DispatchQueue.main)
+                        .sink(receiveCompletion: { [weak self] completion in
+                            switch completion {
+                            case .finished:
+                                ()
+                            case .failure(let error):
+                                print("LOCK PLAYER ERROR: \(error)")
+                            }
+
+                        }, receiveValue: { [weak self] lockPlayerResponse in
+
+                            print("LOCK PLAYER RESPONSE: \(lockPlayerResponse)")
+                        })
+                        .store(in: &cancellables)
+                }
 
     }
 }
