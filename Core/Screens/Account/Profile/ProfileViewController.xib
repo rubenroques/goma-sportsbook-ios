@@ -21,7 +21,7 @@
         </array>
     </customFonts>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ProfileViewController" customModule="Crocobet" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ProfileViewController" customModule="Betsson" customModuleProvider="target">
             <connections>
                 <outlet property="activationAlertScrollableView" destination="fTo-pj-31Q" id="kts-eO-Qfe"/>
                 <outlet property="activationStackView" destination="1bn-gy-5Xw" id="fO1-c2-hEE"/>
@@ -331,7 +331,7 @@ Sportsbook® All Rights Reserved</string>
                                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1bn-gy-5Xw">
                                             <rect key="frame" x="20" y="216" width="374" height="130"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fTo-pj-31Q" customClass="ActivationAlertScrollableView" customModule="Crocobet" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fTo-pj-31Q" customClass="ActivationAlertScrollableView" customModule="Betsson" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="374" height="130"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="130" id="AR1-5w-JbD"/>

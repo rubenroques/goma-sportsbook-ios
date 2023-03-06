@@ -526,9 +526,11 @@ extension SportRadarModels {
 
     struct UploadDocumentResponse: Codable {
         var status: String
+        var message: String?
 
         enum CodingKeys: String, CodingKey {
             case status = "status"
+            case message = "message"
         }
     }
 

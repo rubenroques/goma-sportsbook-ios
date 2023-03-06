@@ -50,6 +50,10 @@ class ActivationAlertScrollableView: NibView {
     func setupWithTheme() {
         self.backgroundColor = UIColor.clear
         self.collectionView.backgroundColor = UIColor.clear
+
+        self.pageControl.pageIndicatorTintColor = UIColor.App.navBanner
+        self.pageControl.currentPageIndicatorTintColor = UIColor.App.navBannerActive
+
     }
 
     func setAlertArrayData(arrayData: [ActivationAlert]) {

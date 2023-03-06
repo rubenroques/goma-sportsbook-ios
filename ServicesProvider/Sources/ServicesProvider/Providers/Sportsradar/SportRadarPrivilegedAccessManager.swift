@@ -570,7 +570,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
                 return Just(uploadDocumentResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
             else {
-                return Fail(outputType: UploadDocumentResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+                return Fail(outputType: UploadDocumentResponse.self, failure: ServiceProviderError.errorMessage(message: uploadDocumentResponse.message ?? "Error")).eraseToAnyPublisher()
             }
         }).eraseToAnyPublisher()
     }

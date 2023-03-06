@@ -83,8 +83,6 @@ class UploadDocumentsViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
-        self.statusLabel.text = Env.userSessionStore.userProfilePublisher.value?.kycStatus ?? ""
-
     }
 
     // MARK: - Layout and Theme
@@ -140,6 +138,13 @@ class UploadDocumentsViewController: UIViewController {
                 self?.isLoading = isLoading
             })
             .store(in: &cancellables)
+
+        viewModel.kycStatusPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] kycStatus in
+                self?.statusLabel.text = kycStatus
+            })
+            .store(in: &cancellables)
     }
 
     private func openFile() {
@@ -169,19 +174,29 @@ extension UploadDocumentsViewController: UIDocumentPickerDelegate, UINavigationC
 
         let fileUrl = urls[0]
         let fileName = urls[0].lastPathComponent
+        var fileSize = 0.0
 
         do {
 
-            let fileData = try Data(contentsOf: fileUrl)
-
-            if let cellId = self.viewModel.selectedUploadDocumentCellId {
-
-                if let cellViewModel = self.viewModel.cachedCellViewModels[cellId] {
-                    cellViewModel.startUpload(fileName: fileName, fileData: fileData)
-                }
-
+            let attribute = try FileManager.default.attributesOfItem(atPath: fileUrl.path)
+            if let size = attribute[FileAttributeKey.size] as? NSNumber {
+                fileSize = size.doubleValue / 1000000.0
             }
 
+            if fileSize > 10.0 {
+                self.showSimpleAlert(title: localized("max_file_size_exceeded"), message: localized("maz_file_size_exceeded_message"))
+            }
+            else {
+                let fileData = try Data(contentsOf: fileUrl)
+
+                if let cellId = self.viewModel.selectedUploadDocumentCellId {
+
+                    if let cellViewModel = self.viewModel.cachedCellViewModels[cellId] {
+                        cellViewModel.startUpload(fileName: fileName, fileData: fileData)
+                    }
+
+                }
+            }
         }
         catch {
             print("No data")
@@ -229,6 +244,10 @@ extension UploadDocumentsViewController: UITableViewDataSource, UITableViewDeleg
 
                 self?.reloadData()
             }
+
+            cell.shouldShowUploadingError = { [weak self] message in
+                self?.showSimpleAlert(title: "Upload Error", message: message)
+            }
         }
         else {
             let cellViewModel = UploadDocumentCellViewModel(documentInfo: documentInfo)
@@ -250,6 +269,10 @@ extension UploadDocumentsViewController: UITableViewDataSource, UITableViewDeleg
             cell.shouldRedrawViews = { [weak self] in
 
                 self?.reloadData()
+            }
+
+            cell.shouldShowUploadingError = { [weak self] message in
+                self?.showSimpleAlert(title: "Upload Error", message: message)
             }
         }
 

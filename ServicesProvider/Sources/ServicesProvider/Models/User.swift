@@ -419,9 +419,11 @@ public struct UserDocument {
 
 public struct UploadDocumentResponse {
     public var status: String
+    public var message: String?
 
     enum CodingKeys: String, CodingKey {
         case status = "status"
+        case message = "message"
     }
 }
 

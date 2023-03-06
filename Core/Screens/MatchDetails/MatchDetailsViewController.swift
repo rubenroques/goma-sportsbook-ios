@@ -74,7 +74,6 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var marketTypesCollectionView: UICollectionView!
     @IBOutlet private var tableView: UITableView!
 
-
     private lazy var backgroundGradientView: GradientView = {
         let view = GradientView()
         view.translatesAutoresizingMaskIntoConstraints = false

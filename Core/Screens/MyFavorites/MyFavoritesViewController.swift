@@ -12,6 +12,7 @@ class MyFavoritesViewController: UIViewController {
 
     // MARK: Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
+    private lazy var containerView: GradientView = Self.createContainerView()
     private lazy var topView: UIView = Self.createTopView()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var topTitleLabel: UILabel = Self.createTopTitleLabel()
@@ -172,16 +173,21 @@ class MyFavoritesViewController: UIViewController {
 
         self.topSafeAreaView.backgroundColor = .clear
 
+        self.containerView.colors = [(UIColor.App.backgroundGradient1, NSNumber(value: 0.0)),
+                                     (UIColor.App.backgroundGradient2, NSNumber(value: 1.0))]
+
         self.topView.backgroundColor = .clear
 
         self.backButton.tintColor = UIColor.App.textHeadlinePrimary
 
         self.topTitleLabel.textColor = UIColor.App.textPrimary
         self.topSliderCollectionView.backgroundColor = UIColor.App.pillNavigation
+
+        //        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
+        self.tableView.backgroundColor = .clear
         
-        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
         self.loadingScreenBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
-        self.emptyStateView.backgroundColor = UIColor.App.backgroundPrimary
+        self.emptyStateView.backgroundColor = .clear
 
         self.accountValueView.backgroundColor = UIColor.App.backgroundSecondary
         self.accountValueLabel.textColor = UIColor.App.textPrimary
@@ -566,7 +572,6 @@ extension MyFavoritesViewController {
         }
     }
 
-
     @objc private func didTapAccountValue() {
         let depositViewController = DepositViewController()
         let navigationViewController = Router.navigationController(with: depositViewController)
@@ -639,6 +644,12 @@ extension MyFavoritesViewController {
         collectionView.alwaysBounceHorizontal = true
 
         return collectionView
+    }
+
+    private static func createContainerView() -> GradientView {
+        let view = GradientView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
 
     private static func createTableView() -> UITableView {
@@ -737,7 +748,10 @@ extension MyFavoritesViewController {
     
     private func setupSubviews() {
         self.view.addSubview(self.topSafeAreaView)
-        self.view.addSubview(self.topView)
+
+        self.view.addSubview(self.containerView)
+
+        self.containerView.addSubview(self.topView)
 
         self.accountValueView.addSubview(self.accountPlusView)
         self.accountPlusView.addSubview(self.accountPlusImageView)
@@ -749,10 +763,12 @@ extension MyFavoritesViewController {
 
         self.topView.bringSubviewToFront(self.topTitleLabel)
 
-        self.view.addSubview(self.topSliderCollectionView)
+        self.containerView.addSubview(self.topSliderCollectionView)
 
-        self.view.addSubview(self.tableView)
-        self.view.addSubview(self.loadingScreenBaseView)
+        self.containerView.addSubview(self.tableView)
+
+        self.containerView.addSubview(self.loadingScreenBaseView)
+
         self.loadingScreenBaseView.addSubview(self.activityIndicatorView)
         self.loadingScreenBaseView.bringSubviewToFront(self.activityIndicatorView)
 
@@ -778,13 +794,15 @@ extension MyFavoritesViewController {
 
         self.view.addSubview(self.floatingShortcutsView)
         
-        self.view.addSubview(self.emptyStateView)
+        self.containerView.addSubview(self.emptyStateView)
 
         self.emptyStateView.addSubview(self.emptyStateImageView)
         self.emptyStateView.addSubview(self.emptyStateTitleLabel)
         self.emptyStateView.addSubview(self.emptyStateLoginButton)
 
         self.initConstraints()
+
+        self.containerView.layoutSubviews()
     }
 
     private func initConstraints() {
@@ -797,11 +815,19 @@ extension MyFavoritesViewController {
             self.topSafeAreaView.bottomAnchor.constraint(equalTo: self.view.topAnchor)
         ])
 
+        // ContainerView
+        NSLayoutConstraint.activate([
+            self.containerView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
+            self.containerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.containerView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.containerView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+        ])
+
         // Top bar
         NSLayoutConstraint.activate([
-            self.topView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.topView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.topView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
+            self.topView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.topView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.topView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
             self.topView.heightAnchor.constraint(equalToConstant: 44),
 
             self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor),
@@ -832,8 +858,8 @@ extension MyFavoritesViewController {
         ])
 
         NSLayoutConstraint.activate([
-            self.topSliderCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.topSliderCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.topSliderCollectionView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.topSliderCollectionView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
             self.topSliderCollectionView.topAnchor.constraint(equalTo: self.topView.bottomAnchor, constant: 8),
             self.topSliderCollectionView.heightAnchor.constraint(equalToConstant: 50)
         ])
@@ -841,17 +867,17 @@ extension MyFavoritesViewController {
         // TableView
         NSLayoutConstraint.activate([
             self.tableView.topAnchor.constraint(equalTo: self.topSliderCollectionView.bottomAnchor),
-            self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            self.tableView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.tableView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.tableView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor)
         ])
 
         // Loading Screen
         NSLayoutConstraint.activate([
-            self.loadingScreenBaseView.topAnchor.constraint(equalTo: self.topView.bottomAnchor),
-            self.loadingScreenBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.loadingScreenBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.loadingScreenBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            self.loadingScreenBaseView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
+            self.loadingScreenBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.loadingScreenBaseView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.loadingScreenBaseView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
 
             self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingScreenBaseView.centerXAnchor),
             self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingScreenBaseView.centerYAnchor)
@@ -865,10 +891,10 @@ extension MyFavoritesViewController {
 
         // Empty state view
         NSLayoutConstraint.activate([
-            self.emptyStateView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.emptyStateView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.emptyStateView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.emptyStateView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
             self.emptyStateView.topAnchor.constraint(equalTo: self.topSliderCollectionView.bottomAnchor),
-            self.emptyStateView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            self.emptyStateView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
 
             self.emptyStateImageView.widthAnchor.constraint(equalToConstant: 160),
             self.emptyStateImageView.heightAnchor.constraint(equalToConstant: 160),

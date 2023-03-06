@@ -128,6 +128,14 @@ extension UIColor {
             return UIColor(named: "separatorLineSecondary") ?? Self.separatorLine
         }
 
+        static var navBanner: UIColor {
+            return UIColor(named: "navBanner") ?? Self.backgroundPrimary
+        }
+
+        static var navBannerActive: UIColor {
+            return UIColor(named: "navBannerActive") ?? Self.backgroundSecondary
+        }
+
     }
 
 }

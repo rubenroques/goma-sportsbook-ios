@@ -148,7 +148,7 @@ extension SportRadarModelMapper {
 
     static func uploadDocumentResponse(fromUploadDocumentResponse internalUploadDocumentResponse: SportRadarModels.UploadDocumentResponse) -> UploadDocumentResponse {
 
-        return UploadDocumentResponse(status: internalUploadDocumentResponse.status)
+        return UploadDocumentResponse(status: internalUploadDocumentResponse.status, message: internalUploadDocumentResponse.message)
     }
 
     static func paymentsResponse(fromPaymentsResponse internalPaymentsResponse: SportRadarModels.PaymentsResponse) -> PaymentsResponse {
