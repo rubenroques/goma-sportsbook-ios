@@ -142,11 +142,15 @@ class FavoritesManager {
                 continue
             }
 
-            let favoriteId = favoriteList.name.components(separatedBy: ":")[1]
+            let favoriteListSplit = favoriteList.name.components(separatedBy: ":")
+            
+            if let favoriteId = favoriteListSplit[safe: 1]
+            {
 
-            favoriteIds.append(favoriteId)
+                favoriteIds.append(favoriteId)
 
-            self.fetchedMatchesListIds[favoriteId] = favoriteList.id
+                self.fetchedMatchesListIds[favoriteId] = favoriteList.id
+            }
         }
 
         self.fetchedFavoriteEventIds.append(contentsOf: favoriteIds)

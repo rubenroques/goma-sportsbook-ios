@@ -19,22 +19,22 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ST7-n0-qvj">
-                        <rect key="frame" x="0.0" y="2" width="300" height="106"/>
+                        <rect key="frame" x="4" y="2" width="292" height="106"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fMz-9V-1fS">
-                                <rect key="frame" x="12" y="12" width="280" height="21"/>
+                                <rect key="frame" x="12" y="12" width="272" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="247" verticalHuggingPriority="247" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="DLP-f6-ESf">
-                                <rect key="frame" x="12" y="37" width="238" height="33"/>
+                                <rect key="frame" x="12" y="37" width="230" height="33"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="253" verticalHuggingPriority="253" horizontalCompressionResistancePriority="752" verticalCompressionResistancePriority="752" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YS8-PY-Ny1">
-                                <rect key="frame" x="12" y="74" width="280" height="21"/>
+                                <rect key="frame" x="12" y="74" width="272" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -60,10 +60,8 @@
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="ST7-n0-qvj" secondAttribute="bottom" constant="2" id="Duh-Of-B3W"/>
                 <constraint firstItem="ST7-n0-qvj" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="2" id="cOi-a8-mtT"/>
-                <constraint firstAttribute="trailing" secondItem="ST7-n0-qvj" secondAttribute="trailing" id="eIK-pR-J8S"/>
-                <constraint firstItem="ST7-n0-qvj" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="g3h-Z6-PfC"/>
-                <constraint firstItem="ST7-n0-qvj" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="rQh-xk-TsR"/>
-                <constraint firstAttribute="trailing" secondItem="ST7-n0-qvj" secondAttribute="trailing" id="xHZ-Iq-Zjo"/>
+                <constraint firstAttribute="trailing" secondItem="ST7-n0-qvj" secondAttribute="trailing" constant="4" id="eIK-pR-J8S"/>
+                <constraint firstItem="ST7-n0-qvj" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="4" id="g3h-Z6-PfC"/>
             </constraints>
             <connections>
                 <outlet property="containerView" destination="ST7-n0-qvj" id="TTd-og-kW8"/>

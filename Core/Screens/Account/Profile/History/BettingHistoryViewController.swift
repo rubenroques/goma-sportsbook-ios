@@ -59,6 +59,8 @@ class BettingHistoryViewController: UIViewController {
 
         self.tableView.register(MyTicketTableViewCell.nib, forCellReuseIdentifier: MyTicketTableViewCell.identifier)
 
+        self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
+
         self.emptyStateButton.addTarget(self, action: #selector(self.didTapMakeDeposit), for: .primaryActionTriggered)
 
         self.tableView.isHidden = false

@@ -44,6 +44,7 @@ class DocumentView: UIView {
                 self.uploadView.isHidden = true
                 self.postUploadView.isHidden = true
                 self.addAnotherBaseView.isHidden = true
+                self.containerView.layer.borderWidth = 0
             case .uploading:
                 self.preUploadView.isHidden = true
                 self.uploadView.isHidden = false
@@ -76,6 +77,8 @@ class DocumentView: UIView {
         }
     }
 
+    var initialDocumentUploadedState: DocumentUploadState?
+
     var uploadValue: Float = 0 {
         didSet {
 
@@ -101,12 +104,13 @@ class DocumentView: UIView {
     var shouldSelectFile: ((String) -> Void)?
     var finishedUploading: (() -> Void)?
     var shouldRedrawView: (() -> Void)?
+    var shouldShowUploadingError: ((String) -> Void)?
     
     var documentInfo: DocumentInfo?
 
     var cancellables = Set<AnyCancellable>()
 
-    var hasFinishedUploadedFile: CurrentValueSubject<Bool, Never> = .init(false)
+    var uploadedFileState: CurrentValueSubject<UploadedFileState, Never> = .init(.notUploaded)
     var hasFinishedProgressUpload: CurrentValueSubject<Bool, Never> = .init(false)
 
     var dashedSublayer: CALayer?
@@ -137,22 +141,36 @@ class DocumentView: UIView {
 
         self.addAnotherBaseView.addGestureRecognizer(addAnotherTap)
 
-        Publishers.CombineLatest(self.hasFinishedUploadedFile, self.hasFinishedProgressUpload)
-            .sink(receiveValue: { [weak self] finishedUploaded, finishedProgress in
+        Publishers.CombineLatest(self.uploadedFileState, self.hasFinishedProgressUpload)
+            .sink(receiveValue: { [weak self] uploadedFileState, finishedProgress in
+
                 guard let self = self else {return}
 
-                if finishedUploaded && finishedProgress {
+                if finishedProgress && uploadedFileState == .uploaded {
                     self.documentUploadState = .uploaded
 
                     self.postUploadTitleLabel.text = self.uploadTitleLabel.text
 
-                    self.statusLabel.text = "Pending Approved"
+                    self.statusLabel.text = localized("pending_approved")
                     self.statusView.backgroundColor = UIColor.App.statsAway
 
                     self.finishedUploading?()
 
-                    self.hasFinishedUploadedFile.send(false)
+                    self.uploadedFileState.send(.notUploaded)
                     self.hasFinishedProgressUpload.send(false)
+                }
+                else {
+                    switch uploadedFileState {
+                    case .error(let message):
+                        if let initialDocumentUploadedState = self.initialDocumentUploadedState {
+                            self.documentUploadState = initialDocumentUploadedState
+                        }
+                        self.shouldRedrawView?()
+                        self.shouldShowUploadingError?(message)
+                        self.uploadedFileState.send(.notUploaded)
+
+                    default: ()
+                    }
                 }
             })
             .store(in: &cancellables)
@@ -224,9 +242,10 @@ class DocumentView: UIView {
             switch documentInfo.status {
             case .notReceived:
                 self.documentUploadState = .preUpload
+                self.initialDocumentUploadedState = .preUpload
             case .received:
                 self.documentUploadState = .documentReceived
-
+                self.initialDocumentUploadedState = .documentReceived
                 if let fileUploaded {
                     self.postUploadTitleLabel.text = fileUploaded.name
 
@@ -236,6 +255,7 @@ class DocumentView: UIView {
         }
         else {
             self.documentUploadState = .addAnother
+            self.initialDocumentUploadedState = .addAnother
         }
     }
 
@@ -260,12 +280,15 @@ class DocumentView: UIView {
         // Simulate uploading values
         var count = 0
         Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
-            if count == 100 {
+            if count == 99 {
                 self.hasFinishedProgressUpload.send(true)
                 timer.invalidate()
             }
             else {
                 count += 2
+                if count == 100 {
+                    count = 99
+                }
                 self.uploadValue = Float(count)/Float(100)
             }
 
@@ -279,10 +302,18 @@ class DocumentView: UIView {
                     ()
                 case .failure(let error):
                     print("UPLOAD FILE ERROR: \(error)")
+                    switch error {
+                    case .errorMessage(let message):
+                        self?.uploadedFileState.send(.error(message: message))
+
+                    default:
+                        ()
+                    }
                 }
             }, receiveValue: { [weak self] uploadFileResponse in
                 print("UPLOAD FILE RESPONSE: \(uploadFileResponse)")
-                self?.hasFinishedUploadedFile.send(true)
+                self?.uploadValue = 1
+                self?.uploadedFileState.send(.uploaded)
             })
             .store(in: &cancellables)
 
@@ -412,14 +443,12 @@ extension DocumentView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "File Name"
         label.font = AppFont.with(type: .bold, size: 17)
-        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return label
     }
 
     private static func createStatusView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.setContentHuggingPriority(.required, for: .horizontal)
         return view
     }
 
@@ -428,6 +457,8 @@ extension DocumentView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Status"
         label.font = AppFont.with(type: .bold, size: 11)
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
         return label
     }
 
@@ -589,4 +620,23 @@ extension DocumentView {
             self.addAnotherIconImageView.centerYAnchor.constraint(equalTo: self.addAnotherTitleLabel.centerYAnchor)
         ])
     }
+}
+
+enum UploadedFileState: Equatable {
+    case notUploaded
+    case uploaded
+    case error(message: String)
+
+    static func ~= (lhs: Self, rhs: Self) -> Bool {
+        switch (lhs, rhs) {
+          case
+            (.notUploaded, .notUploaded),
+            (.uploaded, .uploaded),
+            (.error, .error):
+            return true
+
+          default:
+            return false
+        }
+      }
 }

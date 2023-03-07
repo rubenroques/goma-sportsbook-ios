@@ -30,7 +30,7 @@ enum FileState {
         if code == "NOT_REVIEWED" {
             self = .pendingApproved
         }
-        else if code == "REVIEWED" {
+        else if code == "APPROVED" {
             self = .approved
         }
         else {

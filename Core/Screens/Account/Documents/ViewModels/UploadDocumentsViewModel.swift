@@ -46,11 +46,15 @@ class UploadDocumentsViewModel {
     var hasLoadedUserDocuments: CurrentValueSubject<Bool, Never> = .init(false)
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
+    var kycStatusPublisher: CurrentValueSubject<String, Never> = .init(Env.userSessionStore.userProfilePublisher.value?.kycStatus ?? "")
+
     init() {
 
         self.setupPublishers()
 
         self.getDocumentTypes()
+
+        self.getKYCStatus()
 
     }
 
@@ -146,5 +150,29 @@ class UploadDocumentsViewModel {
 
         self.isLoadingPublisher.send(false)
         self.shouldReloadData?()
+    }
+
+    private func getKYCStatus() {
+
+        Env.servicesProvider.getProfile()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("PROFILE ERROR: \(error)")
+                }
+            }, receiveValue: { [weak self] userProfile in
+
+                if let kycStatus = userProfile.kycStatus {
+                    self?.kycStatusPublisher.send(kycStatus)
+
+                    if kycStatus == "PASS" {
+                        Env.userSessionStore.isUserKycVerified.send(true)
+                    }
+                }
+            })
+            .store(in: &cancellables)
     }
 }

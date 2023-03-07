@@ -20,14 +20,17 @@ extension SportRadarModelMapper {
             let firstConvertedBet = betSelections.first
 
             let potentialReturn: Double = internalBets.first?.potentialReturn ?? 0.0
+            let totalReturn: Double = internalBets.first?.totalReturn ?? 0.0
+
             return Bet(identifier: identifier,
                        type: firstBet?.type ?? "",
                        state: firstConvertedBet?.state ?? .undefined,
                        result: firstConvertedBet?.result ?? .notSpecified,
+                       globalState: firstConvertedBet?.globalState ?? .undefined,
                        stake: firstBet?.totalStake ?? 0.0,
                        totalOdd: firstBet?.totalOdd ?? 0.0,
                        selections: betSelections,
-                       potentialReturn: potentialReturn,
+                       potentialReturn: potentialReturn == 0.0 ? totalReturn : potentialReturn,
                        date: firstBet?.attemptedDate ?? Date())
         }
         return BettingHistory(bets: bets.sorted(by: { $0.date > $1.date }))
@@ -44,6 +47,8 @@ extension SportRadarModelMapper {
         case .undefined: state = .undefined
         case .attempted: state = .attempted
         case .allStates: state = .undefined
+        case .won: state = .won
+        case .lost: state = .lost
         }
 
         let result: BetResult
@@ -57,9 +62,23 @@ extension SportRadarModelMapper {
         case .void: result = .void
         }
 
+        let globalState: BetState
+        switch internalBet.globalState {
+        case .opened: globalState = .opened
+        case .closed: globalState = .closed
+        case .settled: globalState = .settled
+        case .cancelled: globalState = .cancelled
+        case .undefined: globalState = .undefined
+        case .attempted: globalState = .attempted
+        case .allStates: globalState = .undefined
+        case .won: globalState = .won
+        case .lost: globalState = .lost
+        }
+
         return BetSelection(identifier: internalBet.identifier,
                             state: state,
                             result: result,
+                            globalState: globalState,
                             eventName: internalBet.eventName,
                             homeTeamName: internalBet.homeTeamName,
                             awayTeamName: internalBet.awayTeamName,

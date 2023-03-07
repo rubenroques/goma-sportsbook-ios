@@ -26,6 +26,8 @@ extension SportRadarModels {
         case settled = "Settled"
         case cancelled = "Cancelled"
         case allStates = "AllStates"
+        case won = "Won"
+        case lost = "Lost"
         case undefined = "Undefined"
 
         init?(rawValue: String) {
@@ -34,12 +36,16 @@ extension SportRadarModels {
                 self = .attempted
             case "opened", "open":
                 self = .opened
-            case  "closed":
+            case "closed":
                 self = .closed
-            case  "settled":
+            case "settled":
                 self = .settled
-            case  "cancelled":
+            case "cancelled":
                 self = .cancelled
+            case "won":
+                self = .won
+            case "lost":
+                self = .lost
             default:
                 self = .undefined
             }
@@ -60,9 +66,11 @@ extension SportRadarModels {
         var type: String
         var state: BetState
         var result: BetResult
+        var globalState: BetState
         var marketName: String
         var outcomeName: String
-        var potentialReturn: Double
+        var potentialReturn: Double?
+        var totalReturn: Double?
         var totalOdd: Double
         var totalStake: Double
         var attemptedDate: Date
@@ -81,9 +89,11 @@ extension SportRadarModels {
             case type = "betTypeName"
             case state = "betLegStatus"
             case result = "betResult"
+            case globalState = "betState"
             case marketName
             case outcomeName = "selectionName"
             case potentialReturn
+            case totalReturn = "totalReturn"
             case totalOdd = "totalMultiBetOdds"
             case totalStake = "totalStake"
             case attemptedDate = "tsAttempted"
@@ -104,7 +114,8 @@ extension SportRadarModels {
             self.sportTypeName = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.sportTypeName)
             self.marketName = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.marketName)
             self.outcomeName = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.outcomeName)
-            self.potentialReturn = try container.decode(Double.self, forKey: SportRadarModels.Bet.CodingKeys.potentialReturn)
+            self.potentialReturn = (try? container.decode(Double.self, forKey: SportRadarModels.Bet.CodingKeys.potentialReturn)) ?? 0.0
+            self.totalReturn = (try? container.decode(Double.self, forKey: SportRadarModels.Bet.CodingKeys.totalReturn)) ?? 0.0
 
             self.type = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.type)
 
@@ -113,6 +124,9 @@ extension SportRadarModels {
 
             let resultString = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.result)
             self.result = BetResult(rawValue: resultString) ?? .notSpecified
+
+            let globalStateString = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.globalState)
+            self.globalState = BetState(rawValue: globalStateString) ?? .undefined
 
             self.totalOdd = try container.decode(Double.self, forKey: SportRadarModels.Bet.CodingKeys.totalOdd)
             self.totalStake = try container.decode(Double.self, forKey: SportRadarModels.Bet.CodingKeys.totalStake)

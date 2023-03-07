@@ -8,7 +8,7 @@
 import Foundation
 
 enum BettingAPIClient {
-    case betHistory(page: Int, startDate: Date?, endDate: Date?, betState: [SportRadarModels.BetState]?, betResult: [SportRadarModels.BetResult]?)
+    case betHistory(page: Int, startDate: Date?, endDate: Date?, betState: [SportRadarModels.BetState]?, betResult: [SportRadarModels.BetResult]?, pageSize: Int)
     case betDetails(identifier: String)
     case calculateReturns(betTicket: BetTicket)
     case getAllowedBetTypes(betTicketSelections: [BetTicketSelection])
@@ -34,7 +34,7 @@ extension BettingAPIClient: Endpoint {
     
     var query: [URLQueryItem]? {
         switch self {
-        case .betHistory(let page, let startDate, let endDate, let betStates, let betOutcomes):
+        case .betHistory(let page, let startDate, let endDate, let betStates, let betOutcomes, let pageSize):
             
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss.SSS"
@@ -61,8 +61,9 @@ extension BettingAPIClient: Endpoint {
 
             query.append(URLQueryItem(name: "orderBy", value: "0"))
             query.append(URLQueryItem(name: "orderDesc", value: "true"))
+            
+            query.append(URLQueryItem(name: "pageSize", value: "\(pageSize)"))
 
-            query.append(URLQueryItem(name: "pageSize", value: "10"))
             query.append(URLQueryItem(name: "pageNumber", value: "\(page)"))
 
             return query

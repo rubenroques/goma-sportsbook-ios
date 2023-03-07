@@ -207,6 +207,13 @@ class ProfileViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        Env.userSessionStore.isUserKycVerified
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.verifyUserActivationConditions()
+            })
+            .store(in: &cancellables)
+
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

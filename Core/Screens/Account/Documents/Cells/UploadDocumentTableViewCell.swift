@@ -66,6 +66,7 @@ class UploadDocumentTableViewCell: UITableViewCell {
     // MARK: Public properties
     var finishedUploading: (() -> Void)?
     var shouldRedrawViews: (() -> Void)?
+    var shouldShowUploadingError: ((String) -> Void)?
 
     // MARK: Lifetime and Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -153,6 +154,11 @@ class UploadDocumentTableViewCell: UITableViewCell {
                     self?.shouldRedrawViews?()
                 }
 
+                documentView.shouldShowUploadingError = { [weak self] message in
+
+                    self?.shouldShowUploadingError?(message)
+                }
+
                 viewModel.cachedDocumentViews.append(documentView)
 
                 self.stackView.addArrangedSubview(documentView)
@@ -176,6 +182,11 @@ class UploadDocumentTableViewCell: UITableViewCell {
 
                     documentView.shouldRedrawView = { [weak self] in
                         self?.shouldRedrawViews?()
+                    }
+
+                    documentView.shouldShowUploadingError = { [weak self] message in
+
+                        self?.shouldShowUploadingError?(message)
                     }
 
                     viewModel.cachedDocumentViews.append(documentView)
@@ -213,6 +224,11 @@ class UploadDocumentTableViewCell: UITableViewCell {
 
             documentView.shouldRedrawView = { [weak self] in
                 self?.shouldRedrawViews?()
+            }
+
+            documentView.shouldShowUploadingError = { [weak self] message in
+
+                self?.shouldShowUploadingError?(message)
             }
 
             viewModel.cachedDocumentViews.append(documentView)

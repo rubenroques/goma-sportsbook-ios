@@ -140,6 +140,14 @@ class DynamicHomeViewTemplateDataSource {
                 self?.refreshPublisher.send()
             })
             .store(in: &cancellables)
+
+        Env.userSessionStore.isUserKycVerified
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.fetchAlerts()
+                self?.refreshPublisher.send()
+            })
+            .store(in: &cancellables)
     }
 
     func refresh() {

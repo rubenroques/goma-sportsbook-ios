@@ -727,3 +727,6 @@ Terms of use, Privacy Policy and EULA";
 "bonus_expired" = "Bonus Expired";
 "deposit_cancel" = "Deposit Cancel";
 "withdrawal_cancel" = "Withdrawal Cancel";
+
+"max_file_size_exceeded" = "Max File Size Exceeded";
+"maz_file_size_exceeded_message" = "The file chosen exceeds the maximum 10MB size. Please select another file.";
