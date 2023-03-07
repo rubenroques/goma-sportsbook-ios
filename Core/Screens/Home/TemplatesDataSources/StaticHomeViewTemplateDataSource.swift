@@ -270,7 +270,7 @@ class StaticHomeViewTemplateDataSource {
         let favoriteEventsId = Env.favoritesManager.favoriteEventsIdPublisher.value
 
         for eventId in favoriteEventsId {
-            
+
             Env.servicesProvider.getEventSummary(eventId: eventId)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
@@ -284,14 +284,12 @@ class StaticHomeViewTemplateDataSource {
 
                     guard let self = self else {return}
 
-                    print("EVENT SUMMARY: \(eventSummary)")
-
                     if eventSummary.homeTeamName != "" || eventSummary.awayTeamName != "" {
                         let match = ServiceProviderModelMapper.match(fromEvent: eventSummary)
 
                         if !self.favoriteMatches.contains(where: {
                             $0.id == match.id
-                        }) {
+                        }), self.favoriteMatches.count < 2 {
                             self.favoriteMatches.append(match)
                         }
                     }

@@ -16,10 +16,12 @@ public struct Bet: Codable {
     public var type: String
     public var state: BetState
     public var result: BetResult
+    public var globalState: BetState
     public var stake: Double
     public var totalOdd: Double
     public var selections: [BetSelection]
-    public var potentialReturn: Double
+    public var potentialReturn: Double?
+    public var totalReturn: Double?
     public var date: Date
 }
 
@@ -27,6 +29,7 @@ public struct BetSelection: Codable {
     public var identifier: String
     public var state: BetState
     public var result: BetResult
+    public var globalState: BetState
     public var eventName: String
     public var homeTeamName: String
     public var awayTeamName: String
@@ -51,6 +54,8 @@ public enum BetState: String, Codable {
     case settled
     case cancelled
     case attempted
+    case won
+    case lost
     case undefined
 }
 

@@ -27,10 +27,10 @@ extension ServiceProviderModelMapper {
                         bonusBetAmount: nil,
                         currency: nil,
                         maxWinning: bet.potentialReturn,
-                        totalPriceValue: bet.totalOdd,
+                               totalPriceValue: selections.count > 1 ? bet.totalOdd : selections.first?.priceValue,
                         overallBetReturns: nil,
                         numberOfSelections: selections.count,
-                        status: bet.state.rawValue,
+                        status: bet.globalState.rawValue,
                         placedDate: bet.date,
                         settledDate: nil,
                         freeBet: nil,
@@ -46,19 +46,29 @@ extension ServiceProviderModelMapper {
         case .settled: status = .settled
         case .cancelled: status = .cancelled
         case .attempted: status = .undefined
+        case .won: status = .won
+        case .lost: status = .lost
         case .undefined: status = .undefined
         }
 
+        // betResult is global, betLegStatus is the selection real result
         let result: BetSelectionResult
-        switch betSelection.result {
-        case .open: result = .open
+        switch betSelection.state {
+        case .opened: result = .open
         case .won: result = .won
         case .lost: result = .lost
-        case .drawn: result = .drawn
-        case .notSpecified: result = .undefined
-        case .void: result = .undefined
-        case .pending: result = .undefined
+        default: result = .undefined
         }
+//        let result: BetSelectionResult
+//        switch betSelection.result {
+//        case .open: result = .open
+//        case .won: result = .won
+//        case .lost: result = .lost
+//        case .drawn: result = .drawn
+//        case .notSpecified: result = .undefined
+//        case .void: result = .undefined
+//        case .pending: result = .undefined
+//        }
 
         var decimalOdd: Double
         switch betSelection.odd {
@@ -67,7 +77,6 @@ extension ServiceProviderModelMapper {
         case .european(let odd):
             decimalOdd = odd
         }
-
 
         let betHistoryEntrySelection = BetHistoryEntrySelection(outcomeId: betSelection.identifier,
                                                                 status: status,

@@ -66,6 +66,8 @@ enum BetSelectionStatus: String, Codable, CaseIterable {
     case closed
     case settled
     case cancelled
+    case won
+    case lost
     case undefined
 }
 
