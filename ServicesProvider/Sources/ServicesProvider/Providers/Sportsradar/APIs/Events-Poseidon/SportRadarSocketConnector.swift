@@ -20,6 +20,8 @@ protocol SportRadarConnectorSubscriber: AnyObject {
     func eventGroups(forContentIdentifier identifier: ContentIdentifier, withEvents: [EventsGroup])
     func outrightEventGroups(events: [EventsGroup])
 
+    func marketDetails(forContentIdentifier identifier: ContentIdentifier, market: Market)
+
     func didReceiveGenericUpdate(content: SportRadarModels.ContentContainer)
 }
 
@@ -201,6 +203,11 @@ extension SportRadarSocketConnector: WebSocketDelegate {
                     if let subscriber = self.messageSubscriber {
                         let eventsGroup = SportRadarModelMapper.eventsGroup(fromInternalEvents: events)
                         subscriber.outrightEventGroups(events: [eventsGroup])
+                    }
+                case .marketDetails(let contentIdentifier, let market):
+                    if let subscriber = self.messageSubscriber, let marketValue = market {
+                        let mappedMarket = SportRadarModelMapper.market(fromInternalMarket: marketValue)
+                        subscriber.marketDetails(forContentIdentifier: contentIdentifier, market: mappedMarket)
                     }
                 default:
                     if let subscriber = self.messageSubscriber {

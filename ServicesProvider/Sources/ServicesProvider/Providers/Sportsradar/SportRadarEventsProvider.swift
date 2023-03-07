@@ -64,15 +64,12 @@ class SportRadarEventsProvider: EventsProvider {
     private var liveSportTypesPublisher: CurrentValueSubject<SubscribableContent<[SportType]>, ServiceProviderError>?
     private var allSportTypesPublisher: CurrentValueSubject<SubscribableContent<[SportType]>, ServiceProviderError>?
 
-
-
     private var eventsPaginators: [String: SportRadarEventsPaginator] = [:]
     private var eventDetailsCoordinator: SportRadarEventDetailsCoordinator?
+    private var marketUpdatesCoordinators: [String: SportRadarMarketDetailsCoordinator] = [:]
 
     private var competitionEventsPublisher: [ContentIdentifier: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>] = [:]
-    //private var eventsPublishers: [TopicIdentifier: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>] = [:]
     private var outrightDetailsPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
-
     private var eventSummaryPublisher: CurrentValueSubject<SubscribableContent<[EventsGroup]>, ServiceProviderError>?
 
     //
@@ -96,6 +93,10 @@ class SportRadarEventsProvider: EventsProvider {
         self.eventsPaginators = self.eventsPaginators.filter { $0.value.isActive }
         for paginator in self.eventsPaginators.values where paginator.isActive {
             paginator.reconnect(withNewSessionToken: newSocketToken)
+        }
+
+        if let eventDetailsCoordinator = self.eventDetailsCoordinator {
+            eventDetailsCoordinator.reconnect(withNewSessionToken: newSocketToken)
         }
     }
 
@@ -515,38 +516,67 @@ class SportRadarEventsProvider: EventsProvider {
         return Just(nil).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
     }
 
-    public func subscribeToMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
+    public func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
         // events lists
         for paginator in self.eventsPaginators.values {
-            if paginator.containsMarket(withid: id), let publisher = paginator.subscribeToMarketUpdates(withId: id) {
+            if paginator.containsMarket(withid: id), let publisher = paginator.subscribeToEventMarketUpdates(withId: id) {
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
         }
         // event details
         if let eventDetailsCoordinator = self.eventDetailsCoordinator,
            eventDetailsCoordinator.containsMarket(withid: id),
-           let publisher = eventDetailsCoordinator.subscribeToMarketUpdates(withId: id)
+           let publisher = eventDetailsCoordinator.subscribeToEventMarketUpdates(withId: id)
         {
             return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
         }
         return Just(nil).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
     }
 
-    public func subscribeToOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
+    public func subscribeToEventOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
         // events lists
         for paginator in self.eventsPaginators.values {
-            if paginator.containsOutcome(withid: id), let publisher = paginator.subscribeToOutcomeUpdates(withId: id) {
+            if paginator.containsOutcome(withid: id), let publisher = paginator.subscribeToEventOutcomeUpdates(withId: id) {
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
         }
         // event details
         if let eventDetailsCoordinator = self.eventDetailsCoordinator,
            eventDetailsCoordinator.containsOutcome(withid: id),
-           let publisher = eventDetailsCoordinator.subscribeToOutcomeUpdates(withId: id)
+           let publisher = eventDetailsCoordinator.subscribeToEventOutcomeUpdates(withId: id)
         {
             return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
         }
         return Just(nil).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+    }
+
+
+    public func subscribeToMarketDetails(withId id: String) -> AnyPublisher<SubscribableContent<Market>, ServiceProviderError> {
+
+        // Get the session
+        guard
+            let sessionToken = socketConnector.token
+        else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+
+        // contentType -> liveDataSummaryAdvancedListBySportType
+        let contentType = ContentType.market
+        // contentId -> FBL/0 -> /0 means page 0 of pagination
+        let contentRoute = ContentRoute.market(marketId: id)
+
+        let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
+
+        if let coordinators = self.marketUpdatesCoordinators[id], coordinators.isActive {
+            return coordinators.marketPublisher
+        }
+        else {
+            let coordinator = SportRadarMarketDetailsCoordinator.init(sessionToken: sessionToken.hash,
+                                                                       contentIdentifier: contentIdentifier)
+            self.marketUpdatesCoordinators[id] = coordinator
+            return coordinator.requestMarketUpdates()
+        }
+
     }
 
 }
@@ -636,10 +666,20 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
         }
     }
 
+    func marketDetails(forContentIdentifier identifier: ContentIdentifier, market: Market) {
+        if let marketUpdatesCoordinator = marketUpdatesCoordinators[market.id] {
+            marketUpdatesCoordinator.updateMarket(market)
+        }
+    }
+
     func didReceiveGenericUpdate(content: SportRadarModels.ContentContainer) {
         if let contentIdentifier = content.contentIdentifier,
             let contentIdentifierPaginator = self.eventsPaginators[contentIdentifier.pageableId] {
             contentIdentifierPaginator.handleContentUpdate(content)
+        }
+
+        for marketUpdatesCoordinator in self.marketUpdatesCoordinators.values {
+            marketUpdatesCoordinator.handleContentUpdate(content)
         }
     }
 
@@ -1175,7 +1215,7 @@ extension SportRadarEventsProvider {
     }
 
     private func createSubscribeRequest(withHTTPBody body: Data? = nil) -> URLRequest {
-        let hostname = SportRadarConstants.socketRestHostname
+        let hostname = SportRadarConstants.servicesRestHostname
         let url = URL(string: "\(hostname)/services/content/subscribe")!
         var request = URLRequest(url: url)
         request.httpBody = body
@@ -1186,7 +1226,7 @@ extension SportRadarEventsProvider {
     }
 
     private func createUnsubscribeRequest(withHTTPBody body: Data? = nil) -> URLRequest {
-        let hostname = SportRadarConstants.socketRestHostname
+        let hostname = SportRadarConstants.servicesRestHostname
         let url = URL(string: "\(hostname)/services/content/unsubscribe")!
         var request = URLRequest(url: url)
         request.httpBody = body

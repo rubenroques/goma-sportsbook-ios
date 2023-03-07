@@ -190,13 +190,9 @@ class SportRadarEventsPaginator {
 
             guard let request = endpoint.request() else { continue }
             let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
-
                 if let error {
                     print("SportRadarEventsPaginator: reconnect dataTask contentIdentifier \(subscription.contentIdentifier) error \(error)")
                 }
-//                if let response {
-//                    print("SportRadarEventsPaginator: reconnect dataTask response \(response)")
-//                }
                 if let data, let dataString = String(data: data, encoding: .utf8) {
                     print("SportRadarEventsPaginator: reconnect dataTask contentIdentifier \(subscription.contentIdentifier) data \(dataString)")
                 }
@@ -239,12 +235,12 @@ extension SportRadarEventsPaginator {
         return self.storage.subscribeToEventUpdates(withId: id)
     }
 
-    func subscribeToMarketUpdates(withId id: String) -> AnyPublisher<Market, Never>? {
-        return self.storage.subscribeToMarketUpdates(withId: id)
+    func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market, Never>? {
+        return self.storage.subscribeToEventMarketUpdates(withId: id)
     }
 
-    func subscribeToOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome, Never>? {
-        return self.storage.subscribeToOutcomeUpdates(withId: id)
+    func subscribeToEventOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome, Never>? {
+        return self.storage.subscribeToEventOutcomeUpdates(withId: id)
     }
 
     func containsEvent(withid id: String) -> Bool {

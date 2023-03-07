@@ -525,14 +525,14 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
         if let market = match.markets.first {
 
-            self.marketSubscriber = Env.servicesProvider.subscribeToMarketUpdates(withId: market.id)
+            self.marketSubscriber = Env.servicesProvider.subscribeToEventMarketUpdates(withId: market.id)
                 .compactMap({ $0 })
                 .map({ (serviceProviderMarket: ServicesProvider.Market) -> Market in
                     return ServiceProviderModelMapper.market(fromServiceProviderMarket: serviceProviderMarket)
                 })
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-                    print("marketSubscriber subscribeToMarketUpdates completion: \(completion)")
+                    print("marketSubscriber subscribeToEventMarketUpdates completion: \(completion)")
                 }, receiveValue: { [weak self] (marketUpdated: Market) in
                     if marketUpdated.isAvailable {
                         self?.showMarketButtons()
@@ -559,7 +559,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 }
 
                 self.leftOddButtonSubscriber = Env.servicesProvider
-                    .subscribeToOutcomeUpdates(withId: outcome.bettingOffer.id)
+                    .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
                     .compactMap({ $0 })
                     .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
                     .map(\.bettingOffer)
@@ -616,7 +616,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 }
 
                 self.middleOddButtonSubscriber = Env.servicesProvider
-                    .subscribeToOutcomeUpdates(withId: outcome.bettingOffer.id)
+                    .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
                     .compactMap({ $0 })
                     .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
                     .map(\.bettingOffer)
@@ -672,7 +672,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 }
 
                 self.rightOddButtonSubscriber = Env.servicesProvider
-                    .subscribeToOutcomeUpdates(withId: outcome.bettingOffer.id)
+                    .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
                     .compactMap({ $0 })
                     .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
                     .map(\.bettingOffer)

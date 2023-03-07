@@ -97,9 +97,46 @@ class SportRadarBettingProvider: BettingProvider {
     func placeBets(betTickets: [BetTicket]) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         let endpoint = BettingAPIClient.placeBets(betTickets: betTickets)
         let publisher: AnyPublisher<SportRadarModels.PlacedBetsResponse, ServiceProviderError> = self.connector.request(endpoint)
+
         return publisher
-            .map({ SportRadarModelMapper.placedBetsResponse(fromInternalPlacedBetsResponse: $0) })
+            .flatMap { (internalPlacedBetsResponse: SportRadarModels.PlacedBetsResponse) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> in
+
+
+                if internalPlacedBetsResponse.responseCode == "1" ||
+                        internalPlacedBetsResponse.responseCode == "2" ||
+                        internalPlacedBetsResponse.responseCode == "3"
+                {
+                    let placedBetsResponse = SportRadarModelMapper.placedBetsResponse(fromInternalPlacedBetsResponse: internalPlacedBetsResponse)
+                    return Just( placedBetsResponse ).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                }
+                else {
+                    let notPlacedBetError = ServiceProviderError.notPlacedBet(message: internalPlacedBetsResponse.errorMessage ?? "")
+                    return Fail(outputType: PlacedBetsResponse.self, failure: notPlacedBetError)
+                        .eraseToAnyPublisher()
+                }
+            }
             .eraseToAnyPublisher()
+
+
+//        return publisher
+//            .map({ SportRadarModelMapper.placedBetsResponse(fromInternalPlacedBetsResponse: $0) })
+//            .flatMap({ (statusResponse: SportRadarModels.StatusResponse) -> AnyPublisher<SignUpResponse, ServiceProviderError> in
+//            if statusResponse.status == "SUCCESS" || statusResponse.status == "BONUSPLAN_NOT_FOUND" {
+//                return Just( SignUpResponse(successful: true) ).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+//            }
+//            else if let errors = statusResponse.errors {
+//                let mappedErrors = errors.map { error -> SignUpResponse.SignUpError in
+//                    return SignUpResponse.SignUpError(field: error.field, error: error.error)
+//                }
+//                return Just( SignUpResponse(successful: false, errors: mappedErrors) ).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+//            }
+//            return Fail(outputType: PlacedBetsResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+//        })
+//        .eraseToAnyPublisher()
+//
+//        return publisher
+//            .map({ SportRadarModelMapper.placedBetsResponse(fromInternalPlacedBetsResponse: $0) })
+//            .eraseToAnyPublisher()
     }
 
     func getBetDetails(identifier: String) -> AnyPublisher<Bet, ServiceProviderError> {

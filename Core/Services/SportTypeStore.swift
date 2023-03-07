@@ -40,6 +40,10 @@ class SportTypeStore {
     }
 
     private var cancellables = Set<AnyCancellable>()
+
+    private var preLiveSportsSubscription: ServicesProvider.Subscription?
+    private var liveSportsSubscription: ServicesProvider.Subscription?
+
     private var sports = [Sport]()
     private var preLiveSports = [Sport]()
     private var liveSports = [Sport]()
@@ -51,6 +55,7 @@ class SportTypeStore {
         self.getPreLiveSports()
 
         Publishers.CombineLatest(self.isLoadingLiveSportsPublisher, self.isLoadingPreLiveSportsPublisher)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLoadingLiveSports, isLoadingPreLiveSports in
 
                 if !isLoadingLiveSports && !isLoadingPreLiveSports {
@@ -68,6 +73,7 @@ class SportTypeStore {
     private func getLiveSports() {
 
         Env.servicesProvider.subscribeLiveSportTypes()
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished:
@@ -75,7 +81,6 @@ class SportTypeStore {
                 case .failure(let error):
                     print("LIVE SPORTS ERROR: \(error)")
                     self?.liveSportsRequestRetries += 1
-
                     if let liveSportsRequestRetries = self?.liveSportsRequestRetries,
                        liveSportsRequestRetries < 5 {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -91,6 +96,7 @@ class SportTypeStore {
 
             switch subscribableContent {
             case .connected(let subscription):
+                self?.liveSportsSubscription = subscription
                 self?.liveSports = []
             case .contentUpdate(let sportTypes):
                 let sports = sportTypes.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
@@ -106,14 +112,13 @@ class SportTypeStore {
 
     private func getPreLiveSports() {
         Env.servicesProvider.getAvailableSportTypes()
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
             switch completion {
             case .finished:
                 ()
             case .failure(let error):
-
                 self?.preLiveSportsRequestRetries += 1
-
                 if let preLiveSportsRequestRetries = self?.preLiveSportsRequestRetries,
                    preLiveSportsRequestRetries < 5 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {

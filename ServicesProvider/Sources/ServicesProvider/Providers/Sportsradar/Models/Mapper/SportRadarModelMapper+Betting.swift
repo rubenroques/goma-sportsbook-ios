@@ -75,12 +75,8 @@ extension SportRadarModelMapper {
     //  SportRadar ---> ServiceProvider
     static func placedBetsResponse(fromInternalPlacedBetsResponse placedBetsResponse: SportRadarModels.PlacedBetsResponse) -> PlacedBetsResponse {
         let bets = placedBetsResponse.bets.map(Self.placedBetEntry(fromInternalPlacedBetEntry:))
-
-        let betSucceed = placedBetsResponse.responseCode == "2" && placedBetsResponse.identifier != "0"
         return PlacedBetsResponse(identifier: placedBetsResponse.identifier,
-                                 responseCode: placedBetsResponse.responseCode,
-                                 succeed: betSucceed,
-                                 bets: bets)
+                                  bets: bets)
     }
 
     static func placedBetEntry(fromInternalPlacedBetEntry placedBetEntry: SportRadarModels.PlacedBetEntry) -> PlacedBetEntry {

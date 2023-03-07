@@ -238,7 +238,7 @@ extension Outcome {
     }
 }
 
-enum OddFormat: Codable, Hashable {
+enum OddFormat: Codable, Hashable, CustomStringConvertible {
     case fraction(numerator: Int, denominator: Int)
     case decimal(odd: Double)
 
@@ -253,7 +253,17 @@ enum OddFormat: Codable, Hashable {
             hasher.combine(odd)
         }
     }
-    
+
+    var description: String {
+        switch self {
+        case .fraction(let numerator, let denominator):
+            let decimal = (Double(numerator)/Double(denominator)) + 1.0
+            return "OddFormat \(decimal) [\(numerator)/\(denominator)]"
+        case .decimal(let odd):
+            return "OddFormat \(odd)"
+        }
+
+    }
 }
 
 struct BettingOffer {

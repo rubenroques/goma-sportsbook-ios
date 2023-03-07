@@ -181,22 +181,32 @@ extension ServicesProviderClient {
         return eventsProvider.subscribeToEventUpdates(withId: id)
     }
 
-    public func subscribeToMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
+    public func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
-        return eventsProvider.subscribeToMarketUpdates(withId: id)
+        return eventsProvider.subscribeToEventMarketUpdates(withId: id)
     }
 
-    public func subscribeToOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
+    public func subscribeToEventOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
-        return eventsProvider.subscribeToOutcomeUpdates(withId: id)
+        return eventsProvider.subscribeToEventOutcomeUpdates(withId: id)
+    }
+
+
+    public func subscribeToMarketDetails(withId id: String) -> AnyPublisher<SubscribableContent<Market>, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeToMarketDetails(withId: id)
     }
 
 }

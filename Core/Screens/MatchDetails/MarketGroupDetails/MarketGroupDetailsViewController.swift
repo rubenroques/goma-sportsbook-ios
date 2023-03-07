@@ -62,7 +62,6 @@ class MarketGroupDetailsViewController: UIViewController {
         self.showLoading()
 
         self.bind(toViewModel: self.viewModel)
-
     }
 
     override func viewWillAppear(_ animated: Bool) {

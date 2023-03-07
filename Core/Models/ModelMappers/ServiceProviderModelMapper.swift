@@ -85,7 +85,7 @@ extension ServiceProviderModelMapper {
                       nameDigit3: nil,
                       eventPartId: nil,
                       bettingTypeId: market.eventMarketTypeId,
-                      outcomes: Self.outcomes(fromServiceProviderOutcomes: market.outcomes),
+                      outcomes: Self.outcomes(fromServiceProviderOutcomes: market.outcomes, marketName: market.name),
                       marketTypeId: market.marketTypeId,
                       eventName: market.eventName,
                       isMainOutright: market.isMainOutright,
@@ -101,28 +101,41 @@ extension ServiceProviderModelMapper {
     }
     
     // Outcome
-    static func outcomes(fromServiceProviderOutcomes outcomes: [ServicesProvider.Outcome]) -> [Outcome] {
-        return outcomes.map(Self.outcome(fromServiceProviderOutcome:))
+    static func outcomes(fromServiceProviderOutcomes outcomes: [ServicesProvider.Outcome], marketName: String) -> [Outcome] {
+        return outcomes.map { outcome in
+            return Self.outcome(fromServiceProviderOutcome: outcome, marketName: marketName)
+        }
     }
-    
+
+    static func outcomes(fromServiceProviderOutcomes outcomes: [ServicesProvider.Outcome]) -> [Outcome] {
+        return outcomes.map { outcome in
+            return Self.outcome(fromServiceProviderOutcome: outcome, marketName: nil)
+        }
+    }
+
     static func outcome(fromServiceProviderOutcome outcome: ServicesProvider.Outcome) -> Outcome {
+        return Self.outcome(fromServiceProviderOutcome: outcome, marketName: nil)
+    }
+
+    static func outcome(fromServiceProviderOutcome outcome: ServicesProvider.Outcome, marketName: String?) -> Outcome {
         let oddFormat: OddFormat = Self.oddFormat(fromServiceProviderOddFormat: outcome.odd)
         let bettingOffer = BettingOffer(id: outcome.id,
                                         odd: oddFormat,
                                         statusId: "",
                                         isLive: true,
                                         isAvailable: outcome.isTradable)
-        
-        let outcome = Outcome(id: outcome.id,
+
+        let mappedOutcome = Outcome(id: outcome.id,
                               codeName: outcome.name,
                               typeName: outcome.name,
                               translatedName: outcome.name,
-                              marketId: outcome.marketId,
+                                    marketName: marketName,
+                              marketId: outcome.marketId, 
                               bettingOffer: bettingOffer,
                               orderValue: outcome.orderValue,
                               externalReference: outcome.externalReference)
 
-        return outcome
+        return mappedOutcome
     }
 
     static func oddFormat(fromServiceProviderOddFormat oddFormat: ServicesProvider.OddFormat) -> OddFormat {

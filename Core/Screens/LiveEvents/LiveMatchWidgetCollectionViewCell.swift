@@ -585,7 +585,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.homeOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
 
                 self.leftOddButtonSubscriber = Env.servicesProvider
-                    .subscribeToOutcomeUpdates(withId: outcome.bettingOffer.id)
+                    .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
                     .compactMap({ $0 })
                     .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
                     .map(\.bettingOffer)
@@ -636,7 +636,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.drawOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
 
                 self.middleOddButtonSubscriber = Env.servicesProvider
-                    .subscribeToOutcomeUpdates(withId: outcome.bettingOffer.id)
+                    .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
                     .compactMap({ $0 })
                     .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
                     .map(\.bettingOffer)
@@ -684,7 +684,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.awayOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
 
                 self.rightOddButtonSubscriber = Env.servicesProvider
-                    .subscribeToOutcomeUpdates(withId: outcome.bettingOffer.id)
+                    .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
                     .compactMap({ $0 })
                     .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
                     .map(\.bettingOffer)

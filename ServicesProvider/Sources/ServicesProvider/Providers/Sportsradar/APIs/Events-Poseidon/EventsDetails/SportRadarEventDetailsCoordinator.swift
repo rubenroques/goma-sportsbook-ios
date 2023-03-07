@@ -23,7 +23,7 @@ class SportRadarEventDetailsCoordinator {
         return eventDetailsCurrentValueSubject.eraseToAnyPublisher()
     }
 
-    private var eventDetailsCurrentValueSubject: CurrentValueSubject<SubscribableContent<Event>, ServiceProviderError> = .init(.disconnected)
+    private var eventDetailsCurrentValueSubject: CurrentValueSubject<SubscribableContent<Event>, ServiceProviderError>
 
     init(contentIdentifier: ContentIdentifier, sessionToken: String, storage: SportRadarEventDetailsStorage) {
         self.sessionToken = sessionToken
@@ -72,6 +72,25 @@ class SportRadarEventDetailsCoordinator {
         self.eventDetailsCurrentValueSubject.send(.contentUpdate(content: updatedEvent))
     }
 
+    func reconnect(withNewSessionToken newSessionToken: String) {
+        self.sessionToken = newSessionToken
+        self.storage.reset()
+
+        let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: self.sessionToken,
+                                                         contentIdentifier: self.contentIdentifier)
+
+        guard let request = endpoint.request() else { return }
+        let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error {
+                print("SportRadarEventDetailsCoordinator: reconnect dataTask contentIdentifier \(self.contentIdentifier) error \(error)")
+            }
+            if let data, let dataString = String(data: data, encoding: .utf8) {
+                print("SportRadarEventDetailsCoordinator: reconnect dataTask contentIdentifier \(self.contentIdentifier) data \(dataString)")
+            }
+        }
+        sessionDataTask.resume()
+    }
+
 }
 
 
@@ -105,12 +124,12 @@ extension SportRadarEventDetailsCoordinator {
         return self.storage.subscribeToEventUpdates(withId: id)
     }
 
-    func subscribeToMarketUpdates(withId id: String) -> AnyPublisher<Market, Never>? {
-        return self.storage.subscribeToMarketUpdates(withId: id)
+    func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market, Never>? {
+        return self.storage.subscribeToEventMarketUpdates(withId: id)
     }
 
-    func subscribeToOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome, Never>? {
-        return self.storage.subscribeToOutcomeUpdates(withId: id)
+    func subscribeToEventOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome, Never>? {
+        return self.storage.subscribeToEventOutcomeUpdates(withId: id)
     }
 
     func containsEvent(withid id: String) -> Bool {

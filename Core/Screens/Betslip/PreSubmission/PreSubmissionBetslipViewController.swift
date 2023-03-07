@@ -1482,10 +1482,16 @@ class PreSubmissionBetslipViewController: UIViewController {
                 .sink { [weak self] completion in
                     switch completion {
                     case .failure(let error):
-                        let message = """
-                        Something went wrong with your bet request.
-                        Make sure you have completed your profile and enought balance.
-                        """
+                        var message = ""
+                        switch error {
+                        case .betPlacementDetailedError(let detailedMessage):
+                            message = detailedMessage
+                        default:
+                            message = """
+                            Something went wrong with your bet request.
+                            Make sure you have completed your profile and enought balance.
+                            """
+                        }
                         self?.showErrorView(errorMessage: message)
                     default: ()
                     }
@@ -1501,10 +1507,16 @@ class PreSubmissionBetslipViewController: UIViewController {
                     .sink { [weak self] completion in
                         switch completion {
                         case .failure(let error):
-                            let message = """
-                            Something went wrong with your bet request.
-                            Make sure you have completed your profile and enought balance.
-                            """
+                            var message = ""
+                            switch error {
+                            case .betPlacementDetailedError(let detailedMessage):
+                                message = detailedMessage
+                            default:
+                                message = """
+                                Something went wrong with your bet request.
+                                Make sure you have completed your profile and enought balance.
+                                """
+                            }
                             self?.showErrorView(errorMessage: message)
                         default: ()
                         }
@@ -1520,10 +1532,16 @@ class PreSubmissionBetslipViewController: UIViewController {
                     .sink { [weak self] completion in
                         switch completion {
                         case .failure(let error):
-                            let message = """
-                            Something went wrong with your bet request.
-                            Make sure you have completed your profile and enought balance.
-                            """
+                            var message = ""
+                            switch error {
+                            case .betPlacementDetailedError(let detailedMessage):
+                                message = detailedMessage
+                            default:
+                                message = """
+                                Something went wrong with your bet request.
+                                Make sure you have completed your profile and enought balance.
+                                """
+                            }
                             self?.showErrorView(errorMessage: message)
                         default: ()
                         }
@@ -1933,6 +1951,8 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
                 cell.configureWithBettingTicket(bettingTicket, errorBetting: cellBetError.errorMessage)
             case .forbiddenBetError:
                 cell.configureWithBettingTicket(bettingTicket, errorBetting: cellBetError.errorMessage)
+            case .betPlacementDetailedError(let message):
+                cell.configureWithBettingTicket(bettingTicket, errorBetting: message)
             default:
                 cell.configureWithBettingTicket(bettingTicket)
             }

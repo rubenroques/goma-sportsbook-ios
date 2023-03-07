@@ -23,6 +23,8 @@ public enum ServiceProviderError: Error {
 
     case incompletedSportData
     case userSessionNotFound
+
+    case notPlacedBet(message: String)
     
     case onSubscribe
 

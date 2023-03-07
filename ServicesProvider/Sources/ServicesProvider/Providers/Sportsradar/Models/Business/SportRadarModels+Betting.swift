@@ -208,6 +208,7 @@ extension SportRadarModels {
     struct PlacedBetsResponse: Codable {
         var identifier: String
         var responseCode: String
+        var errorMessage: String?
         var bets: [PlacedBetEntry]
 
         enum CodingKeys: String, CodingKey {
@@ -215,6 +216,7 @@ extension SportRadarModels {
             case bets = "bets"
             case status = "status"
             case responseCode = "state"
+            case errorMessage = "statusText"
         }
 
         init(from decoder: Decoder) throws {
@@ -227,6 +229,8 @@ extension SportRadarModels {
             let statusContainer = try? container.nestedContainer(keyedBy: CodingKeys.self, forKey: .status)
             let statusCodeInt = (try? statusContainer?.decodeIfPresent(Int.self, forKey: .responseCode)) ?? 0
             self.responseCode = "\(statusCodeInt)"
+
+            self.errorMessage = try statusContainer?.decodeIfPresent(String.self, forKey: .errorMessage)
         }
 
         func encode(to encoder: Encoder) throws {

@@ -41,8 +41,10 @@ protocol EventsProvider {
 
     //
     func subscribeToEventUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError>
-    func subscribeToMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError>
-    func subscribeToOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError>
+    func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError>
+    func subscribeToEventOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError>
+
+    func subscribeToMarketDetails(withId id: String) -> AnyPublisher<SubscribableContent<Market>, ServiceProviderError>
 
     //
     //

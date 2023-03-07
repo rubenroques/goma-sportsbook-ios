@@ -221,7 +221,7 @@ extension BettingAPIClient: Endpoint {
     }
     
     var url: String {
-        return SportRadarConstants.bettingHostname
+        return SportRadarConstants.apiRestHostname
     }
     
     var headers: HTTP.Headers? {
@@ -240,7 +240,13 @@ extension BettingAPIClient: Endpoint {
     }
     
     var timeout: TimeInterval {
-        return TimeInterval(20)
+        switch self {
+        case .betHistory: return TimeInterval(5)
+        case .betDetails: return TimeInterval(5)
+        case .calculateReturns: return TimeInterval(5)
+        case .getAllowedBetTypes: return TimeInterval(5)
+        case .placeBets: return TimeInterval(60)
+        }
     }
     
     // TODO: Check if we can use this in every endpoint

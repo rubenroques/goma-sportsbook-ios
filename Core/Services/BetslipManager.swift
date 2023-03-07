@@ -29,8 +29,8 @@ class BetslipManager: NSObject {
     var betPlacedDetailsErrorsPublisher: CurrentValueSubject<[BetPlacedDetails], Never>
     var betslipPlaceBetResponseErrorsPublisher: CurrentValueSubject<[BetslipPlaceBetResponse], Never>
 
-    private var bettingTicketRegisters: [String: EndpointPublisherIdentifiable] = [:]
-    private var bettingTicketSubscribers: [String: AnyCancellable] = [:]
+    private var bettingTicketServiceProviderSubscriptions: [String: ServicesProvider.Subscription] = [:]
+    private var bettingTicketsCancellables: [String: AnyCancellable] = [:]
 
     var betBuilderOddPublisher: CurrentValueSubject<Double?, Never> = .init(nil)
 
@@ -77,6 +77,11 @@ class BetslipManager: NSObject {
             .sink { [weak self] tickets in
 
                 self?.bettingTicketsPublisher.send(tickets)
+
+                print("Tickets updates")
+                for ticket in tickets {
+                    print("\(ticket.id) \(ticket.outcomeDescription) \(ticket.odd)")
+                }
             }
             .store(in: &cancellables)
 
@@ -89,11 +94,11 @@ class BetslipManager: NSObject {
         self.bettingTicketsDictionaryPublisher
             .filter(\.isEmpty)
             .sink { [weak self] _ in
-            self?.simpleBetslipSelectionState.send(nil)
-            self?.multipleBetslipSelectionState.send(nil)
-            UserDefaults.standard.cachedBetslipTickets = []
-        }
-        .store(in: &cancellables)
+                self?.simpleBetslipSelectionState.send(nil)
+                self?.multipleBetslipSelectionState.send(nil)
+                UserDefaults.standard.cachedBetslipTickets = []
+            }
+            .store(in: &cancellables)
 
         self.bettingTicketsPublisher
             .filter({ return !$0.isEmpty })
@@ -155,13 +160,14 @@ class BetslipManager: NSObject {
     }
 
     private func unsubscribeBettingTicketPublisher(withId id: String) {
-        if let register = self.bettingTicketRegisters[id] {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: register)
-            self.bettingTicketRegisters.removeValue(forKey: id)
-        }
-        if let subscriber = self.bettingTicketSubscribers[id] {
+
+        // Cancel the subscription
+        self.bettingTicketServiceProviderSubscriptions[id] = nil
+
+        // Cancel combine
+        if let subscriber = self.bettingTicketsCancellables[id] {
             subscriber.cancel()
-            self.bettingTicketSubscribers.removeValue(forKey: id)
+            self.bettingTicketsCancellables.removeValue(forKey: id)
         }
 
         self.bettingTicketPublisher.removeValue(forKey: id)
@@ -177,51 +183,64 @@ class BetslipManager: NSObject {
             self.bettingTicketPublisher[bettingTicket.id] = .init(bettingTicket)
         }
 
-        let endpoint = TSRouter.bettingOfferPublisher(operatorId: Env.appSession.operatorId,
-                                                      language: "en",
-                                                      bettingOfferId: bettingTicket.id)
-
-        let bettingTicketSubscriber = Env.everyMatrixClient.manager.registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+        let bettingTicketSubscriber = Env.servicesProvider.subscribeToMarketDetails(withId: bettingTicket.marketId)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
+            .sink { completion in
                 switch completion {
-                case .failure:
-                    print("Error retrieving data!")
+                case .failure(let error):
+                    print("Error retrieving data! \(error)")
                 case .finished:
                     print("Data retrieved!")
                 }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let oddUpdatesRegister):
-                    self?.bettingTicketRegisters[bettingTicket.id] = oddUpdatesRegister
-
-                case .initialContent(let aggregator):
-
-                    if let content = aggregator.content {
-                        for contentType in content {
-                            if case let .bettingOffer(bettingOffer) = contentType {
-                                self?.updateBettingTicket(withId: bettingOffer.id, bettingOffer: bettingOffer)
-                            }
-                        }
-                    }
-
-                case .updatedContent(let aggregatorUpdates):
-                    if let content = aggregatorUpdates.contentUpdates {
-                        for contentType in content {
-                            if case let .bettingOfferUpdate(id, statusId, odd, _, isAvailable) = contentType {
-                                self?.updateBettingTicketOdd(withId: id, statusId: statusId, newOdd: odd, isAvailable: isAvailable)
-                            }
-                        }
-                    }
-
-                case .disconnect:
-                    print("MarketDetailCell odd update - disconnect")
+            } receiveValue: { [weak self] subscribableContent in
+                switch subscribableContent {
+                case .connected(let subscription):
+                    self?.bettingTicketServiceProviderSubscriptions[bettingTicket.id] = subscription
+                case .contentUpdate(let market):
+                    print("Betslip subscribeToMarketDetails content retrieved!")
+                    let internalMarket = ServiceProviderModelMapper.market(fromServiceProviderMarket: market)
+                    self?.updateBettingTickets(ofMarket: internalMarket)
+                case .disconnected:
+                    print("Betslip subscribeToMarketDetails disconnected")
                 }
-            })
+            }
 
-        self.bettingTicketSubscribers[bettingTicket.id] = bettingTicketSubscriber
+        self.bettingTicketsCancellables[bettingTicket.id] = bettingTicketSubscriber
+
     }
-    
+
+    private func updateBettingTickets(ofMarket market: Market) {
+
+        print("BTSL  \(market.name)")
+        for outcome in market.outcomes {
+            if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[outcome.id] {
+                let newAvailablity = market.isAvailable
+                let newOdd = outcome.bettingOffer.odd
+                let newBettingTicket = BettingTicket.init(id: bettingTicket.id,
+                                                          outcomeId: bettingTicket.outcomeId,
+                                                          marketId: bettingTicket.marketId,
+                                                          matchId: bettingTicket.matchId,
+                                                          isAvailable: newAvailablity,
+                                                          statusId: bettingTicket.statusId,
+                                                          matchDescription: bettingTicket.matchDescription,
+                                                          marketDescription: bettingTicket.marketDescription,
+                                                          outcomeDescription: bettingTicket.outcomeDescription,
+                                                          odd: newOdd)
+
+                self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
+
+                self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)
+
+                print("BTSL  Updated outcome \(bettingTicket.outcomeDescription) \(newOdd)")
+            }
+            else {
+                print("BTSL  Ignored outcome \(outcome.translatedName) \(outcome.bettingOffer.odd)")
+            }
+
+        }
+
+    }
+
     private func updateBettingTicket(withId id: String, bettingOffer: EveryMatrix.BettingOffer) {
         if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[id], let value = bettingOffer.oddsValue {
             let newBettingTicket = BettingTicket(id: bettingTicket.id,
@@ -367,21 +386,18 @@ extension BetslipManager {
                 case .forbidden:
                     return BetslipErrorType.forbiddenBetError
                 case .errorMessage(let message):
-                    return BetslipErrorType.betPlacementError
+                    return BetslipErrorType.betPlacementDetailedError(message: message)
+                case .notPlacedBet(let message):
+                    return BetslipErrorType.betPlacementDetailedError(message: message)
                 default:
                     return BetslipErrorType.betPlacementError
                 }
             })
             .flatMap({ (placedBetsResponse: PlacedBetsResponse) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> in
-                guard
-                    placedBetsResponse.succeed
-                else {
-                    return Fail(error: BetslipErrorType.betPlacementError).eraseToAnyPublisher()
-                }
                 let betPlacedDetailsArray = placedBetsResponse.bets.map { (placedBetEntry: PlacedBetEntry) -> BetPlacedDetails in
                     let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
                     let response = BetslipPlaceBetResponse(betId: placedBetEntry.identifier,
-                                                           betSucceed: placedBetsResponse.succeed,
+                                                           betSucceed: true,
                                                            totalPriceValue: totalPriceValue,
                                                            maxWinning: placedBetEntry.potentialReturn)
                     return BetPlacedDetails(response: response, tickets: [])
@@ -437,21 +453,18 @@ extension BetslipManager {
                 case .forbidden:
                     return BetslipErrorType.forbiddenBetError
                 case .errorMessage(let message):
-                    return BetslipErrorType.betPlacementError
+                    return BetslipErrorType.betPlacementDetailedError(message: message)
+                case .notPlacedBet(let message):
+                    return BetslipErrorType.betPlacementDetailedError(message: message)
                 default:
                     return BetslipErrorType.betPlacementError
                 }
             })
             .flatMap({ (placedBetsResponse: PlacedBetsResponse) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> in
-                guard
-                    placedBetsResponse.succeed
-                else {
-                    return Fail(error: BetslipErrorType.betPlacementError).eraseToAnyPublisher()
-                }
                 let betPlacedDetailsArray = placedBetsResponse.bets.map { (placedBetEntry: PlacedBetEntry) -> BetPlacedDetails in
                     let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
                     let response = BetslipPlaceBetResponse(betId: placedBetEntry.identifier,
-                                                           betSucceed: placedBetsResponse.succeed,
+                                                           betSucceed: true,
                                                            totalPriceValue: totalPriceValue,
                                                            maxWinning: placedBetEntry.potentialReturn)
                     return BetPlacedDetails(response: response, tickets: [])
@@ -500,21 +513,18 @@ extension BetslipManager {
                 case .forbidden:
                     return BetslipErrorType.forbiddenBetError
                 case .errorMessage(let message):
-                    return BetslipErrorType.betPlacementError
+                    return BetslipErrorType.betPlacementDetailedError(message: message)
+                case .notPlacedBet(let message):
+                    return BetslipErrorType.betPlacementDetailedError(message: message)
                 default:
                     return BetslipErrorType.betPlacementError
                 }
             })
             .flatMap({ (placedBetsResponse: PlacedBetsResponse) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> in
-                guard
-                    placedBetsResponse.succeed
-                else {
-                    return Fail(error: BetslipErrorType.betPlacementError).eraseToAnyPublisher()
-                }
                 let betPlacedDetailsArray = placedBetsResponse.bets.map { (placedBetEntry: PlacedBetEntry) -> BetPlacedDetails in
                     let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
                     let response = BetslipPlaceBetResponse(betId: placedBetEntry.identifier,
-                                                           betSucceed: placedBetsResponse.succeed,
+                                                           betSucceed: true,
                                                            totalPriceValue: totalPriceValue,
                                                            maxWinning: placedBetEntry.potentialReturn)
                     return BetPlacedDetails(response: response, tickets: [])
@@ -565,7 +575,7 @@ extension BetslipManager {
 
     }
 
-    func requestSystemBetPotentialReturn(withSkateAmount stake: Double, systemBetType: SystemBetType) -> AnyPublisher<BetPotencialReturn, Never>  {
+    func requestSystemBetPotentialReturn(withSkateAmount stake: Double, systemBetType: SystemBetType) -> AnyPublisher<BetPotencialReturn, Never> {
 
         let betTicketSelections = self.bettingTicketsPublisher.value.map { bettingTicket in
             let odd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
@@ -583,7 +593,6 @@ extension BetslipManager {
         let betTicket = BetTicket.init(tickets: betTicketSelections,
                                        stake: stake,
                                        betGroupingType: BetGroupingType.system(identifier: systemBetType.id, name: systemBetType.name ?? ""))
-
 
         return Env.servicesProvider.calculatePotentialReturn(forBetTicket: betTicket)
             .map({ betslipPotentialReturn in
@@ -680,182 +689,6 @@ extension BetslipManager {
 
     }
 
-    /*
-    ///
-    ///
-    func placeAllSingleBets(withSkateAmount amounts: [String: Double], singleFreeBet: SingleBetslipFreebet? = nil, singleOddsBoost: SingleBetslipOddsBoost? = nil) ->
-    AnyPublisher<[BetPlacedDetails], EveryMatrix.APIError> {
-
-        let future = Future<[BetPlacedDetails], EveryMatrix.APIError>.init({ promise in
-
-            var betPlacedDetailsList: [BetPlacedDetails] = []
-            let ticketSelections = self.bettingTicketsPublisher.value
-
-            let requests = ticketSelections.map { ticketSelection -> AnyPublisher<BetPlacedDetails, EveryMatrix.APIError>? in
-                guard let amount = amounts[ticketSelection.id] else {
-                    return nil
-                }
-                return self.placeSingleBet(betTicketId: ticketSelection.id, amount: amount, singleFreeBet: singleFreeBet, singleOddsBoost: singleOddsBoost)
-            }
-            .compactMap({ $0 })
-
-            Publishers.MergeMany(requests)
-                .sink(receiveCompletion: { completion in
-
-                    switch completion {
-                    case .finished:
-                        promise(.success(betPlacedDetailsList))
-                    case .failure(let everyMatrixAPIError):
-                        promise(.failure(everyMatrixAPIError))
-                    }
-
-                }, receiveValue: { betPlacedDetails in
-                    betPlacedDetailsList.append(betPlacedDetails)
-                })
-                .store(in: &self.cancellables)
-
-        })
-        .eraseToAnyPublisher()
-
-        return future
-    }
-
-    private func placeSingleBet(betTicketId: String, amount: Double, singleFreeBet: SingleBetslipFreebet?, singleOddsBoost: SingleBetslipOddsBoost?) ->
-    AnyPublisher<BetPlacedDetails, EveryMatrix.APIError> {
-
-        let updatedTicketSelections = self.bettingTicketsPublisher.value
-        let ticketSelections = updatedTicketSelections.filter({ bettingTicket in
-            bettingTicket.id == betTicketId
-        }).map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.decimalOdd) })
-
-        let betslipOddValidationType: String = UserDefaults.standard.bettingUserSettings.oddValidationType
-
-        var betAmount = amount
-        var isFreeBet = false
-        var ubsWalletId = ""
-
-        if let singleFreeBet = singleFreeBet, singleFreeBet.bettingId == betTicketId {
-            betAmount = singleFreeBet.freeBet.freeBetAmount
-            isFreeBet = true
-            ubsWalletId = singleFreeBet.freeBet.walletId
-        }
-
-        if let singleOddsBoost = singleOddsBoost, singleOddsBoost.bettingId == betTicketId {
-            ubsWalletId = singleOddsBoost.oddsBoost.walletId
-        }
-
-        let route = TSRouter.placeBet(language: "en",
-                                      amount: betAmount,
-                                      betType: .single,
-                                      tickets: ticketSelections,
-                                      oddsValidationType: betslipOddValidationType,
-                                      freeBet: isFreeBet,
-                                      ubsWalletId: ubsWalletId)
-
-        Logger.log("BetslipManager - Submitting single bet: \(route)")
-
-        return Env.everyMatrixClient.manager
-            .getModel(router: route, decodingType: BetslipPlaceBetResponse.self)
-            .map({ response in
-                
-                return BetPlacedDetails.init(response: response, tickets: updatedTicketSelections)
-            })
-            .eraseToAnyPublisher()
-        
-    }
-
-    func placeMultipleBet(withStakeAmount amount: Double,
-                          freeBet: BetslipFreebet? = nil,
-                          oddsBoost: BetslipOddsBoost? = nil) -> AnyPublisher<BetPlacedDetails, EveryMatrix.APIError> {
-
-        let updatedTicketSelections = self.bettingTicketsPublisher.value
-        let ticketSelections = updatedTicketSelections
-            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.decimalOdd) })
-        
-        let betslipOddValidationType: String = UserDefaults.standard.bettingUserSettings.oddValidationType
-
-        var betAmount = amount
-        var isFreeBet = false
-        var ubsWalletId = ""
-        var betBuilderPriceValue: Double? = nil
-
-        if let freeBet = freeBet {
-            betAmount = freeBet.freeBetAmount
-            isFreeBet = true
-            ubsWalletId = freeBet.walletId
-        }
-
-        if let oddsBoost = oddsBoost {
-            ubsWalletId = oddsBoost.walletId
-        }
-
-        if let betBuilderOdds = self.multipleBetslipSelectionState.value?.betBuilder?[safe: 0]?.betBuilderOdds {
-            betBuilderPriceValue = betBuilderOdds
-        }
-
-        let route = TSRouter.placeBet(language: "en",
-                                      amount: betAmount,
-                                      betType: .multiple,
-                                      tickets: ticketSelections,
-                                      oddsValidationType: betslipOddValidationType,
-                                      freeBet: isFreeBet,
-                                      ubsWalletId: ubsWalletId,
-                                      betBuilderPriceValue: betBuilderPriceValue)
-
-        Logger.log("BetslipManager - Submitting multiple bet: \(route)")
-
-        return Env.everyMatrixClient.manager
-            .getModel(router: route, decodingType: BetslipPlaceBetResponse.self)
-            .map({ return BetPlacedDetails.init(response: $0, tickets: updatedTicketSelections) })
-            .handleEvents(receiveOutput: { betslipPlaceBetResponse in
-                if betslipPlaceBetResponse.response.betSucceed ?? false {
-                    // self.clearAllBettingTickets()
-                    self.newBetsPlacedPublisher.send()
-                }
-            })
-            .eraseToAnyPublisher()
-    }
-
-    func placeSystemBet(withSkateAmount amount: Double, systemBetType: SystemBetType, freeBet: BetslipFreebet? = nil) -> AnyPublisher<BetPlacedDetails, EveryMatrix.APIError> {
-
-        let updatedTicketSelections = self.bettingTicketsPublisher.value
-        let ticketSelections = updatedTicketSelections
-            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.decimalOdd) })
-        
-        let betslipOddValidationType: String = UserDefaults.standard.bettingUserSettings.oddValidationType
-        
-        var betAmount = amount
-        var isFreeBet = false
-        var ubsWalletId = ""
-        if let freeBet = freeBet {
-            betAmount = freeBet.freeBetAmount
-            isFreeBet = true
-            ubsWalletId = freeBet.walletId
-        }
-
-        let route = TSRouter.placeSystemBet(language: "en",
-                                            amount: betAmount,
-                                            systemBetType: systemBetType,
-                                            tickets: ticketSelections,
-                                            oddsValidationType: betslipOddValidationType,
-                                            freeBet: isFreeBet,
-                                            ubsWalletId: ubsWalletId)
-
-        Logger.log("BetslipManager - Submitting system bet: \(route)")
-        
-        return Env.everyMatrixClient.manager
-            .getModel(router: route, decodingType: BetslipPlaceBetResponse.self)
-            .map({ return BetPlacedDetails.init(response: $0, tickets: updatedTicketSelections) })
-            .handleEvents(receiveOutput: { betslipPlaceBetResponse in
-                if betslipPlaceBetResponse.response.betSucceed ?? false {
-                    //self.clearAllBettingTickets()
-                    self.newBetsPlacedPublisher.send()
-                }
-            })
-            .eraseToAnyPublisher()
-    }
-*/
-
     func getErrorsForBettingTicket(bettingTicket: BettingTicket) -> BetslipError {
 
         if !betslipPlaceBetResponseErrorsPublisher.value.isEmpty {
@@ -900,14 +733,14 @@ extension BetslipManager {
 
         }
         else if let forbiddenBetCombinations = Env.betslipManager.multipleBetslipSelectionState.value?.forbiddenCombinations,
-                    !forbiddenBetCombinations.isEmpty {
+                !forbiddenBetCombinations.isEmpty {
 
             var hasFoundCorrespondingId = false
 
             for forbiddenBetCombination in forbiddenBetCombinations {
                 for selection in forbiddenBetCombination.selections where selection.bettingOfferId == bettingTicket.bettingId {
-                        hasFoundCorrespondingId = true
-                        break
+                    hasFoundCorrespondingId = true
+                    break
 
                 }
             }
@@ -960,6 +793,7 @@ extension BetslipManager {
 enum BetslipErrorType: Error {
     case emptyBetslip
     case betPlacementError
+    case betPlacementDetailedError(message: String)
     case forbiddenBetError
     case none
 }
@@ -973,9 +807,7 @@ struct BetslipError {
         self.errorType = errorType
     }
 
-
 }
-
 
 struct BetPlacedDetails {
     var response: BetslipPlaceBetResponse

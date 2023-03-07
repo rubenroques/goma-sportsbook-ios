@@ -26,6 +26,7 @@ extension SportRadarModels {
         case outrightEventGroup(events: [SportRadarModels.Event])
         case eventSummary(contentIdentifier: ContentIdentifier, eventDetails: [SportRadarModels.Event])
 
+        case marketDetails(contentIdentifier: ContentIdentifier, market: SportRadarModels.Market?)
         //
         case addEvent(contentIdentifier: ContentIdentifier, event: SportRadarModels.Event)
         case removeEvent(contentIdentifier: ContentIdentifier, eventId: String)
@@ -52,6 +53,7 @@ extension SportRadarModels {
                 return nil
             case .preLiveSports(_):
                 return nil
+
             case .eventDetails(let contentIdentifier, _):
                 return contentIdentifier
             case .eventGroup(let contentIdentifier, _):
@@ -60,6 +62,9 @@ extension SportRadarModels {
                 return nil
             case .eventSummary(let contentIdentifier, _):
                 return contentIdentifier
+            case .marketDetails(let contentIdentifier, _):
+                return contentIdentifier
+
             case .addEvent(let contentIdentifier, _):
                 return contentIdentifier
             case .removeEvent(let contentIdentifier, _):
@@ -100,6 +105,7 @@ extension SportRadarModels {
             case oddNumerator = "currentpriceup"
             case oddDenominator = "currentpricedown"
             case selectionId = "idfoselection"
+            case marketId = "idfomarket"
         }
 
         private enum ScoreUpdateCodingKeys: String, CodingKey {
@@ -188,6 +194,14 @@ extension SportRadarModels {
                 else {
                     return .eventSummary(contentIdentifier: contentIdentifier, eventDetails: [])
                 }
+            case .market:
+                if container.contains(.change) {
+                    let market: SportRadarModels.Market? = try container.decodeIfPresent(SportRadarModels.Market.self, forKey: .change)
+                    return .marketDetails(contentIdentifier: contentIdentifier, market: market)
+                }
+                else {
+                    return .marketDetails(contentIdentifier: contentIdentifier, market: nil)
+                }
             }
         }
 
@@ -243,6 +257,27 @@ extension SportRadarModels {
             else if path.contains("status") && path.contains("liveDataSummary"), let eventId = SocketMessageParseHelper.extractEventId(path) {
                 let newStatus = try container.decode(String.self, forKey: .change)
             }
+            else if path.contains("selections") && path.contains("idfoselection") {
+                if let changeContainer = try? container.nestedContainer(keyedBy: SelectionUpdateCodingKeys.self, forKey: .change),
+                   let oddNumerator = try changeContainer.decodeIfPresent(String.self, forKey: .oddNumerator),
+                   let oddDenominator = try changeContainer.decodeIfPresent(String.self, forKey: .oddDenominator),
+                   let selectionId = try? changeContainer.decode(String.self, forKey: .selectionId),
+                   let marketId = try? changeContainer.decode(String.self, forKey: .marketId) {
+
+                    print("ContentContainer updated market odd with id \(marketId) and associated change \(changeType)")
+
+                    return .updateOutcomeOdd(contentIdentifier: contentIdentifier,
+                                             selectionId: selectionId,
+                                             newOddNumerator: oddNumerator,
+                                             newOddDenominator: oddDenominator)
+
+                }
+            }
+            else if case let .market(marketId: marketId) = contentIdentifier.contentRoute {
+                print("ContentContainer remove market with id \(path) and associated change \(changeType)")
+                return .removeMarket(contentIdentifier: contentIdentifier, marketId: marketId)
+            }
+
 
             print("ContentContainer ignored update for \(path) and associated change \(changeType)")
             throw SportRadarError.ignoredContentUpdate

@@ -38,7 +38,6 @@ extension SportRadarModelMapper {
                      status: Self.eventStatus(fromInternalEvent: internalEvent.status),
                      matchTime: internalEvent.matchTime,
                      sportTypeCode: internalEvent.sportTypeCode ?? "")
-
     }
 
     static func eventStatus(fromInternalEvent internalEventStatus: SportRadarModels.Event.Status) -> Event.Status? {

@@ -76,7 +76,7 @@ extension SportRadarRestAPIClient: Endpoint {
         case .deleteFavoriteList:
             return "/api/favourites/fw/deleteAccountFavouriteCoupon"
         case .deleteFavoriteFromList:
-            return "/API/favourites/fw/deleteAccountFavourites"
+            return "/api/favourites/fw/deleteAccountFavourites"
         }
     }
 
@@ -322,42 +322,44 @@ extension SportRadarRestAPIClient: Endpoint {
         switch self {
 
         case .subscribe:
-            return SportRadarConstants.socketRestHostname
+            return SportRadarConstants.servicesRestHostname
         case .unsubscribe:
-            return SportRadarConstants.socketRestHostname
+            return SportRadarConstants.servicesRestHostname
 
         case .marketsFilter:
             return SportRadarConstants.sportRadarFrontEndURL
+            
         case .fieldWidgetId:
-            return SportRadarConstants.bettingHostname
+            return SportRadarConstants.servicesRestHostname
         case .sportsBoNavigationList:
-            return SportRadarConstants.bettingHostname
+            return SportRadarConstants.servicesRestHostname
         case .sportsScheduledList:
-            return SportRadarConstants.bettingHostname
+            return SportRadarConstants.servicesRestHostname
         case .sportRegionsNavigationList:
-            return SportRadarConstants.bettingHostname
+            return SportRadarConstants.servicesRestHostname
         case .regionCompetitions:
-            return SportRadarConstants.bettingHostname
+            return SportRadarConstants.servicesRestHostname
         case .competitionMarketGroups:
-            return SportRadarConstants.bettingHostname
+            return SportRadarConstants.servicesRestHostname
         case .search:
-            return SportRadarConstants.bettingHostname
+            return SportRadarConstants.servicesRestHostname
         case .banners:
-            return SportRadarConstants.bettingHostname
+            return SportRadarConstants.servicesRestHostname
         case .getEventSummary:
-            return SportRadarConstants.bettingHostname
+            return SportRadarConstants.servicesRestHostname
+
         case .favoritesList:
-            return SportRadarConstants.bettingHostname
+            return SportRadarConstants.apiRestHostname
         case .addFavoriteList:
-            return SportRadarConstants.bettingHostname
+            return SportRadarConstants.apiRestHostname
         case .addFavoriteToList:
-            return SportRadarConstants.bettingHostname
+            return SportRadarConstants.apiRestHostname
         case .getFavoritesFromList:
-            return SportRadarConstants.bettingHostname
+            return SportRadarConstants.apiRestHostname
         case .deleteFavoriteList:
-            return SportRadarConstants.bettingHostname
+            return SportRadarConstants.apiRestHostname
         case .deleteFavoriteFromList:
-            return SportRadarConstants.bettingHostname
+            return SportRadarConstants.apiRestHostname
         }
     }
 

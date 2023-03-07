@@ -341,14 +341,13 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
             self.addAmountValue(previousBettingAmount)
         }
 
-        if let bettingOfferPublisher = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id),
-           let marketPublisher = Env.everyMatrixStorage.marketsPublishers[bettingTicket.marketId] {
+        if let bettingOfferPublisher = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id) {
 
-            self.oddAvailabilitySubscriber = Publishers.CombineLatest(bettingOfferPublisher, marketPublisher)
+            self.oddAvailabilitySubscriber = bettingOfferPublisher
                 .receive(on: DispatchQueue.main)
                 .eraseToAnyPublisher()
-                .map({ bettingOffer, market in
-                    return bettingOffer.isOpen && (market.isAvailable ?? true)
+                .map({ bettingOffer in
+                    return bettingOffer.isAvailable
                 })
                 .sink(receiveValue: { [weak self] isBetAvailable in
                     self?.suspendedBettingOfferView.isHidden = isBetAvailable

@@ -121,7 +121,7 @@ class OutcomeSelectionButtonView: NibView {
         }
 
         self.oddUpdatesPublisher = Env.servicesProvider
-            .subscribeToOutcomeUpdates(withId: outcome.bettingOffer.id)
+            .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
             .compactMap({ $0 })
             .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
             .map(\.bettingOffer)
@@ -130,6 +130,8 @@ class OutcomeSelectionButtonView: NibView {
                 print("oddUpdatesPublisher subscribeToOutcomeUpdates completion: \(completion)")
             }, receiveValue: { [weak self] (updatedBettingOffer: BettingOffer) in
                 guard let weakSelf = self else { return }
+
+                print("oddUpdatesPublisher subscribeToOutcomeUpdates completion: \(updatedBettingOffer)")
 
                 if !updatedBettingOffer.isAvailable || updatedBettingOffer.decimalOdd.isNaN {
                     weakSelf.containerView.isUserInteractionEnabled = false

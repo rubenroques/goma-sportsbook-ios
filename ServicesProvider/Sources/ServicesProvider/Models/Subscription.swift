@@ -79,6 +79,8 @@ public enum ContentType: String, Codable {
     case eventDetails = "event"
     case eventGroup = "eventGroup"
     case eventSummary = "eventSummary"
+
+    case market = "market"
 }
 
 public enum ContentRoute {
@@ -92,6 +94,8 @@ public enum ContentRoute {
     case eventDetails(eventId: String)
     case eventGroup(marketGroupId: String)
     case eventSummary(eventId: String)
+
+    case market(marketId: String)
 
     var fullRoute: String {
         switch self {
@@ -113,6 +117,8 @@ public enum ContentRoute {
             return marketGroupId
         case .eventSummary(let eventId):
             return eventId
+        case .market(let marketId):
+            return marketId
         }
     }
 
@@ -127,12 +133,14 @@ public enum ContentRoute {
             return ""
         case .preLiveSports:
             return ""
-        case .eventDetails:
-            return ""
-        case .eventGroup:
-            return ""
-        case .eventSummary:
-            return ""
+        case .eventDetails(let eventId):
+            return eventId
+        case .eventGroup(let marketGroupId):
+            return marketGroupId
+        case .eventSummary(let eventId):
+            return eventId
+        case .market(let marketId):
+            return marketId
         }
     }
 
@@ -144,13 +152,15 @@ public enum ContentRoute {
             return eventCount
         case .liveSports:
             return nil
-        case .preLiveSports(_, _):
+        case .preLiveSports:
             return nil
-        case .eventDetails(_):
+        case .eventDetails:
             return nil
         case .eventGroup:
             return nil
-        case .eventSummary(_):
+        case .eventSummary:
+            return nil
+        case .market:
             return nil
         }
     }
@@ -241,6 +251,8 @@ public class ContentIdentifier: Decodable, Hashable, Equatable, Identifiable {
             self.contentRoute = ContentRoute.eventGroup(marketGroupId: contentRouteRawString)
         case .eventSummary:
             self.contentRoute = ContentRoute.eventSummary(eventId: contentRouteRawString)
+        case .market:
+            self.contentRoute = ContentRoute.market(marketId: contentRouteRawString)
         }
 
         self.id = "\(contentType)-\(contentRoute.fullRoute)".MD5()

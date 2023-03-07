@@ -141,24 +141,16 @@ public struct BetTicketSelection: Codable {
 }
 
 public struct PlacedBetsResponse: Codable {
+
     public var identifier: String
-    public var responseCode: String
-    public var succeed: Bool
     public var bets: [PlacedBetEntry]
 
-    enum CodingKeys: String, CodingKey {
-        case identifier = "idFOBetSlip"
-        case responseCode = "state"
-        case bets = "bets"
-        case succeed = "succeed"
-    }
+    public init(identifier: String, bets: [PlacedBetEntry]) {
 
-    public init(identifier: String, responseCode: String, succeed: Bool, bets: [PlacedBetEntry]) {
         self.identifier = identifier
         self.bets = bets
-        self.succeed = succeed
-        self.responseCode = responseCode
     }
+
 }
 
 public struct PlacedBetEntry: Codable {
