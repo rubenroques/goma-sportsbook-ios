@@ -75,9 +75,19 @@ class FavoritesManager {
                     ()
                 case .failure(let error):
                     print("FAVORITES LIST ERROR: \(error)")
+                    // Retry if userSessionNotFound
+                    switch error {
+                    case .userSessionNotFound:
+
+                        self?.getUserFavorites()
+
+                    default: ()
+                    }
                 }
 
             }, receiveValue: { [weak self] favoritesListResponse in
+
+                print("FAVORITES LISTS: \(favoritesListResponse)")
 
                 if !favoritesListResponse.favoritesList.contains(where: {
                     $0.name == "Competitions"
