@@ -12,12 +12,12 @@ class OmegaConnector: Connector {
     
     var token: CurrentValueSubject<OmegaSessionAccessToken?, Never> = .init(nil)
     var tokenPublisher: AnyPublisher<OmegaSessionAccessToken?, Never> {
-        token.eraseToAnyPublisher()
+        return self.token.eraseToAnyPublisher()
     }
     
-    var connectionStateSubject: CurrentValueSubject<ConnectorState, Error> = .init(.connected)
-    var connectionStatePublisher: AnyPublisher<ConnectorState, Error> {
-        connectionStateSubject.eraseToAnyPublisher()
+    var connectionStateSubject: CurrentValueSubject<ConnectorState, Never> = .init(.connected)
+    var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
+        return self.connectionStateSubject.eraseToAnyPublisher()
     }
     
     private var cancellables: Set<AnyCancellable> = []

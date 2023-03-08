@@ -10,9 +10,9 @@ public class ServicesProviderClient {
         case sportradar
     }
 
-    public var privilegedAccessManagerConnectionStatePublisher: AnyPublisher<ConnectorState, Error> = Just(ConnectorState.disconnected).setFailureType(to: Error.self).eraseToAnyPublisher()
-    public var eventsConnectionStatePublisher: AnyPublisher<ConnectorState, Error> = Just(ConnectorState.disconnected).setFailureType(to: Error.self).eraseToAnyPublisher()
-    public var bettingConnectionStatePublisher: AnyPublisher<ConnectorState, Error> = Just(ConnectorState.disconnected).setFailureType(to: Error.self).eraseToAnyPublisher()
+    public var privilegedAccessManagerConnectionStatePublisher: AnyPublisher<ConnectorState, Never> = Just(ConnectorState.disconnected).eraseToAnyPublisher()
+    public var eventsConnectionStatePublisher: AnyPublisher<ConnectorState, Never> = Just(ConnectorState.disconnected).eraseToAnyPublisher()
+    public var bettingConnectionStatePublisher: AnyPublisher<ConnectorState, Never> = Just(ConnectorState.disconnected).eraseToAnyPublisher()
 
     private var providerType: ProviderType = .everymatrix
 
@@ -44,6 +44,7 @@ public class ServicesProviderClient {
                                                            restConnector: SportRadarRestConnector())
             self.bettingProvider = SportRadarBettingProvider(sessionCoordinator: sessionCoordinator)
 
+            self.eventsConnectionStatePublisher = self.eventsProvider!.connectionStatePublisher
         }
     }
 

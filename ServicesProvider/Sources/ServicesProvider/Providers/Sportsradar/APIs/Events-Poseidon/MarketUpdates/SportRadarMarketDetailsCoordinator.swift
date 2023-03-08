@@ -131,6 +131,8 @@ extension SportRadarMarketDetailsCoordinator {
             self.updateMarketTradability(withId: marketId, isTradable: isTradable)
         case .updateOutcomeOdd(_, let selectionId, let newOddNumerator, let newOddDenominator):
             self.updateOutcomeOdd(withId: selectionId, newOddNumerator: newOddNumerator, newOddDenominator: newOddDenominator)
+        case .removeMarket(_, let marketId):
+            self.updateMarketTradability(withId: marketId, isTradable: false)
         default:
             () // Ignore other cases
         }

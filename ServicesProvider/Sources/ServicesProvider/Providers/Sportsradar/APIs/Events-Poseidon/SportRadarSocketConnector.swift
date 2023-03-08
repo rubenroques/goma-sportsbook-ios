@@ -39,17 +39,26 @@ class SportRadarSocketConnector: NSObject, Connector {
 
     weak var messageSubscriber: SportRadarConnectorSubscriber?
     
-    var connectionStatePublisher: AnyPublisher<ConnectorState, Error> {
+    var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
         connectionStateSubject.eraseToAnyPublisher()
     }
-    private let connectionStateSubject: CurrentValueSubject<ConnectorState, Error>
+    private let connectionStateSubject: CurrentValueSubject<ConnectorState, Never>
     
     private var webSocket : URLSessionWebSocketTask?
     private var socket: WebSocket
-    private var isConnected: Bool
+    private var isConnected: Bool {
+        didSet {
+            if self.isConnected {
+                self.connectionStateSubject.send(.connected)
+            }
+            else {
+                self.connectionStateSubject.send(.disconnected)
+            }
+        }
+    }
     
     override init() {
-        self.connectionStateSubject = CurrentValueSubject<ConnectorState, Error>.init(.disconnected)
+        self.connectionStateSubject = .init(.disconnected)
         self.isConnected = false
         
         self.socket = WebSocket.init(request: Self.socketRequest(), useCustomEngine: false)
@@ -91,6 +100,7 @@ class SportRadarSocketConnector: NSObject, Connector {
     }
     
     func refreshConnection() {
+        self.isConnected = false
         self.socket.forceDisconnect()
         self.socket = WebSocket.init(request: Self.socketRequest(), useCustomEngine: false)
         self.connectSocket()
@@ -117,9 +127,8 @@ extension SportRadarSocketConnector: WebSocketDelegate {
         
         switch event {
         case .connected(let headers):
-            self.isConnected = true
             self.sendListeningStarted(toSocket: client)
-            
+
             print("ServiceProvider - SportRadarSocketConnector websocket is connected: \(headers)")
         case .disconnected(let reason, let code):
             self.isConnected = false
@@ -165,7 +174,6 @@ extension SportRadarSocketConnector: WebSocketDelegate {
         case .listeningStarted(let sessionTokenId):
             self.isConnected = true
             self.tokenSubject.send(SportRadarSessionAccessToken(hash: sessionTokenId))
-            self.connectionStateSubject.send(.connected)
 
         case .contentChanges(let contents):
             for content in contents {

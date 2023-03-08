@@ -32,14 +32,40 @@ public struct BetSelection: Codable {
     public var result: BetResult
     public var globalState: BetState
     public var eventName: String
-    public var homeTeamName: String
-    public var awayTeamName: String
+    public var homeTeamName: String?
+    public var awayTeamName: String?
     public var marketName: String
     public var outcomeName: String
     public var odd: OddFormat
     
     public var homeResult: String?
     public var awayResult: String?
+
+    init(identifier: String,
+         state: BetState,
+         result: BetResult,
+         globalState: BetState,
+         eventName: String,
+         homeTeamName: String?,
+         awayTeamName: String?,
+         marketName: String,
+         outcomeName: String,
+         odd: OddFormat,
+         homeResult: String?,
+         awayResult: String?) {
+        self.identifier = identifier
+        self.state = state
+        self.result = result
+        self.globalState = globalState
+        self.eventName = eventName
+        self.homeTeamName = homeTeamName
+        self.awayTeamName = awayTeamName
+        self.marketName = marketName
+        self.outcomeName = outcomeName
+        self.odd = odd
+        self.homeResult = homeResult
+        self.awayResult = awayResult
+    }
 }
 
 public enum BetResult: String, Codable {

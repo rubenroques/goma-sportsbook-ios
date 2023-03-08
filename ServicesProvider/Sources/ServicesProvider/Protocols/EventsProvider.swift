@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-protocol EventsProvider {
+protocol EventsProvider: Connector {
 
     //
     //

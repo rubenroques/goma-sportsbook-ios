@@ -222,6 +222,10 @@ extension SportRadarEventsPaginator {
         case .updateEventScore(_, let eventId, let homeScore, let awayScore):
             self.storage.updateEventScore(withId: eventId, newHomeScore: homeScore, newAwayScore: awayScore)
 
+        case .removeMarket(_, let marketId):
+            self.storage.updateMarketTradability(withId: marketId, isTradable: false)
+
+            
         default:
             () // Ignore other cases
         }

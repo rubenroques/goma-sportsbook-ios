@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,11 +13,12 @@
         </array>
     </customFonts>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MyTicketBetLineView" customModule="ShowcaseBeta" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MyTicketBetLineView" customModule="Betsson" customModuleProvider="target">
             <connections>
                 <outlet property="awayTeamNameLabel" destination="cii-t0-3Ds" id="mGw-0t-kou"/>
                 <outlet property="awayTeamScoreLabel" destination="KM0-Io-NHp" id="Pd7-5M-V8E"/>
                 <outlet property="baseView" destination="YPg-OO-9uf" id="nW3-vB-X39"/>
+                <outlet property="baseViewHeightConstraint" destination="Sa1-WQ-ick" id="x16-Mv-OA6"/>
                 <outlet property="bottomBaseView" destination="YBe-bD-GYV" id="JoT-r4-Q5r"/>
                 <outlet property="dateLabel" destination="dDo-fO-dxP" id="UtT-Sm-pUv"/>
                 <outlet property="homeTeamNameLabel" destination="DGC-11-9Ob" id="TGy-JE-PtZ"/>
@@ -171,14 +172,14 @@
                                             <rect key="frame" x="0.0" y="0.0" width="588" height="29"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="248" verticalHuggingPriority="248" horizontalCompressionResistancePriority="748" verticalCompressionResistancePriority="748" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aec-Af-FUf">
-                                                    <rect key="frame" x="12" y="2.5" width="392.5" height="24"/>
+                                                    <rect key="frame" x="12" y="2.5" width="378" height="24"/>
                                                     <string key="text">Vestibulum venenatis purus a nisl consequat tincidunt. Ut laoreet finibus nisl, semper porta orci porttitor id. In leo lacus, maximus vitae felis ornare, feugiat bibendum nibh. </string>
                                                     <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kN9-vA-zBm">
-                                                    <rect key="frame" x="410.5" y="2.5" width="165.5" height="24"/>
+                                                    <rect key="frame" x="396" y="2.5" width="180" height="24"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" relation="lessThanOrEqual" constant="180" id="BFZ-gt-ifU"/>
                                                     </constraints>

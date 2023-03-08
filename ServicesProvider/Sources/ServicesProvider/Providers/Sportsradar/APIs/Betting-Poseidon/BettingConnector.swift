@@ -12,9 +12,9 @@ class BettingConnector: Connector {
     
     var token: BettingSessionAccessToken?
     
-    var connectionStateSubject: CurrentValueSubject<ConnectorState, Error> = .init(.connected)
-    var connectionStatePublisher: AnyPublisher<ConnectorState, Error> {
-        connectionStateSubject.eraseToAnyPublisher()
+    var connectionStateSubject: CurrentValueSubject<ConnectorState, Never> = .init(.connected)
+    var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
+        return connectionStateSubject.eraseToAnyPublisher()
     }
     
     private let session: URLSession

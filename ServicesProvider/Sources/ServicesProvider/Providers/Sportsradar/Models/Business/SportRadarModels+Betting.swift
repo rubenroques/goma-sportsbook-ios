@@ -60,8 +60,10 @@ extension SportRadarModels {
         
         var identifier: String
         var eventName: String
-        var homeTeamName: String
-        var awayTeamName: String
+
+        var homeTeamName: String?
+        var awayTeamName: String?
+
         var sportTypeName: String
         var type: String
         var state: BetState
@@ -111,8 +113,10 @@ extension SportRadarModels {
             let identifierInt = try container.decode(Double.self, forKey: .identifier)
             self.identifier = String(identifierInt)
             self.eventName = try container.decode(String.self, forKey: .eventName)
-            self.homeTeamName = try container.decode(String.self, forKey: .homeTeamName)
-            self.awayTeamName = try container.decode(String.self, forKey: .awayTeamName)
+
+            self.homeTeamName = try container.decodeIfPresent(String.self, forKey: .homeTeamName)
+            self.awayTeamName = try container.decodeIfPresent(String.self, forKey: .awayTeamName)
+
             self.sportTypeName = try container.decode(String.self, forKey: .sportTypeName)
             self.marketName = try container.decode(String.self, forKey: .marketName)
             self.outcomeName = try container.decode(String.self, forKey: .outcomeName)

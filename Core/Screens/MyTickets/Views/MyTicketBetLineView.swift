@@ -39,6 +39,8 @@ class MyTicketBetLineView: NibView {
     @IBOutlet private weak var indicatorInternalBaseView: UIView!
     @IBOutlet private weak var indicatorLabel: UILabel!
 
+    @IBOutlet private weak var baseViewHeightConstraint: NSLayoutConstraint!
+
     var betHistoryEntrySelection: BetHistoryEntrySelection
     var countryCode: String = ""
 
@@ -163,6 +165,12 @@ class MyTicketBetLineView: NibView {
               
         self.homeTeamScoreLabel.text = self.betHistoryEntrySelection.homeParticipantScore ?? ""
         self.awayTeamScoreLabel.text = self.betHistoryEntrySelection.awayParticipantScore ?? ""
+
+        if (self.homeTeamNameLabel.text?.isEmpty ?? true) && (self.awayTeamNameLabel.text?.isEmpty ?? true) {
+            self.homeTeamNameLabel.isHidden = true
+            self.awayTeamNameLabel.isHidden = true
+            self.baseViewHeightConstraint.constant = 100
+        }
 
         self.configureFromStatus()
         self.setupWithTheme()

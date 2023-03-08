@@ -56,12 +56,11 @@ class BettingHistoryViewModel {
     private var recordsPerPage = 10
     
     private var ticketsHasNextPage = true
-    private var recordsPage = 1
 
-    private var resolvedPage = 1
-    private var openedPage = 1
-    private var wonPage = 1
-    private var cashoutPage = 1
+    private var resolvedPage = 0
+    private var openedPage = 0
+    private var wonPage = 0
+    private var cashoutPage = 0
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -106,13 +105,13 @@ class BettingHistoryViewModel {
 
         switch self.bettingTicketsType {
         case .opened:
-            self.loadOpenedTickets(page: 1)
+            self.loadOpenedTickets(page: 0)
         case .resolved:
-            self.loadResolvedTickets(page: 1)
+            self.loadResolvedTickets(page: 0)
         case .won:
-            self.loadWonTickets(page: 1)
+            self.loadWonTickets(page: 0)
         case .cashout:
-            self.loadCashoutTickets(page: 1)
+            self.loadCashoutTickets(page: 0)
         }
     }
 
@@ -683,7 +682,6 @@ class BettingHistoryViewModel {
     
     private func resetPageCount() {
         self.recordsPerPage = 10
-        self.recordsPage = 1
         self.ticketsHasNextPage = true
     }
 

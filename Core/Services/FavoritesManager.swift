@@ -34,20 +34,15 @@ class FavoritesManager {
 
         Publishers.CombineLatest(self.finishedCompetitionsIds, self.finishedMatchesIds)
             .sink(receiveValue: { [weak self] finishedCompetitionsids, finishedMatchesIds in
-
                 guard let self = self else {return}
-
                 if finishedCompetitionsids && finishedMatchesIds {
-
                     self.favoriteEventsIdPublisher.send(self.fetchedFavoriteEventIds)
 
                     let fetchedMatches = Array(self.fetchedMatchesListIds.keys)
                     let fetchedCompetitions = Array(self.fetchedCompetitionsListsIds.keys)
 
                     self.favoriteMatchesIdPublisher.send(fetchedMatches)
-
                     self.favoriteCompetitionsIdPublisher.send(fetchedCompetitions)
-
                 }
             })
             .store(in: &cancellables)
@@ -64,42 +59,28 @@ class FavoritesManager {
                 case .finished:
                     ()
                 case .failure(let error):
-                    print("FAVORITES LIST ERROR: \(error)")
-                    // Retry if userSessionNotFound
                     switch error {
                     case .userSessionNotFound:
-
                         self?.getUserFavorites()
-
                     default: ()
                     }
                 }
 
             }, receiveValue: { [weak self] favoritesListResponse in
-
-                print("FAVORITES LISTS: \(favoritesListResponse)")
-
                 if !favoritesListResponse.favoritesList.contains(where: {
                     $0.name == "Competitions"
                 }) {
                     self?.createCompetitionsList()
                 }
                 else {
-
                     if let competitionListId = favoritesListResponse.favoritesList.first(where: {
                         $0.name == "Competitions"
                     }) {
-
                         self?.competitionListId = competitionListId.id
-
                         self?.getCompetitionsIds(competitionListId: competitionListId.id, favoritesList: favoritesListResponse.favoritesList)
-
                     }
-
                     self?.processFavoritesLists(favoritesLists: favoritesListResponse.favoritesList)
-
                 }
-
             })
             .store(in: &cancellables)
     }

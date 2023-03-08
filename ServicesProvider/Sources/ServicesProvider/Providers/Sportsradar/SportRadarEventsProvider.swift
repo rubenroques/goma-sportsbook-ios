@@ -17,6 +17,11 @@ class SportRadarEventsProvider: EventsProvider {
 
     var sessionCoordinator: SportRadarSessionCoordinator
 
+    var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
+        return self.connectionStateSubject.eraseToAnyPublisher()
+    }
+    private var connectionStateSubject: CurrentValueSubject<ConnectorState, Never> = .init(.disconnected)
+
     private var cancellables = Set<AnyCancellable>()
 
     required init(sessionCoordinator: SportRadarSessionCoordinator,
@@ -79,7 +84,6 @@ class SportRadarEventsProvider: EventsProvider {
     private let defaultEventCount = 10
 
     func reconnectIfNeeded() {
-
         self.socketConnector.refreshConnection()
     }
 

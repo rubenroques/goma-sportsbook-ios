@@ -15,6 +15,6 @@ public enum ConnectorState {
 
 protocol Connector {
  
-    var connectionStatePublisher: AnyPublisher<ConnectorState, Error> { get }
+    var connectionStatePublisher: AnyPublisher<ConnectorState, Never> { get }
     
 }
