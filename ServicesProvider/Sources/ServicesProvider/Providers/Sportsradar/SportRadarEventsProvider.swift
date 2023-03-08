@@ -80,12 +80,6 @@ class SportRadarEventsProvider: EventsProvider {
 
     func reconnectIfNeeded() {
 
-//        self.liveSportTypesPublisher?.send(.disconnected)
-//        self.liveSportTypesPublisher = nil
-//
-//        self.allSportTypesPublisher?.send(.disconnected)
-//        self.allSportTypesPublisher = nil
-//
         self.socketConnector.refreshConnection()
     }
 
@@ -97,6 +91,11 @@ class SportRadarEventsProvider: EventsProvider {
 
         if let eventDetailsCoordinator = self.eventDetailsCoordinator {
             eventDetailsCoordinator.reconnect(withNewSessionToken: newSocketToken)
+        }
+
+        self.marketUpdatesCoordinators = self.marketUpdatesCoordinators.filter { $0.value.isActive }
+        for marketUpdatesCoordinator in self.marketUpdatesCoordinators.values {
+            marketUpdatesCoordinator.reconnect(withNewSessionToken: newSocketToken)
         }
     }
 
@@ -241,8 +240,7 @@ class SportRadarEventsProvider: EventsProvider {
     }
 
     //
-    //
-    //
+    // MARK: - Competition and Match Details
     //
     func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
 
@@ -499,6 +497,9 @@ class SportRadarEventsProvider: EventsProvider {
         return publisher.eraseToAnyPublisher()
     }
 
+    //
+    // MARK: - Subcribable Updates
+    //
     public func subscribeToEventUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
         // events lists
         for paginator in self.eventsPaginators.values {
@@ -540,6 +541,7 @@ class SportRadarEventsProvider: EventsProvider {
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
         }
+        
         // event details
         if let eventDetailsCoordinator = self.eventDetailsCoordinator,
            eventDetailsCoordinator.containsOutcome(withid: id),
@@ -581,6 +583,9 @@ class SportRadarEventsProvider: EventsProvider {
 
 }
 
+//
+// MARK: - Socket event delegate
+//
 extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
 
     func liveEventsUpdated(forContentIdentifier identifier: ContentIdentifier, withEvents events: [EventsGroup]) {
@@ -678,6 +683,10 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
             contentIdentifierPaginator.handleContentUpdate(content)
         }
 
+        if let eventDetailsCoordinator = self.eventDetailsCoordinator {
+            eventDetailsCoordinator.handleContentUpdate(content)
+        }
+
         for marketUpdatesCoordinator in self.marketUpdatesCoordinators.values {
             marketUpdatesCoordinator.handleContentUpdate(content)
         }
@@ -685,8 +694,9 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
 
 }
 
-/* REST API Events
- */
+//
+// MARK: - Competition and Match Details
+//
 extension SportRadarEventsProvider {
 
     func getMarketsFilters(event: Event) -> AnyPublisher<[MarketGroup], Never> {
@@ -891,7 +901,9 @@ extension SportRadarEventsProvider {
         .eraseToAnyPublisher()
     }
 
-    // Favorites
+    //
+    // MARK: - Favorites
+    //
     func getFavoritesList() -> AnyPublisher<FavoritesListResponse, ServiceProviderError> {
 
         let endpoint = SportRadarRestAPIClient.favoritesList

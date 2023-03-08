@@ -120,6 +120,8 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.loadBetTickets()
 
         self.setupWithTheme()
+
+        Env.userSessionStore.refreshUserWallet()
     }
 
     override func viewDidLayoutSubviews() {

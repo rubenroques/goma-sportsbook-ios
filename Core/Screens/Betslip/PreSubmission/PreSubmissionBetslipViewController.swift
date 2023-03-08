@@ -210,7 +210,14 @@ class PreSubmissionBetslipViewController: UIViewController {
     // Simple Bets values
     private var simpleBetsBettingValues: CurrentValueSubject<[String: Double], Never> = .init([:])
 
-    private var maxBetValue: Double = Double.greatestFiniteMagnitude
+    private var maxBetValue: Double {
+        if let userWallet = Env.userSessionStore.userWalletPublisher.value {
+            return userWallet.available
+        }
+        else {
+            return 0
+        }
+    }
 
     private var realBetValuePublisher: CurrentValueSubject<Double, Never> = .init(0.0)
     private var multiplierPublisher: CurrentValueSubject<Double, Never> = .init(0.0)
@@ -382,7 +389,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             .sink { [weak self] tickets in
                 self?.singleBettingTicketDataSource.bettingTickets = tickets
                 self?.multipleBettingTicketDataSource.bettingTickets = tickets
-                
+
                 self?.simpleOddsValueLabel.text = "\(tickets.count)"
                 
                 self?.tableView.reloadData()
@@ -398,6 +405,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .sink { [weak self] tickets in
                 self?.systemBettingTicketDataSource.bettingTickets = tickets
+                self?.requestSystemBetInfo()
             }
             .store(in: &cancellables)
 
@@ -1621,33 +1629,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
     @IBAction private func didTapPlusMaxButton() {
-        var maxAmountPossible = 0.0
-
-        if self.listTypePublisher.value == .multiple {
-            if let userBalance = self.userBalance,
-               let maxStake = self.maxStakeMultiple {
-                if userBalance < maxStake {
-                    maxAmountPossible = userBalance
-                }
-                else {
-                    maxAmountPossible = maxStake
-                }
-            }
-        }
-        else if self.listTypePublisher.value == .system {
-            if let userBalance = self.userBalance,
-               let maxStake = self.maxStakeSystem {
-                if userBalance < maxStake {
-                    maxAmountPossible = userBalance
-                }
-                else {
-                    maxAmountPossible = maxStake
-                }
-            }
-
-        }
-
-        self.addAmountValue(maxAmountPossible, isMax: true)
+        self.addAmountValue(self.maxBetValue, isMax: true)
     }
 
 }

@@ -152,9 +152,9 @@ extension UserDefaults {
             if let biometric = self.value(forKey: UserDefaultsKey.biometricAuthentication.key) as? Bool {
                 return biometric
             }
-            self.setValue(false, forKey: UserDefaultsKey.biometricAuthentication.key)
+            self.setValue(true, forKey: UserDefaultsKey.biometricAuthentication.key)
             self.synchronize()
-            return false
+            return true
         }
         set {
             self.setValue(newValue, forKey: UserDefaultsKey.biometricAuthentication.key)

@@ -107,8 +107,16 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
     var marketPublisherSubscriber: AnyCancellable?
     var cancellables = Set<AnyCancellable>()
 
-    var maxStake: Double?
-    var userBalance: Double?
+    private var userBalance: Double?
+
+    private var maxBetValue: Double {
+        if let userWallet = Env.userSessionStore.userWalletPublisher.value {
+            return userWallet.available
+        }
+        else {
+            return 0
+        }
+    }
 
     var currentValue: Int = 0 {
         didSet {
@@ -206,7 +214,6 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         
         self.endEditing(true)
 
-        self.maxStake = 0
         self.userBalance = 0
 
         self.freeBetView.isSwitchOn = false
@@ -415,17 +422,6 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
             self.errorLateralBottomView.backgroundColor = UIColor.App.backgroundSecondary
         }
 
-        Env.betslipManager.simpleBetslipSelectionStateList
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] betslipStateList in
-
-                if let bettingTicketId = self?.bettingTicket?.bettingId, let betslipState = betslipStateList[bettingTicketId].value {
-                    self?.maxStake = betslipState.maxStake
-
-                }
-            })
-            .store(in: &cancellables)
-
         Env.userSessionStore.userWalletPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] wallet in
@@ -528,19 +524,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
     }
 
     @IBAction private func didTapPlusMaxButton() {
-        var maxAmountPossible = 0.0
-
-        if let userBalance = self.userBalance,
-           let maxStake = self.maxStake {
-            if userBalance < maxStake {
-                maxAmountPossible = userBalance
-            }
-            else {
-                maxAmountPossible = maxStake
-            }
-        }
-
-        self.addAmountValue(maxAmountPossible, isMax: true)
+        self.addAmountValue(self.maxBetValue, isMax: true)
     }
 
     func refreshPossibleWinnings() {
@@ -574,20 +558,6 @@ extension SingleBettingTicketTableViewCell: UITextFieldDelegate {
         else {
             currentValue = Int(value * 100.0)
         }
-
-//        if let maxStake = self.maxStake {
-//            let maxStakeInt = Int(maxStake * 100.0)
-//            if currentValue > maxStakeInt {
-//                currentValue = maxStakeInt
-//            }
-//        }
-//
-//        if let maxUserBalance = self.userBalance {
-//            let maxUserBalanceInt = Int(maxUserBalance * 100.0)
-//            if currentValue > maxUserBalanceInt {
-//                currentValue = maxUserBalanceInt
-//            }
-//        }
 
         let calculatedAmount = Double(currentValue/100) + Double(currentValue%100)/100
         self.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
