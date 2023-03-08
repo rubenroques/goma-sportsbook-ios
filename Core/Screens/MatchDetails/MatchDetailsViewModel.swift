@@ -55,6 +55,7 @@ class MatchDetailsViewModel: NSObject {
     var availableMarkets: [String: [String]] = [:]
     var marketGroups: [MarketGroup] = []
 
+
     var isLiveMatch: Bool {
         if let match = self.match {
             switch match.status {
@@ -66,6 +67,37 @@ class MatchDetailsViewModel: NSObject {
         }
         return false
     }
+
+    var inProgressStatusString: String? {
+        if let match = self.match {
+            switch match.status {
+            case .ended, .notStarted, .unknown:
+                return nil
+            case .inProgress(let progress):
+                return progress
+            }
+        }
+        return nil
+    }
+
+    var matchScore: String {
+        var homeScore = "0"
+        var awayScore = "0"
+        if let match = self.match, let homeScoreInt = match.homeParticipantScore {
+            homeScore = "\(homeScoreInt)"
+        }
+        if let match = self.match, let awayScoreInt = match.awayParticipantScore {
+            awayScore = "\(awayScoreInt)"
+        }
+        return "\(homeScore) - \(awayScore)"
+    }
+
+    var matchTimeDetails: String? {
+        return [self.match?.matchTime, self.match?.status.description()]
+            .compactMap({ $0 })
+            .joined(separator: " - ")
+    }
+
 
     private var statsJSON: JSON?
     let matchStatsViewModel: MatchStatsViewModel
@@ -132,6 +164,7 @@ class MatchDetailsViewModel: NSObject {
             }
             .store(in: &cancellables)
 
+
     }
 
     func getMatchDetails() {
@@ -164,14 +197,34 @@ class MatchDetailsViewModel: NSObject {
                         let marketGroups = self.marketGroups
                         self.marketGroupsState.send(.loaded(marketGroups))
                     }
-
+                    self.getMatchLiveDetails()
                 case .disconnected:
                     print("Disconnected from ws")
                 }
             })
             .store(in: &cancellables)
+
+
     }
 
+    func getMatchLiveDetails() {
+
+        Env.servicesProvider.subscribeToEventUpdates(withId: self.matchId)
+            .compactMap({ $0 })
+            .map(ServiceProviderModelMapper.match(fromEvent:))
+            .sink(receiveCompletion: { completion in
+                print("matchSubscriber subscribeToEventUpdates completion: \(completion)")
+            }, receiveValue: { [weak self] updatedMatch in
+                switch updatedMatch.status {
+                case .notStarted, .ended, .unknown:
+                    self?.matchModePublisher.send(.preLive)
+                case .inProgress(_):
+                    self?.matchModePublisher.send(.live)
+                }
+                self?.matchPublisher.send(.loaded(updatedMatch))
+            })
+            .store(in: &self.cancellables)
+    }
     //
     //
     private func getMarketGroups(event: ServicesProvider.Event) {

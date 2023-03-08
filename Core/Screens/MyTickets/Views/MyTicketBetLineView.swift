@@ -161,22 +161,8 @@ class MyTicketBetLineView: NibView {
             self.dateLabel.isHidden = false
         }
               
-        self.homeTeamScoreLabel.text = ""
-        self.awayTeamScoreLabel.text = ""
-
-        self.homeResultSubscription = self.viewModel?.homeScore
-            .removeDuplicates()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] homeGoals in
-            self?.homeTeamScoreLabel.text = homeGoals ?? ""
-        })
-
-        self.awayResultSubscription = self.viewModel?.awayScore
-            .removeDuplicates()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] awayGoals in
-            self?.awayTeamScoreLabel.text = awayGoals ?? ""
-        })
+        self.homeTeamScoreLabel.text = self.betHistoryEntrySelection.homeParticipantScore ?? ""
+        self.awayTeamScoreLabel.text = self.betHistoryEntrySelection.awayParticipantScore ?? ""
 
         self.configureFromStatus()
         self.setupWithTheme()

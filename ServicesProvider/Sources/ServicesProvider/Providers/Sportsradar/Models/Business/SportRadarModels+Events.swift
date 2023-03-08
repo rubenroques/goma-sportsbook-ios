@@ -18,6 +18,74 @@ extension SportRadarModels {
             case version = "value"
         }
     }
+
+    struct EventLiveDataSummary: Decodable {
+        var id: String
+        var homeScore: Int
+        var awayScore: Int
+
+        var matchTime: String?
+        var status: Event.Status
+
+        enum CodingKeys: String, CodingKey {
+            case scoresContainer = "scores"
+            case currentScores = "CURRENT_SCORE"
+            case matchScores = "MATCH_SCORE"
+            case homeScore = "home"
+            case awayScore = "away"
+            case eventStatus = "status"
+            case matchTime = "matchTime"
+        }
+
+        init(id: String, homeScore: Int, awayScore: Int, matchTime: String? = nil, status: Event.Status) {
+            self.id = id
+            self.homeScore = homeScore
+            self.awayScore = awayScore
+            self.matchTime = matchTime
+            self.status = status
+        }
+
+        init(from decoder: Decoder) throws {
+            let container: KeyedDecodingContainer<CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
+
+            self.id = ""
+            
+            let fullMatchTime = try container.decodeIfPresent(String.self, forKey: .matchTime) ?? ""
+            let minutesPart = SocketMessageParseHelper.extractMatchMinutes(from: fullMatchTime)
+            self.matchTime = minutesPart
+
+            // Status
+            self.status = .unknown
+            if let statusString = try? container.decode(String.self, forKey: .eventStatus) {
+                self.status = Event.Status.init(value: statusString)
+            }
+
+            // Scores
+            self.homeScore = 0
+            self.awayScore = 0
+
+            if let scoresContainer = try? container.nestedContainer(keyedBy: CodingKeys.self, forKey: .scoresContainer),
+                let currentScoresContainer = try? scoresContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .currentScores) {
+
+                if let homeScore = try? currentScoresContainer.decode(Int.self, forKey: .homeScore) {
+                    self.homeScore = homeScore
+                }
+                if let awayScore = try? currentScoresContainer.decode(Int.self, forKey: .awayScore) {
+                    self.awayScore = awayScore
+                }
+            }
+            else if let scoresContainer = try? container.nestedContainer(keyedBy: CodingKeys.self, forKey: .scoresContainer),
+                let matchScoresContainer = try? scoresContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .matchScores) {
+
+                if let homeScore = try? matchScoresContainer.decode(Int.self, forKey: .homeScore) {
+                    self.homeScore = homeScore
+                }
+                if let awayScore = try? matchScoresContainer.decode(Int.self, forKey: .awayScore) {
+                    self.awayScore = awayScore
+                }
+            }
+        }
+    }
     
     struct Event: Codable {
         
@@ -55,6 +123,15 @@ extension SportRadarModels {
                 case "not_started": self = .notStarted
                 case "ended": self = .ended
                 default: self = .inProgress(value)
+                }
+            }
+
+            var stringValue: String {
+                switch self {
+                case .notStarted: return "not_started"
+                case .ended: return "ended"
+                case .inProgress(let value): return value
+                case .unknown: return ""
                 }
             }
         }

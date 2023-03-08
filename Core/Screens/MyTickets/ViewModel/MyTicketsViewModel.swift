@@ -52,9 +52,9 @@ class MyTicketsViewModel: NSObject {
     
     private let recordsPerPage = 10
     
-    private var resolvedPage = 1
-    private var openedPage = 1
-    private var wonPage = 1
+    private var resolvedPage = 0
+    private var openedPage = 0
+    private var wonPage = 0
     
     private var hasNextPage = true
 
@@ -139,6 +139,7 @@ class MyTicketsViewModel: NSObject {
         self.resolvedMyTickets.value = []
         self.openedMyTickets.value = []
         self.wonMyTickets.value = []
+
         self.reloadTableView()
     }
 
@@ -487,18 +488,19 @@ class MyTicketsViewModel: NSObject {
     }
 
     func refresh() {
-        self.resolvedPage = 1
-        self.openedPage = 1
-        self.wonPage = 1
+        self.clearData()
+
+        self.resolvedPage = 0
+        self.openedPage = 0
+        self.wonPage = 0
         
         switch self.myTicketsTypePublisher.value {
         case .opened:
-                self.loadOpenedTickets(page: self.openedPage)
+            self.loadOpenedTickets(page: self.openedPage)
         case .resolved:
-                self.loadResolvedTickets(page: self.resolvedPage)
+            self.loadResolvedTickets(page: self.resolvedPage)
         case .won:
-                self.loadWonTickets(page: self.wonPage)
-           
+            self.loadWonTickets(page: self.wonPage)
         }
     }
         

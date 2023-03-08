@@ -390,22 +390,10 @@ class SportRadarEventsProvider: EventsProvider {
         else {
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
-
-        let contentType = ContentType.eventDetails
-        let contentRoute = ContentRoute.eventDetails(eventId: matchId)
-        let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
-
-        self.eventDetailsCoordinator = SportRadarEventDetailsCoordinator(contentIdentifier: contentIdentifier,
+        self.eventDetailsCoordinator = SportRadarEventDetailsCoordinator(matchId: matchId,
                                                                          sessionToken: sessionToken.hash,
                                                                          storage: SportRadarEventDetailsStorage())
-
-        guard
-            let eventDetailsCoordinator = self.eventDetailsCoordinator
-        else {
-            return Fail(error: ServiceProviderError.subscriptionNotFound).eraseToAnyPublisher()
-        }
-
-        return eventDetailsCoordinator.requestInitialEventDetails().eraseToAnyPublisher()
+        return self.eventDetailsCoordinator!.eventDetailsPublisher
     }
 
     func subscribeOutrightMarkets(forMarketGroupId marketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
@@ -674,6 +662,12 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
     func marketDetails(forContentIdentifier identifier: ContentIdentifier, market: Market) {
         if let marketUpdatesCoordinator = marketUpdatesCoordinators[market.id] {
             marketUpdatesCoordinator.updateMarket(market)
+        }
+    }
+
+    func eventDetailsLiveInitialData(contentIdentifier: ContentIdentifier, eventLiveDataSummary: SportRadarModels.EventLiveDataSummary) {
+        if let eventDetailsCoordinator = self.eventDetailsCoordinator {
+            eventDetailsCoordinator.initialLiveData(eventLiveDataSummary: eventLiveDataSummary)
         }
     }
 

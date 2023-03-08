@@ -169,7 +169,6 @@ class UserSessionStore {
         }
 
         UserDefaults.standard.userSession = nil
-        UserDefaults.standard.biometricAuthenticationEnabled = false
 
         Env.favoritesManager.clearCachedFavorites()
         Env.gomaSocialClient.clearUserChatroomsData()

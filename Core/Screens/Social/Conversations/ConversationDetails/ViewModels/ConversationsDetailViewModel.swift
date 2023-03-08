@@ -734,7 +734,6 @@ extension ConversationDetailViewModel {
                                                   matchId: betSelection.eventId,
                                                   decimalOdd: 0.0,
                                                   isAvailable: markets.first?.isAvailable ?? true,
-                                                  statusId: "1",
                                                   matchDescription: betSelection.eventName,
                                                   marketDescription: marketDescription,
                                                   outcomeDescription: betSelection.betName)

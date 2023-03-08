@@ -69,6 +69,7 @@ extension SportRadarModels {
         var globalState: BetState
         var marketName: String
         var outcomeName: String
+        var eventResult: String?
         var potentialReturn: Double?
         var totalReturn: Double?
         var totalOdd: Double
@@ -102,41 +103,43 @@ extension SportRadarModels {
             case oddNumerator = "ownPriceUp"
 
             case order = "legOrder"
+            case eventResult = "eventResult"
         }
 
         init(from decoder: Decoder) throws {
-            let container: KeyedDecodingContainer<SportRadarModels.Bet.CodingKeys> = try decoder.container(keyedBy: SportRadarModels.Bet.CodingKeys.self)
-            let identifierInt = try container.decode(Double.self, forKey: SportRadarModels.Bet.CodingKeys.identifier)
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let identifierInt = try container.decode(Double.self, forKey: .identifier)
             self.identifier = String(identifierInt)
-            self.eventName = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.eventName)
-            self.homeTeamName = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.homeTeamName)
-            self.awayTeamName = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.awayTeamName)
-            self.sportTypeName = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.sportTypeName)
-            self.marketName = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.marketName)
-            self.outcomeName = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.outcomeName)
-            self.potentialReturn = (try? container.decode(Double.self, forKey: SportRadarModels.Bet.CodingKeys.potentialReturn)) ?? 0.0
-            self.totalReturn = (try? container.decode(Double.self, forKey: SportRadarModels.Bet.CodingKeys.totalReturn)) ?? 0.0
+            self.eventName = try container.decode(String.self, forKey: .eventName)
+            self.homeTeamName = try container.decode(String.self, forKey: .homeTeamName)
+            self.awayTeamName = try container.decode(String.self, forKey: .awayTeamName)
+            self.sportTypeName = try container.decode(String.self, forKey: .sportTypeName)
+            self.marketName = try container.decode(String.self, forKey: .marketName)
+            self.outcomeName = try container.decode(String.self, forKey: .outcomeName)
+            self.eventResult = try container.decodeIfPresent(String.self, forKey: .eventResult)
+            self.potentialReturn = (try? container.decode(Double.self, forKey: .potentialReturn)) ?? 0.0
+            self.totalReturn = (try? container.decode(Double.self, forKey: .totalReturn)) ?? 0.0
 
-            self.type = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.type)
+            self.type = try container.decode(String.self, forKey: .type)
 
-            let stateString = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.state)
+            let stateString = try container.decode(String.self, forKey: .state)
             self.state = BetState(rawValue: stateString) ?? .undefined
 
-            let resultString = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.result)
+            let resultString = try container.decode(String.self, forKey: .result)
             self.result = BetResult(rawValue: resultString) ?? .notSpecified
 
-            let globalStateString = try container.decode(String.self, forKey: SportRadarModels.Bet.CodingKeys.globalState)
+            let globalStateString = try container.decode(String.self, forKey: .globalState)
             self.globalState = BetState(rawValue: globalStateString) ?? .undefined
 
-            self.totalOdd = try container.decode(Double.self, forKey: SportRadarModels.Bet.CodingKeys.totalOdd)
-            self.totalStake = try container.decode(Double.self, forKey: SportRadarModels.Bet.CodingKeys.totalStake)
+            self.totalOdd = try container.decode(Double.self, forKey: .totalOdd)
+            self.totalStake = try container.decode(Double.self, forKey: .totalStake)
 
-            self.attemptedDate = try container.decode(Date.self, forKey: SportRadarModels.Bet.CodingKeys.attemptedDate)
+            self.attemptedDate = try container.decode(Date.self, forKey: .attemptedDate)
 
-            self.oddNumerator = try container.decode(Double.self, forKey: SportRadarModels.Bet.CodingKeys.oddNumerator)
-            self.oddDenominator = try container.decode(Double.self, forKey: SportRadarModels.Bet.CodingKeys.oddDenominator)
+            self.oddNumerator = try container.decode(Double.self, forKey: .oddNumerator)
+            self.oddDenominator = try container.decode(Double.self, forKey: .oddDenominator)
 
-            self.order = (try? container.decode(Int.self, forKey: SportRadarModels.Bet.CodingKeys.order)) ?? 999
+            self.order = (try? container.decode(Int.self, forKey: .order)) ?? 999
         }
 
     }

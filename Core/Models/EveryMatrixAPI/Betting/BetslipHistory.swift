@@ -106,6 +106,9 @@ struct BetHistoryEntrySelection: Codable {
     let homeParticipantName: String?
     let awayParticipantName: String?
 
+    let homeParticipantScore: String?
+    let awayParticipantScore: String?
+
     let marketName: String?
     let betName: String?
 
@@ -132,6 +135,9 @@ struct BetHistoryEntrySelection: Codable {
 
         case homeParticipantName = "homeParticipantName"
         case awayParticipantName = "awayParticipantName"
+
+        case homeParticipantScore = "homeParticipantScore"
+        case awayParticipantScore = "awayParticipantScore"
 
         case marketName = "marketName"
         case betName = "betName"

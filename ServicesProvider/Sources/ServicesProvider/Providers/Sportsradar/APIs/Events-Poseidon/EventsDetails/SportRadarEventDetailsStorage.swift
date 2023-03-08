@@ -74,19 +74,19 @@ extension SportRadarEventDetailsStorage {
         marketSubject.send(market)
     }
 
-    func updateEventStatus(withId id: String, newStatus: String) {
+    func updateEventStatus(newStatus: String) {
         guard let event = self.eventSubject.value else { return }
         event.status = Event.Status(value: newStatus)
         eventSubject.send(event)
     }
 
-    func updateEventTime(withId id: String, newTime: String) {
+    func updateEventTime(newTime: String) {
         guard let event = self.eventSubject.value else { return }
         event.matchTime = newTime
         eventSubject.send(event)
     }
 
-    func updateEventScore(withId id: String, newHomeScore: Int?, newAwayScore: Int?) {
+    func updateEventScore(newHomeScore: Int?, newAwayScore: Int?) {
         guard let event = self.eventSubject.value else { return }
         event.homeTeamScore = newHomeScore
         event.awayTeamScore = newAwayScore

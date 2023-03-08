@@ -22,6 +22,8 @@ extension SportRadarModels {
         case preLiveSports(sportsTypes: [SportType]) 
         
         case eventDetails(contentIdentifier: ContentIdentifier, event: SportRadarModels.Event?)
+        case eventDetailsLiveData(contentIdentifier: ContentIdentifier, eventLiveDataSummary: SportRadarModels.EventLiveDataSummary?)
+
         case eventGroup(contentIdentifier: ContentIdentifier, events: [SportRadarModels.Event])
         case outrightEventGroup(events: [SportRadarModels.Event])
         case eventSummary(contentIdentifier: ContentIdentifier, eventDetails: [SportRadarModels.Event])
@@ -56,6 +58,10 @@ extension SportRadarModels {
 
             case .eventDetails(let contentIdentifier, _):
                 return contentIdentifier
+
+            case .eventDetailsLiveData(let contentIdentifier, _):
+                return contentIdentifier
+
             case .eventGroup(let contentIdentifier, _):
                 return contentIdentifier
             case .outrightEventGroup(_):
@@ -202,6 +208,14 @@ extension SportRadarModels {
                 else {
                     return .marketDetails(contentIdentifier: contentIdentifier, market: nil)
                 }
+            case .eventDetailsLiveData:
+                if container.contains(.change) {
+                    let eventLiveData = try container.decodeIfPresent(SportRadarModels.EventLiveDataSummary.self, forKey: .change)
+                    return ContentContainer.eventDetailsLiveData(contentIdentifier: contentIdentifier, eventLiveDataSummary: eventLiveData)
+                }
+                else {
+                    return ContentContainer.eventDetailsLiveData(contentIdentifier: contentIdentifier, eventLiveDataSummary: nil)
+                }
             }
         }
 
@@ -256,6 +270,7 @@ extension SportRadarModels {
             }
             else if path.contains("status") && path.contains("liveDataSummary"), let eventId = SocketMessageParseHelper.extractEventId(path) {
                 let newStatus = try container.decode(String.self, forKey: .change)
+                return .updateEventState(contentIdentifier: contentIdentifier, eventId: eventId, state: newStatus)
             }
             else if path.contains("selections") && path.contains("idfoselection") {
                 if let changeContainer = try? container.nestedContainer(keyedBy: SelectionUpdateCodingKeys.self, forKey: .change),

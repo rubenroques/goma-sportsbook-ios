@@ -77,6 +77,7 @@ public enum ContentType: String, Codable {
     case preLiveSports = "sportTypeByDate"
 
     case eventDetails = "event"
+    case eventDetailsLiveData = "liveDataSummary"
     case eventGroup = "eventGroup"
     case eventSummary = "eventSummary"
 
@@ -92,6 +93,7 @@ public enum ContentRoute {
     case preLiveSports(startDate: Date?, endDate: Date?)
 
     case eventDetails(eventId: String)
+    case eventDetailsLiveData(eventId: String)
     case eventGroup(marketGroupId: String)
     case eventSummary(eventId: String)
 
@@ -112,6 +114,8 @@ public enum ContentRoute {
             return dateRange
 
         case .eventDetails(let eventId):
+            return eventId
+        case .eventDetailsLiveData(let eventId):
             return eventId
         case .eventGroup(let marketGroupId):
             return marketGroupId
@@ -135,6 +139,8 @@ public enum ContentRoute {
             return ""
         case .eventDetails(let eventId):
             return eventId
+        case .eventDetailsLiveData(let eventId):
+            return eventId
         case .eventGroup(let marketGroupId):
             return marketGroupId
         case .eventSummary(let eventId):
@@ -155,6 +161,8 @@ public enum ContentRoute {
         case .preLiveSports:
             return nil
         case .eventDetails:
+            return nil
+        case .eventDetailsLiveData:
             return nil
         case .eventGroup:
             return nil
@@ -247,6 +255,8 @@ public class ContentIdentifier: Decodable, Hashable, Equatable, Identifiable {
 
         case .eventDetails:
             self.contentRoute = ContentRoute.eventDetails(eventId: contentRouteRawString)
+        case .eventDetailsLiveData:
+            self.contentRoute = ContentRoute.eventDetailsLiveData(eventId: contentRouteRawString)
         case .eventGroup:
             self.contentRoute = ContentRoute.eventGroup(marketGroupId: contentRouteRawString)
         case .eventSummary:

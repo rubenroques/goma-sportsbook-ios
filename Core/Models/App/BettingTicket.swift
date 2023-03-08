@@ -20,15 +20,10 @@ struct BettingTicket: Hashable, Codable {
     var matchId: String
 
     var isAvailable: Bool
-    var statusId: String
 
     var matchDescription: String
     var marketDescription: String
     var outcomeDescription: String
-
-    var isOpen: Bool {
-        return self.isAvailable && ((self.statusId ?? "") == "1" )
-    }
 
     var odd: OddFormat
 
@@ -60,7 +55,6 @@ struct BettingTicket: Hashable, Codable {
          marketId: String,
          matchId: String,
          isAvailable: Bool,
-         statusId: String,
          matchDescription: String,
          marketDescription: String,
          outcomeDescription: String,
@@ -71,7 +65,6 @@ struct BettingTicket: Hashable, Codable {
         self.marketId = marketId
         self.matchId = matchId
         self.isAvailable = isAvailable
-        self.statusId = statusId
         self.matchDescription = matchDescription
         self.marketDescription = marketDescription
         self.outcomeDescription = outcomeDescription
@@ -84,7 +77,6 @@ struct BettingTicket: Hashable, Codable {
          matchId: String,
          decimalOdd: Double,
          isAvailable: Bool,
-         statusId: String,
          matchDescription: String,
          marketDescription: String,
          outcomeDescription: String) {
@@ -94,7 +86,6 @@ struct BettingTicket: Hashable, Codable {
         self.marketId = marketId
         self.matchId = matchId
         self.isAvailable = isAvailable
-        self.statusId = statusId
         self.matchDescription = matchDescription
         self.marketDescription = marketDescription
         self.outcomeDescription = outcomeDescription
@@ -114,7 +105,6 @@ extension BettingTicket {
                   marketId: market.id,
                   matchId: match.id,
                   isAvailable: outcome.bettingOffer.isAvailable,
-                  statusId: "1",
                   matchDescription: matchDescription,
                   marketDescription: marketDescription,
                   outcomeDescription: outcomeDescription,
@@ -132,7 +122,6 @@ extension BettingTicket {
                   marketId: marketId,
                   matchId: match.id,
                   isAvailable: outcome.bettingOffer.isAvailable,
-                  statusId: "1",
                   matchDescription: matchDescription,
                   marketDescription: marketDescription,
                   outcomeDescription: outcomeDescription,

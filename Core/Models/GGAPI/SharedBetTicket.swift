@@ -191,6 +191,9 @@ struct SharedBetTicketSelection: Codable, Hashable {
     let homeParticipantName: String?
     let awayParticipantName: String?
 
+    let homeParticipantScore: String?
+    let awayParticipantScore: String?
+
     let marketName: String?
     let betName: String?
 
@@ -217,6 +220,9 @@ struct SharedBetTicketSelection: Codable, Hashable {
 
         case homeParticipantName = "home_team"
         case awayParticipantName = "away_team"
+
+        case homeParticipantScore = "home_team_score"
+        case awayParticipantScore = "away_team_score"
 
         case marketName = "bet_type"
         case betName = "outcome_name"
@@ -248,6 +254,8 @@ extension SharedBetTicketSelection {
                   bettingTypeEventPartName: selection.bettingTypeEventPartName,
                   homeParticipantName: selection.homeParticipantName,
                   awayParticipantName: selection.awayParticipantName,
+                  homeParticipantScore: selection.homeParticipantScore,
+                  awayParticipantScore: selection.awayParticipantScore,
                   marketName: selection.marketName,
                   betName: selection.betName)
     }
@@ -277,6 +285,8 @@ extension BetHistoryEntrySelection {
                   bettingTypeEventPartName: sharedBetTicketSelection.bettingTypeEventPartName,
                   homeParticipantName: sharedBetTicketSelection.homeParticipantName,
                   awayParticipantName: sharedBetTicketSelection.awayParticipantName,
+                  homeParticipantScore: sharedBetTicketSelection.homeParticipantScore,
+                  awayParticipantScore: sharedBetTicketSelection.awayParticipantScore,
                   marketName: sharedBetTicketSelection.marketName,
                   betName: sharedBetTicketSelection.betName)
     }

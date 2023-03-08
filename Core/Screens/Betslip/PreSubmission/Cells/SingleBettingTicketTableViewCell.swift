@@ -361,6 +361,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                 })
         }
 
+        
         self.oddSubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
             .map(\.decimalOdd)
             .compactMap({ $0 })

@@ -12,35 +12,50 @@ class SportRadarEventDetailsCoordinator {
 
     var storage: SportRadarEventDetailsStorage
     var sessionToken: String
-    let contentIdentifier: ContentIdentifier
 
-    weak var subscription: Subscription?
+    let marketsContentIdentifier: ContentIdentifier
+    let liveDataContentIdentifier: ContentIdentifier
+
+    weak var marketsSubscription: Subscription?
     var isActive: Bool {
-        return self.subscription != nil
+        return self.marketsSubscription != nil
     }
 
     var eventDetailsPublisher: AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
         return eventDetailsCurrentValueSubject.eraseToAnyPublisher()
     }
 
-    private var eventDetailsCurrentValueSubject: CurrentValueSubject<SubscribableContent<Event>, ServiceProviderError>
+    private var eventDetailsCurrentValueSubject: CurrentValueSubject<SubscribableContent<Event>, ServiceProviderError> = .init(.disconnected)
 
-    init(contentIdentifier: ContentIdentifier, sessionToken: String, storage: SportRadarEventDetailsStorage) {
+    init(matchId: String, sessionToken: String, storage: SportRadarEventDetailsStorage) {
         self.sessionToken = sessionToken
         self.storage = storage
-        self.contentIdentifier = contentIdentifier
 
-        self.eventDetailsCurrentValueSubject = .init(.disconnected)
+
+        let marketsContentType = ContentType.eventDetails
+        let marketsContentRoute = ContentRoute.eventDetails(eventId: matchId)
+        let marketsContentIdentifier = ContentIdentifier(contentType: marketsContentType, contentRoute: marketsContentRoute)
+
+        self.marketsContentIdentifier = marketsContentIdentifier
+
+        let liveDataContentType = ContentType.eventDetailsLiveData
+        let liveDataContentRoute = ContentRoute.eventDetailsLiveData(eventId: matchId)
+        let liveDataContentIdentifier = ContentIdentifier(contentType: liveDataContentType, contentRoute: liveDataContentRoute)
+
+        self.liveDataContentIdentifier = liveDataContentIdentifier
+
+        self.requestEventDetails()
+        self.requestEventLiveData()
     }
 
-    func requestInitialEventDetails() -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
-        let publisher = CurrentValueSubject<SubscribableContent<Event>, ServiceProviderError>.init(.disconnected)
+    func requestEventDetails() {
         let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: self.sessionToken,
-                                                         contentIdentifier: self.contentIdentifier)
+                                                         contentIdentifier: self.marketsContentIdentifier)
         guard
             let request = endpoint.request()
         else {
-            return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
+            self.eventDetailsCurrentValueSubject.send(completion: .failure(ServiceProviderError.onSubscribe))
+            return
         }
 
         let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
@@ -49,22 +64,48 @@ class SportRadarEventDetailsCoordinator {
                 let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode)
             else {
-                print("SportRadarEventsPaginator: requestInitialPage - error on subscribe to topic \(error) \(response)")
+                print("SportRadarEventDetailsCoordinator: requestEventDetails")
+                self.eventDetailsCurrentValueSubject.send(completion: .failure(ServiceProviderError.onSubscribe))
+                return
+            }
+            let subscription = Subscription(contentIdentifier: self.marketsContentIdentifier,
+                                            sessionToken: self.sessionToken,
+                                            unsubscriber: self)
+            self.eventDetailsCurrentValueSubject.send(.connected(subscription: subscription))
+            self.marketsSubscription = subscription
+        }
+        sessionDataTask.resume()
+    }
+
+
+    func requestEventLiveData() {
+        let publisher = CurrentValueSubject<SubscribableContent<Event>, ServiceProviderError>.init(.disconnected)
+        let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: self.sessionToken,
+                                                         contentIdentifier: self.liveDataContentIdentifier)
+        guard
+            let request = endpoint.request()
+        else {
+            return
+        }
+
+        let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard
+                (error == nil),
+                let httpResponse = response as? HTTPURLResponse,
+                (200...299).contains(httpResponse.statusCode)
+            else {
+                print("SportRadarEventDetailsCoordinator: requestEventLiveData")
                 publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
                 return
             }
-            let subscription = Subscription(contentIdentifier: self.contentIdentifier,
+            let subscription = Subscription(contentIdentifier: self.liveDataContentIdentifier,
                                             sessionToken: self.sessionToken,
-                                               unsubscriber: self)
-            publisher.send(.connected(subscription: subscription))
-            self.subscription = subscription
+                                            unsubscriber: self)
+            self.marketsSubscription?.associateSubscription(subscription)
         }
         sessionDataTask.resume()
-
-        self.eventDetailsCurrentValueSubject = publisher
-
-        return self.eventDetailsCurrentValueSubject.eraseToAnyPublisher()
     }
+
 
     func updateEventDetails(_ updatedEvent: Event) {
         self.storage.storeEvent(updatedEvent)
@@ -76,25 +117,49 @@ class SportRadarEventDetailsCoordinator {
         self.sessionToken = newSessionToken
         self.storage.reset()
 
-        let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: self.sessionToken,
-                                                         contentIdentifier: self.contentIdentifier)
+        //
+        //
+        let marketsEndpoint = SportRadarRestAPIClient.subscribe(sessionToken: self.sessionToken,
+                                                                contentIdentifier: self.marketsContentIdentifier)
 
-        guard let request = endpoint.request() else { return }
-        let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+        guard let marketsRequest = marketsEndpoint.request() else { return }
+        let marketsSessionDataTask = URLSession.shared.dataTask(with: marketsRequest) { data, response, error in
             if let error {
-                print("SportRadarEventDetailsCoordinator: reconnect dataTask contentIdentifier \(self.contentIdentifier) error \(error)")
+                print("SportRadarEventDetailsCoordinator: reconnect dataTask contentIdentifier \(self.marketsContentIdentifier) error \(error)")
             }
             if let data, let dataString = String(data: data, encoding: .utf8) {
-                print("SportRadarEventDetailsCoordinator: reconnect dataTask contentIdentifier \(self.contentIdentifier) data \(dataString)")
+                print("SportRadarEventDetailsCoordinator: reconnect dataTask contentIdentifier \(self.marketsContentIdentifier) data \(dataString)")
             }
         }
-        sessionDataTask.resume()
+        marketsSessionDataTask.resume()
+
+        //
+        //
+        let liveDataEndpoint = SportRadarRestAPIClient.subscribe(sessionToken: self.sessionToken,
+                                                                 contentIdentifier: self.liveDataContentIdentifier)
+
+        guard let liveDataRequest = liveDataEndpoint.request() else { return }
+        let liveDataSessionDataTask = URLSession.shared.dataTask(with: liveDataRequest) { data, response, error in
+            if let error {
+                print("SportRadarEventDetailsCoordinator: reconnect dataTask contentIdentifier \(self.liveDataContentIdentifier) error \(error)")
+            }
+            if let data, let dataString = String(data: data, encoding: .utf8) {
+                print("SportRadarEventDetailsCoordinator: reconnect dataTask contentIdentifier \(self.liveDataContentIdentifier) data \(dataString)")
+            }
+        }
+        liveDataSessionDataTask.resume()
     }
 
 }
 
 
 extension SportRadarEventDetailsCoordinator {
+
+    func initialLiveData(eventLiveDataSummary: SportRadarModels.EventLiveDataSummary) {
+        self.storage.updateEventStatus(newStatus: eventLiveDataSummary.status.stringValue)
+        self.storage.updateEventTime(newTime: eventLiveDataSummary.matchTime ?? "")
+        self.storage.updateEventScore(newHomeScore: eventLiveDataSummary.homeScore, newAwayScore: eventLiveDataSummary.awayScore)
+    }
 
     func handleContentUpdate(_ content: SportRadarModels.ContentContainer) {
         switch content {
@@ -104,12 +169,12 @@ extension SportRadarEventDetailsCoordinator {
         case .updateMarketTradability(_, let marketId, let isTradable):
             self.storage.updateMarketTradability(withId: marketId, isTradable: isTradable)
 
-        case .updateEventState(_, let eventId, let newStatus):
-            self.storage.updateEventStatus(withId: eventId, newStatus: newStatus)
-        case .updateEventTime(_, let eventId, let newTime):
-            self.storage.updateEventTime(withId: eventId, newTime: newTime)
-        case .updateEventScore(_, let eventId, let homeScore, let awayScore):
-            self.storage.updateEventScore(withId: eventId, newHomeScore: homeScore, newAwayScore: awayScore)
+        case .updateEventState(_, _, let newStatus):
+            self.storage.updateEventStatus(newStatus: newStatus)
+        case .updateEventTime(_, _, let newTime):
+            self.storage.updateEventTime(newTime: newTime)
+        case .updateEventScore(_, _, let homeScore, let awayScore):
+            self.storage.updateEventScore(newHomeScore: homeScore, newAwayScore: awayScore)
 
         default:
             () // Ignore other cases

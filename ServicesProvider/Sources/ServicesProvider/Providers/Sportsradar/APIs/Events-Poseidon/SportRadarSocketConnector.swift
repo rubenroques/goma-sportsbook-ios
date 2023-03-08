@@ -17,6 +17,7 @@ protocol SportRadarConnectorSubscriber: AnyObject {
     func preLiveSportsUpdated(withSportTypes: [SportRadarModels.SportType])
 
     func eventDetailsUpdated(forContentIdentifier identifier: ContentIdentifier, event: Event)
+    func eventDetailsLiveInitialData(contentIdentifier: ContentIdentifier, eventLiveDataSummary: SportRadarModels.EventLiveDataSummary)
     func eventGroups(forContentIdentifier identifier: ContentIdentifier, withEvents: [EventsGroup])
     func outrightEventGroups(events: [EventsGroup])
 
@@ -125,7 +126,7 @@ extension SportRadarSocketConnector: WebSocketDelegate {
             self.refreshConnection()
             print("ServiceProvider - SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
-            // print("ServiceProvider - SportRadarSocketConnector websocket recieved text: \n \(string) \n\n ------------- ")
+            print("ServiceProvider - SportRadarSocketConnector websocket recieved text: \n \(string) \n\n ------------- ")
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)
@@ -208,6 +209,10 @@ extension SportRadarSocketConnector: WebSocketDelegate {
                     if let subscriber = self.messageSubscriber, let marketValue = market {
                         let mappedMarket = SportRadarModelMapper.market(fromInternalMarket: marketValue)
                         subscriber.marketDetails(forContentIdentifier: contentIdentifier, market: mappedMarket)
+                    }
+                case .eventDetailsLiveData(let contentIdentifier, let eventLiveDataSummary):
+                    if let subscriber = self.messageSubscriber, let eventLiveDataSummaryValue = eventLiveDataSummary {
+                        subscriber.eventDetailsLiveInitialData(contentIdentifier: contentIdentifier, eventLiveDataSummary: eventLiveDataSummaryValue)
                     }
                 default:
                     if let subscriber = self.messageSubscriber {

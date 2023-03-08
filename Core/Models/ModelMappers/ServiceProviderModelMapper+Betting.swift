@@ -99,6 +99,8 @@ extension ServiceProviderModelMapper {
                                                                 bettingTypeEventPartName: nil,
                                                                 homeParticipantName: betSelection.homeTeamName,
                                                                 awayParticipantName: betSelection.awayTeamName,
+                                                                homeParticipantScore: betSelection.homeResult,
+                                                                awayParticipantScore: betSelection.awayResult,
                                                                 marketName: betSelection.marketName,
                                                                 betName: betSelection.outcomeName)
 

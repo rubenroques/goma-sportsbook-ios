@@ -42,44 +42,6 @@ class MyTicketBetLineViewModel {
         self.goalsSubscription?.cancel()
         self.goalsSubscription = nil
 
-        if let goalsRegister = goalsRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: goalsRegister)
-        }
-
-        let endpoint = TSRouter.eventPartScoresPublisher(operatorId: Env.appSession.operatorId, language: "en", matchId: id)
-
-        self.goalsSubscription = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
-                case .finished:
-                    print("Data retrieved!")
-                }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    self?.goalsRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    print("MyBets cashoutPublisher initialContent")
-
-                    for content in (aggregator.content ?? []) {
-                        switch content {
-                        case .eventPartScore(let eventPartScore):
-                            if let eventInfoTypeId = eventPartScore.eventInfoTypeID, eventInfoTypeId == "1" {
-                                self?.homeScore.send(eventPartScore.homeScore ?? nil)
-                                self?.awayScore.send(eventPartScore.awayScore ?? nil)
-                            }
-                        default: ()
-                        }
-                    }
-                case .updatedContent(let aggregatorUpdates):
-                    print("MyBets cashoutPublisher updatedContent")
-                case .disconnect:
-                    print("MyBets cashoutPublisher disconnect")
-                }
-            })
     }
 
 }

@@ -56,16 +56,6 @@ class FavoritesManager {
     // MARK: Functions
     func getUserFavorites() {
         self.clearFavoritesData()
-//        Env.everyMatrixClient.getUserMetadata()
-//            .receive(on: DispatchQueue.main)
-//            .eraseToAnyPublisher()
-//            .sink { _ in
-//            } receiveValue: { [weak self] userMetadata in
-//                if let userMetadataRecords = userMetadata.records[0].value {
-//                    self?.favoriteEventsIdPublisher.send(userMetadataRecords)
-//                }
-//            }
-//            .store(in: &cancellables)
 
         Env.servicesProvider.getFavoritesList()
             .receive(on: DispatchQueue.main)

@@ -23,6 +23,7 @@ public struct Bet: Codable {
     public var potentialReturn: Double?
     public var totalReturn: Double?
     public var date: Date
+
 }
 
 public struct BetSelection: Codable {
@@ -36,6 +37,9 @@ public struct BetSelection: Codable {
     public var marketName: String
     public var outcomeName: String
     public var odd: OddFormat
+    
+    public var homeResult: String?
+    public var awayResult: String?
 }
 
 public enum BetResult: String, Codable {

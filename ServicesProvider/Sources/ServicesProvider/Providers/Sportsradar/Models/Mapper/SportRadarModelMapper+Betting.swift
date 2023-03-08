@@ -75,6 +75,11 @@ extension SportRadarModelMapper {
         case .lost: globalState = .lost
         }
 
+        let cleanedEventResult = (internalBet.eventResult ?? "").replacingOccurrences(of: " ", with: "")
+
+        let homeResult: String? = cleanedEventResult.split(separator: ":")[safe: 0].map(String.init)
+        let awayResult: String? = cleanedEventResult.split(separator: ":")[safe: 1].map(String.init)
+
         return BetSelection(identifier: internalBet.identifier,
                             state: state,
                             result: result,
@@ -85,7 +90,9 @@ extension SportRadarModelMapper {
                             marketName: internalBet.marketName,
                             outcomeName: internalBet.outcomeName,
                             odd: OddFormat.fraction(numerator: Int(internalBet.oddNumerator),
-                                                    denominator: Int(internalBet.oddDenominator)))
+                                                    denominator: Int(internalBet.oddDenominator)),
+                            homeResult: homeResult,
+                            awayResult: awayResult)
     }
 
     //  ServiceProvider ----> SportRadar

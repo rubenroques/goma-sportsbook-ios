@@ -171,7 +171,6 @@ class BetslipManager: NSObject {
         }
 
         self.bettingTicketPublisher.removeValue(forKey: id)
-        
     }
 
     private func subscribeBettingTicketPublisher(bettingTicket: BettingTicket) {
@@ -210,8 +209,6 @@ class BetslipManager: NSObject {
     }
 
     private func updateBettingTickets(ofMarket market: Market) {
-
-        print("BTSL  \(market.name)")
         for outcome in market.outcomes {
             if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[outcome.id] {
                 let newAvailablity = market.isAvailable
@@ -221,7 +218,6 @@ class BetslipManager: NSObject {
                                                           marketId: bettingTicket.marketId,
                                                           matchId: bettingTicket.matchId,
                                                           isAvailable: newAvailablity,
-                                                          statusId: bettingTicket.statusId,
                                                           matchDescription: bettingTicket.matchDescription,
                                                           marketDescription: bettingTicket.marketDescription,
                                                           outcomeDescription: bettingTicket.outcomeDescription,
@@ -230,15 +226,8 @@ class BetslipManager: NSObject {
                 self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
 
                 self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)
-
-                print("BTSL  Updated outcome \(bettingTicket.outcomeDescription) \(newOdd)")
             }
-            else {
-                print("BTSL  Ignored outcome \(outcome.translatedName) \(outcome.bettingOffer.odd)")
-            }
-
         }
-
     }
 
     private func updateBettingTicket(withId id: String, bettingOffer: EveryMatrix.BettingOffer) {
@@ -249,7 +238,6 @@ class BetslipManager: NSObject {
                                                  matchId: bettingTicket.matchId,
                                                  decimalOdd: value,
                                                  isAvailable: bettingOffer.isAvailable ?? bettingTicket.isAvailable,
-                                                 statusId: bettingOffer.statusId ?? bettingTicket.statusId,
                                                  matchDescription: bettingTicket.matchDescription,
                                                  marketDescription: bettingTicket.marketDescription,
                                                  outcomeDescription: bettingTicket.outcomeDescription)
@@ -267,7 +255,6 @@ class BetslipManager: NSObject {
                                                  matchId: bettingTicket.matchId,
                                                  decimalOdd: newOdd ?? bettingTicket.decimalOdd,
                                                  isAvailable: isAvailable ?? bettingTicket.isAvailable,
-                                                 statusId: statusId ?? bettingTicket.statusId,
                                                  matchDescription: bettingTicket.matchDescription,
                                                  marketDescription: bettingTicket.marketDescription,
                                                  outcomeDescription: bettingTicket.outcomeDescription)

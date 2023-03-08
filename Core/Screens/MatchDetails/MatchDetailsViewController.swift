@@ -664,7 +664,7 @@ class MatchDetailsViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
-        
+
         self.viewModel.matchModePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] matchMode in
@@ -677,11 +677,11 @@ class MatchDetailsViewController: UIViewController {
                     self?.headerDetailPreliveView.isHidden = true
                     self?.headerDetailLiveView.isHidden = false
                 }
-                
+
                 self?.view.setNeedsLayout()
                 self?.view.layoutIfNeeded()
-                
-                self?.updateHeaderDetails()
+
+                self?.setupHeaderDetails()
             })
             .store(in: &cancellables)
         
@@ -910,51 +910,29 @@ class MatchDetailsViewController: UIViewController {
             return
         }
         
-        let viewModel = MatchWidgetCellViewModel(match: match)
+        let cellViewModel = MatchWidgetCellViewModel(match: match)
         
-        if viewModel.countryISOCode != "" {
-            self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+        if cellViewModel.countryISOCode != "" {
+            self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: cellViewModel.countryISOCode))
         }
         else {
-            self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
+            self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: cellViewModel.countryId))
         }
         
-        self.headerCompetitionLabel.text = viewModel.competitionName
-        self.headerDetailHomeLabel.text = viewModel.homeTeamName
-        self.headerDetailAwayLabel.text = viewModel.awayTeamName
+        self.headerCompetitionLabel.text = cellViewModel.competitionName
+        self.headerDetailHomeLabel.text = cellViewModel.homeTeamName
+        self.headerDetailAwayLabel.text = cellViewModel.awayTeamName
         
         if self.viewModel.matchModePublisher.value == .preLive {
-            self.headerDetailPreliveTopLabel.text = viewModel.startDateString
-            self.headerDetailPreliveBottomLabel.text = viewModel.startTimeString
+            self.headerDetailPreliveTopLabel.text = cellViewModel.startDateString
+            self.headerDetailPreliveBottomLabel.text = cellViewModel.startTimeString
         }
         else {
-            self.updateHeaderDetails()
+            self.headerDetailLiveTopLabel.text = self.viewModel.matchScore
+            self.headerDetailLiveBottomLabel.text = self.viewModel.matchTimeDetails
         }
     }
-    
-    func updateHeaderDetails() {
 
-        var homeGoals = ""
-        var awayGoals = ""
-        var minutes = ""
-        var matchPart = ""
-
-        // TODO: Request and Update Match info
-
-        if homeGoals.isNotEmpty && awayGoals.isNotEmpty {
-            self.headerDetailLiveTopLabel.text = "\(homeGoals) - \(awayGoals)"
-        }
-        
-        if minutes.isNotEmpty && matchPart.isNotEmpty {
-            self.headerDetailLiveBottomLabel.text = "\(minutes)' - \(matchPart)"
-        }
-        else if minutes.isNotEmpty {
-            self.headerDetailLiveBottomLabel.text = "\(minutes)'"
-        }
-        else if matchPart.isNotEmpty {
-            self.headerDetailLiveBottomLabel.text = "\(matchPart)"
-        }
-    }
 
     func expandLiveFieldIfNeeded() {
         if self.viewModel.isLiveMatch {
