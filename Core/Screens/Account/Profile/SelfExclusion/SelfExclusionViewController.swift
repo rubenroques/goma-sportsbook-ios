@@ -231,8 +231,8 @@ class SelfExclusionViewController: UIViewController {
 
         switch alertType {
         case .success:
-            let alert = UIAlertController(title: "Self Exclusion Success",
-                                          message: "Self exclusion options were added with success!",
+            let alert = UIAlertController(title: localized("self_exclusion_success"),
+                                          message: localized("self_exclusion_success_message"),
                                           preferredStyle: .alert)
 
             alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
@@ -243,8 +243,8 @@ class SelfExclusionViewController: UIViewController {
 
             self.present(alert, animated: true, completion: nil)
         case .error:
-            let alert = UIAlertController(title: "Self Exclusion Error",
-                                          message: "There was an error trying to apply the selected self exclusion options. Please try again later.",
+            let alert = UIAlertController(title: localized("self_exclusion_error"),
+                                          message: localized("self_exclusion_error_message"),
                                           preferredStyle: .alert)
 
             alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
