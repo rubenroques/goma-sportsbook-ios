@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-protocol BettingProvider {
+protocol BettingProvider: Connector {
 
     func getBetHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError>
     func getBetDetails(identifier: String) -> AnyPublisher<Bet, ServiceProviderError>

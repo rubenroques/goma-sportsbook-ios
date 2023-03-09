@@ -134,7 +134,10 @@ class MyFavoritesViewModel: NSObject {
             .store(in: &cancellables)
 
         self.fetchedEventSummaryPublisher
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self]  fetchedEventsSummmary in
+
+                print("FETCHED COUNT: \(fetchedEventsSummmary.count)")
 
                 if fetchedEventsSummmary.count == self?.favoriteEventsIds.count && fetchedEventsSummmary.isNotEmpty {
                     self?.updateContentList()
@@ -208,7 +211,6 @@ class MyFavoritesViewModel: NSObject {
                                          numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
         competitionInfo: competitionInfo)
 
-
         self.favoriteCompetitionsDataPublisher.value.append(newCompetition)
 
         self.fetchedEventSummaryPublisher.value.append(competitionInfo.id)
@@ -239,18 +241,17 @@ class MyFavoritesViewModel: NSObject {
                         case .finished:
                             ()
                         case .failure(let error):
-                            print("EVENT SUMMARY ERROR: \(error)")
+                            print("EVENT SUMMARY FAV ERROR: \(error)")
                         }
 
-                    }, receiveValue: { [weak self] eventSummary in
+                        self?.fetchedEventSummaryPublisher.value.append(eventId)
 
-                        print("EVENT SUMMARY: \(eventSummary)")
+                    }, receiveValue: { [weak self] eventSummary in
+                        guard let self = self else { return }
 
                         if eventSummary.homeTeamName != "" || eventSummary.awayTeamName != "" {
                             let match = ServiceProviderModelMapper.match(fromEvent: eventSummary)
-                            self?.favoriteMatchesDataPublisher.value.append(match)
-
-                            self?.fetchedEventSummaryPublisher.value.append(eventSummary.id)
+                            self.favoriteMatchesDataPublisher.value.append(match)
 
                         }
 

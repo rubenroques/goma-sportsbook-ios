@@ -400,6 +400,9 @@ extension OmegaAPIClient: Endpoint {
                 queryItemsURL.append(queryItem)
             }
 
+            let queryItem = URLQueryItem(name: "lockType", value: "EXCLUSION")
+            queryItemsURL.append(queryItem)
+
             return queryItemsURL
 
         case .getPersonalDepositLimits:

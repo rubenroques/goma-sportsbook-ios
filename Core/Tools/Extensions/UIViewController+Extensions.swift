@@ -27,12 +27,12 @@ extension UIViewController {
         }
     }
 
-    func showAlert(type: EditAlertView.AlertState, errorText: String = "") {
+    func showAlert(type: EditAlertView.AlertState, alertText: String = "") {
 
         let popup = EditAlertView()
         popup.alertState = type
-        if errorText != "" {
-            popup.setAlertText(errorText)
+        if alertText != "" {
+            popup.setAlertText(alertText)
         }
         popup.translatesAutoresizingMaskIntoConstraints = false
         popup.alpha = 0

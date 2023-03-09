@@ -101,6 +101,7 @@ class SelfExclusionViewController: UIViewController {
         self.topTitleLabel.textColor = UIColor.App.textPrimary
 
         self.editButton.backgroundColor = UIColor.App.backgroundPrimary
+        self.editButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         self.exclusionSelectTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
         self.exclusionSelectTextFieldView.setTextFieldColor(UIColor.App.inputText)
@@ -124,6 +125,20 @@ class SelfExclusionViewController: UIViewController {
             .sink(receiveValue: { [weak self] isLocked in
                 if isLocked {
                     self?.dismiss(animated: true)
+                }
+            })
+            .store(in: &cancellables)
+
+        viewModel.shouldShowAlert
+            .receive(on: DispatchQueue.main)
+            .dropFirst()
+            .sink(receiveValue: { [weak self] alertType in
+
+                switch alertType {
+                case .success:
+                    self?.showAlert(alertType: .success)
+                case .error:
+                    self?.showAlert(alertType: .error)
                 }
             })
             .store(in: &cancellables)
@@ -212,6 +227,33 @@ class SelfExclusionViewController: UIViewController {
             .store(in: &cancellables)
     }
 
+    private func showAlert(alertType: AlertType) {
+
+        switch alertType {
+        case .success:
+            let alert = UIAlertController(title: localized("self_exclusion_success"),
+                                          message: localized("self_exclusion_success_message"),
+                                          preferredStyle: .alert)
+
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+                
+                Env.userSessionStore.logout()
+                self?.dismiss(animated: true)
+            }))
+
+            self.present(alert, animated: true, completion: nil)
+        case .error:
+            let alert = UIAlertController(title: localized("self_exclusion_error"),
+                                          message: localized("self_exclusion_error_message"),
+                                          preferredStyle: .alert)
+
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+
+            self.present(alert, animated: true, completion: nil)
+        }
+
+    }
+
     private func showPeriodError(periodValueTypeError: PeriodValueTypeError, periodValue: String) {
 
         var message = ""
@@ -296,6 +338,7 @@ extension SelfExclusionViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(localized("save"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 15)
         return button
     }
 
