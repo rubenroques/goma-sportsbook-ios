@@ -118,17 +118,11 @@ class QuickBetViewController: UIViewController {
         self.addDoneAccessoryView()
 
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
-
         self.addOneButton.addTarget(self, action: #selector(didTapAddOneButton), for: .primaryActionTriggered)
-
         self.addFiveButton.addTarget(self, action: #selector(didTapAddFiveButton), for: .primaryActionTriggered)
-
         self.addMaxButton.addTarget(self, action: #selector(didTapAddMaxButton), for: .primaryActionTriggered)
-
         self.finalBetButton.addTarget(self, action: #selector(didTapFinalBetButton), for: .primaryActionTriggered)
-
         self.closeErrorButton.addTarget(self, action: #selector(didTapCloseErrorButton), for: .primaryActionTriggered)
-
         self.continueButton.addTarget(self, action: #selector(didTapContinueButton), for: .primaryActionTriggered)
 
         self.isSuccessBet = false
@@ -140,7 +134,6 @@ class QuickBetViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-
     }
 
     // MARK: - Layout and Theme
@@ -183,7 +176,7 @@ class QuickBetViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundPopup
+        self.view.backgroundColor = UIColor(hex: 0x111619, alpha: 0.8)
 
         self.topSafeAreaView.backgroundColor = .clear
 
@@ -284,11 +277,9 @@ class QuickBetViewController: UIViewController {
             .dropFirst()
             .sink(receiveValue: { [weak self] returnAmount in
                 if let returnCurrencyAmount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: returnAmount)) {
-
                     self?.returnLabel.text = localized("return") + ": \(returnCurrencyAmount)"
-
+                    self?.possibleWinningsValueLabel.text  = returnCurrencyAmount
                 }
-
             })
             .store(in: &cancellables)
 
@@ -338,16 +329,7 @@ class QuickBetViewController: UIViewController {
     }
 
     private func showBetSuccessScreen() {
-
-        let returnAmount = self.viewModel.returnAmountValue.value
-
-        if let returnCurrencyAmount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: returnAmount)) {
-
-            self.possibleWinningsValueLabel.text  = "\(returnCurrencyAmount)"
-            self.isSuccessBet = true
-
-        }
-
+        self.isSuccessBet = true
     }
 
     private func updateOddStatus(oddStatusType: OddStatusType) {
@@ -637,7 +619,7 @@ extension QuickBetViewController {
     private static func createFinalBetButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("bet"), for: .normal)
+        button.setTitle(localized("place_bet"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
         return button
     }

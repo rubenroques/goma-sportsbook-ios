@@ -347,6 +347,58 @@ extension BetslipManager {
 
     }
 
+    func placeQuickBet(bettingTicket: BettingTicket, amount: Double) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
+        
+        let convertedOdd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
+        let betTicketSelection = ServicesProvider.BetTicketSelection(identifier: bettingTicket.id,
+                                                                     eventName: "",
+                                                                     homeTeamName: "",
+                                                                     awayTeamName: "",
+                                                                     marketName: "",
+                                                                     outcomeName: "",
+                                                                     odd: convertedOdd,
+                                                                     stake: amount)
+
+        let betTicket = ServicesProvider.BetTicket(tickets: [betTicketSelection],
+                                                   stake: amount,
+                                                   betGroupingType: .single(identifier: "S"))
+
+
+        let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket])
+            .mapError({ error in
+                switch error {
+                case .forbidden:
+                    return BetslipErrorType.forbiddenBetError
+                case .errorMessage(let message):
+                    return BetslipErrorType.betPlacementDetailedError(message: message)
+                case .notPlacedBet(let message):
+                    return BetslipErrorType.betPlacementDetailedError(message: message)
+                default:
+                    return BetslipErrorType.betPlacementError
+                }
+            })
+            .flatMap({ (placedBetsResponse: PlacedBetsResponse) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> in
+                let betPlacedDetailsArray = placedBetsResponse.bets.map { (placedBetEntry: PlacedBetEntry) -> BetPlacedDetails in
+                    let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
+                    let response = BetslipPlaceBetResponse(betId: placedBetEntry.identifier,
+                                                           betSucceed: true,
+                                                           totalPriceValue: totalPriceValue,
+                                                           maxWinning: placedBetEntry.potentialReturn)
+                    return BetPlacedDetails(response: response, tickets: [])
+                }
+                return Just(betPlacedDetailsArray).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()
+            })
+            .handleEvents(receiveOutput: { betPlacedDetailsArray in
+                let shouldUpdate: Bool = betPlacedDetailsArray.map(\.response.betSucceed).compactMap({ $0 }).allSatisfy { $0 }
+                if shouldUpdate {
+                    self.newBetsPlacedPublisher.send()
+                }
+            })
+            .eraseToAnyPublisher()
+
+        return publisher
+    }
+
     func placeSingleBets(amounts: [String: Double]) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
         var betTickets: [ServicesProvider.BetTicket] = []
         for singleTicket in self.bettingTicketsPublisher.value {

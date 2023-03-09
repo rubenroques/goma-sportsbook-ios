@@ -27,7 +27,7 @@ class QuickBetViewModel {
     var finalBetAmountPublisher: CurrentValueSubject<Double, Never> = .init(0.0)
     var returnAmountValue: CurrentValueSubject<Double, Never> = .init(0.0)
     var maxBetStake: Double = 0.0
-    var priceValueFactor: Double = 0.0
+    var priceValueFactor: Double = 1.0
 
     var oddStatusPublisher: CurrentValueSubject<OddStatusType, Never> = .init(.same)
 
@@ -241,50 +241,37 @@ class QuickBetViewModel {
         self.isLoadingPublisher.send(true)
 
         let betAmount = self.finalBetAmountPublisher.value
-
         let ticketSelection = EveryMatrix.BetslipTicketSelection(id: self.bettingTicket.id, currentOdd: self.bettingTicket.decimalOdd)
 
-        let userBetslipSetting = UserDefaults.standard.string(forKey: "betslipOddValidationType")
-
-        let route = TSRouter.placeBet(language: "en",
-                                      amount: betAmount,
-                                      betType: .single,
-                                      tickets: [ticketSelection], oddsValidationType: userBetslipSetting ?? "ACCEPT_ANY",
-                                      freeBet: false,
-                                      ubsWalletId: "")
-
-        Env.everyMatrixClient.manager
-            .getModel(router: route, decodingType: BetslipPlaceBetResponse.self)
+        Env.betslipManager.placeQuickBet(bettingTicket: self.bettingTicket, amount: betAmount)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
-                    print("Quickbet error: \(error)")
-                    self?.shouldShowBetError?(error.localizedDescription)
-                case .finished:
-                    print("Quickbet finished!")
+                    var message = ""
+                    switch error {
+                    case .betPlacementDetailedError(let detailedMessage):
+                        message = detailedMessage
+                    default:
+                        message = """
+                        Something went wrong with your bet request.
+                        Make sure you have completed your profile and enought balance.
+                        """
+                    }
+                    self?.shouldShowBetError?(message)
+                default: ()
                 }
-
                 self?.isLoadingPublisher.send(false)
-
-            }, receiveValue: { [weak self] response in
-                self?.processBetResponse(response: response)
+            }, receiveValue: { [weak self] betPlacedDetails in
+                if betPlacedDetails.first?.response.betSucceed ?? false {
+                    self?.shouldShowBetSuccess?()
+                }
+                else {
+                    let defaultError = "Sorry, we're unable to process your bet at this time"
+                    self?.shouldShowBetError?(defaultError)
+                }
+                Env.userSessionStore.refreshUserWallet()
             })
             .store(in: &cancellables)
     }
-
-    func processBetResponse(response: BetslipPlaceBetResponse) {
-
-        if let betSucceed = response.betSucceed {
-            if !betSucceed {
-                if let errorMessage = response.errorMessage {
-                    self.shouldShowBetError?(errorMessage)
-                }
-            }
-            else {
-                self.shouldShowBetSuccess?()
-            }
-        }
-    }
-
 }

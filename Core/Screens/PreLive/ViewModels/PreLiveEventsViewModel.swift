@@ -251,9 +251,7 @@ class PreLiveEventsViewModel: NSObject {
         Publishers.CombineLatest(self.expectedCompetitionsPublisher, self.selectedCompetitionsInfoPublisher)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] expectedCompetitions, selectedCompetitionsInfo in
-
                 if selectedCompetitionsInfo.count == expectedCompetitions {
-                    print("ALL COMPETITIONS DATA")
                     self?.processCompetitionsInfo()
                 }
             })
@@ -262,10 +260,7 @@ class PreLiveEventsViewModel: NSObject {
         self.competitionsMatchesSubscriptions
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] competitionMatchesSubscriptions in
-
                 if competitionMatchesSubscriptions.count == self?.expectedCompetitionsPublisher.value {
-                    print("ALL COMPETITIONS SUBSCRIPTIONS")
-
                     self?.isLoadingCompetitionMatches.send(false)
                     self?.isLoadingEvents.send(false)
                     self?.updateContentList()
@@ -679,7 +674,7 @@ class PreLiveEventsViewModel: NSObject {
     func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String, competitionInfo: SportCompetitionInfo) {
 
         Env.servicesProvider.subscribeCompetitionMatches(forMarketGroupId: marketGroupId)
-        .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
+        .sink { (completion: Subscribers.Completion<ServiceProviderError>) in
             switch completion {
             case .finished:
                 ()

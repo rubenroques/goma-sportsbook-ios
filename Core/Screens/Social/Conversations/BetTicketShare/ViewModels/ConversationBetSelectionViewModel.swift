@@ -68,8 +68,6 @@ class ConversationBetSelectionViewModel {
         
         self.setupConversationInfo()
 
-        self.loadLocations()
-
         self.initialLoadMyTickets()
     }
 
@@ -87,8 +85,6 @@ class ConversationBetSelectionViewModel {
         self.setupPublishers()
 
         self.setupConversationInfo()
-
-        self.loadLocations()
 
         self.initialLoadMyTickets()
     }
@@ -161,23 +157,6 @@ class ConversationBetSelectionViewModel {
         self.loadOpenedTickets(page: 0)
     }
 
-    func loadLocations() {
-        let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
-        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
-            .sink(receiveCompletion: { _ in
-
-            },
-            receiveValue: { [weak self] response in
-                self?.locationsCodesDictionary = [:]
-                (response.records ?? []).forEach { location in
-                    if let code = location.code {
-                        self?.locationsCodesDictionary[location.id] = code
-                    }
-                }
-            })
-            .store(in: &cancellables)
-    }
-
     func initialLoadMyTickets() {
         self.loadOpenedTickets(page: 0)
         self.loadResolvedTickets(page: 0)
@@ -186,104 +165,14 @@ class ConversationBetSelectionViewModel {
 
     func loadOpenedTickets(page: Int) {
         // TODO: ServiceProvider get My Bets
-/*
-        self.isLoadingOpened.send(true)
-
-        let openedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.opened, records: recordsPerPage, page: page)
-        Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let apiError):
-                    switch apiError {
-                    case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
-                        self?.clearData()
-                    case .notConnected:
-                        self?.clearData()
-                    default:
-                        ()
-                    }
-                case .finished:
-                    ()
-                }
-                self?.isLoadingOpened.send(false)
-            },
-            receiveValue: { [weak self] betHistoryResponse in
-                self?.openedTicketsPublisher.value = betHistoryResponse.betList ?? []
-                self?.reloadData()
-            })
-            .store(in: &cancellables)
- */
     }
 
     func loadResolvedTickets(page: Int) {
         // TODO: ServiceProvider get My Bets
-/*
-        self.isLoadingResolved.send(true)
-
-        let resolvedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.resolved, records: recordsPerPage, page: page)
-        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: BetHistoryResponse.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let apiError):
-                    switch apiError {
-                    case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
-                        self?.clearData()
-                    case .notConnected:
-                        self?.clearData()
-                    default:
-                        ()
-                    }
-                case .finished:
-                    ()
-                }
-                self?.isLoadingResolved.send(false)
-            },
-            receiveValue: { [weak self] betHistoryResponse in
-                self?.resolvedTicketsPublisher.value = betHistoryResponse.betList ?? []
-                if case .resolved = self?.myTicketsTypePublisher.value {
-                    self?.reloadData()
-                }
-            })
-            .store(in: &cancellables)
- */
     }
 
     func loadWonTickets(page: Int) {
         // TODO: ServiceProvider get My Bets
-/*
-        self.isLoadingWon.send(true)
-
-        let wonRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.won, records: recordsPerPage, page: page)
-        Env.everyMatrixClient.manager.getModel(router: wonRoute, decodingType: BetHistoryResponse.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let apiError):
-                    switch apiError {
-                    case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
-                        self?.clearData()
-                    case .notConnected:
-                        self?.clearData()
-                    default:
-                        ()
-                    }
-                case .finished:
-                    ()
-                }
-                self?.isLoadingWon.send(false)
-            },
-            receiveValue: { [weak self] betHistoryResponse in
-                self?.wonTicketsPublisher.value = betHistoryResponse.betList ?? []
-                if case .won = self?.myTicketsTypePublisher.value {
-                    self?.reloadData()
-                }
-            })
-            .store(in: &cancellables)
-
- */
-
     }
 
     private func getGroupInitials(text: String) -> String {

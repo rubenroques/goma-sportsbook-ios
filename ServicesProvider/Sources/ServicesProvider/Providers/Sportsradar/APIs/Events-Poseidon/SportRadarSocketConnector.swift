@@ -135,7 +135,7 @@ extension SportRadarSocketConnector: WebSocketDelegate {
             self.refreshConnection()
             print("ServiceProvider - SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
         case .text(let string):
-            print("ServiceProvider - SportRadarSocketConnector websocket recieved text: \n \(string) \n\n ------------- ")
+            // print("ServiceProvider - SportRadarSocketConnector websocket recieved text: \n  \(string) \n\n----------------- \n")
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)

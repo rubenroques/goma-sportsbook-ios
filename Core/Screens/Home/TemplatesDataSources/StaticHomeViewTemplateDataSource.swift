@@ -180,7 +180,6 @@ class StaticHomeViewTemplateDataSource {
         self.fetchTips()
         self.fetchSuggestedBets()
         self.fetchAlerts()
-
     }
 
     func requestSports() {
@@ -188,16 +187,6 @@ class StaticHomeViewTemplateDataSource {
         let prefixSports = allSports.filter({ $0.alphaId != nil }).prefix(10)
         self.sportsToFetch = Array(prefixSports)
         self.refreshPublisher.send()
-    }
-
-    func fetchLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {
-
-        let router = TSRouter.getLocations(language: "en", sortByPopularity: false)
-        return Env.everyMatrixClient.manager.getModel(router: router, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
-            .map(\.records)
-            .compactMap({$0})
-            .replaceError(with: [EveryMatrix.Location]())
-            .eraseToAnyPublisher()
     }
 
     // Banners

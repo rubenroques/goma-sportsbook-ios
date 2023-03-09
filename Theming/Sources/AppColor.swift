@@ -6,7 +6,6 @@ public enum AppColor {
     public static let backgroundSecondary = UIColor(named: "backgroundSecondary")!
     public static let backgroundTertiary = UIColor(named: "backgroundTertiary")!
     public static let backgroundBorder = UIColor(named: "backgroundBorder")!
-    public static let backgroundPopup: UIColor = UIColor(named: "backgroundPopup")!
 
     public static let backgroundCards = UIColor(named: "backgroundCards")!
 

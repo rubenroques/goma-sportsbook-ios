@@ -56,42 +56,13 @@ class MyFavoritesViewModel: NSObject {
         super.init()
 
         self.initialSetup()
-
-    }
-
-    deinit {
-        print("VM DEINIT")
-        self.unregisterEndpoints()
     }
 
     // MARK: Functions
     private func initialSetup() {
-
-        //self.getLocations()
-
-        //Env.favoritesManager.getUserFavorites()
-
         self.setupPublishers()
-
     }
-    
-    private func unregisterEndpoints() {
 
-        if let favoriteMatchesRegister = self.favoriteMatchesRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteMatchesRegister)
-        }
-
-        self.favoriteMatchesPublisher?.cancel()
-        self.favoriteMatchesPublisher = nil
-
-        if let favoriteCompetitionsMatchesRegister = self.favoriteCompetitionsMatchesRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteCompetitionsMatchesRegister)
-        }
-
-        self.favoriteCompetitionsMatchesPublisher?.cancel()
-        self.favoriteCompetitionsMatchesPublisher = nil
-
-    }
 
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
         if let viewModel = cachedMatchStatsViewModels[match.id] {
@@ -140,33 +111,6 @@ class MyFavoritesViewModel: NSObject {
    
     }
 
-    private func getLocations() {
-        self.isLoadingPublisher.send(true)
-
-        let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
-        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("LOCATIONS ERROR: \(error)")
-                    self?.isLoadingPublisher.send(false)
-                case .finished:
-                    ()
-                }
-            },
-                  receiveValue: { [weak self] response in
-
-                (response.records ?? []).forEach { location in
-
-                    self?.store.locations[location.id] = location
-                }
-
-                self?.setupPublishers()
-
-            })
-            .store(in: &cancellables)
-    }
-    
     private func setupPublishers() {
 
         Env.favoritesManager.favoriteEventsIdPublisher

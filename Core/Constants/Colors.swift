@@ -17,8 +17,7 @@ extension UIColor {
         static let backgroundSecondary = UIColor(named: "backgroundSecondary")!
         static let backgroundTertiary = UIColor(named: "backgroundTertiary")!
         static let backgroundBorder = UIColor(named: "backgroundBorder")!
-        static let backgroundPopup: UIColor = UIColor(named: "backgroundPopup")!
-
+        
         static let backgroundCards = UIColor(named: "backgroundCards")!
         static var backgroundHeader: UIColor {
             return UIColor(named: "backgroundHeader") ?? Self.backgroundPrimary

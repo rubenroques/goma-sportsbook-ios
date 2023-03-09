@@ -13,7 +13,7 @@ protocol BettingProvider {
     func getBetHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError>
     func getBetDetails(identifier: String) -> AnyPublisher<Bet, ServiceProviderError>
 
-    func getOpenBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError>
+    func getOpenBetsHistory(pageIndex: Int, pageSize: Int) -> AnyPublisher<BettingHistory, ServiceProviderError>
     func getResolvedBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError>
     func getWonBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError>
 

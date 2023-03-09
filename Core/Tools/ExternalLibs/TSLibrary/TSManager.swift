@@ -30,37 +30,37 @@ final class TSManager {
     var swampSession: SSWampSession?
     var userAgentExtractionWebView: WKWebView?
     var isConnected: Bool { return swampSession?.isConnected() ?? false }
-    let origin = "https://clientsample-sports-stage.everymatrix.com/"
+    let origin = ""
 
     init() {
-
-        Logger.log("TSManager init")
-
-        DispatchQueue.main.async {
-
-            self.userAgentExtractionWebView = WKWebView()
-            self.userAgentExtractionWebView?.evaluateJavaScript("navigator.userAgent") { [weak self] userAgent, error in
-                guard let userAgentValue = userAgent as? String, let weakSelf = self else {
-                    return
-                }
-                weakSelf.tsQueue.async {
-                    if let cid = UserDefaults.standard.string(forKey: "CID") {
-                        weakSelf.swampSession = SSWampSession(realm: TSParams.realm,
-                                                          transport: WebSocketSSWampTransport(wsEndpoint: URL(string: TSParams.wsEndPoint + "?cid=\(cid)")!,
-                                                                                              userAgent: userAgentValue,
-                                                                                              origin: weakSelf.origin))
-                    }
-                    else {
-                        weakSelf.swampSession = SSWampSession(realm: TSParams.realm,
-                                                          transport: WebSocketSSWampTransport(wsEndpoint: URL(string: TSParams.wsEndPoint)!,
-                                                                                              userAgent: userAgentValue,
-                                                                                              origin: weakSelf.origin))
-                    }
-                    weakSelf.connect()
-                    weakSelf.userAgentExtractionWebView = nil
-                }
-            }
-        }
+//
+//        Logger.log("TSManager init")
+//
+//        DispatchQueue.main.async {
+//
+//            self.userAgentExtractionWebView = WKWebView()
+//            self.userAgentExtractionWebView?.evaluateJavaScript("navigator.userAgent") { [weak self] userAgent, error in
+//                guard let userAgentValue = userAgent as? String, let weakSelf = self else {
+//                    return
+//                }
+//                weakSelf.tsQueue.async {
+//                    if let cid = UserDefaults.standard.string(forKey: "CID") {
+//                        weakSelf.swampSession = SSWampSession(realm: TSParams.realm,
+//                                                          transport: WebSocketSSWampTransport(wsEndpoint: URL(string: TSParams.wsEndPoint + "?cid=\(cid)")!,
+//                                                                                              userAgent: userAgentValue,
+//                                                                                              origin: weakSelf.origin))
+//                    }
+//                    else {
+//                        weakSelf.swampSession = SSWampSession(realm: TSParams.realm,
+//                                                          transport: WebSocketSSWampTransport(wsEndpoint: URL(string: TSParams.wsEndPoint)!,
+//                                                                                              userAgent: userAgentValue,
+//                                                                                              origin: weakSelf.origin))
+//                    }
+//                    weakSelf.connect()
+//                    weakSelf.userAgentExtractionWebView = nil
+//                }
+//            }
+//        }
     }
 
 

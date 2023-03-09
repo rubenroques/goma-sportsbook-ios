@@ -55,14 +55,7 @@ class SuggestedBetViewModel: NSObject {
 
         super.init()
 
-        self.getLocations()
-            .sink { [weak self] locations in
-                for location in locations {
-                    self?.locations[location.id] = location
-                }
-                self?.getSuggestedBetsOdds()
-            }
-            .store(in: &cancellables)
+        self.getSuggestedBetsOdds()
     }
 
     deinit {
@@ -201,17 +194,6 @@ class SuggestedBetViewModel: NSObject {
         self.numberOfSelection = validMarkets
 
         self.isViewModelFinishedLoading.send(true)
-    }
-
-    func getLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {
-
-        let router = TSRouter.getLocations(language: "en", sortByPopularity: false)
-        return Env.everyMatrixClient.manager.getModel(router: router, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
-            .map(\.records)
-            .compactMap({ $0 })
-            .replaceError(with: [EveryMatrix.Location]())
-            .eraseToAnyPublisher()
-
     }
 
     func addOutcomeToTicketArray(match: Match, market: Market, outcome: Outcome) {

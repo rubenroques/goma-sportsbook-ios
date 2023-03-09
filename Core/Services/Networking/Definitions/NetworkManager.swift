@@ -72,7 +72,6 @@ struct NetworkManager {
                     return NetworkError(errors: [.forbidden])
                 }
                 else {
-                    // print("GomaNetworkError \(error)")
                     return NetworkError(errors: [.invalidResponse])
                 }
             }

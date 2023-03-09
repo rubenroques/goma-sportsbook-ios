@@ -644,14 +644,14 @@ extension ServicesProviderClient {
         return bettingProvider.getBetHistory(pageIndex: pageIndex)
     }
 
-    public func getOpenBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
+    public func getOpenBetsHistory(pageIndex: Int, pageSize: Int = 10) -> AnyPublisher<BettingHistory, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
 
-        return bettingProvider.getOpenBetsHistory(pageIndex: pageIndex)
+        return bettingProvider.getOpenBetsHistory(pageIndex: pageIndex, pageSize: pageSize)
     }
 
     public func getResolvedBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {

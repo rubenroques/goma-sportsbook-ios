@@ -45,15 +45,8 @@ class CompetitionDetailsViewModel {
     }
 
     func refresh() {
-
         self.isLoadingCompetitions.send(true)
-
-        self.fetchLocations()
-            .sink { [weak self] locations in
-                self?.store.storeLocations(locations: locations)
-                self?.fetchCompetitions()
-            }
-            .store(in: &cancellables)
+        self.fetchCompetitions()
     }
 
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
@@ -65,17 +58,6 @@ class CompetitionDetailsViewModel {
             cachedMatchStatsViewModels[match.id] = viewModel
             return viewModel
         }
-    }
-
-    func fetchLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {
-
-        let router = TSRouter.getLocations(language: "en", sortByPopularity: false)
-        return Env.everyMatrixClient.manager.getModel(router: router, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
-            .map(\.records)
-            .compactMap({$0})
-            .replaceError(with: [EveryMatrix.Location]())
-            .eraseToAnyPublisher()
-
     }
 
     func markCompetitionAsFavorite(competition: Competition) {
@@ -95,38 +77,6 @@ class CompetitionDetailsViewModel {
 
     func fetchCompetitions() {
 
-        let language = "en"
-        let sportId = self.sport.id
-
-        if let competitionsRegister = competitionsRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: competitionsRegister)
-        }
-
-        self.competitionsPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(TSRouter.tournamentsPublisher(operatorId: Env.appSession.operatorId,
-                                                              language: language,
-                                                              sportId: sportId),
-                      decodingType: EveryMatrixSocketResponse<EveryMatrix.Tournament>.self)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
-                    self?.isLoadingCompetitions.send(false)
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    self?.competitionsRegister = publisherIdentifiable
-                case .initialContent(let initialDumpContent):
-                    self?.storeCompetitions(initialDumpContent.records ?? [] )
-                case .updatedContent:
-                    ()
-                case .disconnect:
-                    ()
-                }
-            })
     }
 
     func storeCompetitions(_ competitions: [EveryMatrix.Tournament] ) {

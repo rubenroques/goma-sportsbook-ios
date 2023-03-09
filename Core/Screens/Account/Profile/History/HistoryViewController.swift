@@ -375,32 +375,8 @@ extension HistoryViewController {
     
     @objc func didTapMakeDeposit(sender: UITapGestureRecognizer) {
         let depositViewController = Router.navigationController(with: DepositViewController())
-
-//        depositViewController.shouldRefreshUserWallet = { [weak self] in
-//            Env.userSessionStore.refreshUserWallet()
-//        }
-        
         self.present(depositViewController, animated: true, completion: nil)
     }
-
-    /*
-    @objc func didChangeSegmentValue(_ sender: UISegmentedControl) {
-        if self.optionSegmentControl.selectedSegmentIndex == 0 {
-            self.viewModel.listTypePublisher.send(.transactions)
-            self.viewModel.transactionsTypePublisher.send(.deposit)
-        }
-        else {
-            self.viewModel.listTypePublisher.send(.bettings)
-            self.viewModel.ticketsTypePublisher.send(.resolved)
-            self.tableView.reloadData()
-        }
-        
-        self.filterSelectedOption = 0
-        
-        self.tableView.reloadData()
-        self.topSliderCollectionView.reloadData()
-    }
-    */
 
 }
 

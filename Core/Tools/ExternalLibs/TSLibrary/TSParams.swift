@@ -8,7 +8,7 @@
 import Foundation
 
 struct TSParams {
-    static let realm = "http://www.gomadevelopment.pt"
-    static let wsEndPoint = "wss://api-phoenix-stage.everymatrix.com/v2/"
+    static let realm = ""
+    static let wsEndPoint = ""
     // static let externalSession = "tipico"
 }

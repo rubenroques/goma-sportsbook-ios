@@ -64,17 +64,20 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
     }
         
     public func websocketDidConnect(socket: WebSocketClient) {
-        print("TSWebSocketClient connect")
-        isConnected = true
-        delegate?.ssWampTransportDidConnectWithSerializer(JSONSSWampSerializer())
+//        print("TSWebSocketClient connect")
+//        isConnected = true
+//        delegate?.ssWampTransportDidConnectWithSerializer(JSONSSWampSerializer())
+//
     }
 
     public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-        print("TSWebSocketClient disconnect")
-        if isConnected {
-            delegate?.ssWampTransportDidDisconnect(error, reason: disconnectionReason)
-        }
-        isConnected = false
+//        print("TSWebSocketClient disconnect")
+//        if isConnected {
+//            delegate?.ssWampTransportDidDisconnect(error, reason: disconnectionReason)
+//        }
+//        isConnected = false
+
+
     }
 
     public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {

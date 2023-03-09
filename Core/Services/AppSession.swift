@@ -26,16 +26,11 @@ class AppSession {
     }
 
     func connectPublishers() {
-        
-        NotificationCenter.default.publisher(for: .socketConnected)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
 
-            }, receiveValue: { [weak self] _ in
-                Logger.log("EMSessionLoginFLow - Socket Connected received will login if needed")
-                self?.requestAppClientSettings()
-            })
-            .store(in: &cancellables)
+        executeDelayed(0.12) {
+            self.requestAppClientSettings()
+        }
+
     }
 
     func requestAppClientSettings() {

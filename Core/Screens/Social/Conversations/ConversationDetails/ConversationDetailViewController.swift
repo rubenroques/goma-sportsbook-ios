@@ -599,38 +599,23 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
 extension ConversationDetailViewController: UIGestureRecognizerDelegate {
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-
-        // if interactivePopGesture should require the failure of the other gesture
-
         if gestureRecognizer == self.navigationController?.interactivePopGestureRecognizer && otherGestureRecognizer == self.tableView.panGestureRecognizer {
-            // print("FIRST SHOULD NOT REQUIRE FAILURE OF SECOND")
             return false
         }
-
        return false
     }
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-
-        // If interactivePopGesture is recognized with another gesture
-
         if gestureRecognizer == self.navigationController?.interactivePopGestureRecognizer && otherGestureRecognizer == self.tableView.panGestureRecognizer {
-            // print("FIRST RECOGNIZED SIMULTANEOUSLY WITH SECOND")
             return true
         }
-
         return false
     }
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-
-        // if interactivePopGesture fails because of another gesture
-
         if gestureRecognizer == self.navigationController?.interactivePopGestureRecognizer && otherGestureRecognizer == self.tableView.panGestureRecognizer {
-            // print("FIRST FAILING BECAUSE OF SECOND")
             return true
         }
-
         return false
     }
 }

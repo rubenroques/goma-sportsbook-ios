@@ -66,23 +66,9 @@ class UserSessionStore {
     
     init() {
 
-        NotificationCenter.default.publisher(for: .socketConnected)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
-
-            }, receiveValue: { [weak self] _ in
-                Logger.log("UserSessionStore - Socket Connected received will login if needed")
-                self?.startUserSessionIfNeeded()
-            })
-            .store(in: &cancellables)
-
-        NotificationCenter.default.publisher(for: .userSessionForcedLogoutDisconnected)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                Logger.log("UserSessionStore - SessionForcedLogoutDisconnected received will logout local user")
-                self?.logout()
-            }
-            .store(in: &cancellables)
+        executeDelayed(0.15) {
+            self.startUserSessionIfNeeded()
+        }
 
         NotificationCenter.default.publisher(for: .userSessionConnected)
             .receive(on: DispatchQueue.main)
@@ -314,14 +300,12 @@ extension UserSessionStore {
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
-                    print("GOMA SETTINGS ERROR: \(error)")
                     self?.storeNotificationsUserSettings(notificationsUserSettings: NotificationsUserSettings.defaultSettings)
                 case .finished:
                     ()
                 }
             },
             receiveValue: { [weak self] notificationsUserSettings in
-                print("GOMA SETTINGS RESPONSE: \(notificationsUserSettings)")
                 self?.storeNotificationsUserSettings(notificationsUserSettings: notificationsUserSettings)
             })
             .store(in: &cancellables)

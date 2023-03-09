@@ -110,8 +110,10 @@ extension SportRadarModels {
 
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            let identifierInt = try container.decode(Double.self, forKey: .identifier)
-            self.identifier = String(identifierInt)
+
+            let identifierDouble = try container.decode(Double.self, forKey: .identifier)
+            self.identifier = String(format: "%.2f", identifierDouble)
+
             self.eventName = try container.decode(String.self, forKey: .eventName)
 
             self.homeTeamName = try container.decodeIfPresent(String.self, forKey: .homeTeamName)

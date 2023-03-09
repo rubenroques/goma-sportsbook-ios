@@ -131,7 +131,7 @@ class FavoritesAggregatorsRepository {
             case .eventPartScore:
                 ()
             case .unknown:
-                () // print("Unknown type ignored")
+                ()
             case .event(_):
                 ()
             case .marketGroup(_):

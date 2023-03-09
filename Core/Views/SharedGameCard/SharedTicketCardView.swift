@@ -116,13 +116,13 @@ class SharedTicketCardView: UIView {
             self.betCardsStackView.addArrangedSubview(sharedTicketBetLineView)
         }
 
-        if betHistoryEntry.type == "SINGLE" {
+        if betHistoryEntry.type?.lowercased() == "single" {
             self.titleLabel.text = localized("single")+" Bet"
         }
-        else if betHistoryEntry.type == "MULTIPLE" {
+        else if betHistoryEntry.type?.lowercased() == "multiple" {
             self.titleLabel.text = localized("multiple")+" Bet"
         }
-        else if betHistoryEntry.type == "SYSTEM" {
+        else {
             self.titleLabel.text = localized("system")+" Bet"
         }
 

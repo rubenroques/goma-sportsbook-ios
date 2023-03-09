@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 class BettingConnector: Connector {
-    
+
     var token: BettingSessionAccessToken?
     
     var connectionStateSubject: CurrentValueSubject<ConnectorState, Never> = .init(.connected)

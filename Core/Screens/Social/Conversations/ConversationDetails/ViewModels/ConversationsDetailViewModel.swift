@@ -47,30 +47,7 @@ class ConversationDetailViewModel: NSObject {
         
         super.init()
 
-//        self.fetchLocations()
-//            .sink { [weak self] locations in
-//                Env.gomaSocialClient.storeLocations(locations: locations)
-//            }
-//            .store(in: &cancellables)
-
-        self.fetchLocations()
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("Error getting locations: \(error)")
-                case .finished:
-                    ()
-                }
-
-                self?.isLoadingConversationPublisher.send(false)
-
-            }, receiveValue: { [weak self] locations in
-                Env.gomaSocialClient.storeLocations(locations: locations)
-
-                self?.setupPublishers()
-            })
-            .store(in: &cancellables)
-
+        self.setupPublishers()
     }
     
     init(conversationData: ConversationData) {
@@ -81,27 +58,11 @@ class ConversationDetailViewModel: NSObject {
         
         super.init()
 
-        self.fetchLocations()
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("Error getting locations: \(error)")
-                case .finished:
-                    ()
-                }
 
-                self?.isLoadingConversationPublisher.send(false)
+        self.setupConversationInfo()
+        self.startSocketListening()
 
-            }, receiveValue: { [weak self] locations in
-                Env.gomaSocialClient.storeLocations(locations: locations)
-
-                self?.setupConversationInfo()
-                self?.startSocketListening()
-
-                self?.isLoadingConversationPublisher.send(false)
-            })
-            .store(in: &cancellables)
-
+        self.isLoadingConversationPublisher.send(false)
     }
 
     // MARK: Functions
@@ -213,17 +174,6 @@ class ConversationDetailViewModel: NSObject {
                 })
                 .store(in: &cancellables)
         }
-
-    }
-
-    func fetchLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {
-
-        let router = TSRouter.getLocations(language: "en", sortByPopularity: false)
-        return Env.everyMatrixClient.manager.getModel(router: router, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
-            .map(\.records)
-            .compactMap({$0})
-            .replaceError(with: [EveryMatrix.Location]())
-            .eraseToAnyPublisher()
 
     }
 

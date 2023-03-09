@@ -61,21 +61,6 @@ class MatchDetailsAggregatorRepository: NSObject {
         super.init()
     }
 
-    func getLocations() {
-
-        let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
-        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
-            .sink(receiveCompletion: { _ in
-
-            },
-            receiveValue: { [weak self] response in
-                (response.records ?? []).forEach { location in
-                    self?.locations[location.id] = location
-                }
-            })
-            .store(in: &cancellable)
-    }
-
     func connectMarketGroupsPublisher() {
 
         self.marketGroups = [:]
@@ -492,11 +477,11 @@ class MatchDetailsAggregatorRepository: NSObject {
             case .cashout:
                 ()
             case .event:
-                () // print("Events aren't processed")
+                ()
             case .eventPartScore:
                 ()
             case .unknown:
-                () // print("Unknown type ignored")
+                ()
             }
         }
 

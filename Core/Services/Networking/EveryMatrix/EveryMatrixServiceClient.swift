@@ -36,7 +36,6 @@ class EveryMatrixServiceClient: ObservableObject {
 
     init() {
         // The singleton init below is used to start up TS connection
-
         self.manager = TSManager()
         
         reachability.whenReachable = { [weak self] _ in

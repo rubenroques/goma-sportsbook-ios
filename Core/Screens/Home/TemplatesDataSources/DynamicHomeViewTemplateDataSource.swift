@@ -156,25 +156,10 @@ class DynamicHomeViewTemplateDataSource {
         self.cachedSuggestedBetLineViewModel = nil
         self.sportGroupViewModelCache = [:]
 
-        self.fetchLocations()
-            .sink { [weak self] locations in
-                self?.store.storeLocations(locations: locations)
+        self.fetchFavoriteMatches()
+        self.fetchSuggestedBets()
+        self.fetchAlerts()
 
-                self?.fetchFavoriteMatches()
-                self?.fetchSuggestedBets()
-                self?.fetchAlerts()
-            }
-            .store(in: &cancellables)
-    }
-
-    func fetchLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {
-
-        let router = TSRouter.getLocations(language: "en", sortByPopularity: false)
-        return Env.everyMatrixClient.manager.getModel(router: router, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
-            .map(\.records)
-            .compactMap({$0})
-            .replaceError(with: [EveryMatrix.Location]())
-            .eraseToAnyPublisher()
     }
 
     // User alerts

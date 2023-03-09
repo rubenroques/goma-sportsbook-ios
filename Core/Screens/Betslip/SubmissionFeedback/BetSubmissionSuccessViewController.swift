@@ -46,10 +46,8 @@ class BetSubmissionSuccessViewController: UIViewController {
     private var ticketSnapshots: [String: UIImage] = [:]
     private var sharedBetHistory: BetHistoryEntry?
     private var locationsCodesDictionary: [String: String] = [:]
-    private var loadedTicketInfoPublisher: CurrentValueSubject<[String: BetHistoryEntry], Never> = .init([:])
-    private var cancellables = Set<AnyCancellable>()
 
-    private var canShareTicketPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    private var cancellables = Set<AnyCancellable>()
 
     var willDismissAction: (() -> Void)?
 
@@ -97,8 +95,6 @@ class BetSubmissionSuccessViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        self.setupPublishers()
 
         self.checkmarkImageView.image = UIImage(named: "like_success_icon")
 
@@ -158,30 +154,6 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.scrollContentView.backgroundColor = .clear
     }
 
-    private func setupPublishers() {
-
-        self.loadedTicketInfoPublisher
-            .receive(on: DispatchQueue.main)
-            .dropFirst()
-            .sink(receiveValue: { [weak self] loadedTicketInfo in
-                guard let self = self else {return}
-                if loadedTicketInfo.count == self.betPlacedDetailsArray.count {
-                    self.isLoading = false
-                }
-            })
-            .store(in: &cancellables)
-
-        self.canShareTicketPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] canShare in
-                if canShare {
-                    self?.showBetShareScreen()
-                    self?.canShareTicketPublisher.send(false)
-                }
-            })
-            .store(in: &cancellables)
-    }
-
     private func showBetShareScreen() {
 
         if let betHistoryEntry = self.sharedBetHistory,
@@ -210,52 +182,32 @@ class BetSubmissionSuccessViewController: UIViewController {
 
     private func loadBetTickets() {
 
-        var bettingTickets: [BetHistoryEntry] = []
+        self.isLoading = true
 
-        let requests = self.betPlacedDetailsArray
-            .map(\.response.betId)
-            .compactMap({ $0 })
-            .map(self.loadBetTicket(withId:))
-        Publishers.MergeMany(requests)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                self?.configureBetCards(withBetHistoryEntries: bettingTickets)
-                self?.isLoading = false
-            } receiveValue: { bettingTicket in
-                bettingTickets.append(bettingTicket)
-            }
-            .store(in: &cancellables)
-    }
+        Env.servicesProvider.getOpenBetsHistory(pageIndex: 0, pageSize: 20)
+            .map(ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory:))
+            .map({ [weak self] betHistoryResponse -> [BetHistoryEntry] in
+                var betHistoryEntriesToShow: [BetHistoryEntry] = []
 
-    private func getSharedBetToken(betHistoryEntry: BetHistoryEntry) {
-
-        let betTokenRoute = TSRouter.getSharedBetTokens(betId: betHistoryEntry.betId)
-
-        Env.everyMatrixClient.manager.getModel(router: betTokenRoute, decodingType: SharedBetToken.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure(let apiError):
-                    switch apiError {
-                    case .requestError(let value):
-                        print("Bet token request error: \(value)")
-                    case .notConnected:
-                        ()
-                    default:
-                        ()
+                let submitedBetsIds: [String] = (self?.betPlacedDetailsArray ?? []).compactMap(\.response.betId)
+                let openBetsArray: [BetHistoryEntry] = betHistoryResponse.betList ?? []
+                for openBet in openBetsArray {
+                    if submitedBetsIds.contains(openBet.betId) {
+                        betHistoryEntriesToShow.append(openBet)
                     }
-                case .finished:
-                    ()
                 }
-            },
-                  receiveValue: { [weak self] betTokens in
-                let betToken = betTokens.sharedBetTokens.betTokenWithAllInfo
-                self?.sharedBetToken = betToken
-                self?.sharedBetHistory = betHistoryEntry
-                self?.canShareTicketPublisher.send(true)
 
+                return betHistoryEntriesToShow
             })
-            .store(in: &cancellables)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+
+            } receiveValue: { [weak self] betHistoryEntries in
+                self?.configureBetCards(withBetHistoryEntries: betHistoryEntries)
+                self?.isLoading = false
+            }
+            .store(in: &self.cancellables)
+
     }
 
     private func configureBetCards(withBetHistoryEntries betHistoryEntries: [BetHistoryEntry]) {
@@ -279,13 +231,11 @@ class BetSubmissionSuccessViewController: UIViewController {
         sharedTicketCardView.configure(withBetHistoryEntry: betHistory, countryCodes: [], viewModel: betCardViewModel)
 
         sharedTicketCardView.didTappedSharebet = { [weak self] snapshot in
-            self?.getSharedBetToken(betHistoryEntry: betHistory)
-            self?.ticketSnapshots[betHistory.betId] = snapshot
+            // self?.getSharedBetToken(betHistoryEntry: betHistory)
+            // self?.ticketSnapshots[betHistory.betId] = snapshot
         }
 
         self.betCardsStackView.addArrangedSubview(sharedTicketCardView)
-
-        self.loadedTicketInfoPublisher.value[betHistory.betId] = betHistory
 
     }
 

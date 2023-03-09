@@ -180,7 +180,6 @@ extension SportRadarModels {
 
             self.name = try container.decodeIfPresent(String.self, forKey: .name)
 
-            // print("parselog Event: \(self.name)")
 
             self.markets = try container.decodeIfPresent([SportRadarModels.Market].self, forKey: .markets)
 
@@ -305,7 +304,6 @@ extension SportRadarModels {
             self.eventMarketCount = try container.decodeIfPresent(Int.self, forKey: .eventMarketCount)
             self.isTradable = try container.decodeIfPresent(Bool.self, forKey: .isTradable) ?? true
 
-            // print("parselog    |----- Market: \(self.name), isTradable:\(self.isTradable)")
 
             self.outcomes = try container.decode([SportRadarModels.Outcome].self, forKey: .outcomes)
         }
@@ -357,7 +355,6 @@ extension SportRadarModels {
             self.odd = .fraction(numerator: Int(numerator), denominator: Int(denominator) )
             self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? true
 
-            // print("parselog        |---- Outcome: \(self.name)")
         }
 
     }

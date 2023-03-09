@@ -227,7 +227,6 @@ extension GomaGamingService: Endpoint {
 
             let groupNameQuery = URLQueryItem(name: "name", value: groupName)
             queryItemsURL.append(groupNameQuery)
-            print("EDIT GROUP QUERY: \(queryItemsURL)")
             return queryItemsURL
             
         case .removeUser(_, let userId):
@@ -551,7 +550,6 @@ extension GomaGamingService: Endpoint {
                     \(type)
                     }
                     """
-            print("ALL NOTIFS BODY: \(body)")
             let data = body.data(using: String.Encoding.utf8)!
             return data
         default:
