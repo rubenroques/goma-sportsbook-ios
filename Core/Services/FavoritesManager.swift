@@ -46,6 +46,7 @@ class FavoritesManager {
                 }
             })
             .store(in: &cancellables)
+
     }
 
     // MARK: Functions
@@ -67,6 +68,8 @@ class FavoritesManager {
                 }
 
             }, receiveValue: { [weak self] favoritesListResponse in
+                print("FAVORITES LIST: \(favoritesListResponse)")
+
                 if !favoritesListResponse.favoritesList.contains(where: {
                     $0.name == "Competitions"
                 }) {
@@ -119,7 +122,7 @@ class FavoritesManager {
 
         for favoriteList in favoritesLists {
 
-            if favoriteList.name == "Competitions" {
+            if favoriteList.name == "Competitions" || !favoriteList.name.contains("Match") {
                 continue
             }
 
@@ -128,9 +131,11 @@ class FavoritesManager {
             if let favoriteId = favoriteListSplit[safe: 1]
             {
 
-                favoriteIds.append(favoriteId)
+                if !favoriteIds.contains(favoriteId) {
+                    favoriteIds.append(favoriteId)
 
-                self.fetchedMatchesListIds[favoriteId] = favoriteList.id
+                    self.fetchedMatchesListIds[favoriteId] = favoriteList.id
+                }
             }
         }
 

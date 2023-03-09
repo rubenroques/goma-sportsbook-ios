@@ -735,4 +735,7 @@ Terms of use, Privacy Policy and EULA";
 "withdrawal_cancel" = "Withdrawal Cancel";
 
 "max_file_size_exceeded" = "Max File Size Exceeded";
-"maz_file_size_exceeded_message" = "The file chosen exceeds the maximum 10MB size. Please select another file.";
+"max_file_size_exceeded_message" = "The file chosen exceeds the maximum 10MB size. Please select another file.";
+
+"betting_limit_update_error_message" = "Betting limit could not be updated. Please try again later.";
+"deposit_limit_update_error_message" = "Deposit limit could not be updated. Please try again later.";

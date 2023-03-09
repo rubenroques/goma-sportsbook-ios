@@ -323,7 +323,8 @@ class ProfileLimitsManagementViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] errorText in
                 if errorText != "" {
-                    self?.showAlert(type: .error, errorText: errorText)
+                    self?.viewModel.isLoadingPublisher.send(false)
+                    self?.showAlert(type: .error, alertText: errorText)
                 }
             })
             .store(in: &cancellables)
@@ -578,9 +579,9 @@ class ProfileLimitsManagementViewController: UIViewController {
 
         }
 
-        if !updatedLimits {
-            self.viewModel.isLoadingPublisher.send(false)
-        }
+//        if !updatedLimits {
+//            self.viewModel.isLoadingPublisher.send(false)
+//        }
     }
 
     @objc func didTapBackground() {

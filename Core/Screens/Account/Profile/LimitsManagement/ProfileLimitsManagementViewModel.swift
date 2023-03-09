@@ -48,6 +48,10 @@ class ProfileLimitsManagementViewModel: NSObject {
     var limitsLoaded: CurrentValueSubject<Bool, Never> = .init(false)
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
+    var finishedUpdatingDepositLimit: CurrentValueSubject<LimitUpdateStatus, Never> = .init(.idle)
+    var finishedUpdatingWageringLimit: CurrentValueSubject<LimitUpdateStatus, Never> = .init(.idle)
+    var finishedUpdatingLossLimit: CurrentValueSubject<LimitUpdateStatus, Never> = .init(.idle)
+
     // MARK: Cycles
     override init() {
         super.init()
@@ -210,7 +214,6 @@ class ProfileLimitsManagementViewModel: NSObject {
 //    }
 
     func updateDepositLimit(amount: String) {
-        self.isLoadingPublisher.send(true)
 
         if let limit = Double(amount) {
             Env.servicesProvider.updateWeeklyDepositLimits(newLimit: limit)
@@ -222,19 +225,18 @@ class ProfileLimitsManagementViewModel: NSObject {
                         ()
                     case .failure(let error):
                         print("UPDATE DEPOSIT LIMIT ERROR: \(error)")
+                        self?.limitOptionsErrorPublisher.send("\(localized("betting_limit_update_error_message"))")
                         self?.isLoadingPublisher.send(false)
                     }
                 }, receiveValue: { [weak self] updateLimitResponse in
 
-                    print("UPDATE DEPOSIT LIMIT SUCCESS: \(updateLimitResponse)")
-                    self?.isLoadingPublisher.send(false)
+                    self?.limitOptionsCheckPublisher.value.append("deposit")
                 })
                 .store(in: &cancellables)
         }
     }
 
     func updateBettingLimit(amount: String) {
-        self.isLoadingPublisher.send(true)
 
         if let limit = Double(amount) {
             Env.servicesProvider.updateWeeklyBettingLimits(newLimit: limit)
@@ -246,12 +248,13 @@ class ProfileLimitsManagementViewModel: NSObject {
                         ()
                     case .failure(let error):
                         print("UPDATE DEPOSIT LIMIT ERROR: \(error)")
+                        self?.limitOptionsErrorPublisher.send("\(localized("betting_limit_update_error_message"))")
                         self?.isLoadingPublisher.send(false)
                     }
                 }, receiveValue: { [weak self] updateLimitResponse in
 
-                    print("UPDATE DEPOSIT LIMIT SUCCESS: \(updateLimitResponse)")
-                    self?.isLoadingPublisher.send(false)
+                    self?.limitOptionsCheckPublisher.value.append("wagering")
+
                 })
                 .store(in: &cancellables)
         }
@@ -530,4 +533,10 @@ class ProfileLimitsManagementViewModel: NSObject {
 //
 //    }
 
+}
+
+enum LimitUpdateStatus {
+    case updated
+    case failed
+    case idle
 }

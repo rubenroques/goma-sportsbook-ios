@@ -420,8 +420,25 @@ extension UserSessionStore {
                     ()
                 }
                 self?.isLoadingUserSessionPublisher.send(false)
-            }, receiveValue: { loggedUser in
-                Env.favoritesManager.getUserFavorites()
+            }, receiveValue: { [weak self] loggedUser in
+                //Env.favoritesManager.getUserFavorites()
+                self?.setupFavorites()
+            })
+            .store(in: &cancellables)
+    }
+
+    func setupFavorites() {
+
+        Env.servicesProvider.bettingConnectionStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] connectorState in
+
+                switch connectorState {
+                case .connected:
+                    Env.favoritesManager.getUserFavorites()
+                case .disconnected:
+                    ()
+                }
             })
             .store(in: &cancellables)
     }

@@ -184,7 +184,7 @@ extension UploadDocumentsViewController: UIDocumentPickerDelegate, UINavigationC
             }
 
             if fileSize > 10.0 {
-                self.showSimpleAlert(title: localized("max_file_size_exceeded"), message: localized("maz_file_size_exceeded_message"))
+                self.showSimpleAlert(title: localized("max_file_size_exceeded"), message: localized("max_file_size_exceeded_message"))
             }
             else {
                 let fileData = try Data(contentsOf: fileUrl)

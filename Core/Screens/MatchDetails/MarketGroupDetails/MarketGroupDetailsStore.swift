@@ -200,7 +200,7 @@ class MarketGroupDetailsStore {
                 similarMarkets[similarMarketKey] = [sortedOutcomeMarket]
             }
 
-            similarMarketsNames[similarMarketKey] = sortedOutcomeMarket.name ?? ""
+            similarMarketsNames[similarMarketKey] = sortedOutcomeMarket.name
         }
 
         //
@@ -213,6 +213,9 @@ class MarketGroupDetailsStore {
 
                 let marketGroupName = similarMarketsNames[marketKey] ?? ""
 
+                if marketGroupName.contains("Halftime/fulltime") {
+                    print("DEBUG MARKET GROUP")
+                }
                 let allOutcomes = value.flatMap({ $0.outcomes })
                 var outcomesDictionary: [String: [Outcome]] = [:]
                 
@@ -241,7 +244,7 @@ class MarketGroupDetailsStore {
                     marketGroupOrganizers.append(sequentialMarketGroupOrganizer)
 
                 }
-                else if value.count == 1 {
+                else if value.count == 1 && outcomesDictionary.keys.count <= 3 {
 
                     // One Market with multiples outcomes
                     let columnListedMarketGroupOrganizer = ColumnListedMarketGroupOrganizer(id: firstMarket.id,
@@ -294,6 +297,7 @@ class MarketGroupDetailsStore {
                                                                                             name: marketGroupName,
                                                                                             outcomes: outcomesDictionary)
                     marketGroupOrganizers.append(columnListedMarketGroupOrganizer)
+
                 }
             }
         }

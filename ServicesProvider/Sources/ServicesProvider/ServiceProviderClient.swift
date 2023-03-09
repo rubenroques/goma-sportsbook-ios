@@ -45,6 +45,8 @@ public class ServicesProviderClient {
             self.bettingProvider = SportRadarBettingProvider(sessionCoordinator: sessionCoordinator)
 
             self.eventsConnectionStatePublisher = self.eventsProvider!.connectionStatePublisher
+
+            self.bettingConnectionStatePublisher = self.bettingProvider!.connectionStatePublisher
         }
     }
 

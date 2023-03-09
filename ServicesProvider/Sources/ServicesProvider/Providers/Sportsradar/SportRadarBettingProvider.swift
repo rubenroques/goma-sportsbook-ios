@@ -8,12 +8,17 @@
 import Foundation
 import Combine
 
-class SportRadarBettingProvider: BettingProvider {
+class SportRadarBettingProvider: BettingProvider, Connector {
 
     var sessionCoordinator: SportRadarSessionCoordinator
 
     private var connector: BettingConnector
     private var cancellables: Set<AnyCancellable> = []
+
+    var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
+        return self.connectionStateSubject.eraseToAnyPublisher()
+    }
+    private var connectionStateSubject: CurrentValueSubject<ConnectorState, Never> = .init(.disconnected)
 
     init(sessionCoordinator: SportRadarSessionCoordinator, connector: BettingConnector = BettingConnector()) {
         self.sessionCoordinator = sessionCoordinator
@@ -29,6 +34,8 @@ class SportRadarBettingProvider: BettingProvider {
                 }
             }
             .store(in: &cancellables)
+
+        self.connectionStateSubject.send(self.connector.connectionStateSubject.value)
     }
 
     func getBetHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
