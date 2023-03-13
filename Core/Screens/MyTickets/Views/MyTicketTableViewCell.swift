@@ -287,12 +287,12 @@ class MyTicketTableViewCell: UITableViewCell {
                    let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
                     self.winningsSubtitleLabel.text = maxWinningsString
                 }
-                self.totalOddTitleLabel.textColor = .white
-                self.totalOddSubtitleLabel.textColor = .white
-                self.betAmountTitleLabel.textColor = .white
-                self.betAmountSubtitleLabel.textColor = .white
-                self.winningsTitleLabel.textColor = .white
-                self.winningsSubtitleLabel.textColor = .white
+                self.totalOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.totalOddSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.betAmountTitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.betAmountSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.winningsTitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.winningsSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
 
             case "HALF_LOST":
                 self.highlightCard(withColor: UIColor.App.myTicketsLost)
@@ -301,12 +301,12 @@ class MyTicketTableViewCell: UITableViewCell {
                    let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
                     self.winningsSubtitleLabel.text = maxWinningsString
                 }
-                self.totalOddTitleLabel.textColor = .white
-                self.totalOddSubtitleLabel.textColor = .white
-                self.betAmountTitleLabel.textColor = .white
-                self.betAmountSubtitleLabel.textColor = .white
-                self.winningsTitleLabel.textColor = .white
-                self.winningsSubtitleLabel.textColor = .white
+                self.totalOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.totalOddSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.betAmountTitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.betAmountSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.winningsTitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.winningsSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
             case "LOST":
                 self.highlightCard(withColor: UIColor.App.myTicketsLost)
                 self.winningsTitleLabel.text = localized("possible_winnings") // Titulo
@@ -314,12 +314,12 @@ class MyTicketTableViewCell: UITableViewCell {
                    let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
                     self.winningsSubtitleLabel.text = maxWinningsString
                 }
-                self.totalOddTitleLabel.textColor = .white
-                self.totalOddSubtitleLabel.textColor = .white
-                self.betAmountTitleLabel.textColor = .white
-                self.betAmountSubtitleLabel.textColor = .white
-                self.winningsTitleLabel.textColor = .white
-                self.winningsSubtitleLabel.textColor = .white
+                self.totalOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.totalOddSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.betAmountTitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.betAmountSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.winningsTitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.winningsSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
 
             case "CASHED_OUT":
                 self.highlightCard(withColor: UIColor.App.myTicketsOther)
@@ -336,12 +336,12 @@ class MyTicketTableViewCell: UITableViewCell {
                    let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
                     self.winningsSubtitleLabel.text = maxWinningsString
                 }
-                self.totalOddTitleLabel.textColor = .white
-                self.totalOddSubtitleLabel.textColor = .white
-                self.betAmountTitleLabel.textColor = .white
-                self.betAmountSubtitleLabel.textColor = .white
-                self.winningsTitleLabel.textColor = .white
-                self.winningsSubtitleLabel.textColor = .white
+                self.totalOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.totalOddSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.betAmountTitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.betAmountSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.winningsTitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.winningsSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
 
             case "CANCELLED":
                 self.highlightCard(withColor: UIColor.App.myTicketsOther)
@@ -350,12 +350,12 @@ class MyTicketTableViewCell: UITableViewCell {
                    let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
                     self.winningsSubtitleLabel.text = maxWinningsString
                 }
-                self.totalOddTitleLabel.textColor = .white
-                self.totalOddSubtitleLabel.textColor = .white
-                self.betAmountTitleLabel.textColor = .white
-                self.betAmountSubtitleLabel.textColor = .white
-                self.winningsTitleLabel.textColor = .white
-                self.winningsSubtitleLabel.textColor = .white
+                self.totalOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.totalOddSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.betAmountTitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.betAmountSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.winningsTitleLabel.textColor = UIColor.App.buttonTextPrimary
+                self.winningsSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
 
             case "OPEN":
                 self.resetHighlightedCard()

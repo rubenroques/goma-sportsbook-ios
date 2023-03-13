@@ -446,7 +446,7 @@ class ProfileViewController: UIViewController {
 
         let messagesView = NavigationCardView()
         messagesView.hasNotifications = true
-        messagesView.setupView(title: localized("promotions"), iconTitle: "messages_profile_icon")
+        messagesView.setupView(title: localized("promotions"), iconTitle: "promotion_icon")
         let messagesTap = UITapGestureRecognizer(target: self, action: #selector(messagesViewTapped(sender:)))
         messagesView.addGestureRecognizer(messagesTap)
 

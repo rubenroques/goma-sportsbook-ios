@@ -53,8 +53,11 @@ class MessagesViewModel {
                         self?.inAppMessagesPublisher.send(newsNotifications)
                     }
                 }
+
             })
             .store(in: &cancellables)
+
+
     }
 
     func setCellReadStatus(inAppMessageId: Int) {

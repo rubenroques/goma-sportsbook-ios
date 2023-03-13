@@ -739,3 +739,5 @@ Terms of use, Privacy Policy and EULA";
 
 "self_exclusion_error" = "Self Exclusion Error";
 "self_exclusion_error_message" = "There was an error trying to apply the selected self exclusion options. Please try again later.";
+
+"no_promotions_yet" = "There's no promotions yet.";

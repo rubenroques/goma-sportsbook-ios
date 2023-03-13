@@ -56,6 +56,8 @@ struct SportRadarConstants {
     // Others
     static var sportRadarFrontEndURL = "https://cdn1-bson-ssb-ua.betsson.fr"
 
+    static var sportRadarLegacyFrontEndURL = "https://cdn1.optimahq.com"
+
 //    ===================================================================================================================
 
 
