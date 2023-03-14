@@ -13,13 +13,21 @@ class CompetitionFilterHeaderViewModel {
 
 class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
 
-    var baseView: UIView = {
+    private lazy var baseView: UIView = {
         var baseView  = UIView()
         baseView.translatesAutoresizingMaskIntoConstraints = false
         return baseView
     }()
 
-    var titleLabel: UILabel = {
+    private lazy var iconImageView: UIImageView = {
+        var imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "country_flag_240")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+
+    private lazy var titleLabel: UILabel = {
         var label  = UILabel()
         label.font = AppFont.with(type: .bold, size: 16)
         label.numberOfLines = 2
@@ -27,13 +35,13 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         return label
     }()
 
-    var selectedFiltersBaseView: UIView = {
+    private lazy var selectedFiltersBaseView: UIView = {
         var baseView  = UIView()
         baseView.translatesAutoresizingMaskIntoConstraints = false
         return baseView
     }()
 
-    var selectedFiltersLabel: UILabel = {
+    private lazy var selectedFiltersLabel: UILabel = {
         var label  = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 12)
@@ -41,7 +49,7 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         return label
     }()
 
-    var arrowImageView: UIImageView = {
+    private lazy var arrowImageView: UIImageView = {
         var imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -71,7 +79,25 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
 
     var viewModel: CompetitionFilterSectionViewModel? {
         didSet {
-            self.titleLabel.text = self.viewModel?.name ?? ""
+            self.titleLabel.text = viewModel?.name ?? ""
+
+            if let countryIsoCode = viewModel?.country?.iso2Code {
+                if countryIsoCode != "" {
+                    self.iconImageView.image = UIImage(named: Assets.flagName(withCountryCode: countryIsoCode))
+                }
+                else {
+                    self.iconImageView.image = UIImage(named: "country_flag_240")
+                }
+            }
+            else {
+                self.iconImageView.image = UIImage(named: "country_flag_240")
+            }
+
+            // TEMP
+            self.iconImageView.isHidden = true
+
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
         }
     }
 
@@ -84,6 +110,9 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
 
         self.setupSubviews()
         self.setupWithTheme()
+
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
     }
 
     @available(iOS, unavailable)
@@ -140,6 +169,8 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
             baseView.roundCorners(corners: [.topLeft, .topRight, .bottomLeft, .bottomRight], radius: 5)
             arrowImageView.image = UIImage(named: "arrow_down_icon")
         }
+
+        self.iconImageView.layer.cornerRadius = 18 / 2
     }
 
     func setupSubviews() {
@@ -151,6 +182,7 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         self.selectedFiltersBaseView.isHidden = true
 
         self.addSubview(self.baseView)
+        self.baseView.addSubview(self.iconImageView)
         self.baseView.addSubview(self.titleLabel)
         self.baseView.addSubview(self.arrowImageView)
         self.baseView.addSubview(self.selectedFiltersBaseView)
@@ -164,11 +196,18 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
             self.baseView.heightAnchor.constraint(greaterThanOrEqualToConstant: 56),
 
             self.baseView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -20),
-
+//
             self.baseView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor, constant: -1),
-            self.baseView.bottomAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+//            self.baseView.bottomAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
 
+            self.iconImageView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 20),
+            self.iconImageView.widthAnchor.constraint(equalToConstant: 18),
+            self.iconImageView.heightAnchor.constraint(equalTo: self.iconImageView.widthAnchor),
+            self.iconImageView.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
+
+//            self.titleLabel.leadingAnchor.constraint(equalTo: self.iconImageView.trailingAnchor, constant: 8),
             self.titleLabel.trailingAnchor.constraint(equalTo: arrowImageView.leadingAnchor, constant: -6),
+            self.titleLabel.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -4),
 
             self.arrowImageView.widthAnchor.constraint(equalToConstant: 14),
             self.arrowImageView.widthAnchor.constraint(equalTo: arrowImageView.heightAnchor),
@@ -183,6 +222,9 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
             self.selectedFiltersLabel.centerXAnchor.constraint(equalTo: self.selectedFiltersBaseView.centerXAnchor),
             self.selectedFiltersLabel.centerYAnchor.constraint(equalTo: self.selectedFiltersBaseView.centerYAnchor),
         ])
+
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
     }
 
     func setupWithTheme() {
@@ -196,6 +238,8 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
 
         self.selectedFiltersBaseView.backgroundColor = UIColor.App.highlightSecondary
         self.selectedFiltersLabel.textColor = UIColor.App.buttonTextPrimary
+
+        self.iconImageView.backgroundColor = .clear
     }
 
 }

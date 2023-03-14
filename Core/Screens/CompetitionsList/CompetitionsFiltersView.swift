@@ -257,6 +257,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         super.layoutSubviews()
 
         self.headerBaseView.roundCorners(corners: [.topRight, .topLeft], radius: 20)
+        
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -382,6 +383,9 @@ class CompetitionsFiltersView: UIView, NibLoadable {
 
     func reloadTableView() {
         self.tableView.reloadData()
+
+        self.layoutIfNeeded()
+        self.layoutSubviews()
     }
 }
 
@@ -500,7 +504,21 @@ extension CompetitionsFiltersView: UITableViewDelegate, UITableViewDataSource {
         headerView.section = section
         headerView.isExpanded = expandedCellsDictionary[viewModelForSection.id] ?? false // expandedCells.contains(section)
         headerView.sectionIdentifier = viewModelForSection.id
-        headerView.titleLabel.text = viewModelForSection.name
+//        headerView.titleLabel.text = viewModelForSection.name
+//
+//        if let countryIsoCode = viewModelForSection.country?.iso2Code {
+//            if countryIsoCode != "" {
+//                headerView.iconImageView.image = UIImage(named: Assets.flagName(withCountryCode: countryIsoCode))
+//            }
+//            else {
+//                headerView.iconImageView.image = UIImage(named: "country_flag_240")
+//            }
+//        }
+//        else {
+//            headerView.iconImageView.image = UIImage(named: "country_flag_240")
+//        }
+
+        headerView.viewModel = viewModelForSection
 
         headerView.selectionCount = self.competitionSelectedIds[viewModelForSection.id]?.count ?? 0
 

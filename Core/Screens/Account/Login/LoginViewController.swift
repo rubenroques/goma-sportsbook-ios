@@ -611,15 +611,17 @@ class LoginViewController: UIViewController {
                                       message: alertMessage,
                                       preferredStyle: .alert)
 
-        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
 
             if paymentStatus == .authorised {
                 Env.userSessionStore.refreshUserWallet()
 
-                self.dismiss(animated: true)
+                self?.depositOnRegisterViewController?.dismiss(animated: true)
             }
         }))
-        self.present(alert, animated: true, completion: nil)
+
+        self.depositOnRegisterViewController?.present(alert, animated: true, completion: nil)
+
     }
 
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SharedModels
 
 extension SportRadarModelMapper {
 
@@ -65,10 +66,13 @@ extension SportRadarModelMapper {
 
     static func sportNodeRegion(fromInternalSportNodeRegion sportNodeRegion: SportRadarModels.SportRegion) -> SportRegion {
 
+        let country: Country? = Country.country(withName: sportNodeRegion.name ?? "")
+
         let sportRegionNode = SportRegion(id: sportNodeRegion.id,
                                           name: sportNodeRegion.name,
                                           numberEvents: sportNodeRegion.numberEvents,
-                                          numberOutrightEvents: sportNodeRegion.numberOutrightEvents)
+                                          numberOutrightEvents: sportNodeRegion.numberOutrightEvents,
+                                          country: country)
 
         return sportRegionNode
     }

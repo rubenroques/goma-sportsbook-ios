@@ -48,6 +48,7 @@ extension ServiceProviderModelMapper {
         case .attempted: status = .undefined
         case .won: status = .won
         case .lost: status = .lost
+        case .cashedOut: status = .cashedOut
         case .undefined: status = .undefined
         }
 

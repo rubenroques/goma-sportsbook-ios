@@ -253,7 +253,6 @@ class PreLiveEventsViewModel: NSObject {
             .sink(receiveValue: { [weak self] expectedCompetitions, selectedCompetitionsInfo in
 
                 if selectedCompetitionsInfo.count == expectedCompetitions {
-                    print("ALL COMPETITIONS DATA")
                     self?.processCompetitionsInfo()
                 }
             })
@@ -264,7 +263,6 @@ class PreLiveEventsViewModel: NSObject {
             .sink(receiveValue: { [weak self] competitionMatchesSubscriptions in
 
                 if competitionMatchesSubscriptions.count == self?.expectedCompetitionsPublisher.value {
-                    print("ALL COMPETITIONS SUBSCRIPTIONS")
 
                     self?.isLoadingCompetitionMatches.send(false)
                     self?.isLoadingEvents.send(false)
@@ -592,7 +590,6 @@ class PreLiveEventsViewModel: NSObject {
         }
     }
 
-
     func fetchCompetitionsFilters() {
 
         self.isLoadingCompetitionGroups.send(false)
@@ -746,7 +743,6 @@ class PreLiveEventsViewModel: NSObject {
 
     private func processCompetitionOutrights(outrightMatch: Match, competitionInfo: SportCompetitionInfo) {
 
-        // Temp fix
         let numberOutrightMarkets = competitionInfo.numberOutrightMarkets == "0" ? 1 : Int(competitionInfo.numberOutrightMarkets) ?? 0
 
         let newCompetition = Competition(id: competitionInfo.id,

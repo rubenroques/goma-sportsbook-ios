@@ -14,6 +14,7 @@ struct CompetitionGroup {
     var name: String
     var aggregationType: AggregationType
     var competitions: [Competition]
+    var country: Country?
     
     enum AggregationType {
         case popular

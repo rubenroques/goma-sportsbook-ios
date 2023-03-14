@@ -803,6 +803,26 @@ extension ServicesProviderClient {
 
         return privilegedAccessManager.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: transactionType, pageNumber: pageNumber)
     }
+
+    public func calculateCashout(betId: String) -> AnyPublisher<Cashout, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return bettingProvider.calculateCashout(betId: betId)
+    }
+
+    public func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double) -> AnyPublisher<CashoutResult, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return bettingProvider.cashoutBet(betId: betId, cashoutValue: cashoutValue, stakeValue: stakeValue)
+    }
 }
 
 // Utilities

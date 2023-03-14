@@ -321,7 +321,7 @@ class MyTicketTableViewCell: UITableViewCell {
                 self.winningsTitleLabel.textColor = UIColor.App.buttonTextPrimary
                 self.winningsSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
 
-            case "CASHED_OUT":
+            case "CASHED_OUT", "CASHEDOUT":
                 self.highlightCard(withColor: UIColor.App.myTicketsOther)
                 self.winningsTitleLabel.text = localized("return") // Titulo
                 if let maxWinnings = betHistoryEntry.overallBetReturns, // Valor  - > overallBetReturns

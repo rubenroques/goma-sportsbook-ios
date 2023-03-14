@@ -552,7 +552,7 @@ class MyTicketsViewModel: NSObject {
             return viewModel
         }
         else {
-            let viewModel =  MyTicketCellViewModel(ticket: ticket)
+            let viewModel = MyTicketCellViewModel(ticket: ticket)
             viewModel.requestDataRefreshAction = { [weak self] in
                 self?.refresh()
                 

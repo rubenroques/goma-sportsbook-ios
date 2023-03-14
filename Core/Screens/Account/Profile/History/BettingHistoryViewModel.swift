@@ -189,7 +189,15 @@ class BettingHistoryViewModel {
                 nextTickets.append(contentsOf: betHistoryEntries)
                 self.wonTickets.send(nextTickets)
             }
-        default: ()
+        case .cashout:
+            if self.cashoutTickets.value.isEmpty {
+                self.cashoutTickets.send(betHistoryEntries)
+            }
+            else {
+                var nextTickets = self.cashoutTickets.value
+                nextTickets.append(contentsOf: betHistoryEntries)
+                self.cashoutTickets.send(nextTickets)
+            }
         }
 
         self.listStatePublisher.send(.loaded)
@@ -544,7 +552,7 @@ class BettingHistoryViewModel {
             self.listStatePublisher.send(.loading)
         }
 
-        Env.servicesProvider.getBettingHistory(pageIndex: page)
+        Env.servicesProvider.getResolvedBetsHistory(pageIndex: page)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
 
@@ -558,8 +566,36 @@ class BettingHistoryViewModel {
                 }
             }, receiveValue: { [weak self] bettingHistory in
 
-                print("BETTING CASHOUT HISTORY: \(bettingHistory)")
-                self?.listStatePublisher.send(.empty)
+                guard let self = self else { return }
+
+                let bettingHistoryResponse = ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory: bettingHistory)
+
+                if let bettingHistoryEntries = bettingHistoryResponse.betList {
+
+                    if bettingHistoryEntries.isNotEmpty {
+
+                        let filteredWonBettingHistoryEntries = bettingHistoryEntries.filter({
+                            $0.status == "cashedOut"
+                        })
+
+                        if filteredWonBettingHistoryEntries.isNotEmpty {
+                            self.processBettingHistory(betHistoryEntries: filteredWonBettingHistoryEntries)
+                        }
+                        else {
+                            self.requestNextPage()
+                        }
+
+                    }
+                    else {
+                        self.ticketsHasNextPage = false
+                        if self.cashoutTickets.value.isEmpty {
+                            self.listStatePublisher.send(.empty)
+                        }
+                        else {
+                            self.listStatePublisher.send(.loaded)
+                        }
+                    }
+                }
             })
             .store(in: &cancellables)
 
@@ -631,19 +667,30 @@ class BettingHistoryViewModel {
     }
     
     func refresh() {
-        self.resolvedPage = 1
-        self.openedPage = 1
-        self.wonPage = 1
-        self.cashoutPage = 1
+        self.resolvedPage = 0
+        self.openedPage = 0
+        self.wonPage = 0
+        self.cashoutPage = 0
 
         self.initialLoadMyTickets()
     }
 
     func initialLoadMyTickets() {
-        self.loadResolvedTickets(page: 1)
-        self.loadOpenedTickets(page: 1)
-        self.loadWonTickets(page: 1)
-        self.loadCashoutTickets(page: 1)
+        self.cashoutTickets.value = []
+        self.resolvedTickets.value = []
+        self.openedTickets.value = []
+        self.wonTickets.value = []
+
+        switch self.bettingTicketsType {
+        case .opened:
+            self.loadOpenedTickets(page: 0)
+        case .resolved:
+            self.loadResolvedTickets(page: 0)
+        case .won:
+            self.loadWonTickets(page: 0)
+        case .cashout:
+            self.loadCashoutTickets(page: 0)
+        }
     }
     
     func requestNextPage() {
@@ -676,7 +723,7 @@ class BettingHistoryViewModel {
 //                return
 //            }
             cashoutPage += 1
-            self.loadCashoutTickets(page: cashoutPage)
+            self.loadCashoutTickets(page: cashoutPage, isNextPage: true)
         }
     }
     
