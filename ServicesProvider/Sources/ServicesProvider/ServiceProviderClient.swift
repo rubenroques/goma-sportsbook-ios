@@ -44,12 +44,16 @@ public class ServicesProviderClient {
             // Session Coordinator
             let sessionCoordinator = SportRadarSessionCoordinator()
 
-            self.privilegedAccessManager = SportRadarPrivilegedAccessManager(sessionCoordinator: sessionCoordinator,
+            let sportRadarPrivilegedAccessManager = SportRadarPrivilegedAccessManager(sessionCoordinator: sessionCoordinator,
                                                                              connector: OmegaConnector())
+
+            self.privilegedAccessManager = sportRadarPrivilegedAccessManager
             self.eventsProvider = SportRadarEventsProvider(sessionCoordinator: sessionCoordinator,
                                                            socketConnector: SportRadarSocketConnector(),
                                                            restConnector: SportRadarRestConnector())
             self.bettingProvider = SportRadarBettingProvider(sessionCoordinator: sessionCoordinator)
+
+            sessionCoordinator.registerUpdater(sportRadarPrivilegedAccessManager, forKey: .launchToken)
 
             self.eventsProvider!.connectionStatePublisher
                 .sink(receiveCompletion: { completion in

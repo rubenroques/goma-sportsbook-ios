@@ -779,3 +779,28 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
     }
 }
 
+extension SportRadarPrivilegedAccessManager: SportRadarSessionTokenUpdater {
+    func forceTokenRefresh(forKey key: SessionCoordinatorKey) -> AnyPublisher<String?, Never> {
+
+        if key == .launchToken {
+            return self.connector
+                .forceRefreshSession()
+                .map(\.launchKey)
+                .replaceError(with: nil)
+                .eraseToAnyPublisher()
+        }
+        else if key == .restSessionToken {
+            return self.connector
+                .forceRefreshSession()
+                .map(\.sessionKey)
+                .map(Optional<String>.init)
+                .replaceError(with: nil)
+                .eraseToAnyPublisher()
+        }
+        else {
+            return Just(nil)
+                .eraseToAnyPublisher()
+        }
+
+    }
+}

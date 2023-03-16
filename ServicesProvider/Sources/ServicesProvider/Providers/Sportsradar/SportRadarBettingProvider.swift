@@ -36,6 +36,15 @@ class SportRadarBettingProvider: BettingProvider, Connector {
             .store(in: &cancellables)
 
         self.connectionStateSubject.send(self.connector.connectionStateSubject.value)
+
+        self.connector.requestTokenRefresher = { [weak self] in
+            if let self = self, let refresher = self.sessionCoordinator.forceTokenRefresh(forKey: .launchToken) {
+                return refresher
+            }
+            else {
+                return Just(Optional<String>.none).eraseToAnyPublisher()
+            }
+        }
     }
 
     func getBetHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
@@ -108,10 +117,9 @@ class SportRadarBettingProvider: BettingProvider, Connector {
         return publisher
             .flatMap { (internalPlacedBetsResponse: SportRadarModels.PlacedBetsResponse) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> in
 
-
                 if internalPlacedBetsResponse.responseCode == "1" ||
-                        internalPlacedBetsResponse.responseCode == "2" ||
-                        internalPlacedBetsResponse.responseCode == "3"
+                    internalPlacedBetsResponse.responseCode == "2" ||
+                    internalPlacedBetsResponse.responseCode == "3"
                 {
                     let placedBetsResponse = SportRadarModelMapper.placedBetsResponse(fromInternalPlacedBetsResponse: internalPlacedBetsResponse)
                     return Just( placedBetsResponse ).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
@@ -123,8 +131,44 @@ class SportRadarBettingProvider: BettingProvider, Connector {
                 }
             }
             .eraseToAnyPublisher()
+    }
 
+//    private func placeInternalBets(betTickets: [BetTicket]) -> AnyPublisher<SportRadarModels.PlacedBetsResponse, ServiceProviderError> {
+//        let endpoint = BettingAPIClient.placeBets(betTickets: betTickets)
+//        let publisher: AnyPublisher<SportRadarModels.PlacedBetsResponse, ServiceProviderError> = self.connector.request(endpoint)
+//
+//        return publisher
+//            .tryCatch { [weak self] (error: ServiceProviderError) -> AnyPublisher<SportRadarModels.PlacedBetsResponse, ServiceProviderError> in
+//                guard let self = self else { throw error }
+//                if case ServiceProviderError.unauthorized = error,
+//                   let refresher = self.sessionCoordinator.forceTokenRefresh(forKey: .launchToken) {
+//                    return refresher
+//                        .setFailureType(to: ServiceProviderError.self)
+//                        .flatMap({ [weak self] (newToken: String?) -> AnyPublisher<SportRadarModels.PlacedBetsResponse, ServiceProviderError> in
+//                            guard
+//                                let self = self
+//                            else {
+//                                return Fail(error: ServiceProviderError.unknown).eraseToAnyPublisher()
+//                            }
+//                            return self.placeInternalBets(betTickets: betTickets).eraseToAnyPublisher()
+//                        })
+//                        .eraseToAnyPublisher()
+//                }
+//                else {
+//                    throw error
+//                }
+//            }
+//            .mapError({ error in
+//                if let typedError = error as? ServiceProviderError {
+//                    return typedError
+//                }
+//                return ServiceProviderError.invalidResponse
+//            })
+//            .eraseToAnyPublisher()
+//    }
 
+//    func
+//
 //        return publisher
 //            .map({ SportRadarModelMapper.placedBetsResponse(fromInternalPlacedBetsResponse: $0) })
 //            .flatMap({ (statusResponse: SportRadarModels.StatusResponse) -> AnyPublisher<SignUpResponse, ServiceProviderError> in
@@ -144,7 +188,7 @@ class SportRadarBettingProvider: BettingProvider, Connector {
 //        return publisher
 //            .map({ SportRadarModelMapper.placedBetsResponse(fromInternalPlacedBetsResponse: $0) })
 //            .eraseToAnyPublisher()
-    }
+// }
 
     func getBetDetails(identifier: String) -> AnyPublisher<Bet, ServiceProviderError> {
 //        let endpoint = BettingAPIClient.betDetails(identifier: identifier)

@@ -72,7 +72,6 @@ class SportRadarEventsProvider: EventsProvider {
         self.socketConnector.messageSubscriber = self
         self.socketConnector.connect()
 
-
     }
 
     private var liveSportTypesPublisher: CurrentValueSubject<SubscribableContent<[SportType]>, ServiceProviderError>?

@@ -55,7 +55,29 @@ class OmegaConnector: Connector {
     private func retrieveSessionKey() -> String? {
         return self.token.value?.sessionKey
     }
-    
+
+    func forceRefreshSession() -> AnyPublisher<OmegaSessionAccessToken, ServiceProviderError> {
+        self.clearCacheSessionKey()
+
+        guard
+            let sessionCredentials = self.sessionCredentials
+        else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+
+        return self.login(username: sessionCredentials.username, password: sessionCredentials.password)
+            .flatMap { [weak self] (loginResponse: SportRadarModels.LoginResponse) -> AnyPublisher<OmegaSessionAccessToken, ServiceProviderError> in
+                if loginResponse.status == "SUCCESS", let token = self?.token.value {
+                    return Just(token).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                }
+                else {
+                    return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+                }
+            }
+            .eraseToAnyPublisher()
+
+    }
+
     func request<T: Codable>(_ endpoint: Endpoint) -> AnyPublisher<T, ServiceProviderError> {
         
         var additionalQueryItems: [URLQueryItem] = []
@@ -170,7 +192,14 @@ class OmegaConnector: Connector {
                 print("ServiceProvider-OmegaConnector Error \(error)")
                 return ServiceProviderError.invalidResponse
             }
-            .flatMap({ loginResponse -> AnyPublisher<SportRadarModels.LoginResponse, ServiceProviderError> in
+            .flatMap({ [weak self] loginResponse -> AnyPublisher<SportRadarModels.LoginResponse, ServiceProviderError> in
+
+                guard
+                    let self = self
+                else {
+                    return Fail(error: ServiceProviderError.unknown).eraseToAnyPublisher()
+                }
+
                 if loginResponse.status == "FAIL_UN_PW" {
                     self.logout()
                     return Fail(error: ServiceProviderError.invalidEmailPassword).eraseToAnyPublisher()
@@ -179,13 +208,25 @@ class OmegaConnector: Connector {
                     return Fail(error: ServiceProviderError.quickSignUpIncomplete).eraseToAnyPublisher()
                 }
                 else if loginResponse.status == "SUCCESS", let sessionKey = loginResponse.sessionKey {
+
                     self.cacheSessionKey(sessionKey)
                     self.sessionCredentials = OmegaSessionCredentials(username: username, password: password)
 
-                    self.openSession()
-                    return Just(loginResponse)
-                        .setFailureType(to: ServiceProviderError.self)
+                    return self.openSession(withSessionKey: sessionKey)
+                        .handleEvents(receiveOutput: { [weak self] (newLaunchToken: String?) in
+                            if let newLaunchTokenValue = newLaunchToken {
+                                self?.cacheLaunchKey(newLaunchTokenValue)
+                            }
+                        })
+                        .map({ _ -> SportRadarModels.LoginResponse in
+                            return loginResponse
+                        })
                         .eraseToAnyPublisher()
+//
+//                    return Just(loginResponse)
+//                        .setFailureType(to: ServiceProviderError.self)
+//                        .eraseToAnyPublisher()
+                    
                 }
                 return Fail(error: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
             })
@@ -199,19 +240,20 @@ class OmegaConnector: Connector {
     }
 
 
-    func openSession() {
+    func openSession(withSessionKey sessionKey: String) -> AnyPublisher<String?, ServiceProviderError> {
         guard
-            let sessionKey = self.retrieveSessionKey(),
             let request = OmegaAPIClient.openSession.request(aditionalQueryItems: [URLQueryItem(name: "sessionKey", value: sessionKey)])
         else {
-            return
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
-        print("SESSION KEY: \(sessionKey)")
-        self.session.dataTaskPublisher(for: request)
-            .handleEvents(receiveOutput: { result in
-                print("ServiceProvider-OmegaConnector openSession [[ requesting ]] ", request,
-                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
-            })
+
+        print("Openieng Session for SESSION KEY: \(sessionKey)")
+
+        return self.session.dataTaskPublisher(for: request)
+//            .handleEvents(receiveOutput: { result in
+//                print("ServiceProvider-OmegaConnector openSession [[ requesting ]] ", request,
+//                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
+//            })
             .tryMap { result in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     throw ServiceProviderError.unauthorized
@@ -231,13 +273,18 @@ class OmegaConnector: Connector {
                 print("ServiceProvider-OmegaConnector Error \(error)")
                 return ServiceProviderError.invalidResponse
             }
-            .sink(receiveCompletion: { completion in
-                    
-            }, receiveValue: { [weak self] openSessionResponse in
-                self?.cacheLaunchKey(openSessionResponse.launchToken)
-            })
-            .store(in: &cancellables)
-        
+            .map({ $0.launchToken })
+            .eraseToAnyPublisher()
+
+//            .sink(receiveCompletion: { completion in
+//
+//            }, receiveValue: { [weak self] openSessionResponse in
+//                self?.cacheLaunchKey(openSessionResponse.launchToken)
+//            })
+//            .store(in: &cancellables)
+
+
+
 //            .flatMap({ openSessionResponse -> AnyPublisher<SportRadarModels.OpenSessionResponse, ServiceProviderError> in
 //                if openSessionResponse.status == "FAIL_UN_PW" {
 //                    self.logout()

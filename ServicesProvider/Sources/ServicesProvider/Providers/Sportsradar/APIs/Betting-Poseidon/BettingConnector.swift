@@ -16,7 +16,9 @@ class BettingConnector: Connector {
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
         return connectionStateSubject.eraseToAnyPublisher()
     }
-    
+
+    var requestTokenRefresher: () -> AnyPublisher<String?, Never> = { Just(Optional<String>.none).eraseToAnyPublisher() }
+
     private let session: URLSession
     private let decoder: JSONDecoder
     
@@ -61,10 +63,6 @@ class BettingConnector: Connector {
         }
         
         return self.session.dataTaskPublisher(for: request)
-//            .handleEvents(receiveOutput: { result in
-//                print("Betting-NetworkManager [[ requesting ]] ", request, String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "-",
-//                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
-//            })
             .tryMap { result -> Data in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     throw ServiceProviderError.unauthorized
@@ -81,7 +79,7 @@ class BettingConnector: Connector {
                 return result.data
             }
             .decode(type: T.self, decoder: self.decoder)
-            .mapError({ error in
+            .mapError({ error -> ServiceProviderError in
                 if let typedError = error as? ServiceProviderError {
                     return typedError
                 }
@@ -90,6 +88,27 @@ class BettingConnector: Connector {
                     return ServiceProviderError.decodingError(message: errorMessage)
                 }
                 return ServiceProviderError.invalidResponse
+            })
+            .catch({ [weak self] (error: ServiceProviderError) -> AnyPublisher<T, ServiceProviderError> in
+                guard let self = self else { return Fail(error: error).eraseToAnyPublisher()  }
+                if case ServiceProviderError.unauthorized = error {
+                    return self.requestTokenRefresher()
+                        .setFailureType(to: ServiceProviderError.self)
+                        .flatMap({ [weak self] (newToken: String?) -> AnyPublisher<T, ServiceProviderError> in
+                            guard
+                                let weakSelf = self,
+                                let newTokenValue = newToken
+                            else {
+                                return Fail(error: ServiceProviderError.unknown).eraseToAnyPublisher()
+                            }
+                            weakSelf.saveSessionKey(newTokenValue)
+                            return weakSelf.request(endpoint).eraseToAnyPublisher()
+                        })
+                        .eraseToAnyPublisher()
+                }
+                else {
+                    return Fail(error: error).eraseToAnyPublisher()
+                }
             })
             .eraseToAnyPublisher()
     }
