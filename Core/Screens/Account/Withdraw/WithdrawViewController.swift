@@ -197,6 +197,10 @@ class WithdrawViewController: UIViewController {
 
         }
 
+        viewModel.shouldShowIbanScreen = { [weak self] in
+            self?.showIbanScreen()
+        }
+
     }
 
     // MARK: Functions
@@ -364,16 +368,21 @@ class WithdrawViewController: UIViewController {
 
     private func showAlert() {
 
-        let alert = UIAlertController(title: localized("withdrawal_status"),
-                                      message: localized("withdrawal_status_message"),
-                                      preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
+        let withdrawSuccessViewController = WithdrawSuccessViewController()
 
-            self.shouldRefreshUserWallet?()
-            self.dismiss(animated: true)
+        withdrawSuccessViewController.configureInfo(title: localized("withdrawal_request_sent_title"), message: localized("withdrawal_status_message"))
 
-        }))
-        self.present(alert, animated: true, completion: nil)
+        self.navigationController?.pushViewController(withdrawSuccessViewController, animated: true)
+//        let alert = UIAlertController(title: localized("withdrawal_status"),
+//                                      message: localized("withdrawal_status_message"),
+//                                      preferredStyle: .alert)
+//        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
+//
+//            self.shouldRefreshUserWallet?()
+//            self.dismiss(animated: true)
+//
+//        }))
+//        self.present(alert, animated: true, completion: nil)
     }
 
     private func showWithdrawWebView(cashierUrl: String) {
@@ -381,6 +390,18 @@ class WithdrawViewController: UIViewController {
 
         self.navigationController?.pushViewController(withdrawWebViewController, animated: true)
 
+    }
+
+    private func showIbanScreen() {
+        print("SHOW IBAN")
+
+        let amountText = self.withdrawHeaderTextFieldView.text
+
+        let ibanProofViewModel = IBANProofViewModel(withdrawAmount: amountText)
+
+        let ibanProofViewController = IBANProofViewController(viewModel: ibanProofViewModel)
+
+        self.navigationController?.pushViewController(ibanProofViewController, animated: true)
     }
 
     @IBAction private func didTapCloseButton() {

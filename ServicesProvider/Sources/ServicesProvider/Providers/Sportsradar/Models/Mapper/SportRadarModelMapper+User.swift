@@ -245,6 +245,41 @@ extension SportRadarModelMapper {
         return UpdatePaymentAction(paymentMethodType: internalUpdatePaymentAction.paymentMethodType, url: internalUpdatePaymentAction.url, method: internalUpdatePaymentAction.method, type: internalUpdatePaymentAction.type)
     }
 
+    static func paymentInformation(fromPaymentInformation internalPaymentInformation: SportRadarModels.PaymentInformation) -> PaymentInformation {
+
+        let bankPaymentInfo = internalPaymentInformation.data.map({ bankPaymentInfo -> BankPaymentInfo in
+            let bankPaymentInfo = Self.bankPaymentInfo(fromBankPaymentInfo: bankPaymentInfo)
+
+            return bankPaymentInfo
+
+        })
+
+        return PaymentInformation(status: internalPaymentInformation.status, data: bankPaymentInfo)
+    }
+
+    static func bankPaymentInfo(fromBankPaymentInfo internalBankPaymentInfo: SportRadarModels.BankPaymentInfo) -> BankPaymentInfo {
+
+        let bankPaymentDetails = internalBankPaymentInfo.details.map({ bankPaymentDetail -> BankPaymentDetail in
+
+            let bankPaymentDetail = Self.bankPaymentDetail(fromBankPaymentDetail: bankPaymentDetail)
+
+            return bankPaymentDetail
+
+        })
+
+        return BankPaymentInfo(id: internalBankPaymentInfo.id, partyId: internalBankPaymentInfo.partyId, type: internalBankPaymentInfo.type, description: internalBankPaymentInfo.description, details: bankPaymentDetails)
+    }
+
+    static func bankPaymentDetail(fromBankPaymentDetail internalBankPaymentDetail: SportRadarModels.BankPaymentDetail) -> BankPaymentDetail {
+
+        return BankPaymentDetail(id: internalBankPaymentDetail.id, paymentInfoId: internalBankPaymentDetail.paymentInfoId, key: internalBankPaymentDetail.key, value: internalBankPaymentDetail.value)
+    }
+
+    static func addPaymentInformationResponse(fromAddPaymentInformationResponse internalAddPaymentInformationResponse: SportRadarModels.AddPaymentInformationResponse) -> AddPaymentInformationResponse {
+
+        return AddPaymentInformationResponse(status: internalAddPaymentInformationResponse.status, message: internalAddPaymentInformationResponse.message)
+    }
+
     static func personalDepositLimitsResponse(fromPersonalDepositLimitsResponse internalPersonalDepositLimitsResponse: SportRadarModels.PersonalDepositLimitResponse) -> PersonalDepositLimitResponse {
 
         return PersonalDepositLimitResponse(status: internalPersonalDepositLimitsResponse.status, dailyLimit: internalPersonalDepositLimitsResponse.dailyLimit, weeklyLimit: internalPersonalDepositLimitsResponse.weeklyLimit, monthlyLimit: internalPersonalDepositLimitsResponse.monthlyLimit, currency: internalPersonalDepositLimitsResponse.currency,

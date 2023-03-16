@@ -747,3 +747,11 @@ Terms of use, Privacy Policy and EULA";
 "self_exclusion_error_message" = "There was an error trying to apply the selected self exclusion options. Please try again later.";
 
 "no_promotions_yet" = "There's no promotions yet.";
+
+"iban_confirm_message" = "Before continuing we need to confirm your IBAN.";
+"iban" = "IBAN";
+"iban_proof" = "IBAN Proof";
+"iban_invalid" = "Invalid IBAN. Must start with 2 Letters [A to Z] followed by 14 to 29 digits [0 to 9]";
+
+"withdrawal_request_sent_title" = "Your withdrawal request was sent.";
+"withdrawal_request_sent_text" = "Your request will be pending till we confirm your IBAN proof, after approval it will take at least 72 hours to appear in your bank statement.";

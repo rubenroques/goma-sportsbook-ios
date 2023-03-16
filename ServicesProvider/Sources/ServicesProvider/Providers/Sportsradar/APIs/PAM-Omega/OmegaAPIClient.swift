@@ -125,6 +125,8 @@ enum OmegaAPIClient {
     case processWithdrawal(withdrawalMethod: String, amount: Double)
     case getPendingWithdrawals
     case cancelWithdrawal(paymentId: Int)
+    case getPaymentInformation
+    case addPaymentInformation(type: String, fields: String)
 
     case getTransactionsHistory(startDate: String, endDate: String, transactionType: String? = nil, pageNumber: Int? = nil, pageSize: Int? = nil)
 }
@@ -203,6 +205,10 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/getPendingWithdrawals"
         case .cancelWithdrawal:
             return "/ps/ips/cancelWithdrawal"
+        case .getPaymentInformation:
+            return "/ps/ips/getPaymentInformation"
+        case .addPaymentInformation:
+            return "/ps/ips/addPaymentInformation"
 
         case .getTransactionsHistory:
             return "/ps/ips/getTransactionHistoryByCurrency"
@@ -504,6 +510,16 @@ extension OmegaAPIClient: Endpoint {
         case .getWithdrawalsMethods:
             return nil
 
+        case .getPaymentInformation:
+            return nil
+
+        case .addPaymentInformation(let type, let fields):
+            return [
+
+                URLQueryItem(name: "type", value: type),
+                URLQueryItem(name: "fields", value: fields)
+            ]
+
         case .getTransactionsHistory(let startDate, let endDate, let transactionType, let pageNumber, let pageSize):
             var queryItemsURL: [URLQueryItem] = []
 
@@ -573,6 +589,8 @@ extension OmegaAPIClient: Endpoint {
         case .processWithdrawal: return .post
         case .getPendingWithdrawals: return .get
         case .cancelWithdrawal: return .post
+        case .getPaymentInformation: return .get
+        case .addPaymentInformation: return .post
 
         case .getTransactionsHistory: return .get
         }
@@ -645,6 +663,8 @@ extension OmegaAPIClient: Endpoint {
         case .processWithdrawal: return true
         case .getPendingWithdrawals: return true
         case .cancelWithdrawal: return true
+        case .getPaymentInformation: return true
+        case .addPaymentInformation: return true
 
         case .getTransactionsHistory: return true
         }
