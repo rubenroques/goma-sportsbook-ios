@@ -10,6 +10,9 @@ import Combine
 import WebKit
 import LocalAuthentication
 import RegisterFlow
+import Adyen
+import AdyenDropIn
+import AdyenComponents
 
 class RootViewController: UIViewController {
 
@@ -40,7 +43,6 @@ class RootViewController: UIViewController {
     }()
 
     @IBOutlet private var leadingSportsBookContentConstriant: NSLayoutConstraint!
-
 
     @IBOutlet private var sportsBookContentView: UIView!
     @IBOutlet private var casinoContentView: UIView!
@@ -106,7 +108,7 @@ class RootViewController: UIViewController {
     //
     //
     private var pictureInPictureView: PictureInPictureView?
-
+    
     private lazy var overlayWindow: PassthroughWindow = {
         var overlayWindow: PassthroughWindow = PassthroughWindow(frame: UIScreen.main.bounds)
         overlayWindow.windowLevel = .alert

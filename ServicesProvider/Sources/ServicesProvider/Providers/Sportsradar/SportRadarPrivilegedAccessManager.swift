@@ -582,8 +582,11 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
                 let paymentsResponse = SportRadarModelMapper.paymentsResponse(fromPaymentsResponse: paymentsResponse)
 
                 // Aditional encoding/decoding data needed for Omega
-                if let paymentMethods = paymentsResponse.depositMethods[safe: 0]?.methods {
+                // If needed to get all methods
+                let paymentMethods = paymentsResponse.depositMethods.compactMap({ $0.methods }).filter({!$0.isEmpty}).flatMap({$0})
 
+                    //                if let paymentMethods = paymentsResponse.depositMethods[safe: 0]?.methods {
+                if !paymentMethods.isEmpty {
                     let simplePaymentMethods = paymentMethods.map({ method -> SimplePaymentMethod in
                         return SimplePaymentMethod(name: method.name, type: method.type)
                     })

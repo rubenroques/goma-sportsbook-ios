@@ -4576,6 +4576,14 @@
 		A9C1C0AB28747FC600E9D6AC /* SelectChatroomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C1C0A628747FC600E9D6AC /* SelectChatroomTableViewCell.swift */; };
 		A9C1C0AC28747FC600E9D6AC /* SelectChatroomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C1C0A628747FC600E9D6AC /* SelectChatroomTableViewCell.swift */; };
 		A9C1C0AD28747FC600E9D6AC /* SelectChatroomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C1C0A628747FC600E9D6AC /* SelectChatroomTableViewCell.swift */; };
+		A9C2D51B29C0D4F000DB95BD /* CashoutInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C2D51A29C0D4F000DB95BD /* CashoutInfo.swift */; };
+		A9C2D51C29C0D4F100DB95BD /* CashoutInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C2D51A29C0D4F000DB95BD /* CashoutInfo.swift */; };
+		A9C2D51D29C0D4F100DB95BD /* CashoutInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C2D51A29C0D4F000DB95BD /* CashoutInfo.swift */; };
+		A9C2D51E29C0D4F100DB95BD /* CashoutInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C2D51A29C0D4F000DB95BD /* CashoutInfo.swift */; };
+		A9C2D51F29C0D4F100DB95BD /* CashoutInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C2D51A29C0D4F000DB95BD /* CashoutInfo.swift */; };
+		A9C2D52029C0D4F100DB95BD /* CashoutInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C2D51A29C0D4F000DB95BD /* CashoutInfo.swift */; };
+		A9C2D52129C0D4F100DB95BD /* CashoutInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C2D51A29C0D4F000DB95BD /* CashoutInfo.swift */; };
+		A9C2D52229C0D4F100DB95BD /* CashoutInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C2D51A29C0D4F000DB95BD /* CashoutInfo.swift */; };
 		A9C3409E28F9A74A0055360B /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C193279991A100151462 /* SearchViewController.swift */; };
 		A9C3409F28F9A74A0055360B /* BetslipHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F4971273804810047169D /* BetslipHistory.swift */; };
 		A9C340A028F9A74A0055360B /* ReceivedTicketMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B6E21D283FCFDC001B570C /* ReceivedTicketMessageTableViewCell.swift */; };
@@ -6154,6 +6162,7 @@
 		A9C1C0962873455000E9D6AC /* SocialAppItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialAppItemCollectionViewCell.swift; sourceTree = "<group>"; };
 		A9C1C09E2874404C00E9D6AC /* ShareTicketFriendGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareTicketFriendGroupViewController.swift; sourceTree = "<group>"; };
 		A9C1C0A628747FC600E9D6AC /* SelectChatroomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectChatroomTableViewCell.swift; sourceTree = "<group>"; };
+		A9C2D51A29C0D4F000DB95BD /* CashoutInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashoutInfo.swift; sourceTree = "<group>"; };
 		A9C3437C28F9A74A0055360B /* GomaSportRadar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GomaSportRadar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9C3438128F9A7DC0055360B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = "en.lproj/LaunchScreen-GOMASportRadar.storyboard"; sourceTree = "<group>"; };
 		A9C3438228F9A7DC0055360B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/LaunchScreen-GOMASportRadar.storyboard"; sourceTree = "<group>"; };
@@ -7899,6 +7908,7 @@
 				A99DE67329A643F800AA24AA /* PaymentStatus.swift */,
 				A90FB7BC29AF67B000D08A7C /* AlertType.swift */,
 				A90FB80B29B2474700D08A7C /* TransactionTypeMapper.swift */,
+				A9C2D51A29C0D4F000DB95BD /* CashoutInfo.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -11106,6 +11116,7 @@
 				450B787B28F58574009229E3 /* SportSelectionViewController.swift in Sources */,
 				450B787C28F58574009229E3 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
 				450B787D28F58574009229E3 /* RadioButton.swift in Sources */,
+				A9C2D51C29C0D4F100DB95BD /* CashoutInfo.swift in Sources */,
 				450B787F28F58574009229E3 /* SocialAppItemCollectionViewCell.swift in Sources */,
 				450B788028F58574009229E3 /* Constants.swift in Sources */,
 				450B788128F58574009229E3 /* YieldSSWampMessage.swift in Sources */,
@@ -11683,6 +11694,7 @@
 				A98708C128DA014800F27348 /* UserProfileViewController.swift in Sources */,
 				A90FB7C429AF67B000D08A7C /* AlertType.swift in Sources */,
 				A9B331D9288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */,
+				A9C2D52229C0D4F100DB95BD /* CashoutInfo.swift in Sources */,
 				A9B6305D29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */,
 				A9DF8E0728DDF64C0083BF56 /* UserInfoMultipleCardView.swift in Sources */,
 				450B7B4628F637FB009229E3 /* ServiceProviderModelMapper+Sports.swift in Sources */,
@@ -12233,6 +12245,7 @@
 				457CBB5A282D27D000ED0F00 /* SimpleRegisterEmailCheckViewController.swift in Sources */,
 				457CBB5B282D27D000ED0F00 /* SSWampMessage.swift in Sources */,
 				45D1ED5F28A150C2001E18E5 /* BusinessModules.swift in Sources */,
+				A9C2D52029C0D4F100DB95BD /* CashoutInfo.swift in Sources */,
 				457CBB5C282D27D000ED0F00 /* NSObject+Extension.swift in Sources */,
 				457CBB5D282D27D000ED0F00 /* Logger.swift in Sources */,
 				457CBB5E282D27D000ED0F00 /* GamesNotificationViewModel.swift in Sources */,
@@ -12560,6 +12573,7 @@
 				457CBD24282D2CD100ED0F00 /* MatchWidgetCellViewModel.swift in Sources */,
 				457CBD25282D2CD100ED0F00 /* BetSuggestedCollectionViewCell.swift in Sources */,
 				457CBD26282D2CD100ED0F00 /* MultipleBettingTicketTableViewCell.swift in Sources */,
+				A9C2D52129C0D4F100DB95BD /* CashoutInfo.swift in Sources */,
 				457CBD27282D2CD100ED0F00 /* Throttler.swift in Sources */,
 				457CBD28282D2CD100ED0F00 /* LimitsResponse.swift in Sources */,
 				A9B6305C29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */,
@@ -13049,6 +13063,7 @@
 				4589C79F282024E400243547 /* SportSelectionViewController.swift in Sources */,
 				4589C7A0282024E400243547 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
 				4589C7A1282024E400243547 /* RadioButton.swift in Sources */,
+				A9C2D51D29C0D4F100DB95BD /* CashoutInfo.swift in Sources */,
 				A9C1C0992873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
 				4589C7A3282024E400243547 /* Constants.swift in Sources */,
 				4589C7A4282024E400243547 /* YieldSSWampMessage.swift in Sources */,
@@ -13672,6 +13687,7 @@
 				45A3308D298976BA008181E9 /* SportSelectionViewController.swift in Sources */,
 				45A3308E298976BA008181E9 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
 				45A3308F298976BA008181E9 /* RadioButton.swift in Sources */,
+				A9C2D51B29C0D4F000DB95BD /* CashoutInfo.swift in Sources */,
 				45A33090298976BA008181E9 /* SocialAppItemCollectionViewCell.swift in Sources */,
 				45A33091298976BA008181E9 /* Constants.swift in Sources */,
 				45A33092298976BA008181E9 /* YieldSSWampMessage.swift in Sources */,
@@ -14393,6 +14409,7 @@
 				45A6BC3A28246A7500D9B416 /* TransactionsTableViewCell.swift in Sources */,
 				45A6BC3B28246A7500D9B416 /* UserRegisterForm.swift in Sources */,
 				45A6BC3C28246A7500D9B416 /* SportsAggregatorRepository.swift in Sources */,
+				A9C2D51F29C0D4F100DB95BD /* CashoutInfo.swift in Sources */,
 				A9DF8E5128E7071B0083BF56 /* UserNotificationInviteTableViewCell.swift in Sources */,
 				45A6BC3D28246A7500D9B416 /* FunctionalUtils.swift in Sources */,
 				45A6BC3E28246A7500D9B416 /* MarketGroup.swift in Sources */,
@@ -15407,6 +15424,7 @@
 				A9C342AD28F9A74A0055360B /* FavoritesManager.swift in Sources */,
 				A9C342AE28F9A74A0055360B /* MyTicketsRootViewController.swift in Sources */,
 				A9C342AF28F9A74A0055360B /* Throwable.swift in Sources */,
+				A9C2D51E29C0D4F100DB95BD /* CashoutInfo.swift in Sources */,
 				A9C342B028F9A74A0055360B /* SSWampSerializer.swift in Sources */,
 				A9C342B128F9A74A0055360B /* NotificationsViewController.swift in Sources */,
 				A9C342B228F9A74A0055360B /* NewMessageViewController.swift in Sources */,

@@ -23,4 +23,7 @@ protocol BettingProvider: Connector {
 
     func placeBets(betTickets: [BetTicket]) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError>
 
+    func calculateCashout(betId: String) -> AnyPublisher<Cashout, ServiceProviderError>
+
+    func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double) -> AnyPublisher<CashoutResult, ServiceProviderError>
 }

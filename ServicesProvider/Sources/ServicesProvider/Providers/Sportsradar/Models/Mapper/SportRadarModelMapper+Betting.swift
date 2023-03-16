@@ -49,6 +49,7 @@ extension SportRadarModelMapper {
         case .allStates: state = .undefined
         case .won: state = .won
         case .lost: state = .lost
+        case .cashedOut: state = .cashedOut
         }
 
         let result: BetResult
@@ -73,6 +74,7 @@ extension SportRadarModelMapper {
         case .allStates: globalState = .undefined
         case .won: globalState = .won
         case .lost: globalState = .lost
+        case .cashedOut: globalState = .cashedOut
         }
 
         let cleanedEventResult = (internalBet.eventResult ?? "").replacingOccurrences(of: " ", with: "")
@@ -148,6 +150,15 @@ extension SportRadarModelMapper {
                                 numberOfBets: betType.numberOfIndividualBets,
                                 potencialReturn: betType.potencialReturn)
         }
+    }
+
+    static func cashout(fromInternalCashout cashout: SportRadarModels.Cashout) -> Cashout {
+        return Cashout(cashoutValue: cashout.cashoutValue, partialCashoutAvailable: cashout.partialCashoutAvailable)
+    }
+
+    static func cashoutResult(fromInternalCashoutResult cashoutResult: SportRadarModels.CashoutResult) -> CashoutResult {
+
+        return CashoutResult(cashoutResultSuccess: cashoutResult.cashoutResult == -1 ? true : false, cashoutReoffer: cashoutResult.cashoutReoffer)
     }
 
 }

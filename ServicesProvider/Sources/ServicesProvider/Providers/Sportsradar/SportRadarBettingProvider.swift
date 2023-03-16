@@ -154,5 +154,27 @@ class SportRadarBettingProvider: BettingProvider, Connector {
         return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
     }
 
+    func calculateCashout(betId: String) -> AnyPublisher<Cashout, ServiceProviderError> {
+        let endpoint = BettingAPIClient.calculateCashout(betId: betId)
+        let publisher: AnyPublisher<SportRadarModels.Cashout, ServiceProviderError> = self.connector.request(endpoint)
+        return publisher
+            .map( { cashout in
+                let cashout = SportRadarModelMapper.cashout(fromInternalCashout: cashout)
+
+                return cashout
+            }).eraseToAnyPublisher()
+    }
+
+    func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double) -> AnyPublisher<CashoutResult, ServiceProviderError> {
+        let endpoint = BettingAPIClient.cashoutBet(betId: betId, cashoutValue: cashoutValue, stakeValue: stakeValue)
+        let publisher: AnyPublisher<SportRadarModels.CashoutResult, ServiceProviderError> = self.connector.request(endpoint)
+        return publisher
+            .map( { cashoutResult in
+                let cashoutResult = SportRadarModelMapper.cashoutResult(fromInternalCashoutResult: cashoutResult)
+
+                return cashoutResult
+            }).eraseToAnyPublisher()
+    }
+
 }
 

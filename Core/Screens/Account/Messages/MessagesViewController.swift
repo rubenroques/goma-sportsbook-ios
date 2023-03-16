@@ -84,6 +84,7 @@ class MessagesViewController: UIViewController {
 
         // TEMP
         self.deleteAllButton.isHidden = true
+        self.markAllReadButton.isHidden = true
     }
 
     // MARK: Layout and Theme
@@ -143,7 +144,7 @@ class MessagesViewController: UIViewController {
                     self?.topTitleLabel.attributedText = mutableAttributedString
                 }
                 else {
-                    self?.topTitleLabel.text = localized("messages")
+                    self?.topTitleLabel.text = localized("promotions")
                 }
             })
             .store(in: &cancellables)
@@ -304,18 +305,18 @@ extension MessagesViewController: UITableViewDataSource, UITableViewDelegate {
         return 0.01
     }
 
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-
-        let markReadAction = UIContextualAction(style: .normal,
-                                        title: localized("mark_as_read")) { [weak self] (action, view, completionHandler) in
-            self?.handleMarkReadAction(indexPath: indexPath)
-                                            completionHandler(true)
-        }
-
-        markReadAction.image = UIImage(named: "mark_read_grey_icon")
-        markReadAction.backgroundColor = UIColor.App.backgroundSecondary
-
-        // TEMP REMOVE
+//    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+//
+//        let markReadAction = UIContextualAction(style: .normal,
+//                                        title: localized("mark_as_read")) { [weak self] (action, view, completionHandler) in
+//            self?.handleMarkReadAction(indexPath: indexPath)
+//                                            completionHandler(true)
+//        }
+//
+//        markReadAction.image = UIImage(named: "mark_read_grey_icon")
+//        markReadAction.backgroundColor = UIColor.App.backgroundSecondary
+//
+//        // TEMP REMOVE
 //        let deleteAction = UIContextualAction(style: .normal,
 //                                        title: "Delete") { [weak self] (action, view, completionHandler) in
 //            self?.handleDeleteAction(indexPath: indexPath)
@@ -324,13 +325,13 @@ extension MessagesViewController: UITableViewDataSource, UITableViewDelegate {
 //
 //        deleteAction.image = UIImage(named: "delete_grey_icon")
 //        deleteAction.backgroundColor = UIColor.App.backgroundSecondary
-
-        let configuration = UISwipeActionsConfiguration(actions: [markReadAction])
-
-        configuration.performsFirstActionWithFullSwipe = false
-
-        return configuration
-    }
+//
+//        let configuration = UISwipeActionsConfiguration(actions: [markReadAction])
+//
+//        configuration.performsFirstActionWithFullSwipe = false
+//
+//        return configuration
+//    }
 
     func tableView(_ tableView: UITableView,
                    editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
@@ -361,7 +362,7 @@ extension MessagesViewController {
     private static func createTopTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("messages")
+        label.text = localized("promotions")
         label.font = AppFont.with(type: .bold, size: 18)
         label.textAlignment = .center
         return label
@@ -409,7 +410,7 @@ extension MessagesViewController {
     private static func createEmptyStateImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "no_messages_star_icon")
+        imageView.image = UIImage(named: "no_promotions_icon")
         imageView.contentMode = .scaleAspectFit
         return imageView
     }
@@ -417,7 +418,7 @@ extension MessagesViewController {
     private static func createEmptyStateLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("no_messages_yet")
+        label.text = localized("no_promotions_yet")
         label.font = AppFont.with(type: .bold, size: 16)
         label.textAlignment = .center
         return label
@@ -494,7 +495,8 @@ extension MessagesViewController {
         NSLayoutConstraint.activate([
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -25),
-            self.tableView.topAnchor.constraint(equalTo: self.markAllReadButton.bottomAnchor, constant: 10),
+            self.tableView.topAnchor.constraint(equalTo: self.topView.bottomAnchor, constant: 30),
+//            self.tableView.topAnchor.constraint(equalTo: self.markAllReadButton.bottomAnchor, constant: 10),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
         ])
 
@@ -505,7 +507,7 @@ extension MessagesViewController {
             self.emptyStateView.topAnchor.constraint(equalTo: self.topView.bottomAnchor),
             self.emptyStateView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
 
-            self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyStateView.topAnchor, constant: 40),
+            self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyStateView.topAnchor, constant: 100),
             self.emptyStateImageView.widthAnchor.constraint(equalToConstant: 120),
             self.emptyStateImageView.heightAnchor.constraint(equalToConstant: 90),
             self.emptyStateImageView.centerXAnchor.constraint(equalTo: self.emptyStateView.centerXAnchor),

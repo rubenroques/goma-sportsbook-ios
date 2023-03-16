@@ -596,6 +596,18 @@ class PreLiveEventsViewController: UIViewController {
     func changedSport(_ sport: Sport) {
         self.selectedSport = sport
         self.didChangeSport?(sport)
+
+        if self.viewModel.matchListTypePublisher.value != .competitions {
+            UIView.animate(withDuration: 0.32, delay: 0.0, options: .curveEaseOut, animations: {
+                self.competitionsFiltersDarkBackgroundView.alpha = 0.9
+                self.openedCompetitionsFiltersConstraint.constant = 0
+                self.tableView.contentInset.bottom = 16
+                self.competitionsFiltersView.state = .opened
+                self.floatingShortcutsBottomConstraint.constant = -self.tableView.contentInset.bottom
+                self.view.layoutIfNeeded()
+            }, completion: nil)
+
+        }
     }
 
     func openCompetitionsFilters() {

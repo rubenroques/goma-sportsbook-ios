@@ -362,7 +362,6 @@ class PreLiveEventsViewModel: NSObject {
 
         self.popularMatchesDataSource.outrightCompetitions = self.popularOutrightCompetitions
 
-
         //
         self.todayMatchesDataSource.todayMatches = filterTodayMatches(with: self.homeFilterOptions, matches: self.todayMatches)
 
@@ -543,7 +542,12 @@ class PreLiveEventsViewModel: NSObject {
                 self.subscribeCompetitionMatches(forMarketGroupId: marketGroup.id, competitionInfo: competitionInfo)
             }
             else {
-                self.processCompetitionOutrights(competitionInfo: competitionInfo)
+                if let marketGroup = competitionInfo.marketGroups.filter({
+                    $0.name == "Outright"
+                }).first {
+                    self.subscribeCompetitionOutright(forMarketGroupId: marketGroup.id, competitionInfo: competitionInfo)
+                    //self.processCompetitionOutrights(competitionInfo: competitionInfo)
+                }
             }
         }
     }
@@ -582,7 +586,6 @@ class PreLiveEventsViewModel: NSObject {
             }
         }
     }
-
 
     func fetchCompetitionsFilters() {
 
@@ -689,8 +692,6 @@ class PreLiveEventsViewModel: NSObject {
                 let matches = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups)
                 self?.processCompetitionMatches(matches: matches, competitionInfo: competitionInfo)
             case .disconnected:
-                self?.competitions = []
-                self?.competitionsDataSource.competitions = []
                 self?.updateContentList()
             }
         }
@@ -702,8 +703,8 @@ class PreLiveEventsViewModel: NSObject {
         let newCompetition = Competition(id: competitionInfo.id,
                                          name: competitionInfo.name,
                                          matches: matches,
-                                         numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
-        competitionInfo: competitionInfo)
+                                         venue: matches.first?.venue, numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
+                                         competitionInfo: competitionInfo)
 
         self.setMainMarkets(matches: matches)
         self.competitions.append(newCompetition)
@@ -712,15 +713,40 @@ class PreLiveEventsViewModel: NSObject {
 
     }
 
-    private func processCompetitionOutrights(competitionInfo: SportCompetitionInfo) {
+    func subscribeCompetitionOutright(forMarketGroupId marketGroupId: String, competitionInfo: SportCompetitionInfo) {
 
-        // Temp fix
+        Env.servicesProvider.subscribeCompetitionMatches(forMarketGroupId: marketGroupId)
+        .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
+            switch completion {
+            case .finished:
+                ()
+            case .failure:
+                ()
+            }
+        } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
+            switch subscribableContent {
+            case .connected(let subscription):
+                self?.competitionsSubscription = subscription
+            case .contentUpdate(let eventsGroups):
+                if let outrightMatch = ServiceProviderModelMapper.matches(fromEventsGroups: eventsGroups).first {
+                    self?.processCompetitionOutrights(outrightMatch: outrightMatch, competitionInfo: competitionInfo)
+                }
+            case .disconnected:
+                self?.updateContentList()
+            }
+        }
+        .store(in: &cancellables)
+    }
+
+    private func processCompetitionOutrights(outrightMatch: Match, competitionInfo: SportCompetitionInfo) {
+
         let numberOutrightMarkets = competitionInfo.numberOutrightMarkets == "0" ? 1 : Int(competitionInfo.numberOutrightMarkets) ?? 0
 
         let newCompetition = Competition(id: competitionInfo.id,
                                          name: competitionInfo.name,
                                          matches: [],
-                                         numberOutrightMarkets:  numberOutrightMarkets,
+                                         venue: outrightMatch.venue,
+                                         numberOutrightMarkets: numberOutrightMarkets,
                                          competitionInfo: competitionInfo)
 
         self.competitions.append(newCompetition)

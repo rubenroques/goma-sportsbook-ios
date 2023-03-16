@@ -13,6 +13,8 @@ enum BettingAPIClient {
     case calculateReturns(betTicket: BetTicket)
     case getAllowedBetTypes(betTicketSelections: [BetTicketSelection])
     case placeBets(betTickets: [BetTicket])
+    case calculateCashout(betId: String)
+    case cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double)
 }
 
 extension BettingAPIClient: Endpoint {
@@ -29,6 +31,10 @@ extension BettingAPIClient: Endpoint {
             return "/api/betting/fo/allowedBetTypesWithCalculation"
         case .placeBets:
             return "/api/betting/fo/betslip"
+        case .calculateCashout(let betId):
+            return "/api/cashout/fo/cashout/\(betId)/calculate"
+        case .cashoutBet(let betId, _, _):
+            return "/api/cashout/fo/cashout/\(betId)"
         }
     }
     
@@ -74,6 +80,10 @@ extension BettingAPIClient: Endpoint {
         case .getAllowedBetTypes:
             return nil
         case .placeBets:
+            return nil
+        case .calculateCashout:
+            return nil
+        case .cashoutBet:
             return nil
         }
     }
@@ -197,6 +207,19 @@ extension BettingAPIClient: Endpoint {
                        """
             let data = body.data(using: String.Encoding.utf8)!
             return data
+
+        case .calculateCashout:
+            return nil
+
+        case .cashoutBet( _, let cashoutValue, let stakeValue):
+            let body = """
+                       {
+                         "expectedValue": \(cashoutValue),
+                         "stakeValue": \(stakeValue)
+                       }
+                       """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
         }
         
     }
@@ -208,6 +231,8 @@ extension BettingAPIClient: Endpoint {
         case .calculateReturns: return .post
         case .getAllowedBetTypes: return .post
         case .placeBets: return .post
+        case .calculateCashout: return .post
+        case .cashoutBet: return .post
         }
     }
     
@@ -218,6 +243,8 @@ extension BettingAPIClient: Endpoint {
         case .calculateReturns: return false
         case .getAllowedBetTypes: return false
         case .placeBets: return true
+        case .calculateCashout: return true
+        case .cashoutBet: return true
         }
     }
     
@@ -247,6 +274,8 @@ extension BettingAPIClient: Endpoint {
         case .calculateReturns: return TimeInterval(5)
         case .getAllowedBetTypes: return TimeInterval(5)
         case .placeBets: return TimeInterval(60)
+        case .calculateCashout: return TimeInterval(5)
+        case .cashoutBet: return TimeInterval(5)
         }
     }
     

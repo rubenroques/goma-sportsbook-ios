@@ -327,7 +327,8 @@ extension SportRadarRestAPIClient: Endpoint {
             return SportRadarConstants.servicesRestHostname
 
         case .marketsFilter:
-            return SportRadarConstants.sportRadarFrontEndURL
+            return SportRadarConstants.sportRadarLegacyFrontEndURL
+//            return SportRadarConstants.sportRadarFrontEndURL
             
         case .fieldWidgetId:
             return SportRadarConstants.servicesRestHostname

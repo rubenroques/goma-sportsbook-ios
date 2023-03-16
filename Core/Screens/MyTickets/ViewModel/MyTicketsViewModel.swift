@@ -189,7 +189,8 @@ class MyTicketsViewModel: NSObject {
         Env.servicesProvider.getResolvedBetsHistory(pageIndex: page)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
-                if case .failure = completion {
+                if case let .failure(error) = completion {
+                    Logger.log("loadResolvedTickets error \(error)")
                     self?.clearData()
                 }
                 self?.isLoadingTickets.send(false)
@@ -265,7 +266,8 @@ class MyTicketsViewModel: NSObject {
         Env.servicesProvider.getWonBetsHistory(pageIndex: page)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
-                if case .failure = completion {
+                if case let .failure(error) = completion {
+                    Logger.log("loadWonTickets error \(error)")
                     self?.clearData()
                 }
                 self?.isLoadingTickets.send(false)
@@ -369,7 +371,7 @@ class MyTicketsViewModel: NSObject {
             return viewModel
         }
         else {
-            let viewModel =  MyTicketCellViewModel(ticket: ticket)
+            let viewModel = MyTicketCellViewModel(ticket: ticket)
             viewModel.requestDataRefreshAction = { [weak self] in
                 self?.refresh()
                 

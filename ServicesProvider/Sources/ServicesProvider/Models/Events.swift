@@ -328,6 +328,7 @@ public struct SportRegion: Codable {
     public var name: String?
     public var numberEvents: String
     public var numberOutrightEvents: String
+    public var country: Country?
 
     enum CodingKeys: String, CodingKey {
         case id = "idfwbonavigation"

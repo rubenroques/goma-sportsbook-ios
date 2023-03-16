@@ -194,7 +194,12 @@ extension ServiceProviderModelMapper {
         let competitionGroups = sportRegions.map({ sportRegion in
 
             if let regionCompetitions = regionCompetitions[sportRegion.id] {
-                let competitionGroup = CompetitionGroup(id: sportRegion.id, name: sportRegion.name ?? "", aggregationType: .region, competitions: self.competitions(fromSportCompetitions: regionCompetitions))
+                var competitionGroup = CompetitionGroup(id: sportRegion.id, name: sportRegion.name ?? "", aggregationType: .region, competitions: self.competitions(fromSportCompetitions: regionCompetitions))
+
+                if let country = sportRegion.country {
+                    competitionGroup.country = Self.country(fromServiceProviderCountry: country)
+                }
+                
                 return competitionGroup
             }
 

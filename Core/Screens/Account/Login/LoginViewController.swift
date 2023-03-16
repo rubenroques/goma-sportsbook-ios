@@ -109,6 +109,15 @@ class LoginViewController: UIViewController {
                     }
                 })
                 .store(in: &cancellables)
+
+            paymentsDropIn.showPaymentStatus = { [weak self] paymentStatus in
+
+                if paymentStatus == .authorised {
+                    Env.userSessionStore.refreshUserWallet()
+                }
+
+                self?.showPaymentStatusAlert(paymentStatus: paymentStatus)
+            }
         }
 
     }
@@ -329,6 +338,7 @@ class LoginViewController: UIViewController {
         }
 
         self.present(registerNavigationController, animated: true)
+
     }
 
     private func showRegisterFeedbackViewController(onNavigationController navigationController: UINavigationController) {
@@ -375,6 +385,9 @@ class LoginViewController: UIViewController {
 
     private func showDepositOnRegisterViewController(onNavigationController navigationController: UINavigationController) {
         let depositOnRegisterViewController = DepositOnRegisterViewController()
+
+        self.depositOnRegisterViewController = depositOnRegisterViewController
+
         depositOnRegisterViewController.didTapBackButtonAction = {
             navigationController.popViewController(animated: true)
         }
@@ -571,8 +584,6 @@ class LoginViewController: UIViewController {
 
         if let paymentDropIn = self.paymentsDropIn?.setupPaymentDropIn() {
 
-            paymentDropIn.delegate = self.paymentsDropIn.self
-
             self.dropInComponent = paymentDropIn
 
             if let depositOnRegisterViewController {
@@ -580,6 +591,36 @@ class LoginViewController: UIViewController {
             }
 
         }
+
+    }
+
+    private func showPaymentStatusAlert(paymentStatus: PaymentStatus) {
+        var alertTitle = ""
+        var alertMessage = ""
+
+        switch paymentStatus {
+        case .authorised:
+            alertTitle = localized("payment_authorized")
+            alertMessage = localized("payment_authorized_message")
+        case .refused:
+            alertTitle = localized("payment_refused")
+            alertMessage = localized("payment_refused_message")
+        }
+
+        let alert = UIAlertController(title: alertTitle,
+                                      message: alertMessage,
+                                      preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+
+            if paymentStatus == .authorised {
+                Env.userSessionStore.refreshUserWallet()
+
+                self?.depositOnRegisterViewController?.dismiss(animated: true)
+            }
+        }))
+
+        self.depositOnRegisterViewController?.present(alert, animated: true, completion: nil)
 
     }
 
