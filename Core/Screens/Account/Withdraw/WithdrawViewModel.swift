@@ -23,55 +23,106 @@ class WithdrawViewModel: NSObject {
     var maximumValue: CurrentValueSubject<String, Never> = .init("")
     var showWithdrawalStatus: (() -> Void)?
 
+    var ibanPaymentDetails: BankPaymentDetail?
+    var shouldShowIbanScreen: (() -> Void)?
+
     // MARK: Lifetime and Cycle
     override init() {
         super.init()
 
         self.getWithdrawalMethods()
+        self.getPaymentInfo()
     }
 
     // MARK: Functions
-    func getWithdrawInfo(amountText: String) {
-        self.isLoadingPublisher.send(true)
+    private func getPaymentInfo() {
 
-        let amountText = amountText
-        var amount = ""
+        Env.servicesProvider.getPaymentInformation()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
 
-        if amountText.contains(",") {
-            amount = amountText.replacingOccurrences(of: ",", with: ".")
-        }
-        else {
-            amount = amountText
-        }
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("PAYMENT INFO ERROR: \(error)")
 
-        if let withdrawalAmount = Double(amount),
-           let withdrawalMethod = self.withdrawalMethods.first?.paymentMethod {
+                }
 
-            Env.servicesProvider.processWithdrawal(paymentMethod: withdrawalMethod, amount: withdrawalAmount)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { [weak self] completion in
+            }, receiveValue: { [weak self] paymentInfo in
+                print("PAYMENT INFO: \(paymentInfo)")
 
-                    switch completion {
-                    case .finished:
-                        ()
-                    case .failure(let error):
-                        print("PROCESS WITHDRAWAL ERROR: \(error)")
-                        switch error {
-                        case .errorMessage(let message):
-                            self?.showErrorAlertTypePublisher.send(.error(message: message))
-                        default:
-                            ()
+                let paymentDetails = paymentInfo.data.filter({
+                    $0.details.isNotEmpty
+                })
+
+                if paymentDetails.isNotEmpty {
+
+                    if let bankPaymentDetail = paymentDetails.filter({
+                        $0.type == "BANK"
+                    }).first,
+                       let ibanPaymentDetail = bankPaymentDetail.details.filter({
+                           $0.key == "IBAN"
+                       }).first {
+
+                        if ibanPaymentDetail.value != "" {
+                            self?.ibanPaymentDetails = ibanPaymentDetail
                         }
-                        self?.isLoadingPublisher.send(false)
                     }
 
-                }, receiveValue: { [weak self] processWithdrawalResponse in
+                }
 
-                    self?.showWithdrawalStatus?()
+            })
+            .store(in: &cancellables)
+    }
 
-                    self?.isLoadingPublisher.send(false)
-                })
-                .store(in: &cancellables)
+    func getWithdrawInfo(amountText: String) {
+
+        if self.ibanPaymentDetails == nil {
+            self.shouldShowIbanScreen?()
+        }
+        else {
+            self.isLoadingPublisher.send(true)
+
+            let amountText = amountText
+            var amount = ""
+
+            if amountText.contains(",") {
+                amount = amountText.replacingOccurrences(of: ",", with: ".")
+            }
+            else {
+                amount = amountText
+            }
+
+            if let withdrawalAmount = Double(amount),
+               let withdrawalMethod = self.withdrawalMethods.first?.paymentMethod {
+
+                Env.servicesProvider.processWithdrawal(paymentMethod: withdrawalMethod, amount: withdrawalAmount)
+                    .receive(on: DispatchQueue.main)
+                    .sink(receiveCompletion: { [weak self] completion in
+
+                        switch completion {
+                        case .finished:
+                            ()
+                        case .failure(let error):
+                            print("PROCESS WITHDRAWAL ERROR: \(error)")
+                            switch error {
+                            case .errorMessage(let message):
+                                self?.showErrorAlertTypePublisher.send(.error(message: message))
+                            default:
+                                ()
+                            }
+                            self?.isLoadingPublisher.send(false)
+                        }
+
+                    }, receiveValue: { [weak self] processWithdrawalResponse in
+
+                        self?.showWithdrawalStatus?()
+
+                        self?.isLoadingPublisher.send(false)
+                    })
+                    .store(in: &cancellables)
+            }
         }
 
 //        var currency = ""

@@ -794,6 +794,26 @@ extension ServicesProviderClient {
         return privilegedAccessManager.cancelWithdrawal(paymentId: paymentId)
     }
 
+    public func getPaymentInformation() -> AnyPublisher<PaymentInformation, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getPaymentInformation()
+    }
+
+    public func addPaymentInformation(type: String, fields: String) -> AnyPublisher<AddPaymentInformationResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.addPaymentInformation(type: type, fields: fields)
+    }
+
     public func getTransactionsHistory(startDate: String, endDate: String, transactionType: String? = nil, pageNumber: Int? = nil) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager

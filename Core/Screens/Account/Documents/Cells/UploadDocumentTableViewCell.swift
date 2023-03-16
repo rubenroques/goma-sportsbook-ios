@@ -67,6 +67,7 @@ class UploadDocumentTableViewCell: UITableViewCell {
     var finishedUploading: (() -> Void)?
     var shouldRedrawViews: (() -> Void)?
     var shouldShowUploadingError: ((String) -> Void)?
+    var isSingleDocument: Bool = false
 
     // MARK: Lifetime and Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -92,6 +93,7 @@ class UploadDocumentTableViewCell: UITableViewCell {
 
         self.stackView.removeAllArrangedSubviews()
 
+        self.isSingleDocument = false
     }
 
     override func layoutSubviews() {
@@ -104,6 +106,8 @@ class UploadDocumentTableViewCell: UITableViewCell {
     }
 
     private func commonInit() {
+
+        self.isSingleDocument = false
     }
 
     private func setupWithTheme() {
@@ -146,7 +150,12 @@ class UploadDocumentTableViewCell: UITableViewCell {
                 }
 
                 documentView.finishedUploading = { [weak self] in
-                    self?.showAddAnotherView()
+
+                    if let isSingleDocument = self?.isSingleDocument,
+                       !isSingleDocument {
+                        self?.showAddAnotherView()
+                    }
+
                     self?.finishedUploading?()
                 }
 

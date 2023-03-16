@@ -53,6 +53,7 @@ enum FileState {
 enum DocumentTypeCode {
     case identification
     case proofAddress
+    case ibanProof
 
     init?(code: String) {
 
@@ -61,6 +62,9 @@ enum DocumentTypeCode {
         }
         else if code == "OTHERS" {
             self = .proofAddress
+        }
+        else if code == "RIB" {
+            self = .ibanProof
         }
         else {
             return nil
@@ -73,6 +77,8 @@ enum DocumentTypeCode {
             return localized("identification")
         case .proofAddress:
             return localized("proof_of_address")
+        case .ibanProof:
+            return localized("iban_proof")
         }
     }
 }

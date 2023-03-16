@@ -471,6 +471,24 @@ class HeaderTextFieldView: NibView {
         self.showingTipLabel = true
     }
 
+    func showBorderState(state: FieldState) {
+
+        switch state {
+        case .error:
+            self.containerView.layer.borderColor = UIColor.systemRed.cgColor
+            self.showingTipLabel = true
+        case .hidden:
+            if !self.showingTipLabel {
+                return
+            }
+            self.showingTipLabel = false
+            self.containerView.layer.borderColor = highlightColor.cgColor
+        default:
+            ()
+        }
+
+    }
+
     func showTip(text: String, color: UIColor = .systemRed) {
 
         tipLabel.text = text
