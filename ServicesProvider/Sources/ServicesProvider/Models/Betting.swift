@@ -140,6 +140,16 @@ public struct BetTicket: Codable {
 public enum OddFormat: Codable {
     case fraction(numerator: Int, denominator: Int)
     case european(odd: Double)
+
+    var fractionOdd: (numerator: Int, denominator: Int)? {
+        switch self {
+        case .fraction(let numerator, let denominator):
+            return (numerator: numerator, denominator: denominator)
+        case .european:
+            return nil
+        }
+    }
+
 }
 
 public struct BetTicketSelection: Codable {

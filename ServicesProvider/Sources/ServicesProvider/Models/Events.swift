@@ -198,7 +198,7 @@ public class Market: Codable {
         self.eventName = try container.decodeIfPresent(String.self, forKey: .eventName)
         self.isMainOutright = try container.decodeIfPresent(Bool.self, forKey: .isMainOutright)
         self.eventMarketCount = try container.decodeIfPresent(Int.self, forKey: .eventMarketCount)
-        self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? false
+        self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? true
     }
 
 }

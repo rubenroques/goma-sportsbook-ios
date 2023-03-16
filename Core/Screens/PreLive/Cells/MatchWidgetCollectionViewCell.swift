@@ -508,7 +508,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }, receiveValue: { [weak self] updatedMatch in
                 self?.viewModel?.match = updatedMatch
 
-                
                 self?.dateLabel.text = "\(viewModel.startDateString)"
                 self?.timeLabel.text = "\(viewModel.startTimeString)"
 
@@ -534,11 +533,14 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 .sink(receiveCompletion: { completion in
                     print("marketSubscriber subscribeToEventMarketUpdates completion: \(completion)")
                 }, receiveValue: { [weak self] (marketUpdated: Market) in
+
                     if marketUpdated.isAvailable {
                         self?.showMarketButtons()
+                        print("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will show \n")
                     }
                     else {
-                        self?.showSuspendedView() // self?.showClosedView()
+                        self?.showSuspendedView()
+                        print("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will hide \n")
                     }
                 })
 

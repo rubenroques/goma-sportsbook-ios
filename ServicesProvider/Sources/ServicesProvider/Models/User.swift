@@ -200,30 +200,38 @@ public class SignUpForm {
     public var nationalityIsoCode: String
     public var currencyCode: String
 
-    public var firstName: String?
-    public var lastName: String?
+    public var firstName: String
+    public var lastName: String
 
-    public var gender: String?
-    public var address: String?
-    public var province: String?
+    public var gender: String
+    public var address: String
+
     public var city: String
+    public var postCode: String
     public var countryIsoCode: String
+
+    public var birthDepartment: String
+    public var streetNumber: String
+    public var birthCountry: String
+    public var birthCity: String
 
     public var bonusCode: String?
     public var receiveMarketingEmails: Bool?
 
     public var avatarName: String?
-    public var placeOfBirth: String?
     public var additionalStreetAddress: String?
     public var godfatherCode: String?
 
     public init(email: String, username: String, password: String, birthDate: Date,
                 mobilePrefix: String, mobileNumber: String, nationalityIsoCode: String,
-                currencyCode: String, firstName: String? = nil, lastName: String? = nil,
-                gender: String? = nil, address: String? = nil, province: String? = nil,
-                city: String, countryIsoCode: String, bonusCode: String? = nil,
+                currencyCode: String, firstName: String, lastName: String,
+                gender: String, address: String, city: String,
+                countryIsoCode: String, bonusCode: String? = nil,
                 receiveMarketingEmails: Bool? = nil, avatarName: String? = nil,
-                placeOfBirth: String? = nil, additionalStreetAddress: String? = nil, godfatherCode: String? = nil) {
+                godfatherCode: String? = nil, postCode: String,
+                birthDepartment: String, streetNumber: String,
+                birthCountry: String, birthCity: String) {
+
         self.email = email
         self.username = username
         self.password = password
@@ -236,15 +244,18 @@ public class SignUpForm {
         self.lastName = lastName
         self.gender = gender
         self.address = address
-        self.province = province
         self.city = city
         self.countryIsoCode = countryIsoCode
         self.bonusCode = bonusCode
         self.receiveMarketingEmails = receiveMarketingEmails
         self.avatarName = avatarName
-        self.placeOfBirth = placeOfBirth
-        self.additionalStreetAddress = additionalStreetAddress
         self.godfatherCode = godfatherCode
+        self.postCode = postCode
+        self.birthDepartment = birthDepartment
+        self.streetNumber = streetNumber
+        self.birthCountry = birthCountry
+        self.birthCity = birthCity
+        
     }
 
 }

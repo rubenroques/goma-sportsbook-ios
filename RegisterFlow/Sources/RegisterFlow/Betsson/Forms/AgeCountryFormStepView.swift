@@ -22,10 +22,48 @@ class AgeCountryFormStepViewModel {
     var birthDate: CurrentValueSubject<Date?, Never>
     var placeBirth: CurrentValueSubject<String?, Never>
 
+    var departmentOfBirth: CurrentValueSubject<String?, Never>
+
     let defaultCountryIso3Code: String
 
     var shouldSuggestAddresses: Bool {
         return (self.selectedCountry.value?.iso3Code ?? "") == defaultCountryIso3Code
+    }
+
+    var shouldShowDepartmentOfBirth: AnyPublisher<Bool, Never> {
+        return self.selectedCountry.map { (optionalCountry: Country?) -> Bool in
+            if let optionalCountry {
+                return optionalCountry.iso3Code == "FRA"
+            }
+            else {
+                return false
+            }
+        }.eraseToAnyPublisher()
+    }
+
+    var isDepartmentOfBirthValid: AnyPublisher<Bool, Never> {
+        return Publishers.CombineLatest(self.selectedCountry, self.departmentOfBirth)
+            .map { (selectedCountry, departmentOfBirth) -> Bool in
+                if let selectedCountry = selectedCountry, let departmentOfBirth = departmentOfBirth {
+                    if selectedCountry.iso3Code != "FRA" && departmentOfBirth == "99" {
+                        return true
+                    }
+                    else if selectedCountry.iso3Code == "FRA" && self.isValidFrenchDepartmentCode(departmentOfBirth) {
+                        return true
+                    }
+                }
+                return false
+            }
+            .eraseToAnyPublisher()
+
+//        self.selectedCountry.map { (optionalCountry: Country?) -> Bool in
+//            if let optionalCountry {
+//                return optionalCountry.iso3Code == "FRA"
+//            }
+//            else {
+//                return false
+//            }
+//        }.eraseToAnyPublisher()
     }
 
     var selectedCountry: CurrentValueSubject<Country?, Never> = .init(nil)
@@ -77,9 +115,13 @@ class AgeCountryFormStepViewModel {
     }
 
     var isFormCompleted: AnyPublisher<Bool, Never> {
-        return Publishers.CombineLatest3(self.birthDate, self.selectedCountry, self.placeBirth)
-            .map { date, country, place -> Bool in
-                return date != nil && country != nil && place != nil && !(place?.isEmpty ?? true)
+        return Publishers.CombineLatest4(self.birthDate, self.selectedCountry, self.placeBirth, self.departmentOfBirth)
+            .map { date, country, place, departmentOfBirth -> Bool in
+                var isDepartmentOfBirthValid = self.isValidFrenchDepartmentCode(departmentOfBirth ?? "")
+                if let iso3Code = country?.iso3Code, iso3Code != "FRA" {
+                    isDepartmentOfBirthValid = (departmentOfBirth ?? "99") == "99"
+                }
+                return date != nil && country != nil && place != nil && !(place?.isEmpty ?? true) && isDepartmentOfBirthValid
             }.eraseToAnyPublisher()
     }
 
@@ -88,6 +130,7 @@ class AgeCountryFormStepViewModel {
          countryState: CountryState = .idle,
          birthDate: Date?,
          selectedCountry: Country?,
+         departmentOfBirth: String?,
          placeBirth: String?,
 
          serviceProvider: ServicesProviderClient,
@@ -103,12 +146,31 @@ class AgeCountryFormStepViewModel {
         self.birthDate = .init(birthDate)
         self.placeBirth = .init(placeBirth)
 
+        self.departmentOfBirth = .init(departmentOfBirth)
+
         self.serviceProvider = serviceProvider
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
 
         self.adresseFrancaiseClient = AdresseFrancaiseClient()
 
         self.loadCountries()
+
+        self.selectedCountry
+            .sink { [weak self] country in
+                if let country = country {
+                    if country.iso3Code != "FRA" {
+                        self?.setDeparmentOfBirth("99") // deparment Of Birth not required for this country
+                    }
+                    else if self?.departmentOfBirth.value == "99" {
+                        self?.setDeparmentOfBirth(nil)
+                    }
+                }
+                else {
+                    self?.setDeparmentOfBirth("99") // no country found
+                }
+            }
+            .store(in: &self.cancellables)
+
     }
 
     func loadCountries() {
@@ -147,20 +209,24 @@ class AgeCountryFormStepViewModel {
         self.userRegisterEnvelopUpdater.setCountryBirth(country)
     }
 
+    func setDeparmentOfBirth(_ departmentOfBirth: String?) {
+        self.departmentOfBirth.send(departmentOfBirth)
+        self.userRegisterEnvelopUpdater.setDepartmentOfBirth(departmentOfBirth)
+    }
+
     func setPlaceOfBirth(_ place: String) {
         self.placeBirth.send(place)
         self.userRegisterEnvelopUpdater.setPlaceBirth(place)
     }
 
-    func requestCommuneAutoCompletion(forQuery query: String) -> AnyPublisher<[String], Never> {
+    func requestCommuneAutoCompletion(forQuery query: String) -> AnyPublisher<[AddressSearchResult], Never> {
         return self.adresseFrancaiseClient
             .searchCommune(query: query)
             .map { results in
-                let labels = results.map(\.label)
-                let uniqueLabels = NSOrderedSet(array: labels).prefix(4)
-                return Array(uniqueLabels) as! [String]
+                let addressResults  = results.map({ AddressSearchResult(title: $0.label, city: $0.city, street: $0.street, postcode: $0.postcode) })
+                return Array(addressResults.prefix(4))
             }
-            .replaceError(with: [String]() )
+            .replaceError(with: [AddressSearchResult]() )
             .eraseToAnyPublisher()
     }
 
@@ -172,12 +238,22 @@ class AgeCountryFormStepViewModel {
         return stringCountry
     }
 
+    private func isValidFrenchDepartmentCode(_ input: String) -> Bool {
+        let departmentCodePattern = "^(0[1-9]|[1-8]\\d|9[0-5]|2[ABab]|97[1-6])$"
+        let departmentCodeRegex = try! NSRegularExpression(pattern: departmentCodePattern)
+        let range = NSRange(location: 0, length: input.utf16.count)
+
+        return departmentCodeRegex.firstMatch(in: input, options: [], range: range) != nil
+    }
+
 }
 
 class AgeCountryFormStepView: FormStepView {
 
     private lazy var dateHeaderTextFieldView: HeaderTextFieldView = Self.createHeaderTextFieldView()
     private lazy var countryHeaderTextFieldView: HeaderTextFieldView = Self.createHeaderTextFieldView()
+
+    private lazy var departmentBirthHeaderTextFieldView: HeaderTextFieldView = Self.createHeaderTextFieldView()
 
     private lazy var placeHeaderTextFieldView: HeaderTextFieldView = Self.createHeaderTextFieldView()
     private lazy var placeSearchCompletionView: SearchCompletionView = Self.createPlaceSearchCompletionView()
@@ -211,6 +287,7 @@ class AgeCountryFormStepView: FormStepView {
         NSLayoutConstraint.activate([
             self.dateHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
             self.countryHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
+            self.departmentBirthHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
 
             self.placeHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
             placeContainerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 80),
@@ -226,12 +303,13 @@ class AgeCountryFormStepView: FormStepView {
 
         self.stackView.addArrangedSubview(self.dateHeaderTextFieldView)
         self.stackView.addArrangedSubview(self.countryHeaderTextFieldView)
+        self.stackView.addArrangedSubview(self.departmentBirthHeaderTextFieldView)
         self.stackView.addArrangedSubview(placeContainerView)
 
         self.titleLabel.text = self.viewModel.title
         
         self.dateHeaderTextFieldView.setReturnKeyType(.next)
-        self.dateHeaderTextFieldView.setPlaceholderText("Date of Birth")
+        self.dateHeaderTextFieldView.setPlaceholderText("Date of birth")
         self.dateHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.countryHeaderTextFieldView.becomeFirstResponder()
         }
@@ -240,24 +318,27 @@ class AgeCountryFormStepView: FormStepView {
         self.dateHeaderTextFieldView.datePicker.maximumDate = maxDate
 
         self.countryHeaderTextFieldView.setReturnKeyType(.continue)
-        self.countryHeaderTextFieldView.setPlaceholderText("Country")
-        self.countryHeaderTextFieldView.didTapReturn = { [weak self] in
-            self?.placeHeaderTextFieldView.becomeFirstResponder()
-        }
+        self.countryHeaderTextFieldView.setPlaceholderText("Country of birth")
         self.countryHeaderTextFieldView.shouldBeginEditing = { [weak self] in
             self?.showCountrySelector()
             return false
         }
 
+        self.departmentBirthHeaderTextFieldView.setReturnKeyType(.continue)
+        self.departmentBirthHeaderTextFieldView.setPlaceholderText("Department of birth")
+        self.departmentBirthHeaderTextFieldView.didTapReturn = { [weak self] in
+            self?.placeHeaderTextFieldView.becomeFirstResponder()
+        }
+
         self.placeHeaderTextFieldView.setReturnKeyType(.continue)
-        self.placeHeaderTextFieldView.setPlaceholderText("Place of Birth")
+        self.placeHeaderTextFieldView.setPlaceholderText("Place of birth")
         self.placeHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.placeHeaderTextFieldView.resignFirstResponder()
         }
 
 
         self.placeSearchCompletionView.didSelectSearchCompletion = { [weak self] searchCompletion in
-            self?.placeHeaderTextFieldView.setText(searchCompletion)
+            self?.placeHeaderTextFieldView.setText(searchCompletion.title)
             self?.placeHeaderTextFieldView.resignFirstResponder()
             self?.placeSearchCompletionView.clearResults()
         }
@@ -277,12 +358,12 @@ class AgeCountryFormStepView: FormStepView {
                 guard
                     let self = self
                 else {
-                    return Just([String]()).eraseToAnyPublisher()
+                    return Just([AddressSearchResult]()).eraseToAnyPublisher()
                 }
                 return self.viewModel.requestCommuneAutoCompletion(forQuery: query)
             }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] suggestions in
+            .sink { [weak self] (suggestions: [AddressSearchResult]) in
                 UIView.animate(withDuration: 0.1) {
                     self?.placeSearchCompletionView.presentResults(suggestions)
                 }
@@ -295,10 +376,40 @@ class AgeCountryFormStepView: FormStepView {
             }
             .store(in: &self.cancellables)
 
+        self.departmentBirthHeaderTextFieldView.textPublisher
+            .sink { [weak self] text in
+                self?.viewModel.setDeparmentOfBirth(text)
+            }
+            .store(in: &self.cancellables)
+
         self.viewModel.selectedCountryText
             .receive(on: DispatchQueue.main)
             .sink { [weak self] countryText in
                 self?.countryHeaderTextFieldView.setText(countryText ?? "")
+            }
+            .store(in: &self.cancellables)
+
+        self.viewModel.shouldShowDepartmentOfBirth
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] shouldShowDepartmentOfBirth in
+                self?.departmentBirthHeaderTextFieldView.isHidden = !shouldShowDepartmentOfBirth
+            }
+            .store(in: &self.cancellables)
+
+        self.viewModel.isDepartmentOfBirthValid
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isDepartmentOfBirthValid in
+                if (self?.departmentBirthHeaderTextFieldView.text.isEmpty ?? true) {
+                    self?.departmentBirthHeaderTextFieldView.hideTipAndError()
+                }
+                else {
+                    if isDepartmentOfBirthValid {
+                        self?.departmentBirthHeaderTextFieldView.hideTipAndError()
+                    }
+                    else {
+                        self?.departmentBirthHeaderTextFieldView.showErrorOnField(text: "This departement of birth is invalid", color: AppColor.alertError)
+                    }
+                }
             }
             .store(in: &self.cancellables)
 
@@ -316,6 +427,16 @@ class AgeCountryFormStepView: FormStepView {
         if let placeOfBirth = self.viewModel.placeBirth.value {
             self.placeHeaderTextFieldView.setText(placeOfBirth)
         }
+
+        self.viewModel.departmentOfBirth
+            .sink { departmentOfBirth in
+                self.departmentBirthHeaderTextFieldView.setText(departmentOfBirth ?? "", shouldPublish: false)
+            }
+            .store(in: &self.cancellables)
+
+//        if let departmentOfBirth = self.viewModel.departmentOfBirth.value {
+//            self.departmentBirthHeaderTextFieldView.setText(departmentOfBirth)
+//        }
 
         if let birthDate = self.viewModel.birthDate.value {
             let dateFormatter = DateFormatter()
@@ -340,6 +461,10 @@ class AgeCountryFormStepView: FormStepView {
         self.countryHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.countryHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.countryHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
+
+        self.departmentBirthHeaderTextFieldView.setViewColor(AppColor.inputBackground)
+        self.departmentBirthHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
+        self.departmentBirthHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
 
         self.placeHeaderTextFieldView.setViewColor(AppColor.inputBackground)
         self.placeHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)

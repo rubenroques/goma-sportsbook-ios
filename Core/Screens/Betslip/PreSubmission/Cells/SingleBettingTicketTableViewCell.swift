@@ -348,20 +348,22 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
             self.addAmountValue(previousBettingAmount)
         }
         
-        self.oddAvailabilitySubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
-            .receive(on: DispatchQueue.main)
-            .map({ (bettingOffer: BettingTicket) -> Bool in
-                return bettingOffer.isAvailable
-            })
-            .sink(receiveValue: { [weak self] isBetAvailable in
-                self?.suspendedBettingOfferView.isHidden = isBetAvailable
-            })
-        
+//        self.oddAvailabilitySubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
+//            .receive(on: DispatchQueue.main)
+//            .map({ (bettingOffer: BettingTicket) -> Bool in
+//                return bettingOffer.isAvailable
+//            })
+//            .sink(receiveValue: { [weak self] isBetAvailable in
+//                self?.suspendedBettingOfferView.isHidden = isBetAvailable
+//            })
+//        
         self.oddSubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
             .map(\.decimalOdd)
             .compactMap({ $0 })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] newOddValue in
+
+                print("betslipdebug \(bettingTicket.id) 5 Single view [\(newOddValue)]")
 
                 if let currentOddValue = self?.currentOddValue {
                     if newOddValue > currentOddValue {

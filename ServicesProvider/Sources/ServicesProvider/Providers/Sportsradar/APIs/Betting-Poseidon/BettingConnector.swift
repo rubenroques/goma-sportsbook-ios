@@ -61,10 +61,10 @@ class BettingConnector: Connector {
         }
         
         return self.session.dataTaskPublisher(for: request)
-            .handleEvents(receiveOutput: { result in
-                print("Betting-NetworkManager [[ requesting ]] ", request, String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "-",
-                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
-            })
+//            .handleEvents(receiveOutput: { result in
+//                print("Betting-NetworkManager [[ requesting ]] ", request, String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "-",
+//                      " [[ response ]] ", String(data: result.data, encoding: .utf8) ?? "!?" )
+//            })
             .tryMap { result -> Data in
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     throw ServiceProviderError.unauthorized

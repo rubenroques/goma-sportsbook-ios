@@ -61,7 +61,8 @@ class BetslipManager: NSObject {
         }
         self.bettingTicketsDictionaryPublisher.send(cachedBetslipTicketsDictionary)
 
-        NotificationCenter.default.publisher(for: .socketConnected)
+        Env.servicesProvider.eventsConnectionStatePublisher
+            .filter({ $0 == .connected })
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
 
@@ -75,13 +76,7 @@ class BetslipManager: NSObject {
                 return Array.init(dictionary.values)
             })
             .sink { [weak self] tickets in
-
                 self?.bettingTicketsPublisher.send(tickets)
-
-                print("Tickets updates")
-                for ticket in tickets {
-                    print("\(ticket.id) \(ticket.outcomeDescription) \(ticket.odd)")
-                }
             }
             .store(in: &cancellables)
 
@@ -120,6 +115,8 @@ class BetslipManager: NSObject {
                 self?.requestMultipleBetslipSelectionState()
             }
             .store(in: &cancellables)
+
+
 
     }
 
@@ -196,14 +193,13 @@ class BetslipManager: NSObject {
                 case .connected(let subscription):
                     self?.bettingTicketServiceProviderSubscriptions[bettingTicket.id] = subscription
                 case .contentUpdate(let market):
-                    print("Betslip subscribeToMarketDetails content retrieved!")
                     let internalMarket = ServiceProviderModelMapper.market(fromServiceProviderMarket: market)
                     self?.updateBettingTickets(ofMarket: internalMarket)
+                    print("betslipdebug \(bettingTicket.id) 3 betslipmanager subcribe [market:\(bettingTicket.marketId)]")
                 case .disconnected:
                     print("Betslip subscribeToMarketDetails disconnected")
                 }
             }
-
         self.bettingTicketsCancellables[bettingTicket.id] = bettingTicketSubscriber
 
     }
@@ -226,6 +222,8 @@ class BetslipManager: NSObject {
                 self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
 
                 self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)
+
+                print("betslipdebug \(outcome.id) 4 betslipmanager update Publisher")
             }
         }
     }

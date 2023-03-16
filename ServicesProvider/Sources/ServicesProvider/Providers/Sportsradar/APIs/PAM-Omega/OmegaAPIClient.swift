@@ -59,23 +59,25 @@ enum OmegaAPIClient {
                 mobileNumber: String,
                 nationalityIso2Code: String,
                 currencyCode: String,
-                firstName: String?,
-                lastName: String?,
-                gender: String?,
-                address: String?,
-                province: String?,
+                firstName: String,
+                lastName: String,
+                gender: String,
+                address: String,
                 city: String,
-                postalCode: String?,
+                postalCode: String,
                 countryIso2Code: String,
-                cardId: String?,
-                securityQuestion: String?,
-                securityAnswer: String?,
+
                 bonusCode: String?,
                 receiveMarketingEmails: Bool?,
                 avatarName: String?,
-                placeOfBirth: String?,
-                additionalStreetAddress: String?,
-                godfatherCode: String?)
+                godfatherCode: String?,
+
+                birthDepartment: String,
+                birthCity: String,
+                birthCountry: String,
+
+                streetNumber: String)
+    
     case updateExtraInfo(placeOfBirth: String?, address2: String?)
 
     case resendVerificationCode(username: String)
@@ -245,13 +247,29 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "mobile", value: phoneNumber)
             ]
 
-        case .signUp(let email, let username, let password,
-                     let birthDate, let mobilePrefix, let mobileNumber, let nationalityIso2Code,
-                     let currencyCode, let firstName, let lastName,
-                     let gender, let address, let province, let city, let postalCode, let countryIso2Code,
-                     let cardId, let securityQuestion, let securityAnswer,
-                     let bonusCode, let receiveMarketingEmails, let avatarName,
-                     let placeOfBirth, let additionalStreetAddress, let godfatherCode):
+        case .signUp(let email,
+                     let username,
+                     let password,
+                     let birthDate,
+                     let mobilePrefix,
+                     let mobileNumber,
+                     let nationalityIso2Code,
+                     let currencyCode,
+                     let firstName,
+                     let lastName,
+                     let gender,
+                     let address,
+                     let city,
+                     let postalCode,
+                     let countryIso2Code,
+                     let bonusCode,
+                     let receiveMarketingEmails,
+                     let avatarName,
+                     let godfatherCode,
+                     let birthDepartment,
+                     let birthCity,
+                     let birthCountry,
+                     let streetNumber):
 
             let phoneNumber = "\(mobilePrefix)\(mobileNumber)".replacingOccurrences(of: "+", with: "")
 
@@ -261,26 +279,27 @@ extension OmegaAPIClient: Endpoint {
             query.append(URLQueryItem(name: "password", value: password))
             query.append(URLQueryItem(name: "email", value: email))
             query.append(URLQueryItem(name: "currency", value: currencyCode))
-            query.append(URLQueryItem(name: "nationality", value: nationalityIso2Code))
+            // query.append(URLQueryItem(name: "nationality", value: nationalityIso2Code))
             query.append(URLQueryItem(name: "mobile", value: phoneNumber))
             query.append(URLQueryItem(name: "city", value: city))
             query.append(URLQueryItem(name: "country", value: countryIso2Code))
+
+            query.append(URLQueryItem(name: "firstName", value: firstName))
+            query.append(URLQueryItem(name: "lastName", value: lastName))
+            query.append(URLQueryItem(name: "gender", value: gender))
+            query.append(URLQueryItem(name: "address", value: address))
+
+            query.append(URLQueryItem(name: "postalCode", value: postalCode))
+            query.append(URLQueryItem(name: "streetNumber", value: streetNumber))
+            query.append(URLQueryItem(name: "birthDepartment", value: birthDepartment))
+            query.append(URLQueryItem(name: "birthCity", value: birthCity))
+            query.append(URLQueryItem(name: "birthCountry", value: birthCountry))
 
             let dateFromatter = DateFormatter()
             dateFromatter.dateFormat = "yyyy-MM-dd"
             let birthDateString = dateFromatter.string(from: birthDate)
             query.append(URLQueryItem(name: "birthDate", value: birthDateString))
 
-            if let firstName = firstName { query.append(URLQueryItem(name: "firstName", value: firstName)) }
-            if let lastName = lastName { query.append(URLQueryItem(name: "lastName", value: lastName)) }
-            if let gender = gender { query.append(URLQueryItem(name: "gender", value: gender)) }
-            if let address = address { query.append(URLQueryItem(name: "address", value: address)) }
-            if let province = province { query.append(URLQueryItem(name: "province", value: province)) }
-
-            if let postalCode = postalCode { query.append(URLQueryItem(name: "postalCode", value: postalCode)) }
-            if let cardId = cardId { query.append(URLQueryItem(name: "idCardNumber", value: cardId)) }
-            if let securityQuestion = securityQuestion { query.append(URLQueryItem(name: "securityQuestion", value: securityQuestion)) }
-            if let securityAnswer = securityAnswer { query.append(URLQueryItem(name: "securityAnswer", value: securityAnswer)) }
 
             if let bonusCode = bonusCode { query.append(URLQueryItem(name: "bonusCode", value: bonusCode)) }
             if let receiveMarketingEmails = receiveMarketingEmails {
@@ -290,8 +309,6 @@ extension OmegaAPIClient: Endpoint {
             let extraInfo = """
                             {
                             "avatar":"\(avatarName ?? "")",
-                            "placeOfBirth":"\(placeOfBirth ?? "")",
-                            "streetLine2":"\(additionalStreetAddress ?? "")",
                             "godfatherCode":"\(godfatherCode ?? "")"
                             }
                             """

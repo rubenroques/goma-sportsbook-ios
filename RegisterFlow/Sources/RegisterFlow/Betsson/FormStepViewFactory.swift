@@ -62,6 +62,7 @@ struct FormStepViewFactory {
                                                                           defaultCountryIso3Code: defaultCountryIso3Code,
                                                                           birthDate: userRegisterEnvelop.dateOfBirth,
                                                                           selectedCountry: userRegisterEnvelop.countryBirth,
+                                                                          departmentOfBirth: userRegisterEnvelop.deparmentOfBirth,
                                                                           placeBirth: userRegisterEnvelop.placeBirth,
                                                                           serviceProvider: serviceProvider,
                                                                           userRegisterEnvelopUpdater: userRegisterEnvelopUpdater)
@@ -73,7 +74,7 @@ struct FormStepViewFactory {
                                                                            countryCodeForSuggestions: defaultCountryIso3Code,
                                                                            place: userRegisterEnvelop.placeAddress,
                                                                            street: userRegisterEnvelop.streetAddress,
-                                                                           additionalStreet: userRegisterEnvelop.additionalStreetAddress,
+                                                                           postcode: userRegisterEnvelop.postcode,
                                                                            userRegisterEnvelopUpdater: userRegisterEnvelopUpdater))
             //
             //

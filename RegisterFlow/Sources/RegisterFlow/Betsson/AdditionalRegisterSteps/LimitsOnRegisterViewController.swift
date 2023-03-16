@@ -261,21 +261,21 @@ public class LimitsOnRegisterViewController: UIViewController {
     }
 
     @objc func didTapBeginnerButton() {
-        self.depositLimitHeaderTextFieldView.setText("40")
-        self.bettingLimitHeaderTextFieldView.setText("40")
-        self.autoPayoutHeaderTextFieldView.setText("40")
+        self.depositLimitHeaderTextFieldView.setText("200")
+        self.bettingLimitHeaderTextFieldView.setText("500")
+        self.autoPayoutHeaderTextFieldView.setText("251")
     }
 
     @objc func didTapIntermediateButton() {
-        self.depositLimitHeaderTextFieldView.setText("400")
-        self.bettingLimitHeaderTextFieldView.setText("400")
-        self.autoPayoutHeaderTextFieldView.setText("400")
+        self.depositLimitHeaderTextFieldView.setText("500")
+        self.bettingLimitHeaderTextFieldView.setText("1000")
+        self.autoPayoutHeaderTextFieldView.setText("1001")
     }
 
     @objc func didTapAdvancedButton() {
-        self.depositLimitHeaderTextFieldView.setText("4000")
-        self.bettingLimitHeaderTextFieldView.setText("4000")
-        self.autoPayoutHeaderTextFieldView.setText("4000")
+        self.depositLimitHeaderTextFieldView.setText("5000")
+        self.bettingLimitHeaderTextFieldView.setText("10000")
+        self.autoPayoutHeaderTextFieldView.setText("10001")
     }
 
     func saveNewLimits() {

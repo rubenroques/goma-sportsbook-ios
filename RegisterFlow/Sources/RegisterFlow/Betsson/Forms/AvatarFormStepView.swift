@@ -16,7 +16,7 @@ class AvatarFormStepViewModel {
     let subtitle: String
     let avatarIconNames: [String]
 
-    var selectedAvatarName: CurrentValueSubject<String?, Never>
+    var selectedAvatarName: CurrentValueSubject<String, Never>
 
     private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
 
@@ -30,7 +30,7 @@ class AvatarFormStepViewModel {
     }
 
     var isFormCompleted: AnyPublisher<Bool, Never> {
-        return self.selectedAvatarName.map({ $0 != nil }).eraseToAnyPublisher()
+        return Just(true).eraseToAnyPublisher()
     }
 
     init(title: String,
@@ -42,7 +42,17 @@ class AvatarFormStepViewModel {
         self.title = title
         self.subtitle = subtitle
         self.avatarIconNames = avatarIconNames
-        self.selectedAvatarName = .init(selectedAvatarName)
+
+        if let selectedAvatarName = selectedAvatarName {
+            self.selectedAvatarName = .init(selectedAvatarName)
+        }
+        else if let first = avatarIconNames.first {
+            self.selectedAvatarName = .init(first)
+        }
+        else {
+            self.selectedAvatarName = .init("avatar1")
+        }
+
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
     }
 
@@ -110,10 +120,8 @@ class AvatarFormStepView: FormStepView {
             self.stackView.addArrangedSubview(lineStackView)
         }
 
-        if let selectedName = self.viewModel.selectedAvatarName.value {
-            self.selectAvatarWithName(selectedName)
-        }
-
+        self.selectAvatarWithName(self.viewModel.selectedAvatarName.value)
+        
     }
 
     public override func layoutSubviews() {

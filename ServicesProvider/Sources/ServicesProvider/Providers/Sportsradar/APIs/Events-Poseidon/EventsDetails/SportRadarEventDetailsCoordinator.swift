@@ -176,6 +176,13 @@ extension SportRadarEventDetailsCoordinator {
         case .updateEventScore(_, _, let homeScore, let awayScore):
             self.storage.updateEventScore(newHomeScore: homeScore, newAwayScore: awayScore)
 
+        case .addMarket(_, let market):
+            for outcome in market.outcomes {
+                if let fractionOdd = outcome.odd.fractionOdd {
+                    self.storage.updateOutcomeOdd(withId: outcome.id, newOddNumerator: String(fractionOdd.numerator), newOddDenominator: String(fractionOdd.denominator))
+                }
+            }
+            self.storage.updateMarketTradability(withId: market.id, isTradable: true)
         case .removeMarket(_, let marketId):
             self.storage.updateMarketTradability(withId: marketId, isTradable: false)
             

@@ -62,7 +62,7 @@ class SportRadarEventsPaginator {
                 let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode)
             else {
-                print("SportRadarEventsPaginator: requestInitialPage - error on subscribe to topic \(error) \(response)")
+                print("SportRadarEventsPaginator: requestInitialPage - error on subscribe to topic")
                 publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
                 return
             }
@@ -122,7 +122,7 @@ class SportRadarEventsPaginator {
                 let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode)
             else {
-                print("SportRadarEventsPaginator: requestNextPage - error on subscribe to topic \(error) \(response)")
+                print("SportRadarEventsPaginator: requestNextPage - error on subscribe to topic")
                 return
             }
             let subscription = Subscription(contentIdentifier: nextPageContentIdentifier,
@@ -222,10 +222,16 @@ extension SportRadarEventsPaginator {
         case .updateEventScore(_, let eventId, let homeScore, let awayScore):
             self.storage.updateEventScore(withId: eventId, newHomeScore: homeScore, newAwayScore: awayScore)
 
+        case .addMarket(_ , let market):
+            for outcome in market.outcomes {
+                if let fractionOdd = outcome.odd.fractionOdd {
+                    self.storage.updateOutcomeOdd(withId: outcome.id, newOddNumerator: String(fractionOdd.numerator), newOddDenominator: String(fractionOdd.denominator))
+                }
+            }
+            self.storage.updateMarketTradability(withId: market.id, isTradable: true)
         case .removeMarket(_, let marketId):
             self.storage.updateMarketTradability(withId: marketId, isTradable: false)
 
-            
         default:
             () // Ignore other cases
         }

@@ -64,6 +64,10 @@ class MyTicketsRootViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        print("MyTicketsRootViewController deinit")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 

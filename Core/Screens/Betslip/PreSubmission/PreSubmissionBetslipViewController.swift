@@ -279,7 +279,9 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.betTypeSegmentControlView = SegmentControlView(options: [localized("single"), localized("multiple"), localized("system")])
         self.betTypeSegmentControlView?.translatesAutoresizingMaskIntoConstraints = false
-        self.betTypeSegmentControlView?.didSelectItemAtIndexAction = self.didChangeSelectedSegmentItem
+        self.betTypeSegmentControlView?.didSelectItemAtIndexAction = { [weak self] index in
+            self?.didChangeSelectedSegmentItem(toIndex: index)
+        }
 
         self.betTypeSegmentControlBaseView.addSubview(self.betTypeSegmentControlView!)
         NSLayoutConstraint.activate([
@@ -398,8 +400,9 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         // Refresh System bet odds
         Env.betslipManager.bettingTicketsPublisher
-            .receive(on: DispatchQueue.main)
+            .removeDuplicates()
             .map(Array.init)
+            .receive(on: DispatchQueue.main)
             .filter({ tickets in
                 tickets.count >= 3
             })
@@ -410,6 +413,9 @@ class PreSubmissionBetslipViewController: UIViewController {
             .store(in: &cancellables)
 
         Publishers.CombineLatest(Env.betslipManager.bettingTicketsPublisher, Env.betslipManager.allowedBetTypesPublisher)
+            .removeDuplicates(by: { leftValue, rightValue in
+                return leftValue.0 == rightValue.0 && leftValue.1 == rightValue.1
+            })
             .receive(on: DispatchQueue.main)
             .sink { [weak self] betTickets, betTypes in
                 let oldSegmentIndex = self?.betTypeSegmentControlView?.selectedItemIndex
@@ -456,6 +462,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             .store(in: &cancellables)
 
         Env.betslipManager.allowedBetTypesPublisher
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] betTypes in
                 let containsSingle = betTypes.first(where: { betType in
@@ -828,21 +835,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                 self?.userBalance = wallet?.total
             })
             .store(in: &cancellables)
-        
-//        Env.userSessionStore.userBalanceWallet
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] wallet in
-//                self?.userBalance = wallet?.amount
-//            })
-//            .store(in: &cancellables)
-
-        Env.everyMatrixClient.serviceStatusPublisher
-            .filter({ $0 == .connected })
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] _ in
-                self?.tableView.reloadData()
-            })
-            .store(in: &cancellables)
 
         self.multipleBettingTicketDataSource.changedFreebetSelectionState = { [weak self] freeBetMultiple in
 
@@ -897,7 +889,6 @@ class PreSubmissionBetslipViewController: UIViewController {
             else {
                 self?.selectedSingleOddsBoost = nil
             }
-
         }
 
         // NOTE: Debounce table reload so the switches can fully animate
@@ -926,18 +917,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                     ()
                 case .failed:
                     ()
-                }
-            })
-            .store(in: &cancellables)
-
-        Env.betslipManager.betBuilderOddPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] betBuilderOdd in
-                if let betBuilderOdd = betBuilderOdd {
-                    self?.updateOddsWithBetBuilder(betBuilderOdds: betBuilderOdd)
-                }
-                else {
-                    self?.updateOddsWithBetBuilder()
                 }
             })
             .store(in: &cancellables)
@@ -1273,7 +1252,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         switch segmentControl.selectedSegmentIndex {
         case 0:
             self.listTypePublisher.value = .simple
-
         case 1:
             self.listTypePublisher.value = .multiple
         case 2:
@@ -1939,12 +1917,12 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
                 cell.configureWithBettingTicket(bettingTicket)
             }
 
-            if self.isBetBuilderActive {
-                cell.updateOddWithBetBuilder(isActive: true, bettingTicket: bettingTicket)
-            }
-            else {
-                cell.updateOddWithBetBuilder(isActive: false, bettingTicket: bettingTicket)
-            }
+//            if self.isBetBuilderActive {
+//                cell.updateOddWithBetBuilder(isActive: true, bettingTicket: bettingTicket)
+//            }
+//            else {
+//                cell.updateOddWithBetBuilder(isActive: false, bettingTicket: bettingTicket)
+//            }
 
             return cell
         }

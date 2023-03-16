@@ -26,11 +26,13 @@ public final class UserRegisterEnvelop: Codable {
 
     public var dateOfBirth: Date?
     public var countryBirth: Country?
+    public var deparmentOfBirth: String?
     public var placeBirth: String?
 
     public var placeAddress: String?
+    public var postcode: String?
     public var streetAddress: String?
-    public var additionalStreetAddress: String?
+    public var streetNumber: String?
 
     public var email: String?
     public var phonePrefixCountry: Country?
@@ -54,10 +56,12 @@ public final class UserRegisterEnvelop: Codable {
                 nickname: String? = nil,
                 dateOfBirth: Date? = nil,
                 countryBirth: Country? = nil,
+                deparmentOfBirth: String? = nil,
                 placeBirth: String? = nil,
                 placeAddress: String? = nil,
+                postcode: String? = nil,
                 streetAddress: String? = nil,
-                additionalStreetAddress: String? = nil,
+                streetNumber: String? = nil,
                 email: String? = nil,
                 phonePrefixCountry: Country? = nil,
                 phoneNumber: String? = nil,
@@ -77,10 +81,12 @@ public final class UserRegisterEnvelop: Codable {
         self.nickname = nickname
         self.dateOfBirth = dateOfBirth
         self.countryBirth = countryBirth
+        self.deparmentOfBirth = deparmentOfBirth
         self.placeBirth = placeBirth
         self.placeAddress = placeAddress
+        self.postcode = postcode
         self.streetAddress = streetAddress
-        self.additionalStreetAddress = additionalStreetAddress
+        self.streetNumber = streetNumber
         self.email = email
         self.phonePrefixCountry = phonePrefixCountry
         self.phoneNumber = phoneNumber
@@ -100,10 +106,10 @@ public final class UserRegisterEnvelop: Codable {
         if self.avatarName == nil || self.nickname.isEmptyOrNil {
             return 1
         }
-        if self.dateOfBirth == nil || self.countryBirth == nil || self.placeBirth.isEmptyOrNil {
+        if self.dateOfBirth == nil || self.countryBirth == nil || self.deparmentOfBirth.isEmptyOrNil || self.placeBirth.isEmptyOrNil {
             return 2
         }
-        if self.placeAddress.isEmptyOrNil || self.streetAddress.isEmptyOrNil {
+        if self.placeAddress.isEmptyOrNil || self.postcode.isEmptyOrNil || self.streetAddress.isEmptyOrNil || self.streetNumber.isEmptyOrNil {
             return 3
         }
         if self.email.isEmptyOrNil || self.phonePrefixCountry == nil || self.phoneNumber.isEmptyOrNil {
@@ -127,10 +133,12 @@ public extension UserRegisterEnvelop {
                                    nickname: "rroques7",
                                    dateOfBirth: Date.init(timeIntervalSince1970: 824848591),
                                    countryBirth: Country.country(withISOCode: "FR"),
+                                   deparmentOfBirth: "2A",
                                    placeBirth: "Paris",
                                    placeAddress: "place name",
+                                   postcode: "83727",
                                    streetAddress: "Long street",
-                                   additionalStreetAddress: "Additional",
+                                   streetNumber: "1",
                                    email: "habee12bi3740@breazeim.com",
                                    phonePrefixCountry: Country.country(withISOCode: "FR"),
                                    phoneNumber: "918437482",
@@ -160,7 +168,11 @@ public extension UserRegisterEnvelop {
             let gender = self.gender,
             let streetAddress = self.streetAddress,
             let birthDate = self.dateOfBirth,
-            let placeAddress = self.placeAddress
+            let placeAddress = self.placeAddress,
+            let postcode = self.postcode,
+            let deparmentOfBirth = self.deparmentOfBirth,
+            let streetNumber = self.streetNumber,
+            let birthCityName = self.placeBirth
         else {
             return nil
         }
@@ -185,15 +197,17 @@ public extension UserRegisterEnvelop {
                                                 lastName: lastName,
                                                 gender: genderString,
                                                 address: streetAddress,
-                                                province: nil,
                                                 city: placeAddress,
-                                                countryIsoCode: countryBirthIsoCode,
+                                                countryIsoCode: "FR",
                                                 bonusCode: self.promoCode,
                                                 receiveMarketingEmails: self.acceptedMarketing,
                                                 avatarName: self.avatarName,
-                                                placeOfBirth: self.placeBirth,
-                                                additionalStreetAddress: self.additionalStreetAddress,
-                                                godfatherCode: self.godfatherCode)
+                                                godfatherCode: self.godfatherCode,
+                                                postCode: postcode,
+                                                birthDepartment: deparmentOfBirth,
+                                                streetNumber: streetNumber,
+                                                birthCountry: countryBirthIsoCode,
+                                                birthCity: birthCityName)
     }
 
 }

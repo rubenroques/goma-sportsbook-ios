@@ -32,6 +32,13 @@ class SportRadarEventsProvider: EventsProvider {
         self.socketConnector = socketConnector
         self.restConnector = restConnector
 
+        self.socketConnector.connectionStatePublisher.sink { completion in
+            print("socketConnector connectionStatePublisher completed")
+        } receiveValue: { [weak self] connectorState in
+            self?.connectionStateSubject.send(connectorState)
+        }
+        .store(in: &self.cancellables)
+
         self.sessionCoordinator.token(forKey: .launchToken)
             .sink { [weak self] launchToken in
                 if let launchTokenValue = launchToken  {
@@ -64,6 +71,8 @@ class SportRadarEventsProvider: EventsProvider {
 
         self.socketConnector.messageSubscriber = self
         self.socketConnector.connect()
+
+
     }
 
     private var liveSportTypesPublisher: CurrentValueSubject<SubscribableContent<[SportType]>, ServiceProviderError>?

@@ -177,25 +177,30 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
 
         self.currentOddValue = bettingTicket.decimalOdd
 
-        if let bettingOfferPublisher = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id) {
-            
-            self.oddAvailabilitySubscriber = bettingOfferPublisher
-                .receive(on: DispatchQueue.main)
-                .eraseToAnyPublisher()
-                .map({ bettingOffer in
-                    return bettingOffer.isAvailable
-                })
-                .sink(receiveValue: { [weak self] isBetAvailable in
-                    self?.suspendedBettingOfferView.isHidden = isBetAvailable
-                })
-        }
-        
+//        self.oddAvailabilitySubscriber?.cancel()
+//        self.oddAvailabilitySubscriber = nil
+//
+//        self.oddAvailabilitySubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
+//            .receive(on: DispatchQueue.main)
+//            .eraseToAnyPublisher()
+//            .map({ bettingOffer in
+//                return bettingOffer.isAvailable
+//            })
+//            .sink(receiveValue: { [weak self] isBetAvailable in
+//                self?.suspendedBettingOfferView.isHidden = isBetAvailable
+//            })
+
+        self.oddSubscriber?.cancel()
+        self.oddSubscriber = nil
+
         self.oddSubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
             .map(\.decimalOdd)
             .compactMap({ $0 })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] newOddValue in
 
+                print("betslipdebug \(bettingTicket.id) 5 Multi view [\(newOddValue)]")
+                
                 if let currentOddValue = self?.currentOddValue {
                     if newOddValue > currentOddValue {
                         self?.highlightOddChangeUp()
@@ -206,9 +211,8 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
                         Logger.log("highlightOddChange Down \(newOddValue) < \(currentOddValue) ")
                     }
                 }
-
                 self?.currentOddValue = newOddValue
-                
+
                 self?.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
             })
 
@@ -223,37 +227,37 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
     }
 
     func updateOddWithBetBuilder(isActive: Bool, bettingTicket: BettingTicket) {
-
-        if isActive {
-            self.oddSubscriber?.cancel()
-            self.oddSubscriber = nil
-            self.oddValueLabel.text = "-.--"
-        }
-        else {
-            if self.oddSubscriber == nil {
-                self.oddSubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
-                    .map(\.decimalOdd)
-                    .compactMap({ $0 })
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveValue: { [weak self] newOddValue in
-
-                        if let currentOddValue = self?.currentOddValue {
-                            if newOddValue > currentOddValue {
-                                self?.highlightOddChangeUp()
-                                Logger.log("highlightOddChange Up \(newOddValue) > \(currentOddValue) ")
-                            }
-                            else if newOddValue < currentOddValue {
-                                self?.highlightOddChangeDown()
-                                Logger.log("highlightOddChange Down \(newOddValue) < \(currentOddValue) ")
-                            }
-                        }
-
-                        self?.currentOddValue = newOddValue
-
-                        self?.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
-                    })
-            }
-        }
+//
+//        if isActive {
+//            self.oddSubscriber?.cancel()
+//            self.oddSubscriber = nil
+//            self.oddValueLabel.text = "-.--"
+//        }
+//        else {
+//            if self.oddSubscriber == nil {
+//                self.oddSubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
+//                    .map(\.decimalOdd)
+//                    .compactMap({ $0 })
+//                    .receive(on: DispatchQueue.main)
+//                    .sink(receiveValue: { [weak self] newOddValue in
+//
+//                        if let currentOddValue = self?.currentOddValue {
+//                            if newOddValue > currentOddValue {
+//                                self?.highlightOddChangeUp()
+//                                Logger.log("highlightOddChange Up \(newOddValue) > \(currentOddValue) ")
+//                            }
+//                            else if newOddValue < currentOddValue {
+//                                self?.highlightOddChangeDown()
+//                                Logger.log("highlightOddChange Down \(newOddValue) < \(currentOddValue) ")
+//                            }
+//                        }
+//
+//                        self?.currentOddValue = newOddValue
+//
+//                        self?.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+//                    })
+//            }
+//        }
     }
 
     @IBAction private func didTapDeleteButton() {

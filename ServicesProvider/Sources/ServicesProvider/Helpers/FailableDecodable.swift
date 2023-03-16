@@ -27,7 +27,7 @@ struct FailableDecodable<Content: Decodable>: Decodable {
             self.content = nil
         }
         catch {
-            print("Uknown error decoding \(error)")
+            // print("Uknown error decoding \(error)")
             self.content = nil
         }
     }

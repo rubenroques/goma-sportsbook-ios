@@ -15,14 +15,14 @@ public struct AdresseFrancaiseClient {
     }
 
     public func searchCommune(query: String) -> AnyPublisher<[AddressResult], AdresseFrancaiseError> {
-        return self.search(query: query, typeFilter: "municipality")
+        return self.search(query: query, fromPostcode: nil, typeFilter: "municipality")
     }
 
-    public func searchStreet(query: String) -> AnyPublisher<[AddressResult], AdresseFrancaiseError> {
-        return self.search(query: query, typeFilter: "street")
+    public func searchStreet(query: String, fromPostcode postcode: String?) -> AnyPublisher<[AddressResult], AdresseFrancaiseError> {
+        return self.search(query: query, fromPostcode: postcode, typeFilter: "street")
     }
 
-    private func search(query: String, typeFilter: String) -> AnyPublisher<[AddressResult], AdresseFrancaiseError> {
+    private func search(query: String, fromPostcode postcode: String?, typeFilter: String) -> AnyPublisher<[AddressResult], AdresseFrancaiseError> {
 
         guard
             var urlComponents = URLComponents(string: "https://api-adresse.data.gouv.fr/search/")
@@ -41,6 +41,10 @@ public struct AdresseFrancaiseClient {
         queryItems.append(URLQueryItem(name: "type", value: typeFilter))
         queryItems.append(URLQueryItem(name: "limit", value: "10"))
         queryItems.append(URLQueryItem(name: "autocomplete", value: "1"))
+
+        if let postcode = postcode {
+            queryItems.append(URLQueryItem(name: "postcode", value: postcode))
+        }
 
         urlComponents.queryItems = queryItems
         
@@ -107,6 +111,7 @@ public struct AddressResult: Codable {
     public var street: String?
     public var city: String?
     public var district: String?
+    public var postcode: String?
 
     enum CodingKeys: String, CodingKey {
         case type = "type"
@@ -116,6 +121,7 @@ public struct AddressResult: Codable {
         case street = "street"
         case district = "district"
         case properties = "properties"
+        case postcode = "postcode"
     }
 
     public init(from decoder: Decoder) throws {
@@ -128,6 +134,7 @@ public struct AddressResult: Codable {
         self.city = try properties.decodeIfPresent(String.self, forKey: .city)
         self.street = try properties.decodeIfPresent(String.self, forKey: .street)
         self.district = try properties.decodeIfPresent(String.self, forKey: .district)
+        self.postcode = try properties.decodeIfPresent(String.self, forKey: .postcode)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -138,6 +145,7 @@ public struct AddressResult: Codable {
         try container.encodeIfPresent(self.city, forKey: .city)
         try container.encodeIfPresent(self.street, forKey: .street)
         try container.encodeIfPresent(self.district, forKey: .district)
+        try container.encodeIfPresent(self.postcode, forKey: .postcode)
     }
 
 }

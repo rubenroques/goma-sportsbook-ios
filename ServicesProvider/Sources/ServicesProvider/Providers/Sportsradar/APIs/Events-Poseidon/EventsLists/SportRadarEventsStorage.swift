@@ -76,9 +76,15 @@ extension SportRadarEventsStorage {
     }
 
     func updateMarketTradability(withId id: String, isTradable: Bool) {
-        guard let marketSubject = self.marketsDictionary[id] else { return }
+        guard
+            let marketSubject = self.marketsDictionary[id]
+        else {
+            print("PaginatorStorage updateMarketTradability \(id) not found to isTradable:\(isTradable)")
+            return
+        }
         let market = marketSubject.value
 
+        print("PaginatorStorage updateMarketTradability \(id) isTradable:\(isTradable)")
         market.isTradable = isTradable
         marketSubject.send(market)
     }

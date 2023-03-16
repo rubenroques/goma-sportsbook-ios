@@ -12,14 +12,78 @@ import Combine
 import SharedModels
 import AdresseFrancaise
 
+public struct AddressSearchResult {
+    public var title: String
+    public var city: String?
+    public var street: String?
+    public var postcode: String?
+}
+
 class AddressFormStepViewModel {
 
     let title: String
 
     var countryCodeForSuggestions: String
     var place: CurrentValueSubject<String?, Never>
+    var postcode: CurrentValueSubject<String?, Never>
     var street: CurrentValueSubject<String?, Never>
-    var additionalStreet: CurrentValueSubject<String?, Never>
+    var streetNumber: CurrentValueSubject<String?, Never>
+
+    var isPostcodeValid: AnyPublisher<Bool, Never> {
+        return self.postcode.map { postcode in
+            if let postcode = postcode {
+                return postcode.range(of: "^[0-9]*$", options: .regularExpression) != nil && postcode.count == 5
+            }
+            else {
+                return false
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+
+    var isStreetNumberValid: AnyPublisher<Bool, Never> {
+        return self.streetNumber.map { streetNumber in
+            if let streetNumber = streetNumber {
+                return streetNumber.range(of: "^[0-9]*$", options: .regularExpression) != nil && streetNumber.count > 0 && streetNumber.count < 4
+            }
+            else {
+                return false
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+
+    var shouldShowPostcodeFormatErrorMessage: AnyPublisher<Bool, Never> {
+        return Publishers.CombineLatest(self.postcode, self.isPostcodeValid)
+            .map { postcode, isPostcodeValid in
+                if let postcode = postcode {
+                    if postcode.isEmpty {
+                        return false // if its nil/empty the message shouldn't appear
+                    }
+                    return !isPostcodeValid  // is it is not valid we show the message
+                }
+                else {
+                    return false // if its nil/empty the message shouldn't appear
+                }
+            }
+            .eraseToAnyPublisher()
+    }
+
+    var shouldShowStreetNumberFormatErrorMessage: AnyPublisher<Bool, Never> {
+        return Publishers.CombineLatest(self.streetNumber, self.isStreetNumberValid)
+            .map { streetNumber, isStreetNumberValid in
+                if let streetNumber = streetNumber {
+                    if streetNumber.isEmpty {
+                        return false // if its nil/empty the message shouldn't appear
+                    }
+                    return !isStreetNumberValid // is it is not valid we show the message
+                }
+                else {
+                    return false // if its nil/empty the message shouldn't appear
+                }
+            }
+            .eraseToAnyPublisher()
+    }
 
     var shouldSuggestAddresses: Bool = true
 
@@ -33,39 +97,28 @@ class AddressFormStepViewModel {
          countryCodeForSuggestions: String,
          place: String? = nil,
          street: String? = nil,
-         additionalStreet: String? = nil,
+         postcode: String? = nil,
+         streetNumber: String? = nil,
          userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater,
          adresseFrancaiseClient: AdresseFrancaiseClient = AdresseFrancaiseClient()) {
 
         self.title = title
         self.countryCodeForSuggestions = countryCodeForSuggestions
         self.place = .init(place)
+        self.postcode = .init(postcode)
         self.street = .init(street)
-        self.additionalStreet = .init(additionalStreet)
+        self.streetNumber = .init(streetNumber)
+
         self.userRegisterEnvelopUpdater = userRegisterEnvelopUpdater
         self.adresseFrancaiseClient = AdresseFrancaiseClient()
 
-         self.userRegisterEnvelopUpdater.selectedCountry
-            .map { [weak self] country -> Bool in
-            if let countryValue = country {
-                return countryValue.iso3Code == (self?.countryCodeForSuggestions ?? "")
-            }
-            else {
-                return false
-            }
-        }
-        .sink(receiveValue: { [weak self] shouldSuggest in
-            self?.shouldSuggestAddresses = shouldSuggest
-        })
-        .store(in: &self.cancellables)
 
     }
 
     var isFormCompleted: AnyPublisher<Bool, Never> {
-        return Publishers.CombineLatest(self.place, self.street)
-            .map { place, street in
-                return (place ?? "").count > 0 &&
-                (street ?? "").count > 0
+        return Publishers.CombineLatest4(self.place, self.street, self.isPostcodeValid, self.isStreetNumberValid)
+            .map { place, street, isPostcodeValid, isStreetNumberValid in
+                return (place ?? "").count > 0 && (street ?? "").count > 0 && isPostcodeValid && isStreetNumberValid
             }
             .eraseToAnyPublisher()
     }
@@ -75,37 +128,40 @@ class AddressFormStepViewModel {
         self.userRegisterEnvelopUpdater.setPlaceAddress(place)
     }
 
+    func setPostcode(_ postcode: String) {
+        self.postcode.send(postcode)
+        self.userRegisterEnvelopUpdater.setPostcode(postcode)
+    }
+
     func setStreet(_ street: String) {
         self.street.send(street)
         self.userRegisterEnvelopUpdater.setStreetAddress(street)
     }
 
-    func setAdditionalStreet(_ additionalStreet: String) {
-        self.additionalStreet.send(additionalStreet)
-        self.userRegisterEnvelopUpdater.setAdditionalStreetAddress(additionalStreet)
+    func setStreetNumber(_ streetNumber: String) {
+        self.streetNumber.send(streetNumber)
+        self.userRegisterEnvelopUpdater.setStreetNumber(streetNumber)
     }
 
-    func requestStreetAutoCompletion(forQuery query: String) -> AnyPublisher<[String], Never> {
+    func requestStreetAutoCompletion(forQuery query: String, fromPostcode postcode: String?) -> AnyPublisher<[AddressSearchResult], Never> {
         return self.adresseFrancaiseClient
-            .searchStreet(query: query)
+            .searchStreet(query: query, fromPostcode: postcode)
             .map { results in
-                let labels = results.map(\.label)
-                let uniqueLabels = NSOrderedSet(array: labels).prefix(4)
-                return Array(uniqueLabels) as! [String]
+                let addressResults  = results.map({ AddressSearchResult(title: $0.street ?? $0.label, city: $0.city, street: $0.street, postcode: $0.postcode) })
+                return Array(addressResults.prefix(4))
             }
-            .replaceError(with: [String]() )
+            .replaceError(with: [AddressSearchResult]() )
             .eraseToAnyPublisher()
     }
 
-    func requestCommuneAutoCompletion(forQuery query: String) -> AnyPublisher<[String], Never> {
+    func requestCommuneAutoCompletion(forQuery query: String) -> AnyPublisher<[AddressSearchResult], Never> {
         return self.adresseFrancaiseClient
             .searchCommune(query: query)
             .map { results in
-                let labels = results.map(\.label)
-                let uniqueLabels = NSOrderedSet(array: labels).prefix(4)
-                return Array(uniqueLabels) as! [String]
+                let addressResults  = results.map({ AddressSearchResult(title: $0.label, city: $0.city, street: $0.street, postcode: $0.postcode) })
+                return Array(addressResults.prefix(4))
             }
-            .replaceError(with: [String]() )
+            .replaceError(with: [AddressSearchResult]() )
             .eraseToAnyPublisher()
     }
 
@@ -116,11 +172,13 @@ class AddressFormStepView: FormStepView {
     private lazy var placeHeaderTextFieldView: HeaderTextFieldView = Self.createPlaceHeaderTextFieldView()
     private lazy var placeSearchCompletionView: SearchCompletionView = Self.createSearchCompletionView()
 
-    private lazy var streetHeaderTextFieldView: HeaderTextFieldView = Self.createStreetHeaderTextFieldView()
-    private lazy var streetSearchCompletionView: SearchCompletionView = Self.createSearchCompletionView()
+    private lazy var postCodeHeaderTextFieldView: HeaderTextFieldView = Self.createStreetHeaderTextFieldView()
+    private lazy var postCodeSearchCompletionView: SearchCompletionView = Self.createSearchCompletionView()
 
-    private lazy var additionalStreetHeaderTextFieldView: HeaderTextFieldView = Self.createAdditionalStreetHeaderTextFieldView()
-    private lazy var additionalStreetSearchCompletionView: SearchCompletionView = Self.createSearchCompletionView()
+    private lazy var streetNameHeaderTextFieldView: HeaderTextFieldView = Self.createAdditionalStreetHeaderTextFieldView()
+    private lazy var streetNameSearchCompletionView: SearchCompletionView = Self.createSearchCompletionView()
+
+    private lazy var numberHeaderTextFieldView: HeaderTextFieldView = Self.createStreetHeaderTextFieldView()
 
     private let viewModel: AddressFormStepViewModel
     private var cancellables = Set<AnyCancellable>()
@@ -148,14 +206,14 @@ class AddressFormStepView: FormStepView {
         let streetContainerView = UIView()
         streetContainerView.translatesAutoresizingMaskIntoConstraints = false
         streetContainerView.backgroundColor = .clear
-        streetContainerView.addSubview(self.streetHeaderTextFieldView)
-        streetContainerView.addSubview(self.streetSearchCompletionView)
+        streetContainerView.addSubview(self.postCodeHeaderTextFieldView)
+        streetContainerView.addSubview(self.postCodeSearchCompletionView)
 
         let additionalStreetContainerView = UIView()
         additionalStreetContainerView.translatesAutoresizingMaskIntoConstraints = false
         additionalStreetContainerView.backgroundColor = .clear
-        additionalStreetContainerView.addSubview(self.additionalStreetHeaderTextFieldView)
-        additionalStreetContainerView.addSubview(self.additionalStreetSearchCompletionView)
+        additionalStreetContainerView.addSubview(self.streetNameHeaderTextFieldView)
+        additionalStreetContainerView.addSubview(self.streetNameSearchCompletionView)
 
         NSLayoutConstraint.activate([
             placeContainerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 80),
@@ -170,82 +228,90 @@ class AddressFormStepView: FormStepView {
             placeContainerView.bottomAnchor.constraint(greaterThanOrEqualTo: self.placeSearchCompletionView.bottomAnchor),
 
             streetContainerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 80),
-            self.streetHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
-            self.streetHeaderTextFieldView.topAnchor.constraint(equalTo: streetContainerView.topAnchor),
-            self.streetHeaderTextFieldView.leadingAnchor.constraint(equalTo: streetContainerView.leadingAnchor),
-            self.streetHeaderTextFieldView.trailingAnchor.constraint(equalTo: streetContainerView.trailingAnchor),
+            self.postCodeHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
+            self.postCodeHeaderTextFieldView.topAnchor.constraint(equalTo: streetContainerView.topAnchor),
+            self.postCodeHeaderTextFieldView.leadingAnchor.constraint(equalTo: streetContainerView.leadingAnchor),
+            self.postCodeHeaderTextFieldView.trailingAnchor.constraint(equalTo: streetContainerView.trailingAnchor),
 
-            self.streetSearchCompletionView.topAnchor.constraint(equalTo: self.streetHeaderTextFieldView.bottomAnchor, constant: -16),
-            self.streetSearchCompletionView.leadingAnchor.constraint(equalTo: self.streetHeaderTextFieldView.leadingAnchor),
-            self.streetSearchCompletionView.trailingAnchor.constraint(equalTo: self.streetHeaderTextFieldView.trailingAnchor),
-            streetContainerView.bottomAnchor.constraint(greaterThanOrEqualTo: self.streetSearchCompletionView.bottomAnchor),
+            self.postCodeSearchCompletionView.topAnchor.constraint(equalTo: self.postCodeHeaderTextFieldView.bottomAnchor, constant: -16),
+            self.postCodeSearchCompletionView.leadingAnchor.constraint(equalTo: self.postCodeHeaderTextFieldView.leadingAnchor),
+            self.postCodeSearchCompletionView.trailingAnchor.constraint(equalTo: self.postCodeHeaderTextFieldView.trailingAnchor),
+            streetContainerView.bottomAnchor.constraint(greaterThanOrEqualTo: self.postCodeSearchCompletionView.bottomAnchor),
 
             additionalStreetContainerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 80),
-            self.additionalStreetHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
-            self.additionalStreetHeaderTextFieldView.topAnchor.constraint(equalTo: additionalStreetContainerView.topAnchor),
-            self.additionalStreetHeaderTextFieldView.leadingAnchor.constraint(equalTo: additionalStreetContainerView.leadingAnchor),
-            self.additionalStreetHeaderTextFieldView.trailingAnchor.constraint(equalTo: additionalStreetContainerView.trailingAnchor),
+            self.streetNameHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
+            self.streetNameHeaderTextFieldView.topAnchor.constraint(equalTo: additionalStreetContainerView.topAnchor),
+            self.streetNameHeaderTextFieldView.leadingAnchor.constraint(equalTo: additionalStreetContainerView.leadingAnchor),
+            self.streetNameHeaderTextFieldView.trailingAnchor.constraint(equalTo: additionalStreetContainerView.trailingAnchor),
 
-            self.additionalStreetSearchCompletionView.topAnchor.constraint(equalTo: self.additionalStreetHeaderTextFieldView.bottomAnchor, constant: -16),
-            self.additionalStreetSearchCompletionView.leadingAnchor.constraint(equalTo: self.additionalStreetHeaderTextFieldView.leadingAnchor),
-            self.additionalStreetSearchCompletionView.trailingAnchor.constraint(equalTo: self.additionalStreetHeaderTextFieldView.trailingAnchor),
-            additionalStreetContainerView.bottomAnchor.constraint(greaterThanOrEqualTo: self.additionalStreetSearchCompletionView.bottomAnchor),
+            self.streetNameSearchCompletionView.topAnchor.constraint(equalTo: self.streetNameHeaderTextFieldView.bottomAnchor, constant: -16),
+            self.streetNameSearchCompletionView.leadingAnchor.constraint(equalTo: self.streetNameHeaderTextFieldView.leadingAnchor),
+            self.streetNameSearchCompletionView.trailingAnchor.constraint(equalTo: self.streetNameHeaderTextFieldView.trailingAnchor),
+            additionalStreetContainerView.bottomAnchor.constraint(greaterThanOrEqualTo: self.streetNameSearchCompletionView.bottomAnchor),
         ])
 
         self.stackView.addArrangedSubview(placeContainerView)
         self.stackView.addArrangedSubview(streetContainerView)
         self.stackView.addArrangedSubview(additionalStreetContainerView)
-
+        self.stackView.addArrangedSubview(self.numberHeaderTextFieldView)
 
         NSLayoutConstraint.activate([
-
-            self.streetHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
-            self.additionalStreetHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
+            self.postCodeHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
+            self.streetNameHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
+            self.numberHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
         ])
 
         self.titleLabel.text = self.viewModel.title
 
         self.placeSearchCompletionView.didSelectSearchCompletion = { [weak self] searchCompletion in
-            self?.placeHeaderTextFieldView.setText(searchCompletion)
+            self?.placeHeaderTextFieldView.setText(searchCompletion.title)
+            self?.postCodeHeaderTextFieldView.setText(searchCompletion.postcode ?? "")
             self?.placeHeaderTextFieldView.resignFirstResponder()
             self?.placeSearchCompletionView.clearResults()
         }
 
-        self.streetSearchCompletionView.didSelectSearchCompletion = { [weak self] searchCompletion in
-            self?.streetHeaderTextFieldView.setText(searchCompletion)
-            self?.streetHeaderTextFieldView.resignFirstResponder()
-            self?.streetSearchCompletionView.clearResults()
-        }
+        //        self.postCodeSearchCompletionView.didSelectSearchCompletion = { [weak self] searchCompletion in
+        //            self?.postCodeHeaderTextFieldView.setText(searchCompletion)
+        //            self?.postCodeHeaderTextFieldView.resignFirstResponder()
+        //            self?.postCodeSearchCompletionView.clearResults()
+        //        }
 
-        self.additionalStreetSearchCompletionView.didSelectSearchCompletion = { [weak self] searchCompletion in
-            self?.additionalStreetHeaderTextFieldView.setText(searchCompletion)
-            self?.additionalStreetHeaderTextFieldView.resignFirstResponder()
-            self?.additionalStreetSearchCompletionView.clearResults()
+        self.streetNameSearchCompletionView.didSelectSearchCompletion = { [weak self] searchCompletion in
+            self?.streetNameHeaderTextFieldView.setText(searchCompletion.title)
+            self?.streetNameHeaderTextFieldView.resignFirstResponder()
+            self?.streetNameSearchCompletionView.clearResults()
         }
 
         self.placeHeaderTextFieldView.setPlaceholderText("Place/Commune")
-        self.streetHeaderTextFieldView.setPlaceholderText("Street line 1")
-        self.additionalStreetHeaderTextFieldView.setPlaceholderText("Street line 2")
+        self.postCodeHeaderTextFieldView.setPlaceholderText("Postcode")
+        self.streetNameHeaderTextFieldView.setPlaceholderText("Street name")
+        self.numberHeaderTextFieldView.setPlaceholderText("Street number")
 
         self.placeHeaderTextFieldView.setReturnKeyType(.next)
         self.placeHeaderTextFieldView.didTapReturn = { [weak self] in
-            self?.streetHeaderTextFieldView.becomeFirstResponder()
+            self?.postCodeHeaderTextFieldView.becomeFirstResponder()
         }
 
-        self.streetHeaderTextFieldView.setReturnKeyType(.continue)
-        self.streetHeaderTextFieldView.didTapReturn = { [weak self] in
-            self?.additionalStreetHeaderTextFieldView.becomeFirstResponder()
+        self.postCodeHeaderTextFieldView.setReturnKeyType(.continue)
+        self.postCodeHeaderTextFieldView.didTapReturn = { [weak self] in
+            self?.streetNameHeaderTextFieldView.becomeFirstResponder()
         }
 
 
-        self.additionalStreetHeaderTextFieldView.setReturnKeyType(.continue)
-        self.additionalStreetHeaderTextFieldView.didTapReturn = { [weak self] in
-            self?.additionalStreetHeaderTextFieldView.resignFirstResponder()
+        self.streetNameHeaderTextFieldView.setReturnKeyType(.continue)
+        self.streetNameHeaderTextFieldView.didTapReturn = { [weak self] in
+            self?.numberHeaderTextFieldView.becomeFirstResponder()
+        }
+
+        self.numberHeaderTextFieldView.setReturnKeyType(.done)
+        self.numberHeaderTextFieldView.didTapReturn = { [weak self] in
+            self?.numberHeaderTextFieldView.resignFirstResponder()
         }
 
         self.placeHeaderTextFieldView.setText(self.viewModel.place.value ?? "")
-        self.streetHeaderTextFieldView.setText(self.viewModel.street.value ?? "")
-        self.additionalStreetHeaderTextFieldView.setText(self.viewModel.additionalStreet.value ?? "")
+        self.postCodeHeaderTextFieldView.setText(self.viewModel.postcode.value ?? "")
+        self.streetNameHeaderTextFieldView.setText(self.viewModel.street.value ?? "")
+        self.numberHeaderTextFieldView.setText(self.viewModel.streetNumber.value ?? "")
 
         self.placeHeaderTextFieldView.textPublisher
             .sink { [weak self] place in
@@ -253,15 +319,21 @@ class AddressFormStepView: FormStepView {
             }
             .store(in: &self.cancellables)
 
-        self.streetHeaderTextFieldView.textPublisher
+        self.postCodeHeaderTextFieldView.textPublisher
+            .sink { [weak self] postcode in
+                self?.viewModel.setPostcode(postcode)
+            }
+            .store(in: &self.cancellables)
+
+        self.streetNameHeaderTextFieldView.textPublisher
             .sink { [weak self] street in
                 self?.viewModel.setStreet(street)
             }
             .store(in: &self.cancellables)
 
-        self.additionalStreetHeaderTextFieldView.textPublisher
-            .sink { [weak self] additionalStreet in
-                self?.viewModel.setAdditionalStreet(additionalStreet)
+        self.numberHeaderTextFieldView.textPublisher
+            .sink { [weak self] streetNumber in
+                self?.viewModel.setStreetNumber(streetNumber)
             }
             .store(in: &self.cancellables)
 
@@ -277,12 +349,12 @@ class AddressFormStepView: FormStepView {
                 guard
                     let self = self
                 else {
-                    return Just([String]()).eraseToAnyPublisher()
+                    return Just([AddressSearchResult]()).eraseToAnyPublisher()
                 }
                 return self.viewModel.requestCommuneAutoCompletion(forQuery: query)
             }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] suggestions in
+            .sink { [weak self] (suggestions: [AddressSearchResult]) in
                 UIView.animate(withDuration: 0.1) {
                     self?.placeSearchCompletionView.presentResults(suggestions)
                 }
@@ -293,59 +365,85 @@ class AddressFormStepView: FormStepView {
             self?.placeSearchCompletionView.clearResults()
         }
 
-        self.streetHeaderTextFieldView.textPublisher
+        //        self.postCodeHeaderTextFieldView.textPublisher
+        //            .compactMap({ $0 })
+        //            .debounce(for: .seconds(0.6), scheduler: DispatchQueue.main)
+        //            .filter({ [weak self] _ in
+        //                guard let self else { return false }
+        //                return self.viewModel.shouldSuggestAddresses && self.postCodeHeaderTextFieldView.isFirstResponder
+        //            })
+        //            .flatMap { [weak self] query in
+        //                guard
+        //                    let self = self
+        //                else {
+        //                    return Just([String]()).eraseToAnyPublisher()
+        //                }
+        //                let cityName = self.placeHeaderTextFieldView.text
+        //                return self.viewModel.requestStreetAutoCompletion(forQuery: query, fromCity: cityName)
+        //            }
+        //            .receive(on: DispatchQueue.main)
+        //            .sink { [weak self] suggestions in
+        //                UIView.animate(withDuration: 0.1) {
+        //                    self?.postCodeSearchCompletionView.presentResults(suggestions)
+        //                }
+        //            }
+        //            .store(in: &self.cancellables)
+        //
+        //        self.postCodeHeaderTextFieldView.didEndEditing = { [weak self] in
+        //            self?.postCodeSearchCompletionView.clearResults()
+        //        }
+
+        self.streetNameHeaderTextFieldView.textPublisher
             .compactMap({ $0 })
             .debounce(for: .seconds(0.6), scheduler: DispatchQueue.main)
             .filter({ [weak self] _ in
                 guard let self else { return false }
-                return self.viewModel.shouldSuggestAddresses && self.streetHeaderTextFieldView.isFirstResponder
+                return self.viewModel.shouldSuggestAddresses && self.streetNameHeaderTextFieldView.isFirstResponder
             })
             .flatMap { [weak self] query in
                 guard
                     let self = self
                 else {
-                    return Just([String]()).eraseToAnyPublisher()
+                    return Just([AddressSearchResult]()).eraseToAnyPublisher()
                 }
-                return self.viewModel.requestStreetAutoCompletion(forQuery: query)
+                let cityName = self.postCodeHeaderTextFieldView.text
+                return self.viewModel.requestStreetAutoCompletion(forQuery: query, fromPostcode: cityName)
             }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] suggestions in
+            .sink { [weak self] (suggestions: [AddressSearchResult]) in
                 UIView.animate(withDuration: 0.1) {
-                    self?.streetSearchCompletionView.presentResults(suggestions)
+                    self?.streetNameSearchCompletionView.presentResults(suggestions)
                 }
             }
             .store(in: &self.cancellables)
 
-        self.streetHeaderTextFieldView.didEndEditing = { [weak self] in
-            self?.streetSearchCompletionView.clearResults()
+        self.streetNameHeaderTextFieldView.didEndEditing = { [weak self] in
+            self?.streetNameSearchCompletionView.clearResults()
         }
 
-        self.additionalStreetHeaderTextFieldView.textPublisher
-            .compactMap({ $0 })
-            .debounce(for: .seconds(0.6), scheduler: DispatchQueue.main)
-            .filter({ [weak self] _ in
-                guard let self else { return false }
-                return self.viewModel.shouldSuggestAddresses && self.additionalStreetHeaderTextFieldView.isFirstResponder
-            })
-            .flatMap { [weak self] query in
-                guard
-                    let self = self
+        self.viewModel.shouldShowPostcodeFormatErrorMessage
+            .receive(on: DispatchQueue.main)
+            .sink { shouldShowPostcodeFormatErrorMessage in
+                if shouldShowPostcodeFormatErrorMessage {
+                    self.postCodeHeaderTextFieldView.showErrorOnField(text: "This Postcode is not valid. Must be 5 digits", color: AppColor.alertError)
+                }
                 else {
-                    return Just([String]()).eraseToAnyPublisher()
-                }
-                return self.viewModel.requestStreetAutoCompletion(forQuery: query)
-            }
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] suggestions in
-                UIView.animate(withDuration: 0.1) {
-                    self?.additionalStreetSearchCompletionView.presentResults(suggestions)
+                    self.postCodeHeaderTextFieldView.hideTipAndError()
                 }
             }
             .store(in: &self.cancellables)
 
-        self.additionalStreetHeaderTextFieldView.didEndEditing = { [weak self] in
-            self?.additionalStreetSearchCompletionView.clearResults()
-        }
+        self.viewModel.shouldShowStreetNumberFormatErrorMessage
+            .receive(on: DispatchQueue.main)
+            .sink { shouldShowStreetNumberFormatErrorMessage in
+                if shouldShowStreetNumberFormatErrorMessage {
+                    self.numberHeaderTextFieldView.showErrorOnField(text: "The number is not valid. Must be up to 3 digits", color: AppColor.alertError)
+                }
+                else {
+                    self.numberHeaderTextFieldView.hideTipAndError()
+                }
+            }
+            .store(in: &self.cancellables)
     }
 
     public override func layoutSubviews() {
@@ -359,13 +457,17 @@ class AddressFormStepView: FormStepView {
         self.placeHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
         self.placeHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
 
-        self.streetHeaderTextFieldView.setViewColor(AppColor.inputBackground)
-        self.streetHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
-        self.streetHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
+        self.postCodeHeaderTextFieldView.setViewColor(AppColor.inputBackground)
+        self.postCodeHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
+        self.postCodeHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
 
-        self.additionalStreetHeaderTextFieldView.setViewColor(AppColor.inputBackground)
-        self.additionalStreetHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
-        self.additionalStreetHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
+        self.streetNameHeaderTextFieldView.setViewColor(AppColor.inputBackground)
+        self.streetNameHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
+        self.streetNameHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
+
+        self.numberHeaderTextFieldView.setViewColor(AppColor.inputBackground)
+        self.numberHeaderTextFieldView.setHeaderLabelColor(AppColor.inputTextTitle)
+        self.numberHeaderTextFieldView.setTextFieldColor(AppColor.inputText)
     }
 
     override func canPresentError(forFormStep formStep: FormStep) -> Bool {
@@ -381,11 +483,11 @@ class AddressFormStepView: FormStepView {
         case ("city", "INVALID_LENGTH"):
             self.placeHeaderTextFieldView.showErrorOnField(text: "Place/Commune is too long", color: AppColor.alertError)
         case ("address", "INVALID_LENGTH"):
-            self.streetHeaderTextFieldView.showErrorOnField(text: "Street name is too long", color: AppColor.alertError)
+            self.postCodeHeaderTextFieldView.showErrorOnField(text: "Street name is too long", color: AppColor.alertError)
         case ("city", _):
             self.placeHeaderTextFieldView.showErrorOnField(text: "Please enter a valid Place/Commune", color: AppColor.alertError)
         case ("address", _):
-            self.streetHeaderTextFieldView.showErrorOnField(text: "Please enter a valid Street", color: AppColor.alertError)
+            self.postCodeHeaderTextFieldView.showErrorOnField(text: "Please enter a valid Street", color: AppColor.alertError)
         default:
             ()
         }

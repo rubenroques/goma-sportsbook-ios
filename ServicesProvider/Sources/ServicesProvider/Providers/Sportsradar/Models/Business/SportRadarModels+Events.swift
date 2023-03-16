@@ -183,6 +183,10 @@ extension SportRadarModels {
 
             self.markets = try container.decodeIfPresent([SportRadarModels.Market].self, forKey: .markets)
 
+            #if DEBUG
+            self.homeName = self.id + " " + (self.homeName ?? "")
+            self.awayName = (self.markets?.first?.id ?? "") + " " + (self.awayName ?? "")
+            #endif
 
             if let startDateString = try container.decodeIfPresent(String.self, forKey: .startDate) {
                 if let date = Self.dateFormatter.date(from: startDateString) {
@@ -303,8 +307,6 @@ extension SportRadarModels {
             self.isMainOutright = try container.decodeIfPresent(Bool.self, forKey: .isMainOutright)
             self.eventMarketCount = try container.decodeIfPresent(Int.self, forKey: .eventMarketCount)
             self.isTradable = try container.decodeIfPresent(Bool.self, forKey: .isTradable) ?? true
-
-
             self.outcomes = try container.decode([SportRadarModels.Outcome].self, forKey: .outcomes)
         }
         

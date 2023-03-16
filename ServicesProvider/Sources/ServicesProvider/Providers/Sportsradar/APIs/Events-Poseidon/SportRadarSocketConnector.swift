@@ -80,9 +80,9 @@ class SportRadarSocketConnector: NSObject, Connector {
         // TODO: ipAddress is empty, and language is hardcoded
         let body = """
                    {
-                     "subscriberId":null,
-                     "versionList":[],
-                     "clientContext":{
+                     "subscriberId": null,
+                     "versionList": [],
+                     "clientContext": {
                        "language":"\(SportRadarConstants.socketLanguageCode)",
                        "ipAddress":""
                      }
@@ -128,23 +128,26 @@ extension SportRadarSocketConnector: WebSocketDelegate {
         switch event {
         case .connected(let headers):
             self.sendListeningStarted(toSocket: client)
-
             print("ServiceProvider - SportRadarSocketConnector websocket is connected: \(headers)")
+
         case .disconnected(let reason, let code):
             self.isConnected = false
             self.refreshConnection()
             print("ServiceProvider - SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
+
         case .text(let string):
             // print("ServiceProvider - SportRadarSocketConnector websocket recieved text: \n  \(string) \n\n----------------- \n")
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)
             }
+
         case .binary(let data):
             // print("ServiceProvider - SportRadarSocketConnector websocket recieved binary: \(String(data: data, encoding: .utf8) ?? "--")")
             if let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)
             }
+
         case .ping(_):
             print("ServiceProvider - SportRadarSocketConnector ping")
             break

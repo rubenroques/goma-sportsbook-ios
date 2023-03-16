@@ -306,14 +306,16 @@ class HeaderTextFieldView: NibView {
         self.textField.becomeFirstResponder()
     }
 
-    func setText(_ text: String, slideUp: Bool = true) {
+    func setText(_ text: String, slideUp: Bool = true, shouldPublish: Bool = true) {
 
         self.textField.text = text
 
-        NotificationCenter.default
-            .post(name: UITextField.textDidChangeNotification,
-                  object: self.textField)
-
+        if shouldPublish {
+            NotificationCenter.default
+                .post(name: UITextField.textDidChangeNotification,
+                      object: self.textField)
+        }
+        
         if !text.isEmpty && slideUp {
             self.slideUp(animated: false)
         }

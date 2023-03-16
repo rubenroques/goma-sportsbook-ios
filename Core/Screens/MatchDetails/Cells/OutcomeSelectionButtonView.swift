@@ -39,6 +39,7 @@ class OutcomeSelectionButtonView: NibView {
     }
 
     private var oddUpdatesPublisher: AnyCancellable?
+    private var marketStateCancellable: AnyCancellable?
 
     convenience init() {
         self.init(frame: .zero)
@@ -118,6 +119,31 @@ class OutcomeSelectionButtonView: NibView {
             self.containerView.isUserInteractionEnabled = false
             self.containerView.alpha = 0.5
             self.marketOddLabel.text = "-"
+        }
+
+        if let marketId = outcome.marketId {
+            self.marketStateCancellable?.cancel()
+            self.marketStateCancellable = Env.servicesProvider.subscribeToEventMarketUpdates(withId: marketId)
+                .compactMap({ $0 })
+                .map({ (serviceProviderMarket: ServicesProvider.Market) -> Market in
+                    return ServiceProviderModelMapper.market(fromServiceProviderMarket: serviceProviderMarket)
+                })
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { completion in
+                    print("marketSubscriber subscribeToEventMarketUpdates completion: \(completion)")
+                }, receiveValue: { [weak self] (marketUpdated: Market) in
+
+                    if marketUpdated.isAvailable {
+                        self?.containerView.isUserInteractionEnabled = true
+                        self?.containerView.alpha = 1.0
+                        print("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will show \n")
+                    }
+                    else {
+                        self?.containerView.isUserInteractionEnabled = false
+                        self?.containerView.alpha = 0.5
+                        print("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will hide \n")
+                    }
+                })
         }
 
         self.oddUpdatesPublisher = Env.servicesProvider

@@ -87,17 +87,17 @@ class NamesFormStepView: FormStepView {
         
         self.titleLabel.text = self.viewModel.title
 
-        self.firstNameHeaderTextFieldView.setContextType(.name)
+        self.firstNameHeaderTextFieldView.setContextType(.givenName)
         self.lastNameHeaderTextFieldView.setContextType(.familyName)
 
         self.firstNameHeaderTextFieldView.setReturnKeyType(.next)
-        self.firstNameHeaderTextFieldView.setPlaceholderText("First Name")
+        self.firstNameHeaderTextFieldView.setPlaceholderText("First name")
         self.firstNameHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.lastNameHeaderTextFieldView.becomeFirstResponder()
         }
         
         self.lastNameHeaderTextFieldView.setReturnKeyType(.continue)
-        self.lastNameHeaderTextFieldView.setPlaceholderText("Last Name")
+        self.lastNameHeaderTextFieldView.setPlaceholderText("Last name")
         self.lastNameHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.lastNameHeaderTextFieldView.resignFirstResponder()
         }

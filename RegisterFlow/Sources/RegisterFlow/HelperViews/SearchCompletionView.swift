@@ -10,12 +10,12 @@ import Theming
 
 public class SearchCompletionView: UIView {
 
-    public var didSelectSearchCompletion: (String) -> Void = { _ in }
+    public var didSelectSearchCompletion: (AddressSearchResult) -> Void = { _ in }
     lazy var contentView: UIView = Self.createContentView()
     lazy var stackView: UIStackView = Self.createStackView()
 
-    private var clickableViewsIndexes: [Int : UIView] = [:]
-    private var searchCompletions: [Int : String] = [:]
+    private var clickableViewsIndexes: [Int: UIView] = [:]
+    private var searchCompletions: [Int: AddressSearchResult] = [:]
 
     public init() {
         super.init(frame: .zero)
@@ -70,11 +70,11 @@ public class SearchCompletionView: UIView {
         return self.stackView.intrinsicContentSize
     }
 
-    func presentResults(_ results: [String]) {
+    func presentResults(_ results: [AddressSearchResult]) {
         self.clearResults()
 
         for (index, searchCompletion) in results.enumerated() {
-            let clicableView = Self.createClicableView(withText: searchCompletion, withTag: index)
+            let clicableView = Self.createClicableView(withText: searchCompletion.title, withTag: index)
             self.stackView.addArrangedSubview(clicableView)
 
             self.clickableViewsIndexes[index] = clicableView

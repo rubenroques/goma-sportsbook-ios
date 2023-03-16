@@ -27,18 +27,19 @@ public class Subscription: Hashable, Identifiable {
         self.sessionToken = sessionToken
         self.id = contentIdentifier.id
         self.unsubscriber = unsubscriber
+        print("ServiceProvider.Subscription init \(self.contentIdentifier)")
     }
 
     init(contentType: ContentType, contentRoute: ContentRoute, sessionToken: String, unsubscriber: UnsubscriptionController) {
-
         self.contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
         self.id = self.contentIdentifier.id
         self.sessionToken = sessionToken
         self.unsubscriber = unsubscriber
+        print("ServiceProvider.Subscription init \(self.contentIdentifier)")
     }
     
     deinit {
-        print("ServiceProvider.Subscription.Debug dinit \(self)")
+        print("ServiceProvider.Subscription deinit \(self)")
         unsubscriber?.unsubscribe(subscription: self)
     }
 

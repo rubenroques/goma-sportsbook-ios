@@ -44,7 +44,6 @@ class SportRadarMarketDetailsCoordinator {
         self.marketCurrentValueSubject = .init(.disconnected)
     }
 
-
     func requestMarketUpdates() -> AnyPublisher<SubscribableContent<Market>, ServiceProviderError> {
 
         self.marketCurrentValueSubject = CurrentValueSubject<SubscribableContent<Market>, ServiceProviderError>.init(.disconnected)
@@ -131,6 +130,13 @@ extension SportRadarMarketDetailsCoordinator {
             self.updateMarketTradability(withId: marketId, isTradable: isTradable)
         case .updateOutcomeOdd(_, let selectionId, let newOddNumerator, let newOddDenominator):
             self.updateOutcomeOdd(withId: selectionId, newOddNumerator: newOddNumerator, newOddDenominator: newOddDenominator)
+        case .addMarket(_ , let market):
+            for outcome in market.outcomes {
+                if let fractionOdd = outcome.odd.fractionOdd {
+                    self.updateOutcomeOdd(withId: outcome.id, newOddNumerator: String(fractionOdd.numerator), newOddDenominator: String(fractionOdd.denominator))
+                }
+            }
+            self.updateMarketTradability(withId: market.id, isTradable: true)
         case .removeMarket(_, let marketId):
             self.updateMarketTradability(withId: marketId, isTradable: false)
         default:
@@ -141,6 +147,9 @@ extension SportRadarMarketDetailsCoordinator {
     func updateMarketTradability(withId id: String, isTradable: Bool) {
         guard let newMarket = self.market else { return }
         newMarket.isTradable = isTradable
+
+        print("betslipdebug \(id) 2 coordinator outcome \(newMarket.id) \(newMarket.name)")
+
         self.marketCurrentValueSubject.send(.contentUpdate(content: newMarket))
     }
 
@@ -169,7 +178,6 @@ extension SportRadarMarketDetailsCoordinator {
         newMarket.outcomes = updatedOutcomes
         self.marketCurrentValueSubject.send(.contentUpdate(content: newMarket))
     }
-
 
 }
 

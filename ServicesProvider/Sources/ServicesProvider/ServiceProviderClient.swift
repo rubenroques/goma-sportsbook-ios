@@ -11,7 +11,12 @@ public class ServicesProviderClient {
     }
 
     public var privilegedAccessManagerConnectionStatePublisher: AnyPublisher<ConnectorState, Never> = Just(ConnectorState.disconnected).eraseToAnyPublisher()
-    public var eventsConnectionStatePublisher: AnyPublisher<ConnectorState, Never> = Just(ConnectorState.disconnected).eraseToAnyPublisher()
+
+    public var eventsConnectionStatePublisher: AnyPublisher<ConnectorState, Never> {
+        return self.eventsConnectionStateSubject.eraseToAnyPublisher()
+    }
+    private var eventsConnectionStateSubject: CurrentValueSubject<ConnectorState, Never> = .init(.disconnected)
+
     public var bettingConnectionStatePublisher: AnyPublisher<ConnectorState, Never> = Just(ConnectorState.disconnected).eraseToAnyPublisher()
 
     private var providerType: ProviderType = .everymatrix
@@ -19,6 +24,8 @@ public class ServicesProviderClient {
     private var privilegedAccessManager: (any PrivilegedAccessManager)?
     private var bettingProvider: (any BettingProvider)?
     private var eventsProvider: (any EventsProvider)?
+
+    private var cancellables = Set<AnyCancellable>()
 
     public init(providerType: ProviderType) {
         self.providerType = providerType
@@ -44,7 +51,12 @@ public class ServicesProviderClient {
                                                            restConnector: SportRadarRestConnector())
             self.bettingProvider = SportRadarBettingProvider(sessionCoordinator: sessionCoordinator)
 
-            self.eventsConnectionStatePublisher = self.eventsProvider!.connectionStatePublisher
+            self.eventsProvider!.connectionStatePublisher
+                .sink(receiveCompletion: { completion in
+
+                }, receiveValue: { [weak self] connectorState in
+                    self?.eventsConnectionStateSubject.send(connectorState)
+                }).store(in: &self.cancellables)
 
             self.bettingConnectionStatePublisher = self.bettingProvider!.connectionStatePublisher
         }

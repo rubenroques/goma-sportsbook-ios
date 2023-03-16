@@ -31,14 +31,6 @@ public class UserRegisterEnvelopUpdater {
             .eraseToAnyPublisher()
     }
 
-    public var selectedCountry: AnyPublisher<SharedModels.Country?, Never> {
-        return self.filledDataUpdated
-            .map { updatedUserRegisterEnvelop -> SharedModels.Country? in
-                return updatedUserRegisterEnvelop.countryBirth
-            }
-            .eraseToAnyPublisher()
-    }
-
     private var filledDataUpdated: CurrentValueSubject<UserRegisterEnvelop, Never>
     private var userRegisterEnvelop: UserRegisterEnvelop
 
@@ -82,23 +74,33 @@ public class UserRegisterEnvelopUpdater {
         self.filledDataUpdated.send(self.userRegisterEnvelop)
     }
 
-    func setPlaceBirth(_ placeBirth: String) {
+    func setDepartmentOfBirth(_ deparmentOfBirth: String?) {
+        self.userRegisterEnvelop.deparmentOfBirth = deparmentOfBirth
+        self.filledDataUpdated.send(self.userRegisterEnvelop)
+    }
+
+    func setPlaceBirth(_ placeBirth: String?) {
         self.userRegisterEnvelop.placeBirth = placeBirth
         self.filledDataUpdated.send(self.userRegisterEnvelop)
     }
 
-    func setPlaceAddress(_ placeAddress: String) {
+    func setPlaceAddress(_ placeAddress: String?) {
         self.userRegisterEnvelop.placeAddress = placeAddress
         self.filledDataUpdated.send(self.userRegisterEnvelop)
     }
 
-    func setStreetAddress(_ streetAddress: String) {
+    func setPostcode(_ postcode: String?) {
+        self.userRegisterEnvelop.postcode = postcode
+        self.filledDataUpdated.send(self.userRegisterEnvelop)
+    }
+
+    func setStreetAddress(_ streetAddress: String?) {
         self.userRegisterEnvelop.streetAddress = streetAddress
         self.filledDataUpdated.send(self.userRegisterEnvelop)
     }
 
-    func setAdditionalStreetAddress(_ additionalStreetAddress: String) {
-        self.userRegisterEnvelop.additionalStreetAddress = additionalStreetAddress
+    func setStreetNumber(_ streetNumber: String?) {
+        self.userRegisterEnvelop.streetNumber = streetNumber
         self.filledDataUpdated.send(self.userRegisterEnvelop)
     }
 
