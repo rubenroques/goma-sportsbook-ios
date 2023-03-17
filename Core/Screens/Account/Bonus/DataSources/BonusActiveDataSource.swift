@@ -12,7 +12,7 @@ import Combine
 class BonusActiveDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
     // MARK: Public Properties
-    var bonusActive: [EveryMatrix.GrantedBonus] = []
+    var bonusActive: [GrantedBonus] = []
 
     var bonusActiveCellViewModels: [BonusActiveCellViewModel] = []
 
@@ -36,6 +36,7 @@ class BonusActiveDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
             if let cell = tableView.dequeueCellType(BonusActiveTableViewCell.self) {
                 if let activeBonus = self.bonusActive[safe: indexPath.row] {
                     if let cellViewModel = self.bonusActiveCellViewModels[safe: indexPath.row] {
+                        cell.isSimpleBonus = true
                         cell.configure(withViewModel: cellViewModel)
                     }
                 }

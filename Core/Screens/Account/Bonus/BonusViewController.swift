@@ -24,6 +24,9 @@ class BonusViewController: UIViewController {
     private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
     private var cancellables = Set<AnyCancellable>()
 
+    private var availableBonusEmptyViewTopConstraint = NSLayoutConstraint()
+    private var otherBonusEmptyViewTopConstraint = NSLayoutConstraint()
+
     // MARK: Data Sources
     private var bonusAvailableDataSource = BonusAvailableDataSource()
     private var bonusActiveDataSource = BonusActiveDataSource()
@@ -91,6 +94,7 @@ class BonusViewController: UIViewController {
         if #available(iOS 15.0, *) {
             self.tableView.sectionHeaderTopPadding = 0
         }
+
     }
 
     // MARK: Layout and Theme
@@ -158,11 +162,17 @@ class BonusViewController: UIViewController {
         switch viewModel.bonusListType {
         case .available:
             self.isPromoCodeViewHidden = false
-            self.isEmptyState = false
+            //self.isEmptyState = false
+            self.availableBonusEmptyViewTopConstraint.isActive = true
+            self.otherBonusEmptyViewTopConstraint.isActive = false
         case .active:
             self.isPromoCodeViewHidden = true
+            self.availableBonusEmptyViewTopConstraint.isActive = false
+            self.otherBonusEmptyViewTopConstraint.isActive = true
         case .history:
             self.isPromoCodeViewHidden = true
+            self.availableBonusEmptyViewTopConstraint.isActive = false
+            self.otherBonusEmptyViewTopConstraint.isActive = true
         }
 
         self.tableView.reloadData()
@@ -181,6 +191,15 @@ class BonusViewController: UIViewController {
             .sink(receiveValue: { [weak self] isBonusActiveEmpty in
                 if self?.viewModel.bonusListType == .active {
                     self?.isEmptyState = isBonusActiveEmpty
+                }
+            })
+            .store(in: &cancellables)
+
+        viewModel.isBonusAvailableEmptyPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isBonusAvailableEmpty in
+                if self?.viewModel.bonusListType == .available {
+                    self?.isEmptyState = isBonusAvailableEmpty
                 }
             })
             .store(in: &cancellables)
@@ -249,29 +268,56 @@ class BonusViewController: UIViewController {
     private func applyBonus(bonusCode: String) {
         self.isLoading = true
 
-        Env.everyMatrixClient.applyBonus(bonusCode: bonusCode)
+        Env.servicesProvider.redeemBonus(code: bonusCode)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
+
                 switch completion {
-                case .failure(let error):
-                    let errorString = "\(error)"
-                    if errorString.lowercased().contains("invalid") {
-                        self?.showAlert(type: .error, text: localized("invalid_bonus_code"))
-                    }
-                    else {
-                        self?.showAlert(type: .error, text: localized("error_bonus_code"))
-                    }
                 case .finished:
                     ()
+                case .failure(let error):
+                    print("REDEEM BONUS ERROR: \(error)")
+                    switch error {
+                    case .errorMessage(let message):
+                        if message == "BONUSPLAN_NOT_FOUND" {
+                            self?.showAlert(type: .error, text: localized("invalid_bonus_code"))
+                        }
+                        else {
+                            self?.showAlert(type: .error, text: localized("error_bonus_code"))
+                        }
+                    default:
+                        ()
+                    }
+                    self?.isLoading = false
                 }
-
-                self?.isLoading = false
-
-            }, receiveValue: { [weak self] _ in
+            }, receiveValue: { [weak self] redeemBonusResponse in
                 self?.showAlert(type: .success, text: localized("bonus_applied_success"))
                 self?.viewModel.updateDataSources()
             })
             .store(in: &cancellables)
+//        Env.everyMatrixClient.applyBonus(bonusCode: bonusCode)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    let errorString = "\(error)"
+//                    if errorString.lowercased().contains("invalid") {
+//                        self?.showAlert(type: .error, text: localized("invalid_bonus_code"))
+//                    }
+//                    else {
+//                        self?.showAlert(type: .error, text: localized("error_bonus_code"))
+//                    }
+//                case .finished:
+//                    ()
+//                }
+//
+//                self?.isLoading = false
+//
+//            }, receiveValue: { [weak self] _ in
+//                self?.showAlert(type: .success, text: localized("bonus_applied_success"))
+//                self?.viewModel.updateDataSources()
+//            })
+//            .store(in: &cancellables)
     }
 
     private func showAlert(type: EditAlertView.AlertState, text: String = "") {
@@ -594,7 +640,7 @@ extension BonusViewController {
         NSLayoutConstraint.activate([
             self.emptyStateView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.emptyStateView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.emptyStateView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 8),
+            //self.emptyStateView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 8),
             self.emptyStateView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
             self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyStateView.topAnchor, constant: 80),
@@ -618,6 +664,10 @@ extension BonusViewController {
             self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingScreenBaseView.centerXAnchor),
             self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingScreenBaseView.centerYAnchor)
         ])
+
+        self.availableBonusEmptyViewTopConstraint = self.emptyStateView.topAnchor.constraint(equalTo: self.promoCodeBaseView.bottomAnchor, constant: 8)
+
+        self.otherBonusEmptyViewTopConstraint = self.emptyStateView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 8)
 
     }
 

@@ -13,8 +13,12 @@ class BonusActiveTableViewCell: UITableViewCell {
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
+    private lazy var bonusLabel: UILabel = Self.createBonusLabel()
+    private lazy var bonusAmountLabel: UILabel = Self.createBonusAmountLabel()
     private lazy var dateLabel: UILabel = Self.createDateLabel()
     private lazy var stackView: UIStackView = Self.createStackView()
+
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
     var hasBonusAmount: Bool = false {
@@ -23,7 +27,12 @@ class BonusActiveTableViewCell: UITableViewCell {
         }
     }
 
-    private var cancellables = Set<AnyCancellable>()
+    var isSimpleBonus: Bool = false {
+        didSet {
+            self.bonusLabel.isHidden = !isSimpleBonus
+            self.bonusAmountLabel.isHidden = !isSimpleBonus
+        }
+    }
 
     // MARK: Lifetime and Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -57,6 +66,10 @@ class BonusActiveTableViewCell: UITableViewCell {
 
         self.dateLabel.textColor = UIColor.App.textSecondary
 
+        self.bonusLabel.textColor = UIColor.App.textPrimary
+
+        self.bonusAmountLabel.textColor = UIColor.App.textSecondary
+
         self.stackView.backgroundColor = UIColor.App.backgroundSecondary
 
     }
@@ -87,16 +100,23 @@ class BonusActiveTableViewCell: UITableViewCell {
             .store(in: &cancellables)
     }
 
-    private func setupProgressBars(bonus: EveryMatrix.GrantedBonus) {
+    private func setupProgressBars(bonus: GrantedBonus) {
 
-        if let bonusAmount = bonus.amount, bonusAmount > 0 {
-            let bonusProgressCardView = BonusProgressView()
-//            bonusProgressCardView.setTitle(title: localized("bonus_amount"))
-//            bonusProgressCardView.setupProgressInfo(bonus: bonus, progressType: .bonus)
-            let bonusProgressViewModel = BonusProgressViewModel(bonus: bonus, progressType: .bonus)
-            bonusProgressCardView.configure(withViewModel: bonusProgressViewModel)
-            self.stackView.addArrangedSubview(bonusProgressCardView)
+        if !self.isSimpleBonus {
+            if let bonusAmount = bonus.amount, bonusAmount > 0 {
+                let bonusProgressCardView = BonusProgressView()
+                //            bonusProgressCardView.setTitle(title: localized("bonus_amount"))
+                //            bonusProgressCardView.setupProgressInfo(bonus: bonus, progressType: .bonus)
+                let bonusProgressViewModel = BonusProgressViewModel(bonus: bonus, progressType: .bonus)
+                bonusProgressCardView.configure(withViewModel: bonusProgressViewModel)
+                self.stackView.addArrangedSubview(bonusProgressCardView)
 
+            }
+        }
+        else {
+            if let bonusAmount = bonus.amount {
+                self.bonusAmountLabel.text = "\(bonusAmount)"
+            }
         }
 
         if let wagerAmount = bonus.initialWagerRequirementAmount, wagerAmount > 0 {
@@ -166,6 +186,26 @@ extension BonusActiveTableViewCell {
         return label
     }
 
+    private static func createBonusLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "\(localized("bonus")):"
+        label.font = AppFont.with(type: .medium, size: 11)
+        label.textAlignment = .left
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        return label
+    }
+
+    private static func createBonusAmountLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "0.0"
+        label.font = AppFont.with(type: .medium, size: 11)
+        label.textAlignment = .left
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        return label
+    }
+
     private static func createStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -181,6 +221,8 @@ extension BonusActiveTableViewCell {
         self.containerView.addSubview(self.titleLabel)
         self.containerView.addSubview(self.subtitleLabel)
         self.containerView.addSubview(self.dateLabel)
+        self.containerView.addSubview(self.bonusLabel)
+        self.containerView.addSubview(self.bonusAmountLabel)
         self.containerView.addSubview(self.stackView)
 
         self.initConstraints()
@@ -208,8 +250,14 @@ extension BonusActiveTableViewCell {
 //            self.subtitleLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20),
 
             self.dateLabel.leadingAnchor.constraint(equalTo: self.subtitleLabel.trailingAnchor, constant: 4),
-            self.dateLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
-            self.dateLabel.centerYAnchor.constraint(equalTo: self.subtitleLabel.centerYAnchor)
+            self.dateLabel.trailingAnchor.constraint(equalTo: self.containerView.centerXAnchor, constant: 5),
+            self.dateLabel.centerYAnchor.constraint(equalTo: self.subtitleLabel.centerYAnchor),
+
+            self.bonusLabel.trailingAnchor.constraint(equalTo: self.bonusAmountLabel.leadingAnchor, constant: -4),
+            self.bonusLabel.centerYAnchor.constraint(equalTo: self.bonusAmountLabel.centerYAnchor),
+
+            self.bonusAmountLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
+            self.bonusAmountLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 12),
         ])
 
         // StackView

@@ -530,8 +530,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         self.viewModel.isLoadingPublisher.send(true)
 
         // TODO: SportRadar Currency for wallet
-        // TODO: SportRadar limits configuration
-        
+
         let acceptedInputs = Set("0123456789.,")
 
         var updatedLimits = false
@@ -539,10 +538,12 @@ class ProfileLimitsManagementViewController: UIViewController {
         if self.viewModel.canUpdateDeposit {
             let period = self.depositFrequencySelectTextFieldView.text
             let amountString = self.depositHeaderTextFieldView.text
-            let amountFiltered = String( amountString.filter{ acceptedInputs.contains($0)} )
+            let amountFiltered = String( amountString.filter { acceptedInputs.contains($0)
+            })
             let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
 
-            let currency = "EUR" // Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
+            // let currency = "EUR"
+            // Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
 
             //self.viewModel.sendLimit(limitType: LimitType.deposit.identifier, period: period, amount: amount, currency: currency)
             self.viewModel.updateDepositLimit(amount: amount)
@@ -553,10 +554,12 @@ class ProfileLimitsManagementViewController: UIViewController {
         if self.viewModel.canUpdateWagering {
             let period = self.bettingFrequencySelectTextFieldView.text
             let amountString = self.bettingHeaderTextFieldView.text
-            let amountFiltered = String( amountString.filter{ acceptedInputs.contains($0)} )
+            let amountFiltered = String( amountString.filter { acceptedInputs.contains($0)
+            })
             let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
 
-            let currency = "EUR" // Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
+            // let currency = "EUR"
+            // Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
 
 //            self.viewModel.sendLimit(limitType: LimitType.wagering.identifier, period: period, amount: amount, currency: currency)
             self.viewModel.updateBettingLimit(amount: amount)
@@ -571,17 +574,20 @@ class ProfileLimitsManagementViewController: UIViewController {
             let amountFiltered = String( amountString.filter{ acceptedInputs.contains($0)} )
             let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
 
-            let currency = "EUR" // Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
+            // let currency = "EUR"
+            // Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
 
-            self.viewModel.sendLimit(limitType: LimitType.loss.identifier, period: period, amount: amount, currency: currency)
+            // TODO: Uncomment when endpoint is working
+            //self.viewModel.updateResponsibleGamingLimit(amount: amount)
+            //self.viewModel.sendLimit(limitType: LimitType.loss.identifier, period: period, amount: amount, currency: currency)
 
-            updatedLimits = true
+            updatedLimits = false // true
 
         }
 
-//        if !updatedLimits {
-//            self.viewModel.isLoadingPublisher.send(false)
-//        }
+        if !updatedLimits {
+            self.viewModel.isLoadingPublisher.send(false)
+        }
     }
 
     @objc func didTapBackground() {

@@ -739,6 +739,7 @@ Terms of use, Privacy Policy and EULA";
 
 "betting_limit_update_error_message" = "Betting limit could not be updated. Please try again later.";
 "deposit_limit_update_error_message" = "Deposit limit could not be updated. Please try again later.";
+"auto_payout_limit_update_error_message" = "Auto payout limit could not be updated. Please try again later.";
 
 "self_exclusion_success" = "Self Exclusion Success";
 "self_exclusion_success_message" = "Self exclusion options were added with success!";
@@ -746,7 +747,7 @@ Terms of use, Privacy Policy and EULA";
 "self_exclusion_error" = "Self Exclusion Error";
 "self_exclusion_error_message" = "There was an error trying to apply the selected self exclusion options. Please try again later.";
 
-"no_promotions_yet" = "There's no promotions yet.";
+"no_promotions_yet" = "There are no promotions yet.";
 
 "iban_confirm_message" = "Before continuing we need to confirm your IBAN.";
 "iban" = "IBAN";
@@ -755,3 +756,5 @@ Terms of use, Privacy Policy and EULA";
 
 "withdrawal_request_sent_title" = "Your withdrawal request was sent.";
 "withdrawal_request_sent_text" = "Your request will be pending till we confirm your IBAN proof, after approval it will take at least 72 hours to appear in your bank statement.";
+
+"used_total_wager" = "Used / Total Wager";

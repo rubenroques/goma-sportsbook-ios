@@ -88,8 +88,6 @@ class MyTicketCellViewModel {
                 }
             }, receiveValue: { [weak self] cashoutInfo in
 
-                print("CASHOUT INFO: \(cashoutInfo)")
-
                 let cashout = CashoutInfo(id: ticket.betId, betId: ticket.betId, value: cashoutInfo.cashoutValue, stake: ticket.totalBetAmount)
 
                 self?.cashout = cashout

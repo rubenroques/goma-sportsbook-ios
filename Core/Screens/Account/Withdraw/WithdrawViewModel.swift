@@ -79,7 +79,13 @@ class WithdrawViewModel: NSObject {
     func getWithdrawInfo(amountText: String) {
 
         if self.ibanPaymentDetails == nil {
-            self.shouldShowIbanScreen?()
+            if let accountBalance = Env.userSessionStore.userWalletPublisher.value?.available,
+               let kycStatus = Env.userSessionStore.isUserKycVerified.value,
+                accountBalance > 0 && kycStatus {
+
+                self.shouldShowIbanScreen?()
+
+            }
         }
         else {
             self.isLoadingPublisher.send(true)
@@ -178,7 +184,6 @@ class WithdrawViewModel: NSObject {
                 }
 
             }, receiveValue: { [weak self] withdrawalMethods in
-                print("WITHDRAWAL METHODS: \(withdrawalMethods)")
 
                 // Bank transfer only
                 let methods = withdrawalMethods.filter({

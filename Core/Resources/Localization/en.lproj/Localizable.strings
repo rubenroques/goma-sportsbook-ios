@@ -1010,6 +1010,7 @@
 "fourth_password_requirement" = "Contain at least one number";
 "lack_requirements" = "Lack requirements";
 "fifth_password_requirement" = "Be alphanumeric with at least 1 symbol from -!@^$&*";
+
 "iban_proof" = "IBAN Proof";
 "iban_invalid" = "Invalid IBAN. Must start with 2 Letters [A to Z] followed by 14 to 29 digits [0 to 9]";
 "department_of_birth_invalid" = "This department of birth is invalid.";
@@ -1025,3 +1026,82 @@
 "street_number" = "Street number";
 
 "place_commune_invalid" = "Only letters allowed.";
+
+
+// NOT SENT TO GOOGLE DRIVE - NEW KEYS
+
+"payment_authorized" = "Payment Authorized";
+"payment_authorized_message" = "Your payment was authorized. Your deposit should be available in your account.";
+
+"payment_refused" = "Payment Refused";
+"payment_refused_message" = "Your payment was refused. Please try again later. If the problem persists contact our Customer Support.";
+
+"withdrawal_status" = "Withdrawal Status";
+"withdrawal_status_message" = "Your withdrawal request was added. In the next days the request will be processed and you'll receive an update.";
+
+"withdraw_error" = "Withdraw Error";
+"withdraw_error_message" = "There was an error trying to process your withdraw. Please try again later, if the problem persists contact customer support.";
+
+"withdrawal_error" = "Withdrawal Error";
+
+"pending_withdrawal_cancel_success" = "Pending Withdrawal Cancel Success";
+"pending_withdrawal_cancel_success_message" = "Your pending withdrawal request was cancelled with success.";
+
+"pending_withdrawal_cancel_error" = "Pending Withdrawal Cancel Error";
+"pending_withdrawal_cancel_success_message" = "Your pending withdrawal request could not be cancelled. Please try again later, if the problem persists contact our customer support.";
+
+"promotions" = "Promotions";
+"responsible_gaming" = "Responsible Gaming";
+"casual_vs_pathologic_gambling" = "Casual vs Pathologic Gambling";
+"tips_keep_control" = "Tips to keep control";
+"self_exclusion" = "Self Exclusion";
+"close_account" = "Close account";
+
+"block_account_info" = "Block your account from betting and depositing for a number of days, weeks or months.";
+
+"casual_vs_pathological_gambling_title" = "Casual vs Pathologic Gaming what are the differences?";
+"casual_vs_pathological_gambling_message" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sagittis eros a nibh fermentum viverra. Sed imperdiet justo non tellus mollis viverra. Aliquam quis varius ex. In sagittis condimentum molestie. Praesent felis tortor, volutpat id tincidunt vitae, euismod eu elit. Nam quis tortor tincidunt, condimentum nibh eget, posuere lorem. In sed pulvinar magna, sed volutpat lacus. Suspendisse consequat pharetra pulvinar. Phasellus consectetur est eget accumsan sagittis.\n\nNunc est sapien, pretium et quam sit amet, varius dignissim sapien. Nulla sed lorem scelerisque, efficitur lorem sed, blandit velit. Donec lacinia ex ac enim rutrum, id tincidunt mi sagittis. Mauris tempor, ligula in dapibus fringilla, augue felis convallis nulla, eget gravida mauris nisi eget justo. Nullam bibendum, est quis suscipit iaculis, libero felis sagittis eros, sit amet iaculis diam velit et erat.\n\nVestibulum ullamcorper nibh condimentum ex scelerisque convallis. Sed sit amet porttitor eros. Duis tempor mauris et mi volutpat, vitae vestibulum metus feugiat. In vitae sem finibus, pharetra neque a, imperdiet tellus. Nunc et mattis leo, vel vehicula odio. Fusce volutpat massa eros, eu vestibulum nunc efficitur maximus. Phasellus non erat ultrices, placerat felis eleifend, ultricies neque. Nulla semper, magna sed semper maximus, sapien dui facilisis nisl, nec dapibus nulla sem non massa. Nam a nunc viverra, euismod lectus vulputate, molestie mauris. Aenean ultrices dolor leo, id pellentesque enim imperdiet semper. Sed massa arcu, dictum nec posuere nec, scelerisque molestie tortor. Ut justo libero, mollis ac quam porttitor, condimentum commodo ex. Nulla dolor lorem, feugiat et eleifend sed, finibus et dolor. Nunc at imperdiet sapien. Maecenas non tellus nibh.";
+
+"tip_title" = "Tip 1";
+"tip_message" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sagittis eros a nibh fermentum viverra. Sed imperdiet justo non tellus mollis viverra. Aliquam quis varius ex. In sagittis condimentum molestie.";
+"evalujeu" = "Evalujeu";
+
+"cancel_withdraw" = "Cancel Withdraw";
+"cancel_withdraw_message" = "Are you sure you want to cancel your withdraw?";
+"go_back" = "Go back";
+
+"cancel_withdraw_success" = "Your withdraw was canceled.";
+"cancel_withdraw_error" = "There was an error trying to cancel your withdraw. Please try again later.";
+
+"withdrawal" = "Withdrawal";
+"bonus_credit" = "Bonus Credit";
+"bonus_expired" = "Bonus Expired";
+"deposit_cancel" = "Deposit Cancel";
+"withdrawal_cancel" = "Withdrawal Cancel";
+
+"max_file_size_exceeded" = "Max File Size Exceeded";
+"max_file_size_exceeded_message" = "The file chosen exceeds the maximum 10MB size. Please select another file.";
+
+"betting_limit_update_error_message" = "Betting limit could not be updated. Please try again later.";
+"deposit_limit_update_error_message" = "Deposit limit could not be updated. Please try again later.";
+"auto_payout_limit_update_error_message" = "Auto payout limit could not be updated. Please try again later.";
+
+"self_exclusion_success" = "Self Exclusion Success";
+"self_exclusion_success_message" = "Self exclusion options were added with success!";
+
+"self_exclusion_error" = "Self Exclusion Error";
+"self_exclusion_error_message" = "There was an error trying to apply the selected self exclusion options. Please try again later.";
+
+"no_promotions_yet" = "There are no promotions yet.";
+
+"iban_confirm_message" = "Before continuing we need to confirm your IBAN.";
+"iban" = "IBAN";
+"iban_proof" = "IBAN Proof";
+"iban_invalid" = "Invalid IBAN. Must start with 2 Letters [A to Z] followed by 14 to 29 digits [0 to 9]";
+
+"withdrawal_request_sent_title" = "Your withdrawal request was sent.";
+"withdrawal_request_sent_text" = "Your request will be pending till we confirm your IBAN proof, after approval it will take at least 72 hours to appear in your bank statement.";
+
+"used_total_wager" = "Used / Total Wager";
+
+

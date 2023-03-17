@@ -46,6 +46,7 @@ class ProfileLimitsManagementViewModel: NSObject {
 
     var personalDepositLimitLoaded: CurrentValueSubject<Bool, Never> = .init(false)
     var limitsLoaded: CurrentValueSubject<Bool, Never> = .init(false)
+    var responsibleGamingLimitLoaded: CurrentValueSubject<Bool, Never> = .init(false)
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     var finishedUpdatingDepositLimit: CurrentValueSubject<LimitUpdateStatus, Never> = .init(.idle)
@@ -64,14 +65,15 @@ class ProfileLimitsManagementViewModel: NSObject {
 
     private func setupPublishers() {
 
-        Publishers.CombineLatest(self.personalDepositLimitLoaded, self.limitsLoadedPublisher)
-            .sink(receiveValue: { [weak self] personalDepositLimitLoaded, limitsLoaded in
+        Publishers.CombineLatest3(self.personalDepositLimitLoaded, self.limitsLoadedPublisher, self.responsibleGamingLimitLoaded)
+            .sink(receiveValue: { [weak self] personalDepositLimitLoaded, limitsLoaded, responsibleGamingLimitLoaded in
 
-                if personalDepositLimitLoaded && limitsLoaded {
+                if personalDepositLimitLoaded && limitsLoaded && responsibleGamingLimitLoaded {
                     self?.limitsLoadedPublisher.send(true)
 
                     self?.personalDepositLimitLoaded.send(false)
                     self?.limitsLoaded.send(false)
+                    self?.responsibleGamingLimitLoaded.send(false)
                 }
             })
             .store(in: &cancellables)
@@ -120,7 +122,7 @@ class ProfileLimitsManagementViewModel: NSObject {
                     ()
                 case .failure(let error):
                     print("LIMITS ERROR: \(error)")
-                    self?.limitsLoadedPublisher.send(true)
+                    self?.limitsLoaded.send(true)
                 }
 
             }, receiveValue: { [weak self] limitsResponse in
@@ -128,6 +130,27 @@ class ProfileLimitsManagementViewModel: NSObject {
                 print("LIMITS RESPONSE: \(limitsResponse)")
 
                 self?.processLimits(limitsResponse: limitsResponse)
+
+            })
+            .store(in: &cancellables)
+
+        Env.servicesProvider.getResponsibleGamingLimits()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("RESPONSIBLE LIMITS ERROR: \(error)")
+                    self?.responsibleGamingLimitLoaded.send(true)
+                }
+
+            }, receiveValue: { [weak self] limitsResponse in
+
+                print("RESPONSIBLE LIMITS RESPONSE: \(limitsResponse)")
+
+                //self?.processLimits(limitsResponse: limitsResponse)
+                self?.responsibleGamingLimitLoaded.send(true)
 
             })
             .store(in: &cancellables)
@@ -183,10 +206,35 @@ class ProfileLimitsManagementViewModel: NSObject {
         //        let lossLimitInfo = LimitInfo(period: "weekly", currency: limitsResponse.currency, amount: limitsResponse.lossLimit ?? 0)
 //
 //        let lossLimit = Limit(updatable: true, current: lossLimitInfo)
-        self.lossLimit = Limit(updatable: false, current: nil, queued: nil)
+        //self.lossLimit = Limit(updatable: false, current: nil, queued: nil)
 
         self.limitsLoadedPublisher.send(true)
 
+    }
+
+    private func processResponsibleGamingLimits(responsibleGamingLimitsResponse: ResponsibleGamingLimitsResponse) {
+
+//        let responsibleGamingLimitInfo = LimitInfo(period: "weekly", currency: responsibleGamingLimitsResponse.currency, amount: Double(responsibleGamingLimitsResponse.weeklyLimit ?? "0") ?? 0)
+//
+//        var responsibleGamingLimit = Limit(updatable: true, current: responsibleGamingLimitInfo, queued: nil)
+//
+//        if let hasPendingLimit = depositLimitResponse.hasPendingWeeklyLimit, hasPendingLimit == "true" {
+//
+//            let pendingLimit = depositLimitResponse.pendingWeeklyLimit ?? ""
+//            let pendingLimitDate = depositLimitResponse.pendingWeeklyLimitEffectiveDate ?? ""
+//            let currency = depositLimitResponse.currency
+//
+//            self.pendingDepositLimitMessage = "There is a pending limit of: \(pendingLimit) \(currency). The current limit is valid until: \(pendingLimitDate)"
+//
+//            let queuedDepositLimitInfo = LimitInfo(period: "weekly", currency: depositLimitResponse.currency, amount: Double(depositLimitResponse.pendingWeeklyLimit ?? "0") ?? 0)
+//
+//            depositLimit.queued = queuedDepositLimitInfo
+//            depositLimit.updatable = false
+//        }
+//
+//        self.lossLimit = responsibleGamingLimit
+//
+//        self.responsibleGamingLimitLoaded.send(true)
     }
 
     private func setLimitsData() {
@@ -254,6 +302,30 @@ class ProfileLimitsManagementViewModel: NSObject {
                 }, receiveValue: { [weak self] updateLimitResponse in
 
                     self?.limitOptionsCheckPublisher.value.append("wagering")
+
+                })
+                .store(in: &cancellables)
+        }
+    }
+
+    func updateResponsibleGamingLimit(amount: String) {
+
+        if let limit = Double(amount) {
+            Env.servicesProvider.updateResponsibleGamingLimits(newLimit: limit)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+
+                    switch completion {
+                    case .finished:
+                        ()
+                    case .failure(let error):
+                        print("UPDATE RESPONSIBLE LIMIT ERROR: \(error)")
+                        self?.limitOptionsErrorPublisher.send("\(localized("auto_payout_limit_update_error_message"))")
+                        self?.isLoadingPublisher.send(false)
+                    }
+                }, receiveValue: { [weak self] updateLimitResponse in
+
+                    self?.limitOptionsCheckPublisher.value.append("loss")
 
                 })
                 .store(in: &cancellables)
