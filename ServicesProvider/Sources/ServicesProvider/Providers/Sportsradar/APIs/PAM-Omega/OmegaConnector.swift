@@ -222,7 +222,7 @@ class OmegaConnector: Connector {
                             return loginResponse
                         })
                         .eraseToAnyPublisher()
-//
+
 //                    return Just(loginResponse)
 //                        .setFailureType(to: ServiceProviderError.self)
 //                        .eraseToAnyPublisher()
@@ -267,12 +267,17 @@ class OmegaConnector: Connector {
                 return result.data
             }
             .decode(type: SportRadarModels.OpenSessionResponse.self, decoder: self.decoder)
-            .mapError { error in
-                // Debug helper
-
+            .mapError({ error -> ServiceProviderError in
                 print("ServiceProvider-OmegaConnector Error \(error)")
+                if let typedError = error as? ServiceProviderError {
+                    return typedError
+                }
+                else if let decodingError = error as? DecodingError {
+                    let errorMessage = "\(decodingError)"
+                    return ServiceProviderError.decodingError(message: errorMessage)
+                }
                 return ServiceProviderError.invalidResponse
-            }
+            })
             .map({ $0.launchToken })
             .eraseToAnyPublisher()
 

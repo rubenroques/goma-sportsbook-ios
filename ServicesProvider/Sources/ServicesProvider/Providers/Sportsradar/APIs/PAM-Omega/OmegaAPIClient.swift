@@ -189,7 +189,7 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/lockPlayer"
 
         case .getBalance:
-            return "/ps/ips/getBalanceSimple"
+            return "/ps/ips/getBalance"
         case .quickSignupCompletion:
             return "/ps/ips/quickSignupCompletion"
         case .getDocumentTypes:
