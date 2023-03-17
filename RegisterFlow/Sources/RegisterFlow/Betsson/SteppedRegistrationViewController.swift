@@ -651,7 +651,9 @@ public extension SteppedRegistrationViewController {
     private func setupSubviews() {
 
         self.stepsScrollView.isScrollEnabled = false
-
+        self.stepsScrollView.bounces = false
+        self.stepsScrollView.bouncesZoom = false
+        
         self.backButton.addTarget(self, action: #selector(self.didTapBackButton), for: .primaryActionTriggered)
         self.continueButton.addTarget(self, action: #selector(self.didTapContinueButton), for: .primaryActionTriggered)
         self.cancelButton.addTarget(self, action: #selector(self.didTapCancelButton), for: .primaryActionTriggered)

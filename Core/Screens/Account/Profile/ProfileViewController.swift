@@ -247,7 +247,7 @@ class ProfileViewController: UIViewController {
 
         totalBalanceLabel.font = AppFont.with(type: .bold, size: 16)
 
-        currentBalanceTitleLabel.text = localized("available_balance")
+        currentBalanceTitleLabel.text = localized("available")
         currentBalanceTitleLabel.font = AppFont.with(type: .bold, size: 14)
 
         currentBalanceLabel.font = AppFont.with(type: .bold, size: 16)

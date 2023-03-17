@@ -113,6 +113,8 @@ extension RegisterStepView {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.clipsToBounds = true
+        scrollView.alwaysBounceVertical = true
+        scrollView.alwaysBounceHorizontal = false
         return scrollView
     }
 

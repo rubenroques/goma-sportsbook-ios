@@ -316,6 +316,7 @@ class LoginViewController: UIViewController {
         let userRegisterEnvelopValue: UserRegisterEnvelop = userRegisterEnvelop ?? UserRegisterEnvelop()
 
         let userRegisterEnvelopUpdater = UserRegisterEnvelopUpdater(userRegisterEnvelop: userRegisterEnvelopValue)
+
         userRegisterEnvelopUpdater.didUpdateUserRegisterEnvelop.sink(receiveValue: { (updatedUserEnvelop: UserRegisterEnvelop) in
             UserDefaults.standard.set(codable: updatedUserEnvelop, forKey: self.registrationFormDataKey)
             UserDefaults.standard.synchronize()
@@ -327,9 +328,11 @@ class LoginViewController: UIViewController {
                                                      userRegisterEnvelopUpdater: userRegisterEnvelopUpdater)
 
         let steppedRegistrationViewController = SteppedRegistrationViewController(viewModel: viewModel)
+        steppedRegistrationViewController.isModalInPresentation = true
 
         let registerNavigationController = Router.navigationController(with: steppedRegistrationViewController)
-
+        registerNavigationController.isModalInPresentation = true
+        
         steppedRegistrationViewController.didRegisteredUserAction = { [weak self] registeredUser in
             if let nickname = registeredUser.nickname, let password = registeredUser.password {
                 self?.triggerLoginAfterRegister(username: nickname, password: password)
@@ -339,7 +342,6 @@ class LoginViewController: UIViewController {
         }
 
         self.present(registerNavigationController, animated: true)
-
     }
 
     private func showRegisterFeedbackViewController(onNavigationController navigationController: UINavigationController) {

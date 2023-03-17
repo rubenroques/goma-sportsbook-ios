@@ -410,7 +410,7 @@ class ContactsFormStepView: FormStepView {
                 return state == .invalidSyntax
             })
             .sink { [weak self] _ in
-                self?.emailHeaderTextFieldView.showErrorOnField(text: "Please insert a valid email format", color: AppColor.inputError)
+                self?.emailHeaderTextFieldView.showErrorOnField(text: "Please insert a valid email format", color: AppColor.alertError)
             }
             .store(in: &self.cancellables)
 
@@ -432,9 +432,9 @@ class ContactsFormStepView: FormStepView {
                 case .validating:
                     self?.emailHeaderTextFieldView.hideTipAndError()
                 case .serverError:
-                    self?.emailHeaderTextFieldView.showErrorOnField(text: "Sorry we cannot verify this email", color: AppColor.inputError)
+                    self?.emailHeaderTextFieldView.showErrorOnField(text: "Sorry we cannot verify this email", color: AppColor.alertError)
                 case .alreadyInUse:
-                    self?.emailHeaderTextFieldView.showErrorOnField(text: "This email is already in use", color: AppColor.inputError)
+                    self?.emailHeaderTextFieldView.showErrorOnField(text: "This email is already in use", color: AppColor.alertError)
                 case .invalidSyntax:
                     self?.emailHeaderTextFieldView.hideTipAndError()
                 case .valid:
