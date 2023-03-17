@@ -17,14 +17,14 @@ class BonusHistoryCellViewModel: NSObject {
     var bonusStatusPublisher: CurrentValueSubject<String, Never> = .init("")
 
     // MARK: Lifetime and Cycle
-    init(bonus: EveryMatrix.GrantedBonus) {
+    init(bonus: GrantedBonus) {
         super.init()
 
         self.setupPublishers(bonus: bonus)
 
     }
 
-    private func setupPublishers(bonus: EveryMatrix.GrantedBonus) {
+    private func setupPublishers(bonus: GrantedBonus) {
 
         self.titlePublisher.value = bonus.name ?? ""
 
@@ -38,7 +38,7 @@ class BonusHistoryCellViewModel: NSObject {
 
     private func getDateFormatted(dateString: String) -> String {
         let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        dateFormatterGet.dateFormat = "dd-MM-yyyy HH:mm:ss"
 
         let dateFormatterPrint = DateFormatter()
         dateFormatterPrint.dateFormat = "yyyy-MM-dd HH:mm"
@@ -52,4 +52,21 @@ class BonusHistoryCellViewModel: NSObject {
 
         return ""
     }
+
+//    private func getDateFormatted(dateString: String) -> String {
+//        let dateFormatterGet = DateFormatter()
+//        dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+//
+//        let dateFormatterPrint = DateFormatter()
+//        dateFormatterPrint.dateFormat = "yyyy-MM-dd HH:mm"
+//
+//        let date = dateString
+//
+//        if let formattedDate = dateFormatterGet.date(from: date) {
+//
+//            return dateFormatterPrint.string(from: formattedDate)
+//        }
+//
+//        return ""
+//    }
 }

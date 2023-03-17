@@ -525,6 +525,15 @@ extension ServicesProviderClient {
         return privilegedAccessManager.updateWeeklyBettingLimits(newLimit: newLimit)
     }
 
+    public func updateResponsibleGamingLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.updateResponsibleGamingLimits(newLimit: newLimit)
+    }
+
     public func getPersonalDepositLimits() -> AnyPublisher<PersonalDepositLimitResponse, ServiceProviderError> {
 
         guard
@@ -543,6 +552,16 @@ extension ServicesProviderClient {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
         return privilegedAccessManager.getLimits()
+    }
+
+    public func getResponsibleGamingLimits() -> AnyPublisher<ResponsibleGamingLimitsResponse, ServiceProviderError> {
+
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.getResponsibleGamingLimits()
     }
 
     public func lockPlayer(isPermanent: Bool? = nil, lockPeriodUnit: String? = nil, lockPeriod: String? = nil) -> AnyPublisher<BasicResponse, ServiceProviderError> {
@@ -822,6 +841,26 @@ extension ServicesProviderClient {
         }
 
         return privilegedAccessManager.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: transactionType, pageNumber: pageNumber)
+    }
+
+    public func getGrantedBonuses() -> AnyPublisher<[GrantedBonus], ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getGrantedBonuses()
+    }
+
+    public func redeemBonus(code: String) -> AnyPublisher<RedeemBonusResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.redeemBonus(code: code)
     }
 
     public func calculateCashout(betId: String) -> AnyPublisher<Cashout, ServiceProviderError> {

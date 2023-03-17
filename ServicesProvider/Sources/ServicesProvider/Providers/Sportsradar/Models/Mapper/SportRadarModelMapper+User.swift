@@ -305,6 +305,11 @@ extension SportRadarModelMapper {
         return LimitPending(effectiveDate: internalLimitPending.effectiveDate, limit: internalLimitPending.limit, limitNumber: internalLimitPending.limitNumber)
     }
 
+    static func responsibleGamingLimitsResponse(fromResponsibleGamingLimitsResponse internalResponsibleGamingLimitsResponse: SportRadarModels.ResponsibleGamingLimitsResponse) -> ResponsibleGamingLimitsResponse {
+
+        return ResponsibleGamingLimitsResponse(status: internalResponsibleGamingLimitsResponse.status, limits: internalResponsibleGamingLimitsResponse.limits)
+    }
+
     static func basicResponse(fromInternalBasicResponse internalBasicResponse: SportRadarModels.BasicResponse) -> BasicResponse {
 
         return BasicResponse(status: internalBasicResponse.status, message: internalBasicResponse.message)
@@ -338,6 +343,47 @@ extension SportRadarModelMapper {
                                  postBalanceBonus: internalTransactionDetail.postBalanceBonus,
                                  currency: internalTransactionDetail.currency,
                                  paymentId: internalTransactionDetail.paymentId)
+    }
+
+    static func grantedBonusesResponse(fromGrantedBonusesResponse internalGrantedBonusesResponse: SportRadarModels.GrantedBonusResponse) -> GrantedBonusResponse {
+
+        let bonuses = internalGrantedBonusesResponse.bonuses.map({ grantedBonus -> GrantedBonus in
+            let grantedBonus = Self.grantedBonus(fromInternalGrantedBonus: grantedBonus)
+
+            return grantedBonus
+
+        })
+
+        return GrantedBonusResponse(status: internalGrantedBonusesResponse.status, bonuses: bonuses)
+    }
+
+    static func grantedBonus(fromInternalGrantedBonus internalGrantedBonus: SportRadarModels.GrantedBonus) -> GrantedBonus {
+
+        return GrantedBonus(id: internalGrantedBonus.id, name: internalGrantedBonus.name, status: internalGrantedBonus.status, amount: internalGrantedBonus.amount, triggerDate: internalGrantedBonus.triggerDate, expiryDate: internalGrantedBonus.expiryDate, wagerRequirement: internalGrantedBonus.wagerRequirement, amountWagered: internalGrantedBonus.amountWagered)
+    }
+
+    static func redeemBonusesResponse(fromRedeemBonusesResponse internalRedeemBonusesResponse: SportRadarModels.RedeemBonusResponse) -> RedeemBonusResponse {
+
+        if let redeemBonus = internalRedeemBonusesResponse.bonus {
+
+            let bonus = Self.redeemBonus(fromRedeemBonus: redeemBonus)
+
+            return RedeemBonusResponse(status: internalRedeemBonusesResponse.status, message: internalRedeemBonusesResponse.message, bonus: bonus)
+        }
+
+        return RedeemBonusResponse(status: internalRedeemBonusesResponse.status, message: internalRedeemBonusesResponse.message)
+    }
+
+    static func redeemBonus(fromRedeemBonus internalRedeemBonus: SportRadarModels.RedeemBonus) -> RedeemBonus {
+
+        return RedeemBonus(id: internalRedeemBonus.id,
+                           name: internalRedeemBonus.name,
+                           status: internalRedeemBonus.status,
+                           triggerDate: internalRedeemBonus.triggerDate,
+                           expiryDate: internalRedeemBonus.expiryDate,
+                           amount: internalRedeemBonus.amount,
+                           wagerRequired: internalRedeemBonus.wagerRequired,
+                           amountWagered: internalRedeemBonus.amountWagered)
     }
 }
 

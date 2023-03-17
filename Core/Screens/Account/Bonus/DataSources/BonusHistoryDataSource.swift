@@ -12,7 +12,7 @@ import Combine
 class BonusHistoryDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
     // MARK: Public Properties
-    var bonusHistory: [EveryMatrix.GrantedBonus] = []
+    var bonusHistory: [GrantedBonus] = []
 
     var bonusHistoryCellViewModels: [BonusHistoryCellViewModel] = []
 

@@ -14,10 +14,10 @@ class BonusActiveCellViewModel: NSObject {
     var titlePublisher: CurrentValueSubject<String, Never> = .init("")
     var dateStringPublisher: CurrentValueSubject<String, Never> = .init("")
     var hasBonusAmountPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    var bonus: EveryMatrix.GrantedBonus
+    var bonus: GrantedBonus
 
     // MARK: Lifetime and Cycle
-    init(bonus: EveryMatrix.GrantedBonus) {
+    init(bonus: GrantedBonus) {
         self.bonus = bonus
         
         super.init()
@@ -26,7 +26,7 @@ class BonusActiveCellViewModel: NSObject {
 
     }
 
-    private func setupPublishers(bonus: EveryMatrix.GrantedBonus) {
+    private func setupPublishers(bonus: GrantedBonus) {
 
         self.titlePublisher.value = bonus.name ?? ""
 
@@ -49,7 +49,7 @@ class BonusActiveCellViewModel: NSObject {
 
     private func getDateFormatted(dateString: String) -> String {
         let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        dateFormatterGet.dateFormat = "dd-MM-yyy HH:mm:ss"
 
         let dateFormatterPrint = DateFormatter()
         dateFormatterPrint.dateFormat = "yyyy-MM-dd HH:mm"
@@ -63,4 +63,21 @@ class BonusActiveCellViewModel: NSObject {
 
         return ""
     }
+
+//    private func getDateFormatted(dateString: String) -> String {
+//        let dateFormatterGet = DateFormatter()
+//        dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+//
+//        let dateFormatterPrint = DateFormatter()
+//        dateFormatterPrint.dateFormat = "yyyy-MM-dd HH:mm"
+//
+//        let date = dateString
+//
+//        if let formattedDate = dateFormatterGet.date(from: date) {
+//
+//            return dateFormatterPrint.string(from: formattedDate)
+//        }
+//
+//        return ""
+//    }
 }

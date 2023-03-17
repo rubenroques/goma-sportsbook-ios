@@ -92,8 +92,10 @@ enum OmegaAPIClient {
 
     case updateWeeklyDepositLimits(newLimit: Double)
     case updateWeeklyBettingLimits(newLimit: Double)
+    case updateResponsibleGamingLimits(newLimit: Double)
     case getPersonalDepositLimits
     case getLimits
+    case getResponsibleGamingLimits(limitType: String, periodType: String)
     case lockPlayer(isPermanent: Bool? = nil, lockPeriodUnit: String? = nil, lockPeriod: String? = nil)
 
     case getBalance
@@ -127,6 +129,9 @@ enum OmegaAPIClient {
     case addPaymentInformation(type: String, fields: String)
 
     case getTransactionsHistory(startDate: String, endDate: String, transactionType: String? = nil, pageNumber: Int? = nil, pageSize: Int? = nil)
+
+    case getGrantedBonuses
+    case redeemBonus(code: String)
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -170,10 +175,14 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/setPersonalDepositLimits"
         case .updateWeeklyBettingLimits:
             return "/ps/ips/updateWagerLimit"
+        case .updateResponsibleGamingLimits:
+            return "/ps/ips/updateResponsibleGamingLimit"
         case .getPersonalDepositLimits:
             return "/ps/ips/getPersonalDepositLimits"
         case .getLimits:
             return "/ps/ips/getLimits"
+        case .getResponsibleGamingLimits:
+            return "/ps/ips/getResponsibleGamingLimit"
         case .lockPlayer:
             return "/ps/ips/lockPlayer"
 
@@ -210,6 +219,11 @@ extension OmegaAPIClient: Endpoint {
 
         case .getTransactionsHistory:
             return "/ps/ips/getTransactionHistoryByCurrency"
+
+        case .getGrantedBonuses:
+            return "/ps/ips/getBonuses"
+        case .redeemBonus:
+            return "/ps/ips/redeemBonus"
         }
     }
     
@@ -388,6 +402,12 @@ extension OmegaAPIClient: Endpoint {
         case .updateWeeklyBettingLimits(let newLimit):
             let limitFormated = String(format: "%.2f", newLimit)
             return [URLQueryItem(name: "limit", value: limitFormated)]
+        case .updateResponsibleGamingLimits(let newLimit):
+            let limitFormated = String(format: "%.2f", newLimit)
+            return [URLQueryItem(name: "limit", value: limitFormated),
+                    URLQueryItem(name: "limitType", value: "BALANCE_LIMIT"),
+                    URLQueryItem(name: "periodType", value: "WEEKLY")
+            ]
         case .lockPlayer(let isPermanent, let lockPeriodUnit, let lockPeriod):
             var queryItemsURL: [URLQueryItem] = []
 
@@ -415,6 +435,10 @@ extension OmegaAPIClient: Endpoint {
             return nil
         case .getLimits:
             return nil
+        case .getResponsibleGamingLimits(let limitType, let periodType):
+            return [URLQueryItem(name: "limitTypes", value: limitType),
+                    URLQueryItem(name: "periodTypes", value: periodType)
+            ]
 
         case .getBalance:
             return nil
@@ -529,6 +553,13 @@ extension OmegaAPIClient: Endpoint {
 
             return queryItemsURL
 
+        case .getGrantedBonuses:
+            return nil
+
+        case .redeemBonus(let code):
+            return [
+                URLQueryItem(name: "bonusCode", value: code),
+            ]
         }
     }
     
@@ -554,8 +585,10 @@ extension OmegaAPIClient: Endpoint {
 
         case .updateWeeklyDepositLimits: return .get
         case .updateWeeklyBettingLimits: return .get
+        case .updateResponsibleGamingLimits: return .get
         case .getPersonalDepositLimits: return .get
         case .getLimits: return .get
+        case .getResponsibleGamingLimits: return .get
         case .lockPlayer: return .post
 
         case .getBalance: return .get
@@ -576,6 +609,9 @@ extension OmegaAPIClient: Endpoint {
         case .addPaymentInformation: return .post
 
         case .getTransactionsHistory: return .get
+
+        case .getGrantedBonuses: return .get
+        case .redeemBonus: return .post
         }
     }
     
@@ -628,8 +664,10 @@ extension OmegaAPIClient: Endpoint {
 
         case .updateWeeklyDepositLimits: return true
         case .updateWeeklyBettingLimits: return true
+        case .updateResponsibleGamingLimits: return true
         case .getPersonalDepositLimits: return true
         case .getLimits: return true
+        case .getResponsibleGamingLimits: return true
         case .lockPlayer: return true
 
         case .getBalance: return true
@@ -650,6 +688,10 @@ extension OmegaAPIClient: Endpoint {
         case .addPaymentInformation: return true
 
         case .getTransactionsHistory: return true
+
+        case .getGrantedBonuses: return true
+
+        case .redeemBonus: return true
         }
     }
     

@@ -13,7 +13,7 @@ class BonusProgressViewModel: NSObject {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
-    var bonus: EveryMatrix.GrantedBonus
+    var bonus: GrantedBonus
     var progressType: ProgressType
 
     var title: String = ""
@@ -24,7 +24,7 @@ class BonusProgressViewModel: NSObject {
     var progressAmountString: String = "-.-"
 
     // MARK: Lifetime and Cycle
-    init(bonus: EveryMatrix.GrantedBonus, progressType: ProgressType) {
+    init(bonus: GrantedBonus, progressType: ProgressType) {
 
         self.bonus = bonus
         self.progressType = progressType
