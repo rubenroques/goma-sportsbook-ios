@@ -301,7 +301,7 @@ extension RankingsViewController {
         label.font = AppFont.with(type: .bold, size: 20)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("empty_no_login")
+        label.text = localized("not_logged_in")
         label.numberOfLines = 2
         return label
     }

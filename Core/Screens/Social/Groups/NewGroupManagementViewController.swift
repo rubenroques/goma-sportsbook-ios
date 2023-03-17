@@ -283,7 +283,7 @@ extension NewGroupManagementViewController: UITableViewDataSource, UITableViewDe
 //            fatalError()
 //        }
 //
-//        let resultsLabel = localized("select_friends_add")
+//        let resultsLabel = localized("select_friends_to_add")
 //
 //        headerView.configureHeader(title: resultsLabel)
 //

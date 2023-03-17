@@ -313,6 +313,7 @@ extension BetslipManager {
             .sink { completion in
 
                 print("getAllowedBetTypes completion \(completion)")
+
             } receiveValue: { [weak self] allowedBetTypes in
 
                 let betTypes = allowedBetTypes.map { betType in

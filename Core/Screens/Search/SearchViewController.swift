@@ -151,7 +151,7 @@ class SearchViewController: UIViewController {
             textfield.textColor = UIColor.App.textPrimary
             textfield.tintColor = UIColor.App.textPrimary
             textfield.font = AppFont.with(type: .semibold, size: 14)
-            textfield.attributedPlaceholder = NSAttributedString(string: localized("search_for_teams_competitions"),
+            textfield.attributedPlaceholder = NSAttributedString(string: localized("search_for_teams_or_competitions"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
                                                                                 UIColor.App.inputTextTitle, NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14)])
 
@@ -291,7 +291,7 @@ class SearchViewController: UIViewController {
     func configureNoResultsViewText() {
         if let searchBarText = self.searchBarView.text {
             let noResultsTextRaw = localized("no_results_for")
-            let noResultsText = noResultsTextRaw.replacingOccurrences(of: "%s", with: searchBarText)
+            let noResultsText = noResultsTextRaw.replacingOccurrences(of: "{context}", with: searchBarText)
             self.noResultsLabel.text = noResultsText
 
         }

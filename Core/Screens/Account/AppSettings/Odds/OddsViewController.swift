@@ -76,19 +76,19 @@ class OddsViewController: UIViewController {
         themeColorView.setTitle(title: localized("odds_format"))
 
         let euOddView = SettingsRadioRowView()
-        euOddView.setTitle(title: localized("eu_odd"))
+        euOddView.setTitle(title: localized("odds_format_eu"))
         euOddView.viewId = 1
         euOddView.hasSeparatorLineView = true
         self.viewModel.oddsFormatRadioButtonViews.append(euOddView)
 
         let ukOddView = SettingsRadioRowView()
-        ukOddView.setTitle(title: localized("uk_odd"))
+        ukOddView.setTitle(title: localized("odds_format_uk"))
         ukOddView.viewId = 2
         ukOddView.hasSeparatorLineView = true
         self.viewModel.oddsFormatRadioButtonViews.append(ukOddView)
 
         let usOddView = SettingsRadioRowView()
-        usOddView.setTitle(title: localized("us_odd"))
+        usOddView.setTitle(title: localized("odds_format_us"))
         usOddView.viewId = 3
         self.viewModel.oddsFormatRadioButtonViews.append(usOddView)
 

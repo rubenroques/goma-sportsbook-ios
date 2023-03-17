@@ -127,8 +127,8 @@ class MyTicketsViewController: UIViewController {
 
                 if userSession == nil {
                     self?.emptyBaseView.isHidden = false
-                    self?.firstTextFieldLabel.text = localized("empty_no_login")
-                    self?.secondTextFieldLabel.text = localized("second_empty_no_login")
+                    self?.firstTextFieldLabel.text = localized("not_logged_in")
+                    self?.secondTextFieldLabel.text = localized("need_login_tickets")
                     self?.noBetsButton.setTitle(localized("login"), for: .normal)
                     self?.noBetsButton.isHidden = false
                     self?.noBetsImage.image = UIImage(named: "no_internet_icon")

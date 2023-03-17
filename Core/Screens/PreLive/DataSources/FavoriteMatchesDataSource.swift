@@ -81,7 +81,7 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
             else {
                 if let cell = tableView.dequeueCellType(EmptyCardTableViewCell.self) {
                     cell.setDescription(primaryText: localized("empty_my_games"),
-                                        secondaryText: localized("second_empty_my_games"),
+                                        secondaryText: localized("go_to_list_to_mark"),
                                         userIsLoggedIn: UserSessionStore.isUserLogged() )
                     return cell
                 }

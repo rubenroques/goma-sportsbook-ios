@@ -194,7 +194,7 @@ extension GenderFormStepView {
         let image = UIImage(named: "GenderMale", in: Bundle.module, with: nil)?.withRenderingMode(.alwaysTemplate)
         button.setImage(image, for: .normal)
 
-        button.setTitle("Male", for: .normal)
+        button.setTitle(Localization.localized("male"), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.layer.cornerRadius = 20
         button.clipsToBounds = true
@@ -214,7 +214,7 @@ extension GenderFormStepView {
         button.setInsets(forContentPadding: UIEdgeInsets(top: 2, left: 10, bottom: 2, right: 12),
                          imageTitlePadding: 6)
 
-        button.setTitle("Female", for: .normal)
+        button.setTitle(Localization.localized("female"), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.layer.cornerRadius = 20
         button.clipsToBounds = true

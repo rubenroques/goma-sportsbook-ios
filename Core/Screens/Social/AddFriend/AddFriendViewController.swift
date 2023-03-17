@@ -624,7 +624,7 @@ extension AddFriendViewController {
         button.setImage(UIImage(named: "add_orange_icon"), for: .normal)
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
-        button.setTitle(localized("add_from_contact_list"), for: .normal)
+        button.setTitle(localized("add_from_contact"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         return button
     }

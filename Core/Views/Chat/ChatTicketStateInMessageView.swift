@@ -106,7 +106,7 @@ class ChatTicketStateInMessageView: UIView {
         self.betAmountValueLabel.text = self.betSelectionCellViewModel.betAmountString
 
         if self.betSelectionCellViewModel.ticket.status == "WON" {
-            self.possibleWinningTitleLabel.text = localized("return")
+            self.possibleWinningTitleLabel.text = localized("return_text")
 
             self.possibleWinningValueLabel.text = self.betSelectionCellViewModel.returnString
 

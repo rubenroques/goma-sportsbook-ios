@@ -121,7 +121,7 @@ class TipsSettingsViewController: UIViewController {
     private func setupTopStackView() {
 
         let anonymousTipsInfoView = SettingsRowView()
-        anonymousTipsInfoView.setTitle(title: localized("anonymous_tips_info"))
+        anonymousTipsInfoView.setTitle(title: localized("anonymous_tips_settings_title"))
 
         let anonymousTipsView = SettingsRowView()
         anonymousTipsView.setTitle(title: localized("anonymous_tips"))

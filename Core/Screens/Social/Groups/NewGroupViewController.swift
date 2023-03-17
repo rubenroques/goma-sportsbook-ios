@@ -354,8 +354,8 @@ extension NewGroupViewController: UITableViewDataSource, UITableViewDelegate {
             fatalError()
         }
 
-        headerView.configureHeader(title: localized("add_friends_group"),
-                                   subtitle: localized("select_atleast_two"))
+        headerView.configureHeader(title: localized("add_friends_to_group"),
+                                   subtitle: localized("select_at_least_2_friends"))
 
         return headerView
 
@@ -494,7 +494,7 @@ extension NewGroupViewController {
     private static func createEmptyStateLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("no_friends")
+        label.text = localized("no_friends_to_display")
         label.numberOfLines = 0
         label.font = AppFont.with(type: .bold, size: 18)
         label.textAlignment = .center

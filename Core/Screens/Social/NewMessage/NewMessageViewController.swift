@@ -433,7 +433,7 @@ extension NewMessageViewController {
     private static func createEmptyStateLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("no_friends")
+        label.text = localized("no_friends_to_display")
         label.numberOfLines = 0
         label.font = AppFont.with(type: .bold, size: 18)
         label.textAlignment = .center

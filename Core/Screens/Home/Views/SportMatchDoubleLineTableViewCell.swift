@@ -348,10 +348,10 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                 let singularMarketRawString = localized("number_of_market_singular")
                 var marketString = ""
                 if numberTotalOfMarkets > 1 {
-                    marketString = marketsRawString.replacingOccurrences(of: "%s", with: "\(numberTotalOfMarkets)")
+                    marketString = marketsRawString.replacingOccurrences(of: "{num_markets}", with: "\(numberTotalOfMarkets)")
                 }
                 else {
-                    marketString = singularMarketRawString.replacingOccurrences(of: "%s", with: "\(numberTotalOfMarkets)")
+                    marketString = singularMarketRawString.replacingOccurrences(of: "{num_markets}", with: "\(numberTotalOfMarkets)")
                 }
                 cell.configureWithSubtitleString(marketString)
 

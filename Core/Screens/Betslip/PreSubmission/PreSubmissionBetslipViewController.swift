@@ -1127,11 +1127,11 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.placeBetButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
         self.placeBetButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
-        self.placeBetButton.setTitle(localized("place_bet"), for: .normal)
+        self.placeBetButton.setTitle(localized("bet"), for: .normal)
 
         self.placeBetButton.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
         self.placeBetButton.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
-        self.placeBetButton.setTitle(localized("place_bet"), for: .disabled)
+        self.placeBetButton.setTitle(localized("bet"), for: .disabled)
 
         self.plusOneButtonView.setBackgroundColor(UIColor.App.backgroundTertiary, for: .normal)
         self.plusOneButtonView.setTitleColor(UIColor.App.textPrimary, for: .normal)

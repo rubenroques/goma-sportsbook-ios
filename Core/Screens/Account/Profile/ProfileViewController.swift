@@ -106,7 +106,7 @@ class ProfileViewController: UIViewController {
         }
 
         if TargetVariables.hasFeatureEnabled(feature: .chat), let userCode = Env.gomaNetworkClient.getCurrentToken()?.code {
-            let userCodeString = localized("user_code").replacingOccurrences(of: "%s", with: userCode)
+            let userCodeString = localized("user_code_dynamic").replacingOccurrences(of: "{code_str}", with: userCode)
             self.userIdLabel.text = userCodeString
             self.userCodeStackView.isHidden = false
         }
@@ -282,8 +282,8 @@ class ProfileViewController: UIViewController {
         if let versionNumber = Bundle.main.versionNumber,
            let buildNumber = Bundle.main.buildNumber {
             let appVersionRawString = localized("app_version_profile")
-            let appVersionBuildNumberString = appVersionRawString.replacingOccurrences(of: "(%s)", with: "(\(buildNumber))")
-            let appVersionStringFinal = appVersionBuildNumberString.replacingOccurrences(of: "%s", with: "\(versionNumber)")
+            let appVersionBuildNumberString = appVersionRawString.replacingOccurrences(of: "{version_1}", with: "(\(buildNumber))")
+            let appVersionStringFinal = appVersionBuildNumberString.replacingOccurrences(of: "{version_2}", with: "\(versionNumber)")
             self.infoLabel.text = appVersionStringFinal
         }
 
@@ -304,7 +304,7 @@ class ProfileViewController: UIViewController {
         if let userCode = Env.gomaNetworkClient.getCurrentToken()?.code {
             self.pasteboard.string = userCode
 
-            let customCodeString = localized("user_code_copied").replacingOccurrences(of: "%s", with: userCode)
+            let customCodeString = localized("user_code_dynamic_copied").replacingOccurrences(of: "{code_str}", with: userCode)
 
             let customToast = ToastCustom.text(title: customCodeString)
 
@@ -339,7 +339,7 @@ class ProfileViewController: UIViewController {
         if let isUserKycVerified = Env.userSessionStore.isUserKycVerified.value, !isUserKycVerified {
             let uploadDocumentsAlertData = ActivationAlert(title: localized("document_validation_required"),
                                                            description: localized("document_validation_required_description"),
-                                                           linkLabel: localized("complete_verification"),
+                                                           linkLabel: localized("complete_your_verification"),
                                                            alertType: .documents)
 
             alertsArray.append(uploadDocumentsAlertData)

@@ -387,7 +387,7 @@ extension ConversationsViewController {
     private static func createEmptyStateLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("time_add_friends")
+        label.text = localized("time_to_add_friends")
         label.numberOfLines = 0
         label.font = AppFont.with(type: .bold, size: 20)
         label.textAlignment = .center

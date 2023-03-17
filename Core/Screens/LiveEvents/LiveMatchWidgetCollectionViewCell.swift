@@ -818,7 +818,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     private func showSuspendedView() {
-        self.suspendedLabel.text = localized("suspended_market")
+        self.suspendedLabel.text = localized("suspended")
         self.suspendedBaseView.isHidden = false
     }
 

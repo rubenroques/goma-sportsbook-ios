@@ -189,7 +189,7 @@ class TermsCondFormStepView: FormStepView {
 extension TermsCondFormStepView {
 
     var termsUnderlinedString: String {
-        return "Terms and Conditions"
+        return Localization.localized("terms_and_conditions")
     }
 
     //
@@ -213,7 +213,7 @@ extension TermsCondFormStepView {
     }
     private static func createMarketingLabel() -> UILabel {
         let label = UILabel()
-        label.text = "I allow my email to be used for marketing purposes"
+        label.text = Localization.localized("allow_email_usage")
         label.numberOfLines = 2
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -233,7 +233,7 @@ extension TermsCondFormStepView {
     }
     private static func createTermsLabel() -> UILabel {
         let label = UILabel()
-        label.text = "Accept Terms & Conditions"
+        label.text = Localization.localized("accept_tc")
         label.numberOfLines = 2
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         label.translatesAutoresizingMaskIntoConstraints = false

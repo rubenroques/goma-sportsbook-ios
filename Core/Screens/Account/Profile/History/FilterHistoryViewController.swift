@@ -290,7 +290,7 @@ extension FilterHistoryViewController {
     private func setupAvailableFilterOptionsSection() {
         self.filterCollapseView.hasCheckbox = false
 
-        self.filterCollapseView.setTitle(title: localized("filter_date"))
+        self.filterCollapseView.setTitle(title: localized("filter_by_date"))
         
         for range in FilterHistoryViewModel.FilterValue.allCases {
             let filterRowView = FilterRowView()

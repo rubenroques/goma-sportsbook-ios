@@ -117,13 +117,19 @@ class UserProfileInfoViewController: UIViewController {
         if let userProfileInfo = self.viewModel.userProfileInfo {
 
             let accumulatedCardView = UserInfoSimpleCardView()
-            accumulatedCardView.configure(title: localized("accumulated_odds_winning"), value: "\(userProfileInfo.rankings.accumulatedWins)", iconType: .accumulated)
+            accumulatedCardView.configure(title: localized("accumulated_odds_winning"),
+                                          value: "\(userProfileInfo.rankings.accumulatedWins)",
+                                          iconType: .accumulated)
 
             let winsCardView = UserInfoSimpleCardView()
-            winsCardView.configure(title: localized("best_consecutive_wins"), value: "\(userProfileInfo.rankings.consecutiveWins)", iconType: .wins)
+            winsCardView.configure(title: localized("best_number_of_consecutive_wins"),
+                                   value: "\(userProfileInfo.rankings.consecutiveWins)",
+                                   iconType: .wins)
 
             let highestOddCardView = UserInfoSimpleCardView()
-            highestOddCardView.configure(title: localized("highest_odd"), value: "\(userProfileInfo.rankings.highestOdd)", iconType: .highest)
+            highestOddCardView.configure(title: localized("highest_odd"),
+                                         value: "\(userProfileInfo.rankings.highestOdd)",
+                                         iconType: .highest)
             
             self.simpleCardsStackView.addArrangedSubview(accumulatedCardView)
             self.simpleCardsStackView.addArrangedSubview(winsCardView)
@@ -132,7 +138,9 @@ class UserProfileInfoViewController: UIViewController {
             if userProfileInfo.sportsPerc.isNotEmpty {
 
                 let sportsPercentageCardView = UserInfoMultipleCardView()
-                sportsPercentageCardView.configure(title: localized("percentage_sports"), iconType: .percentage, sportsData: userProfileInfo.sportsPerc)
+                sportsPercentageCardView.configure(title: localized("percentage_of_bets_per_sport"),
+                                                   iconType: .percentage,
+                                                   sportsData: userProfileInfo.sportsPerc)
 
                 self.simpleCardsStackView.addArrangedSubview(sportsPercentageCardView)
 

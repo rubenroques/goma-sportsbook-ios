@@ -482,57 +482,6 @@ class ProfileLimitsManagementViewModel: NSObject {
         return alertMessage
     }
 
-//    func getAlertInfoText(alertType: String) -> String {
-//        let dateFormatterGet = DateFormatter()
-//        dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SS"
-//
-//        let dateFormatterPrint = DateFormatter()
-//        dateFormatterPrint.dateFormat = "yyyy-MM-dd HH:mm"
-//
-//        var alertFinalText = ""
-//        var alertTypeText = ""
-//        var alertTypeTextLocked = ""
-//
-//        var alertLimit: EveryMatrix.Limit?
-//
-//        if alertType == "deposit" {
-////            alertLimit = self.depositLimit
-//            alertTypeText = localized("deposit_limit_set")
-//            alertTypeTextLocked = localized("deposit_limit_locked")
-//        }
-//        else if alertType == "wagering" {
-////            alertLimit = self.getWageringOption()
-//            alertTypeText = localized("betting_limit_set")
-//            alertTypeTextLocked = localized("betting_limit_locked")
-//        }
-//        else if alertType == "loss" {
-////            alertLimit = self.getLossOption()
-//            alertTypeText = localized("loss_limit_set")
-//            alertTypeTextLocked = localized("loss_limit_locked")
-//        }
-//
-//        if let selectedLimit = alertLimit {
-//
-//            if selectedLimit.updatable {
-//                alertFinalText = alertTypeText
-//            }
-//            else {
-//                if let expireInfo = selectedLimit.current?.expiryDate {
-//                    let date = dateFormatterGet.date(from: expireInfo)
-//                    var dateFinal = ""
-//                    if let dateFormatted = date {
-//                        dateFinal = dateFormatterPrint.string(from: dateFormatted)
-//                    }
-//                    let alertDateLocked = alertTypeTextLocked.replacingOccurrences(of: "%s", with: "\(dateFinal)")
-//                    alertFinalText = alertDateLocked
-//                }
-//            }
-//        }
-//
-//        return alertFinalText
-//
-//    }
-
 }
 
 enum LimitUpdateStatus {

@@ -107,7 +107,7 @@ class BetSubmissionSuccessViewController: UIViewController {
         StyleHelper.styleButton(button: self.continueButton)
 
         self.checkboxImage.image = UIImage(named: "checkbox_unselected_icon")
-        self.checkboxLabel.text = localized("keep_bet_checkbox")
+        self.checkboxLabel.text = localized("keep_bet")
         self.checkboxLabel.font = AppFont.with(type: .semibold, size: 14)
 
         let checkboxTap = UITapGestureRecognizer(target: self, action: #selector(didTapCheckbox))

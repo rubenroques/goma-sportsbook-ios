@@ -501,7 +501,7 @@ extension SimpleRegisterDetailsViewController {
     }
 
     func showUsernameInvalidErrorStatus() {
-        self.usernameHeaderTextView.showErrorOnField(text: localized("invalid_username"),
+        self.usernameHeaderTextView.showErrorOnField(text: localized("username_invalid"),
                                                      color: UIColor.App.alertError)
         self.disableSignUpButton()
     }

@@ -241,7 +241,7 @@ class NicknameFormStepView: FormStepView {
     func configureBindings() {
 
         self.titleLabel.text = self.viewModel.title
-        self.nicknameHeaderTextFieldView.setPlaceholderText("Nickname")
+        self.nicknameHeaderTextFieldView.setPlaceholderText(Localization.localized("nickname"))
 
         self.nicknameHeaderTextFieldView.textPublisher
             .sink { newNickname in
@@ -261,7 +261,7 @@ class NicknameFormStepView: FormStepView {
                 return state == .tooShort
             })
             .sink { [weak self] _ in
-                self?.nicknameHeaderTextFieldView.showErrorOnField(text: "Nickname is too short.")
+                self?.nicknameHeaderTextFieldView.showErrorOnField(text: Localization.localized("nickname_error"))
                 self?.suggestionsLabelContainerView.isHidden = true
                 self?.configureWithSuggestedNicknames([])
                 self?.loadingView.stopAnimating()

@@ -100,7 +100,7 @@ class NotificationsViewController: UIViewController {
     private func setupBottomStackView() {
 
         let allowSportsbookView = SettingsRowView()
-        allowSportsbookView.setTitle(title: localized("allow_sportsbook_contact"))
+        allowSportsbookView.setTitle(title: localized("allow_sportsbook_to_contact"))
 
         let smsView = SettingsRowView()
         smsView.setTitle(title: localized("sms"))

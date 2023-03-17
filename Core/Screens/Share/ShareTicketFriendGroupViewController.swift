@@ -467,7 +467,7 @@ extension ShareTicketFriendGroupViewController {
         label.font = AppFont.with(type: .bold, size: 16)
         label.textAlignment = .center
         label.numberOfLines = 1
-        label.text = localized("send_friends_groups")
+        label.text = localized("send_to_friends_and_groups")
         return label
     }
 
@@ -548,7 +548,7 @@ extension ShareTicketFriendGroupViewController {
 //    private static func createEmptyStateLabel() -> UILabel {
 //        let label = UILabel()
 //        label.translatesAutoresizingMaskIntoConstraints = false
-//        label.text = localized("no_friends")
+//        label.text = localized("no_friends_to_display")
 //        label.numberOfLines = 0
 //        label.font = AppFont.with(type: .bold, size: 18)
 //        label.textAlignment = .center

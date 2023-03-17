@@ -97,7 +97,7 @@ class ReceivedTicketMessageTableViewCell: UITableViewCell {
         self.messageLabel.text = messageData.text
 
         if messageData.text.isEmpty {
-            self.messageLabel.text = localized("chat_empty_shared_ticket_others").replacingOccurrences(of: "%s", with: "\(username)")
+            self.messageLabel.text = localized("chat_empty_shared_ticket_others").replacingOccurrences(of: "{name}", with: "\(username)")
         }
         
         self.messageDateLabel.text = messageData.date

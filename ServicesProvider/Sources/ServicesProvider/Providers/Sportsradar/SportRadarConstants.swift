@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Extensions
 
 struct SportRadarConstants {
 
@@ -45,7 +46,7 @@ struct SportRadarConstants {
         return socketHostname + "/notification/listen/websocket"
     }
     static var servicesRestHostname = "https://velsv-bson-ssb-ua.betsson.fr" // To subscribe to contentIDs, as in velsv-bson-ssb-ua.betsson.fr/services
-    static var socketLanguageCode = "UK"
+    static var socketLanguageCode = Localization.localized("sportradar_content_languange_code")
 
     // PAM
     // //static var pamHostname = "https://ps.omegasys.eu"

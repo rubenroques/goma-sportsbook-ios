@@ -10,6 +10,7 @@ import Combine
 import UIKit
 import ServicesProvider
 import Theming
+import Extensions
 
 public enum FormStep: String {
     case gender
@@ -257,7 +258,7 @@ public class SteppedRegistrationViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { currentStep in
                 if currentStep == 0 {
-                    self.backButton.alpha = 0.5
+                    self.backButton.alpha = 0.0
                     self.backButton.isHidden = false
                     self.cancelButton.isHidden = false
                     self.progressView.isHidden = false
@@ -574,7 +575,7 @@ public extension SteppedRegistrationViewController {
 
     private static func createCancelButton() -> UIButton {
         let button = UIButton()
-        button.setTitle("Close", for: .normal)
+        button.setTitle(Localization.localized("close"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -608,7 +609,7 @@ public extension SteppedRegistrationViewController {
 
     private static func createContinueButton() -> UIButton {
         let button = UIButton()
-        button.setTitle("Continue", for: .normal)
+        button.setTitle(Localization.localized("continue_"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 18)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 8

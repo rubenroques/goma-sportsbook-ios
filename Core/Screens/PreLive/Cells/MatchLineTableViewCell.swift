@@ -292,10 +292,10 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 let singularMarketRawString = localized("number_of_market_singular")
                 var marketString = ""
                 if match.numberTotalOfMarkets > 1 {
-                    marketString = marketsRawString.replacingOccurrences(of: "%s", with: "\(match.numberTotalOfMarkets)")
+                    marketString = marketsRawString.replacingOccurrences(of: "{num_markets}", with: "\(match.numberTotalOfMarkets)")
                 }
                 else {
-                    marketString = singularMarketRawString.replacingOccurrences(of: "%s", with: "\(match.numberTotalOfMarkets)")
+                    marketString = singularMarketRawString.replacingOccurrences(of: "{num_markets}", with: "\(match.numberTotalOfMarkets)")
                 }
 
                 cell.configureWithSubtitleString(marketString)

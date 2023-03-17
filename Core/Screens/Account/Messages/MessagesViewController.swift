@@ -380,7 +380,7 @@ extension MessagesViewController {
     private static func createMarkAllReadButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("mark_all_read"), for: .normal)
+        button.setTitle(localized("mark_all_as_read"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .semibold, size: 12)
         return button
     }

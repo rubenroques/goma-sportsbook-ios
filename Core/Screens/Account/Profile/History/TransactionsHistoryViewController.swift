@@ -388,7 +388,7 @@ extension TransactionsHistoryViewController {
         label.font = AppFont.with(type: .bold, size: 22)
         label.numberOfLines = 4
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("empty_no_transactions")
+        label.text = localized("empty_transactions_history_title")
         return label
     }
 

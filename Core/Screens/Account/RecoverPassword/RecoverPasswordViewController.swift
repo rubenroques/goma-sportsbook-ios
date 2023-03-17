@@ -252,7 +252,7 @@ extension RecoverPasswordViewController {
     private static func createSubtitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("email_associated_account")
+        label.text = localized("enter_associated_email")
         label.font = AppFont.with(type: .bold, size: 15)
         label.textAlignment = .center
         label.numberOfLines = 0

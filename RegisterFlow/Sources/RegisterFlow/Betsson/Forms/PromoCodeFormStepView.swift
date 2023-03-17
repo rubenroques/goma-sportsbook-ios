@@ -72,9 +72,8 @@ class PromoCodeFormStepView: FormStepView {
 
         self.titleLabel.text = self.viewModel.title
 
-        self.promoCodeHeaderTextFieldView.setPlaceholderText("Promo Code")
-        self.godfatherHeaderTextFieldView.setPlaceholderText("Godfather")
-
+        self.promoCodeHeaderTextFieldView.setPlaceholderText(Localization.localized("promo_code"))
+        self.godfatherHeaderTextFieldView.setPlaceholderText(Localization.localized("godfather"))
 
         self.promoCodeHeaderTextFieldView.setReturnKeyType(.next)
         self.promoCodeHeaderTextFieldView.didTapReturn = { [weak self] in

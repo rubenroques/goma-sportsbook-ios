@@ -269,13 +269,13 @@ extension BettingAPIClient: Endpoint {
     
     var timeout: TimeInterval {
         switch self {
-        case .betHistory: return TimeInterval(5)
-        case .betDetails: return TimeInterval(5)
-        case .calculateReturns: return TimeInterval(5)
-        case .getAllowedBetTypes: return TimeInterval(5)
+        case .betHistory: return TimeInterval(10)
+        case .betDetails: return TimeInterval(10)
+        case .calculateReturns: return TimeInterval(10)
+        case .getAllowedBetTypes: return TimeInterval(10)
         case .placeBets: return TimeInterval(60)
-        case .calculateCashout: return TimeInterval(5)
-        case .cashoutBet: return TimeInterval(5)
+        case .calculateCashout: return TimeInterval(10)
+        case .cashoutBet: return TimeInterval(10)
         }
     }
     

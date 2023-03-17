@@ -398,7 +398,7 @@ extension FeaturedTipDetailsViewController {
     private static func createSelectionsLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "\(localized("number_selections")): "
+        label.text = "\(localized("number_of_selections")): "
         label.font = AppFont.with(type: .semibold, size: 12)
         return label
     }

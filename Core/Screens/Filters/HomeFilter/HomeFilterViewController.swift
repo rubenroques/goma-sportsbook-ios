@@ -133,7 +133,7 @@ class HomeFilterViewController: UIViewController {
         
         defaultMarket = filterValues?.defaultMarket
 
-        navigationLabel.text = localized("filters")
+        navigationLabel.text = localized("settings")
         navigationLabel.font = AppFont.with(type: .bold, size: 17)
 
         navigationResetButton.setTitle(localized("reset"), for: .normal)

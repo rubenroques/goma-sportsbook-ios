@@ -352,7 +352,7 @@ extension UserSessionStore {
                 }
                 let wallet = UserWallet(total: total,
                                         bonus: userWallet.bonus,
-                                        totalWithdrawable: userWallet.totalWithdrawable,
+                                        totalWithdrawable: userWallet.withdrawable,
                                         currency: currency)
                 self?.userWalletPublisher.send(wallet)
             })

@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import ServicesProvider
+import Extensions
 
 struct FormStepViewFactory {
 
@@ -27,22 +28,22 @@ struct FormStepViewFactory {
                 case .female: gender = .female
                 }
             }
-            let genderFormStepViewModel = GenderFormStepViewModel(title: "Gender",
+            let genderFormStepViewModel = GenderFormStepViewModel(title: Localization.localized("gender"),
                                                                   selectedGender: gender,
                                                                   userRegisterEnvelopUpdater: userRegisterEnvelopUpdater)
             return GenderFormStepView(viewModel: genderFormStepViewModel)
             //
             //
         case .names:
-            return NamesFormStepView(viewModel: NamesFormStepViewModel(title: "Names",
+            return NamesFormStepView(viewModel: NamesFormStepViewModel(title: Localization.localized("names"),
                                                                        firstName: userRegisterEnvelop.name,
                                                                        lastName: userRegisterEnvelop.surname,
                                                                        userRegisterEnvelopUpdater: userRegisterEnvelopUpdater))
             //
             //
         case .avatar:
-            let avatarFormStepViewModel = AvatarFormStepViewModel(title: "Avatar",
-                                                                  subtitle: "Choose one of our standard avatars for your icon.",
+            let avatarFormStepViewModel = AvatarFormStepViewModel(title: Localization.localized("avatar"),
+                                                                  subtitle: Localization.localized("choose_avatar"),
                                                                   avatarIconNames: ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5", "avatar6",],
                                                                   selectedAvatarName: userRegisterEnvelop.avatarName,
                                                                   userRegisterEnvelopUpdater: userRegisterEnvelopUpdater)
@@ -50,7 +51,7 @@ struct FormStepViewFactory {
             //
             //
         case .nickname:
-            let nicknameFormStepViewModel = NicknameFormStepViewModel(title: "Nickname",
+            let nicknameFormStepViewModel = NicknameFormStepViewModel(title: Localization.localized("nickname"),
                                                                       nickname: userRegisterEnvelop.nickname,
                                                                       serviceProvider: serviceProvider,
                                                                       userRegisterEnvelopUpdater: userRegisterEnvelopUpdater)
@@ -58,7 +59,7 @@ struct FormStepViewFactory {
             //
             //
         case .ageCountry:
-            let ageCountryFormStepViewModel = AgeCountryFormStepViewModel(title: "Age and Country",
+            let ageCountryFormStepViewModel = AgeCountryFormStepViewModel(title: Localization.localized("age_country"),
                                                                           defaultCountryIso3Code: defaultCountryIso3Code,
                                                                           birthDate: userRegisterEnvelop.dateOfBirth,
                                                                           selectedCountry: userRegisterEnvelop.countryBirth,
@@ -70,7 +71,7 @@ struct FormStepViewFactory {
             //
             //
         case .address:
-            return AddressFormStepView(viewModel: AddressFormStepViewModel(title: "Address",
+            return AddressFormStepView(viewModel: AddressFormStepViewModel(title: Localization.localized("address"),
                                                                            countryCodeForSuggestions: defaultCountryIso3Code,
                                                                            place: userRegisterEnvelop.placeAddress,
                                                                            street: userRegisterEnvelop.streetAddress,
@@ -79,7 +80,7 @@ struct FormStepViewFactory {
             //
             //
         case .contacts:
-            return ContactsFormStepView(viewModel: ContactsFormStepViewModel(title: "Contacts",
+            return ContactsFormStepView(viewModel: ContactsFormStepViewModel(title: Localization.localized("contacts"),
                                                                              email: userRegisterEnvelop.email,
                                                                              phoneNumber: userRegisterEnvelop.phoneNumber,
                                                                              prefixCountry: userRegisterEnvelop.phonePrefixCountry,
@@ -89,27 +90,27 @@ struct FormStepViewFactory {
             //
             //
         case .password:
-            return PasswordFormStepView(viewModel: PasswordFormStepViewModel(title: "Security",
+            return PasswordFormStepView(viewModel: PasswordFormStepViewModel(title: Localization.localized("security"),
                                                                              password: userRegisterEnvelop.password,
                                                                              userRegisterEnvelopUpdater: userRegisterEnvelopUpdater))
             //
             //
         case .terms:
-            return TermsCondFormStepView(viewModel: TermsCondFormStepViewModel(title: "Terms and Conditions",
+            return TermsCondFormStepView(viewModel: TermsCondFormStepViewModel(title: Localization.localized("terms_and_conditions"),
                                                                                isMarketingOn: userRegisterEnvelop.acceptedMarketing,
                                                                                isTermsOn: userRegisterEnvelop.acceptedTerms,
                                                                                userRegisterEnvelopUpdater: userRegisterEnvelopUpdater))
             //
             //
         case .promoCodes:
-            return PromoCodeFormStepView(viewModel: PromoCodeFormStepViewModel.init(title: "Promo",
+            return PromoCodeFormStepView(viewModel: PromoCodeFormStepViewModel.init(title: Localization.localized("promo_code"),
                                                                                     promoCode: userRegisterEnvelop.promoCode,
                                                                                     godfatherCode: userRegisterEnvelop.godfatherCode,
                                                                                     userRegisterEnvelopUpdater: userRegisterEnvelopUpdater))
             //
             //
         case .phoneConfirmation:
-            return ConfirmationCodeFormStepView(viewModel: ConfirmationCodeFormStepViewModel(title: "Code Verification",
+            return ConfirmationCodeFormStepView(viewModel: ConfirmationCodeFormStepViewModel(title: Localization.localized("verification_code"),
                                                                                              userRegisterEnvelopUpdater: userRegisterEnvelopUpdater))
         }
     }

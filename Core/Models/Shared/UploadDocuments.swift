@@ -41,7 +41,7 @@ enum FileState {
     var statusName: String {
         switch self {
         case .pendingApproved:
-            return localized("pending_approved")
+            return localized("pending_approval")
         case .approved:
             return localized("approved")
         case .failed:

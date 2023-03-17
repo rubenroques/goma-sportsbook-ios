@@ -140,12 +140,17 @@ class SupportPageViewController: UIViewController {
         self.viewModel.supportResponseAction = { [weak self] withSuccess in
             
             if withSuccess {
-                self?.showAlert(title: localized("supportSuccessTitle"), subtitle: localized("supportSuccessSubtitle"), buttonText: "OK", backAction: true)
+                self?.showAlert(title: localized("success"),
+                                subtitle: localized("support_success"),
+                                buttonText: "OK",
+                                backAction: true)
                 self?.didTapBackButton()
-                
             }
             else {
-                self?.showAlert(title: localized("supportErrorTitle"), subtitle: localized("supportErrorSubtitle"), buttonText: "OK", backAction: false)
+                self?.showAlert(title: localized("error"),
+                                subtitle: localized("support_error"),
+                                buttonText: "OK",
+                                backAction: false)
             }
             
         }

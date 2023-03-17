@@ -146,12 +146,10 @@ class ConversationDetailViewModel: NSObject {
                     if let onlineUsersChat = onlineUsersResponse[self.conversationId],
                        let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
                         if onlineUsersChat.users.contains("\(loggedUserId)") && onlineUsersChat.users.count > 1 {
-
                             self.isChatOnlinePublisher.send(true)
                         }
                         else {
                             self.isChatOnlinePublisher.send(false)
-
                         }
 
                         if let groupUsers = self.conversationData?.groupUsers {
@@ -161,16 +159,12 @@ class ConversationDetailViewModel: NSObject {
                             var userDetailsString = ""
 
                             let chatGroupDetailString = localized("chat_group_users_details")
-
-                            userDetailsString = chatGroupDetailString.replacingFirstOccurrence(of: "%s", with: "\(onlineUsers)")
-                            userDetailsString = userDetailsString.replacingOccurrences(of: "%s", with: "\(numberUsers)")
+                            userDetailsString = chatGroupDetailString.replacingOccurrences(of: "{num_online}", with: "\(onlineUsers)")
+                            userDetailsString = userDetailsString.replacingOccurrences(of: "{num_members}", with: "\(numberUsers)")
 
                             self.usersPublisher.send(userDetailsString)
-
                         }
-
                     }
-
                 })
                 .store(in: &cancellables)
         }
@@ -246,10 +240,8 @@ class ConversationDetailViewModel: NSObject {
                 var userDetailsString = ""
 
                 let chatGroupDetailString = localized("chat_group_users_details")
-
-                userDetailsString = chatGroupDetailString.replacingFirstOccurrence(of: "%s", with: "\(onlineUsers)")
-                userDetailsString = userDetailsString.replacingOccurrences(of: "%s", with: "\(numberUsers)")
-
+                userDetailsString = chatGroupDetailString.replacingOccurrences(of: "{num_online}", with: "\(onlineUsers)")
+                userDetailsString = userDetailsString.replacingOccurrences(of: "{num_members}", with: "\(numberUsers)")
                 self.usersPublisher.value = userDetailsString
 
                 self.groupInitialsPublisher.value = self.getGroupInitials(text: conversationData.name)

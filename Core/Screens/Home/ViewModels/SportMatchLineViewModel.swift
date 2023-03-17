@@ -89,13 +89,13 @@ class SportMatchLineViewModel {
         switch matchesType {
 
         case .popular:
-            self.titlePublisher = .init( localized("Popular").uppercased())
+            self.titlePublisher = .init( localized("popular").uppercased())
             self.requestMatches()
         case .live:
-            self.titlePublisher = .init( localized("Live").uppercased())
+            self.titlePublisher = .init( localized("live").uppercased())
             self.requestMatches()
         case .topCompetition:
-            self.titlePublisher = .init( localized("Popular Competitions").uppercased())
+            self.titlePublisher = .init( localized("popular_competitions").uppercased())
             self.layoutTypePublisher.send(.competition)
             self.requestMatches()
 

@@ -204,7 +204,7 @@ class LoginViewController: UIViewController {
         loginLabel.font = AppFont.with(type: AppFont.AppFontType.bold, size: 26)
         loginLabel.text = localized("login")
 
-        self.usernameHeaderTextFieldView.setPlaceholderText(localized("email_address_placeholder"))
+        self.usernameHeaderTextFieldView.setPlaceholderText(localized("email"))
         self.passwordHeaderTextFieldView.setPlaceholderText(localized("password"))
 
         self.usernameHeaderTextFieldView.highlightColor = .white
@@ -233,7 +233,7 @@ class LoginViewController: UIViewController {
         rememberView.isUserInteractionEnabled = true
         rememberView.addGestureRecognizer(tapImageGestureRecognizer)
 
-        registerLabel.highlightTextLabel(fullString: localized("new_create_account"), highlightString: localized("create_account"))
+        registerLabel.highlightTextLabel(fullString: localized("new_create_account"), highlightString: localized("create_a_new_account"))
         registerLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapCreateAccount)))
 
         self.dismissButton.setTitle(localized("close"), for: .normal)
@@ -292,7 +292,8 @@ class LoginViewController: UIViewController {
         self.loginButton.layer.cornerRadius = CornerRadius.button
         self.loginButton.layer.masksToBounds = true
 
-        self.registerLabel.highlightTextLabel(fullString: localized("new_create_account"), highlightString: localized("create_account"))
+        self.registerLabel.highlightTextLabel(fullString: localized("new_create_account"),
+                                              highlightString: localized("create_a_new_account"))
     }
 
     func checkPolicyLinks() {

@@ -166,7 +166,7 @@ class AgeCountryFormStepViewModel {
                     }
                 }
                 else {
-                    self?.setDeparmentOfBirth("99") // no country found
+                    self?.setDeparmentOfBirth(nil) // no country found
                 }
             }
             .store(in: &self.cancellables)
@@ -309,7 +309,7 @@ class AgeCountryFormStepView: FormStepView {
         self.titleLabel.text = self.viewModel.title
         
         self.dateHeaderTextFieldView.setReturnKeyType(.next)
-        self.dateHeaderTextFieldView.setPlaceholderText("Date of birth")
+        self.dateHeaderTextFieldView.setPlaceholderText(Localization.localized("date_of_birth"))
         self.dateHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.countryHeaderTextFieldView.becomeFirstResponder()
         }
@@ -318,20 +318,20 @@ class AgeCountryFormStepView: FormStepView {
         self.dateHeaderTextFieldView.datePicker.maximumDate = maxDate
 
         self.countryHeaderTextFieldView.setReturnKeyType(.continue)
-        self.countryHeaderTextFieldView.setPlaceholderText("Country of birth")
+        self.countryHeaderTextFieldView.setPlaceholderText(Localization.localized("country_of_birth"))
         self.countryHeaderTextFieldView.shouldBeginEditing = { [weak self] in
             self?.showCountrySelector()
             return false
         }
 
         self.departmentBirthHeaderTextFieldView.setReturnKeyType(.continue)
-        self.departmentBirthHeaderTextFieldView.setPlaceholderText("Department of birth")
+        self.departmentBirthHeaderTextFieldView.setPlaceholderText(Localization.localized("department_of_birth"))
         self.departmentBirthHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.placeHeaderTextFieldView.becomeFirstResponder()
         }
 
         self.placeHeaderTextFieldView.setReturnKeyType(.continue)
-        self.placeHeaderTextFieldView.setPlaceholderText("Place of birth")
+        self.placeHeaderTextFieldView.setPlaceholderText(Localization.localized("birth_place"))
         self.placeHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.placeHeaderTextFieldView.resignFirstResponder()
         }

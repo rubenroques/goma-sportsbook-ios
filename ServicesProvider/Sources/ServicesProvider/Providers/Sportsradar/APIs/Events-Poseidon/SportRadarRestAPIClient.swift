@@ -141,7 +141,7 @@ extension SportRadarRestAPIClient: Endpoint {
                     "id": "\(eventId)/SportRadarWidget"
                 },
                 "clientContext": {
-                    "language": "UK",
+                    "language": "\(SportRadarConstants.socketLanguageCode)",
                     "ipAddress": "127.0.0.1"
                 }
             }
@@ -156,7 +156,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "1355/top"
                             },
                             "clientContext": {
-                                "language": "UK",
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -171,7 +171,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(dateRange)"
                             },
                             "clientContext": {
-                                "language": "UK",
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -186,7 +186,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "1355/\(sportId)"
                             },
                             "clientContext": {
-                                "language": "UK",
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -201,7 +201,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "1355/\(regionId)"
                             },
                             "clientContext": {
-                                "language": "UK",
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -217,7 +217,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "1355/\(competitionId)"
                             },
                             "clientContext": {
-                                "language": "UK",
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -232,7 +232,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(query)/\(resultLimit)/\(page)"
                             },
                             "clientContext": {
-                                "language": "UK",
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -247,7 +247,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "1355/20/HomepageSliders"
                             },
                             "clientContext": {
-                                "language": "UK",
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -262,7 +262,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "\(eventId)"
                             },
                             "clientContext": {
-                                "language": "UK",
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
                                 "ipAddress": "127.0.0.1"
                             }
                         }

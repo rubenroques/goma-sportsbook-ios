@@ -277,7 +277,7 @@ class QuickBetViewController: UIViewController {
             .dropFirst()
             .sink(receiveValue: { [weak self] returnAmount in
                 if let returnCurrencyAmount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: returnAmount)) {
-                    self?.returnLabel.text = localized("return") + ": \(returnCurrencyAmount)"
+                    self?.returnLabel.text = localized("return_text") + ": \(returnCurrencyAmount)"
                     self?.possibleWinningsValueLabel.text  = returnCurrencyAmount
                 }
             })
@@ -562,7 +562,7 @@ extension QuickBetViewController {
     private static func createReturnLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "\(localized("return")): "
+        label.text = "\(localized("return_text")): "
         label.font = AppFont.with(type: .semibold, size: 12)
         return label
     }
@@ -619,7 +619,7 @@ extension QuickBetViewController {
     private static func createFinalBetButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("place_bet"), for: .normal)
+        button.setTitle(localized("bet"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
         return button
     }
@@ -758,7 +758,7 @@ extension QuickBetViewController {
     private static func createSuspendedOddLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("suspended_market")
+        label.text = localized("suspended")
         label.font = AppFont.with(type: .bold, size: 18)
         label.textAlignment = .center
         return label

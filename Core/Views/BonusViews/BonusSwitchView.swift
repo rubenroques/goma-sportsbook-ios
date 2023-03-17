@@ -80,7 +80,7 @@ class BonusSwitchView: UIView {
 
             if let freeBet = freeBet {
                 let freeBetAmount = "\(freeBet.currency) \(freeBet.freeBetAmount)"
-                let freeBetTitle = localized("use_freebet").replacingOccurrences(of: "%s", with: freeBetAmount)
+                let freeBetTitle = localized("use_freebets").replacingOccurrences(of: "{amount}", with: freeBetAmount)
                 self.titleLabel.text = freeBetTitle
             }
         }
@@ -89,7 +89,7 @@ class BonusSwitchView: UIView {
             if let oddsBoost = oddsBoost {
                 let oddsBoostConverted = oddsBoost.oddsBoostPercent * 100
                 let oddsBoost = "\(oddsBoostConverted)%"
-                let oddsTitle = localized("use_boosted_odds").replacingOccurrences(of: "%s", with: oddsBoost)
+                let oddsTitle = localized("use_boosted_odds").replacingOccurrences(of: "{percentage}", with: oddsBoost)
                 self.titleLabel.text = oddsTitle
             }
         }

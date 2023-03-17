@@ -77,7 +77,7 @@ class BonusSwitchTableViewCell: UITableViewCell {
 
             if let freeBet = freeBet {
                 let bonusAmount = "\(freeBet.currency) \(freeBet.freeBetAmount)"
-                let bonusTitle = localized("use_freebet").replacingOccurrences(of: "%s", with: bonusAmount)
+                let bonusTitle = localized("use_freebets").replacingOccurrences(of: "{amount}", with: bonusAmount)
                 self.titleLabel.text = bonusTitle
             }
         }
@@ -86,7 +86,7 @@ class BonusSwitchTableViewCell: UITableViewCell {
             if let oddsBoost = oddsBoost {
                 let oddsBoostConverted = oddsBoost.oddsBoostPercent * 100
                 let oddsBoost = "\(oddsBoostConverted)%"
-                let oddsTitle = localized("use_boosted_odds").replacingOccurrences(of: "%s", with: oddsBoost)
+                let oddsTitle = localized("use_boosted_odds").replacingOccurrences(of: "{percentage}", with: oddsBoost)
                 self.titleLabel.text = oddsTitle
             }
         }

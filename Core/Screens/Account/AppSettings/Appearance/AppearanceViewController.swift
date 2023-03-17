@@ -102,7 +102,7 @@ class AppearanceViewController: UIViewController {
         self.viewModel.themeRadioButtonViews.append(lightModeView)
 
         let syncModeView = SettingsRadioRowView()
-        syncModeView.setTitle(title: localized("sync_mode"))
+        syncModeView.setTitle(title: localized("sync_with_system"))
         syncModeView.viewId = 3
         self.viewModel.themeRadioButtonViews.append(syncModeView)
 

@@ -91,13 +91,13 @@ class NamesFormStepView: FormStepView {
         self.lastNameHeaderTextFieldView.setContextType(.familyName)
 
         self.firstNameHeaderTextFieldView.setReturnKeyType(.next)
-        self.firstNameHeaderTextFieldView.setPlaceholderText("First name")
+        self.firstNameHeaderTextFieldView.setPlaceholderText(Localization.localized("first_name"))
         self.firstNameHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.lastNameHeaderTextFieldView.becomeFirstResponder()
         }
         
         self.lastNameHeaderTextFieldView.setReturnKeyType(.continue)
-        self.lastNameHeaderTextFieldView.setPlaceholderText("Last name")
+        self.lastNameHeaderTextFieldView.setPlaceholderText(Localization.localized("last_name"))
         self.lastNameHeaderTextFieldView.didTapReturn = { [weak self] in
             self?.lastNameHeaderTextFieldView.resignFirstResponder()
         }
@@ -147,13 +147,17 @@ class NamesFormStepView: FormStepView {
         if !self.canPresentError(forFormStep: formStep) { return }
         switch (error.field, error.error) {
         case ("firstName", "INVALID_LENGTH"):
-            self.firstNameHeaderTextFieldView.showErrorOnField(text: "This name has an invalid length", color: AppColor.alertError)
+            self.firstNameHeaderTextFieldView.showErrorOnField(text: "This name has an invalid length",
+                                                               color: AppColor.alertError)
         case ("lastName", "INVALID_LENGTH"):
-            self.lastNameHeaderTextFieldView.showErrorOnField(text: "This last name has an invalid length", color: AppColor.alertError)
+            self.lastNameHeaderTextFieldView.showErrorOnField(text: "This last name has an invalid length",
+                                                              color: AppColor.alertError)
         case ("firstName", _):
-            self.firstNameHeaderTextFieldView.showErrorOnField(text: "Please enter a valid name", color: AppColor.alertError)
+            self.firstNameHeaderTextFieldView.showErrorOnField(text: "Please enter a valid name",
+                                                               color: AppColor.alertError)
         case ("lastName", _):
-            self.lastNameHeaderTextFieldView.showErrorOnField(text: "Please enter a valid last name", color: AppColor.alertError)
+            self.lastNameHeaderTextFieldView.showErrorOnField(text: "Please enter a valid last name",
+                                                              color: AppColor.alertError)
         default:
             ()
         }

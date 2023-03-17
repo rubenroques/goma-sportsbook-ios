@@ -181,7 +181,7 @@ class PasswordFormStepView: FormStepView {
 
         self.titleLabel.text = self.viewModel.title
 
-        self.passwordHeaderTextFieldView.setPlaceholderText("Password")
+        self.passwordHeaderTextFieldView.setPlaceholderText(Localization.localized("password"))
 
         self.passwordHeaderTextFieldView.setReturnKeyType(.next)
         self.passwordHeaderTextFieldView.didTapReturn = { [weak self] in

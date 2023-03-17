@@ -151,7 +151,7 @@ class DocumentView: UIView {
 
                     self.postUploadTitleLabel.text = self.uploadTitleLabel.text
 
-                    self.statusLabel.text = localized("pending_approved")
+                    self.statusLabel.text = localized("pending_approval")
                     self.statusView.backgroundColor = UIColor.App.statsAway
 
                     self.finishedUploading?()

@@ -9,6 +9,7 @@ import Foundation
 import Foundation
 import UIKit
 import Theming
+import Extensions
 
 public class BiometricPromptViewController: UIViewController {
 
@@ -48,18 +49,20 @@ public class BiometricPromptViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.titleLabel.text = "Login with Biometric"
-        self.subtitleLabel.text = "Do you want to login with Fingerprint/Face Recognization?"
-        self.detailsLabel.text = "At any moment, you can disable it in the app settings."
+        self.titleLabel.text = Localization.localized("login_biometrics")
+        self.subtitleLabel.text = Localization.localized("login_biometrics_subtitle")
+        self.detailsLabel.text = Localization.localized("login_biometrics_description")
 
-        self.continueButton.setTitle("Activate", for: .normal)
-        self.laterButton.setTitle("Later", for: .normal)
+        self.continueButton.setTitle(Localization.localized("activate"), for: .normal)
+        self.laterButton.setTitle(Localization.localized("later"), for: .normal)
 
         self.continueButton.addTarget(self, action: #selector(didTapActivateButton), for: .primaryActionTriggered)
         self.laterButton.addTarget(self, action: #selector(didTapLaterButton), for: .primaryActionTriggered)
 
         self.cancelButton.addTarget(self, action: #selector(didTapCancelButton), for: .primaryActionTriggered)
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
+
+        self.backButton.alpha = 0.0
     }
 
     override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -137,7 +140,7 @@ public extension BiometricPromptViewController {
 
     private static func createCancelButton() -> UIButton {
         let button = UIButton()
-        button.setTitle("Close", for: .normal)
+        button.setTitle(Localization.localized("close"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -191,7 +194,7 @@ public extension BiometricPromptViewController {
 
     private static func createContinueButton() -> UIButton {
         let button = UIButton()
-        button.setTitle("Continue", for: .normal)
+        button.setTitle(Localization.localized("continue_"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 18)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 8

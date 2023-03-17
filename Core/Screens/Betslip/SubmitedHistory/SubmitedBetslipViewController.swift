@@ -69,7 +69,7 @@ class SubmitedBetslipViewController: UIViewController {
             self.emptyBetsBaseView.isHidden = true
         }else{
             self.emptyBetsBaseView.isHidden = false
-            self.firstTextNoBetsLabel.text = localized("you_not_logged_in")
+            self.firstTextNoBetsLabel.text = localized("not_logged_in")
             self.secondTextNoBetsLabel.text = localized("need_login_tickets")
            
             self.popularGamesButton.setTitle(localized("login"), for: .normal)
@@ -216,9 +216,9 @@ class SubmitedBetslipViewController: UIViewController {
         }
 
         let cashoutRawMessageString = localized("cashout_prompt_message")
-        let cashoutMessageString = cashoutRawMessageString.replacingOccurrences(of: "%s", with: "\(betCashoutValue)")
+        let cashoutMessageString = cashoutRawMessageString.replacingOccurrences(of: "{value}", with: "\(betCashoutValue)")
 
-        let submitCashoutAlert = UIAlertController(title: localized("cashout_verification"),
+        let submitCashoutAlert = UIAlertController(title: localized("cashout_confirmation"),
                                                    message: cashoutMessageString,
                                                    preferredStyle: UIAlertController.Style.alert)
 

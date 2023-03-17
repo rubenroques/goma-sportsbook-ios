@@ -465,14 +465,14 @@ class SearchViewModel: NSObject {
 
             let resultsCountTextRaw = localized("results_count")
             let matchesCount = self.sportMatchesArrayPublisher.value[section].matches.count
-            let resultsCountText = resultsCountTextRaw.replacingOccurrences(of: "%s", with: "\(matchesCount)")
+            let resultsCountText = resultsCountTextRaw.replacingOccurrences(of: "{num}", with: "\(matchesCount)")
 
             return resultsCountText
         }
         else {
             let resultsCountTextRaw = localized("results_count_singular")
             let matchesCount = self.sportMatchesArrayPublisher.value[section].matches.count
-            let resultsCountText = resultsCountTextRaw.replacingOccurrences(of: "%s", with: "\(matchesCount)")
+            let resultsCountText = resultsCountTextRaw.replacingOccurrences(of: "{num}", with: "\(matchesCount)")
 
             return resultsCountText
         }

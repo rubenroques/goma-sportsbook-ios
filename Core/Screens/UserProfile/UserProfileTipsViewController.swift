@@ -283,7 +283,7 @@ extension UserProfileTipsViewController {
         label.textAlignment = .center
         label.font = AppFont.with(type: .bold, size: 20)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("time_add_friends")
+        label.text = localized("time_to_add_friends")
         label.textAlignment = .center
         return label
     }
@@ -294,7 +294,7 @@ extension UserProfileTipsViewController {
         label.font = AppFont.with(type: .semibold, size: 16)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("add_friends_tip")
+        label.text = localized("add_some_friends_start_chatting_tips")
         label.textAlignment = .center
         return label
     }

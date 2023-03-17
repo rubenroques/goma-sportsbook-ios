@@ -281,14 +281,16 @@ class LiveEventsViewController: UIViewController {
                     self?.tableView.isHidden = false
 
                 case .emptyNoFilter:
-                    self?.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
-                                                secondLabelText: localized("second_empty_list"), isUserLoggedIn: true)
+                    self?.setEmptyStateBaseView(firstLabelText: localized("no_results_for_selection"),
+                                                secondLabelText: localized("try_something_else"),
+                                                isUserLoggedIn: true)
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
 
                 case .emptyAndFilter:
                     self?.setEmptyStateBaseView(firstLabelText: localized("empty_list_with_filters"),
-                                                secondLabelText: localized("second_empty_list_with_filters"), isUserLoggedIn: true)
+                                                secondLabelText: localized("try_something_else"),
+                                                isUserLoggedIn: true)
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
                 }
@@ -411,8 +413,8 @@ class LiveEventsViewController: UIViewController {
         }
         else {
             self.emptyStateImage.image = UIImage(named: "no_internet_icon")
-            self.firstTextFieldEmptyStateLabel.text = localized("empty_no_login")
-            self.secondTextFieldEmptyStateLabel.text = localized("second_empty_no_login")
+            self.firstTextFieldEmptyStateLabel.text = localized("not_logged_in")
+            self.secondTextFieldEmptyStateLabel.text = localized("need_login_tickets")
             self.emptyStateButton.isHidden = isUserLoggedIn
             self.emptyStateButton.setTitle(localized("login"), for: .normal)
         }

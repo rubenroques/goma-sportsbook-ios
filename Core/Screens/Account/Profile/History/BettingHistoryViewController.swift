@@ -342,7 +342,7 @@ extension BettingHistoryViewController {
         label.font = AppFont.with(type: .bold, size: 22)
         label.numberOfLines = 4
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("empty_no_bets")
+        label.text = localized("empty_betting_history_title")
         return label
     }
 

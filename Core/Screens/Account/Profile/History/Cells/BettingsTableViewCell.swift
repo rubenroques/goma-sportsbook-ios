@@ -147,7 +147,7 @@ class BettingsTableViewCell : UITableViewCell {
     func setupPossibleWinningsValuesLabel(possibleWinnings: String, betStatus: String){
         
         if betStatus == "CASHED_OUT"{
-            self.possibleWinningsLabel.text = localized("return")
+            self.possibleWinningsLabel.text = localized("return_text")
         }
         else {
             self.possibleWinningsLabel.text = localized("possible_winnings")

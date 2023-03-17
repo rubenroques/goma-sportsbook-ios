@@ -348,8 +348,8 @@ class ContactsFormStepView: FormStepView {
         self.emailHeaderTextFieldView.setContextType(.emailAddress)
         self.phoneHeaderTextFieldView.setContextType(.telephoneNumber)
 
-        self.emailHeaderTextFieldView.setPlaceholderText("Email")
-        self.phoneHeaderTextFieldView.setPlaceholderText("Phone number")
+        self.emailHeaderTextFieldView.setPlaceholderText(Localization.localized("email"))
+        self.phoneHeaderTextFieldView.setPlaceholderText(Localization.localized("mobile"))
 
         self.emailHeaderTextFieldView.setReturnKeyType(.next)
         self.emailHeaderTextFieldView.didTapReturn = { [weak self] in
@@ -386,7 +386,7 @@ class ContactsFormStepView: FormStepView {
                 }
                 else {
                     self?.prefixLabel.textColor = AppColor.inputTextTitle
-                    self?.prefixLabel.text = "Prefix"
+                    self?.prefixLabel.text = Localization.localized("phone_prefix")
                 }
             }
             .store(in: &self.cancellables)

@@ -28,6 +28,18 @@ class AddressFormStepViewModel {
     var postcode: CurrentValueSubject<String?, Never>
     var street: CurrentValueSubject<String?, Never>
     var streetNumber: CurrentValueSubject<String?, Never>
+//
+//    var isPlaceValid: AnyPublisher<Bool, Never> {
+//        return self.place.map { place in
+//            if let place = place {
+//                return place.allSatisfy { $0.isLetter }
+//            }
+//            else {
+//                return false
+//            }
+//        }
+//        .eraseToAnyPublisher()
+//    }
 
     var isPostcodeValid: AnyPublisher<Bool, Never> {
         return self.postcode.map { postcode in
@@ -52,6 +64,22 @@ class AddressFormStepViewModel {
         }
         .eraseToAnyPublisher()
     }
+
+//    var shouldShowPlaceFormatErrorMessage: AnyPublisher<Bool, Never> {
+//        return Publishers.CombineLatest(self.place, self.isPlaceValid)
+//            .map { place, isPlaceValid in
+//                if let place = place {
+//                    if place.isEmpty {
+//                        return false // if its nil/empty the message shouldn't appear
+//                    }
+//                    return !isPlaceValid  // is it is not valid we show the message
+//                }
+//                else {
+//                    return false // if its nil/empty the message shouldn't appear
+//                }
+//            }
+//            .eraseToAnyPublisher()
+//    }
 
     var shouldShowPostcodeFormatErrorMessage: AnyPublisher<Bool, Never> {
         return Publishers.CombineLatest(self.postcode, self.isPostcodeValid)
@@ -282,10 +310,10 @@ class AddressFormStepView: FormStepView {
             self?.streetNameSearchCompletionView.clearResults()
         }
 
-        self.placeHeaderTextFieldView.setPlaceholderText("Place/Commune")
-        self.postCodeHeaderTextFieldView.setPlaceholderText("Postcode")
-        self.streetNameHeaderTextFieldView.setPlaceholderText("Street name")
-        self.numberHeaderTextFieldView.setPlaceholderText("Street number")
+        self.placeHeaderTextFieldView.setPlaceholderText(Localization.localized("place_commune"))
+        self.postCodeHeaderTextFieldView.setPlaceholderText(Localization.localized("postal_code"))
+        self.streetNameHeaderTextFieldView.setPlaceholderText(Localization.localized("street_name"))
+        self.numberHeaderTextFieldView.setPlaceholderText(Localization.localized("street_number"))
 
         self.placeHeaderTextFieldView.setReturnKeyType(.next)
         self.placeHeaderTextFieldView.didTapReturn = { [weak self] in
@@ -421,11 +449,26 @@ class AddressFormStepView: FormStepView {
             self?.streetNameSearchCompletionView.clearResults()
         }
 
+
+//        self.viewModel.shouldShowPlaceFormatErrorMessage
+//            .receive(on: DispatchQueue.main)
+//            .sink { shouldShowPostcodeFormatErrorMessage in
+//                if shouldShowPostcodeFormatErrorMessage {
+//                    self.placeHeaderTextFieldView.showErrorOnField(text: Localization.localized("place_commune_invalid"),
+//                                                                   color: AppColor.alertError)
+//                }
+//                else {
+//                    self.placeHeaderTextFieldView.hideTipAndError()
+//                }
+//            }
+//            .store(in: &self.cancellables)
+
         self.viewModel.shouldShowPostcodeFormatErrorMessage
             .receive(on: DispatchQueue.main)
             .sink { shouldShowPostcodeFormatErrorMessage in
                 if shouldShowPostcodeFormatErrorMessage {
-                    self.postCodeHeaderTextFieldView.showErrorOnField(text: "This Postcode is not valid. Must be 5 digits", color: AppColor.alertError)
+                    self.postCodeHeaderTextFieldView.showErrorOnField(text: "This Postcode is not valid. Must be 5 digits",
+                                                                      color: AppColor.alertError)
                 }
                 else {
                     self.postCodeHeaderTextFieldView.hideTipAndError()
@@ -437,7 +480,8 @@ class AddressFormStepView: FormStepView {
             .receive(on: DispatchQueue.main)
             .sink { shouldShowStreetNumberFormatErrorMessage in
                 if shouldShowStreetNumberFormatErrorMessage {
-                    self.numberHeaderTextFieldView.showErrorOnField(text: "The number is not valid. Must be up to 3 digits", color: AppColor.alertError)
+                    self.numberHeaderTextFieldView.showErrorOnField(text: "The number is not valid. Must be up to 3 digits",
+                                                                    color: AppColor.alertError)
                 }
                 else {
                     self.numberHeaderTextFieldView.hideTipAndError()

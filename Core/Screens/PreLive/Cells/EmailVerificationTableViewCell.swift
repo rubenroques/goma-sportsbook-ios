@@ -16,7 +16,9 @@ class EmailVerificationTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        self.activationAlertView.setText(title: localized("verify_email"), info: localized("app_full_potential"), linkText: localized("verify_my_account"))
+        self.activationAlertView.setText(title: localized("verify_email"),
+                                         info: localized("app_full_potential"),
+                                         linkText: localized("verify_my_account"))
         self.activationAlertView.layer.cornerRadius = CornerRadius.button
         self.activationAlertView.layer.masksToBounds = true
         self.activationAlertView.linkLabelAction = {

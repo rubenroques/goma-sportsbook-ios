@@ -183,7 +183,9 @@ class WithdrawViewController: UIViewController {
             .sink(receiveValue: { [weak self] minimumValue in
 
                 if minimumValue != "" {
-                    let tipText = localized("minimum_withdraw_value").replacingFirstOccurrence(of: "%s", with: minimumValue)
+                    let tipText = localized("minimum_withdraw_value")
+                        .replacingOccurrences(of: "{value}", with: minimumValue)
+                        .replacingOccurrences(of: "{currency}", with: "€")
                     self?.tipLabel.text = tipText
                     self?.tipLabel.isHidden = false
                 }
@@ -239,19 +241,14 @@ class WithdrawViewController: UIViewController {
 
         let underlineAttriString = NSMutableAttributedString(string: fullString)
 
-        let range1 = (fullString as NSString).range(of: localized("responsible_gaming_clickable"))
-
+        let range1 = (fullString as NSString).range(of: localized("responsible_gambling"))
         underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 10), range: range1)
-
         underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.highlightPrimary, range: range1)
-
         underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
 
         let paragraphStyle = NSMutableParagraphStyle()
-
         paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
         paragraphStyle.alignment = .left
-
         underlineAttriString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: underlineAttriString.length))
 
         responsibleGamingLabel.attributedText = underlineAttriString
@@ -261,13 +258,10 @@ class WithdrawViewController: UIViewController {
 
     @IBAction private func tapResponsabibleGamingUnderlineLabel(gesture: UITapGestureRecognizer) {
         let text = localized("responsible_gaming")
-
-        let stringRange1 = (text as NSString).range(of: localized("responsible_gaming_clickable"))
-
+        let stringRange1 = (text as NSString).range(of: localized("responsible_gambling"))
         if gesture.didTapAttributedTextInLabel(label: self.responsibleGamingLabel, inRange: stringRange1, alignment: .left) {
             // Action
         }
-
     }
 
     func setupFaqUnderlineClickableLabel() {
@@ -281,7 +275,7 @@ class WithdrawViewController: UIViewController {
 
         let underlineAttriString = NSMutableAttributedString(string: fullString)
 
-        let range1 = (fullString as NSString).range(of: localized("faq_clickable"))
+        let range1 = (fullString as NSString).range(of: localized("faq"))
         let range2 = (fullString as NSString).range(of: localized("contact_us"))
 
         underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 10), range: range1)
@@ -307,7 +301,7 @@ class WithdrawViewController: UIViewController {
     @IBAction private func tapFaqUnderlineLabel(gesture: UITapGestureRecognizer) {
         let text = localized("faq")
 
-        let stringRange1 = (text as NSString).range(of: localized("faq_clickable"))
+        let stringRange1 = (text as NSString).range(of: localized("faq"))
         let stringRange2 = (text as NSString).range(of: localized("contact_us"))
 
         if gesture.didTapAttributedTextInLabel(label: self.faqLabel, inRange: stringRange1, alignment: .left) {
