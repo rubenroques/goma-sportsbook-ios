@@ -5449,6 +5449,7 @@
 /* Begin PBXFileReference section */
 		4502BF362798712E00F5B0CD /* HomeAwayCardStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAwayCardStatsView.swift; sourceTree = "<group>"; };
 		4502BF392798713C00F5B0CD /* HomeAwayCardStatsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeAwayCardStatsView.xib; sourceTree = "<group>"; };
+		4503D32C29C48100004CF6FF /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4503E79927D0E89600077CD2 /* CompetitionDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionDetailsViewController.swift; sourceTree = "<group>"; };
 		4503E79C27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionDetailsViewModel.swift; sourceTree = "<group>"; };
 		45044AFA291022E90053311D /* ServiceProviderModelMapper+Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Profile.swift"; sourceTree = "<group>"; };
@@ -5457,7 +5458,6 @@
 		450B7B2428F58574009229E3 /* SportRadar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SportRadar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		450B7B2928F58625009229E3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = "en.lproj/LaunchScreen-SportRadar.storyboard"; sourceTree = "<group>"; };
 		450B7B2A28F58625009229E3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/LaunchScreen-SportRadar.storyboard"; sourceTree = "<group>"; };
-		450B7B2B28F58625009229E3 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "pt-PT"; path = "pt-PT.lproj/LaunchScreen-SportRadar.storyboard"; sourceTree = "<group>"; };
 		450B7B2E28F58625009229E3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		450B7B2F28F58625009229E3 /* SportRadar.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = SportRadar.entitlements; sourceTree = "<group>"; };
 		450B7B3028F58625009229E3 /* TargetVariables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TargetVariables.swift; sourceTree = "<group>"; };
@@ -5582,7 +5582,6 @@
 		455A0CA126BD96BF00EC572D /* SportsbookTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsbookTarget.swift; sourceTree = "<group>"; };
 		455A0CAB26BD981900EC572D /* SharedAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SharedAssets.xcassets; sourceTree = "<group>"; };
 		455A0CB026BD982000EC572D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		455A0CB326BD985800EC572D /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		455A0CB526BD9B6000EC572D /* EnvironmentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentType.swift; sourceTree = "<group>"; };
 		455A0CC026BD9D9000EC572D /* RunningPlatform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RunningPlatform.swift; sourceTree = "<group>"; };
 		455A0CC126BD9D9000EC572D /* Throttler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Throttler.swift; sourceTree = "<group>"; };
@@ -5762,7 +5761,6 @@
 		45A3334E298976BA008181E9 /* Betsson.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Betsson.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45A33353298976E3008181E9 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = "en.lproj/LaunchScreen-Betsson.storyboard"; sourceTree = "<group>"; };
 		45A33354298976E3008181E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/LaunchScreen-Betsson.storyboard"; sourceTree = "<group>"; };
-		45A33355298976E3008181E9 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "pt-PT"; path = "pt-PT.lproj/LaunchScreen-Betsson.storyboard"; sourceTree = "<group>"; };
 		45A33357298976E3008181E9 /* Betsson-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Betsson-Info.plist"; sourceTree = "<group>"; };
 		45A33358298976E3008181E9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		45A33359298976E3008181E9 /* Betsson.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Betsson.entitlements; sourceTree = "<group>"; };
@@ -6190,7 +6188,6 @@
 		A9C3437C28F9A74A0055360B /* GomaSportRadar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GomaSportRadar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9C3438128F9A7DC0055360B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = "en.lproj/LaunchScreen-GOMASportRadar.storyboard"; sourceTree = "<group>"; };
 		A9C3438228F9A7DC0055360B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/LaunchScreen-GOMASportRadar.storyboard"; sourceTree = "<group>"; };
-		A9C3438328F9A7DC0055360B /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "pt-PT"; path = "pt-PT.lproj/LaunchScreen-GOMASportRadar.storyboard"; sourceTree = "<group>"; };
 		A9C3438628F9A7DC0055360B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A9C3438728F9A7DC0055360B /* GOMASportRadar.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = GOMASportRadar.entitlements; sourceTree = "<group>"; };
 		A9C3438828F9A7DC0055360B /* GOMASportRadar-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GOMASportRadar-Info.plist"; sourceTree = "<group>"; };
@@ -6270,7 +6267,6 @@
 		F4E3B74C2742B47100855C58 /* MainMarketType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMarketType.swift; sourceTree = "<group>"; };
 		F4F8C9EE27BEBAF90082CC08 /* TransactionHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistory.swift; sourceTree = "<group>"; };
 		F4F8C9F127C0126D0082CC08 /* FilterHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterHistoryViewController.swift; sourceTree = "<group>"; };
-		F4FDDADA28DDD8D9006EFC21 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -9971,8 +9967,7 @@
 			knownRegions = (
 				en,
 				Base,
-				"pt-PT",
-				es,
+				fr,
 			);
 			mainGroup = 455A0C4726BD902C00EC572D;
 			packageReferences = (
@@ -15544,7 +15539,6 @@
 			children = (
 				450B7B2928F58625009229E3 /* en */,
 				450B7B2A28F58625009229E3 /* Base */,
-				450B7B2B28F58625009229E3 /* pt-PT */,
 			);
 			name = "LaunchScreen-SportRadar.storyboard";
 			sourceTree = "<group>";
@@ -15553,8 +15547,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				455A0CB026BD982000EC572D /* en */,
-				455A0CB326BD985800EC572D /* pt-PT */,
-				F4FDDADA28DDD8D9006EFC21 /* es */,
+				4503D32C29C48100004CF6FF /* fr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -15572,7 +15565,6 @@
 			children = (
 				45A33353298976E3008181E9 /* en */,
 				45A33354298976E3008181E9 /* Base */,
-				45A33355298976E3008181E9 /* pt-PT */,
 			);
 			name = "LaunchScreen-Betsson.storyboard";
 			sourceTree = "<group>";
@@ -15598,7 +15590,6 @@
 			children = (
 				A9C3438128F9A7DC0055360B /* en */,
 				A9C3438228F9A7DC0055360B /* Base */,
-				A9C3438328F9A7DC0055360B /* pt-PT */,
 			);
 			name = "LaunchScreen-GOMASportRadar.storyboard";
 			sourceTree = "<group>";
