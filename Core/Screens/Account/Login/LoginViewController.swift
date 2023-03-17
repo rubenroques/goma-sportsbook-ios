@@ -112,10 +112,6 @@ class LoginViewController: UIViewController {
 
             paymentsDropIn.showPaymentStatus = { [weak self] paymentStatus in
 
-                if paymentStatus == .authorised {
-                    Env.userSessionStore.refreshUserWallet()
-                }
-
                 self?.showPaymentStatusAlert(paymentStatus: paymentStatus)
             }
         }
@@ -396,7 +392,6 @@ class LoginViewController: UIViewController {
         }
 
         depositOnRegisterViewController.didTapDepositButtonAction = { [weak self] amount in
-            print("AMOUNT: \(amount)")
             self?.paymentsDropIn?.getDepositInfo(amountText: amount)
         }
         navigationController.pushViewController(depositOnRegisterViewController, animated: true)
@@ -616,7 +611,7 @@ class LoginViewController: UIViewController {
             if paymentStatus == .authorised {
                 Env.userSessionStore.refreshUserWallet()
 
-                self?.depositOnRegisterViewController?.dismiss(animated: true)
+                self?.closeLoginRegisterFlow()
             }
         }))
 
