@@ -274,7 +274,7 @@ extension BettingAPIClient: Endpoint {
         case .calculateReturns: return TimeInterval(5)
         case .getAllowedBetTypes: return TimeInterval(5)
         case .placeBets: return TimeInterval(60)
-        case .calculateCashout: return TimeInterval(5)
+        case .calculateCashout: return TimeInterval(60)
         case .cashoutBet: return TimeInterval(5)
         }
     }
