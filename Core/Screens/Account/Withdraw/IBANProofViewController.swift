@@ -277,7 +277,6 @@ class IBANProofViewController: UIViewController {
     }
 
     @objc private func didTapNextButton() {
-        print("NEXT - AMOUNT: \(self.viewModel.withdrawAmount)")
 
         let iban = self.ibanHeaderTextFieldView.text
 

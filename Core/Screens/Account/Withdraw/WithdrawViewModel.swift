@@ -184,7 +184,6 @@ class WithdrawViewModel: NSObject {
                 }
 
             }, receiveValue: { [weak self] withdrawalMethods in
-                print("WITHDRAWAL METHODS: \(withdrawalMethods)")
 
                 // Bank transfer only
                 let methods = withdrawalMethods.filter({
