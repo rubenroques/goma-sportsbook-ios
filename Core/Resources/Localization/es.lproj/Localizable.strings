@@ -6,10 +6,10 @@
 
 */
 
-"languange_code" = "es";
-"languange_code_complete" = "es-es";
+"languange_code" = "es"; // UNUSED
+"languange_code_complete" = "es-es"; // UNUSED
 
-"update_available" = "Update available";
+"update_available" = "Update available"; // UNUSED
 "maintenance_mode" = "Temporarily Down For Maintenance";
 "update_available_title" = "New Update Available";
 "update_available_text" = "Check out the latest Update and improve your experience in Sportsbook.";
@@ -38,15 +38,15 @@
 "server_error_title" = "Unexpected Error";
 "server_error_message" = "An unexpected error occurred while processing your request. Please try again.";
 
-"register_error_title" = "Sign up error";
+"register_error_title" = "Sign up error"; // UNUSED
 "invalid_email" = "This email format appears to be invalid.";
 "email_already_registered" = "This email address is already registered.";
 "username_already_registered" = "This username is already registered.";
-"invalid_username" = "This email format appears to be invalid.";
+"invalid_username" = "This email format appears to be invalid."; // UNUSED
 "forgot" = "Forgot Password?";
 
 "new_create_account" = "New here? Create a new account";
-"create_account" = "Create a new account";
+"create_account" = "Create a new account"; // UNUSED
 "agree_terms_conditions" = "By Signing up, you agree to our
 Terms of use, Privacy Policy and EULA";
 "terms" = "Terms of use";
@@ -63,19 +63,19 @@ Terms of use, Privacy Policy and EULA";
 "birth_date" = "Birth Date";
 "username" = "Username";
 "email" = "Email";
-"weak_password" = "Must contain: 8 characters, 1 Uppercase, 1 Lowercase and 1 Symbol";
+"weak_password" = "Must contain: 8 characters, 1 Uppercase, 1 Lowercase and 1 Symbol"; // UNUSED
 "password_not_match" = "Passwords don't match";
 "check_email" = "Check your Email";
 "check_email_text1" = "We have sent a code to";
 "check_email_text2" = "with a link to Sign In.";
-"open_email_app" = "Open email app";
-"insert_email_code" = "Insert code";
+"open_email_app" = "Open email app"; // UNUSED
+"insert_email_code" = "Insert code"; // UNUSED
 "resend_email" = "Resend Email";
 "code" = "Code";
 "enter_code" = "Enter the Code";
 "enter_code_text" = "Enter the code we have sent to your Email";
 "paste_clipboard" = "Paste from Clipboard";
-"edit" = "Edit";
+"edit" = "Edit"; // UNUSED
 "save" = "Save";
 "personal_info" = "Personal Info";
 "first_name" = "First Name";
@@ -92,26 +92,26 @@ Terms of use, Privacy Policy and EULA";
 "error" = "Error";
 "error_edit" = "We can’t update your information at this moment. Please try again later.";
 "success_edit" = "Your information has been updated.";
-"see_promo" = "See Promo";
-"not_now" = "Not right now";
+"see_promo" = "See Promo"; // UNUSED
+"not_now" = "Not right now"; // UNUSED
 
 "cancel" = "Cancel";
 "search_field" = "Search..";
 "search_field_competitions" = "Search competitions..";
 "invalid_birthDate" = "Invalid birth date";
 
-"update_password" = "Update Password";
+"update_password" = "Update Password"; // UNUSED
 "old_password" = "Old Password";
 "new_password" = "New Password";
-"old_password_error" = "Old password is incorrect";
+"old_password_error" = "Old password is incorrect"; // UNUSED
 "password_too_weak" = "Your password is too simple to be secure.";
-"error_edit_password" = "We can’t update your password at this moment. Please try again later.";
+"error_edit_password" = "We can’t update your password at this moment. Please try again later."; // UNUSED
 "success_edit_password" = "Your password has been updated.";
 "invalid_email" = "Invalid email address";
 
 "close" = "Close";
 
-"wallet" = "Wallet";
+"wallet" = "Wallet"; // UNUSED
 "documents" = "Documents";
 "bonus" = "Bonus";
 "history" = "History";
@@ -120,31 +120,31 @@ Terms of use, Privacy Policy and EULA";
 "subject" = "Subject";
 "description" = "Description";
 
-"supportSuccessTitle" = "Success";
-"supportSuccessSubtitle" = "Your message was successfully sent.";
+"supportSuccessTitle" = "Success"; // UNUSED
+"supportSuccessSubtitle" = "Your message was successfully sent."; // UNUSED
 
-"supportErrorTitle" = "Error";
-"supportErrorSubtitle" = "We can't send your message at this moment. Please try again later.";
+"supportErrorTitle" = "Error"; // UNUSED
+"supportErrorSubtitle" = "We can't send your message at this moment. Please try again later."; // UNUSED
 
-"auto_exclusion" = "Auto Exclusion";
+"auto_exclusion" = "Auto Exclusion"; // UNUSED
 "info" = "Info";
 "info_text" = "This is some info about this item";
 "personal_information" = "Personal Information";
 "continue_" = "Continue";
 "complete_signup" = "Complete Sign Up";
-"address_country" = "Address and Country";
+"address_country" = "Address and Country"; // UNUSED
 
 "choose_sport" = "Choose Sport";
 "reset" = "Reset";
-"filters" = "Settings";
-"sort_by" = "Sort by";
-"starting_soon" = "Starting Soon";
-"by_competition" = "By Competition";
-"lowest_odds" = "Lowest Odds";
-"highest_odds" = "Highest Odds";
-"available_markets" = "Available Markets";
+"filters" = "Settings"; // UNUSED
+"sort_by" = "Sort by"; // UNUSED
+"starting_soon" = "Starting Soon"; // UNUSED
+"by_competition" = "By Competition"; // UNUSED
+"lowest_odds" = "Lowest Odds"; // UNUSED
+"highest_odds" = "Highest Odds"; // UNUSED
+"available_markets" = "Available Markets"; // UNUSED
 "apply" = "Apply";
-"time_range" = "Time Range";
+"time_range" = "Time Range"; // UNUSED
 "required_field" = "Required Field";
 "profile_updated_success" = "Profile updated succesfully!";
 "security_question" = "Security Question";
@@ -175,10 +175,10 @@ Terms of use, Privacy Policy and EULA";
 "cashout_available" = "Cashout Available";
 "cashout" = "Cashout";
 "return_money" = "Your return will be ";
-"cashout_verification" = "Are you sure you want to cashout?";
+"cashout_verification" = "Are you sure you want to cashout?"; // UNUSED
 "cashout_info" = "Get a percentage of your bet back before the game is over";
 
-"country" = "Country";
+"country" = "Country"; // UNUSED
 
 "deposit" = "Deposit";
 "deposits" = "Deposits";
@@ -193,10 +193,10 @@ Terms of use, Privacy Policy and EULA";
 
 
 "responsible_gaming" = "Read about Responsible Gambling.";
-"responsible_gaming_clickable" = "Responsible Gambling";
+"responsible_gaming_clickable" = "Responsible Gambling"; // UNUSED
 
 "faq" = "Any questions about payment process see F.A.Q or Contact Us.";
-"faq_clickable" = "F.A.Q";
+"faq_clickable" = "F.A.Q"; // UNUSED
 "contact_us" = "Contact Us";
 
 "withdraw" = "Withdraw";
@@ -206,26 +206,26 @@ Terms of use, Privacy Policy and EULA";
 "minimum_withdraw_value" = "Minimum Value: 10€";
 
 "empty_my_games" = "You don't have favorite games for this sport!";
-"second_empty_my_games" = "Go to the games list and mark them as favorites.";
+"second_empty_my_games" = "Go to the games list and mark them as favorites."; // UNUSED
 "empty_my_competitions" = "You don't have favorite competitions for this sport!";
 "second_empty_my_competitions" = "Go to the competitions list and mark them as favorites.";
 "competition_no_longer"= "This competition is no longer available for betting.";
 
-"empty_no_login" = "You aren't logged in!";
-"second_empty_no_login" = "You need to be logged in to be able to see your tickets.";
+"empty_no_login" = "You aren't logged in!"; // UNUSED
+"second_empty_no_login" = "You need to be logged in to be able to see your tickets."; // UNUSED
 
-"second_empty_no_login_to_bet" = "You need to be logged in to be able to bet.";
+"second_empty_no_login_to_bet" = "You need to be logged in to be able to bet."; // UNUSED
 
-"empty_list" = "There are no results for this selection.";
-"second_empty_list" = "Please try something else!";
+"empty_list" = "There are no results for this selection."; // UNUSED
+"second_empty_list" = "Please try something else!"; // UNUSED
 
 "empty_list_with_filters" = "There are no results for this filters.";
-"second_empty_list_with_filters" = "Please try something else!";
+"second_empty_list_with_filters" = "Please try something else!"; // UNUSED
 
-"empty_no_transactions" = "There’s no transations here!";
+"empty_no_transactions" = "There’s no transations here!"; // UNUSED
 "second_empty_no_transactions" = "You haven’t made a transation yet, it’s time to deposit some money and start betting on your favourites.";
 
-"empty_no_bets" = "There’s no bets here!";
+"empty_no_bets" = "There’s no bets here!"; // UNUSED
 "second_empty_no_bets" = "You haven’t made a bet yet, it’s time to bet on your favourites.";
 
 "my_games" = "My Games";
@@ -269,16 +269,16 @@ Terms of use, Privacy Policy and EULA";
 "outrights" = "Outrights";
 "casino" = "Casino";
 "sportsbook" = "Sportsbook";
-"my_tickets" = "My Tickets";
+"my_tickets" = "My Tickets"; // UNUSED
 "my_bets" = "My Bets";
 "bets" = "Bets";
 "betslip" = "Betslip";
-"place_bet" = "Place Bet";
+"place_bet" = "Place Bet"; // UNUSED
 
 "logout" = "Logout";
 
 "resolved" = "Resolved";
-"opened" = "Opened";
+"opened" = "Opened"; // UNUSED
 "won" = "Won";
 "draw" = "Draw";
 "lost" = "Lost";
@@ -291,7 +291,7 @@ Terms of use, Privacy Policy and EULA";
 "total_odd" = "Total Odd";
 "bet_amount" = "Bet Amount";
 "total_bet_amount" = "Total Bet Amount";
-"return" = "Return";
+"return" = "Return"; // UNUSED
 
 "single" = "Single";
 "multiple" = "Multiple";
@@ -316,15 +316,15 @@ Terms of use, Privacy Policy and EULA";
 "odd" = "Odd";
 "wallet_error" = "Wallet Error";
 "wallet_error_message" = "There was an error trying to get your wallet settings. Try again later.";
-"email_address_or_username" = "Email or Username";
-"email_address_placeholder" = "Email";
+"email_address_or_username" = "Email or Username"; // UNUSED
+"email_address_placeholder" = "Email"; // UNUSED
 "app_version_profile" = "App Version %s (%s)\nSportsbook® All Rights Reserved";
 "daily" = "Daily";
 "weekly" = "Weekly";
 "monthly" = "Monthly";
-"anual" = "Anual";
+"anual" = "Anual"; // UNUSED
 "active" = "Active";
-"limited" = "Limited";
+"limited" = "Limited"; // UNUSED
 "permanent" = "Permanent";
 "suggested_country" = "Suggested Country";
 "available_countries" = "Available Countries";
@@ -334,16 +334,16 @@ Terms of use, Privacy Policy and EULA";
 "profile_incomplete_2" = "Profile incomplete. We'll need some additional info before you can make a deposit.";
 "error_placing_bet" = "Error placing Bet.";
 "need_login_tickets" = "You need to be logged in to be able to see your tickets";
-"you_not_logged_in" = "You aren't logged in!";
+"you_not_logged_in" = "You aren't logged in!"; // UNUSED
 "cashout_prompt_message" = "Your return money will be “%s€”";
 
-"search_for_teams_competitions" = "Search for Teams or Competitions…";
+"search_for_teams_competitions" = "Search for Teams or Competitions…"; // UNUSED
 "no_recent_searches" = "No recent searches";
 "recent_searches" = "Recent searches";
 "results_count" = "%s Results";
 "results_count_singular" = "%s Result";
 
-"sport_id_competition_name" = "Competitions";
+"sport_id_competition_name" = "Competitions"; // UNUSED
 "clear_all" = "Clear all";
 "no_results_for" = "No results for '%s'";
 
@@ -353,7 +353,7 @@ Terms of use, Privacy Policy and EULA";
 
 "accept_any" = "Accept Any";
 "accept_higher" = "Accept Higher";
-"suspended_market" = "Suspended";
+"suspended_market" = "Suspended"; // UNUSED
 "closed_market" = "Closed";
 
 "home" = "Home";
@@ -371,15 +371,15 @@ Terms of use, Privacy Policy and EULA";
 "games_notification_defaults" = "Games Notification Defaults";
 "betting_notification_defaults" = "Betting Notification Defaults";
 "sms" = "SMS";
-"allow_sportsbook_contact" = "Allow Sportsbook to contact you via:";
+"allow_sportsbook_contact" = "Allow Sportsbook to contact you via:"; // UNUSED
 "theme_color" = "Theme Color";
 "dark_mode" = "Dark Mode";
 "light_mode" = "Light Mode";
-"sync_mode" = "Sync with the system";
+"sync_mode" = "Sync with the system"; // UNUSED
 "odds_format" = "Odds Format";
-"eu_odd" = "EU (1.5)";
-"uk_odd" = "UK (1/2)";
-"us_odd" = "US (-200)";
+"eu_odd" = "EU (1.5)"; // UNUSED
+"uk_odd" = "UK (1/2)"; // UNUSED
+"us_odd" = "US (-200)"; // UNUSED
 "odds_variation" = "Odds Variation";
 "allow_mygames_notifications" = "Allow notifications about My Games";
 "allow_mycompetitions_notifications" = "Allow notifications about all games in My Competitions";
@@ -411,20 +411,20 @@ Terms of use, Privacy Policy and EULA";
 "add" = "Add";
 "invalid_bonus_code" = "Invalid bonus code.";
 "error_bonus_code" = "Your code couldn't be applied. Please contact our support.";
-"terms_conditions" = "Terms and conditions";
+"terms_conditions" = "Terms and conditions"; // UNUSED
 
-"use_freebet" = "Use %s of freebet.";
+"use_freebet" = "Use %s of freebet."; // UNUSED
 "use_boosted_odds" = "Use boosted odds %s";
 
 "deposit_limit" = "Deposit Limit";
 "betting_limit" = "Betting Limit";
-"loss_limit" = "Loss Limit";
-"deposit_limit_set" = "Deposit limit set for your account.";
-"betting_limit_set" = "Betting limit set for your account.";
-"loss_limit_set" = "Loss limit set for your account.";
-"deposit_limit_locked" = "Deposit limit set for your account is locked. You can update this limit again after: %s";
-"betting_limit_locked" = "Betting limit set for your account is locked. You can update this limit again after: %s";
-"loss_limit_locked" = "Loss limit set for your account is locked. You can update this limit again after: %s";
+"loss_limit" = "Loss Limit"; // UNUSED
+"deposit_limit_set" = "Deposit limit set for your account."; // UNUSED
+"betting_limit_set" = "Betting limit set for your account."; // UNUSED
+"loss_limit_set" = "Loss limit set for your account."; // UNUSED
+"deposit_limit_locked" = "Deposit limit set for your account is locked. You can update this limit again after: %s"; // UNUSED
+"betting_limit_locked" = "Betting limit set for your account is locked. You can update this limit again after: %s"; // UNUSED
+"loss_limit_locked" = "Loss limit set for your account is locked. You can update this limit again after: %s"; // UNUSED
 
 "deposit_error" = "Deposit Error";
 "deposit_error_message" = "The deposit couldn't be processed at the moment. Please try again later.";
@@ -435,9 +435,9 @@ Terms of use, Privacy Policy and EULA";
 "add_to_favorites" = "Add to favorites";
 "share_event" = "Share Event";
 
-"keep_bet_checkbox" = "Keep this bet on betslip";
+"keep_bet_checkbox" = "Keep this bet on betslip"; // UNUSED
 
-"available_balance" = "Available";
+"available_balance" = "Available"; // UNUSED
 "my_account" = "My Account";
 "total" = "Total";
 
@@ -451,14 +451,14 @@ Terms of use, Privacy Policy and EULA";
 "bonus_amount" = "Bonus Amount";
 "wager_amount" = "Wager Amount";
 
-"users_followed_you" = "Users followed you";
-"shared_tickets_to" = "You shared tickets to";
+"users_followed_you" = "Users followed you"; // UNUSED
+"shared_tickets_to" = "You shared tickets to"; // UNUSED
 
 "add_friend" = "Add Friend";
 "add_friends" = "Add Friends";
 "friends" = "Friends";
 "search_by_username" = "Search by username...";
-"add_from_contact_list" = "Add from contact list";
+"add_from_contact_list" = "Add from contact list"; // UNUSED
 "settings" = "Settings";
 
 "who_send_messages" = "Who can send messages";
@@ -471,22 +471,22 @@ Terms of use, Privacy Policy and EULA";
 "add_contact" = "Add Contact";
 "search_by_contact" = "Search by contact name...";
 "invite" = "Invite";
-"unregistered_contacts_invite" = "You have contacts that don’t have Sportsbook yet, invite them";
+"unregistered_contacts_invite" = "You have contacts that don’t have Sportsbook yet, invite them"; // UNUSED
 
 "new_group" = "New Group";
-"select_friends_add" = "Select friends to add";
+"select_friends_add" = "Select friends to add"; // UNUSED
 "start_group_chat" = "Start Group Chat";
 "group_name" = "Group name";
 "select_a_friend" = "Select a friend";
 
 "my_friends" = "My Friends";
 "search_friend" = "Search a friend";
-"no_friends" = "There are no friends to display.";
-"no_chatrooms" = "There are no chatrooms to display.";
+"no_friends" = "There are no friends to display."; // UNUSED
+"no_chatrooms" = "There are no chatrooms to display."; // UNUSED
 "search_friend_code" = "Search friend with code";
 "friend_code" = "Friend Code";
 "search" = "Search";
-"invalid_friend_code" = "Invalid friend code";
+"invalid_friend_code" = "Invalid friend code"; // UNUSED
 
 "chat" = "Chat";
 "message" = "Message";
@@ -495,8 +495,8 @@ Terms of use, Privacy Policy and EULA";
 "invalid_code" = "Invalid Code";
 "invalid_code_message" = "The input code is invalid.";
 
-"friend_added" = "Friend/s Added";
-"friend_added_message" = "Friend request was sent to the selected users.";
+"friend_added" = "Friend/s Added"; // UNUSED
+"friend_added_message" = "Friend request was sent to the selected users."; // UNUSED
 
 "friend_added_error" = "Friend Add Error";
 "friend_added_message_error" = "There was an error trying to add the selected friend/s. Try again later.";
@@ -516,18 +516,18 @@ Terms of use, Privacy Policy and EULA";
 "remove_user" = "Remove User";
 "remove_user_message" = "Are you sure you want to remove the selected user?";
 
-"not_allowed" = "Not Allowed";
-"minimum_users_message" = "You can't remove users if the group chat has only 3 users.";
+"not_allowed" = "Not Allowed"; // UNUSED
+"minimum_users_message" = "You can't remove users if the group chat has only 3 users."; // UNUSED
 
-"group_name_changed" = "Group Name Changed";
-"group_name_changed_message" = "Group name was changed with success!";
+"group_name_changed" = "Group Name Changed"; // UNUSED
+"group_name_changed_message" = "Group name was changed with success!"; // UNUSED
 
 "mute" = "Mute";
-"unmute" = "Unmute";
+"unmute" = "Unmute"; // UNUSED
 "unfriend" = "Unfriend";
 
-"user_code" = "User code: %s";
-"user_code_copied" = "User Code %s copied.";
+"user_code" = "User code: %s"; // UNUSED
+"user_code_copied" = "User Code %s copied."; // UNUSED
 
 "leave_group" = "Leave Group";
 "leave_group_message" = "Are you sure you want to leave the group?";
@@ -537,10 +537,10 @@ Terms of use, Privacy Policy and EULA";
 "share_ticket" = "Share ticket";
 
 "more" = "More";
-"copy_link" = "Copy link";
+"copy_link" = "Copy link"; // UNUSED
 "share_outside_via" = "Share outside via...";
 "comment" = "Comment";
-"send_friends_groups" = "Send to friends and groups";
+"send_friends_groups" = "Send to friends and groups"; // UNUSED
 "send" = "Send";
 
 "check_this_bet_made" = "Check out this bet I made!";
@@ -552,27 +552,27 @@ Terms of use, Privacy Policy and EULA";
 
 "bet_registered_success" = "Your bet was registered with success.";
 "good_luck" = "Good luck!";
-"share_bet_now" = "Share your bet now";
+"share_bet_now" = "Share your bet now"; // UNUSED
 
-"time_add_friends" = "Time to add friends!";
+"time_add_friends" = "Time to add friends!"; // UNUSED
 "add_some_friends_start_chatting" = "Add some friends and start chatting now!";
 
-"single_bet" = "Single Bet";
-"multiple_bet" = "Multiple Bet";
+"single_bet" = "Single Bet"; // UNUSED
+"multiple_bet" = "Multiple Bet"; // UNUSED
 "system_bet" = "System Bet";
 
 "bet_suffered_alterations" = "The bet suffered alterations because of a change in the game, check the new options.";
 "shared_bet_unavailable" = "The shared bet is not available anymore, check some new bet suggestions.";
 
-"add_friends_group" = "Add friends to group";
-"select_atleast_two" = "Select at least 2 friends";
+"add_friends_group" = "Add friends to group"; // UNUSED
+"select_atleast_two" = "Select at least 2 friends"; // UNUSED
 
 "messages" = "Messages";
-"mark_all_read" = "Mark all as read";
+"mark_all_read" = "Mark all as read"; // UNUSED
 "delete_all" = "Delete all";
 "mark_as_read" = "Mark as read";
 
-"no_messages_yet" = "There’s no messages yet.";
+"no_messages_yet" = "There’s no messages yet."; // UNUSED
 
 "chat_empty_shared_ticket_self" = "You shared a ticket.";
 "chat_empty_shared_ticket_others" = "%s shared a ticket.";
@@ -586,7 +586,7 @@ Terms of use, Privacy Policy and EULA";
 
 "follow" = "Follow";
 "total_odds" = "Total Odds";
-"number_selections" = "Number of selections";
+"number_selections" = "Number of selections"; // UNUSED
 "bet_same" = "Bet the same";
 "show_full_tip" = "Show full tip";
 "featured_tips" = "Featured Tips";
@@ -595,22 +595,22 @@ Terms of use, Privacy Policy and EULA";
 "no_login_tips" = "You need to be logged in to be able to see tips";
 "no_login_rankings" = "You need to be logged in to be able to see rankings";
 
-"add_friends_tip" = "You need to add some friends to see what kind of tips they share.";
-"select" = "Select";
-"follow_user" = "Follow user";
+"add_friends_tip" = "You need to add some friends to see what kind of tips they share."; // UNUSED
+"select" = "Select"; // UNUSED
+"follow_user" = "Follow user"; // UNUSED
 
 "remove_last_user_message" = "Removing the last user of this group will also delete this group! Are you sure you want to remove this user?";
 "remove_last_user" = "Remove Last User";
 
 "no_value" = "-.--€";
-"empty_value" = "";
-"empty" = "-";
+"empty_value" = ""; // UNUSED
+"empty" = "-"; // UNUSED
 "unfollow" = "Unfollow";
 
 "accumulated_odds_winning" = "Accumulated odd of winning";
-"best_consecutive_wins" = "Best number of consecutive wins";
+"best_consecutive_wins" = "Best number of consecutive wins"; // UNUSED
 "highest_odd" = "Highest odd";
-"percentage_sports" = "Percentage of bets per sport";
+"percentage_sports" = "Percentage of bets per sport"; // UNUSED
 
 "friend_request_sent" = "Friend Request Sent!";
 "block_user" = "Block User";
@@ -623,7 +623,7 @@ Terms of use, Privacy Policy and EULA";
 "top_tipsters" = "Top Tipsters";
 "suggested_bets" = "Suggested Bets";
 
-"anonymous_tips_info" = "Anonymous Tips (Your bets will be shared as an anonymous user)";
+"anonymous_tips_info" = "Anonymous Tips (Your bets will be shared as an anonymous user)"; // UNUSED
 "anonymous_tips" = "Anonymous Tips";
 
 "accept" = "Accept";
@@ -636,7 +636,7 @@ Terms of use, Privacy Policy and EULA";
 "code_verification_error" = "Code Verification Error";
 "proceed" = "Proceed";
 "forgot_password" = "Forgot Password";
-"email_associated_account" = "Please enter your Email associated with your Account";
+"email_associated_account" = "Please enter your Email associated with your Account"; // UNUSED
 
 "recover_password_sent" = "Recover Password Sent";
 "recover_password_sent_message" = "If the information provided is correct, a confirmation email will be sent to the registered email address. \nClick the link or Input the verification code in the email to complete the password reset process & create a new password.";
@@ -651,6 +651,6 @@ Terms of use, Privacy Policy and EULA";
 
 "document_validation_required" = "Document Validation Required";
 "document_validation_required_description" = "To access all features of our platform, we require you to submit your valid documents for verification.";
-"complete_verification" = "Complete your verification";
+"complete_verification" = "Complete your verification"; // UNUSED
 
 "payments" = "Payments";
