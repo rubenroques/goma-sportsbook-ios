@@ -1209,8 +1209,6 @@ extension SportRadarEventsProvider {
 extension SportRadarEventsProvider {
 
     private func createPayloadData(with sessionAccessToken: SportRadarSessionAccessToken, contentType: ContentType, contentRoute: ContentRoute) -> Data {
-
-        let contenteFullRoutw = contentRoute
         let bodyString =
         """
         {
