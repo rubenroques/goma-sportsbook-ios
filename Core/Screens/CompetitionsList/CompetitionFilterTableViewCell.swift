@@ -15,13 +15,15 @@ class CompetitionFilterCellViewModel {
     var title: String
     var isSelected: Bool
     var isLastCell: Bool
+    var country: Country?
 
-    init(competition: Competition, locationId: String, isSelected: Bool, isLastCell: Bool) {
+    init(competition: Competition, locationId: String, isSelected: Bool, isLastCell: Bool, country: Country?) {
         self.id = competition.id
         self.title = competition.name
         self.locationId = locationId
         self.isSelected = isSelected
         self.isLastCell = isLastCell
+        self.country = country
     }
 
 }
@@ -42,6 +44,14 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         return baseView
     }()
 
+    private var countryImageView: UIImageView = {
+        var imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "country_flag_240")
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
+
     private var titleLabel: UILabel = {
         var label  = UILabel()
         label.font = AppFont.with(type: .bold, size: 14)
@@ -52,7 +62,7 @@ class CompetitionFilterTableViewCell: UITableViewCell {
 
     private var selectedImageView: UIImageView = {
         var imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .center
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -87,6 +97,8 @@ class CompetitionFilterTableViewCell: UITableViewCell {
 
         self.selectedImageView.image = UIImage(named: "checkbox_unselected_icon")!
         self.titleLabel.text = ""
+
+        self.countryImageView.image = nil
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -95,9 +107,9 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         self.setupWithTheme()
     }
 
-//    override func layoutSubviews() {
-//        super.layoutSubviews()
-//
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
 //        if viewModel?.isLastCell ?? false {
 //            baseView.clipsToBounds = true
 //            baseView.layer.cornerRadius = 5
@@ -108,7 +120,10 @@ class CompetitionFilterTableViewCell: UITableViewCell {
 //            baseView.layer.cornerRadius = 0
 //            baseView.layer.maskedCorners = []
 //        }
-//    }
+
+        self.countryImageView.layer.cornerRadius = self.countryImageView.frame.size.width / 2
+        self.countryImageView.layer.masksToBounds = true
+    }
 
     func setCellSelected(_ selected: Bool) {
         if selected {
@@ -126,6 +141,7 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         selectedImageView.image = UIImage(named: "checkbox_unselected_icon")!
 
         self.contentView.addSubview(baseView)
+        baseView.addSubview(countryImageView)
         baseView.addSubview(titleLabel)
         baseView.addSubview(separatorLineView)
         baseView.addSubview(selectedImageView)
@@ -138,7 +154,7 @@ class CompetitionFilterTableViewCell: UITableViewCell {
 
             baseView.heightAnchor.constraint(greaterThanOrEqualToConstant: 52),
 
-            baseView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -20),
+//            baseView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -20),
             baseView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor, constant: -1),
             baseView.bottomAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
 
@@ -147,6 +163,12 @@ class CompetitionFilterTableViewCell: UITableViewCell {
             baseView.bottomAnchor.constraint(equalTo: separatorLineView.bottomAnchor),
             separatorLineView.heightAnchor.constraint(equalToConstant: 1),
 
+            self.countryImageView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 20),
+            self.countryImageView.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
+            self.countryImageView.widthAnchor.constraint(equalToConstant: 16),
+            self.countryImageView.heightAnchor.constraint(equalTo: self.countryImageView.widthAnchor),
+
+            titleLabel.leadingAnchor.constraint(equalTo: self.countryImageView.trailingAnchor, constant: 4),
             titleLabel.heightAnchor.constraint(equalToConstant: 46),
             titleLabel.trailingAnchor.constraint(equalTo: selectedImageView.leadingAnchor, constant: -6),
 
@@ -165,6 +187,8 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         self.baseView.backgroundColor = UIColor.App.backgroundPrimary
         self.titleLabel.textColor = UIColor.App.textPrimary
         self.separatorLineView.backgroundColor = UIColor.App.separatorLine
+
+        self.countryImageView.backgroundColor = .clear
     }
 
     func configure(withViewModel viewModel: CompetitionFilterCellViewModel) {
@@ -181,6 +205,20 @@ class CompetitionFilterTableViewCell: UITableViewCell {
             self.configureAsNormalCell()
         }
 
+        if let countryIsoCode = viewModel.country?.iso2Code {
+            if countryIsoCode != "" {
+                self.countryImageView.image = UIImage(named: Assets.flagName(withCountryCode: countryIsoCode))
+            }
+            else {
+                self.countryImageView.image = UIImage(named: "country_flag_240")
+            }
+        }
+        else {
+            self.countryImageView.image = UIImage(named: "country_flag_240")
+        }
+
+        self.layoutSubviews()
+        self.layoutIfNeeded()
     }
 
     func configureAsNormalCell() {

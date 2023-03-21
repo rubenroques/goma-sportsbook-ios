@@ -425,7 +425,8 @@ extension CompetitionsFiltersView: UITableViewDelegate, UITableViewDataSource {
         cell.configure(withViewModel: CompetitionFilterCellViewModel(competition: viewModel.competition,
                                                                      locationId: groupViewModel.id,
                                                                      isSelected: isSelected,
-                                                                     isLastCell: isLastCell))
+                                                                     isLastCell: isLastCell,
+                                                                     country: groupViewModel.country))
 
         cell.didTapCellAction = { [weak self] viewModel in
 
@@ -506,19 +507,9 @@ extension CompetitionsFiltersView: UITableViewDelegate, UITableViewDataSource {
         headerView.sectionIdentifier = viewModelForSection.id
 //        headerView.titleLabel.text = viewModelForSection.name
 //
-//        if let countryIsoCode = viewModelForSection.country?.iso2Code {
-//            if countryIsoCode != "" {
-//                headerView.iconImageView.image = UIImage(named: Assets.flagName(withCountryCode: countryIsoCode))
-//            }
-//            else {
-//                headerView.iconImageView.image = UIImage(named: "country_flag_240")
-//            }
-//        }
-//        else {
-//            headerView.iconImageView.image = UIImage(named: "country_flag_240")
-//        }
+        //headerView.viewModel = viewModelForSection
 
-        headerView.viewModel = viewModelForSection
+        headerView.configure(viewModel: viewModelForSection)
 
         headerView.selectionCount = self.competitionSelectedIds[viewModelForSection.id]?.count ?? 0
 

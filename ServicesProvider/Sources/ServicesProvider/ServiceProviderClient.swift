@@ -879,6 +879,16 @@ extension ServicesProviderClient {
         return privilegedAccessManager.redeemBonus(code: code)
     }
 
+    public func contactUs(firstName: String, lastName: String, email: String, subject: String, message: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.contactUs(firstName: firstName, lastName: lastName, email: email, subject: subject, message: message)
+    }
+
     public func calculateCashout(betId: String) -> AnyPublisher<Cashout, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider

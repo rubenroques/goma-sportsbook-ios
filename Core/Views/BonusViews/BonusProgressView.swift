@@ -63,8 +63,8 @@ class BonusProgressView: UIView {
             self.progressBarView.progressTintColor = bonusColor
 
         case .wager:
-            bonusColor = UIColor.App.statsHome
-            self.setupColoredLabel(label: self.progressInfoLabel, text: localized("used_total_wager"), color: bonusColor)
+            bonusColor = UIColor.App.highlightSecondary
+            self.setupColoredLabel(label: self.progressInfoLabel, text: "\(localized("used")) / \(localized("total_wager"))", color: bonusColor)
 
             self.progressBarView.progressTintColor = bonusColor
 
@@ -116,7 +116,8 @@ class BonusProgressView: UIView {
 
         self.progressBarView.progress = progressBarAmount
 
-        let progressAmountString = "\(remainingAmount) / \(totalAmount) \(amountCurrency)"
+        // let progressAmountString = "\(remainingAmount) / \(totalAmount) \(amountCurrency)"
+        let progressAmountString = "\(remainingAmount) / \(totalAmount)"
         self.setupColoredLabel(label: self.progressAmountLabel, text: progressAmountString, color: bonusColor)
 
     }

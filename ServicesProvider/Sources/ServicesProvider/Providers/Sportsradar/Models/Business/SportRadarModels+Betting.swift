@@ -86,6 +86,10 @@ extension SportRadarModels {
 
         var order: Int
 
+        var eventId: Double
+        var tournamentCountryName: String
+        var tournamentName: String
+
         enum CodingKeys: String, CodingKey {
             case identifier = "idFOBet"
             case eventName
@@ -109,6 +113,10 @@ extension SportRadarModels {
 
             case order = "legOrder"
             case eventResult = "eventResult"
+
+            case eventId = "idFOEvent"
+            case tournamentCountryName = "tournamentCountryName"
+            case tournamentName = "tournamentName"
         }
 
         init(from decoder: Decoder) throws {
@@ -149,6 +157,12 @@ extension SportRadarModels {
             self.oddDenominator = try container.decode(Double.self, forKey: .oddDenominator)
 
             self.order = (try? container.decode(Int.self, forKey: .order)) ?? 999
+
+            self.eventId = try container.decode(Double.self, forKey: .eventId)
+
+            self.tournamentCountryName = try container.decode(String.self, forKey: .tournamentCountryName)
+
+            self.tournamentName = try container.decode(String.self, forKey: .tournamentName)
         }
 
     }

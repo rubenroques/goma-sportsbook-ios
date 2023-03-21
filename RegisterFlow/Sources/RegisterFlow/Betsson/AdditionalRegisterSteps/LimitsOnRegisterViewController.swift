@@ -17,8 +17,10 @@ public class LimitsOnRegisterViewModel {
     public enum LimitsOnRegisterError: Error {
         case depositFormatError
         case bettingFormatError
+        case autoPayoutFormatError
         case depositServerError
         case bettingServerError
+        case autoPayoutServerError
     }
 
     let servicesProvider: ServicesProviderClient
@@ -45,6 +47,9 @@ public class LimitsOnRegisterViewModel {
         var clearBettingLimitString = (bettingLimitString ?? "").replacingOccurrences(of: "€", with: "")
         clearBettingLimitString = clearBettingLimitString.replacingOccurrences(of: "$", with: "")
 
+        var clearAutoPayoutLimitString = (autoPayoutLimitString ?? "").replacingOccurrences(of: "€", with: "")
+        clearAutoPayoutLimitString = clearAutoPayoutLimitString.replacingOccurrences(of: "$", with: "")
+
         guard
             let depositLimit = Double(clearDepositLimitString)
         else {
@@ -59,6 +64,13 @@ public class LimitsOnRegisterViewModel {
             return Fail(error: LimitsOnRegisterError.bettingFormatError).eraseToAnyPublisher()
         }
 
+        guard
+            let autoPayoutLimit = Double(clearAutoPayoutLimitString)
+        else {
+            self.isLoadingSubject.send(false)
+            return Fail(error: LimitsOnRegisterError.autoPayoutFormatError).eraseToAnyPublisher()
+        }
+
         let depositPublisher = servicesProvider.updateWeeklyDepositLimits(newLimit: depositLimit)
             .mapError { _ in
                 return LimitsOnRegisterError.depositServerError
@@ -69,9 +81,14 @@ public class LimitsOnRegisterViewModel {
                 return LimitsOnRegisterError.bettingServerError
             }
 
-        return Publishers.Zip(depositPublisher, bettingPublisher)
-            .map { (depositSuccess, bettingSuccess) in
-                return depositSuccess && bettingSuccess
+        let autoPayoutPublisher = servicesProvider.updateResponsibleGamingLimits(newLimit: autoPayoutLimit)
+            .mapError { _ in
+                return LimitsOnRegisterError.autoPayoutServerError
+            }
+
+        return Publishers.Zip3(depositPublisher, bettingPublisher, autoPayoutPublisher)
+            .map { (depositSuccess, bettingSuccess, autoPayoutSuccess) in
+                return depositSuccess && bettingSuccess && autoPayoutSuccess
             }
             .handleEvents(receiveCompletion: { [weak self] _ in
                 self?.isLoadingSubject.send(false)
@@ -327,9 +344,13 @@ public class LimitsOnRegisterViewController: UIViewController {
                     self?.depositLimitHeaderTextFieldView.showErrorOnField(text: "This value is not valid.", color: AppColor.alertError)
                 case .bettingFormatError:
                     self?.bettingLimitHeaderTextFieldView.showErrorOnField(text: "This value is not valid.", color: AppColor.alertError)
+                case .autoPayoutFormatError:
+                    self?.bettingLimitHeaderTextFieldView.showErrorOnField(text: "This value is not valid.", color: AppColor.alertError)
                 case .depositServerError:
                     self?.depositLimitHeaderTextFieldView.showErrorOnField(text: "There was a problem setting this value", color: AppColor.alertError)
                 case .bettingServerError:
+                    self?.bettingLimitHeaderTextFieldView.showErrorOnField(text: "There was a problem setting this value", color: AppColor.alertError)
+                case .autoPayoutServerError:
                     self?.bettingLimitHeaderTextFieldView.showErrorOnField(text: "There was a problem setting this value", color: AppColor.alertError)
                 }
             case .finished:

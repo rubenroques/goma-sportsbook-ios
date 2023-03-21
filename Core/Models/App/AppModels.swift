@@ -369,6 +369,9 @@ struct UserProfile: Codable {
     var city: String?
     var postalCode: String?
 
+    var birthDepartment: String?
+    var streetNumber: String?
+
     var isEmailVerified: Bool
     var isRegistrationCompleted: Bool
 
@@ -381,7 +384,7 @@ struct UserProfile: Codable {
     
     init(userIdentifier: String, username: String, email: String, firstName: String? = nil, lastName: String? = nil, birthDate: Date,
          nationality: Country?, country: Country?, gender: String?, title: UserTitle?, personalIdNumber: String?, address: String?,
-         province: String?, city: String?, postalCode: String?, isEmailVerified: Bool, isRegistrationCompleted: Bool, avatarName: String?,
+         province: String?, city: String?, postalCode: String?, birthDepartment: String?, streetNumber: String?, isEmailVerified: Bool, isRegistrationCompleted: Bool, avatarName: String?,
          godfatherCode: String?, placeOfBirth: String?, additionalStreetLine: String?, kycStatus: String?) {
         self.userIdentifier = userIdentifier
         self.username = username
@@ -398,6 +401,8 @@ struct UserProfile: Codable {
         self.province = province
         self.city = city
         self.postalCode = postalCode
+        self.birthDepartment = birthDepartment
+        self.streetNumber = streetNumber
         self.isEmailVerified = isEmailVerified
         self.isRegistrationCompleted = isRegistrationCompleted
         self.avatarName = avatarName

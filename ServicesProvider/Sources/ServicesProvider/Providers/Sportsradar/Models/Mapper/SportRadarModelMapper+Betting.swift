@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SharedModels
 
 extension SportRadarModelMapper {
 
@@ -82,6 +83,10 @@ extension SportRadarModelMapper {
         let homeResult: String? = cleanedEventResult.split(separator: ":")[safe: 0].map(String.init)
         let awayResult: String? = cleanedEventResult.split(separator: ":")[safe: 1].map(String.init)
 
+        let eventIdString = String(format: "%.1f", internalBet.eventId)
+
+        let country: Country? = Country.country(withName: internalBet.tournamentCountryName)
+
         return BetSelection(identifier: internalBet.identifier,
                             state: state,
                             result: result,
@@ -94,7 +99,12 @@ extension SportRadarModelMapper {
                             odd: OddFormat.fraction(numerator: Int(internalBet.oddNumerator),
                                                     denominator: Int(internalBet.oddDenominator)),
                             homeResult: homeResult,
-                            awayResult: awayResult)
+                            awayResult: awayResult,
+                            eventId: eventIdString,
+                            country: country,
+                            sportTypeName: internalBet.sportTypeName,
+                            tournamentName: internalBet.tournamentName
+        )
     }
 
     //  ServiceProvider ----> SportRadar

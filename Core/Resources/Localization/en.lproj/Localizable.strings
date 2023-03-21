@@ -1102,6 +1102,6 @@
 "withdrawal_request_sent_title" = "Your withdrawal request was sent.";
 "withdrawal_request_sent_text" = "Your request will be pending till we confirm your IBAN proof, after approval it will take at least 72 hours to appear in your bank statement.";
 
-"used_total_wager" = "Used / Total Wager";
-
+"used" = "Used";
+"total_wager" = "Total Wager";
 

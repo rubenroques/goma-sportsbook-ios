@@ -55,9 +55,9 @@ struct SportRadarConstants {
     static var apiRestHostname = "https://api-bson-ssb-ua.betsson.fr" // as in api-bson-ssb-ua.betsson.fr/API
 
     // Others
-    static var sportRadarFrontEndURL = "https://cdn1.optimahq.com" // new: "https://cdn1-bson-ssb-ua.betsson.fr"
+    static var sportRadarFrontEndURL = "https://cdn1-bson-ssb-ua.betsson.fr"
 
-    static var sportRadarLegacyFrontEndURL = "https://cdn1.optimahq.com"
+    //static var sportRadarLegacyFrontEndURL = "https://cdn1.optimahq.com"
 
 //    ===================================================================================================================
 

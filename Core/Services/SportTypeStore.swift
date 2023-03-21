@@ -158,4 +158,11 @@ class SportTypeStore {
     func getAvailableSports() -> [Sport] {
         return self.sports
     }
+
+    func getSportId(sportCode: String) -> String? {
+
+        return self.sports.first(where: {
+            $0.alphaId == sportCode
+        })?.id
+    }
 }

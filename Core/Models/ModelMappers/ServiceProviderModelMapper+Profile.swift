@@ -46,6 +46,8 @@ extension ServiceProviderModelMapper {
                            province: serviceProviderProfile.province,
                            city: serviceProviderProfile.city,
                            postalCode: serviceProviderProfile.postalCode,
+                           birthDepartment: serviceProviderProfile.birthDepartment,
+                           streetNumber: serviceProviderProfile.streetNumber,
                            isEmailVerified: serviceProviderProfile.isEmailVerified,
                            isRegistrationCompleted: serviceProviderProfile.isRegistrationCompleted,
                            avatarName: serviceProviderProfile.avatarName,

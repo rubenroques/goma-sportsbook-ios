@@ -77,29 +77,30 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         }
     }
 
-    var viewModel: CompetitionFilterSectionViewModel? {
-        didSet {
-            self.titleLabel.text = viewModel?.name ?? ""
-
-            if let countryIsoCode = viewModel?.country?.iso2Code {
-                if countryIsoCode != "" {
-                    self.iconImageView.image = UIImage(named: Assets.flagName(withCountryCode: countryIsoCode))
-                }
-                else {
-                    self.iconImageView.image = UIImage(named: "country_flag_240")
-                }
-            }
-            else {
-                self.iconImageView.image = UIImage(named: "country_flag_240")
-            }
-
-            // TEMP
-            self.iconImageView.isHidden = true
-
-            self.setNeedsLayout()
-            self.layoutIfNeeded()
-        }
-    }
+    var viewModel: CompetitionFilterSectionViewModel?
+//    var viewModel: CompetitionFilterSectionViewModel? {
+//        didSet {
+//            self.titleLabel.text = viewModel?.name ?? ""
+//
+//            if let countryIsoCode = viewModel?.country?.iso2Code {
+//                if countryIsoCode != "" {
+//                    self.iconImageView.image = UIImage(named: Assets.flagName(withCountryCode: countryIsoCode))
+//                }
+//                else {
+//                    self.iconImageView.image = UIImage(named: "country_flag_240")
+//                }
+//            }
+//            else {
+//                self.iconImageView.image = UIImage(named: "country_flag_240")
+//            }
+//
+//            // TEMP
+//            //self.iconImageView.isHidden = true
+//
+//            self.setNeedsLayout()
+//            self.layoutIfNeeded()
+//        }
+//    }
 
     var delegate: CollapsibleTableViewHeaderDelegate?
 
@@ -111,8 +112,6 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
     }
 
     @available(iOS, unavailable)
@@ -146,6 +145,7 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         self.section = nil
         self.isExpanded = false
         self.viewModel = nil
+        self.iconImageView.image = nil
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -171,6 +171,8 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         }
 
         self.iconImageView.layer.cornerRadius = 18 / 2
+        self.iconImageView.layer.masksToBounds = true
+
     }
 
     func setupSubviews() {
@@ -240,6 +242,27 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         self.selectedFiltersLabel.textColor = UIColor.App.buttonTextPrimary
 
         self.iconImageView.backgroundColor = .clear
+    }
+
+    func configure(viewModel: CompetitionFilterSectionViewModel) {
+        self.viewModel = viewModel
+
+        self.titleLabel.text = viewModel.name
+
+        if let countryIsoCode = viewModel.country?.iso2Code {
+            if countryIsoCode != "" {
+                self.iconImageView.image = UIImage(named: Assets.flagName(withCountryCode: countryIsoCode))
+            }
+            else {
+                self.iconImageView.image = UIImage(named: "country_flag_240")
+            }
+        }
+        else {
+            self.iconImageView.image = UIImage(named: "country_flag_240")
+        }
+
+        // TEMP
+        self.iconImageView.isHidden = true
     }
 
 }

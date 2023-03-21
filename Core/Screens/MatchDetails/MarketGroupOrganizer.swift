@@ -25,6 +25,7 @@ struct MarketGroup {
     let translatedName: String?
     let isDefault: Bool?
     let markets: [Market]?
+    let position: Int?
 }
 
 struct ColumnListedMarketGroupOrganizer: MarketGroupOrganizer {
@@ -186,6 +187,13 @@ struct MarketLinesMarketGroupOrganizer: MarketGroupOrganizer {
             let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1Name)
             let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2Name)
             return out1Value < out2Value
+        }
+
+        // Inverse Under/Over to Over/Under
+        if self.outcomes.values.contains(where: {
+            (($0[safe: 0]?.codeName.contains("Over")) != nil || ($0[safe: 0]?.codeName.contains("Under")) != nil)
+        }) {
+            self.sortedOutcomeKeys = self.sortedOutcomeKeys.reversed()
         }
 
         self.markets = markets
@@ -403,7 +411,8 @@ struct UndefinedGroupMarketGroupOrganizer: MarketGroupOrganizer {
         }
 
         self.sortedOutcomes = self.sortedOutcomes.sorted(by: {
-            $0.id < $1.id
+            $0.bettingOffer.decimalOdd < $1.bettingOffer.decimalOdd
+            //$0.id < $1.id
         })
 
         self.maxColumnValue = 3

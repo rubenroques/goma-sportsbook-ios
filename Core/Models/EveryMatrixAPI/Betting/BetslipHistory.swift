@@ -82,7 +82,6 @@ enum BetSelectionResult: String, Codable, CaseIterable {
     case undefined
 }
 
-
 struct BetHistoryEntrySelection: Codable {
     let outcomeId: String
     let status: BetSelectionStatus

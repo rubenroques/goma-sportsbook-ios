@@ -578,10 +578,10 @@ class ProfileLimitsManagementViewController: UIViewController {
             // Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
 
             // TODO: Uncomment when endpoint is working
-            //self.viewModel.updateResponsibleGamingLimit(amount: amount)
+            self.viewModel.updateResponsibleGamingLimit(amount: amount)
             //self.viewModel.sendLimit(limitType: LimitType.loss.identifier, period: period, amount: amount, currency: currency)
 
-            updatedLimits = false // true
+            updatedLimits = true
 
         }
 
