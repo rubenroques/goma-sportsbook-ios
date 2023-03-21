@@ -882,7 +882,7 @@ class MatchDetailsViewController: UIViewController {
     
     func setupMatchField() {
         
-        guard let match = self.viewModel.match else {
+        guard self.viewModel.match != nil else {
             return
         }
 

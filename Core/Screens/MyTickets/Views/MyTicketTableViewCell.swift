@@ -399,7 +399,9 @@ class MyTicketTableViewCell: UITableViewCell {
 
         let cashoutAlertMessage = "\(localized("return_money")) \(cashoutValueString)"
 
-        let submitCashoutAlert = UIAlertController(title: localized("cashout_confirmation"),
+        let titleMessage = localized("cashout_confirmation").replacingOccurrences(of: "{amount}", with: cashoutValueString)
+
+        let submitCashoutAlert = UIAlertController(title: titleMessage,
                                                    message: cashoutAlertMessage,
                                                    preferredStyle: UIAlertController.Style.alert)
         submitCashoutAlert.addAction(UIAlertAction(title: localized("cashout"), style: .default, handler: { _ in

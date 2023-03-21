@@ -111,7 +111,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
     private var maxBetValue: Double {
         if let userWallet = Env.userSessionStore.userWalletPublisher.value {
-            return userWallet.available
+            return userWallet.total
         }
         else {
             return 0

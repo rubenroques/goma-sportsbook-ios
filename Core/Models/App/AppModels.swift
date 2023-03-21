@@ -410,17 +410,10 @@ struct UserProfile: Codable {
 }
 
 struct UserWallet {
+
     let total: Double
     let bonus: Double?
     let totalWithdrawable: Double?
     let currency: String
-    
-    var available: Double {
-        if let bonus = self.bonus {
-            return self.total - bonus
-        }
-        else {
-            return self.total
-        }
-    }
+
 }

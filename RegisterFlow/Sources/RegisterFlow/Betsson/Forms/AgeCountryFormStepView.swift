@@ -284,13 +284,18 @@ class AgeCountryFormStepView: FormStepView {
         placeContainerView.addSubview(self.placeHeaderTextFieldView)
         placeContainerView.addSubview(self.placeSearchCompletionView)
 
+        self.stackView.addArrangedSubview(self.dateHeaderTextFieldView)
+        self.stackView.addArrangedSubview(self.countryHeaderTextFieldView)
+        self.stackView.addArrangedSubview(self.departmentBirthHeaderTextFieldView)
+        self.stackView.addArrangedSubview(placeContainerView)
+
         NSLayoutConstraint.activate([
             self.dateHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
             self.countryHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
             self.departmentBirthHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
 
-            self.placeHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
             placeContainerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 80),
+            self.placeHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
             self.placeHeaderTextFieldView.topAnchor.constraint(equalTo: placeContainerView.topAnchor),
             self.placeHeaderTextFieldView.leadingAnchor.constraint(equalTo: placeContainerView.leadingAnchor),
             self.placeHeaderTextFieldView.trailingAnchor.constraint(equalTo: placeContainerView.trailingAnchor),
@@ -298,13 +303,8 @@ class AgeCountryFormStepView: FormStepView {
             self.placeSearchCompletionView.topAnchor.constraint(equalTo: self.placeHeaderTextFieldView.bottomAnchor, constant: -16),
             self.placeSearchCompletionView.leadingAnchor.constraint(equalTo: self.placeHeaderTextFieldView.leadingAnchor),
             self.placeSearchCompletionView.trailingAnchor.constraint(equalTo: self.placeHeaderTextFieldView.trailingAnchor),
-            self.placeSearchCompletionView.bottomAnchor.constraint(greaterThanOrEqualTo: placeContainerView.bottomAnchor),
+            placeContainerView.bottomAnchor.constraint(greaterThanOrEqualTo: self.placeSearchCompletionView.bottomAnchor),
         ])
-
-        self.stackView.addArrangedSubview(self.dateHeaderTextFieldView)
-        self.stackView.addArrangedSubview(self.countryHeaderTextFieldView)
-        self.stackView.addArrangedSubview(self.departmentBirthHeaderTextFieldView)
-        self.stackView.addArrangedSubview(placeContainerView)
 
         self.titleLabel.text = self.viewModel.title
         

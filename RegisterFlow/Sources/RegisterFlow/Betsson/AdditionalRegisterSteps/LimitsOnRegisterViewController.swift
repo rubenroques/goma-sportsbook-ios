@@ -83,6 +83,13 @@ public class LimitsOnRegisterViewModel {
 
 public class LimitsOnRegisterViewController: UIViewController {
 
+    enum SelectedProfile {
+        case none
+        case beginner
+        case intermediate
+        case advanced
+    }
+
     public var didTapContinueButtonAction: () -> Void = { }
 
     public var didTapBackButtonAction: () -> Void = { }
@@ -121,6 +128,12 @@ public class LimitsOnRegisterViewController: UIViewController {
 
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingView: UIActivityIndicatorView = Self.createLoadingView()
+
+    var selectedProfile: SelectedProfile = .none {
+        didSet {
+            self.updateSelectedProfileBorders()
+        }
+    }
 
     private let viewModel: LimitsOnRegisterViewModel
     private var cancellables = Set<AnyCancellable>()
@@ -209,6 +222,12 @@ public class LimitsOnRegisterViewController: UIViewController {
 
     }
 
+    public override func viewDidLayoutSubviews() {
+        self.beginnerImageView.layer.cornerRadius = self.beginnerImageView.frame.height/2
+        self.intermediateImageView.layer.cornerRadius = self.intermediateImageView.frame.height/2
+        self.advancedImageView.layer.cornerRadius = self.advancedImageView.frame.height/2
+    }
+
     override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -261,21 +280,38 @@ public class LimitsOnRegisterViewController: UIViewController {
     }
 
     @objc func didTapBeginnerButton() {
+        self.selectedProfile = .beginner
         self.depositLimitHeaderTextFieldView.setText("200")
         self.bettingLimitHeaderTextFieldView.setText("500")
         self.autoPayoutHeaderTextFieldView.setText("251")
     }
 
     @objc func didTapIntermediateButton() {
+        self.selectedProfile = .intermediate
         self.depositLimitHeaderTextFieldView.setText("500")
         self.bettingLimitHeaderTextFieldView.setText("1000")
         self.autoPayoutHeaderTextFieldView.setText("1001")
     }
 
     @objc func didTapAdvancedButton() {
+        self.selectedProfile = .advanced
         self.depositLimitHeaderTextFieldView.setText("5000")
         self.bettingLimitHeaderTextFieldView.setText("10000")
         self.autoPayoutHeaderTextFieldView.setText("10001")
+    }
+
+    private func updateSelectedProfileBorders() {
+        let borderColor = AppColor.highlightPrimary.cgColor
+        let borderWidth: CGFloat = 2
+
+        self.beginnerImageView.layer.borderWidth = (selectedProfile == .beginner) ? borderWidth : 0
+        self.beginnerImageView.layer.borderColor = borderColor
+
+        self.intermediateImageView.layer.borderWidth = (selectedProfile == .intermediate) ? borderWidth : 0
+        self.intermediateImageView.layer.borderColor = borderColor
+
+        self.advancedImageView.layer.borderWidth = (selectedProfile == .advanced) ? borderWidth : 0
+        self.advancedImageView.layer.borderColor = borderColor
     }
 
     func saveNewLimits() {

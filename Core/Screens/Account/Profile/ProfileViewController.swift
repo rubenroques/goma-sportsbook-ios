@@ -176,13 +176,20 @@ class ProfileViewController: UIViewController {
                         self?.totalBalanceLabel.text = "-.--€"
                     }
                     if let bonusValue = userWallet.bonus,
-                        let formattedBonusString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: bonusValue)) {
+                       let formattedBonusString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: bonusValue)) {
                         self?.bonusBalanceLabel.text = formattedBonusString
                     }
                     else {
                         self?.bonusBalanceLabel.text = "-.--€"
                     }
-                    self?.currentBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: userWallet.available)) ?? "-.--€"
+
+                    if let totalWithdrawable = userWallet.totalWithdrawable,
+                       let formattedTotalWithdrawable = CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalWithdrawable)){
+                        self?.currentBalanceLabel.text = formattedTotalWithdrawable
+                    }
+                    else {
+                        self?.currentBalanceLabel.text =  "-.--€"
+                    }
                 }
                 else {
                     self?.totalBalanceLabel.text = "-.--€"

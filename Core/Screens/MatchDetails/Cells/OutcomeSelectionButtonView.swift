@@ -14,6 +14,7 @@ class OutcomeSelectionButtonView: NibView {
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var marketTypeLabel: UILabel!
     @IBOutlet private var marketOddLabel: UILabel!
+    @IBOutlet private var closedMarketLabel: UILabel!
 
     @IBOutlet private weak var stackView: UIStackView!
     @IBOutlet private weak var upChangeOddValueImage: UIImageView!
@@ -67,6 +68,9 @@ class OutcomeSelectionButtonView: NibView {
         self.marketTypeLabel.text = ""
         self.marketOddLabel.text = ""
 
+        self.closedMarketLabel.text = localized("closed_market")
+        self.closedMarketLabel.isHidden = true
+
         let tapOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapOddButton))
         self.containerView.addGestureRecognizer(tapOddButton)
 
@@ -99,6 +103,9 @@ class OutcomeSelectionButtonView: NibView {
 
         self.marketOddLabel.textColor = UIColor.App.textPrimary
         self.marketOddLabel.font = AppFont.with(type: .bold, size: 13)
+
+        self.closedMarketLabel.textColor = UIColor.App.textPrimary
+        self.closedMarketLabel.font = AppFont.with(type: .bold, size: 13)
     }
 
     func configureWith(outcome: Outcome) {
@@ -137,11 +144,17 @@ class OutcomeSelectionButtonView: NibView {
                         self?.containerView.isUserInteractionEnabled = true
                         self?.containerView.alpha = 1.0
                         print("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will show \n")
+
+                        self?.marketOddLabel.isHidden = false
+                        self?.closedMarketLabel.isHidden = true
                     }
                     else {
                         self?.containerView.isUserInteractionEnabled = false
                         self?.containerView.alpha = 0.5
                         print("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will hide \n")
+
+                        self?.marketOddLabel.isHidden = true
+                        self?.closedMarketLabel.isHidden = false
                     }
                 })
         }
@@ -165,6 +178,9 @@ class OutcomeSelectionButtonView: NibView {
                     weakSelf.marketOddLabel.text = "-"
                 }
                 else {
+                    weakSelf.marketOddLabel.isHidden = false
+                    weakSelf.closedMarketLabel.isHidden = true
+
                     weakSelf.containerView.isUserInteractionEnabled = true
                     weakSelf.containerView.alpha = 1.0
 
@@ -328,6 +344,10 @@ class OutcomeSelectionButtonView: NibView {
     }
 
     func highlightOddChangeUp(animated: Bool = true, upChangeOddValueImage: UIImageView, baseView: UIView) {
+
+        self.upChangeOddValueImage.alpha = 0.0
+        self.downChangeOddValueImage.alpha = 0.0
+
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             upChangeOddValueImage.alpha = 1.0
@@ -341,6 +361,10 @@ class OutcomeSelectionButtonView: NibView {
     }
 
     func highlightOddChangeDown(animated: Bool = true, downChangeOddValueImage: UIImageView, baseView: UIView) {
+
+        self.upChangeOddValueImage.alpha = 0.0
+        self.downChangeOddValueImage.alpha = 0.0
+
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             downChangeOddValueImage.alpha = 1.0

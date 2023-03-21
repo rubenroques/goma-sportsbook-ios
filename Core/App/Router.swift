@@ -85,6 +85,7 @@ class Router {
     }
 
     func showPostLoadingFlow() {
+        
         self.subscribeToUserActionBlockers()
         self.subscribeToURLRedirects()
         self.subscribeToNotificationsOpened()
@@ -97,6 +98,7 @@ class Router {
             bootRootViewController = Router.createLoginViewControllerFlow()
         }
         self.rootWindow.rootViewController = bootRootViewController
+
     }
 
     func subscribeToUserActionBlockers() {

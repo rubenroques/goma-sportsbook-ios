@@ -59,6 +59,8 @@ lane :distribute_to_firebase do |options|
     readonly: false
   )
 
+  increment_build_number
+  
   build_app(
     scheme: options[:app_scheme],
     clean: true,

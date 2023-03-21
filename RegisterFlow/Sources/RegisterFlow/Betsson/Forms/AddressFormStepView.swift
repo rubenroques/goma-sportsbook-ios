@@ -243,6 +243,11 @@ class AddressFormStepView: FormStepView {
         additionalStreetContainerView.addSubview(self.streetNameHeaderTextFieldView)
         additionalStreetContainerView.addSubview(self.streetNameSearchCompletionView)
 
+        self.stackView.addArrangedSubview(placeContainerView)
+        self.stackView.addArrangedSubview(streetContainerView)
+        self.stackView.addArrangedSubview(additionalStreetContainerView)
+        self.stackView.addArrangedSubview(self.numberHeaderTextFieldView)
+
         NSLayoutConstraint.activate([
             placeContainerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 80),
             self.placeHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
@@ -278,11 +283,6 @@ class AddressFormStepView: FormStepView {
             additionalStreetContainerView.bottomAnchor.constraint(greaterThanOrEqualTo: self.streetNameSearchCompletionView.bottomAnchor),
         ])
 
-        self.stackView.addArrangedSubview(placeContainerView)
-        self.stackView.addArrangedSubview(streetContainerView)
-        self.stackView.addArrangedSubview(additionalStreetContainerView)
-        self.stackView.addArrangedSubview(self.numberHeaderTextFieldView)
-
         NSLayoutConstraint.activate([
             self.postCodeHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
             self.streetNameHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
@@ -298,7 +298,7 @@ class AddressFormStepView: FormStepView {
             self?.placeSearchCompletionView.clearResults()
         }
 
-        //        self.postCodeSearchCompletionView.didSelectSearchCompletion = { [weak self] searchCompletion in
+        //        self.postCodeSarchCompletionView.didSelectSearchCompletion = { [weak self] searchCompletion in
         //            self?.postCodeHeaderTextFieldView.setText(searchCompletion)
         //            self?.postCodeHeaderTextFieldView.resignFirstResponder()
         //            self?.postCodeSearchCompletionView.clearResults()

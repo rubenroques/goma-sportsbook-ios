@@ -79,7 +79,7 @@ class WithdrawViewModel: NSObject {
     func getWithdrawInfo(amountText: String) {
 
         if self.ibanPaymentDetails == nil,
-           let accountBalance = Env.userSessionStore.userWalletPublisher.value?.available,
+           let accountBalance = Env.userSessionStore.userWalletPublisher.value?.totalWithdrawable,
            let kycStatus = Env.userSessionStore.isUserKycVerified.value,
            accountBalance > 0 && kycStatus {
 

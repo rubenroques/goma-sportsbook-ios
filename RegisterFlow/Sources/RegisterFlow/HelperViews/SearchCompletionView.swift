@@ -86,9 +86,6 @@ public class SearchCompletionView: UIView {
         self.setupWithTheme()
 
         self.invalidateIntrinsicContentSize()
-        
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
     }
 
     func clearResults() {

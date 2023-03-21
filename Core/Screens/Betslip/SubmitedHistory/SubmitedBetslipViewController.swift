@@ -211,15 +211,18 @@ class SubmitedBetslipViewController: UIViewController {
 
     func submitCashout(betCashout: EveryMatrix.Cashout) {
 
-        guard let betCashoutValue = betCashout.value else {
+        guard
+            let betCashoutValue = betCashout.value,
+            let cashoutValueString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betCashoutValue))
+        else {
             return
         }
 
-        let cashoutRawMessageString = localized("cashout_prompt_message")
-        let cashoutMessageString = cashoutRawMessageString.replacingOccurrences(of: "{value}", with: "\(betCashoutValue)")
+        let messageString = localized("cashout_prompt_message").replacingOccurrences(of: "{value}", with: cashoutValueString)
+        let titleString = localized("cashout_confirmation").replacingOccurrences(of: "{amount}", with: cashoutValueString)
 
-        let submitCashoutAlert = UIAlertController(title: localized("cashout_confirmation"),
-                                                   message: cashoutMessageString,
+        let submitCashoutAlert = UIAlertController(title: titleString,
+                                                   message: messageString,
                                                    preferredStyle: UIAlertController.Style.alert)
 
         submitCashoutAlert.addAction(UIAlertAction(title: localized("cashout"), style: .default, handler: { _ in

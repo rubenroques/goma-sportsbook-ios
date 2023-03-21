@@ -55,7 +55,6 @@ class MatchDetailsViewModel: NSObject {
     var availableMarkets: [String: [String]] = [:]
     var marketGroups: [MarketGroup] = []
 
-
     var isLiveMatch: Bool {
         if let match = self.match {
             switch match.status {
@@ -164,7 +163,6 @@ class MatchDetailsViewModel: NSObject {
             }
             .store(in: &cancellables)
 
-
     }
 
     func getMatchDetails() {
@@ -225,6 +223,7 @@ class MatchDetailsViewModel: NSObject {
             })
             .store(in: &self.cancellables)
     }
+
     //
     //
     private func getMarketGroups(event: ServicesProvider.Event) {
