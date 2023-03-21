@@ -1176,7 +1176,7 @@ extension SportRadarEventsProvider {
         let marketGroupsArray = Array(marketGroups.values)
 
         let sortedMarketGroupsArray = marketGroupsArray.sorted(by: {
-            $0.id < $1.id
+            $0.position ?? 0 < $1.position ?? 99
         })
 
         //self.marketGroupsPublisher.send(sortedMarketGroupsArray)

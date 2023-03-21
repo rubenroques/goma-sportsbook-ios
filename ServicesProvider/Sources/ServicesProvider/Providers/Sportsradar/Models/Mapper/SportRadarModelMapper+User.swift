@@ -48,6 +48,8 @@ extension SportRadarModelMapper {
                            province: playerInfoResponse.province,
                            city: playerInfoResponse.city,
                            postalCode: playerInfoResponse.postalCode,
+                           birthDepartment: playerInfoResponse.birthDepartment,
+                           streetNumber: playerInfoResponse.streetNumber,
                            emailVerificationStatus: EmailVerificationStatus(fromStringKey:  playerInfoResponse.emailVerificationStatus.uppercased()),
                            userRegistrationStatus: userRegistrationStatus,
                            avatarName: avatarName,
@@ -307,7 +309,19 @@ extension SportRadarModelMapper {
 
     static func responsibleGamingLimitsResponse(fromResponsibleGamingLimitsResponse internalResponsibleGamingLimitsResponse: SportRadarModels.ResponsibleGamingLimitsResponse) -> ResponsibleGamingLimitsResponse {
 
-        return ResponsibleGamingLimitsResponse(status: internalResponsibleGamingLimitsResponse.status, limits: internalResponsibleGamingLimitsResponse.limits)
+        let responsibleGamingLimits = internalResponsibleGamingLimitsResponse.limits.map({ responsibleGamingLimit -> ResponsibleGamingLimit in
+
+            let responsibleGamingLimit = Self.responsibleGamingLimit(fromResponsibleGamingLimit: responsibleGamingLimit)
+
+            return responsibleGamingLimit
+
+        })
+
+        return ResponsibleGamingLimitsResponse(status: internalResponsibleGamingLimitsResponse.status, limits: responsibleGamingLimits)
+    }
+
+    static func responsibleGamingLimit(fromResponsibleGamingLimit internalResponsibleGamingLimit: SportRadarModels.ResponsibleGamingLimit) -> ResponsibleGamingLimit {
+        return ResponsibleGamingLimit(id: internalResponsibleGamingLimit.id, partyId: internalResponsibleGamingLimit.partyId, limitType: internalResponsibleGamingLimit.limitType, periodType: internalResponsibleGamingLimit.periodType, effectiveDate: internalResponsibleGamingLimit.effectiveDate, expiryDate: internalResponsibleGamingLimit.expiryDate, limit: internalResponsibleGamingLimit.limit)
     }
 
     static func basicResponse(fromInternalBasicResponse internalBasicResponse: SportRadarModels.BasicResponse) -> BasicResponse {

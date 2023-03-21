@@ -134,6 +134,8 @@ enum OmegaAPIClient {
 
     case getGrantedBonuses
     case redeemBonus(code: String)
+
+    case contactUs(firstName: String, lastName: String, email: String, subject: String, message: String)
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -226,6 +228,9 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/getBonuses"
         case .redeemBonus:
             return "/ps/ips/redeemBonus"
+
+        case .contactUs:
+            return "/ps/ips/contactus"
         }
     }
     
@@ -421,9 +426,9 @@ extension OmegaAPIClient: Endpoint {
             return [URLQueryItem(name: "limit", value: limitFormated)]
         case .updateResponsibleGamingLimits(let newLimit):
             let limitFormated = String(format: "%.2f", newLimit)
-            return [URLQueryItem(name: "limit", value: limitFormated),
-                    URLQueryItem(name: "limitType", value: "BALANCE_LIMIT"),
-                    URLQueryItem(name: "periodType", value: "WEEKLY")
+            return [URLQueryItem(name: "limitType", value: "BALANCE_LIMIT"),
+                    URLQueryItem(name: "periodType", value: "WEEKLY"),
+                    URLQueryItem(name: "limit", value: limitFormated)
             ]
         case .lockPlayer(let isPermanent, let lockPeriodUnit, let lockPeriod):
             var queryItemsURL: [URLQueryItem] = []
@@ -577,6 +582,16 @@ extension OmegaAPIClient: Endpoint {
             return [
                 URLQueryItem(name: "bonusCode", value: code),
             ]
+
+        case .contactUs(let firstName, let lastName, let email, let subject, let message):
+            return [
+                URLQueryItem(name: "firstName", value: firstName),
+                URLQueryItem(name: "lastName", value: lastName),
+                URLQueryItem(name: "email", value: email),
+                URLQueryItem(name: "subject", value: subject),
+                URLQueryItem(name: "message", value: message)
+            ]
+
         }
     }
     
@@ -629,6 +644,8 @@ extension OmegaAPIClient: Endpoint {
 
         case .getGrantedBonuses: return .get
         case .redeemBonus: return .post
+
+        case .contactUs: return .get
         }
     }
     
@@ -709,6 +726,8 @@ extension OmegaAPIClient: Endpoint {
         case .getGrantedBonuses: return true
 
         case .redeemBonus: return true
+
+        case .contactUs: return false
         }
     }
     

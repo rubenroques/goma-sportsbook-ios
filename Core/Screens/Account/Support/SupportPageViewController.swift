@@ -43,6 +43,8 @@ class SupportPageViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
         self.commonInit()
+
+        self.bind(toViewModel: self.viewModel)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -119,6 +121,24 @@ class SupportPageViewController: UIViewController {
         self.backButtonBaseView.backgroundColor = .clear
         
     }
+
+    // MARK: Binding
+    private func bind(toViewModel viewModel: SupportPageViewModel) {
+
+        viewModel.supportResponseAction = { [weak self] withSuccess, message in
+
+            if withSuccess {
+                self?.didTapBackButton()
+            }
+            else {
+                if let message {
+                    self?.showSimpleAlert(title: localized("error"), message: message)
+                }
+            }
+
+        }
+
+    }
     
     // MARK: - Actions
     
@@ -137,39 +157,7 @@ class SupportPageViewController: UIViewController {
     @objc func didTapSend() {
   
         self.viewModel.sendEmail(title: self.subjectTextField.text, message: self.descriptionTextView.text)
-        self.viewModel.supportResponseAction = { [weak self] withSuccess in
-            
-            if withSuccess {
-                self?.showAlert(title: localized("success"),
-                                subtitle: localized("support_success"),
-                                buttonText: "OK",
-                                backAction: true)
-                self?.didTapBackButton()
-            }
-            else {
-                self?.showAlert(title: localized("error"),
-                                subtitle: localized("support_error"),
-                                buttonText: "OK",
-                                backAction: false)
-            }
-            
-        }
-    }
 
-    func showAlert(title: String, subtitle: String, buttonText: String, backAction: Bool) {
-        if backAction {
-            let alert = UIAlertController(title: title, message: subtitle, preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: buttonText, style: UIAlertAction.Style.default, handler: {( action:UIAlertAction!) in
-                self.didTapBackButton()
-            }))
-            self.present(alert, animated: true, completion: nil)
-        }
-        else {
-            let alert = UIAlertController(title: title, message: subtitle, preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: buttonText, style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-      
     }
 }
 

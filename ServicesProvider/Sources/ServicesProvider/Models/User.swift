@@ -85,6 +85,8 @@ public struct UserProfile: Codable {
     public let province: String?
     public let city: String?
     public let postalCode: String?
+    public let birthDepartment: String?
+    public let streetNumber: String?
 
     public let emailVerificationStatus: EmailVerificationStatus
     public let userRegistrationStatus: UserRegistrationStatus
@@ -110,6 +112,8 @@ public struct UserProfile: Codable {
                 province: String?,
                 city: String?,
                 postalCode: String?,
+                birthDepartment: String?,
+                streetNumber: String?,
                 emailVerificationStatus: EmailVerificationStatus,
                 userRegistrationStatus: UserRegistrationStatus,
                 avatarName: String?,
@@ -132,6 +136,8 @@ public struct UserProfile: Codable {
         self.province = province
         self.city = city
         self.postalCode = postalCode
+        self.birthDepartment = birthDepartment
+        self.streetNumber = streetNumber
         self.emailVerificationStatus = emailVerificationStatus
         self.userRegistrationStatus = userRegistrationStatus
 

@@ -145,12 +145,12 @@ class ProfileLimitsManagementViewModel: NSObject {
                     self?.responsibleGamingLimitLoaded.send(true)
                 }
 
-            }, receiveValue: { [weak self] limitsResponse in
+            }, receiveValue: { [weak self] responsibleGamingLimitsResponse in
 
-                print("RESPONSIBLE LIMITS RESPONSE: \(limitsResponse)")
+                print("RESPONSIBLE LIMITS RESPONSE: \(responsibleGamingLimitsResponse)")
 
-                //self?.processLimits(limitsResponse: limitsResponse)
-                self?.responsibleGamingLimitLoaded.send(true)
+                self?.processResponsibleGamingLimits(responsibleGamingLimitsResponse: responsibleGamingLimitsResponse)
+                //self?.responsibleGamingLimitLoaded.send(true)
 
             })
             .store(in: &cancellables)
@@ -214,27 +214,47 @@ class ProfileLimitsManagementViewModel: NSObject {
 
     private func processResponsibleGamingLimits(responsibleGamingLimitsResponse: ResponsibleGamingLimitsResponse) {
 
-//        let responsibleGamingLimitInfo = LimitInfo(period: "weekly", currency: responsibleGamingLimitsResponse.currency, amount: Double(responsibleGamingLimitsResponse.weeklyLimit ?? "0") ?? 0)
+        if let responsibleGamingLimit = responsibleGamingLimitsResponse.limits.first(where: {
+            $0.periodType == "Weekly"
+        }) {
+
+            let responsibleGamingLimitInfo = LimitInfo(period: "weekly", currency: "EUR", amount: responsibleGamingLimit.limit)
+
+            var responsibleGamingLimit = Limit(updatable: true, current: responsibleGamingLimitInfo, queued: nil)
+
+            if responsibleGamingLimitsResponse.limits.count > 1,
+               let pendingLimit = responsibleGamingLimitsResponse.limits[safe: 1] {
+
+                let pendingLimitValue = pendingLimit.limit
+                let pendingLimitDate = pendingLimit.effectiveDate
+                let currency = "EUR"
+
+                self.pendingLossLimitMessage = "There is a pending limit of: \(pendingLimitValue) \(currency). The current limit is valid until: \(pendingLimitDate)"
+
+                let queuedResponsibleGamingLimitInfo = LimitInfo(period: "weekly", currency: "EUR", amount: pendingLimit.limit)
+
+                responsibleGamingLimit.queued = queuedResponsibleGamingLimitInfo
+                responsibleGamingLimit.updatable = false
+            }
+
+//            if let hasPendingLimit = depositLimitResponse.hasPendingWeeklyLimit, hasPendingLimit == "true" {
 //
-//        var responsibleGamingLimit = Limit(updatable: true, current: responsibleGamingLimitInfo, queued: nil)
+//                let pendingLimit = depositLimitResponse.pendingWeeklyLimit ?? ""
+//                let pendingLimitDate = depositLimitResponse.pendingWeeklyLimitEffectiveDate ?? ""
+//                let currency = depositLimitResponse.currency
 //
-//        if let hasPendingLimit = depositLimitResponse.hasPendingWeeklyLimit, hasPendingLimit == "true" {
+//                self.pendingDepositLimitMessage = "There is a pending limit of: \(pendingLimit) \(currency). The current limit is valid until: \(pendingLimitDate)"
 //
-//            let pendingLimit = depositLimitResponse.pendingWeeklyLimit ?? ""
-//            let pendingLimitDate = depositLimitResponse.pendingWeeklyLimitEffectiveDate ?? ""
-//            let currency = depositLimitResponse.currency
+//                let queuedDepositLimitInfo = LimitInfo(period: "weekly", currency: depositLimitResponse.currency, amount: Double(depositLimitResponse.pendingWeeklyLimit ?? "0") ?? 0)
 //
-//            self.pendingDepositLimitMessage = "There is a pending limit of: \(pendingLimit) \(currency). The current limit is valid until: \(pendingLimitDate)"
-//
-//            let queuedDepositLimitInfo = LimitInfo(period: "weekly", currency: depositLimitResponse.currency, amount: Double(depositLimitResponse.pendingWeeklyLimit ?? "0") ?? 0)
-//
-//            depositLimit.queued = queuedDepositLimitInfo
-//            depositLimit.updatable = false
-//        }
-//
-//        self.lossLimit = responsibleGamingLimit
-//
-//        self.responsibleGamingLimitLoaded.send(true)
+//                depositLimit.queued = queuedDepositLimitInfo
+//                depositLimit.updatable = false
+//            }
+
+            self.autoPayoutLimit = responsibleGamingLimit
+        }
+
+        self.responsibleGamingLimitLoaded.send(true)
     }
 
     private func setLimitsData() {

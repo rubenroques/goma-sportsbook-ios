@@ -111,21 +111,40 @@ class MyTicketBetLineView: NibView {
         self.homeTeamNameLabel.text = self.betHistoryEntrySelection.homeParticipantName ?? ""
         self.awayTeamNameLabel.text = self.betHistoryEntrySelection.awayParticipantName ?? ""
 
-        if let sportId = self.betHistoryEntrySelection.sportId, let image = UIImage(named: "sport_type_icon_\(sportId)") {
-            self.sportTypeImageView.image = image
+//        if let sportId = self.betHistoryEntrySelection.sportId, let image = UIImage(named: "sport_type_icon_\(sportId)") {
+//            self.sportTypeImageView.image = image
+//        }
+//        else {
+//            self.sportTypeImageView.image = UIImage(named: "sport_type_icon_default")
+//        }
+        if let sportCode = self.betHistoryEntrySelection.sportName {
+
+            if let sportId = Env.sportsStore.getSportId(sportCode: sportCode) {
+                let image = UIImage(named: "sport_type_icon_\(sportId)")
+                self.sportTypeImageView.image = image
+            }
+            else {
+                self.sportTypeImageView.image = UIImage(named: "sport_type_icon_default")
+            }
+
         }
         else {
             self.sportTypeImageView.image = UIImage(named: "sport_type_icon_default")
         }
         self.sportTypeImageView.setImageColor(color: UIColor.App.textPrimary)
-        
-        if let image = UIImage(named: Assets.flagName(withCountryCode: self.countryCode)) {
+
+        if let image = UIImage(named: Assets.flagName(withCountryCode: self.betHistoryEntrySelection.venueName ?? "")) {
             self.locationImageView.image = image
         }
         else {
             self.locationImageView.isHidden = true
         }
-
+//        if let image = UIImage(named: Assets.flagName(withCountryCode: self.countryCode)) {
+//            self.locationImageView.image = image
+//        }
+//        else {
+//            self.locationImageView.isHidden = true
+//        }
 
         if let marketName = self.betHistoryEntrySelection.marketName, let partName = self.betHistoryEntrySelection.bettingTypeEventPartName {
             self.marketLabel.text = "\(marketName) (\(partName))"
@@ -154,17 +173,22 @@ class MyTicketBetLineView: NibView {
                 self.dateLabel.isHidden = false
             }
             
-            let baseViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBaseView))
-            baseView.addGestureRecognizer(baseViewTapGesture)
+//            let baseViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBaseView))
+//            baseView.addGestureRecognizer(baseViewTapGesture)
         }
         else if let date = self.betHistoryEntrySelection.eventDate {
             self.dateLabel.text = MyTicketBetLineView.dateFormatter.string(from: date)
             self.liveIconImage.isHidden = true
             self.dateLabel.isHidden = false
         }
+
+        if self.betHistoryEntrySelection.status == .opened {
+            let baseViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBaseView))
+            baseView.addGestureRecognizer(baseViewTapGesture)
+        }
               
-        self.homeTeamScoreLabel.text = self.betHistoryEntrySelection.homeParticipantScore ?? ""
-        self.awayTeamScoreLabel.text = self.betHistoryEntrySelection.awayParticipantScore ?? ""
+        self.homeTeamScoreLabel.text = self.betHistoryEntrySelection.homeParticipantScore ?? "-"
+        self.awayTeamScoreLabel.text = self.betHistoryEntrySelection.awayParticipantScore ?? "-"
 
         if (self.homeTeamNameLabel.text?.isEmpty ?? true) && (self.awayTeamNameLabel.text?.isEmpty ?? true) {
             self.homeTeamNameLabel.isHidden = true

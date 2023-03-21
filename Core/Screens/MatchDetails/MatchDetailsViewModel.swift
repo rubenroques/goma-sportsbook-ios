@@ -252,11 +252,12 @@ class MatchDetailsViewModel: NSObject {
                         groupKey: rawMarketGroup.groupKey,
                         translatedName: rawMarketGroup.translatedName,
                         isDefault: rawMarketGroup.isDefault,
-                        markets: ServiceProviderModelMapper.optionalMarkets(fromServiceProviderMarkets: rawMarketGroup.markets))
+                        markets: ServiceProviderModelMapper.optionalMarkets(fromServiceProviderMarkets: rawMarketGroup.markets),
+                        position: rawMarketGroup.position)
 
         }
         let sortedMarketGroups = marketGroups.sorted(by: {
-            $0.id < $1.id
+            $0.position ?? 0 < $1.position ?? 99
         })
         return sortedMarketGroups
     }

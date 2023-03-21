@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SharedModels
 
 public struct BettingHistory: Codable {
     public var bets: [Bet]
@@ -41,6 +42,11 @@ public struct BetSelection: Codable {
     public var homeResult: String?
     public var awayResult: String?
 
+    public var eventId: String
+    public var country: Country?
+    public var sportTypeName: String
+    public var tournamentName: String
+
     init(identifier: String,
          state: BetState,
          result: BetResult,
@@ -52,7 +58,11 @@ public struct BetSelection: Codable {
          outcomeName: String,
          odd: OddFormat,
          homeResult: String?,
-         awayResult: String?) {
+         awayResult: String?,
+         eventId: String,
+         country: Country?,
+         sportTypeName: String,
+         tournamentName: String) {
         self.identifier = identifier
         self.state = state
         self.result = result
@@ -65,6 +75,10 @@ public struct BetSelection: Codable {
         self.odd = odd
         self.homeResult = homeResult
         self.awayResult = awayResult
+        self.eventId = eventId
+        self.country = country
+        self.sportTypeName = sportTypeName
+        self.tournamentName = tournamentName
     }
 }
 

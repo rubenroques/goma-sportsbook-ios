@@ -35,6 +35,7 @@ class PersonalInfoViewController: UIViewController {
     @IBOutlet private var bankIdHeaderTextFieldView: HeaderTextFieldView!
 
     @IBOutlet private var placeOfBirthHeaderTextFieldView: HeaderTextFieldView!
+    @IBOutlet private var departmentOfBirthHeaderTextFieldView: HeaderTextFieldView!
     // Variables
 
     private var cancellables = Set<AnyCancellable>()
@@ -113,9 +114,9 @@ class PersonalInfoViewController: UIViewController {
         birthDateHeaderTextFieldView.setPlaceholderTextColor(UIColor.App.inputTextTitle)
         birthDateHeaderTextFieldView.shouldBeginEditing = { return true }
 
-        adress1HeaderTextFieldView.setPlaceholderText(localized("address_1"))
+        adress1HeaderTextFieldView.setPlaceholderText(localized("address"))
 
-        adress2HeaderTextFieldView.setPlaceholderText(localized("address_2"))
+        adress2HeaderTextFieldView.setPlaceholderText(localized("street_number"))
 
         cityHeaderTextFieldView.setPlaceholderText(localized("city"))
 
@@ -130,6 +131,8 @@ class PersonalInfoViewController: UIViewController {
         bankIdHeaderTextFieldView.setPlaceholderText(localized("bank_id"))
 
         placeOfBirthHeaderTextFieldView.setPlaceholderText(localized("place_of_birth"))
+
+        departmentOfBirthHeaderTextFieldView.setPlaceholderText(localized("department_of_birth"))
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackgroundView))
         self.view.addGestureRecognizer(tapGestureRecognizer)
@@ -229,6 +232,10 @@ class PersonalInfoViewController: UIViewController {
         placeOfBirthHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
 //        placeOfBirthHeaderTextFieldView.isDisabled = true
 
+        departmentOfBirthHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        departmentOfBirthHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        departmentOfBirthHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
+
     }
 
     private func setupPublishers() {
@@ -246,7 +253,8 @@ class PersonalInfoViewController: UIViewController {
                              self.emailHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
                              self.cardIdHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
                              self.bankIdHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
-                             self.placeOfBirthHeaderTextFieldView.textPublisher.eraseToAnyPublisher())
+                             self.placeOfBirthHeaderTextFieldView.textPublisher.eraseToAnyPublisher(),
+                             self.departmentOfBirthHeaderTextFieldView.textPublisher.eraseToAnyPublisher())
         .flatMap({ [weak self] _ -> AnyPublisher<Bool, Never> in
             let newHash = self?.generateFormHash()
             if let originalHash = self?.originalFormHash {
@@ -311,7 +319,8 @@ class PersonalInfoViewController: UIViewController {
                 self.emailHeaderTextFieldView.text,
                 self.cardIdHeaderTextFieldView.text,
                 self.bankIdHeaderTextFieldView.text,
-                self.placeOfBirthHeaderTextFieldView.text].joined().MD5
+                self.placeOfBirthHeaderTextFieldView.text,
+                self.departmentOfBirthHeaderTextFieldView.text].joined().MD5
     }
 
     @IBAction private func didTapBackButton() {
@@ -345,6 +354,8 @@ class PersonalInfoViewController: UIViewController {
         let city = cityHeaderTextFieldView.text
 
         let placeOfBirth = placeOfBirthHeaderTextFieldView.text
+
+        let departmentOfBirth = departmentOfBirthHeaderTextFieldView.text
         
         var serviceProviderCountry: SharedModels.Country?
         if let countryValue = self.profile?.country {
@@ -540,13 +551,16 @@ class PersonalInfoViewController: UIViewController {
         
         self.birthDateHeaderTextFieldView.setText(profile.birthDate.toString(formatString: "yyyy-MM-dd"))
         self.adress1HeaderTextFieldView.setText(profile.address ?? "-")
-        self.adress2HeaderTextFieldView.setText(profile.province ?? "-")
+        self.adress2HeaderTextFieldView.setText(profile.streetNumber ?? "-")
         self.cityHeaderTextFieldView.setText(profile.city ?? "-")
         self.postalCodeHeaderTextFieldView.setText(profile.postalCode ?? "-")
         
         self.cardIdHeaderTextFieldView.setText(profile.personalIdNumber ?? "-")
 
         self.placeOfBirthHeaderTextFieldView.setText(profile.placeOfBirth ?? "-")
+
+        // TODO: Recheck field
+        self.departmentOfBirthHeaderTextFieldView.setText(profile.birthDepartment ?? "-")
         
         self.originalFormHash = self.generateFormHash()
         

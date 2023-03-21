@@ -42,8 +42,8 @@ extension SportRadarRestAPIClient: Endpoint {
             return "/services/content/unsubscribe"
         //
         case .marketsFilter:
-            return "/sportradar/sportsbook/config/marketsFilter_v2.json" // new: "/sportsbook/config/marketsFilter_v2.json"
-
+            //return "/sportradar/sportsbook/config/marketsFilter_v2.json" // new: "/sportsbook/config/marketsFilter_v2.json"
+            return "/sportsbook/config/marketsFilter_v2.json"
         //
         case .fieldWidgetId:
             return "/services/content/get"
@@ -327,8 +327,7 @@ extension SportRadarRestAPIClient: Endpoint {
             return SportRadarConstants.servicesRestHostname
 
         case .marketsFilter:
-            return SportRadarConstants.sportRadarLegacyFrontEndURL
-//            return SportRadarConstants.sportRadarFrontEndURL
+            return SportRadarConstants.sportRadarFrontEndURL
             
         case .fieldWidgetId:
             return SportRadarConstants.servicesRestHostname

@@ -213,7 +213,7 @@ class MarketGroupDetailsStore {
 
                 let marketGroupName = similarMarketsNames[marketKey] ?? ""
 
-                if marketGroupName.contains("Halftime/fulltime") {
+                if marketGroupName.contains("Total") {
                     print("DEBUG MARKET GROUP")
                 }
                 let allOutcomes = value.flatMap({ $0.outcomes })
@@ -230,6 +230,22 @@ class MarketGroupDetailsStore {
                         outcomesDictionary[outcomeTypeName] = [outcomeIt]
                     }
                 }
+
+                // Need to full verify if needed
+//                if let drawKey = outcomesDictionary["D"],
+//                   outcomesDictionary.keys.count > 3 {
+//
+//                    for outcome in outcomesDictionary {
+//                        if outcome.key != "A" && outcome.key != "D" && outcome.key != "H" {
+//                            if let outcomeSelected = outcome.value.first,
+//                            var outcomesList = outcomesDictionary["D"] {
+//                                outcomesList.append(outcomeSelected)
+//                                outcomesDictionary["D"] = outcomesList
+//                                outcomesDictionary[outcome.key] = nil
+//                            }
+//                        }
+//                    }
+//                }
 
                 //
                 // Select the correct organizer
