@@ -542,13 +542,32 @@ class ProfileLimitsManagementViewController: UIViewController {
             })
             let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
 
-            // let currency = "EUR"
-            // Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
+            if let depositAmount = self.viewModel.depositLimit?.current?.amount,
+               let currentAmount = Double(amount),
+               currentAmount > depositAmount {
+                let title = localized("increasing_limit_warning_title").replacingFirstOccurrence(of: "{}", with: localized("deposit"))
+                let message = localized("increasing_limit_warning_text").replacingFirstOccurrence(of: "{}", with: localized("deposit"))
 
-            //self.viewModel.sendLimit(limitType: LimitType.deposit.identifier, period: period, amount: amount, currency: currency)
-            self.viewModel.updateDepositLimit(amount: amount)
+                let alert = UIAlertController(title: title,
+                                              message: message,
+                                              preferredStyle: .alert)
 
-            updatedLimits = true
+                alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+
+                    self?.viewModel.updateDepositLimit(amount: amount)
+
+                    updatedLimits = true
+                }))
+
+                alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
+
+                self.present(alert, animated: true, completion: nil)
+            }
+            else {
+                self.viewModel.updateDepositLimit(amount: amount)
+
+                updatedLimits = true
+            }
         }
 
         if self.viewModel.canUpdateWagering {
@@ -558,13 +577,33 @@ class ProfileLimitsManagementViewController: UIViewController {
             })
             let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
 
-            // let currency = "EUR"
-            // Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
+            if let bettingAmount = self.viewModel.wageringLimit?.current?.amount,
+               let currentAmount = Double(amount),
+               currentAmount > bettingAmount {
+                let title = localized("increasing_limit_warning_title").replacingFirstOccurrence(of: "{}", with: localized("betting"))
+                let message = localized("increasing_limit_warning_text").replacingFirstOccurrence(of: "{}", with: localized("betting"))
 
-//            self.viewModel.sendLimit(limitType: LimitType.wagering.identifier, period: period, amount: amount, currency: currency)
-            self.viewModel.updateBettingLimit(amount: amount)
+                let alert = UIAlertController(title: title,
+                                              message: message,
+                                              preferredStyle: .alert)
 
-            updatedLimits = true
+                alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+
+                    self?.viewModel.updateBettingLimit(amount: amount)
+
+                    updatedLimits = true
+                }))
+
+                alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
+
+                self.present(alert, animated: true, completion: nil)
+            }
+            else {
+                self.viewModel.updateBettingLimit(amount: amount)
+
+                updatedLimits = true
+            }
+
 
         }
 
@@ -574,12 +613,7 @@ class ProfileLimitsManagementViewController: UIViewController {
             let amountFiltered = String( amountString.filter{ acceptedInputs.contains($0)} )
             let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
 
-            // let currency = "EUR"
-            // Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
-
-            // TODO: Uncomment when endpoint is working
             self.viewModel.updateResponsibleGamingLimit(amount: amount)
-            //self.viewModel.sendLimit(limitType: LimitType.loss.identifier, period: period, amount: amount, currency: currency)
 
             updatedLimits = true
 

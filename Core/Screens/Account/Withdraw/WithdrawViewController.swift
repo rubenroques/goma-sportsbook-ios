@@ -207,26 +207,42 @@ class WithdrawViewController: UIViewController {
 
     // MARK: Functions
     private func createPaymentsLogosImageViews() {
-        let mastercardImageView = UIImageView()
-        mastercardImageView.image = UIImage(named: "mastercard_logo")
-        mastercardImageView.contentMode = .scaleAspectFit
-
-        let maestroImageView = UIImageView()
-        maestroImageView.image = UIImage(named: "maestro_logo")
-        maestroImageView.contentMode = .scaleAspectFit
-
         let visaImageView = UIImageView()
-        visaImageView.image = UIImage(named: "visa_logo")
+        visaImageView.image = UIImage(named: "payment_visa_icon")
         visaImageView.contentMode = .scaleAspectFit
+        visaImageView.layer.masksToBounds = true
 
-        let netellerImageView = UIImageView()
-        netellerImageView.image = UIImage(named: "neteller_logo")
-        netellerImageView.contentMode = .scaleAspectFit
+        let masterCardImageView = UIImageView()
+        masterCardImageView.image = UIImage(named: "payment_mc_icon")
+        masterCardImageView.contentMode = .scaleAspectFit
+        masterCardImageView.layer.masksToBounds = true
 
-        self.paymentsLogosStackView.addArrangedSubview(mastercardImageView)
-        self.paymentsLogosStackView.addArrangedSubview(maestroImageView)
+        let carteBancaireImageView = UIImageView()
+        carteBancaireImageView.image = UIImage(named: "payment_cartebancaire_icon")
+        carteBancaireImageView.contentMode = .scaleAspectFit
+        carteBancaireImageView.layer.masksToBounds = true
+
+        let paypalImageView = UIImageView()
+        paypalImageView.image = UIImage(named: "payment_paypal_icon")
+        paypalImageView.contentMode = .scaleAspectFit
+        paypalImageView.layer.masksToBounds = true
+
+        let paysafeImageView = UIImageView()
+        paysafeImageView.image = UIImage(named: "payment_paysafecard_icon")
+        paysafeImageView.contentMode = .scaleAspectFit
+        paysafeImageView.layer.masksToBounds = true
+
+        let sepaImageView = UIImageView()
+        sepaImageView.image = UIImage(named: "payment_sepa_icon")
+        sepaImageView.contentMode = .scaleAspectFit
+        sepaImageView.layer.masksToBounds = true
+
         self.paymentsLogosStackView.addArrangedSubview(visaImageView)
-        self.paymentsLogosStackView.addArrangedSubview(netellerImageView)
+        self.paymentsLogosStackView.addArrangedSubview(masterCardImageView)
+        self.paymentsLogosStackView.addArrangedSubview(carteBancaireImageView)
+        self.paymentsLogosStackView.addArrangedSubview(paypalImageView)
+        self.paymentsLogosStackView.addArrangedSubview(paysafeImageView)
+        self.paymentsLogosStackView.addArrangedSubview(sepaImageView)
 
     }
 

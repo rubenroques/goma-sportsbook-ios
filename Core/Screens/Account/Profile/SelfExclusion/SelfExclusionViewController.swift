@@ -279,15 +279,12 @@ class SelfExclusionViewController: UIViewController {
 
     private func saveSelfExclusionOptions() {
         if self.exclusionSelectTextFieldView.textPublisher.value != localized("not_excluded") {
-            print("LOCK PLAYER!")
-
-            let isPermanent = self.exclusionSelectTextFieldView.textPublisher.value == localized("permanent") ? true : false
 
             let lockPeriodUnit = self.periodTypeSelected ?? ""
 
             let lockPeriod = self.periodValueHeaderTextFieldView.text
 
-            self.viewModel.lockPlayer(isPermanent: isPermanent, lockPeriodUnit: lockPeriodUnit, lockPeriod: lockPeriod)
+            self.viewModel.lockPlayer(lockPeriodUnit: lockPeriodUnit, lockPeriod: lockPeriod)
         }
     }
 }
@@ -301,7 +298,58 @@ extension SelfExclusionViewController {
     }
 
     @objc private func didTapEditButton() {
-        self.saveSelfExclusionOptions()
+
+        var lockPeriodUnit = self.periodTypeSelected ?? ""
+
+        let lockPeriod = self.periodValueHeaderTextFieldView.text
+
+        if lockPeriodUnit == "Days" {
+            if lockPeriod == "1" {
+                lockPeriodUnit = localized("day").lowercased()
+            }
+            else{
+                lockPeriodUnit = localized("days").lowercased()
+            }
+        }
+        else if lockPeriodUnit == "Weeks" {
+            if lockPeriod == "1" {
+                lockPeriodUnit = localized("week").lowercased()
+            }
+            else{
+                lockPeriodUnit = localized("weeks").lowercased()
+            }        }
+        else if lockPeriodUnit == "Months" {
+            if lockPeriod == "1" {
+                lockPeriodUnit = localized("month").lowercased()
+            }
+            else{
+                lockPeriodUnit = localized("months").lowercased()
+            }
+
+        }
+
+        var message = localized("lock_account_alert_text").replacingFirstOccurrence(of: "{value}", with: lockPeriod)
+            .replacingFirstOccurrence(of: "{period}", with: lockPeriodUnit)
+
+        if lockPeriod == "1" {
+            message = localized("lock_account_alert_text").replacingFirstOccurrence(of: "{value}", with: "")
+                .replacingFirstOccurrence(of: "  ", with: " ")
+                .replacingFirstOccurrence(of: "{period}", with: lockPeriodUnit)
+        }
+
+        let alert = UIAlertController(title: localized("self_exclusion"),
+                                      message: message,
+                                      preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+
+            self?.saveSelfExclusionOptions()
+
+        }))
+
+        alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
@@ -363,7 +411,7 @@ extension SelfExclusionViewController {
     private static func createExclusionSelectTextFieldView() -> DropDownSelectionView {
         let dropDownView = DropDownSelectionView()
         dropDownView.translatesAutoresizingMaskIntoConstraints = false
-        dropDownView.setSelectionPicker([localized("not_excluded"), localized("custom"), localized("permanent")])
+        dropDownView.setSelectionPicker([localized("not_excluded"), localized("custom")])
         return dropDownView
     }
 

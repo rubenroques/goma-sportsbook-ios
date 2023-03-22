@@ -759,3 +759,15 @@ Terms of use, Privacy Policy and EULA";
 
 "used" = "Used";
 "total_wager" = "Total Wager";
+
+"confirm_close_account_button" = "Yes, close my account";
+"close_account_alert_text" = "You are about to close your account. If you continue, you won't be able to access your account anymore. This process is irreversible. Do you wish to close your account permanently?";
+
+"increasing_limit_warning_title" = "Increasing {} Limit";
+"increasing_limit_warning_text" = "You are about to increase the {} Limit of your account. These changes will take 48 hours to be applied. Do you wish to apply these changes?";
+"betting" = "Betting";
+
+"lock_account_alert_text" = "You are about to lock your account. If you continue, you won't be able to access your account nor open another account in the next {value} {period}. Are you sure you want to proceed?";
+"week" = "Week";
+"day" = "Day";
+"month" = "Month";
