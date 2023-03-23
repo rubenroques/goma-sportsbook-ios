@@ -190,11 +190,11 @@ struct MarketLinesMarketGroupOrganizer: MarketGroupOrganizer {
         }
 
         // Inverse Under/Over to Over/Under
-        if self.outcomes.values.contains(where: {
-            (($0[safe: 0]?.codeName.contains("Over")) != nil || ($0[safe: 0]?.codeName.contains("Under")) != nil)
-        }) {
-            self.sortedOutcomeKeys = self.sortedOutcomeKeys.reversed()
-        }
+//        if self.outcomes.values.contains(where: {
+//            (($0[safe: 0]?.codeName.contains("Over")) != nil || ($0[safe: 0]?.codeName.contains("Under")) != nil)
+//        }) {
+//            self.sortedOutcomeKeys = self.sortedOutcomeKeys.reversed()
+//        }
 
         self.markets = markets
         self.sortedMarkets = self.markets.sorted(by: { leftMarket, rigthMarket in

@@ -215,10 +215,10 @@ class ProfileLimitsManagementViewModel: NSObject {
     private func processResponsibleGamingLimits(responsibleGamingLimitsResponse: ResponsibleGamingLimitsResponse) {
 
         if let responsibleGamingLimit = responsibleGamingLimitsResponse.limits.first(where: {
-            $0.periodType == "Weekly"
+            $0.periodType == "Daily"
         }) {
 
-            let responsibleGamingLimitInfo = LimitInfo(period: "weekly", currency: "EUR", amount: responsibleGamingLimit.limit)
+            let responsibleGamingLimitInfo = LimitInfo(period: "daily", currency: "EUR", amount: responsibleGamingLimit.limit)
 
             var responsibleGamingLimit = Limit(updatable: true, current: responsibleGamingLimitInfo, queued: nil)
 
@@ -231,7 +231,7 @@ class ProfileLimitsManagementViewModel: NSObject {
 
                 self.pendingLossLimitMessage = "There is a pending limit of: \(pendingLimitValue) \(currency). The current limit is valid until: \(pendingLimitDate)"
 
-                let queuedResponsibleGamingLimitInfo = LimitInfo(period: "weekly", currency: "EUR", amount: pendingLimit.limit)
+                let queuedResponsibleGamingLimitInfo = LimitInfo(period: "daily", currency: "EUR", amount: pendingLimit.limit)
 
                 responsibleGamingLimit.queued = queuedResponsibleGamingLimitInfo
                 responsibleGamingLimit.updatable = false

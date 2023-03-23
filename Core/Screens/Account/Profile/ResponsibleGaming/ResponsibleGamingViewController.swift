@@ -127,8 +127,11 @@ extension ResponsibleGamingViewController {
 
     @objc private func didTapCloseAccount(sender: UITapGestureRecognizer) {
 
-        print("CLOSE ACCOUNT")
+        let closeAccountViewModel = CloseAccountViewModel()
 
+        let closeAccoutViewController = CloseAccountViewController(viewModel: closeAccountViewModel)
+
+        self.navigationController?.pushViewController(closeAccoutViewController, animated: true)
     }
 }
 

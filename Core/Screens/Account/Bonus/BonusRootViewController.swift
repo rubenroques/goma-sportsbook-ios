@@ -51,6 +51,9 @@ class BonusRootViewController: UIViewController {
 
     private var cancellables = Set<AnyCancellable>()
 
+    var tabsToShow: Int = 4
+    var processedQueueBonus: Bool = false
+
     // MARK: - Lifetime and Cycle
     init(viewModel: BonusRootViewModel) {
         self.viewModel = viewModel
@@ -78,7 +81,8 @@ class BonusRootViewController: UIViewController {
         self.bonusTypesViewControllers = [
             BonusViewController(viewModel: BonusViewModel(bonusListType: .available)),
             BonusViewController(viewModel: BonusViewModel(bonusListType: .active)),
-            BonusViewController(viewModel: BonusViewModel(bonusListType: .history)),
+            BonusViewController(viewModel: BonusViewModel(bonusListType: .queued)),
+            BonusViewController(viewModel: BonusViewModel(bonusListType: .history))
         ]
 
         self.bonusTypePagedViewController.delegate = self
@@ -130,7 +134,6 @@ class BonusRootViewController: UIViewController {
         StyleHelper.styleButton(button: self.noLoginButton)
    }
 
-
     // MARK: - Bindings
     private func bind(toViewModel viewModel: BonusRootViewModel) {
 
@@ -155,6 +158,21 @@ class BonusRootViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
+
+        // TODO: Implement later
+//        for bonusTypesViewController in bonusTypesViewControllers {
+//            if let bonusVC = bonusTypesViewController as? BonusViewController {
+//
+//                bonusVC.viewModel.hasQueuedBonus
+//                    .sink(receiveValue: { [weak self] hasQueuedBonus in
+//                        guard let self = self else { return }
+//                        if hasQueuedBonus && !self.processedQueueBonus {
+//                            self.showQueuedBonus()
+//                        }
+//                    })
+//                    .store(in: &cancellables)
+//            }
+//        }
     }
 
     @objc func didTapLoginButton() {
@@ -199,6 +217,38 @@ class BonusRootViewController: UIViewController {
         }
 
         self.currentPageViewControllerIndex = index
+    }
+
+    func showQueuedBonus() {
+
+        let queuedBonusVC = BonusViewController(viewModel: BonusViewModel(bonusListType: .queued))
+
+        if let availableBonusVC = self.bonusTypesViewControllers[safe: 0],
+           let activeBonusVC = self.bonusTypesViewControllers[safe: 1],
+           let historyBonusVC = self.bonusTypesViewControllers[safe: 2] {
+
+            self.bonusTypesViewControllers = [
+                availableBonusVC,
+                activeBonusVC,
+                queuedBonusVC,
+                historyBonusVC
+            ]
+
+            self.tabsToShow = 4
+            self.processedQueueBonus = true
+            self.bonusTypesCollectionView.reloadData()
+        }
+
+//        self.bonusTypesViewControllers = [
+//            BonusViewController(viewModel: BonusViewModel(bonusListType: .available)),
+//            BonusViewController(viewModel: BonusViewModel(bonusListType: .active)),
+//            BonusViewController(viewModel: BonusViewModel(bonusListType: .queued)),
+//            BonusViewController(viewModel: BonusViewModel(bonusListType: .history))
+//        ]
+//
+//        self.tabsToShow = 4
+//        self.reloadCollectionView()
+
     }
 
 }
@@ -258,7 +308,7 @@ extension BonusRootViewController: UICollectionViewDelegate, UICollectionViewDat
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return self.tabsToShow
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -268,15 +318,31 @@ extension BonusRootViewController: UICollectionViewDelegate, UICollectionViewDat
             fatalError()
         }
 
-        switch indexPath.row {
-        case 0:
-            cell.setupWithTitle(localized("available"))
-        case 1:
-            cell.setupWithTitle(localized("active"))
-        case 2:
-            cell.setupWithTitle(localized("history"))
-        default:
-            ()
+        if self.tabsToShow == 4 {
+            switch indexPath.row {
+            case 0:
+                cell.setupWithTitle(localized("available"))
+            case 1:
+                cell.setupWithTitle(localized("active"))
+            case 2:
+                cell.setupWithTitle(localized("queued"))
+            case 3:
+                cell.setupWithTitle(localized("history"))
+            default:
+                ()
+            }
+        }
+        else {
+            switch indexPath.row {
+            case 0:
+                cell.setupWithTitle(localized("available"))
+            case 1:
+                cell.setupWithTitle(localized("active"))
+            case 2:
+                cell.setupWithTitle(localized("history"))
+            default:
+                ()
+            }
         }
 
         if let index = self.viewModel.selectedBonusTypeIndexPublisher.value, index == indexPath.row {
@@ -318,7 +384,6 @@ extension BonusRootViewController: UIGestureRecognizerDelegate {
 }
 
 extension BonusRootViewController {
-
 
     private static func createTopSafeAreaView() -> UIView {
         let view = UIView()
