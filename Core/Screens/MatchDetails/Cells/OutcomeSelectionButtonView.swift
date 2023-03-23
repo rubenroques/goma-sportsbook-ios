@@ -144,7 +144,7 @@ class OutcomeSelectionButtonView: NibView {
                 }, receiveValue: { [weak self] (marketUpdated: Market) in
 
                     if marketUpdated.isAvailable {
-                        self?.isUserInteractionEnabled = false
+                        self?.isUserInteractionEnabled = true
                         self?.containerView.alpha = 1.0
                         Logger.log("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will show \n")
 

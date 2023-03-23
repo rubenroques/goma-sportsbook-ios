@@ -11,6 +11,7 @@ import UIKit
 import Theming
 import ServicesProvider
 import Combine
+import HeaderTextField
 
 public class LimitsOnRegisterViewModel {
 
@@ -341,17 +342,17 @@ public class LimitsOnRegisterViewController: UIViewController {
             case .failure(let limitsOnRegisterError):
                 switch limitsOnRegisterError {
                 case .depositFormatError:
-                    self?.depositLimitHeaderTextFieldView.showErrorOnField(text: "This value is not valid.", color: AppColor.alertError)
+                    self?.depositLimitHeaderTextFieldView.showError(withMessage: "This value is not valid.")
                 case .bettingFormatError:
-                    self?.bettingLimitHeaderTextFieldView.showErrorOnField(text: "This value is not valid.", color: AppColor.alertError)
+                    self?.bettingLimitHeaderTextFieldView.showError(withMessage: "This value is not valid.")
                 case .autoPayoutFormatError:
-                    self?.bettingLimitHeaderTextFieldView.showErrorOnField(text: "This value is not valid.", color: AppColor.alertError)
+                    self?.bettingLimitHeaderTextFieldView.showError(withMessage: "This value is not valid.")
                 case .depositServerError:
-                    self?.depositLimitHeaderTextFieldView.showErrorOnField(text: "There was a problem setting this value", color: AppColor.alertError)
+                    self?.depositLimitHeaderTextFieldView.showError(withMessage: "There was a problem setting this value")
                 case .bettingServerError:
-                    self?.bettingLimitHeaderTextFieldView.showErrorOnField(text: "There was a problem setting this value", color: AppColor.alertError)
+                    self?.bettingLimitHeaderTextFieldView.showError(withMessage: "There was a problem setting this value")
                 case .autoPayoutServerError:
-                    self?.bettingLimitHeaderTextFieldView.showErrorOnField(text: "There was a problem setting this value", color: AppColor.alertError)
+                    self?.bettingLimitHeaderTextFieldView.showError(withMessage: "There was a problem setting this value")
                 }
             case .finished:
                 ()

@@ -7,6 +7,7 @@ import RegisterFlow
 import Adyen
 import AdyenDropIn
 import AdyenComponents
+import HeaderTextField
 
 class LoginViewController: UIViewController {
 
@@ -20,8 +21,8 @@ class LoginViewController: UIViewController {
 
     @IBOutlet private var loginView: UIView!
     @IBOutlet private var loginLabel: UILabel!
-    @IBOutlet private weak var usernameHeaderTextFieldView: HeaderTextFieldView!
-    @IBOutlet private weak var passwordHeaderTextFieldView: HeaderTextFieldView!
+    @IBOutlet private weak var usernameHeaderTextFieldView: HeaderTextField.HeaderTextFieldView!
+    @IBOutlet private weak var passwordHeaderTextFieldView: HeaderTextField.HeaderTextFieldView!
 
     @IBOutlet private var rememberView: UIView!
     @IBOutlet private var rememberToggleView: UIView!
@@ -77,7 +78,7 @@ class LoginViewController: UIViewController {
         self.loginButton.isEnabled = false
         Publishers.CombineLatest(self.usernameHeaderTextFieldView.textPublisher, self.passwordHeaderTextFieldView.textPublisher)
             .map { username, password in
-                return (username?.isNotEmpty ?? false) && (password?.isNotEmpty ?? false)
+                return username.isNotEmpty && password.isNotEmpty
             }
             .sink(receiveCompletion: { _ in
                 
@@ -177,18 +178,18 @@ class LoginViewController: UIViewController {
         passwordHeaderTextFieldView.setSecureField(true)
         passwordHeaderTextFieldView.setKeyboardType(.default)
 
-        usernameHeaderTextFieldView.headerLabel.font = AppFont.with(type: .semibold, size: 16)
-        passwordHeaderTextFieldView.headerLabel.font = AppFont.with(type: .semibold, size: 16)
+        usernameHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
+        passwordHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
 
-        usernameHeaderTextFieldView.textField.returnKeyType = .next
-        passwordHeaderTextFieldView.textField.returnKeyType = .go
+        usernameHeaderTextFieldView.setReturnKeyType(.next)
+        passwordHeaderTextFieldView.setReturnKeyType(.go)
 
         usernameHeaderTextFieldView.didTapReturn = { [weak self] in
-            self?.passwordHeaderTextFieldView.textField.becomeFirstResponder()
+            self?.passwordHeaderTextFieldView.becomeFirstResponder()
         }
 
         passwordHeaderTextFieldView.didTapReturn = { [weak self] in
-            self?.passwordHeaderTextFieldView.textField.resignFirstResponder()
+            self?.passwordHeaderTextFieldView.resignFirstResponder()
             self?.didTapLoginButton()
         }
 
@@ -263,11 +264,13 @@ class LoginViewController: UIViewController {
 
         self.loginLabel.textColor = UIColor.App.textHeadlinePrimary
 
+        self.usernameHeaderTextFieldView.setViewColor(UIColor.App.inputBackground)
         self.usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
-        self.usernameHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
-    
+        self.usernameHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
+
+        self.passwordHeaderTextFieldView.setViewColor(UIColor.App.inputBackground)
         self.passwordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
-        self.passwordHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
+        self.passwordHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
 
         self.rememberView.backgroundColor = .clear
         self.rememberLabel.textColor = UIColor.App.textPrimary

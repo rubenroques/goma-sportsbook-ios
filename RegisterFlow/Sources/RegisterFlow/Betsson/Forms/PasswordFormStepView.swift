@@ -10,6 +10,7 @@ import UIKit
 import Theming
 import Extensions
 import Combine
+import HeaderTextField
 
 class PasswordFormStepViewModel {
 
@@ -259,21 +260,21 @@ class PasswordFormStepView: FormStepView {
 //                    case .empty:
 //                        self.passwordHeaderTextFieldView.hideTipAndError()
 //                    case .short:
-//                        self.passwordHeaderTextFieldView.showErrorOnField(text: "The password is too short", color: AppColor.inputError)
+//                        self.passwordHeaderTextFieldView.showError(withMessage: "The password is too short")
 //                    case .long:
-//                        self.passwordHeaderTextFieldView.showErrorOnField(text: "The password is too long", color: AppColor.inputError)
+//                        self.passwordHeaderTextFieldView.showError(withMessage: "The password is too long")
 //                    case .invalidChars:
-//                        self.passwordHeaderTextFieldView.showErrorOnField(text: "The password contains invalids characters", color: AppColor.inputError)
+//                        self.passwordHeaderTextFieldView.showError(withMessage: "The password contains invalids characters")
 //                    case .onlyNumbers:
-//                        self.passwordHeaderTextFieldView.showErrorOnField(text: "The password can not be all numbers", color: AppColor.inputError)
+//                        self.passwordHeaderTextFieldView.showError(withMessage: "The password can not be all numbers")
 //                    case .needUppercase:
-//                        self.passwordHeaderTextFieldView.showErrorOnField(text: "The password must contain an uppercase letter", color: AppColor.inputError)
+//                        self.passwordHeaderTextFieldView.showError(withMessage: "The password must contain an uppercase letter")
 //                    case .needLowercase:
-//                        self.passwordHeaderTextFieldView.showErrorOnField(text: "The password must contain a lowercase letter", color: AppColor.inputError)
+//                        self.passwordHeaderTextFieldView.showError(withMessage: "The password must contain a lowercase letter")
 //                    case .needNumber:
-//                        self.passwordHeaderTextFieldView.showErrorOnField(text: "The password must contain a number", color: AppColor.inputError)
+//                        self.passwordHeaderTextFieldView.showError(withMessage: "The password must contain a number")
 //                    case .needSpecial:
-//                        self.passwordHeaderTextFieldView.showErrorOnField(text: "The password must contain a special character (-!@$^&*)", color: AppColor.inputError)
+//                        self.passwordHeaderTextFieldView.showError(withMessage: "The password must contain a special character (-!@$^&*)")
 //                    case .valid:
 //                        self.passwordHeaderTextFieldView.hideTipAndError()
 //                    }
@@ -315,11 +316,11 @@ class PasswordFormStepView: FormStepView {
 
         switch (error.field, error.error) {
         case ("password", "INVALID_LENGTH"):
-            self.passwordHeaderTextFieldView.showErrorOnField(text: "This password has an invalid length", color: AppColor.alertError)
+            self.passwordHeaderTextFieldView.showError(withMessage: "This password has an invalid length")
         case ("password", "INVALID_VALUE"):
-            self.passwordHeaderTextFieldView.showErrorOnField(text: "Please enter a valid Password", color: AppColor.alertError)
+            self.passwordHeaderTextFieldView.showError(withMessage: "Please enter a valid Password")
         case ("password", _):
-            self.passwordHeaderTextFieldView.showErrorOnField(text: "Please enter a valid Password", color: AppColor.alertError)
+            self.passwordHeaderTextFieldView.showError(withMessage: "Please enter a valid Password")
         default:
             ()
         }

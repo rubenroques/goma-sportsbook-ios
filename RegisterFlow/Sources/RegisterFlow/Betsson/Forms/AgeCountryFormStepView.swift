@@ -13,6 +13,7 @@ import ServicesProvider
 import SharedModels
 import CountrySelectionFeature
 import AdresseFrancaise
+import HeaderTextField
 
 class AgeCountryFormStepViewModel {
 
@@ -407,7 +408,7 @@ class AgeCountryFormStepView: FormStepView {
                         self?.departmentBirthHeaderTextFieldView.hideTipAndError()
                     }
                     else {
-                        self?.departmentBirthHeaderTextFieldView.showErrorOnField(text: "This departement of birth is invalid", color: AppColor.alertError)
+                        self?.departmentBirthHeaderTextFieldView.showError(withMessage: "This departement of birth is invalid")
                     }
                 }
             }
@@ -496,13 +497,13 @@ class AgeCountryFormStepView: FormStepView {
         if !self.canPresentError(forFormStep: formStep) { return }
         switch (error.field, error.error) {
         case ("birthDate", "BELOW_MINIMUM_AGE"):
-            self.dateHeaderTextFieldView.showErrorOnField(text: "Player is not old enough to be registered", color: AppColor.alertError)
+            self.dateHeaderTextFieldView.showError(withMessage: "Player is not old enough to be registered")
         case ("country", "INVALID_LENGTH"):
-            self.countryHeaderTextFieldView.showErrorOnField(text: "Country name is too long", color: AppColor.alertError)
+            self.countryHeaderTextFieldView.showError(withMessage: "Country name is too long")
         case ("birthDate", _):
-            self.dateHeaderTextFieldView.showErrorOnField(text: "Please enter a valid birth date", color: AppColor.alertError)
+            self.dateHeaderTextFieldView.showError(withMessage: "Please enter a valid birth date")
         case ("country", _):
-            self.countryHeaderTextFieldView.showErrorOnField(text: "Please enter a valid Country", color: AppColor.alertError)
+            self.countryHeaderTextFieldView.showError(withMessage: "Please enter a valid Country")
         default:
             ()
         }

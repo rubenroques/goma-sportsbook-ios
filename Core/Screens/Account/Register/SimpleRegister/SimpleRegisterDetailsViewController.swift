@@ -507,9 +507,7 @@ extension SimpleRegisterDetailsViewController {
     }
     
     func showEmailTakenErrorStatus() {
-        self.usernameHeaderTextView
-            .showErrorOnField(text: localized("email_already_registered"),
-                              color: UIColor.App.alertError)
+        self.usernameHeaderTextView.showErrorOnField(text: localized("email_already_registered"), color: UIColor.App.alertError)
         self.disableSignUpButton()
     }
     

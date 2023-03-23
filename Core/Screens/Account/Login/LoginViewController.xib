@@ -66,14 +66,14 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="334" placeholderIntrinsicHeight="67" translatesAutoresizingMaskIntoConstraints="NO" id="X3W-Gv-gcP" customClass="HeaderTextFieldView" customModule="Betsson" customModuleProvider="target">
+                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="334" placeholderIntrinsicHeight="67" translatesAutoresizingMaskIntoConstraints="NO" id="X3W-Gv-gcP" customClass="HeaderTextFieldView" customModule="HeaderTextField">
                                             <rect key="frame" x="0.0" y="48" width="354" height="80"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="80" id="9gH-p1-dCe"/>
                                             </constraints>
                                         </view>
-                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="334" placeholderIntrinsicHeight="67" translatesAutoresizingMaskIntoConstraints="NO" id="JsX-nm-bpq" customClass="HeaderTextFieldView" customModule="Betsson" customModuleProvider="target">
+                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="334" placeholderIntrinsicHeight="67" translatesAutoresizingMaskIntoConstraints="NO" id="JsX-nm-bpq" customClass="HeaderTextFieldView" customModule="HeaderTextField">
                                             <rect key="frame" x="0.0" y="141" width="354" height="80"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>

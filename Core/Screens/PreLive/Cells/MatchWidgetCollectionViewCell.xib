@@ -41,17 +41,23 @@
                                             <constraint firstAttribute="width" secondItem="hjz-Yg-JGd" secondAttribute="height" id="tod-Xl-JSc"/>
                                         </constraints>
                                     </imageView>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="BvN-9q-msd">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dC7-iS-7O5">
                                         <rect key="frame" x="23" y="0.0" width="17" height="17"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="dC7-iS-7O5" secondAttribute="height" multiplier="1:1" id="oTV-og-rfG"/>
+                                        </constraints>
+                                    </imageView>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="BvN-9q-msd">
+                                        <rect key="frame" x="46" y="0.0" width="17" height="17"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="BvN-9q-msd" secondAttribute="height" multiplier="1:1" id="qs3-4r-6uZ"/>
                                         </constraints>
                                     </imageView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yhm-UM-LCk">
-                                        <rect key="frame" x="46" y="0.0" width="213.5" height="17"/>
+                                        <rect key="frame" x="69" y="0.0" width="190.5" height="17"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="UEFA Champions League" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MRO-h1-2Aq">
-                                                <rect key="frame" x="0.0" y="4" width="212.5" height="11"/>
+                                                <rect key="frame" x="0.0" y="4" width="189.5" height="11"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="11"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -66,6 +72,7 @@
                                     </view>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="dC7-iS-7O5" firstAttribute="width" secondItem="dC7-iS-7O5" secondAttribute="height" multiplier="1:1" id="VGI-Pi-qyg"/>
                                     <constraint firstAttribute="height" constant="17" id="vAm-3P-m5G"/>
                                 </constraints>
                             </stackView>
@@ -482,6 +489,7 @@
                 <outlet property="resultStackView" destination="iph-Xc-owq" id="dsH-Vl-Cvd"/>
                 <outlet property="seeAllBaseView" destination="Xel-CJ-cY5" id="Dfl-gY-KSc"/>
                 <outlet property="seeAllLabel" destination="Vrs-dD-HHo" id="3Bb-90-ubx"/>
+                <outlet property="sportTypeImageView" destination="dC7-iS-7O5" id="Wjz-ap-UKS"/>
                 <outlet property="suspendedBaseView" destination="DoR-hW-9XB" id="30i-gU-w3n"/>
                 <outlet property="suspendedLabel" destination="Thh-yZ-s6v" id="Xsi-9y-Nef"/>
                 <outlet property="teamsHeightConstraint" destination="WkJ-AG-pI4" id="XD9-8p-6d2"/>

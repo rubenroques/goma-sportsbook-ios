@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import ServicesProvider
+import HeaderTextField
 
 class RecoverPasswordViewController: UIViewController {
 
@@ -19,7 +20,7 @@ class RecoverPasswordViewController: UIViewController {
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
-    private lazy var emailTextField: HeaderTextFieldView = Self.createEmailHeaderTextFieldView()
+    private lazy var emailTextField: HeaderTextField.HeaderTextFieldView = Self.createEmailHeaderTextFieldView()
     private lazy var proceedButton: UIButton = Self.createProceedButton()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
@@ -126,16 +127,14 @@ class RecoverPasswordViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] emailText in
                 guard let self = self else { return }
-
-                if let emailText,
-                   emailText != "" {
+                if emailText != "" {
 
                     if emailText.isValidEmailAddress() {
                         self.emailTextField.hideTipAndError()
                         self.proceedButton.isEnabled = true
                     }
                     else {
-                        self.emailTextField.showErrorOnField(text: "Incorrect email format")
+                        self.emailTextField.showError(withMessage: localized("invalid_email"))
                         self.proceedButton.isEnabled = false
                     }
                 }
@@ -259,13 +258,13 @@ extension RecoverPasswordViewController {
         return label
     }
 
-    private static func createEmailHeaderTextFieldView() -> HeaderTextFieldView {
-        let textField = HeaderTextFieldView()
+    private static func createEmailHeaderTextFieldView() -> HeaderTextField.HeaderTextFieldView {
+        let textField = HeaderTextField.HeaderTextFieldView()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.setSecureField(false)
         textField.setKeyboardType(.emailAddress)
         textField.setPlaceholderText(localized("email"))
-        textField.headerLabel.font = AppFont.with(type: .semibold, size: 16)
+        textField.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16)) 
         return textField
     }
 

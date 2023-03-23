@@ -11,6 +11,7 @@ import Extensions
 import Combine
 import SharedModels
 import AdresseFrancaise
+import HeaderTextField
 
 public struct AddressSearchResult {
     public var title: String
@@ -467,8 +468,7 @@ class AddressFormStepView: FormStepView {
             .receive(on: DispatchQueue.main)
             .sink { shouldShowPostcodeFormatErrorMessage in
                 if shouldShowPostcodeFormatErrorMessage {
-                    self.postCodeHeaderTextFieldView.showErrorOnField(text: "This Postcode is not valid. Must be 5 digits",
-                                                                      color: AppColor.alertError)
+                    self.postCodeHeaderTextFieldView.showError(withMessage: "This Postcode is not valid. Must be 5 digits")
                 }
                 else {
                     self.postCodeHeaderTextFieldView.hideTipAndError()
@@ -480,8 +480,7 @@ class AddressFormStepView: FormStepView {
             .receive(on: DispatchQueue.main)
             .sink { shouldShowStreetNumberFormatErrorMessage in
                 if shouldShowStreetNumberFormatErrorMessage {
-                    self.numberHeaderTextFieldView.showErrorOnField(text: "The number is not valid. Must be up to 3 digits",
-                                                                    color: AppColor.alertError)
+                    self.numberHeaderTextFieldView.showError(withMessage: "The number is not valid. Must be up to 3 digits")
                 }
                 else {
                     self.numberHeaderTextFieldView.hideTipAndError()
@@ -525,13 +524,13 @@ class AddressFormStepView: FormStepView {
         if !self.canPresentError(forFormStep: formStep) { return }
         switch (error.field, error.error) {
         case ("city", "INVALID_LENGTH"):
-            self.placeHeaderTextFieldView.showErrorOnField(text: "Place/Commune is too long", color: AppColor.alertError)
+            self.placeHeaderTextFieldView.showError(withMessage: "Place/Commune is too long")
         case ("address", "INVALID_LENGTH"):
-            self.postCodeHeaderTextFieldView.showErrorOnField(text: "Street name is too long", color: AppColor.alertError)
+            self.postCodeHeaderTextFieldView.showError(withMessage: "Street name is too long")
         case ("city", _):
-            self.placeHeaderTextFieldView.showErrorOnField(text: "Please enter a valid Place/Commune", color: AppColor.alertError)
+            self.placeHeaderTextFieldView.showError(withMessage: "Please enter a valid Place/Commune")
         case ("address", _):
-            self.postCodeHeaderTextFieldView.showErrorOnField(text: "Please enter a valid Street", color: AppColor.alertError)
+            self.postCodeHeaderTextFieldView.showError(withMessage: "Please enter a valid Street")
         default:
             ()
         }

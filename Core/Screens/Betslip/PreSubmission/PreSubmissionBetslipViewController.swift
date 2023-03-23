@@ -304,9 +304,9 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.settingsPickerView.tag = 2
 
         self.placeBetButtonsBaseView.isHidden = true
-        self.placeBetButtonsSeparatorView.alpha = 0.5
+        self.placeBetButtonsSeparatorView.alpha = 1.0
         
-        self.secondaryPlaceBetButtonsSeparatorView.alpha = 0.5
+        self.secondaryPlaceBetButtonsSeparatorView.alpha = 1.0
 
         self.simpleWinningsValueLabel.text = localized("no_value")
         self.simpleOddsTitleLabel.text = localized("bets") + ":"
@@ -346,7 +346,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.tableView.delegate = self
 
         self.amountTextfield.delegate = self
-        
         self.secondaryAmountTextfield.delegate = self
 
         self.systemBetInteriorView.layer.cornerRadius = 8
@@ -364,6 +363,12 @@ class PreSubmissionBetslipViewController: UIViewController {
         let amountBaseViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAmountBaseView))
         self.amountBaseView.addGestureRecognizer(amountBaseViewTapGesture)
         self.amountTextfield.isUserInteractionEnabled = false
+
+        //
+        // Quick add buttons
+        self.plusOneButtonView.setTitle("+10", for: .normal)
+        self.plusFiveButtonView.setTitle("+20", for: .normal)
+        self.maxValueButtonView.setTitle("+50", for: .normal)
 
         //
         //
@@ -630,7 +635,10 @@ class PreSubmissionBetslipViewController: UIViewController {
                 betslipType == .system && self?.selectedSystemBetType != nil
             }
             .map({ [weak self] _, bettingValue in
-                return bettingValue > 0 && bettingValue < (self?.maxBetValue ?? 0)
+                //TODO: Use if we can get a max value from server
+                // return bettingValue > 0 && bettingValue < (self?.maxBetValue ?? 0)
+
+                return bettingValue > 0
             })
             .sink(receiveValue: { [weak self] hasValidBettingValue in
                 if hasValidBettingValue {
@@ -647,7 +655,10 @@ class PreSubmissionBetslipViewController: UIViewController {
                 betslipType == .multiple
             }
             .map({ [weak self] _, bettingValue in
-                return bettingValue > 0 && bettingValue < (self?.maxBetValue ?? 0)
+                //TODO: Use if we can get a max value from server
+                // return bettingValue > 0 && bettingValue < (self?.maxBetValue ?? 0)
+
+                return bettingValue > 0
             })
             .sink(receiveValue: { [weak self] hasValidBettingValue in
                 self?.placeBetButton.isEnabled = hasValidBettingValue
@@ -1083,29 +1094,43 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.topSafeArea.backgroundColor = UIColor.App.backgroundPrimary
         self.bottomSafeArea.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.amountTextfield.font = AppFont.with(type: .semibold, size: 14)
-        self.amountTextfield.textColor = UIColor.App.inputTextTitle
+        //
+        // Amount textfields
+        //
+        self.amountTextfield.textAlignment = .left
+        self.amountTextfield.font = AppFont.with(type: .semibold, size: 15)
+        self.amountTextfield.textColor = UIColor.App.inputText
         self.amountTextfield.attributedPlaceholder = NSAttributedString(string: localized("amount"), attributes: [
-            NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14),
+            NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 15),
             NSAttributedString.Key.foregroundColor: UIColor.App.textDisablePrimary
         ])
+
+        self.secondaryAmountTextfield.font = AppFont.with(type: .semibold, size: 15)
+        self.secondaryAmountTextfield.textColor = UIColor.App.inputText
+        self.secondaryAmountTextfield.attributedPlaceholder = NSAttributedString(string: localized("amount"), attributes: [
+            NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 15),
+            NSAttributedString.Key.foregroundColor: UIColor.App.textDisablePrimary
+        ])
+
+
         self.amountBaseView.backgroundColor = UIColor.App.inputBackground
+        self.amountBaseView.layer.cornerRadius = 10.0
+        self.amountBaseView.layer.borderWidth = 2
+        self.amountBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
+
+        self.secondaryAmountBaseView.backgroundColor = UIColor.App.inputBackground
+        self.secondaryAmountBaseView.layer.cornerRadius = 10.0
+        self.secondaryAmountBaseView.layer.borderWidth = 2
+        self.secondaryAmountBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
+        //
+        //
 
         self.clearButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+        self.clearButton.setTitle(localized("clear_all"), for: .normal)
 
         self.settingsButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
         self.settingsButton.setTitle(localized("settings"), for: .normal)
-        
-        self.clearButton.setTitle(localized("clear_all"), for: .normal)
 
-        self.secondaryAmountTextfield.font = AppFont.with(type: .semibold, size: 14)
-        self.secondaryAmountTextfield.textColor = UIColor.App.textPrimary
-        self.secondaryAmountTextfield.attributedPlaceholder = NSAttributedString(string: localized("amount"), attributes: [
-            NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14),
-            NSAttributedString.Key.foregroundColor: UIColor.App.textDisablePrimary
-        ])
-
-        self.secondaryAmountBaseView.backgroundColor = UIColor.App.backgroundTertiary
 
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
@@ -1120,10 +1145,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.placeBetBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.placeBetButtonsBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        self.placeBetButtonsSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.placeBetSendButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
-
-        self.secondaryPlaceBetButtonsSeparatorView.backgroundColor = UIColor.App.separatorLine
 
         self.placeBetButton.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
         self.placeBetButton.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
@@ -1154,8 +1176,10 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondaryMaxButtonView.setTitleColor(UIColor.App.textPrimary.withAlphaComponent(0.7), for: .highlighted)
 
         self.emptyBetsBaseView.backgroundColor = UIColor.App.backgroundPrimary
-
         self.emptyBetslipLabel.textColor = UIColor.App.textPrimary
+
+        self.placeBetButtonsSeparatorView.backgroundColor = UIColor.App.separatorLineSecondary
+        self.secondaryPlaceBetButtonsSeparatorView.backgroundColor = UIColor.App.separatorLineSecondary
 
         self.simpleWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.multipleWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
@@ -1171,8 +1195,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.multipleWinningsTitleLabel.text = localized("possible_winnings")
         self.secondaryMultipleWinningsTitleLabel.text = localized("possible_winnings")
         self.secondarySystemWinningsTitleLabel.text = localized("possible_winnings")
-        
-        
         
         self.simpleWinningsValueLabel.textColor = UIColor.App.textPrimary
         self.simpleOddsTitleLabel.textColor = UIColor.App.textSecondary
@@ -1595,20 +1617,49 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
     @IBAction private func didTapPlusOneButton() {
-        self.addAmountValue(1)
+        self.addAmountValue(10.0)
     }
 
     @IBAction private func didTapPlusFiveButton() {
-        self.addAmountValue(5)
+        self.addAmountValue(20.0)
     }
 
     @IBAction private func didTapPlusMaxButton() {
-        self.addAmountValue(self.maxBetValue, isMax: true)
+        self.addAmountValue(50.0)
     }
 
 }
 
 extension PreSubmissionBetslipViewController: UITextFieldDelegate {
+
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if textField == self.amountTextfield {
+            self.amountBaseView.layer.borderColor = UIColor.App.inputBorderActive.cgColor
+        }
+        else if textField == self.secondaryAmountTextfield {
+            self.secondaryAmountBaseView.layer.borderColor = UIColor.App.inputBorderActive.cgColor
+        }
+        return true
+    }
+
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField == self.amountTextfield {
+            self.amountBaseView.layer.borderColor = UIColor.App.inputBorderActive.cgColor
+        }
+        else if textField == self.secondaryAmountTextfield {
+            self.secondaryAmountBaseView.layer.borderColor = UIColor.App.inputBorderActive.cgColor
+        }
+    }
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField == self.amountTextfield {
+            self.amountBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
+        }
+        else if textField == self.secondaryAmountTextfield {
+            self.secondaryAmountBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
+        }
+    }
+
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         self.updateAmountValue(string)
       
@@ -1875,6 +1926,7 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 160
     }
+
 }
 
 class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewDataSource {

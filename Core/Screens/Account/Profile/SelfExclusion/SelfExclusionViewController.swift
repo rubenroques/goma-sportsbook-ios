@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import HeaderTextField
 
 class SelfExclusionViewController: UIViewController {
 
@@ -20,7 +21,7 @@ class SelfExclusionViewController: UIViewController {
     private lazy var exclusionSelectTextFieldView: DropDownSelectionView = Self.createExclusionSelectTextFieldView()
     private lazy var periodValuesView: UIView = Self.createPeriodValuesView()
     private lazy var periodTypeSelectTextFieldView: DropDownSelectionView = Self.createPeriodTypeSelectTextFieldView()
-    private lazy var periodValueHeaderTextFieldView: HeaderTextFieldView = Self.createPeriodValueHeaderTextFieldView()
+    private lazy var periodValueHeaderTextFieldView: HeaderTextField.HeaderTextFieldView = Self.createPeriodValueHeaderTextFieldView()
 
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
@@ -380,8 +381,8 @@ extension SelfExclusionViewController {
         return dropDownView
     }
 
-    private static func createPeriodValueHeaderTextFieldView() -> HeaderTextFieldView {
-        let headerTextFieldView = HeaderTextFieldView()
+    private static func createPeriodValueHeaderTextFieldView() -> HeaderTextField.HeaderTextFieldView {
+        let headerTextFieldView = HeaderTextField.HeaderTextFieldView()
         headerTextFieldView.setPlaceholderText(localized("period_value"))
         headerTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
         headerTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))

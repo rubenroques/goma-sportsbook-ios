@@ -10,6 +10,7 @@ import UIKit
 import Theming
 import Extensions
 import Combine
+import HeaderTextField
 
 class ConfirmationCodeFormStepViewModel {
 

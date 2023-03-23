@@ -144,7 +144,14 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.upChangeOddValueImage.alpha = 0.0
         self.downChangeOddValueImage.alpha = 0.0
 
+        self.amountBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.amountBaseView.layer.cornerRadius = 10.0
+        self.amountBaseView.layer.borderWidth = 2
+        self.amountBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
+
         self.amountTextfield.delegate = self
+
         self.addDoneAccessoryView()
 
         self.setupWithTheme()
@@ -155,6 +162,10 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.showBonusInfo = false
 
         self.oddsBoostView.isHidden = true
+
+        self.plusOneButtonView.setTitle("+10", for: .normal)
+        self.plusFiveButtonView.setTitle("+20", for: .normal)
+        self.maxValueButtonView.setTitle("+50", for: .normal)
 
         self.setupSubviews()
     }
@@ -257,17 +268,18 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
             NSAttributedString.Key.foregroundColor: UIColor.App.inputTextTitle
         ])
 
-        self.amountBaseView.backgroundColor = UIColor.App.backgroundTertiary
-        
-        self.plusOneButtonView.setBackgroundColor(UIColor.App.backgroundTertiary, for: .normal)
+        self.amountBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.amountBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
+
+        self.plusOneButtonView.setBackgroundColor(UIColor.App.backgroundBorder, for: .normal)
         self.plusOneButtonView.setTitleColor(UIColor.App.textPrimary, for: .normal)
         self.plusOneButtonView.setTitleColor(UIColor.App.textPrimary.withAlphaComponent(0.7), for: .highlighted)
 
-        self.plusFiveButtonView.setBackgroundColor(UIColor.App.backgroundTertiary, for: .normal)
+        self.plusFiveButtonView.setBackgroundColor(UIColor.App.backgroundBorder, for: .normal)
         self.plusFiveButtonView.setTitleColor(UIColor.App.textPrimary, for: .normal)
         self.plusFiveButtonView.setTitleColor(UIColor.App.textPrimary.withAlphaComponent(0.7), for: .highlighted)
 
-        self.maxValueButtonView.setBackgroundColor(UIColor.App.backgroundTertiary, for: .normal)
+        self.maxValueButtonView.setBackgroundColor(UIColor.App.backgroundBorder, for: .normal)
         self.maxValueButtonView.setTitleColor(UIColor.App.textPrimary, for: .normal)
         self.maxValueButtonView.setTitleColor(UIColor.App.textPrimary.withAlphaComponent(0.7), for: .highlighted)
 
@@ -514,15 +526,15 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
     }
 
     @IBAction private func didTapPlusOneButton() {
-        self.addAmountValue(1.0)
+        self.addAmountValue(10.0)
     }
 
     @IBAction private func didTapPlusFiveButton() {
-        self.addAmountValue(5.0)
+        self.addAmountValue(20.0)
     }
 
     @IBAction private func didTapPlusMaxButton() {
-        self.addAmountValue(self.maxBetValue, isMax: true)
+        self.addAmountValue(50.0)
     }
 
     func refreshPossibleWinnings() {
@@ -543,6 +555,26 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 }
 
 extension SingleBettingTicketTableViewCell: UITextFieldDelegate {
+
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if textField == self.amountTextfield {
+            self.amountBaseView.layer.borderColor = UIColor.App.inputBorderActive.cgColor
+        }
+        return true
+    }
+
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField == self.amountTextfield {
+            self.amountBaseView.layer.borderColor = UIColor.App.inputBorderActive.cgColor
+        }
+    }
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField == self.amountTextfield {
+            self.amountBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
+        }
+    }
+
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         self.updateAmountValue(string)
         return false

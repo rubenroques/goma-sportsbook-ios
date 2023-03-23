@@ -10,6 +10,7 @@ import Combine
 import ServicesProvider
 import Theming
 import Extensions
+import HeaderTextField
 
 class NicknameFormStepViewModel {
 
@@ -261,7 +262,7 @@ class NicknameFormStepView: FormStepView {
                 return state == .tooShort
             })
             .sink { [weak self] _ in
-                self?.nicknameHeaderTextFieldView.showErrorOnField(text: Localization.localized("nickname_error"))
+                self?.nicknameHeaderTextFieldView.showError(withMessage: Localization.localized("nickname_error"))
                 self?.suggestionsLabelContainerView.isHidden = true
                 self?.configureWithSuggestedNicknames([])
                 self?.loadingView.stopAnimating()
@@ -285,16 +286,16 @@ class NicknameFormStepView: FormStepView {
                     self?.suggestionsLabelContainerView.isHidden = true
                     self?.loadingView.startAnimating()
                 case .serverError:
-                    self?.nicknameHeaderTextFieldView.showErrorOnField(text: "Sorry we could not validate this nickname.")
+                    self?.nicknameHeaderTextFieldView.showError(withMessage: "Sorry we could not validate this nickname.")
                     self?.suggestionsLabelContainerView.isHidden = true
                     self?.loadingView.stopAnimating()
                 case .alreadyInUse(let suggestions):
-                    self?.nicknameHeaderTextFieldView.showErrorOnField(text: "This nickname is already in use.")
+                    self?.nicknameHeaderTextFieldView.showError(withMessage: "This nickname is already in use.")
                     self?.configureWithSuggestedNicknames(suggestions)
                     self?.suggestionsLabelContainerView.isHidden = false
                     self?.loadingView.stopAnimating()
                 case .invalidSyntax:
-                    self?.nicknameHeaderTextFieldView.showErrorOnField(text: "Please insert a valid nickname.")
+                    self?.nicknameHeaderTextFieldView.showError(withMessage: "Please insert a valid nickname.")
                     self?.suggestionsLabelContainerView.isHidden = true
                     self?.configureWithSuggestedNicknames([])
                     self?.loadingView.stopAnimating()
@@ -385,11 +386,11 @@ class NicknameFormStepView: FormStepView {
 
         switch (error.field, error.error) {
         case ("username", "INVALID_LENGTH"):
-            self.nicknameHeaderTextFieldView.showErrorOnField(text: "Nickname is too long", color: AppColor.alertError)
+            self.nicknameHeaderTextFieldView.showError(withMessage: "Nickname is too long")
         case ("username", "DUPLICATE"):
-            self.nicknameHeaderTextFieldView.showErrorOnField(text: "This nickname is already in use", color: AppColor.alertError)
+            self.nicknameHeaderTextFieldView.showError(withMessage: "This nickname is already in use")
         case ("username", _):
-            self.nicknameHeaderTextFieldView.showErrorOnField(text: "Please enter a valid nickname", color: AppColor.alertError)
+            self.nicknameHeaderTextFieldView.showError(withMessage: "Please enter a valid nickname")
         default:
             ()
         }

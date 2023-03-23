@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import Theming
+import HeaderTextField
 
 public class DepositOnRegisterViewController: UIViewController {
 

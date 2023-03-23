@@ -10,6 +10,7 @@ import UIKit
 import Theming
 import Extensions
 import Combine
+import HeaderTextField
 
 class PromoCodeFormStepViewModel {
 
@@ -131,9 +132,9 @@ class PromoCodeFormStepView: FormStepView {
 
         switch (error.field, error.error) {
         case ("bonusCode", "INVALID_LENGTH"):
-            self.promoCodeHeaderTextFieldView.showErrorOnField(text: "Promo Code is too long", color: AppColor.alertError)
+            self.promoCodeHeaderTextFieldView.showError(withMessage: "Promo Code is too long")
         case ("bonusCode", _):
-            self.promoCodeHeaderTextFieldView.showErrorOnField(text: "Please enter a valid Promo Code", color: AppColor.alertError)
+            self.promoCodeHeaderTextFieldView.showError(withMessage: "Please enter a valid Promo Code")
         default:
             ()
         }

@@ -13,6 +13,7 @@ import Extensions
 import Combine
 import SharedModels
 import CountrySelectionFeature
+import HeaderTextField
 
 class ContactsFormStepViewModel {
 
@@ -410,7 +411,7 @@ class ContactsFormStepView: FormStepView {
                 return state == .invalidSyntax
             })
             .sink { [weak self] _ in
-                self?.emailHeaderTextFieldView.showErrorOnField(text: "Please insert a valid email format", color: AppColor.alertError)
+                self?.emailHeaderTextFieldView.showError(withMessage: "Please insert a valid email format")
             }
             .store(in: &self.cancellables)
 
@@ -432,9 +433,9 @@ class ContactsFormStepView: FormStepView {
                 case .validating:
                     self?.emailHeaderTextFieldView.hideTipAndError()
                 case .serverError:
-                    self?.emailHeaderTextFieldView.showErrorOnField(text: "Sorry we cannot verify this email", color: AppColor.alertError)
+                    self?.emailHeaderTextFieldView.showError(withMessage: "Sorry we cannot verify this email")
                 case .alreadyInUse:
-                    self?.emailHeaderTextFieldView.showErrorOnField(text: "This email is already in use", color: AppColor.alertError)
+                    self?.emailHeaderTextFieldView.showError(withMessage: "This email is already in use")
                 case .invalidSyntax:
                     self?.emailHeaderTextFieldView.hideTipAndError()
                 case .valid:
@@ -507,17 +508,17 @@ class ContactsFormStepView: FormStepView {
 
         switch (error.field, error.error) {
         case ("email", "INVALID_LENGTH"):
-            self.emailHeaderTextFieldView.showErrorOnField(text: "Place/Commune is too long", color: AppColor.alertError)
+            self.emailHeaderTextFieldView.showError(withMessage: "Place/Commune is too long")
         case ("mobile", "INVALID_LENGTH"):
-            self.phoneHeaderTextFieldView.showErrorOnField(text: "Street name is too long", color: AppColor.alertError)
+            self.phoneHeaderTextFieldView.showError(withMessage: "Street name is too long")
         case ("email", "DUPLICATE"):
-            self.emailHeaderTextFieldView.showErrorOnField(text: "This email is already in use", color: AppColor.alertError)
+            self.emailHeaderTextFieldView.showError(withMessage: "This email is already in use")
         case ("mobile", "DUPLICATE"):
-            self.phoneHeaderTextFieldView.showErrorOnField(text: "This mobile number is already in use", color: AppColor.alertError)
+            self.phoneHeaderTextFieldView.showError(withMessage: "This mobile number is already in use")
         case ("email", _):
-            self.emailHeaderTextFieldView.showErrorOnField(text: "Please enter a valid Email", color: AppColor.alertError)
+            self.emailHeaderTextFieldView.showError(withMessage: "Please enter a valid Email")
         case ("mobile", _):
-            self.phoneHeaderTextFieldView.showErrorOnField(text: "Please enter a valid Phone Number", color: AppColor.alertError)
+            self.phoneHeaderTextFieldView.showError(withMessage: "Please enter a valid Phone Number")
         default:
             ()
         }

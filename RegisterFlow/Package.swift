@@ -19,6 +19,7 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(name: "Extensions", path: "../Extensions"),
+        .package(name: "HeaderTextField", path: "../HeaderTextField"),
         .package(name: "SharedModels", path: "../SharedModels"),
         .package(name: "Theming", path: "../Theming"),
         .package(name: "ServicesProvider", path: "../ServicesProvider"),
@@ -33,6 +34,7 @@ let package = Package(
             name: "RegisterFlow",
             dependencies: [
                 "SharedModels",
+                "HeaderTextField",
                 "ServicesProvider",
                 "CountrySelectionFeature",
                 "AdresseFrancaise",

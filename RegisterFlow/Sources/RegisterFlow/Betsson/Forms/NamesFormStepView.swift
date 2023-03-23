@@ -9,6 +9,7 @@ import UIKit
 import Theming
 import Extensions
 import Combine
+import HeaderTextField
 
 struct NamesFormStepViewModel {
 
@@ -147,17 +148,13 @@ class NamesFormStepView: FormStepView {
         if !self.canPresentError(forFormStep: formStep) { return }
         switch (error.field, error.error) {
         case ("firstName", "INVALID_LENGTH"):
-            self.firstNameHeaderTextFieldView.showErrorOnField(text: "This name has an invalid length",
-                                                               color: AppColor.alertError)
+            self.firstNameHeaderTextFieldView.showError(withMessage: "This name has an invalid length")
         case ("lastName", "INVALID_LENGTH"):
-            self.lastNameHeaderTextFieldView.showErrorOnField(text: "This last name has an invalid length",
-                                                              color: AppColor.alertError)
+            self.lastNameHeaderTextFieldView.showError(withMessage: "This last name has an invalid length")
         case ("firstName", _):
-            self.firstNameHeaderTextFieldView.showErrorOnField(text: "Please enter a valid name",
-                                                               color: AppColor.alertError)
+            self.firstNameHeaderTextFieldView.showError(withMessage: "Please enter a valid name")
         case ("lastName", _):
-            self.lastNameHeaderTextFieldView.showErrorOnField(text: "Please enter a valid last name",
-                                                              color: AppColor.alertError)
+            self.lastNameHeaderTextFieldView.showError(withMessage: "Please enter a valid last name")
         default:
             ()
         }

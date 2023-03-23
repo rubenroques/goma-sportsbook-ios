@@ -22,6 +22,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var eventNameLabel: UILabel!
     @IBOutlet private weak var locationFlagImageView: UIImageView!
 
+    @IBOutlet private weak var sportTypeImageView: UIImageView!
+
     @IBOutlet private weak var favoritesButton: UIButton!
 
     @IBOutlet private weak var participantsBaseView: UIView!
@@ -183,6 +185,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.timeLabel.text = ""
 
         self.locationFlagImageView.image = nil
+        self.sportTypeImageView.image = nil
 
         self.oddsStackView.isHidden = false
         self.suspendedBaseView.isHidden = true
@@ -296,6 +299,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.locationFlagImageView.isHidden = false
         self.locationFlagImageView.image = nil
+
+        self.sportTypeImageView.image = nil
 
         self.oddsStackView.alpha = 1.0
         self.oddsStackView.isHidden = false
@@ -488,6 +493,18 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
         else {
             self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
+        }
+
+        if let imageName = self.viewModel?.match?.sportType {
+            if let sportIconImage = UIImage(named: "sport_type_icon_\(imageName)") {
+                self.sportTypeImageView.image = sportIconImage
+            }
+            else {
+                self.sportTypeImageView.image = UIImage(named: "sport_type_icon_default")
+            }
+        }
+        else {
+            self.sportTypeImageView.isHidden = true
         }
 
         guard

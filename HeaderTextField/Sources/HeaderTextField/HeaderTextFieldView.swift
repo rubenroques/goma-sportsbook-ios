@@ -3,7 +3,7 @@ import Extensions
 import Theming
 import Combine
 
-class HeaderTextFieldView: NibView {
+public class HeaderTextFieldView: NibView {
 
     @IBOutlet private weak var containerView: UIView!
     @IBOutlet private weak var headerPlaceholderLabel: UILabel!
@@ -29,61 +29,55 @@ class HeaderTextFieldView: NibView {
     @IBOutlet private weak var bottomStackView: UIStackView!
 
     private enum BorderState {
-        case idleEmpty
-        case idleFilled
+        case idle
         case firstResponder
-        case disabledEmpty
-        case disabledFilled
+        case disabled
         case error
     }
 
-    private var borderState: BorderState = .idleEmpty {
+    private var borderState: BorderState = .idle {
         didSet {
             switch self.borderState {
-            case .idleEmpty:
-                ()
-            case .idleFilled:
-                ()
+            case .idle:
+                self.containerView.layer.borderColor = self.idleColor.cgColor
             case .firstResponder:
-                ()
-            case .disabledEmpty:
-                ()
-            case .disabledFilled:
-                ()
+                self.containerView.layer.borderColor = self.highlightColor.cgColor
+            case .disabled:
+                self.containerView.layer.borderColor = self.disabledColor.cgColor
             case .error:
-                ()
+                self.containerView.layer.borderColor = self.errorColor.cgColor
             }
         }
     }
 
-    var textPublisher: AnyPublisher<String, Never> {
+    public var textPublisher: AnyPublisher<String, Never> {
         return self.textField.textPublisher
     }
     
-    var contentCenterYConstraint: NSLayoutYAxisAnchor {
+    public var contentCenterYConstraint: NSLayoutYAxisAnchor {
         return self.containerView.centerYAnchor
     }
 
-    var didTapReturn: (() -> Void) = { }
-    var didEndEditing: (() -> Void) = { }
+    public var didTapReturn: (() -> Void) = { }
+    public var didEndEditing: (() -> Void) = { }
 
-    var didSelectPickerIndex: ((Int) -> Void)?
-    var shouldBeginEditing: (() -> Bool)?
-    var didTapRemoveIcon: (() -> Void)?
+    public var didSelectPickerIndex: ((Int) -> Void)?
+    public var shouldBeginEditing: (() -> Bool)?
+    public var didTapRemoveIcon: (() -> Void)?
 
-    // Variables
-    let datePicker = UIDatePicker()
-    let pickerView = UIPickerView()
-    var selectionArray: [String] = []
-    var shouldScalePlaceholder = true
+    //  Variables
+    public let datePicker = UIDatePicker()
+    public let pickerView = UIPickerView()
+    public var selectionArray: [String] = []
+    public var shouldScalePlaceholder = true
 
-    var isTipPermanent: Bool = false
-    var isSlidedUp: Bool = false
+    public var isTipPermanent: Bool = false
+    public var isSlidedUp: Bool = false
 
     private var isCurrencyMode = false
     private var currencySymbol: String?
 
-    var showingTipLabel: Bool = false
+    public var showingTipLabel: Bool = false
 
     private var isSecureField = false {
         didSet {
@@ -99,7 +93,7 @@ class HeaderTextFieldView: NibView {
         }
     }
 
-    var autocorrect = false {
+    public var autocorrect = false {
         didSet {
             self.textField.autocorrectionType = .no
 
@@ -109,13 +103,13 @@ class HeaderTextFieldView: NibView {
         }
     }
 
-    var keyboardType: UIKeyboardType = .default {
+    public var keyboardType: UIKeyboardType = .default {
         didSet {
             self.textField.keyboardType = self.keyboardType
         }
     }
 
-    var shouldShowPassword = false {
+    public var shouldShowPassword = false {
         didSet {
             if self.shouldShowPassword {
                 self.textField.isSecureTextEntry = false
@@ -128,7 +122,7 @@ class HeaderTextFieldView: NibView {
         }
     }
 
-    var text: String {
+    public var text: String {
         return self.textField.text ?? ""
     }
 
@@ -154,24 +148,19 @@ class HeaderTextFieldView: NibView {
         }
     }
 
-    var highlightColor = AppColor.highlightPrimary {
-        didSet {
-
-        }
-    }
-
-    var errorColor = AppColor.alertError {
-        didSet {
-
-        }
-    }
+    public var idleColor = AppColor.backgroundBorder
+    public var highlightColor = AppColor.inputBorderActive
+    public var disabledColor = AppColor.inputBackground
+    public var errorColor = AppColor.alertError
 
     private var isActive: Bool = false {
         didSet {
             if isActive {
                 self.borderState = .firstResponder
             }
-
+            else {
+                self.borderState = .idle
+            }
         }
     }
 
@@ -191,30 +180,40 @@ class HeaderTextFieldView: NibView {
         }
     }
 
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
 
         self.setupWithTheme()
         self.configureContainerViewTap()
+
+        self.configureDefault()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
         self.setupWithTheme()
         self.configureContainerViewTap()
+
+        self.configureDefault()
     }
 
-    func configureContainerViewTap() {
+    private func configureDefault() {
+
+        self.borderState = .idle
+        self.tipState = .hidden
+
+    }
+
+    private func configureContainerViewTap() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapContainerView))
         self.containerView.addGestureRecognizer(tapGesture)
     }
 
     func setupWithTheme() {
-
         self.backgroundColor = .clear
 
-        self.containerView.backgroundColor = AppColor.backgroundSecondary
+        self.containerView.backgroundColor = AppColor.inputBackground
         self.containerView.layer.cornerRadius = 10.0
         self.containerView.layer.borderWidth = 2
         self.containerView.layer.borderColor = UIColor.clear.cgColor
@@ -229,8 +228,6 @@ class HeaderTextFieldView: NibView {
         self.showStateImageView.isHidden = true
         self.showPassImageView.isHidden = true
         self.showRemoveImageView.isHidden = true
-
-        self.tipState = .hidden
 
         self.tipLabel.alpha = 0.0
         self.tipLabel.numberOfLines = 2
@@ -261,7 +258,6 @@ class HeaderTextFieldView: NibView {
         self.showPasswordLabel.addGestureRecognizer(tapGestureRecognizer)
 
         self.tipLabel.font = AppFont.with(type: .semibold, size: 12)
-
     }
 
     func shouldSlideDown() -> Bool {
@@ -280,8 +276,6 @@ class HeaderTextFieldView: NibView {
         if self.isSlidedUp {
             return
         }
-
-        self.highlightColor = AppColor.textPrimary
 
         // TODO: Fazer a conta de forma dinâmica
         // let placeholderYPosition = self.headerPlaceholderLabel.center.y
@@ -322,23 +316,23 @@ class HeaderTextFieldView: NibView {
         }
     }
 
-    override var canBecomeFirstResponder: Bool {
+    public override var canBecomeFirstResponder: Bool {
         return true
     }
 
     @discardableResult
-    override func becomeFirstResponder() -> Bool {
+    public override func becomeFirstResponder() -> Bool {
         self.textField.becomeFirstResponder()
     }
 
     @discardableResult
-    override func resignFirstResponder() -> Bool {
+    public override func resignFirstResponder() -> Bool {
         super.resignFirstResponder()
         self.textField.resignFirstResponder()
         return true
     }
 
-    override var isFirstResponder: Bool {
+    public override var isFirstResponder: Bool {
         return self.textField.isFirstResponder
     }
 
@@ -346,7 +340,7 @@ class HeaderTextFieldView: NibView {
         self.textField.becomeFirstResponder()
     }
 
-    func setText(_ text: String, slideUp: Bool = true, shouldPublish: Bool = true) {
+    public func setText(_ text: String, slideUp: Bool = true, shouldPublish: Bool = true) {
 
         self.textField.text = text
 
@@ -362,78 +356,78 @@ class HeaderTextFieldView: NibView {
 
     }
 
-    func setPlaceholderText(_ placeholder: String) {
+    public func setPlaceholderText(_ placeholder: String) {
         self.textField.placeholder = ""
         self.headerLabel.text = placeholder
     }
 
-    func setPlaceholderColor(_ color: UIColor) {
+    public func setPlaceholderColor(_ color: UIColor) {
         self.headerLabel.textColor = color
     }
 
-    func setSecureField(_ isSecure: Bool) {
+    public func setSecureField(_ isSecure: Bool) {
         self.isSecureField = isSecure
     }
 
-    func setCurrencyMode(_ isCurrency: Bool, currencySymbol: String?) {
+    public func setCurrencyMode(_ isCurrency: Bool, currencySymbol: String?) {
         self.isCurrencyMode = isCurrency
         self.currencySymbol = currencySymbol
     }
 
 
-    func showPasswordLabelVisible(visible: Bool) {
+    public func showPasswordLabelVisible(visible: Bool) {
         self.showPasswordLabel.isHidden = !visible
     }
 
-    func setHeaderLabelColor(_ color: UIColor) {
+    public func setHeaderLabelColor(_ color: UIColor) {
         self.headerLabel.textColor = color
     }
 
-    func setTextFieldColor(_ color: UIColor) {
+    public func setTextFieldColor(_ color: UIColor) {
         self.textField.textColor = color
     }
 
-    func setViewColor(_ color: UIColor) {
+    public func setViewColor(_ color: UIColor) {
         self.containerView.backgroundColor = color
     }
 
-    func setImageTextField(_ image: UIImage, size: CGFloat = 30) {
+    public func setImageTextField(_ image: UIImage, size: CGFloat = 30) {
         self.showStateImageView.image = image
         self.showStateImageView.isHidden = false
         self.imageWidthConstraint.constant = size
     }
 
-    func setRemoveTextField() {
+    public func setRemoveTextField() {
         self.showRemoveImageView.image = UIImage(named: "trash_icon")
         self.showRemoveImageView.isHidden = false
     }
 
-    func setTextFieldDefaultValue(_ value: String) {
+    public func setTextFieldDefaultValue(_ value: String) {
         self.textField.text = value
         self.slideUp(animated: false)
     }
 
-    func setTextFieldFont(_ font: UIFont) {
+    public func setTextFieldFont(_ font: UIFont) {
         self.textField.font = font
     }
 
-    func setHeaderLabelFont(_ font: UIFont) {
+    public func setHeaderLabelFont(_ font: UIFont) {
         self.headerLabel.font = font
     }
 
-    func setKeyboardType(_ keyboard: UIKeyboardType) {
+    public func setKeyboardType(_ keyboard: UIKeyboardType) {
         self.textField.keyboardType = keyboard
     }
 
-    func setContextType(_ textContentType: UITextContentType) {
+    public func setContextType(_ textContentType: UITextContentType) {
         self.textField.textContentType = textContentType
     }
 
-    func setReturnKeyType(_ returnKeyType: UIReturnKeyType) {
+    public func setReturnKeyType(_ returnKeyType: UIReturnKeyType) {
         self.textField.returnKeyType = returnKeyType
     }
 
-    func setDatePickerMode() {
+    public func setDatePickerMode() {
         datePicker.datePickerMode = .date
         if #available(iOS 13.4, *) {
             datePicker.preferredDatePickerStyle = .wheels
@@ -463,7 +457,7 @@ class HeaderTextFieldView: NibView {
         self.setText(selectedDate)
     }
 
-    func setPickerArray(_ array: [String]) {
+    public func setPickerArray(_ array: [String]) {
         selectionArray = array
         pickerView.selectRow(0, inComponent: 0, animated: true)
 
@@ -471,12 +465,12 @@ class HeaderTextFieldView: NibView {
 
     }
 
-    func setSelectedPickerOption(option: Int) {
+    public func setSelectedPickerOption(option: Int) {
         pickerView.selectRow(option, inComponent: 0, animated: true)
         self.setText(selectionArray[option])
     }
 
-    func setSelectionPicker(_ array: [String], headerVisible: Bool = false, defaultValue: Int = 0) {
+    public func setSelectionPicker(_ array: [String], headerVisible: Bool = false, defaultValue: Int = 0) {
         selectionArray = array
 
         pickerView.delegate = self
@@ -506,7 +500,7 @@ class HeaderTextFieldView: NibView {
         self.dismissPickerView()
     }
 
-    func dismissPickerView() {
+    public func dismissPickerView() {
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
         let button = UIBarButtonItem(title: Localization.localized("done"), style: .plain, target: self, action: #selector(pickerAction))
@@ -520,23 +514,23 @@ class HeaderTextFieldView: NibView {
         self.endEditing(true)
     }
 
-    func showErrorOnField(text: String, color: UIColor = .systemRed) {
+    public func showError(withMessage: String) {
+
+        self.borderState = .error
 
         self.tipLabel.text = text
-        self.tipLabel.textColor = color
+        self.tipLabel.textColor = self.errorColor
 
-        self.fieldState = .error
+        self.tipState = .error
 
         UIView.animate(withDuration: 0.1) {
             self.tipLabel.alpha = 1.0
         }
 
-        self.containerView.layer.borderColor = color.cgColor
-
         self.showingTipLabel = true
     }
 
-    func showTip(text: String, color: UIColor = .systemRed) {
+    public func showTip(text: String, color: UIColor = .systemRed) {
 
         tipLabel.text = text
         tipLabel.textColor = color
@@ -548,7 +542,7 @@ class HeaderTextFieldView: NibView {
         self.showingTipLabel = true
     }
 
-    func showTipWithoutIcon(text: String, color: UIColor = .systemRed) {
+    public func showTipWithoutIcon(text: String, color: UIColor = .systemRed) {
 
         tipLabel.text = text
         tipLabel.textColor = color
@@ -562,7 +556,7 @@ class HeaderTextFieldView: NibView {
         self.showingTipLabel = true
     }
 
-    func hideTipAndError() {
+    public func hideTipAndError() {
 
         if !self.showingTipLabel {
             return
@@ -573,7 +567,15 @@ class HeaderTextFieldView: NibView {
         tipLabel.text = ""
         tipLabel.textColor = .black
 
-        containerView.layer.borderColor = UIColor.clear.cgColor
+        if isActive {
+            self.borderState = .firstResponder
+        }
+        else if isDisabled {
+            self.borderState = .disabled
+        }
+        else {
+            self.borderState = .idle
+        }
 
         self.tipState = .hidden
 
@@ -590,40 +592,38 @@ class HeaderTextFieldView: NibView {
 
 extension HeaderTextFieldView: UITextFieldDelegate {
 
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+    public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         let shouldBeginEditing = self.shouldBeginEditing?() ?? true
         self.isActive = shouldBeginEditing
         return shouldBeginEditing
     }
 
-    func textFieldDidBeginEditing(_ textField: UITextField) {
+    public func textFieldDidBeginEditing(_ textField: UITextField) {
         self.isActive = true
 
         if !isTipPermanent {
             self.hideTipAndError()
         }
-        self.containerView.layer.borderColor = AppColor.inputBorderActive.cgColor
+
         self.slideUp()
     }
 
-    func textFieldDidEndEditing(_ textField: UITextField) {
+    public func textFieldDidEndEditing(_ textField: UITextField) {
         if self.shouldSlideDown() {
             self.slideDown()
         }
 
         self.isActive = false
 
-        self.containerView.layer.borderColor = UIColor.clear.cgColor
-
         self.didEndEditing()
     }
 
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.didTapReturn()
         return true
     }
 
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if self.isCurrencyMode {
             let decimals = CharacterSet(charactersIn: "0123456789.,")
             if string.rangeOfCharacter(from: decimals) == nil && string != "" {
@@ -637,20 +637,20 @@ extension HeaderTextFieldView: UITextFieldDelegate {
 
 extension HeaderTextFieldView: UIPickerViewDelegate, UIPickerViewDataSource {
 
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+    public func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
 
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return selectionArray.count
     }
 
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         self.didSelectPickerIndex?(row)
         return selectionArray[row]
     }
 
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let selectedItem = selectionArray[row]
         self.setText(selectedItem)
     }

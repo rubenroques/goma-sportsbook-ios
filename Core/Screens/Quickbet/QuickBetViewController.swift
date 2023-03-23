@@ -114,6 +114,7 @@ class QuickBetViewController: UIViewController {
         self.configureTicketInfo()
 
         self.betAmountTextField.delegate = self
+
         self.betAmountTextField.keyboardType = .numberPad
         self.addDoneAccessoryView()
 
@@ -130,6 +131,24 @@ class QuickBetViewController: UIViewController {
         self.isLoading = false
 
         self.oddStatus = .same
+
+        self.addOneButton.setTitle("+10", for: .normal)
+        self.addFiveButton.setTitle("+20", for: .normal)
+        self.addMaxButton.setTitle("+50", for: .normal)
+
+        self.betAmountTextField.textAlignment = .left
+        self.betAmountTextField.font = AppFont.with(type: .semibold, size: 15)
+        self.betAmountTextField.textColor = UIColor.App.inputText
+        self.betAmountTextField.attributedPlaceholder = NSAttributedString(string: localized("amount"), attributes: [
+            NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 15),
+            NSAttributedString.Key.foregroundColor: UIColor.App.textDisablePrimary
+        ])
+
+        self.betAmountView.backgroundColor = UIColor.App.inputBackground
+        self.betAmountView.layer.cornerRadius = 10.0
+        self.betAmountView.layer.borderWidth = 2
+        self.betAmountView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
+
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
 
@@ -202,10 +221,6 @@ class QuickBetViewController: UIViewController {
 
         self.returnLabel.textColor = UIColor.App.textPrimary
 
-        self.betAmountView.backgroundColor = UIColor.App.backgroundTertiary
-
-        self.betAmountTextField.textColor = UIColor.App.textPrimary
-
         self.addOneButton.setBackgroundColor(UIColor.App.backgroundTertiary, for: .normal)
         self.addOneButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
 
@@ -220,29 +235,26 @@ class QuickBetViewController: UIViewController {
         self.finalBetButton.isEnabled = false
 
         self.lateralErrorView.backgroundColor = UIColor.App.alertError
-
         self.bottomErrorView.backgroundColor = UIColor.App.backgroundPrimary
-
         self.iconErrorImageView.backgroundColor = .clear
-
         self.errorLabel.textColor = UIColor.App.textPrimary
 
         self.bottomErrorIndicatorView.backgroundColor = UIColor.App.alertError
 
         self.successContainerView.backgroundColor = UIColor.App.backgroundPrimary
-
         self.successImageView.backgroundColor = .clear
 
         self.titleLabel.textColor = UIColor.App.textPrimary
-
         self.subtitleLabel.textColor = UIColor.App.textPrimary
 
         StyleHelper.styleButton(button: self.continueButton)
 
+
+        self.betAmountView.backgroundColor = UIColor.App.inputBackground
+        self.betAmountTextField.textColor = UIColor.App.inputText
+
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundSecondary.withAlphaComponent(0.8)
-
         self.suspendedOddBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.9)
-
         self.suspendedOddLabel.textColor = UIColor.App.textPrimary
     }
 
@@ -399,18 +411,15 @@ class QuickBetViewController: UIViewController {
     }
 
     @objc func didTapAddOneButton() {
-        self.viewModel.updateBetAmountValue(amount: "1")
+        self.viewModel.updateBetAmountValue(amount: "10")
     }
 
     @objc func didTapAddFiveButton() {
-        self.viewModel.updateBetAmountValue(amount: "5")
-
+        self.viewModel.updateBetAmountValue(amount: "20")
     }
 
     @objc func didTapAddMaxButton() {
-        let maxAmountString = "\(self.viewModel.maxBetStake)"
-
-        self.viewModel.updateBetAmountValue(amount: maxAmountString, isMaxStake: true)
+        self.viewModel.updateBetAmountValue(amount: "50")
     }
 
     @objc func didTapFinalBetButton() {
@@ -455,10 +464,31 @@ class QuickBetViewController: UIViewController {
 
 extension QuickBetViewController: UITextFieldDelegate {
 
+
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if textField == self.betAmountTextField {
+            self.betAmountView.layer.borderColor = UIColor.App.inputBorderActive.cgColor
+        }
+        return true
+    }
+
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField == self.betAmountTextField {
+            self.betAmountView.layer.borderColor = UIColor.App.inputBorderActive.cgColor
+        }
+    }
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField == self.betAmountTextField {
+            self.betAmountView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
+        }
+    }
+
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         self.viewModel.updateBetAmountValue(amount: string, isInput: true)
         return false
     }
+
 }
 
 extension QuickBetViewController {
@@ -619,7 +649,7 @@ extension QuickBetViewController {
     private static func createFinalBetButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("bet"), for: .normal)
+        button.setTitle(localized("place_bet"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
         return button
     }

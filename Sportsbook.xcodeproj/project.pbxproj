@@ -4164,6 +4164,7 @@
 		45C10FA928772DA700037BBE /* ViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F2728772DA700037BBE /* ViewState.swift */; };
 		45C10FAA28772DA700037BBE /* ViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F2728772DA700037BBE /* ViewState.swift */; };
 		45C10FAB28772DA700037BBE /* ViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C10F2728772DA700037BBE /* ViewState.swift */; };
+		45C8ECB929CC7AE4006A35DC /* HeaderTextField in Frameworks */ = {isa = PBXBuildFile; productRef = 45C8ECB829CC7AE4006A35DC /* HeaderTextField */; };
 		45D1ED5D28A150C2001E18E5 /* BusinessModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */; };
 		45D1ED5E28A150C2001E18E5 /* BusinessModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */; };
 		45D1ED5F28A150C2001E18E5 /* BusinessModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */; };
@@ -5532,6 +5533,7 @@
 		45166CDC26F3548D00E69D65 /* TSManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSManager.swift; sourceTree = "<group>"; };
 		45166D2726F3836D00E69D65 /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
 		451ABD6529CB3B1D0062641F /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
+		451ABD6D29CC755B0062641F /* HeaderTextField */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = HeaderTextField; sourceTree = "<group>"; };
 		451B0A36286AFD7300005FA5 /* SupportPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportPageViewController.swift; sourceTree = "<group>"; };
 		451B0A37286AFD7300005FA5 /* SupportPageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportPageViewModel.swift; sourceTree = "<group>"; };
 		451B0A44286AFDC700005FA5 /* SupportTicketResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportTicketResponse.swift; sourceTree = "<group>"; };
@@ -6443,6 +6445,7 @@
 				45A332C6298976BA008181E9 /* OrderedCollections in Frameworks */,
 				45A332C7298976BA008181E9 /* SweeterSwift in Frameworks */,
 				45A332C8298976BA008181E9 /* Starscream in Frameworks */,
+				45C8ECB929CC7AE4006A35DC /* HeaderTextField in Frameworks */,
 				45A332C9298976BA008181E9 /* SocketIO in Frameworks */,
 				45A332CA298976BA008181E9 /* SharedModels in Frameworks */,
 				45A332CB298976BA008181E9 /* ServicesProvider in Frameworks */,
@@ -6948,6 +6951,7 @@
 		455A0C4726BD902C00EC572D = {
 			isa = PBXGroup;
 			children = (
+				451ABD6D29CC755B0062641F /* HeaderTextField */,
 				45BB5542298351CD00684F83 /* AdresseFrancaise */,
 				45DD5303297ED57100DBC2AA /* CountrySelectionFeature */,
 				45DD5302297EBE6A00DBC2AA /* SharedModels */,
@@ -9896,6 +9900,7 @@
 				45A33050298976BA008181E9 /* AdyenSession */,
 				45A33051298976BA008181E9 /* AdyenSwiftUI */,
 				45A33052298976BA008181E9 /* AdyenWeChatPay */,
+				45C8ECB829CC7AE4006A35DC /* HeaderTextField */,
 			);
 			productName = Sportsbook;
 			productReference = 45A3334E298976BA008181E9 /* Betsson.app */;
@@ -17485,6 +17490,10 @@
 		45BA77A4293CD60800B6ACA6 /* ServicesProvider */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ServicesProvider;
+		};
+		45C8ECB829CC7AE4006A35DC /* HeaderTextField */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HeaderTextField;
 		};
 		45D3BBAB296F13BB009E0D09 /* RegisterFlow */ = {
 			isa = XCSwiftPackageProductDependency;

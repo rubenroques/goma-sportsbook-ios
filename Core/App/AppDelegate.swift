@@ -31,7 +31,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.enableAutoToolbar = true
 
-        IQKeyboardManager.shared.disabledToolbarClasses = [BetslipViewController.self, PreSubmissionBetslipViewController.self]
+        let disabledClasses = [BetslipViewController.self, PreSubmissionBetslipViewController.self]
+        IQKeyboardManager.shared.disabledToolbarClasses = disabledClasses
+        IQKeyboardManager.shared.disabledDistanceHandlingClasses = disabledClasses
 
         // Store device id
         if !UserDefaults.standard.isKeyPresentInUserDefaults(key: "device_id") {
