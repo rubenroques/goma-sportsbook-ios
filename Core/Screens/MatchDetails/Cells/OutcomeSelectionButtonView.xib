@@ -73,34 +73,34 @@
                                 </label>
                             </subviews>
                         </stackView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="afq-wR-GEZ">
+                            <rect key="frame" x="2" y="4" width="280" height="104"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
                         <constraint firstItem="hMw-bH-0pz" firstAttribute="leading" secondItem="vtf-a7-hBv" secondAttribute="leading" constant="2" id="1OI-Iu-mlr"/>
+                        <constraint firstAttribute="bottom" secondItem="afq-wR-GEZ" secondAttribute="bottom" constant="4" id="5Cf-1J-taH"/>
+                        <constraint firstItem="afq-wR-GEZ" firstAttribute="leading" secondItem="vtf-a7-hBv" secondAttribute="leading" constant="2" id="ByV-Fe-VaB"/>
                         <constraint firstItem="hMw-bH-0pz" firstAttribute="top" secondItem="vtf-a7-hBv" secondAttribute="top" constant="6" id="EQi-yr-Jaz"/>
                         <constraint firstAttribute="trailing" secondItem="hMw-bH-0pz" secondAttribute="trailing" constant="2" id="REZ-9V-ag2"/>
+                        <constraint firstAttribute="trailing" secondItem="afq-wR-GEZ" secondAttribute="trailing" constant="2" id="Vtc-mI-Jxn"/>
                         <constraint firstAttribute="trailing" secondItem="4US-gk-Yt4" secondAttribute="trailing" constant="6" id="fmP-8c-nY3"/>
                         <constraint firstAttribute="bottom" secondItem="hMw-bH-0pz" secondAttribute="bottom" constant="6" id="pid-63-Om9"/>
+                        <constraint firstItem="afq-wR-GEZ" firstAttribute="top" secondItem="vtf-a7-hBv" secondAttribute="top" constant="4" id="v1r-3a-PCh"/>
                         <constraint firstItem="4US-gk-Yt4" firstAttribute="centerY" secondItem="vtf-a7-hBv" secondAttribute="centerY" id="xQX-Sx-b4T"/>
                     </constraints>
                 </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="afq-wR-GEZ">
-                    <rect key="frame" x="7" y="61" width="280" height="50"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <nil key="textColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
             </subviews>
             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="afq-wR-GEZ" firstAttribute="leading" secondItem="lia-Ch-bbe" secondAttribute="leading" id="1Tu-88-ujw"/>
                 <constraint firstItem="vtf-a7-hBv" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="5" id="37l-Cz-yqu"/>
-                <constraint firstItem="afq-wR-GEZ" firstAttribute="top" secondItem="lia-Ch-bbe" secondAttribute="top" id="AaK-9d-fDX"/>
-                <constraint firstItem="afq-wR-GEZ" firstAttribute="trailing" secondItem="lia-Ch-bbe" secondAttribute="trailing" id="Ey1-q4-wLF"/>
                 <constraint firstItem="vtf-a7-hBv" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="5" id="Oqp-eq-CYG"/>
                 <constraint firstAttribute="bottom" secondItem="vtf-a7-hBv" secondAttribute="bottom" constant="5" id="VB1-mh-iDq"/>
                 <constraint firstAttribute="trailing" secondItem="vtf-a7-hBv" secondAttribute="trailing" constant="5" id="Y13-qa-wGf"/>
-                <constraint firstItem="afq-wR-GEZ" firstAttribute="bottom" secondItem="lia-Ch-bbe" secondAttribute="bottom" id="bMH-Bd-2vj"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="113.04347826086958" y="-62.276785714285708"/>

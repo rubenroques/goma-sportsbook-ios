@@ -47,6 +47,7 @@ extension ServiceProviderModelMapper {
                           awayParticipantScore: event.awayTeamScore,
                           date: event.startDate,
                           sportType: event.sportTypeName,
+                          sportCode: event.sportTypeCode,
                           venue: venue,
                           numberTotalOfMarkets: event.numberMarkets ?? 0,
                           markets: Self.markets(fromServiceProviderMarkets: event.markets),

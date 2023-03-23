@@ -579,6 +579,7 @@ class MatchDetailsAggregatorRepository: NSObject {
                                                                     name: rawMatch.awayParticipantName ?? ""),
                                        date: rawMatch.startDate ?? Date(timeIntervalSince1970: 0),
                                        sportType: rawMatch.sportId ?? "",
+                                       sportCode: rawMatch.shortSportName ?? "",
                                        venue: location,
                                        numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
                                        markets: [],

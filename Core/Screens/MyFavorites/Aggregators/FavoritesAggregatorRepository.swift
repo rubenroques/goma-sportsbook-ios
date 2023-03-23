@@ -320,11 +320,11 @@ class FavoritesAggregatorsRepository {
                                                            name: rawMatch.awayParticipantName ?? ""),
                               date: rawMatch.startDate ?? Date(timeIntervalSince1970: 0),
                               sportType: rawMatch.sportId ?? "",
+                              sportCode: rawMatch.shortSportName ?? "",
                               venue: location,
                               numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
                               markets: sortedMarkets,
                               rootPartId: rawMatch.rootPartId ?? "",
-                              sportName: rawMatch.sportName ?? "",
                               status: .unknown)
 
             matchesList.append(match)

@@ -31,8 +31,12 @@ class LoginViewController: UIViewController {
     @IBOutlet private var forgotView: UIView!
     @IBOutlet private var forgotButton: UIButton!
     @IBOutlet private var loginButton: UIButton!
-    @IBOutlet private var registerLabel: UILabel!
+    @IBOutlet private var registerButton: UIButton!
     @IBOutlet private var policyLinkView: PolicyLinkView!
+
+    @IBOutlet private var rightOrView: UIView!
+    @IBOutlet private var leftOrView: UIView!
+    @IBOutlet private var orLabel: UILabel!
 
     // Variables
     var shouldRememberUser: Bool = true
@@ -229,8 +233,8 @@ class LoginViewController: UIViewController {
         rememberView.isUserInteractionEnabled = true
         rememberView.addGestureRecognizer(tapImageGestureRecognizer)
 
-        registerLabel.highlightTextLabel(fullString: localized("new_create_account"), highlightString: localized("create_a_new_account"))
-        registerLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapCreateAccount)))
+        self.registerButton.setTitle(localized("create_a_new_account"), for: .normal)
+        self.registerButton.addTarget(self, action: #selector(self.didTapCreateAccount), for: .primaryActionTriggered)
 
         self.dismissButton.setTitle(localized("close"), for: .normal)
         self.dismissButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
@@ -288,8 +292,22 @@ class LoginViewController: UIViewController {
         self.loginButton.layer.cornerRadius = CornerRadius.button
         self.loginButton.layer.masksToBounds = true
 
-        self.registerLabel.highlightTextLabel(fullString: localized("new_create_account"),
-                                              highlightString: localized("create_a_new_account"))
+        self.rightOrView.backgroundColor =  UIColor.App.separatorLine
+        self.rightOrView.alpha = 0.9
+        self.leftOrView.backgroundColor =  UIColor.App.separatorLine
+        self.leftOrView.alpha = 0.9
+
+        self.orLabel.textColor = UIColor.App.textPrimary
+
+        self.registerButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        self.registerButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.registerButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
+        self.registerButton.backgroundColor = .clear
+        self.registerButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
+        self.registerButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .highlighted)
+        self.registerButton.layer.cornerRadius = CornerRadius.button
+        self.registerButton.layer.masksToBounds = true
+
     }
 
     func checkPolicyLinks() {

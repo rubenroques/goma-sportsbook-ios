@@ -183,6 +183,7 @@ extension SportRadarEventDetailsCoordinator {
                 }
             }
             self.storage.updateMarketTradability(withId: market.id, isTradable: true)
+            
         case .removeMarket(_, let marketId):
             self.storage.updateMarketTradability(withId: marketId, isTradable: false)
             

@@ -246,10 +246,14 @@ class MatchDetailsViewController: UIViewController {
     }
     
     private var isLiveFieldReady: Bool = false {
+
         didSet {
             if self.isLiveFieldReady {
                 self.matchFieldLoadingView.stopAnimating()
-                self.expandLiveFieldIfNeeded()
+
+                if !oldValue {
+                    self.expandLiveFieldIfNeeded()
+                }
             }
             else {
                 self.matchFieldLoadingView.startAnimating()

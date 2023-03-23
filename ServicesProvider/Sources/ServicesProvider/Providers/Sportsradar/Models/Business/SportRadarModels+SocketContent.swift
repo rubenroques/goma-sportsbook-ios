@@ -226,7 +226,7 @@ extension SportRadarModels {
             let path: String = (try? container.decode(String.self, forKey: .path)) ?? ""
             let changeType: String = (try? container.decode(String.self, forKey: .changeType)) ?? ""
 
-            // print("ContentContainer recieved path \(path) with change \(changeType)")
+            NSLog("ContentContainer recieved path \(path) with change \(changeType)")
 
             if path.contains("idfoevent") && path.contains("idfomarket") && changeType.contains("added") {
                 // added a new Market
@@ -289,12 +289,10 @@ extension SportRadarModels {
                    let marketId = try? changeContainer.decode(String.self, forKey: .marketId) {
 
                     // print("ContentContainer updated market odd with id \(marketId) and associated change \(changeType)")
-
                     return .updateOutcomeOdd(contentIdentifier: contentIdentifier,
                                              selectionId: selectionId,
                                              newOddNumerator: oddNumerator,
                                              newOddDenominator: oddDenominator)
-
                 }
             }
             else if case let .market(marketId: marketId) = contentIdentifier.contentRoute {

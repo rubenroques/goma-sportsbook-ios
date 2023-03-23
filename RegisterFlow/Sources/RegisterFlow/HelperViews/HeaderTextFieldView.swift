@@ -28,6 +28,34 @@ class HeaderTextFieldView: NibView {
     @IBOutlet private weak var usernameLeadingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bottomStackView: UIStackView!
 
+    private enum BorderState {
+        case idleEmpty
+        case idleFilled
+        case firstResponder
+        case disabledEmpty
+        case disabledFilled
+        case error
+    }
+
+    private var borderState: BorderState = .idleEmpty {
+        didSet {
+            switch self.borderState {
+            case .idleEmpty:
+                ()
+            case .idleFilled:
+                ()
+            case .firstResponder:
+                ()
+            case .disabledEmpty:
+                ()
+            case .disabledFilled:
+                ()
+            case .error:
+                ()
+            }
+        }
+    }
+
     var textPublisher: AnyPublisher<String, Never> {
         return self.textField.textPublisher
     }
@@ -104,36 +132,48 @@ class HeaderTextFieldView: NibView {
         return self.textField.text ?? ""
     }
 
-    enum FieldState {
+    enum TipState {
         case ok
         case error
         case hidden
     }
 
-    var fieldState: FieldState = .hidden {
+    var tipState: TipState = .hidden {
         didSet {
-            switch self.fieldState {
+            switch self.tipState {
             case .ok:
-                tipImageView.isHidden = false
-                tipImageView.image = UIImage(named: "Active")
+                self.tipImageView.isHidden = false
+                self.tipImageView.image = UIImage(named: "Active")
             case .error:
-                tipImageView.isHidden = false
-                tipImageView.image = UIImage(named: "error_input_icon")
+                self.tipImageView.isHidden = false
+                self.tipImageView.image = UIImage(named: "error_input_icon")
             case .hidden:
-                tipImageView.isHidden = true
-                tipImageView.image = nil
+                self.tipImageView.isHidden = true
+                self.tipImageView.image = nil
             }
         }
     }
 
     var highlightColor = AppColor.highlightPrimary {
         didSet {
-            if self.isActive {
-            }
+
         }
     }
 
-    private var isActive: Bool = false
+    var errorColor = AppColor.alertError {
+        didSet {
+
+        }
+    }
+
+    private var isActive: Bool = false {
+        didSet {
+            if isActive {
+                self.borderState = .firstResponder
+            }
+
+        }
+    }
 
     var isDisabled: Bool = false {
         didSet {
@@ -190,7 +230,7 @@ class HeaderTextFieldView: NibView {
         self.showPassImageView.isHidden = true
         self.showRemoveImageView.isHidden = true
 
-        self.fieldState = .hidden
+        self.tipState = .hidden
 
         self.tipLabel.alpha = 0.0
         self.tipLabel.numberOfLines = 2
@@ -535,7 +575,7 @@ class HeaderTextFieldView: NibView {
 
         containerView.layer.borderColor = UIColor.clear.cgColor
 
-        fieldState = .hidden
+        self.tipState = .hidden
 
         UIView.animate(withDuration: 0.1) {
             self.tipLabel.alpha = 0.0
@@ -558,6 +598,7 @@ extension HeaderTextFieldView: UITextFieldDelegate {
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
         self.isActive = true
+
         if !isTipPermanent {
             self.hideTipAndError()
         }

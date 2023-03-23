@@ -28,7 +28,7 @@ class LoggerService {
     lazy fileprivate var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale.current
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+        formatter.dateFormat = "HH:mm:ss.SSS"
 
         return formatter
     }()

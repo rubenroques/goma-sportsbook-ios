@@ -97,7 +97,7 @@
 		450B788E28F58574009229E3 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E091227EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift */; };
 		450B788F28F58574009229E3 /* CompetitionSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B0BD30271EED6C009C41FA /* CompetitionSectionViewModel.swift */; };
 		450B789028F58574009229E3 /* ResultsHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D43280DC81B00E82724 /* ResultsHeaderFooterView.swift */; };
-		450B789128F58574009229E3 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* Match.swift */; };
+		450B789128F58574009229E3 /* EMMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* EMMatch.swift */; };
 		450B789228F58574009229E3 /* RecentSearchRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B618327A03C20005DC376 /* RecentSearchRowView.swift */; };
 		450B789328F58574009229E3 /* OddViewPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B619B27A9A3D6005DC376 /* OddViewPosition.swift */; };
 		450B789428F58574009229E3 /* FilterSliderInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D862719D5E600884BDF /* FilterSliderInfoView.swift */; };
@@ -749,6 +749,13 @@
 		450B7B4428F637FA009229E3 /* ServiceProviderModelMapper+Sports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450B7B3E28F637FA009229E3 /* ServiceProviderModelMapper+Sports.swift */; };
 		450B7B4528F637FA009229E3 /* ServiceProviderModelMapper+Sports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450B7B3E28F637FA009229E3 /* ServiceProviderModelMapper+Sports.swift */; };
 		450B7B4628F637FB009229E3 /* ServiceProviderModelMapper+Sports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450B7B3E28F637FA009229E3 /* ServiceProviderModelMapper+Sports.swift */; };
+		451ABD6629CB3B1D0062641F /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451ABD6529CB3B1D0062641F /* Match.swift */; };
+		451ABD6729CB3B1D0062641F /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451ABD6529CB3B1D0062641F /* Match.swift */; };
+		451ABD6829CB3B1D0062641F /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451ABD6529CB3B1D0062641F /* Match.swift */; };
+		451ABD6929CB3B1D0062641F /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451ABD6529CB3B1D0062641F /* Match.swift */; };
+		451ABD6A29CB3B1D0062641F /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451ABD6529CB3B1D0062641F /* Match.swift */; };
+		451ABD6B29CB3B1D0062641F /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451ABD6529CB3B1D0062641F /* Match.swift */; };
+		451ABD6C29CB3B1D0062641F /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451ABD6529CB3B1D0062641F /* Match.swift */; };
 		451B0A3A286AFD7300005FA5 /* SupportPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451B0A36286AFD7300005FA5 /* SupportPageViewController.swift */; };
 		451B0A3B286AFD7300005FA5 /* SupportPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451B0A36286AFD7300005FA5 /* SupportPageViewController.swift */; };
 		451B0A3C286AFD7300005FA5 /* SupportPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451B0A36286AFD7300005FA5 /* SupportPageViewController.swift */; };
@@ -865,7 +872,7 @@
 		457CBA20282D27D000ED0F00 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E091227EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift */; };
 		457CBA21282D27D000ED0F00 /* CompetitionSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B0BD30271EED6C009C41FA /* CompetitionSectionViewModel.swift */; };
 		457CBA22282D27D000ED0F00 /* ResultsHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D43280DC81B00E82724 /* ResultsHeaderFooterView.swift */; };
-		457CBA23282D27D000ED0F00 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* Match.swift */; };
+		457CBA23282D27D000ED0F00 /* EMMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* EMMatch.swift */; };
 		457CBA24282D27D000ED0F00 /* RecentSearchRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B618327A03C20005DC376 /* RecentSearchRowView.swift */; };
 		457CBA25282D27D000ED0F00 /* OddViewPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B619B27A9A3D6005DC376 /* OddViewPosition.swift */; };
 		457CBA26282D27D000ED0F00 /* FilterSliderInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D862719D5E600884BDF /* FilterSliderInfoView.swift */; };
@@ -1468,7 +1475,7 @@
 		457CBCC7282D2CD100ED0F00 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E091227EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift */; };
 		457CBCC8282D2CD100ED0F00 /* CompetitionSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B0BD30271EED6C009C41FA /* CompetitionSectionViewModel.swift */; };
 		457CBCC9282D2CD100ED0F00 /* ResultsHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D43280DC81B00E82724 /* ResultsHeaderFooterView.swift */; };
-		457CBCCA282D2CD100ED0F00 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* Match.swift */; };
+		457CBCCA282D2CD100ED0F00 /* EMMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* EMMatch.swift */; };
 		457CBCCB282D2CD100ED0F00 /* RecentSearchRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B618327A03C20005DC376 /* RecentSearchRowView.swift */; };
 		457CBCCC282D2CD100ED0F00 /* OddViewPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B619B27A9A3D6005DC376 /* OddViewPosition.swift */; };
 		457CBCCD282D2CD100ED0F00 /* FilterSliderInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D862719D5E600884BDF /* FilterSliderInfoView.swift */; };
@@ -2080,7 +2087,7 @@
 		4589C7AD282024E400243547 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E091227EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift */; };
 		4589C7AE282024E400243547 /* CompetitionSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B0BD30271EED6C009C41FA /* CompetitionSectionViewModel.swift */; };
 		4589C7AF282024E400243547 /* ResultsHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D43280DC81B00E82724 /* ResultsHeaderFooterView.swift */; };
-		4589C7B0282024E400243547 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* Match.swift */; };
+		4589C7B0282024E400243547 /* EMMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* EMMatch.swift */; };
 		4589C7B1282024E400243547 /* RecentSearchRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B618327A03C20005DC376 /* RecentSearchRowView.swift */; };
 		4589C7B2282024E400243547 /* OddViewPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B619B27A9A3D6005DC376 /* OddViewPosition.swift */; };
 		4589C7B3282024E400243547 /* FilterSliderInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D862719D5E600884BDF /* FilterSliderInfoView.swift */; };
@@ -2692,7 +2699,7 @@
 		45A3309E298976BA008181E9 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E091227EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift */; };
 		45A3309F298976BA008181E9 /* CompetitionSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B0BD30271EED6C009C41FA /* CompetitionSectionViewModel.swift */; };
 		45A330A0298976BA008181E9 /* ResultsHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D43280DC81B00E82724 /* ResultsHeaderFooterView.swift */; };
-		45A330A1298976BA008181E9 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* Match.swift */; };
+		45A330A1298976BA008181E9 /* EMMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* EMMatch.swift */; };
 		45A330A2298976BA008181E9 /* RecentSearchRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B618327A03C20005DC376 /* RecentSearchRowView.swift */; };
 		45A330A3298976BA008181E9 /* OddViewPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B619B27A9A3D6005DC376 /* OddViewPosition.swift */; };
 		45A330A4298976BA008181E9 /* FilterSliderInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D862719D5E600884BDF /* FilterSliderInfoView.swift */; };
@@ -3448,7 +3455,7 @@
 		45A6BBFA28246A7500D9B416 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E091227EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift */; };
 		45A6BBFB28246A7500D9B416 /* CompetitionSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B0BD30271EED6C009C41FA /* CompetitionSectionViewModel.swift */; };
 		45A6BBFC28246A7500D9B416 /* ResultsHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D43280DC81B00E82724 /* ResultsHeaderFooterView.swift */; };
-		45A6BBFD28246A7500D9B416 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* Match.swift */; };
+		45A6BBFD28246A7500D9B416 /* EMMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* EMMatch.swift */; };
 		45A6BBFE28246A7500D9B416 /* RecentSearchRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B618327A03C20005DC376 /* RecentSearchRowView.swift */; };
 		45A6BBFF28246A7500D9B416 /* OddViewPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B619B27A9A3D6005DC376 /* OddViewPosition.swift */; };
 		45A6BC0028246A7500D9B416 /* FilterSliderInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D862719D5E600884BDF /* FilterSliderInfoView.swift */; };
@@ -4694,7 +4701,7 @@
 		A9C340E828F9A74A0055360B /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E091227EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift */; };
 		A9C340E928F9A74A0055360B /* CompetitionSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B0BD30271EED6C009C41FA /* CompetitionSectionViewModel.swift */; };
 		A9C340EA28F9A74A0055360B /* ResultsHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D43280DC81B00E82724 /* ResultsHeaderFooterView.swift */; };
-		A9C340EB28F9A74A0055360B /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* Match.swift */; };
+		A9C340EB28F9A74A0055360B /* EMMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* EMMatch.swift */; };
 		A9C340EC28F9A74A0055360B /* RecentSearchRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B618327A03C20005DC376 /* RecentSearchRowView.swift */; };
 		A9C340ED28F9A74A0055360B /* OddViewPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B619B27A9A3D6005DC376 /* OddViewPosition.swift */; };
 		A9C340EE28F9A74A0055360B /* FilterSliderInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D862719D5E600884BDF /* FilterSliderInfoView.swift */; };
@@ -5524,6 +5531,7 @@
 		45166CDB26F3548D00E69D65 /* SSWampExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSWampExtensions.swift; sourceTree = "<group>"; };
 		45166CDC26F3548D00E69D65 /* TSManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSManager.swift; sourceTree = "<group>"; };
 		45166D2726F3836D00E69D65 /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
+		451ABD6529CB3B1D0062641F /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		451B0A36286AFD7300005FA5 /* SupportPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportPageViewController.swift; sourceTree = "<group>"; };
 		451B0A37286AFD7300005FA5 /* SupportPageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportPageViewModel.swift; sourceTree = "<group>"; };
 		451B0A44286AFDC700005FA5 /* SupportTicketResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportTicketResponse.swift; sourceTree = "<group>"; };
@@ -6157,7 +6165,7 @@
 		A9B8419726E25BE100269B05 /* TransportSessionIDModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportSessionIDModel.swift; sourceTree = "<group>"; };
 		A9B841A526E6557000269B05 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		A9B841A926E6597300269B05 /* Tournament.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tournament.swift; sourceTree = "<group>"; };
-		A9B841AD26E674AA00269B05 /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
+		A9B841AD26E674AA00269B05 /* EMMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EMMatch.swift; sourceTree = "<group>"; };
 		A9B841B126E9054700269B05 /* Market.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Market.swift; sourceTree = "<group>"; };
 		A9B841B426E914FB00269B05 /* BetOutcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetOutcome.swift; sourceTree = "<group>"; };
 		A9B841B726E91BBC00269B05 /* BettingOffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BettingOffer.swift; sourceTree = "<group>"; };
@@ -8154,6 +8162,7 @@
 				45D728D62715F6DC00EFE04D /* AppModels.swift */,
 				454E0AD32735709E00794E0C /* BettingTicket.swift */,
 				45711906294B9A27000395F0 /* BetType.swift */,
+				451ABD6529CB3B1D0062641F /* Match.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -9157,7 +9166,7 @@
 		A9B841AC26E6749900269B05 /* Matches */ = {
 			isa = PBXGroup;
 			children = (
-				A9B841AD26E674AA00269B05 /* Match.swift */,
+				A9B841AD26E674AA00269B05 /* EMMatch.swift */,
 				4572633C272C2220002F2959 /* MatchInfo.swift */,
 				45C3D2B62773B1B500B3EF44 /* EventPartScore.swift */,
 			);
@@ -11177,7 +11186,7 @@
 				450B788E28F58574009229E3 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */,
 				450B788F28F58574009229E3 /* CompetitionSectionViewModel.swift in Sources */,
 				450B789028F58574009229E3 /* ResultsHeaderFooterView.swift in Sources */,
-				450B789128F58574009229E3 /* Match.swift in Sources */,
+				450B789128F58574009229E3 /* EMMatch.swift in Sources */,
 				450B789228F58574009229E3 /* RecentSearchRowView.swift in Sources */,
 				450B789328F58574009229E3 /* OddViewPosition.swift in Sources */,
 				450B789428F58574009229E3 /* FilterSliderInfoView.swift in Sources */,
@@ -11556,6 +11565,7 @@
 				450B79EE28F58574009229E3 /* BettingHistoryViewController.swift in Sources */,
 				450B79EF28F58574009229E3 /* Snapshot.swift in Sources */,
 				450B79F028F58574009229E3 /* InternalBrowserViewController.swift in Sources */,
+				451ABD6729CB3B1D0062641F /* Match.swift in Sources */,
 				450B79F128F58574009229E3 /* TabularBarButton.swift in Sources */,
 				450B79F228F58574009229E3 /* AddContactViewModel.swift in Sources */,
 				450B79F328F58574009229E3 /* TabularBarDelegate.swift in Sources */,
@@ -11884,7 +11894,7 @@
 				457CBA21282D27D000ED0F00 /* CompetitionSectionViewModel.swift in Sources */,
 				457CBA22282D27D000ED0F00 /* ResultsHeaderFooterView.swift in Sources */,
 				45B6E24528415268001B570C /* SelectFriendTableViewCell.swift in Sources */,
-				457CBA23282D27D000ED0F00 /* Match.swift in Sources */,
+				457CBA23282D27D000ED0F00 /* EMMatch.swift in Sources */,
 				457CBA24282D27D000ED0F00 /* RecentSearchRowView.swift in Sources */,
 				457CBA25282D27D000ED0F00 /* OddViewPosition.swift in Sources */,
 				457CBA26282D27D000ED0F00 /* FilterSliderInfoView.swift in Sources */,
@@ -12410,6 +12420,7 @@
 				457CBBAB282D27D000ED0F00 /* NibIdentifiable.swift in Sources */,
 				A90FB7E029B0BCF000D08A7C /* SelfExclusionViewModel.swift in Sources */,
 				457CBBAC282D27D000ED0F00 /* UnregisteredSSWampMessage.swift in Sources */,
+				451ABD6B29CB3B1D0062641F /* Match.swift in Sources */,
 				457CBBAD282D27D000ED0F00 /* GomaClientSettings.swift in Sources */,
 				457CBBAE282D27D000ED0F00 /* ConversationDetailViewController.swift in Sources */,
 				457CBBAF282D27D000ED0F00 /* Endpoint.swift in Sources */,
@@ -12512,7 +12523,7 @@
 				457CBCC8282D2CD100ED0F00 /* CompetitionSectionViewModel.swift in Sources */,
 				45B6E24428415268001B570C /* SelectFriendTableViewCell.swift in Sources */,
 				457CBCC9282D2CD100ED0F00 /* ResultsHeaderFooterView.swift in Sources */,
-				457CBCCA282D2CD100ED0F00 /* Match.swift in Sources */,
+				457CBCCA282D2CD100ED0F00 /* EMMatch.swift in Sources */,
 				457CBCCB282D2CD100ED0F00 /* RecentSearchRowView.swift in Sources */,
 				457CBCCC282D2CD100ED0F00 /* OddViewPosition.swift in Sources */,
 				457CBCCD282D2CD100ED0F00 /* FilterSliderInfoView.swift in Sources */,
@@ -12752,6 +12763,7 @@
 				A9D5BB8E290AD0E1001B0E13 /* CodeVerificationViewController.swift in Sources */,
 				457CBD80282D2CD100ED0F00 /* TabularBarView.swift in Sources */,
 				457CBD81282D2CD100ED0F00 /* SimpleRegisterDetailsViewController.swift in Sources */,
+				451ABD6C29CB3B1D0062641F /* Match.swift in Sources */,
 				457CBD82282D2CD100ED0F00 /* UIAlertController+Extensions.swift in Sources */,
 				457CBD83282D2CD100ED0F00 /* CGPoint+Extensions.swift in Sources */,
 				457CBD84282D2CD100ED0F00 /* MyTicketsViewModel.swift in Sources */,
@@ -13139,7 +13151,7 @@
 				4589C7AD282024E400243547 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */,
 				4589C7AE282024E400243547 /* CompetitionSectionViewModel.swift in Sources */,
 				4589C7AF282024E400243547 /* ResultsHeaderFooterView.swift in Sources */,
-				4589C7B0282024E400243547 /* Match.swift in Sources */,
+				4589C7B0282024E400243547 /* EMMatch.swift in Sources */,
 				4589C7B1282024E400243547 /* RecentSearchRowView.swift in Sources */,
 				4589C7B2282024E400243547 /* OddViewPosition.swift in Sources */,
 				4589C7B3282024E400243547 /* FilterSliderInfoView.swift in Sources */,
@@ -13518,6 +13530,7 @@
 				4589C8BF282024E400243547 /* BettingHistoryViewController.swift in Sources */,
 				45C10F9628772DA700037BBE /* Snapshot.swift in Sources */,
 				451E1F6E2825636F000E957B /* InternalBrowserViewController.swift in Sources */,
+				451ABD6829CB3B1D0062641F /* Match.swift in Sources */,
 				4589C8C0282024E400243547 /* TabularBarButton.swift in Sources */,
 				4589C8C1282024E400243547 /* AddContactViewModel.swift in Sources */,
 				4589C8C2282024E400243547 /* TabularBarDelegate.swift in Sources */,
@@ -13768,7 +13781,7 @@
 				45A3309E298976BA008181E9 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */,
 				45A3309F298976BA008181E9 /* CompetitionSectionViewModel.swift in Sources */,
 				45A330A0298976BA008181E9 /* ResultsHeaderFooterView.swift in Sources */,
-				45A330A1298976BA008181E9 /* Match.swift in Sources */,
+				45A330A1298976BA008181E9 /* EMMatch.swift in Sources */,
 				45A330A2298976BA008181E9 /* RecentSearchRowView.swift in Sources */,
 				45A330A3298976BA008181E9 /* OddViewPosition.swift in Sources */,
 				45A330A4298976BA008181E9 /* FilterSliderInfoView.swift in Sources */,
@@ -14147,6 +14160,7 @@
 				45A3320C298976BA008181E9 /* MarketDetailCollectionViewCell.swift in Sources */,
 				45A3320D298976BA008181E9 /* BettingHistoryViewController.swift in Sources */,
 				45A3320E298976BA008181E9 /* Snapshot.swift in Sources */,
+				451ABD6629CB3B1D0062641F /* Match.swift in Sources */,
 				45A3320F298976BA008181E9 /* InternalBrowserViewController.swift in Sources */,
 				45A33210298976BA008181E9 /* TabularBarButton.swift in Sources */,
 				45A33211298976BA008181E9 /* AddContactViewModel.swift in Sources */,
@@ -14396,7 +14410,7 @@
 				45A6BBFA28246A7500D9B416 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */,
 				45A6BBFB28246A7500D9B416 /* CompetitionSectionViewModel.swift in Sources */,
 				45A6BBFC28246A7500D9B416 /* ResultsHeaderFooterView.swift in Sources */,
-				45A6BBFD28246A7500D9B416 /* Match.swift in Sources */,
+				45A6BBFD28246A7500D9B416 /* EMMatch.swift in Sources */,
 				45A6BBFE28246A7500D9B416 /* RecentSearchRowView.swift in Sources */,
 				45A6BBFF28246A7500D9B416 /* OddViewPosition.swift in Sources */,
 				45A6BC0028246A7500D9B416 /* FilterSliderInfoView.swift in Sources */,
@@ -14642,6 +14656,7 @@
 				45A6BCB628246A7500D9B416 /* EventPartScore.swift in Sources */,
 				45C10FA928772DA700037BBE /* ViewState.swift in Sources */,
 				45A6BCB728246A7500D9B416 /* PreLiveEventsViewController.swift in Sources */,
+				451ABD6A29CB3B1D0062641F /* Match.swift in Sources */,
 				45A6BCB828246A7500D9B416 /* BonusAvailableDataSource.swift in Sources */,
 				45A6BCB928246A7500D9B416 /* LoginViewController.swift in Sources */,
 				45A6BCBA28246A7500D9B416 /* GroupUserManagementTableViewCell.swift in Sources */,
@@ -15023,7 +15038,7 @@
 				A9C340E928F9A74A0055360B /* CompetitionSectionViewModel.swift in Sources */,
 				45B74AD1292BFE3500F2076C /* ServiceProviderType.swift in Sources */,
 				A9C340EA28F9A74A0055360B /* ResultsHeaderFooterView.swift in Sources */,
-				A9C340EB28F9A74A0055360B /* Match.swift in Sources */,
+				A9C340EB28F9A74A0055360B /* EMMatch.swift in Sources */,
 				A9C340EC28F9A74A0055360B /* RecentSearchRowView.swift in Sources */,
 				A9C340ED28F9A74A0055360B /* OddViewPosition.swift in Sources */,
 				A9C340EE28F9A74A0055360B /* FilterSliderInfoView.swift in Sources */,
@@ -15386,6 +15401,7 @@
 				A9C3424428F9A74A0055360B /* Location.swift in Sources */,
 				A9C3424528F9A74A0055360B /* SSWampTransport.swift in Sources */,
 				A9C3424628F9A74A0055360B /* WithdrawWebViewController.swift in Sources */,
+				451ABD6929CB3B1D0062641F /* Match.swift in Sources */,
 				A9C3424728F9A74A0055360B /* MarketDetailCollectionViewCell.swift in Sources */,
 				A9C3424828F9A74A0055360B /* BettingHistoryViewController.swift in Sources */,
 				A9C3424928F9A74A0055360B /* Snapshot.swift in Sources */,
@@ -15637,7 +15653,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 537;
+				CURRENT_PROJECT_VERSION = 541;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15663,7 +15679,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 537;
+				CURRENT_PROJECT_VERSION = 541;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15856,7 +15872,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/EveryMatrix/Misc/EveryMatrix.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 537;
+				CURRENT_PROJECT_VERSION = 541;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/EveryMatrix/Misc/EveryMatrix-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15882,7 +15898,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/EveryMatrix/Misc/EveryMatrix.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 537;
+				CURRENT_PROJECT_VERSION = 541;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/EveryMatrix/Misc/EveryMatrix-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15908,7 +15924,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Crocobet/Misc/Crocobet.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 537;
+				CURRENT_PROJECT_VERSION = 541;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Crocobet/Misc/Crocobet-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15934,7 +15950,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Crocobet/Misc/Crocobet.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 537;
+				CURRENT_PROJECT_VERSION = 541;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Crocobet/Misc/Crocobet-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15960,7 +15976,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 537;
+				CURRENT_PROJECT_VERSION = 541;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15986,7 +16002,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 537;
+				CURRENT_PROJECT_VERSION = 541;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16012,7 +16028,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 537;
+				CURRENT_PROJECT_VERSION = 541;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16038,7 +16054,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 537;
+				CURRENT_PROJECT_VERSION = 541;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16064,7 +16080,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/DAZN/Misc/DAZN.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 537;
+				CURRENT_PROJECT_VERSION = 541;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/DAZN/Misc/DAZN-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16090,7 +16106,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/DAZN/Misc/DAZN.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 537;
+				CURRENT_PROJECT_VERSION = 541;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/DAZN/Misc/DAZN-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16117,7 +16133,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASportRadar/Misc/GOMASportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 537;
+				CURRENT_PROJECT_VERSION = 541;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASportRadar/Misc/GOMASportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16144,7 +16160,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASportRadar/Misc/GOMASportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 537;
+				CURRENT_PROJECT_VERSION = 541;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASportRadar/Misc/GOMASportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

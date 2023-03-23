@@ -70,9 +70,8 @@ class MatchWidgetCellViewModel {
     }
 
     var matchTimeDetails: String? {
-        return [self.match?.matchTime, self.match?.status.description()]
-            .compactMap({ $0 })
-            .joined(separator: " - ")
+        let details = [self.match?.matchTime, self.match?.detailedStatus]
+        return details.compactMap({ $0 }).joined(separator: " - ")
     }
 
     init(match: Match, store: AggregatorStore) {

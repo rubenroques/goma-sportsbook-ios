@@ -68,7 +68,7 @@ class OutcomeSelectionButtonView: NibView {
         self.marketTypeLabel.text = ""
         self.marketOddLabel.text = ""
 
-        self.closedMarketLabel.text = localized("closed_market")
+        self.closedMarketLabel.text = localized("suspended")
         self.closedMarketLabel.isHidden = true
 
         let tapOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapOddButton))
@@ -129,6 +129,9 @@ class OutcomeSelectionButtonView: NibView {
         }
 
         if let marketId = outcome.marketId {
+
+            Logger.log("marketSubscriber subscribeToEventMarketUpdates \(marketId)")
+
             self.marketStateCancellable?.cancel()
             self.marketStateCancellable = Env.servicesProvider.subscribeToEventMarketUpdates(withId: marketId)
                 .compactMap({ $0 })
@@ -137,26 +140,29 @@ class OutcomeSelectionButtonView: NibView {
                 })
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-                    print("marketSubscriber subscribeToEventMarketUpdates completion: \(completion)")
+                    Logger.log("marketSubscriber subscribeToEventMarketUpdates completion: \(completion)")
                 }, receiveValue: { [weak self] (marketUpdated: Market) in
 
                     if marketUpdated.isAvailable {
-                        self?.containerView.isUserInteractionEnabled = true
+                        self?.isUserInteractionEnabled = false
                         self?.containerView.alpha = 1.0
-                        print("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will show \n")
+                        Logger.log("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will show \n")
 
-                        self?.marketOddLabel.isHidden = false
+                        self?.stackView.isHidden = false
                         self?.closedMarketLabel.isHidden = true
                     }
                     else {
-                        self?.containerView.isUserInteractionEnabled = false
+                        self?.isUserInteractionEnabled = false
                         self?.containerView.alpha = 0.5
-                        print("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will hide \n")
+                        Logger.log("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will hide \n")
 
-                        self?.marketOddLabel.isHidden = true
+                        self?.stackView.isHidden = true
                         self?.closedMarketLabel.isHidden = false
                     }
                 })
+        }
+        else {
+            print("Error ")
         }
 
         self.oddUpdatesPublisher = Env.servicesProvider
@@ -173,20 +179,17 @@ class OutcomeSelectionButtonView: NibView {
                 print("oddUpdatesPublisher subscribeToOutcomeUpdates completion: \(updatedBettingOffer)")
 
                 if !updatedBettingOffer.isAvailable || updatedBettingOffer.decimalOdd.isNaN {
-                    weakSelf.containerView.isUserInteractionEnabled = false
-                    weakSelf.containerView.alpha = 0.5
+                    weakSelf.stackView.isUserInteractionEnabled = false
+                    weakSelf.stackView.alpha = 0.5
                     weakSelf.marketOddLabel.text = "-"
                 }
                 else {
-                    weakSelf.marketOddLabel.isHidden = false
-                    weakSelf.closedMarketLabel.isHidden = true
-
-                    weakSelf.containerView.isUserInteractionEnabled = true
-                    weakSelf.containerView.alpha = 1.0
+                    weakSelf.stackView.isUserInteractionEnabled = true
+                    weakSelf.stackView.alpha = 1.0
 
                     let newOddValue = updatedBettingOffer.decimalOdd
 
-                    if let currentOddValue = weakSelf.oddValue {
+                    if let currentOddValue = weakSelf.oddValue, weakSelf.closedMarketLabel.isHidden {
                         if newOddValue > currentOddValue {
                             weakSelf.highlightOddChangeUp(animated: true,
                                                           upChangeOddValueImage: weakSelf.upChangeOddValueImage,

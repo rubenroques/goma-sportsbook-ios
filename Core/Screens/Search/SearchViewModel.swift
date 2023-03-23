@@ -151,17 +151,17 @@ class SearchViewModel: NSObject {
     func processEvents(eventsGroup: EventsGroup) {
         for event in eventsGroup.events {
             let match = Match(id: event.id,
-                              competitionId: event.competitionId ?? "",
-                              competitionName: event.competitionName ?? "",
-                              homeParticipant: Participant(id: "", name: event.homeTeamName ?? ""),
-                              awayParticipant: Participant(id: "", name: event.awayTeamName ?? ""),
-                              date: event.startDate ?? Date(timeIntervalSince1970: 0),
-                              sportType: event.sportTypeName ?? "",
+                              competitionId: event.competitionId,
+                              competitionName: event.competitionName,
+                              homeParticipant: Participant(id: "", name: event.homeTeamName),
+                              awayParticipant: Participant(id: "", name: event.awayTeamName),
+                              date: event.startDate,
+                              sportType: event.sportTypeName,
+                              sportCode: event.sportTypeCode ?? "",
                               venue: nil,
                               numberTotalOfMarkets: event.numberMarkets != nil ? event.numberMarkets ?? 0 : event.markets.count,
                               markets: ServiceProviderModelMapper.markets(fromServiceProviderMarkets: event.markets),
                               rootPartId: "",
-                              sportName: event.sportTypeName,
                               status: ServiceProviderModelMapper.matchStatus(fromInternalEvent: event.status))
 
             if self.searchMatchesPublisher.value[match.sportType] != nil {
@@ -358,11 +358,11 @@ class SearchViewModel: NSObject {
                                                            name: rawMatch.awayParticipantName ?? ""),
                               date: rawMatch.startDate ?? Date(timeIntervalSince1970: 0),
                               sportType: rawMatch.sportId ?? "",
+                              sportCode: rawMatch.shortSportName,
                               venue: location,
                               numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
                               markets: sortedMarkets,
                               rootPartId: rawMatch.rootPartId ?? "",
-                              sportName: rawMatch.sportName,
                               status: .unknown)
 
             // Set Match
