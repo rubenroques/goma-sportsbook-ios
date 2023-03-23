@@ -31,6 +31,7 @@ class BonusViewController: UIViewController {
     private var bonusAvailableDataSource = BonusAvailableDataSource()
     private var bonusActiveDataSource = BonusActiveDataSource()
     private var bonusHistoryDataSource = BonusHistoryDataSource()
+    private var bonusQueuedDataSource = BonusActiveDataSource()
 
     // MARK: Public Properties
     var viewModel: BonusViewModel
@@ -162,10 +163,13 @@ class BonusViewController: UIViewController {
         switch viewModel.bonusListType {
         case .available:
             self.isPromoCodeViewHidden = false
-            //self.isEmptyState = false
             self.availableBonusEmptyViewTopConstraint.isActive = true
             self.otherBonusEmptyViewTopConstraint.isActive = false
         case .active:
+            self.isPromoCodeViewHidden = true
+            self.availableBonusEmptyViewTopConstraint.isActive = false
+            self.otherBonusEmptyViewTopConstraint.isActive = true
+        case .queued:
             self.isPromoCodeViewHidden = true
             self.availableBonusEmptyViewTopConstraint.isActive = false
             self.otherBonusEmptyViewTopConstraint.isActive = true
@@ -191,6 +195,15 @@ class BonusViewController: UIViewController {
             .sink(receiveValue: { [weak self] isBonusActiveEmpty in
                 if self?.viewModel.bonusListType == .active {
                     self?.isEmptyState = isBonusActiveEmpty
+                }
+            })
+            .store(in: &cancellables)
+
+        viewModel.isBonusQueuedEmptyPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isBonusQueuedEmpty in
+                if self?.viewModel.bonusListType == .queued {
+                    self?.isEmptyState = isBonusQueuedEmpty
                 }
             })
             .store(in: &cancellables)
@@ -242,6 +255,9 @@ class BonusViewController: UIViewController {
 
         self.bonusActiveDataSource.bonusActive = self.viewModel.bonusActive
         self.bonusActiveDataSource.bonusActiveCellViewModels = self.viewModel.bonusActiveCellViewModels
+
+        self.bonusQueuedDataSource.bonusActive = self.viewModel.bonusQueued
+        self.bonusQueuedDataSource.bonusActiveCellViewModels = self.viewModel.bonusQueuedCellViewModels
 
         self.bonusHistoryDataSource.bonusHistory = self.viewModel.bonusHistory
         self.bonusHistoryDataSource.bonusHistoryCellViewModels = self.viewModel.bonusHistoryCellViewModels
@@ -360,6 +376,8 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
             return self.bonusAvailableDataSource.numberOfSections(in: tableView)
         case .active:
             return self.bonusActiveDataSource.numberOfSections(in: tableView)
+        case .queued:
+            return self.bonusQueuedDataSource.numberOfSections(in: tableView)
         case .history:
             return self.bonusHistoryDataSource.numberOfSections(in: tableView)
         }
@@ -372,6 +390,8 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
             return self.bonusAvailableDataSource.bonusAvailable.isNotEmpty
         case .active:
             return self.bonusActiveDataSource.bonusActive.isNotEmpty
+        case .queued:
+            return self.bonusQueuedDataSource.bonusActive.isNotEmpty
         case .history:
             return self.bonusHistoryDataSource.bonusHistory.isNotEmpty
         }
@@ -384,6 +404,8 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
             return self.bonusAvailableDataSource.tableView(tableView, numberOfRowsInSection: section)
         case .active:
             return self.bonusActiveDataSource.tableView(tableView, numberOfRowsInSection: section)
+        case .queued:
+            return self.bonusQueuedDataSource.tableView(tableView, numberOfRowsInSection: section)
         case .history:
             return self.bonusHistoryDataSource.tableView(tableView, numberOfRowsInSection: section)
         }
@@ -393,9 +415,10 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
         switch self.viewModel.bonusListType {
         case .available:
             return self.bonusAvailableDataSource.tableView(tableView, cellForRowAt: indexPath)
-
         case .active:
             return self.bonusActiveDataSource.tableView(tableView, cellForRowAt: indexPath)
+        case .queued:
+            return self.bonusQueuedDataSource.tableView(tableView, cellForRowAt: indexPath)
         case .history:
             return self.bonusHistoryDataSource.tableView(tableView, cellForRowAt: indexPath)
         }
@@ -408,6 +431,8 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
             return self.bonusAvailableDataSource.tableView(tableView, viewForHeaderInSection: section)
         case .active:
             return self.bonusActiveDataSource.tableView(tableView, viewForHeaderInSection: section)
+        case .queued:
+            return self.bonusQueuedDataSource.tableView(tableView, viewForHeaderInSection: section)
         case .history:
             return self.bonusHistoryDataSource.tableView(tableView, viewForHeaderInSection: section)
         }
@@ -421,6 +446,8 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
             return self.bonusAvailableDataSource.tableView(tableView, heightForRowAt: indexPath)
         case .active:
             return self.bonusActiveDataSource.tableView(tableView, heightForRowAt: indexPath)
+        case .queued:
+            return self.bonusQueuedDataSource.tableView(tableView, heightForRowAt: indexPath)
         case .history:
             return self.bonusHistoryDataSource.tableView(tableView, heightForRowAt: indexPath)
         }
@@ -433,6 +460,8 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
             return self.bonusAvailableDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
         case .active:
             return self.bonusActiveDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
+        case .queued:
+            return self.bonusQueuedDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
         case .history:
             return self.bonusHistoryDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
         }
@@ -445,6 +474,8 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
             return self.bonusAvailableDataSource.tableView(tableView, heightForHeaderInSection: section)
         case .active:
             return self.bonusActiveDataSource.tableView(tableView, heightForHeaderInSection: section)
+        case .queued:
+            return self.bonusQueuedDataSource.tableView(tableView, heightForHeaderInSection: section)
         case .history:
             return self.bonusHistoryDataSource.tableView(tableView, heightForHeaderInSection: section)
         }
@@ -457,6 +488,8 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
             return self.bonusAvailableDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
         case .active:
             return self.bonusActiveDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
+        case .queued:
+            return self.bonusQueuedDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
         case .history:
             return self.bonusHistoryDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
         }

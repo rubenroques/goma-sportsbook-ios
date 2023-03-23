@@ -15,6 +15,7 @@ class BonusHistoryCellViewModel: NSObject {
     var startDateStringPublisher: CurrentValueSubject<String, Never> = .init("")
     var endDateStringPublisher: CurrentValueSubject<String, Never> = .init("")
     var bonusStatusPublisher: CurrentValueSubject<String, Never> = .init("")
+    var bonusValuePublisher: CurrentValueSubject<String, Never> = .init("")
 
     // MARK: Lifetime and Cycle
     init(bonus: GrantedBonus) {
@@ -31,6 +32,8 @@ class BonusHistoryCellViewModel: NSObject {
         self.startDateStringPublisher.value = getDateFormatted(dateString: bonus.grantedDate ?? "")
 
         self.endDateStringPublisher.value = getDateFormatted(dateString: bonus.expiryDate ?? "")
+
+        self.bonusValuePublisher.value = "\(bonus.amount ?? 0.0)"
 
         self.bonusStatusPublisher.value = bonus.status.capitalized
 

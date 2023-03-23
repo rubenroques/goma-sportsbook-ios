@@ -15,15 +15,14 @@ class BonusViewModel {
 
     // MARK: Data Sources Properties
     var bonusAvailable: [BonusTypeData] = []
-//    var bonusActive: [EveryMatrix.GrantedBonus] = []
-//    var bonusHistory: [EveryMatrix.GrantedBonus] = []
-
     var bonusActive: [GrantedBonus] = []
     var bonusHistory: [GrantedBonus] = []
+    var bonusQueued: [GrantedBonus] = []
 
     var bonusAvailableCellViewModels: [BonusAvailableCellViewModel] = []
     var bonusActiveCellViewModels: [BonusActiveCellViewModel] = []
     var bonusHistoryCellViewModels: [BonusHistoryCellViewModel] = []
+    var bonusQueuedCellViewModels: [BonusActiveCellViewModel] = []
 
     // MARK: Public Properties
     var bonusListType: BonusListType
@@ -31,6 +30,7 @@ class BonusViewModel {
     var shouldReloadData: PassthroughSubject<Void, Never> = .init()
     var isBonusAvailableEmptyPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isBonusActiveEmptyPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var isBonusQueuedEmptyPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isBonusHistoryEmptyPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isBonusApplicableLoading: CurrentValueSubject<Bool, Never> = .init(false)
     var isBonusClaimableLoading: CurrentValueSubject<Bool, Never> = .init(false)
@@ -41,24 +41,29 @@ class BonusViewModel {
     var requestBonusDetail: ((EveryMatrix.ApplicableBonus) -> Void)?
     var requestApplyBonus: ((EveryMatrix.ApplicableBonus) -> Void)?
 
+    var hasQueuedBonus: CurrentValueSubject<Bool, Never> = .init(false)
+
     enum BonusListType: Int {
         case available = 0
         case active = 1
-        case history = 2
+        case queued = 2
+        case history = 3
     }
 
     // MARK: Lifetime and Cycle
     init(bonusListType: BonusListType) {
         self.bonusListType = bonusListType
 
-        self.requestBonesForType()
+        self.requestBonusForType()
     }
 
-    func requestBonesForType() {
+    func requestBonusForType() {
         switch self.bonusListType {
         case .available:
             self.getAvailableBonus()
         case .active:
+            self.getGrantedBonus()
+        case .queued:
             self.getGrantedBonus()
         case .history:
             self.getGrantedBonus()
@@ -70,8 +75,9 @@ class BonusViewModel {
         self.bonusAvailable = []
         self.bonusActive = []
         self.bonusHistory = []
+        self.bonusQueued = []
 
-        self.requestBonesForType()
+        self.requestBonusForType()
     }
 
     private func getAvailableBonus() {
@@ -222,6 +228,11 @@ class BonusViewModel {
                 let bonusActiveCellViewModel = BonusActiveCellViewModel(bonus: bonus)
                 self.bonusActiveCellViewModels.append(bonusActiveCellViewModel)
             }
+            else if bonus.status == "QUEUED" {
+                self.bonusQueued.append(bonus)
+                let bonusQueuedCellViewModel = BonusActiveCellViewModel(bonus: bonus)
+                self.bonusQueuedCellViewModels.append(bonusQueuedCellViewModel)
+            }
             else {
                 self.bonusHistory.append(bonus)
                 let bonusHistoryCellViewModel = BonusHistoryCellViewModel(bonus: bonus)
@@ -231,6 +242,13 @@ class BonusViewModel {
 
         if self.bonusActive.isEmpty {
             self.isBonusActiveEmptyPublisher.send(true)
+        }
+
+        if self.bonusQueued.isEmpty {
+            self.isBonusQueuedEmptyPublisher.send(true)
+        }
+        else {
+            self.hasQueuedBonus.send(true)
         }
 
         if self.bonusHistory.isEmpty {

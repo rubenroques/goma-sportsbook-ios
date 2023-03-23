@@ -1114,3 +1114,5 @@
 
 "lock_account_alert_text" = "You are about to lock your account. If you continue, you won't be able to access your account nor open another account in the next {value} {period}. Are you sure you want to proceed?";
 "week" = "Week";
+
+"queued" = "Queued";

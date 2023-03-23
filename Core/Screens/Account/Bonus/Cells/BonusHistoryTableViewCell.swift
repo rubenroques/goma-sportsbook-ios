@@ -19,6 +19,8 @@ class BonusHistoryTableViewCell: UITableViewCell {
     private lazy var endDateLabel: UILabel = Self.createEndDateLabel()
     private lazy var bonusStatusView: UIView = Self.createBonusStatusView()
     private lazy var bonusStatusLabel: UILabel = Self.createBonusStatusLabel()
+    private lazy var bonusLabel: UILabel = Self.createBonusLabel()
+    private lazy var bonusAmountLabel: UILabel = Self.createBonusAmountLabel()
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -56,6 +58,9 @@ class BonusHistoryTableViewCell: UITableViewCell {
         self.endDateDescriptionLabel.textColor = UIColor.App.textPrimary
         self.endDateLabel.textColor = UIColor.App.textSecondary
 
+        self.bonusLabel.textColor = UIColor.App.textPrimary
+        self.bonusAmountLabel.textColor = UIColor.App.textSecondary
+
         self.bonusStatusView.backgroundColor = UIColor.App.backgroundOdds
 
         self.bonusStatusLabel.textColor = UIColor.App.textPrimary
@@ -78,6 +83,12 @@ class BonusHistoryTableViewCell: UITableViewCell {
         viewModel.endDateStringPublisher
             .sink(receiveValue: { [weak self] endDateString in
                 self?.endDateLabel.text = endDateString
+            })
+            .store(in: &cancellables)
+
+        viewModel.bonusValuePublisher
+            .sink(receiveValue: { [weak self] bonusValue in
+                self?.bonusAmountLabel.text = bonusValue
             })
             .store(in: &cancellables)
 
@@ -171,6 +182,26 @@ extension BonusHistoryTableViewCell {
         return label
     }
 
+    private static func createBonusLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "\(localized("bonus")):"
+        label.font = AppFont.with(type: .medium, size: 11)
+        label.textAlignment = .left
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        return label
+    }
+
+    private static func createBonusAmountLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "0.0"
+        label.font = AppFont.with(type: .medium, size: 11)
+        label.textAlignment = .left
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        return label
+    }
+
     private func setupSubviews() {
         self.contentView.addSubview(self.containerView)
 
@@ -180,6 +211,8 @@ extension BonusHistoryTableViewCell {
         self.containerView.addSubview(self.endDateDescriptionLabel)
         self.containerView.addSubview(self.endDateLabel)
         self.containerView.addSubview(self.bonusStatusView)
+        self.containerView.addSubview(self.bonusLabel)
+        self.containerView.addSubview(self.bonusAmountLabel)
 
         self.bonusStatusView.addSubview(self.bonusStatusLabel)
 
@@ -216,7 +249,13 @@ extension BonusHistoryTableViewCell {
 
             self.endDateLabel.leadingAnchor.constraint(equalTo: self.endDateDescriptionLabel.trailingAnchor, constant: 4),
             self.endDateLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
-            self.endDateLabel.centerYAnchor.constraint(equalTo: self.endDateDescriptionLabel.centerYAnchor)
+            self.endDateLabel.centerYAnchor.constraint(equalTo: self.endDateDescriptionLabel.centerYAnchor),
+
+            self.bonusLabel.centerYAnchor.constraint(equalTo: self.bonusAmountLabel.centerYAnchor),
+
+            self.bonusAmountLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
+            self.bonusAmountLabel.leadingAnchor.constraint(equalTo: self.bonusLabel.trailingAnchor, constant: 4),
+            self.bonusAmountLabel.centerYAnchor.constraint(equalTo: self.endDateDescriptionLabel.centerYAnchor)
         ])
 
         // Bonus status
