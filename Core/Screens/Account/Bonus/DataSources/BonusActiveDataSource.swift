@@ -37,6 +37,7 @@ class BonusActiveDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
                 if let activeBonus = self.bonusActive[safe: indexPath.row] {
                     if let cellViewModel = self.bonusActiveCellViewModels[safe: indexPath.row] {
                         cell.isSimpleBonus = true
+                        
                         cell.configure(withViewModel: cellViewModel)
                     }
                 }

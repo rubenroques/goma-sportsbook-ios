@@ -81,87 +81,147 @@ class BonusViewModel {
     }
 
     private func getAvailableBonus() {
+
         self.isBonusApplicableLoading.send(true)
         self.isBonusClaimableLoading.send(true)
 
-        var gamingAccountId = ""
+        Env.servicesProvider.getAvailableBonuses()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
 
-        // TODO: SportRadar - Apply Bonus
-//        if let walletGamingAccountId = Env.userSessionStore.userBalanceWallet.value?.id {
-//            gamingAccountId = "\(walletGamingAccountId)"
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("AVAILABLE BONUSES ERROR: \(error)")
+                    self?.isBonusApplicableLoading.send(false)
+                    self?.isBonusClaimableLoading.send(false)
+                }
+
+            }, receiveValue: { [weak self] availableBonuses in
+
+                let filteredAvailableBonuses = availableBonuses.filter({
+                    $0.type != "CODED"
+                })
+
+                if filteredAvailableBonuses.isNotEmpty {
+                    let applicableBonus = filteredAvailableBonuses.map({
+                        let applicableBonus = ServiceProviderModelMapper.applicableBonus(fromServiceProviderAvailableBonus: $0)
+                        return applicableBonus
+                    })
+
+                    self?.processAvailableBonus(bonuses: applicableBonus)
+                }
+                else {
+                    self?.isBonusApplicableLoading.send(false)
+                    self?.isBonusClaimableLoading.send(false)
+                }
+
+            })
+            .store(in: &cancellables)
+    }
+
+//    private func getAvailableBonus() {
+//        self.isBonusApplicableLoading.send(true)
+//        self.isBonusClaimableLoading.send(true)
+//
+//        var gamingAccountId = ""
+//
+//        // Get Applicable Bonus
+//        Env.everyMatrixClient.getApplicableBonus(type: "deposit", gamingAccountId: gamingAccountId)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure:
+//                    ()
+//                case .finished:
+//                    ()
+//                }
+//                self.isBonusApplicableLoading.send(false)
+//            }, receiveValue: { [weak self] bonusResponse in
+//                if let bonusList = bonusResponse.bonuses {
+//                    for bonus in bonusList {
+//
+//                        let bonusTypeData = BonusTypeData(bonus: bonus, bonusType: .applicable)
+//
+//                        self?.bonusAvailable.append(bonusTypeData)
+//
+//                        if let url = URL(string: "https:\(bonus.assets)") {
+//                            self?.storeBonusBanner(url: url, bonusCode: bonus.code)
+//                            let bonusAvailableCellViewModel = BonusAvailableCellViewModel(bonus: bonus, bonusBannerUrl: url)
+//                            self?.bonusAvailableCellViewModels.append(bonusAvailableCellViewModel)
+//                        }
+//                        else {
+//                            let bonusAvailableCellViewModel = BonusAvailableCellViewModel(bonus: bonus)
+//                            self?.bonusAvailableCellViewModels.append(bonusAvailableCellViewModel)
+//                        }
+//
+//                    }
+//                }
+//
+//            })
+//            .store(in: &cancellables)
+//
+//        // Get Claimable Bonus
+//        Env.everyMatrixClient.getClaimableBonus()
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure:
+//                    ()
+//                case .finished:
+//                    ()
+//                }
+//                self.isBonusClaimableLoading.send(false)
+//            }, receiveValue: { [weak self] bonusResponse in
+//                for bonus in bonusResponse.locallyInjectedKey {
+//                    let bonusTypeData = BonusTypeData(bonus: bonus, bonusType: .claimable)
+//
+//                    self?.bonusAvailable.append(bonusTypeData)
+//
+//                    if let url = URL(string: "https:\(bonus.assets)") {
+//                        self?.storeBonusBanner(url: url, bonusCode: bonus.code)
+//                        let bonusAvailableCellViewModel = BonusAvailableCellViewModel(bonus: bonus, bonusBannerUrl: url)
+//                        self?.bonusAvailableCellViewModels.append(bonusAvailableCellViewModel)
+//                    }
+//                    else {
+//                        let bonusAvailableCellViewModel = BonusAvailableCellViewModel(bonus: bonus)
+//                        self?.bonusAvailableCellViewModels.append(bonusAvailableCellViewModel)
+//                    }
+//
+//                }
+//
+//            })
+//            .store(in: &cancellables)
+//
+//        if self.bonusAvailable.isEmpty {
+//            self.isBonusAvailableEmptyPublisher.send(true)
 //        }
+//
+//    }
 
-        // Get Applicable Bonus
-        Env.everyMatrixClient.getApplicableBonus(type: "deposit", gamingAccountId: gamingAccountId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    ()
-                case .finished:
-                    ()
-                }
-                self.isBonusApplicableLoading.send(false)
-            }, receiveValue: { [weak self] bonusResponse in
-                if let bonusList = bonusResponse.bonuses {
-                    for bonus in bonusList {
+    private func processAvailableBonus(bonuses: [ApplicableBonus]) {
 
-                        let bonusTypeData = BonusTypeData(bonus: bonus, bonusType: .applicable)
+        for bonus in bonuses {
+            let bonusTypeData = BonusTypeData(bonus: bonus, bonusType: .claimable)
 
-                        self?.bonusAvailable.append(bonusTypeData)
+            self.bonusAvailable.append(bonusTypeData)
 
-                        if let url = URL(string: "https:\(bonus.assets)") {
-                            self?.storeBonusBanner(url: url, bonusCode: bonus.code)
-                            let bonusAvailableCellViewModel = BonusAvailableCellViewModel(bonus: bonus, bonusBannerUrl: url)
-                            self?.bonusAvailableCellViewModels.append(bonusAvailableCellViewModel)
-                        }
-                        else {
-                            let bonusAvailableCellViewModel = BonusAvailableCellViewModel(bonus: bonus)
-                            self?.bonusAvailableCellViewModels.append(bonusAvailableCellViewModel)
-                        }
+            if let assets = bonus.assets,
+                let url = URL(string: "\(assets)") {
+                self.storeBonusBanner(url: url, bonusCode: bonus.code)
+                let bonusAvailableCellViewModel = BonusAvailableCellViewModel(bonus: bonus, bonusBannerUrl: url)
+                self.bonusAvailableCellViewModels.append(bonusAvailableCellViewModel)
+            }
+            else {
+                let bonusAvailableCellViewModel = BonusAvailableCellViewModel(bonus: bonus)
+                self.bonusAvailableCellViewModels.append(bonusAvailableCellViewModel)
+            }
 
-                    }
-                }
-
-            })
-            .store(in: &cancellables)
-
-        // Get Claimable Bonus
-        Env.everyMatrixClient.getClaimableBonus()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    ()
-                case .finished:
-                    ()
-                }
-                self.isBonusClaimableLoading.send(false)
-            }, receiveValue: { [weak self] bonusResponse in
-                for bonus in bonusResponse.locallyInjectedKey {
-                    let bonusTypeData = BonusTypeData(bonus: bonus, bonusType: .claimable)
-                    
-                    self?.bonusAvailable.append(bonusTypeData)
-
-                    if let url = URL(string: "https:\(bonus.assets)") {
-                        self?.storeBonusBanner(url: url, bonusCode: bonus.code)
-                        let bonusAvailableCellViewModel = BonusAvailableCellViewModel(bonus: bonus, bonusBannerUrl: url)
-                        self?.bonusAvailableCellViewModels.append(bonusAvailableCellViewModel)
-                    }
-                    else {
-                        let bonusAvailableCellViewModel = BonusAvailableCellViewModel(bonus: bonus)
-                        self?.bonusAvailableCellViewModels.append(bonusAvailableCellViewModel)
-                    }
-
-                }
-
-            })
-            .store(in: &cancellables)
-
-        if self.bonusAvailable.isEmpty {
-            self.isBonusAvailableEmptyPublisher.send(true)
         }
 
+        self.isBonusApplicableLoading.send(false)
+        self.isBonusClaimableLoading.send(false)
     }
 
     private func storeBonusBanner(url: URL, bonusCode: String) {
@@ -228,7 +288,7 @@ class BonusViewModel {
                 let bonusActiveCellViewModel = BonusActiveCellViewModel(bonus: bonus)
                 self.bonusActiveCellViewModels.append(bonusActiveCellViewModel)
             }
-            else if bonus.status == "QUEUED" {
+            else if bonus.status == "QUEUED" || bonus.status == "OPTED_IN" {
                 self.bonusQueued.append(bonus)
                 let bonusQueuedCellViewModel = BonusActiveCellViewModel(bonus: bonus)
                 self.bonusQueuedCellViewModels.append(bonusQueuedCellViewModel)

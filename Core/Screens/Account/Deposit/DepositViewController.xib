@@ -13,8 +13,8 @@
             <connections>
                 <outlet property="activityIndicatorView" destination="cq8-DG-kch" id="1pz-bL-AIj"/>
                 <outlet property="amount100Button" destination="Jdh-zE-bjE" id="xpy-xi-Z4m"/>
-                <outlet property="amount10Button" destination="Bho-EI-4ya" id="n8M-7M-EMs"/>
-                <outlet property="amount20Button" destination="7O1-9G-yXH" id="mDV-Fd-ULD"/>
+                <outlet property="amount10Button" destination="Bho-EI-4ya" id="vfz-Mj-6CK"/>
+                <outlet property="amount20Button" destination="7O1-9G-yXH" id="TCH-0d-Iuj"/>
                 <outlet property="amount50Button" destination="atD-RP-Syo" id="9S5-oQ-bHe"/>
                 <outlet property="amountButtonStackView" destination="cjs-fx-QLC" id="JvS-3a-M4V"/>
                 <outlet property="containerView" destination="cpr-u3-egP" id="lPp-Bp-DOQ"/>

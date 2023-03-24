@@ -35,4 +35,10 @@ extension ServiceProviderModelMapper {
                             expiryDate: grantedBonus.expiryDate ,
                             grantedDate: grantedBonus.triggerDate)
     }
+
+    static func applicableBonus(fromServiceProviderAvailableBonus availableBonus: ServicesProvider.AvailableBonus) -> ApplicableBonus {
+
+        return ApplicableBonus(code: availableBonus.id, name: availableBonus.name, description: availableBonus.description, url: nil, html: nil, assets: availableBonus.imageUrl)
+
+    }
 }

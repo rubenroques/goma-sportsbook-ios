@@ -152,7 +152,8 @@ class BonusViewController: UIViewController {
         self.bonusAvailableDataSource.requestApplyBonus = { [weak self] bonusIndex in
             if let bonus = self?.bonusAvailableDataSource.bonusAvailable[safe: bonusIndex] {
                 let bonusCode = bonus.bonus.code
-                self?.applyBonus(bonusCode: bonusCode)
+                //self?.applyBonus(bonusCode: bonusCode)
+                self?.applyAvailableBonus(bonusCode: bonusCode)
             }
         }
     }
@@ -266,7 +267,7 @@ class BonusViewController: UIViewController {
 
     }
 
-    private func showBonusDetail(bonus: EveryMatrix.ApplicableBonus, bonusBannerUrl: URL? = nil) {
+    private func showBonusDetail(bonus: ApplicableBonus, bonusBannerUrl: URL? = nil) {
 
         if let bonusBannerUrl = bonusBannerUrl {
             let bonusDetailViewModel = BonusDetailViewModel(bonus: bonus, bonusBannerUrl: bonusBannerUrl)
@@ -334,6 +335,40 @@ class BonusViewController: UIViewController {
 //                self?.viewModel.updateDataSources()
 //            })
 //            .store(in: &cancellables)
+    }
+
+    func applyAvailableBonus(bonusCode: String) {
+
+        if let partyId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
+
+            Env.servicesProvider.redeemAvailableBonus(partyId: partyId, code: bonusCode)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+
+                    switch completion {
+                    case .finished:
+                        ()
+                    case .failure(let error):
+                        print("REDEEM AVAILABLE BONUS ERROR: \(error)")
+                        switch error {
+                        case .errorMessage(let message):
+                            if message == "BONUSPLAN_NOT_FOUND" {
+                                self?.showAlert(type: .error, text: localized("invalid_bonus_code"))
+                            }
+                            else {
+                                self?.showAlert(type: .error, text: localized("error_bonus_code"))
+                            }
+                        default:
+                            ()
+                        }
+                        self?.isLoading = false
+                    }
+                }, receiveValue: { [weak self] redeemAvailableBonusResponse in
+                    self?.showAlert(type: .success, text: localized("bonus_applied_success"))
+                    self?.viewModel.updateDataSources()
+                })
+                .store(in: &cancellables)
+        }
     }
 
     private func showAlert(type: EditAlertView.AlertState, text: String = "") {

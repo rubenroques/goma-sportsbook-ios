@@ -376,6 +376,32 @@ extension SportRadarModelMapper {
         return GrantedBonus(id: internalGrantedBonus.id, name: internalGrantedBonus.name, status: internalGrantedBonus.status, amount: internalGrantedBonus.amount, triggerDate: internalGrantedBonus.triggerDate, expiryDate: internalGrantedBonus.expiryDate, wagerRequirement: internalGrantedBonus.wagerRequirement, amountWagered: internalGrantedBonus.amountWagered)
     }
 
+    static func availableBonusesResponse(fromAvailableBonusesResponse internalAvailableBonusesResponse: SportRadarModels.AvailableBonusResponse) -> AvailableBonusResponse {
+
+        let bonuses = internalAvailableBonusesResponse.bonuses.map({ availableBonus -> AvailableBonus in
+            let availableBonus = Self.availableBonus(fromInternAlavailableBonus: availableBonus)
+
+            return availableBonus
+
+        })
+
+        return AvailableBonusResponse(status: internalAvailableBonusesResponse.status, bonuses: bonuses)
+    }
+
+    static func availableBonus(fromInternAlavailableBonus internalAvailableBonus: SportRadarModels.AvailableBonus) -> AvailableBonus {
+
+        return AvailableBonus(id: internalAvailableBonus.id,
+                              name: internalAvailableBonus.name,
+                              description: internalAvailableBonus.description,
+                              type: internalAvailableBonus.type,
+                              amount: internalAvailableBonus.amount,
+                              triggerDate: internalAvailableBonus.triggerDate,
+                              expiryDate: internalAvailableBonus.expiryDate,
+                              wagerRequirement: internalAvailableBonus.wagerRequirement,
+
+                              imageUrl: internalAvailableBonus.imageUrl)
+    }
+
     static func redeemBonusesResponse(fromRedeemBonusesResponse internalRedeemBonusesResponse: SportRadarModels.RedeemBonusResponse) -> RedeemBonusResponse {
 
         if let redeemBonus = internalRedeemBonusesResponse.bonus {

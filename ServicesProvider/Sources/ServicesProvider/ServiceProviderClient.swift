@@ -879,6 +879,26 @@ extension ServicesProviderClient {
         return privilegedAccessManager.redeemBonus(code: code)
     }
 
+    public func getAvailableBonuses() -> AnyPublisher<[AvailableBonus], ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getAvailableBonuses()
+    }
+
+    public func redeemAvailableBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.redeemAvailableBonus(partyId: partyId, code: code)
+    }
+
     public func contactUs(firstName: String, lastName: String, email: String, subject: String, message: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager

@@ -211,6 +211,19 @@ extension MultiSlider {
         else if let maximumTextualValue = maximumTextualValue, labelValue == maximumValue {
             valueLabels[i].text = maximumTextualValue
         }
+        else if let extraLabelInfoPlural = extraLabelInfoPlural {
+            if let extraLabelInfoSingular = extraLabelInfoSingular, labelValue == 1 {
+                if let valueLabel = valueLabelFormatter.string(from: NSNumber(value: Double(labelValue))) {
+                    valueLabels[i].text = "\(valueLabel) \(extraLabelInfoSingular)"
+                }
+            }
+            else {
+                if let valueLabel = valueLabelFormatter.string(from: NSNumber(value: Double(labelValue))) {
+                    valueLabels[i].text = "\(valueLabel) \(extraLabelInfoPlural)"
+                }
+            }
+
+        }
         else {
             valueLabels[i].text = valueLabelFormatter.string(from: NSNumber(value: Double(labelValue)))
         }
