@@ -63,7 +63,7 @@ extension FooterResponsibleGamingViewCell {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.text = "FAMILLE, VIE SOCIALE, SANTÉ FINANCIÈRE. ETES-VOUS PRÊT À TOUT MISER? POIS ÊTRE AIDÉ, APPELEZ LE 09-74-75-13-13 (APPEL NON SURTAXÉ)"
+        label.text = "FAMILLE, VIE SOCIALE, SANTÉ FINANCIÈRE. ETES-VOUS PRÊT À TOUT MISER? POUR ÊTRE AIDÉ, APPELEZ LE 09-74-75-13-13 (APPEL NON SURTAXÉ)"
         label.font = AppFont.with(type: .semibold, size: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
