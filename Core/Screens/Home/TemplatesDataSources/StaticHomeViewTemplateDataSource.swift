@@ -25,24 +25,10 @@ class StaticHomeViewTemplateDataSource {
 
     var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
-    // Updatable Storage
-    var store: HomeStore
-
     private let itemsBeforeSports = 7
     private var userMessages: [String] = []
 
     //
-    private var favoriteMatchesIds: [String] = [] {
-        didSet {
-            var matches: [Match] = []
-            for matchId in self.favoriteMatchesIds {
-                if let match = self.store.matchWithId(id: matchId) {
-                    matches.append(match)
-                }
-            }
-            self.favoriteMatches = matches
-        }
-    }
     private var favoriteMatches: [Match] = [] {
         didSet {
             self.refreshPublisher.send()
@@ -114,9 +100,7 @@ class StaticHomeViewTemplateDataSource {
     private var cancellables: Set<AnyCancellable> = []
 
     // MARK: - Life Cycle
-    init(store: HomeStore) {
-        self.store = store
-
+    init() {
         self.refresh()
 
         Env.everyMatrixClient.serviceStatusPublisher
@@ -168,7 +152,6 @@ class StaticHomeViewTemplateDataSource {
     }
 
     func refresh() {
-
         self.cachedMatchStatsViewModels = [:]
         self.cachedSuggestedBetLineViewModel = nil
         self.sportGroupViewModelCache = [:]
@@ -289,25 +272,6 @@ class StaticHomeViewTemplateDataSource {
 
     }
 
-    private func setupFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        self.store.storeContent(fromAggregator: aggregator)
-
-        var matchesIds: [String] = []
-        for content in aggregator.content ?? [] {
-            switch content {
-            case .match(let matchContent):
-                matchesIds.append(matchContent.id)
-            default:
-                ()
-            }
-        }
-        self.favoriteMatchesIds = Array(matchesIds.prefix(2))
-    }
-
-    private func updateFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        self.store.updateContent(fromAggregator: aggregator)
-    }
-
     func fetchTips() {
         // TODO: Usar enum no betType,
         Env.gomaNetworkClient.requestFeaturedTips(deviceId: Env.deviceId, betType: "MULTIPLE")
@@ -359,11 +323,16 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func numberOfSections() -> Int {
-        return itemsBeforeSports + sportsToFetch.count - 1 // minus the first sport
+        return itemsBeforeSports + sportsToFetch.count - 1 + 1 // minus the first sport
         // return itemsBeforeSports
     }
 
     func numberOfRows(forSectionIndex section: Int) -> Int {
+
+        if section == self.numberOfSections()-1 {
+            return 1
+        }
+
         switch section {
         case 0:
             return 0
@@ -457,6 +426,11 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func contentType(forSection section: Int) -> HomeViewModel.Content? {
+
+        if section == self.numberOfSections()-1 {
+            return .footerBanner
+        }
+
         switch section {
         case 0: return HomeViewModel.Content.userMessage
         case 1: return HomeViewModel.Content.userProfile
@@ -495,7 +469,7 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return viewModel
         }
         else {
-            let sportGroupViewModel = SportGroupViewModel(sport: sportForSection, store: self.store)
+            let sportGroupViewModel = SportGroupViewModel(sport: sportForSection)
             sportGroupViewModel.requestRefreshPublisher
                 .sink { [weak self] _ in
                     self?.refreshPublisher.send()
@@ -551,10 +525,6 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             cachedMatchStatsViewModels[match.id] = viewModel
             return viewModel
         }
-    }
-
-    func isMatchLive(withMatchId matchId: String) -> Bool {
-        return self.store.hasMatchesInfoForMatch(withId: matchId)
     }
 
 }

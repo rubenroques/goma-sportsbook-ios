@@ -26,11 +26,8 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
     var matchWentLiveAction: (() -> Void)?
     
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
-    
-    var store: AggregatorStore
-    
-    init(favoriteCompetitions: [Competition], favoriteOutrightCompetitions: [Competition], store: AggregatorStore) {
-        self.store = store
+
+    init(favoriteCompetitions: [Competition], favoriteOutrightCompetitions: [Competition]) {
         self.competitions = favoriteCompetitions
         self.outrightCompetitions = favoriteOutrightCompetitions
     }
@@ -83,12 +80,7 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
             }
             
             if !collapsedCompetitionsSections.contains(indexPath.section) {
-                if self.store.hasMatchesInfoForMatch(withId: match.id) {
-                    cell.setupWithMatch(match, liveMatch: true, store: self.store)
-                }
-                else {
-                    cell.setupWithMatch(match, store: self.store)
-                }
+                cell.setupWithMatch(match)
                 cell.shouldShowCountryFlag(false)
                 cell.tappedMatchLineAction = { [weak self] in
                     self?.didSelectMatchAction?(match)

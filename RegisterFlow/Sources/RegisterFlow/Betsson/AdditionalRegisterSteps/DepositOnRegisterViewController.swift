@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import Theming
 import HeaderTextField
+import Extensions
 
 public class DepositOnRegisterViewController: UIViewController {
 
@@ -63,10 +64,10 @@ public class DepositOnRegisterViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.titleLabel.text = "Deposit"
-        self.subtitleLabel.text = "Make your first deposit and win 5€ of freebet."
+        self.titleLabel.text = Localization.localized("deposit")
+        self.subtitleLabel.text = Localization.localized("first_deposit_subtitle")
 
-        self.depositButton.setTitle("Deposit", for: .normal)
+        self.depositButton.setTitle(Localization.localized("deposit"), for: .normal)
 
         self.depositButton.addTarget(self, action: #selector(didTapDepositButton), for: .primaryActionTriggered)
 
@@ -93,9 +94,14 @@ public class DepositOnRegisterViewController: UIViewController {
         self.amountButton4.addTarget(self, action: #selector(didTapAmountButton4), for: .primaryActionTriggered)
 
 
-        self.depositHeaderTextFieldView.setPlaceholderText("Deposit Value")
+        self.depositHeaderTextFieldView.setPlaceholderText(Localization.localized("deposit_value"))
         self.depositHeaderTextFieldView.setKeyboardType(.decimalPad)
-        self.depositSubtitleLabel.text = "Minimum Value: 10€"
+
+
+        let depositSubtitleText = Localization.localized("minimum_deposit_value")
+            .replacingOccurrences(of: "{value}", with: "10")
+            .replacingOccurrences(of: "{currency}", with: "€")
+        self.depositSubtitleLabel.text = depositSubtitleText
 
         self.isLoading = false
 
@@ -179,14 +185,14 @@ public class DepositOnRegisterViewController: UIViewController {
 
     public func showErrorAlert(errorMessage: String) {
 
-        let errorTitle = "Deposit Error"
+        let errorTitle = Localization.localized("deposit_error")
         let errorMessage = errorMessage
 
         let alert = UIAlertController(title: errorTitle,
                                       message: errorMessage,
                                       preferredStyle: .alert)
 
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: Localization.localized("ok"), style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -211,7 +217,7 @@ public extension DepositOnRegisterViewController {
 
     private static func createCancelButton() -> UIButton {
         let button = UIButton()
-        button.setTitle("Close", for: .normal)
+        button.setTitle(Localization.localized("close"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -297,7 +303,7 @@ public extension DepositOnRegisterViewController {
 
     private static func createDepositButton() -> UIButton {
         let button = UIButton()
-        button.setTitle("Continue", for: .normal)
+        button.setTitle(Localization.localized("continue_"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 18)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 8

@@ -12,7 +12,6 @@ class SportGroupViewModel {
 
     var requestRefreshPublisher = PassthroughSubject<Void, Never>.init()
 
-    private var store: HomeStore
     private var sport: Sport
 
     private var matchTypes: [SportMatchLineViewModel.MatchesType]
@@ -23,17 +22,15 @@ class SportGroupViewModel {
 
     private var cancellables: Set<AnyCancellable> = []
 
-    init(sport: Sport, store: HomeStore) {
+    init(sport: Sport) {
         self.sport = sport
-        self.store = store
 
         self.matchTypes = [.live, .popular, .topCompetition]
     }
 
-    init(sport: Sport, contents: [SportSectionFeedContent], store: HomeStore) {
+    init(sport: Sport, contents: [SportSectionFeedContent]) {
 
         self.sport = sport
-        self.store = store
         self.feedContents = contents
 
         self.matchTypes = []
@@ -86,7 +83,7 @@ class SportGroupViewModel {
             return sportMatchLineViewModel
         }
         else {
-            let sportMatchLineViewModel = SportMatchLineViewModel(sport: self.sport, matchesType: type, store: self.store)
+            let sportMatchLineViewModel = SportMatchLineViewModel(sport: self.sport, matchesType: type)
             sportMatchLineViewModel.loadingPublisher
                 .removeDuplicates()
                 .sink { [weak self] loadingState in

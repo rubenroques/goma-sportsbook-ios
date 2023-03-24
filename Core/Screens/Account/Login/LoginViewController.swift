@@ -264,10 +264,12 @@ class LoginViewController: UIViewController {
 
         self.loginLabel.textColor = UIColor.App.textHeadlinePrimary
 
+        self.usernameHeaderTextFieldView.highlightColor = UIColor.App.inputBorderActive
         self.usernameHeaderTextFieldView.setViewColor(UIColor.App.inputBackground)
         self.usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         self.usernameHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
 
+        self.passwordHeaderTextFieldView.highlightColor = UIColor.App.inputBorderActive
         self.passwordHeaderTextFieldView.setViewColor(UIColor.App.inputBackground)
         self.passwordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         self.passwordHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)

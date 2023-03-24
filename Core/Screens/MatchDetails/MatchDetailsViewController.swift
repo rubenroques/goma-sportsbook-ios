@@ -21,6 +21,7 @@ class MatchDetailsViewController: UIViewController {
     
     @IBOutlet private var headerCompetitionDetailView: UIView!
     @IBOutlet private var headerCompetitionLabel: UILabel!
+    @IBOutlet private var headerCompetitionSportImageView: UIImageView!
     @IBOutlet private var headerCompetitionImageView: UIImageView!
     
     @IBOutlet private var headerDetailStackView: UIStackView!
@@ -55,9 +56,7 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var accountPlusView: UIView!
     @IBOutlet private var accountValueLabel: UILabel!
     @IBOutlet private var accountPlusImageView: UIImageView!
-    
-    @IBOutlet private var marketTypeSeparator: UILabel!
-    
+
     @IBOutlet private var matchFieldBaseView: UIView!
     @IBOutlet private var matchFieldLoadingView: UIActivityIndicatorView!
     
@@ -137,21 +136,6 @@ class MatchDetailsViewController: UIViewController {
     // =========================================================================
     // Header bar and buttons logic
     // =========================================================================
-    
-    var isValidStatsSport: Bool {
-        guard let match = self.viewModel.match else {
-            return false
-        }
-        
-        let isValidStatsSportType = match.sportType == "1" || match.sportType == "3"
-        if isValidStatsSportType {
-            return true
-        }
-        else {
-            return false
-        }
-    }
-    
     private var shouldShowLiveFieldWebView = false {
         didSet {
             if self.shouldShowLiveFieldWebView {
@@ -527,8 +511,7 @@ class MatchDetailsViewController: UIViewController {
     func setupWithTheme() {
         
         self.view.backgroundColor = UIColor.App.backgroundPrimary
-        self.marketTypeSeparator.backgroundColor = UIColor.App.separatorLine
-        
+
         self.topView.backgroundColor = UIColor.App.gameHeader
         self.headerDetailView.backgroundColor = UIColor.App.gameHeader
         self.headerDetailTopView.backgroundColor = .clear
@@ -536,6 +519,8 @@ class MatchDetailsViewController: UIViewController {
         
         self.headerCompetitionDetailView.backgroundColor = .clear
         self.headerCompetitionLabel.textColor = UIColor.App.textSecondary
+        self.headerCompetitionSportImageView.setTintColor(color: UIColor.App.textPrimary)
+
         self.headerDetailStackView.backgroundColor = .clear
         self.headerDetailHomeView.backgroundColor = .clear
         self.headerDetailHomeLabel.textColor = UIColor.App.textPrimary
@@ -935,6 +920,16 @@ class MatchDetailsViewController: UIViewController {
             self.headerDetailLiveTopLabel.text = self.viewModel.matchScore
             self.headerDetailLiveBottomLabel.text = self.viewModel.matchTimeDetails
         }
+
+        let imageName = match.sport.id
+        if let sportIconImage = UIImage(named: "sport_type_icon_\(imageName)") {
+            self.headerCompetitionSportImageView.image = sportIconImage
+        }
+        else {
+            self.headerCompetitionSportImageView.image = UIImage(named: "sport_type_icon_default")
+        }
+
+        self.headerCompetitionSportImageView.setTintColor(color: UIColor.App.textPrimary)
     }
 
 
@@ -1022,10 +1017,8 @@ class MatchDetailsViewController: UIViewController {
     
     @objc private func openCompetitionsDetails() {
         if let match = self.viewModel.match {
-            // TODO: This sport is incomplete
-            let sport = Sport(id: match.sportType, name: "", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0)
             let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [match.competitionId],
-                                                                          sport: sport,
+                                                                          sport: match.sport,
                                                                           store: AggregatorsRepository())
             let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
             self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)

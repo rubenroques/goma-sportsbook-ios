@@ -47,7 +47,7 @@ platform :ios do
     )
   end
 
-lane :distribute_to_firebase do |options|
+lane :certificates do
   
   register_devices(    
     devices_file: "./fastlane/devices.txt"
@@ -59,13 +59,17 @@ lane :distribute_to_firebase do |options|
     readonly: false
   )
 
+end
+
+lane :distribute_to_firebase do |options|
+
   increment_build_number
   
   build_app(
     scheme: options[:app_scheme],
     clean: true,
-    silent: true,
-    suppress_xcode_output: true,
+    silent: false,
+    suppress_xcode_output: false,
     export_method: "ad-hoc" # Use ad hoc provisioning profile
   )
 
@@ -75,6 +79,7 @@ lane :distribute_to_firebase do |options|
     groups: "ios-internal", # Replace with your desired distribution group(s)
     debug: true
   )
+
 end
 
 

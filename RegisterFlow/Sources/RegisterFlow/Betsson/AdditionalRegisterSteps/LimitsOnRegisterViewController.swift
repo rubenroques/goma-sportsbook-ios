@@ -12,6 +12,7 @@ import Theming
 import ServicesProvider
 import Combine
 import HeaderTextField
+import Extensions
 
 public class LimitsOnRegisterViewModel {
 
@@ -173,31 +174,31 @@ public class LimitsOnRegisterViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.titleLabel.text = "Limits Management"
-        self.subtitleLabel.text = "What type of player are you?"
+        self.titleLabel.text = Localization.localized("limits_management")
+        self.subtitleLabel.text = Localization.localized("limits_management_subtitle")
 
         self.beginnerImageView.image = UIImage(named: "level_beginner", in: Bundle.module, with: nil)
         self.intermediateImageView.image = UIImage(named: "level_intermediate", in: Bundle.module, with: nil)
         self.advancedImageView.image = UIImage(named: "level_advanced", in: Bundle.module, with: nil)
 
-        self.beginnerLabel.text = "Beginner"
-        self.intermediateLabel.text = "Intermediate"
-        self.advancedLabel.text = "Advanced"
+        self.beginnerLabel.text = Localization.localized("beginner")
+        self.intermediateLabel.text = Localization.localized("intermediate")
+        self.advancedLabel.text = Localization.localized("advanced")
 
         self.beginnerBaseView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.didTapBeginnerButton)))
         self.intermediateBaseView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.didTapIntermediateButton)))
         self.advancedBaseView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.didTapAdvancedButton)))
 
-        self.continueButton.setTitle("Continue", for: .normal)
+        self.continueButton.setTitle(Localization.localized("continue_"), for: .normal)
 
         self.continueButton.addTarget(self, action: #selector(didTapContinueButton), for: .primaryActionTriggered)
 
         self.cancelButton.addTarget(self, action: #selector(didTapCancelButton), for: .primaryActionTriggered)
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
-        self.depositLimitHeaderTextFieldView.setPlaceholderText("Weekly Deposit Limit")
-        self.bettingLimitHeaderTextFieldView.setPlaceholderText("Weekly Betting Limit")
-        self.autoPayoutHeaderTextFieldView.setPlaceholderText("Auto Payout")
+        self.depositLimitHeaderTextFieldView.setPlaceholderText(Localization.localized("weekly_deposit_limit"))
+        self.bettingLimitHeaderTextFieldView.setPlaceholderText(Localization.localized("weekly_betting_limit"))
+        self.autoPayoutHeaderTextFieldView.setPlaceholderText(Localization.localized("auto_payout"))
 
         self.depositLimitHeaderTextFieldView.setKeyboardType(.numbersAndPunctuation)
         self.bettingLimitHeaderTextFieldView.setKeyboardType(.numbersAndPunctuation)
@@ -387,7 +388,7 @@ public extension LimitsOnRegisterViewController {
 
     private static func createCancelButton() -> UIButton {
         let button = UIButton()
-        button.setTitle("Close", for: .normal)
+        button.setTitle(Localization.localized("close"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button

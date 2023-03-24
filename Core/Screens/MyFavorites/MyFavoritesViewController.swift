@@ -36,10 +36,8 @@ class MyFavoritesViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
 
     // Data Sources
-    private var myFavoriteMatchesDataSource = MyFavoriteMatchesDataSource(userFavoriteMatches: [], store: FavoritesAggregatorsRepository())
-    private var myFavoriteCompetitionsDataSource = MyFavoriteCompetitionsDataSource(favoriteCompetitions: [],
-                                                                                    favoriteOutrightCompetitions: [],
-                                                                                    store: FavoritesAggregatorsRepository())
+    private var myFavoriteMatchesDataSource = MyFavoriteMatchesDataSource(userFavoriteMatches: [])
+    private var myFavoriteCompetitionsDataSource = MyFavoriteCompetitionsDataSource(favoriteCompetitions: [], favoriteOutrightCompetitions: [])
 
     // MARK: Public Properties
     var viewModel: MyFavoritesViewModel
@@ -198,10 +196,6 @@ class MyFavoritesViewController: UIViewController {
 
     // MARK: Binding
     private func bind(toViewModel viewModel: MyFavoritesViewModel) {
-
-        self.myFavoriteMatchesDataSource.store = viewModel.store
-
-        self.myFavoriteCompetitionsDataSource.store = viewModel.store
 
         self.myFavoriteMatchesDataSource.matchStatsViewModelForMatch = { [weak self] match in
             return self?.viewModel.matchStatsViewModel(forMatch: match)

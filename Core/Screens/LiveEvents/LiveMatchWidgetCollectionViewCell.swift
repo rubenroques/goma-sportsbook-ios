@@ -559,23 +559,23 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         if let market = match.markets.first {
 
-            if let marketPublisher = viewModel.store.marketPublisher(withId: market.id) {
-                self.marketSubscriber = marketPublisher
-                    .receive(on: DispatchQueue.main)
-                    .sink { [weak self] marketUpdate in
-                        if marketUpdate.isAvailable ?? true {
-                            self?.showMarketButtons()
-                        }
-                        else {
-                            if marketUpdate.isClosed ?? false {
-                                self?.showClosedView()
-                            }
-                            else {
-                                self?.showSuspendedView()
-                            }
-                        }
-                    }
-            }
+//            if let marketPublisher = viewModel.store.marketPublisher(withId: market.id) {
+//                self.marketSubscriber = marketPublisher
+//                    .receive(on: DispatchQueue.main)
+//                    .sink { [weak self] marketUpdate in
+//                        if marketUpdate.isAvailable ?? true {
+//                            self?.showMarketButtons()
+//                        }
+//                        else {
+//                            if marketUpdate.isClosed ?? false {
+//                                self?.showClosedView()
+//                            }
+//                            else {
+//                                self?.showSuspendedView()
+//                            }
+//                        }
+//                    }
+//            }
 
             if let outcome = market.outcomes[safe: 0] {
 
@@ -757,42 +757,43 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         var matchPart = ""
 
         // Env.everyMatrixStorage.matchesInfoForMatch[match.id]
-        if let matchInfoArray = viewModel.store.matchesInfoForMatchList()[match.id] {
-            for matchInfoId in matchInfoArray {
-                // Env.everyMatrixStorage.matchesInfo[matchInfoId]
-                if let matchInfo = viewModel.store.matchesInfoList()[matchInfoId] {
-                    if (matchInfo.typeId ?? "") == "1" && (matchInfo.eventPartId ?? "") == self.viewModel?.match?.rootPartId {
-                        // Goals
-                        if let homeGoalsFloat = matchInfo.paramFloat1 {
-                            if self.viewModel?.match?.homeParticipant.id == matchInfo.paramParticipantId1 {
-                                homeGoals = "\(homeGoalsFloat)"
-                            }
-                            else if self.viewModel?.match?.awayParticipant.id == matchInfo.paramParticipantId1 {
-                                awayGoals = "\(homeGoalsFloat)"
-                            }
-                        }
-                        if let awayGoalsFloat = matchInfo.paramFloat2 {
-                            if self.viewModel?.match?.homeParticipant.id == matchInfo.paramParticipantId2 {
-                                homeGoals = "\(awayGoalsFloat)"
-                            }
-                            else if self.viewModel?.match?.awayParticipant.id == matchInfo.paramParticipantId2 {
-                                awayGoals = "\(awayGoalsFloat)"
-                            }
-                        }
-                    }
-                    else if (matchInfo.typeId ?? "") == "95", let awayGoalsFloat = matchInfo.paramFloat1 {
-                        // Match Minutes
-                        minutes = "\(awayGoalsFloat)"
-                    }
-                    else if (matchInfo.typeId ?? "") == "92", let eventPartName = matchInfo.paramEventPartName1 {
-                        // Status
-                        matchPart = eventPartName
-                    }
-
-                }
-            }
-           
-        }
+//        if let matchInfoArray = viewModel.store.matchesInfoForMatchList()[match.id] {
+//            for matchInfoId in matchInfoArray {
+//                // Env.everyMatrixStorage.matchesInfo[matchInfoId]
+//                if let matchInfo = viewModel.store.matchesInfoList()[matchInfoId] {
+//                    if (matchInfo.typeId ?? "") == "1" && (matchInfo.eventPartId ?? "") == self.viewModel?.match?.rootPartId {
+//                        // Goals
+//                        if let homeGoalsFloat = matchInfo.paramFloat1 {
+//                            if self.viewModel?.match?.homeParticipant.id == matchInfo.paramParticipantId1 {
+//                                homeGoals = "\(homeGoalsFloat)"
+//                            }
+//                            else if self.viewModel?.match?.awayParticipant.id == matchInfo.paramParticipantId1 {
+//                                awayGoals = "\(homeGoalsFloat)"
+//                            }
+//                        }
+//                        if let awayGoalsFloat = matchInfo.paramFloat2 {
+//                            if self.viewModel?.match?.homeParticipant.id == matchInfo.paramParticipantId2 {
+//                                homeGoals = "\(awayGoalsFloat)"
+//                            }
+//                            else if self.viewModel?.match?.awayParticipant.id == matchInfo.paramParticipantId2 {
+//                                awayGoals = "\(awayGoalsFloat)"
+//                            }
+//                        }
+//                    }
+//                    else if (matchInfo.typeId ?? "") == "95", let awayGoalsFloat = matchInfo.paramFloat1 {
+//                        // Match Minutes
+//                        minutes = "\(awayGoalsFloat)"
+//                    }
+//                    else if (matchInfo.typeId ?? "") == "92", let eventPartName = matchInfo.paramEventPartName1 {
+//                        // Status
+//                        matchPart = eventPartName
+//                    }
+//
+//                }
+//            }
+//
+//        }
+//
 
         if homeGoals.isNotEmpty && awayGoals.isNotEmpty {
             self.resultLabel.text = "\(homeGoals) - \(awayGoals)"

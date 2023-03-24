@@ -38,6 +38,9 @@ extension ServiceProviderModelMapper {
         if let venueCountry = event.venueCountry {
             venue = Location(id: venueCountry.iso2Code, name: venueCountry.name, isoCode: venueCountry.iso2Code)
         }
+
+        let sport = Self.sport(fromServiceProviderSportType: event.sport)
+
         let match = Match(id: event.id,
                           competitionId: event.competitionId,
                           competitionName: event.competitionName,
@@ -46,8 +49,7 @@ extension ServiceProviderModelMapper {
                           homeParticipantScore: event.homeTeamScore,
                           awayParticipantScore: event.awayTeamScore,
                           date: event.startDate,
-                          sportType: event.sportTypeName,
-                          sportCode: event.sportTypeCode,
+                          sport: sport,
                           venue: venue,
                           numberTotalOfMarkets: event.numberMarkets ?? 0,
                           markets: Self.markets(fromServiceProviderMarkets: event.markets),

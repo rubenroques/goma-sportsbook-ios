@@ -19,6 +19,7 @@ class HomeViewModel {
         case sport(Sport)
         case userProfile
         case featuredTips
+        case footerBanner
 
         var identifier: String {
             switch self {
@@ -29,14 +30,12 @@ class HomeViewModel {
             case .sport(let sport): return "sport[\(sport)]"
             case .userProfile: return "userProfile"
             case .featuredTips: return "featuredTips"
+            case .footerBanner: return "footerBanner"
             }
         }
     }
 
     var refreshPublisher = PassthroughSubject<Void, Never>.init()
-
-    // Updatable Storage
-    var store: HomeStore = HomeStore()
 
     private var homeViewTemplateDataSource: HomeViewTemplateDataSource
     private var cancellables: Set<AnyCancellable> = []
@@ -44,10 +43,10 @@ class HomeViewModel {
     // MARK: - Life Cycle
     init() {
         if let homeFeedTemplate = Env.appSession.homeFeedTemplate {
-            self.homeViewTemplateDataSource = DynamicHomeViewTemplateDataSource(store: self.store, homeFeedTemplate: homeFeedTemplate)
+            self.homeViewTemplateDataSource = DynamicHomeViewTemplateDataSource(homeFeedTemplate: homeFeedTemplate)
         }
         else {
-            self.homeViewTemplateDataSource = StaticHomeViewTemplateDataSource(store: self.store)
+            self.homeViewTemplateDataSource = StaticHomeViewTemplateDataSource()
         }
 
         self.homeViewTemplateDataSource.refreshRequestedPublisher
@@ -113,10 +112,6 @@ extension HomeViewModel {
 
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
         return self.homeViewTemplateDataSource.matchStatsViewModel(forMatch: match)
-    }
-
-    func isMatchLive(withMatchId matchId: String) -> Bool {
-        return self.homeViewTemplateDataSource.isMatchLive(withMatchId: matchId)
     }
 
 }

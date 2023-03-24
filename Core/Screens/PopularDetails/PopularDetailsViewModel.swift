@@ -205,10 +205,6 @@ extension PopularDetailsViewModel {
         }
     }
 
-    func isMatchLive(withMatchId matchId: String) -> Bool {
-        return self.store.hasMatchesInfoForMatch(withId: matchId)
-    }
-
 }
 
 extension PopularDetailsViewModel {

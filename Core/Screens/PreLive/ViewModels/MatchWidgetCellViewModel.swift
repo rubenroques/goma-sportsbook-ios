@@ -17,8 +17,7 @@ class MatchWidgetCellViewModel {
     var competitionName: String
     var isToday: Bool
     var countryId: String
-    var store: AggregatorStore
-    
+
     var match: Match?
 
     var isLiveCard: Bool {
@@ -74,9 +73,8 @@ class MatchWidgetCellViewModel {
         return details.compactMap({ $0 }).joined(separator: " - ")
     }
 
-    init(match: Match, store: AggregatorStore) {
+    init(match: Match) {
 
-        self.store = store
         self.match = match
 
         self.homeTeamName = match.homeParticipant.name
@@ -114,48 +112,7 @@ class MatchWidgetCellViewModel {
         self.competitionName = match.competitionName
     }
 
-    init(match: Match) {
-
-        self.store = Env.everyMatrixStorage
-        
-        self.homeTeamName = match.homeParticipant.name
-        self.awayTeamName = match.awayParticipant.name
-
-        self.countryISOCode = match.venue?.isoCode ?? ""
-        self.countryId = match.venue?.id ?? ""
-        
-        self.isToday = false
-        self.startDateString = ""
-        self.startTimeString = ""
-
-        if let startDate = match.date {
-
-            let relativeFormatter = MatchWidgetCellViewModel.relativeDateFormatter
-            let relativeDateString = relativeFormatter.string(from: startDate)
-            // "Jan 18, 2018"
-
-            let nonRelativeFormatter = MatchWidgetCellViewModel.normalDateFormatter
-            let normalDateString = nonRelativeFormatter.string(from: startDate)
-            // "Jan 18, 2018"
-
-            if relativeDateString == normalDateString {
-                let customFormatter = Date.buildFormatter(locale: Env.locale, dateFormat: "dd MMM")
-                self.startDateString = customFormatter.string(from: startDate)
-            }
-            else {
-                self.startDateString = relativeDateString // Today, Yesterday
-            }
-
-            self.isToday = Env.calendar.isDateInToday(startDate)
-            self.startTimeString = MatchWidgetCellViewModel.hourDateFormatter.string(from: startDate)
-        }
-
-        self.competitionName = match.competitionName
-    }
-
     init(match: EveryMatrix.Match) {
-
-        self.store = Env.everyMatrixStorage
 
         self.homeTeamName = match.homeParticipantName ?? ""
         self.awayTeamName = match.awayParticipantName ?? ""

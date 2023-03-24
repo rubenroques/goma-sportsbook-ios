@@ -71,6 +71,8 @@ class HomeViewController: UIViewController {
         self.tableView.register(VideoPreviewLineTableViewCell.self, forCellReuseIdentifier: VideoPreviewLineTableViewCell.identifier)
         self.tableView.register(FeaturedTipLineTableViewCell.self, forCellReuseIdentifier: FeaturedTipLineTableViewCell.identifier)
 
+        self.tableView.register(FooterResponsibleGamingViewCell.self, forCellReuseIdentifier: FooterResponsibleGamingViewCell.identifier)
+
         self.refreshControl.tintColor = UIColor.lightGray
         self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
         self.tableView.addSubview(self.refreshControl)
@@ -204,7 +206,7 @@ class HomeViewController: UIViewController {
     }
 
     private func openLiveDetails(_ sport: Sport) {
-        let viewModel = LiveDetailsViewModel(sport: sport, store: AggregatorsRepository())
+        let viewModel = LiveDetailsViewModel(sport: sport)
         let liveDetailsViewController = LiveDetailsViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(liveDetailsViewController, animated: true)
     }
@@ -281,6 +283,13 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         }
 
         switch contentType {
+        case .footerBanner:
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: FooterResponsibleGamingViewCell.identifier) as? FooterResponsibleGamingViewCell
+            else {
+                fatalError()
+            }
+            return cell
         case .userMessage:
             return UITableViewCell()
         case .bannerLine:
@@ -326,8 +335,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
-            cell.setupWithMatch(match, store: self.viewModel.store)
-            cell.setupFavoriteMatchInfoPublisher(match: match)
+            cell.setupWithMatch(match)
             cell.tappedMatchLineAction = { [weak self] in
                 self?.openMatchDetails(matchId: match.id)
             }
@@ -510,6 +518,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         }
 
         switch contentType {
+        case .footerBanner:
+            return UITableView.automaticDimension
         case .userMessage:
             return .leastNormalMagnitude
         case .bannerLine:
@@ -556,6 +566,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         }
 
         switch contentType {
+        case .footerBanner:
+            return 120
         case .userMessage:
             return .leastNormalMagnitude
         case .bannerLine:
@@ -705,6 +717,8 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
             }
 
             switch contentType {
+            case .footerBanner:
+                ()
             case .userMessage:
                 ()
             case .bannerLine:

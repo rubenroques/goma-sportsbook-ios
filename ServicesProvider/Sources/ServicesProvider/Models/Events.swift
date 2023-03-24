@@ -26,12 +26,10 @@ public class Event: Codable {
     public var id: String
     public var homeTeamName: String
     public var awayTeamName: String
-    public var sportTypeName: String
+    public var sport: SportType
 
     public var homeTeamScore: Int?
     public var awayTeamScore: Int?
-
-    public var sportTypeCode: String?
 
     public var competitionId: String
     public var competitionName: String
@@ -79,12 +77,11 @@ public class Event: Codable {
         case awayTeamName = "awayName"
         case competitionId = "competitionId"
         case competitionName = "competitionName"
-        case sportTypeName = "sportTypeName"
+        case sport = "sport"
         case startDate = "startDate"
         case markets = "markets"
         case venueCountry = "venueCountry"
         case numberMarkets = "numMarkets"
-        case sportTypeCode = "idfosporttype"
     }
 
     public init(id: String,
@@ -92,17 +89,16 @@ public class Event: Codable {
                 awayTeamName: String,
                 homeTeamScore: Int?,
                 awayTeamScore: Int?,
-                sportTypeName: String,
                 competitionId: String,
                 competitionName: String,
+                sport: SportType,
                 startDate: Date,
                 markets: [Market],
                 venueCountry: Country? = nil,
                 numberMarkets: Int? = nil,
                 name: String? = nil,
                 status: Status?,
-                matchTime: String?,
-                sportTypeCode: String?) {
+                matchTime: String?) {
 
         self.id = id
         self.homeTeamName = homeTeamName
@@ -111,9 +107,11 @@ public class Event: Codable {
         self.homeTeamScore = homeTeamScore
         self.awayTeamScore = awayTeamScore
 
-        self.sportTypeName = sportTypeName
         self.competitionId = competitionId
         self.competitionName = competitionName
+
+        self.sport = sport
+
         self.startDate = startDate
         self.markets = markets
         self.venueCountry = venueCountry
@@ -122,23 +120,35 @@ public class Event: Codable {
         self.name = name
         self.status = status
         self.matchTime = matchTime
-        
-        self.sportTypeCode = sportTypeCode
+
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(String.self, forKey: .id)
         self.homeTeamName = try container.decode(String.self, forKey: .homeTeamName)
         self.awayTeamName = try container.decode(String.self, forKey: .awayTeamName)
         self.competitionId = try container.decode(String.self, forKey: .competitionId)
         self.competitionName = try container.decode(String.self, forKey: .competitionName)
-        self.sportTypeName = try container.decode(String.self, forKey: .sportTypeName)
+        self.sport = try container.decode(SportType.self, forKey: .sport)
         self.startDate = try container.decode(Date.self, forKey: .startDate)
         self.markets = try container.decode([Market].self, forKey: .markets)
         self.venueCountry = try container.decodeIfPresent(Country.self, forKey: .venueCountry)
         self.numberMarkets = try container.decodeIfPresent(Int.self, forKey: .numberMarkets)
-        self.sportTypeCode = try container.decodeIfPresent(String.self, forKey: .sportTypeCode)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.id, forKey: .id)
+        try container.encode(self.homeTeamName, forKey: .homeTeamName)
+        try container.encode(self.awayTeamName, forKey: .awayTeamName)
+        try container.encode(self.competitionId, forKey: .competitionId)
+        try container.encode(self.competitionName, forKey: .competitionName)
+        try container.encode(self.sport, forKey: .sport)
+        try container.encode(self.startDate, forKey: .startDate)
+        try container.encode(self.markets, forKey: .markets)
+        try container.encodeIfPresent(self.venueCountry, forKey: .venueCountry)
+        try container.encodeIfPresent(self.numberMarkets, forKey: .numberMarkets)
     }
 
 }

@@ -1253,16 +1253,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         Env.betslipManager.clearAllBettingTickets()
 
         self.suggestedBetsListViewController?.refreshSuggestedBets()
-//
-//        self.gomaSuggestedBetsResponse = []
-//
-//        for cachedBetSuggestedViewModel in self.cachedSuggestedBetViewModels.values {
-//            cachedBetSuggestedViewModel.unregisterSuggestedBets()
-//        }
-//
-//        self.cachedSuggestedBetViewModels = [:]
-//
-//        self.betSuggestedCollectionView.reloadData()
     }
 
     @IBAction private func didChangeSegmentValue(_ segmentControl: UISegmentedControl) {

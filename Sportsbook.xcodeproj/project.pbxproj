@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		450088F029CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450088EF29CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift */; };
+		450088F129CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450088EF29CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift */; };
+		450088F229CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450088EF29CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift */; };
+		450088F329CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450088EF29CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift */; };
+		450088F429CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450088EF29CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift */; };
+		450088F529CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450088EF29CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift */; };
+		450088F629CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450088EF29CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift */; };
 		45044AFB291022E90053311D /* ServiceProviderModelMapper+Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45044AFA291022E90053311D /* ServiceProviderModelMapper+Profile.swift */; };
 		45044AFC291022E90053311D /* ServiceProviderModelMapper+Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45044AFA291022E90053311D /* ServiceProviderModelMapper+Profile.swift */; };
 		45044AFD291022E90053311D /* ServiceProviderModelMapper+Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45044AFA291022E90053311D /* ServiceProviderModelMapper+Profile.swift */; };
@@ -299,7 +306,6 @@
 		450B795928F58574009229E3 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CC226BD9D9000EC572D /* Localization.swift */; };
 		450B795A28F58574009229E3 /* NewGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D5E281179DA00E82724 /* NewGroupViewController.swift */; };
 		450B795B28F58574009229E3 /* ChallengeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB426F3548D00E69D65 /* ChallengeSSWampMessage.swift */; };
-		450B795C28F58574009229E3 /* MatchDetailsAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */; };
 		450B795D28F58574009229E3 /* ChatNotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FDC2806D5720098854C /* ChatNotificationsViewController.swift */; };
 		450B795E28F58574009229E3 /* BetslipErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF4482750FC89006DD528 /* BetslipErrorView.swift */; };
 		450B795F28F58574009229E3 /* CompetitionSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B617C279EE6D2005DC376 /* CompetitionSearchTableViewCell.swift */; };
@@ -466,7 +472,6 @@
 		450B7A0228F58574009229E3 /* BetslipSelectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495F2737C3630047169D /* BetslipSelectionState.swift */; };
 		450B7A0328F58574009229E3 /* BonusDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1827D2784C008BAF41 /* BonusDetailViewController.swift */; };
 		450B7A0428F58574009229E3 /* MatchFiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */; };
-		450B7A0528F58574009229E3 /* HomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457BD60D27B6E45100E5612E /* HomeStore.swift */; };
 		450B7A0628F58574009229E3 /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D8C271ED08400884BDF /* CGFloat+Extensions.swift */; };
 		450B7A0728F58574009229E3 /* SportGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F0A8827C6468B003123DF /* SportGroupViewModel.swift */; };
 		450B7A0828F58574009229E3 /* BonusAvailableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F79FE27D0D218008BAF41 /* BonusAvailableTableViewCell.swift */; };
@@ -1034,7 +1039,6 @@
 		457CBAC3282D27D000ED0F00 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CC226BD9D9000EC572D /* Localization.swift */; };
 		457CBAC4282D27D000ED0F00 /* NewGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D5E281179DA00E82724 /* NewGroupViewController.swift */; };
 		457CBAC5282D27D000ED0F00 /* ChallengeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB426F3548D00E69D65 /* ChallengeSSWampMessage.swift */; };
-		457CBAC6282D27D000ED0F00 /* MatchDetailsAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */; };
 		457CBAC7282D27D000ED0F00 /* ChatNotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FDC2806D5720098854C /* ChatNotificationsViewController.swift */; };
 		457CBAC8282D27D000ED0F00 /* BetslipErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF4482750FC89006DD528 /* BetslipErrorView.swift */; };
 		457CBAC9282D27D000ED0F00 /* CompetitionSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B617C279EE6D2005DC376 /* CompetitionSearchTableViewCell.swift */; };
@@ -1168,7 +1172,6 @@
 		457CBB4B282D27D000ED0F00 /* BetslipSelectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495F2737C3630047169D /* BetslipSelectionState.swift */; };
 		457CBB4C282D27D000ED0F00 /* BonusDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1827D2784C008BAF41 /* BonusDetailViewController.swift */; };
 		457CBB4D282D27D000ED0F00 /* MatchFiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */; };
-		457CBB4E282D27D000ED0F00 /* HomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457BD60D27B6E45100E5612E /* HomeStore.swift */; };
 		457CBB4F282D27D000ED0F00 /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D8C271ED08400884BDF /* CGFloat+Extensions.swift */; };
 		457CBB50282D27D000ED0F00 /* SportGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F0A8827C6468B003123DF /* SportGroupViewModel.swift */; };
 		457CBB51282D27D000ED0F00 /* BonusAvailableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F79FE27D0D218008BAF41 /* BonusAvailableTableViewCell.swift */; };
@@ -1637,7 +1640,6 @@
 		457CBD6C282D2CD100ED0F00 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CC226BD9D9000EC572D /* Localization.swift */; };
 		457CBD6D282D2CD100ED0F00 /* NewGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D5E281179DA00E82724 /* NewGroupViewController.swift */; };
 		457CBD6E282D2CD100ED0F00 /* ChallengeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB426F3548D00E69D65 /* ChallengeSSWampMessage.swift */; };
-		457CBD6F282D2CD100ED0F00 /* MatchDetailsAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */; };
 		457CBD70282D2CD100ED0F00 /* ChatNotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FDC2806D5720098854C /* ChatNotificationsViewController.swift */; };
 		457CBD71282D2CD100ED0F00 /* BetslipErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF4482750FC89006DD528 /* BetslipErrorView.swift */; };
 		457CBD72282D2CD100ED0F00 /* CompetitionSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B617C279EE6D2005DC376 /* CompetitionSearchTableViewCell.swift */; };
@@ -1771,7 +1773,6 @@
 		457CBDF3282D2CD100ED0F00 /* BetslipSelectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495F2737C3630047169D /* BetslipSelectionState.swift */; };
 		457CBDF4282D2CD100ED0F00 /* BonusDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1827D2784C008BAF41 /* BonusDetailViewController.swift */; };
 		457CBDF5282D2CD100ED0F00 /* MatchFiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */; };
-		457CBDF6282D2CD100ED0F00 /* HomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457BD60D27B6E45100E5612E /* HomeStore.swift */; };
 		457CBDF7282D2CD100ED0F00 /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D8C271ED08400884BDF /* CGFloat+Extensions.swift */; };
 		457CBDF8282D2CD100ED0F00 /* SportGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F0A8827C6468B003123DF /* SportGroupViewModel.swift */; };
 		457CBDF9282D2CD100ED0F00 /* BonusAvailableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F79FE27D0D218008BAF41 /* BonusAvailableTableViewCell.swift */; };
@@ -2244,7 +2245,6 @@
 		4589C84D282024E400243547 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CC226BD9D9000EC572D /* Localization.swift */; };
 		4589C84E282024E400243547 /* NewGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D5E281179DA00E82724 /* NewGroupViewController.swift */; };
 		4589C84F282024E400243547 /* ChallengeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB426F3548D00E69D65 /* ChallengeSSWampMessage.swift */; };
-		4589C850282024E400243547 /* MatchDetailsAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */; };
 		4589C851282024E400243547 /* ChatNotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FDC2806D5720098854C /* ChatNotificationsViewController.swift */; };
 		4589C852282024E400243547 /* BetslipErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF4482750FC89006DD528 /* BetslipErrorView.swift */; };
 		4589C853282024E400243547 /* CompetitionSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B617C279EE6D2005DC376 /* CompetitionSearchTableViewCell.swift */; };
@@ -2371,7 +2371,6 @@
 		4589C8CD282024E400243547 /* BetslipSelectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495F2737C3630047169D /* BetslipSelectionState.swift */; };
 		4589C8CE282024E400243547 /* BonusDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1827D2784C008BAF41 /* BonusDetailViewController.swift */; };
 		4589C8CF282024E400243547 /* MatchFiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */; };
-		4589C8D0282024E400243547 /* HomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457BD60D27B6E45100E5612E /* HomeStore.swift */; };
 		4589C8D1282024E400243547 /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D8C271ED08400884BDF /* CGFloat+Extensions.swift */; };
 		4589C8D2282024E400243547 /* SportGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F0A8827C6468B003123DF /* SportGroupViewModel.swift */; };
 		4589C8D3282024E400243547 /* BonusAvailableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F79FE27D0D218008BAF41 /* BonusAvailableTableViewCell.swift */; };
@@ -2910,7 +2909,6 @@
 		45A33172298976BA008181E9 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CC226BD9D9000EC572D /* Localization.swift */; };
 		45A33173298976BA008181E9 /* NewGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D5E281179DA00E82724 /* NewGroupViewController.swift */; };
 		45A33174298976BA008181E9 /* ChallengeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB426F3548D00E69D65 /* ChallengeSSWampMessage.swift */; };
-		45A33175298976BA008181E9 /* MatchDetailsAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */; };
 		45A33176298976BA008181E9 /* ChatNotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FDC2806D5720098854C /* ChatNotificationsViewController.swift */; };
 		45A33177298976BA008181E9 /* BetslipErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF4482750FC89006DD528 /* BetslipErrorView.swift */; };
 		45A33178298976BA008181E9 /* CompetitionSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B617C279EE6D2005DC376 /* CompetitionSearchTableViewCell.swift */; };
@@ -3084,7 +3082,6 @@
 		45A33220298976BA008181E9 /* BetslipSelectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495F2737C3630047169D /* BetslipSelectionState.swift */; };
 		45A33221298976BA008181E9 /* BonusDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1827D2784C008BAF41 /* BonusDetailViewController.swift */; };
 		45A33222298976BA008181E9 /* MatchFiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */; };
-		45A33223298976BA008181E9 /* HomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457BD60D27B6E45100E5612E /* HomeStore.swift */; };
 		45A33224298976BA008181E9 /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D8C271ED08400884BDF /* CGFloat+Extensions.swift */; };
 		45A33225298976BA008181E9 /* SportGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F0A8827C6468B003123DF /* SportGroupViewModel.swift */; };
 		45A33226298976BA008181E9 /* BonusAvailableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F79FE27D0D218008BAF41 /* BonusAvailableTableViewCell.swift */; };
@@ -3616,7 +3613,6 @@
 		45A6BC9E28246A7500D9B416 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CC226BD9D9000EC572D /* Localization.swift */; };
 		45A6BC9F28246A7500D9B416 /* NewGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D5E281179DA00E82724 /* NewGroupViewController.swift */; };
 		45A6BCA028246A7500D9B416 /* ChallengeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB426F3548D00E69D65 /* ChallengeSSWampMessage.swift */; };
-		45A6BCA128246A7500D9B416 /* MatchDetailsAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */; };
 		45A6BCA228246A7500D9B416 /* ChatNotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FDC2806D5720098854C /* ChatNotificationsViewController.swift */; };
 		45A6BCA328246A7500D9B416 /* BetslipErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF4482750FC89006DD528 /* BetslipErrorView.swift */; };
 		45A6BCA428246A7500D9B416 /* CompetitionSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B617C279EE6D2005DC376 /* CompetitionSearchTableViewCell.swift */; };
@@ -3749,7 +3745,6 @@
 		45A6BD2428246A7500D9B416 /* BetslipSelectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495F2737C3630047169D /* BetslipSelectionState.swift */; };
 		45A6BD2528246A7500D9B416 /* BonusDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1827D2784C008BAF41 /* BonusDetailViewController.swift */; };
 		45A6BD2628246A7500D9B416 /* MatchFiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */; };
-		45A6BD2728246A7500D9B416 /* HomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457BD60D27B6E45100E5612E /* HomeStore.swift */; };
 		45A6BD2828246A7500D9B416 /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D8C271ED08400884BDF /* CGFloat+Extensions.swift */; };
 		45A6BD2928246A7500D9B416 /* SportGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F0A8827C6468B003123DF /* SportGroupViewModel.swift */; };
 		45A6BD2A28246A7500D9B416 /* BonusAvailableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F79FE27D0D218008BAF41 /* BonusAvailableTableViewCell.swift */; };
@@ -4912,7 +4907,6 @@
 		A9C341B328F9A74A0055360B /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CC226BD9D9000EC572D /* Localization.swift */; };
 		A9C341B428F9A74A0055360B /* NewGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D5E281179DA00E82724 /* NewGroupViewController.swift */; };
 		A9C341B528F9A74A0055360B /* ChallengeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB426F3548D00E69D65 /* ChallengeSSWampMessage.swift */; };
-		A9C341B628F9A74A0055360B /* MatchDetailsAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */; };
 		A9C341B728F9A74A0055360B /* ChatNotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FDC2806D5720098854C /* ChatNotificationsViewController.swift */; };
 		A9C341B828F9A74A0055360B /* BetslipErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF4482750FC89006DD528 /* BetslipErrorView.swift */; };
 		A9C341B928F9A74A0055360B /* CompetitionSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B617C279EE6D2005DC376 /* CompetitionSearchTableViewCell.swift */; };
@@ -5079,7 +5073,6 @@
 		A9C3425C28F9A74A0055360B /* BetslipSelectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495F2737C3630047169D /* BetslipSelectionState.swift */; };
 		A9C3425D28F9A74A0055360B /* BonusDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1827D2784C008BAF41 /* BonusDetailViewController.swift */; };
 		A9C3425E28F9A74A0055360B /* MatchFiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */; };
-		A9C3425F28F9A74A0055360B /* HomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457BD60D27B6E45100E5612E /* HomeStore.swift */; };
 		A9C3426028F9A74A0055360B /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D8C271ED08400884BDF /* CGFloat+Extensions.swift */; };
 		A9C3426128F9A74A0055360B /* SportGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F0A8827C6468B003123DF /* SportGroupViewModel.swift */; };
 		A9C3426228F9A74A0055360B /* BonusAvailableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F79FE27D0D218008BAF41 /* BonusAvailableTableViewCell.swift */; };
@@ -5477,6 +5470,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		450088EF29CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterResponsibleGamingViewCell.swift; sourceTree = "<group>"; };
 		4502BF362798712E00F5B0CD /* HomeAwayCardStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAwayCardStatsView.swift; sourceTree = "<group>"; };
 		4502BF392798713C00F5B0CD /* HomeAwayCardStatsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeAwayCardStatsView.xib; sourceTree = "<group>"; };
 		4503D32C29C48100004CF6FF /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -5700,7 +5694,6 @@
 		457816B92707632400F66878 /* TitleTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleTableViewHeader.swift; sourceTree = "<group>"; };
 		457816BA2707632400F66878 /* TitleTableViewHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TitleTableViewHeader.xib; sourceTree = "<group>"; };
 		457BD60A27B6C00B00E5612E /* SportMatchLineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportMatchLineViewModel.swift; sourceTree = "<group>"; };
-		457BD60D27B6E45100E5612E /* HomeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeStore.swift; sourceTree = "<group>"; };
 		457BD61027BADEB100E5612E /* TestsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestsViewController.swift; sourceTree = "<group>"; };
 		457BD61127BADEB200E5612E /* TestsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestsViewController.xib; sourceTree = "<group>"; };
 		457BD61627BBAF6100E5612E /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
@@ -5777,7 +5770,6 @@
 		45936CAF270EEFA200E8260E /* LoadableContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadableContent.swift; sourceTree = "<group>"; };
 		45936CB2270EF02200E8260E /* SearchTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTextField.swift; sourceTree = "<group>"; };
 		45936CB5270EF04500E8260E /* SportType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportType.swift; sourceTree = "<group>"; };
-		45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailsAggregatorRepository.swift; sourceTree = "<group>"; };
 		45A0B301274FA3B800211A85 /* MarketGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketGroup.swift; sourceTree = "<group>"; };
 		45A16E122707B6C100A95C01 /* ListTypeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTypeCollectionViewCell.swift; sourceTree = "<group>"; };
 		45A16E132707B6C100A95C01 /* ListTypeCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListTypeCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -7945,7 +7937,6 @@
 		45B7DADD26F92CC30032C1C3 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				457EDABA2791ADEE00DDCD83 /* Sport.swift */,
 				45936CB5270EF04500E8260E /* SportType.swift */,
 				45B7DADE26F92CE40032C1C3 /* UserSession.swift */,
 				4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */,
@@ -8095,7 +8086,6 @@
 				45C3E8C827B190A1007A1A0F /* HomeViewController.swift */,
 				45C3E8CE27B40559007A1A0F /* HomeViewModel.swift */,
 				45A6BB8D2822B4BB00D9B416 /* TemplatesDataSources */,
-				457BD60D27B6E45100E5612E /* HomeStore.swift */,
 				45D8C9D527BD483D00C131E6 /* ViewModels */,
 				45D8C9D627BD484F00C131E6 /* Views */,
 			);
@@ -8176,6 +8166,7 @@
 				454E0AD32735709E00794E0C /* BettingTicket.swift */,
 				45711906294B9A27000395F0 /* BetType.swift */,
 				451ABD6529CB3B1D0062641F /* Match.swift */,
+				457EDABA2791ADEE00DDCD83 /* Sport.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -8227,6 +8218,7 @@
 				4540ED2D27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift */,
 				45628E7F27BFBE4900AAB160 /* CompetitionWidgetCollectionViewCell.swift */,
 				45A6BB962822FF4200D9B416 /* VideoPreviewLineTableViewCell.swift */,
+				450088EF29CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift */,
 				45A6BB9A2823D1B300D9B416 /* VideoPreviewCollectionViewCell.swift */,
 				A9B946A528BE67770091296E /* FeaturedTipLineTableViewCell.swift */,
 			);
@@ -9314,7 +9306,6 @@
 				A9BCF432274D1A77006DD528 /* MatchDetailsViewController.swift */,
 				A9BCF433274D1A77006DD528 /* MatchDetailsViewController.xib */,
 				453079372750EDBF00278B7C /* MatchDetailsViewModel.swift */,
-				45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */,
 				455C677227E24CCA00AAB2A5 /* MarketGroupDetails */,
 				4591358027602960009D1193 /* MarketGroupOrganizer.swift */,
 				A9BCF43A274FB589006DD528 /* Cells */,
@@ -11427,7 +11418,6 @@
 				450B795928F58574009229E3 /* Localization.swift in Sources */,
 				450B795A28F58574009229E3 /* NewGroupViewController.swift in Sources */,
 				450B795B28F58574009229E3 /* ChallengeSSWampMessage.swift in Sources */,
-				450B795C28F58574009229E3 /* MatchDetailsAggregatorRepository.swift in Sources */,
 				450B795D28F58574009229E3 /* ChatNotificationsViewController.swift in Sources */,
 				450B795E28F58574009229E3 /* BetslipErrorView.swift in Sources */,
 				450B795F28F58574009229E3 /* CompetitionSearchTableViewCell.swift in Sources */,
@@ -11609,7 +11599,6 @@
 				450B7A0228F58574009229E3 /* BetslipSelectionState.swift in Sources */,
 				450B7A0328F58574009229E3 /* BonusDetailViewController.swift in Sources */,
 				450B7A0428F58574009229E3 /* MatchFiltersViewController.swift in Sources */,
-				450B7A0528F58574009229E3 /* HomeStore.swift in Sources */,
 				450B7A0628F58574009229E3 /* CGFloat+Extensions.swift in Sources */,
 				450B7A0728F58574009229E3 /* SportGroupViewModel.swift in Sources */,
 				450B7A0828F58574009229E3 /* BonusAvailableTableViewCell.swift in Sources */,
@@ -11721,6 +11710,7 @@
 				450B7A6F28F58574009229E3 /* WebSocketSSWampTransport.swift in Sources */,
 				450B7A7028F58574009229E3 /* SettingsRowView.swift in Sources */,
 				450B7A7128F58574009229E3 /* TitleTableViewHeader.swift in Sources */,
+				450088F129CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */,
 				450B7A7228F58574009229E3 /* TabularViewDelegate.swift in Sources */,
 				450B7A7328F58574009229E3 /* BonusSwitchView.swift in Sources */,
 				450B7A7428F58574009229E3 /* ReceivedMessageTableViewCell.swift in Sources */,
@@ -12138,7 +12128,6 @@
 				A90FB80829B0F8B100D08A7C /* GenericAlertView.swift in Sources */,
 				457CBAC4282D27D000ED0F00 /* NewGroupViewController.swift in Sources */,
 				457CBAC5282D27D000ED0F00 /* ChallengeSSWampMessage.swift in Sources */,
-				457CBAC6282D27D000ED0F00 /* MatchDetailsAggregatorRepository.swift in Sources */,
 				457CBAC7282D27D000ED0F00 /* ChatNotificationsViewController.swift in Sources */,
 				A9C1C0AB28747FC600E9D6AC /* SelectChatroomTableViewCell.swift in Sources */,
 				457CBAC8282D27D000ED0F00 /* BetslipErrorView.swift in Sources */,
@@ -12313,7 +12302,6 @@
 				457CBB4C282D27D000ED0F00 /* BonusDetailViewController.swift in Sources */,
 				A982959B283B94D00014066A /* ConversationBetSelectionViewController.swift in Sources */,
 				457CBB4D282D27D000ED0F00 /* MatchFiltersViewController.swift in Sources */,
-				457CBB4E282D27D000ED0F00 /* HomeStore.swift in Sources */,
 				457CBB4F282D27D000ED0F00 /* CGFloat+Extensions.swift in Sources */,
 				457CBB50282D27D000ED0F00 /* SportGroupViewModel.swift in Sources */,
 				457CBB51282D27D000ED0F00 /* BonusAvailableTableViewCell.swift in Sources */,
@@ -12397,6 +12385,7 @@
 				457CBB8B282D27D000ED0F00 /* Bonus.swift in Sources */,
 				457CBB8C282D27D000ED0F00 /* LogViewerViewController.swift in Sources */,
 				A99DE667299E825900AA24AA /* RecoverPasswordViewModel.swift in Sources */,
+				450088F529CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */,
 				457CBB8D282D27D000ED0F00 /* TransactionsHistoryRootViewController.swift in Sources */,
 				457CBB8E282D27D000ED0F00 /* FavoritesManager.swift in Sources */,
 				45B6E208283E3F29001B570C /* EditGroupAddFriendViewModel.swift in Sources */,
@@ -12515,6 +12504,7 @@
 				457CBCAD282D2CD100ED0F00 /* GeoLocationManager.swift in Sources */,
 				457CBCAE282D2CD100ED0F00 /* SSWampError.swift in Sources */,
 				457CBCAF282D2CD100ED0F00 /* PersonalInfoViewController.swift in Sources */,
+				450088F629CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */,
 				45B6E230284151DE001B570C /* EditGroupViewController.swift in Sources */,
 				457CBCB0282D2CD100ED0F00 /* SharedBetData.swift in Sources */,
 				457CBCB1282D2CD100ED0F00 /* HeaderTextFieldView.swift in Sources */,
@@ -12762,7 +12752,6 @@
 				457CBD6C282D2CD100ED0F00 /* Localization.swift in Sources */,
 				457CBD6D282D2CD100ED0F00 /* NewGroupViewController.swift in Sources */,
 				457CBD6E282D2CD100ED0F00 /* ChallengeSSWampMessage.swift in Sources */,
-				457CBD6F282D2CD100ED0F00 /* MatchDetailsAggregatorRepository.swift in Sources */,
 				457CBD70282D2CD100ED0F00 /* ChatNotificationsViewController.swift in Sources */,
 				457CBD71282D2CD100ED0F00 /* BetslipErrorView.swift in Sources */,
 				A9C1C0AC28747FC600E9D6AC /* SelectChatroomTableViewCell.swift in Sources */,
@@ -12939,7 +12928,6 @@
 				457CBDF4282D2CD100ED0F00 /* BonusDetailViewController.swift in Sources */,
 				A982959C283B94D00014066A /* ConversationBetSelectionViewController.swift in Sources */,
 				457CBDF5282D2CD100ED0F00 /* MatchFiltersViewController.swift in Sources */,
-				457CBDF6282D2CD100ED0F00 /* HomeStore.swift in Sources */,
 				457CBDF7282D2CD100ED0F00 /* CGFloat+Extensions.swift in Sources */,
 				457CBDF8282D2CD100ED0F00 /* SportGroupViewModel.swift in Sources */,
 				457CBDF9282D2CD100ED0F00 /* BonusAvailableTableViewCell.swift in Sources */,
@@ -13395,7 +13383,6 @@
 				4589C84D282024E400243547 /* Localization.swift in Sources */,
 				4589C84E282024E400243547 /* NewGroupViewController.swift in Sources */,
 				4589C84F282024E400243547 /* ChallengeSSWampMessage.swift in Sources */,
-				4589C850282024E400243547 /* MatchDetailsAggregatorRepository.swift in Sources */,
 				4589C851282024E400243547 /* ChatNotificationsViewController.swift in Sources */,
 				4589C852282024E400243547 /* BetslipErrorView.swift in Sources */,
 				4589C853282024E400243547 /* CompetitionSearchTableViewCell.swift in Sources */,
@@ -13578,7 +13565,6 @@
 				4589C8CD282024E400243547 /* BetslipSelectionState.swift in Sources */,
 				4589C8CE282024E400243547 /* BonusDetailViewController.swift in Sources */,
 				4589C8CF282024E400243547 /* MatchFiltersViewController.swift in Sources */,
-				4589C8D0282024E400243547 /* HomeStore.swift in Sources */,
 				4589C8D1282024E400243547 /* CGFloat+Extensions.swift in Sources */,
 				4589C8D2282024E400243547 /* SportGroupViewModel.swift in Sources */,
 				4589C8D3282024E400243547 /* BonusAvailableTableViewCell.swift in Sources */,
@@ -13690,6 +13676,7 @@
 				4589C921282024E400243547 /* WebSocketSSWampTransport.swift in Sources */,
 				4589C922282024E400243547 /* SettingsRowView.swift in Sources */,
 				4589C923282024E400243547 /* TitleTableViewHeader.swift in Sources */,
+				450088F229CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */,
 				4589C924282024E400243547 /* TabularViewDelegate.swift in Sources */,
 				4589C925282024E400243547 /* BonusSwitchView.swift in Sources */,
 				4589C926282024E400243547 /* ReceivedMessageTableViewCell.swift in Sources */,
@@ -14028,7 +14015,6 @@
 				45A33172298976BA008181E9 /* Localization.swift in Sources */,
 				45A33173298976BA008181E9 /* NewGroupViewController.swift in Sources */,
 				45A33174298976BA008181E9 /* ChallengeSSWampMessage.swift in Sources */,
-				45A33175298976BA008181E9 /* MatchDetailsAggregatorRepository.swift in Sources */,
 				45A33176298976BA008181E9 /* ChatNotificationsViewController.swift in Sources */,
 				45A33177298976BA008181E9 /* BetslipErrorView.swift in Sources */,
 				45A33178298976BA008181E9 /* CompetitionSearchTableViewCell.swift in Sources */,
@@ -14210,7 +14196,6 @@
 				45A33220298976BA008181E9 /* BetslipSelectionState.swift in Sources */,
 				45A33221298976BA008181E9 /* BonusDetailViewController.swift in Sources */,
 				45A33222298976BA008181E9 /* MatchFiltersViewController.swift in Sources */,
-				45A33223298976BA008181E9 /* HomeStore.swift in Sources */,
 				45A33224298976BA008181E9 /* CGFloat+Extensions.swift in Sources */,
 				45A33225298976BA008181E9 /* SportGroupViewModel.swift in Sources */,
 				45A33226298976BA008181E9 /* BonusAvailableTableViewCell.swift in Sources */,
@@ -14321,6 +14306,7 @@
 				45A3328F298976BA008181E9 /* WebSocketSSWampTransport.swift in Sources */,
 				45A33290298976BA008181E9 /* SettingsRowView.swift in Sources */,
 				45A33291298976BA008181E9 /* TitleTableViewHeader.swift in Sources */,
+				450088F029CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */,
 				45A33292298976BA008181E9 /* TabularViewDelegate.swift in Sources */,
 				45A33293298976BA008181E9 /* BonusSwitchView.swift in Sources */,
 				45A33294298976BA008181E9 /* ReceivedMessageTableViewCell.swift in Sources */,
@@ -14657,7 +14643,6 @@
 				45A6BC9E28246A7500D9B416 /* Localization.swift in Sources */,
 				45A6BC9F28246A7500D9B416 /* NewGroupViewController.swift in Sources */,
 				45A6BCA028246A7500D9B416 /* ChallengeSSWampMessage.swift in Sources */,
-				45A6BCA128246A7500D9B416 /* MatchDetailsAggregatorRepository.swift in Sources */,
 				45A6BCA228246A7500D9B416 /* ChatNotificationsViewController.swift in Sources */,
 				45A6BCA328246A7500D9B416 /* BetslipErrorView.swift in Sources */,
 				45A6BCA428246A7500D9B416 /* CompetitionSearchTableViewCell.swift in Sources */,
@@ -14832,7 +14817,6 @@
 				45A6BD2428246A7500D9B416 /* BetslipSelectionState.swift in Sources */,
 				45A6BD2528246A7500D9B416 /* BonusDetailViewController.swift in Sources */,
 				45A6BD2628246A7500D9B416 /* MatchFiltersViewController.swift in Sources */,
-				45A6BD2728246A7500D9B416 /* HomeStore.swift in Sources */,
 				45A6BD2828246A7500D9B416 /* CGFloat+Extensions.swift in Sources */,
 				45A6BD2928246A7500D9B416 /* SportGroupViewModel.swift in Sources */,
 				45A6BD2A28246A7500D9B416 /* BonusAvailableTableViewCell.swift in Sources */,
@@ -14961,6 +14945,7 @@
 				A9DF8E0428DDF64C0083BF56 /* UserInfoMultipleCardView.swift in Sources */,
 				45A6BD8128246A7500D9B416 /* Event.swift in Sources */,
 				45C10E2128759FEF00037BBE /* KDCircularProgress.swift in Sources */,
+				450088F429CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */,
 				A9B331DF288FFFE000D097F0 /* MessagesViewModel.swift in Sources */,
 				F4A62A8A2850FAB5007B46C5 /* CasinoGameDetailViewController.swift in Sources */,
 				45A6BD8228246A7500D9B416 /* SportMatchSingleLineTableViewCell.swift in Sources */,
@@ -15285,7 +15270,6 @@
 				A9C341B328F9A74A0055360B /* Localization.swift in Sources */,
 				A9C341B428F9A74A0055360B /* NewGroupViewController.swift in Sources */,
 				A9C341B528F9A74A0055360B /* ChallengeSSWampMessage.swift in Sources */,
-				A9C341B628F9A74A0055360B /* MatchDetailsAggregatorRepository.swift in Sources */,
 				A9C341B728F9A74A0055360B /* ChatNotificationsViewController.swift in Sources */,
 				A9C341B828F9A74A0055360B /* BetslipErrorView.swift in Sources */,
 				A9C341B928F9A74A0055360B /* CompetitionSearchTableViewCell.swift in Sources */,
@@ -15424,6 +15408,7 @@
 				A9C3439228F9A7DC0055360B /* TargetVariables.swift in Sources */,
 				A9C3423D28F9A74A0055360B /* LiveEventsViewModel.swift in Sources */,
 				A9C3423E28F9A74A0055360B /* SSWampSession.swift in Sources */,
+				450088F329CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */,
 				A9C3423F28F9A74A0055360B /* SharedTicketBetLineView.swift in Sources */,
 				A9C3424028F9A74A0055360B /* SubmitedBetTableViewCellViewModel.swift in Sources */,
 				A9C3424128F9A74A0055360B /* ShareTicketFriendGroupViewModel.swift in Sources */,
@@ -15457,7 +15442,6 @@
 				A9C3425C28F9A74A0055360B /* BetslipSelectionState.swift in Sources */,
 				A9C3425D28F9A74A0055360B /* BonusDetailViewController.swift in Sources */,
 				A9C3425E28F9A74A0055360B /* MatchFiltersViewController.swift in Sources */,
-				A9C3425F28F9A74A0055360B /* HomeStore.swift in Sources */,
 				A9C3426028F9A74A0055360B /* CGFloat+Extensions.swift in Sources */,
 				A9C3426128F9A74A0055360B /* SportGroupViewModel.swift in Sources */,
 				A9C3426228F9A74A0055360B /* BonusAvailableTableViewCell.swift in Sources */,
@@ -15684,7 +15668,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 541;
+				CURRENT_PROJECT_VERSION = 543;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15710,7 +15694,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 541;
+				CURRENT_PROJECT_VERSION = 543;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15903,7 +15887,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/EveryMatrix/Misc/EveryMatrix.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 541;
+				CURRENT_PROJECT_VERSION = 543;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/EveryMatrix/Misc/EveryMatrix-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15929,7 +15913,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/EveryMatrix/Misc/EveryMatrix.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 541;
+				CURRENT_PROJECT_VERSION = 543;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/EveryMatrix/Misc/EveryMatrix-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15955,7 +15939,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Crocobet/Misc/Crocobet.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 541;
+				CURRENT_PROJECT_VERSION = 543;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Crocobet/Misc/Crocobet-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15981,7 +15965,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Crocobet/Misc/Crocobet.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 541;
+				CURRENT_PROJECT_VERSION = 543;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Crocobet/Misc/Crocobet-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16007,7 +15991,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 541;
+				CURRENT_PROJECT_VERSION = 543;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16033,7 +16017,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 541;
+				CURRENT_PROJECT_VERSION = 543;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16059,7 +16043,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 541;
+				CURRENT_PROJECT_VERSION = 543;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16085,7 +16069,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 541;
+				CURRENT_PROJECT_VERSION = 543;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16111,7 +16095,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/DAZN/Misc/DAZN.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 541;
+				CURRENT_PROJECT_VERSION = 543;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/DAZN/Misc/DAZN-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16137,7 +16121,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/DAZN/Misc/DAZN.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 541;
+				CURRENT_PROJECT_VERSION = 543;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/DAZN/Misc/DAZN-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16164,7 +16148,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASportRadar/Misc/GOMASportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 541;
+				CURRENT_PROJECT_VERSION = 543;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASportRadar/Misc/GOMASportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16191,7 +16175,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASportRadar/Misc/GOMASportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 541;
+				CURRENT_PROJECT_VERSION = 543;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASportRadar/Misc/GOMASportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

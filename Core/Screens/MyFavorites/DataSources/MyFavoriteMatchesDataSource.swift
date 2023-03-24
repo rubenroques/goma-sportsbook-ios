@@ -24,11 +24,8 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
 
     var collapsedSportSections: Set<Int> = []
 
-    var store: FavoritesAggregatorsRepository
-
-    init(userFavoriteMatches: [Match], store: FavoritesAggregatorsRepository) {
+    init(userFavoriteMatches: [Match]) {
         self.userFavoriteMatches = userFavoriteMatches
-        self.store = store
         super.init()
     }
 
@@ -38,11 +35,11 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
         self.userFavoritesBySportsArray = []
 
         for match in favoriteMatches {
-            if self.matchesBySportList[match.sportType] != nil {
-                self.matchesBySportList[match.sportType]?.append(match)
+            if self.matchesBySportList[match.sport.name] != nil {
+                self.matchesBySportList[match.sport.name]?.append(match)
             }
             else {
-                self.matchesBySportList[match.sportType] = [match]
+                self.matchesBySportList[match.sport.name] = [match]
             }
         }
 
@@ -99,16 +96,7 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
                     cell.matchStatsViewModel = matchStatsViewModel
                 }
 
-                let store = self.store as AggregatorStore
-                
-                if store.hasMatchesInfoForMatch(withId: match.id) {
-                    cell.setupWithMatch(match, liveMatch: true, store: store)
-                }
-                else {
-                    cell.setupWithMatch(match, store: store)
-                }
-
-                cell.setupFavoriteMatchInfoPublisher(match: match)
+                cell.setupWithMatch(match)
                 cell.tappedMatchLineAction = { [weak self] in
                     self?.didSelectMatchAction?(match)
                 }
@@ -142,8 +130,8 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
 
             if let favoriteMatch = self.userFavoritesBySportsArray[section].matches.first {
 
-                let sportName = favoriteMatch.sportType
-                let sportTypeId = favoriteMatch.sportType
+                let sportName = favoriteMatch.sport.name
+                let sportTypeId = favoriteMatch.sport.name
 
                 headerView.configureHeader(title: sportName, sportTypeId: sportTypeId)
 

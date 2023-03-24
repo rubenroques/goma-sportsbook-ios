@@ -936,3 +936,5 @@
 "department_of_birth" = "Département de naissance";
 "street_name" = "Nom de rue";
 "street_number" = "Numéro de rue";
+
+"no_value" = "-.--€";

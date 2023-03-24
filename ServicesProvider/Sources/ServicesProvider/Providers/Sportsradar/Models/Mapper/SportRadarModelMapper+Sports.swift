@@ -11,6 +11,7 @@ import SharedModels
 extension SportRadarModelMapper {
 
     static func sportType(fromSportRadarSportType sportRadarSportType: SportRadarModels.SportType) -> SportType {
+
         // Try get the internal sport id name
         let cleanedSportRadarSportTypeName = Self.simplify(string: sportRadarSportType.name)
         let sportTypeInfoId = SportTypeInfo.allCases.first { sportTypeInfo in
@@ -31,6 +32,7 @@ extension SportRadarModelMapper {
     }
 
     static func sportType(fromSportNode sportNode: SportRadarModels.SportNode) -> SportRadarModels.SportType {
+
         let sportUnique = SportRadarModels.SportType(name: sportNode.name,
                                     numericId: sportNode.id,
                                     alphaId: nil,
@@ -41,6 +43,8 @@ extension SportRadarModelMapper {
     }
 
     static func sportType(fromScheduledSport scheduledSport: SportRadarModels.ScheduledSport) -> SportRadarModels.SportType {
+
+
         let sportUnique = SportRadarModels.SportType(name: scheduledSport.name,
                                                      numericId: nil,
                                                      alphaId: scheduledSport.id,

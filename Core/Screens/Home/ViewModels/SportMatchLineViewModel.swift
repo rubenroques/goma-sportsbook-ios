@@ -52,8 +52,6 @@ class SportMatchLineViewModel {
     var loadingPublisher: CurrentValueSubject<LoadingState, Never> = .init(.loading)
     var layoutTypePublisher: CurrentValueSubject<LayoutType, Never> = .init(.doubleLine)
 
-    var store: HomeStore
-
     var sport: Sport
     var topCompetitions: [Competition]?
 
@@ -80,11 +78,10 @@ class SportMatchLineViewModel {
     private var cancellables: Set<AnyCancellable> = []
     private var subscriptions = Set<ServicesProvider.Subscription>()
 
-    init(sport: Sport, matchesType: MatchesType, store: HomeStore) {
+    init(sport: Sport, matchesType: MatchesType) {
 
         self.sport = sport
         self.matchesType = matchesType
-        self.store = store
 
         switch matchesType {
 
@@ -392,27 +389,6 @@ extension SportMatchLineViewModel {
         return (matchEventsGroups, competitionEventsGroups)
     }
 
-    func storeOutrightCompetitions(aggregator: EveryMatrix.Aggregator) {
-
-        self.store.storeOutrightTournaments(aggregator)
-
-        let localOutrightCompetitions = self.store.outrightTournaments.values.map { rawTournament -> Competition in
-            var location: Location?
-            if let rawLocation = self.store.location(forId: rawTournament.venueId ?? "") {
-                location = Location(id: rawLocation.id,
-                                    name: rawLocation.name ?? "",
-                                    isoCode: rawLocation.code ?? "")
-            }
-
-            return Competition.init(id: rawTournament.id,
-                             name: rawTournament.name ?? "",
-                             venue: location,
-                             numberOutrightMarkets: rawTournament.numberOfOutrightMarkets ?? 0)
-        }
-
-        self.outrightCompetitions = Array(localOutrightCompetitions.prefix(2))
-        self.updatedContent()
-    }
 
     private func finishedWithError() {
         self.loadingPublisher.send(.empty)
@@ -463,10 +439,6 @@ extension SportMatchLineViewModel {
         }
 
         self.refreshPublisher.send()
-    }
-
-    func updateMatches(fromAggregator aggregator: EveryMatrix.Aggregator) {
-        self.store.updateContent(fromAggregator: aggregator)
     }
 
 }

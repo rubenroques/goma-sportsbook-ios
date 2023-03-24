@@ -23,7 +23,6 @@ class MatchLineTableViewCell: UITableViewCell {
     private var cachedCardsStyle: CardsStyle?
 
     private var match: Match?
-    private var store: AggregatorStore?
 
     private var shouldShowCountryFlag: Bool = true
     private var showingBackSliderView: Bool = false
@@ -123,7 +122,6 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionView.layoutSubviews()
         self.collectionView.setContentOffset(CGPoint(x: -self.collectionView.contentInset.left, y: 1), animated: false)
 
-        self.store = nil
         self.match = nil
 
         self.matchStatsViewModel = nil
@@ -166,31 +164,14 @@ class MatchLineTableViewCell: UITableViewCell {
         self.backSliderView.backgroundColor = UIColor.App.buttonBackgroundSecondary
     }
 
-    func setupWithMatch(_ match: Match, liveMatch: Bool = false, store: AggregatorStore) {
+    func setupWithMatch(_ match: Match, liveMatch: Bool = false) {
         
         self.match = match
         self.liveMatch = liveMatch
 
-        self.store = store
-
         UIView.performWithoutAnimation {
             self.collectionView.reloadSections(IndexSet(integer: 0))
         }
-    }
-
-    func setupFavoriteMatchInfoPublisher(match: Match) {
-        if let store = self.store, !store.hasMatchesInfoForMatch(withId: match.id) {
-            self.matchInfoPublisher = store.matchesInfoForMatchListPublisher()?
-                .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { [weak self] value in
-                    if value.contains(match.id) {
-                        self?.matchInfoPublisher?.cancel()
-                        self?.matchInfoPublisher = nil
-                        self?.matchWentLive?()
-                    }
-                })
-        }
-
     }
 
     func shouldShowCountryFlag(_ show: Bool) {
@@ -312,65 +293,28 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
 
         if indexPath.row == 0 {
 
-            var store: AggregatorStore = Env.everyMatrixStorage
-            if let storeValue = self.store {
-                store = storeValue
-            }
+            guard
+                let cell = collectionView.dequeueCellType(MatchWidgetCollectionViewCell.self, indexPath: indexPath)
 
-            if let match = self.match, store.hasMatchesInfoForMatch(withId: match.id) {
-                self.liveMatch = true
-            }
             else {
-                self.liveMatch = false
+                fatalError()
             }
+            if let match = self.match {
 
-            if !self.liveMatch {
-                guard
-                    let cell = collectionView.dequeueCellType(MatchWidgetCollectionViewCell.self, indexPath: indexPath)
+                let cellViewModel = MatchWidgetCellViewModel(match: match)
+                cell.configure(withViewModel: cellViewModel)
 
-                else {
-                    fatalError()
+                cell.tappedMatchWidgetAction = {
+                    self.tappedMatchLineAction?()
                 }
-                if let match = self.match {
 
-                    let cellViewModel = MatchWidgetCellViewModel(match: match, store: store)
-                    cell.configure(withViewModel: cellViewModel)
-
-                    cell.tappedMatchWidgetAction = {
-                        self.tappedMatchLineAction?()
-                    }
-
-                    cell.didLongPressOdd = { bettingTicket in
-                        self.didLongPressOdd?(bettingTicket)
-                    }
+                cell.didLongPressOdd = { bettingTicket in
+                    self.didLongPressOdd?(bettingTicket)
                 }
-                cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
-
-                return cell
             }
-            else {
-                guard
-                    let cell = collectionView.dequeueCellType(LiveMatchWidgetCollectionViewCell.self, indexPath: indexPath)
-                else {
-                    fatalError()
-                }
+            cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
 
-                if let match = self.match {
-                    let cellViewModel = MatchWidgetCellViewModel(match: match, store: store)
-
-                    cell.configure(withViewModel: cellViewModel)
-
-                    cell.tappedMatchWidgetAction = {
-                        self.tappedMatchLineAction?()
-                    }
-
-                    cell.didLongPressOdd = { bettingTicket in
-                        self.didLongPressOdd?(bettingTicket)
-                    }
-                }
-                cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
-                return cell
-            }
+            return cell
         }
         else {
             if let match = self.match, let market = match.markets[safe: indexPath.row] {
@@ -381,9 +325,9 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 if market.outcomes.count == 2 {
                     if let cell = collectionView.dequeueCellType(OddDoubleCollectionViewCell.self, indexPath: indexPath) {
                         cell.matchStatsViewModel = self.matchStatsViewModel
-                        if let store = self.store {
-                            cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso, store: store)
-                        }
+                        cell.setupWithMarket(market, match: match,
+                                             teamsText: teamsText,
+                                             countryIso: countryIso)
                         cell.tappedMatchWidgetAction = {
                             self.tappedMatchLineAction?()
                         }
@@ -398,9 +342,9 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 else {
                     if let cell = collectionView.dequeueCellType(OddTripleCollectionViewCell.self, indexPath: indexPath) {
                         cell.matchStatsViewModel = self.matchStatsViewModel
-                        if let store = self.store {
-                            cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso, store: store)
-                        }
+                        cell.setupWithMarket(market, match: match,
+                                             teamsText: teamsText,
+                                             countryIso: countryIso)
                         cell.tappedMatchWidgetAction = {
                             self.tappedMatchLineAction?()
                         }

@@ -256,111 +256,111 @@ class AggregatorsRepository {
     }
 
     func matchesForListType(_ listType: AggregatorListType) -> [Match] {
-
-        guard let matchesIds = self.matchesForType[listType] else {
-            return []
-        }
-
-        let rawMatchesList = matchesIds.map { id in
-            return matches[id]
-        }
-        .compactMap({$0})
-
-        var matchesList: [Match] = []
-
-        for rawMatch in rawMatchesList {
-
-            var matchMarkets: [Market] = []
-
-            let marketsIds = self.marketsForMatch[rawMatch.id] ?? []
-            let rawMarketsList = marketsIds.map { id in
-                return self.marketsPublishers[id]?.value
-            }
-            .compactMap({$0})
-
-            for rawMarket  in rawMarketsList {
-
-                let rawOutcomeIds = self.bettingOutcomesForMarket[rawMarket.id] ?? []
-
-                let rawOutcomesList = rawOutcomeIds.map { id in
-                    return self.betOutcomes[id]
-                }
-                .compactMap({$0})
-
-                var outcomes: [Outcome] = []
-                for rawOutcome in rawOutcomesList {
-
-                    if let rawBettingOffer = self.bettingOffers[rawOutcome.id] {
-                        let bettingOffer = BettingOffer(id: rawBettingOffer.id,
-                                                        decimalOdd: rawBettingOffer.oddsValue ?? 0.0,
-                                                        statusId: rawBettingOffer.statusId ?? "1",
-                                                        isLive: rawBettingOffer.isLive ?? false,
-                                                        isAvailable: rawBettingOffer.isAvailable ?? true)
-
-                        let outcome = Outcome(id: rawOutcome.id,
-                                              codeName: rawOutcome.headerNameKey ?? "",
-                                              typeName: rawOutcome.headerName ?? "",
-                                              translatedName: rawOutcome.translatedName ?? "",
-                                              nameDigit1: rawOutcome.paramFloat1,
-                                              nameDigit2: rawOutcome.paramFloat2,
-                                              nameDigit3: rawOutcome.paramFloat3,
-                                              paramBoolean1: rawOutcome.paramBoolean1,
-                                              marketName: rawMarket.shortName ?? "",
-                                              marketId: rawMarket.id,
-                                              bettingOffer: bettingOffer)
-                        outcomes.append(outcome)
-                    }
-                }
-
-                let sortedOutcomes = outcomes.sorted { out1, out2 in
-                    let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1.codeName)
-                    let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2.codeName)
-                    return out1Value < out2Value
-                }
-
-                let market = Market(id: rawMarket.id,
-                                    typeId: rawMarket.bettingTypeId ?? "",
-                                    name: rawMarket.shortName ?? "",
-                                    nameDigit1: rawMarket.paramFloat1,
-                                    nameDigit2: rawMarket.paramFloat2,
-                                    nameDigit3: rawMarket.paramFloat3,
-                                    eventPartId: rawMarket.eventPartId,
-                                    bettingTypeId: rawMarket.bettingTypeId,
-                                    outcomes: sortedOutcomes)
-                matchMarkets.append(market)
-            }
-
-            let sortedMarkets = matchMarkets.sorted { market1, market2 in
-                let position1 = mainMarketsOrder.firstIndex(of: market1.typeId) ?? 10000
-                let position2 = mainMarketsOrder.firstIndex(of: market2.typeId) ?? 10000
-                return position1 < position2
-            }
-
-            var location: Location?
-            if let rawLocation = self.location(forId: rawMatch.venueId ?? "") {
-                location = Location(id: rawLocation.id, name: rawLocation.name ?? "", isoCode: rawLocation.code ?? "")
-            }
-
-            let match = Match(id: rawMatch.id,
-                              competitionId: rawMatch.parentId ?? "",
-                              competitionName: rawMatch.parentName ?? "",
-                              homeParticipant: Participant(id: rawMatch.homeParticipantId ?? "",
-                                                           name: rawMatch.homeParticipantName ?? ""),
-                              awayParticipant: Participant(id: rawMatch.awayParticipantId ?? "",
-                                                           name: rawMatch.awayParticipantName ?? ""),
-                              date: rawMatch.startDate ?? Date(timeIntervalSince1970: 0),
-                              sportType: rawMatch.sportId ?? "",
-                              sportCode: rawMatch.shortSportName ?? "",
-                              venue: location,
-                              numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
-                              markets: sortedMarkets,
-                              rootPartId: rawMatch.rootPartId ?? "",
-                              status: .unknown)
-
-            matchesList.append(match)
-        }
-
-        return matchesList
+        return []
+//
+//        guard let matchesIds = self.matchesForType[listType] else {
+//            return []
+//        }
+//
+//        let rawMatchesList = matchesIds.map { id in
+//            return matches[id]
+//        }
+//        .compactMap({$0})
+//
+//        var matchesList: [Match] = []
+//
+//        for rawMatch in rawMatchesList {
+//
+//            var matchMarkets: [Market] = []
+//
+//            let marketsIds = self.marketsForMatch[rawMatch.id] ?? []
+//            let rawMarketsList = marketsIds.map { id in
+//                return self.marketsPublishers[id]?.value
+//            }
+//            .compactMap({$0})
+//
+//            for rawMarket  in rawMarketsList {
+//
+//                let rawOutcomeIds = self.bettingOutcomesForMarket[rawMarket.id] ?? []
+//
+//                let rawOutcomesList = rawOutcomeIds.map { id in
+//                    return self.betOutcomes[id]
+//                }
+//                .compactMap({$0})
+//
+//                var outcomes: [Outcome] = []
+//                for rawOutcome in rawOutcomesList {
+//
+//                    if let rawBettingOffer = self.bettingOffers[rawOutcome.id] {
+//                        let bettingOffer = BettingOffer(id: rawBettingOffer.id,
+//                                                        decimalOdd: rawBettingOffer.oddsValue ?? 0.0,
+//                                                        statusId: rawBettingOffer.statusId ?? "1",
+//                                                        isLive: rawBettingOffer.isLive ?? false,
+//                                                        isAvailable: rawBettingOffer.isAvailable ?? true)
+//
+//                        let outcome = Outcome(id: rawOutcome.id,
+//                                              codeName: rawOutcome.headerNameKey ?? "",
+//                                              typeName: rawOutcome.headerName ?? "",
+//                                              translatedName: rawOutcome.translatedName ?? "",
+//                                              nameDigit1: rawOutcome.paramFloat1,
+//                                              nameDigit2: rawOutcome.paramFloat2,
+//                                              nameDigit3: rawOutcome.paramFloat3,
+//                                              paramBoolean1: rawOutcome.paramBoolean1,
+//                                              marketName: rawMarket.shortName ?? "",
+//                                              marketId: rawMarket.id,
+//                                              bettingOffer: bettingOffer)
+//                        outcomes.append(outcome)
+//                    }
+//                }
+//
+//                let sortedOutcomes = outcomes.sorted { out1, out2 in
+//                    let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1.codeName)
+//                    let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2.codeName)
+//                    return out1Value < out2Value
+//                }
+//
+//                let market = Market(id: rawMarket.id,
+//                                    typeId: rawMarket.bettingTypeId ?? "",
+//                                    name: rawMarket.shortName ?? "",
+//                                    nameDigit1: rawMarket.paramFloat1,
+//                                    nameDigit2: rawMarket.paramFloat2,
+//                                    nameDigit3: rawMarket.paramFloat3,
+//                                    eventPartId: rawMarket.eventPartId,
+//                                    bettingTypeId: rawMarket.bettingTypeId,
+//                                    outcomes: sortedOutcomes)
+//                matchMarkets.append(market)
+//            }
+//
+//            let sortedMarkets = matchMarkets.sorted { market1, market2 in
+//                let position1 = mainMarketsOrder.firstIndex(of: market1.typeId) ?? 10000
+//                let position2 = mainMarketsOrder.firstIndex(of: market2.typeId) ?? 10000
+//                return position1 < position2
+//            }
+//
+//            var location: Location?
+//            if let rawLocation = self.location(forId: rawMatch.venueId ?? "") {
+//                location = Location(id: rawLocation.id, name: rawLocation.name ?? "", isoCode: rawLocation.code ?? "")
+//            }
+//
+//            let match = Match(id: rawMatch.id,
+//                              competitionId: rawMatch.parentId ?? "",
+//                              competitionName: rawMatch.parentName ?? "",
+//                              homeParticipant: Participant(id: rawMatch.homeParticipantId ?? "",
+//                                                           name: rawMatch.homeParticipantName ?? ""),
+//                              awayParticipant: Participant(id: rawMatch.awayParticipantId ?? "",
+//                                                           name: rawMatch.awayParticipantName ?? ""),
+//                              date: rawMatch.startDate ?? Date(timeIntervalSince1970: 0),
+//                              sportType: rawMatch.sportId ?? "",
+//                              sportCode: rawMatch.shortSportName ?? "",
+//                              venue: location,
+//                              numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
+//                              markets: sortedMarkets,
+//                              rootPartId: rawMatch.rootPartId ?? "",
+//                              status: .unknown)
+//
+//            matchesList.append(match)
+//        }
+//       return matchesList
     }
 
     func location(forId id: String) -> EveryMatrix.Location? {

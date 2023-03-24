@@ -354,6 +354,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.seeAllBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
         self.seeAllLabel.textColor = UIColor.App.textPrimary
 
+        self.sportTypeImageView.setTintColor(color: UIColor.App.textPrimary)
+
         if isLeftOutcomeButtonSelected {
             self.homeBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
             self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
@@ -495,7 +497,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
         }
 
-        if let imageName = self.viewModel?.match?.sportType {
+        if let imageName = self.viewModel?.match?.sport.id {
             if let sportIconImage = UIImage(named: "sport_type_icon_\(imageName)") {
                 self.sportTypeImageView.image = sportIconImage
             }
@@ -507,16 +509,17 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.sportTypeImageView.isHidden = true
         }
 
+        self.sportTypeImageView.setTintColor(color: UIColor.App.textPrimary)
+
         guard
             let match = viewModel.match
         else {
             return
         }
 
-
         self.matchSubscriber?.cancel()
         self.matchSubscriber = nil
-
+        
         self.matchSubscriber = Env.servicesProvider.subscribeToEventUpdates(withId: match.id)
             .compactMap({ $0 })
             .map(ServiceProviderModelMapper.match(fromEvent:))

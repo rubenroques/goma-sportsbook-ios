@@ -304,7 +304,7 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                     fatalError()
                 }
 
-                let cellViewModel = MatchWidgetCellViewModel(match: match, store: viewModel.store)
+                let cellViewModel = MatchWidgetCellViewModel(match: match)
 
                 cell.configure(withViewModel: cellViewModel)
                 cell.tappedMatchWidgetAction = { [weak self] in
@@ -324,7 +324,7 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                     fatalError()
                 }
 
-                let cellViewModel = MatchWidgetCellViewModel(match: match, store: viewModel.store)
+                let cellViewModel = MatchWidgetCellViewModel(match: match)
 
                 cell.configure(withViewModel: cellViewModel)
                 cell.tappedMatchWidgetAction = { [weak self] in
@@ -357,8 +357,7 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
 
                         cell.setupWithMarket(market, match: match,
                                              teamsText: teamsText,
-                                             countryIso: countryIso,
-                                             store: viewModel.store)
+                                             countryIso: countryIso)
                         cell.tappedMatchWidgetAction = { [weak self] in
                             self?.tappedMatchLineAction?(match)
                         }
@@ -379,8 +378,7 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
 
                         cell.setupWithMarket(market, match: match,
                                              teamsText: teamsText,
-                                             countryIso: countryIso,
-                                             store: viewModel.store)
+                                             countryIso: countryIso)
                         cell.tappedMatchWidgetAction = { [weak self] in
                             self?.tappedMatchLineAction?(match)
                         }

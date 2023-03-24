@@ -17,7 +17,7 @@ enum FavoritesAggregatorListType {
 }
 
 class FavoritesAggregatorsRepository {
-
+/*
     var matchesForType: [FavoritesAggregatorListType: [String] ] = [:]
     var matches: [String: EveryMatrix.Match] = [:]
     var marketsForMatch: [String: Set<String>] = [:]
@@ -371,5 +371,5 @@ extension FavoritesAggregatorsRepository: AggregatorStore {
         let matchesInfo = matchesInfo
         return matchesInfo
     }
-    
+*/
 }

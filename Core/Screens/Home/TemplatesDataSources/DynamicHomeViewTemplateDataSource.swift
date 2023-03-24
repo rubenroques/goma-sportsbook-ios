@@ -10,8 +10,6 @@ import Combine
 
 class DynamicHomeViewTemplateDataSource {
 
-    private var store: HomeStore
-
     private var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
     private var alertsArray: [ActivationAlert] = []
@@ -20,17 +18,6 @@ class DynamicHomeViewTemplateDataSource {
     private var bannersLineViewModel: BannerLineCellViewModel?
 
     //
-    private var favoriteMatchesIds: [String] = [] {
-        didSet {
-            var matches: [Match] = []
-            for matchId in self.favoriteMatchesIds {
-                if let match = self.store.matchWithId(id: matchId) {
-                    matches.append(match)
-                }
-            }
-            self.favoriteMatches = matches
-        }
-    }
     private var favoriteMatches: [Match] = [] {
         didSet {
             self.refreshPublisher.send()
@@ -67,8 +54,8 @@ class DynamicHomeViewTemplateDataSource {
     //
     private var cancellables: Set<AnyCancellable> = []
 
-    init(store: HomeStore, homeFeedTemplate: HomeFeedTemplate) {
-        self.store = store
+    init(homeFeedTemplate: HomeFeedTemplate) {
+
         self.homeFeedTemplate = homeFeedTemplate
 
         var bannerCellViewModels: [BannerCellViewModel] = []
@@ -186,66 +173,6 @@ class DynamicHomeViewTemplateDataSource {
     // Favorites
     private func fetchFavoriteMatches() {
 
-        if let favoriteMatchesRegister = favoriteMatchesRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteMatchesRegister)
-        }
-
-        guard let userId = Env.userSessionStore.userSessionPublisher.value?.userId else { return }
-
-        let endpoint = TSRouter.favoriteMatchesPublisher(operatorId: Env.appSession.operatorId,
-                                                      language: "en",
-                                                      userId: userId)
-
-        self.favoriteMatchesPublisher?.cancel()
-        self.favoriteMatchesPublisher = nil
-
-        self.favoriteMatchesPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving Favorite data!")
-
-                case .finished:
-                    print("Favorite Data retrieved!")
-                }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    print("PreLiveEventsViewModel favoriteMatchesPublisher connect")
-                    self?.favoriteMatchesRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    print("PreLiveEventsViewModel favoriteMatchesPublisher initialContent")
-                    self?.setupFavoriteMatchesAggregatorProcessor(aggregator: aggregator)
-                case .updatedContent(let aggregatorUpdates):
-                    print("PreLiveEventsViewModel favoriteMatchesPublisher updatedContent")
-                    self?.updateFavoriteMatchesAggregatorProcessor(aggregator: aggregatorUpdates)
-                case .disconnect:
-                    print("PreLiveEventsViewModel favoriteMatchesPublisher disconnect")
-                }
-
-            })
-    }
-
-    private func setupFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        self.store.storeContent(fromAggregator: aggregator)
-
-        var matchesIds: [String] = []
-        for content in aggregator.content ?? [] {
-            switch content {
-            case .match(let matchContent):
-                matchesIds.append(matchContent.id)
-            default:
-                ()
-            }
-        }
-
-        self.favoriteMatchesIds = Array(matchesIds.prefix(2))
-    }
-
-    private func updateFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        self.store.updateContent(fromAggregator: aggregator)
     }
 
     // Suggested Bets
@@ -418,7 +345,7 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         }
         else {
             let sport = Sport(id: sportId, name: name.capitalized, alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0)
-            let sportGroupViewModel = SportGroupViewModel(sport: sport, contents: contents, store: self.store)
+            let sportGroupViewModel = SportGroupViewModel(sport: sport, contents: contents)
             sportGroupViewModel.requestRefreshPublisher
                 .sink { [weak self] _ in
                     self?.refreshPublisher.send()
@@ -472,10 +399,6 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             cachedMatchStatsViewModels[match.id] = viewModel
             return viewModel
         }
-    }
-
-    func isMatchLive(withMatchId matchId: String) -> Bool {
-        return self.store.hasMatchesInfoForMatch(withId: matchId)
     }
 
 }

@@ -53,16 +53,8 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
             if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
                 cell.matchStatsViewModel = matchStatsViewModel
             }
-
-            let store = Env.everyMatrixStorage as AggregatorStore
-
-            if store.hasMatchesInfoForMatch(withId: match.id) {
-                cell.setupWithMatch(match, liveMatch: true, store: store)
-            }
-            else {
-                cell.setupWithMatch(match, store: store)
-            }
-
+            
+            cell.setupWithMatch(match)
             cell.shouldShowCountryFlag(false)
             cell.tappedMatchLineAction = {
                 self.didSelectMatchAction?(match)

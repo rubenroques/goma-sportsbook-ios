@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import Theming
+import Extensions
 
 public struct RegisterFeedbackViewModel {
     public var registerSuccess: Bool
@@ -51,15 +52,15 @@ public class RegisterFeedbackViewController: UIViewController {
 
         if self.viewModel.registerSuccess {
             self.feedbackImageView.image = UIImage(named: "registerSuccess", in: Bundle.module, compatibleWith: nil)
-            self.titleLabel.text = "Congratulations!"
-            self.subtitleLabel.text = "Your account is registered. Now you only need to verify your identity."
-            self.continueButton.setTitle("Continue", for: .normal)
+            self.titleLabel.text = Localization.localized("congratulations")
+            self.subtitleLabel.text = Localization.localized("singup_success_text")
+            self.continueButton.setTitle(Localization.localized("continue_"), for: .normal)
         }
         else {
             self.feedbackImageView.image = UIImage(named: "registerError", in: Bundle.module, compatibleWith: nil)
-            self.titleLabel.text = "Oh no!"
-            self.subtitleLabel.text = "Sorry there was a problem while creating your account, contact us for help."
-            self.continueButton.setTitle("Contact Us", for: .normal)
+            self.titleLabel.text = Localization.localized("unsucess_register_title")
+            self.subtitleLabel.text = Localization.localized("unsucess_register")
+            self.continueButton.setTitle(Localization.localized("contact_us"), for: .normal)
         }
 
         self.continueButton.addTarget(self, action: #selector(didTapContinueButton), for: .primaryActionTriggered)
@@ -136,7 +137,7 @@ public extension RegisterFeedbackViewController {
 
     private static func createContinueButton() -> UIButton {
         let button = UIButton()
-        button.setTitle("Continue", for: .normal)
+        button.setTitle(Localization.localized("continue_"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 18)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 8

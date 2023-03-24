@@ -149,237 +149,24 @@ class SearchViewModel: NSObject {
     }
 
     func processEvents(eventsGroup: EventsGroup) {
+        
         for event in eventsGroup.events {
-            let match = Match(id: event.id,
-                              competitionId: event.competitionId,
-                              competitionName: event.competitionName,
-                              homeParticipant: Participant(id: "", name: event.homeTeamName),
-                              awayParticipant: Participant(id: "", name: event.awayTeamName),
-                              date: event.startDate,
-                              sportType: event.sportTypeName,
-                              sportCode: event.sportTypeCode ?? "",
-                              venue: nil,
-                              numberTotalOfMarkets: event.numberMarkets != nil ? event.numberMarkets ?? 0 : event.markets.count,
-                              markets: ServiceProviderModelMapper.markets(fromServiceProviderMarkets: event.markets),
-                              rootPartId: "",
-                              status: ServiceProviderModelMapper.matchStatus(fromInternalEvent: event.status))
 
-            if self.searchMatchesPublisher.value[match.sportType] != nil {
+            let match = ServiceProviderModelMapper.match(fromEvent: event)
+
+            if self.searchMatchesPublisher.value[match.sport.name] != nil {
                 let searchMatch = SearchEvent.match(match)
-                self.searchMatchesPublisher.value[match.sportType]?.append(searchMatch)
+                self.searchMatchesPublisher.value[match.sport.name]?.append(searchMatch)
             }
             else {
                 let searchMatch = SearchEvent.match(match)
-                self.searchMatchesPublisher.value[match.sportType] = [searchMatch]
+                self.searchMatchesPublisher.value[match.sport.name] = [searchMatch]
             }
         }
+
         self.setSportMatchesArray()
     }
 
-    func processSearchResponse(searchResponse: SearchV2Response) {
-        let searchRecords = searchResponse.records
-        for record in searchRecords {
-            switch record {
-            case .tournament(let tournamentContent):
-                tournaments.append(tournamentContent)
-            case .match(let matchContent):
-                matches.append(matchContent)
-            default:
-                ()
-            }
-        }
-
-        if let searchContents = searchResponse.includedData {
-
-            for searchContent in searchContents {
-                switch searchContent {
-
-                case .matchInfo(let matchInfo):
-
-                    matchesInfo[matchInfo.id] = matchInfo
-
-                    if let matchId = matchInfo.matchId {
-                        if var matchInfoForIterationMatch = matchesInfoForMatch[matchId] {
-                            matchInfoForIterationMatch.insert(matchInfo.id)
-                            matchesInfoForMatch[matchId] = matchInfoForIterationMatch
-                      }
-                        else {
-                            var newSet = Set<String>.init()
-                            newSet.insert(matchInfo.id)
-
-                            matchesInfoForMatch[matchId] = newSet
-
-                            var matchIdArray = matchesInfoForMatchPublisher.value
-                            matchIdArray.append(matchId)
-                            matchesInfoForMatchPublisher.send(matchIdArray)
-                      }
-                    }
-
-                case .market(let marketContent):
-
-                    // markets[marketContent.id] = marketContent
-                    marketsPublishers[marketContent.id] = CurrentValueSubject<EveryMatrix.Market, Never>.init(marketContent)
-
-                    if let matchId = marketContent.eventId {
-                        if var marketsForIterationMatch = marketsForMatch[matchId] {
-                            marketsForIterationMatch.insert(marketContent.id)
-                            marketsForMatch[matchId] = marketsForIterationMatch
-                        }
-                        else {
-                            var newSet = Set<String>.init()
-                            newSet.insert(marketContent.id)
-                            marketsForMatch[matchId] = newSet
-                        }
-                    }
-                case .betOutcome(let betOutcomeContent):
-                    betOutcomes[betOutcomeContent.id] = betOutcomeContent
-
-                case .bettingOffer(let bettingOfferContent):
-                    if let outcomeIdValue = bettingOfferContent.outcomeId {
-                        bettingOffers[outcomeIdValue] = bettingOfferContent
-                    }
-                    bettingOfferPublishers[bettingOfferContent.id] = CurrentValueSubject<EveryMatrix.BettingOffer, Never>.init(bettingOfferContent)
-
-                case .mainMarket(let market):
-                    mainMarkets[market.id] = market
-                    mainMarketsOrder.append(market.bettingTypeId ?? "")
-
-                case .marketOutcomeRelation(let marketOutcomeRelationContent):
-                    marketOutcomeRelations[marketOutcomeRelationContent.id] = marketOutcomeRelationContent
-
-                    if let marketId = marketOutcomeRelationContent.marketId, let outcomeId = marketOutcomeRelationContent.outcomeId {
-                        if var outcomesForMatch = bettingOutcomesForMarket[marketId] {
-                            outcomesForMatch.insert(outcomeId)
-                            bettingOutcomesForMarket[marketId] = outcomesForMatch
-                        }
-                        else {
-                            var newSet = Set<String>.init()
-                            newSet.insert(outcomeId)
-                            bettingOutcomesForMarket[marketId] = newSet
-                        }
-                    }
-                case .marketGroup:
-                    ()
-                case .event:
-                    ()
-                case .unknown:
-                    ()
-                }
-            }
-        }
-
-        self.processRawMatches()
-
-    }
-
-    func processRawMatches() {
-
-        let rawMatchesList = self.matches
-
-        for rawMatch in rawMatchesList {
-
-            var matchMarkets: [Market] = []
-
-            let marketsIds = self.marketsForMatch[rawMatch.id] ?? []
-            let rawMarketsList = marketsIds.map { id in
-                return self.marketsPublishers[id]?.value
-            }
-            .compactMap({$0})
-
-            for rawMarket  in rawMarketsList {
-
-                let rawOutcomeIds = self.bettingOutcomesForMarket[rawMarket.id] ?? []
-
-                let rawOutcomesList = rawOutcomeIds.map { id in
-                    return self.betOutcomes[id]
-                }
-                .compactMap({$0})
-
-                var outcomes: [Outcome] = []
-                for rawOutcome in rawOutcomesList {
-
-                    if let rawBettingOffer = self.bettingOffers[rawOutcome.id] {
-                        let bettingOffer = BettingOffer(id: rawBettingOffer.id,
-                                                        decimalOdd: rawBettingOffer.oddsValue ?? 0.0,
-                                                        statusId: rawBettingOffer.statusId ?? "1",
-                                                        isLive: rawBettingOffer.isLive ?? false,
-                                                        isAvailable: rawBettingOffer.isAvailable ?? true)
-
-                        let outcome = Outcome(id: rawOutcome.id,
-                                              codeName: rawOutcome.headerNameKey ?? "",
-                                              typeName: rawOutcome.headerName ?? "",
-                                              translatedName: rawOutcome.translatedName ?? "",
-                                              nameDigit1: rawOutcome.paramFloat1,
-                                              nameDigit2: rawOutcome.paramFloat2,
-                                              nameDigit3: rawOutcome.paramFloat3,
-                                              paramBoolean1: rawOutcome.paramBoolean1,
-                                              marketName: rawMarket.shortName ?? "",
-                                              marketId: rawMarket.id,
-                                              bettingOffer: bettingOffer)
-                        outcomes.append(outcome)
-                    }
-                }
-
-                let sortedOutcomes = outcomes.sorted { out1, out2 in
-                    let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1.codeName)
-                    let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2.codeName)
-                    return out1Value < out2Value
-                }
-
-                let market = Market(id: rawMarket.id,
-                                    typeId: rawMarket.bettingTypeId ?? "",
-                                    name: rawMarket.shortName ?? "",
-                                    nameDigit1: rawMarket.paramFloat1,
-                                    nameDigit2: rawMarket.paramFloat2,
-                                    nameDigit3: rawMarket.paramFloat3,
-                                    eventPartId: rawMarket.eventPartId,
-                                    bettingTypeId: rawMarket.bettingTypeId,
-                                    outcomes: sortedOutcomes)
-                matchMarkets.append(market)
-            }
-
-            let sortedMarkets = matchMarkets.sorted { market1, market2 in
-                let position1 = mainMarketsOrder.firstIndex(of: market1.typeId) ?? 100
-                let position2 = mainMarketsOrder.firstIndex(of: market2.typeId) ?? 100
-                return position1 < position2
-            }
-
-            var location: Location?
-            if let rawLocation = self.location(forId: rawMatch.venueId ?? "") {
-                location = Location(id: rawLocation.id, name: rawLocation.name ?? "", isoCode: rawLocation.code ?? "")
-            }
-
-            let match = Match(id: rawMatch.id,
-                              competitionId: rawMatch.parentId ?? "",
-                              competitionName: rawMatch.parentName ?? "",
-                              homeParticipant: Participant(id: rawMatch.homeParticipantId ?? "",
-                                                           name: rawMatch.homeParticipantName ?? ""),
-                              awayParticipant: Participant(id: rawMatch.awayParticipantId ?? "",
-                                                           name: rawMatch.awayParticipantName ?? ""),
-                              date: rawMatch.startDate ?? Date(timeIntervalSince1970: 0),
-                              sportType: rawMatch.sportId ?? "",
-                              sportCode: rawMatch.shortSportName,
-                              venue: location,
-                              numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
-                              markets: sortedMarkets,
-                              rootPartId: rawMatch.rootPartId ?? "",
-                              status: .unknown)
-
-            // Set Match
-            if self.searchMatchesPublisher.value[match.sportType] != nil {
-                let searchMatch = SearchEvent.match(match)
-                self.searchMatchesPublisher.value[match.sportType]?.append(searchMatch)
-            }
-            else {
-                let searchMatch = SearchEvent.match(match)
-                self.searchMatchesPublisher.value[match.sportType] = [searchMatch]
-            }
-
-        }
-
-        self.setSportMatchesArray()
-
-    }
 
     func setSportMatchesArray() {
 
@@ -413,10 +200,6 @@ class SearchViewModel: NSObject {
 
         self.searchMatchesPublisher.send(self.searchMatchesPublisher.value)
         self.hasDoneSearch = true
-    }
-
-    func location(forId id: String) -> EveryMatrix.Location? {
-        return Env.everyMatrixStorage.locations[id]
     }
 
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {

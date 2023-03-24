@@ -149,34 +149,6 @@ class LiveDetailsViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-//        Env.userSessionStore.userBalanceWallet
-//            .compactMap({$0})
-//            .map(\.amount)
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] value in
-//                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
-//                    let accountValue = bonusWallet.amount + value
-//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-//
-//                }
-//                else {
-//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
-//                }
-//            }
-//            .store(in: &cancellables)
-//
-//        Env.userSessionStore.userBonusBalanceWallet
-//            .compactMap({$0})
-//            .map(\.amount)
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] value in
-//                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
-//                    let accountValue = currentWallet.amount + value
-//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-//                }
-//            }
-//            .store(in: &cancellables)
-
         Env.userSessionStore.userWalletPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] userWallet in
@@ -318,7 +290,7 @@ extension LiveDetailsViewController: UITableViewDelegate, UITableViewDataSource 
             }
 
             cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
-            cell.setupWithMatch(match, liveMatch: true, store: self.viewModel.store)
+            cell.setupWithMatch(match, liveMatch: true)
             cell.shouldShowCountryFlag(false)
             cell.tappedMatchLineAction = { [weak self] in
                 self?.openMatchDetails(match)

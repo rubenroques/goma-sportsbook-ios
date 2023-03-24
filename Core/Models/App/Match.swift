@@ -16,8 +16,7 @@ struct Match {
     var awayParticipant: Participant
     var date: Date?
 
-    var sportType: String
-    var sportCode: String?
+    var sport: Sport
 
     var venue: Location?
     var numberTotalOfMarkets: Int
@@ -39,8 +38,8 @@ struct Match {
         case .notStarted:
             return "Not started"
         case .inProgress(let details):
-            if let sportCode = self.sportCode {
-                return self.convertStatus(sportCode, details)
+            if let sportAlphaId = self.sport.alphaId {
+                return self.convertStatus(sportAlphaId, details)
             }
             return "\(details)"
         case .ended:
@@ -64,8 +63,7 @@ struct Match {
          homeParticipantScore: Int? = nil,
          awayParticipantScore: Int? = nil,
          date: Date? = nil,
-         sportType: String,
-         sportCode: String?,
+         sport: Sport,
          venue: Location? = nil,
          numberTotalOfMarkets: Int,
          markets: [Market],
@@ -81,8 +79,9 @@ struct Match {
         self.homeParticipantScore = homeParticipantScore
         self.awayParticipantScore = awayParticipantScore
         self.date = date
-        self.sportType = sportType
-        self.sportCode = sportCode
+
+        self.sport = sport
+
         self.venue = venue
         self.numberTotalOfMarkets = numberTotalOfMarkets
         self.markets = markets

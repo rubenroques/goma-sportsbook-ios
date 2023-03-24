@@ -319,7 +319,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.rightOddValueLabel.font = AppFont.with(type: .bold, size: 13)
     }
 
-    func setupWithMarket(_ market: Market, match: Match, teamsText: String, countryIso: String, store: AggregatorStore) {
+    func setupWithMarket(_ market: Market, match: Match, teamsText: String, countryIso: String) {
 
         if let matchStatsViewModel = matchStatsViewModel,
            market.eventPartId != nil,
@@ -338,15 +338,14 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         self.match = match
         self.market = market
-        self.store = store
-        
+
         self.marketNameLabel.text = market.name
 
         self.participantsNameLabel.text = teamsText
 
         self.participantsCountryImageView.image = UIImage(named: "market_stats_icon")
 
-        if let marketPublisher = store.marketPublisher(withId: market.id) {
+        if let marketPublisher = self.store?.marketPublisher(withId: market.id) {
             self.marketSubscriber = marketPublisher
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] marketUpdate in
@@ -380,7 +379,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                 self.leftOddValueLabel.text = "-"
             }
 
-            self.leftOddButtonSubscriber = store.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
+            self.leftOddButtonSubscriber = self.store?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                 .compactMap({ $0 })
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { [weak self] bettingOffer in
@@ -433,7 +432,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                 self.rightOddValueLabel.text = "-"
             }
 
-            self.rightOddButtonSubscriber = store.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
+            self.rightOddButtonSubscriber = self.store?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                 .compactMap({ $0 })
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { [weak self] bettingOffer in

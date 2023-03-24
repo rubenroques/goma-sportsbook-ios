@@ -202,7 +202,6 @@ public class HeaderTextFieldView: NibView {
 
         self.borderState = .idle
         self.tipState = .hidden
-
     }
 
     private func configureContainerViewTap() {

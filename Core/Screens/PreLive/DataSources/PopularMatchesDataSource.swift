@@ -81,10 +81,8 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
                 if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
                     cell.matchStatsViewModel = matchStatsViewModel
                 }
-                let store = Env.everyMatrixStorage as AggregatorStore
 
-                cell.setupWithMatch(match, store: store)
-
+                cell.setupWithMatch(match)
                 cell.tappedMatchLineAction = {
                     self.didSelectMatchAction?(match)
                 }

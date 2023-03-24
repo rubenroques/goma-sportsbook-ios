@@ -31,6 +31,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 
 
+### ios certificates
+
+```sh
+[bundle exec] fastlane ios certificates
+```
+
+
+
 ### ios distribute_to_firebase
 
 ```sh

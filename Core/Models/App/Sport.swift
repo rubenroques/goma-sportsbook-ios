@@ -34,16 +34,3 @@ struct Sport {
     }
     
 }
-
-extension Sport {
-    
-    init(discipline: EveryMatrix.Discipline) {
-        self.init(id: discipline.id,
-                  name: discipline.name ?? "",
-                  alphaId: nil,
-                  numericId: nil,
-                  showEventCategory: discipline.showEventCategory ?? false,
-                  liveEventsCount: discipline.numberOfLiveEvents ?? 0)
-    }
-
-}

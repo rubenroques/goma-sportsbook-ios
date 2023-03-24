@@ -173,20 +173,22 @@ extension SportRadarModels {
             self.awayName = try container.decodeIfPresent(String.self, forKey: .awayName)
             self.competitionId = try container.decodeIfPresent(String.self, forKey: .competitionId)
             self.competitionName = try container.decodeIfPresent(String.self, forKey: .competitionName)
-            self.sportTypeName = try container.decodeIfPresent(String.self, forKey: .sportTypeName)
             self.tournamentCountryName = try container.decodeIfPresent(String.self, forKey: .tournamentCountryName)
-            self.sportTypeCode = try container.decodeIfPresent(String.self, forKey: .sportTypeCode)
+
+            self.markets = try container.decodeIfPresent([SportRadarModels.Market].self, forKey: .markets)
+
             self.numberMarkets = container.contains(.numberMarkets) ? try container.decode(Int.self, forKey: .numberMarkets) : self.markets?.first?.eventMarketCount
 
             self.name = try container.decodeIfPresent(String.self, forKey: .name)
 
+            self.sportTypeName = try container.decodeIfPresent(String.self, forKey: .sportTypeName)
+            self.sportTypeCode = try container.decodeIfPresent(String.self, forKey: .sportTypeCode)
 
-            self.markets = try container.decodeIfPresent([SportRadarModels.Market].self, forKey: .markets)
 
-            #if DEBUG
-            self.homeName = self.id + " " + (self.homeName ?? "")
-            self.awayName = (self.markets?.first?.id ?? "") + " " + (self.awayName ?? "")
-            #endif
+//            #if DEBUG
+//            self.homeName = self.id + " " + (self.homeName ?? "")
+//            self.awayName = (self.markets?.first?.id ?? "") + " " + (self.awayName ?? "")
+//            #endif
 
             if let startDateString = try container.decodeIfPresent(String.self, forKey: .startDate) {
                 if let date = Self.dateFormatter.date(from: startDateString) {

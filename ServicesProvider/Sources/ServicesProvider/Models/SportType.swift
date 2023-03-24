@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct SportType {
+public struct SportType: Codable {
 
     public var name: String
     public var numericId: String?

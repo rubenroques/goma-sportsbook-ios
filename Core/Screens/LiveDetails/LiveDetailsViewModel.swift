@@ -11,8 +11,6 @@ import ServicesProvider
 
 class LiveDetailsViewModel {
 
-    var store: AggregatorsRepository
-
     var refreshPublisher = PassthroughSubject<Void, Never>.init()
     var isLoading: CurrentValueSubject<Bool, Never> = .init(true)
     var titlePublisher: CurrentValueSubject<String, Never>
@@ -29,8 +27,7 @@ class LiveDetailsViewModel {
     private var cancellables: Set<AnyCancellable> = []
     private var subscriptions: Set<ServicesProvider.Subscription> = []
 
-    init(sport: Sport, store: AggregatorsRepository) {
-        self.store = store
+    init(sport: Sport) {
         self.sport = sport
 
         self.titlePublisher = .init("\(self.sport.name) - Live Matches")
@@ -107,10 +104,6 @@ class LiveDetailsViewModel {
         self.isLoading.send(false)
     }
 
-    private func updateWithAggregatorProcessor(_ aggregator: EveryMatrix.Aggregator) {
-        self.store.processContentUpdateAggregator(aggregator)
-    }
-
 }
 
 extension LiveDetailsViewModel {
@@ -124,10 +117,6 @@ extension LiveDetailsViewModel {
             cachedMatchStatsViewModels[match.id] = viewModel
             return viewModel
         }
-    }
-
-    func isMatchLive(withMatchId matchId: String) -> Bool {
-        return self.store.hasMatchesInfoForMatch(withId: matchId)
     }
 
 }

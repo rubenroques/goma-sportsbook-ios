@@ -23,16 +23,6 @@ class SuggestedBetsListViewModel {
         self.getSuggestedBets()
     }
 
-    deinit {
-        print("SuggestedBetsListViewModel deinit")
-
-        for cachedBetSuggestedViewModel in self.cachedSuggestedBetViewModels.values {
-            cachedBetSuggestedViewModel.unregisterSuggestedBets()
-        }
-
-        cachedSuggestedBetViewModels = [:]
-    }
-
     func refreshSuggestedBets() {
         self.suggestedBetsSummaries = []
         self.needsReload.send()

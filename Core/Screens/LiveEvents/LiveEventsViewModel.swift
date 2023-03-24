@@ -436,18 +436,10 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
                 if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
                     cell.matchStatsViewModel = matchStatsViewModel
                 }
-
-                let store = Env.everyMatrixStorage as AggregatorStore
-
-                cell.setupWithMatch(match, liveMatch: true, store: store)
+                cell.setupWithMatch(match, liveMatch: true)
                 cell.tappedMatchLineAction = {
                     self.didSelectMatchAction?(match)
                 }
-                
-//                cell.didTapFavoriteMatchAction = { [weak self] match in
-//                    self?.didTapFavoriteAction?(match)
-//                }
-
                 cell.didLongPressOdd = { bettingTicket in
                     self.didLongPressOdd?(bettingTicket)
                 }

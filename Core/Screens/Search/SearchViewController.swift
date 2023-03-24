@@ -437,15 +437,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
                 if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self) {
 
-                    let store = self.viewModel as AggregatorStore
-
-                    if store.hasMatchesInfoForMatch(withId: match.id) {
-                        cell.setupWithMatch(match, liveMatch: true, store: store)
-                    }
-                    else {
-                        cell.setupWithMatch(match, store: store)
-                    }
-
+                    cell.setupWithMatch(match)
                     cell.tappedMatchLineAction = {
                         self.openMatchDetailsScreen(match: match)
                     }
@@ -466,9 +458,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                 if let cell = tableView.dequeueCellType(CompetitionSearchTableViewCell.self) {
 
                     if let cellCompetition = competition.name, let cellVenueId = competition.venueId {
-                        // cell.setTitle(title: "\(cellCompetition)")
-                        let location = self.viewModel.location(forId: cellVenueId)
-                        cell.setCellValues(title: cellCompetition, flagCode: location?.code ?? "", flagId: location?.id ?? "")
+                        cell.setCellValues(title: cellCompetition, flagCode: "", flagId: "")
                         cell.tappedCompetitionCellAction = {
                             self.openCompetitionDetailsScreen(competition: competition)
                         }

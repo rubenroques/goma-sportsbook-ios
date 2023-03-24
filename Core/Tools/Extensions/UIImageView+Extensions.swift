@@ -17,7 +17,11 @@ extension UIImageView {
         self.image = templateImage
         self.tintColor = color
     }
-    
+
+    func setTintColor(color: UIColor) {
+        self.setImageColor(color: color)
+    }
+
     func autofillBackgroundColor() {
         
         guard

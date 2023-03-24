@@ -51,24 +51,11 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
                     if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
                         cell.matchStatsViewModel = matchStatsViewModel
                     }
-                    let store = Env.everyMatrixStorage as AggregatorStore
-
-                    if store.hasMatchesInfoForMatch(withId: match.id) {
-                        cell.setupWithMatch(match, liveMatch: true, store: store)
-                    }
-                    else {
-                        cell.setupWithMatch(match, store: store)
-                    }
-
-                    cell.setupFavoriteMatchInfoPublisher(match: match)
+                    
+                    cell.setupWithMatch(match)
                     cell.tappedMatchLineAction = {
                         self.didSelectMatchAction?(match)
                     }
-                    
-//                    cell.didTapFavoriteMatchAction = { [weak self] match in
-//                        self?.didTapFavoriteMatchAction?(match)
-//                    }
-                    
                     cell.matchWentLive = {
                         DispatchQueue.main.async {
                             self.matchWentLiveAction?()
