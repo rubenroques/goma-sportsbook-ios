@@ -102,7 +102,7 @@ class BonusAvailableDataSource: NSObject, UITableViewDataSource, UITableViewDele
 }
 
 struct BonusTypeData {
-    var bonus: EveryMatrix.ApplicableBonus
+    var bonus: ApplicableBonus
     var bonusType: BonusType
 
     enum BonusType {

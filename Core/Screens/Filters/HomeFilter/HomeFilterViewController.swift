@@ -43,7 +43,7 @@ class HomeFilterViewController: UIViewController {
     // Variables
     // var timeSliderValues: [CGFloat] = []
     var lowerBoundTimeRange: CGFloat = 0.0
-    var highBoundTimeRange: CGFloat = 48.0
+    var highBoundTimeRange: CGFloat = 6.0
     var lowerBoundOddsRange: CGFloat = 1.0
     var highBoundOddsRange: CGFloat = 30.0
     var countFilters: Int = 0
@@ -186,7 +186,7 @@ class HomeFilterViewController: UIViewController {
 
     func setupTimeRangeSection() {
         let minValue: CGFloat = 0
-        let maxValue: CGFloat = 48
+        let maxValue: CGFloat = 6
         let values: [CGFloat]
         if delegate?.turnTimeRangeOn == true {
             timeRangeCollapseView.isUserInteractionEnabled = true
@@ -209,6 +209,7 @@ class HomeFilterViewController: UIViewController {
         timeRangeMultiSlider?.orientation = .horizontal
         timeRangeMultiSlider?.minimumTextualValue = localized("now")
         timeRangeMultiSlider?.minimumValue = minValue
+        timeRangeMultiSlider?.maximumTextualValue = localized("all")
         timeRangeMultiSlider?.maximumValue = maxValue
         timeRangeMultiSlider?.outerTrackColor = UIColor.App.separatorLine
         timeRangeMultiSlider?.value = values
@@ -217,11 +218,15 @@ class HomeFilterViewController: UIViewController {
         timeRangeMultiSlider?.tintColor = UIColor.App.highlightPrimary
         timeRangeMultiSlider?.trackWidth = 6
         timeRangeMultiSlider?.showsThumbImageShadow = false
+        // timeRangeMultiSlider?.distanceBetweenThumbs = 1
         timeRangeMultiSlider?.keepsDistanceBetweenThumbs = false
         timeRangeMultiSlider?.addTarget(self, action: #selector(timeSliderChanged), for: .valueChanged)
         timeRangeMultiSlider?.valueLabelPosition = .bottom
         timeRangeMultiSlider?.valueLabelColor = UIColor.App.textPrimary
         timeRangeMultiSlider?.valueLabelFont = AppFont.with(type: .bold, size: 14)
+
+        timeRangeMultiSlider?.extraLabelInfoSingular = localized("day")
+        timeRangeMultiSlider?.extraLabelInfoPlural = localized("days")
 
         if let timeRangeMultiSlider = timeRangeMultiSlider {
             contentView.addConstrainedSubview(timeRangeMultiSlider, constrain: .leftMargin, .rightMargin, .bottomMargin, .topMargin)
@@ -413,8 +418,16 @@ class HomeFilterViewController: UIViewController {
 
     @objc func timeSliderChanged(_ slider: MultiSlider) {
         // Get time slider values
-        lowerBoundTimeRange = slider.value[0]
-        highBoundTimeRange = slider.value[1]
+        if slider.value[0] == slider.maximumValue && slider.value[1] == slider.maximumValue {
+            slider.value[0] = slider.maximumValue - 1
+            lowerBoundTimeRange = slider.value[0]
+            highBoundTimeRange = slider.value[1]
+        }
+        else {
+            lowerBoundTimeRange = slider.value[0]
+            highBoundTimeRange = slider.value[1]
+        }
+
     }
 
     @objc func oddsSliderChanged(_ slider: MultiSlider) {
@@ -446,12 +459,10 @@ class HomeFilterViewController: UIViewController {
             }
         }
 
-
         lowerBoundTimeRange = homeFilterOptions.lowerBoundTimeRange
         highBoundTimeRange = homeFilterOptions.highBoundTimeRange
         timeRangeMultiSlider?.value = [homeFilterOptions.lowerBoundTimeRange, homeFilterOptions.highBoundTimeRange]
         oddRangeMultiSlider?.value = [homeFilterOptions.lowerBoundOddsRange, homeFilterOptions.highBoundOddsRange]
-
 
         if let oddRangeMultiSlider = oddRangeMultiSlider {
             lowerBoundOddsRange = oddRangeMultiSlider.value[0].round(to: 1)
@@ -500,7 +511,7 @@ class HomeFilterViewController: UIViewController {
 
     @IBAction private func applyFiltersAction() {
         
-        if lowerBoundTimeRange != 0.0 || highBoundTimeRange != 48.0 {
+        if lowerBoundTimeRange != 0.0 || highBoundTimeRange != 365.0 {
             countFilters += 1
         }
         

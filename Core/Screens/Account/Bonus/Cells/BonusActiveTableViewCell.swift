@@ -13,9 +13,11 @@ class BonusActiveTableViewCell: UITableViewCell {
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
+    private lazy var dateLabel: UILabel = Self.createDateLabel()
     private lazy var bonusLabel: UILabel = Self.createBonusLabel()
     private lazy var bonusAmountLabel: UILabel = Self.createBonusAmountLabel()
-    private lazy var dateLabel: UILabel = Self.createDateLabel()
+    private lazy var bonusStatusView: UIView = Self.createBonusStatusView()
+    private lazy var bonusStatusLabel: UILabel = Self.createBonusStatusLabel()
     private lazy var stackView: UIStackView = Self.createStackView()
 
     private var cancellables = Set<AnyCancellable>()
@@ -31,6 +33,12 @@ class BonusActiveTableViewCell: UITableViewCell {
         didSet {
             self.bonusLabel.isHidden = !isSimpleBonus
             self.bonusAmountLabel.isHidden = !isSimpleBonus
+        }
+    }
+
+    var hasTypeStatus: Bool = false {
+        didSet {
+            self.bonusStatusView.isHidden = !hasTypeStatus
         }
     }
 
@@ -60,7 +68,7 @@ class BonusActiveTableViewCell: UITableViewCell {
 
         self.containerView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.titleLabel.textColor = UIColor.App.highlightSecondary
+        self.titleLabel.textColor = UIColor.App.highlightPrimary
 
         self.subtitleLabel.textColor = UIColor.App.textPrimary
 
@@ -69,6 +77,10 @@ class BonusActiveTableViewCell: UITableViewCell {
         self.bonusLabel.textColor = UIColor.App.textPrimary
 
         self.bonusAmountLabel.textColor = UIColor.App.textSecondary
+
+        self.bonusStatusView.backgroundColor = UIColor.App.backgroundOdds
+
+        self.bonusStatusLabel.textColor = UIColor.App.textPrimary
 
         self.stackView.backgroundColor = UIColor.App.backgroundSecondary
 
@@ -96,8 +108,33 @@ class BonusActiveTableViewCell: UITableViewCell {
                     self?.setupProgressBars(bonus: viewModel.bonus)
 
                 }
+                else {
+                    self?.stackView.removeAllArrangedSubviews()
+
+                    self?.setupEmptyBonus()
+                }
             })
             .store(in: &cancellables)
+
+        let bonusStatus = viewModel.bonus.status
+
+        if bonusStatus != "ACTIVE" {
+            self.hasTypeStatus = true
+            self.bonusStatusLabel.text = bonusStatus
+        }
+        else {
+            self.hasTypeStatus = false
+        }
+    }
+
+    private func setupEmptyBonus() {
+        let emptyBonusView = BonusEmptyView()
+        emptyBonusView.configure(title: localized("wager_amount"), message: localized("no_wager_info"))
+
+        self.stackView.addArrangedSubview(emptyBonusView)
+
+        self.bonusAmountLabel.text = "-"
+
     }
 
     private func setupProgressBars(bonus: GrantedBonus) {
@@ -206,6 +243,23 @@ extension BonusActiveTableViewCell {
         return label
     }
 
+    private static func createBonusStatusView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        view.layer.cornerRadius = CornerRadius.label
+        return view
+    }
+
+    private static func createBonusStatusLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Status"
+        label.textAlignment = .center
+        label.font = AppFont.with(type: .bold, size: 11)
+        return label
+    }
+
     private static func createStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -223,6 +277,10 @@ extension BonusActiveTableViewCell {
         self.containerView.addSubview(self.dateLabel)
         self.containerView.addSubview(self.bonusLabel)
         self.containerView.addSubview(self.bonusAmountLabel)
+        self.containerView.addSubview(self.bonusStatusView)
+
+        self.bonusStatusView.addSubview(self.bonusStatusLabel)
+
         self.containerView.addSubview(self.stackView)
 
         self.initConstraints()
@@ -253,18 +311,32 @@ extension BonusActiveTableViewCell {
             self.dateLabel.trailingAnchor.constraint(equalTo: self.containerView.centerXAnchor, constant: 5),
             self.dateLabel.centerYAnchor.constraint(equalTo: self.subtitleLabel.centerYAnchor),
 
-            self.bonusLabel.trailingAnchor.constraint(equalTo: self.bonusAmountLabel.leadingAnchor, constant: -4),
-            self.bonusLabel.centerYAnchor.constraint(equalTo: self.bonusAmountLabel.centerYAnchor),
+            self.bonusLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
+            self.bonusLabel.topAnchor.constraint(equalTo: self.subtitleLabel.bottomAnchor, constant: 10),
 
-            self.bonusAmountLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
-            self.bonusAmountLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 12),
+            self.bonusAmountLabel.leadingAnchor.constraint(equalTo: self.bonusLabel.trailingAnchor, constant: 4),
+            self.bonusAmountLabel.trailingAnchor.constraint(equalTo: self.containerView.centerXAnchor, constant: 5),
+            self.bonusAmountLabel.centerYAnchor.constraint(equalTo: self.bonusLabel.centerYAnchor),
+        ])
+
+        // Bonus status
+        NSLayoutConstraint.activate([
+            self.bonusStatusView.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 8),
+            self.bonusStatusView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
+            self.bonusStatusView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 10),
+            self.bonusStatusView.widthAnchor.constraint(greaterThanOrEqualToConstant: 80),
+            self.bonusStatusView.heightAnchor.constraint(greaterThanOrEqualToConstant: 30),
+
+            self.bonusStatusLabel.leadingAnchor.constraint(equalTo: self.bonusStatusView.leadingAnchor, constant: 8),
+            self.bonusStatusLabel.trailingAnchor.constraint(equalTo: self.bonusStatusView.trailingAnchor, constant: -8),
+            self.bonusStatusLabel.centerYAnchor.constraint(equalTo: self.bonusStatusView.centerYAnchor)
         ])
 
         // StackView
         NSLayoutConstraint.activate([
             self.stackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
             self.stackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
-            self.stackView.topAnchor.constraint(equalTo: self.subtitleLabel.bottomAnchor, constant: 16),
+            self.stackView.topAnchor.constraint(equalTo: self.bonusLabel.bottomAnchor, constant: 16),
             self.stackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20)
         ])
 

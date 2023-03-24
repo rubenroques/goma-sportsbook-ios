@@ -25,6 +25,9 @@ open class MultiSlider: UIControl {
     
     @IBInspectable open dynamic var minimumTextualValue: String? = nil { didSet { adjustValuesToStepAndLimits() } }
     @IBInspectable open dynamic var maximumTextualValue: String? = nil { didSet { adjustValuesToStepAndLimits() } }
+    @IBInspectable open dynamic var extraLabelInfoSingular: String? = nil { didSet { adjustValuesToStepAndLimits() } }
+    @IBInspectable open dynamic var extraLabelInfoPlural: String? = nil { didSet { adjustValuesToStepAndLimits() } }
+
     
     @IBInspectable open dynamic var minimumValue: CGFloat = 0 { didSet { adjustValuesToStepAndLimits() } }
     @IBInspectable open dynamic var maximumValue: CGFloat = 1 { didSet { adjustValuesToStepAndLimits() } }

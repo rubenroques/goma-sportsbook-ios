@@ -16,14 +16,14 @@ class BonusAvailableCellViewModel: NSObject {
     var bonusBannerUrlPublisher: CurrentValueSubject<URL?, Never> = .init(nil)
 
     // MARK: Lifetime and Cycle
-    init(bonus: EveryMatrix.ApplicableBonus, bonusBannerUrl: URL? = nil) {
+    init(bonus: ApplicableBonus, bonusBannerUrl: URL? = nil) {
         super.init()
 
         self.setupPublishers(bonus: bonus, bonusBannerUrl: bonusBannerUrl)
 
     }
 
-    private func setupPublishers(bonus: EveryMatrix.ApplicableBonus, bonusBannerUrl: URL?) {
+    private func setupPublishers(bonus: ApplicableBonus, bonusBannerUrl: URL?) {
 
         self.titlePublisher.value = bonus.name
 

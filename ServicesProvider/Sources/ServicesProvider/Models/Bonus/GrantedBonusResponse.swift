@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  GrantedBonusResponse.swift
 //  
 //
 //  Created by André Lascas on 16/03/2023.

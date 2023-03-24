@@ -59,7 +59,11 @@ class PreLiveEventsViewModel: NSObject {
         didSet {
             if self.matchListTypePublisher.value == .upcoming {
                 if let lowerTimeRange = homeFilterOptions?.lowerBoundTimeRange, let highTimeRange = homeFilterOptions?.highBoundTimeRange {
-                    let timeRange = "\(Int(lowerTimeRange))-\(Int(highTimeRange))"
+                    var timeRange = "\(Int(lowerTimeRange))-\(Int(highTimeRange))"
+
+                    if highTimeRange == 6 {
+                        timeRange = "\(Int(lowerTimeRange))-365"
+                    }
                     self.fetchTodayMatches(withFilter: true, timeRange: timeRange)
                 }
             }
@@ -468,8 +472,17 @@ class PreLiveEventsViewModel: NSObject {
 
     //
     private func fetchTodayMatchesNextPage() {
+        var timeRange = ""
+
+        if let lowerTimeRange = homeFilterOptions?.lowerBoundTimeRange, let highTimeRange = homeFilterOptions?.highBoundTimeRange {
+            timeRange = "\(Int(lowerTimeRange))-\(Int(highTimeRange))"
+        }
+
+        let datesFilter = Env.servicesProvider.getDatesFilter(timeRange: timeRange)
+
         let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.selectedSport)
-        Env.servicesProvider.requestPreLiveMatchesNextPage(forSportType: sportType, sortType: .date)
+
+        Env.servicesProvider.requestPreLiveMatchesNextPage(forSportType: sportType, initialDate: datesFilter[safe: 0], endDate: datesFilter[safe: 1], sortType: .date)
             .sink { completion in
                 print("requestPreLiveMatchesNextPage completion \(completion)")
             } receiveValue: { [weak self] hasNextPage in

@@ -11,7 +11,7 @@ import Combine
 class BonusDetailViewModel: NSObject {
     // MARK: Private Properties
     private var cancellables = Set<AnyCancellable>()
-    private var bonus: EveryMatrix.ApplicableBonus
+    private var bonus: ApplicableBonus
     private var bonusBannerUrl: URL?
 
     // MARK: Public Properties
@@ -22,7 +22,7 @@ class BonusDetailViewModel: NSObject {
     var bonusBannerPublisher: CurrentValueSubject<URL?, Never> = .init(nil)
 
     // MARK: Lifetime and Cycle
-    init(bonus: EveryMatrix.ApplicableBonus, bonusBannerUrl: URL? = nil) {
+    init(bonus: ApplicableBonus, bonusBannerUrl: URL? = nil) {
         self.bonus = bonus
         self.bonusBannerUrl = bonusBannerUrl
 
@@ -36,7 +36,7 @@ class BonusDetailViewModel: NSObject {
         self.titlePublisher.value = self.bonus.name
         self.descriptionPublisher.value = self.bonus.description
         self.termsTitlePublisher.value = localized("terms_and_conditions")
-        self.termsLinkStringPublisher.value = self.bonus.url
+        self.termsLinkStringPublisher.value = self.bonus.url ?? ""
         self.bonusBannerPublisher.value = self.bonusBannerUrl
     }
 

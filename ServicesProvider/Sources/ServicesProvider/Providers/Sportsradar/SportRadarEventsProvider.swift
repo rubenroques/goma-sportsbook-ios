@@ -1185,13 +1185,13 @@ extension SportRadarEventsProvider {
     func getDatesFilter(timeRange: String) -> [Date] {
         var dates = [Date]()
 
-        let hours = timeRange.components(separatedBy: "-")
+        let days = timeRange.components(separatedBy: "-")
 
-        if let initialHour = Int(hours[safe: 0] ?? "0"),
-           let endHour = Int(hours[safe: 1] ?? "48") {
-
-            if let startDate = Calendar.current.date(byAdding: .hour, value: initialHour, to: Date()),
-               let endDate = Calendar.current.date(byAdding: .hour, value: endHour, to: Date()) {
+        if let initialDay = Int(days[safe: 0] ?? "0"),
+           let endDay = Int(days[safe: 1] ?? "365") {
+            
+            if let startDate = Calendar.current.date(byAdding: .day, value: initialDay, to: Date()),
+               let endDate = Calendar.current.date(byAdding: .day, value: endDay, to: Date()) {
                 dates.append(startDate)
                 dates.append(endDate)
 
