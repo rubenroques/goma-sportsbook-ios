@@ -1892,18 +1892,12 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
                             let singleBetslipOddsBoost = SingleBetslipOddsBoost(bettingId: bettingTicket.bettingId, oddsBoost: oddsBoost)
                             self?.currentTicketOddsBoostSelected = singleBetslipOddsBoost
                             self?.changedOddsBoostSelectionState?(singleBetslipOddsBoost)
-
-                            Env.betslipManager.requestSimpleBetslipSelectionState(oddsBoostPercentage: oddsBoost.oddsBoostPercent)
-
                         }
                         else {
                             self?.isOddsBoostSelected = false
                             self?.currentTicketOddsBoostSelected = nil
                             self?.changedOddsBoostSelectionState?(nil)
-                            Env.betslipManager.requestSimpleBetslipSelectionState()
-
                         }
-
                         self?.tableNeedsDebouncedReload?()
                     }
                     // Only one to use each time

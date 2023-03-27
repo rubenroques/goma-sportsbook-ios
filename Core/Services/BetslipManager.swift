@@ -11,7 +11,6 @@ import OrderedCollections
 import nanopb
 import ServicesProvider
 
-
 class BetslipManager: NSObject {
 
     var allowedBetTypesPublisher = CurrentValueSubject<[BetType], Never>.init([])
@@ -29,7 +28,7 @@ class BetslipManager: NSObject {
     var betPlacedDetailsErrorsPublisher: CurrentValueSubject<[BetPlacedDetails], Never>
     var betslipPlaceBetResponseErrorsPublisher: CurrentValueSubject<[BetslipPlaceBetResponse], Never>
 
-    private var bettingTicketServiceProviderSubscriptions: [String: ServicesProvider.Subscription] = [:]
+    private var serviceProviderSubscriptions: [String: ServicesProvider.Subscription] = [:]
     private var bettingTicketsCancellables: [String: AnyCancellable] = [:]
 
     var betBuilderOddPublisher: CurrentValueSubject<Double?, Never> = .init(nil)
@@ -102,22 +101,6 @@ class BetslipManager: NSObject {
             })
             .store(in: &cancellables)
 
-        self.bettingTicketsDictionaryPublisher
-            .filter({ return !$0.isEmpty })
-            .removeDuplicates()
-            .debounce(for: 1.0, scheduler: DispatchQueue.main)
-            .eraseToAnyPublisher()
-            .map({ _ -> Void in
-                return ()
-            })
-            .sink { [weak self] in
-                self?.requestSimpleBetslipSelectionState()
-                self?.requestMultipleBetslipSelectionState()
-            }
-            .store(in: &cancellables)
-
-
-
     }
 
     func addBettingTicket(_ bettingTicket: BettingTicket) {
@@ -157,9 +140,8 @@ class BetslipManager: NSObject {
     }
 
     private func unsubscribeBettingTicketPublisher(withId id: String) {
-
         // Cancel the subscription
-        self.bettingTicketServiceProviderSubscriptions[id] = nil
+        self.serviceProviderSubscriptions[id] = nil
 
         // Cancel combine
         if let subscriber = self.bettingTicketsCancellables[id] {
@@ -191,7 +173,7 @@ class BetslipManager: NSObject {
             } receiveValue: { [weak self] subscribableContent in
                 switch subscribableContent {
                 case .connected(let subscription):
-                    self?.bettingTicketServiceProviderSubscriptions[bettingTicket.id] = subscription
+                    self?.serviceProviderSubscriptions[bettingTicket.id] = subscription
                 case .contentUpdate(let market):
                     let internalMarket = ServiceProviderModelMapper.market(fromServiceProviderMarket: market)
                     self?.updateBettingTickets(ofMarket: internalMarket)
@@ -225,40 +207,6 @@ class BetslipManager: NSObject {
 
                 print("betslipdebug \(outcome.id) 4 betslipmanager update Publisher")
             }
-        }
-    }
-
-    private func updateBettingTicket(withId id: String, bettingOffer: EveryMatrix.BettingOffer) {
-        if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[id], let value = bettingOffer.oddsValue {
-            let newBettingTicket = BettingTicket(id: bettingTicket.id,
-                                                 outcomeId: bettingTicket.outcomeId,
-                                                 marketId: bettingTicket.marketId,
-                                                 matchId: bettingTicket.matchId,
-                                                 decimalOdd: value,
-                                                 isAvailable: bettingOffer.isAvailable ?? bettingTicket.isAvailable,
-                                                 matchDescription: bettingTicket.matchDescription,
-                                                 marketDescription: bettingTicket.marketDescription,
-                                                 outcomeDescription: bettingTicket.outcomeDescription)
-            self.bettingTicketsDictionaryPublisher.value[id] = newBettingTicket
-
-            self.bettingTicketPublisher[id]?.send(newBettingTicket)
-        }
-    }
-
-    private func updateBettingTicketOdd(withId id: String, statusId: String?, newOdd: Double?, isAvailable: Bool?) {
-        if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[id] {
-            let newBettingTicket = BettingTicket(id: bettingTicket.id,
-                                                 outcomeId: bettingTicket.outcomeId,
-                                                 marketId: bettingTicket.marketId,
-                                                 matchId: bettingTicket.matchId,
-                                                 decimalOdd: newOdd ?? bettingTicket.decimalOdd,
-                                                 isAvailable: isAvailable ?? bettingTicket.isAvailable,
-                                                 matchDescription: bettingTicket.matchDescription,
-                                                 marketDescription: bettingTicket.marketDescription,
-                                                 outcomeDescription: bettingTicket.outcomeDescription)
-            self.bettingTicketsDictionaryPublisher.value[id] = newBettingTicket
-
-            self.bettingTicketPublisher[id]?.send(newBettingTicket)
         }
     }
 
@@ -641,90 +589,6 @@ extension BetslipManager {
             .replaceError(with: nil)
             .replaceNil(with: BetPotencialReturn(potentialReturn: 0, totalStake: 0, numberOfBets: 0))
             .eraseToAnyPublisher()
-    }
-
-    func requestSimpleBetslipSelectionState(oddsBoostPercentage: Double? = nil) {
-
-        let ticketSelections = self.bettingTicketsPublisher.value
-            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.decimalOdd) })
-
-        for ticket in ticketSelections {
-
-            let route = TSRouter.getBetslipSelectionInfo(language: "en",
-                                                         stakeAmount: 1,
-                                                         betType: .single,
-                                                         tickets: [ticket],
-                                                         oddsBoostPercentage: oddsBoostPercentage)
-
-            Env.everyMatrixClient.manager
-                .getModel(router: route, decodingType: BetslipSelectionState.self)
-                .handleEvents(receiveOutput: { betslipSelectionState in
-                    self.simpleBetslipSelectionState.send(betslipSelectionState)
-                })
-                .receive(on: DispatchQueue.main)
-                .sink { _ in
-
-                } receiveValue: { betslipSelectionState in
-                    self.simpleBetslipSelectionState.send(betslipSelectionState)
-
-                    // Add to simple selection array
-                    self.simpleBetslipSelectionStateList.value[ticket.id] = betslipSelectionState
-                    self.simpleBetslipSelectionStateList.send(self.simpleBetslipSelectionStateList.value)
-                }
-                .store(in: &cancellables)
-
-        }
-    }
-
-    func requestMultipleBetslipSelectionState(oddsBoostPercentage: Double? = nil) {
-
-        let ticketSelections = self.bettingTicketsPublisher.value
-            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.decimalOdd) })
-
-        let route = TSRouter.getBetslipSelectionInfo(language: "en",
-                                                     stakeAmount: 1,
-                                                     betType: .multiple,
-                                                     tickets: ticketSelections, oddsBoostPercentage: oddsBoostPercentage)
-
-        Env.everyMatrixClient.manager
-            .getModel(router: route, decodingType: BetslipSelectionState.self)
-            .receive(on: DispatchQueue.main)
-            .sink { _ in
-                
-            } receiveValue: { [weak self] betslipSelectionState in
-                self?.multipleBetslipSelectionState.send(betslipSelectionState)
-
-                if let betBuilder = betslipSelectionState.betBuilder,
-                   let betBuilderOdds = betBuilder[safe: 0]?.betBuilderOdds {
-                    self?.betBuilderOddPublisher.send(betBuilderOdds)
-                }
-                else {
-                    self?.betBuilderOddPublisher.send(nil)
-                }
-            }
-            .store(in: &cancellables)
-
-    }
-
-    func requestSystemBetslipSelectionState(withSkateAmount amount: Double = 1.0, systemBetType: SystemBetType)
-    -> AnyPublisher<BetslipSelectionState, EveryMatrix.APIError> {
-
-        let ticketSelections = self.bettingTicketsPublisher.value
-            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.decimalOdd) })
-
-        let route = TSRouter.getSystemBetSelectionInfo(language: "en",
-                                                       stakeAmount: amount,
-                                                       systemBetType: systemBetType,
-                                                       tickets: ticketSelections)
-
-        return Env.everyMatrixClient.manager
-            .getModel(router: route, decodingType: BetslipSelectionState.self)
-            .handleEvents(receiveOutput: { betslipSelectionState in
-                // self.simpleBetslipSelectionState.send(betslipSelectionState)
-                self.systemBetslipSelectionState.send(betslipSelectionState)
-            })
-            .eraseToAnyPublisher()
-
     }
 
     func getErrorsForBettingTicket(bettingTicket: BettingTicket) -> BetslipError {

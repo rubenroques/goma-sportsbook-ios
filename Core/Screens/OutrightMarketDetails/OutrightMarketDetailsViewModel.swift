@@ -106,7 +106,6 @@ class OutrightMarketDetailsViewModel {
                         print("COMPETITION INFO ERROR: \(error)")
                         self?.isLoadingPublisher.send(false)
                     }
-
                 }, receiveValue: { [weak self] competitionInfo in
                     self?.subscribeOutrightMarkets(competition: competition)
                 })
@@ -120,9 +119,8 @@ class OutrightMarketDetailsViewModel {
         if let outrightMarketGroup = competition.competitionInfo?.marketGroups.filter({
             $0.name == "Outright"
         }).first {
-
             Env.servicesProvider.subscribeOutrightMarkets(forMarketGroupId: outrightMarketGroup.id)
-                .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
+                .sink { [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
                     switch completion {
                     case .finished:
                         ()
@@ -136,12 +134,9 @@ class OutrightMarketDetailsViewModel {
                     case .contentUpdate(let eventsGroups):
                         print("OUTRIGHTS EVENTS: \(eventsGroups)")
                         if let event = eventsGroups.first?.events.first {
-                            //self.storeMarkets(markets: eventsGroups)
                             let markets = ServiceProviderModelMapper.markets(fromServiceProviderMarkets: event.markets)
                             self?.storeMarkets(markets: markets)
-                            //self?.isLoadingPublisher.send(false)
                         }
-
                     case .disconnected:
                         ()
                     }
@@ -160,25 +155,6 @@ class OutrightMarketDetailsViewModel {
         self.isCompetitionBettingAvailablePublisher.send(self.marketGroupOrganizers.isNotEmpty)
 
         self.refreshPublisher.send()
-        self.isLoadingPublisher.send(false)
-    }
-
-    private func storeAggregator(_ aggregator: EveryMatrix.Aggregator) {
-        self.store.storeMarketGroupDetails(fromAggregator: aggregator, onMarketGroup: Self.groupKey)
-        self.marketGroupOrganizers = self.store.marketGroupOrganizers(withGroupKey: Self.groupKey)
-        
-        self.isCompetitionBettingAvailablePublisher.send(self.marketGroupOrganizers.isNotEmpty)
-                
-        self.refreshPublisher.send()
-        self.isLoadingPublisher.send(false)
-    }
-
-    private func updateWithAggregator(_ aggregator: EveryMatrix.Aggregator) {
-        self.store.updateMarketGroupDetails(fromAggregator: aggregator)
-        
-        let updatedMarketGroupOrganizers = self.store.marketGroupOrganizers(withGroupKey: Self.groupKey)
-        self.isCompetitionBettingAvailablePublisher.send(updatedMarketGroupOrganizers.isNotEmpty)
-        
         self.isLoadingPublisher.send(false)
     }
 

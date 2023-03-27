@@ -24,24 +24,13 @@ class OutrightMarketDetailsStore {
 
     private var markets: [Market] = []
 
-    var locations: OrderedDictionary<String, EveryMatrix.Location> = [:]
-    
     // MARK: - Lifetime and Cycle
     init() {
 
     }
 
-    func storeLocations(locations: [EveryMatrix.Location]) {
-        self.locations = [:]
-        for location in locations {
-            self.locations[location.id] = location
-        }
-    }
-
     func storeMarketGroupDetailsFromMarkets(markets: [Market], onMarketGroup marketGroupKey: String) {
-
         for market in markets {
-
             if var marketsForIterationMatch = marketsForGroup[marketGroupKey] {
                 marketsForIterationMatch.append(market.id)
                 marketsForGroup[marketGroupKey] = marketsForIterationMatch
@@ -51,100 +40,9 @@ class OutrightMarketDetailsStore {
                 newSet.append(market.id)
                 marketsForGroup[marketGroupKey] = newSet
             }
-
             self.markets.append(market)
         }
-
     }
-    
-    func storeMarketGroupDetails(fromAggregator aggregator: EveryMatrix.Aggregator, onMarketGroup marketGroupKey: String) {
-
-        for content in aggregator.content ?? [] {
-            switch content {
-            case .market(let marketContent):
-                marketsPublishers[marketContent.id] = CurrentValueSubject<EveryMatrix.Market, Never>.init(marketContent)
-
-                if var marketsForIterationMatch = marketsForGroup[marketGroupKey] {
-                    marketsForIterationMatch.append(marketContent.id)
-                    marketsForGroup[marketGroupKey] = marketsForIterationMatch
-                }
-                else {
-                    var newSet = OrderedSet<String>.init()
-                    newSet.append(marketContent.id)
-                    marketsForGroup[marketGroupKey] = newSet
-                }
-
-            case .betOutcome(let betOutcomeContent):
-                betOutcomes[betOutcomeContent.id] = betOutcomeContent
-
-            case .bettingOffer(let bettingOfferContent):
-                if let outcomeIdValue = bettingOfferContent.outcomeId {
-                    bettingOffers[outcomeIdValue] = bettingOfferContent
-                }
-                bettingOfferPublishers[bettingOfferContent.id] = CurrentValueSubject<EveryMatrix.BettingOffer, Never>.init(bettingOfferContent)
-
-            case .marketOutcomeRelation(let marketOutcomeRelationContent):
-                marketOutcomeRelations[marketOutcomeRelationContent.id] = marketOutcomeRelationContent
-
-                if let marketId = marketOutcomeRelationContent.marketId, let outcomeId = marketOutcomeRelationContent.outcomeId {
-                    if var outcomesForMatch = bettingOutcomesForMarket[marketId] {
-                        outcomesForMatch.insert(outcomeId)
-                        bettingOutcomesForMarket[marketId] = outcomesForMatch
-                    }
-                    else {
-                        var newSet = Set<String>.init()
-                        newSet.insert(outcomeId)
-                        bettingOutcomesForMarket[marketId] = newSet
-                    }
-                }
-
-            default:
-                ()
-            }
-        }
-    }
-
-    func updateMarketGroupDetails(fromAggregator aggregator: EveryMatrix.Aggregator) {
-
-        guard
-            let contentUpdates = aggregator.contentUpdates
-        else {
-            return
-        }
-
-        for update in contentUpdates {
-            switch update {
-            case .bettingOfferUpdate(let id, let statusId, let odd, let isLive, let isAvailable):
-                if let publisher = bettingOfferPublishers[id] {
-                    let bettingOffer = publisher.value
-                    let updatedBettingOffer = bettingOffer.bettingOfferUpdated(withOdd: odd,
-                                                                               statusId: statusId,
-                                                                               isLive: isLive,
-                                                                               isAvailable: isAvailable)
-                    publisher.send(updatedBettingOffer)
-                }
-            case .marketUpdate(let id, let isAvailable, let isClosed):
-                if let marketPublisher = marketsPublishers[id] {
-                    let market = marketPublisher.value
-                    let updatedMarket = market.martketUpdated(withAvailability: isAvailable, isCLosed: isClosed)
-                    marketPublisher.send(updatedMarket)
-                }
-            case .matchInfo:
-                ()
-            case .fullMatchInfoUpdate:
-                ()
-            case .cashoutUpdate:
-                ()
-            case .unknown:
-                ()
-            case .cashoutCreate:
-                ()
-            case .cashoutDelete:
-                ()
-            }
-        }
-    }
-
 
     func marketGroupOrganizers(withGroupKey key: String) -> [MarketGroupOrganizer] {
         guard let marketsIds = self.marketsForGroup[key] else { return [] }

@@ -262,33 +262,6 @@ extension CountrySelectorViewController: UITableViewDelegate {
     
 }
 
-//extension CountrySelectorViewController {
-//
-//    private func convertCountries(_ countries: [Country]) -> [String] {
-//
-//        var originaCountry: EveryMatrix.Country?
-//        var countryPhoneList: [String] = []
-//
-//        for country in countries {
-//            let isoCode = country.iso2Code
-//            if country.phonePrefix.isNotEmpty {
-//                if let flag = CountryFlagHelper.flag(forCode: isoCode) {
-//                    if isoCode == listing.currentIpCountry {
-//                        originaCountry = country
-//                    }
-//                    else {
-//                        countryPhoneList.append("\(country.name) \(flag) \(country.phonePrefix)")
-//                    }
-//                }
-//                else {
-//                    countryPhoneList.append("\(country.name) \(country.isoCode ?? "") \(country.phonePrefix)")
-//                }
-//            }
-//        }
-//        return (originaCountry, countryPhoneList)
-//    }
-//}
-
 // Keyboard
 extension CountrySelectorViewController {
     
