@@ -97,7 +97,14 @@ class PromotionsWebViewController: UIViewController {
     }
 
     @objc private func didTapBackButton() {
-        self.navigationController?.popViewController(animated: true)
+
+        if let currentUrl = self.webView.url,
+           currentUrl != self.url {
+            self.webView.goBack()
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 }
 
@@ -116,11 +123,20 @@ extension PromotionsWebViewController: WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+
         guard let url = navigationAction.request.url else { return nil }
 
         webView.load(navigationAction.request)
 
-        return nil
+        return webView
+    }
+
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
+
+        guard let url = navigationAction.request.url else { return .cancel }
+
+        return .allow
+
     }
 }
 
