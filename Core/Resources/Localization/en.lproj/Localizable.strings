@@ -457,7 +457,6 @@
 "live_field_statistics" = "Live field statistics"; // UNUSED
 "live_matches" = "Live Matches";
 "live_number" = "Live ({num_matches})"; // UNUSED
-"live_stats" = "Live field"; // UNUSED
 "loading" = "Loading";
 "lock_account_alert_text" = "You are about to lock your account. Are you sure you want to proceed?"; // UNUSED
 "lock_account_alert_title" = "Account Lock"; // UNUSED
@@ -1116,3 +1115,5 @@
 
 "queued" = "Queued";
 "no_wager_info" = "No Wager Info";
+
+"live_stats" = "Live field";

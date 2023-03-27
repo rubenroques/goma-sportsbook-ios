@@ -939,3 +939,6 @@
 "payment_authorized_message" = "Votre paiement a été autorisé. Votre dépôt devrait être disponible sur votre compte.";
 
 "no_value" = "-.--€";
+"light_mode" = "Mode clair";
+
+"live_stats" = "Match en direct";

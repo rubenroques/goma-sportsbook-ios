@@ -370,6 +370,12 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.plusFiveButtonView.setTitle("+20", for: .normal)
         self.maxValueButtonView.setTitle("+50", for: .normal)
 
+        // Quick add buttons
+        self.secondaryPlusOneButtonView.setTitle("+10", for: .normal)
+        self.secondaryPlusFiveButtonView.setTitle("+20", for: .normal)
+        self.secondaryMaxButtonView.setTitle("+50", for: .normal)
+
+
         //
         //
         singleBettingTicketDataSource.didUpdateBettingValueAction = { [weak self] id, value in

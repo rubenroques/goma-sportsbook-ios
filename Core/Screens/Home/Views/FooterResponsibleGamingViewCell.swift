@@ -22,6 +22,9 @@ class FooterResponsibleGamingViewCell: UITableViewCell {
 
         self.setupSubviews()
         self.setupWithTheme()
+
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapBaseView))
+        self.baseView.addGestureRecognizer(tapGestureRecognizer)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -45,8 +48,13 @@ class FooterResponsibleGamingViewCell: UITableViewCell {
         self.contentView.backgroundColor = .clear
     }
 
-}
+    @objc func didTapBaseView() {
+        if let url = URL(string: "https://www.joueurs-info-service.fr/") {
+            UIApplication.shared.open(url)
+        }
+    }
 
+}
 
 extension FooterResponsibleGamingViewCell {
 
