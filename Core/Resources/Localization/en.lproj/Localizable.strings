@@ -1117,3 +1117,6 @@
 "no_wager_info" = "No Wager Info";
 
 "live_stats" = "Live field";
+
+"bet_placed" = "Bet Placed";
+"bet_settled" = "Bet Settled";

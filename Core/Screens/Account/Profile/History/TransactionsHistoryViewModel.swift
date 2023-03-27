@@ -364,7 +364,14 @@ class TransactionsHistoryViewModel {
 
     func processTransactions(transactions: [TransactionDetail], transactionType: TransactionsType) {
 
-        let transactions = transactions.map { transactionDetail -> TransactionHistory in
+        // Filter unwanted transactions types
+        let unwantedTypes = ["RSV_COMMIT", "RESERVE", "RSV_CANCEL"]
+
+        let filteredTransactions = transactions.filter({
+            !unwantedTypes.contains($0.type)
+        })
+
+        let transactionsHistory = filteredTransactions.map { transactionDetail -> TransactionHistory in
 
             var valueType = TransactionValueType.neutral
 
@@ -407,12 +414,12 @@ class TransactionsHistoryViewModel {
         switch transactionType {
         case .all:
             if self.allTransactions.value.isEmpty {
-                self.allTransactions.send(transactions)
-                self.transactionsPublisher.send(transactions)
+                self.allTransactions.send(transactionsHistory)
+                self.transactionsPublisher.send(transactionsHistory)
             }
             else {
                 var nextTransactions = self.allTransactions.value
-                nextTransactions.append(contentsOf: transactions)
+                nextTransactions.append(contentsOf: transactionsHistory)
                 self.allTransactions.send(nextTransactions)
                 self.transactionsPublisher.send(nextTransactions)
             }
@@ -421,12 +428,12 @@ class TransactionsHistoryViewModel {
 
         case .deposit:
             if self.depositTransactions.value.isEmpty {
-                self.depositTransactions.send(transactions)
-                self.transactionsPublisher.send(transactions)
+                self.depositTransactions.send(transactionsHistory)
+                self.transactionsPublisher.send(transactionsHistory)
             }
             else {
                 var nextTransactions = self.depositTransactions.value
-                nextTransactions.append(contentsOf: transactions)
+                nextTransactions.append(contentsOf: transactionsHistory)
                 self.depositTransactions.send(nextTransactions)
                 self.transactionsPublisher.send(nextTransactions)
             }
@@ -434,12 +441,12 @@ class TransactionsHistoryViewModel {
             self.hasLoadedPendingWithdrawals.send(true)
         case .withdraw:
             if self.withdrawTransactions.value.isEmpty {
-                self.withdrawTransactions.send(transactions)
-                self.transactionsPublisher.send(transactions)
+                self.withdrawTransactions.send(transactionsHistory)
+                self.transactionsPublisher.send(transactionsHistory)
             }
             else {
                 var nextTransactions = self.withdrawTransactions.value
-                nextTransactions.append(contentsOf: transactions)
+                nextTransactions.append(contentsOf: transactionsHistory)
                 self.withdrawTransactions.send(nextTransactions)
                 self.transactionsPublisher.send(nextTransactions)
             }
@@ -523,22 +530,31 @@ class TransactionsHistoryViewModel {
 
         switch self.transactionsType {
         case .all:
-            if self.allTransactions.value.count < self.recordsPerPage * (self.allPage) {
-                self.transactionsHasNextPage = false
+//            if self.allTransactions.value.count < self.recordsPerPage * (self.allPage) {
+//                self.transactionsHasNextPage = false
+//                return
+//            }
+            if !self.transactionsHasNextPage {
                 return
             }
             allPage += 1
             self.loadAll(page: allPage, isNextPage: true)
         case .deposit:
-            if self.depositTransactions.value.count < self.recordsPerPage * (self.depositPage) {
-                self.transactionsHasNextPage = false
+//            if self.depositTransactions.value.count < self.recordsPerPage * (self.depositPage) {
+//                self.transactionsHasNextPage = false
+//                return
+//            }
+            if !self.transactionsHasNextPage {
                 return
             }
             depositPage += 1
             self.loadDeposits(page: depositPage, isNextPage: true)
         case .withdraw:
-            if self.withdrawTransactions.value.count < self.recordsPerPage * (self.withdrawPage) {
-                self.transactionsHasNextPage = false
+//            if self.withdrawTransactions.value.count < self.recordsPerPage * (self.withdrawPage) {
+//                self.transactionsHasNextPage = false
+//                return
+//            }
+            if !self.transactionsHasNextPage {
                 return
             }
             withdrawPage += 1
