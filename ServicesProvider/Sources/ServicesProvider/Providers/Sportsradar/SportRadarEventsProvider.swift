@@ -1078,7 +1078,7 @@ extension SportRadarEventsProvider {
             if let selectedMarketSports = marketFilter.marketsSportType?.marketSports {
 
                 for marketSportType in selectedMarketSports {
-                    let eventSportCode = match.sport.name
+                    let eventSportCode = match.sport.alphaId ?? ""
                     for marketSport in marketSportType.value {
 
                         if eventSportCode.contains(marketSportType.key) || marketSportType.key.lowercased() == "all" {
