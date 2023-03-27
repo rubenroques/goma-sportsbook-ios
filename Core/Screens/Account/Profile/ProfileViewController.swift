@@ -571,11 +571,22 @@ extension ProfileViewController {
     }
 
     @objc func messagesViewTapped(sender: UITapGestureRecognizer) {
-        let messagesViewModel = MessagesViewModel()
+//        let messagesViewModel = MessagesViewModel()
+//
+//        let messagesRootViewController = MessagesViewController(viewModel: messagesViewModel)
 
-        let messagesRootViewController = MessagesViewController(viewModel: messagesViewModel)
-        
-        self.navigationController?.pushViewController(messagesRootViewController, animated: true)
+        let promotionsWebViewModel = PromotionsWebViewModel()
+
+        let theme = self.traitCollection.userInterfaceStyle
+
+        let urlString = theme == .dark ? "https://sportsbook-stage.gomagaming.com/en/in-app/promotions?dark=true" : "https://sportsbook-stage.gomagaming.com/en/in-app/promotions?dark=false"
+
+        if let url = URL(string: urlString) {
+
+            let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
+
+            self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
+        }
     }
 
     @objc func historyViewTapped(sender: UITapGestureRecognizer) {

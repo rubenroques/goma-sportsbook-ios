@@ -1116,3 +1116,6 @@
 
 "queued" = "Queued";
 "no_wager_info" = "No Wager Info";
+
+"bet_placed" = "Bet Placed";
+"bet_settled" = "Bet Settled";
