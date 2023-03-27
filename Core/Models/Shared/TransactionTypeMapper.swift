@@ -8,14 +8,17 @@
 import Foundation
 
 enum TransactionTypeMapper {
+
     case deposit
     case withdrawal
     case bonusCredited
     case bonusExpired
+    case bonusReleased
     case depositCancel
     case withdrawalCancel
     case betPlaced
     case betSettled
+    case cashOut
 
     init?(transactionType: String) {
 
@@ -24,10 +27,12 @@ enum TransactionTypeMapper {
         case "WITHDRAWAL": self = .withdrawal
         case "CRE_BONUS": self = .bonusCredited
         case "EXP_BONUS": self = .bonusExpired
+        case "BONUS_REL": self = .bonusReleased
         case "DP_CANCEL": self = .depositCancel
         case "WD_CANCEL": self = .withdrawalCancel
         case "GAME_BET": self = .betPlaced
         case "GAME_WIN": self = .betSettled
+        case "CASH_OUT": self = .cashOut
         default: return nil
         }
     }
@@ -38,10 +43,12 @@ enum TransactionTypeMapper {
         case .withdrawal: return localized("withdrawal")
         case .bonusCredited: return localized("bonus_credit")
         case .bonusExpired: return localized("bonus_expired")
+        case .bonusReleased: return localized("bonus_released")
         case .depositCancel: return localized("deposit_cancel")
         case .withdrawalCancel: return localized("withdrawal_cancel")
         case .betPlaced: return localized("bet_placed")
         case .betSettled: return localized("bet_settled")
+        case .cashOut: return localized("cashout")
         }
     }
 }

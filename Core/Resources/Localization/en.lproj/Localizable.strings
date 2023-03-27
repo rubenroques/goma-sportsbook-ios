@@ -836,7 +836,7 @@
 "start_of_game" = "Start of game";
 "starting_from" = "Starting From"; // UNUSED
 "starting_soon" = "Starting Soon"; // UNUSED
-"statistics" = "statistics"; // UNUSED
+"statistics" = "Statistics"; // UNUSED
 "subject" = "Subject";
 "submit" = "Submit";
 "subtitle" = "Subtitle";
@@ -1120,3 +1120,5 @@
 
 "bet_placed" = "Bet Placed";
 "bet_settled" = "Bet Settled";
+
+"bonus_released" = "Bonus Released";

@@ -343,7 +343,7 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailLiveBottomLabel.font = AppFont.with(type: .semibold, size: 12)
         self.headerDetailLiveBottomLabel.numberOfLines = 0
 
-        self.liveButtonLabel.text = localized("live_stats")
+        self.liveButtonLabel.text = ""
 
         self.homeRedCardImage.isHidden = true
         self.awayRedCardImage.isHidden = true
@@ -663,10 +663,14 @@ class MatchDetailsViewController: UIViewController {
                 if matchMode == .preLive {
                     self?.headerDetailLiveView.isHidden = true
                     self?.headerDetailPreliveView.isHidden = false
+
+                    self?.liveButtonLabel.text = localized("statistics")
                 }
                 else {
                     self?.headerDetailPreliveView.isHidden = true
                     self?.headerDetailLiveView.isHidden = false
+
+                    self?.liveButtonLabel.text = localized("live_stats")
                 }
 
                 self?.view.setNeedsLayout()
@@ -686,7 +690,6 @@ class MatchDetailsViewController: UIViewController {
         self.viewModel.homeRedCardsScorePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] homeScoreValue in
-                
                 if homeScoreValue != "0" {
                     self?.homeRedCardImage.isHidden = false
                     self?.homeRedCardLabel.text = homeScoreValue

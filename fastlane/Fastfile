@@ -63,8 +63,6 @@ end
 
 lane :distribute_to_firebase do |options|
 
-  increment_build_number
-  
   build_app(
     scheme: options[:app_scheme],
     clean: true,
@@ -83,10 +81,26 @@ lane :distribute_to_firebase do |options|
 end
 
 
-  lane :beta do |options|
-    desc "Distribute Beta version to Firebase"
-    # create_github_release
-    # send_discord_notification
-    distribute_to_firebase(app_scheme: options[:client])
-  end
+lane :increment_specific_target_build_number do |options|
+  target = options[:app_scheme]
+
+  # Get the path to the target's Info.plist file
+  plist_path = "./Clients/#{target}/Misc/#{target}-Info.plist"
+
+  # Read the current build number
+  current_build_number = get_info_plist_value(path: plist_path, key: "CFBundleVersion")
+
+  # Increment the build number
+  new_build_number = current_build_number.to_i + 1
+
+  # Update the build number in the Info.plist file
+  set_info_plist_value(path: plist_path, key: "CFBundleVersion", value: new_build_number.to_s)
+end
+
+lane :beta do |options|
+  desc "Distribute Beta version to Firebase"
+  increment_specific_target_build_number(app_scheme: options[:client])
+  distribute_to_firebase(app_scheme: options[:client])
+end
+
 end

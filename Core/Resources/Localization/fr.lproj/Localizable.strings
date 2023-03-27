@@ -773,7 +773,7 @@
 "start_of_game" = "Début du jeu";
 "starting_from" = "A partir de"; // UNUSED
 "starting_soon" = "Commence bientôt"; // UNUSED
-"statistics" = "statistiques"; // UNUSED
+"statistics" = "Statistiques"; // UNUSED
 "street_line_1" = "Rue ligne 1"; // UNUSED
 "street_line_2" = "Rue ligne 2"; // UNUSED
 "subject" = "Sujet";
@@ -946,3 +946,11 @@
 
 "bet_placed" = "Pari Placé";
 "bet_settled" = "Pari Réglé";
+
+"bonus_credit" = "Crédit Bonus";
+"bonus_expired" = "Bonus Expiré";
+"deposit_cancel" = "Annulation de Dépôt";
+
+"bonus_released" = "Bonus Libéré";
+
+"kyc_account_status" = "Statut du compte KYC";
