@@ -640,7 +640,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
     }
 
     func processDeposit(paymentMethod: String, amount: Double, option: String) -> AnyPublisher<ProcessDepositResponse, ServiceProviderError> {
-
+        
         let endpoint = OmegaAPIClient.processDeposit(paymentMethod: paymentMethod, amount: amount, option: option)
         let publisher: AnyPublisher<SportRadarModels.ProcessDepositResponse, ServiceProviderError> = self.connector.request(endpoint)
 

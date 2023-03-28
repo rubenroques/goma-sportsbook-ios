@@ -788,7 +788,7 @@
 "suggested_bets" = "Paris suggérés";
 "suggested_country" = "Pays suggéré";
 "suggested_names" = "Noms suggérés"; // UNUSED
-"support" = "Soutien";
+"support" = "Support";
 "support_error" = "Nous ne pouvons pas envoyer votre message pour le moment. Veuillez réessayer plus tard.";
 "support_success" = "Votre message a bien été envoyé";
 "suspended" = "Suspendu";
@@ -946,3 +946,15 @@
 
 "bet_placed" = "Pari Placé";
 "bet_settled" = "Pari Réglé";
+
+"withdraw_error" = "Erreur de retirer";
+"used" = "Utilisé";
+"queued" = "File";
+"no_wager_info" = "Info sans mise";
+"payment_authorized" = "Paiement Autorisé";
+
+"withdrawal" = "Retrait";
+"bonus_credit" = "Crédit Bonus";
+"bonus_expired" = "Bonus Expirée";
+"deposit_cancel" = "Dépôt Annulation";
+"withdrawal_cancel" = "Retrait Annulation";

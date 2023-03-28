@@ -10,7 +10,7 @@ import Foundation
 public struct AvailableBonus: Codable {
     public var id: String
     public var name: String
-    public var description: String
+    public var description: String?
     public var type: String
     public var amount: Double
     public var triggerDate: String

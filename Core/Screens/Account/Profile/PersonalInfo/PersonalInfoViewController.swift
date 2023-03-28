@@ -84,6 +84,7 @@ class PersonalInfoViewController: UIViewController {
 
         editButton.setTitle(localized("save"), for: .normal)
         editButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
+        editButton.isHidden = true
 
 //        titleHeaderTextFieldView.setPlaceholderText(localized("title"))
         titleHeaderTextFieldView.setPlaceholderText(localized("gender"))
@@ -92,12 +93,15 @@ class PersonalInfoViewController: UIViewController {
         titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
         titleHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .regular, size: 15))
         titleHeaderTextFieldView.setPlaceholderTextColor(UIColor.App.inputTextTitle)
+        titleHeaderTextFieldView.isDisabled = true
 
         firstNameHeaderTextFieldView.setPlaceholderText(localized("first_name"))
         firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("names_match_id"),
                                                         color: UIColor.App.inputTextTitle)
+        firstNameHeaderTextFieldView.isDisabled = true
 
         lastNameHeaderTextFieldView.setPlaceholderText(localized("last_name"))
+        lastNameHeaderTextFieldView.isDisabled = true
 
         countryHeaderTextFieldView.setPlaceholderText(localized("nationality"))
         countryHeaderTextFieldView.setSelectionPicker(["---"], headerVisible: true)
@@ -112,27 +116,35 @@ class PersonalInfoViewController: UIViewController {
         birthDateHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
         birthDateHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .regular, size: 15))
         birthDateHeaderTextFieldView.setPlaceholderTextColor(UIColor.App.inputTextTitle)
-        birthDateHeaderTextFieldView.shouldBeginEditing = { return true }
+        birthDateHeaderTextFieldView.shouldBeginEditing = { return false }
 
         adress1HeaderTextFieldView.setPlaceholderText(localized("address"))
+        adress1HeaderTextFieldView.isDisabled = true
 
         adress2HeaderTextFieldView.setPlaceholderText(localized("street_number"))
+        adress2HeaderTextFieldView.isDisabled = true
 
         cityHeaderTextFieldView.setPlaceholderText(localized("city"))
+        cityHeaderTextFieldView.isDisabled = true
 
         postalCodeHeaderTextFieldView.setPlaceholderText(localized("postal_code"))
+        postalCodeHeaderTextFieldView.isDisabled = true
 
         usernameHeaderTextFieldView.setPlaceholderText(localized("username"))
+        usernameHeaderTextFieldView.isDisabled = true
 
         emailHeaderTextFieldView.setPlaceholderText(localized("email"))
+        emailHeaderTextFieldView.isDisabled = true
 
         cardIdHeaderTextFieldView.setPlaceholderText(localized("id_number"))
 
         bankIdHeaderTextFieldView.setPlaceholderText(localized("bank_id"))
 
         placeOfBirthHeaderTextFieldView.setPlaceholderText(localized("place_of_birth"))
+        placeOfBirthHeaderTextFieldView.isDisabled = true
 
         departmentOfBirthHeaderTextFieldView.setPlaceholderText(localized("department_of_birth"))
+        departmentOfBirthHeaderTextFieldView.isDisabled = true
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackgroundView))
         self.view.addGestureRecognizer(tapGestureRecognizer)

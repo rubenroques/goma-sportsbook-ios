@@ -160,9 +160,12 @@ class BonusRootViewController: UIViewController {
             .store(in: &cancellables)
 
         // TODO: Implement later
-//        for bonusTypesViewController in bonusTypesViewControllers {
-//            if let bonusVC = bonusTypesViewController as? BonusViewController {
-//
+        for bonusTypesViewController in bonusTypesViewControllers {
+            if let bonusVC = bonusTypesViewController as? BonusViewController {
+
+                bonusVC.redeemedBonus = { [weak self] bonusMessage in
+                    self?.checkAddedBonus(bonusMessage: bonusMessage)
+                }
 //                bonusVC.viewModel.hasQueuedBonus
 //                    .sink(receiveValue: { [weak self] hasQueuedBonus in
 //                        guard let self = self else { return }
@@ -171,8 +174,8 @@ class BonusRootViewController: UIViewController {
 //                        }
 //                    })
 //                    .store(in: &cancellables)
-//            }
-//        }
+            }
+        }
     }
 
     @objc func didTapLoginButton() {
@@ -248,6 +251,41 @@ class BonusRootViewController: UIViewController {
 //
 //        self.tabsToShow = 4
 //        self.reloadCollectionView()
+
+    }
+
+    func checkAddedBonus(bonusMessage: String) {
+
+        for bonusTypesViewController in bonusTypesViewControllers {
+            if let bonusVC = bonusTypesViewController as? BonusViewController {
+
+                bonusVC.viewModel.updateDataSources()
+
+                if bonusVC.viewModel.bonusListType == .active {
+
+                    bonusVC.viewModel.isBonusGrantedLoading
+                        .sink(receiveValue: { [weak self] _ in
+
+                            let filteredActiveBonus = bonusVC.viewModel.bonusActive.filter({
+                                bonusMessage.contains($0.id)
+                            })
+
+                            let filteredQueuedBonus = bonusVC.viewModel.bonusQueued.filter({
+                                bonusMessage.contains($0.id)
+                            })
+
+                            if filteredActiveBonus.isNotEmpty {
+                                self?.selectBonusType(atIndex: 1)
+                            }
+                            else if filteredQueuedBonus.isNotEmpty {
+                                self?.selectBonusType(atIndex: 2)
+                            }
+
+                        })
+                        .store(in: &cancellables)
+                }
+            }
+        }
 
     }
 
