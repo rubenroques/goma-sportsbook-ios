@@ -42,17 +42,16 @@ class SplashViewController: UIViewController {
             self.present(alert, animated: true, completion: nil)
         }
 
-        self.isLoadingBootDataSubscription = Publishers.CombineLatest3(Env.appSession.isLoadingAppSettingsPublisher,
-                                                                       Env.userSessionStore.isLoadingUserSessionPublisher,
-                                                                       Env.sportsStore.isLoadingSportTypesPublisher)
+        // Env.appSession.isLoadingAppSettingsPublisher,
+        self.isLoadingBootDataSubscription = Publishers.CombineLatest(Env.userSessionStore.isLoadingUserSessionPublisher,
+                                                                      Env.sportsStore.isLoadingSportTypesPublisher)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isLoadingAppSettings, isLoadingUserSession, isLoadingSportTypes in
-                if !isLoadingAppSettings && !isLoadingUserSession && !isLoadingSportTypes {
+            .sink { [weak self]  isLoadingUserSession, isLoadingSportTypes in
+                if !isLoadingUserSession && !isLoadingSportTypes {
                     self?.splashLoadingCompleted()
                 }
             }
     }
-
 
     func splashLoadingCompleted() {
         self.isLoadingBootDataSubscription = nil
@@ -60,4 +59,3 @@ class SplashViewController: UIViewController {
     }
 
 }
-

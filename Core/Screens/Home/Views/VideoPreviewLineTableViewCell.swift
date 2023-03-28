@@ -89,17 +89,13 @@ class VideoPreviewLineTableViewCell: UITableViewCell {
     }
 
     func configure(withViewModel viewModel: VideoPreviewLineCellViewModel) {
-
         self.viewModel = viewModel
-
         self.titleLabel.text = viewModel.titleSection
-
         self.reloadData()
     }
 
     func reloadData() {
         self.collectionView.reloadData()
-
     }
 
 }

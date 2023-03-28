@@ -940,5 +940,9 @@
 
 "no_value" = "-.--€";
 
+"light_mode" = "Mode clair";
+
+"live_stats" = "Match en direct";
+
 "bet_placed" = "Pari Placé";
 "bet_settled" = "Pari Réglé";

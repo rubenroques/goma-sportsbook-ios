@@ -343,6 +343,8 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailLiveBottomLabel.font = AppFont.with(type: .semibold, size: 12)
         self.headerDetailLiveBottomLabel.numberOfLines = 0
 
+        self.liveButtonLabel.text = localized("live_stats")
+
         self.homeRedCardImage.isHidden = true
         self.awayRedCardImage.isHidden = true
         self.homeRedCardLabel.isHidden = true
