@@ -312,10 +312,9 @@ class BonusViewController: UIViewController {
                 }
             }, receiveValue: { [weak self] redeemBonusResponse in
                 self?.showAlert(type: .success, text: localized("bonus_applied_success"))
-                if let bonusMessage = redeemBonusResponse.message {
-                    self?.redeemedBonus?(bonusMessage)
+                if let bonus = redeemBonusResponse.bonus {
+                    self?.redeemedBonus?("\(bonus.id)")
                 }
-                self?.viewModel.updateDataSources()
             })
             .store(in: &cancellables)
 //        Env.everyMatrixClient.applyBonus(bonusCode: bonusCode)
@@ -371,7 +370,9 @@ class BonusViewController: UIViewController {
                     }
                 }, receiveValue: { [weak self] redeemAvailableBonusResponse in
                     self?.showAlert(type: .success, text: localized("bonus_applied_success"))
-                    self?.viewModel.updateDataSources()
+                    if let bonusMessage = redeemAvailableBonusResponse.message {
+                        self?.redeemedBonus?(bonusMessage)
+                    }
                 })
                 .store(in: &cancellables)
         }

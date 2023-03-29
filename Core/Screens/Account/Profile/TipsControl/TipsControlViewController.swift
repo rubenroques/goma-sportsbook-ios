@@ -135,7 +135,7 @@ extension TipsControlViewController {
     private static func createTopTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("tips_keep_control")
+        label.text = localized("tips_to_keep_control")
         label.font = AppFont.with(type: .bold, size: 20)
         label.textAlignment = .center
         return label

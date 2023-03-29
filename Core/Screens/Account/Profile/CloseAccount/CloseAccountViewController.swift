@@ -169,8 +169,8 @@ class CloseAccountViewController: UIViewController {
 
         switch alertType {
         case .success:
-            let alert = UIAlertController(title: localized("self_exclusion_success"),
-                                          message: localized("self_exclusion_success_message"),
+            let alert = UIAlertController(title: localized("close_account_success"),
+                                          message: localized("close_account_success_message"),
                                           preferredStyle: .alert)
 
             alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
@@ -181,8 +181,8 @@ class CloseAccountViewController: UIViewController {
 
             self.present(alert, animated: true, completion: nil)
         case .error:
-            let alert = UIAlertController(title: localized("self_exclusion_error"),
-                                          message: localized("self_exclusion_error_message"),
+            let alert = UIAlertController(title: localized("close_account_error"),
+                                          message: localized("close_account_error_message"),
                                           preferredStyle: .alert)
 
             alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))

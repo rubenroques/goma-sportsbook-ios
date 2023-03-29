@@ -264,21 +264,23 @@ class BonusRootViewController: UIViewController {
                 if bonusVC.viewModel.bonusListType == .active {
 
                     bonusVC.viewModel.isBonusGrantedLoading
-                        .sink(receiveValue: { [weak self] _ in
+                        .sink(receiveValue: { [weak self] isLoading in
 
-                            let filteredActiveBonus = bonusVC.viewModel.bonusActive.filter({
-                                bonusMessage.contains($0.id)
-                            })
+                            if !isLoading {
+                                let filteredActiveBonus = bonusVC.viewModel.bonusActive.filter({
+                                    bonusMessage.contains($0.id)
+                                })
 
-                            let filteredQueuedBonus = bonusVC.viewModel.bonusQueued.filter({
-                                bonusMessage.contains($0.id)
-                            })
+                                let filteredQueuedBonus = bonusVC.viewModel.bonusQueued.filter({
+                                    bonusMessage.contains($0.id)
+                                })
 
-                            if filteredActiveBonus.isNotEmpty {
-                                self?.selectBonusType(atIndex: 1)
-                            }
-                            else if filteredQueuedBonus.isNotEmpty {
-                                self?.selectBonusType(atIndex: 2)
+                                if filteredActiveBonus.isNotEmpty {
+                                    self?.selectBonusType(atIndex: 1)
+                                }
+                                else if filteredQueuedBonus.isNotEmpty {
+                                    self?.selectBonusType(atIndex: 2)
+                                }
                             }
 
                         })

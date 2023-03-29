@@ -247,8 +247,6 @@ class BonusViewModel {
 
             }, receiveValue: { [weak self] grantedBonuses in
 
-                print("GRANTED BONUSES: \(grantedBonuses)")
-
                 let grantedBonus = grantedBonuses.map({
                     let grantedBonus = ServiceProviderModelMapper.grantedBonus(fromServiceProviderGrantedBonus: $0)
                     return grantedBonus
