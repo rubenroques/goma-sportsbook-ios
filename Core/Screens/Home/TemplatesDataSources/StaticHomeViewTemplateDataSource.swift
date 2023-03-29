@@ -88,11 +88,6 @@ class StaticHomeViewTemplateDataSource {
     //
     var alertsArray: [ActivationAlert] = []
 
-    //
-    // EM Registers
-    private var bannersInfoRegister: EndpointPublisherIdentifiable?
-    private var favoriteMatchesRegister: EndpointPublisherIdentifiable?
-
     // Combine Publishers
     private var bannersInfoPublisher: AnyCancellable?
     private var favoriteMatchesPublisher: AnyCancellable?
@@ -103,8 +98,8 @@ class StaticHomeViewTemplateDataSource {
     init() {
         self.refresh()
 
-        Env.everyMatrixClient.serviceStatusPublisher
-            .filter(\.isConnected)
+        Env.servicesProvider.eventsConnectionStatePublisher
+            .filter({ $0 == .connected })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.refresh()
@@ -172,16 +167,6 @@ class StaticHomeViewTemplateDataSource {
         self.refreshPublisher.send()
     }
 
-    // Banners
-    func stopBannerUpdates() {
-        if let bannersInfoRegister = bannersInfoRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: bannersInfoRegister)
-        }
-
-        self.bannersInfoPublisher?.cancel()
-        self.bannersInfoPublisher = nil
-    }
-
     func fetchAlerts() {
         self.alertsArray = []
         if let isUserEmailVerified = Env.userSessionStore.isUserEmailVerified.value, !isUserEmailVerified {
@@ -210,9 +195,6 @@ class StaticHomeViewTemplateDataSource {
     }
 
     func fetchBanners() {
-
-        self.stopBannerUpdates()
-
         self.banners = []
 
         Env.servicesProvider.getBanners()

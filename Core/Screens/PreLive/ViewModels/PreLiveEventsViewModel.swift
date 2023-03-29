@@ -805,46 +805,6 @@ class PreLiveEventsViewModel: NSObject {
             .store(in: &cancellables)
     }
 
-    func outrightCompetitions(forIds ids: [String]) -> [Competition] {
-
-        var outrightCompetitions: [Competition] = []
-
-        for id in ids {
-            if let rawCompetition = Env.everyMatrixStorage.tournaments[id] {
-
-                var location: Location?
-                if let rawLocation = Env.everyMatrixStorage.location(forId: rawCompetition.venueId ?? "") {
-                    location = Location(id: rawLocation.id,
-                                    name: rawLocation.name ?? "",
-                                    isoCode: rawLocation.code ?? "")
-                }
-
-                let competition = Competition(id: rawCompetition.id,
-                                              name: rawCompetition.name ?? "",
-                                              venue: location,
-                                              numberOutrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
-                outrightCompetitions.append(competition)
-            }
-            else if let rawCompetition = Env.everyMatrixStorage.popularTournaments[id] {
-
-                var location: Location?
-                if let rawLocation = Env.everyMatrixStorage.location(forId: rawCompetition.venueId ?? "") {
-                    location = Location(id: rawLocation.id,
-                                    name: rawLocation.name ?? "",
-                                    isoCode: rawLocation.code ?? "")
-                }
-
-                let competition = Competition(id: rawCompetition.id,
-                                              name: rawCompetition.name ?? "",
-                                              venue: location,
-                                              numberOutrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
-                outrightCompetitions.append(competition)
-            }
-        }
-
-        return outrightCompetitions
-    }
-
 }
 
 extension PreLiveEventsViewModel {

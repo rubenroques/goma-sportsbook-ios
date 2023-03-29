@@ -13,7 +13,7 @@ public protocol UnsubscriptionController: AnyObject {
 }
 
 public class Subscription: Hashable, Identifiable {
-    
+
     public var id: String
 
     public var contentIdentifier: ContentIdentifier
@@ -37,7 +37,7 @@ public class Subscription: Hashable, Identifiable {
         self.unsubscriber = unsubscriber
         print("ServiceProvider.Subscription init \(self.contentIdentifier)")
     }
-    
+
     deinit {
         print("ServiceProvider.Subscription deinit \(self)")
         unsubscriber?.unsubscribe(subscription: self)
@@ -56,11 +56,11 @@ public class Subscription: Hashable, Identifiable {
         hasher.combine(id)
         hasher.combine(contentIdentifier)
     }
-    
+
     public static func == (lhs: Subscription, rhs: Subscription) -> Bool {
         return lhs.id == rhs.id && lhs.contentIdentifier == rhs.contentIdentifier
     }
-        
+
 }
 
 

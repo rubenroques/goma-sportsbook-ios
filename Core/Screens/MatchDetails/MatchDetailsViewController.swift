@@ -333,10 +333,10 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailPreliveTopLabel.text = localized("match_label_default")
         self.headerDetailPreliveTopLabel.font = AppFont.with(type: .semibold, size: 12)
         
-        self.headerDetailPreliveBottomLabel.text = localized("time_label_default")
+        self.headerDetailPreliveBottomLabel.text = "00:00"
         self.headerDetailPreliveBottomLabel.font = AppFont.with(type: .bold, size: 16)
         
-        self.headerDetailLiveTopLabel.text = localized("score_label_default")
+        self.headerDetailLiveTopLabel.text = "'0 - 0'"
         self.headerDetailLiveTopLabel.font = AppFont.with(type: .bold, size: 16)
         
         self.headerDetailLiveBottomLabel.text = localized("match_start_label_default")
@@ -1022,13 +1022,10 @@ class MatchDetailsViewController: UIViewController {
     
     @objc private func openCompetitionsDetails() {
         if let match = self.viewModel.match {
-            let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [match.competitionId],
-                                                                          sport: match.sport,
-                                                                          store: AggregatorsRepository())
+            let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [match.competitionId], sport: match.sport)
             let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
             self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
         }
-        
     }
     
     @objc func didTapChatView() {
@@ -1048,7 +1045,7 @@ class MatchDetailsViewController: UIViewController {
 
     private func openQuickbet(_ bettingTicket: BettingTicket) {
 
-        if let userSession = UserSessionStore.loggedUserSession() {
+        if UserSessionStore.isUserLogged() {
             let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
 
             let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)

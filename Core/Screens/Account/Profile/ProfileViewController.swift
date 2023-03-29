@@ -123,46 +123,6 @@ class ProfileViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        Env.everyMatrixClient.getProfileStatus()
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
-            .sink { _ in
-
-            } receiveValue: { _ in
-            }
-        .store(in: &cancellables)
-
-//        Env.userSessionStore.userBalanceWallet
-//            .compactMap({$0})
-//            .map(\.amount)
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] value in
-//                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
-//                    let accountValue = bonusWallet.amount + value
-//                    self?.totalBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-//                }
-//                else {
-//                    self?.totalBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
-//                }
-//                self?.currentBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
-//            }
-//            .store(in: &cancellables)
-//
-//        Env.userSessionStore.userBonusBalanceWallet
-//            .compactMap({$0})
-//            .map(\.amount)
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] value in
-//                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
-//                    let accountValue = currentWallet.amount + value
-//
-//                    self?.totalBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-//                }
-//                self?.bonusBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
-//            }
-//            .store(in: &cancellables)
-//
-
         Env.userSessionStore.refreshUserWallet()
 
         Env.userSessionStore.userWalletPublisher

@@ -20,8 +20,6 @@ class OutrightMarketDetailsViewModel {
 
     // MARK: - Private Properties
     private var marketGroupOrganizers: [MarketGroupOrganizer] = []
-    private var competitionMarketPublisher: AnyCancellable?
-    private var competitionMarketRegister: EndpointPublisherIdentifiable?
 
     private var store: OutrightMarketDetailsStore
 

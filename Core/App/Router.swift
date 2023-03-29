@@ -162,34 +162,32 @@ class Router {
     }
 
     func subscribeToURLRedirects() {
-        Publishers.CombineLatest(Env.urlSchemaManager.redirectPublisher, Env.everyMatrixClient.serviceStatusPublisher)
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveValue: { [weak self] urlSubject, serviceStatus in
-                        if serviceStatus == .connected {
-                            if Env.everyMatrixClient.manager.isConnected {
-                                if let urlSubject = urlSubject["gamedetail"] {
-                                    self?.showMatchDetailScreen(matchId: urlSubject)
-                                }
-                                else if let urlSubject = urlSubject["bet"] {
-                                    self?.subscribeBetslipSharedTicketStatus(betToken: urlSubject)
-                                }
-                            }
-                        }
-                    })
-                    .store(in: &cancellables)
+        Publishers.CombineLatest(Env.urlSchemaManager.redirectPublisher, Env.servicesProvider.eventsConnectionStatePublisher)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] urlSubject, serviceStatus in
+                if serviceStatus == .connected {
+                    if let urlSubject = urlSubject["gamedetail"] {
+                        self?.showMatchDetailScreen(matchId: urlSubject)
+                    }
+                    else if let urlSubject = urlSubject["bet"] {
+                        self?.subscribeBetslipSharedTicketStatus(betToken: urlSubject)
+                    }
+                }
+            })
+            .store(in: &cancellables)
     }
 
     func subscribeToNotificationsOpened() {
-        Env.everyMatrixClient.serviceStatusPublisher
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveValue: { [weak self] serviceStatus in
-                        if let requestStartingRoute = self?.requestStartingRoute(),
-                           serviceStatus == .connected {
-                            self?.appSharedState = .inactiveApp
-                            self?.openRoute(requestStartingRoute)
-                        }
-                    })
-                    .store(in: &cancellables)
+        Env.servicesProvider.eventsConnectionStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] serviceStatus in
+                if let requestStartingRoute = self?.requestStartingRoute(),
+                   serviceStatus == .connected {
+                    self?.appSharedState = .inactiveApp
+                    self?.openRoute(requestStartingRoute)
+                }
+            })
+            .store(in: &cancellables)
     }
 
     // Open from notifications
@@ -348,12 +346,13 @@ class Router {
                 let navigationViewController = Router.navigationController(with: betslipViewController)
                 self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
             case .activeApp:
-                NotificationCenter.default.publisher(for: .socketConnected)
+
+                Env.servicesProvider.eventsConnectionStatePublisher
+                    .filter({ $0 == .connected })
                     .receive(on: DispatchQueue.main)
                     .sink(receiveCompletion: { _ in
 
                     }, receiveValue: { [weak self] _ in
-
                         let betslipViewController = BetslipViewController(startScreen: .sharedBet(token))
                         let navigationViewController = Router.navigationController(with: betslipViewController)
                         self?.rootViewController?.present(navigationViewController, animated: true, completion: nil)

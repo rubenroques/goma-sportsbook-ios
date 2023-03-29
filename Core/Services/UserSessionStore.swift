@@ -66,20 +66,11 @@ class UserSessionStore {
     
     init() {
 
+        // TODO: Remove this, it shoulg detect the service provider connection state
         executeDelayed(0.15) {
             self.startUserSessionIfNeeded()
         }
 
-        NotificationCenter.default.publisher(for: .userSessionConnected)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                // self?.subscribeAccountBalanceWatcher()
-                
-                self?.requestNotificationsUserSettings()
-                self?.requestBettingUserSettings()
-            }
-            .store(in: &cancellables)
-        
     }
 
     static func loggedUserSession() -> UserSession? {
@@ -160,7 +151,6 @@ class UserSessionStore {
         Env.gomaSocialClient.clearUserChatroomsData()
 
         // TODO: Migrate to UserDefaults extensions
-        UserDefaults.standard.removeObject(forKey: "betslipOddValidationType")
         UserDefaults.standard.removeObject(forKey: "RegistrationFormDataKey")
 
         Env.gomaNetworkClient.reconnectSession()
@@ -239,16 +229,7 @@ class UserSessionStore {
             .handleEvents(receiveOutput: { [weak self] registered in
                 self?.pendingSignUpUserForm = form
             }).eraseToAnyPublisher()
-        
-//        Env.everyMatrixClient
-//            .simpleRegister(form: form)
-//            .map { _ in return true }
-//            .handleEvents(receiveOutput: { registered in
-//                if registered {
-//                    self.triggerLoginOnRegister(form: form)
-//                }
-//            })
-//            .eraseToAnyPublisher()
+
     }
 
     func triggerPendingLoginAfterRegister() -> AnyPublisher<Bool, UserSessionError> {
@@ -273,21 +254,6 @@ class UserSessionStore {
             return Just(false).setFailureType(to: UserSessionError.self).eraseToAnyPublisher()
         }
     }
-//    private func triggerLoginAfterRegister(form: ServicesProvider.SimpleSignUpForm) {
-//        self.login(withUsername: form.username, password: form.password)
-//            .map { String($0.userId) }
-//            .sink(receiveCompletion: { [weak self] completion in
-//                switch completion {
-//                case .failure:
-//                    self?.logout()
-//                case .finished:
-//                    ()
-//                }
-//            }, receiveValue: { userId in
-//                self.signUpSimpleGomaAPI(form: form, userId: userId)
-//            })
-//            .store(in: &cancellables)
-//    }
 
 }
 

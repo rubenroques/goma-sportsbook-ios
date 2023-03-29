@@ -145,38 +145,12 @@ class FullRegisterDocumentsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        Env.everyMatrixClient.getProfile()
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
-            .sink { _ in
-
-            } receiveValue: { profile in
-                self.profile = profile.fields
-            }
-        .store(in: &cancellables)
-
         self.addFileDocumentPickerView.didTapAddFile = {
             self.openFile()
         }
     }
 
     private func checkUserInputs() {
-
-//        idHeaderTextFieldView.hasText = { value in
-//            if value {
-//                if self.addFileDocumentPickerView.fileSelected == true {
-//                    self.submitButton.enableButton()
-//                }
-//            }
-//            else {
-//                self.submitButton.disableButton()
-//            }
-//        }
-//
-//        idHeaderTextFieldView.didTapReturn = {
-//            self.view.endEditing(true)
-//        }
-
         let validCardId = idHeaderTextFieldView.text == "" ? false : true
 
         if validCardId {
@@ -185,7 +159,6 @@ class FullRegisterDocumentsViewController: UIViewController {
         else {
             self.submitButton.isEnabled = false
         }
-
     }
 
     private func openFile() {
@@ -312,32 +285,6 @@ class FullRegisterDocumentsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-//
-//      Env.everyMatrixClient.updateProfile(form: form)
-//            .receive(on: DispatchQueue.main)
-//            .sink { completion in
-//                switch completion {
-//                case .failure(let error):
-//                    print("fullRegisterProfile error: \(error)")
-//                    switch error {
-//                    case let .requestError(message):
-//                        self.showAlert(type: .error, text: message)
-//                    default:
-//                        self.showAlert(type: .error, text: "\(error)")
-//                    }
-//                case .finished:
-//                    ()
-//                }
-//
-//                print("fullRegisterProfile completion: \(completion)")
-//
-//            } receiveValue: { _ in
-//                self.refreshUserProfileStatus()
-//                self.showAlert(type: .success, text: localized("profile_updated_success"))
-//                self.navigationController?.popToRootViewController(animated: true)
-//            }
-//            .store(in: &cancellables)
-//
         
         if let firstName = form.firstName, let lastName = form.lastName {
             Env.gomaNetworkClient.requestUpdateNameProfile(name: "\(firstName) \(lastName)")

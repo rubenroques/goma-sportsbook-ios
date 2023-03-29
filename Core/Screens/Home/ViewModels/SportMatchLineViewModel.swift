@@ -61,18 +61,6 @@ class SportMatchLineViewModel {
 
     private var matchesType: MatchesType
 
-    private var popularMatchesPublisher: AnyCancellable?
-    private var liveMatchesPublisher: AnyCancellable?
-    private var competitionsMatchesPublisher: AnyCancellable?
-    private var outrightCompetitionsPublisher: AnyCancellable?
-
-    private var popularMatchesRegister: EndpointPublisherIdentifiable?
-    private var liveMatchesRegister: EndpointPublisherIdentifiable?
-    private var competitionMatchesRegister: EndpointPublisherIdentifiable?
-    private var outrightCompetitionsRegister: EndpointPublisherIdentifiable?
-
-    // private var matchesIds: [String] = []
-
     private var matches: [Match] = []
 
     private var cancellables: Set<AnyCancellable> = []

@@ -212,12 +212,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             self.bootstrap.router.openedNotificationRouteWhileActive(route)
         }
         else if application.applicationState == .inactive {
-            if Env.everyMatrixClient.serviceStatusPublisher.value == .connected {
-                self.bootstrap.router.openedNotificationRouteWhileActive(route)
-            }
-            else {
-                self.bootstrap.router.configureStartingRoute(route)
-            }
+            self.bootstrap.router.configureStartingRoute(route)
         }
         else if application.applicationState == .background {
             self.bootstrap.router.configureStartingRoute(route)
@@ -226,4 +221,3 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
 
 }
-

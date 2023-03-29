@@ -86,21 +86,13 @@ class EmailVerificationViewController: UIViewController, ChooseEmailActionSheetP
     }
 
     @IBAction private func closeAction() {
-        Env.everyMatrixClient.getSessionInfo()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] _ in
-                self?.dismiss(animated: true, completion: nil)
-            }, receiveValue: { userSession in
-                Env.userSessionStore.isUserEmailVerified.send(userSession.isEmailVerified)
-            })
-            .store(in: &cancellables)
 
     }
+
     @IBAction private func activateAccountAction() {
-        chooseEmailActionSheet = setupChooseEmailActionSheet()
+        self.chooseEmailActionSheet = self.setupChooseEmailActionSheet()
 
         show(chooseEmailActionSheet ?? UIAlertController(), sender: self)
-
     }
 
 }

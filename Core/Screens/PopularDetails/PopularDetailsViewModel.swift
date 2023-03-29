@@ -11,8 +11,6 @@ import ServicesProvider
 
 class PopularDetailsViewModel {
 
-    var store: AggregatorsRepository
-
     var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
     var isLoading: CurrentValueSubject<Bool, Never> = .init(true)
@@ -20,7 +18,6 @@ class PopularDetailsViewModel {
     var titlePublisher: CurrentValueSubject<String, Never>
 
     private var matchesPublisher: AnyCancellable?
-    private var matchesRegister: EndpointPublisherIdentifiable?
 
     private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
 
@@ -33,8 +30,7 @@ class PopularDetailsViewModel {
     private var cancellables: Set<AnyCancellable> = []
     private var subscriptions: Set<ServicesProvider.Subscription> = []
 
-    init(sport: Sport, store: AggregatorsRepository) {
-        self.store = store
+    init(sport: Sport) {
         self.sport = sport
 
         self.titlePublisher = .init(self.sport.name)
@@ -156,38 +152,6 @@ class PopularDetailsViewModel {
 
     private func setupWithError() {
         self.isLoading.send(false)
-    }
-
-    private func updateWithAggregatorProcessor(_ aggregator: EveryMatrix.Aggregator) {
-        self.store.processContentUpdateAggregator(aggregator)
-    }
-
-    private func storeOutrightCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        self.store.processOutrightTournamentsAggregator(aggregator)
-
-        let localOutrightCompetitions = self.store.outrightTournaments.values.map { rawCompetition -> Competition in
-
-            var location: Location?
-            if let rawLocation = self.store.location(forId: rawCompetition.venueId ?? "") {
-                location = Location(id: rawLocation.id,
-                                name: rawLocation.name ?? "",
-                                isoCode: rawLocation.code ?? "")
-            }
-
-            let competition = Competition(id: rawCompetition.id,
-                                               name: rawCompetition.name ?? "",
-                                               venue: location,
-                                               numberOutrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
-            return competition
-        }
-
-        self.titlePublisher.send("\(self.sport.name) - Markets")
-
-        self.outrightCompetitions = localOutrightCompetitions
-        self.isLoading.send(false)
-        self.refreshPublisher.send()
-
-        self.closeOutrightCompetitionsConnection()
     }
 
 }

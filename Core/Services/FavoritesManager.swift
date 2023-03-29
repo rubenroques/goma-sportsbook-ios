@@ -256,20 +256,6 @@ class FavoritesManager {
             }
         }
 
-//        Env.everyMatrixClient.postUserMetadata(favoriteEvents: favoriteEvents)
-//            .receive(on: DispatchQueue.main)
-//            .eraseToAnyPublisher()
-//            .sink { _ in
-//            } receiveValue: { [weak self] _ in
-//
-//                if favoriteAction == .add {
-//                    self?.postFavoritesToGoma(eventId: eventId, favoriteType: favoriteTypeChanged)
-//                }
-//                else if favoriteAction == .remove {
-//                    self?.deleteFavoriteFromGoma(eventId: eventId)
-//                }
-//            }
-//            .store(in: &cancellables)
     }
 
     private func addFavoriteToList(listId: Int, eventId: String, isCompetitionFavorite: Bool = false) {

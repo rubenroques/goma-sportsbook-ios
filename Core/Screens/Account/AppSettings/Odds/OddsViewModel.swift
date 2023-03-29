@@ -34,10 +34,10 @@ class OddsViewModel: NSObject {
         viewTapped.isChecked = true
 
         if viewTapped.viewId == 1 {
-            self.bettingUserSettings?.oddValidationType = BetslipOddValidationType.acceptHigher.rawValue
+            self.bettingUserSettings?.oddValidationType =  BetslipOddValidationType.acceptHigher.key
         }
         else if viewTapped.viewId == 2 {
-            self.bettingUserSettings?.oddValidationType = BetslipOddValidationType.acceptAny.rawValue
+            self.bettingUserSettings?.oddValidationType = BetslipOddValidationType.acceptAny.key
         }
 
         self.storeBettingUserSettings()

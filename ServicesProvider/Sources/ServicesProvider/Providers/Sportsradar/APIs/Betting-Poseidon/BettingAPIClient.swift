@@ -15,6 +15,8 @@ enum BettingAPIClient {
     case placeBets(betTickets: [BetTicket])
     case calculateCashout(betId: String)
     case cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double)
+    case getBetslipSettings
+    case updateBetslipSettings(acceptingReoffer: Bool)
 }
 
 extension BettingAPIClient: Endpoint {
@@ -35,6 +37,10 @@ extension BettingAPIClient: Endpoint {
             return "/api/cashout/fo/cashout/\(betId)/calculate"
         case .cashoutBet(let betId, _, _):
             return "/api/cashout/fo/cashout/\(betId)"
+        case .getBetslipSettings:
+            return "/api/betting/fo/attribute/getAll"
+        case .updateBetslipSettings:
+            return "/api/betting/fo/attribute/update"
         }
     }
     
@@ -84,6 +90,10 @@ extension BettingAPIClient: Endpoint {
         case .calculateCashout:
             return nil
         case .cashoutBet:
+            return nil
+        case .getBetslipSettings:
+            return nil
+        case .updateBetslipSettings:
             return nil
         }
     }
@@ -220,6 +230,24 @@ extension BettingAPIClient: Endpoint {
                        """
             let data = body.data(using: String.Encoding.utf8)!
             return data
+
+        case .getBetslipSettings:
+            return nil
+        case .updateBetslipSettings(let acceptingReoffer):
+
+            var acceptingReofferStringValue = "0"
+            if acceptingReoffer {
+                acceptingReofferStringValue = "-1"
+            }
+
+            let body = """
+                       {id: 101,
+                       name: "ACCEPTINRREOFFER",
+                       value: "\(acceptingReofferStringValue)"}
+                       """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+
         }
         
     }
@@ -233,6 +261,8 @@ extension BettingAPIClient: Endpoint {
         case .placeBets: return .post
         case .calculateCashout: return .post
         case .cashoutBet: return .post
+        case .getBetslipSettings: return .get
+        case .updateBetslipSettings: return .post
         }
     }
     
@@ -245,6 +275,8 @@ extension BettingAPIClient: Endpoint {
         case .placeBets: return true
         case .calculateCashout: return true
         case .cashoutBet: return true
+        case .getBetslipSettings: return true
+        case .updateBetslipSettings: return true
         }
     }
     
@@ -276,6 +308,8 @@ extension BettingAPIClient: Endpoint {
         case .placeBets: return TimeInterval(60)
         case .calculateCashout: return TimeInterval(60)
         case .cashoutBet: return TimeInterval(20)
+        case .getBetslipSettings: return TimeInterval(10)
+        case .updateBetslipSettings: return TimeInterval(10)
         }
     }
     

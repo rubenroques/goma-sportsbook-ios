@@ -190,11 +190,19 @@ class LiveEventsViewController: UIViewController {
         tableView.addSubview(self.refreshControl)
 
         tableView.separatorStyle = .none
-        tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
-        tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
-        tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
-        tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
-        tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
+        tableView.register(MatchLineTableViewCell.nib,
+                           forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+        tableView.register(BannerScrollTableViewCell.nib,
+                           forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
+        tableView.register(LoadingMoreTableViewCell.nib,
+                           forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
+        tableView.register(FooterResponsibleGamingViewCell.self,
+                           forCellReuseIdentifier: FooterResponsibleGamingViewCell.identifier)
+        tableView.register(TournamentTableViewHeader.nib,
+                           forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
+        tableView.register(TitleTableViewHeader.nib,
+                           forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
+
 
         tableView.delegate = self
         tableView.dataSource = self

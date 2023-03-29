@@ -22,7 +22,6 @@ class MarketGroupDetailsViewModel {
     
     private var marketGroupId: String
 
-    private var marketGroupsDetailsRegister: EndpointPublisherIdentifiable?
     private var store: MarketGroupDetailsStore
 
     var availableMarkets: [Market] = []
@@ -67,27 +66,6 @@ class MarketGroupDetailsViewModel {
         if !self.isBetBuilder {
             return
         }
-        
-        let tickets = Env.betslipManager.bettingTicketsPublisher.value
-        let ticketSelections = tickets
-            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.decimalOdd) })
-        
-        if ticketSelections.isEmpty {
-            self.grayedOutSelectionsPublisher.send(BetBuilderGrayoutsState.defaultState)
-            print("grayoutdebug no tickets, send empty")
-            return
-        }
-        
-        let route = TSRouter.getSelectionsGreyout(tickets: ticketSelections)
-        Env.everyMatrixClient.manager.getModel(router: route, decodingType: BetBuilderGrayoutsState.self)
-            .sink { completion in
-                print("GrayoutDebug \(completion)")
-                
-            } receiveValue: { [weak self] betBuilderGrayoutsState in
-                print("grayoutdebug getSelectionsGreyout response")
-                self?.grayedOutSelectionsPublisher.send(betBuilderGrayoutsState)
-            }
-            .store(in: &cancellables)
 
     }
     

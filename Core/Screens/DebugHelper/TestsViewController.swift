@@ -15,7 +15,6 @@ class TestsViewController: UIViewController {
 
     var cancellables = Set<AnyCancellable>()
 
-    var savedRegistration: Registration?
 
     init() {
         super.init(nibName: "TestsViewController", bundle: nil)
@@ -58,14 +57,6 @@ class TestsViewController: UIViewController {
     }
 
     @IBAction private func testSubscriptionInitialDump() {
-
-        if let savedRegistration = savedRegistration {
-            Env.everyMatrixClient.manager.swampSession?.unregister(savedRegistration.registration, onSuccess: {
-                self.savedRegistration = nil
-            }, onError: { _, _ in
-                self.savedRegistration = nil
-            })
-        }
 
     }
 

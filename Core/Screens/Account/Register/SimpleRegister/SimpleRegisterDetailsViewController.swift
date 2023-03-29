@@ -198,16 +198,6 @@ class SimpleRegisterDetailsViewController: UIViewController {
         }
 
     private func setupPublishers() {
-
-//        Env.everyMatrixClient.getCountries()
-//            .receive(on: DispatchQueue.main)
-//            .eraseToAnyPublisher()
-//            .sink { _ in
-//                self.indicativeHeaderTextView.isUserInteractionEnabled = true
-//            } receiveValue: { [weak self] countries in
-//                self?.setupWithCountryCodes(countries)
-//            }
-//            .store(in: &cancellables)
         
         Env.servicesProvider.getCurrentCountry()
             .compactMap({ $0 })
@@ -539,18 +529,17 @@ extension SimpleRegisterDetailsViewController {
 extension SimpleRegisterDetailsViewController {
 
     private func requestValidUsernameCheck(_ username: String) {
-        Env.everyMatrixClient
-            .validateUsername(username)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.loadingUsernameValidityView.stopAnimating()
-            } receiveValue: { [weak self] usernameAvailability in
-                if !usernameAvailability.isAvailable {
-                    self?.showUsernameTakenErrorStatus()
-                }
-                self?.loadingUsernameValidityView.stopAnimating()
-            }
-            .store(in: &cancellables)
+//        Env. em .validateUsername(username)
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] _ in
+//                self?.loadingUsernameValidityView.stopAnimating()
+//            } receiveValue: { [weak self] usernameAvailability in
+//                if !usernameAvailability.isAvailable {
+//                    self?.showUsernameTakenErrorStatus()
+//                }
+//                self?.loadingUsernameValidityView.stopAnimating()
+//            }
+//            .store(in: &cancellables)
     }
 }
 

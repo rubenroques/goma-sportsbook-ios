@@ -183,7 +183,7 @@ class HomeViewController: UIViewController {
 
     // MARK: - Actions
     private func openCompetitionsDetails(competitionsIds: [String], sport: Sport) {
-        let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: competitionsIds, sport: sport, store: AggregatorsRepository())
+        let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: competitionsIds, sport: sport)
         let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
         self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
     }
@@ -200,7 +200,7 @@ class HomeViewController: UIViewController {
     }
 
     private func openPopularDetails(_ sport: Sport) {
-        let viewModel = PopularDetailsViewModel(sport: sport, store: AggregatorsRepository())
+        let viewModel = PopularDetailsViewModel(sport: sport)
         let popularDetailsViewController = PopularDetailsViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(popularDetailsViewController, animated: true)
     }
@@ -244,7 +244,7 @@ class HomeViewController: UIViewController {
 
     private func openQuickbet(_ bettingTicket: BettingTicket) {
 
-        if let userSession = UserSessionStore.loggedUserSession() {
+        if UserSessionStore.isUserLogged() {
             let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
 
             let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)
@@ -518,8 +518,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         }
 
         switch contentType {
-        case .footerBanner:
-            return UITableView.automaticDimension
         case .userMessage:
             return .leastNormalMagnitude
         case .bannerLine:
@@ -554,6 +552,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
         case .userProfile:
             return 140
+        case .footerBanner:
+            return UITableView.automaticDimension
         }
 
     }
@@ -566,8 +566,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         }
 
         switch contentType {
-        case .footerBanner:
-            return 120
         case .userMessage:
             return .leastNormalMagnitude
         case .bannerLine:
@@ -602,6 +600,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
         case .userProfile:
             return 140
+        case .footerBanner:
+            return 120
         }
     }
 

@@ -212,34 +212,34 @@ class ConversationBetSelectionViewModel {
             return
         }
 
-        self.isLoadingSharedBetPublisher.send(true)
-
-        let betTokenRoute = TSRouter.getSharedBetTokens(betId: viewModelValue.id)
-
-        Env.everyMatrixClient.manager.getModel(router: betTokenRoute, decodingType: SharedBetToken.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure:
-                    self?.isLoadingSharedBetPublisher.send(false)
-                case .finished:
-                    ()
-                }
-            },
-            receiveValue: { [weak self] betToken in
-                guard let self = self else { return }
-
-                let attachment = self.generateAttachmentString(viewModel: viewModelValue,
-                                                               withToken: betToken.sharedBetTokens.betTokenWithAllInfo)
-
-                Env.gomaSocialClient.sendMessage(chatroomId: self.conversationData?.id ?? 0,
-                                                 message: message,
-                                                 attachment: attachment)
-  
-                self.isLoadingSharedBetPublisher.send(false)
-                self.messageSentAction?()
-            })
-            .store(in: &cancellables)
+//        self.isLoadingSharedBetPublisher.send(true)
+//
+//        let betTokenRoute = em .getSharedBetTokens(betId: viewModelValue.id)
+//
+//        Env. em .manager.getModel(router: betTokenRoute, decodingType: SharedBetToken.self)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure:
+//                    self?.isLoadingSharedBetPublisher.send(false)
+//                case .finished:
+//                    ()
+//                }
+//            },
+//            receiveValue: { [weak self] betToken in
+//                guard let self = self else { return }
+//
+//                let attachment = self.generateAttachmentString(viewModel: viewModelValue,
+//                                                               withToken: betToken.sharedBetTokens.betTokenWithAllInfo)
+//
+//                Env.gomaSocialClient.sendMessage(chatroomId: self.conversationData?.id ?? 0,
+//                                                 message: message,
+//                                                 attachment: attachment)
+//
+//                self.isLoadingSharedBetPublisher.send(false)
+//                self.messageSentAction?()
+//            })
+//            .store(in: &cancellables)
 
     }
 

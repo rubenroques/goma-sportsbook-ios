@@ -32,9 +32,6 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    private var oddUpdatesPublisher: AnyCancellable?
-    private var oddUpdatesRegister: EndpointPublisherIdentifiable?
-
     override func awakeFromNib() {
         super.awakeFromNib()
 
@@ -66,13 +63,6 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
 
         self.oddValue = nil
         self.isAvailableForBet = nil
-
-        self.oddUpdatesPublisher?.cancel()
-        self.oddUpdatesPublisher = nil
-
-        if let oddUpdatesRegister = oddUpdatesRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: oddUpdatesRegister)
-        }
 
         self.isOutcomeButtonSelected = false
 
@@ -114,54 +104,54 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
                                 statusId: outcome.bettingOffer.statusId != "" ? outcome.bettingOffer.statusId : "1",
                                 isAvailableForBetting: outcome.bettingOffer.isAvailable ?? true)
 
-        self.isOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-
-        let endpoint = TSRouter.bettingOfferPublisher(operatorId: Env.appSession.operatorId,
-                                                      language: "en",
-                                                      bettingOfferId: outcome.bettingOffer.id)
-
-        self.oddUpdatesPublisher = Env.everyMatrixClient.manager.registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
-                case .finished:
-                    print("Data retrieved!")
-                }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let oddUpdatesRegister):
-                    self?.oddUpdatesRegister = oddUpdatesRegister
-
-                case .initialContent(let aggregator):
-
-                    if let content = aggregator.content {
-                        for contentType in content {
-                            if case let .bettingOffer(bettingOffer) = contentType, let oddsValue = bettingOffer.oddsValue {
-                                self?.oddValue =  nil
-                                self?.updateBettingOffer(value: oddsValue,
-                                                         statusId: bettingOffer.statusId ?? "1",
-                                                         isAvailableForBetting: bettingOffer.isAvailable ?? true)
-                                break
-                            }
-                        }
-                    }
-
-                case .updatedContent(let aggregatorUpdates):
-
-                    if let content = aggregatorUpdates.contentUpdates {
-                        for contentType in content {
-                            if case let .bettingOfferUpdate(_, statusId, odd, _, isAvailable) = contentType {
-                                self?.updateBettingOffer(value: odd, statusId: statusId, isAvailableForBetting: isAvailable)
-                            }
-                        }
-                    }
-
-                case .disconnect:
-                    ()
-                }
-            })
+//        self.isOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+//
+//        let endpoint = em .bettingOfferPublisher(operatorId: Env.appSession.operatorId,
+//                                                      language: "en",
+//                                                      bettingOfferId: outcome.bettingOffer.id)
+//
+//        self.oddUpdatesPublisher = Env. em .manager.registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure:
+//                    print("Error retrieving data!")
+//                case .finished:
+//                    print("Data retrieved!")
+//                }
+//            }, receiveValue: { [weak self] state in
+//                switch state {
+//                case .connect(let oddUpdatesRegister):
+//                    self?.oddUpdatesRegister = oddUpdatesRegister
+//
+//                case .initialContent(let aggregator):
+//
+//                    if let content = aggregator.content {
+//                        for contentType in content {
+//                            if case let .bettingOffer(bettingOffer) = contentType, let oddsValue = bettingOffer.oddsValue {
+//                                self?.oddValue =  nil
+//                                self?.updateBettingOffer(value: oddsValue,
+//                                                         statusId: bettingOffer.statusId ?? "1",
+//                                                         isAvailableForBetting: bettingOffer.isAvailable ?? true)
+//                                break
+//                            }
+//                        }
+//                    }
+//
+//                case .updatedContent(let aggregatorUpdates):
+//
+//                    if let content = aggregatorUpdates.contentUpdates {
+//                        for contentType in content {
+//                            if case let .bettingOfferUpdate(_, statusId, odd, _, isAvailable) = contentType {
+//                                self?.updateBettingOffer(value: odd, statusId: statusId, isAvailableForBetting: isAvailable)
+//                            }
+//                        }
+//                    }
+//
+//                case .disconnect:
+//                    ()
+//                }
+//            })
     }
 
     private func updateBettingOffer(value: Double?, statusId: String?, isAvailableForBetting available: Bool?) {

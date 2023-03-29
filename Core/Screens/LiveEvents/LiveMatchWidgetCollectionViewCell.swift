@@ -114,9 +114,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     private var currentHomeOddValue: Double?
     private var currentDrawOddValue: Double?
     private var currentAwayOddValue: Double?
-    
-    private var goalsRegister: EndpointPublisherIdentifiable?
-    private var goalsSubscription: AnyCancellable?
 
     private var homeRedCardPublisher: CurrentValueSubject<String, Never> = .init("0")
     private var awayRedCardPublisher: CurrentValueSubject<String, Never> = .init("0")
@@ -474,58 +471,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.drawOddValueLabel.font = AppFont.with(type: .bold, size: 13)
         self.awayOddValueLabel.font = AppFont.with(type: .bold, size: 13)
     }
-    
-    func requestRedCards(forMatchWithId id: String) {
-        
-        self.goalsSubscription?.cancel()
-        self.goalsSubscription = nil
 
-        if let goalsRegister = goalsRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: goalsRegister)
-        }
-        
-        let endpoint = TSRouter.eventPartScoresPublisher(operatorId: Env.appSession.operatorId, language: "en", matchId: id)
-        
-        self.goalsSubscription = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
-                case .finished:
-                    print("Data retrieved!")
-                }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    print("%%\(publisherIdentifiable)")
-                    self?.goalsRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    print("MyBets cashoutPublisher initialContent")
-                    for content in (aggregator.content ?? []) {
-                       switch content {
-                        case .eventPartScore(let eventPartScore):
-                            if let eventInfoTypeId = eventPartScore.eventInfoTypeID, eventInfoTypeId == "4" {
-                                if let homeScore = eventPartScore.homeScore {
-                                    self?.homeRedCardPublisher.send(homeScore)
-                                    
-                                }
-                                if let awayscore = eventPartScore.awayScore {
-                                    self?.awayRedCardPublisher.send(awayscore)
-                                  
-                                }
-                            }
-                        default: ()
-                        }
-                    }
-                case .updatedContent:
-                    print("MyBets cashoutPublisher updatedContent")
-                case .disconnect:
-                    print("MyBets cashoutPublisher disconnect")
-                }
-            })
-        
-    }
 
     func configure(withViewModel viewModel: MatchWidgetCellViewModel) {
 
@@ -553,8 +499,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         }
 
         if let matchId = viewModel.match {
-            self.requestRedCards(forMatchWithId: matchId.id)
-            
+            // self.requestRedCards(forMatchWithId: matchId.id)
         }
 
         if let market = match.markets.first {
@@ -740,8 +685,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 //            self.awayOddValueLabel.text = "-"
 
             self.showSeeAllView()
-
-
         }
 
         for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
@@ -755,45 +698,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         var awayGoals = ""
         var minutes = ""
         var matchPart = ""
-
-        // Env.everyMatrixStorage.matchesInfoForMatch[match.id]
-//        if let matchInfoArray = viewModel.store.matchesInfoForMatchList()[match.id] {
-//            for matchInfoId in matchInfoArray {
-//                // Env.everyMatrixStorage.matchesInfo[matchInfoId]
-//                if let matchInfo = viewModel.store.matchesInfoList()[matchInfoId] {
-//                    if (matchInfo.typeId ?? "") == "1" && (matchInfo.eventPartId ?? "") == self.viewModel?.match?.rootPartId {
-//                        // Goals
-//                        if let homeGoalsFloat = matchInfo.paramFloat1 {
-//                            if self.viewModel?.match?.homeParticipant.id == matchInfo.paramParticipantId1 {
-//                                homeGoals = "\(homeGoalsFloat)"
-//                            }
-//                            else if self.viewModel?.match?.awayParticipant.id == matchInfo.paramParticipantId1 {
-//                                awayGoals = "\(homeGoalsFloat)"
-//                            }
-//                        }
-//                        if let awayGoalsFloat = matchInfo.paramFloat2 {
-//                            if self.viewModel?.match?.homeParticipant.id == matchInfo.paramParticipantId2 {
-//                                homeGoals = "\(awayGoalsFloat)"
-//                            }
-//                            else if self.viewModel?.match?.awayParticipant.id == matchInfo.paramParticipantId2 {
-//                                awayGoals = "\(awayGoalsFloat)"
-//                            }
-//                        }
-//                    }
-//                    else if (matchInfo.typeId ?? "") == "95", let awayGoalsFloat = matchInfo.paramFloat1 {
-//                        // Match Minutes
-//                        minutes = "\(awayGoalsFloat)"
-//                    }
-//                    else if (matchInfo.typeId ?? "") == "92", let eventPartName = matchInfo.paramEventPartName1 {
-//                        // Status
-//                        matchPart = eventPartName
-//                    }
-//
-//                }
-//            }
-//
-//        }
-//
 
         if homeGoals.isNotEmpty && awayGoals.isNotEmpty {
             self.resultLabel.text = "\(homeGoals) - \(awayGoals)"

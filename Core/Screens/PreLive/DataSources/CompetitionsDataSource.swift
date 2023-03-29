@@ -28,7 +28,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return competitions.count
+        return competitions.count + 1
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -40,10 +40,19 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                 return competition.matches.count
             }
         }
+        else if section == self.competitions.count {
+            return 1
+        }
         return 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        if indexPath.section == self.competitions.count,
+            let cell = tableView.dequeueCellType(FooterResponsibleGamingViewCell.self) {
+            return cell
+        }
+
         guard
             let competition = self.competitions[safe: indexPath.section]
         else {
@@ -99,10 +108,16 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 //            }
             return cell
         }
+
         fatalError()
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+
+        if section == self.competitions.count {
+            return nil // Footer
+        }
+
         guard
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TournamentTableViewHeader.identifier)
                 as? TournamentTableViewHeader,
@@ -141,14 +156,24 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == self.competitions.count {
+            return CGFloat(0.01)
+        }
         return 54
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+        if section == self.competitions.count {
+            return CGFloat(0.01)
+        }
         return 54
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == self.competitions.count {
+            return UITableView.automaticDimension // Footer
+        }
+
         if self.collapsedCompetitionsSections.contains(indexPath.section) {
             return .leastNonzeroMagnitude
         }
@@ -165,6 +190,10 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == self.competitions.count {
+            return 120 // Footer
+        }
+
         if self.collapsedCompetitionsSections.contains(indexPath.section) {
             return .leastNonzeroMagnitude
         }

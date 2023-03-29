@@ -263,3 +263,13 @@ public struct PlacedBetLeg: Codable {
     }
 
 }
+
+public struct BetslipSettings: Codable {
+
+    public var acceptingAnyReoffer: Bool
+
+    public init(acceptingAnyReoffer: Bool) {
+        self.acceptingAnyReoffer = acceptingAnyReoffer
+    }
+    
+}

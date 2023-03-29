@@ -61,9 +61,6 @@ struct BusinessModulesManager {
     }
     
     var isSocialFeaturesEnabled: Bool {
-        return true
-        
-        //
         for module in businessModules where module.name.lowercased() == "social features" {
             return module.enabled
         }

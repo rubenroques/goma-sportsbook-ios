@@ -106,7 +106,8 @@ class AppSettingsViewController: UIViewController {
             self.topStackView.addArrangedSubview(appearanceView)
         }
 
-        self.topStackView.addArrangedSubview(oddsView)
+        // TODO: Disabled odds settings
+        // self.topStackView.addArrangedSubview(oddsView)
 
         self.topStackView.addArrangedSubview(chatView)
 
@@ -117,6 +118,7 @@ class AppSettingsViewController: UIViewController {
     private func setupBottomStackView() {
 
         if #available(iOS 11, *) {
+
             let authContext = LAContext()
             let _ = authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
             switch authContext.biometryType {
@@ -143,6 +145,7 @@ class AppSettingsViewController: UIViewController {
             @unknown default:
                 self.bottomStackView.isHidden = true
             }
+
         }
 
     }

@@ -121,85 +121,6 @@ class BonusViewModel {
             .store(in: &cancellables)
     }
 
-//    private func getAvailableBonus() {
-//        self.isBonusApplicableLoading.send(true)
-//        self.isBonusClaimableLoading.send(true)
-//
-//        var gamingAccountId = ""
-//
-//        // Get Applicable Bonus
-//        Env.everyMatrixClient.getApplicableBonus(type: "deposit", gamingAccountId: gamingAccountId)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .failure:
-//                    ()
-//                case .finished:
-//                    ()
-//                }
-//                self.isBonusApplicableLoading.send(false)
-//            }, receiveValue: { [weak self] bonusResponse in
-//                if let bonusList = bonusResponse.bonuses {
-//                    for bonus in bonusList {
-//
-//                        let bonusTypeData = BonusTypeData(bonus: bonus, bonusType: .applicable)
-//
-//                        self?.bonusAvailable.append(bonusTypeData)
-//
-//                        if let url = URL(string: "https:\(bonus.assets)") {
-//                            self?.storeBonusBanner(url: url, bonusCode: bonus.code)
-//                            let bonusAvailableCellViewModel = BonusAvailableCellViewModel(bonus: bonus, bonusBannerUrl: url)
-//                            self?.bonusAvailableCellViewModels.append(bonusAvailableCellViewModel)
-//                        }
-//                        else {
-//                            let bonusAvailableCellViewModel = BonusAvailableCellViewModel(bonus: bonus)
-//                            self?.bonusAvailableCellViewModels.append(bonusAvailableCellViewModel)
-//                        }
-//
-//                    }
-//                }
-//
-//            })
-//            .store(in: &cancellables)
-//
-//        // Get Claimable Bonus
-//        Env.everyMatrixClient.getClaimableBonus()
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .failure:
-//                    ()
-//                case .finished:
-//                    ()
-//                }
-//                self.isBonusClaimableLoading.send(false)
-//            }, receiveValue: { [weak self] bonusResponse in
-//                for bonus in bonusResponse.locallyInjectedKey {
-//                    let bonusTypeData = BonusTypeData(bonus: bonus, bonusType: .claimable)
-//
-//                    self?.bonusAvailable.append(bonusTypeData)
-//
-//                    if let url = URL(string: "https:\(bonus.assets)") {
-//                        self?.storeBonusBanner(url: url, bonusCode: bonus.code)
-//                        let bonusAvailableCellViewModel = BonusAvailableCellViewModel(bonus: bonus, bonusBannerUrl: url)
-//                        self?.bonusAvailableCellViewModels.append(bonusAvailableCellViewModel)
-//                    }
-//                    else {
-//                        let bonusAvailableCellViewModel = BonusAvailableCellViewModel(bonus: bonus)
-//                        self?.bonusAvailableCellViewModels.append(bonusAvailableCellViewModel)
-//                    }
-//
-//                }
-//
-//            })
-//            .store(in: &cancellables)
-//
-//        if self.bonusAvailable.isEmpty {
-//            self.isBonusAvailableEmptyPublisher.send(true)
-//        }
-//
-//    }
-
     private func processAvailableBonus(bonuses: [ApplicableBonus]) {
 
         for bonus in bonuses {
@@ -236,48 +157,21 @@ class BonusViewModel {
         Env.servicesProvider.getGrantedBonuses()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
-
                 switch completion {
                 case .finished:
                     ()
                 case .failure(let error):
-                    print("GRANTED BONUSES ERROR: \(error)")
                     self?.isBonusGrantedLoading.send(false)
                 }
-
             }, receiveValue: { [weak self] grantedBonuses in
-
-                print("GRANTED BONUSES: \(grantedBonuses)")
-
                 let grantedBonus = grantedBonuses.map({
                     let grantedBonus = ServiceProviderModelMapper.grantedBonus(fromServiceProviderGrantedBonus: $0)
                     return grantedBonus
                 })
-
                 self?.processGrantedBonus(bonuses: grantedBonus)
-
             })
             .store(in: &cancellables)
 
-//        Env.everyMatrixClient.getGrantedBonus()
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .failure:
-//                    ()
-//                case .finished:
-//                    ()                }
-//            }, receiveValue: { [weak self] bonusResponse in
-//                if let bonuses = bonusResponse.bonuses {
-//                    self?.processGrantedBonus(bonuses: bonuses)
-//                }
-//                else {
-//                    self?.isBonusActiveEmptyPublisher.send(true)
-//                    self?.isBonusHistoryEmptyPublisher.send(true)
-//                }
-//
-//            })
-//            .store(in: &cancellables)
     }
 
     private func processGrantedBonus(bonuses: [GrantedBonus]) {
@@ -319,30 +213,4 @@ class BonusViewModel {
 
     }
 
-//    private func processGrantedBonus(bonuses: [EveryMatrix.GrantedBonus]) {
-//
-//        for bonus in bonuses {
-//            if bonus.status == "active" {
-//                self.bonusActive.append(bonus)
-//                let bonusActiveCellViewModel = BonusActiveCellViewModel(bonus: bonus)
-//                self.bonusActiveCellViewModels.append(bonusActiveCellViewModel)
-//            }
-//            else {
-//                self.bonusHistory.append(bonus)
-//                let bonusHistoryCellViewModel = BonusHistoryCellViewModel(bonus: bonus)
-//                self.bonusHistoryCellViewModels.append(bonusHistoryCellViewModel)
-//            }
-//        }
-//
-//        if self.bonusActive.isEmpty {
-//            self.isBonusActiveEmptyPublisher.send(true)
-//        }
-//
-//        if self.bonusHistory.isEmpty {
-//            self.isBonusHistoryEmptyPublisher.send(true)
-//        }
-//
-//        self.isBonusGrantedLoading.send(false)
-//
-//    }
 }

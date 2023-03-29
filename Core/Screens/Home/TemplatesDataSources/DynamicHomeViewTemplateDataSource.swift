@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import ServicesProvider
 
 class DynamicHomeViewTemplateDataSource {
 
@@ -23,8 +24,6 @@ class DynamicHomeViewTemplateDataSource {
             self.refreshPublisher.send()
         }
     }
-    private var favoriteMatchesRegister: EndpointPublisherIdentifiable?
-    private var favoriteMatchesPublisher: AnyCancellable?
 
     //
     private var featuredTips: [FeaturedTip] = []
@@ -90,8 +89,8 @@ class DynamicHomeViewTemplateDataSource {
 
         self.refresh()
 
-        Env.everyMatrixClient.serviceStatusPublisher
-            .filter(\.isConnected)
+        Env.servicesProvider.eventsConnectionStatePublisher
+            .filter({ $0 == .connected })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.refresh()

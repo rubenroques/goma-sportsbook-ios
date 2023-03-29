@@ -312,29 +312,7 @@ class BonusViewController: UIViewController {
                 self?.viewModel.updateDataSources()
             })
             .store(in: &cancellables)
-//        Env.everyMatrixClient.applyBonus(bonusCode: bonusCode)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                switch completion {
-//                case .failure(let error):
-//                    let errorString = "\(error)"
-//                    if errorString.lowercased().contains("invalid") {
-//                        self?.showAlert(type: .error, text: localized("invalid_bonus_code"))
-//                    }
-//                    else {
-//                        self?.showAlert(type: .error, text: localized("error_bonus_code"))
-//                    }
-//                case .finished:
-//                    ()
-//                }
-//
-//                self?.isLoading = false
-//
-//            }, receiveValue: { [weak self] _ in
-//                self?.showAlert(type: .success, text: localized("bonus_applied_success"))
-//                self?.viewModel.updateDataSources()
-//            })
-//            .store(in: &cancellables)
+
     }
 
     func applyAvailableBonus(bonusCode: String) {

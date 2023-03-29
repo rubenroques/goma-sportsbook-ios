@@ -130,42 +130,6 @@ class WithdrawViewModel: NSObject {
             }
         }
 
-//        var currency = ""
-//        var gamingAccountId = ""
-//
-//        if let walletCurrency = Env.userSessionStore.userBalanceWallet.value?.currency {
-//            currency = walletCurrency
-//        }
-//        else {
-//
-//            self.showErrorAlertTypePublisher.send(.wallet)
-//            self.isLoadingPublisher.send(false)
-//        }
-//
-//        if let walletGamingAccountId = Env.userSessionStore.userBalanceWallet.value?.id {
-//            gamingAccountId = "\(walletGamingAccountId)"
-//        }
-//        else {
-//
-//            self.showErrorAlertTypePublisher.send(.wallet)
-//            self.isLoadingPublisher.send(false)
-//        }
-//
-//        Env.everyMatrixClient.getWithdrawResponse(currency: currency, amount: amount, gamingAccountId: gamingAccountId)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                switch completion {
-//                case .failure:
-//                    self?.showErrorAlertTypePublisher.send(.withdraw)
-//                case .finished:
-//                    ()
-//                }
-//                self?.isLoadingPublisher.send(false)
-//            }, receiveValue: { [weak self] value in
-//                self?.cashierUrlPublisher.value = value.cashierUrl
-//            })
-//            .store(in: &cancellables)
-//
     }
 
     private func getWithdrawalMethods() {

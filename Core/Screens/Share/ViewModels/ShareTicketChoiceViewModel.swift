@@ -53,35 +53,35 @@ class ShareTicketChoiceViewModel {
         else {
             return
         }
-
-        let betTokenRoute = TSRouter.getSharedBetTokens(betId: ticket.betId)
-
-        Env.everyMatrixClient.manager.getModel(router: betTokenRoute, decodingType: SharedBetToken.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure:
-                    ()
-                case .finished:
-                    ()
-                }
-            },
-            receiveValue: { [weak self] betToken in
-                guard let self = self else { return }
-
-                let defaultMessage = localized("check_this_bet_made")
-
-                let attachment = self.generateAttachmentString(ticket: ticket,
-                                                               withToken: betToken.sharedBetTokens.betTokenWithAllInfo)
-
-                Env.gomaSocialClient.sendMessage(chatroomId: chatroomData.chatroom.id,
-                                                 message: defaultMessage,
-                                                 attachment: attachment)
-
-                //self.isLoadingSharedBetPublisher.send(false)
-                self.messageSentAction?()
-            })
-            .store(in: &cancellables)
+//
+//        let betTokenRoute = em .getSharedBetTokens(betId: ticket.betId)
+//
+//        Env. em .manager.getModel(router: betTokenRoute, decodingType: SharedBetToken.self)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure:
+//                    ()
+//                case .finished:
+//                    ()
+//                }
+//            },
+//            receiveValue: { [weak self] betToken in
+//                guard let self = self else { return }
+//
+//                let defaultMessage = localized("check_this_bet_made")
+//
+//                let attachment = self.generateAttachmentString(ticket: ticket,
+//                                                               withToken: betToken.sharedBetTokens.betTokenWithAllInfo)
+//
+//                Env.gomaSocialClient.sendMessage(chatroomId: chatroomData.chatroom.id,
+//                                                 message: defaultMessage,
+//                                                 attachment: attachment)
+//
+//                //self.isLoadingSharedBetPublisher.send(false)
+//                self.messageSentAction?()
+//            })
+//            .store(in: &cancellables)
 
     }
 

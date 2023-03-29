@@ -21,15 +21,15 @@ class HistoryRootViewController: UIViewController {
     private var viewControllers: [UIViewController] = []
 
     private var transactionsHistoryViewController: TransactionsHistoryRootViewController
-    private var bettingHistoryViewController: BettingHistoryRootViewController
+    private var bettingHistoryRootViewController: BettingHistoryRootViewController
 
     // MARK: - Lifetime and Cycle
     init() {
 
         self.transactionsHistoryViewController = TransactionsHistoryRootViewController(viewModel: TransactionsHistoryRootViewModel())
-        self.bettingHistoryViewController = BettingHistoryRootViewController(viewModel: BettingHistoryRootViewModel())
+        self.bettingHistoryRootViewController = BettingHistoryRootViewController(viewModel: BettingHistoryRootViewModel())
 
-        self.viewControllers = [self.transactionsHistoryViewController, self.bettingHistoryViewController]
+        self.viewControllers = [self.transactionsHistoryViewController, self.bettingHistoryRootViewController]
         self.viewControllerTabDataSource = TitleTabularDataSource(with: viewControllers)
 
         self.viewControllerTabDataSource.initialPage = 0

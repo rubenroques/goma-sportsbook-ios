@@ -420,7 +420,7 @@
 "invalid_email" = "Invalid email address";
 "invalid_email" = "This email format appears to be invalid.";
 "invalid_friend_code" = "Invalid friend code"; // UNUSED
-"invalid_gender" = "The gender specified is invalid. Please select one of the suggested."; // UNUSED
+"invalid_gender" = "Please select a gender."; // UNUSED
 "invalid_lock_period" = "Value must be between {min} and {max}."; // UNUSED
 "invalid_nationality" = "The nationality specified is invalid. Please select one of the suggested."; // UNUSED
 "invalid_period_value" = "Invalid Period Value";
@@ -748,7 +748,6 @@
 "returnx" = "Return: {value} €"; // UNUSED
 "save" = "Save";
 "save_profile" = "Save Profile"; // UNUSED
-"score_label_default" = "0 - 0";
 "search" = "Search";
 "search_by_contact" = "Search by contact name...";
 "search_by_username" = "Search by username...";
@@ -873,7 +872,6 @@
 "this_selection" = "this selection"; // UNUSED
 "ticket_url_pasteboard" = "Ticket link was copied.";
 "time_filter_label" = "Events start time {start} - {end}"; // UNUSED
-"time_label_default" = "00:00";
 "time_range" = "Time Range"; // UNUSED
 "time_to_add_friends" = "Time to add friends!";
 "time_today_only" = "Time (for Upcoming matches only)";

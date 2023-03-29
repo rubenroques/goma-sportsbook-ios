@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import OrderedCollections
+import ServicesProvider
 
 class PreSubmissionBetslipViewController: UIViewController {
   
@@ -189,8 +190,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
-    private var selectedBetslipSetting: String?
-
     // Multiple Bets values
     private var displayBetValue: Int = 0 {
         didSet {
@@ -240,6 +239,10 @@ class PreSubmissionBetslipViewController: UIViewController {
     var maxStakeMultiple: Double?
     var maxStakeSystem: Double?
     var userBalance: Double?
+
+    var acceptingAnyReofferOnBetPlace: Bool = false
+
+    var betslipSettingsSelectorList = BetslipOddValidationType.allCases
 
     // Publishers
     var tableReloadDebouncePublisher: PassthroughSubject<Void, Never> = .init()
@@ -375,6 +378,26 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondaryPlusFiveButtonView.setTitle("+20", for: .normal)
         self.secondaryMaxButtonView.setTitle("+50", for: .normal)
 
+        // Disable settings until loaded
+        self.settingsButton.isEnabled = false
+        self.settingsButton.isUserInteractionEnabled = false
+
+        // Loading settings odd change on bet
+        Env.servicesProvider
+            .getBetslipSettings()
+            .receive(on: DispatchQueue.main).sink(receiveValue: { [weak self] betslipSettings in
+                if let betslipSettingsValue = betslipSettings {
+                    self?.acceptingAnyReofferOnBetPlace = betslipSettingsValue.acceptingAnyReoffer
+                    self?.settingsButton.isEnabled = true
+                    self?.settingsButton.isUserInteractionEnabled = true
+                }
+                else {
+                    self?.acceptingAnyReofferOnBetPlace = false
+                    self?.settingsButton.isEnabled = false
+                    self?.settingsButton.isUserInteractionEnabled = false
+                }
+            })
+            .store(in: &self.cancellables)
 
         //
         //
@@ -946,8 +969,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                                                object: nil)
 
         self.placeBetButton.isEnabled = false
-
-        self.getUserSettings()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -957,19 +978,14 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.isKeyboardShowingPublisher.send(false) 
     }
 
-    func getUserSettings() {
-
-        if let userSetting = UserDefaults.standard.string(forKey: "betslipOddValidationType"),
-           let userSettingIndex = Env.userBetslipSettingsSelectorList.firstIndex(where: { $0.key == userSetting }) {
-
-            self.settingsPickerView.selectRow(userSettingIndex, inComponent: 0, animated: true)
-            self.selectedBetslipSetting = userSetting
-        }
-
-    }
-    
-    func setUserSettings() {
-        UserDefaults.standard.set(self.selectedBetslipSetting, forKey: "betslipOddValidationType")
+    func saveUserSettings(acceptingAnyReofferOnBetPlace: Bool) {
+        let betslipSettings = ServicesProvider.BetslipSettings.init(acceptingAnyReoffer: acceptingAnyReofferOnBetPlace)
+        Env.servicesProvider
+            .updateBetslipSettings(betslipSettings)
+            .sink { completed in
+                print("ServicesProvider updateBetslipSettings \(completed)")
+            }
+            .store(in: &self.cancellables)
     }
 
     func checkForbiddenCombinationErrors(multipleBetslipState: BetslipSelectionState) {
@@ -1135,8 +1151,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.clearButton.setTitle(localized("clear_all"), for: .normal)
 
         self.settingsButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+        self.settingsButton.setTitleColor(UIColor.App.highlightPrimary.withAlphaComponent(0.4), for: .disabled)
         self.settingsButton.setTitle(localized("settings"), for: .normal)
-
 
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
@@ -1315,56 +1331,9 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     @IBAction private func didTapSettingsSelectButton() {
         self.showingSettingsSelector = false
+
+        self.saveUserSettings(acceptingAnyReofferOnBetPlace: self.acceptingAnyReofferOnBetPlace)
     }
-
-/*
-    func requestSystemBetsTypes() {
-
-        self.systemBetTypeLoadingView.startAnimating()
-
-        let tickets = self.systemBettingTicketDataSource.bettingTickets
-        let ticketSelections = tickets
-            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
-
-        let route = TSRouter.getSystemBetTypes(tickets: ticketSelections)
-
-        Env.everyMatrixClient.manager.getModel(router: route, decodingType: SystemBetResponse.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] _ in
-                self?.systemBetTypeLoadingView.stopAnimating()
-            }, receiveValue: { [weak self] systemBetResponse in
-                
-                guard let weakSelf = self else { return }
-                
-                weakSelf.systemBetOptions = systemBetResponse.systemBets
-                
-                var containsOldSelection = false
-                var componentsIndex = 0
-                if let currentSelection = weakSelf.selectedSystemBetType {
-                    for (index, item) in weakSelf.systemBetOptions.enumerated() {
-                        if currentSelection.id == item.id {
-                            containsOldSelection = true
-                            componentsIndex = index
-                            break
-                        }
-                    }
-                }
-                
-                if weakSelf.selectedSystemBetType == nil || !containsOldSelection {
-                    weakSelf.selectedSystemBetType = weakSelf.systemBetOptions.first
-                }
-                else {
-                    
-                }
-                
-                weakSelf.systemBetTypePickerView.reloadAllComponents()
-                weakSelf.systemBetTypePickerView.selectRow(componentsIndex, inComponent: 0, animated: false)
-                 
-                weakSelf.requestSystemBetInfo()
-            })
-            .store(in: &cancellables)
-    }
-*/
 
     func requestSystemBetInfo() {
 
@@ -1391,19 +1360,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
         .store(in: &cancellables)
 
-
-        /*
-        Env.betslipManager
-            .requestSystemBetslipSelectionState(systemBetType: selectedSystemBetType)
-            .receive(on: DispatchQueue.main)
-            .sink { _ in
-
-            } receiveValue: { [weak self] betDetails in
-               
-                self?.configureWithSystemBetInfo(systemBetInfo: betDetails)
-            }
-            .store(in: &cancellables)
-*/
     }
 
     func configureWithSystemBetPotencialReturn(_ betPotencialReturn: BetPotencialReturn) {
@@ -1708,9 +1664,7 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
         }
         let calculatedAmount = Double(displayBetValue/100) + Double(displayBetValue%100)/100
         amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
-        
         secondaryAmountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
-
     }
 
 }
@@ -1726,7 +1680,7 @@ extension PreSubmissionBetslipViewController: UIPickerViewDelegate, UIPickerView
             return self.systemBetOptions.count
         }
         else {
-            return Env.userBetslipSettingsSelectorList.count
+            return self.betslipSettingsSelectorList.count
         }
     }
 
@@ -1737,7 +1691,7 @@ extension PreSubmissionBetslipViewController: UIPickerViewDelegate, UIPickerView
                                       attributes: [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary])
         }
         else {
-            return NSAttributedString(string: Env.userBetslipSettingsSelectorList[safe: row]?.description ?? "--",
+            return NSAttributedString(string: self.betslipSettingsSelectorList[safe: row]?.localizedDescription ?? "--",
                                       attributes: [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary])
         }
     }
@@ -1747,8 +1701,17 @@ extension PreSubmissionBetslipViewController: UIPickerViewDelegate, UIPickerView
             self.selectedSystemBetType = self.systemBetOptions[safe: row]
         }
         else {
-            self.selectedBetslipSetting = Env.userBetslipSettingsSelectorList[safe: row]?.key
-            self.setUserSettings()
+            let value = self.betslipSettingsSelectorList[safe: row]?.key
+
+            if value == "ACCEPT_HIGHER" {
+                self.acceptingAnyReofferOnBetPlace = false
+            }
+            else if value == "ACCEPT_ANY" {
+                self.acceptingAnyReofferOnBetPlace = true
+            }
+            else {
+                self.acceptingAnyReofferOnBetPlace = false
+            }
         }
     }
 

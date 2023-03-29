@@ -70,17 +70,17 @@ class CasinoWebViewController: UIViewController {
     
     func loadInitialPage() {
 
-        Env.everyMatrixClient.getCMSSessionID()
-            .receive(on: DispatchQueue.main)
-            .map { cmsSessionInfo in
-                let cmsSessionInfoId: String? = cmsSessionInfo.id
-                return cmsSessionInfoId
-            }
-            .replaceError(with: nil)
-            .sink(receiveValue: { [weak self] cmsSessionInfoId in
-                self?.loadWebView(withID: cmsSessionInfoId)
-            })
-            .store(in: &self.cancellables)
+//        Env. em .getCMSSessionID()
+//            .receive(on: DispatchQueue.main)
+//            .map { cmsSessionInfo in
+//                let cmsSessionInfoId: String? = cmsSessionInfo.id
+//                return cmsSessionInfoId
+//            }
+//            .replaceError(with: nil)
+//            .sink(receiveValue: { [weak self] cmsSessionInfoId in
+//                self?.loadWebView(withID: cmsSessionInfoId)
+//            })
+//            .store(in: &self.cancellables)
 
     }
 

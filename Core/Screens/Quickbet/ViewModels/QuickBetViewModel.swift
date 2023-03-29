@@ -14,9 +14,6 @@ class QuickBetViewModel {
     private var bettingTicket: BettingTicket
     private var cancellables = Set<AnyCancellable>()
 
-    private var oddUpdatesPublisher: AnyCancellable?
-    private var oddUpdatesRegister: EndpointPublisherIdentifiable?
-
     // MARK: Public Properties
     var oddValuePublisher: CurrentValueSubject<String, Never> = .init("")
     var currentAmountInteger: Int = 0 {
@@ -40,71 +37,12 @@ class QuickBetViewModel {
     init(bettingTicket: BettingTicket) {
         self.bettingTicket = bettingTicket
 
-        self.requestSimpleBetSelectionState()
-
         self.setupPublishers()
     }
 
-    deinit {
-        self.oddUpdatesPublisher?.cancel()
-        self.oddUpdatesPublisher = nil
-
-        if let oddUpdatesRegister = oddUpdatesRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: oddUpdatesRegister)
-        }
-    }
 
     private func setupPublishers() {
-
-        let endpoint = TSRouter.bettingOfferPublisher(operatorId: Env.appSession.operatorId,
-                                                      language: "en",
-                                                      bettingOfferId: bettingTicket.bettingId)
-
-        self.oddUpdatesPublisher = Env.everyMatrixClient.manager.registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
-                case .finished:
-                    print("Data retrieved!")
-                }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let oddUpdatesRegister):
-                    self?.oddUpdatesRegister = oddUpdatesRegister
-
-                case .initialContent(let aggregator):
-
-                    if let content = aggregator.content {
-                        for contentType in content {
-                            if case let .bettingOffer(bettingOffer) = contentType,
-                               let oddsValue = bettingOffer.oddsValue {
-
-                                self?.updateBettingOffer(value: oddsValue, isAvailable: bettingOffer.isAvailable, statusId: bettingOffer.statusId)
-                                break
-                            }
-                        }
-                    }
-
-                case .updatedContent(let aggregatorUpdates):
-
-                    if let content = aggregatorUpdates.contentUpdates {
-                        for contentType in content {
-                            if case let .bettingOfferUpdate(_, statusId, odd, _, isAvailable) = contentType {
-                                print("QUICKBET OFFER: \(statusId) - \(odd) - \(isAvailable)")
-                                self?.updateBettingOffer(value: odd, isAvailable: isAvailable,
-                                        statusId: statusId)
-
-                            }
-                        }
-                    }
-
-                case .disconnect:
-                    ()
-                }
-            })
-
+        // TODO: Watch odd updates on quick bet view
     }
 
     func getOutcome() -> String {
@@ -164,34 +102,6 @@ class QuickBetViewModel {
 
             self.returnAmountValue.send(returnAmount)
         }
-    }
-
-    func requestSimpleBetSelectionState() {
-        let ticketSelection = EveryMatrix.BetslipTicketSelection(id: self.bettingTicket.id, currentOdd: self.bettingTicket.decimalOdd)
-
-        let route = TSRouter.getBetslipSelectionInfo(language: "en",
-                                                     stakeAmount: 1,
-                                                     betType: .single,
-                                                     tickets: [ticketSelection], oddsBoostPercentage: nil)
-
-        Env.everyMatrixClient.manager
-            .getModel(router: route, decodingType: BetslipSelectionState.self)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    print("QUICKBET STATE ERROR: \(error)")
-                case .finished:
-                    print("QUICKBET STATE FINISHED")
-                }
-            } receiveValue: { [weak self] betslipSelectionState in
-
-                if let maxStake = betslipSelectionState.maxStake {
-                    self?.maxBetStake = maxStake
-
-                }
-            }
-            .store(in: &cancellables)
     }
 
     private func updateBettingOffer(value: Double?, isAvailable: Bool?, statusId: String?) {

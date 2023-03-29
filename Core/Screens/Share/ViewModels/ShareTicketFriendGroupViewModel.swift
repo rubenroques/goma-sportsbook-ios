@@ -120,46 +120,44 @@ class ShareTicketFriendGroupViewModel {
     }
 
     func sendTicketMessage(message: String) {
-
-        if self.selectedChatrooms.isNotEmpty {
-
-            guard
-                let ticket = self.sharedTicketInfo.ticket
-            else {
-                return
-            }
-
-            let betTokenRoute = TSRouter.getSharedBetTokens(betId: ticket.betId)
-
-            Env.everyMatrixClient.manager.getModel(router: betTokenRoute, decodingType: SharedBetToken.self)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { [weak self] completion in
-                    switch completion {
-                    case .failure:
-                        ()
-                        //self?.isLoadingSharedBetPublisher.send(false)
-                    case .finished:
-                        ()
-                    }
-                },
-                      receiveValue: { [weak self] betToken in
-                    guard let self = self else { return }
-
-                    let attachment = self.generateAttachmentString(ticket: ticket,
-                                                                   withToken: betToken.sharedBetTokens.betTokenWithAllInfo)
-
-                    for chatroomData in self.selectedChatrooms {
-
-                        Env.gomaSocialClient.sendMessage(chatroomId: chatroomData.chatroom.id,
-                                                         message: message,
-                                                         attachment: attachment)
-                    }
-
-                    //self.isLoadingSharedBetPublisher.send(false)
-                    self.messageSentAction?()
-                })
-                .store(in: &cancellables)
-        }
+//
+//        if self.selectedChatrooms.isNotEmpty {
+//
+//            guard
+//                let ticket = self.sharedTicketInfo.ticket
+//            else {
+//                return
+//            }
+//
+//            let betTokenRoute = em .getSharedBetTokens(betId: ticket.betId)
+//
+//            Env. em .manager.getModel(router: betTokenRoute, decodingType: SharedBetToken.self)
+//                .receive(on: DispatchQueue.main)
+//                .sink(receiveCompletion: { [weak self] completion in
+//                    switch completion {
+//                    case .failure:
+//                        ()
+//                    case .finished:
+//                        ()
+//                    }
+//                },
+//                      receiveValue: { [weak self] betToken in
+//                    guard let self = self else { return }
+//
+//                    let attachment = self.generateAttachmentString(ticket: ticket,
+//                                                                   withToken: betToken.sharedBetTokens.betTokenWithAllInfo)
+//
+//                    for chatroomData in self.selectedChatrooms {
+//
+//                        Env.gomaSocialClient.sendMessage(chatroomId: chatroomData.chatroom.id,
+//                                                         message: message,
+//                                                         attachment: attachment)
+//                    }
+//
+//                    self.messageSentAction?()
+//                })
+//                .store(in: &cancellables)
+//        }
     }
 
     func generateAttachmentString(ticket: BetHistoryEntry, withToken betShareToken: String) -> [String: AnyObject]? {

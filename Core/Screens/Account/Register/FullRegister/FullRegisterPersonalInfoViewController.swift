@@ -215,17 +215,6 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
     private func setupPublishers() {
 
-//        Env.everyMatrixClient.getCountries()
-//            .receive(on: DispatchQueue.main)
-//            .eraseToAnyPublisher()
-//            .sink { _ in
-//                self.countryHeaderTextFieldView.isUserInteractionEnabled = true
-//            } receiveValue: { countries in
-//                self.countries = countries
-//                self.setupWithCountryCodes(countries)
-//            }
-//        .store(in: &cancellables)
-
         Env.servicesProvider.getProfile()
             .receive(on: DispatchQueue.main)
             .handleEvents(receiveSubscription: { [weak self] _ in

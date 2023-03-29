@@ -22,10 +22,6 @@ class MyTicketCellViewModel {
 
     private var ticket: BetHistoryEntry
 
-    private var cashoutRegister: EndpointPublisherIdentifiable?
-    private var cashoutAvailabilitySubscription: AnyCancellable?
-
-//    private var cashout: EveryMatrix.Cashout?
     private var cashout: CashoutInfo?
 
     private var cashoutSubscription: AnyCancellable?
@@ -70,12 +66,9 @@ class MyTicketCellViewModel {
 
     deinit {
         print("MyTicketCellViewModel deinit")
-        self.unregisterCashoutSubscription()
     }
 
     private func requestCashoutAvailability(ticket: BetHistoryEntry) {
-        // CASHOUT HERE
-
         Env.servicesProvider.calculateCashout(betId: ticket.betId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -95,51 +88,6 @@ class MyTicketCellViewModel {
 
             })
             .store(in: &cancellables)
-
-//        self.cashout = nil
-//
-//        self.cashoutAvailabilitySubscription?.cancel()
-//        self.cashoutAvailabilitySubscription = nil
-//
-//        if let cashoutRegister = cashoutRegister {
-//            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
-//        }
-//
-//        let endpoint = TSRouter.cashoutPublisher(operatorId: Env.appSession.operatorId,
-//                                                 language: "en",
-//                                                 betId: ticket.betId)
-//
-//        self.cashoutAvailabilitySubscription = Env.everyMatrixClient.manager
-//            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .failure:
-//                    print("Error retrieving data!")
-//                case .finished:
-//                    print("Data retrieved!")
-//                }
-//            }, receiveValue: { [weak self] state in
-//                switch state {
-//                case .connect(let publisherIdentifiable):
-//                    self?.cashoutRegister = publisherIdentifiable
-//                case .initialContent(let aggregator):
-//                    print("MyBets cashoutPublisher initialContent")
-//                    if let content = aggregator.content?.first {
-//                        switch content {
-//                        case .cashout(let cashout):
-//                            if let value = cashout.value {
-//                                self?.cashout = cashout
-//                                self?.hasCashoutEnabled.send( .visible(value) )
-//                            }
-//                        default: ()
-//                        }
-//                    }
-//                case .updatedContent:
-//                    print("MyBets cashoutPublisher updatedContent")
-//                case .disconnect:
-//                    print("MyBets cashoutPublisher disconnect")
-//                }
-//            })
 
     }
 
@@ -195,29 +143,7 @@ class MyTicketCellViewModel {
                 })
                 .store(in: &cancellables)
         }
-//        let route = TSRouter.cashoutBet(language: "en", betId: cashout.id)
-//        self.cashoutSubscription = Env.everyMatrixClient.manager
-//            .getModel(router: route, decodingType: CashoutSubmission.self)
-//            .delay(for: .seconds(5), scheduler: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] _ in
-//                self?.requestDataRefreshAction?()
-//                self?.isLoadingCellData.send(false)
-//            }, receiveValue: { _ in
-//
-//            })
-    }
 
-    func unregisterCashoutSubscription() {
-        
-        if let cashoutRegister = self.cashoutRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
-        }
-
-        self.cashoutAvailabilitySubscription?.cancel()
-        self.cashoutAvailabilitySubscription = nil
-
-        self.cashoutSubscription?.cancel()
-        self.cashoutSubscription = nil
     }
 
 }

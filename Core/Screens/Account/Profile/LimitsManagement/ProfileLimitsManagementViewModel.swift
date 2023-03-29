@@ -80,19 +80,6 @@ class ProfileLimitsManagementViewModel: NSObject {
     }
 
     private func getLimits() {
-//        Env.everyMatrixClient.getLimits()
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .failure(let error):
-//                    print("LIMITS ERROR: \(error)")
-//                case .finished:
-//                    ()
-//                }
-//            }, receiveValue: { [weak self] limitsResponse in
-//                self?.setLimitsData(limitsResponse: limitsResponse)
-//            })
-//            .store(in: &cancellables)
 
         Env.servicesProvider.getPersonalDepositLimits()
             .receive(on: DispatchQueue.main)
@@ -150,8 +137,6 @@ class ProfileLimitsManagementViewModel: NSObject {
                 print("RESPONSIBLE LIMITS RESPONSE: \(responsibleGamingLimitsResponse)")
 
                 self?.processResponsibleGamingLimits(responsibleGamingLimitsResponse: responsibleGamingLimitsResponse)
-                //self?.responsibleGamingLimitLoaded.send(true)
-
             })
             .store(in: &cancellables)
     }
@@ -353,28 +338,28 @@ class ProfileLimitsManagementViewModel: NSObject {
     }
 
     func sendLimit(limitType: String, period: String, amount: String, currency: String) {
-        Env.everyMatrixClient.setLimit(limitType: limitType, period: period, amount: amount, currency: currency)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    self?.limitOptionsErrorPublisher.send("\(error)")
-                    self?.isLoadingPublisher.send(false)
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { [weak self] _ in
-                if limitType == "Deposit" {
-                    self?.limitOptionsCheckPublisher.value.append("deposit")
-                }
-                else if limitType == "Wagering" {
-                    self?.limitOptionsCheckPublisher.value.append("wagering")
-                }
-                else if limitType == "Loss" {
-                    self?.limitOptionsCheckPublisher.value.append("loss")
-                }
-            })
-            .store(in: &cancellables)
+//        Env. em .setLimit(limitType: limitType, period: period, amount: amount, currency: currency)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    self?.limitOptionsErrorPublisher.send("\(error)")
+//                    self?.isLoadingPublisher.send(false)
+//                case .finished:
+//                    ()
+//                }
+//            }, receiveValue: { [weak self] _ in
+//                if limitType == "Deposit" {
+//                    self?.limitOptionsCheckPublisher.value.append("deposit")
+//                }
+//                else if limitType == "Wagering" {
+//                    self?.limitOptionsCheckPublisher.value.append("wagering")
+//                }
+//                else if limitType == "Loss" {
+//                    self?.limitOptionsCheckPublisher.value.append("loss")
+//                }
+//            })
+//            .store(in: &cancellables)
     }
 
     func checkLimitUpdatableStatus(limitType: String, limitAmount: String, isLimitUpdatable: Bool) {
@@ -525,18 +510,18 @@ class ProfileLimitsManagementViewModel: NSObject {
 //    }
 
     func removeLimit(limitType: String, period: String) {
-        Env.everyMatrixClient.removeLimit(limitType: limitType, period: period)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    self?.limitOptionsErrorPublisher.send("\(error)")
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { _ in
-            })
-            .store(in: &cancellables)
+//        Env. em .removeLimit(limitType: limitType, period: period)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .failure(let error):
+//                    self?.limitOptionsErrorPublisher.send("\(error)")
+//                case .finished:
+//                    ()
+//                }
+//            }, receiveValue: { _ in
+//            })
+//            .store(in: &cancellables)
     }
 
     func getAlertInfoText(alertType: String) -> String {

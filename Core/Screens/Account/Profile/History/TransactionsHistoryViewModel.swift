@@ -76,16 +76,16 @@ class TransactionsHistoryViewModel {
         }
         self.calculateDate(filterApplied: filterApplied)
    
-//        Env.everyMatrixClient.serviceStatusPublisher
-//            .sink { serviceStatus in
-//                if serviceStatus == .connected {
-//                    self.initialContentLoad()
-//                }
-//            }
-//            .store(in: &cancellables)
+        Env.servicesProvider.eventsConnectionStatePublisher
+            .sink { serviceStatus in
+                if serviceStatus == .connected {
+                    self.initialContentLoad()
+                }
+            }
+            .store(in: &cancellables)
+
         self.setupPublishers()
         self.initialContentLoad()
-       
     }
 
     private func setupPublishers() {
@@ -326,40 +326,7 @@ class TransactionsHistoryViewModel {
 
             })
             .store(in: &cancellables)
-//        let withdrawsRoute = TSRouter.getTransactionHistory(type: "Withdraw",
-//                                                            startTime: convertDateToString(date: self.startDatePublisher.value),
-//                                                            endTime: convertDateToString(date: self.endDatePublisher.value),
-//                                                            pageIndex: page,
-//                                                            pageSize: recordsPerPage)
-//        Env.everyMatrixClient.manager.getModel(router: withdrawsRoute, decodingType: EveryMatrix.TransactionsHistoryResponse.self)
-//            .map(\.transactions)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                switch completion {
-//                case .failure(let apiError):
-//                    self?.transactionsPublisher.send([])
-//                    switch apiError {
-//                    case .requestError(let value) where value.lowercased().contains("must be logged in to perform this action"):
-//                        self?.listStatePublisher.send(.noUserFoundError)
-//                    case .notConnected:
-//                        self?.listStatePublisher.send(.noUserFoundError)
-//                    default:
-//                        self?.listStatePublisher.send(.serverError)
-//                    }
-//                case .finished:
-//                    ()
-//                }
-//            }, receiveValue: { [weak self] withdrawsTransactions in
-//                self?.withdrawTransactions.send(withdrawsTransactions)
-//                //self?.transactionsPublisher.send(withdrawsTransactions)
-//                if withdrawsTransactions.isEmpty {
-//                    self?.listStatePublisher.send(.empty)
-//                }
-//                else {
-//                    self?.listStatePublisher.send(.loaded)
-//                }
-//            })
-//            .store(in: &cancellables)
+
     }
 
     func processTransactions(transactions: [TransactionDetail], transactionType: TransactionsType) {
@@ -479,46 +446,6 @@ class TransactionsHistoryViewModel {
 
     }
 
-//    func loadDeposits(page: Int) {
-//        self.listStatePublisher.send(.loading)
-//        let depositsRoute = TSRouter.getTransactionHistory(type: "Deposit",
-//                                                           startTime: convertDateToString(date: self.startDatePublisher.value),
-//                                                           endTime: convertDateToString(date: self.endDatePublisher.value),
-//                                                           pageIndex: page,
-//                                                           pageSize: recordsPerPage)
-//
-//        Env.everyMatrixClient.manager.getModel(router: depositsRoute, decodingType: EveryMatrix.TransactionsHistoryResponse.self)
-//            .map(\.transactions)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { [weak self] completion in
-//                switch completion {
-//                case .failure(let apiError):
-//                    self?.transactionsPublisher.send([])
-//                    switch apiError {
-//                    case .requestError(let value) where value.lowercased().contains("must be logged in to perform this action"):
-//                        self?.listStatePublisher.send(.noUserFoundError)
-//                    case .notConnected:
-//                        self?.listStatePublisher.send(.noUserFoundError)
-//                    default:
-//                        self?.listStatePublisher.send(.serverError)
-//                    }
-//                case .finished:
-//                    ()
-//                }
-//            }, receiveValue: { [weak self] depositsTransactions in
-//                let deposits = depositsTransactions
-//                self?.depositTransactions.send(depositsTransactions)
-//                //self?.transactionsPublisher.send(depositsTransactions)
-//                if depositsTransactions.isEmpty {
-//                    self?.listStatePublisher.send(.empty)
-//                }
-//                else {
-//                    self?.listStatePublisher.send(.loaded)
-//                }
-//            })
-//            .store(in: &cancellables)
-//    }
-    
     func convertDateToString(date: Date) -> String{
         let auxDate = "\(date)"
         let dateSplited = auxDate.split(separator: " ")
@@ -530,30 +457,18 @@ class TransactionsHistoryViewModel {
 
         switch self.transactionsType {
         case .all:
-//            if self.allTransactions.value.count < self.recordsPerPage * (self.allPage) {
-//                self.transactionsHasNextPage = false
-//                return
-//            }
             if !self.transactionsHasNextPage {
                 return
             }
             allPage += 1
             self.loadAll(page: allPage, isNextPage: true)
         case .deposit:
-//            if self.depositTransactions.value.count < self.recordsPerPage * (self.depositPage) {
-//                self.transactionsHasNextPage = false
-//                return
-//            }
             if !self.transactionsHasNextPage {
                 return
             }
             depositPage += 1
             self.loadDeposits(page: depositPage, isNextPage: true)
         case .withdraw:
-//            if self.withdrawTransactions.value.count < self.recordsPerPage * (self.withdrawPage) {
-//                self.transactionsHasNextPage = false
-//                return
-//            }
             if !self.transactionsHasNextPage {
                 return
             }

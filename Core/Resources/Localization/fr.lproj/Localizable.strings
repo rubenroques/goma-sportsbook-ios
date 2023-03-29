@@ -383,7 +383,7 @@
 "invalid_email" = "Adresse e-mail invalide";
 "invalid_email" = "Adresse e-mail invalide";
 "invalid_friend_code" = "Code ami invalide"; // UNUSED
-"invalid_gender" = "Le sexe spécifié n'est pas valide. Veuillez sélectionner l'une des suggestions."; // UNUSED
+"invalid_gender" = "Veuillez sélectionner l'une des suggestions."; // UNUSED
 "invalid_lock_period" = "La valeur doit être comprise entre {min} et {max}."; // UNUSED
 "invalid_nationality" = "La nationalité indiquée n'est pas valide. Veuillez sélectionner l'une des suggestions."; // UNUSED
 "invalid_period_value" = "Valeur de période non valide";

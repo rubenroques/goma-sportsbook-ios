@@ -85,8 +85,7 @@ class HomeFilterViewController: UIViewController {
     }
 
     func commonInit() {
-        // Test values
-        //mainMarkets = Env.everyMatrixStorage.mainMarkets
+
         if let delegate = self.delegate {
             if delegate.isLiveEventsMarkets {
                 self.mainMarkets = self.liveEventsViewModel.mainMarkets
@@ -103,8 +102,6 @@ class HomeFilterViewController: UIViewController {
             filterValues = liveEventsViewModel.homeFilterOptions
         }
         else {
-
-//            filterValues = HomeFilterOptions()
             if let delegate = self.delegate {
                 if delegate.isLiveEventsMarkets {
                     if let firstMarketType = self.liveEventsViewModel.getFirstMarketType() {

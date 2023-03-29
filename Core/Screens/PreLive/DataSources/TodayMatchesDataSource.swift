@@ -30,7 +30,7 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 4
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -49,6 +49,8 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
             else {
                 return 0
             }
+        case 3:
+            return 1
         default:
             return 0
         }
@@ -93,6 +95,10 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
             }
         case 2:
             if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
+                return cell
+            }
+        case 3:
+            if let cell = tableView.dequeueCellType(FooterResponsibleGamingViewCell.self) {
                 return cell
             }
         default:
@@ -144,8 +150,9 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
         case 0:
             return 145 // Outrights
         case 2:
-            // Loading cell
-            return 70
+            return 70 // Loading cell
+        case 3:
+            return UITableView.automaticDimension // Footer
         default:
             return UITableView.automaticDimension
         }
@@ -156,8 +163,9 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
         case 0:
             return 145 // Outrights
         case 2:
-            // Loading cell
-            return 70
+            return 70 // Loading cell
+        case 3:
+            return 120 // Footer
         default:
             return StyleHelper.cardsStyleHeight() + 20
         }

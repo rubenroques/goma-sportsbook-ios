@@ -15,8 +15,6 @@ class Environment {
     let appSession = AppSession()
 
     let gomaNetworkClient = GomaGamingServiceClient()
-    let everyMatrixClient = EveryMatrixServiceClient()
-    let everyMatrixStorage = AggregatorsRepository()
 
     lazy var servicesProvider: ServicesProviderClient = {
         let provider = TargetVariables.serviceProviderType
@@ -52,10 +50,7 @@ class Environment {
     let urlSchemaManager = URLSchemaManager()
     let urlApp: String = "https://sportsbook.gomagaming.com/"
 
-    var userBetslipSettingsSelectorList: [BetslipSelection] = [BetslipSelection(key: BetslipOddValidationType.acceptAny.rawValue,
-                                                                                description: localized("accept_any")),
-                                                               BetslipSelection(key: BetslipOddValidationType.acceptHigher.rawValue,
-                                                                                description: localized("accept_higher"))]
+    
     
     init() {
 

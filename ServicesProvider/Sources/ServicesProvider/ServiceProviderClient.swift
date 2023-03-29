@@ -711,7 +711,6 @@ extension ServicesProviderClient {
         return bettingProvider.getWonBetsHistory(pageIndex: pageIndex)
     }
 
-
     public func getBetDetails(identifier: String) -> AnyPublisher<Bet, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
@@ -720,6 +719,26 @@ extension ServicesProviderClient {
         }
 
         return bettingProvider.getBetDetails(identifier: identifier)
+    }
+
+    public func getBetslipSettings() -> AnyPublisher<BetslipSettings?, Never> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Just(nil).eraseToAnyPublisher()
+        }
+
+        return bettingProvider.getBetslipSettings()
+    }
+
+    public func updateBetslipSettings(_ betslipSettings: BetslipSettings) -> AnyPublisher<Bool, Never> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Just(false).eraseToAnyPublisher()
+        }
+
+        return bettingProvider.updateBetslipSettings(betslipSettings)
     }
 
 }

@@ -13,9 +13,6 @@ class MyTicketBetLineViewModel {
     var homeScore = CurrentValueSubject<String?, Never>.init(nil)
     var awayScore = CurrentValueSubject<String?, Never>.init(nil)
 
-    private var goalsRegister: EndpointPublisherIdentifiable?
-    private var goalsSubscription: AnyCancellable?
-
     private var selection: BetHistoryEntrySelection
 
     init(selection: BetHistoryEntrySelection) {
@@ -26,22 +23,8 @@ class MyTicketBetLineViewModel {
         }
     }
 
-    deinit {
-        print("MyTicketBetLineViewModel deinit")
-
-        if let goalsRegister = goalsRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: goalsRegister)
-        }
-
-        self.goalsSubscription?.cancel()
-        self.goalsSubscription = nil
-    }
-
     private func requestGoals(forMatchWithId id: String) {
-
-        self.goalsSubscription?.cancel()
-        self.goalsSubscription = nil
-
+        // TODO: Request goals updates
     }
 
 }

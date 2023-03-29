@@ -339,4 +339,48 @@ extension SportRadarModels {
 
     }
 
+
+    struct BetslipSettings: Codable {
+        var acceptingAnyReoffer: Bool
+
+        enum CodingKeys: String, CodingKey {
+            case name = "name"
+            case value = "value"
+            case acceptingAnyReoffer = "acceptingReoffer"
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            let settings = try container.decode([Settings].self)
+            guard
+                let acceptingReofferSetting = settings.first(where: { $0.name == "ACCEPTINRREOFFER" }),
+                let value = acceptingReofferSetting.value
+            else {
+                acceptingAnyReoffer = false
+                return
+            }
+
+            switch value {
+            case "0":
+                acceptingAnyReoffer = false
+            case "-1":
+                acceptingAnyReoffer = true
+            default:
+                acceptingAnyReoffer = false
+            }
+        }
+
+        private struct Settings: Codable {
+            var name: String
+            var value: String?
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: SportRadarModels.BetslipSettings.CodingKeys.self)
+            try container.encode(self.acceptingAnyReoffer, forKey: .acceptingAnyReoffer)
+        }
+
+    }
+
+
 }

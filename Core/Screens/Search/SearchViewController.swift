@@ -306,7 +306,7 @@ class SearchViewController: UIViewController {
         // TODO: This sport is incomplete
         let sport = Sport(id: competition.sportId ?? "", name: "", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0)
         let competitionId = competition.id
-        let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport, store: AggregatorsRepository())
+        let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport)
         let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
         self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
     }

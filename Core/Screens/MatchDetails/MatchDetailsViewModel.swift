@@ -35,9 +35,6 @@ class MatchDetailsViewModel: NSObject {
     var selectedMarketTypeIndexPublisher: CurrentValueSubject<Int?, Never> = .init(nil)
 
     var matchStatsUpdatedPublisher = PassthroughSubject<Void, Never>.init()
- 
-    private var goalsRegister: EndpointPublisherIdentifiable?
-    private var goalsSubscription: AnyCancellable?
 
     var shouldRenderFieldWidget: CurrentValueSubject<Bool, Never> = .init(false)
     var fieldWidgetRenderDataType: FieldWidgetRenderDataType?

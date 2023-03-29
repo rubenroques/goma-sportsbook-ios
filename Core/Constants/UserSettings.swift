@@ -194,12 +194,26 @@ enum CardsStyle: Int {
     case normal = 5
 }
 
-enum BetslipOddValidationType: String {
+enum BetslipOddValidationType: String, CaseIterable {
+
     case acceptAny = "ACCEPT_ANY"
     case acceptHigher = "ACCEPT_HIGHER"
     
     static var defaultValue: BetslipOddValidationType {
         return .acceptAny
     }
-}
 
+    var key: String {
+        return self.rawValue
+    }
+
+    var localizedDescription: String {
+        switch self {
+        case .acceptAny:
+            return localized("accept_any")
+        case .acceptHigher:
+            return localized("accept_higher")
+        }
+    }
+
+}

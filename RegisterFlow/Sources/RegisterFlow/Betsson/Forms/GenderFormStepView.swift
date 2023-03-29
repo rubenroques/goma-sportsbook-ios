@@ -10,7 +10,7 @@ import Extensions
 import Combine
 import Theming
 
-struct GenderFormStepViewModel {
+class GenderFormStepViewModel {
 
     let title: String
 
@@ -21,6 +21,11 @@ struct GenderFormStepViewModel {
     enum Gender {
         case male
         case female
+    }
+
+    private var shouldShowGenderErrorMessageSubject: CurrentValueSubject<Bool, Never> = .init(false)
+    var shouldShowGenderErrorMessage: AnyPublisher<Bool, Never> {
+        return self.shouldShowGenderErrorMessageSubject.eraseToAnyPublisher()
     }
 
     var isFormCompleted: AnyPublisher<Bool, Never> {
@@ -50,6 +55,11 @@ struct GenderFormStepViewModel {
                 self.selectedGender = .init(.female)
             }
         }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { [weak self] in
+            self?.checkGenderSelected()
+        }
+
     }
 
     func setGender(_ gender: Gender) {
@@ -58,20 +68,32 @@ struct GenderFormStepViewModel {
         switch gender {
         case .male:
             self.userRegisterEnvelopUpdater.setGender(UserRegisterEnvelop.Gender.male)
+            self.shouldShowGenderErrorMessageSubject.send(false)
         case .female:
             self.userRegisterEnvelopUpdater.setGender(UserRegisterEnvelop.Gender.female)
+            self.shouldShowGenderErrorMessageSubject.send(false)
         }
 
+    }
+
+    private func checkGenderSelected() {
+        if self.selectedGender.value == nil {
+            self.shouldShowGenderErrorMessageSubject.send(true)
+        }
     }
 
 }
 
 class GenderFormStepView: FormStepView {
 
+    private lazy var internalStackView: UIStackView = Self.createInternalStackView()
+
     private lazy var maleButton: UIButton = Self.createMaleButton()
     private lazy var femaleButton: UIButton = Self.createFemaleButton()
 
-    private lazy var stackContainerView: UIView = Self.createStackContainerView()
+    private lazy var genderErrorLabel: UILabel = Self.createGenderErrorLabel()
+
+    private lazy var buttonsContainerView: UIView = Self.createButtonsContainerView()
     private lazy var buttonStackView: UIStackView = Self.createStackView()
 
     override var isFormCompleted: AnyPublisher<Bool, Never> {
@@ -79,6 +101,8 @@ class GenderFormStepView: FormStepView {
     }
 
     let viewModel: GenderFormStepViewModel
+
+    private var cancellables = Set<AnyCancellable>()
 
     init(viewModel: GenderFormStepViewModel) {
         self.viewModel = viewModel
@@ -95,11 +119,17 @@ class GenderFormStepView: FormStepView {
         self.maleButton.addTarget(self, action: #selector(self.didTapMaleButton), for: .primaryActionTriggered)
         self.femaleButton.addTarget(self, action: #selector(self.didTapFemaleButton), for: .primaryActionTriggered)
 
-        self.stackView.addArrangedSubview(self.stackContainerView)
-        self.stackContainerView.addSubview(self.buttonStackView)
-
         self.buttonStackView.addArrangedSubview(self.maleButton)
         self.buttonStackView.addArrangedSubview(self.femaleButton)
+
+        self.buttonsContainerView.addSubview(self.buttonStackView)
+
+        self.internalStackView.addArrangedSubview(self.buttonsContainerView)
+        self.internalStackView.addArrangedSubview(self.genderErrorLabel)
+
+        self.stackView.addArrangedSubview(self.internalStackView)
+
+        self.genderErrorLabel.isHidden = true
 
         NSLayoutConstraint.activate([
             self.maleButton.heightAnchor.constraint(equalToConstant: 40),
@@ -107,9 +137,11 @@ class GenderFormStepView: FormStepView {
             self.maleButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 80),
             self.femaleButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 80),
 
-            self.buttonStackView.leadingAnchor.constraint(equalTo: self.stackContainerView.leadingAnchor),
-            self.buttonStackView.topAnchor.constraint(equalTo: self.stackContainerView.topAnchor),
-            self.buttonStackView.bottomAnchor.constraint(equalTo: self.stackContainerView.bottomAnchor),
+            self.genderErrorLabel.heightAnchor.constraint(equalToConstant: 27),
+
+            self.buttonStackView.leadingAnchor.constraint(equalTo: self.buttonsContainerView.leadingAnchor),
+            self.buttonStackView.topAnchor.constraint(equalTo: self.buttonsContainerView.topAnchor),
+            self.buttonStackView.bottomAnchor.constraint(equalTo: self.buttonsContainerView.bottomAnchor),
         ])
 
         if let gender = self.viewModel.selectedGender.value {
@@ -121,6 +153,12 @@ class GenderFormStepView: FormStepView {
             }
         }
 
+        self.viewModel
+            .shouldShowGenderErrorMessage
+            .sink(receiveValue: { shouldShowGenderErrorMessage in
+                self.genderErrorLabel.isHidden = !shouldShowGenderErrorMessage
+            })
+            .store(in: &self.cancellables)
     }
 
     override func setupWithTheme() {
@@ -222,7 +260,17 @@ extension GenderFormStepView {
         return button
     }
 
-    fileprivate static func createStackContainerView() -> UIView {
+    fileprivate static func createGenderErrorLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 2
+        label.font = AppFont.with(type: .semibold, size: 12)
+        label.text = "  " + Localization.localized("invalid_gender")
+        label.textColor = AppColor.alertError
+        return label
+    }
+
+    fileprivate static func createButtonsContainerView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -236,6 +284,17 @@ extension GenderFormStepView {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }
+
+
+    fileprivate static func createInternalStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        stackView.distribution = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }
+
 
 }
 

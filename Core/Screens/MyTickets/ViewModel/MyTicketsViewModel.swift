@@ -382,33 +382,10 @@ class MyTicketsViewModel: NSObject {
     }
 
     func getSharedBetTokens() {
-        if let betId = self.clickedBetId {
-            let betTokenRoute = TSRouter.getSharedBetTokens(betId: betId)
 
-            Env.everyMatrixClient.manager.getModel(router: betTokenRoute, decodingType: SharedBetToken.self)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let apiError):
-                        switch apiError {
-                        case .requestError(let value):
-                            print("Bet token request error: \(value)")
-                        case .notConnected:
-                            ()
-                        default:
-                            ()
-                        }
-                    case .finished:
-                        ()
-                    }
-                },
-                receiveValue: { [weak self] betTokens in
-                    let betToken = betTokens.sharedBetTokens.betTokenWithAllInfo
-                    self?.clickedBetTokenPublisher.send(betToken)
+        // TODO: Get a bet token for the shared clicked bet
+        // Send it to self?.clickedBetTokenPublisher.send(betToken)
 
-                })
-                .store(in: &cancellables)
-        }
     }
     
     func shouldShowLoadingCell() -> Bool {
@@ -429,10 +406,10 @@ class MyTicketsViewModel: NSObject {
         case .opened:
             self.openedPage += 1
             self.loadOpenedTickets(page: openedPage, isNextPage: true)
-        case .resolved :
+        case .resolved:
             self.resolvedPage += 1
             self.loadResolvedTickets(page: resolvedPage, isNextPage: true)
-        case .won :
+        case .won:
             self.wonPage += 1
             self.loadWonTickets(page: wonPage, isNextPage: true)
        }

@@ -119,12 +119,6 @@ class MatchWidgetCellViewModel {
 
         self.countryISOCode = ""
         self.countryId = ""
-        if let venueId = match.venueId,
-           let location = Env.everyMatrixStorage.location(forId: venueId),
-           let code = location.code {
-            self.countryISOCode = code
-            self.countryId = location.id
-        }
 
         self.isToday = false
         self.startDateString = ""

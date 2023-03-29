@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ServicesProvider
 import Combine
 
 class OddDoubleCollectionViewCell: UICollectionViewCell {
@@ -60,7 +61,6 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
     var match: Match?
     var market: Market?
-    var store: AggregatorStore?
 
     private var leftOutcome: Outcome?
     private var rightOutcome: Outcome?
@@ -172,7 +172,6 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.matchStatsViewModel = nil
         self.match = nil
         self.market = nil
-        self.store = nil
 
         self.leftOutcome = nil
         self.rightOutcome = nil
@@ -345,23 +344,26 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         self.participantsCountryImageView.image = UIImage(named: "market_stats_icon")
 
-        if let marketPublisher = self.store?.marketPublisher(withId: market.id) {
-            self.marketSubscriber = marketPublisher
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] marketUpdate in
-                    if marketUpdate.isAvailable ?? true {
-                        self?.showMarketButtons()
-                    }
-                    else {
-                        if marketUpdate.isClosed ?? false {
-                            self?.showClosedView()
-                        }
-                        else {
-                            self?.showSuspendedView()
-                        }
-                    }
+        self.marketSubscriber = Env.servicesProvider.subscribeToEventMarketUpdates(withId: market.id)
+            .compactMap({ $0 })
+            .map({ (serviceProviderMarket: ServicesProvider.Market) -> Market in
+                return ServiceProviderModelMapper.market(fromServiceProviderMarket: serviceProviderMarket)
+            })
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                print("marketSubscriber subscribeToEventMarketUpdates completion: \(completion)")
+            }, receiveValue: { [weak self] (marketUpdated: Market) in
+
+                if marketUpdated.isAvailable {
+                    self?.showMarketButtons()
+                    print("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will show \n")
                 }
-        }
+                else {
+                    self?.showSuspendedView()
+                    print("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will hide \n")
+                }
+            })
+
 
         if let outcome = market.outcomes[safe: 0] {
             self.leftOddTitleLabel.text = outcome.typeName
@@ -379,14 +381,19 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                 self.leftOddValueLabel.text = "-"
             }
 
-            self.leftOddButtonSubscriber = self.store?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
+            self.leftOddButtonSubscriber = Env.servicesProvider
+                .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
                 .compactMap({ $0 })
+                .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
+                .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { [weak self] bettingOffer in
+                .sink(receiveCompletion: { completion in
+                    print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                }, receiveValue: { [weak self] bettingOffer in
 
                     guard let weakSelf = self else { return }
 
-                    if !bettingOffer.isOpen {
+                    if !bettingOffer.isAvailable {
                         weakSelf.leftBaseView.isUserInteractionEnabled = false
                         weakSelf.leftBaseView.alpha = 0.5
                         weakSelf.leftOddValueLabel.text = "-"
@@ -395,7 +402,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                         weakSelf.leftBaseView.isUserInteractionEnabled = true
                         weakSelf.leftBaseView.alpha = 1.0
 
-                        guard let newOddValue = bettingOffer.oddsValue else { return }
+                        let newOddValue = bettingOffer.decimalOdd
 
                         if let currentOddValue = weakSelf.currentLeftOddValue {
                             if newOddValue > currentOddValue {
@@ -432,14 +439,19 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                 self.rightOddValueLabel.text = "-"
             }
 
-            self.rightOddButtonSubscriber = self.store?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
+            self.rightOddButtonSubscriber = Env.servicesProvider
+                .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
                 .compactMap({ $0 })
+                .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
+                .map(\.bettingOffer)
                 .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { [weak self] bettingOffer in
+                .sink(receiveCompletion: { completion in
+                    print("leftOddButtonSubscriber subscribeToOutcomeUpdates completion: \(completion)")
+                }, receiveValue: { [weak self] bettingOffer in
 
                     guard let weakSelf = self else { return }
                     
-                    if !bettingOffer.isOpen {
+                    if !bettingOffer.isAvailable {
                         weakSelf.rightBaseView.isUserInteractionEnabled = false
                         weakSelf.rightBaseView.alpha = 0.5
                         weakSelf.rightOddValueLabel.text = "-"
@@ -448,7 +460,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                         weakSelf.rightBaseView.isUserInteractionEnabled = true
                         weakSelf.rightBaseView.alpha = 1.0
                         
-                        guard let newOddValue = bettingOffer.oddsValue else { return }
+                        let newOddValue = bettingOffer.decimalOdd
 
                         if let currentOddValue = weakSelf.currentRightOddValue {
                             if newOddValue > currentOddValue {

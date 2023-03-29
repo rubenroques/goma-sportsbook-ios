@@ -16,17 +16,9 @@ class CompetitionDetailsViewModel {
         case match(Match)
     }
 
-    var store: AggregatorsRepository
-
     var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
     var isLoadingCompetitions: CurrentValueSubject<Bool, Never> = .init(true)
-
-    private var competitionsMatchesPublisher: AnyCancellable?
-    private var competitionsMatchesRegister: EndpointPublisherIdentifiable?
-
-    private var competitionsPublisher: AnyCancellable?
-    private var competitionsRegister: EndpointPublisherIdentifiable?
 
     private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
 
@@ -36,8 +28,7 @@ class CompetitionDetailsViewModel {
 
     private var cancellables: Set<AnyCancellable> = []
 
-    init(competitionsIds: [String], sport: Sport, store: AggregatorsRepository) {
-        self.store = store
+    init(competitionsIds: [String], sport: Sport) {
         self.sport = sport
         self.competitionsIds = competitionsIds
 
@@ -79,123 +70,8 @@ class CompetitionDetailsViewModel {
 
     }
 
-    func storeCompetitions(_ competitions: [EveryMatrix.Tournament] ) {
-        if let competitionsRegister = competitionsRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: competitionsRegister)
-        }
-        self.competitionsPublisher?.cancel()
-
-        self.store.storeTournaments(tournaments: competitions)
-
-        self.fetchCompetitionsMatchesWithIds(self.competitionsIds)
-    }
-
     func fetchCompetitionsMatchesWithIds(_ ids: [String]) {
 
-        if let competitionsMatchesRegister = competitionsMatchesRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: competitionsMatchesRegister)
-        }
-
-        let endpoint = TSRouter.competitionsMatchesPublisher(operatorId: Env.appSession.operatorId,
-                                                             language: "en",
-                                                             sportId: self.sport.id,
-                                                             events: ids)
-
-        self.competitionsMatchesPublisher?.cancel()
-        self.competitionsMatchesPublisher = nil
-
-        self.competitionsMatchesPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
-                case .finished:
-                    print("Data retrieved!")
-                }
-                self?.isLoadingCompetitions.send(false)
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    self?.competitionsMatchesRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    self?.storeCompetitionsAggregatorProcessor(aggregator: aggregator)
-                case .updatedContent(let aggregatorUpdates):
-                    self?.updateCompetitionsAggregatorProcessor(aggregator: aggregatorUpdates)
-                case .disconnect:
-                    ()
-                }
-            })
-    }
-
-    private func storeCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-
-        self.store.processAggregator(aggregator, withListType: .competitions, shouldClear: true)
-
-        let appMatches = self.store.matchesForListType(.competitions)
-
-        var competitionsMatches = OrderedDictionary<String, [Match]>()
-        for match in appMatches {
-            if let matchesForId = competitionsMatches[match.competitionId] {
-                var newMatchesForId = matchesForId
-                newMatchesForId.append(match)
-                competitionsMatches[match.competitionId] = newMatchesForId
-            }
-            else {
-                competitionsMatches[match.competitionId] = [match]
-            }
-        }
-
-        var processedCompetitions: [Competition] = []
-        for competitionId in competitionsMatches.keys {
-            if let rawCompetition = self.store.tournaments[competitionId] {
-
-                var location: Location?
-                if let rawLocation = self.store.location(forId: rawCompetition.venueId ?? "") {
-                    location = Location(id: rawLocation.id,
-                                    name: rawLocation.name ?? "",
-                                    isoCode: rawLocation.code ?? "")
-                }
-
-                let competition = Competition(id: competitionId,
-                                              name: rawCompetition.name ?? "",
-                                              matches: (competitionsMatches[competitionId] ?? []),
-                                              venue: location,
-                                              numberOutrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
-                processedCompetitions.append(competition)
-            }
-        }
-
-        if processedCompetitions.isEmpty {
-            for competitionId in self.competitionsIds {
-                if let rawCompetition = self.store.tournaments[competitionId] {
-
-                    var location: Location?
-                    if let rawLocation = self.store.location(forId: rawCompetition.venueId ?? "") {
-                        location = Location(id: rawLocation.id,
-                                        name: rawLocation.name ?? "",
-                                        isoCode: rawLocation.code ?? "")
-                    }
-
-                    let competition = Competition(id: competitionId,
-                                                  name: rawCompetition.name ?? "",
-                                                  matches: (competitionsMatches[competitionId] ?? []),
-                                                  venue: location,
-                                                  numberOutrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
-                    processedCompetitions.append(competition)
-                }
-            }
-        }
-
-        self.loadedCompetitions = processedCompetitions
-
-        self.isLoadingCompetitions.send(false)
-
-        self.refreshPublisher.send()
-    }
-
-    private func updateCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        self.store.processContentUpdateAggregator(aggregator)
     }
 
 }

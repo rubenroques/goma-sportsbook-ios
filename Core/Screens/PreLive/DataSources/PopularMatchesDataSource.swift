@@ -34,7 +34,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 4
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -53,6 +53,8 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
             else {
                 return 0
             }
+        case 3:
+            return 1
         default:
             return 0
         }
@@ -95,6 +97,12 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
             if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
                 return cell
             }
+
+        case 3:
+            if let cell = tableView.dequeueCellType(FooterResponsibleGamingViewCell.self) {
+                return cell
+            }
+            
         default:
             fatalError()
         }
@@ -147,6 +155,8 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
             return UITableView.automaticDimension // Matches
         case 2:
             return 70 // Loading cell
+        case 3:
+            return UITableView.automaticDimension // Footer
         default:
             return UITableView.automaticDimension
         }
@@ -160,6 +170,8 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
             return StyleHelper.cardsStyleHeight() + 20 // Matches
         case 2:
             return 70 // Loading cell
+        case 3:
+            return 120
         default:
             return StyleHelper.cardsStyleHeight() + 20
         }
