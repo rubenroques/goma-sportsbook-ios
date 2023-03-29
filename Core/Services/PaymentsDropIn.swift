@@ -74,8 +74,8 @@ class PaymentsDropIn {
     private func setupSession() {
 
         if let clientKey = self.clientKey,
-           let apiContext = try? APIContext(environment: Adyen.Environment.test, clientKey: "test_HNOW5H423JB7JEJYVXMQF655YAT7M5IB") {
-
+           let apiContext = try? APIContext(environment: Adyen.Environment.test, clientKey: clientKey) {
+            // test_HNOW5H423JB7JEJYVXMQF655YAT7M5IB
             self.apiContext = apiContext
 
             if let sessionId = self.sessionId,
@@ -157,6 +157,8 @@ class PaymentsDropIn {
     }
 
     private func processDepositResponse(amount: Double) {
+
+        print("AMOUNT DEPOSIT: \(amount)")
 
         Env.servicesProvider.processDeposit(paymentMethod: "ADYEN_IDEAL", amount: amount, option: "DROP_IN")
             .receive(on: DispatchQueue.main)

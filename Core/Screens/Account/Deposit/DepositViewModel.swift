@@ -68,7 +68,7 @@ class DepositViewModel: NSObject {
             print(paymentInfo)
         }
 
-        self.minimumValue.send("50.00")
+        self.minimumValue.send("20.00")
     }
 
     func getDepositInfo(amountText: String) {

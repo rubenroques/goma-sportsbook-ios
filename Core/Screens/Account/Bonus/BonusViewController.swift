@@ -35,6 +35,7 @@ class BonusViewController: UIViewController {
 
     // MARK: Public Properties
     var viewModel: BonusViewModel
+    var redeemedBonus: ((String) -> Void)?
 
     var isPromoCodeViewHidden: Bool = false {
         didSet {
@@ -135,6 +136,7 @@ class BonusViewController: UIViewController {
         self.promoCodeTextFieldView.didTapButtonAction = { [weak self] in
             print("APPLY BONUS!")
             let bonusCode = self?.promoCodeTextFieldView.getTextFieldValue() ?? ""
+            self?.promoCodeTextFieldView.resignFirstResponder()
             self?.applyBonus(bonusCode: bonusCode)
         }
 
@@ -298,6 +300,7 @@ class BonusViewController: UIViewController {
                     case .errorMessage(let message):
                         if message == "BONUSPLAN_NOT_FOUND" {
                             self?.showAlert(type: .error, text: localized("invalid_bonus_code"))
+                            // self?.redeemedBonus?("BonusID:355")
                         }
                         else {
                             self?.showAlert(type: .error, text: localized("error_bonus_code"))
@@ -309,7 +312,9 @@ class BonusViewController: UIViewController {
                 }
             }, receiveValue: { [weak self] redeemBonusResponse in
                 self?.showAlert(type: .success, text: localized("bonus_applied_success"))
-                self?.viewModel.updateDataSources()
+                if let bonus = redeemBonusResponse.bonus {
+                    self?.redeemedBonus?("\(bonus.id)")
+                }
             })
             .store(in: &cancellables)
 
@@ -343,7 +348,9 @@ class BonusViewController: UIViewController {
                     }
                 }, receiveValue: { [weak self] redeemAvailableBonusResponse in
                     self?.showAlert(type: .success, text: localized("bonus_applied_success"))
-                    self?.viewModel.updateDataSources()
+                    if let bonusMessage = redeemAvailableBonusResponse.message {
+                        self?.redeemedBonus?(bonusMessage)
+                    }
                 })
                 .store(in: &cancellables)
         }

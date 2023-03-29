@@ -511,11 +511,17 @@ extension OmegaAPIClient: Endpoint {
 
             return nil
         case .processDeposit(let paymentMethod, let amount, let option):
+            let localeCode = Locale.current.languageCode
+            let localeRegion = Locale.current.regionCode
+            let locale = "\(localeCode ?? "fr")-\(localeRegion ?? "FR")"
+
             return [
 
                 URLQueryItem(name: "paymentMethod", value: paymentMethod),
                 URLQueryItem(name: "amount", value: "\(amount)"),
-                URLQueryItem(name: "option", value: option)
+                URLQueryItem(name: "option", value: option),
+                URLQueryItem(name: "locale", value: locale),
+                URLQueryItem(name: "requestedBonusPlanId", value: "NONE")
             ]
 
         case .processWithdrawal(let withdrawalMethod, let amount):

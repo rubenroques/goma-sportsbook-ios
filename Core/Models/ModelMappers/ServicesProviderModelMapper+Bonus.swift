@@ -38,7 +38,7 @@ extension ServiceProviderModelMapper {
 
     static func applicableBonus(fromServiceProviderAvailableBonus availableBonus: ServicesProvider.AvailableBonus) -> ApplicableBonus {
 
-        return ApplicableBonus(code: availableBonus.id, name: availableBonus.name, description: availableBonus.description, url: nil, html: nil, assets: availableBonus.imageUrl)
+        return ApplicableBonus(code: availableBonus.id, name: availableBonus.name, description: availableBonus.description ?? "", url: nil, html: nil, assets: availableBonus.imageUrl)
 
     }
 }

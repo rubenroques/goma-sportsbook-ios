@@ -102,7 +102,7 @@ extension CasualGamblingViewController {
     private static func createTopTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("casual_vs_pathologic_gambling")
+        label.text = localized("casual_pathologic_gambling")
         label.font = AppFont.with(type: .bold, size: 20)
         label.textAlignment = .center
         return label
@@ -130,7 +130,7 @@ extension CasualGamblingViewController {
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("casual_vs_pathological_gambling_title")
+        label.text = localized("casual_pathologic_question")
         label.font = AppFont.with(type: .bold, size: 16)
         label.textAlignment = .left
         label.numberOfLines = 0
@@ -140,7 +140,7 @@ extension CasualGamblingViewController {
     private static func createTextLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("casual_vs_pathological_gambling_message")
+        label.text = localized("casual_pathologic_answer")
         label.font = AppFont.with(type: .bold, size: 16)
         label.textAlignment = .left
         label.numberOfLines = 0

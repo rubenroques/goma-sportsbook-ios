@@ -121,3 +121,17 @@ enum UserGender: String, Codable, CaseIterable {
 
 }
 // swiftlint:enable line_length
+
+enum GomaGamingEnv {
+    case stage
+    case prod
+
+    var baseUrl: String {
+        switch self {
+        case .stage:
+            return "https://sportsbook-stage.gomagaming.com"
+        case .prod:
+            return "https://goma-uat.betsson.fr"
+        }
+    }
+}

@@ -788,7 +788,7 @@
 "suggested_bets" = "Paris suggérés";
 "suggested_country" = "Pays suggéré";
 "suggested_names" = "Noms suggérés"; // UNUSED
-"support" = "Soutien";
+"support" = "Support";
 "support_error" = "Nous ne pouvons pas envoyer votre message pour le moment. Veuillez réessayer plus tard.";
 "support_success" = "Votre message a bien été envoyé";
 "suspended" = "Suspendu";
@@ -954,3 +954,37 @@
 "bonus_released" = "Bonus Libéré";
 
 "kyc_account_status" = "Statut du compte KYC";
+
+"withdraw_error" = "Erreur de retirer";
+"used" = "Utilisé";
+"queued" = "File";
+"no_wager_info" = "Info sans mise";
+"payment_authorized" = "Paiement Autorisé";
+
+"withdrawal" = "Retrait";
+"bonus_credit" = "Crédit Bonus";
+"bonus_expired" = "Bonus Expirée";
+"deposit_cancel" = "Dépôt Annulation";
+"withdrawal_cancel" = "Retrait Annulation";
+
+"close_account_success" = "Réussir à fermer un compte";
+"close_account_success_message" = "Votre compte a été fermé avec succès.";
+"close_account_error" = "Erreur de fermeture de compte";
+"close_account_error_message" = "Une erreur s'est produite lors de la fermeture de votre compte, veuillez contacter l'assistance.";
+
+"casual_pathologic_gambling" = "Jeu occasionnel vs jeu pathologique";
+"casual_pathologic_question" = "Jeu occasionnel vs jeu pathologique: quelles sont les différences ?";
+
+"tips_to_keep_control" = "Conseils pour garder le contrôle";
+"self_exclusion" = "Auto-exclusion";
+"close_account" = "Fermer le compte";
+
+"block_account_info" = "Bloquer les paris et les dépôts sur votre compte pendant un certain nombre de jours, de semaines ou de mois.";
+
+"confirm_close_account_button" = "Oui, fermer mon compte";
+"close_account_alert_text" = "Vous êtes sur le point de fermer votre compte. Si vous continuez, vous ne pourrez plus accéder à votre compte. Ce processus est irréversible. Souhaitez-vous fermer définitivement votre compte ?";
+
+// NOT TO ADD YET
+"tip_title" = "Pointe 1";
+"tip_message" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sagittis eros a nibh fermentum viverra. Sed imperdiet justo non tellus mollis viverra. Aliquam quis varius ex. In sagittis condimentum molestie.";
+"casual_pathologic_answer" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sagittis eros a nibh fermentum viverra. Sed imperdiet justo non tellus mollis viverra. Aliquam quis varius ex. In sagittis condimentum molestie. Praesent felis tortor, volutpat id tincidunt vitae, euismod eu elit. Nam quis tortor tincidunt, condimentum nibh eget, posuere lorem. In sed pulvinar magna, sed volutpat lacus. Suspendisse consequat pharetra pulvinar. Phasellus consectetur est eget accumsan sagittis.\n\nNunc est sapien, pretium et quam sit amet, varius dignissim sapien. Nulla sed lorem scelerisque, efficitur lorem sed, blandit velit. Donec lacinia ex ac enim rutrum, id tincidunt mi sagittis. Mauris tempor, ligula in dapibus fringilla, augue felis convallis nulla, eget gravida mauris nisi eget justo. Nullam bibendum, est quis suscipit iaculis, libero felis sagittis eros, sit amet iaculis diam velit et erat.\n\nVestibulum ullamcorper nibh condimentum ex scelerisque convallis. Sed sit amet porttitor eros. Duis tempor mauris et mi volutpat, vitae vestibulum metus feugiat. In vitae sem finibus, pharetra neque a, imperdiet tellus. Nunc et mattis leo, vel vehicula odio. Fusce volutpat massa eros, eu vestibulum nunc efficitur maximus. Phasellus non erat ultrices, placerat felis eleifend, ultricies neque. Nulla semper, magna sed semper maximus, sapien dui facilisis nisl, nec dapibus nulla sem non massa. Nam a nunc viverra, euismod lectus vulputate, molestie mauris. Aenean ultrices dolor leo, id pellentesque enim imperdiet semper. Sed massa arcu, dictum nec posuere nec, scelerisque molestie tortor. Ut justo libero, mollis ac quam porttitor, condimentum commodo ex. Nulla dolor lorem, feugiat et eleifend sed, finibus et dolor. Nunc at imperdiet sapien. Maecenas non tellus nibh.";

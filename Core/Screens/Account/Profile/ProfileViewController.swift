@@ -474,8 +474,9 @@ class ProfileViewController: UIViewController {
     }
 
     @IBAction private func didTapWithdrawButton() {
-        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete.value {
-            if isUserProfileComplete {
+        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete.value,
+           let isUserKycVerified = Env.userSessionStore.isUserKycVerified.value {
+            if isUserProfileComplete && isUserKycVerified {
                 let withDrawViewController = WithdrawViewController()
                 let navigationViewController = Router.navigationController(with: withDrawViewController)
 
@@ -537,9 +538,13 @@ extension ProfileViewController {
 
         let promotionsWebViewModel = PromotionsWebViewModel()
 
-        let theme = self.traitCollection.userInterfaceStyle
+        // TODO: Change to prod url when fixed
+        let gomaBaseUrl = GomaGamingEnv.stage.baseUrl
+        let appLanguage = Locale.current.languageCode
 
-        let urlString = theme == .dark ? "https://sportsbook-stage.gomagaming.com/en/in-app/promotions?dark=true" : "https://sportsbook-stage.gomagaming.com/en/in-app/promotions?dark=false"
+        let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
+
+        let urlString = "\(gomaBaseUrl)/\(appLanguage ?? "fr")/in-app/promotions?dark=\(isDarkTheme)"
 
         if let url = URL(string: urlString) {
 

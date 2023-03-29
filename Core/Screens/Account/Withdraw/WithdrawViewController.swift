@@ -363,7 +363,7 @@ class WithdrawViewController: UIViewController {
             errorTitle = localized("withdraw_error")
             errorMessage = localized("withdraw_error_message")
         case .error(let message):
-            errorTitle = localized("withdrawal_error")
+            errorTitle = localized("withdraw_error")
             errorMessage = message
         default:
             ()

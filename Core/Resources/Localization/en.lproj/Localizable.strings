@@ -1048,15 +1048,15 @@
 
 "promotions" = "Promotions";
 "responsible_gaming" = "Responsible Gaming";
-"casual_vs_pathologic_gambling" = "Casual vs Pathologic Gambling";
-"tips_keep_control" = "Tips to keep control";
+"casual_pathologic_gambling" = "Casual vs Pathologic Gambling";
+"tips_to_keep_control" = "Tips to keep control";
 "self_exclusion" = "Self Exclusion";
 "close_account" = "Close account";
 
 "block_account_info" = "Block your account from betting and depositing for a number of days, weeks or months.";
 
-"casual_vs_pathological_gambling_title" = "Casual vs Pathologic Gaming what are the differences?";
-"casual_vs_pathological_gambling_message" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sagittis eros a nibh fermentum viverra. Sed imperdiet justo non tellus mollis viverra. Aliquam quis varius ex. In sagittis condimentum molestie. Praesent felis tortor, volutpat id tincidunt vitae, euismod eu elit. Nam quis tortor tincidunt, condimentum nibh eget, posuere lorem. In sed pulvinar magna, sed volutpat lacus. Suspendisse consequat pharetra pulvinar. Phasellus consectetur est eget accumsan sagittis.\n\nNunc est sapien, pretium et quam sit amet, varius dignissim sapien. Nulla sed lorem scelerisque, efficitur lorem sed, blandit velit. Donec lacinia ex ac enim rutrum, id tincidunt mi sagittis. Mauris tempor, ligula in dapibus fringilla, augue felis convallis nulla, eget gravida mauris nisi eget justo. Nullam bibendum, est quis suscipit iaculis, libero felis sagittis eros, sit amet iaculis diam velit et erat.\n\nVestibulum ullamcorper nibh condimentum ex scelerisque convallis. Sed sit amet porttitor eros. Duis tempor mauris et mi volutpat, vitae vestibulum metus feugiat. In vitae sem finibus, pharetra neque a, imperdiet tellus. Nunc et mattis leo, vel vehicula odio. Fusce volutpat massa eros, eu vestibulum nunc efficitur maximus. Phasellus non erat ultrices, placerat felis eleifend, ultricies neque. Nulla semper, magna sed semper maximus, sapien dui facilisis nisl, nec dapibus nulla sem non massa. Nam a nunc viverra, euismod lectus vulputate, molestie mauris. Aenean ultrices dolor leo, id pellentesque enim imperdiet semper. Sed massa arcu, dictum nec posuere nec, scelerisque molestie tortor. Ut justo libero, mollis ac quam porttitor, condimentum commodo ex. Nulla dolor lorem, feugiat et eleifend sed, finibus et dolor. Nunc at imperdiet sapien. Maecenas non tellus nibh.";
+"casual_pathologic_question" = "Casual vs Pathologic Gaming what are the differences?";
+"casual_pathologic_answer" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sagittis eros a nibh fermentum viverra. Sed imperdiet justo non tellus mollis viverra. Aliquam quis varius ex. In sagittis condimentum molestie. Praesent felis tortor, volutpat id tincidunt vitae, euismod eu elit. Nam quis tortor tincidunt, condimentum nibh eget, posuere lorem. In sed pulvinar magna, sed volutpat lacus. Suspendisse consequat pharetra pulvinar. Phasellus consectetur est eget accumsan sagittis.\n\nNunc est sapien, pretium et quam sit amet, varius dignissim sapien. Nulla sed lorem scelerisque, efficitur lorem sed, blandit velit. Donec lacinia ex ac enim rutrum, id tincidunt mi sagittis. Mauris tempor, ligula in dapibus fringilla, augue felis convallis nulla, eget gravida mauris nisi eget justo. Nullam bibendum, est quis suscipit iaculis, libero felis sagittis eros, sit amet iaculis diam velit et erat.\n\nVestibulum ullamcorper nibh condimentum ex scelerisque convallis. Sed sit amet porttitor eros. Duis tempor mauris et mi volutpat, vitae vestibulum metus feugiat. In vitae sem finibus, pharetra neque a, imperdiet tellus. Nunc et mattis leo, vel vehicula odio. Fusce volutpat massa eros, eu vestibulum nunc efficitur maximus. Phasellus non erat ultrices, placerat felis eleifend, ultricies neque. Nulla semper, magna sed semper maximus, sapien dui facilisis nisl, nec dapibus nulla sem non massa. Nam a nunc viverra, euismod lectus vulputate, molestie mauris. Aenean ultrices dolor leo, id pellentesque enim imperdiet semper. Sed massa arcu, dictum nec posuere nec, scelerisque molestie tortor. Ut justo libero, mollis ac quam porttitor, condimentum commodo ex. Nulla dolor lorem, feugiat et eleifend sed, finibus et dolor. Nunc at imperdiet sapien. Maecenas non tellus nibh.";
 
 "tip_title" = "Tip 1";
 "tip_message" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sagittis eros a nibh fermentum viverra. Sed imperdiet justo non tellus mollis viverra. Aliquam quis varius ex. In sagittis condimentum molestie.";
@@ -1120,3 +1120,8 @@
 "bet_settled" = "Bet Settled";
 
 "bonus_released" = "Bonus Released";
+
+"close_account_success" = "Close Account Success";
+"close_account_success_message" = "Your account has been successfully closed.";
+"close_account_error" = "Close Account Error";
+"close_account_error_message" = "There was an error closing your account, please contact support.";

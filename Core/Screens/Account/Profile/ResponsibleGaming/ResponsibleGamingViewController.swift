@@ -54,12 +54,12 @@ class ResponsibleGamingViewController: UIViewController {
     // MARK: Functions
     private func setupStackView() {
         let casualGamblingView = NavigationCardView()
-        casualGamblingView.setupView(title: localized("casual_vs_pathologic_gambling"), iconTitle: "casual_gambling_icon")
+        casualGamblingView.setupView(title: localized("casual_pathologic_gambling"), iconTitle: "casual_gambling_icon")
         let casualGamblingTap = UITapGestureRecognizer(target: self, action: #selector(didTapCasualGambling(sender:)))
         casualGamblingView.addGestureRecognizer(casualGamblingTap)
 
         let tipsControlView = NavigationCardView()
-        tipsControlView.setupView(title: localized("tips_keep_control"), iconTitle: "responsible_gaming_icon")
+        tipsControlView.setupView(title: localized("tips_to_keep_control"), iconTitle: "responsible_gaming_icon")
         let tipsControlTap = UITapGestureRecognizer(target: self, action: #selector(didTapTipsControl(sender:)))
         tipsControlView.addGestureRecognizer(tipsControlTap)
 
