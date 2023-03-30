@@ -50,6 +50,7 @@ extension UIColor {
         static let inputTextTitle = UIColor(named: "inputTextTitle")!
         static let inputText = UIColor(named: "inputText")!
         static let inputError = UIColor(named: "inputError")!
+        static let inputTextDisable = UIColor(named: "inputTextDisable")
 
         static var iconPrimary: UIColor {
             return UIColor(named: "iconPrimary") ?? Self.textPrimary

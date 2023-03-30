@@ -964,8 +964,8 @@
 "close_account_error" = "Erreur de fermeture de compte";
 "close_account_error_message" = "Une erreur s'est produite lors de la fermeture de votre compte, veuillez contacter l'assistance.";
 
-"casual_pathologic_gambling" = "Jeu occasionnel vs jeu pathologique";
-"casual_pathologic_question" = "Jeu occasionnel vs jeu pathologique: quelles sont les différences ?";
+"casual_pathologic_gambling" = "Jeu récréatif et Jeu excessif";
+"casual_pathologic_question" = "Jeu récréatif et Jeu excessif: quelles sont les différences ?";
 
 "tips_to_keep_control" = "Conseils pour garder le contrôle";
 "self_exclusion" = "Auto-exclusion";
@@ -975,6 +975,22 @@
 
 "confirm_close_account_button" = "Oui, fermer mon compte";
 "close_account_alert_text" = "Vous êtes sur le point de fermer votre compte. Si vous continuez, vous ne pourrez plus accéder à votre compte. Ce processus est irréversible. Souhaitez-vous fermer définitivement votre compte ?";
+
+"evalujeu" = "Evalujeu";
+
+"lock_account_success" = "Verrouiller le compte avec succès";
+"lock_account_success_message" = "Votre compte a été verrouillé avec succès.";
+"lock_account_error" = "Erreur de verrouillage du compte";
+"lock_account_error_message" = "Une erreur s'est produite lors du verrouillage de votre compte, veuillez contacter l'assistance.";
+
+"pending_limit_info" = "Il y a une limite en attente de: {pendingLimit} {currency}. La limite actuelle est valable jusqu'au: {pendingLimitDate}";
+
+"increasing_limit_warning_title" = "Augmenter la limite de {}";
+"increasing_limit_warning_text" = "Vous êtes sur le point d'augmenter la limite de {} de votre compte. Ces changements mettront 48 heures à être appliqués. Souhaitez-vous appliquer ces modifications?";
+
+"current_limit_info" = "Il s'agit de la valeur actuelle de votre {limitType}.";
+
+"limit_update_error_message" = "La limite de {limitType} n'a pas pu être mise à jour. Veuillez contacter le support.";
 
 // NOT TO ADD YET
 "tip_title" = "Pointe 1";

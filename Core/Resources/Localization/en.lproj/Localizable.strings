@@ -1080,9 +1080,7 @@
 "max_file_size_exceeded" = "Max File Size Exceeded";
 "max_file_size_exceeded_message" = "The file chosen exceeds the maximum 10MB size. Please select another file.";
 
-"betting_limit_update_error_message" = "Betting limit could not be updated. Please try again later.";
-"deposit_limit_update_error_message" = "Deposit limit could not be updated. Please try again later."; // UNUSED
-"auto_payout_limit_update_error_message" = "Auto payout limit could not be updated. Please try again later.";
+"limit_update_error_message" = "{limitType} limit could not be updated. Please contact support.";
 
 "self_exclusion_success" = "Self Exclusion Success";
 "self_exclusion_success_message" = "Self exclusion options were added with success!";
@@ -1125,3 +1123,12 @@
 "close_account_success_message" = "Your account has been successfully closed.";
 "close_account_error" = "Close Account Error";
 "close_account_error_message" = "There was an error closing your account, please contact support.";
+
+"lock_account_success" = "Lock Account Success";
+"lock_account_success_message" = "Your account has been successfully locked.";
+"lock_account_error" = "Lock Account Error";
+"lock_account_error_message" = "There was an error locking your account, please contact support.";
+
+"pending_limit_info" = "There is a pending limit of: {pendingLimit} {currency}. The current limit is valid until: {pendingLimitDate}";
+
+"current_limit_info" = "This is your current {limitType} value.";

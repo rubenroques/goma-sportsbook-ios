@@ -69,7 +69,7 @@ protocol PrivilegedAccessManager {
     func getPaymentInformation() -> AnyPublisher<PaymentInformation, ServiceProviderError>
     func addPaymentInformation(type: String, fields: String) -> AnyPublisher<AddPaymentInformationResponse, ServiceProviderError>
 
-    func getTransactionsHistory(startDate: String, endDate: String, transactionType: String?, pageNumber: Int?) -> AnyPublisher<[TransactionDetail], ServiceProviderError>
+    func getTransactionsHistory(startDate: String, endDate: String, transactionType: [String]?, pageNumber: Int?) -> AnyPublisher<[TransactionDetail], ServiceProviderError>
 
     func getGrantedBonuses() -> AnyPublisher<[GrantedBonus], ServiceProviderError>
     func redeemBonus(code: String) -> AnyPublisher<RedeemBonusResponse, ServiceProviderError>

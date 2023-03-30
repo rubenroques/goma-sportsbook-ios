@@ -409,6 +409,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
 
 
         return publisher.flatMap({ statusResponse -> AnyPublisher<Bool, ServiceProviderError> in
+            print("AUTO_PAYOUT: \(statusResponse)")
             if statusResponse.status == "SUCCESS" {
                 return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
@@ -460,7 +461,6 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
 
         return publisher.flatMap({ responsibleGamingLimitsResponse -> AnyPublisher<ResponsibleGamingLimitsResponse, ServiceProviderError> in
             if responsibleGamingLimitsResponse.status == "SUCCESS" {
-
                 let responsibleGamingLimitsResponse = SportRadarModelMapper.responsibleGamingLimitsResponse(fromResponsibleGamingLimitsResponse: responsibleGamingLimitsResponse)
 
                 return Just(responsibleGamingLimitsResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
@@ -785,7 +785,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         }).eraseToAnyPublisher()
     }
 
-    func getTransactionsHistory(startDate: String, endDate: String, transactionType: String? = nil, pageNumber: Int? = nil) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
+    func getTransactionsHistory(startDate: String, endDate: String, transactionType: [String]? = nil, pageNumber: Int? = nil) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: transactionType, pageNumber: pageNumber, pageSize: 10)
 

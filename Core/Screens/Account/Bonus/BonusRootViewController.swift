@@ -159,7 +159,6 @@ class BonusRootViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        // TODO: Implement later
         for bonusTypesViewController in bonusTypesViewControllers {
             if let bonusVC = bonusTypesViewController as? BonusViewController {
 
@@ -261,31 +260,35 @@ class BonusRootViewController: UIViewController {
 
                 bonusVC.viewModel.updateDataSources()
 
-                if bonusVC.viewModel.bonusListType == .active {
+                bonusVC.viewModel.isBonusGrantedLoading
+                    .sink(receiveValue: { [weak self] isLoading in
 
-                    bonusVC.viewModel.isBonusGrantedLoading
-                        .sink(receiveValue: { [weak self] isLoading in
+                        if !isLoading {
 
-                            if !isLoading {
+                            if bonusVC.viewModel.bonusListType == .active {
                                 let filteredActiveBonus = bonusVC.viewModel.bonusActive.filter({
-                                    bonusMessage.contains($0.id)
-                                })
-
-                                let filteredQueuedBonus = bonusVC.viewModel.bonusQueued.filter({
                                     bonusMessage.contains($0.id)
                                 })
 
                                 if filteredActiveBonus.isNotEmpty {
                                     self?.selectBonusType(atIndex: 1)
                                 }
-                                else if filteredQueuedBonus.isNotEmpty {
+                            }
+                            else if bonusVC.viewModel.bonusListType == .queued {
+
+                                let filteredQueuedBonus = bonusVC.viewModel.bonusQueued.filter({
+                                    bonusMessage.contains($0.id)
+                                })
+
+                                if filteredQueuedBonus.isNotEmpty {
                                     self?.selectBonusType(atIndex: 2)
                                 }
                             }
 
-                        })
-                        .store(in: &cancellables)
-                }
+                        }
+
+                    })
+                    .store(in: &cancellables)
             }
         }
 
