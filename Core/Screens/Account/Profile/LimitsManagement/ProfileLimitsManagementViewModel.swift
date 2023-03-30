@@ -153,7 +153,9 @@ class ProfileLimitsManagementViewModel: NSObject {
             let pendingLimitDate = depositLimitResponse.pendingWeeklyLimitEffectiveDate ?? ""
             let currency = depositLimitResponse.currency
 
-            self.pendingDepositLimitMessage = "There is a pending limit of: \(pendingLimit) \(currency). The current limit is valid until: \(pendingLimitDate)"
+            self.pendingDepositLimitMessage = localized("pending_limit_info").replacingFirstOccurrence(of: "{pendingLimit}", with: pendingLimit)
+                .replacingFirstOccurrence(of: "{currency}", with: currency)
+                .replacingFirstOccurrence(of: "{pendingLimitDate}", with: pendingLimitDate)
 
             let queuedDepositLimitInfo = LimitInfo(period: "weekly", currency: depositLimitResponse.currency, amount: Double(depositLimitResponse.pendingWeeklyLimit ?? "0") ?? 0)
 
@@ -177,7 +179,9 @@ class ProfileLimitsManagementViewModel: NSObject {
             let pendingLimitDate = pendingLimit.effectiveDate
             let currency = limitsResponse.currency
 
-            self.pendingWageringLimitMessage = "There is a pending limit of: \(pendingLimit.limitNumber) \(currency). The current limit is valid until: \(pendingLimitDate)"
+            self.pendingWageringLimitMessage = localized("pending_limit_info").replacingFirstOccurrence(of: "{pendingLimit}", with: "\(pendingLimit.limitNumber)")
+                .replacingFirstOccurrence(of: "{currency}", with: currency)
+                .replacingFirstOccurrence(of: "{pendingLimitDate}", with: pendingLimitDate)
 
             let queuedDepositLimitInfo = LimitInfo(period: "weekly", currency: currency, amount: pendingLimit.limitNumber)
 
@@ -214,7 +218,9 @@ class ProfileLimitsManagementViewModel: NSObject {
                 let pendingLimitDate = pendingLimit.effectiveDate
                 let currency = "EUR"
 
-                self.pendingLossLimitMessage = "There is a pending limit of: \(pendingLimitValue) \(currency). The current limit is valid until: \(pendingLimitDate)"
+                self.pendingLossLimitMessage = localized("pending_limit_info").replacingFirstOccurrence(of: "{pendingLimit}", with: "\(pendingLimitValue)")
+                    .replacingFirstOccurrence(of: "{currency}", with: currency)
+                    .replacingFirstOccurrence(of: "{pendingLimitDate}", with: pendingLimitDate)
 
                 let queuedResponsibleGamingLimitInfo = LimitInfo(period: "daily", currency: "EUR", amount: pendingLimit.limit)
 
@@ -278,7 +284,8 @@ class ProfileLimitsManagementViewModel: NSObject {
                         ()
                     case .failure(let error):
                         print("UPDATE DEPOSIT LIMIT ERROR: \(error)")
-                        self?.limitOptionsErrorPublisher.send("\(localized("betting_limit_update_error_message"))")
+                        let limitErrorMessage = localized("limit_update_error_message").replacingFirstOccurrence(of: "{limitType}", with: localized("deposit"))
+                        self?.limitOptionsErrorPublisher.send(limitErrorMessage)
                         self?.isLoadingPublisher.send(false)
                     }
                 }, receiveValue: { [weak self] updateLimitResponse in
@@ -301,7 +308,8 @@ class ProfileLimitsManagementViewModel: NSObject {
                         ()
                     case .failure(let error):
                         print("UPDATE DEPOSIT LIMIT ERROR: \(error)")
-                        self?.limitOptionsErrorPublisher.send("\(localized("betting_limit_update_error_message"))")
+                        let limitErrorMessage = localized("limit_update_error_message").replacingFirstOccurrence(of: "{limitType}", with: localized("betting"))
+                        self?.limitOptionsErrorPublisher.send(limitErrorMessage)
                         self?.isLoadingPublisher.send(false)
                     }
                 }, receiveValue: { [weak self] updateLimitResponse in
@@ -325,7 +333,8 @@ class ProfileLimitsManagementViewModel: NSObject {
                         ()
                     case .failure(let error):
                         print("UPDATE RESPONSIBLE LIMIT ERROR: \(error)")
-                        self?.limitOptionsErrorPublisher.send("\(localized("auto_payout_limit_update_error_message"))")
+                        let limitErrorMessage = localized("limit_update_error_message").replacingFirstOccurrence(of: "{limitType}", with: localized("auto_payout"))
+                        self?.limitOptionsErrorPublisher.send(limitErrorMessage)
                         self?.isLoadingPublisher.send(false)
                     }
                 }, receiveValue: { [weak self] updateLimitResponse in
@@ -530,30 +539,33 @@ class ProfileLimitsManagementViewModel: NSObject {
 
         if alertType == "deposit" {
 
-            if let pendingDepositLimitMessage {
-                alertMessage = pendingDepositLimitMessage
-            }
-            else {
-                alertMessage = "This is your current deposit value."
-            }
+//            if let pendingDepositLimitMessage {
+//                alertMessage = pendingDepositLimitMessage
+//            }
+//            else {
+//                alertMessage = localized("current_limit_info").replacingFirstOccurrence(of: "{limitType}", with: localized("deposit").lowercased())
+//            }
+            alertMessage = localized("current_limit_info").replacingFirstOccurrence(of: "{limitType}", with: localized("deposit").lowercased())
         }
         else if alertType == "wagering" {
 
-            if let pendingWageringLimitMessage {
-                alertMessage = pendingWageringLimitMessage
-            }
-            else {
-                alertMessage = "This is your current betting value."
-            }
+//            if let pendingWageringLimitMessage {
+//                alertMessage = pendingWageringLimitMessage
+//            }
+//            else {
+//                alertMessage = localized("current_limit_info").replacingFirstOccurrence(of: "{limitType}", with: localized("betting").lowercased())
+//            }
+            alertMessage = localized("current_limit_info").replacingFirstOccurrence(of: "{limitType}", with: localized("betting").lowercased())
         }
         else if alertType == "loss" {
 
-            if let pendingLossLimitMessage {
-                alertMessage = pendingLossLimitMessage
-            }
-            else {
-                alertMessage = "This is your current auto payout value."
-            }
+//            if let pendingLossLimitMessage {
+//                alertMessage = pendingLossLimitMessage
+//            }
+//            else {
+//                alertMessage = localized("current_limit_info").replacingFirstOccurrence(of: "{limitType}", with: localized("auto_payout").lowercased())
+//            }
+            alertMessage = localized("current_limit_info").replacingFirstOccurrence(of: "{limitType}", with: localized("auto_payout").lowercased())
         }
 
         return alertMessage

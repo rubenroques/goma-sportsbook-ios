@@ -207,7 +207,9 @@ class TransactionsHistoryViewModel {
 
         let endDate = self.getDateString(date: self.endDatePublisher.value)
 
-        Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, pageNumber: page)
+        Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: ["DEPOSIT", "WITHDRAWAL", "CRE_BONUS",
+                                                                                                              "EXP_BONUS", "DP_CANCEL", "WD_CANCEL",
+                                                                                                              "GAME_WIN", "GAME_BET", "CASH_OUT"], pageNumber: page)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
 
@@ -240,7 +242,7 @@ class TransactionsHistoryViewModel {
 
         let endDate = self.getDateString(date: self.endDatePublisher.value)
 
-        Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: "DEPOSIT", pageNumber: page)
+        Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: ["DEPOSIT"], pageNumber: page)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
 
@@ -305,7 +307,7 @@ class TransactionsHistoryViewModel {
 
         let endDate = self.getDateString(date: self.endDatePublisher.value)
 
-        Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: "WITHDRAWAL", pageNumber: page)
+        Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: ["WITHDRAWAL"], pageNumber: page)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
 
@@ -332,13 +334,13 @@ class TransactionsHistoryViewModel {
     func processTransactions(transactions: [TransactionDetail], transactionType: TransactionsType) {
 
         // Filter unwanted transactions types
-        let unwantedTypes = ["RSV_COMMIT", "RESERVE", "RSV_CANCEL"]
+//        let unwantedTypes = ["RSV_COMMIT", "RESERVE", "RSV_CANCEL"]
+//
+//        let filteredTransactions = transactions.filter({
+//            !unwantedTypes.contains($0.type)
+//        })
 
-        let filteredTransactions = transactions.filter({
-            !unwantedTypes.contains($0.type)
-        })
-
-        let transactionsHistory = filteredTransactions.map { transactionDetail -> TransactionHistory in
+        let transactionsHistory = transactions.map { transactionDetail -> TransactionHistory in
 
             var valueType = TransactionValueType.neutral
 

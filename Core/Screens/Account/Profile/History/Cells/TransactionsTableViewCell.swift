@@ -83,7 +83,7 @@ class TransactionsTableViewCell: UITableViewCell {
         else if let date = DateFormatter.init(format: "dd-MM-yyyy HH:mm:ss").date(from: transactionHistoryEntry.time) {
 
             let dateFormatter = Self.dateFormatter
-            dateFormatter.dateFormat = "dd-MM-yyyy"
+            dateFormatter.dateFormat = "dd-MM-yyyy HH:mm"
 
             self.transactionDateLabel.text =
             dateFormatter.string(from: date)

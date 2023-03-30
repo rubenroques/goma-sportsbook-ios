@@ -197,16 +197,25 @@ class BonusViewModel {
         if self.bonusActive.isEmpty {
             self.isBonusActiveEmptyPublisher.send(true)
         }
+        else {
+            self.isBonusActiveEmptyPublisher.send(false)
+        }
 
         if self.bonusQueued.isEmpty {
             self.isBonusQueuedEmptyPublisher.send(true)
         }
         else {
-            self.hasQueuedBonus.send(true)
+            self.isBonusQueuedEmptyPublisher.send(false)
         }
+//        else {
+//            self.hasQueuedBonus.send(true)
+//        }
 
         if self.bonusHistory.isEmpty {
             self.isBonusHistoryEmptyPublisher.send(true)
+        }
+        else {
+            self.isBonusHistoryEmptyPublisher.send(false)
         }
 
         self.isBonusGrantedLoading.send(false)

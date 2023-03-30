@@ -130,7 +130,7 @@ enum OmegaAPIClient {
     case getPaymentInformation
     case addPaymentInformation(type: String, fields: String)
 
-    case getTransactionsHistory(startDate: String, endDate: String, transactionType: String? = nil, pageNumber: Int? = nil, pageSize: Int? = nil)
+    case getTransactionsHistory(startDate: String, endDate: String, transactionType: [String]? = nil, pageNumber: Int? = nil, pageSize: Int? = nil)
 
     case getGrantedBonuses
     case redeemBonus(code: String)
@@ -571,8 +571,10 @@ extension OmegaAPIClient: Endpoint {
             queryItemsURL.append(endDateQueryItem)
 
             if let transactionType {
-                let queryItem = URLQueryItem(name: "tranType", value: transactionType)
-                queryItemsURL.append(queryItem)
+                for tranType in transactionType {
+                    let queryItem = URLQueryItem(name: "tranType", value: tranType)
+                    queryItemsURL.append(queryItem)
+                }
             }
 
             if let pageNumber {

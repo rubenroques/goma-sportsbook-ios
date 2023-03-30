@@ -16,12 +16,14 @@
                 <outlet property="bettingHeaderTextFieldView" destination="mq2-gj-Skp" id="hT9-jh-OBu"/>
                 <outlet property="bettingLabel" destination="X70-ec-SzP" id="phH-uQ-aO8"/>
                 <outlet property="bettingLineView" destination="8WW-XA-HAp" id="bUL-xh-dRL"/>
+                <outlet property="bettingQueuedInfoLabel" destination="zch-gM-dwa" id="TQL-y7-YN9"/>
                 <outlet property="bettingView" destination="aCZ-5Z-EYH" id="9dX-ta-gWp"/>
                 <outlet property="containerView" destination="NOI-aO-DNs" id="9qc-nQ-uXH"/>
                 <outlet property="depositFrequencySelectTextFieldView" destination="ueC-zl-out" id="Bj5-o5-IKf"/>
                 <outlet property="depositHeaderTextFieldView" destination="gFU-ul-7N1" id="ycz-6B-mR8"/>
                 <outlet property="depositLabel" destination="boD-XE-HVx" id="sGJ-A5-8x2"/>
                 <outlet property="depositLineView" destination="GBR-xz-Wiy" id="i6F-DS-q7z"/>
+                <outlet property="depositQueuedInfoLabel" destination="xHO-GK-twY" id="DsS-xH-8ER"/>
                 <outlet property="depositView" destination="Dt9-UA-KBE" id="Woh-oo-nf0"/>
                 <outlet property="editButton" destination="8eU-k9-fvt" id="XsO-Sg-uQa"/>
                 <outlet property="headerLabel" destination="hhA-V0-VE1" id="Rp2-Se-8qm"/>
@@ -30,6 +32,7 @@
                 <outlet property="lossHeaderTextFieldView" destination="AKN-vK-CRV" id="ITl-u7-hCJ"/>
                 <outlet property="lossLabel" destination="RfM-ds-a6T" id="Hrz-Ep-09M"/>
                 <outlet property="lossLineView" destination="Lkz-kv-yMX" id="efI-0j-P0I"/>
+                <outlet property="lossQueuedInfoLabel" destination="Ng0-18-mTb" id="mbl-74-89Y"/>
                 <outlet property="lossView" destination="n9B-DI-jLq" id="3cx-XT-Nar"/>
                 <outlet property="scrollView" destination="3uj-Qe-j3L" id="Yt6-hM-kRf"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -90,7 +93,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="886"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dt9-UA-KBE">
-                                    <rect key="frame" x="16" y="0.0" width="382" height="201.5"/>
+                                    <rect key="frame" x="16" y="0.0" width="382" height="230"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="boD-XE-HVx">
                                             <rect key="frame" x="0.0" y="0.0" width="382" height="20.5"/>
@@ -99,7 +102,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="nmc-Ff-R0M">
-                                            <rect key="frame" x="0.0" y="36.5" width="382" height="148"/>
+                                            <rect key="frame" x="0.0" y="36.5" width="382" height="176.5"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gFU-ul-7N1" customClass="HeaderTextFieldView" customModule="Betsson" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="382" height="80"/>
@@ -108,17 +111,26 @@
                                                         <constraint firstAttribute="height" constant="80" id="gLN-hv-FAS"/>
                                                     </constraints>
                                                 </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xHO-GK-twY">
+                                                    <rect key="frame" x="0.0" y="88" width="382" height="20.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ueC-zl-out" customClass="DropDownSelectionView" customModule="Betsson" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="88" width="382" height="60"/>
+                                                    <rect key="frame" x="0.0" y="116.5" width="382" height="60"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="60" id="c8F-Ol-cEy"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="xHO-GK-twY" firstAttribute="top" secondItem="gFU-ul-7N1" secondAttribute="bottom" constant="-8" id="Efe-6o-8F1"/>
+                                            </constraints>
                                         </stackView>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GBR-xz-Wiy">
-                                            <rect key="frame" x="0.0" y="192.5" width="382" height="1"/>
+                                            <rect key="frame" x="0.0" y="221" width="382" height="1"/>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="1" id="bES-5b-j7W"/>
@@ -140,7 +152,7 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aCZ-5Z-EYH">
-                                    <rect key="frame" x="16" y="217.5" width="382" height="201.5"/>
+                                    <rect key="frame" x="16" y="246" width="382" height="230"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X70-ec-SzP">
                                             <rect key="frame" x="0.0" y="0.0" width="382" height="20.5"/>
@@ -149,7 +161,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="OHp-Ug-PKi">
-                                            <rect key="frame" x="0.0" y="36.5" width="382" height="148"/>
+                                            <rect key="frame" x="0.0" y="36.5" width="382" height="176.5"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mq2-gj-Skp" customClass="HeaderTextFieldView" customModule="Betsson" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="382" height="80"/>
@@ -158,17 +170,26 @@
                                                         <constraint firstAttribute="height" constant="80" id="Afq-Jn-UpC"/>
                                                     </constraints>
                                                 </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zch-gM-dwa">
+                                                    <rect key="frame" x="0.0" y="88" width="382" height="20.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZeO-nV-Ihm" customClass="DropDownSelectionView" customModule="Betsson" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="88" width="382" height="60"/>
+                                                    <rect key="frame" x="0.0" y="116.5" width="382" height="60"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="60" id="4UL-bt-Pv4"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="zch-gM-dwa" firstAttribute="top" secondItem="mq2-gj-Skp" secondAttribute="bottom" constant="-8" id="cxt-7p-cBN"/>
+                                            </constraints>
                                         </stackView>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8WW-XA-HAp">
-                                            <rect key="frame" x="0.0" y="192.5" width="382" height="1"/>
+                                            <rect key="frame" x="0.0" y="221" width="382" height="1"/>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="1" id="C5s-UH-mug"/>
@@ -190,7 +211,7 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n9B-DI-jLq">
-                                    <rect key="frame" x="16" y="439" width="382" height="201.5"/>
+                                    <rect key="frame" x="16" y="496" width="382" height="230"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RfM-ds-a6T">
                                             <rect key="frame" x="0.0" y="0.0" width="382" height="20.5"/>
@@ -199,7 +220,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="7AC-ZH-oeE">
-                                            <rect key="frame" x="0.0" y="36.5" width="382" height="148"/>
+                                            <rect key="frame" x="0.0" y="36.5" width="382" height="176.5"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AKN-vK-CRV" customClass="HeaderTextFieldView" customModule="Betsson" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="382" height="80"/>
@@ -208,17 +229,26 @@
                                                         <constraint firstAttribute="height" constant="80" id="TH3-co-WC5"/>
                                                     </constraints>
                                                 </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ng0-18-mTb">
+                                                    <rect key="frame" x="0.0" y="88" width="382" height="20.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jka-6d-va1" customClass="DropDownSelectionView" customModule="Betsson" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="88" width="382" height="60"/>
+                                                    <rect key="frame" x="0.0" y="116.5" width="382" height="60"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="60" id="cZa-Pl-dEN"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Ng0-18-mTb" firstAttribute="top" secondItem="AKN-vK-CRV" secondAttribute="bottom" constant="-8" id="ttf-Fx-Lha"/>
+                                            </constraints>
                                         </stackView>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lkz-kv-yMX">
-                                            <rect key="frame" x="0.0" y="192.5" width="382" height="1"/>
+                                            <rect key="frame" x="0.0" y="221" width="382" height="1"/>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="1" id="g8N-ia-uon"/>

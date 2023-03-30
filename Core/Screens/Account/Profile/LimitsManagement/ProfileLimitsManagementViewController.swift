@@ -21,18 +21,21 @@ class ProfileLimitsManagementViewController: UIViewController {
     @IBOutlet private var depositLabel: UILabel!
     @IBOutlet private var depositHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var depositFrequencySelectTextFieldView: DropDownSelectionView!
+    @IBOutlet private var depositQueuedInfoLabel: UILabel!
     @IBOutlet private var depositLineView: UIView!
 
     @IBOutlet private var bettingView: UIView!
     @IBOutlet private var bettingLabel: UILabel!
     @IBOutlet private var bettingHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var bettingFrequencySelectTextFieldView: DropDownSelectionView!
+    @IBOutlet private var bettingQueuedInfoLabel: UILabel!
     @IBOutlet private var bettingLineView: UIView!
 
     @IBOutlet private var lossView: UIView!
     @IBOutlet private var lossLabel: UILabel!
     @IBOutlet private var lossHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var lossFrequencySelectHeaderTextFieldView: DropDownSelectionView!
+    @IBOutlet private var lossQueuedInfoLabel: UILabel!
     @IBOutlet private var lossLineView: UIView!
 
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
@@ -130,6 +133,10 @@ class ProfileLimitsManagementViewController: UIViewController {
         self.shouldShowDepositPeriods = false
 
         self.lossLineView.isHidden = true
+
+        self.depositQueuedInfoLabel.isHidden = true
+        self.bettingQueuedInfoLabel.isHidden = true
+        self.lossQueuedInfoLabel.isHidden = true
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -206,6 +213,12 @@ class ProfileLimitsManagementViewController: UIViewController {
         lossFrequencySelectHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         lossFrequencySelectHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
         lossFrequencySelectHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
+
+        self.depositQueuedInfoLabel.textColor = UIColor.App.textPrimary
+
+        self.bettingQueuedInfoLabel.textColor = UIColor.App.textPrimary
+
+        self.lossQueuedInfoLabel.textColor = UIColor.App.textPrimary
 
     }
 
@@ -287,6 +300,15 @@ class ProfileLimitsManagementViewController: UIViewController {
         }
         lossFrequencySelectHeaderTextFieldView.setSelectionPicker([localized("daily"), localized("weekly"), localized("monthly")])
 
+        self.depositQueuedInfoLabel.font = AppFont.with(type: .bold, size: 14)
+        self.depositQueuedInfoLabel.numberOfLines = 0
+
+        self.bettingQueuedInfoLabel.font = AppFont.with(type: .bold, size: 14)
+        self.bettingQueuedInfoLabel.numberOfLines = 0
+
+        self.lossQueuedInfoLabel.font = AppFont.with(type: .bold, size: 14)
+        self.lossQueuedInfoLabel.numberOfLines = 0
+
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
 
@@ -350,11 +372,13 @@ class ProfileLimitsManagementViewController: UIViewController {
             let alertText = self.viewModel.getAlertInfoText(alertType: alertType)
             let alertTitle = localized("betting_limit")
             self.showFieldInfo(view: self.bettingView, alertTitle: alertTitle, alertText: alertText)
+
         }
         else if alertType == LimitType.loss.identifier.lowercased() {
             let alertText = self.viewModel.getAlertInfoText(alertType: alertType)
             let alertTitle = localized("auto_payout_limit")
             self.showFieldInfo(view: self.lossView, alertTitle: alertTitle, alertText: alertText)
+
         }
 
     }
@@ -376,6 +400,11 @@ class ProfileLimitsManagementViewController: UIViewController {
             else {
                 self.isDepositUpdatable = false
             }
+
+            if let pendingDepositLimitMessage = self.viewModel.pendingLossLimitMessage {
+                self.depositQueuedInfoLabel.text = pendingDepositLimitMessage
+                self.depositQueuedInfoLabel.isHidden = false
+            }
         }
 
         // Check wagering info
@@ -392,6 +421,11 @@ class ProfileLimitsManagementViewController: UIViewController {
             else {
                 self.isWageringUpdatable = false
             }
+
+            if let pendingBettingLimitMessage = self.viewModel.pendingWageringLimitMessage {
+                self.bettingQueuedInfoLabel.text = pendingBettingLimitMessage
+                self.bettingQueuedInfoLabel.isHidden = false
+            }
         }
 
         // Auto payout limit
@@ -407,6 +441,11 @@ class ProfileLimitsManagementViewController: UIViewController {
             }
             else {
                 self.isLossUpdatable = false
+            }
+
+            if let pendingAutoPayoutLimitMessage = self.viewModel.pendingLossLimitMessage {
+                self.lossQueuedInfoLabel.text = pendingAutoPayoutLimitMessage
+                self.lossQueuedInfoLabel.isHidden = false
             }
         }
 
@@ -603,7 +642,6 @@ class ProfileLimitsManagementViewController: UIViewController {
 
                 updatedLimits = true
             }
-
 
         }
 
