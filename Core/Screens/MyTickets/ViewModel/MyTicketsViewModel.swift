@@ -101,7 +101,7 @@ class MyTicketsViewModel: NSObject {
             .store(in: &cancellables)
 
         Env.betslipManager.newBetsPlacedPublisher
-            .delay(for: 0.8, scheduler: DispatchQueue.main)
+            .delay(for: 1.0, scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 self?.refresh()

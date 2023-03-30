@@ -97,6 +97,7 @@ class Router {
         else {
             bootRootViewController = Router.createLoginViewControllerFlow()
         }
+
         self.rootWindow.rootViewController = bootRootViewController
 
     }

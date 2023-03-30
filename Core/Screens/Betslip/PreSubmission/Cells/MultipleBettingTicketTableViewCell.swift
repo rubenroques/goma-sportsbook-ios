@@ -226,45 +226,9 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         }
     }
 
-    func updateOddWithBetBuilder(isActive: Bool, bettingTicket: BettingTicket) {
-//
-//        if isActive {
-//            self.oddSubscriber?.cancel()
-//            self.oddSubscriber = nil
-//            self.oddValueLabel.text = "-.--"
-//        }
-//        else {
-//            if self.oddSubscriber == nil {
-//                self.oddSubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
-//                    .map(\.decimalOdd)
-//                    .compactMap({ $0 })
-//                    .receive(on: DispatchQueue.main)
-//                    .sink(receiveValue: { [weak self] newOddValue in
-//
-//                        if let currentOddValue = self?.currentOddValue {
-//                            if newOddValue > currentOddValue {
-//                                self?.highlightOddChangeUp()
-//                                Logger.log("highlightOddChange Up \(newOddValue) > \(currentOddValue) ")
-//                            }
-//                            else if newOddValue < currentOddValue {
-//                                self?.highlightOddChangeDown()
-//                                Logger.log("highlightOddChange Down \(newOddValue) < \(currentOddValue) ")
-//                            }
-//                        }
-//
-//                        self?.currentOddValue = newOddValue
-//
-//                        self?.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
-//                    })
-//            }
-//        }
-    }
-
     @IBAction private func didTapDeleteButton() {
         if let bettingTicket = self.bettingTicket {
             Env.betslipManager.removeBettingTicket(bettingTicket)
-            Env.betslipManager.removeAllPlacedDetailsError()
-            Env.betslipManager.removeAllBetslipPlacedBetErrorResponse()
         }
     }
 

@@ -255,6 +255,23 @@ class UserSessionStore {
         }
     }
 
+    func shouldRequestLimits() -> AnyPublisher<Bool, Never> {
+        return Publishers.CombineLatest(Env.servicesProvider.getPersonalDepositLimits(), Env.servicesProvider.getLimits())
+            .map { depositLimitResponse, bettingLimitsResponse in
+                let hasLimitsDefined = depositLimitResponse.weeklyLimit != nil
+                let hasBettingLimitsDefined = bettingLimitsResponse.wagerLimit != nil
+
+                if hasLimitsDefined && hasBettingLimitsDefined {
+                    return false
+                }
+                else {
+                    return true
+                }
+            }
+            .replaceError(with: false) // if an error occour don't show
+            .eraseToAnyPublisher()
+    }
+
 }
 
 extension UserSessionStore {

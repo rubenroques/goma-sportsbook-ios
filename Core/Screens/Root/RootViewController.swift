@@ -369,14 +369,13 @@ class RootViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        //Add blur effect
+        // Add blur effect
         self.localAuthenticationBaseView.backgroundColor = .clear
 
         let blurEffect = UIBlurEffect(style: .regular)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.translatesAutoresizingMaskIntoConstraints = false
 
-        //if you have more UIViews, use an insertSubview API to place it where needed
         self.localAuthenticationBaseView.insertSubview(blurEffectView, at: 0)
 
         NSLayoutConstraint.activate([
@@ -389,8 +388,17 @@ class RootViewController: UIViewController {
         self.localAuthenticationBaseView.alpha = 0.0
         self.showLocalAuthenticationCoveringViewIfNeeded()
 
-        self.authenticateUser()
+        Env.userSessionStore
+            .shouldRequestLimits()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] shouldRequestLimits in
+                if shouldRequestLimits {
+                    self?.showLimitsScreenOnRegister()
+                }
+            }
+            .store(in: &self.cancellables)
 
+        self.authenticateUser()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -400,8 +408,7 @@ class RootViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] userWallet in
                 if let userWallet = userWallet,
-                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: userWallet.total))
-                {
+                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: userWallet.total)) {
                     self?.accountValueLabel.text = formattedTotalString
                 }
                 else {
@@ -410,48 +417,44 @@ class RootViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-//        Env.userSessionStore.userBalanceWallet
-//            .compactMap({$0})
-//            .map(\.amount)
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] value in
-//                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
-//                    let accountValue = bonusWallet.amount + value
-//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-//
-//                }
-//                else {
-//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
-//                }
-//            }
-//            .store(in: &cancellables)
-//
-//        Env.userSessionStore.userBonusBalanceWallet
-//            .compactMap({$0})
-//            .map(\.amount)
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] value in
-//                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
-//                    let accountValue = currentWallet.amount + value
-//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-//                }
-//            }
-//            .store(in: &cancellables)
-
         Env.userSessionStore.refreshUserWallet()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-//
-//        executeDelayed(0.1) {
-//            self.loadChildViewControllerIfNeeded(tab: .preLive)
-//        }
-//
-//        executeDelayed(0.2) {
-//            self.loadChildViewControllerIfNeeded(tab: .live)
-//        }
+    }
 
+    //
+    // Obrigatory Limits
+    //
+    func showLimitsScreenOnRegister() {
+        if self.presentedViewController?.isModal == true {
+            self.presentedViewController?.dismiss(animated: true, completion: nil)
+        }
+
+        let limitsOnRegisterViewModel = LimitsOnRegisterViewModel(servicesProvider: Env.servicesProvider)
+        let limitsOnRegisterViewController = LimitsOnRegisterViewController.init(viewModel: limitsOnRegisterViewModel)
+
+        limitsOnRegisterViewController.triggeredContinueAction = { [weak self] in
+            self?.hideLimitsScreenOnRegister()
+        }
+
+        let navigationViewController = Router.navigationController(with: limitsOnRegisterViewController)
+        navigationViewController.isModalInPresentation = true
+        navigationViewController.modalPresentationStyle = .fullScreen
+        self.present(navigationViewController, animated: false, completion: nil)
+    }
+
+    func hideLimitsScreenOnRegister() {
+        if let presentedViewController = self.presentedViewController {
+            if presentedViewController is LimitsOnRegisterViewController {
+                presentedViewController.dismiss(animated: true, completion: nil)
+            }
+            else if let navigationController = presentedViewController as? UINavigationController,
+                    navigationController.rootViewController is LimitsOnRegisterViewController {
+                navigationController.dismiss(animated: true, completion: nil)
+            }
+        }
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

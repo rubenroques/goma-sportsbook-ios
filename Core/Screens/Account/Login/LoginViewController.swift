@@ -74,7 +74,6 @@ class LoginViewController: UIViewController {
         // Default value
         Env.userSessionStore.shouldRecordUserSession = true
 
-        // TEMP EM SHUTDOWN
         self.loginButton.isEnabled = false
         Publishers.CombineLatest(self.usernameHeaderTextFieldView.textPublisher, self.passwordHeaderTextFieldView.textPublisher)
             .map { username, password in
@@ -399,7 +398,7 @@ class LoginViewController: UIViewController {
         limitsOnRegisterViewController.didTapCancelButtonAction = { [weak self] in
             self?.closeLoginRegisterFlow()
         }
-        limitsOnRegisterViewController.didTapContinueButtonAction = { [weak self] in
+        limitsOnRegisterViewController.triggeredContinueAction = { [weak self] in
             self?.showDepositOnRegisterViewController(onNavigationController: navigationController)
         }
         navigationController.pushViewController(limitsOnRegisterViewController, animated: true)

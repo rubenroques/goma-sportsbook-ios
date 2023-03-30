@@ -241,9 +241,10 @@ extension BettingAPIClient: Endpoint {
             }
 
             let body = """
-                       {id: 101,
-                       name: "ACCEPTINRREOFFER",
-                       value: "\(acceptingReofferStringValue)"}
+                       {
+                       "id": 101,
+                       "name": "ACCEPTINRREOFFER",
+                       "value": "\(acceptingReofferStringValue)"}
                        """
             let data = body.data(using: String.Encoding.utf8)!
             return data

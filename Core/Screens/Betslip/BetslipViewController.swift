@@ -155,45 +155,11 @@ class BetslipViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-//        Env.userSessionStore.userBalanceWallet
-//            .compactMap({$0})
-//            .map(\.amount)
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] value in
-//                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
-//                    let accountValue = bonusWallet.amount + value
-//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-//
-//                }
-//                else {
-//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
-//                }
-//            }
-//            .store(in: &cancellables)
-//
-//        Env.userSessionStore.userBonusBalanceWallet
-//            .compactMap({$0})
-//            .map(\.amount)
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] value in
-//                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
-//                    let accountValue = currentWallet.amount + value
-//
-//                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-//                }
-//
-//            }
-//            .store(in: &cancellables)
-//
-
-        Env.userSessionStore.refreshUserWallet()
-        
         Env.userSessionStore.userWalletPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] userWallet in
                 if let userWallet = userWallet,
-                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: userWallet.total))
-                {
+                   let formattedTotalString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: userWallet.total)) {
                     self?.accountValueLabel.text = formattedTotalString
                 }
                 else {
@@ -201,13 +167,14 @@ class BetslipViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
-        
-        self.setupWithTheme()
 
+        Env.userSessionStore.refreshUserWallet()
+
+        self.setupWithTheme()
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        
+        super.viewWillAppear(animated)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -277,28 +244,6 @@ class BetslipViewController: UIViewController {
     }
 
     func showBetPlacedScreen(withBetPlacedDetails betPlacedDetailsArray: [BetPlacedDetails]) {
-
-        var errorCode: String?
-        var errorMessage: String?
-        var errorBetPlaced: BetPlacedDetails?
-
-        for betPlaced in betPlacedDetailsArray {
-            if let errorCodeValue = betPlaced.response.errorCode {
-                errorCode = errorCodeValue
-                errorMessage = betPlaced.response.errorMessage
-                errorBetPlaced = betPlaced
-                break
-            }
-        }
-
-        if errorCode != nil {
-            let message = errorMessage != nil ? errorMessage! : localized("error_placing_bet")
-
-            if let betPlaced = errorBetPlaced {
-                Env.betslipManager.addBetPlacedDetailsError(betPlacedDetails: [betPlaced])
-            }
-            return
-        }
 
         Logger.log("Bet placed without erros. Will show feedback screen.")
 

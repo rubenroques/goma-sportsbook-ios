@@ -520,8 +520,6 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
     @IBAction private func didTapDeleteButton() {
         if let bettingTicket = self.bettingTicket {
             Env.betslipManager.removeBettingTicket(bettingTicket)
-            Env.betslipManager.removeAllPlacedDetailsError()
-            Env.betslipManager.removeAllBetslipPlacedBetErrorResponse()
         }
     }
 

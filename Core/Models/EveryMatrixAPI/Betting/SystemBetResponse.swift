@@ -21,3 +21,9 @@ struct SystemBetType: Decodable {
     var name: String?
     var numberOfBets: Int?
 }
+
+extension SystemBetType: Equatable {
+    static func == (lhs: SystemBetType, rhs: SystemBetType) -> Bool {
+        return lhs.id == rhs.id
+    }
+}

@@ -109,7 +109,7 @@ public class LimitsOnRegisterViewController: UIViewController {
         case advanced
     }
 
-    public var didTapContinueButtonAction: () -> Void = { }
+    public var triggeredContinueAction: () -> Void = { }
 
     public var didTapBackButtonAction: () -> Void = { }
     public var didTapCancelButtonAction: () -> Void = { }
@@ -224,7 +224,8 @@ public class LimitsOnRegisterViewController: UIViewController {
         }
 
         self.backButton.isHidden = true
-
+        self.cancelButton.isHidden = true
+        
         self.viewModel.isLoading
             .receive(on: DispatchQueue.main)
             .sink { [weak self] loading in
@@ -360,7 +361,7 @@ public class LimitsOnRegisterViewController: UIViewController {
             }
         } receiveValue: { [weak self] success in
             if success {
-                self?.didTapContinueButtonAction()
+                self?.triggeredContinueAction()
             }
         }
         .store(in: &self.cancellables)

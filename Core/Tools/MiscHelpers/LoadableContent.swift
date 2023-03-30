@@ -13,3 +13,20 @@ enum LoadableContent<T> {
     case loaded(T)
     case failed
 }
+
+extension LoadableContent: Equatable where T: Equatable {
+    static func == (lhs: LoadableContent<T>, rhs: LoadableContent<T>) -> Bool {
+        switch (lhs, rhs) {
+        case (.idle, .idle):
+            return true
+        case (.loading, .loading):
+            return true
+        case (.failed, .failed):
+            return true
+        case let (.loaded(lhsValue), .loaded(rhsValue)):
+            return lhsValue == rhsValue
+        default:
+            return false
+        }
+    }
+}
