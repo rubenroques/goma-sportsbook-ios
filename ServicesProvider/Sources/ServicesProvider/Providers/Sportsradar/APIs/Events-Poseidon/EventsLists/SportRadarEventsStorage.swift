@@ -79,12 +79,12 @@ extension SportRadarEventsStorage {
         guard
             let marketSubject = self.marketsDictionary[id]
         else {
-            print("PaginatorStorage updateMarketTradability \(id) not found to isTradable:\(isTradable)")
+            // print("PaginatorStorage updateMarketTradability \(id) not found to isTradable:\(isTradable)")
             return
         }
         let market = marketSubject.value
 
-        print("PaginatorStorage updateMarketTradability \(id) isTradable:\(isTradable)")
+        // print("PaginatorStorage updateMarketTradability \(id) isTradable:\(isTradable)")
         market.isTradable = isTradable
         marketSubject.send(market)
     }

@@ -9,6 +9,7 @@ import CoreLocation
 import Combine
 
 enum GeoLocationStatus {
+    case notRequired
     case invalid
     case valid
     case notAuthorized
@@ -19,6 +20,7 @@ enum GeoLocationStatus {
 extension GeoLocationStatus: CustomDebugStringConvertible {
     var debugDescription: String {
         switch self {
+        case .notRequired: return "notRequired"
         case .invalid: return "invalid"
         case .valid: return "valid"
         case .notAuthorized: return "notAuthorized"
@@ -30,8 +32,8 @@ extension GeoLocationStatus: CustomDebugStringConvertible {
 
 class GeoLocationManager: NSObject, CLLocationManagerDelegate {
 
-    private var locationManager = CLLocationManager()
-    let locationStatus = CurrentValueSubject<GeoLocationStatus, Never>(.notDetermined)
+    private var locationManager: CLLocationManager?
+    let locationStatus = CurrentValueSubject<GeoLocationStatus, Never>(.notRequired)
     let authorizationstatus: CLAuthorizationStatus = .notDetermined
     var lastKnownLocation: CLLocation?
 
@@ -40,35 +42,42 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
     override init() {
         super.init()
 
-        locationManager.delegate = self
-        locationManager.pausesLocationUpdatesAutomatically = true
+        if TargetVariables.hasFeatureEnabled(feature: .getLocationLimits) {
+            self.locationManager = CLLocationManager()
+            self.locationManager?.delegate = self
+            self.locationManager?.pausesLocationUpdatesAutomatically = true
+        }
+        else {
+            self.locationManager = nil
+        }
     }
 
     func requestGeoLocationUpdates() {
-        locationManager.requestWhenInUseAuthorization()
+        locationManager?.requestWhenInUseAuthorization()
     }
 
     func startGeoLocationUpdates() {
+
         Logger.log("startGeoLocationUpdates")
 //
 //        #if DEBUG
-//        locationManager.startUpdatingLocation()
+//        locationManager?.startUpdatingLocation()
 //        return
 //        #endif
 
         if CLLocationManager.significantLocationChangeMonitoringAvailable() {
-            locationManager.startMonitoringSignificantLocationChanges()
+            locationManager?.startMonitoringSignificantLocationChanges()
         }
         else {
-            locationManager.startUpdatingLocation()
+            locationManager?.startUpdatingLocation()
         }
     }
 
     func stopGeoLocationUpdates() {
         if CLLocationManager.significantLocationChangeMonitoringAvailable() {
-            locationManager.stopMonitoringSignificantLocationChanges()
+            locationManager?.stopMonitoringSignificantLocationChanges()
         }
-        locationManager.stopUpdatingLocation()
+        locationManager?.stopUpdatingLocation()
     }
 
     func isLocationServicesEnabled() -> Bool {

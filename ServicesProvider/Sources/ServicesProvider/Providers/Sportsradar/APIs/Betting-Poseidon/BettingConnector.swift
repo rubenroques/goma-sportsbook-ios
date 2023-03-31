@@ -104,27 +104,27 @@ class BettingConnector: Connector {
                 }
                 return ServiceProviderError.invalidResponse
             })
-//            .catch({ [weak self] (error: ServiceProviderError) -> AnyPublisher<T, ServiceProviderError> in
-//                guard let self = self else { return Fail(error: error).eraseToAnyPublisher()  }
-//                if case ServiceProviderError.unauthorized = error {
-//                    return self.requestTokenRefresher()
-//                        .setFailureType(to: ServiceProviderError.self)
-//                        .flatMap({ [weak self] (newToken: String?) -> AnyPublisher<T, ServiceProviderError> in
-//                            guard
-//                                let weakSelf = self,
-//                                let newTokenValue = newToken
-//                            else {
-//                                return Fail(error: ServiceProviderError.unknown).eraseToAnyPublisher()
-//                            }
-//                            weakSelf.saveSessionKey(newTokenValue)
-//                            return weakSelf.request(endpoint).eraseToAnyPublisher()
-//                        })
-//                        .eraseToAnyPublisher()
-//                }
-//                else {
-//                    return Fail(error: error).eraseToAnyPublisher()
-//                }
-//            })
+            .catch({ [weak self] (error: ServiceProviderError) -> AnyPublisher<T, ServiceProviderError> in
+                guard let self = self else { return Fail(error: error).eraseToAnyPublisher()  }
+                if case ServiceProviderError.unauthorized = error {
+                    return self.requestTokenRefresher()
+                        .setFailureType(to: ServiceProviderError.self)
+                        .flatMap({ [weak self] (newToken: String?) -> AnyPublisher<T, ServiceProviderError> in
+                            guard
+                                let weakSelf = self,
+                                let newTokenValue = newToken
+                            else {
+                                return Fail(error: ServiceProviderError.unknown).eraseToAnyPublisher()
+                            }
+                            weakSelf.saveSessionKey(newTokenValue)
+                            return weakSelf.request(endpoint).eraseToAnyPublisher()
+                        })
+                        .eraseToAnyPublisher()
+                }
+                else {
+                    return Fail(error: error).eraseToAnyPublisher()
+                }
+            })
             .eraseToAnyPublisher()
     }
         

@@ -313,6 +313,7 @@ class RootViewController: UIViewController {
         //
         self.setupWithTheme()
 
+
         Env.userSessionStore.userSessionPublisher
             .receive(on: DispatchQueue.main)
             .sink { userSession in
@@ -325,6 +326,8 @@ class RootViewController: UIViewController {
                     else {
                         self.profilePictureImageView.image = UIImage(named: "empty_user_image")
                     }
+
+                    self.checkUserLimitsSet()
                 }
                 else {
                     self.screenState = .anonymous
@@ -388,16 +391,6 @@ class RootViewController: UIViewController {
         self.localAuthenticationBaseView.alpha = 0.0
         self.showLocalAuthenticationCoveringViewIfNeeded()
 
-        Env.userSessionStore
-            .shouldRequestLimits()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] shouldRequestLimits in
-                if shouldRequestLimits {
-                    self?.showLimitsScreenOnRegister()
-                }
-            }
-            .store(in: &self.cancellables)
-
         self.authenticateUser()
     }
 
@@ -422,6 +415,20 @@ class RootViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+    }
+
+    func checkUserLimitsSet() {
+
+        Env.userSessionStore
+            .shouldRequestLimits()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] shouldRequestLimits in
+                if shouldRequestLimits {
+                    self?.showLimitsScreenOnRegister()
+                }
+            }
+            .store(in: &self.cancellables)
+
     }
 
     //

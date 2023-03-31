@@ -46,6 +46,8 @@ enum SportsbookTargetFeatures: CaseIterable {
     case homeBanners
     case homePopUps
 
+    case getLocationLimits
+
     case favoriteEvents
     case favoriteCompetitions
 

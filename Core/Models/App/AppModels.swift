@@ -27,21 +27,25 @@ struct Competition {
     var name: String
     var matches: [Match]
     var venue: Location?
+    var sport: Sport?
     var numberOutrightMarkets: Int
     var outrightMarkets: [Market]?
     var competitionInfo: SportCompetitionInfo?
 
-    init(id: String, name: String, matches: [Match] = [], venue: Location? = nil, numberOutrightMarkets: Int, outrightMarkets: [Market]? = nil, competitionInfo: SportCompetitionInfo? = nil) {
+    init(id: String, name: String, matches: [Match] = [],
+         venue: Location? = nil, sport: Sport?, numberOutrightMarkets: Int,
+         outrightMarkets: [Market]? = nil, competitionInfo: SportCompetitionInfo? = nil) {
+
         self.id = id
         self.name = name
         self.matches = matches
         self.venue = venue
+        self.sport = sport
         self.numberOutrightMarkets = numberOutrightMarkets
         self.outrightMarkets = outrightMarkets
         self.competitionInfo = competitionInfo
     }
 }
-
 
 struct Location {
     var id: String

@@ -373,8 +373,8 @@ class MyTicketsViewModel: NSObject {
         else {
             let viewModel = MyTicketCellViewModel(ticket: ticket)
             viewModel.requestDataRefreshAction = { [weak self] in
+                Env.userSessionStore.refreshUserWalletAfterDelay()
                 self?.refresh()
-                
             }
             cachedViewModels[ticket.betId] = viewModel
             return viewModel

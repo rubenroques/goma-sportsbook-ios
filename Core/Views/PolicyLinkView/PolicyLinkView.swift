@@ -11,7 +11,7 @@ class PolicyLinkView: NibView {
 
     @IBOutlet private var termsLabel: UILabel!
 
-    // Variables
+        // Variables
         var didTapTerms: (() -> Void)?
         var didTapPrivacy: (() -> Void)?
         var didTapEula: (() -> Void)?
@@ -41,9 +41,9 @@ class PolicyLinkView: NibView {
 
             let underlineAttriString = NSMutableAttributedString(string: termsText)
 
-            let range1 = (termsText as NSString).range(of: localized("terms"))
-            let range2 = (termsText as NSString).range(of: localized("privacy_policy"))
-            let range3 = (termsText as NSString).range(of: localized("eula"))
+            let range1 = (termsText.lowercased() as NSString).range(of: localized("terms").lowercased())
+            let range2 = (termsText.lowercased() as NSString).range(of: localized("privacy_policy").lowercased())
+            let range3 = (termsText.lowercased() as NSString).range(of: localized("eula").lowercased())
 
             let paragraphStyle = NSMutableParagraphStyle()
 

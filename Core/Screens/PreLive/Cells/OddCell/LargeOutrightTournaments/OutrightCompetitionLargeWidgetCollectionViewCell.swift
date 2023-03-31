@@ -15,12 +15,20 @@ class OutrightCompetitionLargeWidgetViewModel {
     var name: String
     var countryImageName: String
     var countryName: String
+    var sportImageName: String
 
     init(competition: Competition) {
         self.competition = competition
         self.name = competition.name
         self.countryName = competition.venue?.name ?? ""
         self.countryImageName = Assets.flagName(withCountryCode: competition.venue?.isoCode ?? "")
+
+        if let imageName = competition.sport?.id {
+            self.sportImageName = "sport_type_icon_\(imageName)"
+        }
+        else {
+            self.sportImageName = "sport_type_icon_default"
+        }
     }
 
 }
@@ -36,6 +44,7 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
 
     private lazy var favoritesIconImageView: UIImageView = Self.createFavoritesIconImageView()
     private lazy var favoriteCompetitionButton: UIButton = Self.createFavoriteCompetitionButton()
+    private lazy var sportTypeImageView: UIImageView = Self.createSportTypeImageView()
     private lazy var countryFlagCompetitionImageView: UIImageView = Self.createCountryFlagCompetitionImageView()
     private lazy var countryNameCompetitionLabel: UILabel = Self.createCountryNameCompetitionLabel()
 
@@ -126,6 +135,8 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
 
         self.seeAllView.backgroundColor = UIColor.App.backgroundOdds
         self.seeAllLabel.textColor = UIColor.App.textPrimary
+
+        self.sportTypeImageView.setTintColor(color: UIColor.App.textPrimary)
     }
 
     private func adjustDesignToCardStyle() {
@@ -177,7 +188,10 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
         self.titleLabel.text = viewModel.name
         self.countryFlagCompetitionImageView.image = UIImage(named: viewModel.countryImageName)
         self.countryNameCompetitionLabel.text = viewModel.countryName
-        
+
+        self.sportTypeImageView.image = UIImage(named: viewModel.sportImageName)
+        self.sportTypeImageView.setTintColor(color: UIColor.App.textPrimary)
+
         self.isFavorite = Env.favoritesManager.isEventFavorite(eventId: viewModel.competition.id)
         
     }
@@ -259,6 +273,16 @@ extension OutrightCompetitionLargeWidgetCollectionViewCell {
         countryFlagCompetitionButton.translatesAutoresizingMaskIntoConstraints = false
         return countryFlagCompetitionButton
     }
+
+    private static func createSportTypeImageView() -> UIImageView {
+        let createSportTypeImageView = UIImageView()
+        createSportTypeImageView.clipsToBounds = true
+        createSportTypeImageView.contentMode = .scaleAspectFit
+        createSportTypeImageView.image = UIImage(named: "sport_type_icon_default")
+        createSportTypeImageView.translatesAutoresizingMaskIntoConstraints = false
+        return createSportTypeImageView
+    }
+
     private static func createCountryNameCompetitionLabel() -> UILabel {
         let countryNameCompetitionLabel = UILabel()
         countryNameCompetitionLabel.font = AppFont.with(type: .semibold, size: 11)
@@ -314,6 +338,7 @@ extension OutrightCompetitionLargeWidgetCollectionViewCell {
         self.baseView.addSubview(self.competitionBaseStackView)
 
         self.competitionBaseStackView.addArrangedSubview(self.favoritesIconImageView)
+        self.competitionBaseStackView.addArrangedSubview(self.sportTypeImageView)
         self.competitionBaseStackView.addArrangedSubview(self.countryFlagCompetitionImageView)
         self.competitionBaseStackView.addArrangedSubview(self.countryNameCompetitionLabel)
 
@@ -350,6 +375,8 @@ extension OutrightCompetitionLargeWidgetCollectionViewCell {
 
             self.favoritesIconImageView.heightAnchor.constraint(equalTo: self.favoritesIconImageView.widthAnchor),
             self.countryFlagCompetitionImageView.heightAnchor.constraint(equalTo: self.countryFlagCompetitionImageView.widthAnchor),
+
+            self.sportTypeImageView.heightAnchor.constraint(equalTo: self.sportTypeImageView.widthAnchor),
             self.headerHeightConstraint,
 
             //

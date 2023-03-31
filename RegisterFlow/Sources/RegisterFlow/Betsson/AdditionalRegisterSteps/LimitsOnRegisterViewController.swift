@@ -74,17 +74,20 @@ public class LimitsOnRegisterViewModel {
         }
 
         let depositPublisher = servicesProvider.updateWeeklyDepositLimits(newLimit: depositLimit)
-            .mapError { _ in
+            .mapError { error in
+                print("Error \(error)")
                 return LimitsOnRegisterError.depositServerError
             }
 
         let bettingPublisher = servicesProvider.updateWeeklyBettingLimits(newLimit: bettingLimit)
-            .mapError { _ in
+            .mapError { error in
+                print("Error \(error)")
                 return LimitsOnRegisterError.bettingServerError
             }
 
         let autoPayoutPublisher = servicesProvider.updateResponsibleGamingLimits(newLimit: autoPayoutLimit)
-            .mapError { _ in
+            .mapError { error in
+                print("Error \(error)")
                 return LimitsOnRegisterError.autoPayoutServerError
             }
 

@@ -214,11 +214,13 @@ extension SportRadarModels {
         var potentialReturn: Double
         var totalStake: Double
         var numberOfBets: Int
+        var totalOdd: Double?
 
         enum CodingKeys: String, CodingKey {
             case numberOfBets = "unitCount"
             case potentialReturn = "potentialReturn"
             case totalStake = "totalStake"
+            case totalOdd = "totalOdd"
         }
         
     }

@@ -154,7 +154,6 @@ class BetslipManager: NSObject {
                 case .contentUpdate(let market):
                     let internalMarket = ServiceProviderModelMapper.market(fromServiceProviderMarket: market)
                     self?.updateBettingTickets(ofMarket: internalMarket)
-                    print("betslipdebug \(bettingTicket.id) 3 betslipmanager subcribe [market:\(bettingTicket.marketId)]")
                 case .disconnected:
                     print("Betslip subscribeToMarketDetails disconnected")
                 }
@@ -179,10 +178,7 @@ class BetslipManager: NSObject {
                                                           odd: newOdd)
 
                 self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
-
                 self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)
-
-                print("betslipdebug \(outcome.id) \(newOdd) 4 betslipmanager update Publisher")
             }
         }
     }
@@ -526,12 +522,18 @@ extension BetslipManager {
 
         return Env.servicesProvider.calculatePotentialReturn(forBetTicket: betTicket)
             .map({ betslipPotentialReturn in
+
                 return BetPotencialReturn(potentialReturn: betslipPotentialReturn.potentialReturn,
                                           totalStake: betslipPotentialReturn.totalStake,
-                                          numberOfBets: betslipPotentialReturn.numberOfBets)
+                                          numberOfBets: betslipPotentialReturn.numberOfBets,
+                                          totalOdd: 1)
+
             })
             .replaceError(with: nil)
-            .replaceNil(with: BetPotencialReturn(potentialReturn: 0, totalStake: 0, numberOfBets: 0))
+            .replaceNil(with: BetPotencialReturn(potentialReturn: 0,
+                                                 totalStake: 0,
+                                                 numberOfBets: 0,
+                                                 totalOdd: 1))
             .eraseToAnyPublisher()
 
     }
@@ -571,7 +573,8 @@ extension BetslipManager {
             .map({ betslipPotentialReturn in
                 return BetPotencialReturn(potentialReturn: betslipPotentialReturn.potentialReturn,
                                           totalStake: betslipPotentialReturn.totalStake,
-                                          numberOfBets: betslipPotentialReturn.numberOfBets)
+                                          numberOfBets: betslipPotentialReturn.numberOfBets,
+                                          totalOdd: 1)
             })
             .mapError({ _ in
                 return BetslipErrorType.potentialReturn
@@ -602,7 +605,8 @@ extension BetslipManager {
             .map({ betslipPotentialReturn in
                 return BetPotencialReturn(potentialReturn: betslipPotentialReturn.potentialReturn,
                                           totalStake: betslipPotentialReturn.totalStake,
-                                          numberOfBets: betslipPotentialReturn.numberOfBets)
+                                          numberOfBets: betslipPotentialReturn.numberOfBets,
+                                          totalOdd: 1)
             })
             .mapError({ _ in
                 return BetslipErrorType.potentialReturn
@@ -641,4 +645,5 @@ struct BetPotencialReturn: Codable {
     var potentialReturn: Double
     var totalStake: Double
     var numberOfBets: Int
+    var totalOdd: Double
 }

@@ -92,7 +92,7 @@ class LiveEventsViewController: UIViewController {
         self.commonInit()
         self.setupWithTheme()
         self.connectPublishers()
-        
+
         self.viewModel.fetchLiveMatches()
 
         self.viewModel.didSelectMatchAction = { match in
@@ -233,6 +233,17 @@ class LiveEventsViewController: UIViewController {
             self?.didTapChatView()
         }
 
+        let footerResponsibleGamingView = FooterResponsibleGamingView()
+        footerResponsibleGamingView.translatesAutoresizingMaskIntoConstraints = false
+
+        self.emptyBaseView.addSubview(footerResponsibleGamingView)
+
+        NSLayoutConstraint.activate([
+            footerResponsibleGamingView.leadingAnchor.constraint(equalTo: self.emptyBaseView.leadingAnchor),
+            footerResponsibleGamingView.trailingAnchor.constraint(equalTo: self.emptyBaseView.trailingAnchor),
+            footerResponsibleGamingView.bottomAnchor.constraint(equalTo: self.emptyBaseView.bottomAnchor),
+        ])
+
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
     }
@@ -358,6 +369,8 @@ class LiveEventsViewController: UIViewController {
 
         self.sportsSelectorExpandImageView.setImageColor(color: UIColor.App.textPrimary)
         self.sportsSelectorExpandImageView.tintColor = UIColor.App.textPrimary
+
+
     }
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {

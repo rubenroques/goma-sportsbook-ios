@@ -23,8 +23,10 @@ struct Bootstrap {
         env.betslipManager.start()
         env.businessSettingsSocket.connect()
 
-        if env.locationManager.isLocationServicesEnabled() {
-            env.locationManager.startGeoLocationUpdates()
+        if TargetVariables.hasFeatureEnabled(feature: .getLocationLimits) {
+            if env.locationManager.isLocationServicesEnabled() {
+                env.locationManager.startGeoLocationUpdates()
+            }
         }
 
         env.servicesProvider.connect()

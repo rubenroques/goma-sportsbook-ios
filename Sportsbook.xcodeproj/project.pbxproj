@@ -743,6 +743,20 @@
 		45452BEC290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
 		45452BED290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
 		45452BEE290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */; };
+		4546A89429D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4546A89329D64C4D00ABD562 /* FooterResponsibleGamingView.swift */; };
+		4546A89529D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4546A89329D64C4D00ABD562 /* FooterResponsibleGamingView.swift */; };
+		4546A89629D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4546A89329D64C4D00ABD562 /* FooterResponsibleGamingView.swift */; };
+		4546A89729D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4546A89329D64C4D00ABD562 /* FooterResponsibleGamingView.swift */; };
+		4546A89829D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4546A89329D64C4D00ABD562 /* FooterResponsibleGamingView.swift */; };
+		4546A89929D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4546A89329D64C4D00ABD562 /* FooterResponsibleGamingView.swift */; };
+		4546A89A29D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4546A89329D64C4D00ABD562 /* FooterResponsibleGamingView.swift */; };
+		4546A89D29D7089200ABD562 /* UserTrackingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4546A89C29D7089200ABD562 /* UserTrackingViewController.swift */; };
+		4546A89E29D7089200ABD562 /* UserTrackingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4546A89C29D7089200ABD562 /* UserTrackingViewController.swift */; };
+		4546A89F29D7089200ABD562 /* UserTrackingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4546A89C29D7089200ABD562 /* UserTrackingViewController.swift */; };
+		4546A8A029D7089200ABD562 /* UserTrackingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4546A89C29D7089200ABD562 /* UserTrackingViewController.swift */; };
+		4546A8A129D7089200ABD562 /* UserTrackingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4546A89C29D7089200ABD562 /* UserTrackingViewController.swift */; };
+		4546A8A229D7089200ABD562 /* UserTrackingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4546A89C29D7089200ABD562 /* UserTrackingViewController.swift */; };
+		4546A8A329D7089200ABD562 /* UserTrackingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4546A89C29D7089200ABD562 /* UserTrackingViewController.swift */; };
 		454F73B5299152C100437460 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F73B4299152C100437460 /* GradientView.swift */; };
 		454F73B6299152C100437460 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F73B4299152C100437460 /* GradientView.swift */; };
 		454F73B7299152C100437460 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F73B4299152C100437460 /* GradientView.swift */; };
@@ -5191,6 +5205,8 @@
 		45372F5A29D1FD04002FB894 /* OddOutcomesSortingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddOutcomesSortingHelper.swift; sourceTree = "<group>"; };
 		4540ED2D27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedBetLineTableViewCell.swift; sourceTree = "<group>"; };
 		45452BE9290B55BD00C4D94E /* ServiceProviderModelMapper+Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+Country.swift"; sourceTree = "<group>"; };
+		4546A89329D64C4D00ABD562 /* FooterResponsibleGamingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterResponsibleGamingView.swift; sourceTree = "<group>"; };
+		4546A89C29D7089200ABD562 /* UserTrackingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTrackingViewController.swift; sourceTree = "<group>"; };
 		454990CB2716333F00D57CE2 /* SportsTypes.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SportsTypes.xcassets; sourceTree = "<group>"; };
 		454990CE27163D3200D57CE2 /* CollapsibleGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleGroupView.swift; sourceTree = "<group>"; };
 		454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaGamingServiceClient.swift; sourceTree = "<group>"; };
@@ -6299,6 +6315,7 @@
 			isa = PBXGroup;
 			children = (
 				450088EF29CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift */,
+				4546A89329D64C4D00ABD562 /* FooterResponsibleGamingView.swift */,
 			);
 			path = FooterResponsibleGaming;
 			sourceTree = "<group>";
@@ -6314,6 +6331,14 @@
 				A90C373729C38EB9007B8AEC /* ServicesProviderModelMapper+Bonus.swift */,
 			);
 			path = ModelMappers;
+			sourceTree = "<group>";
+		};
+		4546A89B29D7083D00ABD562 /* UserTracking */ = {
+			isa = PBXGroup;
+			children = (
+				4546A89C29D7089200ABD562 /* UserTrackingViewController.swift */,
+			);
+			path = UserTracking;
 			sourceTree = "<group>";
 		};
 		454A7A6126DA2FD600E6E74E /* Misc */ = {
@@ -7044,6 +7069,7 @@
 				A9A836AF26C6AC5D00508923 /* Maintenance */,
 				A9B8407926CA788000269B05 /* VersionUpdate */,
 				A9B8409426DE44BF00269B05 /* GeoLocation */,
+				4546A89B29D7083D00ABD562 /* UserTracking */,
 				451E1F6A2825634E000E957B /* InternalBrowser */,
 				455A0D2226BDE7B900EC572D /* DebugHelper */,
 				A92F5D8F2729730100884BDF /* Spinner */,
@@ -10794,6 +10820,7 @@
 				450B793928F58574009229E3 /* InviteContactTableViewCell.swift in Sources */,
 				450B793A28F58574009229E3 /* Animations.swift in Sources */,
 				450B793B28F58574009229E3 /* UserSessionStore.swift in Sources */,
+				4546A89529D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */,
 				450B793C28F58574009229E3 /* TipsRootViewController.swift in Sources */,
 				450B793D28F58574009229E3 /* ActionButtonTableViewCell.swift in Sources */,
 				450B793E28F58574009229E3 /* EditGroupAddFriendViewModel.swift in Sources */,
@@ -11120,6 +11147,7 @@
 				450B7A8328F58574009229E3 /* OutrightMarketDetailsStore.swift in Sources */,
 				450B7A8428F58574009229E3 /* RecentSearchTableViewCell.swift in Sources */,
 				450B7A8528F58574009229E3 /* TestsViewController.swift in Sources */,
+				4546A89E29D7089200ABD562 /* UserTrackingViewController.swift in Sources */,
 				450B7A8728F58574009229E3 /* Odd.swift in Sources */,
 				450B7A8828F58574009229E3 /* NetworkSession.swift in Sources */,
 				450B7A8928F58574009229E3 /* AddUnregisteredFriendTableViewCell.swift in Sources */,
@@ -11282,6 +11310,7 @@
 				457CBA19282D27D000ED0F00 /* DocumentPickerView.swift in Sources */,
 				45B6E204283E3F21001B570C /* EditContactViewModel.swift in Sources */,
 				457CBA1A282D27D000ED0F00 /* NSAttributedString+Extensions.swift in Sources */,
+				4546A8A229D7089200ABD562 /* UserTrackingViewController.swift in Sources */,
 				457CBA1B282D27D000ED0F00 /* BettingHistoryRootViewController.swift in Sources */,
 				457CBA1C282D27D000ED0F00 /* DepositViewModel.swift in Sources */,
 				457CBA1D282D27D000ED0F00 /* UserSession.swift in Sources */,
@@ -11795,6 +11824,7 @@
 				A9FB6D6728C65EF100E3FE58 /* RankingsListViewController.swift in Sources */,
 				457CBBB7282D27D000ED0F00 /* PhonePrefixSelectorViewController.swift in Sources */,
 				457CBBB8282D27D000ED0F00 /* ChatSettingsViewModel.swift in Sources */,
+				4546A89929D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */,
 				457CBBB9282D27D000ED0F00 /* GomaGamingSocialServiceClient.swift in Sources */,
 				457CBBBA282D27D000ED0F00 /* BettingOffer.swift in Sources */,
 			);
@@ -11892,6 +11922,7 @@
 				457CBCCF282D2CD100ED0F00 /* Environment.swift in Sources */,
 				A9CB3E7429CDC25600BEF9C1 /* ApplicableBonus.swift in Sources */,
 				457CBCD0282D2CD100ED0F00 /* SegmentControlView.swift in Sources */,
+				4546A8A329D7089200ABD562 /* UserTrackingViewController.swift in Sources */,
 				A98EC7D12889ADC20044FC46 /* ShareTicketChoiceViewModel.swift in Sources */,
 				457CBCD1282D2CD100ED0F00 /* TodayMatchesDataSource.swift in Sources */,
 				457CBCD2282D2CD100ED0F00 /* StaticHomeViewTemplateDataSource.swift in Sources */,
@@ -11961,6 +11992,7 @@
 				457CBD0B282D2CD100ED0F00 /* MarketGroup.swift in Sources */,
 				457CBD0C282D2CD100ED0F00 /* MarketGroupDetailsStore.swift in Sources */,
 				45085660284A640D00F4FB52 /* FriendProfileViewModel.swift in Sources */,
+				4546A89A29D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */,
 				A986D35128CB47A900AF95D7 /* TipsViewModel.swift in Sources */,
 				457CBD0D282D2CD100ED0F00 /* StyleHelpers.swift in Sources */,
 				457CBD0F282D2CD100ED0F00 /* PictureInPictureView.swift in Sources */,
@@ -12631,6 +12663,7 @@
 				45C10F2A28772DA700037BBE /* Animations.swift in Sources */,
 				4589C836282024E400243547 /* UserSessionStore.swift in Sources */,
 				A9FB6D4328C61D2100E3FE58 /* TipsRootViewController.swift in Sources */,
+				4546A89629D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */,
 				45B6E23B284151F9001B570C /* ActionButtonTableViewCell.swift in Sources */,
 				45B6E20A283E3F2A001B570C /* EditGroupAddFriendViewModel.swift in Sources */,
 				A98708CD28DA27DB00F27348 /* UserProfileTipsViewController.swift in Sources */,
@@ -12957,6 +12990,7 @@
 				4589C930282024E400243547 /* OutrightMarketDetailsStore.swift in Sources */,
 				4589C931282024E400243547 /* RecentSearchTableViewCell.swift in Sources */,
 				4589C932282024E400243547 /* TestsViewController.swift in Sources */,
+				4546A89F29D7089200ABD562 /* UserTrackingViewController.swift in Sources */,
 				4589C934282024E400243547 /* Odd.swift in Sources */,
 				4589C935282024E400243547 /* NetworkSession.swift in Sources */,
 				4589C936282024E400243547 /* AddUnregisteredFriendTableViewCell.swift in Sources */,
@@ -13217,6 +13251,7 @@
 				45A3314F298976BA008181E9 /* ModalTransitionPresenting.swift in Sources */,
 				45A33150298976BA008181E9 /* InviteContactTableViewCell.swift in Sources */,
 				45A33151298976BA008181E9 /* Animations.swift in Sources */,
+				4546A89429D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */,
 				45A33152298976BA008181E9 /* UserSessionStore.swift in Sources */,
 				45A33153298976BA008181E9 /* TipsRootViewController.swift in Sources */,
 				45A33154298976BA008181E9 /* ActionButtonTableViewCell.swift in Sources */,
@@ -13543,6 +13578,7 @@
 				45A332A3298976BA008181E9 /* OutrightMarketDetailsStore.swift in Sources */,
 				45A332A4298976BA008181E9 /* RecentSearchTableViewCell.swift in Sources */,
 				45A332A5298976BA008181E9 /* TestsViewController.swift in Sources */,
+				4546A89D29D7089200ABD562 /* UserTrackingViewController.swift in Sources */,
 				45A332A7298976BA008181E9 /* Odd.swift in Sources */,
 				45A332A8298976BA008181E9 /* NetworkSession.swift in Sources */,
 				45A332A9298976BA008181E9 /* AddUnregisteredFriendTableViewCell.swift in Sources */,
@@ -13613,6 +13649,7 @@
 				45A6BBE528246A7500D9B416 /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
 				45A6BBE628246A7500D9B416 /* AuthToken.swift in Sources */,
 				45A6BBE728246A7500D9B416 /* MatchInfo.swift in Sources */,
+				4546A89829D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */,
 				45A6BBE828246A7500D9B416 /* MultiSlider+Drag.swift in Sources */,
 				45A6BBEA28246A7500D9B416 /* OddsViewModel.swift in Sources */,
 				45A6BBEB28246A7500D9B416 /* BonusProgressViewModel.swift in Sources */,
@@ -13781,6 +13818,7 @@
 				45A6BC7628246A7500D9B416 /* OutrightCompetitionLineTableViewCell.swift in Sources */,
 				45A6BC7828246A7500D9B416 /* EditAlertView.swift in Sources */,
 				45A6BC7928246A7500D9B416 /* SharedBetToken.swift in Sources */,
+				4546A8A129D7089200ABD562 /* UserTrackingViewController.swift in Sources */,
 				45C10F6128772DA700037BBE /* CGFloat+Shift.swift in Sources */,
 				45A6BC7A28246A7500D9B416 /* SettingsRadioRowView.swift in Sources */,
 				45065D342922E46700E0A205 /* Loadable.swift in Sources */,
@@ -14338,6 +14376,7 @@
 				A9C3416228F9A74A0055360B /* ChatNotificationsViewModel.swift in Sources */,
 				A9C3416328F9A74A0055360B /* RequestLocationAccessViewController.swift in Sources */,
 				A9C3416428F9A74A0055360B /* Market.swift in Sources */,
+				4546A89729D64C4D00ABD562 /* FooterResponsibleGamingView.swift in Sources */,
 				A9C3416528F9A74A0055360B /* MyTicketTableViewCell.swift in Sources */,
 				A90C372329C35FD0007B8AEC /* WithdrawSuccessViewController.swift in Sources */,
 				A9C3416628F9A74A0055360B /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
@@ -14486,6 +14525,7 @@
 				A9C341FC28F9A74A0055360B /* KeychainInterface.swift in Sources */,
 				A9C341FD28F9A74A0055360B /* UserDefaults.swift in Sources */,
 				A9C341FE28F9A74A0055360B /* SportSelectionCollectionViewCellViewModel.swift in Sources */,
+				4546A8A029D7089200ABD562 /* UserTrackingViewController.swift in Sources */,
 				A9C341FF28F9A74A0055360B /* ActivationAlertView.swift in Sources */,
 				A9C3420028F9A74A0055360B /* Internationalization.swift in Sources */,
 				A9C3420128F9A74A0055360B /* CasinoWebViewController.swift in Sources */,
@@ -14794,7 +14834,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1003;
+				CURRENT_PROJECT_VERSION = 1009;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -14820,7 +14860,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/SportRadar/Misc/SportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1003;
+				CURRENT_PROJECT_VERSION = 1009;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/SportRadar/Misc/SportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15013,7 +15053,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/EveryMatrix/Misc/EveryMatrix.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1003;
+				CURRENT_PROJECT_VERSION = 1005;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/EveryMatrix/Misc/EveryMatrix-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15039,7 +15079,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/EveryMatrix/Misc/EveryMatrix.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1003;
+				CURRENT_PROJECT_VERSION = 1005;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/EveryMatrix/Misc/EveryMatrix-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15065,7 +15105,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Crocobet/Misc/Crocobet.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1003;
+				CURRENT_PROJECT_VERSION = 1004;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Crocobet/Misc/Crocobet-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15091,7 +15131,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Crocobet/Misc/Crocobet.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1003;
+				CURRENT_PROJECT_VERSION = 1004;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Crocobet/Misc/Crocobet-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15117,7 +15157,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1003;
+				CURRENT_PROJECT_VERSION = 1008;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15143,7 +15183,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1003;
+				CURRENT_PROJECT_VERSION = 1008;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15170,7 +15210,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1005;
+				CURRENT_PROJECT_VERSION = 1011;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
@@ -15199,7 +15239,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1005;
+				CURRENT_PROJECT_VERSION = 1011;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
@@ -15227,7 +15267,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/DAZN/Misc/DAZN.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1003;
+				CURRENT_PROJECT_VERSION = 1006;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/DAZN/Misc/DAZN-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15253,7 +15293,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/DAZN/Misc/DAZN.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1003;
+				CURRENT_PROJECT_VERSION = 1006;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/DAZN/Misc/DAZN-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15280,7 +15320,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASportRadar/Misc/GOMASportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1003;
+				CURRENT_PROJECT_VERSION = 1007;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASportRadar/Misc/GOMASportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15307,7 +15347,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASportRadar/Misc/GOMASportRadar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1003;
+				CURRENT_PROJECT_VERSION = 1007;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASportRadar/Misc/GOMASportRadar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

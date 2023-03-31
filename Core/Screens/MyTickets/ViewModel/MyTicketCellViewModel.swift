@@ -80,12 +80,9 @@ class MyTicketCellViewModel {
                     print("CASHOUT INFO ERROR: \(error)")
                 }
             }, receiveValue: { [weak self] cashoutInfo in
-
                 let cashout = CashoutInfo(id: ticket.betId, betId: ticket.betId, value: cashoutInfo.cashoutValue, stake: ticket.totalBetAmount)
-
                 self?.cashout = cashout
                 self?.hasCashoutEnabled.send( .visible(cashoutInfo.cashoutValue))
-
             })
             .store(in: &cancellables)
 
@@ -129,12 +126,10 @@ class MyTicketCellViewModel {
                     case .finished:
                         ()
                     case .failure(let error):
-                        print("CASHOUT RESULT ERROR: \(error)")
+                        print("CASHOUT ERROR: \(error)")
                         self?.isLoadingCellData.send(false)
                     }
                 }, receiveValue: { [weak self] cashoutResult in
-                    print("CASHOUT RESULT: \(cashoutResult)")
-
                     if cashoutResult.cashoutResultSuccess {
                         self?.requestDataRefreshAction?()
                         self?.isLoadingCellData.send(false)

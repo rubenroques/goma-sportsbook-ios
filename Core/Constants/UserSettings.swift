@@ -8,6 +8,7 @@
 import Foundation
 
 enum UserDefaultsKey: String {
+
     case theme = "appThemeKey"
     case userSession = "userSession"
     case userSkippedLoginFlow = "userSkippedLoginFlow"    
@@ -19,6 +20,7 @@ enum UserDefaultsKey: String {
     case notificationsUserSettings = "notificationsUserSettings"
 
     case biometricAuthentication
+    case acceptedTracking
 
     var key: String {
         return self.rawValue
@@ -161,6 +163,22 @@ extension UserDefaults {
             self.synchronize()
         }
     }
+
+    var acceptedTracking: Bool {
+        get {
+            if let acceptedTracking = self.value(forKey: UserDefaultsKey.acceptedTracking.key) as? Bool {
+                return acceptedTracking
+            }
+            self.setValue(false, forKey: UserDefaultsKey.acceptedTracking.key)
+            self.synchronize()
+            return false
+        }
+        set {
+            self.setValue(newValue, forKey: UserDefaultsKey.acceptedTracking.key)
+            self.synchronize()
+        }
+    }
+
 
     func clear() {
         let domain = Bundle.main.bundleIdentifier!

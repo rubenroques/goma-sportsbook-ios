@@ -173,7 +173,7 @@ class MyFavoritesViewModel: NSObject {
     func subscribeCompetitionMatches(forMarketGroupId marketGroupId: String, competitionInfo: SportCompetitionInfo) {
 
         Env.servicesProvider.subscribeCompetitionMatches(forMarketGroupId: marketGroupId)
-        .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
+        .sink { [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
             switch completion {
             case .finished:
                 ()
@@ -199,6 +199,7 @@ class MyFavoritesViewModel: NSObject {
         let newCompetition = Competition(id: competitionInfo.id,
                                          name: competitionInfo.name,
                                          matches: matches,
+                                         sport: nil,
                                          numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
         competitionInfo: competitionInfo)
 
