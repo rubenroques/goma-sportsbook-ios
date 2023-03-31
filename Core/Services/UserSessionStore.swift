@@ -51,7 +51,8 @@ class UserSessionStore {
     }
 
     var userWalletPublisher = CurrentValueSubject<UserWallet?, Never>(nil)
-    
+
+    var acceptedTrackingPublisher = CurrentValueSubject<Bool?, Never>(false)
     var hasGomaUserSessionPublisher = CurrentValueSubject<Bool, Never>(false)
     
     var shouldRecordUserSession = true
@@ -66,7 +67,9 @@ class UserSessionStore {
     
     init() {
 
-        // TODO: Remove this, it shoulg detect the service provider connection state
+        self.acceptedTrackingPublisher.send( self.hasAcceptedTracking() )
+
+        // TODO: Remove this, it should detect the service provider connection state
         executeDelayed(0.15) {
             self.startUserSessionIfNeeded()
         }
@@ -318,6 +321,12 @@ extension UserSessionStore {
         UserDefaults.standard.bettingUserSettings = bettingUserSettings
     }
 
+    func refreshUserWalletAfterDelay() {
+        executeDelayed(0.3) {
+            self.refreshUserWallet()
+        }
+    }
+
     func refreshUserWallet() {
         Env.servicesProvider.getUserBalance()
             .receive(on: DispatchQueue.main)
@@ -464,5 +473,24 @@ extension UserSessionStore {
     func shouldRequestFaceId() -> Bool {
         return UserDefaults.standard.biometricAuthenticationEnabled
     }
-    
+
 }
+
+extension UserSessionStore {
+
+    func didAcceptedTracking() {
+        UserDefaults.standard.acceptedTracking = true
+        self.acceptedTrackingPublisher.send(true)
+    }
+
+    func didSkipedTracking() {
+        self.acceptedTrackingPublisher.send(nil)
+    }
+
+    func hasAcceptedTracking() -> Bool {
+        return UserDefaults.standard.acceptedTracking
+    }
+
+
+}
+

@@ -147,9 +147,6 @@ extension SportRadarMarketDetailsCoordinator {
     func updateMarketTradability(withId id: String, isTradable: Bool) {
         guard let newMarket = self.market else { return }
         newMarket.isTradable = isTradable
-
-        print("betslipdebug \(id) 2 coordinator outcome \(newMarket.id) \(newMarket.name)")
-
         self.marketCurrentValueSubject.send(.contentUpdate(content: newMarket))
     }
 

@@ -168,6 +168,8 @@ class MyTicketTableViewCell: UITableViewCell {
         self.cashoutButton.layer.masksToBounds = true
         self.cashoutButton.backgroundColor = .clear
 
+        self.loadingActivityIndicator.tintColor = UIColor.App.textPrimary
+
         if let status = self.betHistoryEntry?.status?.uppercased() {
             switch status {
             case "WON", "HALF_WON":

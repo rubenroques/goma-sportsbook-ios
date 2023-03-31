@@ -375,8 +375,6 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] newOddValue in
 
-                print("betslipdebug \(bettingTicket.id) 5 Single view [\(newOddValue)]")
-
                 if let currentOddValue = self?.currentOddValue {
                     if newOddValue > currentOddValue {
                         self?.highlightOddChangeUp()

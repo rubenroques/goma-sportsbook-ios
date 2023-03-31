@@ -168,7 +168,7 @@ class TermsCondFormStepView: FormStepView {
     }
 
     func openTermWebPage() {
-        if let url = URL(string: "https://gomadevelopment.pt/") {
+        if let url = URL(string: "https://sportsbook-stage.gomagaming.com/fr/terms-and-conditions") {
             UIApplication.shared.open(url)
         }
     }

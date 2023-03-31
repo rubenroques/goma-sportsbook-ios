@@ -469,7 +469,8 @@ class PreSubmissionBetslipViewController: UIViewController {
             .store(in: &self.cancellables)
 
         Publishers.CombineLatest(Env.betslipManager.bettingTicketsPublisher, Env.betslipManager.allowedBetTypesPublisher)
-            .removeDuplicates(by: { (leftValue: ([BettingTicket], LoadableContent<[BetType]>), rightValue: ([BettingTicket], LoadableContent<[BetType]> )) -> Bool in
+            .removeDuplicates(by: { (leftValue: ([BettingTicket], LoadableContent<[BetType]>),
+                                     rightValue: ([BettingTicket], LoadableContent<[BetType]> )) -> Bool in
                 return leftValue.0 == rightValue.0 && leftValue.1 == rightValue.1
             })
             .compactMap({ (bettingTickets: [BettingTicket], allowedBetTypesContent: LoadableContent<[BetType]>) -> ([BettingTicket], [BetType])? in
@@ -573,6 +574,20 @@ class PreSubmissionBetslipViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
+
+
+        Env.betslipManager.bettingTicketsPublisher
+            .receive(on: DispatchQueue.main)
+            .map({ orderedSet -> Double in
+                let newArray = orderedSet.map { $0.decimalOdd }
+                let multiple: Double = newArray.reduce(1.0, *)
+                return multiple
+            })
+            .sink(receiveValue: { [weak self] multiplier in
+                self?.configureWithMultipleTotalOdd(multiplier)
+            })
+            .store(in: &cancellables)
+
 
         //
         self.viewModel.sharedBetsPublisher
@@ -1193,9 +1208,9 @@ class PreSubmissionBetslipViewController: UIViewController {
                     ()
                 case .failure(let error): // Error, clear previous info
                     print("requestMultipleBetPotentialReturn \(error)")
-                    self?.multipleOddsValueLabel.text = localized("no_value")
+                    self?.multipleOddsValueLabel.text = "-.--"
                     self?.multipleWinningsValueLabel.text = localized("no_value")
-                    self?.secondaryMultipleOddsValueLabel.text = localized("no_value")
+                    self?.secondaryMultipleOddsValueLabel.text = "-.--"
                     self?.secondaryMultipleWinningsValueLabel.text = localized("no_value")
                 }
             } receiveValue: { [weak self] betPotencialReturn in
@@ -1207,14 +1222,18 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     func configureWithMultiplePotencialReturn(_ betPotencialReturn: BetPotencialReturn) {
 
+        let multiTicketsOdd = Env.betslipManager.bettingTicketsPublisher.value.map(\.decimalOdd).reduce(1.0, *)
+        self.configureWithMultipleTotalOdd(multiTicketsOdd)
+
         let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betPotencialReturn.potentialReturn)) ?? localized("no_value")
         self.multipleWinningsValueLabel.text = possibleWinningsString
         self.secondaryMultipleWinningsValueLabel.text = possibleWinningsString
 
-        let totalBetAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betPotencialReturn.totalStake)) ?? localized("no_value")
-        self.multipleOddsValueLabel.text = totalBetAmountString
-        self.secondaryMultipleOddsValueLabel.text = totalBetAmountString
+    }
 
+    func configureWithMultipleTotalOdd(_ totalOdd: Double) {
+        self.multipleOddsValueLabel.text = OddConverter.stringForValue(totalOdd, format: UserDefaults.standard.userOddsFormat)
+        self.secondaryMultipleOddsValueLabel.text = OddConverter.stringForValue(totalOdd, format: UserDefaults.standard.userOddsFormat)
     }
 
     func requestSystemBetInfo() {

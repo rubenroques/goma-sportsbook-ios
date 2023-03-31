@@ -105,7 +105,8 @@ class SportRadarBettingProvider: BettingProvider, Connector {
             .map { (betslipPotentialReturn: SportRadarModels.BetslipPotentialReturnResponse) -> BetslipPotentialReturn in
                 return BetslipPotentialReturn(potentialReturn: betslipPotentialReturn.potentialReturn,
                                               totalStake: betslipPotentialReturn.totalStake,
-                                              numberOfBets: betslipPotentialReturn.numberOfBets)
+                                              numberOfBets: betslipPotentialReturn.numberOfBets,
+                                              totalOdd: betslipPotentialReturn.totalOdd ?? 1.0)
             }
             .eraseToAnyPublisher()
     }

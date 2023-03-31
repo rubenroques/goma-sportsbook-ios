@@ -140,12 +140,28 @@ class Router {
             }
             .store(in: &cancellables)
 
+        Env.userSessionStore.acceptedTrackingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { accepted in
+                if let acceptedValue = accepted {
+                    if !acceptedValue {
+                        self.showUserTrackingViewController()
+                    }
+                    else {
+                        self.hideUserTrackingViewController()
+                    }
+                }
+                else {
+                    // Nil means the user skipped it
+                    self.hideUserTrackingViewController()
+                }
+            }
+            .store(in: &self.cancellables)
+
         Env.locationManager.locationStatus
             .receive(on: DispatchQueue.main)
             .sink { locationStatus in
-
                 Logger.log("Router.locationManager received \(locationStatus)")
-
                 switch locationStatus {
                 case .valid:
                     self.hideLocationScreen()
@@ -156,7 +172,9 @@ class Router {
                 case .notAuthorized:
                     self.showRequestDeniedLocationScreen()
                 case .notDetermined:
-                    ()
+                    () // Skip location updates
+                case .notRequired:
+                    () // Skip location updates
                 }
             }
             .store(in: &cancellables)
@@ -362,6 +380,27 @@ class Router {
             }
         }
 
+    }
+
+    //
+    // User actions tracking
+    func showUserTrackingViewController() {
+
+        if let presentedViewController = self.rootViewController?.presentedViewController {
+            if !(presentedViewController is UserTrackingViewController) {
+                presentedViewController.dismiss(animated: false, completion: nil)
+            }
+        }
+
+        let userTrackingViewController = UserTrackingViewController(viewModel: UserTrackingViewModel())
+        self.rootViewController?.present(userTrackingViewController, animated: true, completion: nil)
+    }
+
+    func hideUserTrackingViewController() {
+        if let presentedViewController = self.rootViewController?.presentedViewController,
+           presentedViewController is UserTrackingViewController {
+            presentedViewController.dismiss(animated: true, completion: nil)
+        }
     }
 
     //

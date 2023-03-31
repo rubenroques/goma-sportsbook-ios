@@ -243,9 +243,9 @@ class LoginViewController: UIViewController {
 
         self.logoImageView.isUserInteractionEnabled = true
 
-//        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
-//        debugLogoImageViewTap.numberOfTapsRequired = 3
-//        self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
+        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
+        debugLogoImageViewTap.numberOfTapsRequired = 3
+        self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
 //
 //        let debug2LogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebug))
 //        debug2LogoImageViewTap.numberOfTapsRequired = 2
@@ -316,15 +316,20 @@ class LoginViewController: UIViewController {
 
     func checkPolicyLinks() {
             policyLinkView.didTapTerms = {
-                // TO-DO: Terms link
+                if let url = URL(string: "https://sportsbook-stage.gomagaming.com/fr/terms-and-conditions") {
+                    UIApplication.shared.open(url)
+                }
             }
 
             policyLinkView.didTapPrivacy = {
-                // TO-DO: Privacy link
-            }
+                if let url = URL(string: "https://sportsbook-stage.gomagaming.com/fr/privacy-policy") {
+                    UIApplication.shared.open(url)
+                }            }
 
             policyLinkView.didTapEula = {
-                // TO-DO: EULA link
+                if let url = URL(string: "https://sportsbook-stage.gomagaming.com/fr/betting-rules") {
+                    UIApplication.shared.open(url)
+                }
             }
         }
 
@@ -634,8 +639,7 @@ class LoginViewController: UIViewController {
         alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
 
             if paymentStatus == .authorised {
-                Env.userSessionStore.refreshUserWallet()
-
+                Env.userSessionStore.refreshUserWalletAfterDelay()
                 self?.closeLoginRegisterFlow()
             }
         }))
@@ -658,13 +662,13 @@ extension LoginViewController {
     @objc func didTapDebugFormFill() {
         
         if self.usernameHeaderTextFieldView.text.isEmpty || self.usernameHeaderTextFieldView.text == "ruben" {
-            self.usernameHeaderTextFieldView.setText("gomafrontend") // ("pafeha4474@lance7.com") // ("gomafrontend") // ("ruben@gomadevelopment.pt")
-            self.passwordHeaderTextFieldView.setText("Omega123") // ("iosGoma123") // ("Omega123") // ("ruben=GOMA=12345")
+            self.usernameHeaderTextFieldView.setText("rroques11") // ("pafeha4474@lance7.com") // ("gomafrontend") // ("ruben@gomadevelopment.pt")
+            self.passwordHeaderTextFieldView.setText("Ruben12345!") // ("iosGoma123") // ("Omega123") // ("ruben=GOMA=12345")
             self.loginButton.isEnabled = true
         }
-        else if self.usernameHeaderTextFieldView.text == "gomafrontend" {
-            self.usernameHeaderTextFieldView.setText("pafeha4474@lance7.com")
-            self.passwordHeaderTextFieldView.setText("iosGoma123")
+        else if self.usernameHeaderTextFieldView.text == "rroques11" {
+            self.usernameHeaderTextFieldView.setText("rroques10")
+            self.passwordHeaderTextFieldView.setText("Ruben12345!")
             self.loginButton.isEnabled = true
         }
         else if self.usernameHeaderTextFieldView.text == "ruben5" {

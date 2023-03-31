@@ -162,21 +162,18 @@ extension ServiceProviderModelMapper {
     static func competitions(fromEventsGroups eventsGroups: [EventsGroup]) -> [Competition] {
         var competitions = [Competition]()
 
-        if let event = eventsGroups.first {
-
-            let mappedCompetitions = event.events.map({ event in
-
+        if let firstEvent = eventsGroups.first {
+            firstEvent.events.forEach { event in
+                let sport = Self.sport(fromServiceProviderSportType: event.sport)
                 let location = Location(id: event.venueCountry?.capital ?? "", name: event.venueCountry?.name ?? "", isoCode: event.venueCountry?.iso2Code ?? "")
-
                 let competition = Competition(id: event.id,
                                               name: event.name ?? event.competitionName,
                                               venue: location,
+                                              sport: sport,
                                               numberOutrightMarkets: event.markets.count,
                                               outrightMarkets: ServiceProviderModelMapper.markets(fromServiceProviderMarkets: event.markets))
-                return competition
-            })
-
-            return mappedCompetitions
+                competitions.append(competition)
+            }
         }
 
         return competitions
@@ -185,7 +182,10 @@ extension ServiceProviderModelMapper {
     static func competitionGroups(fromSportRegions sportRegions: [SportRegion]) -> [CompetitionGroup] {
 
         let competitionGroups = sportRegions.map({ sportRegion in
-            let competitionGroup = CompetitionGroup(id: sportRegion.id, name: sportRegion.name ?? "", aggregationType: .region, competitions: [])
+            let competitionGroup = CompetitionGroup(id: sportRegion.id,
+                                                    name: sportRegion.name ?? "",
+                                                    aggregationType: .region,
+                                                    competitions: [])
             return competitionGroup
         })
 
@@ -197,7 +197,10 @@ extension ServiceProviderModelMapper {
         let competitionGroups = sportRegions.map({ sportRegion in
 
             if let regionCompetitions = regionCompetitions[sportRegion.id] {
-                var competitionGroup = CompetitionGroup(id: sportRegion.id, name: sportRegion.name ?? "", aggregationType: .region, competitions: self.competitions(fromSportCompetitions: regionCompetitions))
+                var competitionGroup = CompetitionGroup(id: sportRegion.id,
+                                                        name: sportRegion.name ?? "",
+                                                        aggregationType: .region,
+                                                        competitions: self.competitions(fromSportCompetitions: regionCompetitions))
 
                 if let country = sportRegion.country {
                     competitionGroup.country = Self.country(fromServiceProviderCountry: country)
@@ -216,7 +219,10 @@ extension ServiceProviderModelMapper {
     static func competitions(fromSportCompetitions sportCompetitions: [SportCompetition]) -> [Competition] {
 
         let competitions = sportCompetitions.map({ sportCompetition in
-            let competition = Competition(id: sportCompetition.id, name: sportCompetition.name, numberOutrightMarkets: 0,
+            let competition = Competition(id: sportCompetition.id,
+                                          name: sportCompetition.name,
+                                          sport: nil,
+                                          numberOutrightMarkets: 0,
                                           outrightMarkets: [])
             return competition
         })

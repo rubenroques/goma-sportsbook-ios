@@ -513,11 +513,11 @@ public class HeaderTextFieldView: NibView {
         self.endEditing(true)
     }
 
-    public func showError(withMessage: String) {
+    public func showError(withMessage message: String) {
 
         self.borderState = .error
 
-        self.tipLabel.text = text
+        self.tipLabel.text = message
         self.tipLabel.textColor = self.errorColor
 
         self.tipState = .error

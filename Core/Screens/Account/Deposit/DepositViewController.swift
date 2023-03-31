@@ -216,7 +216,7 @@ class DepositViewController: UIViewController {
         viewModel.paymentsDropIn.showPaymentStatus = { [weak self] paymentStatus in
 
             if paymentStatus == .authorised {
-                Env.userSessionStore.refreshUserWallet()
+                Env.userSessionStore.refreshUserWalletAfterDelay()
             }
 
             self?.showPaymentStatusAlert(paymentStatus: paymentStatus)

@@ -199,8 +199,6 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] newOddValue in
 
-                print("betslipdebug \(bettingTicket.id) 5 Multi view [\(newOddValue)]")
-                
                 if let currentOddValue = self?.currentOddValue {
                     if newOddValue > currentOddValue {
                         self?.highlightOddChangeUp()

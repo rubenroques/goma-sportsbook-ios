@@ -1,15 +1,14 @@
 //
-//  FooterResponsibleGamingViewCell.swift
+//  FooterResponsibleGamingView.swift
 //  Sportsbook
 //
-//  Created by Ruben Roques on 24/03/2023.
+//  Created by Ruben Roques on 31/03/2023.
 //
 
 import Foundation
 import UIKit
 
-
-class FooterResponsibleGamingViewCell: UITableViewCell {
+class FooterResponsibleGamingView: UIView {
 
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var topLabel: UILabel = Self.createTopLabel()
@@ -18,23 +17,35 @@ class FooterResponsibleGamingViewCell: UITableViewCell {
     private lazy var ageBaseView: UIView = Self.createAgeBaseView()
     private lazy var ageLabel: UILabel = Self.createAgeLabel()
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    // MARK: - Lifetime and Cycle
+    init() {
+        super.init(frame: .zero)
 
-        self.setupSubviews()
+        self.commonInit()
         self.setupWithTheme()
+    }
+
+    @available(iOS, unavailable)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+
+        self.commonInit()
+        self.setupWithTheme()
+    }
+
+    @available(iOS, unavailable)
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+
+        self.commonInit()
+        self.setupWithTheme()
+    }
+
+    func commonInit() {
+        self.setupSubviews()
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapBaseView))
         self.baseView.addGestureRecognizer(tapGestureRecognizer)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -45,8 +56,7 @@ class FooterResponsibleGamingViewCell: UITableViewCell {
 
     func setupWithTheme() {
         self.backgroundColor = .clear
-        self.backgroundView?.backgroundColor = .clear
-        self.contentView.backgroundColor = .clear
+
     }
 
     @objc func didTapBaseView() {
@@ -57,7 +67,8 @@ class FooterResponsibleGamingViewCell: UITableViewCell {
 
 }
 
-extension FooterResponsibleGamingViewCell {
+
+extension FooterResponsibleGamingView {
 
     private static func createBaseView() -> UIView {
         let view = UIView()
@@ -114,7 +125,7 @@ extension FooterResponsibleGamingViewCell {
     private func setupSubviews() {
 
         // Add subviews to self.view or each other
-        self.contentView.addSubview(self.baseView)
+        self.addSubview(self.baseView)
 
         self.baseView.addSubview(self.topLabel)
         self.baseView.addSubview(self.bottomLabel)
@@ -128,10 +139,10 @@ extension FooterResponsibleGamingViewCell {
 
     private func initConstraints() {
         NSLayoutConstraint.activate([
-            self.baseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 18),
-            self.baseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -18),
-            self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            self.baseView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -46),
+            self.baseView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 18),
+            self.baseView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -18),
+            self.baseView.topAnchor.constraint(equalTo: self.topAnchor),
+            self.baseView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -46),
 
             self.topLabel.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 12),
             self.topLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
@@ -153,3 +164,4 @@ extension FooterResponsibleGamingViewCell {
         ])
     }
 }
+

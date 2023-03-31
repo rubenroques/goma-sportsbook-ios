@@ -716,7 +716,9 @@ class PreLiveEventsViewModel: NSObject {
         let newCompetition = Competition(id: competitionInfo.id,
                                          name: competitionInfo.name,
                                          matches: matches,
-                                         venue: matches.first?.venue, numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
+                                         venue: matches.first?.venue,
+                                         sport: nil,
+                                         numberOutrightMarkets: Int(competitionInfo.numberOutrightMarkets) ?? 0,
                                          competitionInfo: competitionInfo)
 
         self.setMainMarkets(matches: matches)
@@ -729,7 +731,7 @@ class PreLiveEventsViewModel: NSObject {
     func subscribeCompetitionOutright(forMarketGroupId marketGroupId: String, competitionInfo: SportCompetitionInfo) {
 
         Env.servicesProvider.subscribeCompetitionMatches(forMarketGroupId: marketGroupId)
-        .sink {  [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
+        .sink { [weak self] (completion: Subscribers.Completion<ServiceProviderError>) in
             switch completion {
             case .finished:
                 ()
@@ -759,6 +761,7 @@ class PreLiveEventsViewModel: NSObject {
                                          name: competitionInfo.name,
                                          matches: [],
                                          venue: outrightMatch.venue,
+                                         sport: nil,
                                          numberOutrightMarkets: numberOutrightMarkets,
                                          competitionInfo: competitionInfo)
 

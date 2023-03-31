@@ -231,20 +231,20 @@ extension SportRadarModels {
             if path.contains("idfoevent") && path.contains("idfomarket") && changeType.contains("added") {
                 // added a new Market
                 let newMarket = try container.decode(SportRadarModels.Market.self, forKey: .change)
-                print("ContentContainer 'add' market with id \(newMarket.id) :: \(path) and associated change \(changeType)")
+                // print("ContentContainer 'add' market with id \(newMarket.id) :: \(path) and associated change \(changeType)")
                 return .addMarket(contentIdentifier: contentIdentifier, market: newMarket)
             }
             else if path.contains("idfoevent") && path.contains("idfomarket") && changeType.contains("removed"),
                         let marketId = SocketMessageParseHelper.extractMarketId(path) {
                 // removed a Market
-                print("ContentContainer removed market with id \(marketId) :: \(path) and associated change \(changeType)")
+                // print("ContentContainer removed market with id \(marketId) :: \(path) and associated change \(changeType)")
                 return .removeMarket(contentIdentifier: contentIdentifier, marketId: marketId)
             }
             else if path.contains("idfoevent") && path.contains("idfomarket") && path.contains("istradable") && changeType.contains("updated"),
                     let marketId = SocketMessageParseHelper.extractMarketId(path) {
                 // removed a Market
                 let newIsTradable = try container.decode(Bool.self, forKey: .change)
-                print("ContentContainer isTradable \(newIsTradable) market with id :: \(path) and associated change \(changeType)")
+                // print("ContentContainer isTradable \(newIsTradable) market with id :: \(path) and associated change \(changeType)")
                 return .updateMarketTradability(contentIdentifier: contentIdentifier, marketId: marketId, isTradable: newIsTradable)
             }
             // Updates on Events
@@ -255,7 +255,6 @@ extension SportRadarModels {
                 let oddNumerator = try changeContainer.decodeIfPresent(String.self, forKey: .oddNumerator)
                 let oddDenominator = try changeContainer.decodeIfPresent(String.self, forKey: .oddDenominator)
                 let selectionId = try changeContainer.decode(String.self, forKey: .selectionId)
-                // print("betslipdebug \(selectionId) 1 socket")
                 return .updateOutcomeOdd(contentIdentifier: contentIdentifier, selectionId: selectionId, newOddNumerator: oddNumerator, newOddDenominator: oddDenominator)
             }
             else if path.contains("idfoevent") && path.contains("numMarkets") && changeType.contains("updated"), let eventId = SocketMessageParseHelper.extractEventId(path) {

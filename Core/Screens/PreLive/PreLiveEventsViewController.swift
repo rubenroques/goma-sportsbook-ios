@@ -274,7 +274,6 @@ class PreLiveEventsViewController: UIViewController {
         tableView.register(FooterResponsibleGamingViewCell.self,
                            forCellReuseIdentifier: FooterResponsibleGamingViewCell.identifier)
 
-
         tableView.delegate = self
         tableView.dataSource = self
 
@@ -332,6 +331,19 @@ class PreLiveEventsViewController: UIViewController {
         }
 
         // ==
+
+
+        let footerResponsibleGamingView = FooterResponsibleGamingView()
+        footerResponsibleGamingView.translatesAutoresizingMaskIntoConstraints = false
+
+        self.emptyBaseView.addSubview(footerResponsibleGamingView)
+
+        NSLayoutConstraint.activate([
+            footerResponsibleGamingView.leadingAnchor.constraint(equalTo: self.emptyBaseView.leadingAnchor),
+            footerResponsibleGamingView.trailingAnchor.constraint(equalTo: self.emptyBaseView.trailingAnchor),
+            footerResponsibleGamingView.bottomAnchor.constraint(equalTo: self.emptyBaseView.bottomAnchor),
+        ])
+
 
         //
         self.view.bringSubviewToFront(self.competitionsFiltersDarkBackgroundView)
