@@ -42,6 +42,8 @@ class BonusViewModel {
     var requestApplyBonus: ((EveryMatrix.ApplicableBonus) -> Void)?
 
     var hasQueuedBonus: CurrentValueSubject<Bool, Never> = .init(false)
+    //var shouldReloadAllBonusData: PassthroughSubject<Void, Never> = .init()
+    var shouldShowAlert: ((AlertType) -> Void)?
 
     enum BonusListType: Int {
         case available = 0
@@ -284,6 +286,15 @@ class BonusViewModel {
             if bonus.status == "ACTIVE" {
                 self.bonusActive.append(bonus)
                 let bonusActiveCellViewModel = BonusActiveCellViewModel(bonus: bonus)
+
+//                bonusActiveCellViewModel.shouldReloadData = { [weak self] in
+//                    self?.shouldReloadAllBonusData.send()
+//                }
+                bonusActiveCellViewModel.shouldShowAlert = { [weak self] alertType in
+
+                    self?.shouldShowAlert?(alertType)
+                }
+
                 self.bonusActiveCellViewModels.append(bonusActiveCellViewModel)
             }
             else if bonus.status == "QUEUED" || bonus.status == "OPTED_IN" {

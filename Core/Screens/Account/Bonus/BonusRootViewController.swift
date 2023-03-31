@@ -165,6 +165,10 @@ class BonusRootViewController: UIViewController {
                 bonusVC.redeemedBonus = { [weak self] bonusMessage in
                     self?.checkAddedBonus(bonusMessage: bonusMessage)
                 }
+
+                bonusVC.reloadAllBonusData = { [weak self] in
+                    self?.reloadAllBonusData()
+                }
 //                bonusVC.viewModel.hasQueuedBonus
 //                    .sink(receiveValue: { [weak self] hasQueuedBonus in
 //                        guard let self = self else { return }
@@ -292,6 +296,16 @@ class BonusRootViewController: UIViewController {
             }
         }
 
+    }
+
+    func reloadAllBonusData() {
+
+        for bonusTypesViewController in bonusTypesViewControllers {
+            if let bonusVC = bonusTypesViewController as? BonusViewController {
+
+                bonusVC.viewModel.updateDataSources()
+            }
+        }
     }
 
 }

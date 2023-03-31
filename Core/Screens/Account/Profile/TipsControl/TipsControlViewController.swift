@@ -78,6 +78,7 @@ class TipsControlViewController: UIViewController {
 
         self.tipButton.backgroundColor = .clear
         self.tipButton.layer.borderColor = UIColor(red: 0.16, green: 0.18, blue: 0.36, alpha: 1).cgColor
+        self.tipButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
     }
 
     // MARK: Functions
@@ -116,7 +117,6 @@ extension TipsControlViewController {
     }
 
     @objc private func didTapTipButton() {
-        print("TIPS")
         if let url = URL(string: "https://www.evalujeu.fr/") {
             UIApplication.shared.open(url)
         }

@@ -16,6 +16,12 @@ class BonusActiveCellViewModel: NSObject {
     var hasBonusAmountPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var bonus: GrantedBonus
 
+    var shouldReloadData: (() -> Void)?
+    var shouldShowAlert: ((AlertType) -> Void)?
+
+    // MARK: Private Properties
+    private var cancellables = Set<AnyCancellable>()
+
     // MARK: Lifetime and Cycle
     init(bonus: GrantedBonus) {
         self.bonus = bonus
@@ -62,6 +68,28 @@ class BonusActiveCellViewModel: NSObject {
         }
 
         return ""
+    }
+
+    func cancelBonus() {
+
+        //self.shouldReloadData?()
+        self.shouldShowAlert?(.success)
+
+//        Env.servicesProvider.cancelBonus(bonusId: self.bonus.id)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .finished:
+//                    ()
+//                case .failure(let error):
+//                    print("CANCEL BONUS ERROR: \(error)")
+//                }
+//            }, receiveValue: { [weak self] cancelBonusResponse in
+//
+//                print("CANCEL BONUS SUCCESS: \(cancelBonusResponse)")
+//                self?.shouldReloadData?()
+//            })
+//            .store(in: &cancellables)
     }
 
 //    private func getDateFormatted(dateString: String) -> String {

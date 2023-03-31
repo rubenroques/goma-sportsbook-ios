@@ -36,6 +36,7 @@ class BonusViewController: UIViewController {
     // MARK: Public Properties
     var viewModel: BonusViewModel
     var redeemedBonus: ((String) -> Void)?
+    var reloadAllBonusData: (() -> Void)?
 
     var isPromoCodeViewHidden: Bool = false {
         didSet {
@@ -247,6 +248,26 @@ class BonusViewController: UIViewController {
                 self?.bonusAvailableDataSource.bonusBannersUrl = bonusBanners
             })
             .store(in: &cancellables)
+
+//        viewModel.shouldReloadAllBonusData
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] _ in
+//                self?.showAlert(type: .success, text: "Bonus cancelled with success!")
+//                self?.reloadAllBonusData?()
+//            })
+//            .store(in: &cancellables)
+
+        viewModel.shouldShowAlert = { [weak self] alertType in
+
+            switch alertType {
+            case .success:
+                self?.showAlert(type: .success, text: "Cancel bonus success!")
+                self?.reloadAllBonusData?()
+            case .error:
+                self?.showAlert(type: .error, text: "Cancel bonus error!")
+
+            }
+        }
 
     }
 
