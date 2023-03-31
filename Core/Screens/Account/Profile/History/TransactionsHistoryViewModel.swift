@@ -532,30 +532,18 @@ class TransactionsHistoryViewModel {
 
         switch self.transactionsType {
         case .all:
-//            if self.allTransactions.value.count < self.recordsPerPage * (self.allPage) {
-//                self.transactionsHasNextPage = false
-//                return
-//            }
             if !self.transactionsHasNextPage {
                 return
             }
             allPage += 1
             self.loadAll(page: allPage, isNextPage: true)
         case .deposit:
-//            if self.depositTransactions.value.count < self.recordsPerPage * (self.depositPage) {
-//                self.transactionsHasNextPage = false
-//                return
-//            }
             if !self.transactionsHasNextPage {
                 return
             }
             depositPage += 1
             self.loadDeposits(page: depositPage, isNextPage: true)
         case .withdraw:
-//            if self.withdrawTransactions.value.count < self.recordsPerPage * (self.withdrawPage) {
-//                self.transactionsHasNextPage = false
-//                return
-//            }
             if !self.transactionsHasNextPage {
                 return
             }
