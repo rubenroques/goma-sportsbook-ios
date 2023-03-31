@@ -401,7 +401,7 @@ class ProfileLimitsManagementViewController: UIViewController {
                 self.isDepositUpdatable = false
             }
 
-            if let pendingDepositLimitMessage = self.viewModel.pendingLossLimitMessage {
+            if let pendingDepositLimitMessage = self.viewModel.pendingDepositLimitMessage {
                 self.depositQueuedInfoLabel.text = pendingDepositLimitMessage
                 self.depositQueuedInfoLabel.isHidden = false
             }

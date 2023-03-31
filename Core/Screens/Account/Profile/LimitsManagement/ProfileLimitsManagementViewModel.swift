@@ -219,10 +219,10 @@ class ProfileLimitsManagementViewModel: NSObject {
     private func processResponsibleGamingLimits(responsibleGamingLimitsResponse: ResponsibleGamingLimitsResponse) {
 
         if let responsibleGamingLimit = responsibleGamingLimitsResponse.limits.first(where: {
-            $0.periodType == "Daily"
+            $0.periodType == "Permanent"
         }) {
 
-            let responsibleGamingLimitInfo = LimitInfo(period: "daily", currency: "EUR", amount: responsibleGamingLimit.limit)
+            let responsibleGamingLimitInfo = LimitInfo(period: "permanent", currency: "EUR", amount: responsibleGamingLimit.limit)
 
             var responsibleGamingLimit = Limit(updatable: true, current: responsibleGamingLimitInfo, queued: nil)
 
@@ -237,7 +237,7 @@ class ProfileLimitsManagementViewModel: NSObject {
                     .replacingFirstOccurrence(of: "{currency}", with: currency)
                     .replacingFirstOccurrence(of: "{pendingLimitDate}", with: pendingLimitDate)
 
-                let queuedResponsibleGamingLimitInfo = LimitInfo(period: "daily", currency: "EUR", amount: pendingLimit.limit)
+                let queuedResponsibleGamingLimitInfo = LimitInfo(period: "permanent", currency: "EUR", amount: pendingLimit.limit)
 
                 responsibleGamingLimit.queued = queuedResponsibleGamingLimitInfo
                 responsibleGamingLimit.updatable = false

@@ -455,7 +455,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
     }
 
     func getResponsibleGamingLimits() -> AnyPublisher<ResponsibleGamingLimitsResponse, ServiceProviderError> {
-        let endpoint = OmegaAPIClient.getResponsibleGamingLimits(limitType: "BALANCE_LIMIT", periodType: "DAILY")
+        let endpoint = OmegaAPIClient.getResponsibleGamingLimits(limitType: "BALANCE_LIMIT", periodType: "PERMANENT")
 
         let publisher: AnyPublisher<SportRadarModels.ResponsibleGamingLimitsResponse, ServiceProviderError> = self.connector.request(endpoint)
 

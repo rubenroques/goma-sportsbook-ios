@@ -436,7 +436,7 @@ extension OmegaAPIClient: Endpoint {
         case .updateResponsibleGamingLimits(let newLimit):
             let limitFormated = String(format: "%.2f", newLimit)
             return [URLQueryItem(name: "limitType", value: "BALANCE_LIMIT"),
-                    URLQueryItem(name: "periodType", value: "DAILY"),
+                    URLQueryItem(name: "periodType", value: "PERMANENT"),
                     URLQueryItem(name: "limit", value: limitFormated)
             ]
         case .lockPlayer(let isPermanent, let lockPeriodUnit, let lockPeriod):
