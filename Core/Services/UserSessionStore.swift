@@ -14,6 +14,7 @@ enum UserSessionError: Error {
     case restrictedCountry(errorMessage: String)
     case serverError
     case quickSignUpIncomplete
+    case errorMessage(errorMessage: String)
 }
 
 enum RegisterUserError: Error {
@@ -185,6 +186,8 @@ class UserSessionStore {
                     return .invalidEmailPassword
                 case .quickSignUpIncomplete:
                     return .quickSignUpIncomplete
+                case .errorMessage(let message):
+                    return .errorMessage(errorMessage: message)
                 default:
                     return .serverError
                 }
@@ -397,6 +400,8 @@ extension UserSessionStore {
                     case .restrictedCountry(let errorMessage):
                         ()
                     case .serverError:
+                        ()
+                    case .errorMessage(let errorMessage):
                         ()
                     }
                     print("UserSessionStore login failed, error: \(error)")

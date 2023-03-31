@@ -307,7 +307,7 @@ class TransactionsHistoryViewModel {
 
         let endDate = self.getDateString(date: self.endDatePublisher.value)
 
-        Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: ["WITHDRAWAL"], pageNumber: page)
+        Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: ["WITHDRAWAL", "WD_CANCEL"], pageNumber: page)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
 

@@ -79,6 +79,11 @@ class BonusViewModel {
         self.bonusHistory = []
         self.bonusQueued = []
 
+        self.bonusAvailableCellViewModels = []
+        self.bonusActiveCellViewModels = []
+        self.bonusHistoryCellViewModels = []
+        self.bonusQueuedCellViewModels = []
+
         self.requestBonusForType()
     }
 

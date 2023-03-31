@@ -229,7 +229,7 @@ class TransactionsHistoryViewController: UIViewController {
 
     private func showCancelConfirmationAlert(paymentId: Int) {
         let alert = UIAlertController(title: localized("cancel_withdraw"),
-                                      message: localized("cancel_withdraw_message"),
+                                      message: localized("cancel_withdraw_description"),
                                       preferredStyle: .alert)
 
         alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in

@@ -261,10 +261,10 @@ class BonusViewController: UIViewController {
 
             switch alertType {
             case .success:
-                self?.showAlert(type: .success, text: "Cancel bonus success!")
+                self?.showAlert(type: .success, text: localized("bonus_cancel_success"))
                 self?.reloadAllBonusData?()
             case .error:
-                self?.showAlert(type: .error, text: "Cancel bonus error!")
+                self?.showAlert(type: .error, text: localized("bonus_cancel_error"))
 
             }
         }

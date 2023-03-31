@@ -1065,11 +1065,12 @@
 "evalujeu" = "Evalujeu";
 
 "cancel_withdraw" = "Cancel Withdraw";
-"cancel_withdraw_message" = "Are you sure you want to cancel your withdraw?";
+"cancel_withdraw_description" = "Are you sure you want to cancel your withdraw?";
+
 "go_back" = "Go back";
 
 "cancel_withdraw_success" = "Your withdraw was canceled.";
-"cancel_withdraw_error" = "There was an error trying to cancel your withdraw. Please try again later.";
+"cancel_withdraw_error" = "There was an error trying to cancel your withdraw. Please contact support.";
 
 "withdrawal" = "Withdrawal";
 "bonus_credit" = "Bonus Credit";
@@ -1132,3 +1133,6 @@
 "pending_limit_info" = "There is a pending limit of: {pendingLimit} {currency}. The current limit is valid until: {pendingLimitDate}";
 
 "current_limit_info" = "This is your current {limitType} value.";
+
+"bonus_cancel_success" = "Bonus cancelled with success!";
+"bonus_cancel_error" = "Bonus could not be cancelled. Please contact support.";

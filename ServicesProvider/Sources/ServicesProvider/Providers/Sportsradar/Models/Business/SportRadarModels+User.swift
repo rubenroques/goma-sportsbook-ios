@@ -27,6 +27,7 @@ extension SportRadarModels {
         let kycStatus: String?
         let lockStatus: String?
         let securityVerificationRequiredFields: [String]?
+        let message: String?
     }
 
     struct OpenSessionResponse: Codable {

@@ -495,6 +495,8 @@ class LoginViewController: UIViewController {
                         self.showServerErrorStatus()
                     case .quickSignUpIncomplete:
                         self.showServerErrorStatus()
+                    case .errorMessage(let errorMessage):
+                        self.showServerErrorStatus(errorMessage: errorMessage)
                     default:
                         self.showServerErrorStatus()
                     }
