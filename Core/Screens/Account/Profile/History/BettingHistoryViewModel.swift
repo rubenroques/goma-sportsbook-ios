@@ -88,8 +88,6 @@ class BettingHistoryViewModel {
             }
             .store(in: &cancellables)
 
-        self.initialContentLoad()
-        
     }
 
     func initialContentLoad() {

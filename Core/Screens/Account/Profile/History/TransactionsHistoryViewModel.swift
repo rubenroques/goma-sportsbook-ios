@@ -85,7 +85,6 @@ class TransactionsHistoryViewModel {
             .store(in: &cancellables)
 
         self.setupPublishers()
-        self.initialContentLoad()
     }
 
     private func setupPublishers() {
