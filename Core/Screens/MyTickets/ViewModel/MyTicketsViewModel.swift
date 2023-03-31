@@ -50,7 +50,7 @@ class MyTicketsViewModel: NSObject {
     var isLoadingTickets: CurrentValueSubject<Bool, Never> = .init(true)
     private var locationsCodesDictionary: [String: String] = [:]
     
-    private let recordsPerPage = 10
+    private let recordsPerPage = 20
     
     private var resolvedPage = 0
     private var openedPage = 0

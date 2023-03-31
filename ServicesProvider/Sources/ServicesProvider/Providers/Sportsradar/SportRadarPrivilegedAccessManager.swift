@@ -455,7 +455,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
     }
 
     func getResponsibleGamingLimits() -> AnyPublisher<ResponsibleGamingLimitsResponse, ServiceProviderError> {
-        let endpoint = OmegaAPIClient.getResponsibleGamingLimits(limitType: "BALANCE_LIMIT", periodType: "DAILY")
+        let endpoint = OmegaAPIClient.getResponsibleGamingLimits(limitType: "BALANCE_LIMIT", periodType: "PERMANENT")
 
         let publisher: AnyPublisher<SportRadarModels.ResponsibleGamingLimitsResponse, ServiceProviderError> = self.connector.request(endpoint)
 
@@ -879,6 +879,26 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
     func redeemAvailableBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.redeemAvailableBonuses(partyId: partyId, bonusId: code)
+
+        let publisher: AnyPublisher<SportRadarModels.BasicResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ basicResponse -> AnyPublisher<BasicResponse, ServiceProviderError> in
+            if basicResponse.status == "SUCCESS" {
+
+                let basicResponse = SportRadarModelMapper.basicResponse(fromInternalBasicResponse: basicResponse)
+
+                return Just(basicResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
+            }
+            else {
+                return Fail(outputType: BasicResponse.self, failure: ServiceProviderError.errorMessage(message: basicResponse.message ?? "Error")).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+
+    func cancelBonus(bonusId: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.cancelBonus(bonusId: bonusId)
 
         let publisher: AnyPublisher<SportRadarModels.BasicResponse, ServiceProviderError> = self.connector.request(endpoint)
 

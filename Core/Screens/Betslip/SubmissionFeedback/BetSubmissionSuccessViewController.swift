@@ -184,7 +184,7 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         self.isLoading = true
 
-        Env.servicesProvider.getOpenBetsHistory(pageIndex: 0, pageSize: 20)
+        Env.servicesProvider.getOpenBetsHistory(pageIndex: 0)
             .map(ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory:))
             .map({ [weak self] betHistoryResponse -> [BetHistoryEntry] in
                 var betHistoryEntriesToShow: [BetHistoryEntry] = []

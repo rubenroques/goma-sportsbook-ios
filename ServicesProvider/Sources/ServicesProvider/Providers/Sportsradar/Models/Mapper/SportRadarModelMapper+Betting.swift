@@ -85,7 +85,7 @@ extension SportRadarModelMapper {
 
         let eventIdString = String(format: "%.1f", internalBet.eventId)
 
-        let country: Country? = Country.country(withName: internalBet.tournamentCountryName)
+        let country: Country? = Country.country(withName: internalBet.tournamentCountryName ?? "")
 
         return BetSelection(identifier: internalBet.identifier,
                             state: state,
@@ -103,7 +103,7 @@ extension SportRadarModelMapper {
                             eventId: eventIdString,
                             country: country,
                             sportTypeName: internalBet.sportTypeName,
-                            tournamentName: internalBet.tournamentName
+                            tournamentName: internalBet.tournamentName ?? ""
         )
     }
 

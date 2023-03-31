@@ -19,6 +19,10 @@ class BonusActiveTableViewCell: UITableViewCell {
     private lazy var bonusStatusView: UIView = Self.createBonusStatusView()
     private lazy var bonusStatusLabel: UILabel = Self.createBonusStatusLabel()
     private lazy var stackView: UIStackView = Self.createStackView()
+    private lazy var cancelButton: UIButton = Self.createCancelButton()
+
+    private lazy var stackViewBottomConstraint: NSLayoutConstraint = Self.createStackViewBottomConstraint()
+    private lazy var cancelButtonBottomConstraint: NSLayoutConstraint = Self.createCancelButtonBottomConstraint()
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -42,12 +46,26 @@ class BonusActiveTableViewCell: UITableViewCell {
         }
     }
 
+    var hasCancelButton: Bool = true {
+        didSet {
+            self.cancelButton.isHidden = !hasCancelButton
+
+            self.stackViewBottomConstraint.isActive = !hasCancelButton
+
+            self.cancelButtonBottomConstraint.isActive = hasCancelButton
+        }
+    }
+
+    var viewModel: BonusActiveCellViewModel?
+
     // MARK: Lifetime and Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         self.setupSubviews()
         self.setupWithTheme()
+
+        self.cancelButton.addTarget(self, action: #selector(didTapCancelButton), for: .primaryActionTriggered)
 
     }
 
@@ -60,6 +78,12 @@ class BonusActiveTableViewCell: UITableViewCell {
         super.traitCollectionDidChange(previousTraitCollection)
 
         self.setupWithTheme()
+    }
+
+    override func layoutSubviews() {
+        self.cancelButton.layer.cornerRadius = CornerRadius.button
+        self.cancelButton.layer.borderWidth = 1
+        self.cancelButton.layer.masksToBounds = true
     }
 
     private func setupWithTheme() {
@@ -84,9 +108,15 @@ class BonusActiveTableViewCell: UITableViewCell {
 
         self.stackView.backgroundColor = UIColor.App.backgroundSecondary
 
+        self.cancelButton.backgroundColor = .clear
+        self.cancelButton.layer.borderColor = UIColor(red: 0.16, green: 0.18, blue: 0.36, alpha: 1).cgColor
+        self.cancelButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+
     }
 
     func configure(withViewModel viewModel: BonusActiveCellViewModel) {
+
+        self.viewModel = viewModel
 
         viewModel.titlePublisher
             .sink(receiveValue: { [weak self] title in
@@ -120,10 +150,12 @@ class BonusActiveTableViewCell: UITableViewCell {
 
         if bonusStatus != "ACTIVE" {
             self.hasTypeStatus = true
+            self.hasCancelButton = false
             self.bonusStatusLabel.text = bonusStatus
         }
         else {
             self.hasTypeStatus = false
+            self.hasCancelButton = true
         }
     }
 
@@ -175,6 +207,13 @@ class BonusActiveTableViewCell: UITableViewCell {
 //        wagerProgressCardView.setTitle(title: "Wager Amount")
 //        wagerProgressCardView.testSetupProgressInfo(bonus: bonus, progressType: .wager)
 //        self.stackView.addArrangedSubview(wagerProgressCardView)
+
+    }
+
+    // MARK: Actions
+    @objc func didTapCancelButton() {
+        print("CANCEL BONUS!")
+        self.viewModel?.cancelBonus()
 
     }
 
@@ -269,6 +308,24 @@ extension BonusActiveTableViewCell {
         return stackView
     }
 
+    private static func createCancelButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(localized("cancel"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
+        return button
+    }
+
+    private static func createStackViewBottomConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createCancelButtonBottomConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
     private func setupSubviews() {
         self.contentView.addSubview(self.containerView)
 
@@ -282,6 +339,8 @@ extension BonusActiveTableViewCell {
         self.bonusStatusView.addSubview(self.bonusStatusLabel)
 
         self.containerView.addSubview(self.stackView)
+
+        self.containerView.addSubview(self.cancelButton)
 
         self.initConstraints()
     }
@@ -337,8 +396,24 @@ extension BonusActiveTableViewCell {
             self.stackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
             self.stackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
             self.stackView.topAnchor.constraint(equalTo: self.bonusLabel.bottomAnchor, constant: 16),
-            self.stackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20)
+            // self.stackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20)
         ])
+
+        // Cancel button
+        NSLayoutConstraint.activate([
+            self.cancelButton.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
+            self.cancelButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
+            self.cancelButton.topAnchor.constraint(equalTo: self.stackView.bottomAnchor, constant: 15),
+            // self.cancelButton.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20),
+            self.cancelButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+
+
+        self.stackViewBottomConstraint = self.stackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20)
+        self.stackViewBottomConstraint.isActive = false
+
+        self.cancelButtonBottomConstraint = self.cancelButton.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20)
+        self.cancelButtonBottomConstraint.isActive = true
 
     }
 

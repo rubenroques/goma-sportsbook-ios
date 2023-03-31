@@ -87,8 +87,8 @@ extension SportRadarModels {
         var order: Int
 
         var eventId: Double
-        var tournamentCountryName: String
-        var tournamentName: String
+        var tournamentCountryName: String?
+        var tournamentName: String?
 
         enum CodingKeys: String, CodingKey {
             case identifier = "idFOBet"
@@ -160,9 +160,9 @@ extension SportRadarModels {
 
             self.eventId = try container.decode(Double.self, forKey: .eventId)
 
-            self.tournamentCountryName = try container.decode(String.self, forKey: .tournamentCountryName)
+            self.tournamentCountryName = try container.decodeIfPresent(String.self, forKey: .tournamentCountryName)
 
-            self.tournamentName = try container.decode(String.self, forKey: .tournamentName)
+            self.tournamentName = try container.decodeIfPresent(String.self, forKey: .tournamentName)
         }
 
     }

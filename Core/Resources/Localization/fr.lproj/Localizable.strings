@@ -1000,6 +1000,18 @@
 
 "limit_update_error_message" = "La limite de {limitType} n'a pas pu être mise à jour. Veuillez contacter le support.";
 
+"bonus_cancel_success" = "Bonus annulé avec succès!";
+"bonus_cancel_error" = "Le bonus n'a pas pu être annulé. Veuillez contacter le service d'assistance.";
+
+"withdrawal_request_sent_title" = "Votre demande de retrait a été envoyée.";
+"withdrawal_request_sent_text" = "Votre demande sera en attente jusqu'à ce que nous confirmions votre preuve IBAN. Après approbation, il faudra au moins 72 heures pour qu'elle apparaisse sur votre relevé bancaire.";
+
+"cancel_withdraw" = "Annuler Retrait";
+"cancel_withdraw_description" = "Êtes-vous sûr de vouloir annuler votre retrait?";
+
+"cancel_withdraw_success" = "Votre retrait a été annulé.";
+"cancel_withdraw_error" = "Une erreur s'est produite lors de l'annulation de votre retrait. Veuillez contacter l'assistance.";
+
 // NOT TO ADD YET
 "tip_title" = "Pointe 1";
 "tip_message" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sagittis eros a nibh fermentum viverra. Sed imperdiet justo non tellus mollis viverra. Aliquam quis varius ex. In sagittis condimentum molestie.";

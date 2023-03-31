@@ -50,7 +50,7 @@ class BettingHistoryViewModel {
     
     // MARK: - Private Properties
 
-    private var recordsPerPage = 10
+    private var recordsPerPage = 20
     
     private var ticketsHasNextPage = true
 
@@ -444,7 +444,7 @@ class BettingHistoryViewModel {
     }
     
     private func resetPageCount() {
-        self.recordsPerPage = 10
+        self.recordsPerPage = 20
         self.ticketsHasNextPage = true
     }
 

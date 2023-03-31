@@ -681,14 +681,14 @@ extension ServicesProviderClient {
         return bettingProvider.getBetHistory(pageIndex: pageIndex)
     }
 
-    public func getOpenBetsHistory(pageIndex: Int, pageSize: Int = 10) -> AnyPublisher<BettingHistory, ServiceProviderError> {
+    public func getOpenBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
 
-        return bettingProvider.getOpenBetsHistory(pageIndex: pageIndex, pageSize: pageSize)
+        return bettingProvider.getOpenBetsHistory(pageIndex: pageIndex)
     }
 
     public func getResolvedBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
@@ -916,6 +916,16 @@ extension ServicesProviderClient {
         }
 
         return privilegedAccessManager.redeemAvailableBonus(partyId: partyId, code: code)
+    }
+
+    public func cancelBonus(bonusId: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.cancelBonus(bonusId: bonusId)
     }
 
     public func contactUs(firstName: String, lastName: String, email: String, subject: String, message: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {

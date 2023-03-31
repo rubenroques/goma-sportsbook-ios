@@ -228,6 +228,10 @@ class OmegaConnector: Connector {
 //                        .eraseToAnyPublisher()
                     
                 }
+                else {
+                    let message = loginResponse.message ?? "Login Error"
+                    return Fail(error: ServiceProviderError.errorMessage(message: message)).eraseToAnyPublisher()
+                }
                 return Fail(error: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
             })
             .eraseToAnyPublisher()
