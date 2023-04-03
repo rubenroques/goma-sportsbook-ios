@@ -10,8 +10,8 @@ import Foundation
 extension SportRadarModels {
 
     struct CashoutResult: Codable {
-        var cashoutResult: Int
-        var cashoutReoffer: Double
+        var cashoutResult: Int?
+        var cashoutReoffer: Double?
 
         enum CodingKeys: String, CodingKey {
             case cashoutResult = "cashoutResult"

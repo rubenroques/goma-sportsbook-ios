@@ -1150,8 +1150,10 @@
 "audience_measurement" = "Audience measurement";
 "advertising_and_offers_optimization" = "Advertising and offers optimization";
 
-
 "cashout_reoffer_warning_title" = "Cashout Re-Offer Warning";
-"cashout_reoffer_warning_text" = "This bet cashout re-offer value has changed to %@%@. Do you want to accept it?";
+"cashout_reoffer_warning_text" = "This bet cashout re-offer value has changed to {cashoutReofferValue}{currencySymbol}. Do you want to accept it?";
+
 "cashout_error" = "Cashout Error";
 "cashout_no_longer_available" = "This bet cashout is no longer available.";
+
+"bet_id" = "Bet ID";

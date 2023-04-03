@@ -1012,24 +1012,13 @@
 "cancel_withdraw_success" = "Votre retrait a été annulé.";
 "cancel_withdraw_error" = "Une erreur s'est produite lors de l'annulation de votre retrait. Veuillez contacter l'assistance.";
 
-
-"tracking_policy_title" = "Politique de suivi";
-"accept_all_cookies" = "Tout accepter";
-"settings_cookies" = "Paramétrer";
-"continue_without_accepting_cookies" = "Continuer sans accepter";
-"details_cookies" = "Bienvenue sur Betsson.fr\n\n\nNous respectons vos données, nous souhaitons aussi vous offrir une expérience optimisée:\n\n- au travers d'une application performante et sécurisée.\n\n- une offre pertinente via des publicités adaptées.\n\nNos partenaires et nous même utilisons des services et cookies afin de vous fournir ses engagements en toute sécurité.\n\nIl vous ait possible de changer vos préférences.\n";
-
-"details_cookies_settings" = "Paramétrer la gestion de mes données.\n\n\nLes systèmes suivit de Betsson sont de deux types:\n\n-Essentiel: ceux-ci sont nécessaires au bon fonctionnement et à la sécurité des services proposés.\n\n-Recommandé: ceux-ci permettent une expérience optimisée.\n";
-
-"essential_mandatory" = "Essentiel (obligatoire)";
-"audience_measurement" = "Mesure d'audiences";
-"advertising_and_offers_optimization" = "Optimisation des publicités et des offres";
-
-
 "cashout_reoffer_warning_title" = "Avertissement de réoffre de retrait";
-"cashout_reoffer_warning_text" = "Cette valeur de réoffre de retrait de pari a changé en %@%@. Voulez-vous l'accepter?";
+"cashout_reoffer_warning_text" = "Cette valeur de réoffre de retrait de pari a changé en {cashoutReofferValue}{currencySymbol}. Voulez-vous l'accepter?";
+
 "cashout_error" = "Erreur de retrait";
 "cashout_no_longer_available" = "Ce retrait de pari n'est plus disponible.";
+
+"bet_id" = "ID de pari";
 
 
 // NOT TO ADD YET

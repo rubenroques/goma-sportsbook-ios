@@ -168,6 +168,15 @@ class BettingHistoryViewController: UIViewController {
                 }
             })
             .store(in: &self.cancellables)
+
+        viewModel.requestAlertAction = { [weak self] cashoutReoffer, betId in
+
+            self?.showCashoutAlert(cashoutReoffer: cashoutReoffer, betId: betId)
+        }
+
+        viewModel.showCashoutSuspendedAction = { [weak self] in
+            self?.showSimpleAlert(title: localized("cashout_error"), message: localized("cashout_no_longer_available"))
+        }
     }
 
     private func showLoading() {
@@ -185,6 +194,27 @@ class BettingHistoryViewController: UIViewController {
         self.viewModel.refreshContent()
     }
 
+    private func showCashoutAlert(cashoutReoffer: String, betId: String) {
+
+        let message = localized("cashout_reoffer_warning_text").replacingFirstOccurrence(of: "{cashoutReofferValue}", with: cashoutReoffer)
+            .replacingFirstOccurrence(of: "{currencySymbol}", with: "€")
+
+        let alert = UIAlertController(title: localized("cashout_reoffer_warning_title"),
+                                      message: message,
+                                      preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+
+            if let cellViewModel = self?.viewModel.cachedViewModels[betId] {
+                cellViewModel.requestCashout()
+            }
+        }))
+
+        alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
+        
+    }
 }
 
 //

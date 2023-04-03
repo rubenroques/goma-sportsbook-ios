@@ -168,7 +168,7 @@ extension SportRadarModelMapper {
 
     static func cashoutResult(fromInternalCashoutResult cashoutResult: SportRadarModels.CashoutResult) -> CashoutResult {
 
-        return CashoutResult(cashoutResultSuccess: cashoutResult.cashoutResult == -1 ? true : false, cashoutReoffer: cashoutResult.cashoutReoffer)
+        return CashoutResult(cashoutResult: cashoutResult.cashoutResult, cashoutReoffer: cashoutResult.cashoutReoffer)
     }
 
 }
