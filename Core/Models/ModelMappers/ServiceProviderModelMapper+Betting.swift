@@ -77,7 +77,7 @@ extension ServiceProviderModelMapper {
         switch betSelection.odd {
         case .fraction(let numerator, let denominator):
             decimalOdd = (Double(numerator)/Double(denominator)) + 1.0
-        case .european(let odd):
+        case .decimal(let odd):
             decimalOdd = odd
         }
 

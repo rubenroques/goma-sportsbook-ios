@@ -70,8 +70,11 @@ extension SportRadarEventsStorage {
         let newOddNumeratorValue = Int(newOddNumerator ?? "x") ?? oldNumerator
         let newOddDenominatorValue = Int(newOddDenominator ?? "x") ?? oldDenominator
 
-        outcome.odd = OddFormat.fraction(numerator: newOddNumeratorValue, denominator: newOddDenominatorValue)
+        if newOddNumeratorValue == oldNumerator && newOddDenominatorValue == oldDenominator {
+            return
+        }
 
+        outcome.odd = OddFormat.fraction(numerator: newOddNumeratorValue, denominator: newOddDenominatorValue)
         outcomeSubject.send(outcome)
     }
 

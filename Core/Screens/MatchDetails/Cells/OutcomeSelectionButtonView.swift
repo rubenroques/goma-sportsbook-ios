@@ -28,7 +28,8 @@ class OutcomeSelectionButtonView: NibView {
     var outcome: Outcome?
     var bettingOffer: BettingOffer?
 
-    var oddValue: Double?
+    var currentOdd: OddFormat?
+    var currentOddDecimalValue: Double?
     var isAvailableForBet: Bool?
 
     var didLongPressOdd: ((BettingTicket) -> Void)?
@@ -116,6 +117,8 @@ class OutcomeSelectionButtonView: NibView {
 
         self.isOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
+        self.currentOdd = outcome.bettingOffer.odd
+
         // Check for SportRadar invalid odd
         if !outcome.bettingOffer.decimalOdd.isNaN {
             self.containerView.isUserInteractionEnabled = true
@@ -187,21 +190,23 @@ class OutcomeSelectionButtonView: NibView {
                     weakSelf.stackView.isUserInteractionEnabled = true
                     weakSelf.stackView.alpha = 1.0
 
+                    weakSelf.currentOdd = updatedBettingOffer.odd
+
                     let newOddValue = updatedBettingOffer.decimalOdd
 
-                    if let currentOddValue = weakSelf.oddValue, weakSelf.closedMarketLabel.isHidden {
-                        if newOddValue > currentOddValue {
+                    if let currentOddDecimalValue = weakSelf.currentOddDecimalValue, weakSelf.closedMarketLabel.isHidden {
+                        if newOddValue > currentOddDecimalValue {
                             weakSelf.highlightOddChangeUp(animated: true,
                                                           upChangeOddValueImage: weakSelf.upChangeOddValueImage,
                                                           baseView: weakSelf.containerView)
                         }
-                        else if newOddValue < currentOddValue {
+                        else if newOddValue < currentOddDecimalValue {
                             weakSelf.highlightOddChangeDown(animated: true,
                                                             downChangeOddValueImage: weakSelf.downChangeOddValueImage,
                                                             baseView: weakSelf.containerView)
                         }
                     }
-                    weakSelf.oddValue = newOddValue
+                    weakSelf.currentOddDecimalValue = newOddValue
                     weakSelf.marketOddLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                 }
             })
@@ -244,7 +249,7 @@ class OutcomeSelectionButtonView: NibView {
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription,
-                                          odd: outcome.bettingOffer.odd)
+                                          odd: self.currentOdd ?? outcome.bettingOffer.odd)
         }
         else {
             let marketName = outcome.marketName ?? ""
@@ -266,7 +271,7 @@ class OutcomeSelectionButtonView: NibView {
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription,
-                                          odd: outcome.bettingOffer.odd)
+                                          odd: self.currentOdd ?? outcome.bettingOffer.odd)
         }
 
         if Env.betslipManager.hasBettingTicket(bettingTicket) {

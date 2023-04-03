@@ -137,17 +137,28 @@ extension SportRadarMarketDetailsCoordinator {
                 }
             }
             self.updateMarketTradability(withId: market.id, isTradable: true)
+
+        case .enableMarket(_, let marketId):
+            self.updateMarketTradability(withId: marketId, isTradable: true)
         case .removeMarket(_, let marketId):
             self.updateMarketTradability(withId: marketId, isTradable: false)
+
         default:
             () // Ignore other cases
         }
     }
 
     func updateMarketTradability(withId id: String, isTradable: Bool) {
-        guard let newMarket = self.market else { return }
-        newMarket.isTradable = isTradable
-        self.marketCurrentValueSubject.send(.contentUpdate(content: newMarket))
+        guard let updatedMarket = self.market else { return }
+        let currentTradable = updatedMarket.isTradable
+        if isTradable != currentTradable {
+            updatedMarket.isTradable = isTradable
+            print("debugbetslip \(id) ServiceProvider updated market Tradability \(isTradable)")
+            self.marketCurrentValueSubject.send(.contentUpdate(content: updatedMarket))
+        }
+        else {
+            print("No updated found updateMarketTradability on market \(id)")
+        }
     }
 
     func updateOutcomeOdd(withId id: String, newOddNumerator: String?, newOddDenominator: String?) {
@@ -167,12 +178,18 @@ extension SportRadarMarketDetailsCoordinator {
         let newOddNumeratorValue = Int(newOddNumerator ?? "x") ?? oldNumerator
         let newOddDenominatorValue = Int(newOddDenominator ?? "x") ?? oldDenominator
 
+        if newOddNumeratorValue == oldNumerator && newOddDenominatorValue == oldDenominator {
+            return
+        }
+
         outcome.odd = OddFormat.fraction(numerator: newOddNumeratorValue, denominator: newOddDenominatorValue)
         outcomeSubject.send(outcome)
 
         // Update the market with the new outcome list
         let updatedOutcomes = Array(self.outcomesDictionary.values.map(\.value))
         newMarket.outcomes = updatedOutcomes
+
+        print("debugbetslip-\(outcome.id) ServiceProvider updated odd  \(outcome.odd.decimalOdd)")
         self.marketCurrentValueSubject.send(.contentUpdate(content: newMarket))
     }
 

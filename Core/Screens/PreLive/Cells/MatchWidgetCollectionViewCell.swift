@@ -246,8 +246,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.leftOddButtonSubscriber?.cancel()
         self.leftOddButtonSubscriber = nil
+
         self.middleOddButtonSubscriber?.cancel()
         self.middleOddButtonSubscriber = nil
+
         self.rightOddButtonSubscriber?.cancel()
         self.rightOddButtonSubscriber = nil
 
@@ -318,6 +320,20 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.adjustDesignToCardStyle()
         self.setupWithTheme()
+    }
+
+    func cellDidDisappear() {
+        self.leftOddButtonSubscriber?.cancel()
+        self.leftOddButtonSubscriber = nil
+
+        self.middleOddButtonSubscriber?.cancel()
+        self.middleOddButtonSubscriber = nil
+
+        self.rightOddButtonSubscriber?.cancel()
+        self.rightOddButtonSubscriber = nil
+
+        self.marketSubscriber?.cancel()
+        self.marketSubscriber = nil
     }
 
     func setupWithTheme() {
@@ -570,6 +586,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.leftOutcome = outcome
                 self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
+
                 // Check for SportRadar invalid odd
                 if !outcome.bettingOffer.decimalOdd.isNaN {
                     self.homeOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
@@ -584,6 +601,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
                     .compactMap({ $0 })
                     .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome: ))
+                    .handleEvents(receiveOutput: { [weak self] outcome in
+                        print("debugbetslip-\(outcome.bettingOffer.id) List Cell  \(outcome.bettingOffer.decimalOdd) left ")
+                        self?.leftOutcome = outcome
+                    })
                     .map(\.bettingOffer)
                     .receive(on: DispatchQueue.main)
                     .sink(receiveCompletion: { completion in
@@ -641,6 +662,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
                     .compactMap({ $0 })
                     .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
+                    .handleEvents(receiveOutput: { [weak self] outcome in
+                        print("debugbetslip-\(outcome.bettingOffer.id) List Cell  \(outcome.bettingOffer.decimalOdd) center ")
+                        self?.middleOutcome = outcome
+                    })
                     .map(\.bettingOffer)
                     .receive(on: DispatchQueue.main)
                     .sink(receiveCompletion: { completion in
@@ -697,6 +722,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     .subscribeToEventOutcomeUpdates(withId: outcome.bettingOffer.id)
                     .compactMap({ $0 })
                     .map(ServiceProviderModelMapper.outcome(fromServiceProviderOutcome:))
+                    .handleEvents(receiveOutput: { [weak self] outcome in
+                        print("debugbetslip-\(outcome.bettingOffer.id) List Cell  \(outcome.bettingOffer.decimalOdd) right ")
+                        self?.rightOutcome = outcome
+                    })
                     .map(\.bettingOffer)
                     .receive(on: DispatchQueue.main)
                     .sink(receiveCompletion: { completion in

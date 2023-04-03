@@ -1,8 +1,6 @@
 import UIKit
 import Combine
 import ServicesProvider
-import AppTrackingTransparency
-import AdSupport
 import RegisterFlow
 import Adyen
 import AdyenDropIn
@@ -137,30 +135,6 @@ class LoginViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        if #available(iOS 14, *) {
-            ATTrackingManager.requestTrackingAuthorization { status in
-                switch status {
-                case .authorized:
-                    // Tracking authorization dialog was shown and we are authorized
-                    print("Authorized")
-
-                    // Now that we are authorized we can get the IDFA
-                    print(ASIdentifierManager.shared().advertisingIdentifier)
-                case .denied:
-                    // Tracking authorization dialog was
-                    // shown and permission is denied
-                    print("Denied")
-                case .notDetermined:
-                    // Tracking authorization dialog has not been shown
-                    print("Not Determined")
-                case .restricted:
-                    print("Restricted")
-                @unknown default:
-                    print("Unknown")
-                }
-            }
-        }
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -359,7 +333,6 @@ class LoginViewController: UIViewController {
         steppedRegistrationViewController.didRegisteredUserAction = { [weak self] registeredUser in
             if let nickname = registeredUser.nickname, let password = registeredUser.password {
                 self?.triggerLoginAfterRegister(username: nickname, password: password)
-                self?.deleteCachedRegistrationData()
                 self?.showRegisterFeedbackViewController(onNavigationController: registerNavigationController)
             }
         }
@@ -381,7 +354,7 @@ class LoginViewController: UIViewController {
             navigationController.popViewController(animated: true)
         }
         biometricPromptViewController.didTapCancelButtonAction = { [weak self] in
-            self?.closeLoginRegisterFlow()
+            self?.showLimitsOnRegisterViewController(onNavigationController: navigationController)
         }
         biometricPromptViewController.didTapActivateButtonAction = { [weak self] in
             Env.userSessionStore.setShouldRequestFaceId(true)
@@ -517,10 +490,12 @@ class LoginViewController: UIViewController {
 
 
     func triggerLoginAfterRegister(username: String, password: String) {
+        Env.userSessionStore.disableForcedLimitsScreen()
         Env.userSessionStore.login(withUsername: username, password: password)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 print("triggerLoginAfterRegister ", completion)
+                self?.deleteCachedRegistrationData()
             } receiveValue: { [weak self] success in
                 print("triggerLoginAfterRegister ", success)
             }
@@ -529,9 +504,6 @@ class LoginViewController: UIViewController {
 
     func closeLoginRegisterFlow() {
         if self.isModal {
-//            self.dismiss(animated: true, completion: nil)
-//            self.presentedViewController?.dismiss(animated: true)
-
             self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
         }
         else {

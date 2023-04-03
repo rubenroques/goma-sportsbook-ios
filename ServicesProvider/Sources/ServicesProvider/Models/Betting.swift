@@ -155,14 +155,29 @@ public struct BetTicket: Codable {
 
 public enum OddFormat: Codable {
     case fraction(numerator: Int, denominator: Int)
-    case european(odd: Double)
+    case decimal(odd: Double)
 
     var fractionOdd: (numerator: Int, denominator: Int)? {
         switch self {
         case .fraction(let numerator, let denominator):
             return (numerator: numerator, denominator: denominator)
-        case .european:
+        case .decimal:
             return nil
+        }
+    }
+
+    var decimalOdd: Double {
+        switch self {
+        case .fraction(let numerator, let denominator):
+            let decimal = (Double(numerator)/Double(denominator)) + 1.0
+            if decimal.isNaN {
+                return decimal
+            }
+            else {
+                return decimal
+            }
+        case .decimal(let odd):
+            return odd
         }
     }
 

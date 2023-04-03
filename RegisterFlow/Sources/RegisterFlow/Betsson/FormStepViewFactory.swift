@@ -76,6 +76,7 @@ struct FormStepViewFactory {
                                                                            place: userRegisterEnvelop.placeAddress,
                                                                            street: userRegisterEnvelop.streetAddress,
                                                                            postcode: userRegisterEnvelop.postcode,
+                                                                           streetNumber: userRegisterEnvelop.streetNumber,
                                                                            userRegisterEnvelopUpdater: userRegisterEnvelopUpdater))
             //
             //

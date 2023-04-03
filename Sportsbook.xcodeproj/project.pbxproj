@@ -3893,6 +3893,13 @@
 		45F2F9AD298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
 		45F2F9AE298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
 		45F2F9AF298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
+		45FF105329D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
+		45FF105429D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
+		45FF105529D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
+		45FF105629D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
+		45FF105729D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
+		45FF105829D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
+		45FF105929D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
 		A90229A228AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
 		A90229A328AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
 		A90229A428AFD41100972863 /* QuickBetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A902299F28AFD41100972863 /* QuickBetViewController.swift */; };
@@ -5576,6 +5583,7 @@
 		45EF543A270C664100D1E13E /* CollapsibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleView.swift; sourceTree = "<group>"; };
 		45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = StaticColors.xcassets; sourceTree = "<group>"; };
 		45F8B156274BFF710087652B /* SystemBetResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemBetResponse.swift; sourceTree = "<group>"; };
+		45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTrackingSettingsViewController.swift; sourceTree = "<group>"; };
 		A902299F28AFD41100972863 /* QuickBetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickBetViewController.swift; sourceTree = "<group>"; };
 		A90229B028B6892300972863 /* QuickBetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickBetViewModel.swift; sourceTree = "<group>"; };
 		A907B6AB29D10C7500AC4A17 /* PromotionsWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromotionsWebViewController.swift; sourceTree = "<group>"; };
@@ -6337,6 +6345,7 @@
 			isa = PBXGroup;
 			children = (
 				4546A89C29D7089200ABD562 /* UserTrackingViewController.swift */,
+				45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */,
 			);
 			path = UserTracking;
 			sourceTree = "<group>";
@@ -10965,6 +10974,7 @@
 				450B79C628F58574009229E3 /* FriendProfileViewModel.swift in Sources */,
 				450B79C728F58574009229E3 /* FilterRowView.swift in Sources */,
 				450B79C928F58574009229E3 /* UploadView.swift in Sources */,
+				45FF105929D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */,
 				450B79CA28F58574009229E3 /* ThreeAwayMarketDetailTableViewCell.swift in Sources */,
 				450B79CB28F58574009229E3 /* AddFriendViewModel.swift in Sources */,
 				450B79CC28F58574009229E3 /* TipsListViewController.swift in Sources */,
@@ -11376,6 +11386,7 @@
 				457CBA48282D27D000ED0F00 /* HomeFilterViewController.swift in Sources */,
 				457CBA49282D27D000ED0F00 /* Bootstrap.swift in Sources */,
 				457CBA4B282D27D000ED0F00 /* SimpleRegisterSendEmailCodeViewController.swift in Sources */,
+				45FF105329D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */,
 				A90229B528B6892300972863 /* QuickBetViewModel.swift in Sources */,
 				457CBA4C282D27D000ED0F00 /* BonusActiveTableViewCell.swift in Sources */,
 				457CBA4D282D27D000ED0F00 /* GomaGamingService.swift in Sources */,
@@ -11906,6 +11917,7 @@
 				457CBCC4282D2CD100ED0F00 /* UserSession.swift in Sources */,
 				A9B331BF288EF21300D097F0 /* MessagesViewController.swift in Sources */,
 				45B6E23C2841524F001B570C /* SelectFriendCellViewModel.swift in Sources */,
+				45FF105429D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */,
 				A9863ED8286F01E500A4A1A2 /* ShareTicketChoiceViewController.swift in Sources */,
 				457CBCC5282D2CD100ED0F00 /* LoadableContent.swift in Sources */,
 				457CBCC6282D2CD100ED0F00 /* CollapsibleView.swift in Sources */,
@@ -12808,6 +12820,7 @@
 				A99FD5132835479200275509 /* FriendProfileViewModel.swift in Sources */,
 				4589C8A1282024E400243547 /* FilterRowView.swift in Sources */,
 				4589C8A3282024E400243547 /* UploadView.swift in Sources */,
+				45FF105529D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */,
 				4589C8A4282024E400243547 /* ThreeAwayMarketDetailTableViewCell.swift in Sources */,
 				4589C8A5282024E400243547 /* AddFriendViewModel.swift in Sources */,
 				A9FB6D5D28C657CE00E3FE58 /* TipsListViewController.swift in Sources */,
@@ -13396,6 +13409,7 @@
 				45A331E3298976BA008181E9 /* FeaturedTipCollectionViewModel.swift in Sources */,
 				45A331E4298976BA008181E9 /* FriendProfileViewModel.swift in Sources */,
 				45A331E5298976BA008181E9 /* FilterRowView.swift in Sources */,
+				45FF105629D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */,
 				45A331E7298976BA008181E9 /* UploadView.swift in Sources */,
 				45A33362298976E3008181E9 /* TargetVariables.swift in Sources */,
 				45A331E8298976BA008181E9 /* ThreeAwayMarketDetailTableViewCell.swift in Sources */,
@@ -14149,6 +14163,7 @@
 				A96FAEF92982A06B00A0751F /* PaymentsViewController.swift in Sources */,
 				45A6BD7E28246A7500D9B416 /* ReceivedMessageTableViewCell.swift in Sources */,
 				45A6BD7F28246A7500D9B416 /* RecentSearchHeaderView.swift in Sources */,
+				45FF105729D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */,
 				45C10F9D28772DA700037BBE /* DefaultShiftAnimation.swift in Sources */,
 				45A6BD8028246A7500D9B416 /* SharedGameCardView.swift in Sources */,
 				A9DF8E0428DDF64C0083BF56 /* UserInfoMultipleCardView.swift in Sources */,
@@ -14736,6 +14751,7 @@
 				A9C342D028F9A74A0055360B /* DefaultShiftAnimation.swift in Sources */,
 				A9C342D128F9A74A0055360B /* Event.swift in Sources */,
 				A9C342D228F9A74A0055360B /* UserInfoMultipleCardView.swift in Sources */,
+				45FF105829D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */,
 				A9C342D328F9A74A0055360B /* SportMatchSingleLineTableViewCell.swift in Sources */,
 				A9C342D428F9A74A0055360B /* KDCircularProgress.swift in Sources */,
 				A9C342D528F9A74A0055360B /* MessagesViewModel.swift in Sources */,
@@ -15210,7 +15226,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1011;
+				CURRENT_PROJECT_VERSION = 1031;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
@@ -15239,7 +15255,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1011;
+				CURRENT_PROJECT_VERSION = 1031;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";

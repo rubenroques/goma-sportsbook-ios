@@ -34,6 +34,7 @@ extension SportRadarModels {
         case removeEvent(contentIdentifier: ContentIdentifier, eventId: String)
 
         case addMarket(contentIdentifier: ContentIdentifier, market: SportRadarModels.Market)
+        case enableMarket(contentIdentifier: ContentIdentifier, marketId: String)
         case removeMarket(contentIdentifier: ContentIdentifier, marketId: String)
 
         case updateEventState(contentIdentifier: ContentIdentifier, eventId: String, state: String)
@@ -76,6 +77,8 @@ extension SportRadarModels {
             case .removeEvent(let contentIdentifier, _):
                 return contentIdentifier
             case .addMarket(let contentIdentifier, _):
+                return contentIdentifier
+            case .enableMarket(let contentIdentifier, _):
                 return contentIdentifier
             case .removeMarket(let contentIdentifier, _):
                 return contentIdentifier
@@ -226,7 +229,7 @@ extension SportRadarModels {
             let path: String = (try? container.decode(String.self, forKey: .path)) ?? ""
             let changeType: String = (try? container.decode(String.self, forKey: .changeType)) ?? ""
 
-            NSLog("ContentContainer recieved path \(path) with change \(changeType)")
+            print("ContentContainer recieved path \(path) with change \(changeType)")
 
             if path.contains("idfoevent") && path.contains("idfomarket") && changeType.contains("added") {
                 // added a new Market
@@ -294,9 +297,18 @@ extension SportRadarModels {
                                              newOddDenominator: oddDenominator)
                 }
             }
-            else if case let .market(marketId: marketId) = contentIdentifier.contentRoute {
+            else if path.contains("istradable"),
+                        changeType.contains("updated"),
+                        let newIsTradable = try? container.decode(Bool.self, forKey: .change),
+                        case let .market(marketId: marketId) = contentIdentifier.contentRoute {
+                if newIsTradable {
+                    return .enableMarket(contentIdentifier: contentIdentifier, marketId: marketId)
+                }
+                else {
+                    return .removeMarket(contentIdentifier: contentIdentifier, marketId: marketId)
+                }
                 // print("ContentContainer 'remove' market with id \(path) and associated change \(changeType)")
-                return .removeMarket(contentIdentifier: contentIdentifier, marketId: marketId)
+                // return .removeMarket(contentIdentifier: contentIdentifier, marketId: marketId)
             }
             else if path.contains("idfoevent") && changeType.contains("added") {
                 // Added a new event
@@ -305,7 +317,7 @@ extension SportRadarModels {
                 // Added a new event
             }
 
-            //print("ContentContainer ignored update for \(path) and associated change \(changeType)")
+            print("ContentContainer ignored update for \(path) and associated change \(changeType)")
             throw SportRadarError.ignoredContentUpdate
         }
 

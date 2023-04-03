@@ -143,7 +143,7 @@ extension ServiceProviderModelMapper {
 
     static func oddFormat(fromServiceProviderOddFormat oddFormat: ServicesProvider.OddFormat) -> OddFormat {
         switch oddFormat {
-        case .european(let odd):
+        case .decimal(let odd):
             return .decimal(odd: odd)
         case .fraction(let numerator, let denominator):
             return .fraction(numerator: numerator, denominator: denominator)
@@ -153,7 +153,7 @@ extension ServiceProviderModelMapper {
     static func serviceProviderOddFormat(fromOddFormat oddFormat: OddFormat) -> ServicesProvider.OddFormat {
         switch oddFormat {
         case .decimal(let odd):
-            return .european(odd: odd)
+            return .decimal(odd: odd)
         case .fraction(let numerator, let denominator):
             return .fraction(numerator: numerator, denominator: denominator)
         }

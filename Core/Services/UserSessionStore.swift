@@ -7,6 +7,8 @@
 
 import Foundation
 import Combine
+import AppTrackingTransparency
+import AdSupport
 import ServicesProvider
 
 enum UserSessionError: Error {
@@ -58,6 +60,8 @@ class UserSessionStore {
     
     var shouldRecordUserSession = true
 
+    var shouldSkipLimitsScreen = false
+
     var isUserProfileComplete = CurrentValueSubject<Bool?, Never>(nil)
     var isUserEmailVerified = CurrentValueSubject<Bool?, Never>(nil)
     var isUserKycVerified = CurrentValueSubject<Bool?, Never>(nil)
@@ -67,14 +71,12 @@ class UserSessionStore {
     var userProfilePublisher = CurrentValueSubject<UserProfile?, Never>(nil)
     
     init() {
-
-        self.acceptedTrackingPublisher.send( self.hasAcceptedTracking() )
+        self.acceptedTrackingPublisher.send(self.hasAcceptedTracking())
 
         // TODO: Remove this, it should detect the service provider connection state
         executeDelayed(0.15) {
             self.startUserSessionIfNeeded()
         }
-
     }
 
     static func loggedUserSession() -> UserSession? {
@@ -263,7 +265,12 @@ class UserSessionStore {
 
     func shouldRequestLimits() -> AnyPublisher<Bool, Never> {
         return Publishers.CombineLatest(Env.servicesProvider.getPersonalDepositLimits(), Env.servicesProvider.getLimits())
-            .map { depositLimitResponse, bettingLimitsResponse in
+            .map {  [weak self] depositLimitResponse, bettingLimitsResponse in
+
+                if self?.shouldSkipLimitsScreen ?? false {
+                    return false
+                }
+
                 let hasLimitsDefined = depositLimitResponse.weeklyLimit != nil
                 let hasBettingLimitsDefined = bettingLimitsResponse.wagerLimit != nil
 
@@ -469,6 +476,15 @@ extension UserSessionStore {
     
 }
 
+
+extension UserSessionStore {
+
+    func disableForcedLimitsScreen() {
+        self.shouldSkipLimitsScreen = true
+    }
+
+}
+
 extension UserSessionStore {
 
     func setShouldRequestFaceId(_ newValue: Bool) {
@@ -484,8 +500,35 @@ extension UserSessionStore {
 extension UserSessionStore {
 
     func didAcceptedTracking() {
+
         UserDefaults.standard.acceptedTracking = true
+
         self.acceptedTrackingPublisher.send(true)
+
+        if #available(iOS 14, *) {
+            ATTrackingManager.requestTrackingAuthorization { status in
+                switch status {
+                case .authorized:
+                    // Tracking authorization dialog was shown and we are authorized
+                    print("Authorized")
+
+                    // Now that we are authorized we can get the IDFA
+                    print(ASIdentifierManager.shared().advertisingIdentifier)
+                case .denied:
+                    // Tracking authorization dialog was
+                    // shown and permission is denied
+                    print("Denied")
+                case .notDetermined:
+                    // Tracking authorization dialog has not been shown
+                    print("Not Determined")
+                case .restricted:
+                    print("Restricted")
+                @unknown default:
+                    print("Unknown")
+                }
+            }
+        }
+
     }
 
     func didSkipedTracking() {

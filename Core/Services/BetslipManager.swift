@@ -177,8 +177,22 @@ class BetslipManager: NSObject {
                                                           outcomeDescription: bettingTicket.outcomeDescription,
                                                           odd: newOdd)
 
-                self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
-                self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)
+                print("debugbetslip // ==================================== ")
+                print("debugbetslip Updated ticket \(bettingTicket.id)")
+                print("debugbetslip \(newBettingTicket.decimalOdd) \(bettingTicket.decimalOdd)")
+                print("debugbetslip \(newBettingTicket.isAvailable) \(bettingTicket.isAvailable)")
+
+
+                if newBettingTicket.decimalOdd == bettingTicket.decimalOdd &&
+                    newBettingTicket.isAvailable == bettingTicket.isAvailable {
+                    print("debugbetslip || Skipping, no data updated on ticket")
+                }
+                else {
+                    print("debugbetslip || Updated ticket")
+                    self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
+                    self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)
+                }
+                print("debugbetslip    ==================================== //")
             }
         }
     }
@@ -250,7 +264,6 @@ extension BetslipManager {
                     }
                 }
 
-
                 self?.systemTypesAvailablePublisher.send(.loaded(systemBetTypes))
 
             }
@@ -276,7 +289,6 @@ extension BetslipManager {
         let betTicket = ServicesProvider.BetTicket(tickets: [betTicketSelection],
                                                    stake: amount,
                                                    betGroupingType: .single(identifier: "S"))
-
 
         let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket])
             .mapError({ error in
@@ -497,7 +509,7 @@ extension BetslipManager {
         return publisher
     }
 
-    func requestSimpleBetPotentialReturn(withSkateAmount amounts: [String: Double]) -> AnyPublisher<BetPotencialReturn, Never>  {
+    func requestSimpleBetPotentialReturn(withSkateAmount amounts: [String: Double]) -> AnyPublisher<BetPotencialReturn, Never> {
 
         let ticketSelections = self.bettingTicketsPublisher.value
             .map { (ticket: BettingTicket) in
@@ -647,3 +659,4 @@ struct BetPotencialReturn: Codable {
     var numberOfBets: Int
     var totalOdd: Double
 }
+

@@ -647,8 +647,10 @@ class MatchDetailsViewController: UIViewController {
                     ()
                 case .loaded:
                     self?.setupHeaderDetails()
+
                     let theme = self?.traitCollection.userInterfaceStyle
                     viewModel.getFieldWidget(isDarkTheme: theme == .dark ? true : false)
+
                     self?.statsCollectionView.reloadData()
                 case .failed:
                     self?.showMatchNotAvailableView()
@@ -876,13 +878,16 @@ class MatchDetailsViewController: UIViewController {
     
     func setupMatchField() {
         
-        guard self.viewModel.match != nil else {
+        guard
+            self.viewModel.match != nil,
+            !self.isLiveFieldReady // if we already loadd the live field we should not reload it
+        else {
             return
         }
 
         if let fieldWidget = self.viewModel.fieldWidgetRenderDataType {
             self.shouldShowLiveFieldWebView = true
-            self.isLiveFieldReady = false
+
             switch fieldWidget {
             case .url(let url):
                 let urlRequest = URLRequest(url: url)

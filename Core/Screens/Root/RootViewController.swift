@@ -313,7 +313,6 @@ class RootViewController: UIViewController {
         //
         self.setupWithTheme()
 
-
         Env.userSessionStore.userSessionPublisher
             .receive(on: DispatchQueue.main)
             .sink { userSession in

@@ -20,7 +20,7 @@ enum UserDefaultsKey: String {
     case notificationsUserSettings = "notificationsUserSettings"
 
     case biometricAuthentication
-    case acceptedTracking
+    case acceptedTracking = "acceptedTrackingKey"
 
     var key: String {
         return self.rawValue

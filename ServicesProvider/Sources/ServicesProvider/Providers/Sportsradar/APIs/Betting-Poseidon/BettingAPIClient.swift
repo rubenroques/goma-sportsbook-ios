@@ -120,7 +120,7 @@ extension BettingAPIClient: Endpoint {
                 case .fraction(let numerator, let denominator):
                     priceUp = "\(numerator)"
                     priceDown = "\(denominator)"
-                case .european:
+                case .decimal:
                     priceUp = ""
                     priceDown = ""
                 }
@@ -170,7 +170,7 @@ extension BettingAPIClient: Endpoint {
                     case .fraction(let numerator, let denominator):
                         priceUp = "\(numerator)"
                         priceDown = "\(denominator)"
-                    case .european:
+                    case .decimal:
                         priceUp = ""
                         priceDown = ""
                     }
@@ -327,7 +327,7 @@ extension BettingAPIClient: Endpoint {
                 case .fraction(let numerator, let denominator):
                     priceUp = "\(numerator)"
                     priceDown = "\(denominator)"
-                case .european:
+                case .decimal:
                     priceUp = ""
                     priceDown = ""
                 }
@@ -387,7 +387,7 @@ extension BettingAPIClient: Endpoint {
             case .fraction(let numerator, let denominator):
                 priceUp = "\(numerator)"
                 priceDown = "\(denominator)"
-            case .european:
+            case .decimal:
                 priceUp = ""
                 priceDown = ""
             }

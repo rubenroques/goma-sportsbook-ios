@@ -229,9 +229,12 @@ extension SportRadarEventsPaginator {
                 }
             }
             self.storage.updateMarketTradability(withId: market.id, isTradable: true)
+
+        case .enableMarket(_, let marketId):
+            self.storage.updateMarketTradability(withId: marketId, isTradable: true)
         case .removeMarket(_, let marketId):
             self.storage.updateMarketTradability(withId: marketId, isTradable: false)
-
+            
         default:
             () // Ignore other cases
         }

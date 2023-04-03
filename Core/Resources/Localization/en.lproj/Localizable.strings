@@ -1136,3 +1136,22 @@
 
 "bonus_cancel_success" = "Bonus cancelled with success!";
 "bonus_cancel_error" = "Bonus could not be cancelled. Please contact support.";
+
+
+"tracking_policy_title" = "Tracking Policy";
+"accept_all_cookies" = "Accept all";
+"settings_cookies" = "Settings";
+"continue_without_accepting_cookies" = "Continue without accepting";
+"details_cookies" = "Welcome to Betsson.fr\n\n\nWe respect your data and would like to offer you an optimized experience:\n\n-Through a high-performance and secure application.\n\n-With relevant offers through adapted advertisements.\n\nOur partners and we use services and cookies to securely provide you with these commitments.\n\n\nYou can change your preferences.\n";
+
+"details_cookies_settings" = "Configure my data management.\n\n\nBetsson's tracking systems are of two types:\n\n-Essential: These are necessary for the proper functioning and security of the services offered.\n\n-Recommended: These enable an optimized experience.\n";
+
+"essential_mandatory" = "Essential (mandatory)";
+"audience_measurement" = "Audience measurement";
+"advertising_and_offers_optimization" = "Advertising and offers optimization";
+
+
+"cashout_reoffer_warning_title" = "Cashout Re-Offer Warning";
+"cashout_reoffer_warning_text" = "This bet cashout re-offer value has changed to %@%@. Do you want to accept it?";
+"cashout_error" = "Cashout Error";
+"cashout_no_longer_available" = "This bet cashout is no longer available.";

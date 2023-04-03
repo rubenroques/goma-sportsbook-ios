@@ -370,6 +370,12 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 //            })
 //        
         self.oddSubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
+            .removeDuplicates(by: { lhs, rhs in
+                return lhs.id == rhs.id && lhs.decimalOdd == rhs.decimalOdd
+            })
+            .handleEvents(receiveOutput: {
+                print("debugbetslip-\($0.bettingId) Betslip Cell \($0.decimalOdd) ")
+            })
             .map(\.decimalOdd)
             .compactMap({ $0 })
             .receive(on: DispatchQueue.main)
@@ -383,7 +389,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                         self?.highlightOddChangeDown()
                     }
                 }
-                
+
                 self?.currentOddValue = newOddValue
                 // self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
 
@@ -403,9 +409,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                 }
 
             })
-        
 
-        
         if let errorBetting = errorBetting {
             self.errorLabel.text = errorBetting
             self.errorView.isHidden = false

@@ -98,6 +98,8 @@ class Router {
             bootRootViewController = Router.createLoginViewControllerFlow()
         }
 
+        let navigationController = Router.navigationController(with: UserTrackingViewController(viewModel: UserTrackingViewModel()))
+        navigationController.isModalInPresentation = true
         self.rootWindow.rootViewController = bootRootViewController
 
     }
@@ -385,15 +387,15 @@ class Router {
     //
     // User actions tracking
     func showUserTrackingViewController() {
-
         if let presentedViewController = self.rootViewController?.presentedViewController {
             if !(presentedViewController is UserTrackingViewController) {
                 presentedViewController.dismiss(animated: false, completion: nil)
             }
         }
-
         let userTrackingViewController = UserTrackingViewController(viewModel: UserTrackingViewModel())
-        self.rootViewController?.present(userTrackingViewController, animated: true, completion: nil)
+        let navigationController = Router.navigationController(with: userTrackingViewController)
+        navigationController.isModalInPresentation = true
+        self.rootViewController?.present(navigationController, animated: true, completion: nil)
     }
 
     func hideUserTrackingViewController() {
@@ -401,12 +403,16 @@ class Router {
            presentedViewController is UserTrackingViewController {
             presentedViewController.dismiss(animated: true, completion: nil)
         }
+        else if let presentedViewController = self.rootViewController?.presentedViewController,
+                let navigationController = presentedViewController as? UINavigationController,
+                navigationController.rootViewController is UserTrackingViewController {
+            presentedViewController.dismiss(animated: true, completion: nil)
+        }
     }
 
     //
     // Chat
     func showChatNotifications() {
-
         let chatNotificationsViewController = ChatNotificationsViewController()
         self.showIntoSocialViewControllerModal(chatNotificationsViewController)
     }
@@ -417,7 +423,6 @@ class Router {
         let conversationDetailViewModel = ConversationDetailViewModel(chatId: chatId)
         let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
         self.showIntoSocialViewControllerModal(conversationDetailViewController)
-
     }
 
     private func showIntoSocialViewControllerModal(_ viewController: UIViewController) {
