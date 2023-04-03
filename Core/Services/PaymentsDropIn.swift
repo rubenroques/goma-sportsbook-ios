@@ -160,7 +160,8 @@ class PaymentsDropIn {
 
         print("AMOUNT DEPOSIT: \(amount)")
 
-        Env.servicesProvider.processDeposit(paymentMethod: "ADYEN_IDEAL", amount: amount, option: "DROP_IN")
+        // TODO: ADYEN_IDEAL -> ADYEN_CARD
+        Env.servicesProvider.processDeposit(paymentMethod: "ADYEN_CARD", amount: amount, option: "DROP_IN")
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {

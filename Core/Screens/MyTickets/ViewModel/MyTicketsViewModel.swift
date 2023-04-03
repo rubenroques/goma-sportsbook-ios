@@ -41,6 +41,9 @@ class MyTicketsViewModel: NSObject {
     var tappedMatchDetail: ((String) -> Void)?
     var requestShareActivityView: ((UIImage, String, String) -> Void)?
 
+    var requestAlertAction: ((String, String) -> Void)?
+    var showCashoutSuspendedAction: (() -> Void)?
+
     private var matchDetailsDictionary: [String: Match] = [:]
 
     private var resolvedMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
@@ -376,6 +379,15 @@ class MyTicketsViewModel: NSObject {
                 Env.userSessionStore.refreshUserWalletAfterDelay()
                 self?.refresh()
             }
+
+            viewModel.requestAlertAction = { [weak self] cashoutReoffer, betId in
+                self?.requestAlertAction?(cashoutReoffer, betId)
+            }
+
+            viewModel.showCashoutSuspendedAction = { [weak self] in
+                self?.showCashoutSuspendedAction?()
+            }
+
             cachedViewModels[ticket.betId] = viewModel
             return viewModel
         }

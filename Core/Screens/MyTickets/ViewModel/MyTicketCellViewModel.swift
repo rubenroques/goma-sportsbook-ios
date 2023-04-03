@@ -20,6 +20,9 @@ class MyTicketCellViewModel {
 
     var requestDataRefreshAction: (() -> Void)?
 
+    var requestAlertAction: ((String, String) -> Void)?
+    var showCashoutSuspendedAction: (() -> Void)?
+
     private var ticket: BetHistoryEntry
 
     private var cashout: CashoutInfo?
@@ -119,6 +122,13 @@ class MyTicketCellViewModel {
 
             self.isLoadingCellData.send(true)
 
+//            self.showCashoutSuspendedAction?()
+//            self.cashout = nil
+//            self.hasCashoutEnabled.send(.hidden)
+//            self.requestDataRefreshAction?()
+//
+//            self.isLoadingCellData.send(false)
+
             Env.servicesProvider.cashoutBet(betId: betId, cashoutValue: cashoutValue, stakeValue: stakeValue)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
@@ -130,9 +140,23 @@ class MyTicketCellViewModel {
                         self?.isLoadingCellData.send(false)
                     }
                 }, receiveValue: { [weak self] cashoutResult in
-                    if cashoutResult.cashoutResultSuccess {
+                    if cashoutResult.cashoutResult == -1 {
                         self?.requestDataRefreshAction?()
                         self?.isLoadingCellData.send(false)
+                    }
+                    else if cashoutResult.cashoutResult == 1 {
+                        if let cashoutReoffer = cashoutResult.cashoutReoffer,
+                           let ticket = self?.ticket {
+                            self?.requestCashoutAvailability(ticket: ticket)
+                            self?.requestAlertAction?("\(cashoutReoffer)", ticket.betId)
+                            self?.isLoadingCellData.send(false)
+                        }
+                    }
+                    else {
+                        self?.showCashoutSuspendedAction?()
+                        self?.requestDataRefreshAction?()
+                        self?.cashout = nil
+                        self?.hasCashoutEnabled.send(.hidden)
                     }
 
                 })

@@ -408,7 +408,6 @@ extension BonusActiveTableViewCell {
             self.cancelButton.heightAnchor.constraint(equalToConstant: 50)
         ])
 
-
         self.stackViewBottomConstraint = self.stackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20)
         self.stackViewBottomConstraint.isActive = false
 

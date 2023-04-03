@@ -18,7 +18,11 @@ class TransactionsTableViewCell: UITableViewCell {
     private lazy var transactionValueLabel: UILabel = Self.createValueLabel()
     private lazy var transactionDateLabel: UILabel = Self.createDateLabel()
     private lazy var transactionIdLabel: UILabel = Self.createIdLabel()
+    private lazy var gameTransactionIdLabel: UILabel = Self.createGameTransactionIdLabel()
     private lazy var cancelButton: UIButton = Self.createCancelButton()
+
+    private lazy var dateLabelBottomConstraint: NSLayoutConstraint = Self.createDateLabelBottomConstraint()
+    private lazy var gameTranIdBottomConstraint: NSLayoutConstraint = Self.createGameTranIdBottomConstraint()
     
     var transactionHistoryEntry: TransactionHistory?
 
@@ -27,6 +31,17 @@ class TransactionsTableViewCell: UITableViewCell {
             self.cancelButton.isHidden = !hasPendingTransaction
         }
     }
+
+    var hasGameTranId: Bool = false {
+        didSet {
+            self.gameTransactionIdLabel.isHidden = !hasGameTranId
+
+            self.dateLabelBottomConstraint.isActive = !hasGameTranId
+
+            self.gameTranIdBottomConstraint.isActive = hasGameTranId
+        }
+    }
+
     var shouldCancelPendingTransaction: ((Int) -> Void)?
     
     // MARK: - Lifetime and Cycle
@@ -50,6 +65,7 @@ class TransactionsTableViewCell: UITableViewCell {
         super.prepareForReuse()
 
         self.hasPendingTransaction = false
+        self.hasGameTranId = false
     }
 
     // MARK: - Layout and Theme
@@ -66,6 +82,8 @@ class TransactionsTableViewCell: UITableViewCell {
         self.transactionIdLabel.textColor = UIColor.App.textSecondary
         self.transactionDateLabel.textColor = UIColor.App.textSecondary
         self.transactionValueLabel.textColor = UIColor.App.textPrimary
+
+        self.gameTransactionIdLabel.textColor = UIColor.App.textSecondary
 
         self.cancelButton.backgroundColor = .clear
 
@@ -133,6 +151,17 @@ class TransactionsTableViewCell: UITableViewCell {
         }
 
         self.hasPendingTransaction = false
+
+        if let gameTranId = transactionHistoryEntry.id,
+           let gameId = gameTranId.components(separatedBy: "_")[safe: 1] {
+
+            self.gameTransactionIdLabel.text = "\(localized("bet_id")): \(gameId)"
+            self.hasGameTranId = true
+
+        }
+        else {
+            self.hasGameTranId = false
+        }
 
     }
 
@@ -219,6 +248,24 @@ extension TransactionsTableViewCell {
         return button
     }
 
+    private static func createGameTransactionIdLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .semibold, size: 10)
+        label.text = localized("bet_id")
+        return label
+    }
+
+    private static func createDateLabelBottomConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createGameTranIdBottomConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
     private func setupSubviews() {
 
         self.contentView.addSubview(self.baseView)
@@ -228,6 +275,7 @@ extension TransactionsTableViewCell {
         self.baseView.addSubview(self.transactionDateLabel)
         self.baseView.addSubview(self.transactionTypeLabel)
         self.baseView.addSubview(self.transactionValueLabel)
+        self.baseView.addSubview(self.gameTransactionIdLabel)
         self.baseView.addSubview(self.cancelButton)
 
         self.initConstraints()
@@ -258,13 +306,23 @@ extension TransactionsTableViewCell {
 
             self.transactionDateLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 20),
             self.transactionDateLabel.topAnchor.constraint(equalTo: self.transactionIdLabel.bottomAnchor, constant: 8),
-            self.transactionDateLabel.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -15),
+            //self.transactionDateLabel.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -15),
+
+            self.gameTransactionIdLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 20),
+            self.gameTransactionIdLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -20),
+            self.gameTransactionIdLabel.topAnchor.constraint(equalTo: self.transactionDateLabel.bottomAnchor, constant: 8),
 
             self.cancelButton.heightAnchor.constraint(equalToConstant: 40),
             self.cancelButton.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -20),
             self.cancelButton.topAnchor.constraint(equalTo: self.transactionValueLabel.bottomAnchor, constant: 0)
 
         ])
+
+        self.dateLabelBottomConstraint = self.transactionDateLabel.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -15)
+        self.dateLabelBottomConstraint.isActive = true
+
+        self.gameTranIdBottomConstraint = self.gameTransactionIdLabel.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -15)
+        self.gameTranIdBottomConstraint.isActive = false
 
     }
 

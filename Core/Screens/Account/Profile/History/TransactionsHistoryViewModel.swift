@@ -208,7 +208,8 @@ class TransactionsHistoryViewModel {
 
         Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: ["DEPOSIT", "WITHDRAWAL", "CRE_BONUS",
                                                                                                               "EXP_BONUS", "DP_CANCEL", "WD_CANCEL",
-                                                                                                              "GAME_WIN", "GAME_BET", "CASH_OUT"], pageNumber: page)
+                                                                                                              "GAME_WIN", "GAME_BET", "CASH_OUT",
+                                                                                                             "BONUS_REL"], pageNumber: page)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
 
@@ -368,7 +369,7 @@ class TransactionsHistoryViewModel {
                                                         fees: [],
                                                         status: nil,
                                                         transactionReference: nil,
-                                                        id: "\(transactionDetail.id)",
+                                                        id: "\(transactionDetail.gameTranId ?? "")",
                                                         isRallbackAllowed: nil,
                                                         paymentId: transactionDetail.paymentId)
 

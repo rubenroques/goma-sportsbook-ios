@@ -47,7 +47,10 @@ class BettingHistoryViewModel {
     var openedTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
     var wonTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
     var cashoutTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
-    
+
+    var requestAlertAction: ((String, String) -> Void)?
+    var showCashoutSuspendedAction: (() -> Void)?
+
     // MARK: - Private Properties
 
     private var recordsPerPage = 20
@@ -467,14 +470,25 @@ class BettingHistoryViewModel {
         }
 
         if let viewModel = cachedViewModels[ticket.betId] {
+            
             return viewModel
         }
         else {
             let viewModel =  MyTicketCellViewModel(ticket: ticket)
+
             viewModel.requestDataRefreshAction = { [weak self] in
                 Env.userSessionStore.refreshUserWalletAfterDelay()
                 self?.refresh()
             }
+
+            viewModel.requestAlertAction = { [weak self] cashoutReoffer, betId in
+                self?.requestAlertAction?(cashoutReoffer, betId)
+            }
+
+            viewModel.showCashoutSuspendedAction = { [weak self] in
+                self?.showCashoutSuspendedAction?()
+            }
+
             cachedViewModels[ticket.betId] = viewModel
             return viewModel
         }

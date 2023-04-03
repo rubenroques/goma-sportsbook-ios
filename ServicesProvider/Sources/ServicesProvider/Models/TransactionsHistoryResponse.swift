@@ -29,6 +29,7 @@ public struct TransactionDetail: Codable {
     public var postBalanceBonus: Double
     public var currency: String
     public var paymentId: Int?
+    public var gameTranId: String?
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -40,6 +41,7 @@ public struct TransactionDetail: Codable {
         case postBalanceBonus = "postBalanceBonus"
         case currency = "currency"
         case paymentId = "paymentId"
+        case gameTranId = "gameTranId"
     }
 }
 

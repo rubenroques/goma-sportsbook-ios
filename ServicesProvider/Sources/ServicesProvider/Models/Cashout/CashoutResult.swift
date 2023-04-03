@@ -8,11 +8,11 @@
 import Foundation
 
 public struct CashoutResult: Codable {
-    public var cashoutResultSuccess: Bool
-    public var cashoutReoffer: Double
+    public var cashoutResult: Int?
+    public var cashoutReoffer: Double?
 
     enum CodingKeys: String, CodingKey {
-        case cashoutResultSuccess = "cashoutResult"
+        case cashoutResult = "cashoutResult"
         case cashoutReoffer = "cashoutReoffer"
     }
 }

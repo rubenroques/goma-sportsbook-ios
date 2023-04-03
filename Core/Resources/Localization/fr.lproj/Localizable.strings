@@ -1012,6 +1012,15 @@
 "cancel_withdraw_success" = "Votre retrait a été annulé.";
 "cancel_withdraw_error" = "Une erreur s'est produite lors de l'annulation de votre retrait. Veuillez contacter l'assistance.";
 
+"cashout_reoffer_warning_title" = "Avertissement de réoffre de retrait";
+"cashout_reoffer_warning_text" = "Cette valeur de réoffre de retrait de pari a changé en {cashoutReofferValue}{currencySymbol}. Voulez-vous l'accepter?";
+
+"cashout_error" = "Erreur de retrait";
+"cashout_no_longer_available" = "Ce retrait de pari n'est plus disponible.";
+
+"bet_id" = "ID de pari";
+
+
 // NOT TO ADD YET
 "tip_title" = "Pointe 1";
 "tip_message" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sagittis eros a nibh fermentum viverra. Sed imperdiet justo non tellus mollis viverra. Aliquam quis varius ex. In sagittis condimentum molestie.";
