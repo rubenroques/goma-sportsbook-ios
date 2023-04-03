@@ -336,7 +336,26 @@ class ProfileLimitsManagementViewController: UIViewController {
                     if limitOptions == viewModel.limitOptionsSet && viewModel.limitOptionsSet.isNotEmpty {
                         self?.viewModel.isLoadingPublisher.send(false)
                         self?.showAlert(type: .success)
+                        self?.viewModel.getLimits()
                     }
+                }
+            })
+            .store(in: &cancellables)
+
+        self.viewModel.isDepositLimitUpdated
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isUpdated in
+                if isUpdated {
+                    self?.saveBettingLimit()
+                }
+            })
+            .store(in: &cancellables)
+
+        self.viewModel.isBettingLimitUpdated
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isUpdated in
+                if isUpdated {
+                    self?.saveAutoPayoutLimit()
                 }
             })
             .store(in: &cancellables)
@@ -347,6 +366,7 @@ class ProfileLimitsManagementViewController: UIViewController {
                 if errorText != "" {
                     self?.viewModel.isLoadingPublisher.send(false)
                     self?.showAlert(type: .error, alertText: errorText)
+                    self?.viewModel.getLimits()
                 }
             })
             .store(in: &cancellables)
@@ -565,10 +585,126 @@ class ProfileLimitsManagementViewController: UIViewController {
         self.present(removeLimitAlert, animated: true, completion: nil)
     }
 
+    private func saveDepositLimit() {
+
+        let acceptedInputs = Set("0123456789.,")
+
+        var updatedLimits = false
+
+        if self.viewModel.canUpdateDeposit {
+            self.viewModel.isLoadingPublisher.send(true)
+
+            let period = self.depositFrequencySelectTextFieldView.text
+            let amountString = self.depositHeaderTextFieldView.text
+            let amountFiltered = String( amountString.filter { acceptedInputs.contains($0)
+            })
+            let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
+
+            if let depositAmount = self.viewModel.depositLimit?.current?.amount,
+               let currentAmount = Double(amount),
+               currentAmount > depositAmount {
+                let title = localized("increasing_limit_warning_title").replacingFirstOccurrence(of: "{}", with: localized("deposit"))
+                let message = localized("increasing_limit_warning_text").replacingFirstOccurrence(of: "{}", with: localized("deposit"))
+
+                let alert = UIAlertController(title: title,
+                                              message: message,
+                                              preferredStyle: .alert)
+
+                alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+
+                    self?.viewModel.updateDepositLimit(amount: amount)
+
+                    updatedLimits = true
+                }))
+
+                alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
+
+                self.present(alert, animated: true, completion: nil)
+            }
+            else {
+                self.viewModel.updateDepositLimit(amount: amount)
+
+                updatedLimits = true
+            }
+        }
+        else {
+            self.saveBettingLimit()
+        }
+    }
+
+    private func saveBettingLimit() {
+
+        let acceptedInputs = Set("0123456789.,")
+
+        var updatedLimits = false
+
+        if self.viewModel.canUpdateWagering {
+            self.viewModel.isLoadingPublisher.send(true)
+            let period = self.bettingFrequencySelectTextFieldView.text
+            let amountString = self.bettingHeaderTextFieldView.text
+            let amountFiltered = String( amountString.filter { acceptedInputs.contains($0)
+            })
+            let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
+
+            if let bettingAmount = self.viewModel.wageringLimit?.current?.amount,
+               let currentAmount = Double(amount),
+               currentAmount > bettingAmount {
+                let title = localized("increasing_limit_warning_title").replacingFirstOccurrence(of: "{}", with: localized("betting"))
+                let message = localized("increasing_limit_warning_text").replacingFirstOccurrence(of: "{}", with: localized("betting"))
+
+                let alert = UIAlertController(title: title,
+                                              message: message,
+                                              preferredStyle: .alert)
+
+                alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+
+                    self?.viewModel.updateBettingLimit(amount: amount)
+
+                    updatedLimits = true
+                }))
+
+                alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
+
+                self.present(alert, animated: true, completion: nil)
+            }
+            else {
+                self.viewModel.updateBettingLimit(amount: amount)
+
+                updatedLimits = true
+            }
+
+        }
+        else {
+            self.saveAutoPayoutLimit()
+        }
+    }
+
+    private func saveAutoPayoutLimit() {
+
+        let acceptedInputs = Set("0123456789.,")
+
+        var updatedLimits = false
+
+        if self.viewModel.canUpdateLoss {
+            self.viewModel.isLoadingPublisher.send(true)
+
+            let period = self.lossFrequencySelectHeaderTextFieldView.text
+            let amountString = self.lossHeaderTextFieldView.text
+            let amountFiltered = String( amountString.filter{ acceptedInputs.contains($0)} )
+            let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
+
+            self.viewModel.updateResponsibleGamingLimit(amount: amount)
+
+            updatedLimits = true
+
+        }
+        else {
+            self.viewModel.isLoadingPublisher.send(false)
+        }
+    }
+
     private func saveLimitsOptions() {
         self.viewModel.isLoadingPublisher.send(true)
-
-        // TODO: SportRadar Currency for wallet
 
         let acceptedInputs = Set("0123456789.,")
 
@@ -676,6 +812,8 @@ class ProfileLimitsManagementViewController: UIViewController {
 
     @IBAction private func editAction() {
 
+        self.viewModel.cleanLimitOptions()
+
         self.viewModel.checkLimitUpdatableStatus(limitType: LimitType.deposit.identifier.lowercased(),
                                                  limitAmount: self.depositHeaderTextFieldView.text,
                                                  isLimitUpdatable: isDepositUpdatable)
@@ -703,7 +841,8 @@ class ProfileLimitsManagementViewController: UIViewController {
 //                                                 limitPeriod: self.lossFrequencySelectHeaderTextFieldView.text,
 //                                                 isLimitUpdatable: isLossUpdatable)
 
-        self.saveLimitsOptions()
+        //self.saveLimitsOptions()
+        self.saveDepositLimit()
 
     }
 
