@@ -217,9 +217,9 @@ class LoginViewController: UIViewController {
 
         self.logoImageView.isUserInteractionEnabled = true
 
-        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
-        debugLogoImageViewTap.numberOfTapsRequired = 3
-        self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
+//        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
+//        debugLogoImageViewTap.numberOfTapsRequired = 3
+//        self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
 //
 //        let debug2LogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebug))
 //        debug2LogoImageViewTap.numberOfTapsRequired = 2
@@ -649,13 +649,11 @@ extension LoginViewController {
             self.usernameHeaderTextFieldView.setText("bohifo2337@dilanfa.com")
             self.passwordHeaderTextFieldView.setText("Ruben)12345")
             self.loginButton.isEnabled = true
-            
         }
         else if self.usernameHeaderTextFieldView.text == "ruben6" {
             self.usernameHeaderTextFieldView.setText("devil11308@game4hr.com")
             self.passwordHeaderTextFieldView.setText("Ruben)1234")
             self.loginButton.isEnabled = true
-            
         }
         else if self.usernameHeaderTextFieldView.text == "mosafe" {
             self.usernameHeaderTextFieldView.setText("modaf")
