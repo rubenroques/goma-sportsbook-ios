@@ -53,6 +53,10 @@ class ProfileLimitsManagementViewModel: NSObject {
     var finishedUpdatingWageringLimit: CurrentValueSubject<LimitUpdateStatus, Never> = .init(.idle)
     var finishedUpdatingLossLimit: CurrentValueSubject<LimitUpdateStatus, Never> = .init(.idle)
 
+    var isDepositLimitUpdated: CurrentValueSubject<Bool, Never> = .init(false)
+    var isBettingLimitUpdated: CurrentValueSubject<Bool, Never> = .init(false)
+    var isAutoPayoutLimitUpdated: CurrentValueSubject<Bool, Never> = .init(false)
+
     // MARK: Cycles
     override init() {
         super.init()
@@ -79,7 +83,7 @@ class ProfileLimitsManagementViewModel: NSObject {
             .store(in: &cancellables)
     }
 
-    private func getLimits() {
+    func getLimits() {
 
         Env.servicesProvider.getPersonalDepositLimits()
             .receive(on: DispatchQueue.main)
@@ -291,6 +295,9 @@ class ProfileLimitsManagementViewModel: NSObject {
                 }, receiveValue: { [weak self] updateLimitResponse in
 
                     self?.limitOptionsCheckPublisher.value.append("deposit")
+
+                    self?.isDepositLimitUpdated.send(true)
+
                 })
                 .store(in: &cancellables)
         }
@@ -316,6 +323,8 @@ class ProfileLimitsManagementViewModel: NSObject {
 
                     self?.limitOptionsCheckPublisher.value.append("wagering")
 
+                    self?.isBettingLimitUpdated.send(true)
+
                 })
                 .store(in: &cancellables)
         }
@@ -340,6 +349,8 @@ class ProfileLimitsManagementViewModel: NSObject {
                 }, receiveValue: { [weak self] updateLimitResponse in
 
                     self?.limitOptionsCheckPublisher.value.append("loss")
+
+                    self?.isAutoPayoutLimitUpdated.send(true)
 
                 })
                 .store(in: &cancellables)
@@ -412,6 +423,11 @@ class ProfileLimitsManagementViewModel: NSObject {
                 self.canUpdateLoss = true
             }
         }
+    }
+
+    func cleanLimitOptions() {
+        self.limitOptionsSet = []
+        self.limitOptionsCheckPublisher.value = []
     }
 
 //    func checkLimitUpdatableStatus(limitType: String, limitAmount: String, limitPeriod: String, isLimitUpdatable: Bool) {
