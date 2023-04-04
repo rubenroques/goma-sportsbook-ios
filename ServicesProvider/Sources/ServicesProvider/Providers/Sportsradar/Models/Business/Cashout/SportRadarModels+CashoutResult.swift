@@ -12,10 +12,12 @@ extension SportRadarModels {
     struct CashoutResult: Codable {
         var cashoutResult: Int?
         var cashoutReoffer: Double?
+        var message: String?
 
         enum CodingKeys: String, CodingKey {
             case cashoutResult = "cashoutResult"
             case cashoutReoffer = "cashoutReoffer"
+            case message = "message"
         }
     }
     

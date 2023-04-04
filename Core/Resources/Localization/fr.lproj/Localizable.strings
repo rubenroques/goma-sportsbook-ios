@@ -137,7 +137,7 @@
 "cashout_confirmation" = "Voulez-vous vraiment retirer {amount} ?";
 "cashout_info" = "Récupérez un pourcentage de votre mise avant la fin du jeu";
 "cashout_prompt_message" = "Votre remboursement sera de \"{value} €\"";
-"cashout_success_text" = "Votre pari a été encaissé avec succès !"; // UNUSED
+"cashout_success_text" = "Votre pari a été encaissé avec succès !";
 "cashout_value" = "Encaissement {cashoutAmount}"; // UNUSED
 "casino" = "Casino";
 "casino_regulation" = "Règlement du casino"; // UNUSED
@@ -1020,6 +1020,8 @@
 
 "bet_id" = "ID de pari";
 
+"cancel_bonus" = "Annuler le bonus";
+"cancel_bonus_confirmation" = "Êtes-vous sûr de vouloir annuler ce bonus?";
 
 // NOT TO ADD YET
 "tip_title" = "Pointe 1";

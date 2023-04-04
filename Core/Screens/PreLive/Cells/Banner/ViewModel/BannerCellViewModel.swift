@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import ServicesProvider
 
 class BannerLineCellViewModel {
 
@@ -32,11 +33,12 @@ class BannerCellViewModel {
     var presentationType: PresentationType
     var matchId: String?
     var imageURL: URL?
+    var marketId: String?
 
     var eventPartId: String?
     var betTypeId: String?
 
-    var match: CurrentValueSubject<EveryMatrix.Match?, Never> = .init(nil)
+    var match: CurrentValueSubject<Match?, Never> = .init(nil)
 
     var completeMatch: CurrentValueSubject<Match?, Never> = .init(nil)
 
@@ -54,11 +56,16 @@ class BannerCellViewModel {
 
     var marketOutcomeRelations: [String: EveryMatrix.MarketOutcomeRelation] = [:]
 
+    private var serviceProviderSubscriptions: [String: ServicesProvider.Subscription] = [:]
+
     var cancellables = Set<AnyCancellable>()
 
-    init(id: String, matchId: String?, imageURL: String) {
+    let dateFormatter = DateFormatter()
+
+    init(id: String, matchId: String?, imageURL: String, marketId: String?) {
         self.id = id
         self.matchId = matchId
+        self.marketId = marketId
         let imageURLString = imageURL
 
         if let matchId = self.matchId {
@@ -71,8 +78,10 @@ class BannerCellViewModel {
                 self.imageURL = URL(string: EveryMatrixInfo.staticHost + imageURLString)
             }
 
-            // self.requestMatchInfo(matchId)
-            // self.requestMatchOdds()
+            if let marketId = marketId {
+                self.requestMatchInfo(matchId: matchId, marketId: marketId)
+                // self.requestMatchOdds()
+            }
         }
         else {
             self.presentationType = .image
@@ -122,6 +131,55 @@ class BannerCellViewModel {
 
     func oddPublisherForBettingOfferId(_ id: String) -> AnyPublisher<EveryMatrix.BettingOffer, Never>? {
         return bettingOfferPublishers[id]?.eraseToAnyPublisher()
+    }
+
+    func requestMatchInfo(matchId: String, marketId: String) {
+
+        Env.servicesProvider.subscribeToMarketDetails(withId: marketId)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .failure(let error):
+                    print("Error retrieving data! \(error)")
+                case .finished:
+                    print("Data retrieved!")
+                }
+            } receiveValue: { [weak self] subscribableContent in
+                switch subscribableContent {
+                case .connected(let subscription):
+                    self?.serviceProviderSubscriptions[marketId] = subscription
+                case .contentUpdate(let market):
+                    let market = market
+                    let internalMarket = ServiceProviderModelMapper.market(fromServiceProviderMarket: market)
+                    self?.setupMarketInfo(market: internalMarket, matchId: matchId)
+                case .disconnected:
+                    print("Banner subscribeToMarketDetails disconnected")
+                }
+            }
+            .store(in: &cancellables)
+    }
+
+    private func setupMarketInfo(market: Market, matchId: String) {
+
+//        if self.completeMatch.value == nil {
+
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSz"
+            let matchDate = dateFormatter.date(from: market.startDate ?? "")
+
+            let match = Match(id: matchId,
+                              competitionId: "",
+                              competitionName: "",
+                              homeParticipant: Participant(id: "", name: market.homeParticipant ?? ""),
+                              awayParticipant: Participant(id: "", name: market.awayParticipant ?? ""),
+                              date: matchDate,
+                              sport: Sport(id: "1", name: "", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0),
+                              numberTotalOfMarkets: 1,
+                              markets: [market],
+                              rootPartId: "",
+                              status: .unknown)
+            self.match.send(match)
+            self.completeMatch.send(match)
+//        }
     }
     
 }
