@@ -153,7 +153,7 @@ class QuickBetViewModel {
         let betAmount = self.finalBetAmountPublisher.value
         let ticketSelection = EveryMatrix.BetslipTicketSelection(id: self.bettingTicket.id, currentOdd: self.bettingTicket.decimalOdd)
 
-        Env.betslipManager.placeQuickBet(bettingTicket: self.bettingTicket, amount: betAmount)
+        Env.betslipManager.placeQuickBet(bettingTicket: self.bettingTicket, amount: betAmount, useFreebetBalance: false)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {

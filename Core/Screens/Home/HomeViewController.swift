@@ -551,7 +551,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
             }
         case .userProfile:
-            return 140
+            return 126
         case .footerBanner:
             return UITableView.automaticDimension
         }
@@ -599,7 +599,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
             }
         case .userProfile:
-            return 140
+            return 126
         case .footerBanner:
             return 120
         }

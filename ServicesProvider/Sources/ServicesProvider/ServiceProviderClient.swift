@@ -599,7 +599,7 @@ extension ServicesProviderClient {
         return privilegedAccessManager.getUserBalance()
     }
 
-    public func signUpCompletion(form: ServicesProvider.UpdateUserProfileForm)  -> AnyPublisher<Bool, ServiceProviderError> {
+    public func signUpCompletion(form: ServicesProvider.UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
@@ -607,6 +607,8 @@ extension ServicesProviderClient {
         }
         return privilegedAccessManager.signUpCompletion(form: form)
     }
+
+
 }
 
 extension ServicesProviderClient {
@@ -658,14 +660,14 @@ extension ServicesProviderClient {
 
     }
 
-    public func placeBets(betTickets: [BetTicket]) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+    public func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
 
-        return bettingProvider.placeBets(betTickets: betTickets)
+        return bettingProvider.placeBets(betTickets: betTickets, useFreebetBalance: useFreebetBalance)
     }
 
     //
@@ -957,6 +959,16 @@ extension ServicesProviderClient {
 
         return bettingProvider.cashoutBet(betId: betId, cashoutValue: cashoutValue, stakeValue: stakeValue)
     }
+
+    public func getFreebet() -> AnyPublisher<FreebetBalance, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+        return bettingProvider.getFreebet()
+    }
+
 }
 
 // Utilities

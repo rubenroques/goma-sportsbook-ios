@@ -21,7 +21,7 @@ protocol BettingProvider: Connector {
     
     func calculatePotentialReturn(forBetTicket betTicket: BetTicket) -> AnyPublisher<BetslipPotentialReturn, ServiceProviderError>
 
-    func placeBets(betTickets: [BetTicket]) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError>
+    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError>
 
     func calculateCashout(betId: String) -> AnyPublisher<Cashout, ServiceProviderError>
 
@@ -29,5 +29,6 @@ protocol BettingProvider: Connector {
 
     func getBetslipSettings() -> AnyPublisher<BetslipSettings?, Never>
     func updateBetslipSettings(_ betslipSettings: BetslipSettings) -> AnyPublisher<Bool, Never>
-    
+
+    func getFreebet() -> AnyPublisher<FreebetBalance, ServiceProviderError>
 }

@@ -229,7 +229,7 @@ extension SportRadarModels {
             let path: String = (try? container.decode(String.self, forKey: .path)) ?? ""
             let changeType: String = (try? container.decode(String.self, forKey: .changeType)) ?? ""
 
-            print("ContentContainer recieved path \(path) with change \(changeType)")
+            // print("ContentContainer recieved path \(path) with change \(changeType)")
 
             if path.contains("idfoevent") && path.contains("idfomarket") && changeType.contains("added") {
                 // added a new Market

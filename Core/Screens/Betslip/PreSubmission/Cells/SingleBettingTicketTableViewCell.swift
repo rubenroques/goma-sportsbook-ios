@@ -96,6 +96,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         }
     }
 
+    var shouldHighlightTextfield: () -> Bool = { return false }
+
     var isFreeBetSelected: ((Bool) -> Void)?
     var isOddsBoostSelected: ((Bool) -> Void)?
 
@@ -105,7 +107,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
     var oddSubscriber: AnyCancellable?
     var oddAvailabilitySubscriber: AnyCancellable?
     var marketPublisherSubscriber: AnyCancellable?
-    var cancellables = Set<AnyCancellable>()
+    var walletUpdatesSubscriber: AnyCancellable?
 
     private var userBalance: Double?
 
@@ -341,7 +343,11 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         }, completion: nil)
     }
 
-    func configureWithBettingTicket(_ bettingTicket: BettingTicket, previousBettingAmount: Double? = nil, errorBetting: String? = nil) {
+    func configureWithBettingTicket(_ bettingTicket: BettingTicket,
+                                    previousBettingAmount: Double? = nil,
+                                    errorBetting: String? = nil,
+                                    shouldHighlightTextfield: Bool = false) {
+
 
         self.bettingTicket = bettingTicket
         self.outcomeNameLabel.text = bettingTicket.outcomeDescription
@@ -434,12 +440,24 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
             self.errorLateralBottomView.backgroundColor = UIColor.App.backgroundSecondary
         }
 
-        Env.userSessionStore.userWalletPublisher
+        self.walletUpdatesSubscriber?.cancel()
+        self.walletUpdatesSubscriber = Env.userSessionStore.userWalletPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] wallet in
                 self?.userBalance = wallet?.total
             })
-            .store(in: &cancellables)
+
+        if shouldHighlightTextfield {
+            self.amountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+        }
+        else {
+            if self.amountTextfield.isFirstResponder {
+                self.amountBaseView.layer.borderColor = UIColor.App.inputBorderActive.cgColor
+            }
+            else {
+                self.amountBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
+            }
+        }
 
     }
 
@@ -557,6 +575,11 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 extension SingleBettingTicketTableViewCell: UITextFieldDelegate {
 
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if self.shouldHighlightTextfield() {
+            self.amountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+            return true // If the isFreebetEnabled the border should stay orange
+        }
+
         if textField == self.amountTextfield {
             self.amountBaseView.layer.borderColor = UIColor.App.inputBorderActive.cgColor
         }
@@ -564,12 +587,20 @@ extension SingleBettingTicketTableViewCell: UITextFieldDelegate {
     }
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        if self.shouldHighlightTextfield() {
+            self.amountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+            return // If the isFreebetEnabled the border should stay orange
+        }
         if textField == self.amountTextfield {
             self.amountBaseView.layer.borderColor = UIColor.App.inputBorderActive.cgColor
         }
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
+        if self.shouldHighlightTextfield() {
+            self.amountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+            return // If the isFreebetEnabled the border should stay orange
+        }
         if textField == self.amountTextfield {
             self.amountBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
         }

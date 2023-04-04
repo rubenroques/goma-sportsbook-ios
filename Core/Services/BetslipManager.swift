@@ -274,7 +274,7 @@ extension BetslipManager {
 
     }
 
-    func placeQuickBet(bettingTicket: BettingTicket, amount: Double) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
+    func placeQuickBet(bettingTicket: BettingTicket, amount: Double, useFreebetBalance: Bool) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
         
         let convertedOdd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: bettingTicket.odd)
         let betTicketSelection = ServicesProvider.BetTicketSelection(identifier: bettingTicket.id,
@@ -290,7 +290,7 @@ extension BetslipManager {
                                                    stake: amount,
                                                    betGroupingType: .single(identifier: "S"))
 
-        let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket])
+        let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket], useFreebetBalance: useFreebetBalance)
             .mapError({ error in
                 switch error {
                 case .forbidden:
@@ -325,7 +325,7 @@ extension BetslipManager {
         return publisher
     }
 
-    func placeSingleBets(amounts: [String: Double]) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
+    func placeSingleBets(amounts: [String: Double], useFreebetBalance: Bool) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
         var betTickets: [ServicesProvider.BetTicket] = []
         for singleTicket in self.bettingTicketsPublisher.value {
             let stake = amounts[singleTicket.id] ?? 0.0
@@ -345,7 +345,7 @@ extension BetslipManager {
             betTickets.append(betTicket)
         }
 
-        let publisher =  Env.servicesProvider.placeBets(betTickets: betTickets)
+        let publisher =  Env.servicesProvider.placeBets(betTickets: betTickets, useFreebetBalance: useFreebetBalance)
             .mapError({ error in
                 switch error {
                 case .forbidden:
@@ -380,7 +380,7 @@ extension BetslipManager {
         return publisher
     }
 
-    func placeMultipleBet(withStake stake: Double) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
+    func placeMultipleBet(withStake stake: Double, useFreebetBalance: Bool) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
 
         guard
             self.bettingTicketsPublisher.value.isNotEmpty
@@ -414,7 +414,7 @@ extension BetslipManager {
         }
 
         let betTicket = BetTicket.init(tickets: betTicketSelections, stake: stake, betGroupingType: BetGroupingType.multiple(identifier: multipleBetIdentifier))
-        let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket])
+        let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket], useFreebetBalance: useFreebetBalance)
             .mapError({ error in
                 switch error {
                 case .forbidden:
@@ -449,7 +449,7 @@ extension BetslipManager {
         return publisher
     }
 
-    func placeSystemBet(withStake stake: Double, systemBetType: SystemBetType) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
+    func placeSystemBet(withStake stake: Double, systemBetType: SystemBetType, useFreebetBalance: Bool) -> AnyPublisher<[BetPlacedDetails], BetslipErrorType> {
 
         guard
             self.bettingTicketsPublisher.value.isNotEmpty
@@ -474,7 +474,7 @@ extension BetslipManager {
                                        stake: stake,
                                        betGroupingType: BetGroupingType.system(identifier: systemBetType.id, name: systemBetType.name ?? ""))
         
-        let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket])
+        let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket], useFreebetBalance: useFreebetBalance)
             .mapError({ error in
                 switch error {
                 case .forbidden:

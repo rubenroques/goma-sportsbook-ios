@@ -12,11 +12,12 @@ enum BettingAPIClient {
     case betDetails(identifier: String)
     case calculateReturns(betTicket: BetTicket)
     case getAllowedBetTypes(betTicketSelections: [BetTicketSelection])
-    case placeBets(betTickets: [BetTicket])
+    case placeBets(betTickets: [BetTicket], useFreebetBalance: Bool)
     case calculateCashout(betId: String)
     case cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double)
     case getBetslipSettings
     case updateBetslipSettings(acceptingReoffer: Bool)
+    case getFreebetBalance
 }
 
 extension BettingAPIClient: Endpoint {
@@ -41,6 +42,8 @@ extension BettingAPIClient: Endpoint {
             return "/api/betting/fo/attribute/getAll"
         case .updateBetslipSettings:
             return "/api/betting/fo/attribute/update"
+        case .getFreebetBalance:
+            return "/api/betting/fo/freeBalance"
         }
     }
     
@@ -94,6 +97,8 @@ extension BettingAPIClient: Endpoint {
         case .getBetslipSettings:
             return nil
         case .updateBetslipSettings:
+            return nil
+        case .getFreebetBalance:
             return nil
         }
     }
@@ -157,7 +162,7 @@ extension BettingAPIClient: Endpoint {
             let data = body.data(using: String.Encoding.utf8)!
             return data
 
-        case .placeBets(let betTickets):
+        case .placeBets(let betTickets, let useFreebetBalance):
 
             var betsArray: [String] = []
             for ticket in betTickets {
@@ -212,7 +217,8 @@ extension BettingAPIClient: Endpoint {
             let body = """
                        {
                          "bets": [\(betsString)],
-                         "useAutoAcceptance": true
+                         "useAutoAcceptance": true,
+                         "free": \(useFreebetBalance)
                        }
                        """
             let data = body.data(using: String.Encoding.utf8)!
@@ -249,6 +255,8 @@ extension BettingAPIClient: Endpoint {
             let data = body.data(using: String.Encoding.utf8)!
             return data
 
+        case .getFreebetBalance:
+            return nil
         }
         
     }
@@ -264,6 +272,7 @@ extension BettingAPIClient: Endpoint {
         case .cashoutBet: return .post
         case .getBetslipSettings: return .get
         case .updateBetslipSettings: return .post
+        case .getFreebetBalance: return .get
         }
     }
     
@@ -278,6 +287,7 @@ extension BettingAPIClient: Endpoint {
         case .cashoutBet: return true
         case .getBetslipSettings: return true
         case .updateBetslipSettings: return true
+        case .getFreebetBalance: return true
         }
     }
     
@@ -311,6 +321,7 @@ extension BettingAPIClient: Endpoint {
         case .cashoutBet: return TimeInterval(20)
         case .getBetslipSettings: return TimeInterval(10)
         case .updateBetslipSettings: return TimeInterval(10)
+        case .getFreebetBalance: return TimeInterval(10)
         }
     }
     

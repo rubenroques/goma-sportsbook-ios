@@ -63,6 +63,14 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var systemOddsTitleLabel: UILabel!
     @IBOutlet private weak var systemOddsValueLabel: UILabel!
 
+    @IBOutlet private weak var freeBetBaseView: UIView!
+    @IBOutlet private weak var freeBetInternalView: UIView!
+    @IBOutlet private weak var freeBetImageView: UIImageView!
+    @IBOutlet private weak var freeBetTitleLabel: UILabel!
+    @IBOutlet private weak var freeBetBalanceLabel: UILabel!
+    @IBOutlet private weak var freeBetSwitch: UISwitch!
+    @IBOutlet private weak var freeBetCloseButton: UIButton!
+
     @IBOutlet private weak var placeBetBaseView: UIView!
     @IBOutlet private weak var placeBetButtonsBaseView: UIView!
     @IBOutlet private weak var placeBetButtonsSeparatorView: UIView!
@@ -123,7 +131,17 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     private var userSelectedSystemBet: Bool = false
     private var isBetBuilderSelection: Bool = false
-    
+
+    private var isFreebetEnabled: CurrentValueSubject<Bool, Never> = .init(false)
+
+    private var isFreebetDismissed = false {
+        didSet {
+            if isFreebetDismissed {
+                self.freeBetBaseView.isHidden = true
+            }
+        }
+    }
+
     private var cancellables = Set<AnyCancellable>()
 
     var viewModel: PreSubmissionBetslipViewModel
@@ -270,6 +288,12 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.loadingBaseView.alpha = 0.0
         self.settingsPickerBaseView.alpha = 0.0
 
+        self.freeBetBaseView.isHidden = true
+
+        self.simpleWinningsBaseView.isHidden = false
+        self.multipleWinningsBaseView.isHidden = true
+        self.systemWinningsBaseView.isHidden = true
+
         self.view.bringSubviewToFront(systemBetTypeSelectorBaseView)
         self.view.bringSubviewToFront(settingsPickerBaseView)
         self.view.bringSubviewToFront(emptyBetsBaseView)
@@ -396,6 +420,10 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         singleBettingTicketDataSource.bettingValueForId = { [weak self] id in
             self?.simpleBetsBettingValues.value[id]
+        }
+
+        singleBettingTicketDataSource.shouldHighlightTextfield = { [weak self] in
+            return self?.isFreebetEnabled.value ?? false
         }
 
         // Loading settings odd change on bet
@@ -859,12 +887,76 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        Env.servicesProvider
+            .getFreebet()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                if case .failure = completion {
+                    self?.freeBetBalanceLabel.text = ""
+                    self?.freeBetBaseView.isHidden = true
+                }
+            } receiveValue: { [weak self] freebetBalance in
+                if freebetBalance.balance > 0.0 {
+                    // Show freebet view
+                    print("Show freebet view")
+                    let balance = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freebetBalance.balance))
+                    self?.freeBetBalanceLabel.text = balance
+                    self?.freeBetBaseView.isHidden = false
+                }
+                else {
+                    // Hide freebet view
+                    print("Hide freebet view")
+                    self?.freeBetBalanceLabel.text = ""
+                    self?.freeBetBaseView.isHidden = true
+                }
+            }
+            .store(in: &self.cancellables)
+
+
+        // Free bet
+        self.freeBetSwitch.addTarget(self, action: #selector(onFreebetSwitchValueChanged(_:)), for: .valueChanged)
+
+        self.freeBetCloseButton.addTarget(self, action: #selector(didTapCloseFreebetButton), for: .primaryActionTriggered)
+        self.freeBetInternalView.layer.cornerRadius = 5
+        self.freeBetInternalView.layer.borderWidth = 2
+        self.freeBetInternalView.layer.borderColor = UIColor.clear.cgColor
+
+        self.freeBetSwitch.setOn(false, animated: true)
+        self.freeBetTitleLabel.font = AppFont.with(type: .semibold, size: 14)
+        self.freeBetBalanceLabel.font = AppFont.with(type: .semibold, size: 14)
+
+        self.isFreebetEnabled
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isFreebetEnabled in
+                if isFreebetEnabled {
+                    self?.freeBetInternalView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+                    self?.amountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+                    self?.secondaryAmountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+                }
+                else {
+                    self?.freeBetInternalView.layer.borderColor = UIColor.clear.cgColor
+
+                    if self?.isKeyboardShowingPublisher.value ?? false {
+                        self?.amountBaseView.layer.borderColor = UIColor.App.inputBorderActive.cgColor
+                        self?.secondaryAmountBaseView.layer.borderColor = UIColor.App.inputBorderActive.cgColor
+                    }
+                    else {
+                        self?.amountBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
+                        self?.secondaryAmountBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
+                    }
+                }
+
+                self?.tableView.reloadData()
+            }
+            .store(in: &self.cancellables)
+
         self.setupWithTheme()
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
                                                name: UIResponder.keyboardWillHideNotification,
                                                object: nil)
+
 
         self.placeBetButton.isEnabled = false
     }
@@ -1122,6 +1214,18 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.settingsButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
         self.clearButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
+        self.freeBetBaseView.backgroundColor = .clear
+
+        self.freeBetInternalView.backgroundColor = UIColor.App.backgroundSecondary
+        self.freeBetImageView.setImageColor(color: UIColor.App.textPrimary)
+
+        self.freeBetTitleLabel.textColor = UIColor.App.textPrimary
+        self.freeBetBalanceLabel.textColor = UIColor.App.textPrimary
+
+        self.freeBetSwitch.onTintColor = UIColor.App.highlightPrimary
+
+        self.freeBetCloseButton.imageView?.setTintColor(color: UIColor.App.textPrimary)
+
     }
 
     @objc func dismissKeyboard() {
@@ -1208,9 +1312,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                     ()
                 case .failure(let error): // Error, clear previous info
                     print("requestMultipleBetPotentialReturn \(error)")
-                    self?.multipleOddsValueLabel.text = "-.--"
                     self?.multipleWinningsValueLabel.text = localized("no_value")
-                    self?.secondaryMultipleOddsValueLabel.text = "-.--"
                     self?.secondaryMultipleWinningsValueLabel.text = localized("no_value")
                 }
             } receiveValue: { [weak self] betPotencialReturn in
@@ -1318,7 +1420,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             
             if self.listTypePublisher.value == .simple {
                 let singleBetTicketStakes = self.simpleBetsBettingValues.value
-                Env.betslipManager.placeSingleBets(amounts: singleBetTicketStakes)
+                Env.betslipManager.placeSingleBets(amounts: singleBetTicketStakes, useFreebetBalance: self.isFreebetEnabled.value)
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] completion in
                     switch completion {
@@ -1343,7 +1445,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 .store(in: &cancellables)
             }
             else if self.listTypePublisher.value == .multiple {
-                Env.betslipManager.placeMultipleBet(withStake: self.realBetValue)
+                Env.betslipManager.placeMultipleBet(withStake: self.realBetValue, useFreebetBalance: self.isFreebetEnabled.value)
                     .receive(on: DispatchQueue.main)
                     .sink { [weak self] completion in
                         switch completion {
@@ -1368,7 +1470,9 @@ class PreSubmissionBetslipViewController: UIViewController {
                     .store(in: &cancellables)
             }
             else if self.listTypePublisher.value == .system, let selectedSystemBetType = self.selectedSystemBetType {
-                Env.betslipManager.placeSystemBet(withStake: self.realBetValue, systemBetType: selectedSystemBetType)
+                Env.betslipManager.placeSystemBet(withStake: self.realBetValue,
+                                                  systemBetType: selectedSystemBetType,
+                                                  useFreebetBalance: self.isFreebetEnabled.value)
                     .receive(on: DispatchQueue.main)
                     .sink { [weak self] completion in
                         switch completion {
@@ -1453,6 +1557,17 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
+    @objc private func onFreebetSwitchValueChanged(_ freeBetSwitch: UISwitch) {
+        self.isFreebetEnabled.send(freeBetSwitch.isOn)
+    }
+
+    @IBAction private func didTapCloseFreebetButton() {
+        self.freeBetSwitch.isOn = false
+        self.isFreebetEnabled.send(false)
+
+        self.isFreebetDismissed = true
+    }
+
     @IBAction private func didTapPlusOneButton() {
         self.addAmountValue(10.0)
     }
@@ -1470,6 +1585,12 @@ class PreSubmissionBetslipViewController: UIViewController {
 extension PreSubmissionBetslipViewController: UITextFieldDelegate {
 
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if self.isFreebetEnabled.value {
+            self.amountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+            self.secondaryAmountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+            return true // If the isFreebetEnabled the border should stay orange
+        }
+
         if textField == self.amountTextfield {
             self.amountBaseView.layer.borderColor = UIColor.App.inputBorderActive.cgColor
         }
@@ -1480,6 +1601,12 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
     }
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        if self.isFreebetEnabled.value {
+            self.amountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+            self.secondaryAmountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+            return // If the isFreebetEnabled the border should stay orange
+        }
+
         if textField == self.amountTextfield {
             self.amountBaseView.layer.borderColor = UIColor.App.inputBorderActive.cgColor
         }
@@ -1489,6 +1616,12 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
+        if self.isFreebetEnabled.value {
+            self.amountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+            self.secondaryAmountBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+            return // If the isFreebetEnabled the border should stay orange
+        }
+
         if textField == self.amountTextfield {
             self.amountBaseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
         }
@@ -1605,6 +1738,8 @@ extension PreSubmissionBetslipViewController: UITableViewDelegate, UITableViewDa
 
 class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewDataSource {
 
+    var shouldHighlightTextfield: () -> Bool = { return false }
+
     var bettingTickets: [BettingTicket] = []
 
     var didUpdateBettingValueAction: ((String, Double) -> Void)?
@@ -1635,8 +1770,17 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
             fatalError()
         }
         let bettingAmount = self.bettingValueForId?(bettingTicket.id)
-        cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: bettingAmount)
+
+        let shouldHighlightTextfield = self.shouldHighlightTextfield()
+        cell.configureWithBettingTicket(bettingTicket,
+                                        previousBettingAmount: bettingAmount,
+                                        shouldHighlightTextfield: shouldHighlightTextfield)
+
         cell.didUpdateBettingValueAction = self.didUpdateBettingValueAction
+        cell.shouldHighlightTextfield = { [weak self] in
+            return self?.shouldHighlightTextfield() ?? false
+        }
+
         return cell
     }
 

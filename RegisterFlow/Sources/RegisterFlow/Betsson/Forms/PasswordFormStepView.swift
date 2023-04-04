@@ -160,7 +160,6 @@ class PasswordFormStepView: FormStepView {
         self.tipsContainerStackView.addArrangedSubview(self.numbersTipLabel)
         self.tipsContainerStackView.addArrangedSubview(self.symbolsTipLabel)
 
-
         self.stackView.addArrangedSubview(self.tipsContainerView)
         self.stackView.addArrangedSubview(self.passwordHeaderTextFieldView)
 
@@ -254,32 +253,6 @@ class PasswordFormStepView: FormStepView {
                 for label in errorLabels {
                     self.markTipLabelError(label: label)
                 }
-
-//                for passwordState in passwordStates {
-//                    switch passwordState {
-//                    case .empty:
-//                        self.passwordHeaderTextFieldView.hideTipAndError()
-//                    case .short:
-//                        self.passwordHeaderTextFieldView.showError(withMessage: "The password is too short")
-//                    case .long:
-//                        self.passwordHeaderTextFieldView.showError(withMessage: "The password is too long")
-//                    case .invalidChars:
-//                        self.passwordHeaderTextFieldView.showError(withMessage: "The password contains invalids characters")
-//                    case .onlyNumbers:
-//                        self.passwordHeaderTextFieldView.showError(withMessage: "The password can not be all numbers")
-//                    case .needUppercase:
-//                        self.passwordHeaderTextFieldView.showError(withMessage: "The password must contain an uppercase letter")
-//                    case .needLowercase:
-//                        self.passwordHeaderTextFieldView.showError(withMessage: "The password must contain a lowercase letter")
-//                    case .needNumber:
-//                        self.passwordHeaderTextFieldView.showError(withMessage: "The password must contain a number")
-//                    case .needSpecial:
-//                        self.passwordHeaderTextFieldView.showError(withMessage: "The password must contain a special character (-!@$^&*)")
-//                    case .valid:
-//                        self.passwordHeaderTextFieldView.hideTipAndError()
-//                    }
-//                }
-
             }
             .store(in: &self.cancellables)
     }

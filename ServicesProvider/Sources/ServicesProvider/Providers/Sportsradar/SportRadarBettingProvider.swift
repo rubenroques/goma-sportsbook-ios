@@ -111,8 +111,8 @@ class SportRadarBettingProvider: BettingProvider, Connector {
             .eraseToAnyPublisher()
     }
 
-    func placeBets(betTickets: [BetTicket]) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
-        let endpoint = BettingAPIClient.placeBets(betTickets: betTickets)
+    func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+        let endpoint = BettingAPIClient.placeBets(betTickets: betTickets, useFreebetBalance: useFreebetBalance)
         let publisher: AnyPublisher<SportRadarModels.PlacedBetsResponse, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher
@@ -232,7 +232,6 @@ class SportRadarBettingProvider: BettingProvider, Connector {
             })
             .replaceError(with: nil)
             .eraseToAnyPublisher()
-
     }
 
     func updateBetslipSettings(_ betslipSettings: BetslipSettings) -> AnyPublisher<Bool, Never> {
@@ -249,7 +248,18 @@ class SportRadarBettingProvider: BettingProvider, Connector {
             })
             .replaceError(with: false)
             .eraseToAnyPublisher()
+    }
 
+    func getFreebet() -> AnyPublisher<FreebetBalance, ServiceProviderError> {
+
+        let endpoint = BettingAPIClient.getFreebetBalance
+        let publisher: AnyPublisher<SportRadarModels.FreebetResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher
+            .map({ freeBet -> FreebetBalance in
+                return FreebetBalance(balance: freeBet.balance)
+            })
+            .eraseToAnyPublisher()
     }
 
 }
