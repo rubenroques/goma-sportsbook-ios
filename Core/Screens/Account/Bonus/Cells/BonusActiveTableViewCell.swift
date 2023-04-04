@@ -212,19 +212,20 @@ class BonusActiveTableViewCell: UITableViewCell {
 
     // MARK: Actions
     @objc func didTapCancelButton() {
-//        let alert = UIAlertController(title: localized("cancel_bonus"),
-//                                      message: localized("cancel_bonus_confirmation"),
-//                                      preferredStyle: .alert)
-//
-//        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
-//
-//
-//        }))
-//
-//        alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
-//
-//        self.present(alert, animated: true, completion: nil)
-        self.viewModel?.cancelBonus()
+        let alert = UIAlertController(title: localized("cancel_bonus"),
+                                      message: localized("cancel_bonus_confirmation"),
+                                      preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+            self?.viewModel?.cancelBonus()
+
+        }))
+
+        alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
+
+        self.viewController?.present(alert, animated: true, completion: nil)
+
+        //self.viewModel?.cancelBonus()
 
     }
 
