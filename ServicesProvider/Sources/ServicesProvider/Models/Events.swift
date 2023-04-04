@@ -164,6 +164,9 @@ public class Market: Codable {
     public var isMainOutright: Bool?
     public var eventMarketCount: Int?
     public var isTradable: Bool
+    public var startDate: String?
+    public var homeParticipant: String?
+    public var awayParticipant: String?
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -175,6 +178,9 @@ public class Market: Codable {
         case isMainOutright = "ismainoutright"
         case eventMarketCount = "eventMarketCount"
         case isTradable = "isTradable"
+        case startDate = "tsstart"
+        case homeParticipant = "participantname_home"
+        case awayParticipant = "participantname_away"
     }
 
     public init(id: String,
@@ -185,7 +191,10 @@ public class Market: Codable {
                 eventName: String?,
                 isMainOutright: Bool?,
                 eventMarketCount: Int?,
-                isTradable: Bool) {
+                isTradable: Bool,
+                startDate: String?,
+                homeParticipant: String?,
+                awayParticipant: String?) {
 
         self.id = id
         self.name = name
@@ -196,6 +205,9 @@ public class Market: Codable {
         self.isMainOutright = isMainOutright
         self.eventMarketCount = eventMarketCount
         self.isTradable = isTradable
+        self.startDate = startDate
+        self.homeParticipant = homeParticipant
+        self.awayParticipant = awayParticipant
     }
 
     required public init(from decoder: Decoder) throws {
@@ -415,6 +427,8 @@ public struct Banner: Codable {
     public var imageUrl: String
     public var bodyText: String?
     public var type: String
+    public var linkUrl: String?
+    public var marketId: String?
 
     enum CodingKeys: String, CodingKey {
         case id = "idfwheadline"
@@ -423,6 +437,8 @@ public struct Banner: Codable {
         case imageUrl = "imageurl"
         case bodyText = "bodytext"
         case type = "idfwheadlinetype"
+        case linkUrl = "linkurl"
+        case marketId = "idfomarket"
     }
 }
 

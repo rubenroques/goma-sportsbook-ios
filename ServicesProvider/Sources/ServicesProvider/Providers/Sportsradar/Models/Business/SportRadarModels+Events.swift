@@ -274,6 +274,9 @@ extension SportRadarModels {
         var isMainOutright: Bool?
         var eventMarketCount: Int?
         var isTradable: Bool
+        var startDate: String?
+        var homeParticipant: String?
+        var awayParticipant: String?
 
         enum CodingKeys: String, CodingKey {
             case id = "idfomarket"
@@ -285,9 +288,12 @@ extension SportRadarModels {
             case isMainOutright = "ismainoutright"
             case eventMarketCount = "eventMarketCount"
             case isTradable = "istradable"
+            case startDate = "tsstart"
+            case homeParticipant = "participantname_home"
+            case awayParticipant = "participantname_away"
         }
 
-        init(id: String, name: String, outcomes: [Outcome], marketTypeId: String? = nil, eventMarketTypeId: String? = nil, eventName: String? = nil, isMainOutright: Bool? = nil, eventMarketCount: Int? = nil, isTradable: Bool) {
+        init(id: String, name: String, outcomes: [Outcome], marketTypeId: String? = nil, eventMarketTypeId: String? = nil, eventName: String? = nil, isMainOutright: Bool? = nil, eventMarketCount: Int? = nil, isTradable: Bool, startDate: String? = nil, homeParticipant: String? = nil, awayParticipant: String? = nil) {
             self.id = id
             self.name = name
             self.outcomes = outcomes
@@ -297,6 +303,9 @@ extension SportRadarModels {
             self.isMainOutright = isMainOutright
             self.eventMarketCount = eventMarketCount
             self.isTradable = isTradable
+            self.startDate = startDate
+            self.homeParticipant = homeParticipant
+            self.awayParticipant = awayParticipant
         }
 
         init(from decoder: Decoder) throws {
@@ -310,6 +319,10 @@ extension SportRadarModels {
             self.eventMarketCount = try container.decodeIfPresent(Int.self, forKey: .eventMarketCount)
             self.isTradable = try container.decodeIfPresent(Bool.self, forKey: .isTradable) ?? true
             self.outcomes = try container.decode([SportRadarModels.Outcome].self, forKey: .outcomes)
+            self.startDate = try container.decodeIfPresent(String.self, forKey: .startDate)
+            self.homeParticipant = try container.decodeIfPresent(String.self, forKey: .homeParticipant)
+            self.awayParticipant = try container.decodeIfPresent(String.self, forKey: .awayParticipant)
+
         }
         
     }
@@ -480,6 +493,8 @@ extension SportRadarModels {
         var imageUrl: String
         var bodyText: String?
         var type: String
+        var linkUrl: String?
+        var marketId: String?
 
         enum CodingKeys: String, CodingKey {
             case id = "idfwheadline"
@@ -488,6 +503,8 @@ extension SportRadarModels {
             case imageUrl = "imageurl"
             case bodyText = "bodytext"
             case type = "idfwheadlinetype"
+            case linkUrl = "linkurl"
+            case marketId = "idfomarket"
         }
     }
 

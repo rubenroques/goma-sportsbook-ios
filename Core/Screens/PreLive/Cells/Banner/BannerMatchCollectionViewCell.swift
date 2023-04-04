@@ -279,6 +279,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         switch viewModel.presentationType {
         case .match:
             if let url = viewModel.imageURL {
+                self.imageView.isHidden = false
                 self.imageView.kf.setImage(with: url)
             }
             viewModel.match

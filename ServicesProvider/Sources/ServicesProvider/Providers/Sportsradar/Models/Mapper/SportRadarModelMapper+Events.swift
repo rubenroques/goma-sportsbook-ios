@@ -70,7 +70,10 @@ extension SportRadarModelMapper {
                       eventName: internalMarket.eventName,
                       isMainOutright: false,
                       eventMarketCount: internalMarket.eventMarketCount,
-                      isTradable: internalMarket.isTradable ?? true)
+                      isTradable: internalMarket.isTradable ?? true,
+                      startDate: internalMarket.startDate,
+                      homeParticipant: internalMarket.homeParticipant,
+                      awayParticipant: internalMarket.awayParticipant)
     }
 
     static func outcome(fromInternalOutcome internalOutcome: SportRadarModels.Outcome) -> Outcome {
@@ -97,7 +100,7 @@ extension SportRadarModelMapper {
     }
 
     static func banner(fromInternalBanner internalBanner: SportRadarModels.Banner) -> Banner {
-        return Banner(id: internalBanner.id, name: internalBanner.name, title: internalBanner.title, imageUrl: internalBanner.imageUrl, bodyText: internalBanner.bodyText, type: internalBanner.type)
+        return Banner(id: internalBanner.id, name: internalBanner.name, title: internalBanner.title, imageUrl: internalBanner.imageUrl, bodyText: internalBanner.bodyText, type: internalBanner.type, linkUrl: internalBanner.linkUrl, marketId: internalBanner.marketId)
     }
 
     // Favorites

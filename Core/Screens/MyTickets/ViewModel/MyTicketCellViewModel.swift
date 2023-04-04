@@ -22,6 +22,7 @@ class MyTicketCellViewModel {
 
     var requestAlertAction: ((String, String) -> Void)?
     var showCashoutSuspendedAction: (() -> Void)?
+    var showCashoutState: ((AlertType, String) -> Void)?
 
     private var ticket: BetHistoryEntry
 
@@ -137,12 +138,19 @@ class MyTicketCellViewModel {
                         ()
                     case .failure(let error):
                         print("CASHOUT ERROR: \(error)")
+                        switch error {
+                        case .errorMessage(let message):
+                            self?.showCashoutState?(.error, message)
+                        default:
+                            ()
+                        }
                         self?.isLoadingCellData.send(false)
                     }
                 }, receiveValue: { [weak self] cashoutResult in
                     if cashoutResult.cashoutResult == -1 {
                         self?.requestDataRefreshAction?()
                         self?.isLoadingCellData.send(false)
+                        self?.showCashoutState?(.success, localized("cashout_success_text"))
                     }
                     else if cashoutResult.cashoutResult == 1 {
                         if let cashoutReoffer = cashoutResult.cashoutReoffer,

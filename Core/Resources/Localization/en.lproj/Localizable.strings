@@ -156,7 +156,7 @@
 "cashout_confirmation" = "Are you sure you want to cashout {amount} ?";
 "cashout_info" = "Get a percentage of your bet back before the game is over";
 "cashout_prompt_message" = "Your return money will be “{value} €”";
-"cashout_success_text" = "Your bet was cashed out successfully!"; // UNUSED
+"cashout_success_text" = "Your bet was cashed out successfully!";
 "cashout_value" = "Cashout {cashoutAmount}"; // UNUSED
 "casino" = "Casino";
 "casino_regulation" = "Casino Regulation"; // UNUSED
@@ -1144,3 +1144,6 @@
 "cashout_no_longer_available" = "This bet cashout is no longer available.";
 
 "bet_id" = "Bet ID";
+
+"cancel_bonus" = "Cancel Bonus";
+"cancel_bonus_confirmation" = "Are you sure you want to cancel this bonus?";
