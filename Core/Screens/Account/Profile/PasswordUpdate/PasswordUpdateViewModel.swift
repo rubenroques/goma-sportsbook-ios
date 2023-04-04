@@ -10,6 +10,20 @@ import Combine
 import ServicesProvider
 
 class PasswordUpdateViewModel: NSObject {
+
+    enum PasswordState {
+        case empty
+        case short
+        case long
+        case invalidChars
+        case onlyNumbers
+        case needUppercase
+        case needLowercase
+        case needNumber
+        case needSpecial
+        case valid
+    }
+
     // MARK: Private Properties
     private var cancellables = Set<AnyCancellable>()
 
@@ -20,22 +34,25 @@ class PasswordUpdateViewModel: NSObject {
     var shouldShowAlertPublisher: CurrentValueSubject<AlertInfo?, Never> = .init(nil)
     var newPassword: CurrentValueSubject<String?, Never> = .init("")
 
-    var passwordState: AnyPublisher<PasswordState, Never> {
+    var passwordState: AnyPublisher<[PasswordState], Never> {
         return self.newPassword
             .map { password in
-                guard let password else { return PasswordState.empty }
-                if password.isEmpty { return PasswordState.empty }
-                if password.count < 8 { return PasswordState.short }
-                if password.count > 16 { return PasswordState.long }
+                var passwordStates: [PasswordState] = []
+
+                guard let password else { return [PasswordState.empty] }
+
+                if password.isEmpty { passwordStates.append(PasswordState.empty) }
+                if password.count < 8 { passwordStates.append(PasswordState.short) }
+                if password.count > 16 { passwordStates.append(PasswordState.long) }
 
                 let numbersCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "0123456789")
                 if password.rangeOfCharacter(from: numbersCharacterSet.inverted) == nil {
-                    return PasswordState.onlyNumbers
+                    passwordStates.append(PasswordState.onlyNumbers)
                 }
 
                 let validCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "-!@$^&*abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
                 if password.rangeOfCharacter(from: validCharacterSet.inverted) != nil {
-                    return PasswordState.invalidChars
+                    passwordStates.append(PasswordState.invalidChars)
                 }
 
                 let specialCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "-!@$^&*")
@@ -43,19 +60,23 @@ class PasswordUpdateViewModel: NSObject {
                 let upperCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
                 if password.rangeOfCharacter(from: lowerCharacterSet as CharacterSet) == nil {
-                    return PasswordState.needLowercase
+                    passwordStates.append(PasswordState.needLowercase)
                 }
                 if password.rangeOfCharacter(from: upperCharacterSet as CharacterSet) == nil {
-                    return PasswordState.needUppercase
+                    passwordStates.append(PasswordState.needUppercase)
                 }
                 if password.rangeOfCharacter(from: numbersCharacterSet as CharacterSet) == nil {
-                    return PasswordState.needNumber
+                    passwordStates.append(PasswordState.needNumber)
                 }
                 if password.rangeOfCharacter(from: specialCharacterSet as CharacterSet) == nil {
-                    return PasswordState.needSpecial
+                    passwordStates.append(PasswordState.needSpecial)
                 }
 
-                return PasswordState.valid
+                if !passwordStates.isEmpty {
+                    return passwordStates
+                }
+
+                return [PasswordState.valid]
             }
             .eraseToAnyPublisher()
     }
@@ -133,17 +154,4 @@ class PasswordUpdateViewModel: NSObject {
 struct AlertInfo {
     var alertType: EditAlertView.AlertState
     var message: String
-}
-
-enum PasswordState {
-    case empty
-    case short
-    case long
-    case invalidChars
-    case onlyNumbers
-    case needUppercase
-    case needLowercase
-    case needNumber
-    case needSpecial
-    case valid
 }

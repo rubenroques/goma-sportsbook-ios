@@ -18,14 +18,22 @@ class PasswordUpdateViewController: UIViewController {
     @IBOutlet private var oldPasswordHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var newPasswordHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var confirmPasswordHeaderTextFieldView: HeaderTextFieldView!
+
+    @IBOutlet private var tipTitleLabel: UILabel!
+    @IBOutlet private var lengthTipLabel: UILabel!
+    @IBOutlet private var uppercaseTipLabel: UILabel!
+    @IBOutlet private var lowercaseTipLabel: UILabel!
+    @IBOutlet private var numbersTipLabel: UILabel!
+    @IBOutlet private var symbolsTipLabel: UILabel!
+
     @IBOutlet private var separatorLineView: UIView!
     @IBOutlet private var securityQuestionLabel: UILabel!
     @IBOutlet private var securityQuestionHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var securityAnswerHeaderTextFieldView: HeaderTextFieldView!
+
     @IBOutlet private var loadingBaseView: UIView!
     @IBOutlet private var loadingActivityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private var scrollView: UIScrollView!
-    @IBOutlet private var passwordPolicyLabel: UILabel!
 
     private var isLoading: Bool = false {
         didSet {
@@ -61,8 +69,8 @@ class PasswordUpdateViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        commonInit()
-        setupWithTheme()
+        self.commonInit()
+        self.setupWithTheme()
 
         self.bind(toViewModel: self.viewModel)
 
@@ -74,31 +82,53 @@ class PasswordUpdateViewController: UIViewController {
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        setupWithTheme()
+        self.setupWithTheme()
     }
 
     func commonInit() {
-        headerLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
-        headerLabel.text = localized("account_security")
+        self.headerLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
+        self.headerLabel.text = localized("account_security")
 
-        editButton.setTitle(localized("save"), for: .normal)
+        self.self.editButton.setTitle(localized("save"), for: .normal)
         editButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
-        oldPasswordHeaderTextFieldView.setPlaceholderText(localized("old_password"))
-        newPasswordHeaderTextFieldView.setPlaceholderText(localized("new_password"))
-        confirmPasswordHeaderTextFieldView.setPlaceholderText(localized("confirm_password"))
+        self.tipTitleLabel.text = "In order to protect your account your password must:"
+        self.numbersTipLabel.text = "• Contain at least one number"
+        self.uppercaseTipLabel.text = "• Contain an uppercase character"
+        self.lowercaseTipLabel.text = "• Contain a lowercase character"
+        self.symbolsTipLabel.text = "• Be alphanumeric with at least 1 symbol from -!@^$&*"
+        self.lengthTipLabel.text = "• Have length between 8 and 16 characters"
 
-        oldPasswordHeaderTextFieldView.setSecureField(true)
-        oldPasswordHeaderTextFieldView.showPasswordLabelVisible(visible: false)
+        self.tipTitleLabel.font = AppFont.with(type: .semibold, size: 12)
+        self.numbersTipLabel.font = AppFont.with(type: .semibold, size: 12)
+        self.uppercaseTipLabel.font = AppFont.with(type: .semibold, size: 12)
+        self.lowercaseTipLabel.font = AppFont.with(type: .semibold, size: 12)
+        self.symbolsTipLabel.font = AppFont.with(type: .semibold, size: 12)
+        self.lengthTipLabel.font = AppFont.with(type: .semibold, size: 12)
 
-        newPasswordHeaderTextFieldView.setSecureField(true)
+        self.tipTitleLabel.numberOfLines = 2
+        self.numbersTipLabel.numberOfLines = 2
+        self.uppercaseTipLabel.numberOfLines = 2
+        self.lowercaseTipLabel.numberOfLines = 2
+        self.symbolsTipLabel.numberOfLines = 2
+        self.lengthTipLabel.numberOfLines = 2
 
-        confirmPasswordHeaderTextFieldView.setSecureField(true)
+        self.oldPasswordHeaderTextFieldView.setPlaceholderText(localized("old_password"))
+        self.newPasswordHeaderTextFieldView.setPlaceholderText(localized("new_password"))
+        self.confirmPasswordHeaderTextFieldView.setPlaceholderText(localized("confirm_password"))
 
+        self.oldPasswordHeaderTextFieldView.setSecureField(true)
+        self.oldPasswordHeaderTextFieldView.showPasswordLabelVisible(visible: false)
+
+        self.newPasswordHeaderTextFieldView.setSecureField(true)
+
+        self.confirmPasswordHeaderTextFieldView.setSecureField(true)
+
+        
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
 
-        editButton.isEnabled = false
+        self.editButton.isEnabled = false
 
         self.securityQuestionLabel.text = localized("security_question")
         self.securityQuestionLabel.font = AppFont.with(type: .bold, size: 17)
@@ -107,61 +137,18 @@ class PasswordUpdateViewController: UIViewController {
 
         self.securityAnswerHeaderTextFieldView.setPlaceholderText(localized("security_answer"))
 
-        self.passwordPolicyLabel.text = ""
-        self.passwordPolicyLabel.font = AppFont.with(type: .semibold, size: 12)
-        self.passwordPolicyLabel.numberOfLines = 0
-        self.passwordPolicyLabel.isHidden = false
-
         Publishers.CombineLatest4(self.oldPasswordHeaderTextFieldView.textPublisher,
                                   self.newPasswordHeaderTextFieldView.textPublisher,
                                   self.confirmPasswordHeaderTextFieldView.textPublisher,
                                   self.viewModel.passwordState)
-            .map { oldPassword, newPassword, confirmPassword, passwordState in
+            .map { oldPassword, newPassword, confirmPassword, passwordStates -> Bool in
 
                 if let newPassword {
                     self.viewModel.setPassword(newPassword)
                 }
 
-                if let newPassword,
-                   let confirmPassword {
-
-                    if passwordState == .valid && confirmPassword != newPassword {
-                        self.confirmPasswordHeaderTextFieldView.showErrorOnField(text: localized("password_not_match"))
-                    }
-                }
-
-//                if self.passwordRegex == "" {
-//
-//                    self.canSavePassword = false
-//
-//                    return false
-//                }
-
-                if (newPassword ?? "") != (confirmPassword ?? "") {
-
-                    self.canSavePassword = false
-
-                    return false
-                }
-
-//                if oldPassword == "" ||
-//                    new?.range(of: self.passwordRegex, options: .regularExpression) == nil ||
-//                    confirm?.range(of: self.passwordRegex, options: .regularExpression) == nil {
-//
-//                    self.canSavePassword = false
-//
-//                    return false
-//                }
-                if oldPassword == "" {
-
-                    self.canSavePassword = false
-
-                    return false
-                }
-
-                if passwordState != .valid {
-                    self.canSavePassword = false
-
+                if let newPassword, let confirmPassword, confirmPassword != newPassword {
+                    self.confirmPasswordHeaderTextFieldView.showErrorOnField(text: localized("password_not_match"))
                     return false
                 }
 
@@ -169,11 +156,63 @@ class PasswordUpdateViewController: UIViewController {
                 self.confirmPasswordHeaderTextFieldView.hideTipAndError()
                 self.oldPasswordHeaderTextFieldView.hideTipAndError()
 
+                let allLabels = [self.lengthTipLabel,
+                                 self.uppercaseTipLabel,
+                                 self.lowercaseTipLabel,
+                                 self.numbersTipLabel,
+                                 self.symbolsTipLabel].compactMap({ $0 })
+
+                if passwordStates.contains(.empty) {
+                    for label in allLabels {
+                        self.resetTipLabel(label: label)
+                    }
+                    return false
+                }
+
+                var errorLabels: Set<UILabel> = []
+
+                if passwordStates.contains(.short) || passwordStates.contains(.long) {
+                    errorLabels.insert(self.lengthTipLabel)
+                }
+
+                if passwordStates.contains(.invalidChars) {
+                    errorLabels.insert(self.symbolsTipLabel)
+                }
+
+                if passwordStates.contains(.onlyNumbers) {
+                    errorLabels.insert(self.lowercaseTipLabel)
+                    errorLabels.insert(self.uppercaseTipLabel)
+                    errorLabels.insert(self.symbolsTipLabel)
+                }
+
+                if passwordStates.contains(.needLowercase) {
+                    errorLabels.insert(self.lowercaseTipLabel)
+                }
+                if passwordStates.contains(.needUppercase) {
+                    errorLabels.insert(self.uppercaseTipLabel)
+                }
+                if passwordStates.contains(.needNumber) {
+                    errorLabels.insert(self.numbersTipLabel)
+                }
+                if passwordStates.contains(.needSpecial) {
+                    errorLabels.insert(self.symbolsTipLabel)
+                }
+
+                for label in allLabels where !errorLabels.contains(label) {
+                    self.markTipLabelCompleted(label: label)
+                }
+
+                for label in errorLabels {
+                    self.markTipLabelError(label: label)
+                }
+
                 self.canSavePassword = true
 
                 return true
             }
-            .assign(to: \.isEnabled, on: self.editButton)
+            .sink(receiveValue: { [weak self] enabled in
+                self?.editButton.isEnabled = enabled
+            })
             .store(in: &self.cancellables)
 
         Publishers.CombineLatest(self.securityQuestionHeaderTextFieldView.textPublisher, self.securityAnswerHeaderTextFieldView.textPublisher)
@@ -212,27 +251,27 @@ class PasswordUpdateViewController: UIViewController {
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        containerView.backgroundColor = UIColor.App.backgroundPrimary
+        self.containerView.backgroundColor = UIColor.App.backgroundPrimary
         
-        headerView.backgroundColor = UIColor.App.backgroundPrimary
-        headerLabel.textColor = UIColor.App.textPrimary
+        self.headerView.backgroundColor = UIColor.App.backgroundPrimary
+        self.headerLabel.textColor = UIColor.App.textPrimary
 
-        editButton.backgroundColor = .clear
-        editButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
-        editButton.setTitleColor(UIColor.App.highlightPrimary, for: .highlighted)
-        editButton.setTitleColor(UIColor.App.textDisablePrimary, for: .disabled)
+        self.editButton.backgroundColor = .clear
+        self.editButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+        self.editButton.setTitleColor(UIColor.App.highlightPrimary, for: .highlighted)
+        self.editButton.setTitleColor(UIColor.App.textDisablePrimary, for: .disabled)
 
-        oldPasswordHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
-        oldPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
-        oldPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
+        self.oldPasswordHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        self.oldPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        self.oldPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
 
-        newPasswordHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
-        newPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
-        newPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
+        self.newPasswordHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        self.newPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        self.newPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
 
-        confirmPasswordHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
-        confirmPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
-        confirmPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
+        self.confirmPasswordHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        self.confirmPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        self.confirmPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
 
         self.separatorLineView.backgroundColor = UIColor.App.separatorLine
 
@@ -250,7 +289,13 @@ class PasswordUpdateViewController: UIViewController {
 
         self.scrollView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.passwordPolicyLabel.textColor = UIColor.App.inputTextTitle
+        self.tipTitleLabel.textColor = UIColor.App.textPrimary
+        self.lengthTipLabel.textColor = UIColor.App.textPrimary
+        self.uppercaseTipLabel.textColor = UIColor.App.textPrimary
+        self.lowercaseTipLabel.textColor = UIColor.App.textPrimary
+        self.numbersTipLabel.textColor = UIColor.App.textPrimary
+        self.symbolsTipLabel.textColor = UIColor.App.textPrimary
+
     }
 
     private func bind(toViewModel viewModel: PasswordUpdateViewModel) {
@@ -259,12 +304,8 @@ class PasswordUpdateViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] policy in
                 if let policy = policy {
-
                     self?.passwordRegex = policy.regularExpression ?? ""
                     self?.passwordRegexMessage = policy.message
-
-                    self?.passwordPolicyLabel.text = self?.passwordRegexMessage ?? ""
-
                 }
             })
             .store(in: &cancellables)
@@ -301,51 +342,7 @@ class PasswordUpdateViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        viewModel.passwordState
-            .debounce(for: .seconds(1.5), scheduler: DispatchQueue.main)
-            .receive(on: DispatchQueue.main)
-            .sink { passwordState in
-                switch passwordState {
-                case .empty:
-                    self.newPasswordHeaderTextFieldView.hideTipAndError()
-                    self.passwordPolicyLabel.isHidden = false
-                case .short:
-                    self.newPasswordHeaderTextFieldView.showErrorOnField(text: "The password is too short", color: UIColor.App.inputError)
-                    self.passwordPolicyLabel.isHidden = true
-                case .long:
-                    self.newPasswordHeaderTextFieldView.showErrorOnField(text: "The password is too long", color: UIColor.App.inputError)
-                    self.passwordPolicyLabel.isHidden = true
 
-                case  .invalidChars:
-                    self.newPasswordHeaderTextFieldView.showErrorOnField(text: "The password contains invalids characters", color: UIColor.App.inputError)
-                    self.passwordPolicyLabel.isHidden = true
-
-                case .onlyNumbers:
-                    self.newPasswordHeaderTextFieldView.showErrorOnField(text: "The password can not be all numbers", color: UIColor.App.inputError)
-                    self.passwordPolicyLabel.isHidden = true
-
-                case .needUppercase:
-                    self.newPasswordHeaderTextFieldView.showErrorOnField(text: "The password must contain an uppercase letter", color: UIColor.App.inputError)
-                    self.passwordPolicyLabel.isHidden = true
-
-                case .needLowercase:
-                    self.newPasswordHeaderTextFieldView.showErrorOnField(text: "The password must contain a lowercase letter", color: UIColor.App.inputError)
-                    self.passwordPolicyLabel.isHidden = true
-
-                case .needNumber:
-                    self.newPasswordHeaderTextFieldView.showErrorOnField(text: "The password must contain a number", color: UIColor.App.inputError)
-                    self.passwordPolicyLabel.isHidden = true
-
-                case .needSpecial:
-                    self.newPasswordHeaderTextFieldView.showErrorOnField(text: "The password must contain a special character (-!@$^&*)", color: UIColor.App.inputError)
-                    self.passwordPolicyLabel.isHidden = true
-
-                case .valid:
-                    self.newPasswordHeaderTextFieldView.hideTipAndError()
-                    self.passwordPolicyLabel.isHidden = true
-                }
-            }
-            .store(in: &self.cancellables)
     }
 
     private func setupProfileSecurity(profile: EveryMatrix.UserProfile) {
@@ -405,7 +402,6 @@ class PasswordUpdateViewController: UIViewController {
         self.confirmPasswordHeaderTextFieldView.resignFirstResponder()
         self.securityQuestionHeaderTextFieldView.resignFirstResponder()
         self.securityAnswerHeaderTextFieldView.resignFirstResponder()
-
     }
 
     @IBAction private func editAction() {
@@ -475,6 +471,23 @@ class PasswordUpdateViewController: UIViewController {
 
         let contentInset: UIEdgeInsets = UIEdgeInsets.zero
         scrollView.contentInset = contentInset
+    }
+
+
+    private func resetTipLabel(label: UILabel) {
+        label.alpha = 1.0
+    }
+
+    private func markTipLabelCompleted(label: UILabel) {
+        UIView.animate(withDuration: 0.2) {
+            label.alpha = 0.37
+        }
+    }
+
+    private func markTipLabelError(label: UILabel) {
+        UIView.animate(withDuration: 0.2) {
+            label.alpha = 1.0
+        }
     }
 
 }
