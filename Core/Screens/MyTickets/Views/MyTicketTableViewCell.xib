@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -36,21 +37,61 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FTm-sF-tcl">
                                 <rect key="frame" x="0.0" y="8" width="399" height="56"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="rFM-eh-O7u">
-                                        <rect key="frame" x="12" y="11.5" width="327" height="33"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="rFM-eh-O7u">
+                                        <rect key="frame" x="12" y="9.5" width="327" height="37"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ticket 1 - Multiple Bet" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u4V-wd-Z9n">
-                                                <rect key="frame" x="0.0" y="0.0" width="327" height="16"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="327" height="20"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="20" id="t2Q-Iz-KUh"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="02/10/21, 2:30PM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qru-Yl-AEW">
-                                                <rect key="frame" x="0.0" y="17" width="327" height="16"/>
-                                                <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="10"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wwr-bp-ugq">
+                                                <rect key="frame" x="0.0" y="21" width="327" height="16"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="02/10/21, 2:30PM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qru-Yl-AEW">
+                                                        <rect key="frame" x="0.0" y="0.0" width="80" height="16"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="16" id="qFf-te-X1S"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="10"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jZS-1f-Vac">
+                                                        <rect key="frame" x="86" y="-1" width="44" height="18"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Freebet" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fDz-Ed-4cl">
+                                                                <rect key="frame" x="4" y="1" width="36" height="16"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="16" id="Cwm-XB-bP8"/>
+                                                                </constraints>
+                                                                <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="10"/>
+                                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                        <color key="backgroundColor" name="alertWarning"/>
+                                                        <constraints>
+                                                            <constraint firstItem="fDz-Ed-4cl" firstAttribute="top" secondItem="jZS-1f-Vac" secondAttribute="top" constant="1" id="69q-2R-zH9"/>
+                                                            <constraint firstItem="fDz-Ed-4cl" firstAttribute="leading" secondItem="jZS-1f-Vac" secondAttribute="leading" constant="4" id="MeT-oa-yAH"/>
+                                                            <constraint firstAttribute="bottom" secondItem="fDz-Ed-4cl" secondAttribute="bottom" constant="1" id="m18-qB-sR2"/>
+                                                            <constraint firstAttribute="trailing" secondItem="fDz-Ed-4cl" secondAttribute="trailing" constant="4" id="wbs-he-dSP"/>
+                                                        </constraints>
+                                                    </view>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="qru-Yl-AEW" firstAttribute="leading" secondItem="wwr-bp-ugq" secondAttribute="leading" id="18m-lo-rds"/>
+                                                    <constraint firstItem="jZS-1f-Vac" firstAttribute="centerY" secondItem="wwr-bp-ugq" secondAttribute="centerY" id="bSN-81-oW9"/>
+                                                    <constraint firstItem="jZS-1f-Vac" firstAttribute="leading" secondItem="qru-Yl-AEW" secondAttribute="trailing" constant="6" id="hJk-eI-Z8Q"/>
+                                                    <constraint firstAttribute="bottom" secondItem="qru-Yl-AEW" secondAttribute="bottom" id="lWj-Nf-3Qq"/>
+                                                    <constraint firstItem="qru-Yl-AEW" firstAttribute="top" secondItem="wwr-bp-ugq" secondAttribute="top" id="xi2-gH-LVw"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zuK-D6-xfw">
@@ -274,7 +315,8 @@
                 <outlet property="bottomStackView" destination="od3-Q5-lI2" id="IEE-Mp-gXO"/>
                 <outlet property="cashoutBaseView" destination="BLE-kd-Pbd" id="Xex-a1-L5G"/>
                 <outlet property="cashoutButton" destination="a2o-OR-1K7" id="5v6-9G-LDX"/>
-                <outlet property="contentView" destination="H2p-sc-9uM" id="0te-xh-T3X"/>
+                <outlet property="freebetBaseView" destination="jZS-1f-Vac" id="GzR-oJ-LD9"/>
+                <outlet property="freebetLabel" destination="fDz-Ed-4cl" id="nMp-1t-eq4"/>
                 <outlet property="headerBaseView" destination="FTm-sF-tcl" id="4tV-PT-DAQ"/>
                 <outlet property="loadingActivityIndicator" destination="q1c-HF-zYC" id="pBr-eT-MIT"/>
                 <outlet property="loadingView" destination="3sD-Ev-YhE" id="K10-lx-s4c"/>
@@ -292,5 +334,8 @@
     </objects>
     <resources>
         <image name="send_bet_icon" width="18" height="18"/>
+        <namedColor name="alertWarning">
+            <color red="0.94901960784313721" green="0.75294117647058822" blue="0.21568627450980393" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

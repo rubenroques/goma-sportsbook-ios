@@ -24,7 +24,7 @@ public struct Bet: Codable {
     public var potentialReturn: Double?
     public var totalReturn: Double?
     public var date: Date
-
+    public var freebet: Bool
 }
 
 public struct BetSelection: Codable {

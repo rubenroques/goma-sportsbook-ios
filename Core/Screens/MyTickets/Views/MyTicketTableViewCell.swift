@@ -41,6 +41,9 @@ class MyTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var loadingView: UIView!
     @IBOutlet private weak var loadingActivityIndicator: UIActivityIndicatorView!
 
+    @IBOutlet private weak var freebetBaseView: UIView!
+    @IBOutlet private weak var freebetLabel: UILabel!
+
     private var betHistoryEntry: BetHistoryEntry?
 
     private var viewModel: MyTicketCellViewModel?
@@ -97,6 +100,14 @@ class MyTicketTableViewCell: UITableViewCell {
         self.betAmountSubtitleLabel.text = "-"
         self.winningsSubtitleLabel.text = "-"
 
+        self.freebetLabel.text = localized("Freebet")
+        self.freebetLabel.font = AppFont.with(type: .bold, size: 9.5)
+
+        self.freebetBaseView.clipsToBounds = true
+        self.freebetBaseView.layer.masksToBounds = true
+
+        self.freebetBaseView.isHidden = true
+
         self.setupWithTheme()
     }
 
@@ -104,6 +115,7 @@ class MyTicketTableViewCell: UITableViewCell {
         super.prepareForReuse()
 
         self.loadingView.isHidden = true
+        self.freebetBaseView.isHidden = true
 
         self.betHistoryEntry = nil
         self.viewModel = nil
@@ -127,10 +139,14 @@ class MyTicketTableViewCell: UITableViewCell {
         self.totalOddSubtitleLabel.text = "-"
         self.betAmountSubtitleLabel.text = "-"
         self.winningsSubtitleLabel.text = "-"
+
+
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
+
+        self.freebetBaseView.layer.cornerRadius = self.freebetBaseView.frame.height / 2
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -168,6 +184,8 @@ class MyTicketTableViewCell: UITableViewCell {
         self.cashoutButton.layer.masksToBounds = true
         self.cashoutButton.backgroundColor = .clear
 
+        self.freebetBaseView.backgroundColor = UIColor.App.myTicketsOther
+
         self.loadingActivityIndicator.tintColor = UIColor.App.textPrimary
 
         if let status = self.betHistoryEntry?.status?.uppercased() {
@@ -202,6 +220,13 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.betHistoryEntry = betHistoryEntry
         self.viewModel = viewModel
+
+        if betHistoryEntry.freeBet ?? false {
+            self.freebetBaseView.isHidden = false
+        }
+        else {
+            self.freebetBaseView.isHidden = true
+        }
 
         if let state = self.viewModel?.hasCashoutEnabled.value {
             self.configureCashoutButton(withState: state)

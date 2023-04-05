@@ -90,6 +90,8 @@ extension SportRadarModels {
         var tournamentCountryName: String?
         var tournamentName: String?
 
+        var freeBet: Bool
+
         enum CodingKeys: String, CodingKey {
             case identifier = "idFOBet"
             case eventName
@@ -117,6 +119,9 @@ extension SportRadarModels {
             case eventId = "idFOEvent"
             case tournamentCountryName = "tournamentCountryName"
             case tournamentName = "tournamentName"
+
+            case freeBet = "free"
+
         }
 
         init(from decoder: Decoder) throws {
@@ -163,6 +168,60 @@ extension SportRadarModels {
             self.tournamentCountryName = try container.decodeIfPresent(String.self, forKey: .tournamentCountryName)
 
             self.tournamentName = try container.decodeIfPresent(String.self, forKey: .tournamentName)
+
+            if let freeBetIntValue = try container.decodeIfPresent(Int.self, forKey: .freeBet) {
+                print(" freeBet = \(freeBetIntValue)")
+                if freeBetIntValue == -1 {
+                    self.freeBet = true
+                }
+                else {
+                    self.freeBet = false
+                }
+            }
+            else if let freeBetStringValue = try container.decodeIfPresent(String.self, forKey: .freeBet) {
+                if freeBetStringValue == "-1" {
+                    self.freeBet = true
+                }
+                else {
+                    self.freeBet = false
+                }
+            }
+            else if let freeBetBoolValue = try container.decodeIfPresent(Bool.self, forKey: .freeBet) {
+                self.freeBet = freeBetBoolValue
+            }
+            else {
+                self.freeBet = false
+            }
+
+            print("-bet: \(self)")
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(self.identifier, forKey: CodingKeys.identifier)
+            try container.encode(self.eventName, forKey: CodingKeys.eventName)
+            try container.encodeIfPresent(self.homeTeamName, forKey: CodingKeys.homeTeamName)
+            try container.encodeIfPresent(self.awayTeamName, forKey: CodingKeys.awayTeamName)
+            try container.encode(self.sportTypeName, forKey: CodingKeys.sportTypeName)
+            try container.encode(self.type, forKey: CodingKeys.type)
+            try container.encode(self.state, forKey: CodingKeys.state)
+            try container.encode(self.result, forKey: CodingKeys.result)
+            try container.encode(self.globalState, forKey: CodingKeys.globalState)
+            try container.encode(self.marketName, forKey: CodingKeys.marketName)
+            try container.encode(self.outcomeName, forKey: CodingKeys.outcomeName)
+            try container.encodeIfPresent(self.potentialReturn, forKey: CodingKeys.potentialReturn)
+            try container.encodeIfPresent(self.totalReturn, forKey: CodingKeys.totalReturn)
+            try container.encode(self.totalOdd, forKey: CodingKeys.totalOdd)
+            try container.encode(self.totalStake, forKey: CodingKeys.totalStake)
+            try container.encode(self.attemptedDate, forKey: CodingKeys.attemptedDate)
+            try container.encode(self.oddDenominator, forKey: CodingKeys.oddDenominator)
+            try container.encode(self.oddNumerator, forKey: CodingKeys.oddNumerator)
+            try container.encode(self.order, forKey: CodingKeys.order)
+            try container.encodeIfPresent(self.eventResult, forKey: CodingKeys.eventResult)
+            try container.encode(self.eventId, forKey: CodingKeys.eventId)
+            try container.encodeIfPresent(self.tournamentCountryName, forKey: CodingKeys.tournamentCountryName)
+            try container.encodeIfPresent(self.tournamentName, forKey: CodingKeys.tournamentName)
+            try container.encodeIfPresent(self.freeBet, forKey: CodingKeys.freeBet)
         }
 
     }
