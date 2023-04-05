@@ -103,7 +103,7 @@ class MyTicketTableViewCell: UITableViewCell {
         self.winningsSubtitleLabel.text = "-"
 
         self.freebetLabel.text = localized("Freebet")
-        self.freebetLabel.font = AppFont.with(type: .bold, size: 9.5)
+        self.freebetLabel.font = AppFont.with(type: .bold, size: 9.0)
 
         self.freebetBaseView.clipsToBounds = true
         self.freebetBaseView.layer.masksToBounds = true

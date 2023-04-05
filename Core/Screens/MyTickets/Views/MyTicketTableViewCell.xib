@@ -26,7 +26,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tt6-nr-mqM">
-                        <rect key="frame" x="12" y="10" width="399" height="455"/>
+                        <rect key="frame" x="12" y="10" width="399" height="466"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="th4-zS-Yw2">
                                 <rect key="frame" x="0.0" y="0.0" width="399" height="8"/>
@@ -35,10 +35,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FTm-sF-tcl">
-                                <rect key="frame" x="0.0" y="8" width="399" height="56"/>
+                                <rect key="frame" x="0.0" y="8" width="399" height="65"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="rFM-eh-O7u">
-                                        <rect key="frame" x="12" y="9.5" width="327" height="37"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="rFM-eh-O7u">
+                                        <rect key="frame" x="12" y="4" width="327" height="57"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ticket 1 - Multiple Bet" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u4V-wd-Z9n">
                                                 <rect key="frame" x="0.0" y="0.0" width="327" height="20"/>
@@ -50,7 +50,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wwr-bp-ugq">
-                                                <rect key="frame" x="0.0" y="21" width="327" height="16"/>
+                                                <rect key="frame" x="0.0" y="22" width="327" height="16"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="02/10/21, 2:30PM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qru-Yl-AEW">
                                                         <rect key="frame" x="0.0" y="0.0" width="80" height="16"/>
@@ -62,10 +62,10 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jZS-1f-Vac">
-                                                        <rect key="frame" x="86" y="-1" width="44" height="18"/>
+                                                        <rect key="frame" x="86" y="-1" width="48" height="18"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Freebet" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fDz-Ed-4cl">
-                                                                <rect key="frame" x="4" y="1" width="36" height="16"/>
+                                                                <rect key="frame" x="6" y="1" width="36" height="16"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="16" id="Cwm-XB-bP8"/>
                                                                 </constraints>
@@ -77,9 +77,9 @@
                                                         <color key="backgroundColor" name="alertWarning"/>
                                                         <constraints>
                                                             <constraint firstItem="fDz-Ed-4cl" firstAttribute="top" secondItem="jZS-1f-Vac" secondAttribute="top" constant="1" id="69q-2R-zH9"/>
-                                                            <constraint firstItem="fDz-Ed-4cl" firstAttribute="leading" secondItem="jZS-1f-Vac" secondAttribute="leading" constant="4" id="MeT-oa-yAH"/>
+                                                            <constraint firstItem="fDz-Ed-4cl" firstAttribute="leading" secondItem="jZS-1f-Vac" secondAttribute="leading" constant="6" id="MeT-oa-yAH"/>
                                                             <constraint firstAttribute="bottom" secondItem="fDz-Ed-4cl" secondAttribute="bottom" constant="1" id="m18-qB-sR2"/>
-                                                            <constraint firstAttribute="trailing" secondItem="fDz-Ed-4cl" secondAttribute="trailing" constant="4" id="wbs-he-dSP"/>
+                                                            <constraint firstAttribute="trailing" secondItem="fDz-Ed-4cl" secondAttribute="trailing" constant="6" id="wbs-he-dSP"/>
                                                         </constraints>
                                                     </view>
                                                 </subviews>
@@ -92,10 +92,19 @@
                                                     <constraint firstItem="qru-Yl-AEW" firstAttribute="top" secondItem="wwr-bp-ugq" secondAttribute="top" id="xi2-gH-LVw"/>
                                                 </constraints>
                                             </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#id" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HlD-gT-Ce5">
+                                                <rect key="frame" x="0.0" y="40" width="327" height="17"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="17" id="eSL-ek-E7H"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="10"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zuK-D6-xfw">
-                                        <rect key="frame" x="353" y="5" width="40" height="40"/>
+                                        <rect key="frame" x="353" y="9.5" width="40" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="40" id="9FA-2X-f6f"/>
                                             <constraint firstAttribute="height" constant="40" id="HGp-0H-uuU"/>
@@ -108,16 +117,16 @@
                                     </button>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="rFM-eh-O7u" secondAttribute="bottom" constant="4" id="3rI-Af-4a7"/>
                                     <constraint firstItem="rFM-eh-O7u" firstAttribute="leading" secondItem="FTm-sF-tcl" secondAttribute="leading" constant="12" id="8Sk-tf-KEr"/>
-                                    <constraint firstAttribute="height" constant="56" id="Xqj-OK-cIQ"/>
                                     <constraint firstAttribute="trailing" secondItem="rFM-eh-O7u" secondAttribute="trailing" constant="60" id="jNE-it-cjd"/>
+                                    <constraint firstItem="rFM-eh-O7u" firstAttribute="top" secondItem="FTm-sF-tcl" secondAttribute="top" constant="4" id="jrQ-yz-fYs"/>
                                     <constraint firstItem="zuK-D6-xfw" firstAttribute="centerY" secondItem="FTm-sF-tcl" secondAttribute="centerY" constant="-3" id="tjE-zM-cXR"/>
                                     <constraint firstAttribute="trailing" secondItem="zuK-D6-xfw" secondAttribute="trailing" constant="6" id="tmj-R6-fv9"/>
-                                    <constraint firstItem="rFM-eh-O7u" firstAttribute="centerY" secondItem="FTm-sF-tcl" secondAttribute="centerY" id="toW-vg-KVa"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kAq-e8-CXE">
-                                <rect key="frame" x="0.0" y="64" width="399" height="270"/>
+                                <rect key="frame" x="0.0" y="75" width="399" height="270"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="g5w-be-8FE">
                                         <rect key="frame" x="10" y="0.0" width="379" height="270"/>
@@ -145,7 +154,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6dB-Ev-5zh">
-                                <rect key="frame" x="0.0" y="346" width="399" height="109"/>
+                                <rect key="frame" x="0.0" y="357" width="399" height="109"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="od3-Q5-lI2">
                                         <rect key="frame" x="0.0" y="0.0" width="399" height="109"/>
@@ -263,10 +272,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3sD-Ev-YhE">
-                                <rect key="frame" x="0.0" y="0.0" width="399" height="455"/>
+                                <rect key="frame" x="0.0" y="0.0" width="399" height="466"/>
                                 <subviews>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="q1c-HF-zYC">
-                                        <rect key="frame" x="181" y="209" width="37" height="37"/>
+                                        <rect key="frame" x="181" y="214.5" width="37" height="37"/>
                                     </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.4015159354304636" colorSpace="custom" customColorSpace="sRGB"/>
@@ -292,7 +301,7 @@
                             <constraint firstAttribute="bottom" secondItem="3sD-Ev-YhE" secondAttribute="bottom" id="mUU-at-7qX"/>
                             <constraint firstAttribute="trailing" secondItem="FTm-sF-tcl" secondAttribute="trailing" id="rpu-nA-5e2"/>
                             <constraint firstItem="6dB-Ev-5zh" firstAttribute="top" secondItem="kAq-e8-CXE" secondAttribute="bottom" constant="12" id="vDK-71-qjV"/>
-                            <constraint firstItem="kAq-e8-CXE" firstAttribute="top" secondItem="FTm-sF-tcl" secondAttribute="bottom" id="vXm-hQ-BKz"/>
+                            <constraint firstItem="kAq-e8-CXE" firstAttribute="top" secondItem="FTm-sF-tcl" secondAttribute="bottom" constant="2" id="vXm-hQ-BKz"/>
                             <constraint firstItem="th4-zS-Yw2" firstAttribute="top" secondItem="Tt6-nr-mqM" secondAttribute="top" id="yhf-1y-Pi7"/>
                         </constraints>
                     </view>
@@ -310,7 +319,7 @@
                 <outlet property="betAmountTitleLabel" destination="vXt-7J-prf" id="fat-fs-Cc2"/>
                 <outlet property="betCardsBaseView" destination="kAq-e8-CXE" id="3Hi-nU-NoQ"/>
                 <outlet property="betCardsStackView" destination="g5w-be-8FE" id="PRp-vV-tMb"/>
-                <outlet property="betIdLabel" destination="TJT-V7-4hz" id="ksU-q3-sE5"/>
+                <outlet property="betIdLabel" destination="HlD-gT-Ce5" id="ZvN-3H-QmP"/>
                 <outlet property="bottomBaseView" destination="6dB-Ev-5zh" id="ZgF-yh-GHO"/>
                 <outlet property="bottomSeparatorLineView" destination="fKZ-IO-dTa" id="epf-1i-c8q"/>
                 <outlet property="bottomStackView" destination="od3-Q5-lI2" id="IEE-Mp-gXO"/>
