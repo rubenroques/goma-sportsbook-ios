@@ -225,8 +225,6 @@ class BonusActiveTableViewCell: UITableViewCell {
 
         self.viewController?.present(alert, animated: true, completion: nil)
 
-        //self.viewModel?.cancelBonus()
-
     }
 
 }

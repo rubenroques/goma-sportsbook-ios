@@ -1147,3 +1147,6 @@
 
 "cancel_bonus" = "Cancel Bonus";
 "cancel_bonus_confirmation" = "Are you sure you want to cancel this bonus?";
+
+"refund" = "Refund";
+"product_bonus" = "Product Bonus";

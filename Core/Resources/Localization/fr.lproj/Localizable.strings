@@ -1023,6 +1023,9 @@
 "cancel_bonus" = "Annuler le bonus";
 "cancel_bonus_confirmation" = "Êtes-vous sûr de vouloir annuler ce bonus?";
 
+"refund" = "Remboursement";
+"product_bonus" = "Bonus Produit";
+
 // NOT TO ADD YET
 "tip_title" = "Pointe 1";
 "tip_message" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sagittis eros a nibh fermentum viverra. Sed imperdiet justo non tellus mollis viverra. Aliquam quis varius ex. In sagittis condimentum molestie.";
