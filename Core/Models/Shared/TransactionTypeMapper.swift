@@ -19,6 +19,8 @@ enum TransactionTypeMapper {
     case betPlaced
     case betSettled
     case cashOut
+    case refund
+    case productBonus
 
     init?(transactionType: String) {
 
@@ -33,6 +35,8 @@ enum TransactionTypeMapper {
         case "GAME_BET": self = .betPlaced
         case "GAME_WIN": self = .betSettled
         case "CASH_OUT": self = .cashOut
+        case "REFUND": self = .refund
+        case "PRODUC_BON": self = .productBonus
         default: return nil
         }
     }
@@ -49,6 +53,8 @@ enum TransactionTypeMapper {
         case .betPlaced: return localized("bet_placed")
         case .betSettled: return localized("bet_settled")
         case .cashOut: return localized("cashout")
+        case .refund: return localized("refund")
+        case .productBonus: return localized("product_bonus")
         }
     }
 }

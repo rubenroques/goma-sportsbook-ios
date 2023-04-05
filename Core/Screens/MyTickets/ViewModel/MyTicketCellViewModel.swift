@@ -165,6 +165,7 @@ class MyTicketCellViewModel {
                         self?.requestDataRefreshAction?()
                         self?.cashout = nil
                         self?.hasCashoutEnabled.send(.hidden)
+                        self?.isLoadingCellData.send(false)
                     }
 
                 })

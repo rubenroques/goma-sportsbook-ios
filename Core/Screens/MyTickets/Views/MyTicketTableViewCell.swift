@@ -17,6 +17,7 @@ class MyTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var headerBaseView: UIView!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var subtitleLabel: UILabel!
+    @IBOutlet private weak var betIdLabel: UILabel!
     @IBOutlet private weak var shareButton: UIButton!
 
     @IBOutlet private weak var betCardsBaseView: UIView!
@@ -95,6 +96,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.titleLabel.text = ""
         self.subtitleLabel.text = ""
+        self.betIdLabel.text = ""
 
         self.totalOddSubtitleLabel.text = "-"
         self.betAmountSubtitleLabel.text = "-"
@@ -131,6 +133,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.titleLabel.text = ""
         self.subtitleLabel.text = ""
+        self.betIdLabel.text = ""
 
         self.totalOddTitleLabel.text = localized("total_odd")
         self.betAmountTitleLabel.text = localized("bet_amount")
@@ -200,6 +203,8 @@ class MyTicketTableViewCell: UITableViewCell {
                 self.resetHighlightedCard()
             }
         }
+
+        self.betIdLabel.textColor = UIColor.App.textPrimary
     }
 
     func configureCashoutButton(withState state: MyTicketCellViewModel.CashoutButtonState) {
@@ -288,6 +293,11 @@ class MyTicketTableViewCell: UITableViewCell {
             self.subtitleLabel.text = MyTicketTableViewCell.dateFormatter.string(from: date)
         }
 
+        // Strange ID with .10 instead of .1
+        if let betIdDouble = Double(betHistoryEntry.betId) {
+            let betId = String(format: "%.1f", betIdDouble)
+            self.betIdLabel.text = "\(localized("bet_id")): \(betId)"
+        }
         if let oddValue = betHistoryEntry.totalPriceValue, betHistoryEntry.type != "SYSTEM" {
             // let newOddValue = Double(floor(oddValue * 100)/100)
             self.totalOddSubtitleLabel.text = oddValue == 0.0 ? "-" : OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)

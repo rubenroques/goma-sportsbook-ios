@@ -57,6 +57,7 @@ class BannerCellViewModel {
     var marketOutcomeRelations: [String: EveryMatrix.MarketOutcomeRelation] = [:]
 
     private var serviceProviderSubscriptions: [String: ServicesProvider.Subscription] = [:]
+    private var marketsCancellables: [String: AnyCancellable] = [:]
 
     var cancellables = Set<AnyCancellable>()
 
@@ -135,7 +136,7 @@ class BannerCellViewModel {
 
     func requestMatchInfo(matchId: String, marketId: String) {
 
-        Env.servicesProvider.subscribeToMarketDetails(withId: marketId)
+        let marketSubscriber = Env.servicesProvider.subscribeToMarketDetails(withId: marketId)
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
@@ -156,30 +157,34 @@ class BannerCellViewModel {
                     print("Banner subscribeToMarketDetails disconnected")
                 }
             }
-            .store(in: &cancellables)
+        
+        self.marketsCancellables[marketId] = marketSubscriber
     }
 
     private func setupMarketInfo(market: Market, matchId: String) {
+        
+        //        if self.completeMatch.value == nil {
 
-//        if self.completeMatch.value == nil {
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSz"
+        let matchDate = dateFormatter.date(from: market.startDate ?? "")
 
-            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSz"
-            let matchDate = dateFormatter.date(from: market.startDate ?? "")
+        let match = Match(id: matchId,
+                          competitionId: "",
+                          competitionName: "",
+                          homeParticipant: Participant(id: "", name: market.homeParticipant ?? ""),
+                          awayParticipant: Participant(id: "", name: market.awayParticipant ?? ""),
+                          date: matchDate,
+                          sport: Sport(id: "1", name: "", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0),
+                          numberTotalOfMarkets: 1,
+                          markets: [market],
+                          rootPartId: "",
+                          status: .unknown)
 
-            let match = Match(id: matchId,
-                              competitionId: "",
-                              competitionName: "",
-                              homeParticipant: Participant(id: "", name: market.homeParticipant ?? ""),
-                              awayParticipant: Participant(id: "", name: market.awayParticipant ?? ""),
-                              date: matchDate,
-                              sport: Sport(id: "1", name: "", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0),
-                              numberTotalOfMarkets: 1,
-                              markets: [market],
-                              rootPartId: "",
-                              status: .unknown)
+        if self.match.value.noValue {
             self.match.send(match)
-            self.completeMatch.send(match)
-//        }
+        }
+        self.completeMatch.send(match)
+        //        }
     }
     
 }
