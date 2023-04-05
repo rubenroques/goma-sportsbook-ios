@@ -93,7 +93,10 @@ extension ServiceProviderModelMapper {
                       eventName: market.eventName,
                       isMainOutright: market.isMainOutright,
                       eventMarketCount: market.eventMarketCount,
-                      isAvailable: market.isTradable)
+                      isAvailable: market.isTradable,
+                      startDate: market.startDate,
+                      homeParticipant: market.homeParticipant,
+                      awayParticipant: market.awayParticipant)
     }
 
     static func optionalMarkets(fromServiceProviderMarkets markets: [ServicesProvider.Market]?) -> [Market]? {

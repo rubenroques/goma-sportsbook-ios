@@ -32,7 +32,8 @@ extension SportRadarModelMapper {
                        totalOdd: firstBet?.totalOdd ?? 0.0,
                        selections: betSelections,
                        potentialReturn: potentialReturn == 0.0 ? totalReturn : potentialReturn,
-                       date: firstBet?.attemptedDate ?? Date())
+                       date: firstBet?.attemptedDate ?? Date(),
+                       freebet: firstBet?.freeBet ?? false)
         }
         return BettingHistory(bets: bets.sorted(by: { $0.date > $1.date }))
     }
@@ -168,7 +169,7 @@ extension SportRadarModelMapper {
 
     static func cashoutResult(fromInternalCashoutResult cashoutResult: SportRadarModels.CashoutResult) -> CashoutResult {
 
-        return CashoutResult(cashoutResult: cashoutResult.cashoutResult, cashoutReoffer: cashoutResult.cashoutReoffer)
+        return CashoutResult(cashoutResult: cashoutResult.cashoutResult, cashoutReoffer: cashoutResult.cashoutReoffer, message: cashoutResult.message)
     }
 
 }

@@ -17,6 +17,7 @@ class MyTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var headerBaseView: UIView!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var subtitleLabel: UILabel!
+    @IBOutlet private weak var betIdLabel: UILabel!
     @IBOutlet private weak var shareButton: UIButton!
 
     @IBOutlet private weak var betCardsBaseView: UIView!
@@ -40,6 +41,9 @@ class MyTicketTableViewCell: UITableViewCell {
 
     @IBOutlet private weak var loadingView: UIView!
     @IBOutlet private weak var loadingActivityIndicator: UIActivityIndicatorView!
+
+    @IBOutlet private weak var freebetBaseView: UIView!
+    @IBOutlet private weak var freebetLabel: UILabel!
 
     private var betHistoryEntry: BetHistoryEntry?
 
@@ -92,10 +96,19 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.titleLabel.text = ""
         self.subtitleLabel.text = ""
+        self.betIdLabel.text = ""
 
         self.totalOddSubtitleLabel.text = "-"
         self.betAmountSubtitleLabel.text = "-"
         self.winningsSubtitleLabel.text = "-"
+
+        self.freebetLabel.text = localized("Freebet")
+        self.freebetLabel.font = AppFont.with(type: .bold, size: 9.0)
+
+        self.freebetBaseView.clipsToBounds = true
+        self.freebetBaseView.layer.masksToBounds = true
+
+        self.freebetBaseView.isHidden = true
 
         self.setupWithTheme()
     }
@@ -104,6 +117,7 @@ class MyTicketTableViewCell: UITableViewCell {
         super.prepareForReuse()
 
         self.loadingView.isHidden = true
+        self.freebetBaseView.isHidden = true
 
         self.betHistoryEntry = nil
         self.viewModel = nil
@@ -119,6 +133,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.titleLabel.text = ""
         self.subtitleLabel.text = ""
+        self.betIdLabel.text = ""
 
         self.totalOddTitleLabel.text = localized("total_odd")
         self.betAmountTitleLabel.text = localized("bet_amount")
@@ -127,10 +142,14 @@ class MyTicketTableViewCell: UITableViewCell {
         self.totalOddSubtitleLabel.text = "-"
         self.betAmountSubtitleLabel.text = "-"
         self.winningsSubtitleLabel.text = "-"
+
+
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
+
+        self.freebetBaseView.layer.cornerRadius = self.freebetBaseView.frame.height / 2
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -168,6 +187,8 @@ class MyTicketTableViewCell: UITableViewCell {
         self.cashoutButton.layer.masksToBounds = true
         self.cashoutButton.backgroundColor = .clear
 
+        self.freebetBaseView.backgroundColor = UIColor.App.myTicketsOther
+
         self.loadingActivityIndicator.tintColor = UIColor.App.textPrimary
 
         if let status = self.betHistoryEntry?.status?.uppercased() {
@@ -182,6 +203,8 @@ class MyTicketTableViewCell: UITableViewCell {
                 self.resetHighlightedCard()
             }
         }
+
+        self.betIdLabel.textColor = UIColor.App.textPrimary
     }
 
     func configureCashoutButton(withState state: MyTicketCellViewModel.CashoutButtonState) {
@@ -202,6 +225,13 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.betHistoryEntry = betHistoryEntry
         self.viewModel = viewModel
+
+        if betHistoryEntry.freeBet ?? false {
+            self.freebetBaseView.isHidden = false
+        }
+        else {
+            self.freebetBaseView.isHidden = true
+        }
 
         if let state = self.viewModel?.hasCashoutEnabled.value {
             self.configureCashoutButton(withState: state)
@@ -263,6 +293,11 @@ class MyTicketTableViewCell: UITableViewCell {
             self.subtitleLabel.text = MyTicketTableViewCell.dateFormatter.string(from: date)
         }
 
+        // Strange ID with .10 instead of .1
+        if let betIdDouble = Double(betHistoryEntry.betId) {
+            let betId = String(format: "%.1f", betIdDouble)
+            self.betIdLabel.text = "\(localized("bet_id")): \(betId)"
+        }
         if let oddValue = betHistoryEntry.totalPriceValue, betHistoryEntry.type != "SYSTEM" {
             // let newOddValue = Double(floor(oddValue * 100)/100)
             self.totalOddSubtitleLabel.text = oddValue == 0.0 ? "-" : OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)

@@ -214,10 +214,13 @@ class SportRadarBettingProvider: BettingProvider, Connector {
         let endpoint = BettingAPIClient.cashoutBet(betId: betId, cashoutValue: cashoutValue, stakeValue: stakeValue)
         let publisher: AnyPublisher<SportRadarModels.CashoutResult, ServiceProviderError> = self.connector.request(endpoint)
         return publisher
-            .map( { cashoutResult in
+            .flatMap({ cashoutResult -> AnyPublisher<CashoutResult, ServiceProviderError> in
+                if let message = cashoutResult.message {
+                    return Fail(outputType: CashoutResult.self, failure: ServiceProviderError.errorMessage(message: message)).eraseToAnyPublisher()
+                }
                 let cashoutResult = SportRadarModelMapper.cashoutResult(fromInternalCashoutResult: cashoutResult)
 
-                return cashoutResult
+                return Just(cashoutResult).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }).eraseToAnyPublisher()
     }
 

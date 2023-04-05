@@ -77,6 +77,10 @@ struct Market {
     var eventMarketCount: Int?
     var isAvailable: Bool
 
+    var startDate: String?
+    var homeParticipant: String?
+    var awayParticipant: String?
+
     init(id: String,
          typeId: String,
          name: String,
@@ -90,7 +94,10 @@ struct Market {
          eventName: String? = nil,
          isMainOutright: Bool? = nil,
          eventMarketCount: Int? = nil,
-         isAvailable: Bool = true) {
+         isAvailable: Bool = true,
+         startDate: String? = nil,
+         homeParticipant: String? = nil,
+         awayParticipant: String? = nil) {
         
         self.id = id
         self.typeId = typeId
@@ -106,6 +113,9 @@ struct Market {
         self.isMainOutright = isMainOutright
         self.eventMarketCount = eventMarketCount
         self.isAvailable = isAvailable
+        self.startDate = startDate
+        self.homeParticipant = homeParticipant
+        self.awayParticipant = awayParticipant
     }
 }
 
@@ -263,6 +273,7 @@ struct BannerInfo {
     var matchId: String?
     var imageURL: String?
     var priorityOrder: Int?
+    var marketId: String?
 }
 
 

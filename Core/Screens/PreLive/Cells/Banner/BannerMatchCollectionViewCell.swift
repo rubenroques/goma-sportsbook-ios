@@ -175,6 +175,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
         self.viewModel = nil
         self.completeMatch = nil
+        self.matchViewModel = nil
 
         self.leftOutcome = nil
         self.middleOutcome = nil
@@ -279,12 +280,18 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         switch viewModel.presentationType {
         case .match:
             if let url = viewModel.imageURL {
+                self.imageView.isHidden = false
                 self.imageView.kf.setImage(with: url)
             }
             viewModel.match
                 .receive(on: DispatchQueue.main)
                 .compactMap({$0}).sink { [weak self] match in
-                    self?.matchViewModel = MatchWidgetCellViewModel(match: match)
+                    if let matchViewModel = self?.matchViewModel {
+                        self?.matchViewModel = matchViewModel
+                    }
+                    else {
+                        self?.matchViewModel = MatchWidgetCellViewModel(match: match)
+                    }
                 }
                 .store(in: &cancellables)
 
@@ -496,6 +503,19 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
             self.drawOddValueLabel.text = "-"
             self.awayOddValueLabel.text = "-"
         }
+
+        Env.betslipManager.bettingTicketsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink{ [weak self] bettingTicket in
+
+                self?.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: match.markets[safe:0]?.outcomes[safe: 0]?.bettingOffer.id ?? "")
+
+                self?.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: match.markets[safe:0]?.outcomes[safe: 1]?.bettingOffer.id ?? "")
+
+                self?.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: match.markets[safe:0]?.outcomes[safe: 2]?.bettingOffer.id ?? "")
+
+            }
+            .store(in: &cancellables)
 
     }
 

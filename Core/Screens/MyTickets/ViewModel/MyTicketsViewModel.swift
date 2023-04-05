@@ -43,6 +43,7 @@ class MyTicketsViewModel: NSObject {
 
     var requestAlertAction: ((String, String) -> Void)?
     var showCashoutSuspendedAction: (() -> Void)?
+    var showCashoutState: ((AlertType, String) -> Void)?
 
     private var matchDetailsDictionary: [String: Match] = [:]
 
@@ -386,6 +387,10 @@ class MyTicketsViewModel: NSObject {
 
             viewModel.showCashoutSuspendedAction = { [weak self] in
                 self?.showCashoutSuspendedAction?()
+            }
+
+            viewModel.showCashoutState = { [weak self] alertType, text in
+                self?.showCashoutState?(alertType, text)
             }
 
             cachedViewModels[ticket.betId] = viewModel

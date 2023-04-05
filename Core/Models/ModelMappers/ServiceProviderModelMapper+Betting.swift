@@ -16,9 +16,7 @@ extension ServiceProviderModelMapper {
     }
 
     static func betHistoryEntry(fromServiceProviderBet bet: ServicesProvider.Bet) -> BetHistoryEntry {
-
         let selections = bet.selections.map(Self.betHistoryEntrySelection(fromServiceProviderBetSelection:))
-
         return BetHistoryEntry(betId: bet.identifier,
                         selections: selections,
                         type: bet.type,
@@ -35,7 +33,7 @@ extension ServiceProviderModelMapper {
                         status: bet.globalState.rawValue,
                         placedDate: bet.date,
                         settledDate: nil,
-                        freeBet: nil,
+                        freeBet: bet.freebet,
                         betShareToken: nil)
     }
 

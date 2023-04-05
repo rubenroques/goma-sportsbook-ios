@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -25,7 +26,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tt6-nr-mqM">
-                        <rect key="frame" x="12" y="10" width="399" height="455"/>
+                        <rect key="frame" x="12" y="10" width="399" height="466"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="th4-zS-Yw2">
                                 <rect key="frame" x="0.0" y="0.0" width="399" height="8"/>
@@ -34,19 +35,68 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FTm-sF-tcl">
-                                <rect key="frame" x="0.0" y="8" width="399" height="56"/>
+                                <rect key="frame" x="0.0" y="8" width="399" height="65"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="rFM-eh-O7u">
-                                        <rect key="frame" x="12" y="11.5" width="327" height="33"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="rFM-eh-O7u">
+                                        <rect key="frame" x="12" y="4" width="327" height="57"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ticket 1 - Multiple Bet" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u4V-wd-Z9n">
-                                                <rect key="frame" x="0.0" y="0.0" width="327" height="16"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="327" height="20"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="20" id="t2Q-Iz-KUh"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="02/10/21, 2:30PM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qru-Yl-AEW">
-                                                <rect key="frame" x="0.0" y="17" width="327" height="16"/>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wwr-bp-ugq">
+                                                <rect key="frame" x="0.0" y="22" width="327" height="16"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="02/10/21, 2:30PM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qru-Yl-AEW">
+                                                        <rect key="frame" x="0.0" y="0.0" width="80" height="16"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="16" id="qFf-te-X1S"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="10"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jZS-1f-Vac">
+                                                        <rect key="frame" x="86" y="-1" width="48" height="18"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Freebet" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fDz-Ed-4cl">
+                                                                <rect key="frame" x="6" y="1" width="36" height="16"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="16" id="Cwm-XB-bP8"/>
+                                                                </constraints>
+                                                                <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="10"/>
+                                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                        <color key="backgroundColor" name="alertWarning"/>
+                                                        <constraints>
+                                                            <constraint firstItem="fDz-Ed-4cl" firstAttribute="top" secondItem="jZS-1f-Vac" secondAttribute="top" constant="1" id="69q-2R-zH9"/>
+                                                            <constraint firstItem="fDz-Ed-4cl" firstAttribute="leading" secondItem="jZS-1f-Vac" secondAttribute="leading" constant="6" id="MeT-oa-yAH"/>
+                                                            <constraint firstAttribute="bottom" secondItem="fDz-Ed-4cl" secondAttribute="bottom" constant="1" id="m18-qB-sR2"/>
+                                                            <constraint firstAttribute="trailing" secondItem="fDz-Ed-4cl" secondAttribute="trailing" constant="6" id="wbs-he-dSP"/>
+                                                        </constraints>
+                                                    </view>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="qru-Yl-AEW" firstAttribute="leading" secondItem="wwr-bp-ugq" secondAttribute="leading" id="18m-lo-rds"/>
+                                                    <constraint firstItem="jZS-1f-Vac" firstAttribute="centerY" secondItem="wwr-bp-ugq" secondAttribute="centerY" id="bSN-81-oW9"/>
+                                                    <constraint firstItem="jZS-1f-Vac" firstAttribute="leading" secondItem="qru-Yl-AEW" secondAttribute="trailing" constant="6" id="hJk-eI-Z8Q"/>
+                                                    <constraint firstAttribute="bottom" secondItem="qru-Yl-AEW" secondAttribute="bottom" id="lWj-Nf-3Qq"/>
+                                                    <constraint firstItem="qru-Yl-AEW" firstAttribute="top" secondItem="wwr-bp-ugq" secondAttribute="top" id="xi2-gH-LVw"/>
+                                                </constraints>
+                                            </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#id" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HlD-gT-Ce5">
+                                                <rect key="frame" x="0.0" y="40" width="327" height="17"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="17" id="eSL-ek-E7H"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="10"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -54,7 +104,7 @@
                                         </subviews>
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zuK-D6-xfw">
-                                        <rect key="frame" x="353" y="5" width="40" height="40"/>
+                                        <rect key="frame" x="353" y="9.5" width="40" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="40" id="9FA-2X-f6f"/>
                                             <constraint firstAttribute="height" constant="40" id="HGp-0H-uuU"/>
@@ -67,16 +117,16 @@
                                     </button>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="rFM-eh-O7u" secondAttribute="bottom" constant="4" id="3rI-Af-4a7"/>
                                     <constraint firstItem="rFM-eh-O7u" firstAttribute="leading" secondItem="FTm-sF-tcl" secondAttribute="leading" constant="12" id="8Sk-tf-KEr"/>
-                                    <constraint firstAttribute="height" constant="56" id="Xqj-OK-cIQ"/>
                                     <constraint firstAttribute="trailing" secondItem="rFM-eh-O7u" secondAttribute="trailing" constant="60" id="jNE-it-cjd"/>
+                                    <constraint firstItem="rFM-eh-O7u" firstAttribute="top" secondItem="FTm-sF-tcl" secondAttribute="top" constant="4" id="jrQ-yz-fYs"/>
                                     <constraint firstItem="zuK-D6-xfw" firstAttribute="centerY" secondItem="FTm-sF-tcl" secondAttribute="centerY" constant="-3" id="tjE-zM-cXR"/>
                                     <constraint firstAttribute="trailing" secondItem="zuK-D6-xfw" secondAttribute="trailing" constant="6" id="tmj-R6-fv9"/>
-                                    <constraint firstItem="rFM-eh-O7u" firstAttribute="centerY" secondItem="FTm-sF-tcl" secondAttribute="centerY" id="toW-vg-KVa"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kAq-e8-CXE">
-                                <rect key="frame" x="0.0" y="64" width="399" height="270"/>
+                                <rect key="frame" x="0.0" y="75" width="399" height="270"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="g5w-be-8FE">
                                         <rect key="frame" x="10" y="0.0" width="379" height="270"/>
@@ -104,7 +154,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6dB-Ev-5zh">
-                                <rect key="frame" x="0.0" y="346" width="399" height="109"/>
+                                <rect key="frame" x="0.0" y="357" width="399" height="109"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="od3-Q5-lI2">
                                         <rect key="frame" x="0.0" y="0.0" width="399" height="109"/>
@@ -222,10 +272,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3sD-Ev-YhE">
-                                <rect key="frame" x="0.0" y="0.0" width="399" height="455"/>
+                                <rect key="frame" x="0.0" y="0.0" width="399" height="466"/>
                                 <subviews>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="q1c-HF-zYC">
-                                        <rect key="frame" x="181" y="209" width="37" height="37"/>
+                                        <rect key="frame" x="181" y="214.5" width="37" height="37"/>
                                     </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.4015159354304636" colorSpace="custom" customColorSpace="sRGB"/>
@@ -251,7 +301,7 @@
                             <constraint firstAttribute="bottom" secondItem="3sD-Ev-YhE" secondAttribute="bottom" id="mUU-at-7qX"/>
                             <constraint firstAttribute="trailing" secondItem="FTm-sF-tcl" secondAttribute="trailing" id="rpu-nA-5e2"/>
                             <constraint firstItem="6dB-Ev-5zh" firstAttribute="top" secondItem="kAq-e8-CXE" secondAttribute="bottom" constant="12" id="vDK-71-qjV"/>
-                            <constraint firstItem="kAq-e8-CXE" firstAttribute="top" secondItem="FTm-sF-tcl" secondAttribute="bottom" id="vXm-hQ-BKz"/>
+                            <constraint firstItem="kAq-e8-CXE" firstAttribute="top" secondItem="FTm-sF-tcl" secondAttribute="bottom" constant="2" id="vXm-hQ-BKz"/>
                             <constraint firstItem="th4-zS-Yw2" firstAttribute="top" secondItem="Tt6-nr-mqM" secondAttribute="top" id="yhf-1y-Pi7"/>
                         </constraints>
                     </view>
@@ -269,12 +319,14 @@
                 <outlet property="betAmountTitleLabel" destination="vXt-7J-prf" id="fat-fs-Cc2"/>
                 <outlet property="betCardsBaseView" destination="kAq-e8-CXE" id="3Hi-nU-NoQ"/>
                 <outlet property="betCardsStackView" destination="g5w-be-8FE" id="PRp-vV-tMb"/>
+                <outlet property="betIdLabel" destination="HlD-gT-Ce5" id="ZvN-3H-QmP"/>
                 <outlet property="bottomBaseView" destination="6dB-Ev-5zh" id="ZgF-yh-GHO"/>
                 <outlet property="bottomSeparatorLineView" destination="fKZ-IO-dTa" id="epf-1i-c8q"/>
                 <outlet property="bottomStackView" destination="od3-Q5-lI2" id="IEE-Mp-gXO"/>
                 <outlet property="cashoutBaseView" destination="BLE-kd-Pbd" id="Xex-a1-L5G"/>
                 <outlet property="cashoutButton" destination="a2o-OR-1K7" id="5v6-9G-LDX"/>
-                <outlet property="contentView" destination="H2p-sc-9uM" id="0te-xh-T3X"/>
+                <outlet property="freebetBaseView" destination="jZS-1f-Vac" id="GzR-oJ-LD9"/>
+                <outlet property="freebetLabel" destination="fDz-Ed-4cl" id="nMp-1t-eq4"/>
                 <outlet property="headerBaseView" destination="FTm-sF-tcl" id="4tV-PT-DAQ"/>
                 <outlet property="loadingActivityIndicator" destination="q1c-HF-zYC" id="pBr-eT-MIT"/>
                 <outlet property="loadingView" destination="3sD-Ev-YhE" id="K10-lx-s4c"/>
@@ -292,5 +344,8 @@
     </objects>
     <resources>
         <image name="send_bet_icon" width="18" height="18"/>
+        <namedColor name="alertWarning">
+            <color red="0.94901960784313721" green="0.75294117647058822" blue="0.21568627450980393" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

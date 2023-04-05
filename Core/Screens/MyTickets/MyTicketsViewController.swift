@@ -41,6 +41,8 @@ class MyTicketsViewController: UIViewController {
         }
     }
 
+    var reloadAllMyTickets: (() -> Void)?
+
     init(viewModel: MyTicketsViewModel = MyTicketsViewModel()) {
         self.viewModel = viewModel
         
@@ -185,6 +187,11 @@ class MyTicketsViewController: UIViewController {
             self?.showSimpleAlert(title: localized("cashout_error"), message: localized("cashout_no_longer_available"))
         }
 
+        self.viewModel.showCashoutState = { [weak self] alertType, text in
+            self?.reloadAllMyTickets?()
+            self?.showCashoutState(alertType: alertType, text: text)
+        }
+
         self.isLoading = false
 
         self.setupWithTheme()
@@ -301,6 +308,38 @@ class MyTicketsViewController: UIViewController {
         alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
 
         self.present(alert, animated: true, completion: nil)
+
+    }
+
+    private func showCashoutState(alertType: AlertType, text: String) {
+
+        let alertView = GenericAlertView()
+
+        alertView.configure(alertType: alertType, text: text)
+
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
+            alertView.alpha = 1
+        }, completion: { _ in
+        })
+
+        alertView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(alertView)
+
+        NSLayoutConstraint.activate([
+            alertView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            alertView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            alertView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
+                alertView.alpha = 0
+            }, completion: { _ in
+                alertView.removeFromSuperview()
+            })
+        }
+
+        self.view.bringSubviewToFront(alertView)
 
     }
 

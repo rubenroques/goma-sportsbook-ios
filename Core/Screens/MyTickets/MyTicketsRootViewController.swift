@@ -74,11 +74,12 @@ class MyTicketsRootViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.ticketTypesViewControllers = [
-            MyTicketsViewController(viewModel: MyTicketsViewModel(myTicketType: .opened)),
-            MyTicketsViewController(viewModel: MyTicketsViewModel(myTicketType: .resolved)),
-            MyTicketsViewController(viewModel: MyTicketsViewModel(myTicketType: .won))
-        ]
+//        self.ticketTypesViewControllers = [
+//            MyTicketsViewController(viewModel: MyTicketsViewModel(myTicketType: .opened)),
+//            MyTicketsViewController(viewModel: MyTicketsViewModel(myTicketType: .resolved)),
+//            MyTicketsViewController(viewModel: MyTicketsViewModel(myTicketType: .won))
+//        ]
+        self.setupViewControllers()
 
         self.ticketTypePagedViewController.delegate = self
         self.ticketTypePagedViewController.dataSource = self
@@ -180,6 +181,32 @@ class MyTicketsRootViewController: UIViewController {
         }
 
         self.currentPageViewControllerIndex = index
+    }
+
+    private func setupViewControllers() {
+
+        let openedMyTicketsViewModel = MyTicketsViewModel(myTicketType: .opened)
+
+        let openedMyTicketsViewController = MyTicketsViewController(viewModel: openedMyTicketsViewModel)
+
+        let resolvedMyTicketsViewModel = MyTicketsViewModel(myTicketType: .resolved)
+
+        let resolvedMyTicketsViewController = MyTicketsViewController(viewModel: resolvedMyTicketsViewModel)
+
+        let wonMyTicketsViewModel = MyTicketsViewModel(myTicketType: .won)
+
+        let wonMyTicketsViewController = MyTicketsViewController(viewModel: wonMyTicketsViewModel)
+
+        // Callbacks
+        openedMyTicketsViewController.reloadAllMyTickets = { [weak self] in
+            resolvedMyTicketsViewModel.refresh()
+        }
+
+        self.ticketTypesViewControllers = [
+            openedMyTicketsViewController,
+            resolvedMyTicketsViewController,
+            wonMyTicketsViewController
+        ]
     }
 
 }

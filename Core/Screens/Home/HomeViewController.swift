@@ -216,6 +216,24 @@ class HomeViewController: UIViewController {
         self.navigationController?.pushViewController(bonusRootViewController, animated: true)
     }
 
+    private func openPromotionsView() {
+        let promotionsWebViewModel = PromotionsWebViewModel()
+
+        let gomaBaseUrl = GomaGamingEnv.stage.baseUrl
+        let appLanguage = Locale.current.languageCode
+
+        let isDarkTheme = self.traitCollection.userInterfaceStyle == .dark ? true : false
+
+        let urlString = "\(gomaBaseUrl)/\(appLanguage ?? "fr")/in-app/promotions?dark=\(isDarkTheme)"
+
+        if let url = URL(string: urlString) {
+
+            let promotionsWebViewController = PromotionsWebViewController(url: url, viewModel: promotionsWebViewModel)
+
+            self.navigationController?.pushViewController(promotionsWebViewController, animated: true)
+        }
+    }
+
     private func openFeaturedTipSlider(featuredTips: [FeaturedTip], atIndex index: Int = 0) {
         let tipsSliderViewController = TipsSliderViewController(viewModel: TipsSliderViewModel(featuredTips: featuredTips, startIndex: index))
         
@@ -304,7 +322,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.didTapBannerViewAction = { [weak self] presentationType in
                 switch presentationType {
                 case .image:
-                    self?.openBonusView()
+                    // self?.openBonusView()
+                    self?.openPromotionsView()
                 case .match(let matchId):
                     self?.openMatchDetails(matchId: matchId)
                 case .externalMatch(let matchId, _, _, _):
