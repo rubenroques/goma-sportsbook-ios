@@ -128,7 +128,7 @@ class TermsCondFormStepView: FormStepView {
 
         if let readTermsString = self.readLabel.text {
             let attributedString = NSMutableAttributedString(string: readTermsString)
-            if let range = readTermsString.range(of: self.termsUnderlinedString) {
+            if let range = readTermsString.range(of: Self.termsUnderlinedString) {
                 attributedString.addAttribute(.underlineStyle,
                                               value: NSUnderlineStyle.single.rawValue,
                                               range: NSRange(range, in: readTermsString))
@@ -160,7 +160,7 @@ class TermsCondFormStepView: FormStepView {
 
     @IBAction private func tapUnderlineLabel(gesture: UITapGestureRecognizer) {
         let readTermsString = self.readLabel.attributedText?.string ?? ""
-        let underlineRange = (readTermsString as NSString).range(of: termsUnderlinedString)
+        let underlineRange = (readTermsString as NSString).range(of: Self.termsUnderlinedString)
 
         if gesture.didTapAttributedTextInLabel(label: self.readLabel, inRange: underlineRange, alignment: .left) {
             self.openTermWebPage()
@@ -188,7 +188,7 @@ class TermsCondFormStepView: FormStepView {
 
 extension TermsCondFormStepView {
 
-    var termsUnderlinedString: String {
+    private static var termsUnderlinedString: String {
         return Localization.localized("terms_and_conditions")
     }
 
@@ -200,7 +200,9 @@ extension TermsCondFormStepView {
     }
     private static func createReadLabel() -> UILabel {
         let label = UILabel()
-        label.text = "Read about our Terms and Conditions"
+        var text = Localization.localized("read_about_terms_placeholders")
+        text = text.replacingOccurrences(of: "{terms_and_conditions}", with: Self.termsUnderlinedString)
+        label.text = text
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }

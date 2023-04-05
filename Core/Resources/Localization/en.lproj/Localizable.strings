@@ -685,7 +685,6 @@
 "possible_winnings2" = "Possible Winnings:"; // UNUSED
 "postal_code" = "Postal Code";
 "previous" = "Previous"; // UNUSED
-"privacy_policy" = "Privacy Policy";
 "proceed" = "Proceed";
 "profile" = "Profile"; // UNUSED
 "profile_complete" = "Profile complete"; // UNUSED
@@ -861,7 +860,7 @@
 "system_type_plural_other" = "system types"; // UNUSED
 "team_statistics" = "Teams statistics"; // UNUSED
 "terms" = "Terms of use";
-"terms_and_conditions" = "Terms and Conditions";
+
 "terms_conditions" = "I read and accept the Terms and Conditions Privacy Policy and Cookies. I'm Certifying that i am 18 years old or older."; // UNUSED
 "terms_conditions" = "Terms & Conditions"; // UNUSED
 "theme" = "Theme"; // UNUSED
@@ -1161,6 +1160,15 @@
 "cancel_bonus" = "Cancel Bonus";
 "cancel_bonus_confirmation" = "Are you sure you want to cancel this bonus?";
 
-"freebet" = "Freebet";
 "refund" = "Refund";
 "product_bonus" = "Product Bonus";
+
+// NOT TO ADD YET
+"freebet" = "Freebet";
+
+"read_about_terms_placeholders" = "Read about our {terms_and_conditions}.";
+"agree_terms_conditions_placeholders" = "By Signing up, you agree to our \n{terms_and_conditions}, {privacy_policy}, and {sport_betting_rules}";
+
+"terms_and_conditions" = "Terms and Conditions";
+"privacy_policy" = "Privacy Policy";
+"sport_betting_rules" = "Sport Betting Rules";
