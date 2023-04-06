@@ -222,7 +222,7 @@
                             </constraints>
                         </imageView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cFv-EN-zyq" customClass="PolicyLinkView" customModule="Betsson" customModuleProvider="target">
-                            <rect key="frame" x="16" y="537" width="382" height="30"/>
+                            <rect key="frame" x="30" y="537" width="354" height="30"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="30" id="gr8-us-6ZC"/>
@@ -278,12 +278,12 @@
                         <constraint firstItem="BZ5-fV-Qhj" firstAttribute="centerY" secondItem="HKq-qe-QUt" secondAttribute="centerY" id="SZ1-Dd-ww5"/>
                         <constraint firstItem="HKq-qe-QUt" firstAttribute="top" secondItem="cFv-EN-zyq" secondAttribute="bottom" constant="20" id="YrU-bp-wC7"/>
                         <constraint firstItem="ryS-WN-4K9" firstAttribute="centerX" secondItem="gi0-AF-5zH" secondAttribute="centerX" id="ZVJ-Se-ewq"/>
-                        <constraint firstItem="cFv-EN-zyq" firstAttribute="leading" secondItem="Nh5-5S-iM1" secondAttribute="leading" constant="16" id="aDM-6t-AJA"/>
+                        <constraint firstItem="cFv-EN-zyq" firstAttribute="leading" secondItem="Nh5-5S-iM1" secondAttribute="leading" constant="30" id="aDM-6t-AJA"/>
                         <constraint firstItem="Nh5-5S-iM1" firstAttribute="trailing" secondItem="ryS-WN-4K9" secondAttribute="trailing" id="afw-1V-KkJ"/>
                         <constraint firstItem="BZ5-fV-Qhj" firstAttribute="leading" secondItem="HKq-qe-QUt" secondAttribute="trailing" constant="10" id="fVe-Wi-HQL"/>
                         <constraint firstItem="1Ff-on-6jN" firstAttribute="top" secondItem="HKq-qe-QUt" secondAttribute="bottom" constant="20" id="jBr-Fd-Pq0"/>
                         <constraint firstItem="j9a-OT-Wci" firstAttribute="leading" secondItem="Nh5-5S-iM1" secondAttribute="leading" constant="70" id="jmK-uz-NOJ"/>
-                        <constraint firstItem="Nh5-5S-iM1" firstAttribute="trailing" secondItem="cFv-EN-zyq" secondAttribute="trailing" constant="16" id="lpX-Es-MIS"/>
+                        <constraint firstItem="Nh5-5S-iM1" firstAttribute="trailing" secondItem="cFv-EN-zyq" secondAttribute="trailing" constant="30" id="lpX-Es-MIS"/>
                         <constraint firstItem="cFv-EN-zyq" firstAttribute="top" secondItem="bO1-8P-WSi" secondAttribute="bottom" constant="8" id="mtM-vF-VMn"/>
                         <constraint firstItem="eVF-cv-mHj" firstAttribute="centerY" secondItem="HKq-qe-QUt" secondAttribute="centerY" id="ory-Ov-9ar"/>
                         <constraint firstItem="ryS-WN-4K9" firstAttribute="centerY" secondItem="gi0-AF-5zH" secondAttribute="centerY" id="pBY-3p-sGG"/>

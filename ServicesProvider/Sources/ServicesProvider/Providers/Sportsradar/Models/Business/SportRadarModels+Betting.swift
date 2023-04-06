@@ -177,7 +177,6 @@ extension SportRadarModels {
             self.tournamentName = try container.decodeIfPresent(String.self, forKey: .tournamentName)
 
             if let freeBetIntValue = try container.decodeIfPresent(Int.self, forKey: .freeBet) {
-                print(" freeBet = \(freeBetIntValue)")
                 if freeBetIntValue == -1 {
                     self.freeBet = true
                 }
@@ -199,8 +198,6 @@ extension SportRadarModels {
             else {
                 self.freeBet = false
             }
-
-            print("-bet: \(self)")
 
             self.partialCashoutReturn = try container.decodeIfPresent(Double.self, forKey: .partialCashoutReturn)
 

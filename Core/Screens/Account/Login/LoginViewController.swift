@@ -217,9 +217,12 @@ class LoginViewController: UIViewController {
 
         self.logoImageView.isUserInteractionEnabled = true
 
-//        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
-//        debugLogoImageViewTap.numberOfTapsRequired = 3
-//        self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
+        #if DEBUG
+        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
+        debugLogoImageViewTap.numberOfTapsRequired = 3
+        self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
+        #endif
+        
 //
 //        let debug2LogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebug))
 //        debug2LogoImageViewTap.numberOfTapsRequired = 2
@@ -287,25 +290,25 @@ class LoginViewController: UIViewController {
         self.registerButton.layer.masksToBounds = true
 
     }
-
+    
     func checkPolicyLinks() {
-            policyLinkView.didTapTerms = {
-                if let url = URL(string: "https://sportsbook-stage.gomagaming.com/fr/terms-and-conditions") {
-                    UIApplication.shared.open(url)
-                }
-            }
-
-            policyLinkView.didTapPrivacy = {
-                if let url = URL(string: "https://sportsbook-stage.gomagaming.com/fr/privacy-policy") {
-                    UIApplication.shared.open(url)
-                }            }
-
-            policyLinkView.didTapEula = {
-                if let url = URL(string: "https://sportsbook-stage.gomagaming.com/fr/betting-rules") {
-                    UIApplication.shared.open(url)
-                }
+        policyLinkView.didTapTerms = {
+            if let url = URL(string: "https://goma-uat.betsson.fr/terms-and-conditions.pdf") {
+                UIApplication.shared.open(url)
             }
         }
+        
+        policyLinkView.didTapPrivacy = {
+            if let url = URL(string: "https://goma-uat.betsson.fr/fr/privacy-policy") {
+                UIApplication.shared.open(url)
+            }            }
+        
+        policyLinkView.didTapEula = {
+            if let url = URL(string: "https://goma-uat.betsson.fr/betting-rules.pdf") {
+                UIApplication.shared.open(url)
+            }
+        }
+    }
 
     @objc private func didTapCreateAccount() {
 

@@ -685,7 +685,6 @@
 "possible_winnings2" = "Possible Winnings:"; // UNUSED
 "postal_code" = "Postal Code";
 "previous" = "Previous"; // UNUSED
-"privacy_policy" = "Privacy Policy";
 "proceed" = "Proceed";
 "profile" = "Profile"; // UNUSED
 "profile_complete" = "Profile complete"; // UNUSED
@@ -860,7 +859,7 @@
 "system_type_plural_other" = "system types"; // UNUSED
 "team_statistics" = "Teams statistics"; // UNUSED
 "terms" = "Terms of use";
-"terms_and_conditions" = "Terms and Conditions";
+
 "terms_conditions" = "I read and accept the Terms and Conditions Privacy Policy and Cookies. I'm Certifying that i am 18 years old or older."; // UNUSED
 "terms_conditions" = "Terms & Conditions"; // UNUSED
 "theme" = "Theme"; // UNUSED
@@ -1160,7 +1159,6 @@
 "cancel_bonus" = "Cancel Bonus";
 "cancel_bonus_confirmation" = "Are you sure you want to cancel this bonus?";
 
-"freebet" = "Freebet";
 "refund" = "Refund";
 "product_bonus" = "Product Bonus";
 
@@ -1170,3 +1168,36 @@
 "partial_cashout_value" = "Partial Cashout {cashoutAmount}";
 "original" = "Original";
 "returned" = "Returned";
+// NOT TO ADD YET
+"freebet" = "Freebet";
+
+"read_about_terms_placeholders" = "Read about our {terms_and_conditions}.";
+"agree_terms_conditions_placeholders" = "By Signing up, you agree to our \n{terms_and_conditions}, {privacy_policy}, and {sport_betting_rules}";
+
+"terms_and_conditions" = "Terms and Conditions";
+"privacy_policy" = "Privacy Policy";
+"sport_betting_rules" = "Sport Betting Rules";
+
+"password_tips_title" = "In order to protect your account your password must:";
+"password_tips_number" = "• Contain at least one number";
+"password_tips_uppercase" = "• Contain an uppercase character";
+"password_tips_lowercase" = "• Contain a lowercase character";
+"password_tips_alphanumeric" = "• Be alphanumeric with at least 1 symbol from -!@^$&*";
+"password_tips_length" = "• Have length between 8 and 16 characters";
+
+"app_version_profile_1" = "App Version {version_1} ({version_2})";
+"app_version_profile_2" = "Sportsbook® All Rights Reserved";
+
+"affiliate_system_footer_link" = "Affiliate System";
+"privacy_policy_footer_link" = "Privacy Policy";
+"security_rules_footer_link" = "Security Rules";
+"cookie_policy_footer_link" = "Cookie Policy";
+"sports_betting_rules_footer_link" = "Sports Betting Rules";
+"terms_and_conditions_footer_link" = "Terms and Conditions";
+"about_footer_link" = "About";
+"faqs_footer_link" = "FAQs";
+"responsible_gambling_footer_link" = "Responsible Gambling";
+
+
+"gambling_warning_footer_link" = "FAMILY, SOCIAL LIFE, FINANCIAL HEALTH. ARE YOU READY TO BET EVERYTHING? FOR HELP, CALL 09-74-75-13-13 (NON-PREMIUM CALL)";
+"minors_prohibition_footer_link" = "GAMBLING AND GAMING ARE PROHIBITED FOR MINORS";

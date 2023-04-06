@@ -121,13 +121,6 @@ class PreLiveEventsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.competitionsFiltersView.selectedIds
-            .receive(on: DispatchQueue.main)
-            .sink { idsSet in
-                print("selectedIds -> \(idsSet)")
-            }
-            .store(in: &cancellables)
-
         self.competitionsFiltersView.shouldLoadCompetitions = { [weak self] regionId in
             print("REGION ID CLICKED: \(regionId)")
             self?.viewModel.loadCompetitionByRegion(regionId: regionId)
@@ -614,7 +607,7 @@ class PreLiveEventsViewController: UIViewController {
         self.selectedSport = sport
         self.didChangeSport?(sport)
 
-        self.drawOpenCompetitionsFilters()
+        self.openCompetitionsFilters()
     }
 
     func openCompetitionsFilters() {
@@ -626,24 +619,28 @@ class PreLiveEventsViewController: UIViewController {
             return
         }
 
-        UIView.animate(withDuration: 0.32, delay: 0.0, options: .curveEaseOut, animations: {
-            self.drawOpenCompetitionsFilters()
+        self.reloadData() // We need to make sure we have an updated tableview before trigger the animation
+
+        UIView.animate(withDuration: 0.32, delay: 0.0, options: [.curveEaseOut, .beginFromCurrentState], animations: {
+            self.competitionsFiltersDarkBackgroundView.alpha = 0.9
+            self.openedCompetitionsFiltersConstraint.constant = 0
+            self.tableView.contentInset.bottom = 16
+            self.competitionsFiltersView.state = .opened
+            self.floatingShortcutsBottomConstraint.constant = -self.tableView.contentInset.bottom
             self.view.layoutIfNeeded()
         }, completion: nil)
 
     }
 
-    private func drawOpenCompetitionsFilters() {
-        self.competitionsFiltersDarkBackgroundView.alpha = 0.9
-        self.openedCompetitionsFiltersConstraint.constant = 0
-        self.tableView.contentInset.bottom = 16
-        self.competitionsFiltersView.state = .opened
-        self.floatingShortcutsBottomConstraint.constant = -self.tableView.contentInset.bottom
-    }
-
     func showBottomBarCompetitionsFilters(animated: Bool = true) {
 
-        UIView.animate(withDuration: animated ? 0.32 : 0.0, delay: 0.0, options: .curveEaseOut, animations: {
+        if competitionsFiltersView.state == .bar {
+            return
+        }
+
+        self.reloadData() // We need to make sure we have an updated tableview before trigger the animation
+
+        UIView.animate(withDuration: animated ? 0.32 : 0.0, delay: 0.0, options: [.curveEaseOut, .beginFromCurrentState], animations: {
             self.competitionsFiltersDarkBackgroundView.alpha = 0.0
             self.openedCompetitionsFiltersConstraint.constant = -(self.competitionsFiltersView.frame.size.height - 52)
             self.tableView.contentInset.bottom = 54+16
@@ -655,7 +652,13 @@ class PreLiveEventsViewController: UIViewController {
 
     func showBottomLineCompetitionsFilters(animated: Bool = true) {
 
-        UIView.animate(withDuration: animated ? 0.32 : 0.0, delay: 0.0, options: .curveEaseOut, animations: {
+        if competitionsFiltersView.state == .line {
+            return
+        }
+
+        self.reloadData() // We need to make sure we have an updated tableview before trigger the animation
+
+        UIView.animate(withDuration: animated ? 0.32 : 0.0, delay: 0.0, options: [.curveEaseOut, .beginFromCurrentState], animations: {
             self.competitionsFiltersDarkBackgroundView.alpha = 0.0
             self.openedCompetitionsFiltersConstraint.constant = -(self.competitionsFiltersView.frame.size.height - 18)
             self.tableView.contentInset.bottom = 24

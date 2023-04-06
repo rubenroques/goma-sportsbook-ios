@@ -652,22 +652,20 @@ class PreLiveEventsViewModel: NSObject {
 
     func fetchCompetitionsMatchesWithIds(_ ids: [String]) {
 
-        if ids.isEmpty {
-            self.competitions = []
-            self.competitionsDataSource.competitions = []
-            self.updateContentList()
-            self.isLoadingCompetitionMatches.send(false)
-            self.isLoadingEvents.send(false)
-        }
-        else {
-            self.isLoadingCompetitionMatches.send(true)
-            self.isLoadingEvents.send(true)
-        }
-
         self.selectedCompetitionsInfoPublisher.value = [:]
         self.competitionsMatchesSubscriptions.value = [:]
 
         self.expectedCompetitionsPublisher.send(ids.count)
+
+        if ids.isEmpty {
+            self.competitions = []
+            self.competitionsDataSource.competitions = []
+            self.updateContentList()
+            return
+        }
+
+        self.isLoadingCompetitionMatches.send(true)
+        self.isLoadingEvents.send(true)
 
         for competitionId in ids {
             Env.servicesProvider.getCompetitionMarketGroups(competitionId: competitionId)

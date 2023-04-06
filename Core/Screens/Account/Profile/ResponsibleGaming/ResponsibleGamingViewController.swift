@@ -80,10 +80,12 @@ class ResponsibleGamingViewController: UIViewController {
 
         self.stackView.addArrangedSubview(casualGamblingView)
         self.stackView.addArrangedSubview(tipsControlView)
-        self.stackView.addArrangedSubview(limitsView)
-        self.stackView.addArrangedSubview(selfExclusionView)
-        self.stackView.addArrangedSubview(closeAccountView)
 
+        if Env.userSessionStore.isUserLogged() {
+            self.stackView.addArrangedSubview(limitsView)
+            self.stackView.addArrangedSubview(selfExclusionView)
+            self.stackView.addArrangedSubview(closeAccountView)
+        }
     }
 }
 
