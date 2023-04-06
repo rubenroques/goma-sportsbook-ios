@@ -34,6 +34,8 @@ extension ServiceProviderModelMapper {
                         placedDate: bet.date,
                         settledDate: nil,
                         freeBet: bet.freebet,
+                        partialCashoutReturn: bet.partialCashoutReturn,
+                        partialCashoutStake: bet.partialCashoutStake,
                         betShareToken: nil)
     }
 

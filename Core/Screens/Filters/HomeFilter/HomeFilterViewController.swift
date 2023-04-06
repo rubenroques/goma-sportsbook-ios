@@ -202,6 +202,7 @@ class HomeFilterViewController: UIViewController {
 
         let contentView = timeRangeCollapseView.getContentView()
         self.timeRangeMultiSlider = MultiSlider()
+        
         timeRangeMultiSlider?.backgroundColor = UIColor.App.backgroundSecondary
         timeRangeMultiSlider?.orientation = .horizontal
         timeRangeMultiSlider?.minimumTextualValue = localized("now")

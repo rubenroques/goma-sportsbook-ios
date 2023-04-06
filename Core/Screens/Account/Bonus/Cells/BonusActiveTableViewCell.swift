@@ -148,14 +148,19 @@ class BonusActiveTableViewCell: UITableViewCell {
 
         let bonusStatus = viewModel.bonus.status
 
-        if bonusStatus != "ACTIVE" {
-            self.hasTypeStatus = true
-            self.hasCancelButton = false
-            self.bonusStatusLabel.text = bonusStatus
-        }
-        else {
+        if bonusStatus == "ACTIVE" {
             self.hasTypeStatus = false
             self.hasCancelButton = true
+        }
+        else if bonusStatus == "QUEUED" {
+            self.hasTypeStatus = true
+            self.hasCancelButton = true
+            self.bonusStatusLabel.text = BonusTypeMapper.init(bonusType: bonusStatus)?.bonusName ?? bonusStatus.capitalized
+        }
+        else {
+            self.hasTypeStatus = true
+            self.hasCancelButton = false
+            self.bonusStatusLabel.text = BonusTypeMapper.init(bonusType: bonusStatus)?.bonusName ?? bonusStatus.capitalized
         }
     }
 

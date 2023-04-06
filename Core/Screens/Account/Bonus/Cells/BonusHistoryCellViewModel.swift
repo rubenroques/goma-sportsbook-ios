@@ -35,7 +35,7 @@ class BonusHistoryCellViewModel: NSObject {
 
         self.bonusValuePublisher.value = "\(bonus.amount ?? 0.0)"
 
-        self.bonusStatusPublisher.value = bonus.status.capitalized
+        self.bonusStatusPublisher.value = BonusTypeMapper.init(bonusType: bonus.status)?.bonusName ?? bonus.status.capitalized
 
     }
 

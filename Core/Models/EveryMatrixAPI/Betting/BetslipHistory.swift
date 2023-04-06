@@ -34,6 +34,8 @@ struct BetHistoryEntry {
     let placedDate: Date?
     let settledDate: Date?
     let freeBet: Bool?
+    let partialCashoutReturn: Double?
+    let partialCashoutStake: Double?
 
     let betShareToken: String?
 

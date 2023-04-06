@@ -160,6 +160,8 @@ extension BetHistoryEntry {
                   placedDate: sharedBetTicket.placedDate,
                   settledDate: sharedBetTicket.settledDate,
                   freeBet: sharedBetTicket.freeBet,
+                  partialCashoutReturn: nil,
+                  partialCashoutStake: nil,
                   betShareToken: sharedBetTicket.betShareToken)
     }
 
