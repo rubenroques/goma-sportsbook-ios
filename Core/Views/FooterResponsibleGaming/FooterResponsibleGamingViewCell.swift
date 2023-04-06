@@ -83,7 +83,7 @@ extension FooterResponsibleGamingViewCell {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.text = "LES JEUX D+ARGENT ET DE HASARD SONT \n INTERDITS AUX MINEURS"
+        label.text = "LES JEUX D+ARGENT ET DE HASARD SONT INTERDITS AUX MINEURS"
         label.font = AppFont.with(type: .semibold, size: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor(hex: 0x5559b4)
@@ -146,6 +146,7 @@ extension FooterResponsibleGamingViewCell {
             self.ageLabel.centerYAnchor.constraint(equalTo: self.ageBaseView.centerYAnchor),
             self.ageLabel.centerXAnchor.constraint(equalTo: self.ageBaseView.centerXAnchor),
 
+            self.ageBaseView.leadingAnchor.constraint(greaterThanOrEqualTo: self.baseView.leadingAnchor, constant: 2),
             self.ageBaseView.widthAnchor.constraint(equalToConstant: 30),
             self.ageBaseView.widthAnchor.constraint(equalTo: self.ageBaseView.heightAnchor),
             self.ageBaseView.centerYAnchor.constraint(equalTo: self.bottomLabel.centerYAnchor),

@@ -28,7 +28,8 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return competitions.count + 1
+        print("CompetitionsDebug tableView numberOfSections \(self.competitions.count + 1)")
+        return self.competitions.count + 1
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -113,6 +114,8 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+
+        print("CompetitionsDebug tableView viewForHeaderInSection \(section)")
 
         if section == self.competitions.count {
             return nil // Footer

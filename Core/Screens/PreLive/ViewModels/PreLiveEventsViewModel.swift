@@ -362,6 +362,8 @@ class PreLiveEventsViewModel: NSObject {
 
     private func updateContentList() {
 
+        print("CompetitionsDebug updateContentList")
+
         self.popularMatchesDataSource.matches = filterPopularMatches(with: self.homeFilterOptions, matches: self.popularMatches)
 
         self.popularMatchesDataSource.outrightCompetitions = self.popularOutrightCompetitions
@@ -373,6 +375,8 @@ class PreLiveEventsViewModel: NSObject {
 
         //
         self.competitionsDataSource.competitions = filterCompetitionMatches(with: self.homeFilterOptions, competitions: self.competitions)
+
+        print("CompetitionsDebug updateContentList self.competitionsDataSource.competitions \(self.competitionsDataSource.competitions.count)")
 
         //
         //
@@ -652,10 +656,13 @@ class PreLiveEventsViewModel: NSObject {
 
     func fetchCompetitionsMatchesWithIds(_ ids: [String]) {
 
+        print("CompetitionsDebug fetchCompetitionsMatchesWithIds")
+
         if ids.isEmpty {
             self.competitions = []
             self.competitionsDataSource.competitions = []
             self.updateContentList()
+
             self.isLoadingCompetitionMatches.send(false)
             self.isLoadingEvents.send(false)
         }

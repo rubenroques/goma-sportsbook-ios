@@ -157,6 +157,7 @@ extension FooterResponsibleGamingView {
             self.ageLabel.centerYAnchor.constraint(equalTo: self.ageBaseView.centerYAnchor),
             self.ageLabel.centerXAnchor.constraint(equalTo: self.ageBaseView.centerXAnchor),
 
+            self.ageBaseView.leadingAnchor.constraint(greaterThanOrEqualTo: self.baseView.leadingAnchor, constant: 2),
             self.ageBaseView.widthAnchor.constraint(equalToConstant: 30),
             self.ageBaseView.widthAnchor.constraint(equalTo: self.ageBaseView.heightAnchor),
             self.ageBaseView.centerYAnchor.constraint(equalTo: self.bottomLabel.centerYAnchor),
@@ -164,4 +165,3 @@ extension FooterResponsibleGamingView {
         ])
     }
 }
-

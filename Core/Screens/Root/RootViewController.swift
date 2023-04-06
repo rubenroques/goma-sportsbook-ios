@@ -85,6 +85,9 @@ class RootViewController: UIViewController {
     @IBOutlet private var profilePictureBaseView: UIView!
     @IBOutlet private var profilePictureImageView: UIImageView!
 
+    @IBOutlet private var anonymousUserMenuBaseView: UIView!
+    @IBOutlet private var anonymousUserMenuImageView: UIImageView!
+
     @IBOutlet private var searchButton: UIButton!
     @IBOutlet private var logoImageView: UIImageView!
     @IBOutlet private var logoImageWidthConstraint: NSLayoutConstraint!
@@ -556,6 +559,9 @@ class RootViewController: UIViewController {
         let profileTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfileButton))
         profilePictureBaseView.addGestureRecognizer(profileTapGesture)
 
+        let anonymousTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAnonymousButton))
+        anonymousUserMenuBaseView.addGestureRecognizer(anonymousTapGesture)
+
         //
         accountValueLabel.text = localized("loading")
         accountValueLabel.font = AppFont.with(type: .bold, size: 12)
@@ -714,16 +720,20 @@ class RootViewController: UIViewController {
         switch state {
         case .logged:
             self.loginBaseView.isHidden = true
-            self.profileBaseView.isHidden = false
+
+            self.profilePictureBaseView.isHidden = false
             self.accountValueBaseView.isHidden = false
 
+            self.anonymousUserMenuBaseView.isHidden = true
             Env.userSessionStore.refreshUserWallet()
 
         case .anonymous:
             self.loginBaseView.isHidden = false
-            self.profileBaseView.isHidden = true
+
+            self.profilePictureBaseView.isHidden = true
             self.accountValueBaseView.isHidden = true
 
+            self.anonymousUserMenuBaseView.isHidden = false
         }
     }
 
@@ -972,6 +982,17 @@ extension RootViewController {
             self.present(navigationViewController, animated: true, completion: nil)
         }
     }
+
+    @objc private func didTapAnonymousButton() {
+        self.presentAnonymousSideMenuViewController()
+    }
+
+    private func presentAnonymousSideMenuViewController() {
+        let anonymousSideMenuViewController = AnonymousSideMenuViewController(viewModel: AnonymousSideMenuViewModel())
+        let navigationViewController = Router.navigationController(with: anonymousSideMenuViewController)
+        self.present(navigationViewController, animated: true, completion: nil)
+    }
+
 }
 
 extension RootViewController {

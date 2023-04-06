@@ -767,6 +767,13 @@
 		4554ED0A2976F7FE006942B3 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4554ED092976F7FE006942B3 /* IQKeyboardManagerSwift */; };
 		455A0C6B26BD902F00EC572D /* SportsbookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0C6A26BD902F00EC572D /* SportsbookTests.swift */; };
 		456237D9297EE5F600B3FA3A /* SharedModels in Frameworks */ = {isa = PBXBuildFile; productRef = 456237D8297EE5F600B3FA3A /* SharedModels */; };
+		4566339629DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566339529DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift */; };
+		4566339729DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566339529DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift */; };
+		4566339829DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566339529DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift */; };
+		4566339929DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566339529DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift */; };
+		4566339A29DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566339529DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift */; };
+		4566339B29DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566339529DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift */; };
+		4566339C29DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4566339529DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift */; };
 		4568B9662858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
 		4568B9672858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
 		4568B9682858CF4100FA99B3 /* CilinderSceneKitScene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */; };
@@ -5324,6 +5331,7 @@
 		45626E432755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OverUnderMarketDetailTableViewCell.xib; sourceTree = "<group>"; };
 		45628E7C27BEE02400AAB160 /* SuggestedBetLineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedBetLineViewModel.swift; sourceTree = "<group>"; };
 		45628E7F27BFBE4900AAB160 /* CompetitionWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
+		4566339529DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnonymousSideMenuViewController.swift; sourceTree = "<group>"; };
 		4568B9632858CF4100FA99B3 /* CilinderSceneKitScene.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = CilinderSceneKitScene.scn; sourceTree = "<group>"; };
 		4568B96C2858E45F00FA99B3 /* FlipNumberView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlipNumberView.swift; sourceTree = "<group>"; };
 		456B341C26C17D43009D7D27 /* UIStackView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extensions.swift"; sourceTree = "<group>"; };
@@ -6728,6 +6736,14 @@
 			path = Account;
 			sourceTree = "<group>";
 		};
+		4566339429DDD42F00C4F1A9 /* AnonymousSideMenu */ = {
+			isa = PBXGroup;
+			children = (
+				4566339529DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift */,
+			);
+			path = AnonymousSideMenu;
+			sourceTree = "<group>";
+		};
 		4568B96B2858E43700FA99B3 /* FlipperView */ = {
 			isa = PBXGroup;
 			children = (
@@ -7072,6 +7088,7 @@
 				454F0A7B27C4146F003123DF /* OutrightMarketDetails */,
 				451B0A35286AFD7300005FA5 /* Support */,
 				454E090627EB82F200391560 /* Social */,
+				4566339429DDD42F00C4F1A9 /* AnonymousSideMenu */,
 				4589F3EA26BF017A005DF543 /* Account */,
 				A9E7C68A27B526C500F784C9 /* MyFavorites */,
 				4523AECE27FB282800C5BF4E /* Casino */,
@@ -10925,6 +10942,7 @@
 				450B799B28F58574009229E3 /* SupportPageViewModel.swift in Sources */,
 				450B799C28F58574009229E3 /* FriendStatusCellViewModel.swift in Sources */,
 				450B799D28F58574009229E3 /* FriendStatusTableViewCell.swift in Sources */,
+				4566339729DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */,
 				A90FB7F029B0C53900D08A7C /* TipsControlViewController.swift in Sources */,
 				450B799E28F58574009229E3 /* UIView+Shift.swift in Sources */,
 				450B79A028F58574009229E3 /* MessageDetailViewModel.swift in Sources */,
@@ -11529,6 +11547,7 @@
 				457CBABC282D27D000ED0F00 /* Tournament.swift in Sources */,
 				A91A05BD29CB534B00E0A772 /* CloseAccountViewController.swift in Sources */,
 				457CBABD282D27D000ED0F00 /* OverUnderMarketDetailTableViewCell.swift in Sources */,
+				4566339B29DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */,
 				457CBABE282D27D000ED0F00 /* SearchViewModel.swift in Sources */,
 				457CBAC0282D27D000ED0F00 /* DepositResponse.swift in Sources */,
 				457CBAC1282D27D000ED0F00 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
@@ -12187,6 +12206,7 @@
 				457CBDA2282D2CD100ED0F00 /* MaintenanceViewController.swift in Sources */,
 				457CBDA3282D2CD100ED0F00 /* FriendStatusCellViewModel.swift in Sources */,
 				45C10F7528772DA700037BBE /* UIView+Shift.swift in Sources */,
+				4566339C29DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */,
 				457CBDA4282D2CD100ED0F00 /* FriendStatusTableViewCell.swift in Sources */,
 				A9B331F1289422FC00D097F0 /* MessageDetailViewModel.swift in Sources */,
 				457CBDA6282D2CD100ED0F00 /* MatchLineTableViewCell.swift in Sources */,
@@ -12771,6 +12791,7 @@
 				451B0A40286AFD7300005FA5 /* SupportPageViewModel.swift in Sources */,
 				45A6BB832821459200D9B416 /* FriendStatusCellViewModel.swift in Sources */,
 				45A6BB84282145BB00D9B416 /* FriendStatusTableViewCell.swift in Sources */,
+				4566339829DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */,
 				A90FB7F129B0C53900D08A7C /* TipsControlViewController.swift in Sources */,
 				45C10F7228772DA700037BBE /* UIView+Shift.swift in Sources */,
 				A9B331EE289422FC00D097F0 /* MessageDetailViewModel.swift in Sources */,
@@ -13360,6 +13381,7 @@
 				45A331B4298976BA008181E9 /* MaintenanceViewController.swift in Sources */,
 				45A331B5298976BA008181E9 /* SupportPageViewModel.swift in Sources */,
 				45A331B6298976BA008181E9 /* FriendStatusCellViewModel.swift in Sources */,
+				4566339629DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */,
 				A90FB7EF29B0C53900D08A7C /* TipsControlViewController.swift in Sources */,
 				45A331B7298976BA008181E9 /* FriendStatusTableViewCell.swift in Sources */,
 				45A331B8298976BA008181E9 /* UIView+Shift.swift in Sources */,
@@ -13929,6 +13951,7 @@
 				A9DF8E2E28E45CB50083BF56 /* FeaturedTipDetailsViewModel.swift in Sources */,
 				45B6E236284151E6001B570C /* EditGroupAddUserViewController.swift in Sources */,
 				45A6BCC228246A7500D9B416 /* CurrencyHelper.swift in Sources */,
+				4566339A29DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */,
 				45A6BCC428246A7500D9B416 /* Theme.swift in Sources */,
 				45A6BCC528246A7500D9B416 /* UserActionView.swift in Sources */,
 				45A6BCC628246A7500D9B416 /* SpinnerViewController.swift in Sources */,
@@ -14663,6 +14686,7 @@
 				A9C3427C28F9A74A0055360B /* RootViewController.swift in Sources */,
 				A9C3427E28F9A74A0055360B /* SportType.swift in Sources */,
 				A9C3427F28F9A74A0055360B /* UIViewController+Shift.swift in Sources */,
+				4566339929DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */,
 				A9C3428028F9A74A0055360B /* EditContactViewController.swift in Sources */,
 				A9C3428128F9A74A0055360B /* NewGroupViewModel.swift in Sources */,
 				A9C3428228F9A74A0055360B /* SegmentControlItemView.swift in Sources */,

@@ -1172,3 +1172,13 @@
 "terms_and_conditions" = "Terms and Conditions";
 "privacy_policy" = "Privacy Policy";
 "sport_betting_rules" = "Sport Betting Rules";
+
+"password_tips_title" = "In order to protect your account your password must:";
+"password_tips_number" = "• Contain at least one number";
+"password_tips_uppercase" = "• Contain an uppercase character";
+"password_tips_lowercase" = "• Contain a lowercase character";
+"password_tips_alphanumeric" = "• Be alphanumeric with at least 1 symbol from -!@^$&*";
+"password_tips_length" = "• Have length between 8 and 16 characters";
+
+"app_version_profile_1" = "App Version {version_1} ({version_2})";
+"app_version_profile_2" = "Sportsbook® All Rights Reserved";

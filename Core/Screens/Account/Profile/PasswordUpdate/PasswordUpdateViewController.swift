@@ -47,7 +47,6 @@ class PasswordUpdateViewController: UIViewController {
     }
 
     private var canSavePassword: Bool = false
-    private var canSaveSecurityInfo: Bool = false
 
     var cancellables = Set<AnyCancellable>()
     var passwordRegex: String = ""
@@ -92,14 +91,14 @@ class PasswordUpdateViewController: UIViewController {
         self.self.editButton.setTitle(localized("save"), for: .normal)
         editButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
-        self.tipTitleLabel.text = "In order to protect your account your password must:"
-        self.numbersTipLabel.text = "• Contain at least one number"
-        self.uppercaseTipLabel.text = "• Contain an uppercase character"
-        self.lowercaseTipLabel.text = "• Contain a lowercase character"
-        self.symbolsTipLabel.text = "• Be alphanumeric with at least 1 symbol from -!@^$&*"
-        self.lengthTipLabel.text = "• Have length between 8 and 16 characters"
+        self.tipTitleLabel.text = localized("password_tips_title")
+        self.numbersTipLabel.text = localized("password_tips_number")
+        self.uppercaseTipLabel.text = localized("password_tips_uppercase")
+        self.lowercaseTipLabel.text = localized("password_tips_lowercase")
+        self.symbolsTipLabel.text = localized("password_tips_alphanumeric")
+        self.lengthTipLabel.text = localized("password_tips_length")
 
-        self.tipTitleLabel.font = AppFont.with(type: .semibold, size: 12)
+        self.tipTitleLabel.font = AppFont.with(type: .semibold, size: 13)
         self.numbersTipLabel.font = AppFont.with(type: .semibold, size: 12)
         self.uppercaseTipLabel.font = AppFont.with(type: .semibold, size: 12)
         self.lowercaseTipLabel.font = AppFont.with(type: .semibold, size: 12)
@@ -137,114 +136,7 @@ class PasswordUpdateViewController: UIViewController {
 
         self.securityAnswerHeaderTextFieldView.setPlaceholderText(localized("security_answer"))
 
-        Publishers.CombineLatest4(self.oldPasswordHeaderTextFieldView.textPublisher,
-                                  self.newPasswordHeaderTextFieldView.textPublisher,
-                                  self.confirmPasswordHeaderTextFieldView.textPublisher,
-                                  self.viewModel.passwordState)
-            .map { oldPassword, newPassword, confirmPassword, passwordStates -> Bool in
 
-                if let newPassword {
-                    self.viewModel.setPassword(newPassword)
-                }
-
-                if let newPassword, let confirmPassword, confirmPassword != newPassword {
-                    self.confirmPasswordHeaderTextFieldView.showErrorOnField(text: localized("password_not_match"))
-                    return false
-                }
-
-                self.newPasswordHeaderTextFieldView.hideTipAndError()
-                self.confirmPasswordHeaderTextFieldView.hideTipAndError()
-                self.oldPasswordHeaderTextFieldView.hideTipAndError()
-
-                let allLabels = [self.lengthTipLabel,
-                                 self.uppercaseTipLabel,
-                                 self.lowercaseTipLabel,
-                                 self.numbersTipLabel,
-                                 self.symbolsTipLabel].compactMap({ $0 })
-
-                if passwordStates.contains(.empty) {
-                    for label in allLabels {
-                        self.resetTipLabel(label: label)
-                    }
-                    return false
-                }
-
-                var errorLabels: Set<UILabel> = []
-
-                if passwordStates.contains(.short) || passwordStates.contains(.long) {
-                    errorLabels.insert(self.lengthTipLabel)
-                }
-
-                if passwordStates.contains(.invalidChars) {
-                    errorLabels.insert(self.symbolsTipLabel)
-                }
-
-                if passwordStates.contains(.onlyNumbers) {
-                    errorLabels.insert(self.lowercaseTipLabel)
-                    errorLabels.insert(self.uppercaseTipLabel)
-                    errorLabels.insert(self.symbolsTipLabel)
-                }
-
-                if passwordStates.contains(.needLowercase) {
-                    errorLabels.insert(self.lowercaseTipLabel)
-                }
-                if passwordStates.contains(.needUppercase) {
-                    errorLabels.insert(self.uppercaseTipLabel)
-                }
-                if passwordStates.contains(.needNumber) {
-                    errorLabels.insert(self.numbersTipLabel)
-                }
-                if passwordStates.contains(.needSpecial) {
-                    errorLabels.insert(self.symbolsTipLabel)
-                }
-
-                for label in allLabels where !errorLabels.contains(label) {
-                    self.markTipLabelCompleted(label: label)
-                }
-
-                for label in errorLabels {
-                    self.markTipLabelError(label: label)
-                }
-
-                self.canSavePassword = true
-
-                return true
-            }
-            .sink(receiveValue: { [weak self] enabled in
-                self?.editButton.isEnabled = enabled
-            })
-            .store(in: &self.cancellables)
-
-        Publishers.CombineLatest(self.securityQuestionHeaderTextFieldView.textPublisher, self.securityAnswerHeaderTextFieldView.textPublisher)
-            .map { [weak self] securityQuestion, securityAnswer in
-                if securityQuestion == "" || securityAnswer == "" {
-
-                    self?.canSaveSecurityInfo = false
-
-                    return false
-                }
-                if let userProfile = self?.viewModel.userProfilePublisher.value {
-                    if securityQuestion == userProfile.securityQuestion && securityAnswer == userProfile.securityAnswer {
-
-                        self?.canSaveSecurityInfo = false
-
-                        return false
-                    }
-                }
-
-                self?.canSaveSecurityInfo = true
-
-                return true
-            }
-            .assign(to: \.isEnabled, on: self.editButton)
-            .store(in: &self.cancellables)
-
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
-                                               name: UIResponder.keyboardWillShowNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
-                                               name: UIResponder.keyboardWillHideNotification,
-                                               object: nil)
 
     }
 
@@ -300,27 +192,6 @@ class PasswordUpdateViewController: UIViewController {
 
     private func bind(toViewModel viewModel: PasswordUpdateViewModel) {
 
-        viewModel.policyPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] policy in
-                if let policy = policy {
-                    self?.passwordRegex = policy.regularExpression ?? ""
-                    self?.passwordRegexMessage = policy.message
-                }
-            })
-            .store(in: &cancellables)
-
-        viewModel.userProfilePublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] userProfile in
-
-                if let userProfile = userProfile {
-                    self?.setupProfileSecurity(profile: userProfile)
-                }
-
-            })
-            .store(in: &cancellables)
-
         viewModel.isLoadingPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLoading in
@@ -342,16 +213,101 @@ class PasswordUpdateViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        let validNewPasswordPublisher = self.viewModel.passwordState
+            .map { states in
+                return states.count == 1 && states.contains(.valid)
+            }
 
-    }
+        let validConfirmPasswordPublisher = Publishers.CombineLatest(self.newPasswordHeaderTextFieldView.textPublisher,
+                                                                     self.confirmPasswordHeaderTextFieldView.textPublisher)
+            .map { newPassword, confirmPassword in
+                if let newPassword, let confirmPassword, confirmPassword != newPassword {
+                    return false
+                }
+                return true
+            }
 
-    private func setupProfileSecurity(profile: EveryMatrix.UserProfile) {
+        self.newPasswordHeaderTextFieldView.textPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] newPassword in
+                self?.newPasswordHeaderTextFieldView.hideTipAndError()
+                self?.viewModel.setPassword(newPassword ?? "")
+            }
+            .store(in: &self.cancellables)
 
-        self.securityQuestionHeaderTextFieldView.setText(profile.securityQuestion)
+        let editButtonEnabledPublisher = Publishers.CombineLatest(validConfirmPasswordPublisher, validNewPasswordPublisher).map { return $0 && $1 }
 
-        self.securityAnswerHeaderTextFieldView.setText(profile.securityAnswer)
+        self.viewModel.passwordState
+            .sink { passwordStates in
 
-        self.isLoading = false
+                let allLabels = [self.lengthTipLabel,
+                                 self.uppercaseTipLabel,
+                                 self.lowercaseTipLabel,
+                                 self.numbersTipLabel,
+                                 self.symbolsTipLabel].compactMap({ $0 })
+
+                if passwordStates.contains(.empty) {
+                    for label in allLabels {
+                        self.resetTipLabel(label: label)
+                    }
+                }
+
+                var errorLabels: Set<UILabel> = []
+
+                if passwordStates.contains(.short) || passwordStates.contains(.long) {
+                    errorLabels.insert(self.lengthTipLabel)
+                }
+
+                if passwordStates.contains(.invalidChars) {
+                    errorLabels.insert(self.symbolsTipLabel)
+                }
+
+                if passwordStates.contains(.onlyNumbers) {
+                    errorLabels.insert(self.lowercaseTipLabel)
+                    errorLabels.insert(self.uppercaseTipLabel)
+                    errorLabels.insert(self.symbolsTipLabel)
+                }
+
+                if passwordStates.contains(.needLowercase) {
+                    errorLabels.insert(self.lowercaseTipLabel)
+                }
+                if passwordStates.contains(.needUppercase) {
+                    errorLabels.insert(self.uppercaseTipLabel)
+                }
+                if passwordStates.contains(.needNumber) {
+                    errorLabels.insert(self.numbersTipLabel)
+                }
+                if passwordStates.contains(.needSpecial) {
+                    errorLabels.insert(self.symbolsTipLabel)
+                }
+
+                for label in allLabels where !errorLabels.contains(label) {
+                    self.markTipLabelCompleted(label: label)
+                }
+
+                for label in errorLabels {
+                    self.markTipLabelError(label: label)
+                }
+            }
+            .store(in: &self.cancellables)
+
+        validConfirmPasswordPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] validConfirmPassword in
+                if validConfirmPassword {
+                    self?.confirmPasswordHeaderTextFieldView.hideTipAndError()
+                }
+                else {
+                    self?.confirmPasswordHeaderTextFieldView.showErrorOnField(text: localized("password_not_match"))
+                }
+            }
+            .store(in: &self.cancellables)
+
+        editButtonEnabledPublisher.sink(receiveValue: { [weak self] enabled in
+            self?.editButton.isEnabled = enabled
+        })
+        .store(in: &self.cancellables)
+
     }
 
     func showAlert(type: EditAlertView.AlertState, text: String = "") {
@@ -405,74 +361,16 @@ class PasswordUpdateViewController: UIViewController {
     }
 
     @IBAction private func editAction() {
+        self.newPasswordHeaderTextFieldView.hideTipAndError()
+        self.confirmPasswordHeaderTextFieldView.hideTipAndError()
 
-        if self.canSavePassword {
-            self.savePassword()
-        }
-
-        if self.canSaveSecurityInfo {
-            self.saveSecurityInfo()
-        }
-
-    }
-
-    private func savePassword() {
-
-        var validFields = true
-        // Clean warnings
-        newPasswordHeaderTextFieldView.hideTipAndError()
-        confirmPasswordHeaderTextFieldView.hideTipAndError()
-
-//        if newPasswordHeaderTextFieldView.text.range(of: self.passwordRegex, options: .regularExpression) == nil {
-//            newPasswordHeaderTextFieldView.showErrorOnField(text: self.passwordRegexMessage)
-//            validFields = false
-//        }
-//
-//        if confirmPasswordHeaderTextFieldView.text.range(of: self.passwordRegex, options: .regularExpression) == nil {
-//            confirmPasswordHeaderTextFieldView.showErrorOnField(text: self.passwordRegexMessage)
-//            validFields = false
-//        }
-
-        if validFields {
-            self.viewModel.savePassword(oldPassword: oldPasswordHeaderTextFieldView.text,
-                                        newPassword: newPasswordHeaderTextFieldView.text)
-        }
-
-    }
-
-    private func saveSecurityInfo() {
-
-//        self.viewModel.saveSecurityInfo(securityQuestion: self.securityQuestionHeaderTextFieldView.text,
-//                                        securityAnswer: self.securityAnswerHeaderTextFieldView.text)
-
+        self.viewModel.savePassword(oldPassword: oldPasswordHeaderTextFieldView.text,
+                                    newPassword: newPasswordHeaderTextFieldView.text)
     }
 
     @IBAction private func backAction() {
         self.navigationController?.popViewController(animated: true)
     }
-
-    @objc func keyboardWillShow(notification: NSNotification) {
-
-        guard
-            let userInfo = notification.userInfo,
-            var keyboardFrame: CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
-        else {
-            return
-        }
-
-        keyboardFrame = self.view.convert(keyboardFrame, from: nil)
-
-        var contentInset: UIEdgeInsets = self.scrollView.contentInset
-        contentInset.bottom = keyboardFrame.size.height + 20
-        scrollView.contentInset = contentInset
-    }
-
-    @objc func keyboardWillHide(notification: NSNotification) {
-
-        let contentInset: UIEdgeInsets = UIEdgeInsets.zero
-        scrollView.contentInset = contentInset
-    }
-
 
     private func resetTipLabel(label: UILabel) {
         label.alpha = 1.0

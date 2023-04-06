@@ -124,7 +124,7 @@ class PreLiveEventsViewController: UIViewController {
         self.competitionsFiltersView.selectedIds
             .receive(on: DispatchQueue.main)
             .sink { idsSet in
-                print("selectedIds -> \(idsSet)")
+                print("CompetitionsDebug selectedIds -> \(idsSet)")
             }
             .store(in: &cancellables)
 
@@ -295,6 +295,7 @@ class PreLiveEventsViewController: UIViewController {
         //
         //
         self.competitionsFiltersView.applyFiltersAction = { [unowned self] selectedCompetitionsIds in
+            print("CompetitionsDebug applyCompetitionsFiltersWithIds")
             self.applyCompetitionsFiltersWithIds(selectedCompetitionsIds)
         }
         self.competitionsFiltersView.tapHeaderViewAction = { [unowned self] in
@@ -392,6 +393,7 @@ class PreLiveEventsViewController: UIViewController {
         self.viewModel.dataChangedPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
+                print("CompetitionsDebug reloadData()")
                 self?.reloadData()
             })
             .store(in: &cancellables)
@@ -626,7 +628,7 @@ class PreLiveEventsViewController: UIViewController {
             return
         }
 
-        UIView.animate(withDuration: 0.32, delay: 0.0, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.32, delay: 0.0, options: [.curveEaseOut, .beginFromCurrentState], animations: {
             self.drawOpenCompetitionsFilters()
             self.view.layoutIfNeeded()
         }, completion: nil)
@@ -634,6 +636,9 @@ class PreLiveEventsViewController: UIViewController {
     }
 
     private func drawOpenCompetitionsFilters() {
+
+        print("CompetitionsDebug drawOpenCompetitionsFilters()")
+
         self.competitionsFiltersDarkBackgroundView.alpha = 0.9
         self.openedCompetitionsFiltersConstraint.constant = 0
         self.tableView.contentInset.bottom = 16
@@ -643,7 +648,13 @@ class PreLiveEventsViewController: UIViewController {
 
     func showBottomBarCompetitionsFilters(animated: Bool = true) {
 
-        UIView.animate(withDuration: animated ? 0.32 : 0.0, delay: 0.0, options: .curveEaseOut, animations: {
+        if competitionsFiltersView.state == .bar {
+            return
+        }
+
+        print("CompetitionsDebug showBottomBarCompetitionsFilters()")
+
+        UIView.animate(withDuration: animated ? 0.32 : 0.0, delay: 0.0, options: [.curveEaseOut, .beginFromCurrentState], animations: {
             self.competitionsFiltersDarkBackgroundView.alpha = 0.0
             self.openedCompetitionsFiltersConstraint.constant = -(self.competitionsFiltersView.frame.size.height - 52)
             self.tableView.contentInset.bottom = 54+16
@@ -655,7 +666,13 @@ class PreLiveEventsViewController: UIViewController {
 
     func showBottomLineCompetitionsFilters(animated: Bool = true) {
 
-        UIView.animate(withDuration: animated ? 0.32 : 0.0, delay: 0.0, options: .curveEaseOut, animations: {
+        if competitionsFiltersView.state == .line {
+            return
+        }
+
+        print("CompetitionsDebug showBottomLineCompetitionsFilters()")
+
+        UIView.animate(withDuration: animated ? 0.32 : 0.0, delay: 0.0, options: [.curveEaseOut, .beginFromCurrentState], animations: {
             self.competitionsFiltersDarkBackgroundView.alpha = 0.0
             self.openedCompetitionsFiltersConstraint.constant = -(self.competitionsFiltersView.frame.size.height - 18)
             self.tableView.contentInset.bottom = 24

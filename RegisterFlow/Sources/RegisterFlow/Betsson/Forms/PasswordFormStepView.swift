@@ -352,7 +352,7 @@ extension PasswordFormStepView {
         label.font = AppFont.with(type: .semibold, size: 12)
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "In order to protect your account your password must:"
+        label.text = Localization.localized("password_tips_title")
         return label
     }
 
@@ -361,7 +361,7 @@ extension PasswordFormStepView {
         label.font = AppFont.with(type: .semibold, size: 12)
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "• Contain at least one number"
+        label.text = Localization.localized("password_tips_number")
         return label
     }
 
@@ -370,7 +370,7 @@ extension PasswordFormStepView {
         label.font = AppFont.with(type: .semibold, size: 12)
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "• Contain an uppercase character"
+        label.text = Localization.localized("password_tips_uppercase")
         return label
     }
 
@@ -379,7 +379,7 @@ extension PasswordFormStepView {
         label.font = AppFont.with(type: .semibold, size: 12)
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "• Contain a lowercase character"
+        label.text = Localization.localized("password_tips_lowercase")
         return label
     }
 
@@ -388,7 +388,7 @@ extension PasswordFormStepView {
         label.font = AppFont.with(type: .semibold, size: 12)
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "• Be alphanumeric with at least 1 symbol from -!@^$&*"
+        label.text = Localization.localized("password_tips_alphanumeric")
         return label
     }
 
@@ -397,7 +397,7 @@ extension PasswordFormStepView {
         label.font = AppFont.with(type: .semibold, size: 12)
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "• Have length between 8 and 16 characters"
+        label.text = Localization.localized("password_tips_length")
         return label
     }
 

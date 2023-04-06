@@ -50,7 +50,7 @@ struct SportRadarConstants {
 
     // PAM
     // //static var pamHostname = "https://ps.omegasys.eu"
-    static var pamHostname = "https://bfr-ps.omegasys.eu"
+    static var pamHostname = "https://ips-stg.betsson.fr"
     // Betting
     static var apiRestHostname = "https://api-bson-ssb-ua.betsson.fr" // as in api-bson-ssb-ua.betsson.fr/API
 
