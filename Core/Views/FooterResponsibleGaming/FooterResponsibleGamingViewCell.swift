@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 
-
 class FooterResponsibleGamingViewCell: UITableViewCell {
 
     private lazy var baseView: UIView = Self.createBaseView()
@@ -17,12 +16,18 @@ class FooterResponsibleGamingViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
+        self.commonInit()
         self.setupSubviews()
         self.setupWithTheme()
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    private func commonInit() {
+        self.footerResponsibleGamingView.hideLinksView()
+        self.footerResponsibleGamingView.hideSocialView()
     }
 
     override func prepareForReuse() {
@@ -58,7 +63,6 @@ extension FooterResponsibleGamingViewCell {
         footerResponsibleGamingView.translatesAutoresizingMaskIntoConstraints = false
         return footerResponsibleGamingView
     }
-
 
     private func setupSubviews() {
 

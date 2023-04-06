@@ -40,6 +40,7 @@ class LoginViewController: UIViewController {
     // Variables
     var shouldRememberUser: Bool = true
 
+    private var shouldPresentRegisterFlow: Bool
     private let registrationFormDataKey = "RegistrationFormDataKey"
 
     var cancellables = Set<AnyCancellable>()
@@ -50,7 +51,8 @@ class LoginViewController: UIViewController {
     var paymentsDropIn: PaymentsDropIn?
     var depositOnRegisterViewController: DepositOnRegisterViewController?
 
-    init() {
+    init(shouldPresentRegisterFlow: Bool = false) {
+        self.shouldPresentRegisterFlow = shouldPresentRegisterFlow
         super.init(nibName: "LoginViewController", bundle: nil)
     }
 
@@ -118,11 +120,16 @@ class LoginViewController: UIViewController {
             }
         }
 
+        if self.shouldPresentRegisterFlow {
+            self.presentRegister(animated: false)
+            self.shouldPresentRegisterFlow = false
+        }
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         if self.isModal {
             self.skipButton.isHidden = true
             self.dismissButton.isHidden = false
@@ -131,6 +138,7 @@ class LoginViewController: UIViewController {
             self.skipButton.isHidden = false
             self.dismissButton.isHidden = true
         }
+
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -208,7 +216,7 @@ class LoginViewController: UIViewController {
         rememberView.addGestureRecognizer(tapImageGestureRecognizer)
 
         self.registerButton.setTitle(localized("create_a_new_account"), for: .normal)
-        self.registerButton.addTarget(self, action: #selector(self.didTapCreateAccount), for: .primaryActionTriggered)
+        self.registerButton.addTarget(self, action: #selector(self.didTapRegister), for: .primaryActionTriggered)
 
         self.dismissButton.setTitle(localized("close"), for: .normal)
         self.dismissButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
@@ -310,8 +318,11 @@ class LoginViewController: UIViewController {
         }
     }
 
-    @objc private func didTapCreateAccount() {
+    @objc private func didTapRegister() {
+        self.presentRegister(animated: true)
+    }
 
+    private func presentRegister(animated: Bool = true) {
         let userRegisterEnvelop: UserRegisterEnvelop? = UserDefaults.standard.codable(forKey: self.registrationFormDataKey)
         let userRegisterEnvelopValue: UserRegisterEnvelop = userRegisterEnvelop ?? UserRegisterEnvelop()
 
@@ -340,7 +351,11 @@ class LoginViewController: UIViewController {
             }
         }
 
-        self.present(registerNavigationController, animated: true)
+        if !animated {
+            registerNavigationController.modalPresentationStyle = .fullScreen
+        }
+
+        self.present(registerNavigationController, animated: animated)
     }
 
     private func showRegisterFeedbackViewController(onNavigationController navigationController: UINavigationController) {

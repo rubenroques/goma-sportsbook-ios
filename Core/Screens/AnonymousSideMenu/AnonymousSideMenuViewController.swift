@@ -15,6 +15,9 @@ struct AnonymousSideMenuViewModel {
 
 class AnonymousSideMenuViewController: UIViewController {
 
+    var requestRegisterAction: () -> Void = { }
+    var requestLoginAction: () -> Void = { }
+
     // MARK: - Variables
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var navigationBaseView: UIView = Self.createNavigationBaseView()
@@ -25,7 +28,12 @@ class AnonymousSideMenuViewController: UIViewController {
     private lazy var contentBaseView: UIView = Self.createContentBaseView()
 
     private lazy var contentStackView: UIStackView = Self.createContentStackView()
-    private lazy var signUpButtonBaseView: UIView = Self.createView()
+
+    private lazy var signUpButtonsBaseView: UIView = Self.createView()
+    private lazy var signUpButtonsStackView: UIStackView = Self.createButtonsStackView()
+
+    private lazy var registerButton: UIButton = Self.createButton()
+    private lazy var loginButton: UIButton = Self.createButton()
 
     private lazy var menuContainerView: UIView = Self.createView()
     private lazy var menusStackView: UIStackView = Self.createMenusStackView()
@@ -70,6 +78,12 @@ class AnonymousSideMenuViewController: UIViewController {
         self.closeButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
         self.closeButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
         self.closeButton.setTitle(localized("close"), for: .normal)
+
+        self.registerButton.setTitle(localized("register"), for: .normal)
+        self.loginButton.setTitle(localized("login"), for: .normal)
+
+        self.registerButton.addTarget(self, action: #selector(didTapRegisterButton), for: .primaryActionTriggered)
+        self.loginButton.addTarget(self, action: #selector(didTapLoginButton), for: .primaryActionTriggered)
     }
 
     // MARK: - Layout and Theme
@@ -96,7 +110,10 @@ class AnonymousSideMenuViewController: UIViewController {
         self.contentStackView.backgroundColor = .clear
         self.menusStackView.backgroundColor = .clear
 
-        self.signUpButtonBaseView.backgroundColor = .clear
+        self.signUpButtonsBaseView.backgroundColor = .clear
+
+        StyleHelper.styleButton(button: self.registerButton)
+        StyleHelper.styleButton(button: self.loginButton)
     }
 
     private func addMenus() {
@@ -143,6 +160,14 @@ class AnonymousSideMenuViewController: UIViewController {
 
 
 extension AnonymousSideMenuViewController {
+
+    @objc func didTapRegisterButton() {
+        self.requestRegisterAction()
+    }
+
+    @objc func didTapLoginButton() {
+        self.requestLoginAction()
+    }
 
     @objc func promotionsViewTapped() {
         let promotionsWebViewModel = PromotionsWebViewModel()
@@ -246,6 +271,24 @@ extension AnonymousSideMenuViewController {
         return view
     }
 
+    private static func createButtonsStackView() -> UIStackView {
+        let view = UIStackView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.distribution = .fillEqually
+        view.axis = .horizontal
+        view.spacing = 16
+        return view
+    }
+
+    private static func createButton() -> UIButton {
+        let button = UIButton()
+        button.setTitle("Continue", for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 18)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 8
+        return button
+    }
+
     private static func createMenusStackView() -> UIStackView {
         let view = UIStackView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -296,7 +339,12 @@ extension AnonymousSideMenuViewController {
 
         self.menuContainerView.addSubview(self.menusStackView)
 
-        self.contentStackView.addArrangedSubview(self.signUpButtonBaseView)
+//        self.signUpButtonsStackView.addArrangedSubview(self.loginButton)
+//        self.signUpButtonsStackView.addArrangedSubview(self.registerButton)
+
+        self.signUpButtonsBaseView.addSubview(self.signUpButtonsStackView)
+
+        self.contentStackView.addArrangedSubview(self.signUpButtonsBaseView)
         self.contentStackView.addArrangedSubview(menuContainerView)
         self.contentStackView.addArrangedSubview(self.versionBaseView)
         self.contentStackView.addArrangedSubview(self.footerResponsibleGamingView)
@@ -354,7 +402,6 @@ extension AnonymousSideMenuViewController {
             self.contentStackView.topAnchor.constraint(equalTo: self.contentBaseView.topAnchor),
         ])
 
-
         NSLayoutConstraint.activate([
             self.menusStackView.leadingAnchor.constraint(equalTo: self.menuContainerView.leadingAnchor, constant: 24),
             self.menusStackView.trailingAnchor.constraint(equalTo: self.menuContainerView.trailingAnchor, constant: -24),
@@ -363,7 +410,12 @@ extension AnonymousSideMenuViewController {
         ])
 
         NSLayoutConstraint.activate([
-            self.signUpButtonBaseView.heightAnchor.constraint(equalToConstant: 80),
+            self.signUpButtonsStackView.heightAnchor.constraint(equalToConstant: 50),
+
+            self.signUpButtonsStackView.leadingAnchor.constraint(equalTo: self.signUpButtonsBaseView.leadingAnchor, constant: 24),
+            self.signUpButtonsStackView.trailingAnchor.constraint(equalTo: self.signUpButtonsBaseView.trailingAnchor, constant: -24),
+            self.signUpButtonsStackView.topAnchor.constraint(equalTo: self.signUpButtonsBaseView.topAnchor, constant: 12),
+            self.signUpButtonsStackView.bottomAnchor.constraint(equalTo: self.signUpButtonsBaseView.bottomAnchor, constant: -12),
         ])
 
         NSLayoutConstraint.activate([

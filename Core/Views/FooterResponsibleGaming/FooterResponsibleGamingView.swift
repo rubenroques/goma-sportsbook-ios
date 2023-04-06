@@ -90,7 +90,6 @@ class FooterResponsibleGamingView: UIView {
         self.addTapGestureRecognizer(to: self.aboutLabel, action: #selector(openAboutURL))
         self.addTapGestureRecognizer(to: self.faqLabel, action: #selector(openFAQsURL))
 
-
         self.facebookSocialButton.setImage(UIImage(named: "facebook_icon_mono")?.withRenderingMode(.alwaysTemplate),
                                            for: .normal)
         self.youtubeSocialButton.setImage(UIImage(named: "youtube_icon_mono")?.withRenderingMode(.alwaysTemplate),
@@ -132,6 +131,14 @@ class FooterResponsibleGamingView: UIView {
         self.youtubeSocialButton.tintColor = UIColor.App.textPrimary
         self.instagramSocialButton.tintColor = UIColor.App.textPrimary
         self.twitterSocialButton.tintColor = UIColor.App.textPrimary
+    }
+
+    func hideLinksView() {
+        self.linksBaseView.isHidden = true
+    }
+
+    func hideSocialView() {
+        self.socialBaseView.isHidden = true
     }
 
     @objc func didTapBaseView() {

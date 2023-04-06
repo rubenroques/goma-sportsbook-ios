@@ -956,8 +956,17 @@ extension RootViewController {
 extension RootViewController {
 
     @IBAction private func didTapLoginButton() {
+        self.presentLoginScreen()
+    }
+
+    private func presentLoginScreen() {
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
+    }
+
+    private func presentRegisterScreen() {
+        let loginViewController = Router.navigationController(with: LoginViewController(shouldPresentRegisterFlow: true))
+        self.present(loginViewController, animated: false, completion: nil)
     }
 
     @objc private func didTapProfileButton() {
@@ -989,8 +998,21 @@ extension RootViewController {
 
     private func presentAnonymousSideMenuViewController() {
         let anonymousSideMenuViewController = AnonymousSideMenuViewController(viewModel: AnonymousSideMenuViewModel())
-        let navigationViewController = Router.navigationController(with: anonymousSideMenuViewController)
-        self.present(navigationViewController, animated: true, completion: nil)
+
+        let anonymousNavigationViewController = Router.navigationController(with: anonymousSideMenuViewController)
+
+        anonymousSideMenuViewController.requestLoginAction = { [weak self] in
+            anonymousNavigationViewController.dismiss(animated: true, completion: {
+                self?.presentLoginScreen()
+            })
+        }
+        anonymousSideMenuViewController.requestLoginAction = { [weak self] in
+            anonymousNavigationViewController.dismiss(animated: true, completion: {
+                self?.presentRegisterScreen()
+            })
+        }
+
+        self.present(anonymousNavigationViewController, animated: true, completion: nil)
     }
 
 }
