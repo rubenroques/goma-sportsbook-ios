@@ -966,7 +966,7 @@ extension RootViewController {
 
     private func presentRegisterScreen() {
         let loginViewController = Router.navigationController(with: LoginViewController(shouldPresentRegisterFlow: true))
-        self.present(loginViewController, animated: false, completion: nil)
+        self.present(loginViewController, animated: true, completion: nil)
     }
 
     @objc private func didTapProfileButton() {
@@ -976,11 +976,9 @@ extension RootViewController {
     @objc private func didTapAccountValue() {
         let depositViewController = DepositViewController()
         let navigationViewController = Router.navigationController(with: depositViewController)
-
         depositViewController.shouldRefreshUserWallet = { [weak self] in
             Env.userSessionStore.refreshUserWallet()
         }
-
         self.present(navigationViewController, animated: true, completion: nil)
     }
 
@@ -1006,7 +1004,7 @@ extension RootViewController {
                 self?.presentLoginScreen()
             })
         }
-        anonymousSideMenuViewController.requestLoginAction = { [weak self] in
+        anonymousSideMenuViewController.requestRegisterAction = { [weak self] in
             anonymousNavigationViewController.dismiss(animated: true, completion: {
                 self?.presentRegisterScreen()
             })
