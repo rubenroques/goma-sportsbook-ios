@@ -150,7 +150,7 @@ class MyTicketCellViewModel {
 
             self.isLoadingCellData.send(true)
 
-            Env.servicesProvider.cashoutBet(betId: betId, cashoutValue: cashoutValue, stakeValue: stakeValue)
+            Env.servicesProvider.cashoutBet(betId: betId, cashoutValue: cashoutValue)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
                     switch completion {
