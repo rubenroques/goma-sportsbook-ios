@@ -38,12 +38,26 @@ class MyTicketTableViewCell: UITableViewCell {
 
     @IBOutlet private weak var cashoutBaseView: UIView!
     @IBOutlet private weak var cashoutButton: UIButton!
+    @IBOutlet private weak var partialCashoutFilterButton: UIButton!
+
+    @IBOutlet private weak var partialCashoutSliderView: UIView!
+    @IBOutlet private weak var multiSliderInnerView: UIView!
+    @IBOutlet private weak var partialCashoutButton: UIButton!
 
     @IBOutlet private weak var loadingView: UIView!
     @IBOutlet private weak var loadingActivityIndicator: UIActivityIndicatorView!
 
     @IBOutlet private weak var freebetBaseView: UIView!
     @IBOutlet private weak var freebetLabel: UILabel!
+
+    @IBOutlet private weak var partialAmountsView: UIView!
+    @IBOutlet private weak var originalAmountValueLabel: UILabel!
+    @IBOutlet private weak var returnedAmountValueLabel: UILabel!
+
+    // Constraints
+//    @IBOutlet private weak var stackBottomToPartialConstraint: NSLayoutConstraint!
+//    @IBOutlet private weak var stackBottomToContainerConstraint: NSLayoutConstraint!
+//    @IBOutlet private weak var partialBottomToContainerConstraint: NSLayoutConstraint!
 
     private var betHistoryEntry: BetHistoryEntry?
 
@@ -56,12 +70,36 @@ class MyTicketTableViewCell: UITableViewCell {
     private var selectedMatch: String = ""
 
     private var cashoutValue: Double?
+
+    private var cancellables = Set<AnyCancellable>()
+
     private var showCashoutButton: Bool = false {
         didSet {
             self.cashoutBaseView.isHidden = !showCashoutButton
             if showCashoutButton {
                 self.needsHeightRedraw?()
             }
+        }
+    }
+
+    private var showPartialCashoutSliderView: Bool = false {
+        didSet {
+            if showPartialCashoutSliderView {
+                self.partialCashoutFilterButton.setImage(UIImage(named: "close_dark_icon"), for: .normal)
+                self.cashoutButton.isEnabled = false
+            }
+            else {
+                self.partialCashoutFilterButton.setImage(UIImage(named: "partial_cashout_slider_icon"), for: .normal)
+                self.cashoutButton.isEnabled = true
+            }
+            self.partialCashoutSliderView.isHidden = !showPartialCashoutSliderView
+            self.needsHeightRedraw?()
+        }
+    }
+
+    var hasPartialCashoutReturned: Bool = false {
+        didSet {
+            self.partialAmountsView.isHidden = !hasPartialCashoutReturned
         }
     }
 
@@ -72,6 +110,8 @@ class MyTicketTableViewCell: UITableViewCell {
     var tappedMatchDetail: ((String) -> Void)?
     
     var selectedIdPublisher: CurrentValueSubject<String, Never> = .init("")
+
+    var partialCashoutMultiSlider: MultiSlider?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -88,6 +128,7 @@ class MyTicketTableViewCell: UITableViewCell {
         self.loadingView.isHidden = true
 
         self.cashoutBaseView.isHidden = true
+        self.partialCashoutSliderView.isHidden = true
 
         self.baseView.clipsToBounds = true
         self.baseView.layer.cornerRadius = 10
@@ -110,6 +151,17 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.freebetBaseView.isHidden = true
 
+        self.partialCashoutFilterButton.setTitle("", for: .normal)
+        self.partialCashoutFilterButton.setImage(UIImage(named: "partial_cashout_slider_icon"), for: .normal)
+        self.partialCashoutFilterButton.imageEdgeInsets = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 0)
+        self.partialCashoutFilterButton.contentMode = .scaleAspectFit
+
+        self.originalAmountValueLabel.text = "\(localized("original"))\n€1.00"
+
+        self.returnedAmountValueLabel.text = "\(localized("returned"))\n€0.10"
+
+        self.hasPartialCashoutReturned = false
+
         self.setupWithTheme()
     }
 
@@ -124,6 +176,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.cashoutValue = nil
         self.showCashoutButton = false
+        self.showPartialCashoutSliderView = false
 
         self.cashoutSubscription?.cancel()
         self.cashoutSubscription = nil
@@ -143,7 +196,7 @@ class MyTicketTableViewCell: UITableViewCell {
         self.betAmountSubtitleLabel.text = "-"
         self.winningsSubtitleLabel.text = "-"
 
-
+        self.hasPartialCashoutReturned = false
     }
 
     override func layoutSubviews() {
@@ -170,6 +223,10 @@ class MyTicketTableViewCell: UITableViewCell {
         self.baseView.backgroundColor = UIColor.App.backgroundSecondary
         self.betCardsBaseView.backgroundColor = .clear
         self.betCardsStackView.backgroundColor = .clear
+
+        self.subtitleLabel.textColor = UIColor.App.textSecondary
+
+        self.betIdLabel.textColor = UIColor.App.textSecondary
         
         self.bottomSeparatorLineView.backgroundColor = UIColor.App.separatorLine
         self.bottomBaseView.backgroundColor = .clear
@@ -186,6 +243,13 @@ class MyTicketTableViewCell: UITableViewCell {
         self.cashoutButton.layer.cornerRadius = CornerRadius.button
         self.cashoutButton.layer.masksToBounds = true
         self.cashoutButton.backgroundColor = .clear
+
+        self.partialCashoutFilterButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
+        self.partialCashoutFilterButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary.withAlphaComponent(0.7), for: .highlighted)
+
+        self.partialCashoutFilterButton.layer.cornerRadius = CornerRadius.button
+        self.partialCashoutFilterButton.layer.masksToBounds = true
+        self.partialCashoutFilterButton.backgroundColor = .clear
 
         self.freebetBaseView.backgroundColor = UIColor.App.myTicketsOther
 
@@ -205,6 +269,29 @@ class MyTicketTableViewCell: UITableViewCell {
         }
 
         self.betIdLabel.textColor = UIColor.App.textPrimary
+
+        self.partialCashoutSliderView.backgroundColor = .clear
+        self.partialCashoutSliderView.layer.cornerRadius = CornerRadius.view
+        self.partialCashoutSliderView.layer.masksToBounds = true
+
+        self.multiSliderInnerView.backgroundColor = .clear
+
+        self.partialAmountsView.backgroundColor = .clear
+
+        self.originalAmountValueLabel.textColor = UIColor.App.textSecondary
+
+        self.returnedAmountValueLabel.textColor = UIColor.App.textSecondary
+
+        self.partialCashoutButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        self.partialCashoutButton.setTitleColor(UIColor.App.textPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.partialCashoutButton.setTitleColor(UIColor.App.textPrimary.withAlphaComponent(0.39), for: .disabled)
+
+        self.partialCashoutButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
+        self.partialCashoutButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary.withAlphaComponent(0.7), for: .highlighted)
+
+        self.partialCashoutButton.layer.cornerRadius = CornerRadius.button
+        self.partialCashoutButton.layer.masksToBounds = true
+        self.partialCashoutButton.backgroundColor = .clear
     }
 
     func configureCashoutButton(withState state: MyTicketCellViewModel.CashoutButtonState) {
@@ -214,6 +301,7 @@ class MyTicketTableViewCell: UITableViewCell {
                 self.cashoutButton.setTitle(localized("cashout")+"  \(cashoutValueString)", for: .normal)
             }
             self.cashoutValue = cashoutValue
+
             self.showCashoutButton = true
         }
         else {
@@ -237,12 +325,14 @@ class MyTicketTableViewCell: UITableViewCell {
             self.configureCashoutButton(withState: state)
         }
 
-        self.cashoutSubscription = self.viewModel?.hasCashoutEnabled
+        self.viewModel?.hasCashoutEnabled
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] cashoutButtonState in
                 self?.configureCashoutButton(withState: cashoutButtonState)
+                self?.setupPartialCashoutSlider()
             })
+            .store(in: &cancellables)
 
         self.isLoadingCellDataSubscription = self.viewModel?.isLoadingCellData
             .removeDuplicates()
@@ -413,6 +503,130 @@ class MyTicketTableViewCell: UITableViewCell {
                 self.resetHighlightedCard()
             }
         }
+
+        if let partialCashoutStake = betHistoryEntry.partialCashoutStake,
+           let partialCashoutReturn = betHistoryEntry.partialCashoutReturn,
+        partialCashoutStake > 0 && partialCashoutReturn > 0 {
+
+            // Original amount
+            let originalBetAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betHistoryEntry.totalBetAmount ?? 0.0))
+            self.originalAmountValueLabel.text = "\(localized("original"))\n\(originalBetAmountString ?? "")"
+
+            // New bet amount
+            let newBetAmount = (betHistoryEntry.totalBetAmount ?? 0.0) - partialCashoutStake
+            let totalNewBetAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: newBetAmount))
+            self.betAmountSubtitleLabel.text = totalNewBetAmountString
+
+            // New Possible Winnings
+            let newMaxWinnings = newBetAmount*(betHistoryEntry.maxWinning ?? 0.0)
+            let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: newMaxWinnings))
+            self.winningsSubtitleLabel.text = maxWinningsString
+
+            // Returned Amount
+            let returnedBetAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: partialCashoutReturn))
+            self.returnedAmountValueLabel.text = "\(localized("returned"))\n\(returnedBetAmountString ?? "")"
+
+            self.hasPartialCashoutReturned = true
+        }
+        else {
+            self.hasPartialCashoutReturned = false
+        }
+
+        self.viewModel?.partialCashout
+            .sink(receiveValue: { [weak self] partialCashout in
+
+                if let partialCashout,
+                   let partialCashoutValue = partialCashout.value {
+
+                    let partialCashoutLabel = localized("partial_cashout_value").replacingFirstOccurrence(of: "{cashoutAmount}", with: "\(partialCashoutValue)")
+                    self?.partialCashoutButton.setTitle("\(partialCashoutLabel)€", for: .normal)
+                    self?.partialCashoutButton.isEnabled = true
+                }
+                else {
+                    self?.partialCashoutButton.isEnabled = false
+                }
+            })
+            .store(in: &cancellables)
+
+        self.viewModel?.requestCashoutAvailability()
+    }
+
+    func setupPartialCashoutSlider() {
+        guard let cashout = self.viewModel?.cashout,
+        let ticket = self.viewModel?.ticket
+        else {
+            return
+
+        }
+
+        let cashoutValue = cashout.value ?? 0.0
+        let cashoutStake = cashout.stake ?? 0.0
+
+        var maxSliderStake = cashoutStake
+
+        if let partialCashoutStake = ticket.partialCashoutStake,
+           let totalStake = ticket.totalBetAmount,
+           partialCashoutStake > 0 {
+            maxSliderStake = totalStake - partialCashoutStake
+        }
+
+        let minCashout = maxSliderStake/10
+        let minValue: CGFloat = minCashout
+        let maxValue: CGFloat = maxSliderStake
+        let values: [CGFloat] = [minValue, maxValue]
+        
+        self.partialCashoutMultiSlider = MultiSlider()
+        partialCashoutMultiSlider?.backgroundColor = UIColor.App.backgroundSecondary
+        partialCashoutMultiSlider?.orientation = .horizontal
+        partialCashoutMultiSlider?.minimumValue = minValue
+        partialCashoutMultiSlider?.maximumValue = maxValue
+        partialCashoutMultiSlider?.value = values
+        partialCashoutMultiSlider?.outerTrackColor = UIColor.App.separatorLine
+        partialCashoutMultiSlider?.snapStepSize = minCashout
+        partialCashoutMultiSlider?.thumbImage = UIImage(named: "slider_thumb_icon")
+        partialCashoutMultiSlider?.tintColor = UIColor.App.highlightPrimary
+        partialCashoutMultiSlider?.trackWidth = 6
+        partialCashoutMultiSlider?.showsThumbImageShadow = false
+        partialCashoutMultiSlider?.keepsDistanceBetweenThumbs = false
+        partialCashoutMultiSlider?.addTarget(self, action: #selector(partialSliderChanged), for: .touchUpInside)
+        partialCashoutMultiSlider?.valueLabelPosition = .bottom
+        partialCashoutMultiSlider?.valueLabelColor = UIColor.App.textPrimary
+        partialCashoutMultiSlider?.valueLabelFont = AppFont.with(type: .bold, size: 14)
+        partialCashoutMultiSlider?.extraLabelInfoSingular = localized("€")
+        partialCashoutMultiSlider?.extraLabelInfoPlural = localized("€")
+        partialCashoutMultiSlider?.thumbCount = 1
+        partialCashoutMultiSlider?.value[0] = maxValue
+
+        if let partialCashoutMultiSlider = partialCashoutMultiSlider {
+
+            for view in self.multiSliderInnerView.subviews {
+                view.removeFromSuperview()
+            }
+
+            self.multiSliderInnerView.addConstrainedSubview(partialCashoutMultiSlider, constrain: .leftMargin, .rightMargin, .bottomMargin, .topMargin)
+            self.multiSliderInnerView.layoutMargins = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
+        }
+
+        self.partialCashoutButton.isEnabled = false
+        self.viewModel?.requestPartialCashoutAvailability(ticket: ticket, stakeValue: "\(maxSliderStake)")
+
+
+//        let partialCashoutLabel = localized("partial_cashout_value").replacingFirstOccurrence(of: "{cashoutAmount}", with: "\(maxValue)")
+//        self.partialCashoutButton.setTitle("\(partialCashoutLabel)€", for: .normal)
+    }
+
+    @objc func partialSliderChanged(_ slider: MultiSlider) {
+        let partialCashoutValue = slider.value[0]
+        print("PARTIAL CASHOUT VALUE: \(partialCashoutValue)")
+
+        self.viewModel?.partialCashoutSliderValue = Double(partialCashoutValue)
+
+        if let betTicket = self.viewModel?.ticket {
+            self.partialCashoutButton.isEnabled = false
+            self.viewModel?.requestPartialCashoutAvailability(ticket: betTicket, stakeValue: "\(partialCashoutValue)")
+        }
+//        let partialCashoutLabel = localized("partial_cashout_value").replacingFirstOccurrence(of: "{cashoutAmount}", with: "\(partialCashoutValue)")
+//        self.partialCashoutButton.setTitle("\(partialCashoutLabel)€", for: .normal)
     }
 
     @IBAction func didTapShareButton() {
@@ -443,6 +657,36 @@ class MyTicketTableViewCell: UITableViewCell {
                                                    preferredStyle: UIAlertController.Style.alert)
         submitCashoutAlert.addAction(UIAlertAction(title: localized("cashout"), style: .default, handler: { _ in
             self.viewModel?.requestCashout()
+        }))
+
+        submitCashoutAlert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel))
+
+        self.viewController?.present(submitCashoutAlert, animated: true, completion: nil)
+    }
+
+    @IBAction private func didTapPartialCashoutFilterButton() {
+
+        self.showPartialCashoutSliderView = !self.showPartialCashoutSliderView
+    }
+
+    @IBAction private func didTapPartialCashoutButton() {
+
+        guard
+            let partialCashoutValue = self.viewModel?.partialCashout.value?.value,
+            let cashoutValueString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: partialCashoutValue))
+        else {
+            return
+        }
+
+        let cashoutAlertMessage = "\(localized("return_money")) \(cashoutValueString)"
+
+        let titleMessage = localized("cashout_confirmation").replacingOccurrences(of: "{amount}", with: cashoutValueString)
+
+        let submitCashoutAlert = UIAlertController(title: titleMessage,
+                                                   message: cashoutAlertMessage,
+                                                   preferredStyle: UIAlertController.Style.alert)
+        submitCashoutAlert.addAction(UIAlertAction(title: localized("cashout"), style: .default, handler: { _ in
+            self.viewModel?.requestPartialCashout()
         }))
 
         submitCashoutAlert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel))

@@ -4239,6 +4239,14 @@
 		A9A207E4283BDFCB00499DBC /* ChatTicketSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207E0283BDFCB00499DBC /* ChatTicketSelectionView.swift */; };
 		A9A207E5283BDFCB00499DBC /* ChatTicketSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207E0283BDFCB00499DBC /* ChatTicketSelectionView.swift */; };
 		A9A207E6283BDFCB00499DBC /* ChatTicketSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207E0283BDFCB00499DBC /* ChatTicketSelectionView.swift */; };
+		A9A7B52629DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */; };
+		A9A7B52729DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */; };
+		A9A7B52829DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */; };
+		A9A7B52929DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */; };
+		A9A7B52A29DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */; };
+		A9A7B52B29DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */; };
+		A9A7B52C29DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */; };
+		A9A7B52D29DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */; };
 		A9AD54732996C1E7005AFA11 /* PaymentsDropIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = A996B3F229893FEC00A535FC /* PaymentsDropIn.swift */; };
 		A9B331BC288EF21300D097F0 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331B9288EF21300D097F0 /* MessagesViewController.swift */; };
 		A9B331BD288EF21300D097F0 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B331B9288EF21300D097F0 /* MessagesViewController.swift */; };
@@ -5784,6 +5792,7 @@
 		A9A2E7F327FDE3DA00D35A9D /* ConversationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDetailViewController.swift; sourceTree = "<group>"; };
 		A9A2E7F727FDF5DE00D35A9D /* ReceivedMessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedMessageTableViewCell.swift; sourceTree = "<group>"; };
 		A9A31454282AA6A0004F7E77 /* ActionButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButtonTableViewCell.swift; sourceTree = "<group>"; };
+		A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusTypeMapper.swift; sourceTree = "<group>"; };
 		A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
 		A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceViewController.xib; sourceTree = "<group>"; };
 		A9B0588A282529820089B0D7 /* NewMessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageViewController.swift; sourceTree = "<group>"; };
@@ -7464,6 +7473,7 @@
 				A9C2D51A29C0D4F000DB95BD /* CashoutInfo.swift */,
 				A90C372F29C38DAD007B8AEC /* GrantedBonus.swift */,
 				A9CB3E6D29CDC25600BEF9C1 /* ApplicableBonus.swift */,
+				A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -11109,6 +11119,7 @@
 				450B7A5228F58574009229E3 /* LogViewerViewController.swift in Sources */,
 				450B7A5328F58574009229E3 /* TransactionsHistoryRootViewController.swift in Sources */,
 				450B7A5428F58574009229E3 /* FavoritesManager.swift in Sources */,
+				A9A7B52729DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
 				450B7A5528F58574009229E3 /* MyTicketsRootViewController.swift in Sources */,
 				450B7A5628F58574009229E3 /* Throwable.swift in Sources */,
 				450B7A5828F58574009229E3 /* NotificationsViewController.swift in Sources */,
@@ -11249,6 +11260,7 @@
 				A9DF8E3A28E45D2E0083BF56 /* TipsSliderViewModel.swift in Sources */,
 				A9DF8E3128E45CB50083BF56 /* FeaturedTipDetailsViewModel.swift in Sources */,
 				A9B946CC28C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */,
+				A9A7B52D29DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
 				A986D35228CB47A900AF95D7 /* TipsViewModel.swift in Sources */,
 				A9FB6D6928C65EF100E3FE58 /* RankingsListViewController.swift in Sources */,
 			);
@@ -11775,6 +11787,7 @@
 				457CBB8B282D27D000ED0F00 /* Bonus.swift in Sources */,
 				457CBB8C282D27D000ED0F00 /* LogViewerViewController.swift in Sources */,
 				A99DE667299E825900AA24AA /* RecoverPasswordViewModel.swift in Sources */,
+				A9A7B52B29DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
 				450088F529CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */,
 				457CBB8D282D27D000ED0F00 /* TransactionsHistoryRootViewController.swift in Sources */,
 				457CBB8E282D27D000ED0F00 /* FavoritesManager.swift in Sources */,
@@ -12205,6 +12218,7 @@
 				A98708D028DA27DB00F27348 /* UserProfileTipsViewController.swift in Sources */,
 				A90FB7FF29B0CB4400D08A7C /* TipInfoView.swift in Sources */,
 				457CBDB1282D2CD100ED0F00 /* EmailVerificationTableViewCell.swift in Sources */,
+				A9A7B52C29DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
 				A98EFDA7287C66B000655A26 /* SharedTicketCardView.swift in Sources */,
 				457CBDB2282D2CD100ED0F00 /* ForbiddenLocationViewController.swift in Sources */,
 				457CBDB3282D2CD100ED0F00 /* OddFormatter.swift in Sources */,
@@ -12955,6 +12969,7 @@
 				4589C90E282024E400243547 /* TransactionsHistoryRootViewController.swift in Sources */,
 				4589C90F282024E400243547 /* FavoritesManager.swift in Sources */,
 				4589C910282024E400243547 /* MyTicketsRootViewController.swift in Sources */,
+				A9A7B52829DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
 				4589C911282024E400243547 /* Throwable.swift in Sources */,
 				4589C913282024E400243547 /* NotificationsViewController.swift in Sources */,
 				45B6E2432841525F001B570C /* NewMessageViewController.swift in Sources */,
@@ -13544,6 +13559,7 @@
 				45A33273298976BA008181E9 /* LogViewerViewController.swift in Sources */,
 				45A33274298976BA008181E9 /* TransactionsHistoryRootViewController.swift in Sources */,
 				45A33275298976BA008181E9 /* FavoritesManager.swift in Sources */,
+				A9A7B52629DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
 				45A33276298976BA008181E9 /* MyTicketsRootViewController.swift in Sources */,
 				45A33277298976BA008181E9 /* Throwable.swift in Sources */,
 				45A33279298976BA008181E9 /* NotificationsViewController.swift in Sources */,
@@ -13614,6 +13630,7 @@
 				45A6BBC128246A7400D9B416 /* AppSession.swift in Sources */,
 				45A6BBC228246A7400D9B416 /* HeaderDropDownSelectionView.swift in Sources */,
 				A90C373429C38DAD007B8AEC /* GrantedBonus.swift in Sources */,
+				A9A7B52A29DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
 				45A6BBC328246A7400D9B416 /* TabularViewDataSource.swift in Sources */,
 				45A6BBC428246A7400D9B416 /* SwiftyJSON.swift in Sources */,
 				45C10F7F28772DA700037BBE /* NSObject+Shift.swift in Sources */,
@@ -14276,6 +14293,7 @@
 				A9C340ED28F9A74A0055360B /* OddViewPosition.swift in Sources */,
 				A9C340EE28F9A74A0055360B /* FilterSliderInfoView.swift in Sources */,
 				A9C340EF28F9A74A0055360B /* BannerScrollTableViewCell.swift in Sources */,
+				A9A7B52929DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
 				A9C340F028F9A74A0055360B /* Environment.swift in Sources */,
 				A9C340F128F9A74A0055360B /* SegmentControlView.swift in Sources */,
 				A9C340F228F9A74A0055360B /* UserInfoView.swift in Sources */,
@@ -15224,11 +15242,9 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1045;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -15240,7 +15256,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betsson;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development com.gomagaming.betsson";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -15253,11 +15268,9 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1045;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -15269,7 +15282,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betsson;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AdHoc com.gomagaming.betsson";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

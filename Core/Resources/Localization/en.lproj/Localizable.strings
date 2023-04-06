@@ -738,7 +738,6 @@
 "reset_success" = "Your Password has been updated successfuly!"; // UNUSED
 "resolved" = "Resolved";
 "responsible_gambling" = "Responsible Gambling";
-"responsible_gaming" = "Read about Responsible Gambling.";
 "result" = "Result"; // UNUSED
 "results" = "Results"; // UNUSED
 "results_count" = "{num} Results";
@@ -1164,3 +1163,10 @@
 "freebet" = "Freebet";
 "refund" = "Refund";
 "product_bonus" = "Product Bonus";
+
+"opted_in" = "Opted in";
+"expired" = "Expired";
+
+"partial_cashout_value" = "Partial Cashout {cashoutAmount}";
+"original" = "Original";
+"returned" = "Returned";

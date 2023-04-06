@@ -13,7 +13,7 @@ enum BettingAPIClient {
     case calculateReturns(betTicket: BetTicket)
     case getAllowedBetTypes(betTicketSelections: [BetTicketSelection])
     case placeBets(betTickets: [BetTicket], useFreebetBalance: Bool)
-    case calculateCashout(betId: String)
+    case calculateCashout(betId: String, stakeValue: String?)
     case cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double)
     case getBetslipSettings
     case updateBetslipSettings(acceptingReoffer: Bool)
@@ -34,7 +34,7 @@ extension BettingAPIClient: Endpoint {
             return "/api/betting/fo/allowedBetTypesWithCalculation"
         case .placeBets:
             return "/api/betting/fo/betslip"
-        case .calculateCashout(let betId):
+        case .calculateCashout(let betId, _):
             return "/api/cashout/fo/cashout/\(betId)/calculate"
         case .cashoutBet(let betId, _, _):
             return "/api/cashout/fo/cashout/\(betId)"
@@ -224,8 +224,20 @@ extension BettingAPIClient: Endpoint {
             let data = body.data(using: String.Encoding.utf8)!
             return data
 
-        case .calculateCashout:
-            return nil
+        case .calculateCashout(_, let stakeValue):
+
+            if let stakeValue {
+                let body = """
+                           {
+                             "stakeValue": \(stakeValue)
+                           }
+                           """
+                let data = body.data(using: String.Encoding.utf8)!
+                return data
+            }
+            else {
+                return nil
+            }
 
         case .cashoutBet( _, let cashoutValue, let stakeValue):
             let body = """

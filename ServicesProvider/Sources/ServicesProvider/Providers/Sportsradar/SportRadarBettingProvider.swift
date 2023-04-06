@@ -199,8 +199,8 @@ class SportRadarBettingProvider: BettingProvider, Connector {
         return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
     }
 
-    func calculateCashout(betId: String) -> AnyPublisher<Cashout, ServiceProviderError> {
-        let endpoint = BettingAPIClient.calculateCashout(betId: betId)
+    func calculateCashout(betId: String, stakeValue: String? = nil) -> AnyPublisher<Cashout, ServiceProviderError> {
+        let endpoint = BettingAPIClient.calculateCashout(betId: betId, stakeValue: stakeValue)
         let publisher: AnyPublisher<SportRadarModels.Cashout, ServiceProviderError> = self.connector.request(endpoint)
         return publisher
             .map( { cashout in

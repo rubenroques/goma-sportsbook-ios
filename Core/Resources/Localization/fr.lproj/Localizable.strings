@@ -681,7 +681,7 @@
 "reset_success" = "Votre mot de passe a été mis à jour avec succès !"; // UNUSED
 "resolved" = "Résolu";
 "responsible_gambling" = "Jeu responsable";
-"responsible_gaming" = "Lisez à propos du jeu responsable.";
+"responsible_gaming" = "Jeu responsable";
 "result" = "Résultat"; // UNUSED
 "results" = "Résultats"; // UNUSED
 "results_count" = "{num} résultats";
@@ -1038,6 +1038,13 @@
 "refund" = "Remboursement";
 "product_bonus" = "Bonus Produit";
 
+"opted_in" = "Opté";
+"expired" = "Expiré";
+
+"partial_cashout_value" = "Encaissement partiel {cashoutAmount}";
+
+"original" = "Original";
+"returned" = "Renvoyé";
 // NOT TO ADD YET
 "tip_title" = "Pointe 1";
 "tip_message" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sagittis eros a nibh fermentum viverra. Sed imperdiet justo non tellus mollis viverra. Aliquam quis varius ex. In sagittis condimentum molestie.";

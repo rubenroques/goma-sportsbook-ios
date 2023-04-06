@@ -42,6 +42,7 @@ class MyTicketsViewModel: NSObject {
     var requestShareActivityView: ((UIImage, String, String) -> Void)?
 
     var requestAlertAction: ((String, String) -> Void)?
+    var requestPartialAlertAction: ((String, String) -> Void)?
     var showCashoutSuspendedAction: (() -> Void)?
     var showCashoutState: ((AlertType, String) -> Void)?
 
@@ -143,6 +144,8 @@ class MyTicketsViewModel: NSObject {
         self.resolvedMyTickets.value = []
         self.openedMyTickets.value = []
         self.wonMyTickets.value = []
+
+        self.cachedViewModels = [:]
 
         self.reloadTableView()
     }
@@ -383,6 +386,10 @@ class MyTicketsViewModel: NSObject {
 
             viewModel.requestAlertAction = { [weak self] cashoutReoffer, betId in
                 self?.requestAlertAction?(cashoutReoffer, betId)
+            }
+
+            viewModel.requestPartialAlertAction = { [weak self] cashoutReoffer, betId in
+                self?.requestPartialAlertAction?(cashoutReoffer, betId)
             }
 
             viewModel.showCashoutSuspendedAction = { [weak self] in

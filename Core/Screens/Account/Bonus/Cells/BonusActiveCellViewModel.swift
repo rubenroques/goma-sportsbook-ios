@@ -72,14 +72,6 @@ class BonusActiveCellViewModel: NSObject {
 
     func cancelBonus() {
 
-        //self.shouldReloadData?()
-//        self.shouldShowAlert?(.success)
-//
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-//            self.shouldShowAlert?(.error)
-//
-//        }
-
         Env.servicesProvider.cancelBonus(bonusId: self.bonus.id)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in

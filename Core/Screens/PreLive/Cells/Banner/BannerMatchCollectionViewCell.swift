@@ -304,7 +304,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
                 .store(in: &cancellables)
 
             let tapBannerBaseView = UITapGestureRecognizer(target: self, action: #selector(didTapBannerView))
-            self.participantsBaseView.addGestureRecognizer(tapBannerBaseView)
+            self.matchBaseView.addGestureRecognizer(tapBannerBaseView)
 
         case .image:
             self.imageView.isHidden = false

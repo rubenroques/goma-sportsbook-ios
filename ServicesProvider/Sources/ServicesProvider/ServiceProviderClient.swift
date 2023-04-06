@@ -940,14 +940,14 @@ extension ServicesProviderClient {
         return privilegedAccessManager.contactUs(firstName: firstName, lastName: lastName, email: email, subject: subject, message: message)
     }
 
-    public func calculateCashout(betId: String) -> AnyPublisher<Cashout, ServiceProviderError> {
+    public func calculateCashout(betId: String, stakeValue: String? = nil) -> AnyPublisher<Cashout, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
 
-        return bettingProvider.calculateCashout(betId: betId)
+        return bettingProvider.calculateCashout(betId: betId, stakeValue: stakeValue)
     }
 
     public func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double) -> AnyPublisher<CashoutResult, ServiceProviderError> {

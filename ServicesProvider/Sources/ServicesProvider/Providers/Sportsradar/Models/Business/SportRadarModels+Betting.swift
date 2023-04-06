@@ -92,6 +92,10 @@ extension SportRadarModels {
 
         var freeBet: Bool
 
+        var partialCashoutReturn: Double?
+        var partialCashoutStake: Double?
+
+
         enum CodingKeys: String, CodingKey {
             case identifier = "idFOBet"
             case eventName
@@ -121,6 +125,9 @@ extension SportRadarModels {
             case tournamentName = "tournamentName"
 
             case freeBet = "free"
+
+            case partialCashoutReturn = "partialCashoutReturn"
+            case partialCashoutStake = "partialCashoutStake"
 
         }
 
@@ -194,6 +201,11 @@ extension SportRadarModels {
             }
 
             print("-bet: \(self)")
+
+            self.partialCashoutReturn = try container.decodeIfPresent(Double.self, forKey: .partialCashoutReturn)
+
+            self.partialCashoutStake = try container.decodeIfPresent(Double.self, forKey: .partialCashoutStake)
+
         }
 
         func encode(to encoder: Encoder) throws {
@@ -222,6 +234,10 @@ extension SportRadarModels {
             try container.encodeIfPresent(self.tournamentCountryName, forKey: CodingKeys.tournamentCountryName)
             try container.encodeIfPresent(self.tournamentName, forKey: CodingKeys.tournamentName)
             try container.encodeIfPresent(self.freeBet, forKey: CodingKeys.freeBet)
+
+            try container.encodeIfPresent(self.partialCashoutReturn, forKey: CodingKeys.partialCashoutReturn)
+
+            try container.encodeIfPresent(self.partialCashoutStake, forKey: CodingKeys.partialCashoutStake)
         }
 
     }

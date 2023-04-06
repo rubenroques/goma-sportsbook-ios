@@ -25,6 +25,8 @@ public struct Bet: Codable {
     public var totalReturn: Double?
     public var date: Date
     public var freebet: Bool
+    public var partialCashoutReturn: Double?
+    public var partialCashoutStake: Double?
 }
 
 public struct BetSelection: Codable {
