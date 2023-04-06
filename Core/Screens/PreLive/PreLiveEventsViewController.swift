@@ -121,13 +121,6 @@ class PreLiveEventsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.competitionsFiltersView.selectedIds
-            .receive(on: DispatchQueue.main)
-            .sink { idsSet in
-                print("CompetitionsDebug selectedIds -> \(idsSet)")
-            }
-            .store(in: &cancellables)
-
         self.competitionsFiltersView.shouldLoadCompetitions = { [weak self] regionId in
             print("REGION ID CLICKED: \(regionId)")
             self?.viewModel.loadCompetitionByRegion(regionId: regionId)
@@ -295,7 +288,6 @@ class PreLiveEventsViewController: UIViewController {
         //
         //
         self.competitionsFiltersView.applyFiltersAction = { [unowned self] selectedCompetitionsIds in
-            print("CompetitionsDebug applyCompetitionsFiltersWithIds")
             self.applyCompetitionsFiltersWithIds(selectedCompetitionsIds)
         }
         self.competitionsFiltersView.tapHeaderViewAction = { [unowned self] in
@@ -393,7 +385,6 @@ class PreLiveEventsViewController: UIViewController {
         self.viewModel.dataChangedPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
-                print("CompetitionsDebug reloadData()")
                 self?.reloadData()
             })
             .store(in: &cancellables)
@@ -616,7 +607,7 @@ class PreLiveEventsViewController: UIViewController {
         self.selectedSport = sport
         self.didChangeSport?(sport)
 
-        self.drawOpenCompetitionsFilters()
+        self.openCompetitionsFilters()
     }
 
     func openCompetitionsFilters() {
@@ -628,22 +619,17 @@ class PreLiveEventsViewController: UIViewController {
             return
         }
 
+        self.reloadData() // We need to make sure we have an updated tableview before trigger the animation
+
         UIView.animate(withDuration: 0.32, delay: 0.0, options: [.curveEaseOut, .beginFromCurrentState], animations: {
-            self.drawOpenCompetitionsFilters()
+            self.competitionsFiltersDarkBackgroundView.alpha = 0.9
+            self.openedCompetitionsFiltersConstraint.constant = 0
+            self.tableView.contentInset.bottom = 16
+            self.competitionsFiltersView.state = .opened
+            self.floatingShortcutsBottomConstraint.constant = -self.tableView.contentInset.bottom
             self.view.layoutIfNeeded()
         }, completion: nil)
 
-    }
-
-    private func drawOpenCompetitionsFilters() {
-
-        print("CompetitionsDebug drawOpenCompetitionsFilters()")
-
-        self.competitionsFiltersDarkBackgroundView.alpha = 0.9
-        self.openedCompetitionsFiltersConstraint.constant = 0
-        self.tableView.contentInset.bottom = 16
-        self.competitionsFiltersView.state = .opened
-        self.floatingShortcutsBottomConstraint.constant = -self.tableView.contentInset.bottom
     }
 
     func showBottomBarCompetitionsFilters(animated: Bool = true) {
@@ -652,7 +638,7 @@ class PreLiveEventsViewController: UIViewController {
             return
         }
 
-        print("CompetitionsDebug showBottomBarCompetitionsFilters()")
+        self.reloadData() // We need to make sure we have an updated tableview before trigger the animation
 
         UIView.animate(withDuration: animated ? 0.32 : 0.0, delay: 0.0, options: [.curveEaseOut, .beginFromCurrentState], animations: {
             self.competitionsFiltersDarkBackgroundView.alpha = 0.0
@@ -670,7 +656,7 @@ class PreLiveEventsViewController: UIViewController {
             return
         }
 
-        print("CompetitionsDebug showBottomLineCompetitionsFilters()")
+        self.reloadData() // We need to make sure we have an updated tableview before trigger the animation
 
         UIView.animate(withDuration: animated ? 0.32 : 0.0, delay: 0.0, options: [.curveEaseOut, .beginFromCurrentState], animations: {
             self.competitionsFiltersDarkBackgroundView.alpha = 0.0
