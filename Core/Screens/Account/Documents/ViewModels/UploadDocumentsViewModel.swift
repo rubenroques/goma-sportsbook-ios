@@ -168,7 +168,7 @@ class UploadDocumentsViewModel {
                 if let kycStatus = userProfile.kycStatus {
                     self?.kycStatusPublisher.send(kycStatus)
 
-                    if kycStatus == "PASS" {
+                    if kycStatus == "PASS_COND" {
                         Env.userSessionStore.isUserKycVerified.send(true)
                     }
                 }

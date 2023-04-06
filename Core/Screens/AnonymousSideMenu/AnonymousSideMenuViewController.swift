@@ -96,7 +96,7 @@ class AnonymousSideMenuViewController: UIViewController {
         self.contentStackView.backgroundColor = .clear
         self.menusStackView.backgroundColor = .clear
 
-        self.signUpButtonBaseView.backgroundColor = .blue
+        self.signUpButtonBaseView.backgroundColor = .clear
     }
 
     private func addMenus() {
@@ -124,8 +124,8 @@ class AnonymousSideMenuViewController: UIViewController {
 
         self.menusStackView.addArrangedSubview(promotionsView)
         self.menusStackView.addArrangedSubview(responsibleGamingView)
-        self.menusStackView.addArrangedSubview(settingsView)
-        self.menusStackView.addArrangedSubview(supportView)
+        // self.menusStackView.addArrangedSubview(settingsView)
+        // self.menusStackView.addArrangedSubview(supportView)
     }
 
     // MARK: - Actions

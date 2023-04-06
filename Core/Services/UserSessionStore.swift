@@ -201,7 +201,7 @@ class UserSessionStore {
                                    isEmailVerified: userProfile.isEmailVerified,
                                    isProfileCompleted: userProfile.isRegistrationCompleted,
                                    avatarName: userProfile.avatarName,
-                                   isKycVerified: userProfile.kycStatus == "PASS" ? true : false)
+                                   isKycVerified: userProfile.kycStatus == "PASS_COND" ? true : false)
             }
             .handleEvents(receiveOutput: { [weak self] userSession in
                 self?.saveUserSession(userSession)

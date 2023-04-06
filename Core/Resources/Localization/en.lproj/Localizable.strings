@@ -1182,3 +1182,17 @@
 
 "app_version_profile_1" = "App Version {version_1} ({version_2})";
 "app_version_profile_2" = "Sportsbook® All Rights Reserved";
+
+"affiliate_system_footer_link" = "Affiliate System";
+"privacy_policy_footer_link" = "Privacy Policy";
+"security_rules_footer_link" = "Security Rules";
+"cookie_policy_footer_link" = "Cookie Policy";
+"sports_betting_rules_footer_link" = "Sports Betting Rules";
+"terms_and_conditions_footer_link" = "Terms and Conditions";
+"about_footer_link" = "About";
+"faqs_footer_link" = "FAQs";
+"responsible_gambling_footer_link" = "Responsible Gambling";
+
+
+"gambling_warning_footer_link" = "FAMILY, SOCIAL LIFE, FINANCIAL HEALTH. ARE YOU READY TO BET EVERYTHING? FOR HELP, CALL 09-74-75-13-13 (NON-PREMIUM CALL)";
+"minors_prohibition_footer_link" = "GAMBLING AND GAMING ARE PROHIBITED FOR MINORS";

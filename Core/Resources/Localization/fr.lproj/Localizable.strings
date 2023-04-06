@@ -1061,3 +1061,16 @@
 
 "app_version_profile_1" = "Version de l'application {version_1} ({version_2})";
 "app_version_profile_2" = "Sportsbook® Tous droits réservés";
+
+"affiliate_system_footer_link" = "Système d'affiliation";
+"privacy_policy_footer_link" = "Politique de confidentialité";
+"security_rules_footer_link" = "Règles de sécurité";
+"cookie_policy_footer_link" = "Politique relative aux cookies";
+"sports_betting_rules_footer_link" = "Règles des paris sportifs";
+"terms_and_conditions_footer_link" = "Termes et conditions";
+"about_footer_link" = "À propos";
+"faqs_footer_link" = "FAQ's";
+"responsible_gambling_footer_link" = "Jeu responsable";
+
+"gambling_warning_footer_link" = "FAMILLE, VIE SOCIALE, SANTÉ FINANCIÈRE. ETES-VOUS PRÊT À TOUT MISER? POUR ÊTRE AIDÉ, APPELEZ LE 09-74-75-13-13 (APPEL NON SURTAXÉ)";
+"minors_prohibition_footer_link" = "LES JEUX D'ARGENT ET DE HASARD SONT INTERDITS AUX MINEURS";

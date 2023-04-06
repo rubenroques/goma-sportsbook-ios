@@ -56,6 +56,9 @@ class ProfileViewController: UIViewController {
     @IBOutlet private weak var infoBaseView: UIView!
     @IBOutlet private weak var infoLabel: UILabel!
 
+    @IBOutlet private weak var footerBaseView: UIView!
+    private var footerResponsibleGamingView = FooterResponsibleGamingView()
+
     var userSession: UserSession?
     var cancellables = Set<AnyCancellable>()
     let pasteboard = UIPasteboard.general
@@ -196,6 +199,17 @@ class ProfileViewController: UIViewController {
     }
 
     func commonInit() {
+
+        self.footerResponsibleGamingView.translatesAutoresizingMaskIntoConstraints = false
+
+        self.footerBaseView.addSubview(self.footerResponsibleGamingView)
+
+        NSLayoutConstraint.activate([
+            self.footerResponsibleGamingView.leadingAnchor.constraint(equalTo: self.footerBaseView.leadingAnchor),
+            self.footerResponsibleGamingView.trailingAnchor.constraint(equalTo: self.footerBaseView.trailingAnchor),
+            self.footerResponsibleGamingView.topAnchor.constraint(equalTo: self.footerBaseView.topAnchor, constant: 8),
+            self.footerResponsibleGamingView.bottomAnchor.constraint(equalTo: self.footerBaseView.bottomAnchor),
+        ])
 
         shadowView.layer.shadowRadius = 10
         shadowView.layer.shadowOffset = .zero
