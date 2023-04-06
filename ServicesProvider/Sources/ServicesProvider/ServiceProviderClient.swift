@@ -950,7 +950,7 @@ extension ServicesProviderClient {
         return bettingProvider.calculateCashout(betId: betId, stakeValue: stakeValue)
     }
 
-    public func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double) -> AnyPublisher<CashoutResult, ServiceProviderError> {
+    public func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double? = nil) -> AnyPublisher<CashoutResult, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {

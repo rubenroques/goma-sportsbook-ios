@@ -210,7 +210,7 @@ class SportRadarBettingProvider: BettingProvider, Connector {
             }).eraseToAnyPublisher()
     }
 
-    func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double) -> AnyPublisher<CashoutResult, ServiceProviderError> {
+    func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double? = nil) -> AnyPublisher<CashoutResult, ServiceProviderError> {
         let endpoint = BettingAPIClient.cashoutBet(betId: betId, cashoutValue: cashoutValue, stakeValue: stakeValue)
         let publisher: AnyPublisher<SportRadarModels.CashoutResult, ServiceProviderError> = self.connector.request(endpoint)
         return publisher
