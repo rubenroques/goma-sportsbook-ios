@@ -192,7 +192,16 @@ class UserSessionStore {
             })
             .map { (userProfile: UserProfile) -> UserSession in
                 self.userProfilePublisher.send(userProfile)
-                
+
+                var kycStatus = false
+
+                if (userProfile.kycStatus ?? "") == "PASS_COND" {
+                    kycStatus = true
+                }
+                else if (userProfile.kycStatus ?? "") == "PASS" {
+                    kycStatus = true
+                }
+
                 return UserSession(username: userProfile.username,
                                    password: password,
                                    email: userProfile.email,
@@ -201,7 +210,7 @@ class UserSessionStore {
                                    isEmailVerified: userProfile.isEmailVerified,
                                    isProfileCompleted: userProfile.isRegistrationCompleted,
                                    avatarName: userProfile.avatarName,
-                                   isKycVerified: userProfile.kycStatus == "PASS_COND" ? true : false)
+                                   isKycVerified: kycStatus)
             }
             .handleEvents(receiveOutput: { [weak self] userSession in
                 self?.saveUserSession(userSession)

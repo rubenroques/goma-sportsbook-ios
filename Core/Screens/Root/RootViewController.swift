@@ -433,39 +433,6 @@ class RootViewController: UIViewController {
 
     }
 
-    //
-    // Obrigatory Limits
-    //
-    func showLimitsScreenOnRegister() {
-        if self.presentedViewController?.isModal == true {
-            self.presentedViewController?.dismiss(animated: true, completion: nil)
-        }
-
-        let limitsOnRegisterViewModel = LimitsOnRegisterViewModel(servicesProvider: Env.servicesProvider)
-        let limitsOnRegisterViewController = LimitsOnRegisterViewController.init(viewModel: limitsOnRegisterViewModel)
-
-        limitsOnRegisterViewController.triggeredContinueAction = { [weak self] in
-            self?.hideLimitsScreenOnRegister()
-        }
-
-        let navigationViewController = Router.navigationController(with: limitsOnRegisterViewController)
-        navigationViewController.isModalInPresentation = true
-        navigationViewController.modalPresentationStyle = .fullScreen
-        self.present(navigationViewController, animated: false, completion: nil)
-    }
-
-    func hideLimitsScreenOnRegister() {
-        if let presentedViewController = self.presentedViewController {
-            if presentedViewController is LimitsOnRegisterViewController {
-                presentedViewController.dismiss(animated: true, completion: nil)
-            }
-            else if let navigationController = presentedViewController as? UINavigationController,
-                    navigationController.rootViewController is LimitsOnRegisterViewController {
-                navigationController.dismiss(animated: true, completion: nil)
-            }
-        }
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -795,6 +762,39 @@ class RootViewController: UIViewController {
         self.navigationController?.pushViewController(userProfileViewController, animated: true)
     }
 
+    //
+    // Obrigatory Limits
+    //
+    func showLimitsScreenOnRegister() {
+        if self.presentedViewController?.isModal == true {
+            self.presentedViewController?.dismiss(animated: true, completion: nil)
+        }
+
+        let limitsOnRegisterViewModel = LimitsOnRegisterViewModel(servicesProvider: Env.servicesProvider)
+        let limitsOnRegisterViewController = LimitsOnRegisterViewController.init(viewModel: limitsOnRegisterViewModel)
+
+        limitsOnRegisterViewController.triggeredContinueAction = { [weak self] in
+            self?.hideLimitsScreenOnRegister()
+        }
+
+        let navigationViewController = Router.navigationController(with: limitsOnRegisterViewController)
+        navigationViewController.isModalInPresentation = true
+        navigationViewController.modalPresentationStyle = .fullScreen
+        self.present(navigationViewController, animated: false, completion: nil)
+    }
+
+    func hideLimitsScreenOnRegister() {
+        if let presentedViewController = self.presentedViewController {
+            if presentedViewController is LimitsOnRegisterViewController {
+                presentedViewController.dismiss(animated: true, completion: nil)
+            }
+            else if let navigationController = presentedViewController as? UINavigationController,
+                    navigationController.rootViewController is LimitsOnRegisterViewController {
+                navigationController.dismiss(animated: true, completion: nil)
+            }
+        }
+    }
+
     func reloadChildViewControllersData() {
         if preLiveViewControllerLoaded {
             self.preLiveViewController.reloadData()
@@ -1004,6 +1004,7 @@ extension RootViewController {
                 self?.presentLoginScreen()
             })
         }
+
         anonymousSideMenuViewController.requestRegisterAction = { [weak self] in
             anonymousNavigationViewController.dismiss(animated: true, completion: {
                 self?.presentRegisterScreen()
@@ -1013,6 +1014,17 @@ extension RootViewController {
         self.present(anonymousNavigationViewController, animated: true, completion: nil)
     }
 
+    func hideAnonymousSideMenuViewController() {
+        if let presentedViewController = self.presentedViewController {
+            if presentedViewController is AnonymousSideMenuViewController {
+                presentedViewController.dismiss(animated: true, completion: nil)
+            }
+            else if let navigationController = presentedViewController as? UINavigationController,
+                    navigationController.rootViewController is AnonymousSideMenuViewController {
+                navigationController.dismiss(animated: true, completion: nil)
+            }
+        }
+    }
 }
 
 extension RootViewController {

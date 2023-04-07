@@ -276,7 +276,7 @@ extension AnonymousSideMenuViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.distribution = .fillEqually
         view.axis = .horizontal
-        view.spacing = 16
+        view.spacing = 8
         return view
     }
 
@@ -339,8 +339,8 @@ extension AnonymousSideMenuViewController {
 
         self.menuContainerView.addSubview(self.menusStackView)
 
-//        self.signUpButtonsStackView.addArrangedSubview(self.loginButton)
-//        self.signUpButtonsStackView.addArrangedSubview(self.registerButton)
+        self.signUpButtonsStackView.addArrangedSubview(self.loginButton)
+        self.signUpButtonsStackView.addArrangedSubview(self.registerButton)
 
         self.signUpButtonsBaseView.addSubview(self.signUpButtonsStackView)
 
@@ -412,8 +412,8 @@ extension AnonymousSideMenuViewController {
         NSLayoutConstraint.activate([
             self.signUpButtonsStackView.heightAnchor.constraint(equalToConstant: 50),
 
-            self.signUpButtonsStackView.leadingAnchor.constraint(equalTo: self.signUpButtonsBaseView.leadingAnchor, constant: 24),
-            self.signUpButtonsStackView.trailingAnchor.constraint(equalTo: self.signUpButtonsBaseView.trailingAnchor, constant: -24),
+            self.signUpButtonsStackView.leadingAnchor.constraint(equalTo: self.signUpButtonsBaseView.leadingAnchor, constant: 36),
+            self.signUpButtonsStackView.centerXAnchor.constraint(equalTo: self.signUpButtonsBaseView.centerXAnchor),
             self.signUpButtonsStackView.topAnchor.constraint(equalTo: self.signUpButtonsBaseView.topAnchor, constant: 12),
             self.signUpButtonsStackView.bottomAnchor.constraint(equalTo: self.signUpButtonsBaseView.bottomAnchor, constant: -12),
         ])

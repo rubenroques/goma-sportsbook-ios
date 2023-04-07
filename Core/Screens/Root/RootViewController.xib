@@ -398,15 +398,15 @@
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tkf-V8-RbU">
                                             <rect key="frame" x="0.0" y="17" width="30" height="30"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="empty_user_image" translatesAutoresizingMaskIntoConstraints="NO" id="86f-DC-pBV">
-                                                    <rect key="frame" x="2" y="2" width="26" height="26"/>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="side_menu_icon" translatesAutoresizingMaskIntoConstraints="NO" id="86f-DC-pBV">
+                                                    <rect key="frame" x="3" y="3" width="24" height="24"/>
                                                 </imageView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="bottom" secondItem="86f-DC-pBV" secondAttribute="bottom" constant="2" id="5lx-79-42e"/>
-                                                <constraint firstAttribute="trailing" secondItem="86f-DC-pBV" secondAttribute="trailing" constant="2" id="Kzk-G0-9Eu"/>
-                                                <constraint firstItem="86f-DC-pBV" firstAttribute="leading" secondItem="tkf-V8-RbU" secondAttribute="leading" constant="2" id="WOf-0k-bXW"/>
-                                                <constraint firstItem="86f-DC-pBV" firstAttribute="top" secondItem="tkf-V8-RbU" secondAttribute="top" constant="2" id="oEI-Nh-jxV"/>
+                                                <constraint firstAttribute="bottom" secondItem="86f-DC-pBV" secondAttribute="bottom" constant="3" id="5lx-79-42e"/>
+                                                <constraint firstAttribute="trailing" secondItem="86f-DC-pBV" secondAttribute="trailing" constant="3" id="Kzk-G0-9Eu"/>
+                                                <constraint firstItem="86f-DC-pBV" firstAttribute="leading" secondItem="tkf-V8-RbU" secondAttribute="leading" constant="3" id="WOf-0k-bXW"/>
+                                                <constraint firstItem="86f-DC-pBV" firstAttribute="top" secondItem="tkf-V8-RbU" secondAttribute="top" constant="3" id="oEI-Nh-jxV"/>
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9OD-Ud-62c">
@@ -638,6 +638,7 @@
         <image name="logo_horizontal_left" width="77" height="37"/>
         <image name="plus_small_icon" width="16" height="16"/>
         <image name="search_bar_icon" width="23" height="23"/>
+        <image name="side_menu_icon" width="21" height="18"/>
         <image name="sportsbook_icon" width="28" height="28"/>
         <image name="tabbar_home_icon" width="23" height="24"/>
         <image name="tabbar_live_icon" width="25" height="23"/>
@@ -653,7 +654,7 @@
             <color red="0.92941176470588238" green="0.30980392156862746" blue="0.38823529411764707" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="iconSecondary">
-            <color red="0.46274509803921571" green="0.5725490196078431" blue="0.63529411764705879" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.40784313725490196" green="0.50588235294117645" blue="0.6705882352941176" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

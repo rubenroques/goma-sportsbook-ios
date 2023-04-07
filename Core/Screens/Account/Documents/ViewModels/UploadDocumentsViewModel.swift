@@ -171,6 +171,9 @@ class UploadDocumentsViewModel {
                     if kycStatus == "PASS_COND" {
                         Env.userSessionStore.isUserKycVerified.send(true)
                     }
+                    else if kycStatus == "PASS" {
+                        Env.userSessionStore.isUserKycVerified.send(true)
+                    }
                 }
             })
             .store(in: &cancellables)
