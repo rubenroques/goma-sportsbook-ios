@@ -105,7 +105,6 @@ class WithdrawViewModel: NSObject {
                 Env.servicesProvider.processWithdrawal(paymentMethod: withdrawalMethod, amount: withdrawalAmount)
                     .receive(on: DispatchQueue.main)
                     .sink(receiveCompletion: { [weak self] completion in
-
                         switch completion {
                         case .finished:
                             ()
@@ -119,11 +118,8 @@ class WithdrawViewModel: NSObject {
                             }
                             self?.isLoadingPublisher.send(false)
                         }
-
                     }, receiveValue: { [weak self] processWithdrawalResponse in
-
                         self?.showWithdrawalStatus?()
-
                         self?.isLoadingPublisher.send(false)
                     })
                     .store(in: &cancellables)

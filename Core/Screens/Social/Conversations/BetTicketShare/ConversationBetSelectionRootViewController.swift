@@ -368,11 +368,11 @@ extension ConversationBetSelectionRootViewController: UICollectionViewDelegate, 
 
         switch indexPath.row {
         case 0:
-            cell.setupWithTitle("Open")
+            cell.setupWithTitle(localized("open"))
         case 1:
-            cell.setupWithTitle("Resolved")
+            cell.setupWithTitle(localized("resolved"))
         case 2:
-            cell.setupWithTitle("Won")
+            cell.setupWithTitle(localized("won"))
         default:
             ()
         }

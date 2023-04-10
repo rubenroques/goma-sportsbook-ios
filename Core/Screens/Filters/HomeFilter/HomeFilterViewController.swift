@@ -284,12 +284,13 @@ class HomeFilterViewController: UIViewController {
     }
 
     func setupCardSltyleCollapseView() {
-        cardSltyleCollapseView.setTitle(title: "Cards Style")
+
+        cardSltyleCollapseView.setTitle(title: localized("cards_style"))
 
         self.smallCardStyleOption = FilterRowView()
         smallCardStyleOption.buttonType = .radio
         smallCardStyleOption.isChecked = false
-        smallCardStyleOption.setTitle(title: "Small")
+        smallCardStyleOption.setTitle(title: localized("card_style_small"))
         smallCardStyleOption.viewId = "0"
 
         cardSltyleCollapseView.addViewtoStack(view: smallCardStyleOption)
@@ -297,7 +298,7 @@ class HomeFilterViewController: UIViewController {
         self.normalCardStyleOption = FilterRowView()
         self.normalCardStyleOption.buttonType = .radio
         self.normalCardStyleOption.isChecked = false
-        self.normalCardStyleOption.setTitle(title: "Normal")
+        self.normalCardStyleOption.setTitle(title: localized("card_style_normal"))
         self.normalCardStyleOption.viewId = "0"
 
         cardSltyleCollapseView.addViewtoStack(view: normalCardStyleOption)

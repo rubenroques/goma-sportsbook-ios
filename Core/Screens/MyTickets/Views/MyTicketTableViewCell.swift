@@ -363,17 +363,18 @@ class MyTicketTableViewCell: UITableViewCell {
         }
 
         //
-        if betHistoryEntry.type == "SINGLE" {
+        if betHistoryEntry.type?.lowercased() == "single" {
             self.titleLabel.text = localized("single")+" - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))"
         }
-        else if betHistoryEntry.type == "MULTIPLE" {
+        else if betHistoryEntry.type?.lowercased() == "multiple" {
             self.titleLabel.text = localized("multiple")+" - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))"
         }
-        else if betHistoryEntry.type == "SYSTEM" {
+        else if betHistoryEntry.type?.lowercased() == "system" {
             self.titleLabel.text = localized("system")+" - \(betHistoryEntry.systemBetType?.capitalized ?? "") - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))"
         }
         else {
-            self.titleLabel.text = String([betHistoryEntry.type, betHistoryEntry.status]
+            let betHistoryEntryStatus = betStatusText(forCode: betHistoryEntry.status ?? "")
+            self.titleLabel.text = String([betHistoryEntry.type, betHistoryEntryStatus]
                 .compactMap({ $0 })
                 .map({ $0.capitalized })
                 .joined(separator: " - "))
@@ -710,7 +711,8 @@ class MyTicketTableViewCell: UITableViewCell {
     }
 
     private func betStatusText(forCode code: String) -> String {
-        switch code {
+        switch code.uppercased() {
+        case "OPENED": return localized("open")
         case "OPEN": return localized("open")
         case "DRAW": return localized("draw")
         case "WON": return localized("won")

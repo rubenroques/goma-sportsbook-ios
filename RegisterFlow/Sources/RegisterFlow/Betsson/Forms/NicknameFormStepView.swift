@@ -286,16 +286,16 @@ class NicknameFormStepView: FormStepView {
                     self?.suggestionsLabelContainerView.isHidden = true
                     self?.loadingView.startAnimating()
                 case .serverError:
-                    self?.nicknameHeaderTextFieldView.showError(withMessage: "Sorry we could not validate this nickname.")
+                    self?.nicknameHeaderTextFieldView.showError(withMessage: Localization.localized("nickname_not_validated"))
                     self?.suggestionsLabelContainerView.isHidden = true
                     self?.loadingView.stopAnimating()
                 case .alreadyInUse(let suggestions):
-                    self?.nicknameHeaderTextFieldView.showError(withMessage: "This nickname is already in use.")
+                    self?.nicknameHeaderTextFieldView.showError(withMessage: Localization.localized("nickname_already_in_use"))
                     self?.configureWithSuggestedNicknames(suggestions)
                     self?.suggestionsLabelContainerView.isHidden = false
                     self?.loadingView.stopAnimating()
                 case .invalidSyntax:
-                    self?.nicknameHeaderTextFieldView.showError(withMessage: "Please insert a valid nickname.")
+                    self?.nicknameHeaderTextFieldView.showError(withMessage: Localization.localized("invalid_nickname"))
                     self?.suggestionsLabelContainerView.isHidden = true
                     self?.configureWithSuggestedNicknames([])
                     self?.loadingView.stopAnimating()
@@ -386,7 +386,7 @@ class NicknameFormStepView: FormStepView {
 
         switch (error.field, error.error) {
         case ("username", "INVALID_LENGTH"):
-            self.nicknameHeaderTextFieldView.showError(withMessage: "Nickname is too long")
+            self.nicknameHeaderTextFieldView.showError(withMessage: Localization.localized("nickname_too_long"))
         case ("username", "DUPLICATE"):
             self.nicknameHeaderTextFieldView.showError(withMessage: "This nickname is already in use")
         case ("username", _):

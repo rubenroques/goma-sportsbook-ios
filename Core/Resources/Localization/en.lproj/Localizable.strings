@@ -1030,9 +1030,6 @@
 "payment_refused" = "Payment Refused";
 "payment_refused_message" = "Your payment was refused. Please try again later. If the problem persists contact our Customer Support.";
 
-"withdrawal_status" = "Withdrawal Status";
-"withdrawal_status_message" = "Your withdrawal request was added. In the next days the request will be processed and you'll receive an update.";
-
 "withdraw_error" = "Withdraw Error";
 "withdraw_error_message" = "There was an error trying to process your withdraw. Please try again later, if the problem persists contact customer support.";
 
@@ -1201,3 +1198,45 @@
 
 "gambling_warning_footer_link" = "FAMILY, SOCIAL LIFE, FINANCIAL HEALTH. ARE YOU READY TO BET EVERYTHING? FOR HELP, CALL 09-74-75-13-13 (NON-PREMIUM CALL)";
 "minors_prohibition_footer_link" = "GAMBLING AND GAMING ARE PROHIBITED FOR MINORS";
+
+// 10 April
+"card_style_normal" = "Normal";
+"card_style_small" = "Small";
+
+"man_adjust" = "Manual Adjustment";
+
+"withdrawal_status" = "Withdrawal Status";
+"withdrawal_status_message" = "Your withdrawal request was added. In the next days the request will be processed and you'll receive an update.";
+
+"date_range_filter" = "Date range";
+
+"value_not_valid" = "This value is not valid.";
+"problem_setting_value" = "There was a problem setting this value";
+"invalid_postcode" = "This Postcode is not valid. Must be 5 digits";
+"invalid_number" = "The number is not valid. Must be up to 3 digits";
+"place_too_long" = "Place/Commune is too long";
+"street_name_too_long" = "Street name is too long";
+"invalid_place" = "Please enter a valid Place/Commune";
+"invalid_street" = "Please enter a valid Street";
+"player_not_old_enough" = "Player is not old enough to be registered";
+"country_name_too_long" = "Country name is too long";
+"invalid_birth_date" = "Please enter a valid birth date";
+"invalid_country" = "Please enter a valid Country";
+"invalid_email_format" = "Please insert a valid email format";
+"email_not_verifiable" = "Sorry we cannot verify this email";
+"email_already_in_use" = "This email is already in use";
+"mobile_number_already_in_use" = "This mobile number is already in use";
+"invalid_email" = "Please enter a valid Email";
+"invalid_phone_number" = "Please enter a valid Phone Number";
+"name_invalid_length" = "This name has an invalid length";
+"last_name_invalid_length" = "This last name has an invalid length";
+"invalid_name" = "Please enter a valid name";
+"invalid_last_name" = "Please enter a valid last name";
+"nickname_not_validated" = "Sorry we could not validate this nickname.";
+"nickname_already_in_use" = "This nickname is already in use.";
+"invalid_nickname" = "Please insert a valid nickname.";
+"nickname_too_long" = "Nickname is too long";
+"password_invalid_length" = "This password has an invalid length";
+"invalid_password" = "Please enter a valid Password";
+"promo_code_too_long" = "Promo Code is too long";
+"invalid_promo_code" = "Please enter a valid Promo Code";

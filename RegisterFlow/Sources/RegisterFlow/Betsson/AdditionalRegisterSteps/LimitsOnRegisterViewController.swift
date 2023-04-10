@@ -347,17 +347,17 @@ public class LimitsOnRegisterViewController: UIViewController {
             case .failure(let limitsOnRegisterError):
                 switch limitsOnRegisterError {
                 case .depositFormatError:
-                    self?.depositLimitHeaderTextFieldView.showError(withMessage: "This value is not valid.")
+                    self?.depositLimitHeaderTextFieldView.showError(withMessage: Localization.localized("value_not_valid"))
                 case .bettingFormatError:
-                    self?.bettingLimitHeaderTextFieldView.showError(withMessage: "This value is not valid.")
+                    self?.bettingLimitHeaderTextFieldView.showError(withMessage: Localization.localized("value_not_valid"))
                 case .autoPayoutFormatError:
-                    self?.bettingLimitHeaderTextFieldView.showError(withMessage: "This value is not valid.")
+                    self?.bettingLimitHeaderTextFieldView.showError(withMessage: Localization.localized("value_not_valid"))
                 case .depositServerError:
-                    self?.depositLimitHeaderTextFieldView.showError(withMessage: "There was a problem setting this value")
+                    self?.depositLimitHeaderTextFieldView.showError(withMessage: Localization.localized("problem_setting_value"))
                 case .bettingServerError:
-                    self?.bettingLimitHeaderTextFieldView.showError(withMessage: "There was a problem setting this value")
+                    self?.bettingLimitHeaderTextFieldView.showError(withMessage: Localization.localized("problem_setting_value"))
                 case .autoPayoutServerError:
-                    self?.bettingLimitHeaderTextFieldView.showError(withMessage: "There was a problem setting this value")
+                    self?.bettingLimitHeaderTextFieldView.showError(withMessage: Localization.localized("problem_setting_value"))
                 }
             case .finished:
                 ()

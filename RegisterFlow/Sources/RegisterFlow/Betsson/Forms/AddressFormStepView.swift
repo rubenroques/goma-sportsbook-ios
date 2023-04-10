@@ -468,7 +468,7 @@ class AddressFormStepView: FormStepView {
             .receive(on: DispatchQueue.main)
             .sink { shouldShowPostcodeFormatErrorMessage in
                 if shouldShowPostcodeFormatErrorMessage {
-                    self.postCodeHeaderTextFieldView.showError(withMessage: "This Postcode is not valid. Must be 5 digits")
+                    self.postCodeHeaderTextFieldView.showError(withMessage: Localization.localized("invalid_postcode"))
                 }
                 else {
                     self.postCodeHeaderTextFieldView.hideTipAndError()
@@ -480,7 +480,7 @@ class AddressFormStepView: FormStepView {
             .receive(on: DispatchQueue.main)
             .sink { shouldShowStreetNumberFormatErrorMessage in
                 if shouldShowStreetNumberFormatErrorMessage {
-                    self.numberHeaderTextFieldView.showError(withMessage: "The number is not valid. Must be up to 3 digits")
+                    self.numberHeaderTextFieldView.showError(withMessage: Localization.localized("invalid_number"))
                 }
                 else {
                     self.numberHeaderTextFieldView.hideTipAndError()
@@ -524,13 +524,13 @@ class AddressFormStepView: FormStepView {
         if !self.canPresentError(forFormStep: formStep) { return }
         switch (error.field, error.error) {
         case ("city", "INVALID_LENGTH"):
-            self.placeHeaderTextFieldView.showError(withMessage: "Place/Commune is too long")
+            self.placeHeaderTextFieldView.showError(withMessage: Localization.localized("place_too_long"))
         case ("address", "INVALID_LENGTH"):
-            self.postCodeHeaderTextFieldView.showError(withMessage: "Street name is too long")
+            self.postCodeHeaderTextFieldView.showError(withMessage: Localization.localized("street_name_too_long"))
         case ("city", _):
-            self.placeHeaderTextFieldView.showError(withMessage: "Please enter a valid Place/Commune")
+            self.placeHeaderTextFieldView.showError(withMessage: Localization.localized("invalid_place"))
         case ("address", _):
-            self.postCodeHeaderTextFieldView.showError(withMessage: "Please enter a valid Street")
+            self.postCodeHeaderTextFieldView.showError(withMessage: Localization.localized("invalid_street"))
         default:
             ()
         }

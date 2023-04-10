@@ -132,9 +132,9 @@ class PromoCodeFormStepView: FormStepView {
 
         switch (error.field, error.error) {
         case ("bonusCode", "INVALID_LENGTH"):
-            self.promoCodeHeaderTextFieldView.showError(withMessage: "Promo Code is too long")
+            self.promoCodeHeaderTextFieldView.showError(withMessage: Localization.localized("promo_code_too_long"))
         case ("bonusCode", _):
-            self.promoCodeHeaderTextFieldView.showError(withMessage: "Please enter a valid Promo Code")
+            self.promoCodeHeaderTextFieldView.showError(withMessage: Localization.localized("invalid_promo_code"))
         default:
             ()
         }

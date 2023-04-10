@@ -29,10 +29,9 @@ class FilterHistoryViewModel {
 
         var key: String {
             switch self {
-            case .past30Days: return "Past 30 days"
-            case .past90Days: return "Past 90 days"
-            default:
-                return "Date range"
+            case .past30Days: return localized("past_30_days")
+            case .past90Days: return localized("past_90_days")
+            default: return localized("date_range_filter")
             }
         }
 

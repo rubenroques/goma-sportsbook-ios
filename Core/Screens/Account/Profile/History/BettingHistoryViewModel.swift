@@ -72,15 +72,15 @@ class BettingHistoryViewModel {
         
         switch bettingTicketsType {
         case .opened:
-            self.titlePublisher = .init("Open")
+            self.titlePublisher = .init(localized("open"))
         case .resolved:
-            self.titlePublisher = .init("Resolved")
+            self.titlePublisher = .init(localized("resolved"))
         case .won:
-            self.titlePublisher = .init("Won")
+            self.titlePublisher = .init(localized("won"))
         case .cashout:
-            self.titlePublisher = .init("Cashout")
+            self.titlePublisher = .init(localized("cashed_out"))
         }
-
+        
         self.calculateDate(filterApplied: filterApplied)
    
         Env.servicesProvider.eventsConnectionStatePublisher

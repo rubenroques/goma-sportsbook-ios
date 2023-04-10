@@ -176,6 +176,9 @@ class CompetitionsFiltersView: UIView, NibLoadable {
 
         self.translatesAutoresizingMaskIntoConstraints = false
 
+        self.closeButton.setTitle(localized("close"), for: .normal)
+        self.clearButton.setTitle(localized("clear_all"), for: .normal)
+
         self.loadingView.hidesWhenStopped = true
         self.loadingView.stopAnimating()
 

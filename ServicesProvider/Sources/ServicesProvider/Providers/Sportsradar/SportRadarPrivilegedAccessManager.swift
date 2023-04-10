@@ -794,9 +794,9 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         return publisher.flatMap({ transactionsHistoryResponse -> AnyPublisher<[TransactionDetail], ServiceProviderError> in
             if transactionsHistoryResponse.status == "SUCCESS" {
 
-                let transactionsHistoryResponse = SportRadarModelMapper.transactionsHistoryResponse(fromTransactionsHistoryResponse: transactionsHistoryResponse)
+                let transactionsHistoryResponse2 = SportRadarModelMapper.transactionsHistoryResponse(fromTransactionsHistoryResponse: transactionsHistoryResponse)
 
-                if let transactions = transactionsHistoryResponse.transactions {
+                if let transactions = transactionsHistoryResponse2.transactions {
 
                     return Just(transactions).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
                 }

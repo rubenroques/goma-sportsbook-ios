@@ -289,11 +289,11 @@ class PasswordFormStepView: FormStepView {
 
         switch (error.field, error.error) {
         case ("password", "INVALID_LENGTH"):
-            self.passwordHeaderTextFieldView.showError(withMessage: "This password has an invalid length")
+            self.passwordHeaderTextFieldView.showError(withMessage: Localization.localized("password_invalid_length"))
         case ("password", "INVALID_VALUE"):
-            self.passwordHeaderTextFieldView.showError(withMessage: "Please enter a valid Password")
+            self.passwordHeaderTextFieldView.showError(withMessage: Localization.localized("invalid_password"))
         case ("password", _):
-            self.passwordHeaderTextFieldView.showError(withMessage: "Please enter a valid Password")
+            self.passwordHeaderTextFieldView.showError(withMessage: Localization.localized("invalid_password"))
         default:
             ()
         }

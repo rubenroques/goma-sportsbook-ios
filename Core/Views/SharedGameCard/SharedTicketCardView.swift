@@ -126,6 +126,8 @@ class SharedTicketCardView: UIView {
             self.titleLabel.text = localized("system")+" Bet"
         }
 
+        self.titleLabel.text = betHistoryEntry.type?.lowercased() ?? ""
+
         if let date = betHistoryEntry.placedDate {
             self.subtitleLabel.text = MyTicketBetLineView.dateFormatter.string(from: date)
         }

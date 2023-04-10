@@ -206,30 +206,24 @@ class TransactionsHistoryViewModel {
 
         let endDate = self.getDateString(date: self.endDatePublisher.value)
 
-        Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: ["DEPOSIT", "WITHDRAWAL", "CRE_BONUS",
-                                                                                                              "EXP_BONUS", "DP_CANCEL", "WD_CANCEL",
-                                                                                                              "GAME_WIN", "GAME_BET", "CASH_OUT",
-                                                                                                             "BONUS_REL",
-                                                                                                              "REFUND",
-                                                                                                             "PRODUC_BON"], pageNumber: page)
+        let types = ["DEPOSIT", "WITHDRAWAL", "CRE_BONUS",
+                     "EXP_BONUS", "DP_CANCEL", "WD_CANCEL",
+                     "GAME_WIN", "GAME_BET", "CASH_OUT",
+                    "BONUS_REL", "REFUND", "PRODUC_BON", "MAN_ADJUST"]
+
+        Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: types, pageNumber: page)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
-
                 switch completion {
                 case .finished:
                     ()
                 case .failure(let error):
                     print("TRANSACTIONS DEPOSITS ERROR: \(error)")
-
                     self?.transactionsPublisher.send([])
-
                     self?.listStatePublisher.send(.serverError)
-
                 }
             }, receiveValue: { [weak self] transactionsDeposits in
-
                 self?.processTransactions(transactions: transactionsDeposits, transactionType: .all)
-
             })
             .store(in: &cancellables)
     }

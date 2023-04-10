@@ -659,8 +659,18 @@ extension LoginViewController {
             self.loginButton.isEnabled = true
         }
         else if self.usernameHeaderTextFieldView.text == "rroques11" {
-            self.usernameHeaderTextFieldView.setText("rroques10")
-            self.passwordHeaderTextFieldView.setText("Ruben12345!")
+            self.usernameHeaderTextFieldView.setText("pgomes99")
+            self.passwordHeaderTextFieldView.setText("12345-gomaA")
+            self.loginButton.isEnabled = true
+        }
+        else if self.usernameHeaderTextFieldView.text == "pgomes99" {
+            self.usernameHeaderTextFieldView.setText("jmatos3")
+            self.passwordHeaderTextFieldView.setText("i23456789O!")
+            self.loginButton.isEnabled = true
+        }
+        else if self.usernameHeaderTextFieldView.text == "jmatos3" {
+            self.usernameHeaderTextFieldView.setText("ivotestsrna170")
+            self.passwordHeaderTextFieldView.setText("testesdoIvo1@")
             self.loginButton.isEnabled = true
         }
         else if self.usernameHeaderTextFieldView.text == "ruben5" {

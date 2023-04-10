@@ -148,13 +148,13 @@ class NamesFormStepView: FormStepView {
         if !self.canPresentError(forFormStep: formStep) { return }
         switch (error.field, error.error) {
         case ("firstName", "INVALID_LENGTH"):
-            self.firstNameHeaderTextFieldView.showError(withMessage: "This name has an invalid length")
+            self.firstNameHeaderTextFieldView.showError(withMessage: Localization.localized("name_invalid_length"))
         case ("lastName", "INVALID_LENGTH"):
-            self.lastNameHeaderTextFieldView.showError(withMessage: "This last name has an invalid length")
+            self.lastNameHeaderTextFieldView.showError(withMessage: Localization.localized("last_name_invalid_length"))
         case ("firstName", _):
-            self.firstNameHeaderTextFieldView.showError(withMessage: "Please enter a valid name")
+            self.firstNameHeaderTextFieldView.showError(withMessage: Localization.localized("invalid_name"))
         case ("lastName", _):
-            self.lastNameHeaderTextFieldView.showError(withMessage: "Please enter a valid last name")
+            self.lastNameHeaderTextFieldView.showError(withMessage: Localization.localized("invalid_last_name"))
         default:
             ()
         }

@@ -497,11 +497,11 @@ class AgeCountryFormStepView: FormStepView {
         if !self.canPresentError(forFormStep: formStep) { return }
         switch (error.field, error.error) {
         case ("birthDate", "BELOW_MINIMUM_AGE"):
-            self.dateHeaderTextFieldView.showError(withMessage: "Player is not old enough to be registered")
+            self.dateHeaderTextFieldView.showError(withMessage: Localization.localized("player_not_old_enough"))
         case ("country", "INVALID_LENGTH"):
-            self.countryHeaderTextFieldView.showError(withMessage: "Country name is too long")
+            self.countryHeaderTextFieldView.showError(withMessage: Localization.localized("country_name_too_long"))
         case ("birthDate", _):
-            self.dateHeaderTextFieldView.showError(withMessage: "Please enter a valid birth date")
+            self.dateHeaderTextFieldView.showError(withMessage: Localization.localized("invalid_birth_date"))
         case ("country", _):
             self.countryHeaderTextFieldView.showError(withMessage: "Please enter a valid Country")
         default:

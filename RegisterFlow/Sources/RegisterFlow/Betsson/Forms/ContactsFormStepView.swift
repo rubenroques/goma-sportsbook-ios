@@ -411,7 +411,7 @@ class ContactsFormStepView: FormStepView {
                 return state == .invalidSyntax
             })
             .sink { [weak self] _ in
-                self?.emailHeaderTextFieldView.showError(withMessage: "Please insert a valid email format")
+                self?.emailHeaderTextFieldView.showError(withMessage: Localization.localized("invalid_email_format"))
             }
             .store(in: &self.cancellables)
 
@@ -433,9 +433,9 @@ class ContactsFormStepView: FormStepView {
                 case .validating:
                     self?.emailHeaderTextFieldView.hideTipAndError()
                 case .serverError:
-                    self?.emailHeaderTextFieldView.showError(withMessage: "Sorry we cannot verify this email")
+                    self?.emailHeaderTextFieldView.showError(withMessage: Localization.localized("email_not_verifiable"))
                 case .alreadyInUse:
-                    self?.emailHeaderTextFieldView.showError(withMessage: "This email is already in use")
+                    self?.emailHeaderTextFieldView.showError(withMessage: Localization.localized("email_already_in_use"))
                 case .invalidSyntax:
                     self?.emailHeaderTextFieldView.hideTipAndError()
                 case .valid:
@@ -508,17 +508,17 @@ class ContactsFormStepView: FormStepView {
 
         switch (error.field, error.error) {
         case ("email", "INVALID_LENGTH"):
-            self.emailHeaderTextFieldView.showError(withMessage: "Place/Commune is too long")
+            self.emailHeaderTextFieldView.showError(withMessage: Localization.localized("place_too_long"))
         case ("mobile", "INVALID_LENGTH"):
-            self.phoneHeaderTextFieldView.showError(withMessage: "Street name is too long")
+            self.phoneHeaderTextFieldView.showError(withMessage: Localization.localized("street_name_too_long"))
         case ("email", "DUPLICATE"):
-            self.emailHeaderTextFieldView.showError(withMessage: "This email is already in use")
+            self.emailHeaderTextFieldView.showError(withMessage: Localization.localized("email_already_in_use"))
         case ("mobile", "DUPLICATE"):
-            self.phoneHeaderTextFieldView.showError(withMessage: "This mobile number is already in use")
+            self.phoneHeaderTextFieldView.showError(withMessage: Localization.localized("mobile_number_already_in_use"))
         case ("email", _):
-            self.emailHeaderTextFieldView.showError(withMessage: "Please enter a valid Email")
+            self.emailHeaderTextFieldView.showError(withMessage: Localization.localized("invalid_email"))
         case ("mobile", _):
-            self.phoneHeaderTextFieldView.showError(withMessage: "Please enter a valid Phone Number")
+            self.phoneHeaderTextFieldView.showError(withMessage: Localization.localized("invalid_phone_number"))
         default:
             ()
         }

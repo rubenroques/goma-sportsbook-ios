@@ -487,8 +487,12 @@ class ProfileViewController: UIViewController {
     }
 
     @IBAction private func didTapWithdrawButton() {
-        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete.value,
+
+        if let accountBalance = Env.userSessionStore.userWalletPublisher.value?.totalWithdrawable,
+           accountBalance > 0,
+           let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete.value,
            let isUserKycVerified = Env.userSessionStore.isUserKycVerified.value {
+
             if isUserProfileComplete && isUserKycVerified {
                 let withDrawViewController = WithdrawViewController()
                 let navigationViewController = Router.navigationController(with: withDrawViewController)

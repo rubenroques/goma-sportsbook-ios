@@ -21,6 +21,7 @@ enum TransactionTypeMapper {
     case cashOut
     case refund
     case productBonus
+    case manualAdjustment
 
     init?(transactionType: String) {
 
@@ -37,6 +38,7 @@ enum TransactionTypeMapper {
         case "CASH_OUT": self = .cashOut
         case "REFUND": self = .refund
         case "PRODUC_BON": self = .productBonus
+        case "MAN_ADJUST": self = .manualAdjustment
         default: return nil
         }
     }
@@ -55,6 +57,9 @@ enum TransactionTypeMapper {
         case .cashOut: return localized("cashout")
         case .refund: return localized("refund")
         case .productBonus: return localized("product_bonus")
+        case .manualAdjustment: return localized("man_adjust")
         }
     }
 }
+
+
