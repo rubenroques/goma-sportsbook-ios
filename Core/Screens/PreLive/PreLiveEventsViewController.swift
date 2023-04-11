@@ -266,6 +266,8 @@ class PreLiveEventsViewController: UIViewController {
 
         tableView.register(FooterResponsibleGamingViewCell.self,
                            forCellReuseIdentifier: FooterResponsibleGamingViewCell.identifier)
+        tableView.register(UITableViewCell.self,
+                           forCellReuseIdentifier: UITableViewCell.identifier)
 
         tableView.delegate = self
         tableView.dataSource = self

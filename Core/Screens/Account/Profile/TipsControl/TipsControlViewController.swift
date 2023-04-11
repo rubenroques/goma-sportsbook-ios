@@ -84,27 +84,15 @@ class TipsControlViewController: UIViewController {
     // MARK: Functions
     private func setupStackView() {
         let textLabel = UILabel()
-        // swiftlint:disable line_length
-        textLabel.text = "Les conseils de Betsson pour garder le contrôle et faire du jeu une activité de loisir agréable et responsable. En suivant ces recommandations, vous pourrez éviter de vous mettre en difficulté financière ou émotionnelle.\n\nIl est important de se rappeler que le jeu doit être considéré comme un passe-temps, et non pas comme une source de revenus fiable. Fixer un budget raisonnable est un bon moyen de s'assurer que vous ne dépensez pas plus que vous ne pouvez-vous le permettre.\n\nConsultez régulièrement votre historique de jeu vous permettra de garder un œil sur vos dépenses et de détecter toute dérive éventuelle. Si vous commencez à ressentir des émotions négatives comme la frustration ou le stress, prenez une pause et faites autre chose pour vous détendre.\n\nEnfin, il est important de ne pas laisser le jeu prendre le pas sur vos responsabilités et obligations quotidiennes. Si vous sentez que le jeu commence à impacter négativement votre vie, n'hésitez pas à en parler à vos proches et à chercher de l'aide si nécessaire."
+
+        textLabel.text = localized("tips_keep_control")
+
         textLabel.textColor = UIColor.App.textPrimary
         textLabel.font = AppFont.with(type: .bold, size: 16)
         textLabel.textAlignment = .left
         textLabel.numberOfLines = 0
 
         self.tipsStackView.addArrangedSubview(textLabel)
-//        let tipView1 = TipInfoView()
-//        tipView1.configure(title: localized("tip_title"), text: localized("tip_message"))
-//
-//        let tipView2 = TipInfoView()
-//        tipView2.configure(title: localized("tip_title"), text: localized("tip_message"))
-//
-//        let tipView3 = TipInfoView()
-//        tipView3.configure(title: localized("tip_title"), text: localized("tip_message"))
-//
-//        self.tipsStackView.addArrangedSubview(tipView1)
-//        self.tipsStackView.addArrangedSubview(tipView2)
-//        self.tipsStackView.addArrangedSubview(tipView3)
-
     }
 }
 

@@ -104,7 +104,8 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
         default:
             ()
         }
-        fatalError()
+
+        return tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
