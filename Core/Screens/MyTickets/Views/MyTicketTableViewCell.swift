@@ -118,12 +118,13 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.selectionStyle = .none
         
-        if Env.appSession.businessModulesManager.isSocialFeaturesEnabled {
-            self.shareButton.isHidden = false
-        }
-        else {
-            self.shareButton.isHidden = true
-        }
+//        if Env.appSession.businessModulesManager.isSocialFeaturesEnabled {
+//            self.shareButton.isHidden = false
+//        }
+//        else {
+//            self.shareButton.isHidden = true
+//        }
+        self.shareButton.isHidden = false
 
         self.loadingView.isHidden = true
 

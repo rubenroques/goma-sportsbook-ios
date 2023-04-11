@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum TransactionTypes: CaseIterable {
+public enum TransactionType: CaseIterable {
 
     case deposit
     case withdrawal
@@ -22,6 +22,26 @@ public enum TransactionTypes: CaseIterable {
     case refund
     case productBonus
     case manualAdjustment
+
+    init?(transactionType: String) {
+
+        switch transactionType {
+        case "DEPOSIT": self = .deposit
+        case "WITHDRAWAL": self = .withdrawal
+        case "CRE_BONUS": self = .bonusCredited
+        case "EXP_BONUS": self = .bonusExpired
+        case "BONUS_REL": self = .bonusReleased
+        case "DP_CANCEL": self = .depositCancel
+        case "WD_CANCEL": self = .withdrawalCancel
+        case "GAME_BET": self = .betPlaced
+        case "GAME_WIN": self = .betSettled
+        case "CASH_OUT": self = .cashOut
+        case "REFUND": self = .refund
+        case "PRODUC_BON": self = .productBonus
+        case "MAN_ADJUST": self = .manualAdjustment
+        default: return nil
+        }
+    }
 
     var transactionKey: String {
         switch self {

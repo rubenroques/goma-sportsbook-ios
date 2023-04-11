@@ -206,7 +206,7 @@ class TransactionsHistoryViewModel {
 
         let endDate = self.getDateString(date: self.endDatePublisher.value)
 
-        let types = TransactionTypes.allCases
+        let types = TransactionType.allCases
 
         Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionTypes: types, pageNumber: page)
             .receive(on: DispatchQueue.main)
@@ -235,7 +235,7 @@ class TransactionsHistoryViewModel {
 
         let endDate = self.getDateString(date: self.endDatePublisher.value)
 
-        let types = [TransactionTypes.deposit]
+        let types = [TransactionType.deposit]
 
         Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionTypes: types, pageNumber: page)
             .receive(on: DispatchQueue.main)
@@ -302,7 +302,7 @@ class TransactionsHistoryViewModel {
 
         let endDate = self.getDateString(date: self.endDatePublisher.value)
 
-        let types = [TransactionTypes.withdrawal, TransactionTypes.withdrawalCancel]
+        let types = [TransactionType.withdrawal, TransactionType.withdrawalCancel]
 
         Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionTypes: types, pageNumber: page)
             .receive(on: DispatchQueue.main)
@@ -330,45 +330,9 @@ class TransactionsHistoryViewModel {
 
     func processTransactions(transactions: [TransactionDetail], transactionType: TransactionsType) {
 
-        // Filter unwanted transactions types
-//        let unwantedTypes = ["RSV_COMMIT", "RESERVE", "RSV_CANCEL"]
-//
-//        let filteredTransactions = transactions.filter({
-//            !unwantedTypes.contains($0.type)
-//        })
-
         let transactionsHistory = transactions.map { transactionDetail -> TransactionHistory in
 
-            var valueType = TransactionValueType.neutral
-
-            let transactionType = TransactionTypeMapper.init(transactionType: transactionDetail.type)?.transactionName ?? transactionDetail.type
-
-            if transactionDetail.amount < 0.0 {
-                valueType = .loss
-            }
-            else if transactionDetail.amount > 0.0 {
-                valueType = .won
-            }
-            else {
-                valueType = .neutral
-            }
-
-            let transactionHistory = TransactionHistory(transactionID: "\(transactionDetail.id)",
-                                                        time: transactionDetail.dateTime,
-                                                        type: transactionType,
-                                                        valueType: valueType,
-                                                        debit: DebitCredit(currency: transactionDetail.currency,
-                                                                           amount: transactionDetail.amount,
-                                                                           name: "Debit"),
-                                                        credit: DebitCredit(currency: transactionDetail.currency,
-                                                                            amount: transactionDetail.amount,
-                                                                            name: "Credit"),
-                                                        fees: [],
-                                                        status: nil,
-                                                        transactionReference: nil,
-                                                        id: "\(transactionDetail.gameTranId ?? "")",
-                                                        isRallbackAllowed: nil,
-                                                        paymentId: transactionDetail.paymentId)
+            let transactionHistory = ServiceProviderModelMapper.transactionHistory(fromServiceProviderTransactionDetail: transactionDetail)
 
             return transactionHistory
         }

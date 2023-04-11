@@ -785,7 +785,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         }).eraseToAnyPublisher()
     }
 
-    func getTransactionsHistory(startDate: String, endDate: String, transactionTypes: [TransactionTypes]? = nil, pageNumber: Int? = nil) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
+    func getTransactionsHistory(startDate: String, endDate: String, transactionTypes: [TransactionType]? = nil, pageNumber: Int? = nil) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
 
         var transactionTypesKeys = [String]()
 

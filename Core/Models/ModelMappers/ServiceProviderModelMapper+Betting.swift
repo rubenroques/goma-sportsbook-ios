@@ -110,4 +110,57 @@ extension ServiceProviderModelMapper {
         return betHistoryEntrySelection
     }
 
+    static func transactionHistory(fromServiceProviderTransactionDetail transactionDetail: ServicesProvider.TransactionDetail) -> TransactionHistory {
+
+        var valueType = TransactionValueType.neutral
+
+        let transactionType = Self.stringFromTransactionType(transactionType: transactionDetail.type)
+
+        if transactionDetail.amount < 0.0 {
+            valueType = .loss
+        }
+        else if transactionDetail.amount > 0.0 {
+            valueType = .won
+        }
+        else {
+            valueType = .neutral
+        }
+
+        return TransactionHistory(transactionID: "\(transactionDetail.id)",
+                                                           time: transactionDetail.dateTime,
+                                  type: transactionType ?? "",
+                                                           valueType: valueType,
+                                                           debit: DebitCredit(currency: transactionDetail.currency,
+                                                                              amount: transactionDetail.amount,
+                                                                              name: "Debit"),
+                                                           credit: DebitCredit(currency: transactionDetail.currency,
+                                                                               amount: transactionDetail.amount,
+                                                                               name: "Credit"),
+                                                           fees: [],
+                                                           status: nil,
+                                                           transactionReference: nil,
+                                                           id: "\(transactionDetail.gameTranId ?? "")",
+                                                           isRallbackAllowed: nil,
+                                                           paymentId: transactionDetail.paymentId)
+    }
+
+    static func stringFromTransactionType(transactionType: TransactionType?) -> String? {
+
+        switch transactionType {
+        case .deposit: return localized("deposit")
+        case .withdrawal: return localized("withdrawal")
+        case .bonusCredited: return localized("bonus_credit")
+        case .bonusExpired: return localized("bonus_expired")
+        case .bonusReleased: return localized("bonus_released")
+        case .depositCancel: return localized("deposit_cancel")
+        case .withdrawalCancel: return localized("withdrawal_cancel")
+        case .betPlaced: return localized("bet_placed")
+        case .betSettled: return localized("bet_settled")
+        case .cashOut: return localized("cashout")
+        case .refund: return localized("refund")
+        case .productBonus: return localized("product_bonus")
+        case .manualAdjustment: return localized("man_adjust")
+        default: return nil
+        }
+    }
 }

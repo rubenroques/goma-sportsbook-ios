@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct TransactionsHistoryResponse: Codable {
+public struct TransactionsHistoryResponse {
 
     public var status: String
     public var transactions: [TransactionDetail]?
@@ -16,13 +16,18 @@ public struct TransactionsHistoryResponse: Codable {
         case status = "status"
         case transactions = "transactions"
     }
+
+    public init(status: String, transactions: [TransactionDetail]?) {
+        self.status = status
+        self.transactions = transactions
+    }
 }
 
-public struct TransactionDetail: Codable {
+public struct TransactionDetail {
 
     public var id: Int
     public var dateTime: String
-    public var type: String
+    public var type: TransactionType?
     public var amount: Double
     public var postBalance: Double
     public var amountBonus: Double
@@ -31,17 +36,17 @@ public struct TransactionDetail: Codable {
     public var paymentId: Int?
     public var gameTranId: String?
 
-    enum CodingKeys: String, CodingKey {
-        case id = "id"
-        case dateTime = "dateTime"
-        case type = "tranType"
-        case amount = "amount"
-        case postBalance = "postBalance"
-        case amountBonus = "amountBonus"
-        case postBalanceBonus = "postBalanceBonus"
-        case currency = "currency"
-        case paymentId = "paymentId"
-        case gameTranId = "gameTranId"
+    public init(id: Int, dateTime: String, type: TransactionType? = nil, amount: Double, postBalance: Double, amountBonus: Double, postBalanceBonus: Double, currency: String, paymentId: Int?, gameTranId: String?) {
+        self.id = id
+        self.dateTime = dateTime
+        self.type = type
+        self.amount = amount
+        self.postBalance = postBalance
+        self.amountBonus = amountBonus
+        self.postBalanceBonus = postBalanceBonus
+        self.currency = currency
+        self.paymentId = paymentId
+        self.gameTranId = gameTranId
     }
 }
 
