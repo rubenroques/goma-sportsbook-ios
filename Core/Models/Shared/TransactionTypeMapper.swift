@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ServicesProvider
 
 enum TransactionTypeMapper {
 
@@ -62,4 +63,26 @@ enum TransactionTypeMapper {
     }
 }
 
-
+//class TransactionTypeMapper {
+//
+//    func getTransactionName(transactionType: String) -> String? {
+//
+//        switch transactionType {
+//        case "DEPOSIT": return localized("deposit")
+//        case "WITHDRAWAL": return localized("withdrawal")
+//        case "CRE_BONUS": return localized("bonus_credit")
+//        case "EXP_BONUS": return localized("bonus_expired")
+//        case "BONUS_REL": return localized("bonus_released")
+//        case "DP_CANCEL": return localized("deposit_cancel")
+//        case "WD_CANCEL": return localized("withdrawal_cancel")
+//        case "GAME_BET": return localized("bet_placed")
+//        case "GAME_WIN": return localized("bet_settled")
+//        case "CASH_OUT": return localized("cashout")
+//        case "REFUND": return localized("refund")
+//        case "PRODUC_BON": return localized("product_bonus")
+//        case "MAN_ADJUST": return localized("man_adjust")
+//        default: return nil
+//        }
+//    }
+//
+//}

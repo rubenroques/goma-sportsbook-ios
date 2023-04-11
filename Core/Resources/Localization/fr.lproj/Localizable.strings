@@ -1229,6 +1229,10 @@
 
 "partial_cashout_value" = "Encaissement partiel {cashoutAmount}";
 
+"withdrawal_warning" = "Avertissement de retrait";
+"withdrawal_warning_text" = "Souhaitez-vous procéder au retrait ? Si vous disposez actuellement d'un bonus de dépôt actif, celui-ci sera annulé.";
+"understand_confirmation_withdraw" = "Je comprends";
+
 // NOT TO ADD YET
 "tip_title" = "Pointe 1";
 "tip_message" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sagittis eros a nibh fermentum viverra. Sed imperdiet justo non tellus mollis viverra. Aliquam quis varius ex. In sagittis condimentum molestie.";

@@ -206,12 +206,9 @@ class TransactionsHistoryViewModel {
 
         let endDate = self.getDateString(date: self.endDatePublisher.value)
 
-        let types = ["DEPOSIT", "WITHDRAWAL", "CRE_BONUS",
-                     "EXP_BONUS", "DP_CANCEL", "WD_CANCEL",
-                     "GAME_WIN", "GAME_BET", "CASH_OUT",
-                    "BONUS_REL", "REFUND", "PRODUC_BON", "MAN_ADJUST"]
+        let types = TransactionTypes.allCases
 
-        Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: types, pageNumber: page)
+        Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionTypes: types, pageNumber: page)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -238,7 +235,9 @@ class TransactionsHistoryViewModel {
 
         let endDate = self.getDateString(date: self.endDatePublisher.value)
 
-        Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: ["DEPOSIT"], pageNumber: page)
+        let types = [TransactionTypes.deposit]
+
+        Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionTypes: types, pageNumber: page)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
 
@@ -303,7 +302,9 @@ class TransactionsHistoryViewModel {
 
         let endDate = self.getDateString(date: self.endDatePublisher.value)
 
-        Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: ["WITHDRAWAL", "WD_CANCEL"], pageNumber: page)
+        let types = [TransactionTypes.withdrawal, TransactionTypes.withdrawalCancel]
+
+        Env.servicesProvider.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionTypes: types, pageNumber: page)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
 

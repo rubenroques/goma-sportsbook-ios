@@ -75,7 +75,7 @@ class AppSettingsViewController: UIViewController {
 
         let appearanceView = SettingsRowView()
         appearanceView.setTitle(title: localized("appearance"))
-        appearanceView.hasSeparatorLineView = true
+        // appearanceView.hasSeparatorLineView = true
         appearanceView.hasNavigationImageView = true
         let appearanceTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapAppearanceView))
         appearanceView.addGestureRecognizer(appearanceTap)

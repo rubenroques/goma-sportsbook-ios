@@ -414,6 +414,23 @@ class WithdrawViewController: UIViewController {
         self.navigationController?.pushViewController(ibanProofViewController, animated: true)
     }
 
+    private func showConfirmationAlert() {
+
+        let amountText = self.withdrawHeaderTextFieldView.text
+
+        let alert = UIAlertController(title: localized("withdrawal_warning"),
+                                      message: localized("withdrawal_warning_message"),
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: localized("understand_confirmation_withdraw"), style: .default, handler: { [weak self] _ in
+
+            self?.viewModel.getWithdrawInfo(amountText: amountText)
+        }))
+
+        alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
+    }
+
     @IBAction private func didTapCloseButton() {
         if presentingViewController != nil {
             self.navigationController?.dismiss(animated: true, completion: nil)
@@ -425,9 +442,7 @@ class WithdrawViewController: UIViewController {
 
     @IBAction private func didTapNextButton() {
 
-        let amountText = self.withdrawHeaderTextFieldView.text
-
-        self.viewModel.getWithdrawInfo(amountText: amountText)
+        self.showConfirmationAlert()
 
     }
 

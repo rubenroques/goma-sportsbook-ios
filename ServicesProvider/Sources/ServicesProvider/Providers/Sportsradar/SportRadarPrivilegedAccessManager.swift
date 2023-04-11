@@ -785,9 +785,17 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
         }).eraseToAnyPublisher()
     }
 
-    func getTransactionsHistory(startDate: String, endDate: String, transactionType: [String]? = nil, pageNumber: Int? = nil) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
+    func getTransactionsHistory(startDate: String, endDate: String, transactionTypes: [TransactionTypes]? = nil, pageNumber: Int? = nil) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
 
-        let endpoint = OmegaAPIClient.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: transactionType, pageNumber: pageNumber, pageSize: 10)
+        var transactionTypesKeys = [String]()
+
+        if let transactionTypes {
+            for transactionType in transactionTypes {
+                transactionTypesKeys.append(transactionType.transactionKey)
+            }
+        }
+
+        let endpoint = OmegaAPIClient.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: transactionTypesKeys, pageNumber: pageNumber, pageSize: 10)
 
         let publisher: AnyPublisher<SportRadarModels.TransactionsHistoryResponse, ServiceProviderError> = self.connector.request(endpoint)
 

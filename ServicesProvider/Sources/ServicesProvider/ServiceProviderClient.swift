@@ -870,14 +870,14 @@ extension ServicesProviderClient {
         return privilegedAccessManager.addPaymentInformation(type: type, fields: fields)
     }
 
-    public func getTransactionsHistory(startDate: String, endDate: String, transactionType: [String]? = nil, pageNumber: Int? = nil) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
+    public func getTransactionsHistory(startDate: String, endDate: String, transactionTypes: [TransactionTypes]? = nil, pageNumber: Int? = nil) -> AnyPublisher<[TransactionDetail], ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
 
-        return privilegedAccessManager.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionType: transactionType, pageNumber: pageNumber)
+        return privilegedAccessManager.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionTypes: transactionTypes, pageNumber: pageNumber)
     }
 
     public func getGrantedBonuses() -> AnyPublisher<[GrantedBonus], ServiceProviderError> {

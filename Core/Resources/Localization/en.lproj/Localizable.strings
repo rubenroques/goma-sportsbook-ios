@@ -1240,3 +1240,7 @@
 "invalid_password" = "Please enter a valid Password";
 "promo_code_too_long" = "Promo Code is too long";
 "invalid_promo_code" = "Please enter a valid Promo Code";
+
+"withdrawal_warning" = "Withdrawal Warning";
+"withdrawal_warning_text" = "Would you like to proceed with the withdrawal? If you currently have an active deposit bonus, it will be forfeited.";
+"understand_confirmation_withdraw" = "I understand";

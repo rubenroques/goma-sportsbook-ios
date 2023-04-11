@@ -54,8 +54,8 @@ class TipsControlViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        self.tipButton.layer.cornerRadius = CornerRadius.button
-        self.tipButton.layer.borderWidth = 1
+//        self.tipButton.layer.cornerRadius = CornerRadius.button
+//        self.tipButton.layer.borderWidth = 1
     }
 
     func setupWithTheme() {
@@ -77,7 +77,7 @@ class TipsControlViewController: UIViewController {
         self.tipsStackView.backgroundColor = .clear
 
         self.tipButton.backgroundColor = .clear
-        self.tipButton.layer.borderColor = UIColor(red: 0.16, green: 0.18, blue: 0.36, alpha: 1).cgColor
+        // self.tipButton.layer.borderColor = UIColor(red: 0.16, green: 0.18, blue: 0.36, alpha: 1).cgColor
         self.tipButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
     }
 
@@ -176,7 +176,10 @@ extension TipsControlViewController {
     private static func createTipButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("evalujeu"), for: .normal)
+        //button.setTitle(localized("evalujeu"), for: .normal)
+        button.setImage(UIImage(named: "evalujeu_logo"), for: .normal)
+        button.imageEdgeInsets = UIEdgeInsets(top: 2, left: 4, bottom: 2, right: 4)
+        button.contentMode = .scaleAspectFit
         return button
     }
 
@@ -238,7 +241,7 @@ extension TipsControlViewController {
             self.tipsStackView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor, constant: -20),
             self.tipsStackView.topAnchor.constraint(equalTo: self.scrollContainerView.topAnchor, constant: 20),
 
-            self.tipButton.widthAnchor.constraint(equalToConstant: 146),
+            self.tipButton.widthAnchor.constraint(equalToConstant: 205),
             self.tipButton.heightAnchor.constraint(equalToConstant: 50),
             self.tipButton.centerXAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor),
             self.tipButton.topAnchor.constraint(equalTo: self.tipsStackView.bottomAnchor, constant: 70),

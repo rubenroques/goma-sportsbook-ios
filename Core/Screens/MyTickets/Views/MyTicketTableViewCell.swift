@@ -268,8 +268,6 @@ class MyTicketTableViewCell: UITableViewCell {
             }
         }
 
-        self.betIdLabel.textColor = UIColor.App.textPrimary
-
         self.partialCashoutSliderView.backgroundColor = .clear
         self.partialCashoutSliderView.layer.cornerRadius = CornerRadius.view
         self.partialCashoutSliderView.layer.masksToBounds = true
