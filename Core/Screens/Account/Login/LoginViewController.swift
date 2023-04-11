@@ -120,11 +120,6 @@ class LoginViewController: UIViewController {
             }
         }
 
-        if self.shouldPresentRegisterFlow {
-            self.presentRegister(animated: false)
-            self.shouldPresentRegisterFlow = false
-        }
-
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -143,6 +138,11 @@ class LoginViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
+        if self.shouldPresentRegisterFlow {
+            self.presentRegister(animated: true)
+            self.shouldPresentRegisterFlow = false
+        }
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

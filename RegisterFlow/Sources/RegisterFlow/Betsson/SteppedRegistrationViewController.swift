@@ -568,7 +568,7 @@ public extension SteppedRegistrationViewController {
 
     private static func createProgressView() -> UIProgressView {
         let progressView = UIProgressView()
-        progressView.progress = 0.5
+        progressView.progress = 0.0
         progressView.translatesAutoresizingMaskIntoConstraints = false
         return progressView
     }
