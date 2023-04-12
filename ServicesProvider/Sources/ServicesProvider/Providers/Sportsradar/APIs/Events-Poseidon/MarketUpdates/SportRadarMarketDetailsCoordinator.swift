@@ -34,6 +34,9 @@ class SportRadarMarketDetailsCoordinator {
 
     private var outcomesDictionary: OrderedDictionary<String, CurrentValueSubject<Outcome, Never>>
 
+    private var waiting = true
+    private var timer: Timer?
+
     init(sessionToken: String, contentIdentifier: ContentIdentifier) {
 
         print("☁️SP debugbetslip new SportRadarMarketDetailsCoordinator \(contentIdentifier)")
@@ -80,6 +83,7 @@ class SportRadarMarketDetailsCoordinator {
                     self.subscription = subscription
                     self.marketCurrentValueSubject.send(.connected(subscription: subscription)) // Request succeeded with data: \(data)
 
+                    self.startWaiting()
                     print("☁️SP debugbetslip Request 200 ok SportRadarMarketDetailsCoordinator \(self.contentIdentifier) \(String.init(data: data, encoding: .utf8) ?? "--")")
                 } else {
                     self.marketCurrentValueSubject.send(completion: .failure(ServiceProviderError.onSubscribe)) // Request failed with status code: \(response.statusCode)
@@ -127,7 +131,35 @@ class SportRadarMarketDetailsCoordinator {
         }
     }
 
+    private func startWaiting() {
+        self.waiting = true
+        self.timer = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: false) { [weak self] _ in
+            guard let self = self else { return }
+            if self.waiting {
+                self.handleWaitingTimeout()
+            }
+        }
+
+        RunLoop.main.add(self.timer!, forMode: RunLoop.Mode.common)
+
+    }
+
+    private func stopWaiting() {
+        waiting = false
+        timer?.invalidate()
+        timer = nil
+    }
+
+    private func handleWaitingTimeout() {
+        self.stopWaiting()
+        print("☁️SP debugbetslip 4 seconds elapsed, and the waiting value has not changed.")
+
+        self.marketCurrentValueSubject.send(completion: .failure(ServiceProviderError.noResponseFromSocketOnContent))
+        self.subscription = nil
+    }
+
     func reset() {
+        self.stopWaiting()
         self.marketCurrentValueSubject.send(.disconnected)
 
         self.outcomesDictionary = [:]

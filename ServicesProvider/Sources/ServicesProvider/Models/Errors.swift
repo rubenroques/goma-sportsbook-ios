@@ -29,6 +29,8 @@ public enum ServiceProviderError: Error {
     case onSubscribe
     case resourceNotFound
 
+    case noResponseFromSocketOnContent
+
     case invalidRequestFormat
     case internalServerError
     case request
