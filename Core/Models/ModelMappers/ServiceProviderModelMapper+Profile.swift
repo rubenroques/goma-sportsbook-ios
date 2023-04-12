@@ -20,17 +20,24 @@ extension ServiceProviderModelMapper {
         if let serviceProviderCountry = serviceProviderProfile.country {
             country = ServiceProviderModelMapper.country(fromServiceProviderCountry: serviceProviderCountry)
         }
-         
-        var title: UserTitle?
-        if let gender = serviceProviderProfile.gender {
-            if gender.lowercased() == "f" {
+
+        var gender: UserGender = .male
+        var title: UserTitle = .mister
+        if let genderString = serviceProviderProfile.gender {
+            if genderString.lowercased() == "f" {
                 title = .mizz // "Ms"
-            }
-            else if gender.lowercased() == "m" {
-                title = .mister // "Mr"
+                gender = .female
             }
         }
-        
+
+        var localKYCStatus = KnowYourCustomerStatus.request
+        switch serviceProviderProfile.kycStatus {
+        case .request: localKYCStatus = .request
+        case .pass: localKYCStatus = .pass
+        case .passConditional: localKYCStatus = .passConditional
+        }
+
+
         return UserProfile(userIdentifier: serviceProviderProfile.userIdentifier,
                            username: serviceProviderProfile.username,
                            email: serviceProviderProfile.email,
@@ -39,7 +46,7 @@ extension ServiceProviderModelMapper {
                            birthDate: serviceProviderProfile.birthDate,
                            nationality: nationalityCountry,
                            country: country,
-                           gender: serviceProviderProfile.gender,
+                           gender: gender,
                            title: title,
                            personalIdNumber: serviceProviderProfile.personalIdNumber,
                            address: serviceProviderProfile.address,
@@ -48,13 +55,14 @@ extension ServiceProviderModelMapper {
                            postalCode: serviceProviderProfile.postalCode,
                            birthDepartment: serviceProviderProfile.birthDepartment,
                            streetNumber: serviceProviderProfile.streetNumber,
-                           isEmailVerified: serviceProviderProfile.isEmailVerified,
-                           isRegistrationCompleted: serviceProviderProfile.isRegistrationCompleted,
                            avatarName: serviceProviderProfile.avatarName,
                            godfatherCode: serviceProviderProfile.godfatherCode,
                            placeOfBirth: serviceProviderProfile.placeOfBirth,
                            additionalStreetLine: serviceProviderProfile.additionalStreetLine,
-                           kycStatus: serviceProviderProfile.kycStatus)
+
+                           isEmailVerified: serviceProviderProfile.isEmailVerified,
+                           isRegistrationCompleted: serviceProviderProfile.isRegistrationCompleted,
+                           kycStatus: localKYCStatus)
     }
     
 }

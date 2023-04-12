@@ -162,21 +162,21 @@ class ProfileViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        Env.userSessionStore.isUserProfileComplete
+        Env.userSessionStore.isUserProfileCompletePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.verifyUserActivationConditions()
             })
             .store(in: &cancellables)
 
-        Env.userSessionStore.isUserEmailVerified
+        Env.userSessionStore.isUserEmailVerifiedPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.verifyUserActivationConditions()
             })
             .store(in: &cancellables)
 
-        Env.userSessionStore.isUserKycVerified
+        Env.userSessionStore.userKnowYourCustomerStatusPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.verifyUserActivationConditions()
@@ -306,7 +306,7 @@ class ProfileViewController: UIViewController {
             showActivationAlertScrollableView = true
         }
 
-        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete.value, !isUserProfileComplete {
+        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete, !isUserProfileComplete {
             let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
                                                            description: localized("complete_profile_description"),
                                                            linkLabel: localized("finish_up_profile"),
@@ -316,7 +316,7 @@ class ProfileViewController: UIViewController {
             showActivationAlertScrollableView = true
         }
 
-        if let isUserKycVerified = Env.userSessionStore.isUserKycVerified.value, !isUserKycVerified {
+        if let isUserKycVerified = Env.userSessionStore.userKnowYourCustomerStatus, isUserKycVerified == .request {
             let uploadDocumentsAlertData = ActivationAlert(title: localized("document_validation_required"),
                                                            description: localized("document_validation_required_description"),
                                                            linkLabel: localized("complete_your_verification"),
@@ -462,27 +462,11 @@ class ProfileViewController: UIViewController {
     }
 
     @IBAction private func didTapDepositButton() {
-//        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete.value {
-//            if isUserProfileComplete {
-//                let depositViewController = DepositViewController()
-//                let navigationViewController = Router.navigationController(with: depositViewController)
-//                self.present(navigationViewController, animated: true, completion: nil)
-//            }
-//            else {
-//                let alert = UIAlertController(title: localized("profile_incomplete"),
-//                                              message: localized("profile_incomplete_deposit"),
-//                                              preferredStyle: .alert)
-//                alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
-//                self.present(alert, animated: true, completion: nil)
-//            }
-//        }
         let depositViewController = DepositViewController()
         let navigationViewController = Router.navigationController(with: depositViewController)
-
-        depositViewController.shouldRefreshUserWallet = { [weak self] in
+        depositViewController.shouldRefreshUserWallet = {
             Env.userSessionStore.refreshUserWallet()
         }
-
         self.present(navigationViewController, animated: true, completion: nil)
     }
 
@@ -490,17 +474,15 @@ class ProfileViewController: UIViewController {
 
         if let accountBalance = Env.userSessionStore.userWalletPublisher.value?.totalWithdrawable,
            accountBalance > 0,
-           let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete.value,
-           let isUserKycVerified = Env.userSessionStore.isUserKycVerified.value {
+           let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete,
+           let isUserKycVerified = Env.userSessionStore.userKnowYourCustomerStatus {
 
-            if isUserProfileComplete && isUserKycVerified {
+            if isUserProfileComplete && isUserKycVerified != .request {
                 let withDrawViewController = WithdrawViewController()
                 let navigationViewController = Router.navigationController(with: withDrawViewController)
-
-                withDrawViewController.shouldRefreshUserWallet = { [weak self] in
+                withDrawViewController.shouldRefreshUserWallet = {
                     Env.userSessionStore.refreshUserWallet()
                 }
-
                 self.present(navigationViewController, animated: true, completion: nil)
             }
             else {
@@ -510,6 +492,7 @@ class ProfileViewController: UIViewController {
                 alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
+
         }
     }
 

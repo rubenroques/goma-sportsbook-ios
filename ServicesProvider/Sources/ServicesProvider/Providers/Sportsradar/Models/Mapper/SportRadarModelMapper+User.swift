@@ -11,13 +11,9 @@ extension SportRadarModelMapper {
 
     static func userProfile(fromPlayerInfoResponse playerInfoResponse: SportRadarModels.PlayerInfoResponse) -> UserProfile? {
 
-        var userRegistrationStatus = UserRegistrationStatus.quickOpen
-        switch playerInfoResponse.registrationStatus ?? "" {
-        case "QUICK_OPEN": userRegistrationStatus = .quickOpen
-        case "QUICK_REG": userRegistrationStatus = .quickRegister
-        case "PLAYER": userRegistrationStatus = .completed
-        default: userRegistrationStatus = .quickOpen
-        }
+        let userRegistrationStatus = UserRegistrationStatus(fromStringKey: playerInfoResponse.registrationStatus ?? "")
+        let emailVerificationStatus = EmailVerificationStatus(fromStringKey:  playerInfoResponse.emailVerificationStatus)
+        let knowYourCustomerStatus = KnowYourCustomerStatus(fromStringKey: playerInfoResponse.kycStatus ?? "")
 
         var avatarName: String?
         var godfatherCode: String?
@@ -50,13 +46,13 @@ extension SportRadarModelMapper {
                            postalCode: playerInfoResponse.postalCode,
                            birthDepartment: playerInfoResponse.birthDepartment,
                            streetNumber: playerInfoResponse.streetNumber,
-                           emailVerificationStatus: EmailVerificationStatus(fromStringKey:  playerInfoResponse.emailVerificationStatus.uppercased()),
-                           userRegistrationStatus: userRegistrationStatus,
                            avatarName: avatarName,
                            godfatherCode: godfatherCode,
                            placeOfBirth: placeOfBirth,
                            additionalStreetLine: additionalStreetLine,
-                           kycStatus: playerInfoResponse.kycStatus)
+                           emailVerificationStatus: emailVerificationStatus,
+                           userRegistrationStatus: userRegistrationStatus,
+                           kycStatus: knowYourCustomerStatus)
 
     }
 
@@ -428,14 +424,41 @@ extension SportRadarModelMapper {
     }
 }
 
+private extension UserRegistrationStatus {
+    init(fromStringKey key: String) {
+        switch key.uppercased() {
+        case "QUICK_OPEN":
+            self = .quickOpen
+        case "QUICK_REG":
+            self = .quickRegister
+        case "PLAYER":
+            self = .completed
+        default:
+            self = .quickOpen
+        }
+    }
+}
 
 private extension EmailVerificationStatus {
     init(fromStringKey key: String) {
-        switch key {
+        switch key.uppercased() {
         case "VERIFIED":
             self = .verified
         default:
             self = .unverified
+        }
+    }
+}
+
+private extension KnowYourCustomerStatus {
+    init(fromStringKey key: String) {
+        switch key.uppercased() {
+        case "PASS":
+            self = .pass
+        case "PASS_COND":
+            self = .passConditional
+        default:
+            self = .request
         }
     }
 }

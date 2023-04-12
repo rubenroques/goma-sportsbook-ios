@@ -369,40 +369,42 @@ class SimpleRegisterDetailsViewController: UIViewController {
         
         self.showLoadingSpinner()
 
-        Env.userSessionStore.registerUser(form: form)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                self?.hideLoadingSpinner()
-                switch completion {
-                case .failure(let error):
-                    switch error {
-                    case .usernameInvalid:
-                        self?.showUsernameInvalidErrorStatus()
-                    case .emailInvalid:
-                        self?.showEmailInavalidErrorStatus()
-                    case .passwordInvalid:
-                        self?.showServerErrorStatus()
-                    case .usernameAlreadyUsed:
-                        self?.showUsernameTakenErrorStatus()
-                    case .emailAlreadyUsed:
-                        self?.showEmailTakenErrorStatus()
-                    case .passwordWeak:
-                        self?.showPasswordTooWeakErrorStatus()
-                    case .serverError:
-                        self?.showServerErrorStatus()
-                    }
-                    AnalyticsClient.sendEvent(event: .userSignUpFail)
-                case .finished:
-                    ()
-                }
-            } receiveValue: { [weak self] userCreated in
-                if userCreated {
-                    Logger.log("User registered \(form.email)")
-                    AnalyticsClient.sendEvent(event: .userSignUpSuccess)
-                    self?.pushRegisterNextViewController(email: form.email)
-                }
-            }
-            .store(in: &cancellables)
+        self.hideLoadingSpinner()
+
+//        Env.userSessionStore.registerUser(form: form)
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] completion in
+//                self?.hideLoadingSpinner()
+//                switch completion {
+//                case .failure(let error):
+//                    switch error {
+//                    case .usernameInvalid:
+//                        self?.showUsernameInvalidErrorStatus()
+//                    case .emailInvalid:
+//                        self?.showEmailInavalidErrorStatus()
+//                    case .passwordInvalid:
+//                        self?.showServerErrorStatus()
+//                    case .usernameAlreadyUsed:
+//                        self?.showUsernameTakenErrorStatus()
+//                    case .emailAlreadyUsed:
+//                        self?.showEmailTakenErrorStatus()
+//                    case .passwordWeak:
+//                        self?.showPasswordTooWeakErrorStatus()
+//                    case .serverError:
+//                        self?.showServerErrorStatus()
+//                    }
+//                    AnalyticsClient.sendEvent(event: .userSignUpFail)
+//                case .finished:
+//                    ()
+//                }
+//            } receiveValue: { [weak self] userCreated in
+//                if userCreated {
+//                    Logger.log("User registered \(form.email)")
+//                    AnalyticsClient.sendEvent(event: .userSignUpSuccess)
+//                    self?.pushRegisterNextViewController(email: form.email)
+//                }
+//            }
+//            .store(in: &cancellables)
 
     }
 

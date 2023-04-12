@@ -80,11 +80,9 @@ class WithdrawViewModel: NSObject {
 
         if self.ibanPaymentDetails == nil,
            let accountBalance = Env.userSessionStore.userWalletPublisher.value?.totalWithdrawable,
-           let kycStatus = Env.userSessionStore.isUserKycVerified.value,
-           accountBalance > 0 && kycStatus {
-
+           let kycStatus = Env.userSessionStore.userKnowYourCustomerStatus,
+            accountBalance > 0 && (kycStatus != .request) {
             self.shouldShowIbanScreen?()
-
         }
         else {
             self.isLoadingPublisher.send(true)
