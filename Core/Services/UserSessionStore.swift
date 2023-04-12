@@ -107,6 +107,10 @@ class UserSessionStore {
                 }
             }
             .store(in: &self.cancellables)
+
+        executeDelayed(0.15) {
+            self.startUserSessionIfNeeded()
+        }
     }
 
     static func loggedUserSession() -> UserSession? {
