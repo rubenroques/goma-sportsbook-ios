@@ -35,6 +35,9 @@ class SportRadarMarketDetailsCoordinator {
     private var outcomesDictionary: OrderedDictionary<String, CurrentValueSubject<Outcome, Never>>
 
     init(sessionToken: String, contentIdentifier: ContentIdentifier) {
+
+        print("☁️SP debugbetslip new SportRadarMarketDetailsCoordinator \(contentIdentifier)")
+
         self.sessionToken = sessionToken
         self.contentIdentifier = contentIdentifier
         self.subscription = nil
@@ -46,7 +49,8 @@ class SportRadarMarketDetailsCoordinator {
 
     func requestMarketUpdates() -> AnyPublisher<SubscribableContent<Market>, ServiceProviderError> {
 
-        self.marketCurrentValueSubject = CurrentValueSubject<SubscribableContent<Market>, ServiceProviderError>.init(.disconnected)
+        self.marketCurrentValueSubject.send(.disconnected)
+
         let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: self.sessionToken,
                                                          contentIdentifier: self.contentIdentifier)
 
@@ -56,28 +60,65 @@ class SportRadarMarketDetailsCoordinator {
             return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
         }
 
+        print("☁️SP debugbetslip will request MarketUpdates \(request.timeoutInterval) SportRadarMarketDetailsCoordinator \(self.contentIdentifier)")
+
         let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard
-                (error == nil),
-                let httpResponse = response as? HTTPURLResponse,
-                (200...299).contains(httpResponse.statusCode)
-            else {
-                print("SportRadarEventsPaginator: requestInitialPage - error on subscribe to topic \(error) \(response)")
-                self.marketCurrentValueSubject.send(completion: .failure(ServiceProviderError.onSubscribe))
-                return
+            if let error = error as NSError? {
+                if error.code == NSURLErrorTimedOut {
+                    // Request timed out.
+                    print("☁️SP debugbetslip Request timed-out SportRadarMarketDetailsCoordinator  \(self.contentIdentifier)")
+
+                    self.marketCurrentValueSubject.send(completion: .failure(ServiceProviderError.resourceNotFound))
+                } else {
+                    // Request encountered another error: \(error.localizedDescription)
+                    self.marketCurrentValueSubject.send(completion: .failure(ServiceProviderError.onSubscribe))
+                }
+            } else if let data = data, let response = response as? HTTPURLResponse {
+                if response.statusCode == 200 {
+                    // Handle the data
+                    let subscription = Subscription(contentIdentifier: self.contentIdentifier, sessionToken: self.sessionToken, unsubscriber: self)
+                    self.subscription = subscription
+                    self.marketCurrentValueSubject.send(.connected(subscription: subscription)) // Request succeeded with data: \(data)
+
+                    print("☁️SP debugbetslip Request 200 ok SportRadarMarketDetailsCoordinator \(self.contentIdentifier) \(String.init(data: data, encoding: .utf8) ?? "--")")
+                } else {
+                    self.marketCurrentValueSubject.send(completion: .failure(ServiceProviderError.onSubscribe)) // Request failed with status code: \(response.statusCode)
+                }
+            } else {
+                self.marketCurrentValueSubject.send(completion: .failure(ServiceProviderError.onSubscribe)) // Request failed with an unknown error.
             }
-            let subscription = Subscription(contentIdentifier: self.contentIdentifier,
-                                            sessionToken: self.sessionToken,
-                                            unsubscriber: self)
-            self.subscription = subscription
-            self.marketCurrentValueSubject.send(.connected(subscription: subscription))
         }
+
+//
+//            print("☁️SP debugbetslip ", data, response, error, self.contentIdentifier)
+//            guard
+//                (error == nil),
+//                let httpResponse = response as? HTTPURLResponse,
+//                (200...299).contains(httpResponse.statusCode)
+//            else {
+//                print("☁️SP debugbetslip new SportRadarMarketDetailsCoordinator - error on subscribe to topic \(error) \(response)")
+//                self.marketCurrentValueSubject.send(completion: .failure(ServiceProviderError.onSubscribe))
+//                return
+//            }
+//            let subscription = Subscription(contentIdentifier: self.contentIdentifier,
+//                                            sessionToken: self.sessionToken,
+//                                            unsubscriber: self)
+//            self.subscription = subscription
+//            self.marketCurrentValueSubject.send(.connected(subscription: subscription))
+//
+//            print("☁️SP debugbetslip sent connected SportRadarMarketDetailsCoordinator \(self.contentIdentifier)")
+//        }
+
+        print("☁️SP debugbetslip did request MarketUpdates SportRadarMarketDetailsCoordinator \(self.contentIdentifier)")
+
         sessionDataTask.resume()
         return self.marketCurrentValueSubject.eraseToAnyPublisher()
     }
 
 
     func updateMarket(_ market: Market) {
+        print("☁️SP debugbetslip updated SportRadarMarketDetailsCoordinator \(self.contentIdentifier) \(market.id)")
+
         self.marketCurrentValueSubject.send(.contentUpdate(content: market))
 
         self.outcomesDictionary = [:]
@@ -129,6 +170,14 @@ extension SportRadarMarketDetailsCoordinator {
         case .updateMarketTradability(_, let marketId, let isTradable):
             self.updateMarketTradability(withId: marketId, isTradable: isTradable)
         case .updateOutcomeOdd(_, let selectionId, let newOddNumerator, let newOddDenominator):
+
+            if let id = self.market?.id {
+                print("☁️SP debugbetslip \(id) \(selectionId) updated odd")
+            }
+            else {
+                print("☁️SP debugbetslip no market found for SportRadarMarketDetailsCoordinator !?!?!")
+            }
+
             self.updateOutcomeOdd(withId: selectionId, newOddNumerator: newOddNumerator, newOddDenominator: newOddDenominator)
         case .addMarket(_ , let market):
             for outcome in market.outcomes {
@@ -136,11 +185,16 @@ extension SportRadarMarketDetailsCoordinator {
                     self.updateOutcomeOdd(withId: outcome.id, newOddNumerator: String(fractionOdd.numerator), newOddDenominator: String(fractionOdd.denominator))
                 }
             }
+            print("☁️SP MarketDetailer debugbetslip \(market.id) add market ")
             self.updateMarketTradability(withId: market.id, isTradable: true)
 
         case .enableMarket(_, let marketId):
+            print("☁️SP MarketDetailer debugbetslip \(marketId) emable market")
+
             self.updateMarketTradability(withId: marketId, isTradable: true)
         case .removeMarket(_, let marketId):
+            print("☁️SP MarketDetailer debugbetslip \(marketId) removed market")
+
             self.updateMarketTradability(withId: marketId, isTradable: false)
 
         default:

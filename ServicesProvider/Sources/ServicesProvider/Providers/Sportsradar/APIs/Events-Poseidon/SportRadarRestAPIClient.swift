@@ -414,7 +414,10 @@ extension SportRadarRestAPIClient: Endpoint {
     }
 
     var timeout: TimeInterval {
-        return TimeInterval(20)
+        switch self {
+        case .subscribe: return TimeInterval(3)
+        default: return TimeInterval(20)
+        }
     }
 
     var requireSessionKey: Bool {

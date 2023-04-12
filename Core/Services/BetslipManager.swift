@@ -139,6 +139,7 @@ class BetslipManager: NSObject {
         }
 
         let bettingTicketSubscriber = Env.servicesProvider.subscribeToMarketDetails(withId: bettingTicket.marketId)
+            .print("debugbetslip2-A")
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
@@ -177,22 +178,23 @@ class BetslipManager: NSObject {
                                                           outcomeDescription: bettingTicket.outcomeDescription,
                                                           odd: newOdd)
 
-                print("debugbetslip // ==================================== ")
-                print("debugbetslip Updated ticket \(bettingTicket.id)")
-                print("debugbetslip \(newBettingTicket.decimalOdd) \(bettingTicket.decimalOdd)")
-                print("debugbetslip \(newBettingTicket.isAvailable) \(bettingTicket.isAvailable)")
 
 
                 if newBettingTicket.decimalOdd == bettingTicket.decimalOdd &&
                     newBettingTicket.isAvailable == bettingTicket.isAvailable {
-                    print("debugbetslip || Skipping, no data updated on ticket")
+                    // print("debugbetslip || Skipping, no data updated on ticket")
                 }
                 else {
-                    print("debugbetslip || Updated ticket")
+                    print("debugbetslip // ==================================== ")
+                    print("debugbetslip Updated ticket \(bettingTicket.id)")
+                    print("debugbetslip \(newBettingTicket.decimalOdd) \(bettingTicket.decimalOdd)")
+                    print("debugbetslip \(newBettingTicket.isAvailable) \(bettingTicket.isAvailable)")
+
                     self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
                     self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)
+                    print("debugbetslip    ==================================== // \n")
+
                 }
-                print("debugbetslip    ==================================== //")
             }
         }
     }

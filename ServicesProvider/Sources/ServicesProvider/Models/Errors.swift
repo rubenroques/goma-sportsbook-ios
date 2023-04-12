@@ -27,6 +27,7 @@ public enum ServiceProviderError: Error {
     case notPlacedBet(message: String)
     
     case onSubscribe
+    case resourceNotFound
 
     case invalidRequestFormat
     case internalServerError
