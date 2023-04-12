@@ -403,7 +403,7 @@ class WithdrawViewController: UIViewController {
         let amountText = self.withdrawHeaderTextFieldView.text
 
         let alert = UIAlertController(title: localized("withdrawal_warning"),
-                                      message: localized("withdrawal_warning_message"),
+                                      message: localized("withdrawal_warning_text"),
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: localized("understand_confirmation_withdraw"), style: .default, handler: { [weak self] _ in
 

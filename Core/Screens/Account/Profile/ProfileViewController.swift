@@ -470,6 +470,8 @@ class ProfileViewController: UIViewController {
     // MARK: Functions
     private func getPaymentInfo() {
 
+        self.ibanPaymentDetails = nil
+
         Env.servicesProvider.getPaymentInformation()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -521,21 +523,32 @@ class ProfileViewController: UIViewController {
 
     @IBAction private func didTapWithdrawButton() {
 
-        let userKycStatus = Env.userSessionStore.userKnowYourCustomerStatus
-
         if self.ibanPaymentDetails == nil,
            let accountBalance = Env.userSessionStore.userWalletPublisher.value?.totalWithdrawable,
            let userKycStatus = Env.userSessionStore.userKnowYourCustomerStatus,
-           accountBalance > 0 && userKycStatus == .request {
+           accountBalance > 0 && userKycStatus == .passConditional {
 
             let ibanProofViewModel = IBANProofViewModel()
 
             let ibanProofViewController = IBANProofViewController(viewModel: ibanProofViewModel)
 
+            ibanProofViewController.shouldReloadPaymentInfo = { [weak self] in
+                self?.getPaymentInfo()
+            }
+
             let navigationViewController = Router.navigationController(with: ibanProofViewController)
 
             self.present(navigationViewController, animated: true, completion: nil)
 
+        }
+        else if self.ibanPaymentDetails != nil,
+                let userKycStatus = Env.userSessionStore.userKnowYourCustomerStatus,
+                userKycStatus == .passConditional   {
+            let alert = UIAlertController(title: localized("withdrawal_warning"),
+                                          message: localized("withdrawal_iban_pending_approval_message"),
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: localized("understood"), style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
         else if let accountBalance = Env.userSessionStore.userWalletPublisher.value?.totalWithdrawable,
            accountBalance > 0,
@@ -550,19 +563,18 @@ class ProfileViewController: UIViewController {
                 }
                 self.present(navigationViewController, animated: true, completion: nil)
             }
-            else if let userKycStatus = Env.userSessionStore.userKnowYourCustomerStatus,
-                    userKycStatus == .passConditional {
-                let alert = UIAlertController(title: localized("withdrawal_warning"),
-                                              message: localized("withdrawal_iban_pending_approval_message"),
+            else if userKycStatus == .request {
+                let alert = UIAlertController(title: localized("kyc_message_title"),
+                                              message: localized("kyc_message_body"),
                                               preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+                alert.addAction(UIAlertAction(title: localized("understood"), style: .default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
             else {
                 let alert = UIAlertController(title: localized("profile_incomplete"),
                                               message: localized("profile_incomplete_withdraw"),
                                               preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+                alert.addAction(UIAlertAction(title: localized("understood"), style: .default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
 

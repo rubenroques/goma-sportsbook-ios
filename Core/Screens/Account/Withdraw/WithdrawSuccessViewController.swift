@@ -15,7 +15,6 @@ class WithdrawSuccessViewController: UIViewController {
     private lazy var messageLabel: UILabel = Self.createMessageLabel()
     private lazy var continueButton: UIButton = Self.createContinueButton()
 
-
     // MARK: - Lifetime and Cycle
     init() {
 

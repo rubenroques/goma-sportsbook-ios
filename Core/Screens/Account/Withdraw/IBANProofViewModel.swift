@@ -45,6 +45,7 @@ class IBANProofViewModel {
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var showErrorAlertTypePublisher: CurrentValueSubject<BalanceErrorType?, Never> = .init(nil)
     var shouldShowAlert: ((AlertType, String) -> Void)?
+    var shouldShowSuccessScreen: (() -> Void)?
 
     init() {
 
@@ -126,12 +127,15 @@ class IBANProofViewModel {
                     ()
                 case .failure(let error):
                     print("ADD PAYMENT ERROR: \(error)")
-                    self?.shouldShowAlert?(.error, localized("withdrawal_iban_error_message"))
-                    self?.isLoadingPublisher.send(true)
+                    self?.shouldShowAlert?(.error, localized("upload_iban_error_message"))
+                    self?.isLoadingPublisher.send(false)
                 }
             }, receiveValue: { [weak self] addPaymentResponse in
 
-                self?.shouldShowAlert?(.success, localized("withdrawal_iban_success_message"))
+                // self?.shouldShowAlert?(.success, localized("upload_iban_success_message"))
+                self?.shouldShowSuccessScreen?()
+                self?.isLoadingPublisher.send(false)
+
             })
             .store(in: &cancellables)
     }
