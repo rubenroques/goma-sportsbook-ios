@@ -1233,6 +1233,12 @@
 "withdrawal_warning_text" = "Souhaitez-vous procéder au retrait ? Si vous disposez actuellement d'un bonus de dépôt actif, celui-ci sera annulé.";
 "understand_confirmation_withdraw" = "Je comprends";
 
+"withdrawal_iban_success_message" = "Merci de nous communiquer votre IBAN et votre RIB. Le traitement des documents devrait prendre entre 1 et 2 jours ouvrables.\nVous serez notifié par email une fois le traitement effectué et vous pourrez alors effectuer votre premier retrait.";
+
+"withdrawal_iban_error_message" = "Une erreur s'est produite lors du traitement de vos documents IBAN. Veuillez contacter le support.";
+
+"withdrawal_iban_pending_approval_message" = "Vos documents IBAN et RIB sont en cours de traitement. Il faut compter entre 1 et 2 jours ouvrables pour que les documents soient traités.\nVous serez notifié par email une fois que cela sera fait et vous pourrez alors effectuer votre premier retrait.";
+
 // NOT TO ADD YET
 "tip_title" = "Pointe 1";
 "tip_message" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sagittis eros a nibh fermentum viverra. Sed imperdiet justo non tellus mollis viverra. Aliquam quis varius ex. In sagittis condimentum molestie.";

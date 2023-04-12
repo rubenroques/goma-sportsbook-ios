@@ -163,12 +163,6 @@ class IBANProofViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        viewModel.showWithdrawalStatus = { [weak self] in
-
-            self?.showSuccessScreen()
-
-        }
-
         self.ibanHeaderTextFieldView.textPublisher
             .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
@@ -199,6 +193,37 @@ class IBANProofViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+
+        viewModel.shouldShowAlert = { [weak self] alertType, text in
+            self?.showAlert(alertType: alertType, text: text)
+        }
+    }
+
+    private func showAlert(alertType: AlertType, text: String) {
+
+        switch alertType {
+        case .success:
+            let alert = UIAlertController(title: localized("iban_success"),
+                                          message: text,
+                                          preferredStyle: .alert)
+
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+
+                self?.dismiss(animated: true)
+            }))
+
+            self.present(alert, animated: true, completion: nil)
+        case .error:
+            let alert = UIAlertController(title: localized("iban_error"),
+                                          message: text,
+                                          preferredStyle: .alert)
+
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+
+            self.present(alert, animated: true, completion: nil)
+        }
+
     }
 
     private func validateIBANFormat(ibanValue: String) {

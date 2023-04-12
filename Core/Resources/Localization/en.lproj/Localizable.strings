@@ -1244,3 +1244,9 @@
 "withdrawal_warning" = "Withdrawal Warning";
 "withdrawal_warning_text" = "Would you like to proceed with the withdrawal? If you currently have an active deposit bonus, it will be forfeited.";
 "understand_confirmation_withdraw" = "I understand";
+
+"withdrawal_iban_success_message" = "Thanks for sharing your IBAN and RIB. It should take between 1 to 2 working days for the documents to be treated.\nYou will be notified by email once it is done and then you will be able to make your first withdrawal.";
+
+"withdrawal_iban_error_message" = "There was an error trying to process your IBAN documents. Please contact support.";
+
+"withdrawal_iban_pending_approval_message" = "Your IBAN and RIB documents are being processed. It should take between 1 to 2 working days for the documents to be treated.\nYou will be notified by email once it is done and then you will be able to make your first withdrawal.";

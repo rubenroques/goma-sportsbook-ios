@@ -38,6 +38,7 @@ struct BetHistoryEntry {
     let partialCashoutStake: Double?
 
     let betShareToken: String?
+    let betslipId: Int?
 
     enum CodingKeys: String, CodingKey {
         case betId = "betId"
@@ -59,6 +60,7 @@ struct BetHistoryEntry {
         case freeBet = "freeBet"
 
         case betShareToken = "betShareToken"
+        // case betslipId = "idFOBetslip"
     }
 }
 

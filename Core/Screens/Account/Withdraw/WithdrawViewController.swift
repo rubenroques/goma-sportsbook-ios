@@ -199,10 +199,6 @@ class WithdrawViewController: UIViewController {
 
         }
 
-        viewModel.shouldShowIbanScreen = { [weak self] in
-            self?.showIbanScreen()
-        }
-
     }
 
     // MARK: Functions
@@ -400,18 +396,6 @@ class WithdrawViewController: UIViewController {
 
         self.navigationController?.pushViewController(withdrawWebViewController, animated: true)
 
-    }
-
-    private func showIbanScreen() {
-        print("SHOW IBAN")
-
-        let amountText = self.withdrawHeaderTextFieldView.text
-
-        let ibanProofViewModel = IBANProofViewModel(withdrawAmount: amountText)
-
-        let ibanProofViewController = IBANProofViewController(viewModel: ibanProofViewModel)
-
-        self.navigationController?.pushViewController(ibanProofViewController, animated: true)
     }
 
     private func showConfirmationAlert() {

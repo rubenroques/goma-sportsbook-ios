@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import ServicesProvider
 
 class ProfileViewController: UIViewController {
 
@@ -70,6 +71,9 @@ class ProfileViewController: UIViewController {
     var pageMode: PageMode
     var alertsArray: [ActivationAlert] = []
 
+    var ibanPaymentDetails: BankPaymentDetail?
+    var shouldShowIbanScreen: (() -> Void)?
+
     init(userSession: UserSession? = nil) {
 
         self.pageMode = .anonymous
@@ -80,6 +84,8 @@ class ProfileViewController: UIViewController {
         }
 
         super.init(nibName: "ProfileViewController", bundle: nil)
+
+        self.getPaymentInfo()
     }
 
     @available(iOS, unavailable)
@@ -461,6 +467,49 @@ class ProfileViewController: UIViewController {
 
     }
 
+    // MARK: Functions
+    private func getPaymentInfo() {
+
+        Env.servicesProvider.getPaymentInformation()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("PAYMENT INFO ERROR: \(error)")
+
+                }
+
+            }, receiveValue: { [weak self] paymentInfo in
+
+                let paymentDetails = paymentInfo.data.filter({
+                    $0.details.isNotEmpty
+                })
+
+                if paymentDetails.isNotEmpty {
+
+                    if let bankPaymentDetail = paymentDetails.filter({
+                        $0.type == "BANK"
+                    }).first,
+                       let ibanPaymentDetail = bankPaymentDetail.details.filter({
+                           $0.key == "IBAN"
+                       }).first {
+
+                        if ibanPaymentDetail.value != "" {
+                            self?.ibanPaymentDetails = ibanPaymentDetail
+                        }
+                    }
+
+                }
+
+            })
+            .store(in: &cancellables)
+    }
+
+    // MARK: Actions
+
     @IBAction private func didTapDepositButton() {
 //        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete.value {
 //            if isUserProfileComplete {
@@ -488,7 +537,21 @@ class ProfileViewController: UIViewController {
 
     @IBAction private func didTapWithdrawButton() {
 
-        if let accountBalance = Env.userSessionStore.userWalletPublisher.value?.totalWithdrawable,
+        if self.ibanPaymentDetails == nil,
+           let accountBalance = Env.userSessionStore.userWalletPublisher.value?.totalWithdrawable,
+           let kycStatus = Env.userSessionStore.isUserKycVerified.value,
+           accountBalance > 0 && kycStatus {
+
+            let ibanProofViewModel = IBANProofViewModel()
+
+            let ibanProofViewController = IBANProofViewController(viewModel: ibanProofViewModel)
+
+            let navigationViewController = Router.navigationController(with: ibanProofViewController)
+
+            self.present(navigationViewController, animated: true, completion: nil)
+
+        }
+        else if let accountBalance = Env.userSessionStore.userWalletPublisher.value?.totalWithdrawable,
            accountBalance > 0,
            let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete.value,
            let isUserKycVerified = Env.userSessionStore.isUserKycVerified.value {
@@ -502,6 +565,15 @@ class ProfileViewController: UIViewController {
                 }
 
                 self.present(navigationViewController, animated: true, completion: nil)
+            }
+            // TODO: CHANGE AFTER KYC STATUS REWORK
+            else if let isUserKycVerified = Env.userSessionStore.isUserKycVerified.value,
+                    !isUserKycVerified {
+                let alert = UIAlertController(title: localized("withdrawal_warning"),
+                                              message: localized("withdrawal_iban_pending_approval_message"),
+                                              preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
             }
             else {
                 let alert = UIAlertController(title: localized("profile_incomplete"),
