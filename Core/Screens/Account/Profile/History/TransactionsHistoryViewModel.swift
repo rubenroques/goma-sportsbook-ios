@@ -156,7 +156,7 @@ class TransactionsHistoryViewModel {
             if let startDate = Calendar.current.date(byAdding: .day, value: -30, to: Date()) {
                 self.startDatePublisher.send(startDate)
             }
-        default :
+        default:
             if let startDate = Calendar.current.date(byAdding: .day, value: -90, to: Date()) {
                 self.startDatePublisher.send(startDate)
             }

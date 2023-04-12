@@ -111,7 +111,7 @@ class DynamicHomeViewTemplateDataSource {
             })
             .store(in: &self.cancellables)
 
-        Env.userSessionStore.isUserProfileComplete
+        Env.userSessionStore.isUserProfileCompletePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.fetchAlerts()
@@ -119,7 +119,7 @@ class DynamicHomeViewTemplateDataSource {
             })
             .store(in: &cancellables)
 
-        Env.userSessionStore.isUserEmailVerified
+        Env.userSessionStore.isUserEmailVerifiedPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.fetchAlerts()
@@ -127,7 +127,7 @@ class DynamicHomeViewTemplateDataSource {
             })
             .store(in: &cancellables)
 
-        Env.userSessionStore.isUserKycVerified
+        Env.userSessionStore.userKnowYourCustomerStatusPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.fetchAlerts()
@@ -151,7 +151,7 @@ class DynamicHomeViewTemplateDataSource {
     // User alerts
     func fetchAlerts() {
         self.alertsArray = []
-        if let isUserEmailVerified = Env.userSessionStore.isUserEmailVerified.value, !isUserEmailVerified {
+        if let isUserEmailVerified = Env.userSessionStore.isUserEmailVerified, !isUserEmailVerified {
             let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
                                                            description: localized("app_full_potential"),
                                                            linkLabel: localized("verify_my_account"),
@@ -160,7 +160,7 @@ class DynamicHomeViewTemplateDataSource {
             alertsArray.append(emailActivationAlertData)
         }
 
-        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete.value, !isUserProfileComplete {
+        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete, !isUserProfileComplete {
             let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
                                                            description: localized("complete_profile_description"),
                                                            linkLabel: localized("finish_up_profile"),

@@ -720,6 +720,7 @@ class MyTicketTableViewCell: UITableViewCell {
         case "HALF_LOST": return localized("half_lost")
         case "CANCELLED": return localized("cancelled")
         case "CASHED_OUT": return localized("cashed_out")
+        case "CASHEDOUT": return localized("cashed_out")
         default: return ""
         }
     }

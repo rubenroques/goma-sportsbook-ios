@@ -31,6 +31,12 @@ public enum UserRegistrationStatus: String, Codable {
     case quickRegister
 }
 
+public enum KnowYourCustomerStatus: String, Codable {
+    case request
+    case passConditional
+    case pass
+}
+
 public struct UserOverview: Codable {
     
     public let sessionKey: String
@@ -88,15 +94,14 @@ public struct UserProfile: Codable {
     public let birthDepartment: String?
     public let streetNumber: String?
 
-    public let emailVerificationStatus: EmailVerificationStatus
-    public let userRegistrationStatus: UserRegistrationStatus
-
     public let avatarName: String?
     public let godfatherCode: String?
     public let placeOfBirth: String?
     public let additionalStreetLine: String?
 
-    public let kycStatus: String?
+    public let emailVerificationStatus: EmailVerificationStatus
+    public let userRegistrationStatus: UserRegistrationStatus
+    public let kycStatus: KnowYourCustomerStatus
     
     public init(userIdentifier: String,
                 username: String,
@@ -114,13 +119,13 @@ public struct UserProfile: Codable {
                 postalCode: String?,
                 birthDepartment: String?,
                 streetNumber: String?,
-                emailVerificationStatus: EmailVerificationStatus,
-                userRegistrationStatus: UserRegistrationStatus,
                 avatarName: String?,
                 godfatherCode: String?,
                 placeOfBirth: String?,
                 additionalStreetLine: String?,
-                kycStatus: String?) {
+                emailVerificationStatus: EmailVerificationStatus,
+                userRegistrationStatus: UserRegistrationStatus,
+                kycStatus: KnowYourCustomerStatus) {
         
         self.userIdentifier = userIdentifier
         self.username = username
@@ -138,14 +143,14 @@ public struct UserProfile: Codable {
         self.postalCode = postalCode
         self.birthDepartment = birthDepartment
         self.streetNumber = streetNumber
-        self.emailVerificationStatus = emailVerificationStatus
-        self.userRegistrationStatus = userRegistrationStatus
 
         self.avatarName = avatarName
         self.godfatherCode = godfatherCode
         self.placeOfBirth = placeOfBirth
         self.additionalStreetLine = additionalStreetLine
 
+        self.emailVerificationStatus = emailVerificationStatus
+        self.userRegistrationStatus = userRegistrationStatus
         self.kycStatus = kycStatus
     }
 

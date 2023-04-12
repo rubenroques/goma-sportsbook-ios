@@ -29,7 +29,7 @@ class PasswordUpdateViewModel: NSObject {
 
     // MARK: Public Properties
     var policyPublisher: CurrentValueSubject<PasswordPolicy?, Never> = .init(nil)
-    var userProfilePublisher: CurrentValueSubject<EveryMatrix.UserProfile?, Never> = .init(nil)
+
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var shouldShowAlertPublisher: CurrentValueSubject<AlertInfo?, Never> = .init(nil)
     var newPassword: CurrentValueSubject<String?, Never> = .init("")

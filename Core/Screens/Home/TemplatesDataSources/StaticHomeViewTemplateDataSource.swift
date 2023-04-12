@@ -121,7 +121,7 @@ class StaticHomeViewTemplateDataSource {
             })
             .store(in: &self.cancellables)
 
-        Env.userSessionStore.isUserProfileComplete
+        Env.userSessionStore.isUserProfileCompletePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.fetchAlerts()
@@ -129,7 +129,7 @@ class StaticHomeViewTemplateDataSource {
             })
             .store(in: &cancellables)
 
-        Env.userSessionStore.isUserEmailVerified
+        Env.userSessionStore.isUserEmailVerifiedPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.fetchAlerts()
@@ -137,7 +137,7 @@ class StaticHomeViewTemplateDataSource {
             })
             .store(in: &cancellables)
 
-        Env.userSessionStore.isUserKycVerified
+        Env.userSessionStore.userKnowYourCustomerStatusPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.fetchAlerts()
@@ -178,14 +178,15 @@ class StaticHomeViewTemplateDataSource {
 
             alertsArray.append(emailActivationAlertData)
         }
-        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete.value, !isUserProfileComplete {
+        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete, !isUserProfileComplete {
             let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
                                                            description: localized("complete_profile_description"),
                                                            linkLabel: localized("finish_up_profile"),
                                                            alertType: .profile)
             alertsArray.append(completeProfileAlertData)
         }
-        if let isUserKycVerified = Env.userSessionStore.isUserKycVerified.value, !isUserKycVerified {
+        if let userKnowYourCustomerStatus = Env.userSessionStore.userKnowYourCustomerStatus,
+            userKnowYourCustomerStatus == .request {
             let uploadDocumentsAlertData = ActivationAlert(title: localized("document_validation_required"),
                                                            description: localized("document_validation_required_description"),
                                                            linkLabel: localized("complete_your_verification"),

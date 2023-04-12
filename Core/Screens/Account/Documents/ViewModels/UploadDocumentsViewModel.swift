@@ -46,7 +46,9 @@ class UploadDocumentsViewModel {
     var hasLoadedUserDocuments: CurrentValueSubject<Bool, Never> = .init(false)
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
-    var kycStatusPublisher: CurrentValueSubject<String, Never> = .init(Env.userSessionStore.userProfilePublisher.value?.kycStatus ?? "")
+    var kycStatusPublisher: AnyPublisher<KnowYourCustomerStatus?, Never> {
+        return Env.userSessionStore.userKnowYourCustomerStatusPublisher.eraseToAnyPublisher()
+    }
 
     init() {
 
@@ -153,29 +155,7 @@ class UploadDocumentsViewModel {
     }
 
     private func getKYCStatus() {
-
-        Env.servicesProvider.getProfile()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    print("PROFILE ERROR: \(error)")
-                }
-            }, receiveValue: { [weak self] userProfile in
-
-                if let kycStatus = userProfile.kycStatus {
-                    self?.kycStatusPublisher.send(kycStatus)
-
-                    if kycStatus == "PASS_COND" {
-                        Env.userSessionStore.isUserKycVerified.send(true)
-                    }
-                    else if kycStatus == "PASS" {
-                        Env.userSessionStore.isUserKycVerified.send(true)
-                    }
-                }
-            })
-            .store(in: &cancellables)
+        // Request a forced refresh of the logged user profile
+        Env.userSessionStore.refreshProfile()
     }
 }

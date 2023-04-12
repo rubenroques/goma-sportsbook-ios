@@ -212,7 +212,7 @@ class BetslipViewController: UIViewController {
     }
 
     @objc func didTapAccountValue(_ sender: UITapGestureRecognizer) {
-        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete.value {
+        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete {
             if isUserProfileComplete {
 
                 let depositViewController = DepositViewController()

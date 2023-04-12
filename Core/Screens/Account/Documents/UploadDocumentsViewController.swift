@@ -142,7 +142,16 @@ class UploadDocumentsViewController: UIViewController {
         viewModel.kycStatusPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] kycStatus in
-                self?.statusLabel.text = kycStatus
+                if let kycStatus = kycStatus {
+                    switch kycStatus {
+                    case .request: self?.statusLabel.text = "Requested"
+                    case .passConditional: self?.statusLabel.text = "Pass Conditional"
+                    case .pass: self?.statusLabel.text = "Pass"
+                    }
+                }
+                else {
+                    self?.statusLabel.text = ""
+                }
             })
             .store(in: &cancellables)
     }

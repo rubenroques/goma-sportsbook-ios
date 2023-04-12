@@ -36,10 +36,12 @@ enum UserSessionStatus {
 
 class UserSessionStore {
 
-    var cancellables = Set<AnyCancellable>()
-
     var isLoadingUserSessionPublisher = CurrentValueSubject<Bool, Never>(true)
+
+    var userProfilePublisher = CurrentValueSubject<UserProfile?, Never>(nil)
+
     var userSessionPublisher = CurrentValueSubject<UserSession?, Never>(nil)
+
     var userSessionStatusPublisher: AnyPublisher<UserSessionStatus, Never> {
         return self.userSessionPublisher
             .map { session in
@@ -53,30 +55,58 @@ class UserSessionStore {
             .eraseToAnyPublisher()
     }
 
-    var userWalletPublisher = CurrentValueSubject<UserWallet?, Never>(nil)
-
-    var acceptedTrackingPublisher = CurrentValueSubject<Bool?, Never>(false)
-    var hasGomaUserSessionPublisher = CurrentValueSubject<Bool, Never>(false)
+    var isUserProfileComplete: Bool?
+    var isUserProfileCompletePublisher: AnyPublisher<Bool?, Never> {
+        return self.userProfilePublisher
+            .map { $0?.isRegistrationCompleted }
+            .eraseToAnyPublisher()
+    }
     
-    var shouldRecordUserSession = true
+    var isUserEmailVerified: Bool?
+    var isUserEmailVerifiedPublisher: AnyPublisher<Bool?, Never> {
+        return self.userProfilePublisher
+            .map { $0?.isEmailVerified }
+            .eraseToAnyPublisher()
+    }
 
+    var userKnowYourCustomerStatus: KnowYourCustomerStatus?
+    var userKnowYourCustomerStatusPublisher: AnyPublisher<KnowYourCustomerStatus?, Never> {
+        return self.userProfilePublisher
+            .map { $0?.kycStatus }
+            .eraseToAnyPublisher()
+    }
+
+    var userWalletPublisher = CurrentValueSubject<UserWallet?, Never>(nil)
+    var acceptedTrackingPublisher = CurrentValueSubject<Bool?, Never>(false)
+
+    var shouldRecordUserSession = true
     var shouldSkipLimitsScreen = false
 
-    var isUserProfileComplete = CurrentValueSubject<Bool?, Never>(nil)
-    var isUserEmailVerified = CurrentValueSubject<Bool?, Never>(nil)
-    var isUserKycVerified = CurrentValueSubject<Bool?, Never>(nil)
+    private var cancellables = Set<AnyCancellable>()
 
-    private var pendingSignUpUserForm: ServicesProvider.SimpleSignUpForm?
-
-    var userProfilePublisher = CurrentValueSubject<UserProfile?, Never>(nil)
-    
     init() {
         self.acceptedTrackingPublisher.send(self.hasAcceptedTracking())
 
-        // TODO: Remove this, it should detect the service provider connection state
-        executeDelayed(0.15) {
-            self.startUserSessionIfNeeded()
-        }
+        self.userSessionPublisher.compactMap({ $0 })
+            .sink { [weak self] userSession in
+                self?.saveUserSession(userSession)
+            }
+            .store(in: &self.cancellables)
+
+        self.userProfilePublisher
+            .sink { [weak self] userSession in
+                if let userSession = userSession {
+                    self?.isUserProfileComplete = userSession.isRegistrationCompleted
+                    self?.isUserEmailVerified = userSession.isEmailVerified
+                    self?.userKnowYourCustomerStatus = userSession.kycStatus
+                }
+                else {
+                    self?.isUserProfileComplete = nil
+                    self?.isUserEmailVerified = nil
+                    self?.userKnowYourCustomerStatus = nil
+                }
+            }
+            .store(in: &self.cancellables)
     }
 
     static func loggedUserSession() -> UserSession? {
@@ -106,11 +136,9 @@ class UserSessionStore {
     }
 
     func saveUserSession(_ userSession: UserSession) {
-
         if UserDefaults.standard.userSession != nil {
             return
         }
-
         if let password = userSession.password, let passwordData = password.data(using: .utf8) {
             do {
                 try KeychainInterface.save(password: passwordData, service: Env.bundleId, account: userSession.userId)
@@ -119,10 +147,7 @@ class UserSessionStore {
                 shouldRecordUserSession = false
             }
         }
-
         UserDefaults.standard.userSession = userSession
-
-        userSessionPublisher.send(userSession)
     }
 
     func loadLoggedUser() {
@@ -161,18 +186,12 @@ class UserSessionStore {
 
         Env.gomaNetworkClient.reconnectSession()
 
+        self.userProfilePublisher.send(nil)
         self.userSessionPublisher.send(nil)
-
-        self.isUserProfileComplete.send(nil)
-        self.isUserEmailVerified.send(nil)
-        self.isUserKycVerified.send(nil)
-
-        self.userWalletPublisher.send(nil)
-        
-        self.hasGomaUserSessionPublisher.send(false)
+        self.userWalletPublisher.send(nil)        
     }
 
-    func login(withUsername username: String, password: String) -> AnyPublisher<UserSession, UserSessionError> {
+    func login(withUsername username: String, password: String) -> AnyPublisher<Void, UserSessionError> {
 
         let publisher = Env.servicesProvider.loginUser(withUsername: username, andPassword: password)
             .mapError { (error: ServiceProviderError) -> UserSessionError in
@@ -190,44 +209,33 @@ class UserSessionStore {
             .map({ (serviceProviderProfile: ServicesProvider.UserProfile) in
                 return ServiceProviderModelMapper.userProfile(serviceProviderProfile)
             })
-            .map { (userProfile: UserProfile) -> UserSession in
-                self.userProfilePublisher.send(userProfile)
+            .map { (userProfile: UserProfile) -> (UserSession, UserProfile) in
+                let session = UserSession(username: userProfile.username,
+                                          password: password,
+                                          email: userProfile.email,
+                                          userId: userProfile.userIdentifier,
+                                          birthDate: userProfile.birthDate.toString(),
+                                          avatarName: userProfile.avatarName)
 
-                var kycStatus = false
-
-                if (userProfile.kycStatus ?? "") == "PASS_COND" {
-                    kycStatus = true
-                }
-                else if (userProfile.kycStatus ?? "") == "PASS" {
-                    kycStatus = true
-                }
-
-                return UserSession(username: userProfile.username,
-                                   password: password,
-                                   email: userProfile.email,
-                                   userId: userProfile.userIdentifier,
-                                   birthDate: userProfile.birthDate.toString(),
-                                   isEmailVerified: userProfile.isEmailVerified,
-                                   isProfileCompleted: userProfile.isRegistrationCompleted,
-                                   avatarName: userProfile.avatarName,
-                                   isKycVerified: kycStatus)
+                return (session, userProfile)
             }
-            .handleEvents(receiveOutput: { [weak self] userSession in
-                self?.saveUserSession(userSession)
-                self?.loginGomaAPI(username: userSession.username, password: userSession.userId)
+            .handleEvents(receiveOutput: { [weak self] session, profile in
+                self?.userProfilePublisher.send(profile)
+                self?.userSessionPublisher.send(session)
+
+                self?.loginGomaAPI(username: session.username, password: session.userId)
                 
                 self?.refreshUserWallet()
-                
-                Env.userSessionStore.isUserProfileComplete.send(userSession.isProfileCompleted)
-                Env.userSessionStore.isUserEmailVerified.send(userSession.isEmailVerified)
-                Env.userSessionStore.isUserKycVerified.send(userSession.isKycVerified)
+            })
+            .map({ _ in
+                return ()
             })
             .eraseToAnyPublisher()
         
         return publisher
     }
     
-    func registerUser(form: ServicesProvider.SimpleSignUpForm) -> AnyPublisher<Bool, RegisterUserError> {
+    func registerUser(form: ServicesProvider.SimpleSignUpForm) -> AnyPublisher<Void, RegisterUserError> {
         return Env.servicesProvider.simpleSignUp(form: form)
             .mapError { (error: ServiceProviderError) -> RegisterUserError in
                 switch error {
@@ -243,33 +251,9 @@ class UserSessionStore {
                     return RegisterUserError.serverError
                 }
             }
-            .handleEvents(receiveOutput: { [weak self] registered in
-                self?.pendingSignUpUserForm = form
-            }).eraseToAnyPublisher()
+            .map { _ in return () }
+            .eraseToAnyPublisher()
 
-    }
-
-    func triggerPendingLoginAfterRegister() -> AnyPublisher<Bool, UserSessionError> {
-        if let pendingSignUpUserForm = self.pendingSignUpUserForm {
-            return self.login(withUsername: pendingSignUpUserForm.username, password: pendingSignUpUserForm.password)
-                .handleEvents(receiveOutput: { userSession in
-                    self.signUpSimpleGomaAPI(form: pendingSignUpUserForm, userId: userSession.userId)
-                }, receiveCompletion: { [weak self] completion in
-                    switch completion {
-                    case .failure:
-                        self?.logout()
-                    case .finished:
-                        ()
-                    }
-                })
-                .flatMap { (userSession: UserSession) -> AnyPublisher<Bool, UserSessionError> in
-                    return Just(true).setFailureType(to: UserSessionError.self).eraseToAnyPublisher()
-                }
-                .eraseToAnyPublisher()
-        }
-        else {
-            return Just(false).setFailureType(to: UserSessionError.self).eraseToAnyPublisher()
-        }
     }
 
     func shouldRequestLimits() -> AnyPublisher<Bool, Never> {
@@ -291,6 +275,36 @@ class UserSessionStore {
                 }
             }
             .replaceError(with: false) // if an error occour don't show
+            .eraseToAnyPublisher()
+    }
+
+}
+
+extension UserSessionStore {
+
+    func refreshProfile() {
+        Env.servicesProvider.getProfile()
+            .map(ServiceProviderModelMapper.userProfile(_:))
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let serviceProviderError):
+                    print("UserSessionStore refreshProfile error: \(serviceProviderError)")
+                }
+            } receiveValue: { [weak self] userProfile in
+                self?.userProfilePublisher.send(userProfile)
+            }
+            .store(in: &self.cancellables)
+    }
+
+    func getProfile() -> AnyPublisher<UserProfile?, Never>  {
+        return Env.servicesProvider.getProfile()
+            .map(ServiceProviderModelMapper.userProfile(_:))
+            .handleEvents(receiveOutput: { [weak self] userProfile in
+                self?.userProfilePublisher.send(userProfile)
+            })
+            .replaceError(with: nil)
             .eraseToAnyPublisher()
     }
 
@@ -418,7 +432,6 @@ extension UserSessionStore {
                 }
                 self?.isLoadingUserSessionPublisher.send(false)
             }, receiveValue: { [weak self] loggedUser in
-                //Env.favoritesManager.getUserFavorites()
                 self?.setupFavorites()
             })
             .store(in: &cancellables)
@@ -454,8 +467,6 @@ extension UserSessionStore {
             }, receiveValue: { [weak self] value in
                 Env.gomaNetworkClient.refreshAuthToken(token: value)
                 Env.gomaSocialClient.connectSocket()
-                
-                self?.hasGomaUserSessionPublisher.send(true)
 
                 Env.gomaSocialClient.getInAppMessagesCounter()
 
@@ -464,7 +475,7 @@ extension UserSessionStore {
             .store(in: &cancellables)
     }
 
-    func signUpSimpleGomaAPI(form: ServicesProvider.SimpleSignUpForm, userId: String) {
+    private func signUpSimpleGomaAPI(form: ServicesProvider.SimpleSignUpForm, userId: String) {
         let deviceId = Env.deviceId
         let userRegisterForm = UserRegisterForm(username: form.username,
                                                 email: form.email,
@@ -512,30 +523,28 @@ extension UserSessionStore {
 
         UserDefaults.standard.acceptedTracking = true
 
-        self.acceptedTrackingPublisher.send(true)
-
         if #available(iOS 14, *) {
             ATTrackingManager.requestTrackingAuthorization { status in
                 switch status {
                 case .authorized:
                     // Tracking authorization dialog was shown and we are authorized
                     print("Authorized")
-
                     // Now that we are authorized we can get the IDFA
                     print(ASIdentifierManager.shared().advertisingIdentifier)
                 case .denied:
-                    // Tracking authorization dialog was
-                    // shown and permission is denied
-                    print("Denied")
+                    print("Denied") // Tracking authorization dialog was shown and permission is denied
                 case .notDetermined:
-                    // Tracking authorization dialog has not been shown
-                    print("Not Determined")
+                    print("Not Determined") // Tracking authorization dialog has not been shown
                 case .restricted:
                     print("Restricted")
                 @unknown default:
                     print("Unknown")
                 }
+                self.acceptedTrackingPublisher.send(true)
             }
+        }
+        else {
+            self.acceptedTrackingPublisher.send(true)
         }
 
     }
@@ -547,7 +556,6 @@ extension UserSessionStore {
     func hasAcceptedTracking() -> Bool {
         return UserDefaults.standard.acceptedTracking
     }
-
 
 }
 

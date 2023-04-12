@@ -240,17 +240,7 @@ class CodeVerificationViewController: UIViewController {
     }
     
     func triggerPendingLogin() {
-        Env.userSessionStore.triggerPendingLoginAfterRegister()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                print("triggerPendingLoginAfterRegister ", completion)
-                self?.doneButton.isEnabled = false
-            } receiveValue: { [weak self] success in
-                if success {
-                    self?.pushNextViewController()
-                }
-            }
-            .store(in: &cancellables)
+
     }
     
     func pushNextViewController() {

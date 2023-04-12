@@ -67,17 +67,16 @@ class ConversationDetailViewModel: NSObject {
 
     // MARK: Functions
     private func setupPublishers() {
-
-        Publishers.CombineLatest(Env.userSessionStore.hasGomaUserSessionPublisher, Env.gomaSocialClient.socketConnectedPublisher)
-            .sink { [weak self] hasGomaUserSession, socketConnected in
-                if hasGomaUserSession && socketConnected {
-
-                    if let chatId = self?.conversationId {
-                        self?.requestChatroomDetails(withId: String(chatId))
-                    }
-                }
-            }
-            .store(in: &cancellables)
+//        Publishers.CombineLatest(Env.userSessionStore.hasGomaUserSessionPublisher, Env.gomaSocialClient.socketConnectedPublisher)
+//            .sink { [weak self] hasGomaUserSession, socketConnected in
+//                if hasGomaUserSession && socketConnected {
+//
+//                    if let chatId = self?.conversationId {
+//                        self?.requestChatroomDetails(withId: String(chatId))
+//                    }
+//                }
+//            }
+//            .store(in: &cancellables)
     }
 
     func requestChatroomDetails(withId id: String) {

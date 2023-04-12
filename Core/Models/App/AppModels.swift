@@ -287,6 +287,11 @@ struct Country: Codable {
     var phonePrefix: String
 }
 
+enum KnowYourCustomerStatus: String, Codable {
+    case request
+    case passConditional
+    case pass
+}
 
 struct UserProfile: Codable {
     
@@ -300,7 +305,7 @@ struct UserProfile: Codable {
     var nationality: Country?
     var country: Country?
     
-    var gender: String?
+    var gender: UserGender
     var title: UserTitle?
     
     var personalIdNumber: String?
@@ -312,20 +317,21 @@ struct UserProfile: Codable {
     var birthDepartment: String?
     var streetNumber: String?
 
-    var isEmailVerified: Bool
-    var isRegistrationCompleted: Bool
-
     var avatarName: String?
     var godfatherCode: String?
     var placeOfBirth: String?
     var additionalStreetLine: String?
 
-    var kycStatus: String?
+    var isEmailVerified: Bool
+    var isRegistrationCompleted: Bool
+
+    var kycStatus: KnowYourCustomerStatus
     
     init(userIdentifier: String, username: String, email: String, firstName: String? = nil, lastName: String? = nil, birthDate: Date,
-         nationality: Country?, country: Country?, gender: String?, title: UserTitle?, personalIdNumber: String?, address: String?,
-         province: String?, city: String?, postalCode: String?, birthDepartment: String?, streetNumber: String?, isEmailVerified: Bool, isRegistrationCompleted: Bool, avatarName: String?,
-         godfatherCode: String?, placeOfBirth: String?, additionalStreetLine: String?, kycStatus: String?) {
+         nationality: Country?, country: Country?, gender: UserGender, title: UserTitle?, personalIdNumber: String?, address: String?,
+         province: String?, city: String?, postalCode: String?, birthDepartment: String?, streetNumber: String?, avatarName: String?,
+         godfatherCode: String?, placeOfBirth: String?, additionalStreetLine: String?,
+         isEmailVerified: Bool, isRegistrationCompleted: Bool, kycStatus: KnowYourCustomerStatus) {
         self.userIdentifier = userIdentifier
         self.username = username
         self.email = email
@@ -343,12 +349,14 @@ struct UserProfile: Codable {
         self.postalCode = postalCode
         self.birthDepartment = birthDepartment
         self.streetNumber = streetNumber
-        self.isEmailVerified = isEmailVerified
-        self.isRegistrationCompleted = isRegistrationCompleted
+
         self.avatarName = avatarName
         self.godfatherCode = godfatherCode
         self.placeOfBirth = placeOfBirth
         self.additionalStreetLine = additionalStreetLine
+
+        self.isEmailVerified = isEmailVerified
+        self.isRegistrationCompleted = isRegistrationCompleted
         self.kycStatus = kycStatus
     }
     
