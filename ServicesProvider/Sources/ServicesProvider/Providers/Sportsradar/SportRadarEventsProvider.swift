@@ -576,7 +576,7 @@ class SportRadarEventsProvider: EventsProvider {
             let coordinator = SportRadarMarketDetailsCoordinator.init(sessionToken: sessionToken.hash,
                                                                        contentIdentifier: contentIdentifier)
             self.marketUpdatesCoordinators[id] = coordinator
-            return coordinator.requestMarketUpdates()
+            return coordinator.marketPublisher
         }
 
     }

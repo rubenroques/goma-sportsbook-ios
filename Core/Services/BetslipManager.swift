@@ -141,10 +141,15 @@ class BetslipManager: NSObject {
         let bettingTicketSubscriber = Env.servicesProvider.subscribeToMarketDetails(withId: bettingTicket.marketId)
             .print("debugbetslip2-A")
             .receive(on: DispatchQueue.main)
-            .sink { completion in
+            .sink { [weak self] completion in
                 switch completion {
                 case .failure(let error):
-                    print("Error retrieving data! \(error)")
+                    switch error {
+                    case .resourceUnavailableOrDeleted:
+                        self?.disableBettingTicket(bettingTicket)
+                    default:
+                        print("Error retrieving data! \(error)")
+                    }
                 case .finished:
                     print("Data retrieved!")
                 }
@@ -162,6 +167,27 @@ class BetslipManager: NSObject {
         self.bettingTicketsCancellables[bettingTicket.id] = bettingTicketSubscriber
 
     }
+
+
+    private func disableBettingTicket(_ bettingTicket: BettingTicket) {
+        if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] {
+            let newAvailablity = false
+            let newBettingTicket = BettingTicket.init(id: bettingTicket.id,
+                                                      outcomeId: bettingTicket.outcomeId,
+                                                      marketId: bettingTicket.marketId,
+                                                      matchId: bettingTicket.matchId,
+                                                      isAvailable: newAvailablity,
+                                                      matchDescription: bettingTicket.matchDescription,
+                                                      marketDescription: bettingTicket.marketDescription,
+                                                      outcomeDescription: bettingTicket.outcomeDescription,
+                                                      odd: bettingTicket.odd)
+
+            self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
+            self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)
+
+        }
+    }
+
 
     private func updateBettingTickets(ofMarket market: Market) {
         for outcome in market.outcomes {

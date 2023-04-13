@@ -372,8 +372,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.oddAvailabilitySubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
             .receive(on: DispatchQueue.main)
             .print("debugbetslip2-B")
-            .map({ (bettingOffer: BettingTicket) -> Bool in
-                return bettingOffer.isAvailable
+            .map({ bettingOfferValue in
+                return bettingOfferValue.isAvailable
             })
             .removeDuplicates()
             .sink(receiveValue: { [weak self] isBetAvailable in
