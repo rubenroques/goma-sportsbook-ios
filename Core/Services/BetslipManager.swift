@@ -138,7 +138,7 @@ class BetslipManager: NSObject {
             self.bettingTicketPublisher[bettingTicket.id] = .init(bettingTicket)
         }
 
-        let bettingTicketSubscriber = Env.servicesProvider.subscribeToMarketDetails(withId: bettingTicket.marketId)
+        let bettingTicketSubscriber = Env.servicesProvider.subscribeToMarketDetails(withId: bettingTicket.marketId, onEventId: bettingTicket.matchId)
             .print("debugbetslip2-A")
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in

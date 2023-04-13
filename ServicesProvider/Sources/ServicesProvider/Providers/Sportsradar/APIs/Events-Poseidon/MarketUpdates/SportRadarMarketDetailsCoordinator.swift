@@ -34,14 +34,19 @@ class SportRadarMarketDetailsCoordinator {
 
     private var outcomesDictionary: OrderedDictionary<String, CurrentValueSubject<Outcome, Never>>
 
+    private let marketId: String
+    private let eventId: String
+
     private let decoder = JSONDecoder()
     private let session = URLSession.init(configuration: .default)
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(sessionToken: String, contentIdentifier: ContentIdentifier) {
+    init(marketId: String, eventId: String, sessionToken: String, contentIdentifier: ContentIdentifier) {
 
         print("☁️SP debugbetslip new SportRadarMarketDetailsCoordinator \(contentIdentifier)")
+        self.marketId = marketId
+        self.eventId = eventId
 
         self.sessionToken = sessionToken
         self.contentIdentifier = contentIdentifier
@@ -182,12 +187,8 @@ extension SportRadarMarketDetailsCoordinator {
 
     func handleContentUpdate(_ content: SportRadarModels.ContentContainer) {
 
-        guard
-            let trackedMarketId = self.market?.id
-        else {
-            return
-        }
-
+        let trackedMarketId = self.marketId
+        
         switch content {
         case .updateMarketTradability(_, let marketId, let isTradable):
             if trackedMarketId == marketId {
@@ -215,6 +216,14 @@ extension SportRadarMarketDetailsCoordinator {
             if trackedMarketId == marketId {
                 print("☁️SP MarketDetailer debugbetslip \(marketId) removed market")
                 self.updateMarketTradability(withId: marketId, isTradable: false)
+            }
+        case .removeEvent(_, let updatedEventId):
+            if self.eventId == updatedEventId {
+                self.updateMarketTradability(withId: trackedMarketId, isTradable: false)
+            }
+        case .addEvent(_, let updatedEvent):
+            if self.eventId == updatedEvent.id {
+                self.updateMarketTradability(withId: trackedMarketId, isTradable: true)
             }
         default:
             () // Ignore other cases

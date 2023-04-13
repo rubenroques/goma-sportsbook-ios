@@ -231,6 +231,10 @@ extension SportRadarModels {
 
             // print("ContentContainer recieved path \(path) with change \(changeType)")
 
+            if path.contains("idfoevent") && !path.contains("idfomarket") && !path.contains("liveDataSummary") && !path.contains("numMarkets") {
+                print("break")
+            }
+
             if path.contains("idfoevent") && path.contains("idfomarket") && changeType.contains("added") {
                 // added a new Market
                 let newMarket = try container.decode(SportRadarModels.Market.self, forKey: .change)
@@ -297,8 +301,7 @@ extension SportRadarModels {
                                              newOddDenominator: oddDenominator)
                 }
             }
-            else if path.contains("istradable"),
-                        changeType.contains("updated"),
+            else if path.contains("istradable"), changeType.contains("updated"),
                         let newIsTradable = try? container.decode(Bool.self, forKey: .change),
                         case let .market(marketId: marketId) = contentIdentifier.contentRoute {
                 if newIsTradable {
@@ -310,12 +313,16 @@ extension SportRadarModels {
                 // print("ContentContainer 'remove' market with id \(path) and associated change \(changeType)")
                 // return .removeMarket(contentIdentifier: contentIdentifier, marketId: marketId)
             }
-            else if path.contains("idfoevent") && changeType.contains("added") {
+            else if path.contains("idfoevent") && changeType.contains("added"), let eventId = SocketMessageParseHelper.extractEventId(path)  {
                 // Added a new event
+                let newEvent = try container.decode(SportRadarModels.Event.self, forKey: .change)
+                return .addEvent(contentIdentifier: contentIdentifier, event: newEvent)
             }
-            else if path.contains("idfoevent") && changeType.contains("removed") {
-                // Added a new event
+            else if path.contains("idfoevent") && changeType.contains("removed"), let eventId = SocketMessageParseHelper.extractEventId(path)  {
+                // Removed an event
+                return .removeEvent(contentIdentifier: contentIdentifier, eventId: eventId)
             }
+
 
             print("ContentContainer ignored update for \(path) and associated change \(changeType)")
             throw SportRadarError.ignoredContentUpdate

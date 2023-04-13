@@ -55,6 +55,15 @@ class SportRadarEventsStorage {
 
 extension SportRadarEventsStorage {
 
+    func removedEvent(withId id: String) {
+        guard let eventSubject = self.eventsDictionary[id] else { return }
+        let event = eventSubject.value
+
+        for market in event.markets {
+            self.updateMarketTradability(withId: market.id, isTradable: false)
+        }
+    }
+
     func updateOutcomeOdd(withId id: String, newOddNumerator: String?, newOddDenominator: String?) {
         guard let outcomeSubject = self.outcomesDictionary[id] else { return }
         let outcome = outcomeSubject.value

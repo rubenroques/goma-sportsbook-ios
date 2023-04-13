@@ -553,7 +553,7 @@ class SportRadarEventsProvider: EventsProvider {
     }
 
 
-    public func subscribeToMarketDetails(withId id: String) -> AnyPublisher<SubscribableContent<Market>, ServiceProviderError> {
+    public func subscribeToMarketDetails(withId marketId: String, onEventId eventId: String) -> AnyPublisher<SubscribableContent<Market>, ServiceProviderError> {
 
         // Get the session
         guard
@@ -565,17 +565,19 @@ class SportRadarEventsProvider: EventsProvider {
         // contentType -> liveDataSummaryAdvancedListBySportType
         let contentType = ContentType.market
         // contentId -> FBL/0 -> /0 means page 0 of pagination
-        let contentRoute = ContentRoute.market(marketId: id)
+        let contentRoute = ContentRoute.market(marketId: marketId)
 
         let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
 
-        if let coordinators = self.marketUpdatesCoordinators[id], coordinators.isActive {
+        if let coordinators = self.marketUpdatesCoordinators[marketId], coordinators.isActive {
             return coordinators.marketPublisher
         }
         else {
-            let coordinator = SportRadarMarketDetailsCoordinator.init(sessionToken: sessionToken.hash,
-                                                                       contentIdentifier: contentIdentifier)
-            self.marketUpdatesCoordinators[id] = coordinator
+            let coordinator = SportRadarMarketDetailsCoordinator.init(marketId: marketId,
+                                                                      eventId: eventId,
+                                                                      sessionToken: sessionToken.hash,
+                                                                      contentIdentifier: contentIdentifier)
+            self.marketUpdatesCoordinators[marketId] = coordinator
             return coordinator.marketPublisher
         }
 
