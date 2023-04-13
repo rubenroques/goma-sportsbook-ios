@@ -84,11 +84,6 @@ class SportRadarMarketDetailsCoordinator {
             return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
         }
 
-        //        print("start dump SportRadarMarketDetailsCoordinator checkMarketUpdatesAvailable")
-        //        dump(request)
-        //        dump(String.init(data: request.httpBody ?? Data(), encoding: .utf8))
-        //        print("ended dump SportRadarMarketDetailsCoordinator checkMarketUpdatesAvailable")
-
         return self.session.dataTaskPublisher(for: request)
             .retry(1)
             .map({ return String(data: $0.data, encoding: .utf8) ?? "" })
@@ -116,13 +111,6 @@ class SportRadarMarketDetailsCoordinator {
             return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
         }
 
-        //        print("start dump SportRadarMarketDetailsCoordinator requestMarketUpdates")
-        //        dump(request)
-        //        dump(String.init(data: request.httpBody ?? Data(), encoding: .utf8))
-        //        print("ended dump SportRadarMarketDetailsCoordinator requestMarketUpdates")
-        //
-        //        print("☁️SP debugbetslip will request MarketUpdates \(request.timeoutInterval) SportRadarMarketDetailsCoordinator \(self.contentIdentifier)")
-
         return self.session.dataTaskPublisher(for: request)
             .retry(1)
             .tryMap { data, response -> Data in
@@ -140,83 +128,6 @@ class SportRadarMarketDetailsCoordinator {
                 }
             }
             .eraseToAnyPublisher()
-
-//        return self.session.dataTaskPublisher(for: request)
-//            .retry(1)
-//            .map({  return String(data: $0.data, encoding: .utf8) ?? "" })
-//            .mapError({ error in
-//                if let typedError = error as NSError?, typedError.code == NSURLErrorTimedOut {
-//                    return ServiceProviderError.resourceNotFound
-//                }
-//                else {
-//                    return ServiceProviderError.onSubscribe
-//                }
-//            })
-//            .map { $0.lowercased().contains("version") }
-//            .flatMap { successResponse -> AnyPublisher<Void, ServiceProviderError> in
-//                if successResponse {
-//                    return Just(()).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-//                }
-//                else {
-//                    return Fail(outputType: Void.self, failure: ServiceProviderError.resourceNotFound).eraseToAnyPublisher()
-//                }
-//            }
-//            .eraseToAnyPublisher()
-
-
-
-        //
-        //        let sessionDataTask = self.session.dataTask(with: request) { data, response, error in
-        //            if let error = error as NSError? {
-        //                if error.code == NSURLErrorTimedOut {
-        //                    // Request timed out.
-        //                    print("☁️SP debugbetslip Request timed-out SportRadarMarketDetailsCoordinator  \(self.contentIdentifier)")
-        //
-        //                    self.marketCurrentValueSubject.send(completion: .failure(ServiceProviderError.resourceNotFound))
-        //                } else {
-        //                    // Request encountered another error: \(error.localizedDescription)
-        //                    self.marketCurrentValueSubject.send(completion: .failure(ServiceProviderError.onSubscribe))
-        //                }
-        //            } else if let data = data, let response = response as? HTTPURLResponse {
-        //                if response.statusCode == 200 {
-        //                    // Handle the data
-        //                    let subscription = Subscription(contentIdentifier: self.contentIdentifier, sessionToken: self.sessionToken, unsubscriber: self)
-        //                    self.subscription = subscription
-        //                    self.marketCurrentValueSubject.send(.connected(subscription: subscription)) // Request succeeded with data: \(data)
-        //
-        //                    print("☁️SP debugbetslip Request 200 ok SportRadarMarketDetailsCoordinator \(self.contentIdentifier) \(String.init(data: data, encoding: .utf8) ?? "--")")
-        //                } else {
-        //                    self.marketCurrentValueSubject.send(completion: .failure(ServiceProviderError.onSubscribe)) // Request failed with status code: \(response.statusCode)
-        //                }
-        //            } else {
-        //                self.marketCurrentValueSubject.send(completion: .failure(ServiceProviderError.onSubscribe)) // Request failed with an unknown error.
-        //            }
-        //        }
-        //
-        ////
-        ////            print("☁️SP debugbetslip ", data, response, error, self.contentIdentifier)
-        ////            guard
-        ////                (error == nil),
-        ////                let httpResponse = response as? HTTPURLResponse,
-        ////                (200...299).contains(httpResponse.statusCode)
-        ////            else {
-        ////                print("☁️SP debugbetslip new SportRadarMarketDetailsCoordinator - error on subscribe to topic \(error) \(response)")
-        ////                self.marketCurrentValueSubject.send(completion: .failure(ServiceProviderError.onSubscribe))
-        ////                return
-        ////            }
-        ////            let subscription = Subscription(contentIdentifier: self.contentIdentifier,
-        ////                                            sessionToken: self.sessionToken,
-        ////                                            unsubscriber: self)
-        ////            self.subscription = subscription
-        ////            self.marketCurrentValueSubject.send(.connected(subscription: subscription))
-        ////
-        ////            print("☁️SP debugbetslip sent connected SportRadarMarketDetailsCoordinator \(self.contentIdentifier)")
-        ////        }
-        //
-        //        print("☁️SP debugbetslip did request MarketUpdates SportRadarMarketDetailsCoordinator \(self.contentIdentifier)")
-        //
-        //        sessionDataTask.resume()
-        //        return self.marketCurrentValueSubject.eraseToAnyPublisher()
     }
 
 
@@ -231,12 +142,6 @@ class SportRadarMarketDetailsCoordinator {
         }
     }
 
-    private func handleWaitingTimeout() {
-        print("☁️SP debugbetslip 4 seconds elapsed, and the waiting value has not changed.")
-        self.marketCurrentValueSubject.send(completion: .failure(ServiceProviderError.resourceUnavailableOrDeleted))
-        self.subscription = nil
-    }
-
     func reset() {
         self.marketCurrentValueSubject.send(.disconnected)
 
@@ -249,7 +154,7 @@ class SportRadarMarketDetailsCoordinator {
         self.sessionToken = newSessionToken
         print("SportRadarMarketDetailsCoordinator: reconnect withNewSessionToken \(newSessionToken)")
 
-        guard let subscription = self.subscription else { return }
+        guard self.subscription != nil else { return }
 
         // Reset the storage, avoid duplicates, we will recieve every info again
         self.reset()

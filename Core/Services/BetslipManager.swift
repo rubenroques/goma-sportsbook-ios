@@ -168,7 +168,6 @@ class BetslipManager: NSObject {
 
     }
 
-
     private func disableBettingTicket(_ bettingTicket: BettingTicket) {
         if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] {
             let newAvailablity = false
@@ -184,10 +183,8 @@ class BetslipManager: NSObject {
 
             self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
             self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)
-
         }
     }
-
 
     private func updateBettingTickets(ofMarket market: Market) {
         for outcome in market.outcomes {
@@ -204,23 +201,8 @@ class BetslipManager: NSObject {
                                                           outcomeDescription: bettingTicket.outcomeDescription,
                                                           odd: newOdd)
 
-
-
-                if newBettingTicket.decimalOdd == bettingTicket.decimalOdd &&
-                    newBettingTicket.isAvailable == bettingTicket.isAvailable {
-                    // print("debugbetslip || Skipping, no data updated on ticket")
-                }
-                else {
-                    print("debugbetslip // ==================================== ")
-                    print("debugbetslip Updated ticket \(bettingTicket.id)")
-                    print("debugbetslip \(newBettingTicket.decimalOdd) \(bettingTicket.decimalOdd)")
-                    print("debugbetslip \(newBettingTicket.isAvailable) \(bettingTicket.isAvailable)")
-
-                    self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
-                    self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)
-                    print("debugbetslip    ==================================== // \n")
-
-                }
+                self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
+                self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)
             }
         }
     }
