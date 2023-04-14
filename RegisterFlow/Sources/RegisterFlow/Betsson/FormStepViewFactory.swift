@@ -59,7 +59,7 @@ struct FormStepViewFactory {
             //
             //
         case .ageCountry:
-            let ageCountryFormStepViewModel = AgeCountryFormStepViewModel(title: Localization.localized("age_country"),
+            let ageCountryFormStepViewModel = AgeCountryFormStepViewModel(title: Localization.localized("age_and_birthplace"),
                                                                           defaultCountryIso3Code: defaultCountryIso3Code,
                                                                           birthDate: userRegisterEnvelop.dateOfBirth,
                                                                           selectedCountry: userRegisterEnvelop.countryBirth,

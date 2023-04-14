@@ -138,12 +138,18 @@ class BetslipManager: NSObject {
             self.bettingTicketPublisher[bettingTicket.id] = .init(bettingTicket)
         }
 
-        let bettingTicketSubscriber = Env.servicesProvider.subscribeToMarketDetails(withId: bettingTicket.marketId)
+        let bettingTicketSubscriber = Env.servicesProvider.subscribeToMarketDetails(withId: bettingTicket.marketId, onEventId: bettingTicket.matchId)
+            .print("debugbetslip2-A")
             .receive(on: DispatchQueue.main)
-            .sink { completion in
+            .sink { [weak self] completion in
                 switch completion {
                 case .failure(let error):
-                    print("Error retrieving data! \(error)")
+                    switch error {
+                    case .resourceUnavailableOrDeleted:
+                        self?.disableBettingTicket(bettingTicket)
+                    default:
+                        print("Error retrieving data! \(error)")
+                    }
                 case .finished:
                     print("Data retrieved!")
                 }
@@ -162,6 +168,24 @@ class BetslipManager: NSObject {
 
     }
 
+    private func disableBettingTicket(_ bettingTicket: BettingTicket) {
+        if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] {
+            let newAvailablity = false
+            let newBettingTicket = BettingTicket.init(id: bettingTicket.id,
+                                                      outcomeId: bettingTicket.outcomeId,
+                                                      marketId: bettingTicket.marketId,
+                                                      matchId: bettingTicket.matchId,
+                                                      isAvailable: newAvailablity,
+                                                      matchDescription: bettingTicket.matchDescription,
+                                                      marketDescription: bettingTicket.marketDescription,
+                                                      outcomeDescription: bettingTicket.outcomeDescription,
+                                                      odd: bettingTicket.odd)
+
+            self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
+            self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)
+        }
+    }
+
     private func updateBettingTickets(ofMarket market: Market) {
         for outcome in market.outcomes {
             if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[outcome.id] {
@@ -177,22 +201,8 @@ class BetslipManager: NSObject {
                                                           outcomeDescription: bettingTicket.outcomeDescription,
                                                           odd: newOdd)
 
-                print("debugbetslip // ==================================== ")
-                print("debugbetslip Updated ticket \(bettingTicket.id)")
-                print("debugbetslip \(newBettingTicket.decimalOdd) \(bettingTicket.decimalOdd)")
-                print("debugbetslip \(newBettingTicket.isAvailable) \(bettingTicket.isAvailable)")
-
-
-                if newBettingTicket.decimalOdd == bettingTicket.decimalOdd &&
-                    newBettingTicket.isAvailable == bettingTicket.isAvailable {
-                    print("debugbetslip || Skipping, no data updated on ticket")
-                }
-                else {
-                    print("debugbetslip || Updated ticket")
-                    self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
-                    self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)
-                }
-                print("debugbetslip    ==================================== //")
+                self.bettingTicketsDictionaryPublisher.value[bettingTicket.id] = newBettingTicket
+                self.bettingTicketPublisher[bettingTicket.id]?.send(newBettingTicket)
             }
         }
     }

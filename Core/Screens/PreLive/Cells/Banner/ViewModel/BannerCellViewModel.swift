@@ -136,7 +136,7 @@ class BannerCellViewModel {
 
     func requestMatchInfo(matchId: String, marketId: String) {
 
-        let marketSubscriber = Env.servicesProvider.subscribeToMarketDetails(withId: marketId)
+        let marketSubscriber = Env.servicesProvider.subscribeToMarketDetails(withId: marketId, onEventId: matchId)
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {

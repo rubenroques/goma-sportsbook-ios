@@ -169,9 +169,17 @@ class MatchDetailsViewModel: NSObject {
                 switch completion {
                 case .finished:
                     ()
-                case .failure(_):
-                    self?.matchPublisher.send(.failed)
-                    self?.marketGroupsState.send(.failed)
+                case .failure(let error):
+                    switch error {
+                    case .resourceUnavailableOrDeleted: // This match is no longer available
+                        self?.matchPublisher.send(.failed)
+                        self?.marketGroupsState.send(.failed)
+
+                    default:
+                        print("Error retrieving data! \(error)")
+                        self?.matchPublisher.send(.failed)
+                        self?.marketGroupsState.send(.failed)
+                    }
                 }
             }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<ServicesProvider.Event>) in
                 switch subscribableContent {

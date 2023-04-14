@@ -219,13 +219,13 @@ extension ServicesProviderClient {
     }
 
 
-    public func subscribeToMarketDetails(withId id: String) -> AnyPublisher<SubscribableContent<Market>, ServiceProviderError> {
+    public func subscribeToMarketDetails(withId id: String, onEventId eventId: String) -> AnyPublisher<SubscribableContent<Market>, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
-        return eventsProvider.subscribeToMarketDetails(withId: id)
+        return eventsProvider.subscribeToMarketDetails(withId: id, onEventId: eventId)
     }
 
 }

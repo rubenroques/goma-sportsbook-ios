@@ -365,16 +365,24 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
             self.currentValue = 0
             self.addAmountValue(previousBettingAmount)
         }
-        
-//        self.oddAvailabilitySubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
-//            .receive(on: DispatchQueue.main)
-//            .map({ (bettingOffer: BettingTicket) -> Bool in
-//                return bettingOffer.isAvailable
-//            })
-//            .sink(receiveValue: { [weak self] isBetAvailable in
-//                self?.suspendedBettingOfferView.isHidden = isBetAvailable
-//            })
-//        
+
+        self.oddAvailabilitySubscriber?.cancel()
+        self.oddAvailabilitySubscriber = nil
+
+        self.oddAvailabilitySubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
+            .receive(on: DispatchQueue.main)
+            .print("debugbetslip2-B")
+            .map({ bettingOfferValue in
+                return bettingOfferValue.isAvailable
+            })
+            .removeDuplicates()
+            .sink(receiveValue: { [weak self] isBetAvailable in
+                self?.suspendedBettingOfferView.isHidden = isBetAvailable
+            })
+
+        self.oddSubscriber?.cancel()
+        self.oddSubscriber = nil
+
         self.oddSubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
             .removeDuplicates(by: { lhs, rhs in
                 return lhs.id == rhs.id && lhs.decimalOdd == rhs.decimalOdd

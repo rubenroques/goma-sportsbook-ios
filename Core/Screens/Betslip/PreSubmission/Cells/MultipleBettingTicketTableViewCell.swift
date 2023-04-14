@@ -177,18 +177,19 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
 
         self.currentOddValue = bettingTicket.decimalOdd
 
-//        self.oddAvailabilitySubscriber?.cancel()
-//        self.oddAvailabilitySubscriber = nil
-//
-//        self.oddAvailabilitySubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
-//            .receive(on: DispatchQueue.main)
-//            .eraseToAnyPublisher()
-//            .map({ bettingOffer in
-//                return bettingOffer.isAvailable
-//            })
-//            .sink(receiveValue: { [weak self] isBetAvailable in
-//                self?.suspendedBettingOfferView.isHidden = isBetAvailable
-//            })
+        self.oddAvailabilitySubscriber?.cancel()
+        self.oddAvailabilitySubscriber = nil
+
+        self.oddAvailabilitySubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+            .map({ bettingOffer in
+                return bettingOffer.isAvailable
+            })
+            .removeDuplicates()
+            .sink(receiveValue: { [weak self] isBetAvailable in
+                self?.suspendedBettingOfferView.isHidden = isBetAvailable
+            })
 
         self.oddSubscriber?.cancel()
         self.oddSubscriber = nil

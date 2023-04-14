@@ -210,7 +210,7 @@
 "contact_preferences" = "Préférences de contact";
 "contact_preferences_error" = "Nous ne pouvons pas mettre à jour vos préférences de contact pour le moment. Veuillez réessayer plus tard.";
 "contact_preferences_updated" = "Vos préférences de contact ont été mises à jour";
-"contact_us" = "Contactez-nous";
+"contact_us" = "Service Client";
 "contacts" = "Contacts";
 "continue_" = "Continuer";
 "cookie_alert" = "En poursuivant votre navigation sur ce site, vous consentez à l'utilisation de cookies. Lisez à propos de notre";
@@ -254,7 +254,7 @@
 "deposit_limit_update_error" = "Nous ne pouvons pas mettre à jour votre limite de dépôt pour le moment. Veuillez réessayer plus tard.";
 "deposit_limit_update_success" = "Votre limite de dépôt a été mise à jour";
 "deposit_more_funds" = "Déposez plus de fonds afin de placer ce pari.";
-"deposit_value" = "Valeur du dépôt";
+"deposit_value" = "Montant du dépôt";
 "deposits" = "Dépôts";
 "description" = "Description";
 "device_settings" = "Réglages de l'appareil";
@@ -850,7 +850,7 @@
 "suggested_bets" = "Paris suggérés";
 "suggested_country" = "Pays suggéré";
 "suggested_names" = "Noms suggérés";
-"support" = "Contactez-nous";
+"support" = "Service Client";
 "support_error" = "Nous ne pouvons pas envoyer votre message pour le moment. Veuillez réessayer plus tard.";
 "support_success" = "Votre message a bien été envoyé";
 "suspended" = "Suspendu";
@@ -903,7 +903,6 @@
 "try_something_else" = "S'il vous plaît essayez autre chose !";
 "try_to_full_register" = "Essayez de vous inscrire complètement à la place";
 "unchangeable" = "Non modifiable";
-"understood" = "Compris";
 "unfollow" = "Ne plus suivre";
 "unfriend" = "Retirer de sa liste d'amis";
 "unit_period_exclusion" = "Exclusion de période unitaire";
@@ -1017,7 +1016,7 @@
 "description_iban_request" = "Avant de poursuivre, nous devons confirmer votre IBAN.";
 "iban" = "IBAN";
 "department_of_birth_invalid" = "Ce département de naissance est invalide.";
-"department_of_birth" = "Département de naissance";
+"department_of_birth" = "Département de naissance (numéro)";
 "country_of_birth" = "Pays de naissance";
 "street_number_invalid" = "Ce numéro de rue est invalide.";
 "postcode_invalid" = "Ce code postal n'est pas valide.";
@@ -1063,7 +1062,7 @@
 "close_account_success_message" = "Votre compte a été fermé avec succès.";
 "close_account_error" = "Erreur de fermeture de compte";
 "close_account_error_message" = "Une erreur s'est produite lors de la fermeture de votre compte, veuillez contacter l'assistance.";
-"age_and_birthplace" = "Âge et lieu de naissance";
+"age_and_birthplace" = "Âge et Lieu de naissance";
 "max_size" = "Taille Max";
 "evalujeu" = "Evalujeu";
 "withdrawal" = "Dépôt Annulé";
@@ -1143,7 +1142,7 @@
 
 "withdraw_error" = "Erreur de retirer";
 "used" = "Utilisé";
-"queued" = "File";
+"queued" = "En attente";
 "no_wager_info" = "Info sans mise";
 "payment_authorized" = "Paiement Autorisé";
 
@@ -1325,5 +1324,5 @@
 
 "tips_keep_control" = "Les conseils de Betsson pour garder le contrôle et faire du jeu une activité de loisir agréable et responsable. En suivant ces recommandations, vous pourrez éviter de vous mettre en difficulté financière ou émotionnelle.\n\nIl est important de se rappeler que le jeu doit être considéré comme un passe-temps, et non pas comme une source de revenus fiable. Fixer un budget raisonnable est un bon moyen de s'assurer que vous ne dépensez pas plus que vous ne pouvez-vous le permettre.\n\nConsultez régulièrement votre historique de jeu vous permettra de garder un œil sur vos dépenses et de détecter toute dérive éventuelle. Si vous commencez à ressentir des émotions négatives comme la frustration ou le stress, prenez une pause et faites autre chose pour vous détendre.\n\nEnfin, il est important de ne pas laisser le jeu prendre le pas sur vos responsabilités et obligations quotidiennes. Si vous sentez que le jeu commence à impacter négativement votre vie, n'hésitez pas à en parler à vos proches et à chercher de l'aide si nécessaire.";
 
-"kyc_message_title" = "Le KYC n'est pas complet!";
-"kyc_message_body" = "Mettez à jour vos documents afin de compléter votre KYC";
+"kyc_message_title" = "KYC n'est past complet!";
+"kyc_message_body" = "Vos documents sont necessaire pour effectuet un retrait.";

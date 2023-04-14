@@ -45,7 +45,10 @@ struct SportRadarConstants {
     static var socketURL: String {
         return socketHostname + "/notification/listen/websocket"
     }
-    static var servicesRestHostname = "https://velsv-bson-ssb-ua.betsson.fr" // To subscribe to contentIDs, as in velsv-bson-ssb-ua.betsson.fr/services
+    static var servicesRestHostname = "https://www-bson-ssb-ua.betsson.fr"
+
+    static var servicesSubscribeRestHostname = "https://velsv-bson-ssb-ua.betsson.fr" // To subscribe to contentIDs, as in velsv-bson-ssb-ua.betsson.fr/services
+
     static var socketLanguageCode = Localization.localized("sportradar_content_languange_code")
 
     // PAM

@@ -11,6 +11,7 @@ import Foundation
  */
 
 enum SportRadarRestAPIClient {
+    case get(contentIdentifier: ContentIdentifier)
     case subscribe(sessionToken: String, contentIdentifier: ContentIdentifier)
     case unsubscribe(sessionToken: String, contentIdentifier: ContentIdentifier)
     case marketsFilter
@@ -36,6 +37,8 @@ extension SportRadarRestAPIClient: Endpoint {
     var endpoint: String {
         switch self {
         //
+        case .get:
+            return "/services/content/get"
         case .subscribe:
             return "/services/content/subscribe" 
         case .unsubscribe:
@@ -82,6 +85,7 @@ extension SportRadarRestAPIClient: Endpoint {
 
     var query: [URLQueryItem]? {
         switch self {
+        case .get: return nil
         case .subscribe: return nil
         case .unsubscribe: return nil
         case .marketsFilter: return nil
@@ -105,6 +109,7 @@ extension SportRadarRestAPIClient: Endpoint {
 
     var method: HTTP.Method {
         switch self {
+        case .get: return .post
         case .subscribe: return .post
         case .unsubscribe: return .post
         case .marketsFilter: return .get
@@ -128,6 +133,8 @@ extension SportRadarRestAPIClient: Endpoint {
 
     var body: Data? {
         switch self {
+        case .get(let contentIdentifier):
+            return Self.createPayloadData(with: nil, contentIdentifier: contentIdentifier)
         case .subscribe(let sessionToken, let contentIdentifier):
             return Self.createPayloadData(with: sessionToken, contentIdentifier: contentIdentifier)
         case .unsubscribe(let sessionToken, let contentIdentifier):
@@ -320,11 +327,15 @@ extension SportRadarRestAPIClient: Endpoint {
 
     var url: String {
         switch self {
-
+        case .get:
+            // https://www-bson-ssb-ua.betsson.fr/services/content/get
+            return SportRadarConstants.servicesRestHostname
         case .subscribe:
-            return SportRadarConstants.servicesRestHostname
+            // https://velsv-bson-ssb-ua.betsson.fr/services/content/subscribe
+            return SportRadarConstants.servicesSubscribeRestHostname
         case .unsubscribe:
-            return SportRadarConstants.servicesRestHostname
+            // https://velsv-bson-ssb-ua.betsson.fr/services/content/unsubscribe
+            return SportRadarConstants.servicesSubscribeRestHostname
 
         case .marketsFilter:
             return SportRadarConstants.sportRadarFrontEndURL
@@ -371,10 +382,12 @@ extension SportRadarRestAPIClient: Endpoint {
             "Accept": "application/json"
         ]
         switch self {
-        case .subscribe(_, _):
+        case .get:
+            return defaultHeaders
+        case .subscribe:
             return ["Content-Type": "application/json",
                     "Media-Type": "application/json"]
-        case .unsubscribe(_ ,_):
+        case .unsubscribe:
             return ["Content-Type": "application/json",
                     "Media-Type": "application/json"]
         case .marketsFilter:
@@ -414,7 +427,10 @@ extension SportRadarRestAPIClient: Endpoint {
     }
 
     var timeout: TimeInterval {
-        return TimeInterval(20)
+        switch self {
+        case .subscribe: return TimeInterval(3)
+        default: return TimeInterval(20)
+        }
     }
 
     var requireSessionKey: Bool {

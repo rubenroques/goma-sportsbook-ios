@@ -27,6 +27,9 @@ class SportRadarEventDetailsCoordinator {
 
     private var eventDetailsCurrentValueSubject: CurrentValueSubject<SubscribableContent<Event>, ServiceProviderError> = .init(.disconnected)
 
+    private var waiting = true
+    private var timer: Timer?
+
     init(matchId: String, sessionToken: String, storage: SportRadarEventDetailsStorage) {
         self.sessionToken = sessionToken
         self.storage = storage
@@ -73,6 +76,8 @@ class SportRadarEventDetailsCoordinator {
                                             unsubscriber: self)
             self.eventDetailsCurrentValueSubject.send(.connected(subscription: subscription))
             self.marketsSubscription = subscription
+
+            self.startWaiting()
         }
         sessionDataTask.resume()
     }
@@ -108,12 +113,46 @@ class SportRadarEventDetailsCoordinator {
 
 
     func updateEventDetails(_ updatedEvent: Event) {
+        self.cancelWaiting()
+
         self.storage.storeEvent(updatedEvent)
 
         self.eventDetailsCurrentValueSubject.send(.contentUpdate(content: updatedEvent))
     }
 
+
+    func startWaiting() {
+        waiting = true
+
+        DispatchQueue.global().async {
+            self.timer = Timer(timeInterval: 4.5, repeats: false) { [weak self] _ in
+                guard let self = self else { return }
+                if self.waiting {
+                    self.handleWaitingTimeout()
+                }
+            }
+            RunLoop.current.add(self.timer!, forMode: .default)
+            RunLoop.current.run(until: Date(timeIntervalSinceNow: 4.6))
+        }
+    }
+
+    private func cancelWaiting() {
+        waiting = false
+        timer?.invalidate()
+        timer = nil
+    }
+
+    private func handleWaitingTimeout() {
+        self.cancelWaiting()
+        print("☁️SP debugbetslip 4 seconds elapsed, and the waiting value has not changed.")
+
+        self.eventDetailsCurrentValueSubject.send(completion: .failure(ServiceProviderError.resourceUnavailableOrDeleted))
+        self.marketsSubscription = nil
+    }
+
     func reconnect(withNewSessionToken newSessionToken: String) {
+        self.cancelWaiting()
+
         self.sessionToken = newSessionToken
         self.storage.reset()
 
@@ -188,12 +227,14 @@ extension SportRadarEventDetailsCoordinator {
                     self.storage.updateOutcomeOdd(withId: outcome.id, newOddNumerator: String(fractionOdd.numerator), newOddDenominator: String(fractionOdd.denominator))
                 }
             }
-            self.storage.updateMarketTradability(withId: market.id, isTradable: true)
+            self.storage.updateMarketTradability(withId: market.id, isTradable: market.isTradable)
 
         case .enableMarket(_, let marketId):
             self.storage.updateMarketTradability(withId: marketId, isTradable: true)
         case .removeMarket(_, let marketId):
             self.storage.updateMarketTradability(withId: marketId, isTradable: false)
+        case .removeEvent(_, let eventId):
+            self.storage.removedEvent(withId: eventId)
 
         default:
             () // Ignore other cases
