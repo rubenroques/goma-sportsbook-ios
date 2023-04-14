@@ -210,7 +210,7 @@
 "contact_preferences" = "Préférences de contact";
 "contact_preferences_error" = "Nous ne pouvons pas mettre à jour vos préférences de contact pour le moment. Veuillez réessayer plus tard.";
 "contact_preferences_updated" = "Vos préférences de contact ont été mises à jour";
-"contact_us" = "Contactez-nous";
+"contact_us" = "Service Client";
 "contacts" = "Contacts";
 "continue_" = "Continuer";
 "cookie_alert" = "En poursuivant votre navigation sur ce site, vous consentez à l'utilisation de cookies. Lisez à propos de notre";
@@ -254,7 +254,7 @@
 "deposit_limit_update_error" = "Nous ne pouvons pas mettre à jour votre limite de dépôt pour le moment. Veuillez réessayer plus tard.";
 "deposit_limit_update_success" = "Votre limite de dépôt a été mise à jour";
 "deposit_more_funds" = "Déposez plus de fonds afin de placer ce pari.";
-"deposit_value" = "Valeur du dépôt";
+"deposit_value" = "Montant du dépôt";
 "deposits" = "Dépôts";
 "description" = "Description";
 "device_settings" = "Réglages de l'appareil";
@@ -850,7 +850,7 @@
 "suggested_bets" = "Paris suggérés";
 "suggested_country" = "Pays suggéré";
 "suggested_names" = "Noms suggérés";
-"support" = "Contactez-nous";
+"support" = "Service Client";
 "support_error" = "Nous ne pouvons pas envoyer votre message pour le moment. Veuillez réessayer plus tard.";
 "support_success" = "Votre message a bien été envoyé";
 "suspended" = "Suspendu";
@@ -1015,7 +1015,7 @@
 "iban_proof" = "";
 "iban_invalid" = "";
 "department_of_birth_invalid" = "Ce département de naissance est invalide.";
-"department_of_birth" = "Département de naissance";
+"department_of_birth" = "Département de naissance (numéro)";
 "country_of_birth" = "Pays de naissance";
 "street_number_invalid" = "Ce numéro de rue est invalide.";
 "postcode_invalid" = "Ce code postal n'est pas valide.";
@@ -1063,7 +1063,7 @@
 "close_account_success_message" = "Votre compte a été fermé avec succès.";
 "close_account_error" = "Erreur de fermeture de compte";
 "close_account_error_message" = "Une erreur s'est produite lors de la fermeture de votre compte, veuillez contacter l'assistance.";
-"age_and_birthplace" = "Âge et lieu de naissance";
+"age_and_birthplace" = "Âge et Lieu de naissance";
 "max_size" = "Taille Max";
 "evalujeu" = "Evalujeu";
 "withdrawal" = "Dépôt Annulé";
@@ -1143,7 +1143,7 @@
 
 "withdraw_error" = "Erreur de retirer";
 "used" = "Utilisé";
-"queued" = "File";
+"queued" = "En attente";
 "no_wager_info" = "Info sans mise";
 "payment_authorized" = "Paiement Autorisé";
 
