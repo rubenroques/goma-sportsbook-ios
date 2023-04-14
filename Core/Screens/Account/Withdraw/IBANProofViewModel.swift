@@ -32,7 +32,6 @@ class IBANProofViewModel {
                           "com.pkware.zip-archive",
                           "public.composite-content",
                           "public.text"]
-    var withdrawAmount: String
 
     var cachedCellViewModels: [String: UploadDocumentCellViewModel] = [:]
 
@@ -45,11 +44,10 @@ class IBANProofViewModel {
 
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var showErrorAlertTypePublisher: CurrentValueSubject<BalanceErrorType?, Never> = .init(nil)
-    var showWithdrawalStatus: (() -> Void)?
+    var shouldShowAlert: ((AlertType, String) -> Void)?
+    var shouldShowSuccessScreen: (() -> Void)?
 
-    init(withdrawAmount: String) {
-
-        self.withdrawAmount = withdrawAmount
+    init() {
 
         self.getDocumentTypes()
 
@@ -129,53 +127,57 @@ class IBANProofViewModel {
                     ()
                 case .failure(let error):
                     print("ADD PAYMENT ERROR: \(error)")
-                    self?.isLoadingPublisher.send(true)
+                    self?.shouldShowAlert?(.error, localized("upload_iban_error_message"))
+                    self?.isLoadingPublisher.send(false)
                 }
             }, receiveValue: { [weak self] addPaymentResponse in
 
-                self?.processWithdraw()
+                // self?.shouldShowAlert?(.success, localized("upload_iban_success_message"))
+                self?.shouldShowSuccessScreen?()
+                self?.isLoadingPublisher.send(false)
+
             })
             .store(in: &cancellables)
     }
 
-    func processWithdraw() {
-        let amountText = self.withdrawAmount
-        var amount = ""
-
-        if amountText.contains(",") {
-            amount = amountText.replacingOccurrences(of: ",", with: ".")
-        }
-        else {
-            amount = amountText
-        }
-
-        if let withdrawalAmount = Double(amount) {
-
-            Env.servicesProvider.processWithdrawal(paymentMethod: "ADYEN_BANK_TRANSFER", amount: withdrawalAmount)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { [weak self] completion in
-
-                    switch completion {
-                    case .finished:
-                        ()
-                    case .failure(let error):
-                        print("PROCESS WITHDRAWAL ERROR: \(error)")
-                        switch error {
-                        case .errorMessage(let message):
-                            self?.showErrorAlertTypePublisher.send(.error(message: message))
-                        default:
-                            ()
-                        }
-                        self?.isLoadingPublisher.send(false)
-                    }
-
-                }, receiveValue: { [weak self] processWithdrawalResponse in
-
-                    self?.showWithdrawalStatus?()
-
-                    self?.isLoadingPublisher.send(false)
-                })
-                .store(in: &cancellables)
-        }
-    }
+//    func processWithdraw() {
+//        let amountText = self.withdrawAmount
+//        var amount = ""
+//
+//        if amountText.contains(",") {
+//            amount = amountText.replacingOccurrences(of: ",", with: ".")
+//        }
+//        else {
+//            amount = amountText
+//        }
+//
+//        if let withdrawalAmount = Double(amount) {
+//
+//            Env.servicesProvider.processWithdrawal(paymentMethod: "ADYEN_BANK_TRANSFER", amount: withdrawalAmount)
+//                .receive(on: DispatchQueue.main)
+//                .sink(receiveCompletion: { [weak self] completion in
+//
+//                    switch completion {
+//                    case .finished:
+//                        ()
+//                    case .failure(let error):
+//                        print("PROCESS WITHDRAWAL ERROR: \(error)")
+//                        switch error {
+//                        case .errorMessage(let message):
+//                            self?.showErrorAlertTypePublisher.send(.error(message: message))
+//                        default:
+//                            ()
+//                        }
+//                        self?.isLoadingPublisher.send(false)
+//                    }
+//
+//                }, receiveValue: { [weak self] processWithdrawalResponse in
+//
+//                    self?.showWithdrawalStatus?()
+//
+//                    self?.isLoadingPublisher.send(false)
+//                })
+//                .store(in: &cancellables)
+//        }
+//    }
 }

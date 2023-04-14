@@ -1084,7 +1084,7 @@
 
 "no_promotions_yet" = "There are no promotions yet.";
 
-"iban_confirm_message" = "Before continuing we need to confirm your IBAN.";
+"description_iban_request" = "Before continuing we need to confirm your IBAN.";
 "iban" = "IBAN";
 "iban_proof" = "IBAN Proof";
 "iban_invalid" = "Invalid IBAN. Must start with 2 Letters [A to Z] followed by 14 to 29 digits [0 to 9]";

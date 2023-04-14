@@ -1012,8 +1012,10 @@
 "lack_requirements" = "";
 "street_number" = "Numéro de rue";
 "fifth_password_requirement" = "Être alphanumérique avec au moins 1 symbole de {symbols}";
-"iban_proof" = "";
-"iban_invalid" = "";
+"iban_proof" = "Preuve IBAN";
+"iban_invalid" = "IBAN non valide. Doit commencer par 2 lettres [A à Z] suivies de 14 à 29 chiffres [0 à 9].";
+"description_iban_request" = "Avant de poursuivre, nous devons confirmer votre IBAN.";
+"iban" = "IBAN";
 "department_of_birth_invalid" = "Ce département de naissance est invalide.";
 "department_of_birth" = "Département de naissance (numéro)";
 "country_of_birth" = "Pays de naissance";
@@ -1023,7 +1025,6 @@
 "withdrawal_request_sent_title" = "Votre demande de retrait a été envoyée.";
 "withdrawal_request_sent_text" = "Votre demande sera en attente jusqu'à ce que nous confirmions votre preuve IBAN, après approbation, il faudra au moins 72 heures pour apparaître sur votre relevé bancaire.";
 "withdrawal_error" = "";
-"description_iban_request" = "";
 "cancel_deposit" = "";
 "bonus_credit" = "Crédit Bonus";
 "bonus_expired" = "Bonus Expirée";
@@ -1033,7 +1034,6 @@
 "self_exclusion" = "Auto-exclusion";
 "close_account" = "Fermer le compte";
 "casual_pathologic_question" = "Jeux occasionnels vs jeux pathologiques, quelles sont les différences ?";
-"iban" = "";
 "confirm_close_account_button" = "Oui, fermer mon compte";
 "no_promotions_yet" = "";
 "place_commune_invalid" = "";
@@ -1229,6 +1229,20 @@
 
 "partial_cashout_value" = "Encaissement partiel {cashoutAmount}";
 
+"withdrawal_warning" = "Avertissement de retrait";
+"withdrawal_warning_text" = "Souhaitez-vous procéder au retrait ? Si vous disposez actuellement d'un bonus de dépôt actif, celui-ci sera annulé.";
+"understand_confirmation_withdraw" = "Je comprends";
+
+"upload_iban_success" = "Téléchargement de l'IBAN Succès";
+"upload_iban_success_message" = "Merci de nous communiquer votre IBAN et votre RIB. Le traitement des documents devrait prendre entre 1 et 2 jours ouvrables.\nVous serez notifié par email une fois le traitement effectué et vous pourrez alors effectuer votre premier retrait.";
+
+"upload_iban_error" = "Erreur de téléchargement de l'IBAN";
+"upload_iban_error_message" = "Une erreur s'est produite lors du traitement de vos documents IBAN. Veuillez contacter le support.";
+
+"withdrawal_iban_pending_approval_message" = "Vos documents IBAN et RIB sont en cours de traitement. Il faut compter entre 1 et 2 jours ouvrables pour que les documents soient traités.\nVous serez notifié par email une fois que cela sera fait et vous pourrez alors effectuer votre premier retrait.";
+
+"understood" = "Compris";
+
 // NOT TO ADD YET
 "tip_title" = "Pointe 1";
 "tip_message" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sagittis eros a nibh fermentum viverra. Sed imperdiet justo non tellus mollis viverra. Aliquam quis varius ex. In sagittis condimentum molestie.";
@@ -1306,6 +1320,5 @@
 
 "tips_keep_control" = "Les conseils de Betsson pour garder le contrôle et faire du jeu une activité de loisir agréable et responsable. En suivant ces recommandations, vous pourrez éviter de vous mettre en difficulté financière ou émotionnelle.\n\nIl est important de se rappeler que le jeu doit être considéré comme un passe-temps, et non pas comme une source de revenus fiable. Fixer un budget raisonnable est un bon moyen de s'assurer que vous ne dépensez pas plus que vous ne pouvez-vous le permettre.\n\nConsultez régulièrement votre historique de jeu vous permettra de garder un œil sur vos dépenses et de détecter toute dérive éventuelle. Si vous commencez à ressentir des émotions négatives comme la frustration ou le stress, prenez une pause et faites autre chose pour vous détendre.\n\nEnfin, il est important de ne pas laisser le jeu prendre le pas sur vos responsabilités et obligations quotidiennes. Si vous sentez que le jeu commence à impacter négativement votre vie, n'hésitez pas à en parler à vos proches et à chercher de l'aide si nécessaire.";
 
-"requested_kyc" = "Demandé";
-"pass_conditional_kyc" = "Validation conditionnelle";
-"pass_kyc" = "Validé";
+"kyc_message_title" = "Le KYC n'est pas complet!";
+"kyc_message_body" = "Mettez à jour vos documents afin de compléter votre KYC";

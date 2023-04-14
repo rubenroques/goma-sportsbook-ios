@@ -199,10 +199,6 @@ class WithdrawViewController: UIViewController {
 
         }
 
-        viewModel.shouldShowIbanScreen = { [weak self] in
-            self?.showIbanScreen()
-        }
-
     }
 
     // MARK: Functions
@@ -402,16 +398,21 @@ class WithdrawViewController: UIViewController {
 
     }
 
-    private func showIbanScreen() {
-        print("SHOW IBAN")
+    private func showConfirmationAlert() {
 
         let amountText = self.withdrawHeaderTextFieldView.text
 
-        let ibanProofViewModel = IBANProofViewModel(withdrawAmount: amountText)
+        let alert = UIAlertController(title: localized("withdrawal_warning"),
+                                      message: localized("withdrawal_warning_text"),
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: localized("understand_confirmation_withdraw"), style: .default, handler: { [weak self] _ in
 
-        let ibanProofViewController = IBANProofViewController(viewModel: ibanProofViewModel)
+            self?.viewModel.getWithdrawInfo(amountText: amountText)
+        }))
 
-        self.navigationController?.pushViewController(ibanProofViewController, animated: true)
+        alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
     }
 
     @IBAction private func didTapCloseButton() {
@@ -425,9 +426,7 @@ class WithdrawViewController: UIViewController {
 
     @IBAction private func didTapNextButton() {
 
-        let amountText = self.withdrawHeaderTextFieldView.text
-
-        self.viewModel.getWithdrawInfo(amountText: amountText)
+        self.showConfirmationAlert()
 
     }
 

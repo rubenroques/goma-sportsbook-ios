@@ -35,7 +35,8 @@ extension SportRadarModelMapper {
                        date: firstBet?.attemptedDate ?? Date(),
                        freebet: firstBet?.freeBet ?? false,
                        partialCashoutReturn: firstBet?.partialCashoutReturn,
-                       partialCashoutStake: firstBet?.partialCashoutStake)
+                       partialCashoutStake: firstBet?.partialCashoutStake,
+                       betslipId: firstBet?.betslipId)
         }
         return BettingHistory(bets: bets.sorted(by: { $0.date > $1.date }))
     }

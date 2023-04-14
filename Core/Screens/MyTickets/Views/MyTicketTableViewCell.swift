@@ -124,6 +124,7 @@ class MyTicketTableViewCell: UITableViewCell {
         else {
             self.shareButton.isHidden = true
         }
+        // self.shareButton.isHidden = false
 
         self.loadingView.isHidden = true
 
@@ -267,8 +268,6 @@ class MyTicketTableViewCell: UITableViewCell {
                 self.resetHighlightedCard()
             }
         }
-
-        self.betIdLabel.textColor = UIColor.App.textPrimary
 
         self.partialCashoutSliderView.backgroundColor = .clear
         self.partialCashoutSliderView.layer.cornerRadius = CornerRadius.view

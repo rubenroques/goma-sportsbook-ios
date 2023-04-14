@@ -54,6 +54,8 @@ class IBANProofViewController: UIViewController {
         }
     }
 
+    var shouldReloadPaymentInfo: (() -> Void)?
+
     // MARK: Lifetime and Cycle
     init(viewModel: IBANProofViewModel) {
         self.viewModel = viewModel
@@ -163,12 +165,6 @@ class IBANProofViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        viewModel.showWithdrawalStatus = { [weak self] in
-
-            self?.showSuccessScreen()
-
-        }
-
         self.ibanHeaderTextFieldView.textPublisher
             .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
@@ -199,6 +195,41 @@ class IBANProofViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+        viewModel.shouldShowAlert = { [weak self] alertType, text in
+            self?.showAlert(alertType: alertType, text: text)
+        }
+
+        viewModel.shouldShowSuccessScreen = { [weak self] in
+            self?.shouldReloadPaymentInfo?()
+            self?.showSuccessScreen()
+        }
+    }
+
+    private func showAlert(alertType: AlertType, text: String) {
+
+        switch alertType {
+        case .success:
+            let alert = UIAlertController(title: localized("upload_iban_success"),
+                                          message: text,
+                                          preferredStyle: .alert)
+
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+
+                self?.dismiss(animated: true)
+            }))
+
+            self.present(alert, animated: true, completion: nil)
+        case .error:
+            let alert = UIAlertController(title: localized("upload_iban_error"),
+                                          message: text,
+                                          preferredStyle: .alert)
+
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+
+            self.present(alert, animated: true, completion: nil)
+        }
+
     }
 
     private func validateIBANFormat(ibanValue: String) {
@@ -250,7 +281,7 @@ class IBANProofViewController: UIViewController {
 
         let withdrawSuccessViewController = WithdrawSuccessViewController()
 
-        withdrawSuccessViewController.configureInfo(title: localized("withdrawal_request_sent_title"), message: localized("withdrawal_request_sent_text"))
+        withdrawSuccessViewController.configureInfo(title: localized("upload_iban_success"), message: localized("upload_iban_success_message"))
 
         self.navigationController?.pushViewController(withdrawSuccessViewController, animated: true)
 
@@ -480,7 +511,7 @@ extension IBANProofViewController {
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("iban_confirm_message")
+        label.text = localized("description_iban_request")
         label.font = AppFont.with(type: .bold, size: 20)
         label.textAlignment = .center
         label.numberOfLines = 0

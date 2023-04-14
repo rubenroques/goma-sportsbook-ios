@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import ServicesProvider
 
 class ProfileViewController: UIViewController {
 
@@ -70,6 +71,9 @@ class ProfileViewController: UIViewController {
     var pageMode: PageMode
     var alertsArray: [ActivationAlert] = []
 
+    var ibanPaymentDetails: BankPaymentDetail?
+    var shouldShowIbanScreen: (() -> Void)?
+
     init(userSession: UserSession? = nil) {
 
         self.pageMode = .anonymous
@@ -80,6 +84,8 @@ class ProfileViewController: UIViewController {
         }
 
         super.init(nibName: "ProfileViewController", bundle: nil)
+
+        self.getPaymentInfo()
     }
 
     @available(iOS, unavailable)
@@ -461,6 +467,51 @@ class ProfileViewController: UIViewController {
 
     }
 
+    // MARK: Functions
+    private func getPaymentInfo() {
+
+        self.ibanPaymentDetails = nil
+
+        Env.servicesProvider.getPaymentInformation()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("PAYMENT INFO ERROR: \(error)")
+
+                }
+
+            }, receiveValue: { [weak self] paymentInfo in
+
+                let paymentDetails = paymentInfo.data.filter({
+                    $0.details.isNotEmpty
+                })
+
+                if paymentDetails.isNotEmpty {
+
+                    if let bankPaymentDetail = paymentDetails.filter({
+                        $0.type == "BANK"
+                    }).first,
+                       let ibanPaymentDetail = bankPaymentDetail.details.filter({
+                           $0.key == "IBAN"
+                       }).first {
+
+                        if ibanPaymentDetail.value != "" {
+                            self?.ibanPaymentDetails = ibanPaymentDetail
+                        }
+                    }
+
+                }
+
+            })
+            .store(in: &cancellables)
+    }
+
+    // MARK: Actions
+
     @IBAction private func didTapDepositButton() {
         let depositViewController = DepositViewController()
         let navigationViewController = Router.navigationController(with: depositViewController)
@@ -472,12 +523,39 @@ class ProfileViewController: UIViewController {
 
     @IBAction private func didTapWithdrawButton() {
 
-        if let accountBalance = Env.userSessionStore.userWalletPublisher.value?.totalWithdrawable,
+        if self.ibanPaymentDetails == nil,
+           let accountBalance = Env.userSessionStore.userWalletPublisher.value?.totalWithdrawable,
+           let userKycStatus = Env.userSessionStore.userKnowYourCustomerStatus,
+           accountBalance > 0 && userKycStatus == .passConditional {
+
+            let ibanProofViewModel = IBANProofViewModel()
+
+            let ibanProofViewController = IBANProofViewController(viewModel: ibanProofViewModel)
+
+            ibanProofViewController.shouldReloadPaymentInfo = { [weak self] in
+                self?.getPaymentInfo()
+            }
+
+            let navigationViewController = Router.navigationController(with: ibanProofViewController)
+
+            self.present(navigationViewController, animated: true, completion: nil)
+
+        }
+        else if self.ibanPaymentDetails != nil,
+                let userKycStatus = Env.userSessionStore.userKnowYourCustomerStatus,
+                userKycStatus == .passConditional   {
+            let alert = UIAlertController(title: localized("withdrawal_warning"),
+                                          message: localized("withdrawal_iban_pending_approval_message"),
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: localized("understood"), style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else if let accountBalance = Env.userSessionStore.userWalletPublisher.value?.totalWithdrawable,
            accountBalance > 0,
            let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete,
-           let isUserKycVerified = Env.userSessionStore.userKnowYourCustomerStatus {
+           let userKycStatus = Env.userSessionStore.userKnowYourCustomerStatus {
 
-            if isUserProfileComplete && isUserKycVerified != .request {
+            if isUserProfileComplete && userKycStatus == .pass {
                 let withDrawViewController = WithdrawViewController()
                 let navigationViewController = Router.navigationController(with: withDrawViewController)
                 withDrawViewController.shouldRefreshUserWallet = {
@@ -485,11 +563,18 @@ class ProfileViewController: UIViewController {
                 }
                 self.present(navigationViewController, animated: true, completion: nil)
             }
+            else if userKycStatus == .request {
+                let alert = UIAlertController(title: localized("kyc_message_title"),
+                                              message: localized("kyc_message_body"),
+                                              preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: localized("understood"), style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
             else {
                 let alert = UIAlertController(title: localized("profile_incomplete"),
                                               message: localized("profile_incomplete_withdraw"),
                                               preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+                alert.addAction(UIAlertAction(title: localized("understood"), style: .default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
 

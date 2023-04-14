@@ -344,9 +344,11 @@ extension SportRadarModelMapper {
 
     static func transactionDetail(fromInternalTransactionDetail internalTransactionDetail: SportRadarModels.TransactionDetail) -> TransactionDetail {
 
+        let transactionType = TransactionType.init(transactionType: internalTransactionDetail.type)
+
         return TransactionDetail(id: internalTransactionDetail.id,
                                  dateTime: internalTransactionDetail.dateTime,
-                                 type: internalTransactionDetail.type,
+                                 type: transactionType,
                                  amount: internalTransactionDetail.amount,
                                  postBalance: internalTransactionDetail.postBalance,
                                  amountBonus: internalTransactionDetail.amountBonus,

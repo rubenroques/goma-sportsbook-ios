@@ -1,13 +1,13 @@
 //
-//  TransactionTypeMapper.swift
-//  Sportsbook
+//  TransactionTypes.swift
+//  
 //
-//  Created by André Lascas on 03/03/2023.
+//  Created by André Lascas on 11/04/2023.
 //
 
 import Foundation
 
-enum TransactionTypeMapper {
+public enum TransactionType: CaseIterable {
 
     case deposit
     case withdrawal
@@ -43,23 +43,22 @@ enum TransactionTypeMapper {
         }
     }
 
-    var transactionName: String {
+    var transactionKey: String {
         switch self {
-        case .deposit: return localized("deposit")
-        case .withdrawal: return localized("withdrawal")
-        case .bonusCredited: return localized("bonus_credit")
-        case .bonusExpired: return localized("bonus_expired")
-        case .bonusReleased: return localized("bonus_released")
-        case .depositCancel: return localized("deposit_cancel")
-        case .withdrawalCancel: return localized("withdrawal_cancel")
-        case .betPlaced: return localized("bet_placed")
-        case .betSettled: return localized("bet_settled")
-        case .cashOut: return localized("cashout")
-        case .refund: return localized("refund")
-        case .productBonus: return localized("product_bonus")
-        case .manualAdjustment: return localized("man_adjust")
+        case .deposit: return "DEPOSIT"
+        case .withdrawal: return "WITHDRAWAL"
+        case .bonusCredited: return "CRE_BONUS"
+        case .bonusExpired: return "EXP_BONUS"
+        case .bonusReleased: return "BONUS_REL"
+        case .depositCancel: return "DP_CANCEL"
+        case .withdrawalCancel: return "WD_CANCEL"
+        case .betPlaced: return "GAME_BET"
+        case .betSettled: return "GAME_WIN"
+        case .cashOut: return "CASH_OUT"
+        case .refund: return "REFUND"
+        case .productBonus: return "PRODUC_BON"
+        case .manualAdjustment: return "MAN_ADJUST"
         }
     }
+
 }
-
-

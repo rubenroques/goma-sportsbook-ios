@@ -312,7 +312,6 @@ class MyTicketsViewModel: NSObject {
             }
             .store(in: &cancellables)
 
-
     }
 
     func refresh() {
@@ -409,6 +408,10 @@ class MyTicketsViewModel: NSObject {
 
         // TODO: Get a bet token for the shared clicked bet
         // Send it to self?.clickedBetTokenPublisher.send(betToken)
+        if let betslipId = self.clickedBetId {
+            print("BETSLIP TICKET ID: \(betslipId)")
+            self.clickedBetTokenPublisher.send("")
+        }
 
     }
     
@@ -493,8 +496,9 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
 
             cell.tappedShareAction = { [weak self] in
                 if let cellSnapshot = cell.snapshot,
-                    let ticketStatus = ticketValue.status {
-                    self?.requestShareActivityView?(cellSnapshot, ticketValue.betId, ticketStatus)
+                   let ticketStatus = ticketValue.status,
+                   let betslipId = ticketValue.betslipId {
+                    self?.requestShareActivityView?(cellSnapshot, "\(betslipId)", ticketStatus)
                     self?.clickedBetHistory = ticketValue
                 }
             }
