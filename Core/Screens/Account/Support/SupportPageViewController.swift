@@ -16,15 +16,33 @@ class SupportPageViewController: UIViewController {
     private lazy var backButtonBaseView: UIView = Self.createBackButtonBaseView()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
+    private lazy var anonymousFieldsView: UIView = Self.createAnonymousFieldsView()
+    private lazy var firstNameHeaderTextFieldView: HeaderTextFieldView = Self.createFirstNameHeaderTextFieldView()
+    private lazy var lastNameHeaderTextFieldView: HeaderTextFieldView = Self.createLastNameHeaderTextFieldView()
+    private lazy var emailHeaderTextFieldView: HeaderTextFieldView = Self.createEmailHeaderTextFieldView()
     private lazy var subjectTextField: HeaderTextFieldView = Self.createSubjectTextField()
     private lazy var descriptionView: UIView = Self.createDescriptionBaseView()
     private lazy var descriptionPlaceholderLabel: UILabel = Self.createDescriptionPlaceholderLabel()
     private lazy var descriptionTextView: UITextView = Self.createDescriptionTextView()
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var sendButton: UIButton = Self.createSendButton()
+
+    // Constraints
+    private lazy var anonymousViewTopConstraint: NSLayoutConstraint = Self.createAnonymousViewTopConstraint()
+    private lazy var subjectViewTopConstraint: NSLayoutConstraint = Self.createSubjectViewTopConstraint()
    
     private let viewModel: SupportPageViewModel
     var cancellables = Set<AnyCancellable>()
+
+    var isAnonymous: Bool = false {
+        didSet {
+            self.anonymousFieldsView.isHidden = !isAnonymous
+            self.subjectViewTopConstraint.isActive = !isAnonymous
+            self.anonymousViewTopConstraint.isActive = isAnonymous
+        }
+    }
+
+    var hasSupportDetails: CurrentValueSubject<Bool, Never> = .init(false)
    
     // MARK: - Lifetime and Cycle
     init(viewModel: SupportPageViewModel) {
@@ -45,6 +63,14 @@ class SupportPageViewController: UIViewController {
         self.commonInit()
 
         self.bind(toViewModel: self.viewModel)
+
+        if Env.userSessionStore.isUserLogged() {
+            self.isAnonymous = false
+        }
+        else {
+            self.isAnonymous = true
+        }
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -76,19 +102,51 @@ class SupportPageViewController: UIViewController {
         let tapSendButton = UITapGestureRecognizer(target: self, action: #selector(self.didTapSend))
         self.sendButton.addGestureRecognizer(tapSendButton)
         StyleHelper.styleButton(button: self.sendButton)
-        
-        Publishers.CombineLatest(self.subjectTextField.textPublisher, self.descriptionTextView.textPublisher)
-            .map { subjectText, descriptionViewText in
-                if subjectText?.isNotEmpty ?? false && descriptionViewText?.isNotEmpty ?? false {
 
-                    return true
+
+        if Env.userSessionStore.isUserLogged() {
+            Publishers.CombineLatest(self.subjectTextField.textPublisher, self.descriptionTextView.textPublisher)
+                .map { subjectText, descriptionViewText in
+                    if subjectText?.isNotEmpty ?? false && descriptionViewText?.isNotEmpty ?? false {
+
+                        return true
+                    }
+
+                    return false
                 }
-           
-                return false
-            }
-            .assign(to: \.isEnabled, on: self.sendButton)
-            .store(in: &self.cancellables)
-        
+                .assign(to: \.isEnabled, on: self.sendButton)
+                .store(in: &self.cancellables)
+        }
+        else {
+            Publishers.CombineLatest(self.subjectTextField.textPublisher, self.descriptionTextView.textPublisher)
+                .sink(receiveValue: { [weak self] subjectText, descriptionText in
+
+                    if subjectText != "" && descriptionText != "" {
+                        self?.hasSupportDetails.send(true)
+                    }
+                    else {
+                        self?.hasSupportDetails.send(false)
+                    }
+                })
+                .store(in: &self.cancellables)
+
+            Publishers.CombineLatest4(self.hasSupportDetails,
+                                      self.firstNameHeaderTextFieldView.textPublisher,
+                                      self.lastNameHeaderTextFieldView.textPublisher,
+                                      self.emailHeaderTextFieldView.textPublisher)
+                .map { hasSuportDetails, firstNameText, lastNameText, emailText in
+                    if hasSuportDetails && firstNameText?.isNotEmpty ?? false && lastNameText?.isNotEmpty ?? false && emailText?.isNotEmpty ?? false {
+
+                        return true
+                    }
+
+                    return false
+                }
+                .assign(to: \.isEnabled, on: self.sendButton)
+                .store(in: &self.cancellables)
+        }
+
+
     }
 
     private func setupWithTheme() {
@@ -99,6 +157,32 @@ class SupportPageViewController: UIViewController {
         self.navigationBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.titleLabel.backgroundColor = .clear
         self.titleLabel.textColor = UIColor.App.textPrimary
+
+        self.anonymousFieldsView.backgroundColor = .clear
+
+        self.firstNameHeaderTextFieldView.backgroundColor = .clear
+        self.firstNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.textSecondary)
+        self.firstNameHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
+        self.firstNameHeaderTextFieldView.setSecureField(false)
+        self.firstNameHeaderTextFieldView.textField.font = AppFont.with(type: .semibold, size: 15)
+        self.firstNameHeaderTextFieldView.headerLabel.backgroundColor = UIColor.App.backgroundCards
+        self.firstNameHeaderTextFieldView.setViewColor(UIColor.App.backgroundCards)
+
+        self.lastNameHeaderTextFieldView.backgroundColor = .clear
+        self.lastNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.textSecondary)
+        self.lastNameHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
+        self.lastNameHeaderTextFieldView.setSecureField(false)
+        self.lastNameHeaderTextFieldView.textField.font = AppFont.with(type: .semibold, size: 15)
+        self.lastNameHeaderTextFieldView.headerLabel.backgroundColor = UIColor.App.backgroundCards
+        self.lastNameHeaderTextFieldView.setViewColor(UIColor.App.backgroundCards)
+
+        self.emailHeaderTextFieldView.backgroundColor = .clear
+        self.emailHeaderTextFieldView.setHeaderLabelColor(UIColor.App.textSecondary)
+        self.emailHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
+        self.emailHeaderTextFieldView.setSecureField(false)
+        self.emailHeaderTextFieldView.textField.font = AppFont.with(type: .semibold, size: 15)
+        self.emailHeaderTextFieldView.headerLabel.backgroundColor = UIColor.App.backgroundCards
+        self.emailHeaderTextFieldView.setViewColor(UIColor.App.backgroundCards)
         
         self.subjectTextField.backgroundColor = .clear
         self.subjectTextField.setHeaderLabelColor(UIColor.App.textSecondary)
@@ -149,14 +233,26 @@ class SupportPageViewController: UIViewController {
     @objc func didTapBackground() {
         self.resignFirstResponder()
 
+        self.firstNameHeaderTextFieldView.resignFirstResponder()
+        self.lastNameHeaderTextFieldView.resignFirstResponder()
+        self.emailHeaderTextFieldView.resignFirstResponder()
         self.subjectTextField.resignFirstResponder()
         self.descriptionTextView.resignFirstResponder()
         
     }
     
     @objc func didTapSend() {
-  
-        self.viewModel.sendEmail(title: self.subjectTextField.text, message: self.descriptionTextView.text)
+
+        if Env.userSessionStore.isUserLogged() {
+            self.viewModel.sendEmail(title: self.subjectTextField.text, message: self.descriptionTextView.text)
+        }
+        else {
+            self.viewModel.sendEmail(title: self.subjectTextField.text,
+                                     message: self.descriptionTextView.text,
+                                     firstName: self.firstNameHeaderTextFieldView.text,
+                                     lastName: self.lastNameHeaderTextFieldView.text,
+                                     email: self.emailHeaderTextFieldView.text)
+        }
 
     }
 }
@@ -205,6 +301,31 @@ extension SupportPageViewController {
         titleLabel.textAlignment = .center
         return titleLabel
     }
+
+    private static func createAnonymousFieldsView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createFirstNameHeaderTextFieldView() -> HeaderTextFieldView {
+        let textField = HeaderTextFieldView()
+        textField.setPlaceholderText(localized("first_name"))
+        return textField
+    }
+
+    private static func createLastNameHeaderTextFieldView() -> HeaderTextFieldView {
+        let textField = HeaderTextFieldView()
+        textField.setPlaceholderText(localized("last_name"))
+        return textField
+    }
+
+    private static func createEmailHeaderTextFieldView() -> HeaderTextFieldView {
+        let textField = HeaderTextFieldView()
+        textField.setPlaceholderText(localized("email"))
+        textField.keyboardType = .emailAddress
+        return textField
+    }
     
     private static func createDescriptionPlaceholderLabel() -> UILabel {
         let titleLabel = UILabel()
@@ -252,6 +373,16 @@ extension SupportPageViewController {
         
         return sendButton
     }
+
+    private static func createAnonymousViewTopConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createSubjectViewTopConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
     
     private func setupSubviews() {
 
@@ -262,6 +393,12 @@ extension SupportPageViewController {
         
         self.descriptionView.addSubview(self.descriptionPlaceholderLabel)
         self.descriptionView.addSubview(self.descriptionTextView)
+
+        self.baseView.addSubview(self.anonymousFieldsView)
+
+        self.anonymousFieldsView.addSubview(self.firstNameHeaderTextFieldView)
+        self.anonymousFieldsView.addSubview(self.lastNameHeaderTextFieldView)
+        self.anonymousFieldsView.addSubview(self.emailHeaderTextFieldView)
         
         self.baseView.addSubview(self.subjectTextField)
         self.baseView.addSubview(self.descriptionView)
@@ -303,8 +440,28 @@ extension SupportPageViewController {
             self.baseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.baseView.topAnchor.constraint(equalTo: self.navigationBaseView.bottomAnchor),
             self.baseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.anonymousFieldsView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 15),
+            self.anonymousFieldsView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -15),
+            self.anonymousFieldsView.bottomAnchor.constraint(equalTo: self.subjectTextField.topAnchor, constant: 0),
+
+            self.firstNameHeaderTextFieldView.leadingAnchor.constraint(equalTo: self.anonymousFieldsView.leadingAnchor, constant: 15),
+            self.firstNameHeaderTextFieldView.trailingAnchor.constraint(equalTo: self.anonymousFieldsView.centerXAnchor, constant: -4),
+            self.firstNameHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 90),
+            self.firstNameHeaderTextFieldView.topAnchor.constraint(equalTo: self.anonymousFieldsView.topAnchor, constant: 10),
+
+            self.lastNameHeaderTextFieldView.leadingAnchor.constraint(equalTo: self.anonymousFieldsView.centerXAnchor, constant: 4),
+            self.lastNameHeaderTextFieldView.trailingAnchor.constraint(equalTo: self.anonymousFieldsView.trailingAnchor, constant: -15),
+            self.lastNameHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 90),
+            self.lastNameHeaderTextFieldView.topAnchor.constraint(equalTo: self.firstNameHeaderTextFieldView.topAnchor),
+
+            self.emailHeaderTextFieldView.leadingAnchor.constraint(equalTo: self.anonymousFieldsView.leadingAnchor, constant: 15),
+            self.emailHeaderTextFieldView.trailingAnchor.constraint(equalTo: self.anonymousFieldsView.trailingAnchor, constant: -15),
+            self.emailHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 90),
+            self.emailHeaderTextFieldView.topAnchor.constraint(equalTo: self.firstNameHeaderTextFieldView.bottomAnchor, constant: 10),
+            self.emailHeaderTextFieldView.bottomAnchor.constraint(equalTo: self.anonymousFieldsView.bottomAnchor, constant: -10),
             
-            self.subjectTextField.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 30),
+            //self.subjectTextField.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 30),
             self.subjectTextField.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 28),
             self.subjectTextField.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -28),
             self.subjectTextField.heightAnchor.constraint(equalToConstant: 90),
@@ -332,6 +489,12 @@ extension SupportPageViewController {
             self.descriptionTextView.bottomAnchor.constraint(equalTo: self.descriptionView.bottomAnchor, constant: -53),
             
         ])
+
+        self.anonymousViewTopConstraint = self.anonymousFieldsView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 30)
+        self.anonymousViewTopConstraint.isActive = false
+
+        self.subjectViewTopConstraint = self.subjectTextField.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 30)
+        self.subjectViewTopConstraint.isActive = true
         
     }
 

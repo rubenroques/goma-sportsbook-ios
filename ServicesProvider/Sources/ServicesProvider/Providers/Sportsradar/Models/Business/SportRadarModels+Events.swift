@@ -86,6 +86,90 @@ extension SportRadarModels {
             }
         }
     }
+
+    struct EventLiveDataExtended: Decodable {
+        var id: String
+        var homeScore: Int
+        var awayScore: Int
+
+        var matchTime: String?
+        var status: Event.Status
+
+        enum CodingKeys: String, CodingKey {
+            case attributedContainer = "attributes"
+            case completeContainer = "COMPLETE"
+            case currentScoreContainer = "CURRENT_SCORE"
+            case competitorContainer = "COMPETITOR"
+            case statusContainer = "STATUS"
+            case eventContainer = "EVENT"
+            case emptyContainer = ""
+            case matchScoreContainer = "MATCH_SCORE"
+            case homeScore = "home"
+            case awayScore = "away"
+            case eventStatus = "status"
+            case matchTime = "matchTime"
+        }
+
+        init(id: String, homeScore: Int, awayScore: Int, matchTime: String? = nil, status: Event.Status) {
+            self.id = id
+            self.homeScore = homeScore
+            self.awayScore = awayScore
+            self.matchTime = matchTime
+            self.status = status
+        }
+
+        init(from decoder: Decoder) throws {
+            let container: KeyedDecodingContainer<CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
+
+            self.id = ""
+
+            let fullMatchTime = try container.decodeIfPresent(String.self, forKey: .matchTime) ?? ""
+            let minutesPart = SocketMessageParseHelper.extractMatchMinutes(from: fullMatchTime)
+            self.matchTime = minutesPart
+
+            // Status
+            self.status = .unknown
+            if let attributesContainer = try? container.nestedContainer(keyedBy: CodingKeys.self, forKey: .attributedContainer),
+               let completeContainer = try? attributesContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .completeContainer),
+               let statusContainer = try? completeContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .statusContainer),
+               let eventContainer = try? statusContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .eventContainer) {
+
+                let statusValue =  try eventContainer.decode(String.self, forKey: .emptyContainer)
+
+                self.status = Event.Status.init(value: statusValue)
+            }
+
+            // Scores
+            self.homeScore = 0
+            self.awayScore = 0
+
+            if let attributesContainer = try? container.nestedContainer(keyedBy: CodingKeys.self, forKey: .attributedContainer),
+               let completeContainer = try? attributesContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .completeContainer),
+               let currentScoreContainer = try? completeContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .currentScoreContainer),
+               let competitorContainer = try? currentScoreContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .competitorContainer) {
+
+                if let homeScore = try? competitorContainer.decode(Int.self, forKey: .homeScore) {
+                    self.homeScore = homeScore
+                }
+                if let awayScore = try? competitorContainer.decode(Int.self, forKey: .awayScore) {
+                    self.awayScore = awayScore
+                }
+            }
+            else if let attributesContainer = try? container.nestedContainer(keyedBy: CodingKeys.self, forKey: .attributedContainer),
+                     let completeContainer = try? attributesContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .completeContainer),
+                     let matchScoreContainer = try? completeContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .matchScoreContainer),
+                     let competitorContainer = try? matchScoreContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .competitorContainer) {
+
+                      if let homeScore = try? competitorContainer.decode(Int.self, forKey: .homeScore) {
+                          self.homeScore = homeScore
+                      }
+                      if let awayScore = try? competitorContainer.decode(Int.self, forKey: .awayScore) {
+                          self.awayScore = awayScore
+                      }
+                  }
+
+        }
+    }
     
     struct Event: Codable {
         

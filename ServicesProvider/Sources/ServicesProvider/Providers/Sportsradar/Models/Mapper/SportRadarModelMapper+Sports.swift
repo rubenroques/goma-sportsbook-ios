@@ -12,17 +12,26 @@ extension SportRadarModelMapper {
 
     static func sportType(fromSportRadarSportType sportRadarSportType: SportRadarModels.SportType) -> SportType {
 
-        // Try get the internal sport id name
-        let cleanedSportRadarSportTypeName = Self.simplify(string: sportRadarSportType.name)
-        let sportTypeInfoId = SportTypeInfo.allCases.first { sportTypeInfo in
-            let cleanedName = Self.simplify(string: sportTypeInfo.name)
-            return cleanedName == cleanedSportRadarSportTypeName
-        }?.id
+        // Try get the internal sport id by alpha code or name if it fails
+        var sportTypeId = ""
 
+        if let sportAlphaId = sportRadarSportType.alphaId {
+            sportTypeId = SportTypeInfo.init(alphaCode: sportAlphaId)?.id ?? ""
+        }
+        else {
+            let cleanedSportRadarSportTypeName = Self.simplify(string: sportRadarSportType.name)
+            let sportTypeInfoId = SportTypeInfo.allCases.first { sportTypeInfo in
+                let cleanedName = Self.simplify(string: sportTypeInfo.name)
+                return cleanedName == cleanedSportRadarSportTypeName
+            }?.id
+
+            sportTypeId = sportTypeInfoId ?? ""
+        }
+        
         let sportType = SportType(name: sportRadarSportType.name,
                                   numericId: sportRadarSportType.numericId,
                                   alphaId: sportRadarSportType.alphaId,
-                                  iconId: sportTypeInfoId,
+                                  iconId: sportTypeId,
                                   showEventCategory: false,
                                   numberEvents: sportRadarSportType.numberEvents,
                                   numberOutrightEvents: sportRadarSportType.numberOutrightEvents,

@@ -504,7 +504,8 @@ class MyTicketTableViewCell: UITableViewCell {
             }
         }
 
-        if let partialCashoutStake = betHistoryEntry.partialCashoutStake,
+        if betHistoryEntry.status?.uppercased() == "OPENED",
+           let partialCashoutStake = betHistoryEntry.partialCashoutStake,
            let partialCashoutReturn = betHistoryEntry.partialCashoutReturn,
         partialCashoutStake > 0 && partialCashoutReturn > 0 {
 

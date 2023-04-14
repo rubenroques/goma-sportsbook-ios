@@ -1259,3 +1259,7 @@
 "kyc_message_body" = "Update your Documents in order to complete your KYC.";
 
 "understood" = "Understood";
+
+"withdrawal_reject" = "Withdrawal Rejected";
+
+"contact_settings" = "Contact settings";

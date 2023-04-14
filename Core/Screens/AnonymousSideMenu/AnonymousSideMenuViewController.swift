@@ -142,7 +142,7 @@ class AnonymousSideMenuViewController: UIViewController {
         self.menusStackView.addArrangedSubview(promotionsView)
         self.menusStackView.addArrangedSubview(responsibleGamingView)
         // self.menusStackView.addArrangedSubview(settingsView)
-        // self.menusStackView.addArrangedSubview(supportView)
+        self.menusStackView.addArrangedSubview(supportView)
     }
 
     // MARK: - Actions

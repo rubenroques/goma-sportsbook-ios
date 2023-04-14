@@ -19,11 +19,17 @@ class SupportPageViewModel {
         
     }
     
-    func sendEmail(title: String, message: String) {
+    func sendEmail(title: String, message: String, firstName: String? = nil, lastName: String? = nil, email: String? = nil) {
 
         let userProfile = Env.userSessionStore.userProfilePublisher.value
 
-        Env.servicesProvider.contactUs(firstName: userProfile?.firstName ?? "", lastName: userProfile?.lastName ?? "", email: userProfile?.email ?? "", subject: title, message: message)
+        let firstName = firstName != nil ? firstName : userProfile?.firstName
+
+        let lastName = lastName != nil ? lastName : userProfile?.lastName
+
+        let email = email != nil ? email : userProfile?.email
+
+        Env.servicesProvider.contactUs(firstName: firstName ?? "", lastName: lastName ?? "", email: email ?? "", subject: title, message: message)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {

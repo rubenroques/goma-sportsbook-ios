@@ -161,6 +161,7 @@ extension ServiceProviderModelMapper {
         case .refund: return localized("refund")
         case .productBonus: return localized("product_bonus")
         case .manualAdjustment: return localized("man_adjust")
+        case .withdrawalReject: return localized("withdrawal_reject")
         default: return nil
         }
     }

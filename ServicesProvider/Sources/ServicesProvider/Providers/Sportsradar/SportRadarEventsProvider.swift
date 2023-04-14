@@ -673,9 +673,9 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
         }
     }
 
-    func eventDetailsLiveInitialData(contentIdentifier: ContentIdentifier, eventLiveDataSummary: SportRadarModels.EventLiveDataSummary) {
+    func eventDetailsLiveInitialData(contentIdentifier: ContentIdentifier, eventLiveDataExtended: SportRadarModels.EventLiveDataExtended) {
         if let eventDetailsCoordinator = self.eventDetailsCoordinator {
-            eventDetailsCoordinator.initialLiveData(eventLiveDataSummary: eventLiveDataSummary)
+            eventDetailsCoordinator.initialLiveData(eventLiveDataExtended: eventLiveDataExtended)
         }
     }
 

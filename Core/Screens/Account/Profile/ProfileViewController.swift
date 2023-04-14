@@ -451,6 +451,11 @@ class ProfileViewController: UIViewController {
         let settingsTap = UITapGestureRecognizer(target: self, action: #selector(appSettingsViewTapped(sender:)))
         settingsView.addGestureRecognizer(settingsTap)
 
+        let contactSettingsView = NavigationCardView()
+        contactSettingsView.setupView(title: localized("contact_settings"), iconTitle: "messages_profile_icon")
+        let contactSettingsTap = UITapGestureRecognizer(target: self, action: #selector(contactSettingsViewTapped(sender:)))
+        contactSettingsView.addGestureRecognizer(contactSettingsTap)
+
         let supportView = NavigationCardView()
         supportView.setupView(title: localized("support"), iconTitle: "support_profile_icon")
         let supportTap = UITapGestureRecognizer(target: self, action: #selector(supportViewTapped(sender:)))
@@ -463,6 +468,7 @@ class ProfileViewController: UIViewController {
         self.stackView.addArrangedSubview(historyView)
         self.stackView.addArrangedSubview(responsibleGamingView)
         self.stackView.addArrangedSubview(settingsView)
+        self.stackView.addArrangedSubview(contactSettingsView)
         self.stackView.addArrangedSubview(supportView)
 
     }
@@ -657,6 +663,14 @@ extension ProfileViewController {
     @objc func appSettingsViewTapped(sender: UITapGestureRecognizer) {
         let appSettingsViewController = AppSettingsViewController()
         self.navigationController?.pushViewController(appSettingsViewController, animated: true)
+    }
+
+    @objc func contactSettingsViewTapped(sender: UITapGestureRecognizer) {
+        let contactSettingsViewModel = ContactSettingsViewModel()
+
+        let contactSettingsViewController = ContactSettingsViewController(viewModel: contactSettingsViewModel )
+
+        self.navigationController?.pushViewController(contactSettingsViewController, animated: true)
     }
 
     @objc func supportViewTapped(sender: UITapGestureRecognizer) {

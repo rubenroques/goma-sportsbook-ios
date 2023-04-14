@@ -78,7 +78,7 @@ public enum ContentType: String, Codable {
     case preLiveSports = "sportTypeByDate"
 
     case eventDetails = "event"
-    case eventDetailsLiveData = "liveDataSummary"
+    case eventDetailsLiveData = "liveDataExtended"
     case eventGroup = "eventGroup"
     case eventSummary = "eventSummary"
 

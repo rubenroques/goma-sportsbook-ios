@@ -155,10 +155,16 @@ class SportRadarEventDetailsCoordinator {
 
 extension SportRadarEventDetailsCoordinator {
 
-    func initialLiveData(eventLiveDataSummary: SportRadarModels.EventLiveDataSummary) {
-        self.storage.updateEventStatus(newStatus: eventLiveDataSummary.status.stringValue)
-        self.storage.updateEventTime(newTime: eventLiveDataSummary.matchTime ?? "")
-        self.storage.updateEventScore(newHomeScore: eventLiveDataSummary.homeScore, newAwayScore: eventLiveDataSummary.awayScore)
+//    func initialLiveData(eventLiveDataSummary: SportRadarModels.EventLiveDataSummary) {
+//        self.storage.updateEventStatus(newStatus: eventLiveDataSummary.status.stringValue)
+//        self.storage.updateEventTime(newTime: eventLiveDataSummary.matchTime ?? "")
+//        self.storage.updateEventScore(newHomeScore: eventLiveDataSummary.homeScore, newAwayScore: eventLiveDataSummary.awayScore)
+//    }
+
+    func initialLiveData(eventLiveDataExtended: SportRadarModels.EventLiveDataExtended) {
+        self.storage.updateEventStatus(newStatus: eventLiveDataExtended.status.stringValue)
+        self.storage.updateEventTime(newTime: eventLiveDataExtended.matchTime ?? "")
+        self.storage.updateEventScore(newHomeScore: eventLiveDataExtended.homeScore, newAwayScore: eventLiveDataExtended.awayScore)
     }
 
     func handleContentUpdate(_ content: SportRadarModels.ContentContainer) {

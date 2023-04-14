@@ -17,7 +17,9 @@ protocol SportRadarConnectorSubscriber: AnyObject {
     func preLiveSportsUpdated(withSportTypes: [SportRadarModels.SportType])
 
     func eventDetailsUpdated(forContentIdentifier identifier: ContentIdentifier, event: Event)
-    func eventDetailsLiveInitialData(contentIdentifier: ContentIdentifier, eventLiveDataSummary: SportRadarModels.EventLiveDataSummary)
+    //func eventDetailsLiveInitialData(contentIdentifier: ContentIdentifier, eventLiveDataSummary: SportRadarModels.EventLiveDataSummary)
+    func eventDetailsLiveInitialData(contentIdentifier: ContentIdentifier, eventLiveDataExtended: SportRadarModels.EventLiveDataExtended)
+
     func eventGroups(forContentIdentifier identifier: ContentIdentifier, withEvents: [EventsGroup])
     func outrightEventGroups(events: [EventsGroup])
 
@@ -88,7 +90,6 @@ class SportRadarSocketConnector: NSObject, Connector {
                      }
                    }
                    """
-        
         self.socket.write(string: body) {
             print("ServiceProvider - SportRadarSocketConnector: sendListeningStarted sent")
         }
@@ -221,9 +222,9 @@ extension SportRadarSocketConnector: WebSocketDelegate {
                         let mappedMarket = SportRadarModelMapper.market(fromInternalMarket: marketValue)
                         subscriber.marketDetails(forContentIdentifier: contentIdentifier, market: mappedMarket)
                     }
-                case .eventDetailsLiveData(let contentIdentifier, let eventLiveDataSummary):
-                    if let subscriber = self.messageSubscriber, let eventLiveDataSummaryValue = eventLiveDataSummary {
-                        subscriber.eventDetailsLiveInitialData(contentIdentifier: contentIdentifier, eventLiveDataSummary: eventLiveDataSummaryValue)
+                case .eventDetailsLiveData(let contentIdentifier, let eventLiveDataExtended):
+                    if let subscriber = self.messageSubscriber, let eventLiveDataExtendedValue = eventLiveDataExtended {
+                        subscriber.eventDetailsLiveInitialData(contentIdentifier: contentIdentifier, eventLiveDataExtended: eventLiveDataExtendedValue)
                     }
                 default:
                     if let subscriber = self.messageSubscriber {

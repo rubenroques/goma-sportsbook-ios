@@ -22,7 +22,7 @@ extension SportRadarModels {
         case preLiveSports(sportsTypes: [SportType]) 
         
         case eventDetails(contentIdentifier: ContentIdentifier, event: SportRadarModels.Event?)
-        case eventDetailsLiveData(contentIdentifier: ContentIdentifier, eventLiveDataSummary: SportRadarModels.EventLiveDataSummary?)
+        case eventDetailsLiveData(contentIdentifier: ContentIdentifier, eventLiveDataExtended: SportRadarModels.EventLiveDataExtended?)
 
         case eventGroup(contentIdentifier: ContentIdentifier, events: [SportRadarModels.Event])
         case outrightEventGroup(events: [SportRadarModels.Event])
@@ -120,6 +120,7 @@ extension SportRadarModels {
         private enum ScoreUpdateCodingKeys: String, CodingKey {
             case home = "home"
             case away = "away"
+            case competitor = "COMPETITOR"
         }
 
         init(from decoder: Decoder) throws {
@@ -213,11 +214,11 @@ extension SportRadarModels {
                 }
             case .eventDetailsLiveData:
                 if container.contains(.change) {
-                    let eventLiveData = try container.decodeIfPresent(SportRadarModels.EventLiveDataSummary.self, forKey: .change)
-                    return ContentContainer.eventDetailsLiveData(contentIdentifier: contentIdentifier, eventLiveDataSummary: eventLiveData)
+                    let eventLiveData = try container.decodeIfPresent(SportRadarModels.EventLiveDataExtended.self, forKey: .change)
+                    return ContentContainer.eventDetailsLiveData(contentIdentifier: contentIdentifier, eventLiveDataExtended: eventLiveData)
                 }
                 else {
-                    return ContentContainer.eventDetailsLiveData(contentIdentifier: contentIdentifier, eventLiveDataSummary: nil)
+                    return ContentContainer.eventDetailsLiveData(contentIdentifier: contentIdentifier, eventLiveDataExtended: nil)
                 }
             }
         }
@@ -228,6 +229,10 @@ extension SportRadarModels {
 
             let path: String = (try? container.decode(String.self, forKey: .path)) ?? ""
             let changeType: String = (try? container.decode(String.self, forKey: .changeType)) ?? ""
+
+            if path.contains("matchTime") {
+                ()
+            }
 
             // print("ContentContainer recieved path \(path) with change \(changeType)")
 
@@ -264,6 +269,20 @@ extension SportRadarModels {
                 // Changed the number of markets for an event
                 let newMarketCount = try container.decode(Int.self, forKey: .change)
                 return .updateEventMarketCount(contentIdentifier: contentIdentifier, eventId: eventId, newMarketCount: newMarketCount)
+            }
+            else if path.contains("attributes") && path.contains("COMPLETE") && path.contains("CURRENT_SCORE") {
+                let changeContainer = try container.nestedContainer(keyedBy: ScoreUpdateCodingKeys.self, forKey: .change)
+                let competitorContainer = try changeContainer.nestedContainer(keyedBy: ScoreUpdateCodingKeys.self, forKey: .competitor)
+
+                let homeScore = try competitorContainer.decodeIfPresent(Int.self, forKey: .home)
+                let awayScore = try competitorContainer.decodeIfPresent(Int.self, forKey: .away)
+
+                let eventIdContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
+
+                let eventId = try eventIdContainer.decode(String.self, forKey: .contentId)
+
+                return .updateEventScore(contentIdentifier: contentIdentifier, eventId: eventId, homeScore: homeScore, awayScore: awayScore)
+
             }
             else if path.contains("scores") && path.contains("liveDataSummary") && (path.contains("MATCH_SCORE") || path.contains("CURRENT_SCORE")), let eventId = SocketMessageParseHelper.extractEventId(path) {
                 // Updated score information

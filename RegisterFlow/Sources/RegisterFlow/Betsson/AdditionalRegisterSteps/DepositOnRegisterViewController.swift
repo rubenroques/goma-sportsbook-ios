@@ -83,10 +83,10 @@ public class DepositOnRegisterViewController: UIViewController {
 
         self.depositHeaderTextFieldView.setCurrencyMode(true, currencySymbol: "€")
 
-        self.amountButton1.setTitle("€10", for: .normal)
-        self.amountButton2.setTitle("€20", for: .normal)
-        self.amountButton3.setTitle("€50", for: .normal)
-        self.amountButton4.setTitle("€100", for: .normal)
+        self.amountButton1.setTitle("€20", for: .normal)
+        self.amountButton2.setTitle("€50", for: .normal)
+        self.amountButton3.setTitle("€100", for: .normal)
+        self.amountButton4.setTitle("€200", for: .normal)
 
         self.amountButton1.addTarget(self, action: #selector(didTapAmountButton1), for: .primaryActionTriggered)
         self.amountButton2.addTarget(self, action: #selector(didTapAmountButton2), for: .primaryActionTriggered)
@@ -153,19 +153,19 @@ public class DepositOnRegisterViewController: UIViewController {
     }
 
     @objc func didTapAmountButton1() {
-        self.depositHeaderTextFieldView.setText("10")
-    }
-
-    @objc func didTapAmountButton2() {
         self.depositHeaderTextFieldView.setText("20")
     }
 
-    @objc func didTapAmountButton3() {
+    @objc func didTapAmountButton2() {
         self.depositHeaderTextFieldView.setText("50")
     }
 
-    @objc func didTapAmountButton4() {
+    @objc func didTapAmountButton3() {
         self.depositHeaderTextFieldView.setText("100")
+    }
+
+    @objc func didTapAmountButton4() {
+        self.depositHeaderTextFieldView.setText("200")
     }
 
     private func configureStyleOnButton(_ button: UIButton) {
