@@ -903,7 +903,6 @@
 "try_something_else" = "S'il vous plaît essayez autre chose !";
 "try_to_full_register" = "Essayez de vous inscrire complètement à la place";
 "unchangeable" = "Non modifiable";
-"understood" = "Compris";
 "unfollow" = "Ne plus suivre";
 "unfriend" = "Retirer de sa liste d'amis";
 "unit_period_exclusion" = "Exclusion de période unitaire";
@@ -1320,5 +1319,5 @@
 
 "tips_keep_control" = "Les conseils de Betsson pour garder le contrôle et faire du jeu une activité de loisir agréable et responsable. En suivant ces recommandations, vous pourrez éviter de vous mettre en difficulté financière ou émotionnelle.\n\nIl est important de se rappeler que le jeu doit être considéré comme un passe-temps, et non pas comme une source de revenus fiable. Fixer un budget raisonnable est un bon moyen de s'assurer que vous ne dépensez pas plus que vous ne pouvez-vous le permettre.\n\nConsultez régulièrement votre historique de jeu vous permettra de garder un œil sur vos dépenses et de détecter toute dérive éventuelle. Si vous commencez à ressentir des émotions négatives comme la frustration ou le stress, prenez une pause et faites autre chose pour vous détendre.\n\nEnfin, il est important de ne pas laisser le jeu prendre le pas sur vos responsabilités et obligations quotidiennes. Si vous sentez que le jeu commence à impacter négativement votre vie, n'hésitez pas à en parler à vos proches et à chercher de l'aide si nécessaire.";
 
-"kyc_message_title" = "Le KYC n'est pas complet!";
-"kyc_message_body" = "Mettez à jour vos documents afin de compléter votre KYC";
+"kyc_message_title" = "KYC n'est past complet!";
+"kyc_message_body" = "Vos documents sont necessaire pour effectuet un retrait.";

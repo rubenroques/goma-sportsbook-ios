@@ -899,7 +899,6 @@
 "try_something_else" = "Please try something else!";
 "try_to_full_register" = "Try to do a full register instead."; // UNUSED
 "unchangeable" = "Unchangeable"; // UNUSED
-"understood" = "Understood"; // UNUSED
 "unfollow" = "Unfollow";
 "unfriend" = "Unfriend";
 "unit_period_exclusion" = "Unit Period Exclusion"; // UNUSED
@@ -1248,3 +1247,8 @@
 "pass_kyc" = "Pass";
 
 "age_and_birthplace" = "Age and Birthplace";
+
+"kyc_message_title" = "KYC is not complete!";
+"kyc_message_body" = "Update your Documents in order to complete your KYC.";
+
+"understood" = "Understood";
