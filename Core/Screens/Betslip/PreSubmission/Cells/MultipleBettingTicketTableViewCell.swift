@@ -170,7 +170,7 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
 
         self.outcomeNameLabel.text = bettingTicket.outcomeDescription
 
-        let newOddValue = Double(floor(bettingTicket.decimalOdd * 100)/100)
+        let newOddValue = Double(ceil(bettingTicket.decimalOdd * 100)/100)
         self.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
         self.marketNameLabel.text = bettingTicket.marketDescription
         self.matchDetailLabel.text = bettingTicket.matchDescription

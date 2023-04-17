@@ -67,7 +67,7 @@ class SportStatisticView: UIView {
 
         self.progressBarView.progress = sportPercentage/100
 
-        let percentageIsInteger = floor(sportPercentage) == sportPercentage
+        let percentageIsInteger = ceil(sportPercentage) == sportPercentage
 
         let valueString = percentageIsInteger ? "\(Int(sportPercentage))%" : "\(sportPercentage)%"
         

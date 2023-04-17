@@ -412,7 +412,6 @@ struct UndefinedGroupMarketGroupOrganizer: MarketGroupOrganizer {
 
         self.sortedOutcomes = self.sortedOutcomes.sorted(by: {
             $0.bettingOffer.decimalOdd < $1.bettingOffer.decimalOdd
-            //$0.id < $1.id
         })
 
         self.maxColumnValue = 3

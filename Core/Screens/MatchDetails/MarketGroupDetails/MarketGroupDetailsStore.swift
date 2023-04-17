@@ -115,7 +115,7 @@ class MarketGroupDetailsStore {
 
                 guard let firstMarket = value.first else { continue }
 
-                if firstMarket.name == "1x2 & total" {
+                if firstMarket.name == "Anytime goalscorer" {
                     print("DEBUG")
                 }
 
@@ -151,7 +151,6 @@ class MarketGroupDetailsStore {
 //                        }
 //                    }
 //                }
-
 
 
                 //
