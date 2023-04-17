@@ -348,7 +348,6 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                                     errorBetting: String? = nil,
                                     shouldHighlightTextfield: Bool = false) {
 
-
         self.bettingTicket = bettingTicket
         self.outcomeNameLabel.text = bettingTicket.outcomeDescription
         let newOddValue = Double(round(bettingTicket.decimalOdd * 100)/100)
