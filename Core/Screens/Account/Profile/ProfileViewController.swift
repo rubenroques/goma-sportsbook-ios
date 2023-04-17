@@ -287,7 +287,7 @@ class ProfileViewController: UIViewController {
         self.userCodeStackView.addGestureRecognizer(copyCodeTap)
 
         let testTap = UITapGestureRecognizer(target: self, action: #selector(self.tapTest))
-        self.userCodeStackView.addGestureRecognizer(testTap)
+        self.profilePictureBaseView.addGestureRecognizer(testTap)
     }
 
     @objc func tapTest() {

@@ -351,7 +351,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
         self.bettingTicket = bettingTicket
         self.outcomeNameLabel.text = bettingTicket.outcomeDescription
-        let newOddValue = Double(ceil(bettingTicket.decimalOdd * 100)/100)
+        let newOddValue = Double(round(bettingTicket.decimalOdd * 100)/100)
         self.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
         self.marketNameLabel.text = bettingTicket.marketDescription
         self.matchDetailLabel.text = bettingTicket.matchDescription

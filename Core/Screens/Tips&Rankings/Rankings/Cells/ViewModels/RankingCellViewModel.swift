@@ -23,7 +23,7 @@ class RankingCellViewModel {
     }
 
     func getRankingScore() -> String {
-        let rankingIsInteger = ceil(self.ranking.result) == self.ranking.result
+        let rankingIsInteger = floor(self.ranking.result) == self.ranking.result
 
         let valueString = rankingIsInteger ? "\(Int(self.ranking.result))" : "\(String(format: "%.2f", self.ranking.result))"
 

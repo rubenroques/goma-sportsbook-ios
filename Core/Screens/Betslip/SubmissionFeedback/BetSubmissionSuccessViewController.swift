@@ -69,7 +69,7 @@ class BetSubmissionSuccessViewController: UIViewController {
             })
             .reduce(0.0, +)
 
-        possibleEarningsDouble = Double(ceil(possibleEarningsDouble * 100)/100)
+        possibleEarningsDouble = Double(round(possibleEarningsDouble * 100)/100)
         self.possibleEarningsValue = CurrencyFormater.defaultFormat.string(from: NSNumber(value: possibleEarningsDouble)) ?? "-.--€"
 
         //
