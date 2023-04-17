@@ -106,6 +106,7 @@ class MarketGroupDetailsStore {
             similarMarketsNames[similarMarketKey] = sortedOutcomeMarket.name
         }
 
+
         //
         var marketGroupOrganizers: [MarketGroupOrganizer] = []
         for marketKey in similarMarketsOrdered {
@@ -113,6 +114,10 @@ class MarketGroupDetailsStore {
             if let value = similarMarkets[marketKey] {
 
                 guard let firstMarket = value.first else { continue }
+
+                if firstMarket.name == "1x2 & total" {
+                    print("DEBUG")
+                }
 
                 let marketGroupName = similarMarketsNames[marketKey] ?? ""
 
@@ -146,6 +151,8 @@ class MarketGroupDetailsStore {
 //                        }
 //                    }
 //                }
+
+
 
                 //
                 // Select the correct organizer
@@ -191,7 +198,7 @@ class MarketGroupDetailsStore {
                                                                                             outcomes: outcomesDictionary)
                     marketGroupOrganizers.append(columnListedMarketGroupOrganizer)
                 }
-                else if outcomesDictionary.keys.count == 3 || outcomesDictionary.keys.count == 2 {
+                else if firstMarket.outcomes.count <= 3 &&  (outcomesDictionary.keys.count == 3 || outcomesDictionary.keys.count == 2) {
 
                     // Groups Of Markets with 2 or three columns
                     let marketLinesMarketGroupOrganizer = MarketLinesMarketGroupOrganizer(id: firstMarket.id,
@@ -206,6 +213,12 @@ class MarketGroupDetailsStore {
                     let undefinedGroupMarketGroupOrganizer = UndefinedGroupMarketGroupOrganizer(id: firstMarket.id, name: marketGroupName, outcomes: outcomesDictionary)
 
                     marketGroupOrganizers.append(undefinedGroupMarketGroupOrganizer)
+                }
+                else if outcomesDictionary.keys.count <= 3 && firstMarket.outcomes.count > 3 {
+                    // Grouped markets with unordered outcomes
+                    let unorderedGroupMarketGroupOrganizer = UnorderedGroupMarketGroupOrganizer(id: firstMarket.id, name: marketGroupName, outcomes: outcomesDictionary)
+
+                    marketGroupOrganizers.append(unorderedGroupMarketGroupOrganizer)
                 }
                 else {
                     // Fall back

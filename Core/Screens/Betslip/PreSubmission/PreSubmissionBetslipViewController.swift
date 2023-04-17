@@ -755,6 +755,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 }
                 else {
                     // expectedReturn = Double(floor(expectedReturn * 100)/100)
+                    print("EXPECTED RETURN: \(expectedReturn)")
                     return  CurrencyFormater.defaultFormat.string(from: NSNumber(value: expectedReturn)) ?? localized("no_value")
                 }
             })

@@ -342,7 +342,7 @@
 "fingerprint_login" = "Fingerprint login";
 "finish_up_profile" = "Finish up profile";
 "first_deposit" = "First deposit!"; // UNUSED
-"first_deposit_subtitle" = "Make your first deposit now and win €5 of freebet"; // UNUSED
+"first_deposit_subtitle" = "Make your first deposit now!";
 "first_name" = "First Name";
 "first_name_is_required" = "The first name is a required field. Please complete this field."; // UNUSED
 "first_term" = "I allow my email to be used for marketing"; // UNUSED
@@ -1256,3 +1256,12 @@
 "withdrawal_reject" = "Withdrawal Rejected";
 
 "contact_settings" = "Contact settings";
+
+"upload_iban_success" = "Upload IBAN Success";
+"upload_iban_success_message" = "Thanks for sharing your IBAN and RIB. It should take between 1 to 2 working days for the documents to be treated.\nYou will be notified by email once it is done and then you will be able to make your first withdrawal.";
+"upload_iban_error" = "Upload IBAN Error";
+"upload_iban_error_message" = "There was an error trying to process your IBAN documents. Please contact support.";
+"withdrawal_warning" = "Withdrawal Warning";
+"withdrawal_warning_text" = "Would you like to proceed with the withdrawal? If you currently have an active deposit bonus, it will be forfeited.";
+"withdrawal_iban_pending_approval_message" = "Your IBAN and RIB documents are being processed. It should take between 1 to 2 working days for the documents to be treated.\nYou will be notified by email once it is done and then you will be able to make your first withdrawal.";
+"understand_confirmation_withdraw" = "I understand";
