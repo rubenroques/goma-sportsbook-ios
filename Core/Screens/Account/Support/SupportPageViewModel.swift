@@ -23,13 +23,18 @@ class SupportPageViewModel {
 
         let userProfile = Env.userSessionStore.userProfilePublisher.value
 
-        let firstName = firstName != nil ? firstName : userProfile?.firstName
+        var userIdentifier = ""
 
-        let lastName = lastName != nil ? lastName : userProfile?.lastName
+        if let firstName,
+           let lastName,
+           let email {
+            userIdentifier = "\(firstName) - \(lastName) - \(email)"
+        }
+        else {
+            userIdentifier = "\(userProfile?.userIdentifier ?? "")_\(userProfile?.username ?? "")"
+        }
 
-        let email = email != nil ? email : userProfile?.email
-
-        Env.servicesProvider.contactUs(firstName: firstName ?? "", lastName: lastName ?? "", email: email ?? "", subject: title, message: message)
+        Env.servicesProvider.contactSupport(userIdentifier: userIdentifier, subject: title, message: message)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -44,10 +49,11 @@ class SupportPageViewModel {
                         ()
                     }
                 }
-            }, receiveValue: { [weak self] basicResponse in
+            }, receiveValue: { [weak self] supportResponse in
                 self?.supportResponseAction?(true, nil)
             })
             .store(in: &cancellables)
+
         
 //        Env.gomaNetworkClient.sendSupportTicket(deviceId: Env.deviceId, title: title, message: message)
 //            .receive(on: DispatchQueue.main)

@@ -755,6 +755,12 @@ class PreSubmissionBetslipViewController: UIViewController {
                 }
                 else {
 
+                    print("EXPECTED RETURN: \(expectedReturn)")
+
+                    print("NSNUMBER RETURN: \(NSNumber(value: expectedReturn))")
+
+                    print("CURRENCY FORMATTED: \(CurrencyFormater.defaultFormat.string(from: NSNumber(value: expectedReturn)) ?? localized("no_value"))")
+
                     return  CurrencyFormater.defaultFormat.string(from: NSNumber(value: expectedReturn)) ?? localized("no_value")
                 }
             })
@@ -1336,8 +1342,10 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
     func configureWithMultipleTotalOdd(_ totalOdd: Double) {
-        self.multipleOddsValueLabel.text = OddConverter.stringForValue(totalOdd, format: UserDefaults.standard.userOddsFormat)
-        self.secondaryMultipleOddsValueLabel.text = OddConverter.stringForValue(totalOdd, format: UserDefaults.standard.userOddsFormat)
+//        self.multipleOddsValueLabel.text = OddConverter.stringForValue(totalOdd, format: UserDefaults.standard.userOddsFormat)
+//        self.secondaryMultipleOddsValueLabel.text = OddConverter.stringForValue(totalOdd, format: UserDefaults.standard.userOddsFormat)
+        self.multipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: totalOdd)
+        self.secondaryMultipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: totalOdd)
     }
 
     func requestSystemBetInfo() {

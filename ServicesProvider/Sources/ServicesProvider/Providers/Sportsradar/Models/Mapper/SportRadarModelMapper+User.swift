@@ -325,6 +325,23 @@ extension SportRadarModelMapper {
         return BasicResponse(status: internalBasicResponse.status, message: internalBasicResponse.message)
     }
 
+    static func supportResponse(fromInternalSupportResponse internalSupportResponse: SportRadarModels.SupportResponse) -> SupportResponse {
+
+        if let supportRequest = internalSupportResponse.request {
+            let mappedSupportRequest = Self.supportRequest(fromInternalSupportRequest: supportRequest)
+
+            return SupportResponse(request: mappedSupportRequest, error: internalSupportResponse.error, description: internalSupportResponse.description)
+
+        }
+
+        return SupportResponse(request: nil, error: internalSupportResponse.error, description: internalSupportResponse.description)
+    }
+
+    static func supportRequest(fromInternalSupportRequest internalSupportRequest: SportRadarModels.SupportRequest) -> SupportRequest {
+
+        return SupportRequest(id: internalSupportRequest.id, status: internalSupportRequest.status)
+    }
+
     static func transactionsHistoryResponse(fromTransactionsHistoryResponse internalTransactionsHistoryResponse: SportRadarModels.TransactionsHistoryResponse) -> TransactionsHistoryResponse {
 
         if let transactionDetails = internalTransactionsHistoryResponse.transactions {

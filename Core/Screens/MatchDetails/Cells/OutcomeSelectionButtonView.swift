@@ -123,7 +123,8 @@ class OutcomeSelectionButtonView: NibView {
         if !outcome.bettingOffer.decimalOdd.isNaN {
             self.containerView.isUserInteractionEnabled = true
             self.containerView.alpha = 1.0
-            self.marketOddLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
+//            self.marketOddLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
+            self.marketOddLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
         }
         else {
             self.containerView.isUserInteractionEnabled = false
@@ -207,7 +208,8 @@ class OutcomeSelectionButtonView: NibView {
                         }
                     }
                     weakSelf.currentOddDecimalValue = newOddValue
-                    weakSelf.marketOddLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+//                    weakSelf.marketOddLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+                    weakSelf.marketOddLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
                 }
             })
 

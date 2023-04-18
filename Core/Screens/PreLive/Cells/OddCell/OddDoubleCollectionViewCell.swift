@@ -373,7 +373,8 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
             // Check for SportRadar invalid odd
             if !outcome.bettingOffer.decimalOdd.isNaN {
-            self.leftOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
+//            self.leftOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
+                self.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
             }
             else {
                 self.leftBaseView.isUserInteractionEnabled = false
@@ -418,7 +419,8 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                         }
                         weakSelf.currentLeftOddValue = newOddValue
                         //weakSelf.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-                        weakSelf.leftOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+//                        weakSelf.leftOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+                        weakSelf.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
                     }
                 })
         }
@@ -431,7 +433,8 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
             // Check for SportRadar invalid odd
             if !outcome.bettingOffer.decimalOdd.isNaN {
-            self.rightOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
+//            self.rightOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
+                self.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
             }
             else {
                 self.rightBaseView.isUserInteractionEnabled = false
@@ -476,8 +479,9 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                         }
                         
                         weakSelf.currentRightOddValue = newOddValue
-                        //weakSelf.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-                        weakSelf.rightOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+//                        weakSelf.rightOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+                        weakSelf.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+
                     }
                 })
         }

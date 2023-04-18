@@ -79,7 +79,8 @@ class BetSubmissionSuccessViewController: UIViewController {
                 betPlacedDetails.response.totalPriceValue ?? 1.0
             })
             .reduce(1.0, *)
-        self.totalOddsValue = OddConverter.stringForValue(totalOddDouble, format: UserDefaults.standard.userOddsFormat)
+//        self.totalOddsValue = OddConverter.stringForValue(totalOddDouble, format: UserDefaults.standard.userOddsFormat)
+        self.totalOddsValue = OddFormatter.formatOdd(withValue: totalOddDouble)
 
         //
         // Number Of Bets

@@ -171,7 +171,8 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         self.outcomeNameLabel.text = bettingTicket.outcomeDescription
 
         let newOddValue = Double(round(bettingTicket.decimalOdd * 100)/100)
-        self.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+//        self.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+        self.oddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
         self.marketNameLabel.text = bettingTicket.marketDescription
         self.matchDetailLabel.text = bettingTicket.matchDescription
 
@@ -215,7 +216,8 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
                 }
                 self?.currentOddValue = newOddValue
 
-                self?.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+//                self?.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+                self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
             })
 
         if errorBetting != nil {

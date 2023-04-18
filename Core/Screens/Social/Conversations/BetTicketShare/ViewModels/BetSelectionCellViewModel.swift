@@ -35,7 +35,8 @@ class BetSelectionCellViewModel {
     }
     
     var oddValueString: String {
-        return OddConverter.stringForValue(self.ticket.totalPriceValue ?? 0.0, format: UserDefaults.standard.userOddsFormat)
+//        return OddConverter.stringForValue(self.ticket.totalPriceValue ?? 0.0, format: UserDefaults.standard.userOddsFormat)
+        return OddFormatter.formatOdd(withValue: self.ticket.totalPriceValue ?? 0.0)
     }
 
     var betAmountString: String {

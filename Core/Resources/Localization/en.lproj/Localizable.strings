@@ -1005,7 +1005,7 @@
 "fifth_password_requirement" = "Be alphanumeric with at least 1 symbol from -!@^$&*"; // UNUSED
 
 "iban_proof" = "IBAN Proof";
-"iban_invalid" = "Invalid IBAN. Must start with 2 Letters [A to Z] followed by 14 to 29 digits [0 to 9]";
+"iban_invalid" = "Invalid IBAN. Must start with 2 Letters [A to Z] followed by 14 to 29 alphanumeric values [0 to 9 or A to Z]";
 "department_of_birth_invalid" = "This department of birth is invalid."; // UNUSED
 "department_of_birth" = "Department of Birth";
 "street_number_invalid" = "This street number is invalid."; // UNUSED

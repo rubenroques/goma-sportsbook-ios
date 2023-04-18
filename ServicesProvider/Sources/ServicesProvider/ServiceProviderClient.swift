@@ -940,6 +940,16 @@ extension ServicesProviderClient {
         return privilegedAccessManager.contactUs(firstName: firstName, lastName: lastName, email: email, subject: subject, message: message)
     }
 
+    public func contactSupport(userIdentifier: String, subject: String, message: String) -> AnyPublisher<SupportResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.contactSupport(userIdentifier: userIdentifier, subject: subject, message: message)
+    }
+
     public func calculateCashout(betId: String, stakeValue: String? = nil) -> AnyPublisher<Cashout, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider

@@ -139,6 +139,8 @@ enum OmegaAPIClient {
     case cancelBonus(bonusId: String)
 
     case contactUs(firstName: String, lastName: String, email: String, subject: String, message: String)
+
+    case contactSupport(userIdentifier: String, subject: String, message: String)
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -240,6 +242,9 @@ extension OmegaAPIClient: Endpoint {
 
         case .contactUs:
             return "/ps/ips/contactus"
+
+        case .contactSupport:
+            return "/api/v2/requests"
         }
     }
     
@@ -623,6 +628,8 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "message", value: message)
             ]
 
+        case .contactSupport:
+            return nil
         }
     }
     
@@ -679,6 +686,7 @@ extension OmegaAPIClient: Endpoint {
         case .redeemAvailableBonuses: return .post
         case .cancelBonus: return .post
         case .contactUs: return .get
+        case .contactSupport: return .post
         }
     }
     
@@ -697,6 +705,22 @@ extension OmegaAPIClient: Endpoint {
 //                        }
 //                        """
 //            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+        case .contactSupport(let userIdentifier, let subject, let message):
+            let bodyString =
+            """
+            {
+              "request": {
+                "requester": {
+                  "name": "\(userIdentifier)"
+                },
+                "subject": "\(subject)",
+                "comment": {
+                  "body": "\(message)"
+                }
+              }
+            }
+            """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
         default:
             return nil
         }
@@ -763,12 +787,20 @@ extension OmegaAPIClient: Endpoint {
         case .cancelBonus: return true
             
         case .contactUs: return false
+        case .contactSupport: return false
         }
     }
     
     var url: String {
 
-        return SportRadarConstants.pamHostname
+        switch self {
+        case .contactSupport:
+            return SportRadarConstants.supportHostname
+        default:
+            return SportRadarConstants.pamHostname
+        }
+
+
     }
     
     var headers: HTTP.Headers? {

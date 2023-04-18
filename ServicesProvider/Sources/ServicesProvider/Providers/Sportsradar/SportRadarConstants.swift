@@ -60,6 +60,9 @@ struct SportRadarConstants {
     // Others
     static var sportRadarFrontEndURL = "https://cdn1-bson-ssb-ua.betsson.fr"
 
+    // Support
+    static var supportHostname = "https://betssonfrance.zendesk.com"
+
     //static var sportRadarLegacyFrontEndURL = "https://cdn1.optimahq.com"
 
 //    ===================================================================================================================

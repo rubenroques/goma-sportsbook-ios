@@ -1012,7 +1012,7 @@
 "street_number" = "Numéro de rue";
 "fifth_password_requirement" = "Être alphanumérique avec au moins 1 symbole de {symbols}";
 "iban_proof" = "Preuve IBAN";
-"iban_invalid" = "IBAN non valide. Doit commencer par 2 lettres [A à Z] suivies de 14 à 29 chiffres [0 à 9].";
+"iban_invalid" = "IBAN non valide. Doit commencer par 2 lettres [A à Z] suivies de 14 à 29 valeurs alphanumériques [0 à 9 ou A à Z].";
 "description_iban_request" = "Avant de poursuivre, nous devons confirmer votre IBAN.";
 "iban" = "IBAN";
 "department_of_birth_invalid" = "Ce département de naissance est invalide.";

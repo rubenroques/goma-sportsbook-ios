@@ -78,4 +78,5 @@ protocol PrivilegedAccessManager {
     func cancelBonus(bonusId: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
 
     func contactUs(firstName: String, lastName: String, email: String, subject: String, message: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
+    func contactSupport(userIdentifier: String, subject: String, message: String) -> AnyPublisher<SupportResponse, ServiceProviderError>
 }
