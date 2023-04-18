@@ -575,7 +575,6 @@ class LoginViewController: UIViewController {
 
     }
 
-
     func showBiometricAuthenticationAlert() {
         let context = LAContext()
         var error: NSError?
@@ -606,28 +605,47 @@ class LoginViewController: UIViewController {
 
             let yesAction = UIAlertAction(title: "Yes", style: .default) { _ in
                 Env.userSessionStore.setShouldRequestBiometrics(true)
-                self.authenticateUser(with: context)
+                // self.authenticateUser(with: context)
+                self.showNextViewController()
             }
             alertController.addAction(yesAction)
 
             alertController.preferredAction = yesAction
             self.present(alertController, animated: true)
         }
-    }
-
-    func authenticateUser(with context: LAContext) {
-        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Access requires authentication") { (success, error) in
-            DispatchQueue.main.async {
-                if success {
-                    print("Authentication successful")
-                } else {
-                    print("Authentication failed")
-                }
-
+        else if let error = error as? LAError, error.code == .userCancel {
+            print()
+            let alertController = UIAlertController(title: "Biometric error", message: "It looks like you have denied the use of biometry for this app before.", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: { _ in
                 self.showNextViewController()
-            }
+            })
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true)
+
+        } else {
+            let alertController = UIAlertController(title: "Biometric error", message: "There was an error checking biometric authentication. Please make sure it is enabled in your device settings.", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: { _ in
+                self.showNextViewController()
+            })
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true)
         }
+
     }
+
+//    func authenticateUser(with context: LAContext) {
+//        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Access requires authentication") { (success, error) in
+//            DispatchQueue.main.async {
+//                if success {
+//                    print("Authentication successful")
+//                } else {
+//                    print("Authentication failed")
+//                }
+//
+//                self.showNextViewController()
+//            }
+//        }
+//    }
 
     private func showWrongPasswordStatus() {
         let alert = UIAlertController(title: localized("login_error_title"),
