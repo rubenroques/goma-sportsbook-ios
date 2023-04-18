@@ -158,7 +158,8 @@ class MyTicketBetLineView: NibView {
         if let oddValue = self.betHistoryEntrySelection.priceValue {
             // self.oddValueLabel.text = String(format: "%.2f", Double(floor(oddValue * 100)/100))
             // let newOddValue = Double(floor(oddValue * 100)/100)
-            self.oddValueLabel.text = OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
+//            self.oddValueLabel.text = OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
+            self.oddValueLabel.text = OddFormatter.formatOdd(withValue: oddValue)
         }
 
         self.dateLabel.text = ""

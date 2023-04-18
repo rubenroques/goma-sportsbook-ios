@@ -178,8 +178,8 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         if isAvailable && OddFormatter.isValidOdd(withValue: oddValue) {
             self.isUserInteractionEnabled = true
             self.containerView.alpha = 1.0
-            // self.marketOddLabel.text = OddFormatter.formatOdd(withValue: oddValue)
-            self.marketOddLabel.text = OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
+            self.marketOddLabel.text = OddFormatter.formatOdd(withValue: oddValue)
+//            self.marketOddLabel.text = OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
         }
         else {
             self.isUserInteractionEnabled = false

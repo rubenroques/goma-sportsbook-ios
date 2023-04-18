@@ -435,7 +435,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
             // Check for SportRadar invalid odd
             if !outcome.bettingOffer.decimalOdd.isNaN {
-            self.leftOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
+//            self.leftOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
+                self.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
             }
             else {
                 self.leftBaseView.isUserInteractionEnabled = false
@@ -479,8 +480,9 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
                             }
                         }
                         weakSelf.currentLeftOddValue = newOddValue
-                        // weakSelf.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-                        weakSelf.leftOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+//                        weakSelf.leftOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+                        weakSelf.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+
                     }
                 })
         }
@@ -493,7 +495,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
             // Check for SportRadar invalid odd
             if !outcome.bettingOffer.decimalOdd.isNaN {
-            self.middleOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
+//            self.middleOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
+                self.middleOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
             }
             else {
                 self.middleBaseView.isUserInteractionEnabled = false
@@ -538,8 +541,9 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
                             }
                         }
                         weakSelf.currentMiddleOddValue = newOddValue
-                        //weakSelf.middleOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-                        weakSelf.middleOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+//                        weakSelf.middleOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+                        weakSelf.middleOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+
                     }
                 })
         }
@@ -552,7 +556,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
             // Check for SportRadar invalid odd
             if !outcome.bettingOffer.decimalOdd.isNaN {
-            self.rightOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
+//            self.rightOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.decimalOdd, format: UserDefaults.standard.userOddsFormat)
+                self.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.decimalOdd)
             }
             else {
                 self.rightBaseView.isUserInteractionEnabled = false
@@ -598,8 +603,9 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
                         }
 
                         weakSelf.currentRightOddValue = newOddValue
-                        //weakSelf.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-                        weakSelf.rightOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+//                        weakSelf.rightOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+                        weakSelf.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+
                     }
                 })
         }

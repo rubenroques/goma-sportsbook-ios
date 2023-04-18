@@ -13,6 +13,7 @@ struct CurrencyFormater {
         let currencyFormatter = NumberFormatter()
         currencyFormatter.usesGroupingSeparator = true
         currencyFormatter.numberStyle = .currency
+        currencyFormatter.roundingMode = .halfUp
         currencyFormatter.currencyCode = "EUR"
         return currencyFormatter
     }()

@@ -390,7 +390,8 @@ class MyTicketTableViewCell: UITableViewCell {
         }
         if let oddValue = betHistoryEntry.totalPriceValue, betHistoryEntry.type != "SYSTEM" {
             // let newOddValue = Double(floor(oddValue * 100)/100)
-            self.totalOddSubtitleLabel.text = oddValue == 0.0 ? "-" : OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
+//            self.totalOddSubtitleLabel.text = oddValue == 0.0 ? "-" : OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
+            self.totalOddSubtitleLabel.text = oddValue == 0.0 ? "-" : OddFormatter.formatOdd(withValue: oddValue)
         }
 
         if let betAmount = betHistoryEntry.totalBetAmount,

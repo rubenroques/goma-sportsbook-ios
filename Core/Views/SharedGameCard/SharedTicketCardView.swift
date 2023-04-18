@@ -133,7 +133,8 @@ class SharedTicketCardView: UIView {
         }
 
         if let oddValue = betHistoryEntry.totalPriceValue, betHistoryEntry.type != "SYSTEM" {
-            self.totalOddSubtitleLabel.text = OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
+//            self.totalOddSubtitleLabel.text = OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
+            self.totalOddSubtitleLabel.text = OddFormatter.formatOdd(withValue: oddValue)
         }
 
         if let betAmount = betHistoryEntry.totalBetAmount,

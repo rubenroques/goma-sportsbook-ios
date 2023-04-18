@@ -69,7 +69,7 @@ class BetSubmissionSuccessViewController: UIViewController {
             })
             .reduce(0.0, +)
 
-        possibleEarningsDouble = Double(floor(possibleEarningsDouble * 100)/100)
+        possibleEarningsDouble = Double(round(possibleEarningsDouble * 100)/100)
         self.possibleEarningsValue = CurrencyFormater.defaultFormat.string(from: NSNumber(value: possibleEarningsDouble)) ?? "-.--€"
 
         //
@@ -79,7 +79,8 @@ class BetSubmissionSuccessViewController: UIViewController {
                 betPlacedDetails.response.totalPriceValue ?? 1.0
             })
             .reduce(1.0, *)
-        self.totalOddsValue = OddConverter.stringForValue(totalOddDouble, format: UserDefaults.standard.userOddsFormat)
+//        self.totalOddsValue = OddConverter.stringForValue(totalOddDouble, format: UserDefaults.standard.userOddsFormat)
+        self.totalOddsValue = OddFormatter.formatOdd(withValue: totalOddDouble)
 
         //
         // Number Of Bets

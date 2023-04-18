@@ -394,7 +394,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
             if let outcome = market.outcomes[safe: 0] {
                 self.homeOddTitleLabel.text = outcome.translatedName.isNotEmpty ? outcome.translatedName : outcome.typeName
-                self.homeOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.decimalOdd * 100)/100))"
+                self.homeOddValueLabel.text = "\(Double(round(outcome.bettingOffer.decimalOdd * 100)/100))"
                 // self.currentHomeOddValue = outcome.bettingOffer.value
                 self.leftOutcome = outcome
 
@@ -421,14 +421,14 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 //                            }
 //                        }
 //                        weakSelf.currentHomeOddValue = newOddValue
-                        //weakSelf.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-                        weakSelf.homeOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+                        weakSelf.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+//                        weakSelf.homeOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     })
 
             }
             if let outcome = market.outcomes[safe: 1] {
                 self.drawOddTitleLabel.text = outcome.translatedName.isNotEmpty ? outcome.translatedName : outcome.typeName
-                self.drawOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.decimalOdd * 100)/100))"
+                self.drawOddValueLabel.text = "\(Double(round(outcome.bettingOffer.decimalOdd * 100)/100))"
                 // self.currentDrawOddValue = outcome.bettingOffer.value
                 self.middleOutcome = outcome
 
@@ -455,13 +455,13 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 //                            }
 //                        }
 //                        weakSelf.currentDrawOddValue = newOddValue
-                        //weakSelf.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-                        weakSelf.drawOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+                        weakSelf.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+//                        weakSelf.drawOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     })
             }
             if let outcome = market.outcomes[safe: 2] {
                 self.awayOddTitleLabel.text = outcome.translatedName.isNotEmpty ? outcome.translatedName : outcome.typeName
-                self.awayOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.decimalOdd * 100)/100))"
+                self.awayOddValueLabel.text = "\(Double(round(outcome.bettingOffer.decimalOdd * 100)/100))"
                 // self.currentAwayOddValue = outcome.bettingOffer.value
                 self.rightOutcome = outcome
 
@@ -489,8 +489,8 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 //                        }
 //
 //                        weakSelf.currentAwayOddValue = newOddValue
-                        //weakSelf.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-                        weakSelf.awayOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+                        weakSelf.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+//                        weakSelf.awayOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     })
             }
             

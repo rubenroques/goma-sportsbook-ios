@@ -50,8 +50,6 @@ class Environment {
     let urlSchemaManager = URLSchemaManager()
     let urlApp: String = "https://sportsbook.gomagaming.com/"
 
-    
-    
     init() {
 
     }
@@ -75,5 +73,3 @@ extension Environment {
         return Bundle.main.bundleIdentifier ?? "com.goma.sportsbook"
     }
 }
-
-

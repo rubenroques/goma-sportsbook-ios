@@ -412,8 +412,75 @@ struct UndefinedGroupMarketGroupOrganizer: MarketGroupOrganizer {
 
         self.sortedOutcomes = self.sortedOutcomes.sorted(by: {
             $0.bettingOffer.decimalOdd < $1.bettingOffer.decimalOdd
-            //$0.id < $1.id
         })
+
+        self.maxColumnValue = 3
+        if self.sortedOutcomes.count == 2 || self.sortedOutcomes.count == 4 {
+            self.maxColumnValue = 2
+        }
+
+        self.maxLineValue = ceil(Double(self.sortedOutcomes.count)/Double(self.maxColumnValue))
+    }
+
+    var marketId: String {
+        return self.id
+    }
+
+    var marketName: String {
+        return "\(name)"
+    }
+
+    var numberOfColumns: Int {
+        return self.maxColumnValue
+    }
+
+    var numberOfLines: Int {
+        return Int(self.maxLineValue)
+    }
+
+    func outcomeFor(column: Int, line: Int) -> Outcome? {
+        let index = (line * numberOfColumns) + column
+        if let outcome = self.sortedOutcomes[safe: index] {
+            return outcome
+        }
+        return nil
+    }
+}
+
+struct UnorderedGroupMarketGroupOrganizer: MarketGroupOrganizer {
+
+    var id: String
+    var name: String
+    var outcomes: [String: [Outcome]]
+
+    private var sortedOutcomes: [Outcome]
+
+    private var maxColumnValue: Int
+    private var maxLineValue: Double
+
+    init(id: String, name: String, outcomes: [String: [Outcome]]) {
+
+        self.id = id
+        self.name = name
+        self.outcomes = outcomes
+
+        self.sortedOutcomes = []
+
+        for outcome in outcomes {
+            self.sortedOutcomes.append(contentsOf: outcome.value)
+        }
+
+        if outcomes.keys.contains("A") || outcomes.keys.contains("D") || outcomes.keys.contains("H") {
+
+            self.sortedOutcomes = []
+
+            let sortedOutcomes = outcomes.sorted(by: { $0.0 > $1.0 })
+
+            for outcome in sortedOutcomes {
+                self.sortedOutcomes.append(contentsOf: outcome.value)
+            }
+
+        }
 
         self.maxColumnValue = 3
         if self.sortedOutcomes.count == 2 || self.sortedOutcomes.count == 4 {

@@ -626,6 +626,28 @@ public struct BasicResponse: Codable {
     }
 }
 
+public struct SupportResponse: Codable {
+    public var request: SupportRequest?
+    public var error: String?
+    public var description: String?
+
+    enum CodingKeys: String, CodingKey {
+        case request = "request"
+        case error = "error"
+        case description = "description"
+    }
+}
+
+public struct SupportRequest: Codable {
+    public var id: Int
+    public var status: String
+
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case status = "status"
+    }
+}
+
 public struct PasswordPolicy {
     public var regularExpression: String?
     public var message: String

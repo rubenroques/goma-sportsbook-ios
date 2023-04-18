@@ -92,7 +92,8 @@ class SharedTicketBetLineView: UIView {
         self.oddsTitleLabel.text = localized("odd")
 
         if let oddValue = self.betHistoryEntrySelection.priceValue {
-            let oddString = OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
+//            let oddString = OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
+            let oddString = OddFormatter.formatOdd(withValue: oddValue)
 
             self.oddsValueLabel.text = oddString
         }

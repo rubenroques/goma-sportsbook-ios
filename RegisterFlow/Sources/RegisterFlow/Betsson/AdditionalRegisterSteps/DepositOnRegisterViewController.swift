@@ -229,8 +229,8 @@ public extension DepositOnRegisterViewController {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 8
-        imageView.backgroundColor = .lightGray
-        imageView.image = UIImage(named: "depositPromo", in: Bundle.module, compatibleWith: nil)
+        imageView.backgroundColor = .clear
+        imageView.image = UIImage(named: "first_deposit_promo_banner", in: Bundle.module, compatibleWith: nil)
         return imageView
     }
 

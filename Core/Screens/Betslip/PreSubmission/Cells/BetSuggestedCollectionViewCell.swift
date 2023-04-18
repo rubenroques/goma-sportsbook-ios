@@ -125,7 +125,8 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
     }
     
     func setupInfoBetValues(totalOdd: Double, numberOfSelection: Int) {
-        let formatedOdd = OddConverter.stringForValue(totalOdd, format: UserDefaults.standard.userOddsFormat)
+//        let formatedOdd = OddConverter.stringForValue(totalOdd, format: UserDefaults.standard.userOddsFormat)
+        let formatedOdd = OddFormatter.formatOdd(withValue: totalOdd)
         totalOddValueLabel.text = "\(formatedOdd)"
         numberOfSelectionsValueLabel.text = "\(numberOfSelection)"
      }

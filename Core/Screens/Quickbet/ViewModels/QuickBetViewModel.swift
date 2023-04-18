@@ -115,7 +115,8 @@ class QuickBetViewModel {
 
                 let currentOddValue = self.priceValueFactor
 
-                self.oddValuePublisher.value = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+//                self.oddValuePublisher.value = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+                self.oddValuePublisher.value = OddFormatter.formatOdd(withValue: newOddValue)
 
                 self.priceValueFactor = newOddValue
 

@@ -678,4 +678,26 @@ extension SportRadarModels {
         }
     }
 
+    struct SupportResponse: Codable {
+        var request: SupportRequest?
+        var error: String?
+        var description: String?
+
+        enum CodingKeys: String, CodingKey {
+            case request = "request"
+            case error = "error"
+            case description = "description"
+        }
+    }
+
+    struct SupportRequest: Codable {
+        var id: Int
+        var status: String
+
+        enum CodingKeys: String, CodingKey {
+            case id = "id"
+            case status = "status"
+        }
+    }
+
 }

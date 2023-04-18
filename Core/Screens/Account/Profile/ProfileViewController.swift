@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import ServicesProvider
+import RegisterFlow
 
 class ProfileViewController: UIViewController {
 
@@ -284,6 +285,7 @@ class ProfileViewController: UIViewController {
 
         let copyCodeTap = UITapGestureRecognizer(target: self, action: #selector(self.tapCopyCode))
         self.userCodeStackView.addGestureRecognizer(copyCodeTap)
+
     }
 
     @objc func tapCopyCode() {
