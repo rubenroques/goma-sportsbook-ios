@@ -107,6 +107,8 @@ class RootViewController: UIViewController {
 
     @IBOutlet private var localAuthenticationBaseView: UIView!
     @IBOutlet private var unlockAppButton: UIButton!
+    @IBOutlet private var cancelUnlockAppButton: UIButton!
+    @IBOutlet private var isLoadingUserSessionView: UIActivityIndicatorView!
 
     //
     //
@@ -316,6 +318,8 @@ class RootViewController: UIViewController {
         //
         self.setupWithTheme()
 
+        // Detects a new login
+
         Env.userSessionStore.userSessionPublisher
             .receive(on: DispatchQueue.main)
             .sink { userSession in
@@ -374,6 +378,8 @@ class RootViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        self.isLoadingUserSessionView.isHidden = true
+
         // Add blur effect
         self.localAuthenticationBaseView.backgroundColor = .clear
 
@@ -390,7 +396,7 @@ class RootViewController: UIViewController {
             blurEffectView.bottomAnchor.constraint(equalTo: self.localAuthenticationBaseView.bottomAnchor),
         ])
 
-        self.localAuthenticationBaseView.alpha = 0.0
+        self.localAuthenticationBaseView.alpha = 1.0
         self.showLocalAuthenticationCoveringViewIfNeeded()
 
         self.authenticateUser()
@@ -681,6 +687,10 @@ class RootViewController: UIViewController {
         self.redrawButtonButtons()
 
         self.notificationCounterLabel.textColor = UIColor.App.buttonTextPrimary
+
+        self.isLoadingUserSessionView.tintColor = UIColor.App.textSecondary
+        self.isLoadingUserSessionView.color = UIColor.App.textSecondary
+
     }
 
     func setupWithState(_ state: ScreenState) {
@@ -1333,20 +1343,46 @@ extension RootViewController {
 
 extension RootViewController {
 
-    func showLocalAuthenticationCoveringViewIfNeeded() {
+    func unlockAppWithUser() {
+        // Unlock the app
 
-        #if DEBUG
+        Env.userSessionStore
+            .isLoadingUserSessionPublisher
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoadingUserSession in
+
+                if !isLoadingUserSession {
+                    self?.isLocalAuthenticationCoveringView = false
+                }
+
+                self?.isLoadingUserSessionView.isHidden = !isLoadingUserSession
+                self?.unlockAppButton.isHidden = isLoadingUserSession
+                self?.cancelUnlockAppButton.isHidden = isLoadingUserSession
+
+            }
+            .store(in: &self.cancellables)
+
+        Env.userSessionStore.startUserSession()
+    }
+
+    func unlockAppAnonymous() {
+        Env.userSessionStore.logout()
         self.isLocalAuthenticationCoveringView = false
-        return
-        #endif
+    }
 
-        if Env.userSessionStore.shouldRequestFaceId() {
+    func showLocalAuthenticationCoveringViewIfNeeded() {
+        if Env.userSessionStore.shouldRequestBiometrics() {
             self.isLocalAuthenticationCoveringView = true
         }
     }
 
     @IBAction private func didTapUnlockButton() {
         self.authenticateUser()
+    }
+
+    @IBAction private func didTapCancelUnlockButton() {
+        self.unlockAppAnonymous()
     }
 
     @objc func appWillEnterForeground() {
@@ -1372,12 +1408,9 @@ extension RootViewController {
     }
 
     func authenticateUser() {
-
-        #if DEBUG
-        return
-        #endif
-
-        if !Env.userSessionStore.shouldRequestFaceId() {
+        
+        if !Env.userSessionStore.shouldRequestBiometrics() {
+            self.unlockAppAnonymous()
             return
         }
 
@@ -1406,10 +1439,10 @@ extension RootViewController {
                             }
                         }
                         else {
-                            // Unlock the app
-                            self.isLocalAuthenticationCoveringView = false
+                            self.unlockAppWithUser()
                         }
                     }
+
             })
 
         }

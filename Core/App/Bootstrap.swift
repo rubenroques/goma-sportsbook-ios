@@ -20,7 +20,6 @@ struct Bootstrap {
 
         self.router.makeKeyAndVisible()
 
-        env.betslipManager.start()
         env.businessSettingsSocket.connect()
 
         if TargetVariables.hasFeatureEnabled(feature: .getLocationLimits) {
@@ -31,6 +30,7 @@ struct Bootstrap {
 
         env.servicesProvider.connect()
         env.sportsStore.getSportTypesList()
+        env.betslipManager.start()
     }
 
     func refreshSession() {

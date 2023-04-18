@@ -100,6 +100,7 @@ public final class UserRegisterEnvelop: Codable {
     }
 
     func currentRegisterStep() -> Int {
+        
         if self.gender == nil || self.name.isEmptyOrNil || self.surname.isEmptyOrNil {
             return 0
         }
@@ -115,11 +116,8 @@ public final class UserRegisterEnvelop: Codable {
         if self.email.isEmptyOrNil || self.phonePrefixCountry == nil || self.phoneNumber.isEmptyOrNil {
             return 4
         }
-        if self.password.isEmptyOrNil {
-            return 5
-        }
 
-        return 6
+        return 5
     }
 
 }

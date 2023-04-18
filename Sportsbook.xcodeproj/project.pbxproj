@@ -2705,7 +2705,6 @@
 		45A3316C298976BA008181E9 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C1992799AF1100151462 /* SearchViewModel.swift */; };
 		45A3316E298976BA008181E9 /* DepositResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98757A0276CDB990099990D /* DepositResponse.swift */; };
 		45A3316F298976BA008181E9 /* ActivationAlertScrollableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A13274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift */; };
-		45A33170298976BA008181E9 /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
 		45A33171298976BA008181E9 /* UserSettingsGoma.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98E6C5827B2B09800453CF9 /* UserSettingsGoma.swift */; };
 		45A33172298976BA008181E9 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CC226BD9D9000EC572D /* Localization.swift */; };
 		45A33173298976BA008181E9 /* NewGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D5E281179DA00E82724 /* NewGroupViewController.swift */; };
@@ -4300,12 +4299,6 @@
 		A9B6305B29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */; };
 		A9B6305C29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */; };
 		A9B6305D29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */; };
-		A9B6306029192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
-		A9B6306129192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
-		A9B6306229192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
-		A9B6306529192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
-		A9B6306629192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
-		A9B6306729192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */; };
 		A9B6307C291BE10200BB850E /* field_widget_light.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B6307B291BE10100BB850E /* field_widget_light.html */; };
 		A9B6307D291BE10200BB850E /* field_widget_light.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B6307B291BE10100BB850E /* field_widget_light.html */; };
 		A9B6307E291BE10200BB850E /* field_widget_light.html in Resources */ = {isa = PBXBuildFile; fileRef = A9B6307B291BE10100BB850E /* field_widget_light.html */; };
@@ -5828,7 +5821,6 @@
 		A9B331E328904F4800D097F0 /* MessageDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDetailViewController.swift; sourceTree = "<group>"; };
 		A9B331EB289422FB00D097F0 /* MessageDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDetailViewModel.swift; sourceTree = "<group>"; };
 		A9B6305429102BF900BB850E /* RecoverPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverPasswordViewController.swift; sourceTree = "<group>"; };
-		A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SportRadarEventDetailRepository.swift; sourceTree = "<group>"; };
 		A9B6307B291BE10100BB850E /* field_widget_light.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = field_widget_light.html; sourceTree = "<group>"; };
 		A9B63084291BE10900BB850E /* field_widget_dark.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = field_widget_dark.html; sourceTree = "<group>"; };
 		A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionUpdateViewController.swift; sourceTree = "<group>"; };
@@ -6670,7 +6662,6 @@
 		455A0D1426BD9F3400EC572D /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				A9B6305E29192AA600BB850E /* Repository */,
 				45D9CBE0270F3C8400B8C321 /* AppSession.swift */,
 				454E0A902732A78A00794E0C /* BetslipManager.swift */,
 				455A0D1526BD9F4D00EC572D /* GeoLocationManager.swift */,
@@ -8591,14 +8582,6 @@
 				A9B331EB289422FB00D097F0 /* MessageDetailViewModel.swift */,
 			);
 			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		A9B6305E29192AA600BB850E /* Repository */ = {
-			isa = PBXGroup;
-			children = (
-				A9B6305F29192AA600BB850E /* SportRadarEventDetailRepository.swift */,
-			);
-			path = Repository;
 			sourceTree = "<group>";
 		};
 		A9B63068291AB5F800BB850E /* Widgets */ = {
@@ -10903,7 +10886,6 @@
 				450B795428F58574009229E3 /* SearchViewModel.swift in Sources */,
 				450B795628F58574009229E3 /* DepositResponse.swift in Sources */,
 				450B795728F58574009229E3 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
-				A9B6306129192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */,
 				450B795828F58574009229E3 /* UserSettingsGoma.swift in Sources */,
 				450B795928F58574009229E3 /* Localization.swift in Sources */,
 				450B795A28F58574009229E3 /* NewGroupViewController.swift in Sources */,
@@ -11813,7 +11795,6 @@
 				457CBB84282D27D000ED0F00 /* CompetitionsFiltersView.swift in Sources */,
 				457CBB85282D27D000ED0F00 /* PreviewChatTableViewCell.swift in Sources */,
 				45B6E229283FD08C001B570C /* ChatTicketInMessageView.swift in Sources */,
-				A9B6306629192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */,
 				457CBB86282D27D000ED0F00 /* CompetitionDetailsViewModel.swift in Sources */,
 				A98EC7E02889B0AA0044FC46 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				A98295A2283BA0AF0014066A /* BetSelectionTableViewCell.swift in Sources */,
@@ -12426,7 +12407,6 @@
 				457CBE37282D2CD100ED0F00 /* MyTicketsRootViewController.swift in Sources */,
 				457CBE38282D2CD100ED0F00 /* Throwable.swift in Sources */,
 				457CBE3A282D2CD100ED0F00 /* NotificationsViewController.swift in Sources */,
-				A9B6306729192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */,
 				A98708AF28D3451C00F27348 /* RankingsViewModel.swift in Sources */,
 				457CBE3B282D2CD100ED0F00 /* LiveDetailsViewModel.swift in Sources */,
 				457CBE3C282D2CD100ED0F00 /* TitleTabularDataSource.swift in Sources */,
@@ -12760,7 +12740,6 @@
 				4589C84A282024E400243547 /* DepositResponse.swift in Sources */,
 				4589C84B282024E400243547 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
 				4589C84C282024E400243547 /* UserSettingsGoma.swift in Sources */,
-				A9B6306029192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */,
 				4589C84D282024E400243547 /* Localization.swift in Sources */,
 				4589C84E282024E400243547 /* NewGroupViewController.swift in Sources */,
 				4589C851282024E400243547 /* ChatNotificationsViewController.swift in Sources */,
@@ -13353,7 +13332,6 @@
 				45A3316C298976BA008181E9 /* SearchViewModel.swift in Sources */,
 				45A3316E298976BA008181E9 /* DepositResponse.swift in Sources */,
 				45A3316F298976BA008181E9 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
-				45A33170298976BA008181E9 /* SportRadarEventDetailRepository.swift in Sources */,
 				45A33171298976BA008181E9 /* UserSettingsGoma.swift in Sources */,
 				45A33172298976BA008181E9 /* Localization.swift in Sources */,
 				45A33173298976BA008181E9 /* NewGroupViewController.swift in Sources */,
@@ -13802,7 +13780,6 @@
 				45A6BC2828246A7500D9B416 /* DateUserLocation.swift in Sources */,
 				45A6BC2928246A7500D9B416 /* AppDelegate.swift in Sources */,
 				45A6BC2A28246A7500D9B416 /* LiveEventsViewController.swift in Sources */,
-				A9B6306529192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */,
 				A98295A1283BA0AF0014066A /* BetSelectionTableViewCell.swift in Sources */,
 				45A6BC2B28246A7500D9B416 /* UIImage+Extensions.swift in Sources */,
 				45A6BC2C28246A7500D9B416 /* PreSubmissionBetslipViewModel.swift in Sources */,
@@ -14364,7 +14341,6 @@
 				A9C3410228F9A74A0055360B /* Animator.swift in Sources */,
 				A9C3410328F9A74A0055360B /* ActionTextFieldView.swift in Sources */,
 				A9C3410428F9A74A0055360B /* TipsSettingsViewController.swift in Sources */,
-				A9B6306229192AA600BB850E /* SportRadarEventDetailRepository.swift in Sources */,
 				A9C3410528F9A74A0055360B /* RankingTypeTableHeaderView.swift in Sources */,
 				A9C3410728F9A74A0055360B /* CollapsibleGroupView.swift in Sources */,
 				A9C3410828F9A74A0055360B /* BetOutcome.swift in Sources */,
@@ -15293,7 +15269,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1070;
+				CURRENT_PROJECT_VERSION = 1082;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15319,7 +15295,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1070;
+				CURRENT_PROJECT_VERSION = 1082;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

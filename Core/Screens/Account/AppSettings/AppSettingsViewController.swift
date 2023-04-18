@@ -124,18 +124,18 @@ class AppSettingsViewController: UIViewController {
                 let fingerprintView = SettingsRowView()
                 fingerprintView.setTitle(title: localized("fingerprint_login"))
                 fingerprintView.hasSwitchButton = true
-                fingerprintView.isSwitchOn = Env.userSessionStore.shouldRequestFaceId()
+                fingerprintView.isSwitchOn = Env.userSessionStore.shouldRequestBiometrics()
                 fingerprintView.didTappedSwitch = { isSwitchOn in
-                    Env.userSessionStore.setShouldRequestFaceId(isSwitchOn)
+                    Env.userSessionStore.setShouldRequestBiometrics(isSwitchOn)
                 }
                 self.bottomStackView.addArrangedSubview(fingerprintView)
             case .faceID:
                 let faceIdView = SettingsRowView()
                 faceIdView.setTitle(title: localized("face_id_login"))
                 faceIdView.hasSwitchButton = true
-                faceIdView.isSwitchOn = Env.userSessionStore.shouldRequestFaceId()
+                faceIdView.isSwitchOn = Env.userSessionStore.shouldRequestBiometrics()
                 faceIdView.didTappedSwitch = { isSwitchOn in
-                    Env.userSessionStore.setShouldRequestFaceId(isSwitchOn)
+                    Env.userSessionStore.setShouldRequestBiometrics(isSwitchOn)
                 }
                 self.bottomStackView.addArrangedSubview(faceIdView)
             case .none:

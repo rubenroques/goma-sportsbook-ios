@@ -43,11 +43,10 @@ class SplashViewController: UIViewController {
         }
 
         // Env.appSession.isLoadingAppSettingsPublisher,
-        self.isLoadingBootDataSubscription = Publishers.CombineLatest(Env.userSessionStore.isLoadingUserSessionPublisher,
-                                                                      Env.sportsStore.isLoadingSportTypesPublisher)
+        self.isLoadingBootDataSubscription = Env.sportsStore.isLoadingSportTypesPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self]  isLoadingUserSession, isLoadingSportTypes in
-                if !isLoadingUserSession && !isLoadingSportTypes {
+            .sink { [weak self]  isLoadingSportTypes in
+                if !isLoadingSportTypes {
                     self?.splashLoadingCompleted()
                 }
             }

@@ -102,10 +102,7 @@ class Router {
             bootRootViewController = Router.createLoginViewControllerFlow()
         }
 
-        let navigationController = Router.navigationController(with: UserTrackingViewController(viewModel: UserTrackingViewModel()))
-        navigationController.isModalInPresentation = true
         self.rootWindow.rootViewController = bootRootViewController
-
     }
 
     func subscribeToUserActionBlockers() {
@@ -491,7 +488,20 @@ extension Router {
     }
 
     static func createLoginViewControllerFlow() -> UIViewController {
-        return Router.navigationController(with: LoginViewController())
+
+        let rootViewController = RootViewController(defaultSport: Env.sportsStore.defaultSport)
+
+        let loginViewController = LoginViewController()
+
+        let navigationController = UINavigationController(rootViewController: rootViewController)
+        navigationController.viewControllers = [rootViewController, loginViewController]
+
+        navigationController.setNavigationBarHidden(true, animated: false)
+        navigationController.navigationBar.isTranslucent = false
+        navigationController.interactivePopGestureRecognizer?.delegate = nil
+        navigationController.interactivePopGestureRecognizer?.isEnabled = true
+
+        return navigationController
     }
 
     static func createRootViewControllerNavigation() -> UIViewController {

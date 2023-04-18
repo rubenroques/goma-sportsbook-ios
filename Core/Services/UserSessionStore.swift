@@ -108,12 +108,17 @@ class UserSessionStore {
             }
             .store(in: &self.cancellables)
 
-        executeDelayed(0.15) {
-            self.startUserSessionIfNeeded()
-        }
+    }
+
+    func startUserSession() {
+        self.startUserSessionIfNeeded()
     }
 
     static func loggedUserSession() -> UserSession? {
+        return UserDefaults.standard.userSession
+    }
+
+    static func storedUserSession() -> UserSession? {
         return UserDefaults.standard.userSession
     }
 
@@ -302,7 +307,7 @@ extension UserSessionStore {
             .store(in: &self.cancellables)
     }
 
-    func getProfile() -> AnyPublisher<UserProfile?, Never>  {
+    func getProfile() -> AnyPublisher<UserProfile?, Never> {
         return Env.servicesProvider.getProfile()
             .map(ServiceProviderModelMapper.userProfile(_:))
             .handleEvents(receiveOutput: { [weak self] userProfile in
@@ -511,12 +516,13 @@ extension UserSessionStore {
 
 extension UserSessionStore {
 
-    func setShouldRequestFaceId(_ newValue: Bool) {
+    func setShouldRequestBiometrics(_ newValue: Bool) {
         UserDefaults.standard.biometricAuthenticationEnabled = newValue
     }
 
-    func shouldRequestFaceId() -> Bool {
-        return UserDefaults.standard.biometricAuthenticationEnabled
+    func shouldRequestBiometrics() -> Bool {
+        let hasStoredUserSession = Self.storedUserSession() != nil
+        return hasStoredUserSession && UserDefaults.standard.biometricAuthenticationEnabled
     }
 
 }
@@ -562,4 +568,3 @@ extension UserSessionStore {
     }
 
 }
-

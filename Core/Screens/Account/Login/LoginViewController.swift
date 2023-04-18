@@ -6,6 +6,7 @@ import Adyen
 import AdyenDropIn
 import AdyenComponents
 import HeaderTextField
+import LocalAuthentication
 
 class LoginViewController: UIViewController {
 
@@ -375,11 +376,11 @@ class LoginViewController: UIViewController {
             self?.showLimitsOnRegisterViewController(onNavigationController: navigationController)
         }
         biometricPromptViewController.didTapActivateButtonAction = { [weak self] in
-            Env.userSessionStore.setShouldRequestFaceId(true)
+            Env.userSessionStore.setShouldRequestBiometrics(true)
             self?.showLimitsOnRegisterViewController(onNavigationController: navigationController)
         }
         biometricPromptViewController.didTapLaterButtonAction = { [weak self] in
-            Env.userSessionStore.setShouldRequestFaceId(false)
+            Env.userSessionStore.setShouldRequestBiometrics(false)
             self?.showLimitsOnRegisterViewController(onNavigationController: navigationController)
         }
         navigationController.pushViewController(biometricPromptViewController, animated: true)
@@ -460,11 +461,9 @@ class LoginViewController: UIViewController {
     }
 
     @IBAction private func didTapSkipButton() {
-
         UserSessionStore.skippedLoginFlow()
 
-        let mainScreenViewController = Router.mainScreenViewController()
-        self.navigationController?.pushViewController(mainScreenViewController, animated: true)
+        self.navigationController?.popToRootViewController(animated: true)
     }
 
     @IBAction private func didTapLoginButton() {
@@ -501,7 +500,8 @@ class LoginViewController: UIViewController {
                 self.hideLoadingSpinner()
                 self.loginButton.isEnabled = true
             }, receiveValue: { _ in
-                self.showNextViewController()
+                // self.showNextViewController()
+                self.loginSuccessful()
             })
             .store(in: &cancellables)
     }
@@ -525,9 +525,7 @@ class LoginViewController: UIViewController {
             self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
         }
         else {
-            let mainScreenViewController = Router.mainScreenViewController()
-            self.navigationController?.pushViewController(mainScreenViewController, animated: true)
-
+            self.navigationController?.popToRootViewController(animated: true)
             self.presentedViewController?.dismiss(animated: true)
         }
     }
@@ -548,19 +546,87 @@ class LoginViewController: UIViewController {
         spinnerViewController.view.removeFromSuperview()
     }
 
+
+
+    private func loginSuccessful() {
+
+        // The user had a suc login, we shouldn't start the app with the login anymore
+        // is the same behaviour if the user skipped the login
+        UserSessionStore.skippedLoginFlow()
+
+        if self.shouldRememberUser {
+            self.showBiometricAuthenticationAlert()
+        }
+        else {
+            self.showNextViewController()
+        }
+
+    }
+
     private func showNextViewController() {
+
         AnalyticsClient.sendEvent(event: .userLogin)
         if self.isModal {
             self.dismiss(animated: true, completion: nil)
         }
         else {
-            self.pushMainViewController()
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+
+    }
+
+
+    func showBiometricAuthenticationAlert() {
+        let context = LAContext()
+        var error: NSError?
+
+        // Check if biometric authentication is supported
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            let alertTitle: String
+            let alertMessage: String
+
+            switch context.biometryType {
+            case .faceID:
+                alertTitle = "Face ID"
+                alertMessage = "Do you want to use Face ID?"
+            case .touchID:
+                alertTitle = "Touch ID"
+                alertMessage = "Do you want to use Touch ID?"
+            default:
+                return
+            }
+
+            let alertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
+
+            let noAction = UIAlertAction(title: "No", style: .cancel, handler: { _ in
+                Env.userSessionStore.setShouldRequestBiometrics(false)
+                self.showNextViewController()
+            })
+            alertController.addAction(noAction)
+
+            let yesAction = UIAlertAction(title: "Yes", style: .default) { _ in
+                Env.userSessionStore.setShouldRequestBiometrics(true)
+                self.authenticateUser(with: context)
+            }
+            alertController.addAction(yesAction)
+
+            alertController.preferredAction = yesAction
+            self.present(alertController, animated: true)
         }
     }
 
-    private func pushMainViewController() {
-        let rootViewController = Router.mainScreenViewController()
-        self.navigationController?.pushViewController(rootViewController, animated: true)
+    func authenticateUser(with context: LAContext) {
+        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Access requires authentication") { (success, error) in
+            DispatchQueue.main.async {
+                if success {
+                    print("Authentication successful")
+                } else {
+                    print("Authentication failed")
+                }
+
+                self.showNextViewController()
+            }
+        }
     }
 
     private func showWrongPasswordStatus() {
@@ -629,7 +695,6 @@ class LoginViewController: UIViewController {
                                       preferredStyle: .alert)
 
         alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
-
             if paymentStatus == .authorised {
                 Env.userSessionStore.refreshUserWalletAfterDelay()
                 self?.closeLoginRegisterFlow()
