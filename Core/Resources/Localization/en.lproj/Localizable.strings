@@ -1265,3 +1265,12 @@
 "withdrawal_warning_text" = "Would you like to proceed with the withdrawal? If you currently have an active deposit bonus, it will be forfeited.";
 "withdrawal_iban_pending_approval_message" = "Your IBAN and RIB documents are being processed. It should take between 1 to 2 working days for the documents to be treated.\nYou will be notified by email once it is done and then you will be able to make your first withdrawal.";
 "understand_confirmation_withdraw" = "I understand";
+
+"face_id_title" = "Face ID";
+"face_id_message" = "Do you want to use Face ID?";
+"touch_id_title" = "Touch ID";
+"touch_id_message" = "Do you want to use Touch ID?";
+"no" = "No";
+"biometric_error_title" = "Biometric Error";
+"biometric_error_denied_message" = "It looks like you have denied the use of biometry for this app before.";
+"biometric_error_general_message" = "There was an error checking biometric authentication. Please make sure it is enabled in your device settings.";

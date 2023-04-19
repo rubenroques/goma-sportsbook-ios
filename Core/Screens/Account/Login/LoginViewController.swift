@@ -579,33 +579,31 @@ class LoginViewController: UIViewController {
         let context = LAContext()
         var error: NSError?
 
-        // Check if biometric authentication is supported
         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
             let alertTitle: String
             let alertMessage: String
 
             switch context.biometryType {
             case .faceID:
-                alertTitle = "Face ID"
-                alertMessage = "Do you want to use Face ID?"
+                alertTitle = localized("face_id_title")
+                alertMessage = localized("face_id_message")
             case .touchID:
-                alertTitle = "Touch ID"
-                alertMessage = "Do you want to use Touch ID?"
+                alertTitle = localized("touch_id_title")
+                alertMessage = localized("touch_id_message")
             default:
                 return
             }
 
             let alertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
 
-            let noAction = UIAlertAction(title: "No", style: .cancel, handler: { _ in
+            let noAction = UIAlertAction(title: localized("no"), style: .cancel, handler: { _ in
                 Env.userSessionStore.setShouldRequestBiometrics(false)
                 self.showNextViewController()
             })
             alertController.addAction(noAction)
 
-            let yesAction = UIAlertAction(title: "Yes", style: .default) { _ in
+            let yesAction = UIAlertAction(title: localized("yes"), style: .default) { _ in
                 Env.userSessionStore.setShouldRequestBiometrics(true)
-                // self.authenticateUser(with: context)
                 self.showNextViewController()
             }
             alertController.addAction(yesAction)
@@ -614,24 +612,25 @@ class LoginViewController: UIViewController {
             self.present(alertController, animated: true)
         }
         else if let error = error as? LAError, error.code == .userCancel {
-            print()
-            let alertController = UIAlertController(title: "Biometric error", message: "It looks like you have denied the use of biometry for this app before.", preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: .default, handler: { _ in
+            let alertController = UIAlertController(title: localized("biometric_error_title"), message: localized("biometric_error_denied_message"), preferredStyle: .alert)
+            let okAction = UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
+                Env.userSessionStore.setShouldRequestBiometrics(false)
                 self.showNextViewController()
             })
             alertController.addAction(okAction)
             self.present(alertController, animated: true)
 
         } else {
-            let alertController = UIAlertController(title: "Biometric error", message: "There was an error checking biometric authentication. Please make sure it is enabled in your device settings.", preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: .default, handler: { _ in
+            let alertController = UIAlertController(title: localized("biometric_error_title"), message: localized("biometric_error_general_message"), preferredStyle: .alert)
+            let okAction = UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
+                Env.userSessionStore.setShouldRequestBiometrics(false)
                 self.showNextViewController()
             })
             alertController.addAction(okAction)
             self.present(alertController, animated: true)
         }
-
     }
+
 
 //    func authenticateUser(with context: LAContext) {
 //        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Access requires authentication") { (success, error) in

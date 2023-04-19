@@ -122,6 +122,12 @@ class RootViewController: UIViewController {
 
     //
     //
+    private lazy var blockingWindow: BlockingWindow = {
+        var blockingWindow: BlockingWindow = BlockingWindow(frame: UIScreen.main.bounds)
+        blockingWindow.windowLevel = .statusBar
+        return blockingWindow
+    }()
+
     var isLocalAuthenticationCoveringView: Bool = true {
         didSet {
             if isLocalAuthenticationCoveringView {
@@ -261,6 +267,9 @@ class RootViewController: UIViewController {
          self.pictureInPictureView = PictureInPictureView()
          self.overlayWindow.addSubview(self.pictureInPictureView!, anchors: [.leading(0), .trailing(0), .top(0), .bottom(0)] )
          self.overlayWindow.isHidden = false // .makeKeyAndVisible()
+
+        self.blockingWindow.addSubview(self.localAuthenticationBaseView, anchors: [.leading(0), .trailing(0), .top(0), .bottom(0)])
+        self.blockingWindow.isHidden = false
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(self.windowDidResignKeyNotification(_:)),
@@ -1386,7 +1395,12 @@ extension RootViewController {
     }
 
     @objc func appWillEnterForeground() {
-        self.authenticateUser()
+        if Env.userSessionStore.shouldRequestBiometrics() {
+            self.authenticateUser()
+        }
+        else if Env.userSessionStore.isUserLogged() {
+
+        }
         print("LocalAuth Foreground")
     }
 

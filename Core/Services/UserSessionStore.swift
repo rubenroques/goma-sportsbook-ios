@@ -231,8 +231,6 @@ class UserSessionStore {
             .handleEvents(receiveOutput: { [weak self] session, profile in
                 self?.userProfilePublisher.send(profile)
                 self?.userSessionPublisher.send(session)
-
-                self?.loginGomaAPI(username: session.username, password: session.userId)
                 
                 self?.refreshUserWallet()
             })
@@ -498,7 +496,6 @@ extension UserSessionStore {
             .replaceError(with: MessageNetworkResponse.failed)
             .sink { [weak self] response in
                 self?.loginGomaAPI(username: form.username, password: userId)
-                print("signUpSimpleGomaAPI \(response)")
             }
             .store(in: &cancellables)
     }

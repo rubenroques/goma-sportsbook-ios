@@ -1326,3 +1326,12 @@
 
 "kyc_message_title" = "KYC n'est past complet!";
 "kyc_message_body" = "Vos documents sont necessaire pour effectuet un retrait.";
+
+"face_id_title" = "Face ID";
+"face_id_message" = "Voulez-vous utiliser Face ID ?";
+"touch_id_title" = "Touch ID";
+"touch_id_message" = "Voulez-vous utiliser Touch ID ?";
+"no" = "Non";
+"biometric_error_title" = "Erreur biométrique";
+"biometric_error_denied_message" = "Il semble que vous ayez refusé l'utilisation de la biométrie pour cette application.";
+"biometric_error_general_message" = "Une erreur s'est produite lors de la vérification de l'authentification biométrique. Veuillez vous assurer qu'elle est activée dans les réglages de votre appareil.";
