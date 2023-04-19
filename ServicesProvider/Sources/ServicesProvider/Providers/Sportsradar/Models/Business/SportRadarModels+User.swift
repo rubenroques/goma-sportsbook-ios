@@ -97,6 +97,7 @@ extension SportRadarModels {
         let unit: String?
         let floorNumber: String?
         let birthDepartment: String?
+        let birthCity: String?
 
         let extraInfos: [ExtraInfo]?
 
@@ -162,6 +163,7 @@ extension SportRadarModels {
             case unit = "unit"
             case floorNumber = "floorNumber"
             case birthDepartment = "birthDepartment"
+            case birthCity = "birthCity"
 
             case extraInfos = "extraInfo"
         }
@@ -183,7 +185,7 @@ extension SportRadarModels {
             }
         }
 
-        public init(status: String, partyId: String, userId: String, email: String, firstName: String?, lastName: String?, nickname: String?, language: String?, phone: String?, phoneCountryCode: String?, phoneLocalNumber: String?, phoneNeedsReview: Bool?, birthDate: String?, birthDateFormatted: Date, regDate: String?, regDateFormatted: Date?, mobilePhone: String?, mobileCountryCode: String?, mobileLocalNumber: String?, mobileNeedsReview: Bool?, currency: String?, lastLogin: String?, lastLoginFormatted: Date?, level: Int?, parentID: String?, userType: Int?, isAutopay: Bool?, registrationStatus: String?, sessionKey: String?, vipStatus: String?, kycStatus: String?, emailVerificationStatus: String, verificationStatus: String?, lockedStatus: String?, gender: String?, contactPreference: String?, verificationMethod: String?, docNumber: String?, readonlyFields: String?, accountNumber: String?, idCardNumber: String?, madeDeposit: Bool?, testPlayer: Bool?, address: String?, city: String?, province: String?, postalCode: String?, country: String?, nationality: String?, municipality: String?, streetNumber: String?, building: String?, unit: String?, floorNumber: String?, birthDepartment: String?) {
+        public init(status: String, partyId: String, userId: String, email: String, firstName: String?, lastName: String?, nickname: String?, language: String?, phone: String?, phoneCountryCode: String?, phoneLocalNumber: String?, phoneNeedsReview: Bool?, birthDate: String?, birthDateFormatted: Date, regDate: String?, regDateFormatted: Date?, mobilePhone: String?, mobileCountryCode: String?, mobileLocalNumber: String?, mobileNeedsReview: Bool?, currency: String?, lastLogin: String?, lastLoginFormatted: Date?, level: Int?, parentID: String?, userType: Int?, isAutopay: Bool?, registrationStatus: String?, sessionKey: String?, vipStatus: String?, kycStatus: String?, emailVerificationStatus: String, verificationStatus: String?, lockedStatus: String?, gender: String?, contactPreference: String?, verificationMethod: String?, docNumber: String?, readonlyFields: String?, accountNumber: String?, idCardNumber: String?, madeDeposit: Bool?, testPlayer: Bool?, address: String?, city: String?, province: String?, postalCode: String?, country: String?, nationality: String?, municipality: String?, streetNumber: String?, building: String?, unit: String?, floorNumber: String?, birthDepartment: String?, birthCity: String?) {
 
             self.status = status
             self.partyId = partyId
@@ -240,6 +242,7 @@ extension SportRadarModels {
             self.unit = unit
             self.floorNumber = floorNumber
             self.birthDepartment = birthDepartment
+            self.birthCity = birthCity
             self.extraInfos = nil
         }
 
@@ -301,6 +304,7 @@ extension SportRadarModels {
             self.unit = try container.decodeIfPresent(String.self, forKey: .unit)
             self.floorNumber = try container.decodeIfPresent(String.self, forKey: .floorNumber)
             self.birthDepartment = try container.decodeIfPresent(String.self, forKey: .birthDepartment)
+            self.birthCity = try container.decodeIfPresent(String.self, forKey: .birthCity)
 
             self.extraInfos = try? container.decodeIfPresent([ExtraInfo].self, forKey: .extraInfos)
         }

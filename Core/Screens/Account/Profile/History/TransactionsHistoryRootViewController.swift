@@ -53,6 +53,7 @@ class TransactionsHistoryRootViewController: UIViewController {
     private lazy var pagesBaseView: UIView = Self.createPagesBaseView()
     private lazy var filterBaseView: UIView = Self.createSimpleView()
     private lazy var filtersButtonImage: UIImageView = Self.createFilterImageView()
+    private lazy var filtersCountLabel: UILabel = Self.createFiltersCountLabel()
 
     private lazy var noLoginBaseView: UIView = Self.createNoLoginBaseView()
     private lazy var noLoginImageView: UIImageView = Self.createNoLoginImageView()
@@ -100,6 +101,13 @@ class TransactionsHistoryRootViewController: UIViewController {
 
         self.filterPublisher
             .sink { [weak self] filterApplied in
+
+                switch filterApplied {
+                case .past30Days:
+                    self?.filtersCountLabel.isHidden = true
+                default:
+                    self?.filtersCountLabel.isHidden = false
+                }
 
                 if let viewControllers = self?.viewControllers {
                     if viewControllers.isEmpty {
@@ -167,6 +175,9 @@ class TransactionsHistoryRootViewController: UIViewController {
         self.filterBaseView.addGestureRecognizer(tapFilterGesture)
         self.filterBaseView.isUserInteractionEnabled = true
 
+        filtersCountLabel.isHidden = true
+        self.view.bringSubviewToFront(self.filtersCountLabel)
+
         self.noLoginButton.addTarget(self, action: #selector(didTapLoginButton), for: .primaryActionTriggered)
 
         self.reloadCollectionView()
@@ -185,6 +196,8 @@ class TransactionsHistoryRootViewController: UIViewController {
         self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
 
         self.filterBaseView.layer.masksToBounds = true
+
+        self.filtersCountLabel.layer.cornerRadius = self.filtersCountLabel.frame.width/2
 
     }
     
@@ -205,6 +218,8 @@ class TransactionsHistoryRootViewController: UIViewController {
         self.noLoginSubtitleLabel.textColor = UIColor.App.textPrimary
         
         self.filterBaseView.backgroundColor = UIColor.App.backgroundTertiary
+
+        self.filtersCountLabel.backgroundColor = UIColor.App.highlightSecondary
 
         StyleHelper.styleButton(button: self.noLoginButton)
 
@@ -464,6 +479,16 @@ extension TransactionsHistoryRootViewController {
         return imageView
     }
 
+    private static func createFiltersCountLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 10.0)
+        label.layer.masksToBounds = true
+        label.text = "1"
+        label.textAlignment = .center
+        return label
+    }
+
     private static func createBottomSafeAreaView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -475,6 +500,7 @@ extension TransactionsHistoryRootViewController {
         self.topBaseView.addSubview(self.shortcutsCollectionView)
         self.topBaseView.addSubview(self.filterBaseView)
         self.filterBaseView.addSubview(self.filtersButtonImage)
+        self.topBaseView.addSubview(self.filtersCountLabel)
         
         self.view.addSubview(self.topBaseView)
         self.view.addSubview(self.pagesBaseView)
@@ -525,6 +551,11 @@ extension TransactionsHistoryRootViewController {
             self.filterBaseView.heightAnchor.constraint(equalToConstant: 40),
             self.filterBaseView.trailingAnchor.constraint(equalTo: self.topBaseView.trailingAnchor),
             self.filterBaseView.centerYAnchor.constraint(equalTo: self.shortcutsCollectionView.centerYAnchor),
+
+            self.filtersCountLabel.trailingAnchor.constraint(equalTo: self.filterBaseView.trailingAnchor, constant: -6),
+            self.filtersCountLabel.topAnchor.constraint(equalTo: self.filterBaseView.topAnchor, constant: -6),
+            self.filtersCountLabel.widthAnchor.constraint(equalToConstant: 16),
+            self.filtersCountLabel.heightAnchor.constraint(equalTo: self.filtersCountLabel.widthAnchor),
             
             self.filtersButtonImage.bottomAnchor.constraint(equalTo: self.filterBaseView.bottomAnchor, constant: -8),
             self.filtersButtonImage.topAnchor.constraint(equalTo: self.filterBaseView.topAnchor, constant: 8),

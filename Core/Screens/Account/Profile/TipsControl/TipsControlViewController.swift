@@ -40,6 +40,8 @@ class TipsControlViewController: UIViewController {
 
         self.tipButton.addTarget(self, action: #selector(didTapTipButton), for: .touchUpInside)
 
+        self.tipButton.isHidden = true
+
         self.setupStackView()
 
     }

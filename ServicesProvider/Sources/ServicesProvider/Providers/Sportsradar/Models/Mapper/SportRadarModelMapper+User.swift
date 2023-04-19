@@ -17,14 +17,14 @@ extension SportRadarModelMapper {
 
         var avatarName: String?
         var godfatherCode: String?
-        var placeOfBirth: String?
+        //var placeOfBirth: String?
         var additionalStreetLine: String?
 
         for extraInfo in playerInfoResponse.extraInfos ?? [] {
             switch extraInfo.key {
             case "avatar": avatarName = extraInfo.value
             case "godfatherCode": godfatherCode = extraInfo.value
-            case "placeOfBirth": placeOfBirth = extraInfo.value
+            //case "placeOfBirth": placeOfBirth = extraInfo.value
             case "streetLine2": additionalStreetLine = extraInfo.value
             default: ()
             }
@@ -48,7 +48,7 @@ extension SportRadarModelMapper {
                            streetNumber: playerInfoResponse.streetNumber,
                            avatarName: avatarName,
                            godfatherCode: godfatherCode,
-                           placeOfBirth: placeOfBirth,
+                           placeOfBirth: playerInfoResponse.birthCity,
                            additionalStreetLine: additionalStreetLine,
                            emailVerificationStatus: emailVerificationStatus,
                            userRegistrationStatus: userRegistrationStatus,

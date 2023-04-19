@@ -683,34 +683,34 @@ extension ServicesProviderClient {
         return bettingProvider.getBetHistory(pageIndex: pageIndex)
     }
 
-    public func getOpenBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
+    public func getOpenBetsHistory(pageIndex: Int, startDate: String? = nil, endDate: String? = nil) -> AnyPublisher<BettingHistory, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
 
-        return bettingProvider.getOpenBetsHistory(pageIndex: pageIndex)
+        return bettingProvider.getOpenBetsHistory(pageIndex: pageIndex, startDate: startDate, endDate: endDate)
     }
 
-    public func getResolvedBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
+    public func getResolvedBetsHistory(pageIndex: Int, startDate: String? = nil, endDate: String? = nil) -> AnyPublisher<BettingHistory, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
 
-        return bettingProvider.getResolvedBetsHistory(pageIndex: pageIndex)
+        return bettingProvider.getResolvedBetsHistory(pageIndex: pageIndex, startDate: startDate, endDate: endDate)
     }
 
-    public func getWonBetsHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError> {
+    public func getWonBetsHistory(pageIndex: Int, startDate: String? = nil, endDate: String? = nil) -> AnyPublisher<BettingHistory, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
 
-        return bettingProvider.getWonBetsHistory(pageIndex: pageIndex)
+        return bettingProvider.getWonBetsHistory(pageIndex: pageIndex, startDate: startDate, endDate: endDate)
     }
 
     public func getBetDetails(identifier: String) -> AnyPublisher<Bet, ServiceProviderError> {
