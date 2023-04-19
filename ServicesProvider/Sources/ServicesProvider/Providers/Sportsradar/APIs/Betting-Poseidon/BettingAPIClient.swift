@@ -8,7 +8,7 @@
 import Foundation
 
 enum BettingAPIClient {
-    case betHistory(page: Int, startDate: Date?, endDate: Date?, betState: [SportRadarModels.BetState]?, betResult: [SportRadarModels.BetResult]?, pageSize: Int)
+    case betHistory(page: Int, startDate: String?, endDate: String?, betState: [SportRadarModels.BetState]?, betResult: [SportRadarModels.BetResult]?, pageSize: Int)
     case betDetails(identifier: String)
     case calculateReturns(betTicket: BetTicket)
     case getAllowedBetTypes(betTicketSelections: [BetTicketSelection])
@@ -51,16 +51,24 @@ extension BettingAPIClient: Endpoint {
         switch self {
         case .betHistory(let page, let startDate, let endDate, let betStates, let betOutcomes, let pageSize):
             
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss.SSS"
-            
+//            let dateFormatter = DateFormatter()
+//            dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss.SSS"
+//
             var query: [URLQueryItem] = []
-            
+//
+//            if let startDate = startDate {
+//                query.append(URLQueryItem(name: "from", value: dateFormatter.string(from: startDate)))
+//            }
+//            if let endDate = endDate {
+//                query.append(URLQueryItem(name: "to", value: dateFormatter.string(from: endDate)))
+//            }
+
             if let startDate = startDate {
-                query.append(URLQueryItem(name: "from", value: dateFormatter.string(from: startDate)))
+                query.append(URLQueryItem(name: "from", value: startDate))
             }
+
             if let endDate = endDate {
-                query.append(URLQueryItem(name: "to", value: dateFormatter.string(from: endDate)))
+                query.append(URLQueryItem(name: "to", value: endDate))
             }
             
             if let betStates = betStates?.map(\.rawValue).joined(separator: ",") {

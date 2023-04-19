@@ -518,7 +518,6 @@ class PersonalInfoViewController: UIViewController {
 
         self.placeOfBirthHeaderTextFieldView.setText(profile.placeOfBirth ?? "-")
 
-        // TODO: Recheck field
         self.departmentOfBirthHeaderTextFieldView.setText(profile.birthDepartment ?? "-")
         
         self.originalFormHash = self.generateFormHash()

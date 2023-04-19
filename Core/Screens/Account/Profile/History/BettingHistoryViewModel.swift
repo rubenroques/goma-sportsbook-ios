@@ -64,6 +64,8 @@ class BettingHistoryViewModel {
 
     private var cancellables = Set<AnyCancellable>()
 
+    private let dateFormatter = DateFormatter()
+
     // MARK: - Life Cycle
     init(bettingTicketsType: BettingTicketsType, filterApplied: FilterHistoryViewModel.FilterValue) {
 
@@ -208,7 +210,11 @@ class BettingHistoryViewModel {
             self.listStatePublisher.send(.loading)
         }
 
-        Env.servicesProvider.getOpenBetsHistory(pageIndex: self.openedPage)
+        let startDate = self.getDateString(date: self.startDatePublisher.value)
+
+        let endDate = self.getDateString(date: self.endDatePublisher.value)
+
+        Env.servicesProvider.getOpenBetsHistory(pageIndex: self.openedPage, startDate: startDate, endDate: endDate)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
 
@@ -254,7 +260,11 @@ class BettingHistoryViewModel {
             self.listStatePublisher.send(.loading)
         }
 
-        Env.servicesProvider.getResolvedBetsHistory(pageIndex: page)
+        let startDate = self.getDateString(date: self.startDatePublisher.value)
+
+        let endDate = self.getDateString(date: self.endDatePublisher.value)
+
+        Env.servicesProvider.getResolvedBetsHistory(pageIndex: page, startDate: startDate, endDate: endDate)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
 
@@ -299,7 +309,11 @@ class BettingHistoryViewModel {
             self.listStatePublisher.send(.loading)
         }
 
-        Env.servicesProvider.getWonBetsHistory(pageIndex: page)
+        let startDate = self.getDateString(date: self.startDatePublisher.value)
+
+        let endDate = self.getDateString(date: self.endDatePublisher.value)
+
+        Env.servicesProvider.getWonBetsHistory(pageIndex: page, startDate: startDate, endDate: endDate)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
 
@@ -353,7 +367,11 @@ class BettingHistoryViewModel {
             self.listStatePublisher.send(.loading)
         }
 
-        Env.servicesProvider.getResolvedBetsHistory(pageIndex: page)
+        let startDate = self.getDateString(date: self.startDatePublisher.value)
+
+        let endDate = self.getDateString(date: self.endDatePublisher.value)
+
+        Env.servicesProvider.getResolvedBetsHistory(pageIndex: page, startDate: startDate, endDate: endDate)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
 
@@ -444,6 +462,14 @@ class BettingHistoryViewModel {
             cashoutPage += 1
             self.loadCashoutTickets(page: cashoutPage, isNextPage: true)
         }
+    }
+
+    private func getDateString(date: Date) -> String {
+        self.dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+
+        let dateString = self.dateFormatter.string(from: date).appending(".000")
+
+        return dateString
     }
     
     private func resetPageCount() {

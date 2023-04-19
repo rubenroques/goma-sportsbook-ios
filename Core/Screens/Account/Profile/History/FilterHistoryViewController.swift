@@ -107,13 +107,18 @@ class FilterHistoryViewController: UIViewController {
         StyleHelper.styleButton(button: self.applyButton)
 
         self.checkMarketRadioOptions(views: filterRowViews, viewTapped: filterRowViews[self.defaultFilter.identifier])
+
         self.bindToPublisher()
+
+        self.checkDateRangeOption()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         self.checkMarketRadioOptions(views: filterRowViews, viewTapped: filterRowViews[self.viewModel.selectedFilterPublisher.value.identifier])
+
+        self.checkDateRangeOption()
     }
 
     // MARK: - Layout and Theme
@@ -206,8 +211,10 @@ class FilterHistoryViewController: UIViewController {
             .compactMap({ $0 })
             .sink(receiveValue: { [weak self] endDate in
 
-                self?.endDate = endDate
-                self?.viewModel.setEndTime(dateString: endDate)
+                let finalEndDate = endDate + 86399 // 86399 seconds = 23:59:59
+
+                self?.endDate = finalEndDate
+                self?.viewModel.setEndTime(dateString: finalEndDate)
 
                 if let startDate = self?.startDate,
                    startDate >= endDate,
@@ -219,7 +226,7 @@ class FilterHistoryViewController: UIViewController {
                     self?.startTimeHeaderTextView.setText(newStartDateString)
                     
                     self?.viewModel.setStartTime(dateString: startDate)
-                    self?.viewModel.setEndTime(dateString: endDate)
+                    self?.viewModel.setEndTime(dateString: finalEndDate)
                                                
                 }
 
@@ -258,6 +265,23 @@ class FilterHistoryViewController: UIViewController {
             self.viewModel.didSelectFilter(atIndex: Int(viewTapped.viewId) ?? 0)
         }
         
+    }
+
+    func checkDateRangeOption() {
+
+        if self.viewModel.selectedFilterPublisher.value.identifier == 2 {
+
+            if let startDate = toDate(self.startTimeHeaderTextView.text),
+               let endDate = toDate(self.endTimeHeaderTextView.text) {
+
+                self.startDate = startDate
+                self.viewModel.setStartTime(dateString: startDate)
+
+                let finalEndDate = endDate + 86399
+                
+                self.endDate = finalEndDate
+                self.viewModel.setEndTime(dateString: finalEndDate)}
+        }
     }
     
     @IBAction private func applyAction() {
@@ -313,6 +337,7 @@ extension FilterHistoryViewController {
             view.didTapView = { [weak self] _ in
                 self?.viewModel.didSelectFilter(atIndex: Int(view.viewId) ?? 0)
                 self?.checkMarketRadioOptions(views: self?.filterRowViews ?? [], viewTapped: view)
+                self?.checkDateRangeOption()
             }
 
             // Default market selected

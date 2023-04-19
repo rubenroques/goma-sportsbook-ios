@@ -17,6 +17,7 @@ class CasualGamblingViewController: UIViewController {
     private lazy var scrollContainerView: UIView = Self.createScrollContainerView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var textLabel: UILabel = Self.createTextLabel()
+    private lazy var tipButton: UIButton = Self.createTipButton()
 
     // MARK: Lifetime and Cycle
     init() {
@@ -40,6 +41,8 @@ class CasualGamblingViewController: UIViewController {
 
         // swiftlint:disable line_length
         self.textLabel.text = "Betsson aborde la question du jeu responsable au sérieux et prend des mesures pour aider les joueurs à jouer de manière sûre et saine. En effet, il est crucial de reconnaître qu'il existe une différence entre le jeu récréatif et le jeu problématique.\n\nLe jeu récréatif est généralement considéré comme une activité de loisir occasionnelle qui peut être agréable et amusante, mais qui ne prend pas le dessus sur la vie de la personne. Les joueurs récréatifs sont prudents dans leurs mises et ne jouent pas de manière compulsive ou excessive.\n\nLe jeu problématique, quant à lui, peut affecter la vie quotidienne d'une personne de manière négative. Les joueurs pathologiques ont du mal à contrôler leur comportement de jeu et peuvent continuer à jouer malgré les conséquences négatives qui en résultent, telles que des problèmes financiers, des conflits familiaux ou professionnels, des problèmes de santé mentale ou physique, etc.\n\nIl est donc important que les opérateurs de jeu en ligne tels que Betsson, mettent en place des mesures pour aider à prévenir et à détecter le jeu excessif. Cela peut inclure des limites de dépôt et de mise, des conseils de jeu responsable, ainsi que des options pour s'auto-exclure du site pendant une période de temps spécifiée.\n\nIl est également essentiel d'offrir un soutien et des ressources aux joueurs qui luttent contre le jeu problématique. Les joueurs peuvent bénéficier de programmes d'aide et de conseils en matière de jeu responsable, ainsi que d'un accès à des professionnels de la santé mentale pour les aider à surmonter leur dépendance.\n\nEn somme, la promotion d'un environnement de jeu sûr et sain est une responsabilité partagée entre les joueurs, les opérateurs de jeu en ligne et la société dans son ensemble.\n\nIl est parfois difficile de se rendre compte que le jeu n'est plus une source de plaisir mais commence à devenir un problème.\n\nNous t’invitons à faire un bilan sur Evalujeu, un site d'évaluation et de conseils personnalisés sur les pratiques de jeu."
+
+        self.tipButton.addTarget(self, action: #selector(didTapTipButton), for: .touchUpInside)
     }
 
     // MARK: Layout and Theme
@@ -68,6 +71,9 @@ class CasualGamblingViewController: UIViewController {
         self.titleLabel.textColor = UIColor.App.textPrimary
 
         self.textLabel.textColor = UIColor.App.textPrimary
+
+        self.tipButton.backgroundColor = .clear
+        self.tipButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
     }
 }
 
@@ -77,6 +83,12 @@ class CasualGamblingViewController: UIViewController {
 extension CasualGamblingViewController {
     @objc private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
+    }
+
+    @objc private func didTapTipButton() {
+        if let url = URL(string: "https://www.evalujeu.fr/") {
+            UIApplication.shared.open(url)
+        }
     }
 
 }
@@ -142,6 +154,15 @@ extension CasualGamblingViewController {
         return label
     }
 
+    private static func createTipButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "evalujeu_logo"), for: .normal)
+        button.imageEdgeInsets = UIEdgeInsets(top: 2, left: 4, bottom: 2, right: 4)
+        button.contentMode = .scaleAspectFit
+        return button
+    }
+
     private func setupSubviews() {
         self.view.addSubview(self.topView)
 
@@ -154,6 +175,7 @@ extension CasualGamblingViewController {
 
         self.scrollContainerView.addSubview(self.titleLabel)
         self.scrollContainerView.addSubview(self.textLabel)
+        self.scrollContainerView.addSubview(self.tipButton)
 
         self.initConstraints()
     }
@@ -203,7 +225,13 @@ extension CasualGamblingViewController {
             self.textLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor, constant: 20),
             self.textLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor, constant: -20),
             self.textLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 15),
-            self.textLabel.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -15)
+            //self.textLabel.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -15),
+
+            self.tipButton.widthAnchor.constraint(equalToConstant: 205),
+            self.tipButton.heightAnchor.constraint(equalToConstant: 50),
+            self.tipButton.centerXAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor),
+            self.tipButton.topAnchor.constraint(equalTo: self.textLabel.bottomAnchor, constant: 70),
+            self.tipButton.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -20)
         ])
     }
 
