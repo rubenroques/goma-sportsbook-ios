@@ -366,7 +366,7 @@ class ProfileLimitsManagementViewController: UIViewController {
                 if errorText != "" {
                     self?.viewModel.isLoadingPublisher.send(false)
                     self?.showAlert(type: .error, alertText: errorText)
-                    self?.viewModel.getLimits()
+                    // self?.viewModel.getLimits()
                 }
             })
             .store(in: &cancellables)
