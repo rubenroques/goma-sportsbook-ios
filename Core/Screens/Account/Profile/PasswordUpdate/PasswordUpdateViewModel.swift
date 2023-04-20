@@ -31,7 +31,7 @@ class PasswordUpdateViewModel: NSObject {
     var policyPublisher: CurrentValueSubject<PasswordPolicy?, Never> = .init(nil)
 
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    var shouldShowAlertPublisher: CurrentValueSubject<AlertInfo?, Never> = .init(nil)
+    var shouldShowAlertPublisher: CurrentValueSubject<EditAlertView.AlertInfo?, Never> = .init(nil)
     var newPassword: CurrentValueSubject<String?, Never> = .init("")
 
     var passwordState: AnyPublisher<[PasswordState], Never> {
@@ -122,36 +122,30 @@ class PasswordUpdateViewModel: NSObject {
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
-
                 case .finished:
                     ()
                 case .failure(let error):
                     if case .errorMessage(message: let message) = error {
                         if message.contains("CURRENT_PASSWORD_INCORRECT") {
-                            let alertInfo = AlertInfo(alertType: .error, message: localized("current_password_incorrect"))
+                            let alertInfo = EditAlertView.AlertInfo(alertType: .error, message: localized("current_password_incorrect"))
                             self?.shouldShowAlertPublisher.send(alertInfo)
                         }
                     }
                     else {
-                        let alertInfo = AlertInfo(alertType: .error, message: localized("server_error_message"))
+                        let alertInfo = EditAlertView.AlertInfo(alertType: .error, message: localized("server_error_message"))
                         self?.shouldShowAlertPublisher.send(alertInfo)
                     }
-
                 }
                 self?.isLoadingPublisher.send(false)
             }, receiveValue: { [weak self] success in
                 if success {
-                    let alertInfo = AlertInfo(alertType: .success, message: localized("success_edit_password"))
+                    let alertInfo = EditAlertView.AlertInfo(alertType: .success, message: localized("success_edit_password"))
                     self?.shouldShowAlertPublisher.send(alertInfo)
-                    UserDefaults.standard.userSession?.password = newPassword
+
+                    Env.userSessionStore.updatePassword(newPassword: newPassword)
                 }
             })
             .store(in: &cancellables)
     }
 
-}
-
-struct AlertInfo {
-    var alertType: EditAlertView.AlertState
-    var message: String
 }

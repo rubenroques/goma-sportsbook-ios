@@ -9,13 +9,19 @@ import UIKit
 
 class EditAlertView: NibView {
 
+    struct AlertInfo {
+        var alertType: AlertState
+        var message: String
+    }
+
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var alertImageView: UIImageView!
     @IBOutlet private var alertLabel: UILabel!
     @IBOutlet private var alertTextLabel: UILabel!
     @IBOutlet private var closeButton: UIButton!
+
     // Variables
-    var onClose:(() -> Void)?
+    var onClose: (() -> Void)?
 
     enum AlertState {
         case success

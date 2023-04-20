@@ -620,7 +620,8 @@ class LoginViewController: UIViewController {
             alertController.addAction(okAction)
             self.present(alertController, animated: true)
 
-        } else {
+        }
+        else {
             let alertController = UIAlertController(title: localized("biometric_error_title"), message: localized("biometric_error_general_message"), preferredStyle: .alert)
             let okAction = UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
                 Env.userSessionStore.setShouldRequestBiometrics(false)

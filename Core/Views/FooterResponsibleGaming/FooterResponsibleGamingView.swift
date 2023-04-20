@@ -104,6 +104,8 @@ class FooterResponsibleGamingView: UIView {
         self.instagramSocialButton.addTarget(self, action: #selector(openIntagramURL), for: .primaryActionTriggered)
         self.twitterSocialButton.addTarget(self, action: #selector(openTwitterURL), for: .primaryActionTriggered)
 
+        self.hideLinksView()
+        self.hideSocialView()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -139,6 +141,14 @@ class FooterResponsibleGamingView: UIView {
 
     func hideSocialView() {
         self.socialBaseView.isHidden = true
+    }
+
+    func showLinksView() {
+        self.linksBaseView.isHidden = false
+    }
+
+    func showSocialView() {
+        self.socialBaseView.isHidden = false
     }
 
     @objc func didTapBaseView() {
@@ -388,16 +398,16 @@ extension FooterResponsibleGamingView {
             self.topLabel.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 16),
             self.topLabel.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor, constant: -16),
 
-            self.topLabel.bottomAnchor.constraint(equalTo: self.bottomLabel.topAnchor, constant: -10),
+            self.topLabel.bottomAnchor.constraint(equalTo: self.bottomLabel.topAnchor, constant: -18),
 
             self.bottomLabel.centerXAnchor.constraint(equalTo: self.topView.centerXAnchor),
-            self.bottomLabel.bottomAnchor.constraint(equalTo: self.topView.bottomAnchor, constant: -12),
+            self.bottomLabel.bottomAnchor.constraint(equalTo: self.topView.bottomAnchor, constant: -16),
             self.bottomLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.topView.leadingAnchor),
 
             self.ageLabel.centerYAnchor.constraint(equalTo: self.ageBaseView.centerYAnchor),
             self.ageLabel.centerXAnchor.constraint(equalTo: self.ageBaseView.centerXAnchor),
 
-            self.ageBaseView.leadingAnchor.constraint(greaterThanOrEqualTo: self.topView.leadingAnchor, constant: 2),
+            self.ageBaseView.leadingAnchor.constraint(greaterThanOrEqualTo: self.topView.leadingAnchor, constant: 8),
             self.ageBaseView.widthAnchor.constraint(equalToConstant: 26),
             self.ageBaseView.widthAnchor.constraint(equalTo: self.ageBaseView.heightAnchor),
             self.ageBaseView.centerYAnchor.constraint(equalTo: self.bottomLabel.centerYAnchor),

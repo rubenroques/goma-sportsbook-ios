@@ -390,7 +390,7 @@ class LiveEventsViewController: UIViewController {
 
     private func openQuickbet(_ bettingTicket: BettingTicket) {
 
-        if let userSession = UserSessionStore.loggedUserSession() {
+        if Env.userSessionStore.isUserLogged() {
             let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
 
             let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)

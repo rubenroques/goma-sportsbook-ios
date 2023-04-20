@@ -1438,11 +1438,12 @@ class PreSubmissionBetslipViewController: UIViewController {
                         var message = ""
                         switch error {
                         case .betPlacementDetailedError(let detailedMessage):
-                            message = detailedMessage
+                            message = detailedMessage + "\nPlease contact support."
                         default:
                             message = """
                             Something went wrong with your bet request.
                             Make sure you have completed your profile and enought balance.
+                            Please contact support.
                             """
                         }
                         self?.showErrorView(errorMessage: message)
@@ -1463,11 +1464,12 @@ class PreSubmissionBetslipViewController: UIViewController {
                             var message = ""
                             switch error {
                             case .betPlacementDetailedError(let detailedMessage):
-                                message = detailedMessage
+                                message = detailedMessage + "\nPlease contact support."
                             default:
                                 message = """
                                 Something went wrong with your bet request.
                                 Make sure you have completed your profile and enought balance.
+                                Please contact support.
                                 """
                             }
                             self?.showErrorView(errorMessage: message)
@@ -1490,11 +1492,12 @@ class PreSubmissionBetslipViewController: UIViewController {
                             var message = ""
                             switch error {
                             case .betPlacementDetailedError(let detailedMessage):
-                                message = detailedMessage
+                                message = detailedMessage + "\nPlease contact support."
                             default:
                                 message = """
                                 Something went wrong with your bet request.
                                 Make sure you have completed your profile and enought balance.
+                                Please contact support.
                                 """
                             }
                             self?.showErrorView(errorMessage: message)

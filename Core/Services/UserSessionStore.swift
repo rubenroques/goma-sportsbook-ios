@@ -156,7 +156,19 @@ class UserSessionStore {
                 shouldRecordUserSession = false
             }
         }
-        UserDefaults.standard.userSession = userSession
+        
+        UserDefaults.standard.userSession = userSession.safeUserSession
+    }
+
+    func updatePassword(newPassword password: String) {
+        guard
+            var session = Self.storedUserSession()
+        else {
+            return
+        }
+
+        session.password = password
+        self.saveUserSession(session)
     }
 
     func loadLoggedUser() {

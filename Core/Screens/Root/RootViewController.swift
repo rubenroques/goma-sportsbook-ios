@@ -132,9 +132,12 @@ class RootViewController: UIViewController {
         didSet {
             if isLocalAuthenticationCoveringView {
                 self.localAuthenticationBaseView.isHidden = false
+                self.blockingWindow.isHidden = false
             }
             else {
                 self.localAuthenticationBaseView.isHidden = true
+                self.blockingWindow.isHidden = true
+
             }
         }
     }

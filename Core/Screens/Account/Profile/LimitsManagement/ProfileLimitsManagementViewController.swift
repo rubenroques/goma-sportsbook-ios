@@ -274,7 +274,6 @@ class ProfileLimitsManagementViewController: UIViewController {
             if let period = self?.bettingFrequencySelectTextFieldView.text {
                 self?.showRemoveAlert(limitType: LimitType.wagering.identifier, period: period)
             }
-
         }
         bettingFrequencySelectTextFieldView.setSelectionPicker([localized("daily"), localized("weekly"), localized("monthly")])
 
