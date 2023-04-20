@@ -18,6 +18,7 @@ enum BettingAPIClient {
     case getBetslipSettings
     case updateBetslipSettings(acceptingReoffer: Bool)
     case getFreebetBalance
+    case getSharedTicket(betslipId: String)
 }
 
 extension BettingAPIClient: Endpoint {
@@ -44,6 +45,8 @@ extension BettingAPIClient: Endpoint {
             return "/api/betting/fo/attribute/update"
         case .getFreebetBalance:
             return "/api/betting/fo/freeBalance"
+        case .getSharedTicket(let betslipId):
+            return "/api/betting/fo/bookbetslip/\(betslipId)"
         }
     }
     
@@ -107,6 +110,8 @@ extension BettingAPIClient: Endpoint {
         case .updateBetslipSettings:
             return nil
         case .getFreebetBalance:
+            return nil
+        case .getSharedTicket:
             return nil
         }
     }
@@ -287,6 +292,8 @@ extension BettingAPIClient: Endpoint {
 
         case .getFreebetBalance:
             return nil
+        case .getSharedTicket:
+            return nil
         }
         
     }
@@ -303,6 +310,7 @@ extension BettingAPIClient: Endpoint {
         case .getBetslipSettings: return .get
         case .updateBetslipSettings: return .post
         case .getFreebetBalance: return .get
+        case .getSharedTicket: return .get
         }
     }
     
@@ -318,6 +326,7 @@ extension BettingAPIClient: Endpoint {
         case .getBetslipSettings: return true
         case .updateBetslipSettings: return true
         case .getFreebetBalance: return true
+        case .getSharedTicket: return true
         }
     }
     
@@ -352,6 +361,7 @@ extension BettingAPIClient: Endpoint {
         case .getBetslipSettings: return TimeInterval(10)
         case .updateBetslipSettings: return TimeInterval(10)
         case .getFreebetBalance: return TimeInterval(10)
+        case .getSharedTicket: return TimeInterval(20)
         }
     }
     

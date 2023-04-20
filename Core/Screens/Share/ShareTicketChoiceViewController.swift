@@ -211,7 +211,8 @@ class ShareTicketChoiceViewController: UIViewController {
                 let urlMobile = Env.urlMobileShares
                 if betStatus == "OPEN",
                    let betToken = self.viewModel.clickedShareTicketInfo?.betToken {
-                    let matchUrlString = "\(urlMobile)/bet/\(betToken)"
+                    //let matchUrlString = "\(urlMobile)/bet/\(betToken)"
+                    let matchUrlString = "\(urlMobile)\(betToken)"
 
                     let socialAppUrlShareString = socialApp.urlShare.replacingOccurrences(of: "%url", with: matchUrlString)
 
@@ -253,7 +254,8 @@ class ShareTicketChoiceViewController: UIViewController {
 
             if betStatus == "OPEN",
                let betToken = self.viewModel.clickedShareTicketInfo?.betToken {
-                let matchUrlString = "\(urlMobile)/bet/\(betToken)"
+                //let matchUrlString = "\(urlMobile)/bet/\(betToken)"
+                let matchUrlString = "\(urlMobile)\(betToken)"
 
                 self.pasteboard.string = matchUrlString
 
@@ -278,7 +280,9 @@ class ShareTicketChoiceViewController: UIViewController {
             if betStatus == "OPEN",
                let betToken = self.viewModel.clickedShareTicketInfo?.betToken{
 
-                let matchUrl = URL(string: "\(urlMobile)/bet/\(betToken)")
+                //let matchUrl = URL(string: "\(urlMobile)/bet/\(betToken)")
+                let matchUrl = URL(string: "\(urlMobile)\(betToken)")
+
                 metadata.url = matchUrl
                 metadata.originalURL = metadata.url
             }

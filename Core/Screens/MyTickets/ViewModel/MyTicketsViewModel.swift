@@ -410,7 +410,7 @@ class MyTicketsViewModel: NSObject {
         // Send it to self?.clickedBetTokenPublisher.send(betToken)
         if let betslipId = self.clickedBetId {
             print("BETSLIP TICKET ID: \(betslipId)")
-            self.clickedBetTokenPublisher.send("")
+            self.clickedBetTokenPublisher.send(betslipId)
         }
 
     }
