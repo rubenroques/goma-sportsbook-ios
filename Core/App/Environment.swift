@@ -46,9 +46,11 @@ class Environment {
         UserDefaults.standard.string(forKey: "device_id") ?? ""
     }
 
-    let urlMobileShares: String = "https://sportsbook.gomagaming.com/mobile"
+    //let urlMobileShares: String = "https://sportsbook.gomagaming.com/mobile"
+    let urlMobileShares: String = "https://sportsbook-stage.gomagaming.com/?shared_bet="
     let urlSchemaManager = URLSchemaManager()
-    let urlApp: String = "https://sportsbook.gomagaming.com/"
+    //let urlApp: String = "https://sportsbook.gomagaming.com/"
+    let urlApp: String = "https://sportsbook-stage.gomagaming.com/"
 
     init() {
 

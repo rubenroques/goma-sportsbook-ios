@@ -290,6 +290,10 @@ class ProfileLimitsManagementViewModel: NSObject {
                         print("UPDATE DEPOSIT LIMIT ERROR: \(error)")
                         let limitErrorMessage = localized("limit_update_error_message").replacingFirstOccurrence(of: "{limitType}", with: localized("deposit"))
                         self?.limitOptionsErrorPublisher.send(limitErrorMessage)
+
+                        self?.limitOptionsCheckPublisher.value.append("deposit")
+                        self?.isDepositLimitUpdated.send(true)
+
                         self?.isLoadingPublisher.send(false)
                     }
                 }, receiveValue: { [weak self] updateLimitResponse in
@@ -317,6 +321,10 @@ class ProfileLimitsManagementViewModel: NSObject {
                         print("UPDATE DEPOSIT LIMIT ERROR: \(error)")
                         let limitErrorMessage = localized("limit_update_error_message").replacingFirstOccurrence(of: "{limitType}", with: localized("betting"))
                         self?.limitOptionsErrorPublisher.send(limitErrorMessage)
+
+                        self?.limitOptionsCheckPublisher.value.append("wagering")
+                        self?.isBettingLimitUpdated.send(true)
+
                         self?.isLoadingPublisher.send(false)
                     }
                 }, receiveValue: { [weak self] updateLimitResponse in
@@ -344,6 +352,10 @@ class ProfileLimitsManagementViewModel: NSObject {
                         print("UPDATE RESPONSIBLE LIMIT ERROR: \(error)")
                         let limitErrorMessage = localized("limit_update_error_message").replacingFirstOccurrence(of: "{limitType}", with: localized("auto_payout"))
                         self?.limitOptionsErrorPublisher.send(limitErrorMessage)
+
+                        self?.limitOptionsCheckPublisher.value.append("loss")
+                        self?.isAutoPayoutLimitUpdated.send(true)
+
                         self?.isLoadingPublisher.send(false)
                     }
                 }, receiveValue: { [weak self] updateLimitResponse in
