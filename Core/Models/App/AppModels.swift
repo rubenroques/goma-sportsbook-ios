@@ -81,6 +81,8 @@ struct Market {
     var homeParticipant: String?
     var awayParticipant: String?
 
+    var eventId: String?
+
     init(id: String,
          typeId: String,
          name: String,
@@ -97,7 +99,8 @@ struct Market {
          isAvailable: Bool = true,
          startDate: String? = nil,
          homeParticipant: String? = nil,
-         awayParticipant: String? = nil) {
+         awayParticipant: String? = nil,
+         eventId: String? = nil) {
         
         self.id = id
         self.typeId = typeId
@@ -116,6 +119,7 @@ struct Market {
         self.startDate = startDate
         self.homeParticipant = homeParticipant
         self.awayParticipant = awayParticipant
+        self.eventId = eventId
     }
 }
 

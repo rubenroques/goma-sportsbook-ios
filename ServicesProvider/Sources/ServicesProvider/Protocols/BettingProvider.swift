@@ -31,4 +31,8 @@ protocol BettingProvider: Connector {
     func updateBetslipSettings(_ betslipSettings: BetslipSettings) -> AnyPublisher<Bool, Never>
 
     func getFreebet() -> AnyPublisher<FreebetBalance, ServiceProviderError>
+
+    func getSharedTicket(betslipId: String) -> AnyPublisher<SharedTicketResponse, ServiceProviderError>
+
+    func getTicketSelection(ticketSelectionId: String) -> AnyPublisher<TicketSelection, ServiceProviderError>
 }

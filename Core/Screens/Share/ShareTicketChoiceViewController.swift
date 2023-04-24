@@ -64,12 +64,13 @@ class ShareTicketChoiceViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        if Env.appSession.businessModulesManager.isSocialFeaturesEnabled {
-            self.sendViaButton.isHidden = false
-        }
-        else {
-            self.sendViaButton.isHidden = true
-        }
+//        if Env.appSession.businessModulesManager.isSocialFeaturesEnabled {
+//            self.sendViaButton.isHidden = false
+//        }
+//        else {
+//            self.sendViaButton.isHidden = true
+//        }
+        self.sendViaButton.isHidden = false
 
         self.cancelButton.addTarget(self, action: #selector(didTapCancelButton), for: .primaryActionTriggered)
 
@@ -85,7 +86,7 @@ class ShareTicketChoiceViewController: UIViewController {
 
         self.isLoading = false
 
-        self.isEmptyState = false
+        self.isEmptyState = true
     }
 
     // MARK: - Layout and Theme
@@ -211,8 +212,9 @@ class ShareTicketChoiceViewController: UIViewController {
                 let urlMobile = Env.urlMobileShares
                 if betStatus == "OPEN",
                    let betToken = self.viewModel.clickedShareTicketInfo?.betToken {
+                    let userLocale = Locale.current.languageCode
                     //let matchUrlString = "\(urlMobile)/bet/\(betToken)"
-                    let matchUrlString = "\(urlMobile)\(betToken)"
+                    let matchUrlString = "\(urlMobile)/\(userLocale ?? "fr")/share/bet/\(betToken)"
 
                     let socialAppUrlShareString = socialApp.urlShare.replacingOccurrences(of: "%url", with: matchUrlString)
 
@@ -254,8 +256,9 @@ class ShareTicketChoiceViewController: UIViewController {
 
             if betStatus == "OPEN",
                let betToken = self.viewModel.clickedShareTicketInfo?.betToken {
+                let userLocale = Locale.current.languageCode
                 //let matchUrlString = "\(urlMobile)/bet/\(betToken)"
-                let matchUrlString = "\(urlMobile)\(betToken)"
+                let matchUrlString = "\(urlMobile)/\(userLocale ?? "fr")/share/bet/\(betToken)"
 
                 self.pasteboard.string = matchUrlString
 
@@ -277,11 +280,11 @@ class ShareTicketChoiceViewController: UIViewController {
 
         if let gameSnapshot = self.viewModel.clickedShareTicketInfo?.snapshot, let betStatus = self.viewModel.clickedShareTicketInfo?.betStatus {
 
-            if betStatus == "OPEN",
-               let betToken = self.viewModel.clickedShareTicketInfo?.betToken{
-
+            if betStatus.lowercased() == "opened",
+               let betToken = self.viewModel.clickedShareTicketInfo?.betToken {
+                let userLocale = Locale.current.languageCode
                 //let matchUrl = URL(string: "\(urlMobile)/bet/\(betToken)")
-                let matchUrl = URL(string: "\(urlMobile)\(betToken)")
+                let matchUrl = URL(string: "\(urlMobile)/\(userLocale ?? "fr")/share/bet/\(betToken)")
 
                 metadata.url = matchUrl
                 metadata.originalURL = metadata.url
@@ -294,7 +297,7 @@ class ShareTicketChoiceViewController: UIViewController {
 
         let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
 
-        if let betStatus = self.viewModel.clickedShareTicketInfo?.betStatus, betStatus == "OPEN" {
+        if let betStatus = self.viewModel.clickedShareTicketInfo?.betStatus, betStatus.lowercased() == "opened" {
             let shareActivityViewController = UIActivityViewController(activityItems: [metadataItemSource, self.viewModel.clickedShareTicketInfo?.snapshot],
                                                                        applicationActivities: nil)
             if let popoverController = shareActivityViewController.popoverPresentationController {

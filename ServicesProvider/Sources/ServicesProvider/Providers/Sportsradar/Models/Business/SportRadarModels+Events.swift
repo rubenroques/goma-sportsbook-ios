@@ -361,6 +361,7 @@ extension SportRadarModels {
         var startDate: String?
         var homeParticipant: String?
         var awayParticipant: String?
+        var eventId: String?
 
         enum CodingKeys: String, CodingKey {
             case id = "idfomarket"
@@ -375,9 +376,10 @@ extension SportRadarModels {
             case startDate = "tsstart"
             case homeParticipant = "participantname_home"
             case awayParticipant = "participantname_away"
+            case eventId = "idfoevent"
         }
 
-        init(id: String, name: String, outcomes: [Outcome], marketTypeId: String? = nil, eventMarketTypeId: String? = nil, eventName: String? = nil, isMainOutright: Bool? = nil, eventMarketCount: Int? = nil, isTradable: Bool, startDate: String? = nil, homeParticipant: String? = nil, awayParticipant: String? = nil) {
+        init(id: String, name: String, outcomes: [Outcome], marketTypeId: String? = nil, eventMarketTypeId: String? = nil, eventName: String? = nil, isMainOutright: Bool? = nil, eventMarketCount: Int? = nil, isTradable: Bool, startDate: String? = nil, homeParticipant: String? = nil, awayParticipant: String? = nil, eventId: String? = nil) {
             self.id = id
             self.name = name
             self.outcomes = outcomes
@@ -390,6 +392,7 @@ extension SportRadarModels {
             self.startDate = startDate
             self.homeParticipant = homeParticipant
             self.awayParticipant = awayParticipant
+            self.eventId = eventId
         }
 
         init(from decoder: Decoder) throws {
@@ -406,6 +409,7 @@ extension SportRadarModels {
             self.startDate = try container.decodeIfPresent(String.self, forKey: .startDate)
             self.homeParticipant = try container.decodeIfPresent(String.self, forKey: .homeParticipant)
             self.awayParticipant = try container.decodeIfPresent(String.self, forKey: .awayParticipant)
+            self.eventId = try container.decodeIfPresent(String.self, forKey: .eventId)
 
         }
         

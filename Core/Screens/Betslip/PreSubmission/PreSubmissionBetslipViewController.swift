@@ -603,7 +603,6 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-
         Env.betslipManager.bettingTicketsPublisher
             .receive(on: DispatchQueue.main)
             .map({ orderedSet -> Double in
@@ -615,7 +614,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                 self?.configureWithMultipleTotalOdd(multiplier)
             })
             .store(in: &cancellables)
-
 
         //
         self.viewModel.sharedBetsPublisher
@@ -640,9 +638,9 @@ class PreSubmissionBetslipViewController: UIViewController {
             .filter { _, sharedBetsLoadableContent in
 
                 switch sharedBetsLoadableContent {
-                case .idle, .failed:
+                case .idle, .failed, .loaded:
                     return true
-                case .loading, .loaded:
+                case .loading:
                     return false
                 }
             }
@@ -655,8 +653,11 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.viewModel.isUnavailableBetSelection
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isUnavailable in
-                self?.suggestedBetsListViewController?.isEmptySharedBet = isUnavailable
-                self?.suggestedBetsListViewController?.reloadTableView()
+                // self?.suggestedBetsListViewController?.isEmptySharedBet = isUnavailable
+                // self?.suggestedBetsListViewController?.reloadTableView()
+                if isUnavailable {
+                    self?.showErrorView(errorMessage: localized("shared_bet_unavailable"))
+                }
             })
             .store(in: &cancellables)
 
@@ -917,7 +918,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                 }
             }
             .store(in: &self.cancellables)
-
 
         // Free bet
         self.freeBetSwitch.addTarget(self, action: #selector(onFreebetSwitchValueChanged(_:)), for: .valueChanged)
@@ -1248,7 +1248,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBAction private func didTapClearButton() {
         Env.betslipManager.clearAllBettingTickets()
 
-        self.suggestedBetsListViewController?.refreshSuggestedBets()
+        //self.suggestedBetsListViewController?.refreshSuggestedBets()
     }
 
     @IBAction private func didChangeSegmentValue(_ segmentControl: UISegmentedControl) {

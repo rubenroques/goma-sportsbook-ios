@@ -19,6 +19,7 @@ enum BettingAPIClient {
     case updateBetslipSettings(acceptingReoffer: Bool)
     case getFreebetBalance
     case getSharedTicket(betslipId: String)
+    case getTicketSelection(ticketSelectionId: String)
 }
 
 extension BettingAPIClient: Endpoint {
@@ -47,6 +48,8 @@ extension BettingAPIClient: Endpoint {
             return "/api/betting/fo/freeBalance"
         case .getSharedTicket(let betslipId):
             return "/api/betting/fo/bookbetslip/\(betslipId)"
+        case .getTicketSelection:
+            return "/services/content/get"
         }
     }
     
@@ -112,6 +115,8 @@ extension BettingAPIClient: Endpoint {
         case .getFreebetBalance:
             return nil
         case .getSharedTicket:
+            return nil
+        case .getTicketSelection:
             return nil
         }
     }
@@ -294,6 +299,21 @@ extension BettingAPIClient: Endpoint {
             return nil
         case .getSharedTicket:
             return nil
+        case .getTicketSelection(let ticketSelectionId):
+            let body = """
+                       {
+                        "clientContext": {
+                            "ipAddress": "127.0.0.1",
+                            "language": "UK"
+                        },
+                        "contentId": {
+                            "id": "\(ticketSelectionId)",
+                            "type": "selection"
+                        }
+                       }
+                       """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
         }
         
     }
@@ -311,6 +331,7 @@ extension BettingAPIClient: Endpoint {
         case .updateBetslipSettings: return .post
         case .getFreebetBalance: return .get
         case .getSharedTicket: return .get
+        case .getTicketSelection: return .post
         }
     }
     
@@ -327,11 +348,17 @@ extension BettingAPIClient: Endpoint {
         case .updateBetslipSettings: return true
         case .getFreebetBalance: return true
         case .getSharedTicket: return true
+        case .getTicketSelection: return false
         }
     }
     
     var url: String {
-        return SportRadarConstants.apiRestHostname
+        switch self {
+        case .getTicketSelection:
+            return SportRadarConstants.servicesRestHostname
+        default:
+            return SportRadarConstants.apiRestHostname
+        }
     }
     
     var headers: HTTP.Headers? {
@@ -362,6 +389,7 @@ extension BettingAPIClient: Endpoint {
         case .updateBetslipSettings: return TimeInterval(10)
         case .getFreebetBalance: return TimeInterval(10)
         case .getSharedTicket: return TimeInterval(20)
+        case .getTicketSelection: return TimeInterval(20)
         }
     }
     

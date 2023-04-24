@@ -6,7 +6,8 @@
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:sportsbook.gomagaming.com</string>
+		<string>applinks:sportsbook-stage.gomagaming.com</string>
+		<string>applinks:goma-uat.betsson.fr</string>
 	</array>
 </dict>
 </plist>

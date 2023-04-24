@@ -905,6 +905,23 @@ extension SportRadarEventsProvider {
         .eraseToAnyPublisher()
     }
 
+    func getMarketInfo(marketId: String) -> AnyPublisher<Market, ServiceProviderError> {
+
+        let endpoint = SportRadarRestAPIClient.getMarketInfo(marketId: marketId)
+
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.Market>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { sportRadarResponse -> Market in
+            let market = sportRadarResponse.data
+
+            let mappedMarket = SportRadarModelMapper.market(fromInternalMarket: market)
+
+            return mappedMarket
+        })
+        .eraseToAnyPublisher()
+
+    }
+
     //
     // MARK: - Favorites
     //
