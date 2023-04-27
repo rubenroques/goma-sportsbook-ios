@@ -138,18 +138,23 @@ class OutcomeSelectionButtonView: NibView {
 
             self.marketStateCancellable?.cancel()
             self.marketStateCancellable = Env.servicesProvider.subscribeToEventMarketUpdates(withId: marketId)
+                // .print("matchDetails marketSubscriber")
                 .compactMap({ $0 })
                 .map({ (serviceProviderMarket: ServicesProvider.Market) -> Market in
                     return ServiceProviderModelMapper.market(fromServiceProviderMarket: serviceProviderMarket)
                 })
+                .filter({ [weak self] updatedMarket in
+                    return updatedMarket.id == (self?.outcome?.marketId ?? "-")
+                })
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
-                    Logger.log("marketSubscriber subscribeToEventMarketUpdates completion: \(completion)")
+                    // Logger.log("marketSubscriber subscribeToEventMarketUpdates completion: \(completion)")
                 }, receiveValue: { [weak self] (marketUpdated: Market) in
 
                     if marketUpdated.isAvailable {
                         self?.isUserInteractionEnabled = true
                         self?.containerView.alpha = 1.0
+
                         Logger.log("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will show \n")
 
                         self?.stackView.isHidden = false
@@ -158,6 +163,7 @@ class OutcomeSelectionButtonView: NibView {
                     else {
                         self?.isUserInteractionEnabled = false
                         self?.containerView.alpha = 0.5
+
                         Logger.log("subscribeToEventMarketUpdates market \(marketUpdated.id)-\(marketUpdated.isAvailable) will hide \n")
 
                         self?.stackView.isHidden = true
@@ -180,7 +186,7 @@ class OutcomeSelectionButtonView: NibView {
             }, receiveValue: { [weak self] (updatedBettingOffer: BettingOffer) in
                 guard let weakSelf = self else { return }
 
-                print("oddUpdatesPublisher subscribeToOutcomeUpdates completion: \(updatedBettingOffer)")
+                // print("oddUpdatesPublisher subscribeToOutcomeUpdates receiveValue: \(updatedBettingOffer)")
 
                 if !updatedBettingOffer.isAvailable || updatedBettingOffer.decimalOdd.isNaN {
                     weakSelf.stackView.isUserInteractionEnabled = false

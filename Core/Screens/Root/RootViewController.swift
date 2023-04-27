@@ -203,7 +203,7 @@ class RootViewController: UIViewController {
     var appMode: AppMode = .sportsbook
 
     enum ScreenState {
-        case logged(user: UserSession)
+        case logged(user: UserProfile)
         case anonymous
     }
     var screenState: ScreenState = .anonymous {
@@ -332,13 +332,13 @@ class RootViewController: UIViewController {
 
         // Detects a new login
 
-        Env.userSessionStore.userSessionPublisher
+        Env.userSessionStore.userProfilePublisher
             .receive(on: DispatchQueue.main)
-            .sink { userSession in
-                if let userSession = userSession {
-                    self.screenState = .logged(user: userSession)
+            .sink { userProfile in
+                if let userProfile = userProfile {
+                    self.screenState = .logged(user: userProfile)
 
-                    if let avatarName = userSession.avatarName {
+                    if let avatarName = userProfile.avatarName {
                         self.profilePictureImageView.image = UIImage(named: avatarName)
                     }
                     else {
@@ -560,6 +560,7 @@ class RootViewController: UIViewController {
 
         self.notificationCounterLabel.font = AppFont.with(type: .semibold, size: 12)
 
+        //
         if TargetVariables.hasFeatureEnabled(feature: .casino) {
             self.casinoButtonBaseView.isHidden = false
         }
@@ -567,6 +568,7 @@ class RootViewController: UIViewController {
             self.casinoButtonBaseView.isHidden = true
         }
 
+        //
         if TargetVariables.hasFeatureEnabled(feature: .tips) {
             self.tipsButtonBaseView.isHidden = false
         }
@@ -574,6 +576,7 @@ class RootViewController: UIViewController {
             self.tipsButtonBaseView.isHidden = true
         }
 
+        //
         self.view.insertSubview(self.topGradientBackgroundView, belowSubview: self.topSafeAreaView)
 
         self.mainContainerView.insertSubview(self.mainContainerGradientView, at: 0)
@@ -603,10 +606,17 @@ class RootViewController: UIViewController {
         self.topBackgroundGradientLayer.locations = [0.0, 0.41, 1.0]
         self.topBackgroundGradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
         self.topBackgroundGradientLayer.endPoint = CGPoint(x: 1.0, y: 0.4)
-        self.topGradientBackgroundView.backgroundColor = .white
-        self.topGradientBackgroundView.layer.insertSublayer(self.topBackgroundGradientLayer, at: 0)
+
+        if TargetVariables.shouldUseGradientBackgrounds {
+            self.topGradientBackgroundView.backgroundColor = .white
+            self.topGradientBackgroundView.layer.insertSublayer(self.topBackgroundGradientLayer, at: 0)
+        }
+        else {
+            self.topGradientBackgroundView.backgroundColor = .clear
+        }
 
 
+        //
         if TargetVariables.shouldUserBlurEffectTabBar {
 
             self.bottomBackgroundView.backgroundColor = .clear
@@ -623,29 +633,46 @@ class RootViewController: UIViewController {
                 blurEffectView.topAnchor.constraint(equalTo: self.bottomBackgroundView.topAnchor),
                 blurEffectView.bottomAnchor.constraint(equalTo: self.bottomBackgroundView.bottomAnchor),
             ])
-
         }
-
     }
 
     func setupWithTheme() {
 
         self.view.backgroundColor = .black
 
+        if TargetVariables.shouldUseGradientBackgrounds {
+            self.topSafeAreaView.backgroundColor = .clear
+            self.topBarView.backgroundColor = .clear
 
-        self.topSafeAreaView.backgroundColor = .clear
-        self.topBarView.backgroundColor = .clear
+            self.topGradientBackgroundView.backgroundColor = .clear
+            self.topBackgroundGradientLayer.colors = [UIColor.App.headerGradient1.cgColor,
+                                                      UIColor.App.headerGradient2.cgColor,
+                                                      UIColor.App.headerGradient3.cgColor]
 
-        self.topGradientBackgroundView.backgroundColor = .clear
-        self.topBackgroundGradientLayer.colors = [UIColor.App.headerGradient1.cgColor,
-                                                  UIColor.App.headerGradient2.cgColor,
-                                                  UIColor.App.headerGradient3.cgColor]
+            self.containerView.backgroundColor = .clear
+            self.mainContainerView.backgroundColor = .clear
+            self.mainContainerGradientView.backgroundColor = .clear
+            self.mainContainerGradientLayer.colors = [UIColor.App.backgroundGradient1.cgColor,
+                                                      UIColor.App.backgroundGradient2.cgColor]
 
-        self.containerView.backgroundColor = .clear
-        self.mainContainerView.backgroundColor = .clear
-        self.mainContainerGradientView.backgroundColor = .clear
-        self.mainContainerGradientLayer.colors = [UIColor.App.backgroundGradient1.cgColor,
-                                                  UIColor.App.backgroundGradient2.cgColor]
+            self.searchButton.imageView?.setImageColor(color: UIColor.white)
+            self.anonymousUserMenuImageView.setImageColor(color: UIColor.white)
+        }
+        else {
+            self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
+            self.topBarView.backgroundColor = UIColor.App.backgroundPrimary
+
+            self.topGradientBackgroundView.backgroundColor = .clear
+            self.topBackgroundGradientLayer.colors = []
+
+            self.containerView.backgroundColor = .clear
+            self.mainContainerView.backgroundColor = UIColor.App.backgroundPrimary
+            self.mainContainerGradientView.backgroundColor = .clear
+            self.mainContainerGradientLayer.colors = []
+
+            self.searchButton.imageView?.setImageColor(color: UIColor.App.textPrimary)
+            self.anonymousUserMenuImageView.setImageColor(color: UIColor.App.textPrimary)
+        }
 
         self.homeBaseView.backgroundColor = .clear
         self.preLiveBaseView.backgroundColor = .clear
@@ -659,7 +686,6 @@ class RootViewController: UIViewController {
         self.tipsTitleLabel.textColor = UIColor.App.highlightPrimary
         self.casinoTitleLabel.textColor = UIColor.App.textSecondary
         self.sportsbookTitleLabel.textColor = UIColor.App.textSecondary
-
 
         if TargetVariables.shouldUserBlurEffectTabBar {
             self.tabBarView.backgroundColor = .clear
@@ -705,8 +731,8 @@ class RootViewController: UIViewController {
 
     }
 
-    func setupWithState(_ state: ScreenState) {
-        switch state {
+    func setupWithState(_ screenState: ScreenState) {
+        switch screenState {
         case .logged:
             self.loginBaseView.isHidden = true
 
@@ -759,7 +785,7 @@ class RootViewController: UIViewController {
     }
 
     func openChatModal() {
-        if UserSessionStore.isUserLogged() {
+        if Env.userSessionStore.isUserLogged() {
             let socialViewController = SocialViewController()
             self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
         }
@@ -1005,8 +1031,8 @@ extension RootViewController {
     }
 
     private func presentProfileViewController() {
-        if let loggedUser = UserSessionStore.loggedUserSession() {
-            let profileViewController = ProfileViewController(userSession: loggedUser)
+        if let loggedUser = Env.userSessionStore.loggedUserProfile {
+            let profileViewController = ProfileViewController(userProfile: loggedUser)
             let navigationViewController = Router.navigationController(with: profileViewController)
             self.present(navigationViewController, animated: true, completion: nil)
         }

@@ -125,7 +125,7 @@ class UserTrackingSettingsViewController: UIViewController {
     }
 
     @objc func didTapSkipButton() {
-        Env.userSessionStore.didSkipedTracking()
+        Env.userSessionStore.didSkippedTracking()
     }
 
 }

@@ -56,7 +56,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var shouldUseGradientBackgrounds: Bool {
-        return true
+        return false
     }
 
 }

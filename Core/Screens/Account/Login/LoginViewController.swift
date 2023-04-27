@@ -231,12 +231,7 @@ class LoginViewController: UIViewController {
         debugLogoImageViewTap.numberOfTapsRequired = 3
         self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
         #endif
-        
-//
-//        let debug2LogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebug))
-//        debug2LogoImageViewTap.numberOfTapsRequired = 2
-//        self.logoImageView.addGestureRecognizer(debug2LogoImageViewTap)
-
+  
     }
 
     func setupWithTheme() {
@@ -726,13 +721,6 @@ class LoginViewController: UIViewController {
 }
 
 extension LoginViewController {
-
-    @objc func didTapDebug() {
-        UserDefaults.standard.removeObject(forKey: "RegistrationFormDataKey")
-        UserDefaults.standard.synchronize()
-
-        UIAlertController.showMessage(title: "Debug", message: "Register cached data cleared", on: self)
-    }
 
     @objc func didTapDebugFormFill() {
         

@@ -29,9 +29,15 @@ enum RegisterUserError: Error {
     case serverError
 }
 
-enum UserSessionStatus {
+enum UserProfileStatus {
     case anonymous
     case logged
+}
+
+enum UserTrackingStatus {
+    case unkown
+    case skipped
+    case accepted
 }
 
 class UserSessionStore {
@@ -42,14 +48,14 @@ class UserSessionStore {
 
     var userSessionPublisher = CurrentValueSubject<UserSession?, Never>(nil)
 
-    var userSessionStatusPublisher: AnyPublisher<UserSessionStatus, Never> {
-        return self.userSessionPublisher
-            .map { session in
-                if session != nil {
-                    return UserSessionStatus.logged
+    var userProfileStatusPublisher: AnyPublisher<UserProfileStatus, Never> {
+        return self.userProfilePublisher
+            .map { profile in
+                if profile != nil {
+                    return UserProfileStatus.logged
                 }
                 else {
-                    return UserSessionStatus.anonymous
+                    return UserProfileStatus.anonymous
                 }
             }
             .eraseToAnyPublisher()
@@ -77,15 +83,36 @@ class UserSessionStore {
     }
 
     var userWalletPublisher = CurrentValueSubject<UserWallet?, Never>(nil)
-    var acceptedTrackingPublisher = CurrentValueSubject<Bool?, Never>(false)
+    var acceptedTrackingPublisher = CurrentValueSubject<UserTrackingStatus, Never>(.unkown)
 
     var shouldRecordUserSession = true
     var shouldSkipLimitsScreen = false
 
+    var loggedUserProfile: UserProfile? {
+        return self.userProfilePublisher.value
+    }
+
+    private var storedUserPassword: String? {
+        if let storedUserSession = self.storedUserSession,
+           let passwordData = try? KeychainInterface.readPassword(service: Env.bundleId, account: storedUserSession.userId),
+           let password = String(data: passwordData, encoding: .utf8) {
+            return password
+        }
+        else if let userSession = self.storedUserSession {
+            return userSession.password
+        }
+        return nil
+    }
+
+    private var storedUserSession: UserSession? {
+        // There is a cached session user
+        return UserDefaults.standard.userSession
+    }
+
     private var cancellables = Set<AnyCancellable>()
 
     init() {
-        self.acceptedTrackingPublisher.send(self.hasAcceptedTracking())
+        self.acceptedTrackingPublisher.send(self.hasAcceptedTracking)
 
         self.userSessionPublisher.compactMap({ $0 })
             .sink { [weak self] userSession in
@@ -94,11 +121,13 @@ class UserSessionStore {
             .store(in: &self.cancellables)
 
         self.userProfilePublisher
-            .sink { [weak self] userSession in
-                if let userSession = userSession {
-                    self?.isUserProfileComplete = userSession.isRegistrationCompleted
-                    self?.isUserEmailVerified = userSession.isEmailVerified
-                    self?.userKnowYourCustomerStatus = userSession.kycStatus
+            .sink { [weak self] userProfile in
+                if let userProfile = userProfile {
+                    self?.refreshUserWallet()
+
+                    self?.isUserProfileComplete = userProfile.isRegistrationCompleted
+                    self?.isUserEmailVerified = userProfile.isEmailVerified
+                    self?.userKnowYourCustomerStatus = userProfile.kycStatus
                 }
                 else {
                     self?.isUserProfileComplete = nil
@@ -114,34 +143,9 @@ class UserSessionStore {
         self.startUserSessionIfNeeded()
     }
 
-    static func loggedUserSession() -> UserSession? {
-        return UserDefaults.standard.userSession
-    }
-
-    static func storedUserSession() -> UserSession? {
-        return UserDefaults.standard.userSession
-    }
-
-    static func storedUserPassword() -> String? {
-        if
-            let storedUserSession = UserSessionStore.loggedUserSession(),
-            let passwordData = try? KeychainInterface.readPassword(service: Env.bundleId, account: storedUserSession.userId),
-            let password = String(data: passwordData, encoding: .utf8)
-        {
-            return password
-        }
-        else if let userSession = Self.loggedUserSession() {
-            return userSession.password
-        }
-        return nil
-    }
-
-    static func isUserLogged() -> Bool {
-        return UserDefaults.standard.userSession != nil
-    }
-
     func isUserLogged() -> Bool {
-        return Self.isUserLogged()
+        // return UserDefaults.standard.userSession != nil
+        return self.userProfilePublisher.value != nil
     }
 
     func saveUserSession(_ userSession: UserSession) {
@@ -156,13 +160,13 @@ class UserSessionStore {
                 shouldRecordUserSession = false
             }
         }
-        
+
         UserDefaults.standard.userSession = userSession.safeUserSession
     }
 
     func updatePassword(newPassword password: String) {
         guard
-            var session = Self.storedUserSession()
+            var session = self.storedUserSession
         else {
             return
         }
@@ -171,29 +175,10 @@ class UserSessionStore {
         self.saveUserSession(session)
     }
 
-    func loadLoggedUser() {
-        if let user = UserSessionStore.loggedUserSession() {
-            userSessionPublisher.send(user)
-        }
-    }
-
-    //
-    static func isUserAnonymous() -> Bool {
-        return !isUserLogged()
-    }
-
-    static func didSkipLoginFlow() -> Bool {
-        UserDefaults.standard.userSkippedLoginFlow
-    }
-
-    static func skippedLoginFlow() {
-        UserDefaults.standard.userSkippedLoginFlow = true
-    }
-
     //
     func logout() {
 
-        if let userSession = UserSessionStore.loggedUserSession() {
+        if let userSession = self.storedUserSession {
             try? KeychainInterface.deletePassword(service: Env.bundleId, account: userSession.userId)
         }
 
@@ -205,6 +190,7 @@ class UserSessionStore {
         // TODO: Migrate to UserDefaults extensions
         UserDefaults.standard.removeObject(forKey: "RegistrationFormDataKey")
 
+        //
         Env.gomaNetworkClient.reconnectSession()
 
         self.userProfilePublisher.send(nil)
@@ -243,8 +229,6 @@ class UserSessionStore {
             .handleEvents(receiveOutput: { [weak self] session, profile in
                 self?.userProfilePublisher.send(profile)
                 self?.userSessionPublisher.send(session)
-                
-                self?.refreshUserWallet()
             })
             .map({ _ in
                 return ()
@@ -293,7 +277,7 @@ class UserSessionStore {
                     return true
                 }
             }
-            .replaceError(with: false) // if an error occour don't show
+            .replaceError(with: false) // if an error occour it shouldn't show the blocking screen
             .eraseToAnyPublisher()
     }
 
@@ -346,7 +330,7 @@ extension UserSessionStore {
             receiveValue: { [weak self] notificationsUserSettings in
                 self?.storeNotificationsUserSettings(notificationsUserSettings: notificationsUserSettings)
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
     }
 
     private func storeNotificationsUserSettings(notificationsUserSettings: NotificationsUserSettings) {
@@ -366,7 +350,7 @@ extension UserSessionStore {
             receiveValue: { [weak self] bettingUserSettings in
                 self?.storeBettingUserSettings(bettingUserSettings: bettingUserSettings)
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
     }
     
     private func storeBettingUserSettings(bettingUserSettings: BettingUserSettings) {
@@ -380,11 +364,16 @@ extension UserSessionStore {
     }
 
     func refreshUserWallet() {
+        guard self.isUserLogged() else {
+            return
+        }
+
         Env.servicesProvider.getUserBalance()
+            .throttle(for: .seconds(1), scheduler: DispatchQueue.main, latest: true)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 if case .failure = completion {
-                    self.userWalletPublisher.send(nil)
+                    self?.userWalletPublisher.send(nil)
                 }
             }, receiveValue: { [weak self] (userWallet: ServicesProvider.UserWallet) in
                 guard
@@ -400,7 +389,7 @@ extension UserSessionStore {
                                         currency: currency)
                 self?.userWalletPublisher.send(wallet)
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
     }
     
     func refreshUserProfile() {
@@ -416,8 +405,8 @@ extension UserSessionStore {
         self.isLoadingUserSessionPublisher.send(true)
 
         guard
-            let user = UserSessionStore.loggedUserSession(),
-            let userPassword = UserSessionStore.storedUserPassword()
+            let user = self.storedUserSession,
+            let userPassword = self.storedUserPassword
         else {
             Logger.log("UserSessionStore - User Session not found - login not needed")
             self.isLoadingUserSessionPublisher.send(false)
@@ -425,8 +414,6 @@ extension UserSessionStore {
         }
 
         Logger.log("UserSessionStore - User Session found - login needed")
-
-        self.loadLoggedUser()
 
         // Trigger internal login
         self.login(withUsername: user.username, password: userPassword)
@@ -437,7 +424,7 @@ extension UserSessionStore {
                     case .invalidEmailPassword:
                         self?.logout()
                     case .quickSignUpIncomplete:
-                        self?.logout() // TODO: Finish Quick Sign up code completion
+                        self?.logout()
                     case .restrictedCountry(let errorMessage):
                         ()
                     case .serverError:
@@ -450,24 +437,8 @@ extension UserSessionStore {
                     ()
                 }
                 self?.isLoadingUserSessionPublisher.send(false)
-            }, receiveValue: { [weak self] loggedUser in
-                self?.setupFavorites()
-            })
-            .store(in: &cancellables)
-    }
+            }, receiveValue: {
 
-    func setupFavorites() {
-
-        Env.servicesProvider.bettingConnectionStatePublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] connectorState in
-
-                switch connectorState {
-                case .connected:
-                    Env.favoritesManager.getUserFavorites()
-                case .disconnected:
-                    ()
-                }
             })
             .store(in: &cancellables)
     }
@@ -491,7 +462,7 @@ extension UserSessionStore {
 
                 Env.gomaSocialClient.getFollowingUsers()
             })
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
     }
 
     private func signUpSimpleGomaAPI(form: ServicesProvider.SimpleSignUpForm, userId: String) {
@@ -514,6 +485,17 @@ extension UserSessionStore {
     
 }
 
+extension UserSessionStore {
+
+    static func didSkipLoginFlow() -> Bool {
+        UserDefaults.standard.userSkippedLoginFlow
+    }
+
+    static func skippedLoginFlow() {
+        UserDefaults.standard.userSkippedLoginFlow = true
+    }
+
+}
 
 extension UserSessionStore {
 
@@ -530,7 +512,7 @@ extension UserSessionStore {
     }
 
     func shouldRequestBiometrics() -> Bool {
-        let hasStoredUserSession = Self.storedUserSession() != nil
+        let hasStoredUserSession = self.storedUserSession != nil
         return hasStoredUserSession && UserDefaults.standard.biometricAuthenticationEnabled
     }
 
@@ -559,21 +541,26 @@ extension UserSessionStore {
                 @unknown default:
                     print("Unknown")
                 }
-                self.acceptedTrackingPublisher.send(true)
+                self.acceptedTrackingPublisher.send(.accepted)
             }
         }
         else {
-            self.acceptedTrackingPublisher.send(true)
+            self.acceptedTrackingPublisher.send(.accepted)
         }
 
     }
 
-    func didSkipedTracking() {
-        self.acceptedTrackingPublisher.send(nil)
+    func didSkippedTracking() {
+        self.acceptedTrackingPublisher.send(.skipped)
     }
 
-    func hasAcceptedTracking() -> Bool {
-        return UserDefaults.standard.acceptedTracking
+    var hasAcceptedTracking: UserTrackingStatus {
+        if UserDefaults.standard.acceptedTracking {
+            return .accepted
+        }
+        else {
+            return .unkown
+        }
     }
 
 }

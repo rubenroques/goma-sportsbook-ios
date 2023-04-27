@@ -142,7 +142,7 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
 
     @objc func didTapFavoriteImageView() {
         
-        if UserSessionStore.isUserLogged() {
+        if Env.userSessionStore.isUserLogged() {
             if let competition = competition {
                 self.markAsFavorite(competition: competition)
             }

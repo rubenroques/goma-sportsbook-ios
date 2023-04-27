@@ -85,9 +85,7 @@ extension MyAccountViewController {
     }
 
     @objc private func didTapPersonalInfo(sender: UITapGestureRecognizer) {
-        let userSession = UserSessionStore.loggedUserSession()
-
-        let personalInfoViewController = PersonalInfoViewController(userSession: userSession)
+        let personalInfoViewController = PersonalInfoViewController()
         self.navigationController?.pushViewController(personalInfoViewController, animated: true)
     }
 

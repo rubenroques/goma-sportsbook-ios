@@ -462,7 +462,7 @@ extension OmegaAPIClient: Endpoint {
                 queryItemsURL.append(queryItem)
             }
 
-            let queryItem = URLQueryItem(name: "lockType", value: "EXCLUSION")
+            let queryItem = URLQueryItem(name: "lockType", value: "TIMEOUT")
             queryItemsURL.append(queryItem)
 
             return queryItemsURL

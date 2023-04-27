@@ -61,7 +61,7 @@ class ProfileViewController: UIViewController {
     @IBOutlet private weak var footerBaseView: UIView!
     private var footerResponsibleGamingView = FooterResponsibleGamingView()
 
-    var userSession: UserSession?
+    var userProfile: UserProfile?
     var cancellables = Set<AnyCancellable>()
     let pasteboard = UIPasteboard.general
 
@@ -75,12 +75,12 @@ class ProfileViewController: UIViewController {
     var ibanPaymentDetails: BankPaymentDetail?
     var shouldShowIbanScreen: (() -> Void)?
 
-    init(userSession: UserSession? = nil) {
+    init(userProfile: UserProfile? = nil) {
 
         self.pageMode = .anonymous
-        self.userSession = userSession
+        self.userProfile = userProfile
 
-        if userSession != nil {
+        if userProfile != nil {
             pageMode = .user
         }
 
@@ -105,13 +105,13 @@ class ProfileViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if let user = self.userSession {
+        if let user = self.userProfile {
             self.usernameLabel.text = user.username
 
             if let avatarName = user.avatarName {
                 self.profilePictureImageView.image = UIImage(named: avatarName)
             }
-            // self.userIdLabel.text = user.userId
+            self.userIdLabel.text = user.userIdentifier
         }
 
         if TargetVariables.hasFeatureEnabled(feature: .chat), let userCode = Env.gomaNetworkClient.getCurrentToken()?.code {
@@ -123,10 +123,10 @@ class ProfileViewController: UIViewController {
             self.userCodeStackView.isHidden = true
         }
         
-        Env.userSessionStore.userSessionPublisher
+        Env.userSessionStore.userProfilePublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] userSession in
-                if userSession == nil {
+            .sink { [weak self] userProfile in
+                if userProfile == nil {
                     self?.dismiss(animated: false, completion: nil)
                 }
             }

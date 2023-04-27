@@ -25,8 +25,6 @@ class BannerScrollTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        AnalyticsClient.sendEvent(event: .promoBannerClicked)
-
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
@@ -149,6 +147,7 @@ extension BannerScrollTableViewCell: UICollectionViewDelegate, UICollectionViewD
         cell.setupWithViewModel(cellViewModel)
 
         cell.didTapBannerViewAction = { [weak self] presentationType in
+            AnalyticsClient.sendEvent(event: .promoBannerClicked)
             self?.didTapBannerViewAction?(presentationType)
         }
 

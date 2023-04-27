@@ -548,8 +548,14 @@ class MatchDetailsViewController: UIViewController {
         self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
 
         //
-        self.backgroundGradientView.colors = [(UIColor.App.backgroundGradient1, 0.0),
-                                              (UIColor.App.backgroundGradient2, 1.0)]
+        if TargetVariables.shouldUseGradientBackgrounds {
+            self.backgroundGradientView.colors = [(UIColor.App.backgroundGradient1, NSNumber(0.0)),
+                                                  (UIColor.App.backgroundGradient2, NSNumber(1.0))]
+        }
+        else {
+            self.backgroundGradientView.colors = []
+            self.backgroundGradientView.backgroundColor = UIColor.App.backgroundPrimary
+        }
 
         self.marketGroupsPagedBaseView.backgroundColor = .clear
         // Market List CollectionView
@@ -582,10 +588,10 @@ class MatchDetailsViewController: UIViewController {
     // MARK: - Bindings
     private func bind(toViewModel viewModel: MatchDetailsViewModel) {
         
-        Env.userSessionStore.userSessionPublisher
+        Env.userSessionStore.userProfilePublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] userSession in
-                if userSession != nil { // Is Logged In
+            .sink { [weak self] userProfile in
+                if userProfile != nil { // Is Logged In
                     self?.accountValueView.isHidden = false
                 }
                 else {
@@ -1038,7 +1044,7 @@ class MatchDetailsViewController: UIViewController {
     }
     
     func openChatModal() {
-        if UserSessionStore.isUserLogged() {
+        if Env.userSessionStore.isUserLogged() {
             let socialViewController = SocialViewController()
             self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
         }
@@ -1050,7 +1056,7 @@ class MatchDetailsViewController: UIViewController {
 
     private func openQuickbet(_ bettingTicket: BettingTicket) {
 
-        if UserSessionStore.isUserLogged() {
+        if Env.userSessionStore.isUserLogged() {
             let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
 
             let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)
@@ -1092,7 +1098,7 @@ class MatchDetailsViewController: UIViewController {
     
     @IBAction private func didTapMoreOptionsButton() {
         
-        if UserSessionStore.isUserLogged() {
+        if Env.userSessionStore.isUserLogged() {
             let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
             
             if Env.favoritesManager.isEventFavorite(eventId: self.viewModel.matchId) {

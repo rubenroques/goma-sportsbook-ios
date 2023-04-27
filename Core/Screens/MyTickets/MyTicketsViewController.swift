@@ -123,11 +123,11 @@ class MyTicketsViewController: UIViewController {
             })
             .store(in: &self.cancellables)
 
-        Publishers.CombineLatest(Env.userSessionStore.userSessionPublisher, self.viewModel.isTicketsEmptyPublisher)
+        Publishers.CombineLatest(Env.userSessionStore.userProfilePublisher, self.viewModel.isTicketsEmptyPublisher)
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] userSession, isTicketsEmpty in
+            .sink(receiveValue: { [weak self] userProfile, isTicketsEmpty in
 
-                if userSession == nil {
+                if userProfile == nil {
                     self?.emptyBaseView.isHidden = false
                     self?.firstTextFieldLabel.text = localized("not_logged_in")
                     self?.secondTextFieldLabel.text = localized("need_login_tickets")

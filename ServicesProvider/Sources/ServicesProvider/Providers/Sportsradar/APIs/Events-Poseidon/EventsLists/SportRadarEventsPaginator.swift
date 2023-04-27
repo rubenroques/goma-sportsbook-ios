@@ -208,6 +208,26 @@ class SportRadarEventsPaginator {
 extension SportRadarEventsPaginator {
 
     func handleContentUpdate(_ content: SportRadarModels.ContentContainer) {
+
+        guard
+            let updatedContentIdentifier = content.contentIdentifier
+        else {
+            // print("☁️SP debugdetails SportRadarEventsPaginator ignoring contentIdentifierLess \(content)")
+            return
+        }
+
+        if self.contentIdentifier.contentType == updatedContentIdentifier.contentType
+            && self.contentIdentifier.contentRoute.pageableRoute == updatedContentIdentifier.contentRoute.pageableRoute {
+
+        }
+        else {
+            // ignoring this update, not subscribed by this class
+            // print("☁️SP debugdetails SportRadarEventsPaginator ignoring \(updatedContentIdentifier)")
+            return
+        }
+
+        // print("☁️SP debugdetails SportRadarEventsPaginator handleContentUpdate \(content)")
+
         switch content {
         case .updateOutcomeOdd(_, let selectionId, let newOddNumerator, let newOddDenominator):
             self.storage.updateOutcomeOdd(withId: selectionId, newOddNumerator: newOddNumerator, newOddDenominator: newOddDenominator)
@@ -246,8 +266,8 @@ extension SportRadarEventsPaginator {
 
 extension SportRadarEventsPaginator {
 
-    func subscribeToEventUpdates(withId id: String) -> AnyPublisher<Event, Never>? {
-        return self.storage.subscribeToEventUpdates(withId: id)
+    func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<Event, Never>? {
+        return self.storage.subscribeToEventLiveDataUpdates(withId: id)
     }
 
     func subscribeToEventMarketUpdates(withId id: String) -> AnyPublisher<Market, Never>? {

@@ -121,6 +121,7 @@ public class LimitsOnRegisterViewController: UIViewController {
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var cancelButton: UIButton = Self.createCancelButton()
 
+    private lazy var contentScrollView: UIScrollView = Self.createContentScrollView()
     private lazy var contentBaseView: UIView = Self.createContentBaseView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
@@ -398,6 +399,12 @@ public extension LimitsOnRegisterViewController {
         return button
     }
 
+    private static func createContentScrollView() -> UIScrollView {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }
+
     private static func createContentBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -511,7 +518,9 @@ public extension LimitsOnRegisterViewController {
         self.headerBaseView.addSubview(self.backButton)
         self.headerBaseView.addSubview(self.cancelButton)
 
-        self.view.addSubview(self.contentBaseView)
+        self.view.addSubview(self.contentScrollView)
+        self.contentScrollView.addSubview(self.contentBaseView)
+
         self.contentBaseView.addSubview(self.titleLabel)
         self.contentBaseView.addSubview(self.subtitleLabel)
 
@@ -599,6 +608,18 @@ public extension LimitsOnRegisterViewController {
             self.headerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.headerBaseView.heightAnchor.constraint(equalToConstant: 68),
 
+            self.headerBaseView.bottomAnchor.constraint(equalTo: self.contentScrollView.topAnchor),
+            self.view.leadingAnchor.constraint(equalTo: self.contentScrollView.leadingAnchor),
+            self.view.trailingAnchor.constraint(equalTo: self.contentScrollView.trailingAnchor),
+            self.footerBaseView.topAnchor.constraint(equalTo: self.contentScrollView.bottomAnchor),
+
+            self.contentBaseView.leadingAnchor.constraint(equalTo: self.contentScrollView.contentLayoutGuide.leadingAnchor),
+            self.contentBaseView.topAnchor.constraint(equalTo: self.contentScrollView.contentLayoutGuide.topAnchor),
+            self.contentBaseView.trailingAnchor.constraint(equalTo: self.contentScrollView.contentLayoutGuide.trailingAnchor),
+            self.contentBaseView.bottomAnchor.constraint(equalTo: self.contentScrollView.contentLayoutGuide.bottomAnchor),
+
+            self.contentBaseView.widthAnchor.constraint(equalTo: self.contentScrollView.frameLayoutGuide.widthAnchor),
+
             self.backButton.leadingAnchor.constraint(equalTo: self.headerBaseView.leadingAnchor, constant: 18),
             self.backButton.centerYAnchor.constraint(equalTo: self.headerBaseView.centerYAnchor),
             self.backButton.widthAnchor.constraint(equalTo: self.backButton.heightAnchor),
@@ -608,11 +629,11 @@ public extension LimitsOnRegisterViewController {
             self.cancelButton.trailingAnchor.constraint(equalTo: self.headerBaseView.trailingAnchor, constant: -34),
 
             self.titleLabel.topAnchor.constraint(equalTo: self.contentBaseView.topAnchor, constant: 8),
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor),
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor, constant: 34),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor),
 
             self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 28),
-            self.subtitleLabel.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor),
+            self.subtitleLabel.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor, constant: 34),
             self.subtitleLabel.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor),
 
             self.depositLimitHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
@@ -620,13 +641,9 @@ public extension LimitsOnRegisterViewController {
             self.autoPayoutHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
 
             self.stackView.topAnchor.constraint(equalTo: self.subtitleLabel.bottomAnchor, constant: -12),
-            self.stackView.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor),
-            self.stackView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor),
+            self.stackView.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor, constant: 34),
+            self.stackView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor, constant: -34),
             self.stackView.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor, constant: -8),
-
-            self.contentBaseView.leadingAnchor.constraint(equalTo: self.continueButton.leadingAnchor),
-            self.contentBaseView.trailingAnchor.constraint(equalTo: self.continueButton.trailingAnchor),
-            self.contentBaseView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -10),
 
             self.footerBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.footerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
@@ -650,3 +667,12 @@ public extension LimitsOnRegisterViewController {
     }
 
 }
+
+
+/*
+ self.stepsScrollView.topAnchor.constraint(equalTo: self.contentBaseView.topAnchor),
+ self.stepsScrollView.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor),
+ self.stepsScrollView.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor),
+ self.stepsScrollView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor),
+
+ */

@@ -143,10 +143,10 @@ class BetslipViewController: UIViewController {
             self?.showBetPlacedScreen(withBetPlacedDetails: betPlacedDetails)
         }
 
-        Env.userSessionStore.userSessionPublisher
+        Env.userSessionStore.userProfilePublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] userSession in
-                if userSession != nil {
+            .sink { [weak self] userProfile in
+                if userProfile != nil {
                     self?.accountInfoBaseView.isHidden = false
                 }
                 else {
@@ -194,7 +194,7 @@ class BetslipViewController: UIViewController {
         self.navigationBarView.backgroundColor = UIColor.App.backgroundPrimary
         self.tabsBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.accountInfoBaseView.backgroundColor = UIColor.App.inputBackground
+        self.accountInfoBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.accountValueBaseView.backgroundColor = .clear
         self.accountValuePlusView.backgroundColor = UIColor.App.highlightSecondary
         self.accountValueLabel.textColor = UIColor.App.textPrimary

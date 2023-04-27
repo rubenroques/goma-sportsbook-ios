@@ -214,7 +214,7 @@ class OutrightCompetitionLargeWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     @objc private func didTapFavoritesButton(_ sender: Any) {
-        if UserSessionStore.isUserLogged() {
+        if Env.userSessionStore.isUserLogged() {
             if let competition = self.viewModel?.competition {
                 self.markAsFavorite(competition: competition)
             }

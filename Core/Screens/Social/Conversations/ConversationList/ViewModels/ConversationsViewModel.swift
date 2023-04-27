@@ -240,7 +240,7 @@ class ConversationsViewModel {
         let chatroomName = chatroomData.chatroom.name
         var chatroomUsers: [GomaFriend] = []
 
-        if let loggedUser = UserSessionStore.loggedUserSession() {
+        if let loggedUser = Env.userSessionStore.loggedUserProfile {
             loggedUsername = loggedUser.username
         }
 

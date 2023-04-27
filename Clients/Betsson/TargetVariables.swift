@@ -16,15 +16,15 @@ struct TargetVariables: SportsbookTarget {
     #endif
 
     static var gomaGamingHost: String {
-        return "https://gomagaming.com" //https://sportsbook-api.gomagaming.com"
+        return "https://gomagaming.com" // https://sportsbook-api.gomagaming.com"
     }
 
     static var gomaGamingAnonymousAuthEndpoint: String {
-        return "https://gomagaming.com" //https://sportsbook-api.gomagaming.com/api/auth/v1"
+        return "https://gomagaming.com" // https://sportsbook-api.gomagaming.com/api/auth/v1"
     }
 
     static var gomaGamingLoggedAuthEndpoint: String {
-        return "https://gomagaming.com" //https://sportsbook-api.gomagaming.com/api/auth/v1/login"
+        return "https://gomagaming.com" // https://sportsbook-api.gomagaming.com/api/auth/v1/login"
     }
 
     static var firebaseDatabaseURL: String {
@@ -62,6 +62,10 @@ struct TargetVariables: SportsbookTarget {
 
     static var features: [SportsbookTargetFeatures] {
         return []
+    }
+
+    static var shouldUserBlurEffectTabBar: Bool {
+        return true
     }
 
     static var shouldUseGradientBackgrounds: Bool {

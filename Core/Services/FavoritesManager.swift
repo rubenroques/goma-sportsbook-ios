@@ -157,11 +157,8 @@ class FavoritesManager {
                 }
 
             }, receiveValue: { [weak self] favoritesListAddResponse in
-
                 self?.competitionListId = favoritesListAddResponse.listId
-
                 self?.getUserFavorites()
-
             })
             .store(in: &cancellables)
     }

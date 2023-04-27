@@ -762,7 +762,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     @IBAction private func didTapFavoritesButton(_ sender: Any) {
-        if UserSessionStore.isUserLogged() {
+        if Env.userSessionStore.isUserLogged() {
             if let match = self.viewModel?.match {
                 self.markAsFavorite(match: match)
             }
@@ -997,7 +997,7 @@ extension LiveMatchWidgetCollectionViewCell {
 
     @IBAction private func didLongPressCard() {
 
-        if UserSessionStore.isUserLogged() {
+        if Env.userSessionStore.isUserLogged() {
           
             guard
                 let parentViewController = self.viewController,

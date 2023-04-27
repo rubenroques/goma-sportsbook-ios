@@ -62,7 +62,7 @@ class CasinoWebViewController: UIViewController {
     }
 
     @objc func refreshWebView() {
-        self.userId = UserSessionStore.loggedUserSession()?.userId ?? ""
+        self.userId = Env.userSessionStore.loggedUserProfile?.userIdentifier ?? ""
         
         self.showLoading()
         self.loadInitialPage()

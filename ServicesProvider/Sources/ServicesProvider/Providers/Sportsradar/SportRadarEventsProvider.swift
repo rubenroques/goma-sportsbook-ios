@@ -500,10 +500,10 @@ class SportRadarEventsProvider: EventsProvider {
     //
     // MARK: - Subcribable Updates
     //
-    public func subscribeToEventUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
+    public func subscribeToEventLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError> {
         // events lists
         for paginator in self.eventsPaginators.values {
-            if paginator.containsEvent(withid: id), let publisher = paginator.subscribeToEventUpdates(withId: id) {
+            if paginator.containsEvent(withid: id), let publisher = paginator.subscribeToEventLiveDataUpdates(withId: id) {
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
         }
@@ -511,7 +511,7 @@ class SportRadarEventsProvider: EventsProvider {
         if let eventDetailsCoordinator = self.eventDetailsCoordinator,
            eventDetailsCoordinator.containsMarket(withid: id)
         {
-            let publisher = eventDetailsCoordinator.subscribeToEventUpdates(withId: id)
+            let publisher = eventDetailsCoordinator.subscribeToEventLiveDataUpdates(withId: id)
             return publisher.setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
         }
         return Just(nil).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
@@ -524,11 +524,11 @@ class SportRadarEventsProvider: EventsProvider {
                 return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
         }
+
         // event details
         if let eventDetailsCoordinator = self.eventDetailsCoordinator,
            eventDetailsCoordinator.containsMarket(withid: id),
-           let publisher = eventDetailsCoordinator.subscribeToEventMarketUpdates(withId: id)
-        {
+           let publisher = eventDetailsCoordinator.subscribeToEventMarketUpdates(withId: id) {
             return publisher.map(Optional.init).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
         }
         return Just(nil).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()

@@ -95,7 +95,7 @@ class Router {
         self.subscribeToNotificationsOpened()
 
         var bootRootViewController: UIViewController
-        if UserSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
+        if Env.userSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
             bootRootViewController = Router.mainScreenViewControllerFlow()
         }
         else {
@@ -145,17 +145,14 @@ class Router {
 
         Env.userSessionStore.acceptedTrackingPublisher
             .receive(on: DispatchQueue.main)
-            .sink { accepted in
-                if let acceptedValue = accepted {
-                    if !acceptedValue {
-                        self.showUserTrackingViewController()
-                    }
-                    else {
-                        self.hideUserTrackingViewController()
-                    }
-                }
-                else {
-                    // Nil means the user skipped it
+            .sink { acceptedTrackingState in
+
+                switch acceptedTrackingState {
+                case .unkown:
+                    self.showUserTrackingViewController()
+                case .accepted:
+                    self.hideUserTrackingViewController()
+                case .skipped:
                     self.hideUserTrackingViewController()
                 }
             }

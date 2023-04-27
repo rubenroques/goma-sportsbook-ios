@@ -137,10 +137,35 @@ extension SportRadarSocketConnector: WebSocketDelegate {
             print("ServiceProvider - SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
 
         case .text(let string):
-            print("☁️SP debugbetslip WS recieved text: \(string) \n----------------- \n")
+            // print("☁️SP debugbetslip WS recieved text: \(string) \n----------------- \n")
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)
+
+                //
+                //
+                // DEBUGGING HELPER
+                switch sportRadarSocketResponse {
+                case .listeningStarted:
+                    ()
+                case .contentChanges(let contents):
+                    for content in contents {
+
+                        switch content {
+                        case .liveEvents, .preLiveEvents, .liveSports, .preLiveSports, .eventDetails, .eventDetailsLiveData, .eventGroup, .outrightEventGroup, .eventSummary, .marketDetails:
+                            ()
+                        case .addEvent, .removeEvent, .addMarket, .enableMarket, .removeMarket, .updateEventState, .updateEventTime, .updateEventScore, .updateMarketTradability, .updateEventMarketCount, .updateOutcomeOdd:
+                            print("☁️SP debugbetslip WS recieved text with content update:\n\(string)\n -------------------> Converted to: \n\(content)\n-----\n")
+                        case .unknown:
+                            print("☁️SP debugbetslip WS recieved text with unknown part of the content: \(string) \n\n")
+                        }
+                    }
+                case .unknown:
+                    print("☁️SP debugbetslip WS recieved text with unknown messa: \(string)\n")
+                }
+                //
+                //
+                //
             }
 
         case .binary(let data):
