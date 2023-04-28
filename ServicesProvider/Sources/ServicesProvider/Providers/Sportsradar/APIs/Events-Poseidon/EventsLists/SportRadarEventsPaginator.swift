@@ -229,8 +229,11 @@ extension SportRadarEventsPaginator {
         // print("☁️SP debugdetails SportRadarEventsPaginator handleContentUpdate \(content)")
 
         switch content {
+
         case .updateOutcomeOdd(_, let selectionId, let newOddNumerator, let newOddDenominator):
             self.storage.updateOutcomeOdd(withId: selectionId, newOddNumerator: newOddNumerator, newOddDenominator: newOddDenominator)
+        case .updateOutcomeTradability(_, let selectionId, let isTradable):
+            self.storage.updateOutcomeTradability(withId: selectionId, isTradable: isTradable)
 
         case .updateMarketTradability(_, let marketId, let isTradable):
             self.storage.updateMarketTradability(withId: marketId, isTradable: isTradable)

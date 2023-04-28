@@ -104,6 +104,7 @@ class UserSessionStore {
         return nil
     }
 
+    private var isRefreshingUserWallet: Bool = false
     private var storedUserSession: UserSession? {
         // There is a cached session user
         return UserDefaults.standard.userSession
@@ -364,17 +365,28 @@ extension UserSessionStore {
     }
 
     func refreshUserWallet() {
+
         guard self.isUserLogged() else {
+            self.isRefreshingUserWallet = false
             return
         }
 
+        if self.isRefreshingUserWallet {
+            // a refresh is in progress
+            return
+        }
+
+        self.isRefreshingUserWallet = true
+
+        Logger.log("UserSessionStore - refreshUserWallet")
+
         Env.servicesProvider.getUserBalance()
-            .throttle(for: .seconds(1), scheduler: DispatchQueue.main, latest: true)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case .failure = completion {
                     self?.userWalletPublisher.send(nil)
                 }
+                self?.isRefreshingUserWallet = false
             }, receiveValue: { [weak self] (userWallet: ServicesProvider.UserWallet) in
                 guard
                     let currency = userWallet.currency,

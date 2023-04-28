@@ -407,6 +407,10 @@ extension SportRadarModels {
             self.homeParticipant = try container.decodeIfPresent(String.self, forKey: .homeParticipant)
             self.awayParticipant = try container.decodeIfPresent(String.self, forKey: .awayParticipant)
 
+            #if DEBUG
+            self.name = self.id + " " + self.name
+            #endif
+
         }
         
     }
@@ -455,6 +459,10 @@ extension SportRadarModels {
 
             self.odd = .fraction(numerator: Int(numerator), denominator: Int(denominator) )
             self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? true
+
+            #if DEBUG
+            self.name = self.id + " " + self.name
+            #endif
 
         }
 

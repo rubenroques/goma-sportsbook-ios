@@ -80,6 +80,14 @@ extension SportRadarEventDetailsStorage {
         outcomeSubject.send(outcome)
     }
 
+    func updateOutcomeTradability(withId id: String, isTradable: Bool) {
+        guard let outcomeSubject = self.outcomesDictionary[id] else { return }
+        let outcome = outcomeSubject.value
+        outcome.isTradable = isTradable
+        outcomeSubject.send(outcome)
+    }
+    
+
     // Market updates
     func updateMarketTradability(withId id: String, isTradable: Bool) {
         guard

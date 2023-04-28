@@ -288,7 +288,6 @@ class LiveEventsViewController: UIViewController {
                     self?.emptyBaseView.isHidden = true
                     self?.tableView.isHidden = true
                     return
-
                 }
 
                 self?.refreshControl.endRefreshing()

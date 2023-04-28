@@ -1457,6 +1457,11 @@ extension RootViewController {
             return
         }
 
+        #if DEBUG
+        self.unlockAppWithUser()
+        return
+        #endif
+
         let context = LAContext()
 
         var error: NSError?
@@ -1472,13 +1477,13 @@ extension RootViewController {
                         if let err = error {
                             switch err._code {
                             case LAError.Code.systemCancel.rawValue:
-                                self.notifyUser("Session cancelled", err: err.localizedDescription)
+                                self.notifyUser("Session cancelled", errorMessage: err.localizedDescription)
                             case LAError.Code.userCancel.rawValue:
-                                self.notifyUser("Please try again", err: err.localizedDescription)
+                                self.notifyUser("Please try again", errorMessage: err.localizedDescription)
                             case LAError.Code.userFallback.rawValue:
-                                self.notifyUser("Authentication", err: "Password option selected")
+                                self.notifyUser("Authentication", errorMessage: "Password option selected")
                             default:
-                                self.notifyUser("Authentication failed", err: err.localizedDescription)
+                                self.notifyUser("Authentication failed", errorMessage: err.localizedDescription)
                             }
                         }
                         else {
@@ -1494,30 +1499,27 @@ extension RootViewController {
             if let err = error {
                 switch err.code {
                 case LAError.Code.biometryNotEnrolled.rawValue:
-                    notifyUser("User is not enrolled", err: err.localizedDescription)
+                    notifyUser("User is not enrolled", errorMessage: err.localizedDescription)
                 case LAError.Code.passcodeNotSet.rawValue:
-                    notifyUser("A passcode has not been set", err: err.localizedDescription)
+                    notifyUser("A passcode has not been set", errorMessage: err.localizedDescription)
                 case LAError.Code.biometryNotAvailable.rawValue:
-                    notifyUser("Biometric authentication not available", err: err.localizedDescription)
+                    notifyUser("Biometric authentication not available", errorMessage: err.localizedDescription)
                 default:
-                    notifyUser("Unknown error", err: err.localizedDescription)
+                    notifyUser("Unknown error", errorMessage: err.localizedDescription)
                 }
             }
         }
 
     }
 
-    func notifyUser(_ msg: String, err: String?) {
-        let alert = UIAlertController(title: msg,
-                                      message: err,
+    func notifyUser(_ title: String, errorMessage: String?) {
+        let alert = UIAlertController(title: title,
+                                      message: errorMessage,
                                       preferredStyle: .alert)
-
         let cancelAction = UIAlertAction(title: "OK",
                                          style: .cancel, handler: nil)
-
         alert.addAction(cancelAction)
-        self.present(alert, animated: true,
-                     completion: nil)
+        self.present(alert, animated: true, completion: nil)
     }
 
 }

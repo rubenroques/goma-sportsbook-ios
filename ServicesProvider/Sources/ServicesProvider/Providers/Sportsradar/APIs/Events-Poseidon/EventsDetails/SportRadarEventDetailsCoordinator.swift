@@ -68,7 +68,8 @@ class SportRadarEventDetailsCoordinator {
                 let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode)
             else {
-                print("SportRadarEventDetailsCoordinator: requestEventDetails")
+                dump(error, name: "SportRadarEventDetailsCoordinator requestEventDetails error", maxDepth: 3)
+                dump(response, name: "SportRadarEventDetailsCoordinator requestEventDetails error", maxDepth: 3)
                 self.eventDetailsCurrentValueSubject.send(completion: .failure(ServiceProviderError.onSubscribe))
                 return
             }
@@ -109,7 +110,6 @@ class SportRadarEventDetailsCoordinator {
         }
         sessionDataTask.resume()
     }
-
 
     func updateEventDetails(_ updatedEvent: Event) {
         print("☁️SP debugbetslip updateEventDetails SportRadarEventDetailsCoordinator \(marketsContentIdentifier) \(liveDataContentIdentifier)")
@@ -196,6 +196,8 @@ extension SportRadarEventDetailsCoordinator {
         // Odds
         case .updateOutcomeOdd(_, let selectionId, let newOddNumerator, let newOddDenominator):
             self.storage.updateOutcomeOdd(withId: selectionId, newOddNumerator: newOddNumerator, newOddDenominator: newOddDenominator)
+        case .updateOutcomeTradability(_, let selectionId, let isTradable):
+            self.storage.updateOutcomeTradability(withId: selectionId, isTradable: isTradable)
 
         // Live Data
         case .updateEventState(_, _, let newStatus):

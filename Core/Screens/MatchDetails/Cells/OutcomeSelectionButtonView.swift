@@ -188,6 +188,10 @@ class OutcomeSelectionButtonView: NibView {
 
                 // print("oddUpdatesPublisher subscribeToOutcomeUpdates receiveValue: \(updatedBettingOffer)")
 
+                if !updatedBettingOffer.isAvailable {
+                    print("STOP")
+                }
+
                 if !updatedBettingOffer.isAvailable || updatedBettingOffer.decimalOdd.isNaN {
                     weakSelf.stackView.isUserInteractionEnabled = false
                     weakSelf.stackView.alpha = 0.5

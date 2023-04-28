@@ -280,7 +280,7 @@ class LiveEventsViewModel: NSObject {
 
     func fetchLiveMatches() {
 
-        if didChangeSportType {
+        if self.didChangeSportType {
             self.clearOldSportData()
         }
 

@@ -205,7 +205,6 @@ class MatchDetailsViewModel: NSObject {
             })
             .store(in: &cancellables)
 
-
     }
 
     func getMatchLiveDetails() {
@@ -219,7 +218,7 @@ class MatchDetailsViewModel: NSObject {
                 switch updatedMatch.status {
                 case .notStarted, .ended, .unknown:
                     self?.matchModePublisher.send(.preLive)
-                case .inProgress(_):
+                case .inProgress:
                     self?.matchModePublisher.send(.live)
                 }
                 self?.matchPublisher.send(.loaded(updatedMatch))

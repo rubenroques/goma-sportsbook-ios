@@ -154,7 +154,7 @@ extension SportRadarSocketConnector: WebSocketDelegate {
                         switch content {
                         case .liveEvents, .preLiveEvents, .liveSports, .preLiveSports, .eventDetails, .eventDetailsLiveData, .eventGroup, .outrightEventGroup, .eventSummary, .marketDetails:
                             ()
-                        case .addEvent, .removeEvent, .addMarket, .enableMarket, .removeMarket, .updateEventState, .updateEventTime, .updateEventScore, .updateMarketTradability, .updateEventMarketCount, .updateOutcomeOdd:
+                        case .addEvent, .removeEvent, .addMarket, .enableMarket, .removeMarket, .updateEventState, .updateEventTime, .updateEventScore, .updateMarketTradability, .updateEventMarketCount, .updateOutcomeOdd, .updateOutcomeTradability:
                             print("☁️SP debugbetslip WS recieved text with content update:\n\(string)\n -------------------> Converted to: \n\(content)\n-----\n")
                         case .unknown:
                             print("☁️SP debugbetslip WS recieved text with unknown part of the content: \(string) \n\n")

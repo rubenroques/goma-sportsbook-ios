@@ -213,6 +213,9 @@ extension SportRadarMarketDetailsCoordinator {
         case .updateOutcomeOdd(_, let selectionId, let newOddNumerator, let newOddDenominator):
             self.updateOutcomeOdd(withId: selectionId, newOddNumerator: newOddNumerator, newOddDenominator: newOddDenominator)
 
+        case .updateOutcomeTradability(_, let selectionId, let isTradable):
+            self.updateMarketTradability(withId: selectionId, isTradable: isTradable)
+
         case .addMarket(_ , let market):
             if trackedMarketId == market.id {
                 for outcome in market.outcomes {
@@ -284,6 +287,13 @@ extension SportRadarMarketDetailsCoordinator {
         newMarket.outcomes = updatedOutcomes
 
         self.marketCurrentValueSubject.send(.contentUpdate(content: newMarket))
+    }
+
+    func updateOutcomeTradability(withId id: String, isTradable: Bool) {
+        guard let outcomeSubject = self.outcomesDictionary[id] else { return }
+        let outcome = outcomeSubject.value
+        outcome.isTradable = isTradable
+        outcomeSubject.send(outcome)
     }
 
 }

@@ -42,6 +42,8 @@ extension SportRadarModels {
 
         case updateOutcomeOdd(contentIdentifier: ContentIdentifier, selectionId: String, newOddNumerator: String?, newOddDenominator: String?)
 
+        case updateOutcomeTradability(contentIdentifier: ContentIdentifier, selectionId: String, isTradable: Bool)
+
         case unknown
 
         var contentIdentifier: ContentIdentifier? {
@@ -82,6 +84,8 @@ extension SportRadarModels {
                 return contentIdentifier
             case .updateOutcomeOdd(let contentIdentifier, _, _, _):
                 return contentIdentifier
+            case .updateOutcomeTradability(let contentIdentifier, _, _):
+                return contentIdentifier
             case .updateEventState(let contentIdentifier, _, _):
                 return contentIdentifier
             case .updateEventTime(let contentIdentifier, _, _):
@@ -117,6 +121,7 @@ extension SportRadarModels {
             case oddDenominator = "currentpricedown"
             case selectionId = "idfoselection"
             case marketId = "idfomarket"
+            case suspensionType = "idfoselectionsuspensiontype"
         }
 
         private enum ScoreUpdateCodingKeys: String, CodingKey {
@@ -259,11 +264,27 @@ extension SportRadarModels {
                 let oddNumerator = try changeContainer.decodeIfPresent(String.self, forKey: .oddNumerator)
                 let oddDenominator = try changeContainer.decodeIfPresent(String.self, forKey: .oddDenominator)
 
+                let selectionId = try changeContainer.decode(String.self, forKey: .selectionId)
+
                 if oddNumerator == nil && oddDenominator == nil {
-                    return .unknown
+                    if changeContainer.contains(.suspensionType) {
+                        if let selectionSuspentionType = try changeContainer.decodeIfPresent(String.self, forKey: .suspensionType),
+                           selectionSuspentionType == "N/O" {
+                            return .updateOutcomeTradability(contentIdentifier: contentIdentifier,
+                                                             selectionId: selectionId,
+                                                             isTradable: false)
+                        }
+                        else {
+                            return .updateOutcomeTradability(contentIdentifier: contentIdentifier,
+                                                             selectionId: selectionId,
+                                                             isTradable: true)
+                        }
+                    }
+                    else {
+                        return .unknown
+                    }
                 }
                 else {
-                    let selectionId = try changeContainer.decode(String.self, forKey: .selectionId)
                     return .updateOutcomeOdd(contentIdentifier: contentIdentifier, selectionId: selectionId, newOddNumerator: oddNumerator, newOddDenominator: oddDenominator)
                 }
             }
@@ -336,11 +357,20 @@ extension SportRadarModels {
                 return .removeEvent(contentIdentifier: contentIdentifier, eventId: eventId)
             }
             else if path.contains("markets") && path.contains("idfomarket") && path.contains("istradable") && changeType.contains("updated"), let marketId = SocketMessageParseHelper.extractMarketId(path) {
-                print("Updated Market \(marketId)")
+                let newIsTradable = (try? container.decode(Bool.self, forKey: .change)) ?? true
+                return .updateMarketTradability(contentIdentifier: contentIdentifier, marketId: marketId, isTradable: newIsTradable)
             }
 
             else if path.contains("selections") && path.contains("idfoselection") && changeType.contains("updated"), let selectionId = SocketMessageParseHelper.extractSelectionId(path) {
                 print("Updated Selection \(selectionId)")
+            }
+            else if contentIdentifier.contentType == .market, // Is a contentRout of market updates
+                    path == "istradable", // the path is istradable
+                    changeType == "updated", // the change needs to be update
+                    case .market(let marketId) = contentIdentifier.contentRoute, // extract the marketId
+                    let newIsTradable = try? container.decode(Bool.self, forKey: .change) {
+
+                return .updateMarketTradability(contentIdentifier: contentIdentifier, marketId: marketId, isTradable: newIsTradable)
             }
 
 
@@ -400,6 +430,9 @@ extension SportRadarModels.ContentContainer: CustomDebugStringConvertible {
             return "Update Event Market Count (Content ID: \(contentIdentifier)) - Event ID: \(eventId) - New Market Count: \(newMarketCount)"
         case .updateOutcomeOdd(let contentIdentifier, let selectionId, let newOddNumerator, let newOddDenominator):
             return "Update Outcome Odd (Content ID: \(contentIdentifier)) - Selection ID: \(selectionId) - New Odd Numerator: \(String(describing: newOddNumerator)) - New Odd Denominator: \(String(describing: newOddDenominator))"
+        case .updateOutcomeTradability(let contentIdentifier, let selectionId, let isTradable):
+            return "Update Outcome Tradability (Content ID: \(contentIdentifier)) - Market ID: \(selectionId) - Tradable: \(isTradable)"
+
         case .unknown:
             return "Unknown ContentContainer"
         }

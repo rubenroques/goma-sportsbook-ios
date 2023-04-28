@@ -90,15 +90,15 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var marketsNotAvailableView: UIView!
     @IBOutlet private var marketsNotAvailableLabel: UILabel!
 
-    @IBOutlet private weak var homeRedCardImage: UIImageView!
-    @IBOutlet private weak var awayRedCardImage: UIImageView!
-    @IBOutlet private weak var homeRedCardLabel: UILabel!
-    @IBOutlet private weak var awayRedCardsLabel: UILabel!
+    @IBOutlet private var homeRedCardImage: UIImageView!
+    @IBOutlet private var awayRedCardImage: UIImageView!
+    @IBOutlet private var homeRedCardLabel: UILabel!
+    @IBOutlet private var awayRedCardsLabel: UILabel!
 
-    @IBOutlet private weak var marketsStackView: UIStackView!
-    @IBOutlet private weak var contentScrollView: UIScrollView!
+    @IBOutlet private var marketsStackView: UIStackView!
+    @IBOutlet private var contentScrollView: UIScrollView!
 
-    @IBOutlet private weak var tableViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private var tableViewHeightConstraint: NSLayoutConstraint!
 
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
     private static func createFloatingShortcutsView() -> FloatingShortcutsView {
