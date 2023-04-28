@@ -337,6 +337,16 @@ extension ServicesProviderClient {
         return eventsProvider.getEventSummary(eventId: eventId)
     }
 
+    public func getMarketInfo(marketId: String) -> AnyPublisher<Market, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getMarketInfo(marketId: marketId)
+    }
+
     public func getFavoritesList() -> AnyPublisher<FavoritesListResponse, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -977,6 +987,24 @@ extension ServicesProviderClient {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
         return bettingProvider.getFreebet()
+    }
+
+    public func getSharedTicket(betslipId: String) -> AnyPublisher<SharedTicketResponse, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+        return bettingProvider.getSharedTicket(betslipId: betslipId)
+    }
+
+    public func getTicketSelection(ticketSelectionId: String) -> AnyPublisher<TicketSelection, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+        return bettingProvider.getTicketSelection(ticketSelectionId: ticketSelectionId)
     }
 
 }

@@ -167,6 +167,7 @@ public class Market: Codable {
     public var startDate: String?
     public var homeParticipant: String?
     public var awayParticipant: String?
+    public var eventId: String?
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -181,6 +182,7 @@ public class Market: Codable {
         case startDate = "tsstart"
         case homeParticipant = "participantname_home"
         case awayParticipant = "participantname_away"
+        case eventId = "idfoevent"
     }
 
     public init(id: String,
@@ -194,7 +196,8 @@ public class Market: Codable {
                 isTradable: Bool,
                 startDate: String?,
                 homeParticipant: String?,
-                awayParticipant: String?) {
+                awayParticipant: String?,
+                eventId: String?) {
 
         self.id = id
         self.name = name
@@ -208,6 +211,7 @@ public class Market: Codable {
         self.startDate = startDate
         self.homeParticipant = homeParticipant
         self.awayParticipant = awayParticipant
+        self.eventId = eventId
     }
 
     required public init(from decoder: Decoder) throws {
@@ -221,6 +225,7 @@ public class Market: Codable {
         self.isMainOutright = try container.decodeIfPresent(Bool.self, forKey: .isMainOutright)
         self.eventMarketCount = try container.decodeIfPresent(Int.self, forKey: .eventMarketCount)
         self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? true
+        self.eventId = try container.decodeIfPresent(String.self, forKey: .eventId)
     }
 
 }

@@ -73,7 +73,8 @@ extension SportRadarModelMapper {
                       isTradable: internalMarket.isTradable ?? true,
                       startDate: internalMarket.startDate,
                       homeParticipant: internalMarket.homeParticipant,
-                      awayParticipant: internalMarket.awayParticipant)
+                      awayParticipant: internalMarket.awayParticipant,
+                      eventId: internalMarket.eventId)
     }
 
     static func outcome(fromInternalOutcome internalOutcome: SportRadarModels.Outcome) -> Outcome {

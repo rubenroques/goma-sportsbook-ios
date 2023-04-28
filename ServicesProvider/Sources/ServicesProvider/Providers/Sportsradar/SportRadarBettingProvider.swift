@@ -265,5 +265,38 @@ class SportRadarBettingProvider: BettingProvider, Connector {
             .eraseToAnyPublisher()
     }
 
+    func getSharedTicket(betslipId: String) -> AnyPublisher<SharedTicketResponse, ServiceProviderError> {
+        let endpoint = BettingAPIClient.getSharedTicket(betslipId: betslipId)
+        let publisher: AnyPublisher<SportRadarModels.SharedTicketResponse, ServiceProviderError> = self.connector.request(endpoint)
+        return publisher
+            .map { (sharedTicketResponse: SportRadarModels.SharedTicketResponse) -> SharedTicketResponse in
+
+                return SportRadarModelMapper.sharedTicketResponse(fromInternalSharedTicketResponse: sharedTicketResponse)
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func getTicketSelection(ticketSelectionId: String) -> AnyPublisher<TicketSelection, ServiceProviderError> {
+        let endpoint = BettingAPIClient.getTicketSelection(ticketSelectionId: ticketSelectionId)
+        let publisher: AnyPublisher<SportRadarModels.TicketSelectionResponse, ServiceProviderError> = self.connector.request(endpoint)
+        return publisher
+            .flatMap { (ticketSelectionResponse: SportRadarModels.TicketSelectionResponse) -> AnyPublisher<TicketSelection, ServiceProviderError> in
+
+                if let error = ticketSelectionResponse.errorType {
+                    return Fail(outputType: TicketSelection.self, failure: ServiceProviderError.errorMessage(message: error)).eraseToAnyPublisher()
+                }
+
+                if let ticketSelection = ticketSelectionResponse.data {
+                    let mappedTicketSelection = SportRadarModelMapper.ticketSelection(fromInternalTicketSelection: ticketSelection)
+
+                    return Just(mappedTicketSelection).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                }
+
+                return Fail(outputType: TicketSelection.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+
+            }
+            .eraseToAnyPublisher()
+    }
+
 }
 

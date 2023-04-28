@@ -30,6 +30,7 @@ enum SportRadarRestAPIClient {
     case getFavoritesFromList(listId: Int)
     case deleteFavoriteList(listId: Int)
     case deleteFavoriteFromList(eventId: Int)
+    case getMarketInfo(marketId: String)
 }
 
 extension SportRadarRestAPIClient: Endpoint {
@@ -80,6 +81,8 @@ extension SportRadarRestAPIClient: Endpoint {
             return "/api/favourites/fw/deleteAccountFavouriteCoupon"
         case .deleteFavoriteFromList:
             return "/api/favourites/fw/deleteAccountFavourites"
+        case .getMarketInfo:
+            return "/services/content/get"
         }
     }
 
@@ -104,6 +107,7 @@ extension SportRadarRestAPIClient: Endpoint {
         case .getFavoritesFromList: return nil
         case .deleteFavoriteList: return nil
         case .deleteFavoriteFromList: return nil
+        case .getMarketInfo: return nil
         }
     }
 
@@ -128,6 +132,7 @@ extension SportRadarRestAPIClient: Endpoint {
         case .getFavoritesFromList: return .post
         case .deleteFavoriteList: return .delete
         case .deleteFavoriteFromList: return .delete
+        case .getMarketInfo: return .post
         }
     }
 
@@ -320,6 +325,21 @@ extension SportRadarRestAPIClient: Endpoint {
                         }
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
+        case .getMarketInfo(let marketId):
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "market",
+                                "id": "\(marketId)"
+                            },
+                            "clientContext": {
+                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
         default:
             return nil
         }
@@ -371,6 +391,8 @@ extension SportRadarRestAPIClient: Endpoint {
             return SportRadarConstants.apiRestHostname
         case .deleteFavoriteFromList:
             return SportRadarConstants.apiRestHostname
+        case .getMarketInfo:
+            return SportRadarConstants.servicesRestHostname
         }
     }
 
@@ -419,6 +441,8 @@ extension SportRadarRestAPIClient: Endpoint {
                 "X-MGS-BusinessUnit": "3",
                 "X-MGS-Location": "UK",
             ]
+        case .getMarketInfo:
+            return defaultHeaders
         }
     }
 

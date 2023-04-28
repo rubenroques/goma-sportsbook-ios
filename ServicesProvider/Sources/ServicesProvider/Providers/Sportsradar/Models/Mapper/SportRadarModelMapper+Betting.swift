@@ -175,4 +175,29 @@ extension SportRadarModelMapper {
         return CashoutResult(cashoutResult: cashoutResult.cashoutResult, cashoutReoffer: cashoutResult.cashoutReoffer, message: cashoutResult.message)
     }
 
+    static func sharedTicketResponse(fromInternalSharedTicketResponse internalSharedTicketResponse: SportRadarModels.SharedTicketResponse) -> SharedTicketResponse {
+
+        let mappedSharedBets = internalSharedTicketResponse.bets.map(Self.sharedBet(fromInternalSharedBet:))
+
+        return SharedTicketResponse(bets: mappedSharedBets, totalStake: internalSharedTicketResponse.totalStake, betId: internalSharedTicketResponse.betId)
+
+    }
+
+    static func sharedBet(fromInternalSharedBet internalSharedBet: SportRadarModels.SharedBet) -> SharedBet {
+
+        let mappedSharedBetSelections = internalSharedBet.betSelections.map(Self.sharedBetSelection(fromInternalSharedBetSelection:))
+
+        return SharedBet(betSelections: mappedSharedBetSelections, winStake: internalSharedBet.winStake, potentialReturn: internalSharedBet.potentialReturn, totalStake: internalSharedBet.totalStake)
+    }
+
+    static func sharedBetSelection(fromInternalSharedBetSelection internalSharedBetSelection: SportRadarModels.SharedBetSelection) -> SharedBetSelection {
+
+        return SharedBetSelection(id: internalSharedBetSelection.id, priceDenominator: internalSharedBetSelection.priceDenominator, priceNumerator: internalSharedBetSelection.priceNumerator, priceType: internalSharedBetSelection.priceType)
+    }
+
+    static func ticketSelection(fromInternalTicketSelection internalTicketSelection: SportRadarModels.TicketSelection) -> TicketSelection {
+
+        return TicketSelection(id: internalTicketSelection.id, marketId: internalTicketSelection.marketId, name: internalTicketSelection.name, priceDenominator: internalTicketSelection.priceDenominator, priceNumerator: internalTicketSelection.priceNumerator)
+    }
+
 }
