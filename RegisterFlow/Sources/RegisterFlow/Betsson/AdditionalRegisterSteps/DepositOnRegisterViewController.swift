@@ -10,6 +10,7 @@ import UIKit
 import Theming
 import HeaderTextField
 import Extensions
+import Combine
 
 public class DepositOnRegisterViewController: UIViewController {
 
@@ -42,6 +43,17 @@ public class DepositOnRegisterViewController: UIViewController {
 
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
+
+    private var disableAmountButtons: Bool = false {
+        didSet {
+            self.amountButton1.isEnabled = !disableAmountButtons
+            self.amountButton2.isEnabled = !disableAmountButtons
+            self.amountButton3.isEnabled = !disableAmountButtons
+            self.amountButton4.isEnabled = !disableAmountButtons
+        }
+    }
+
+    private var cancellables = Set<AnyCancellable>()
 
     public var isLoading: Bool = false {
         didSet {
@@ -105,6 +117,18 @@ public class DepositOnRegisterViewController: UIViewController {
 
         self.isLoading = false
 
+        self.depositHeaderTextFieldView.textPublisher
+            .sink(receiveValue: { [weak self] text in
+                guard let self = self else { return }
+                if text != "" && self.depositHeaderTextFieldView.isManualInput {
+                    self.disableAmountButtons = true
+                }
+                else {
+                    self.disableAmountButtons = false
+                }
+            })
+            .store(in: &cancellables)
+
     }
 
     override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -153,18 +177,22 @@ public class DepositOnRegisterViewController: UIViewController {
     }
 
     @objc func didTapAmountButton1() {
+        self.depositHeaderTextFieldView.isManualInput = false
         self.depositHeaderTextFieldView.setText("20")
     }
 
     @objc func didTapAmountButton2() {
+        self.depositHeaderTextFieldView.isManualInput = false
         self.depositHeaderTextFieldView.setText("50")
     }
 
     @objc func didTapAmountButton3() {
+        self.depositHeaderTextFieldView.isManualInput = false
         self.depositHeaderTextFieldView.setText("100")
     }
 
     @objc func didTapAmountButton4() {
+        self.depositHeaderTextFieldView.isManualInput = false
         self.depositHeaderTextFieldView.setText("200")
     }
 

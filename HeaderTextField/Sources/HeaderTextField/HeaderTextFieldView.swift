@@ -79,6 +79,8 @@ public class HeaderTextFieldView: NibView {
 
     public var showingTipLabel: Bool = false
 
+    public var isManualInput: Bool = false
+
     private var isSecureField = false {
         didSet {
 
@@ -605,6 +607,8 @@ extension HeaderTextFieldView: UITextFieldDelegate {
         }
 
         self.slideUp()
+
+        self.isManualInput = true
     }
 
     public func textFieldDidEndEditing(_ textField: UITextField) {

@@ -22,6 +22,8 @@ enum UserDefaultsKey: String {
     case biometricAuthentication
     case acceptedTracking = "acceptedTrackingKey"
 
+    case oddsValueType = "oddsValueType"
+
     var key: String {
         return self.rawValue
     }
@@ -149,6 +151,24 @@ extension UserDefaults {
         }
     }
 
+    var oddsValueType: OddsValueType {
+        get {
+            let defaultValue = TargetVariables.defaultOddsValueType
+
+            if let oddsValueType = self.value(forKey: UserDefaultsKey.oddsValueType.key) as? Int {
+                return OddsValueType(rawValue: oddsValueType) ?? defaultValue
+            }
+            else {
+                self.setValue(defaultValue.rawValue, forKey: UserDefaultsKey.oddsValueType.key)
+                return defaultValue
+            }
+        }
+        set {
+            self.setValue(newValue.rawValue, forKey: UserDefaultsKey.oddsValueType.key)
+            self.synchronize()
+        }
+    }
+
     var biometricAuthenticationEnabled: Bool {
         get {
             if let biometric = self.value(forKey: UserDefaultsKey.biometricAuthentication.key) as? Bool {
@@ -178,7 +198,6 @@ extension UserDefaults {
             self.synchronize()
         }
     }
-
 
     func clear() {
         let domain = Bundle.main.bundleIdentifier!
@@ -234,4 +253,21 @@ enum BetslipOddValidationType: String, CaseIterable {
         }
     }
 
+}
+
+enum OddsValueType: Int {
+    case allOdds = 1
+    case between2And3 = 2
+    case bigOdds = 3
+
+    var oddRange: [Double] {
+        switch self {
+        case .allOdds:
+            return [1.0, 300.0]
+        case .between2And3:
+            return [2.0, 3.0]
+        case .bigOdds:
+            return [3.0, 300.0]
+        }
+    }
 }

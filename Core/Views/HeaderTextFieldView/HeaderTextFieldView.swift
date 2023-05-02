@@ -145,6 +145,8 @@ class HeaderTextFieldView: NibView {
         }
     }
 
+    var isManualInput: Bool = false
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -563,6 +565,7 @@ extension HeaderTextFieldView: UITextFieldDelegate {
 
         self.slideUp()
 
+        self.isManualInput = true
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {

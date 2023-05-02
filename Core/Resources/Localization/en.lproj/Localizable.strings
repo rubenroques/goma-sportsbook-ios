@@ -1265,3 +1265,11 @@
 "withdrawal_warning_text" = "Would you like to proceed with the withdrawal? If you currently have an active deposit bonus, it will be forfeited.";
 "withdrawal_iban_pending_approval_message" = "Your IBAN and RIB documents are being processed. It should take between 1 to 2 working days for the documents to be treated.\nYou will be notified by email once it is done and then you will be able to make your first withdrawal.";
 "understand_confirmation_withdraw" = "I understand";
+
+"contact_support" = "Contact support if you want to change your profile informations";
+
+"all_odds" = "All Odds";
+"between_2_3" = "Between 2 and 3";
+"big_odds" = "Big Odds";
+
+"filters_applied_to" = "Filters applied to:";

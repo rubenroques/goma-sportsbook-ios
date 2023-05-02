@@ -30,6 +30,11 @@ class ShareTicketChoiceViewController: UIViewController {
     private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
     private lazy var emptyChatroomsView: UIView = Self.createEmptyChatroomsView()
     private lazy var emptyChatroomsLabel: UILabel = Self.createEmptyChatroomsLabel()
+
+    // Constraints
+    private var sendViaButtonSeparatorTopConstraint: NSLayoutConstraint?
+    private var sendViaButtonTopTitleConstraint: NSLayoutConstraint?
+
     private var cancellables = Set<AnyCancellable>()
 
     var viewModel: ShareTicketChoiceViewModel
@@ -45,6 +50,20 @@ class ShareTicketChoiceViewController: UIViewController {
         didSet {
             self.emptyChatroomsView.isHidden = !isEmptyState
             self.chatCollectionView.isHidden = isEmptyState
+        }
+    }
+
+    var hasChatrooms: Bool = false {
+        didSet {
+            self.chatCollectionView.isHidden = !hasChatrooms
+            self.emptyChatroomsView.isHidden = !hasChatrooms
+            self.separatorView.isHidden = !hasChatrooms
+            self.leftSeparatorLineView.isHidden = !hasChatrooms
+            self.titleSeparatorLabel.isHidden = !hasChatrooms
+            self.rightSeparatorLineView.isHidden = !hasChatrooms
+
+            self.sendViaButtonSeparatorTopConstraint?.isActive = hasChatrooms
+            self.sendViaButtonTopTitleConstraint?.isActive = !hasChatrooms
         }
     }
 
@@ -87,6 +106,9 @@ class ShareTicketChoiceViewController: UIViewController {
         self.isLoading = false
 
         self.isEmptyState = true
+
+        self.hasChatrooms = false
+
     }
 
     // MARK: - Layout and Theme
@@ -657,7 +679,7 @@ extension ShareTicketChoiceViewController {
             self.sendViaButton.leadingAnchor.constraint(equalTo: self.bottomShareView.leadingAnchor, constant: 90),
             self.sendViaButton.trailingAnchor.constraint(equalTo: self.bottomShareView.trailingAnchor, constant: -90),
             self.sendViaButton.heightAnchor.constraint(equalToConstant: 31),
-            self.sendViaButton.topAnchor.constraint(equalTo: self.separatorView.bottomAnchor, constant: 15),
+            //self.sendViaButton.topAnchor.constraint(equalTo: self.separatorView.bottomAnchor, constant: 15),
             self.sendViaButton.bottomAnchor.constraint(equalTo: self.bottomShareView.bottomAnchor, constant: -15)
         ])
 
@@ -683,6 +705,14 @@ extension ShareTicketChoiceViewController {
             self.emptyChatroomsLabel.trailingAnchor.constraint(equalTo: self.emptyChatroomsView.trailingAnchor, constant: -15),
             self.emptyChatroomsLabel.centerYAnchor.constraint(equalTo: self.emptyChatroomsView.centerYAnchor)
         ])
+
+        // Constraints
+        self.sendViaButtonSeparatorTopConstraint = self.sendViaButton.topAnchor.constraint(equalTo: self.separatorView.bottomAnchor, constant: 15)
+        // self.sendViaButtonSeparatorTopConstraint?.isActive = false
+
+        self.sendViaButtonTopTitleConstraint = self.sendViaButton.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 15)
+        // self.sendViaButtonTopTitleConstraint?.isActive = true
+
     }
 }
 

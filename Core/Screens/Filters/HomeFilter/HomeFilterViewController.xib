@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HomeFilterViewController" customModule="Crocobet" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HomeFilterViewController" customModule="Betsson" customModuleProvider="target">
             <connections>
                 <outlet property="applyButton" destination="fM0-46-agy" id="vtA-hh-0Ni"/>
                 <outlet property="availableMarketsCollapseView" destination="EYI-Lj-7qZ" id="VnT-LL-KDY"/>
@@ -21,6 +22,10 @@
                 <outlet property="oddsCollapseView" destination="kHG-GY-PFB" id="YtH-us-Qmw"/>
                 <outlet property="scrollView" destination="Qjf-7R-WNE" id="4as-FM-bg6"/>
                 <outlet property="sortByFilterCollapseView" destination="CIX-NU-7Gy" id="oC3-HW-kQY"/>
+                <outlet property="sportIconImageView" destination="tgC-EN-Xzj" id="ZLM-32-UAT"/>
+                <outlet property="sportNameLabel" destination="8xD-Ih-95u" id="LGg-va-1Vk"/>
+                <outlet property="sportTitleLabel" destination="aw1-mW-1Ff" id="sBi-2Q-mxE"/>
+                <outlet property="sportView" destination="bXs-Wb-cmr" id="8qz-tu-4rj"/>
                 <outlet property="stackContainerView" destination="mnJ-xO-3YO" id="jdf-8W-mZE"/>
                 <outlet property="stackView" destination="y49-2C-atV" id="R5E-7R-luh"/>
                 <outlet property="timeRangeCollapseView" destination="Oo4-XL-mFO" id="lmJ-pE-8wg"/>
@@ -34,11 +39,11 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7yE-GB-qdx">
-                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="48"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zw0-qt-3LJ">
-                    <rect key="frame" x="0.0" y="44" width="414" height="56"/>
+                    <rect key="frame" x="0.0" y="48" width="414" height="56"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="249" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ejx-cF-UUx">
                             <rect key="frame" x="74" y="18" width="266" height="20.5"/>
@@ -82,32 +87,82 @@
                     </constraints>
                 </view>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qjf-7R-WNE">
-                    <rect key="frame" x="0.0" y="100" width="414" height="696"/>
+                    <rect key="frame" x="0.0" y="104" width="414" height="692"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mnJ-xO-3YO">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="340"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="442.5"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="270" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="y49-2C-atV">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="340"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="442.5"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="CIX-NU-7Gy" customClass="FilterCollapseView" customModule="Crocobet" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R6i-k3-b7l">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="92.5"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bXs-Wb-cmr">
+                                                    <rect key="frame" x="10" y="8" width="394" height="76.5"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aw1-mW-1Ff">
+                                                            <rect key="frame" x="16" y="10" width="362" height="20.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tgC-EN-Xzj">
+                                                            <rect key="frame" x="16" y="46.5" width="20" height="20"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="20" id="32c-zn-zHO"/>
+                                                                <constraint firstAttribute="height" constant="20" id="XUL-VR-iX9"/>
+                                                            </constraints>
+                                                        </imageView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8xD-Ih-95u">
+                                                            <rect key="frame" x="44" y="46.5" width="334" height="20.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="AnB-ZL-HM4"/>
+                                                        <constraint firstItem="8xD-Ih-95u" firstAttribute="leading" secondItem="tgC-EN-Xzj" secondAttribute="trailing" constant="8" id="DcX-eM-4VC"/>
+                                                        <constraint firstItem="aw1-mW-1Ff" firstAttribute="top" secondItem="bXs-Wb-cmr" secondAttribute="top" constant="10" id="FRb-qq-0ae"/>
+                                                        <constraint firstAttribute="trailing" secondItem="aw1-mW-1Ff" secondAttribute="trailing" constant="16" id="Mjh-SC-gWV"/>
+                                                        <constraint firstAttribute="bottom" secondItem="tgC-EN-Xzj" secondAttribute="bottom" constant="10" id="Ol7-qk-MKS"/>
+                                                        <constraint firstAttribute="trailing" secondItem="8xD-Ih-95u" secondAttribute="trailing" constant="16" id="P0h-AO-JqC"/>
+                                                        <constraint firstItem="aw1-mW-1Ff" firstAttribute="leading" secondItem="bXs-Wb-cmr" secondAttribute="leading" constant="16" id="Pwb-cP-hyc"/>
+                                                        <constraint firstItem="tgC-EN-Xzj" firstAttribute="top" secondItem="aw1-mW-1Ff" secondAttribute="bottom" constant="16" id="Ube-hQ-Cwm"/>
+                                                        <constraint firstItem="8xD-Ih-95u" firstAttribute="centerY" secondItem="tgC-EN-Xzj" secondAttribute="centerY" id="ZZ3-ds-e2b"/>
+                                                        <constraint firstItem="tgC-EN-Xzj" firstAttribute="leading" secondItem="bXs-Wb-cmr" secondAttribute="leading" constant="16" id="hBS-wg-8Or"/>
+                                                        <constraint firstAttribute="bottom" secondItem="tgC-EN-Xzj" secondAttribute="bottom" constant="10" id="i5p-nh-pXd"/>
+                                                    </constraints>
+                                                </view>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="bXs-Wb-cmr" firstAttribute="leading" secondItem="R6i-k3-b7l" secondAttribute="leading" constant="10" id="7gf-40-vmq"/>
+                                                <constraint firstAttribute="bottom" secondItem="bXs-Wb-cmr" secondAttribute="bottom" constant="8" id="9mn-H3-yov"/>
+                                                <constraint firstAttribute="trailing" secondItem="bXs-Wb-cmr" secondAttribute="trailing" constant="10" id="O4S-fN-MA8"/>
+                                                <constraint firstItem="bXs-Wb-cmr" firstAttribute="top" secondItem="R6i-k3-b7l" secondAttribute="top" constant="8" id="Y5K-DA-zjg"/>
+                                            </constraints>
+                                        </view>
+                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="CIX-NU-7Gy" customClass="FilterCollapseView" customModule="Betsson" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="102.5" width="414" height="60"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </view>
-                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="Oo4-XL-mFO" customClass="FilterSliderCollapseView" customModule="Crocobet" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="70" width="414" height="60"/>
+                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="Oo4-XL-mFO" customClass="FilterSliderCollapseView" customModule="Betsson" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="172.5" width="414" height="60"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </view>
-                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="EYI-Lj-7qZ" customClass="FilterCollapseView" customModule="Crocobet" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="140" width="414" height="60"/>
+                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="EYI-Lj-7qZ" customClass="FilterCollapseView" customModule="Betsson" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="242.5" width="414" height="60"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </view>
-                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="kHG-GY-PFB" customClass="FilterSliderCollapseView" customModule="Crocobet" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="210" width="414" height="60"/>
+                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="kHG-GY-PFB" customClass="FilterCollapseView" customModule="Betsson" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="312.5" width="414" height="60"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </view>
-                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="x4N-BV-Wsu" customClass="FilterCollapseView" customModule="Crocobet" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="280" width="414" height="60"/>
+                                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="x4N-BV-Wsu" customClass="FilterCollapseView" customModule="Betsson" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="382.5" width="414" height="60"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </view>
                                     </subviews>
@@ -188,4 +243,9 @@
             <point key="canvasLocation" x="27.536231884057973" y="71.651785714285708"/>
         </view>
     </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>

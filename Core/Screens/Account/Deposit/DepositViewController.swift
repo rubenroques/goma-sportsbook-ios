@@ -46,6 +46,15 @@ class DepositViewController: UIViewController {
         }
     }
 
+    private var disableAmountButtons: Bool = false {
+        didSet {
+            self.amount10Button.isEnabled = !disableAmountButtons
+            self.amount20Button.isEnabled = !disableAmountButtons
+            self.amount50Button.isEnabled = !disableAmountButtons
+            self.amount100Button.isEnabled = !disableAmountButtons
+        }
+    }
+
     private var viewModel: DepositViewModel
 
     // MARK: Public Properties
@@ -453,9 +462,18 @@ class DepositViewController: UIViewController {
                 self.amount100Button.backgroundColor = .clear
                 self.amount100Button.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
             }
+
+            if self.depositHeaderTextFieldView.isManualInput {
+                self.disableAmountButtons = true
+            }
+            else {
+                self.disableAmountButtons = false
+            }
+
         }
         else {
             self.nextButton.isEnabled = false
+            self.disableAmountButtons = false
         }
     }
 
@@ -492,6 +510,8 @@ class DepositViewController: UIViewController {
     }
 
     @IBAction private func didTap10Button() {
+        self.depositHeaderTextFieldView.isManualInput = false
+
         self.checkForHighlightedAmountButton()
 
         self.amount10Button.backgroundColor = UIColor.App.buttonBackgroundPrimary
@@ -504,6 +524,8 @@ class DepositViewController: UIViewController {
         self.showRightLabelCustom()
     }
     @IBAction private func didTap20Button() {
+        self.depositHeaderTextFieldView.isManualInput = false
+
         self.checkForHighlightedAmountButton()
 
         self.amount20Button.backgroundColor = UIColor.App.buttonBackgroundPrimary
@@ -518,6 +540,8 @@ class DepositViewController: UIViewController {
     }
 
     @IBAction private func didTap50Button() {
+        self.depositHeaderTextFieldView.isManualInput = false
+
         self.checkForHighlightedAmountButton()
 
         self.amount50Button.backgroundColor = UIColor.App.buttonBackgroundPrimary
@@ -531,6 +555,8 @@ class DepositViewController: UIViewController {
     }
 
     @IBAction private func didTap100Button() {
+        self.depositHeaderTextFieldView.isManualInput = false
+
         self.checkForHighlightedAmountButton()
 
         self.amount100Button.backgroundColor = UIColor.App.buttonBackgroundPrimary

@@ -657,9 +657,13 @@ class MyTicketTableViewCell: UITableViewCell {
         let submitCashoutAlert = UIAlertController(title: titleMessage,
                                                    message: cashoutAlertMessage,
                                                    preferredStyle: UIAlertController.Style.alert)
-        submitCashoutAlert.addAction(UIAlertAction(title: localized("cashout"), style: .default, handler: { _ in
+        let okAction = UIAlertAction(title: localized("cashout"), style: .default, handler: { _ in
             self.viewModel?.requestCashout()
-        }))
+        })
+
+        okAction.setValue(UIColor.App.highlightPrimary, forKey: "titleTextColor")
+
+        submitCashoutAlert.addAction(okAction)
 
         submitCashoutAlert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel))
 

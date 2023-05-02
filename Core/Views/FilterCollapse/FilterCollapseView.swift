@@ -133,6 +133,20 @@ class FilterCollapseView: NibView {
         titleLabel.text = title
     }
 
+    func setTitleWithBold(title: String, charToSplit: String.Element) {
+        let boldText = title.split(separator: charToSplit)
+        let attrs = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15)]
+        if boldText.count > 1 {
+            let normalString = NSMutableAttributedString(string: String(boldText[0]+": "), attributes: attrs)
+            let boldString = NSMutableAttributedString(string: String(boldText[1]))
+            normalString.append(boldString)
+            titleLabel.attributedText = normalString
+        }
+        else {
+            titleLabel.text = title
+        }
+    }
+
     func setCheckboxSelected(selected: Bool) {
         checkboxButton.isChecked = selected
         if selected {
