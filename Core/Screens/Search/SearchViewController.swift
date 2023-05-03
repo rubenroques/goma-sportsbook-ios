@@ -112,9 +112,15 @@ class SearchViewController: UIViewController {
 
         self.bottomView.backgroundColor = UIColor.App.backgroundTertiary
 
-        //self.containerView.backgroundColor = UIColor.App.backgroundTertiary
-        self.containerView.colors = [(UIColor.App.backgroundGradient1, NSNumber(value: 0.0)),
-                                     (UIColor.App.backgroundGradient2, NSNumber(value: 1.0))]
+        //
+        if TargetVariables.shouldUseGradientBackgrounds {
+            self.containerView.colors = [(UIColor.App.backgroundGradient1, NSNumber(0.0)),
+                                         (UIColor.App.backgroundGradient2, NSNumber(1.0))]
+        }
+        else {
+            self.containerView.colors = []
+            self.containerView.backgroundColor = UIColor.App.backgroundTertiary
+        }
 
         self.searchView.backgroundColor = .clear
 
@@ -254,7 +260,7 @@ class SearchViewController: UIViewController {
         }
 
 //        self.didTapFavoriteMatchAction = { match in
-//            if !UserSessionStore.isUserLogged() {
+//            if !Env.userSessionStore.isUserLogged() {
 //                self.presentLoginViewController()
 //            }
 //            else {
@@ -313,7 +319,7 @@ class SearchViewController: UIViewController {
 
     private func openQuickbet(_ bettingTicket: BettingTicket) {
 
-        if let userSession = UserSessionStore.loggedUserSession() {
+        if Env.userSessionStore.isUserLogged() {
             let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
 
             let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)
@@ -355,7 +361,7 @@ class SearchViewController: UIViewController {
     }
 
     func openChatModal() {
-        if UserSessionStore.isUserLogged() {
+        if Env.userSessionStore.isUserLogged() {
             let socialViewController = SocialViewController()
             self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
         }

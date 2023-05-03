@@ -42,14 +42,12 @@ class PersonalInfoViewController: UIViewController {
     // Variables
 
     private var cancellables = Set<AnyCancellable>()
-    private var userSession: UserSession?
     private var countries: [Country] = []
     private var profile: UserProfile?
     
     private var originalFormHash: String?
 
-    init(userSession: UserSession?) {
-        self.userSession = userSession
+    init() {
         super.init(nibName: "PersonalInfoViewController", bundle: nil)
     }
 

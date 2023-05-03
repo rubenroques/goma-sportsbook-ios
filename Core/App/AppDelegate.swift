@@ -15,7 +15,6 @@ import IQKeyboardManagerSwift
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
-    // TO-DO: Integrate fastlane
     var window: UIWindow?
     var bootstrap: Bootstrap!
 
@@ -70,7 +69,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         self.window = UIWindow()
 
         self.bootstrap = Bootstrap(router: Router(window: self.window!))
-
         self.bootstrap.boot()
 
         return true

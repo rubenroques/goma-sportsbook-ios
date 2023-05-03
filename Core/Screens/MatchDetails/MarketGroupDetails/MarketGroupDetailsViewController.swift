@@ -87,8 +87,16 @@ class MarketGroupDetailsViewController: UIViewController {
 
         self.tableView.backgroundColor = .clear
 
-        self.backgroundGradientView.colors = [(UIColor.App.backgroundGradient1, 0.0),
-                                              (UIColor.App.backgroundGradient2, 1.0)]
+        //
+        if TargetVariables.shouldUseGradientBackgrounds {
+            self.backgroundGradientView.colors = [(UIColor.App.backgroundGradient1, NSNumber(0.0)),
+                                                  (UIColor.App.backgroundGradient2, NSNumber(1.0))]
+        }
+        else {
+            self.backgroundGradientView.colors = []
+            self.backgroundGradientView.backgroundColor = UIColor.App.backgroundPrimary
+        }
+        
     }
 
     override func viewDidLayoutSubviews() {
@@ -157,7 +165,7 @@ class MarketGroupDetailsViewController: UIViewController {
 
     private func openQuickbet(_ bettingTicket: BettingTicket) {
 
-        if let userSession = UserSessionStore.loggedUserSession() {
+        if Env.userSessionStore.isUserLogged() {
             let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
 
             let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)

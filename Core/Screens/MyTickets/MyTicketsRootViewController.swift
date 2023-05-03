@@ -129,7 +129,7 @@ class MyTicketsRootViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        Env.userSessionStore.userSessionStatusPublisher
+        Env.userSessionStore.userProfileStatusPublisher
             .receive(on: DispatchQueue.main)
             .sink {[weak self]  userSessionStatus in
 

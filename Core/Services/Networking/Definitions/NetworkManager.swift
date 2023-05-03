@@ -42,8 +42,8 @@ struct NetworkManager {
         }
 
         var userLoginForm: UserLoginForm?
-        if let user = UserSessionStore.loggedUserSession() {
-            userLoginForm = UserLoginForm(username: user.username, password: user.userId, deviceToken: Env.deviceFCMToken)
+        if let user = Env.userSessionStore.loggedUserProfile {
+            userLoginForm = UserLoginForm(username: user.username, password: user.userIdentifier, deviceToken: Env.deviceFCMToken)
         }
 
         return authenticator.validToken(deviceId: deviceId, loggedUser: userLoginForm)

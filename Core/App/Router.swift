@@ -95,17 +95,14 @@ class Router {
         self.subscribeToNotificationsOpened()
 
         var bootRootViewController: UIViewController
-        if UserSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
+        if Env.userSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
             bootRootViewController = Router.mainScreenViewControllerFlow()
         }
         else {
             bootRootViewController = Router.createLoginViewControllerFlow()
         }
 
-        let navigationController = Router.navigationController(with: UserTrackingViewController(viewModel: UserTrackingViewModel()))
-        navigationController.isModalInPresentation = true
         self.rootWindow.rootViewController = bootRootViewController
-
     }
 
     func subscribeToUserActionBlockers() {
@@ -148,17 +145,14 @@ class Router {
 
         Env.userSessionStore.acceptedTrackingPublisher
             .receive(on: DispatchQueue.main)
-            .sink { accepted in
-                if let acceptedValue = accepted {
-                    if !acceptedValue {
-                        self.showUserTrackingViewController()
-                    }
-                    else {
-                        self.hideUserTrackingViewController()
-                    }
-                }
-                else {
-                    // Nil means the user skipped it
+            .sink { acceptedTrackingState in
+
+                switch acceptedTrackingState {
+                case .unkown:
+                    self.showUserTrackingViewController()
+                case .accepted:
+                    self.hideUserTrackingViewController()
+                case .skipped:
                     self.hideUserTrackingViewController()
                 }
             }
@@ -491,7 +485,20 @@ extension Router {
     }
 
     static func createLoginViewControllerFlow() -> UIViewController {
-        return Router.navigationController(with: LoginViewController())
+
+        let rootViewController = RootViewController(defaultSport: Env.sportsStore.defaultSport)
+
+        let loginViewController = LoginViewController()
+
+        let navigationController = UINavigationController(rootViewController: rootViewController)
+        navigationController.viewControllers = [rootViewController, loginViewController]
+
+        navigationController.setNavigationBarHidden(true, animated: false)
+        navigationController.navigationBar.isTranslucent = false
+        navigationController.interactivePopGestureRecognizer?.delegate = nil
+        navigationController.interactivePopGestureRecognizer?.isEnabled = true
+
+        return navigationController
     }
 
     static func createRootViewControllerNavigation() -> UIViewController {

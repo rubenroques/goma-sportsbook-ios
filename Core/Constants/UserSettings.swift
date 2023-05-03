@@ -34,7 +34,7 @@ extension UserDefaults {
     var theme: Theme {
         get {
             self.register(defaults: [UserDefaultsKey.theme.key: Theme.device.rawValue])
-            return Theme(rawValue: self.integer(forKey: UserDefaultsKey.theme.key)) ?? .device
+            return Theme(rawValue: self.integer(forKey: UserDefaultsKey.theme.key)) ?? .dark
         }
         set {
             self.set(newValue.rawValue, forKey: UserDefaultsKey.theme.key)

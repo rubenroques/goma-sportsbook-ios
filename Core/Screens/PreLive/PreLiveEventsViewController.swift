@@ -675,7 +675,7 @@ class PreLiveEventsViewController: UIViewController {
 
     private func openQuickbet(_ bettingTicket: BettingTicket) {
 
-        if UserSessionStore.isUserLogged() {
+        if Env.userSessionStore.isUserLogged() {
             let quickbetViewModel = QuickBetViewModel(bettingTicket: bettingTicket)
 
             let quickbetViewController = QuickBetViewController(viewModel: quickbetViewModel)
@@ -890,12 +890,12 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
 //            self.viewModel.setMatchListType(.favoriteGames)
 //            self.setEmptyStateBaseView(firstLabelText: localized("empty_my_games"),
 //                                       secondLabelText: localized("go_to_list_to_mark"),
-//                                       isUserLoggedIn: UserSessionStore.isUserLogged())
+//                                       isUserLoggedIn: Env.userSessionStore.isUserLogged())
 //        case 4:
 //            self.viewModel.setMatchListType(.favoriteCompetitions)
 //            self.setEmptyStateBaseView(firstLabelText: localized("empty_my_competitions"),
 //                                       secondLabelText: localized("second_empty_my_competitions"),
-//                                       isUserLoggedIn: UserSessionStore.isUserLogged())
+//                                       isUserLoggedIn: Env.userSessionStore.isUserLogged())
         default:
             ()
         }

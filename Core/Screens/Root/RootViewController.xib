@@ -28,6 +28,7 @@
                 <outlet property="anonymousUserMenuBaseView" destination="tkf-V8-RbU" id="AqC-70-siz"/>
                 <outlet property="anonymousUserMenuImageView" destination="86f-DC-pBV" id="lz2-Rt-bO7"/>
                 <outlet property="bottomSafeAreaView" destination="fh2-pN-wGO" id="mH4-JS-0da"/>
+                <outlet property="cancelUnlockAppButton" destination="EUb-fi-1Mi" id="fkP-On-YfV"/>
                 <outlet property="casinoBaseView" destination="yX5-sK-euo" id="6X0-49-aNC"/>
                 <outlet property="casinoBottomView" destination="TwO-uo-g7m" id="ZLp-UG-4yE"/>
                 <outlet property="casinoButtonBaseView" destination="WaX-Xt-ClH" id="dTX-6J-5XO"/>
@@ -39,6 +40,7 @@
                 <outlet property="homeButtonBaseView" destination="4rF-OG-Pdw" id="pw0-Kh-2Ej"/>
                 <outlet property="homeIconImageView" destination="Iba-we-Ish" id="bzi-XU-pun"/>
                 <outlet property="homeTitleLabel" destination="eiC-RB-6o0" id="xt5-r4-zXh"/>
+                <outlet property="isLoadingUserSessionView" destination="fCa-Hc-VH2" id="xDj-II-M0T"/>
                 <outlet property="leadingSportsBookContentConstriant" destination="cGA-fb-qhh" id="O6E-6M-4XW"/>
                 <outlet property="liveBaseView" destination="Fxl-nZ-JeH" id="gr7-zM-dB7"/>
                 <outlet property="liveButtonBaseView" destination="F4I-4h-jeW" id="utD-tx-SDd"/>
@@ -590,18 +592,33 @@
                     <rect key="frame" x="0.0" y="0.0" width="430" height="943"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WtU-rI-FNG">
-                            <rect key="frame" x="130" y="454.5" width="170" height="34.5"/>
+                            <rect key="frame" x="130" y="434.5" width="170" height="34.5"/>
                             <state key="normal" title="Button"/>
                             <buttonConfiguration key="configuration" style="filled" title="Unlock Sportsbook"/>
                             <connections>
                                 <action selector="didTapUnlockButton" destination="-1" eventType="primaryActionTriggered" id="GTj-pL-8od"/>
                             </connections>
                         </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EUb-fi-1Mi">
+                            <rect key="frame" x="117.5" y="499" width="195" height="34.5"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="gray" title="Continue without login"/>
+                            <connections>
+                                <action selector="didTapCancelUnlockButton" destination="-1" eventType="primaryActionTriggered" id="wZy-Ng-FHy"/>
+                            </connections>
+                        </button>
+                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="fCa-Hc-VH2">
+                            <rect key="frame" x="196.5" y="453" width="37" height="37"/>
+                        </activityIndicatorView>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
+                        <constraint firstItem="fCa-Hc-VH2" firstAttribute="centerY" secondItem="99V-gD-7jH" secondAttribute="centerY" id="7qc-ts-5Gq"/>
+                        <constraint firstItem="fCa-Hc-VH2" firstAttribute="centerX" secondItem="99V-gD-7jH" secondAttribute="centerX" id="HO4-BX-wiI"/>
+                        <constraint firstItem="EUb-fi-1Mi" firstAttribute="centerX" secondItem="WtU-rI-FNG" secondAttribute="centerX" id="RDp-fv-D5Z"/>
                         <constraint firstItem="WtU-rI-FNG" firstAttribute="centerX" secondItem="99V-gD-7jH" secondAttribute="centerX" id="S0H-tG-Mh2"/>
-                        <constraint firstItem="WtU-rI-FNG" firstAttribute="centerY" secondItem="99V-gD-7jH" secondAttribute="centerY" id="llu-ws-Tni"/>
+                        <constraint firstItem="EUb-fi-1Mi" firstAttribute="top" secondItem="WtU-rI-FNG" secondAttribute="bottom" constant="30" id="TaX-yQ-y71"/>
+                        <constraint firstItem="WtU-rI-FNG" firstAttribute="centerY" secondItem="99V-gD-7jH" secondAttribute="centerY" constant="-20" id="llu-ws-Tni"/>
                     </constraints>
                 </view>
             </subviews>
@@ -654,7 +671,7 @@
             <color red="0.92941176470588238" green="0.30980392156862746" blue="0.38823529411764707" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="iconSecondary">
-            <color red="0.40784313725490196" green="0.50588235294117645" blue="0.6705882352941176" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.22352941176470589" green="0.23529411764705882" blue="0.51764705882352946" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

@@ -44,7 +44,7 @@ class SportRadarMarketDetailsCoordinator {
 
     init(marketId: String, eventId: String, sessionToken: String, contentIdentifier: ContentIdentifier) {
 
-        print("☁️SP debugbetslip new SportRadarMarketDetailsCoordinator \(contentIdentifier)")
+        // print("☁️SP debugbetslip new SportRadarMarketDetailsCoordinator \(contentIdentifier)")
         self.marketId = marketId
         self.eventId = eventId
 
@@ -69,8 +69,8 @@ class SportRadarMarketDetailsCoordinator {
                 switch completion {
                 case .finished:
                     let subscription = Subscription(contentIdentifier: self.contentIdentifier, sessionToken: self.sessionToken, unsubscriber: self)
-                    self.subscription = subscription
                     self.marketCurrentValueSubject.send(.connected(subscription: subscription))
+                    self.subscription = subscription
                 case .failure(let error):
                     self.marketCurrentValueSubject.send(completion: .failure(error))
                 }
@@ -137,7 +137,7 @@ class SportRadarMarketDetailsCoordinator {
 
 
     func updateMarket(_ market: Market) {
-        print("☁️SP debugbetslip updated SportRadarMarketDetailsCoordinator \(self.contentIdentifier) \(market.id)")
+        // print("☁️SP debugbetslip updated SportRadarMarketDetailsCoordinator \(self.contentIdentifier) \(market.id)")
 
         self.marketCurrentValueSubject.send(.contentUpdate(content: market))
 
@@ -187,16 +187,34 @@ extension SportRadarMarketDetailsCoordinator {
 
     func handleContentUpdate(_ content: SportRadarModels.ContentContainer) {
 
+        guard
+            let updatedContentIdentifier = content.contentIdentifier
+        else {
+            // print("☁️SP debugdetails SportRadarMarketDetailsCoordinator ignoring contentIdentifierLess \(content)")
+            return
+        }
+
+        if self.contentIdentifier != updatedContentIdentifier {
+            // ignoring this update, not subscribed by this class
+            // print("☁️SP debugdetails SportRadarMarketDetailsCoordinator ignoring \(updatedContentIdentifier)")
+            return
+        }
+
+        // print("☁️SP debugdetails SportRadarMarketDetailsCoordinator handleContentUpdate \(content)")
+
         let trackedMarketId = self.marketId
         
         switch content {
         case .updateMarketTradability(_, let marketId, let isTradable):
             if trackedMarketId == marketId {
-                print("☁️SP debugbetslip updateMarketTradability \(marketId) \(isTradable)")
+                // print("☁️SP debugbetslip updateMarketTradability \(marketId) \(isTradable)")
                 self.updateMarketTradability(withId: marketId, isTradable: isTradable)
             }
         case .updateOutcomeOdd(_, let selectionId, let newOddNumerator, let newOddDenominator):
             self.updateOutcomeOdd(withId: selectionId, newOddNumerator: newOddNumerator, newOddDenominator: newOddDenominator)
+
+        case .updateOutcomeTradability(_, let selectionId, let isTradable):
+            self.updateMarketTradability(withId: selectionId, isTradable: isTradable)
 
         case .addMarket(_ , let market):
             if trackedMarketId == market.id {
@@ -205,16 +223,17 @@ extension SportRadarMarketDetailsCoordinator {
                         self.updateOutcomeOdd(withId: outcome.id, newOddNumerator: String(fractionOdd.numerator), newOddDenominator: String(fractionOdd.denominator))
                     }
                 }
-                print("☁️SP MarketDetailer debugbetslip \(market.id) add market ")
+                // print("☁️SP MarketDetailer debugbetslip \(market.id) add market ")
                 self.updateMarketTradability(withId: market.id, isTradable: market.isTradable)
             }
         case .enableMarket(_, let marketId):
             if trackedMarketId == marketId {
+                // print("☁️SP MarketDetailer debugbetslip \(marketId) enabled market")
                 self.updateMarketTradability(withId: marketId, isTradable: true)
             }
         case .removeMarket(_, let marketId):
             if trackedMarketId == marketId {
-                print("☁️SP MarketDetailer debugbetslip \(marketId) removed market")
+                // print("☁️SP MarketDetailer debugbetslip \(marketId) removed market")
                 self.updateMarketTradability(withId: marketId, isTradable: false)
             }
         case .removeEvent(_, let updatedEventId):
@@ -235,11 +254,7 @@ extension SportRadarMarketDetailsCoordinator {
         let currentTradable = updatedMarket.isTradable
         if isTradable != currentTradable {
             updatedMarket.isTradable = isTradable
-            print("debugbetslip ServiceProvider updated market Tradability  \(id) \(isTradable)")
             self.marketCurrentValueSubject.send(.contentUpdate(content: updatedMarket))
-        }
-        else {
-            print("No updated found updateMarketTradability on market \(id)")
         }
     }
 
@@ -271,9 +286,14 @@ extension SportRadarMarketDetailsCoordinator {
         let updatedOutcomes = Array(self.outcomesDictionary.values.map(\.value))
         newMarket.outcomes = updatedOutcomes
 
-        print("☁️SP debugbetslip-\(outcome.id) ServiceProvider updated odd  \(outcome.odd.decimalOdd)")
-
         self.marketCurrentValueSubject.send(.contentUpdate(content: newMarket))
+    }
+
+    func updateOutcomeTradability(withId id: String, isTradable: Bool) {
+        guard let outcomeSubject = self.outcomesDictionary[id] else { return }
+        let outcome = outcomeSubject.value
+        outcome.isTradable = isTradable
+        outcomeSubject.send(outcome)
     }
 
 }

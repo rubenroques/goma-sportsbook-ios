@@ -107,7 +107,7 @@ class StaticHomeViewTemplateDataSource {
             })
             .store(in: &self.cancellables)
 
-        Env.userSessionStore.userSessionPublisher
+        Env.userSessionStore.userProfilePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.refresh()
@@ -164,7 +164,11 @@ class StaticHomeViewTemplateDataSource {
     func requestSports() {
         let allSports = Env.sportsStore.getAvailableSports()
         let prefixSports = allSports.filter({ $0.alphaId != nil }).prefix(10)
-        self.sportsToFetch = Array(prefixSports)
+
+        // T ODO: REMOVE THIS DEBUG CODE
+        self.sportsToFetch = Array(prefixSports) // [] // Array(prefixSports)
+
+        
         self.refreshPublisher.send()
     }
 

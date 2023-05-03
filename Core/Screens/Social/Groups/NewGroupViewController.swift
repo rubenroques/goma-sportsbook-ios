@@ -220,7 +220,7 @@ class NewGroupViewController: UIViewController {
 
     @objc func didTapNextButton() {
         var selectedUsers: [UserContact] = []
-        if let loggedUser = UserSessionStore.loggedUserSession(),
+        if let loggedUser = Env.userSessionStore.loggedUserProfile,
            let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId {
             let adminUser = UserContact(id: "\(loggedUserId)", username: loggedUser.username, phones: [])
 

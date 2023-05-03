@@ -225,7 +225,7 @@ class AddContactViewController: UIViewController {
         metadata.url = URL(string: urlMobile)
         metadata.originalURL = metadata.url
         var text = ""
-        if let loggedUser = UserSessionStore.loggedUserSession(),
+        if let loggedUser = Env.userSessionStore.loggedUserProfile,
            let userCode = Env.gomaNetworkClient.getCurrentToken()?.code {
             metadata.title = "The user \(loggedUser.username) has invited you to Sportsbook!"
             text = "The user \(loggedUser.username) has invited you to Sportsbook! Join him and add him as a friend by searching this code in the app: \(userCode)"

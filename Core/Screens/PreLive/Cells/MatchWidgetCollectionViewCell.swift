@@ -536,11 +536,11 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.matchSubscriber?.cancel()
         self.matchSubscriber = nil
         
-        self.matchSubscriber = Env.servicesProvider.subscribeToEventUpdates(withId: match.id)
+        self.matchSubscriber = Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: match.id)
             .compactMap({ $0 })
             .map(ServiceProviderModelMapper.match(fromEvent:))
             .sink(receiveCompletion: { completion in
-                print("matchSubscriber subscribeToEventUpdates completion: \(completion)")
+                print("matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
             }, receiveValue: { [weak self] updatedMatch in
                 self?.viewModel?.match = updatedMatch
 
@@ -829,7 +829,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     @IBAction private func didTapFavoritesButton(_ sender: Any) {
-        if UserSessionStore.isUserLogged() {
+        if Env.userSessionStore.isUserLogged() {
             if let match = self.viewModel?.match {
                 self.markAsFavorite(match: match)
             }
@@ -1053,7 +1053,7 @@ extension MatchWidgetCollectionViewCell {
 
     @IBAction private func didLongPressCard() {
 
-        if UserSessionStore.isUserLogged() {
+        if Env.userSessionStore.isUserLogged() {
           
             guard
                 let parentViewController = self.viewController,

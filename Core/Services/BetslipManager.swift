@@ -304,7 +304,7 @@ extension BetslipManager {
             .mapError({ error in
                 switch error {
                 case .forbidden:
-                    return BetslipErrorType.forbiddenBetError
+                    return BetslipErrorType.forbiddenRequest
                 case .errorMessage(let message):
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 case .notPlacedBet(let message):
@@ -359,7 +359,7 @@ extension BetslipManager {
             .mapError({ error in
                 switch error {
                 case .forbidden:
-                    return BetslipErrorType.forbiddenBetError
+                    return BetslipErrorType.forbiddenRequest
                 case .errorMessage(let message):
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 case .notPlacedBet(let message):
@@ -428,7 +428,7 @@ extension BetslipManager {
             .mapError({ error in
                 switch error {
                 case .forbidden:
-                    return BetslipErrorType.forbiddenBetError
+                    return BetslipErrorType.forbiddenRequest
                 case .errorMessage(let message):
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 case .notPlacedBet(let message):
@@ -488,7 +488,7 @@ extension BetslipManager {
             .mapError({ error in
                 switch error {
                 case .forbidden:
-                    return BetslipErrorType.forbiddenBetError
+                    return BetslipErrorType.forbiddenRequest
                 case .errorMessage(let message):
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 case .notPlacedBet(let message):
@@ -643,7 +643,7 @@ enum BetslipErrorType: Error {
     case betPlacementError
     case potentialReturn
     case betPlacementDetailedError(message: String)
-    case forbiddenBetError
+    case forbiddenRequest
     case none
 }
 

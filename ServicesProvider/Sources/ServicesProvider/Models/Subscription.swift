@@ -175,7 +175,7 @@ public enum ContentRoute {
     }
 }
 
-public class ContentIdentifier: Decodable, Hashable, Equatable, Identifiable {
+public class ContentIdentifier: Decodable, Identifiable {
     
     public let id: String
 
@@ -266,19 +266,26 @@ public class ContentIdentifier: Decodable, Hashable, Equatable, Identifiable {
             self.contentRoute = ContentRoute.market(marketId: contentRouteRawString)
         }
 
-        self.id = "\(contentType)-\(contentRoute.fullRoute)".MD5()
+        self.id = "\(contentType.rawValue)-\(contentRoute.fullRoute)".MD5()
         self.pageableId = "\(contentType.rawValue)-\(contentRoute.pageableRoute)".MD5()
     }
-    
+
+}
+
+extension ContentIdentifier: Hashable {
+
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
         hasher.combine(pageableId)
     }
-    
+
+}
+
+
+extension ContentIdentifier: Equatable {
     public static func == (lhs: ContentIdentifier, rhs: ContentIdentifier) -> Bool {
         return lhs.id == rhs.id && lhs.pageableId == rhs.pageableId
     }
-
 }
 
 extension ContentIdentifier: CustomStringConvertible {

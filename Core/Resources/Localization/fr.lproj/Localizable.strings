@@ -1263,7 +1263,7 @@
 "password_tips_number" = "• Contenir au moins un chiffre";
 "password_tips_uppercase" = "• Contenir une lettre majuscule";
 "password_tips_lowercase" = "• Contenir une lettre minuscule";
-"password_tips_alphanumeric" = "• Être alphanumérique avec au moins 1 symbole parmi -!@^$&*";
+"password_tips_alphanumeric" = "• Être alphanumérique avec au moins 1 symbole parmi -!@^$&*+";
 "password_tips_length" = "• Avoir une longueur entre 8 et 16 caractères";
 
 "app_version_profile_1" = "Version de l'application {version_1} ({version_2})";
@@ -1326,6 +1326,15 @@
 
 "kyc_message_title" = "KYC n'est past complet!";
 "kyc_message_body" = "Vos documents sont necessaire pour effectuet un retrait.";
+
+"face_id_title" = "Face ID";
+"face_id_message" = "Voulez-vous utiliser Face ID ?";
+"touch_id_title" = "Touch ID";
+"touch_id_message" = "Voulez-vous utiliser Touch ID ?";
+"no" = "Non";
+"biometric_error_title" = "Erreur biométrique";
+"biometric_error_denied_message" = "Il semble que vous ayez refusé l'utilisation de la biométrie pour cette application.";
+"biometric_error_general_message" = "Une erreur s'est produite lors de la vérification de l'authentification biométrique. Veuillez vous assurer qu'elle est activée dans les réglages de votre appareil.";
 
 "contact_support" = "Contactez le support si vous souhaitez modifier les informations de votre profil";
 

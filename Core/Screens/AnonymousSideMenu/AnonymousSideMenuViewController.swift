@@ -321,6 +321,8 @@ extension AnonymousSideMenuViewController {
     private static func createFooterResponsibleGamingView() -> FooterResponsibleGamingView {
         let view = FooterResponsibleGamingView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.showLinksView()
+        view.showSocialView()
         return view
     }
 

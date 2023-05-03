@@ -51,12 +51,12 @@ class PasswordFormStepViewModel {
                     passwordStates.append(PasswordState.onlyNumbers)
                 }
 
-                let validCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "-!@$^&*abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+                let validCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "-!@$^&*+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
                 if password.rangeOfCharacter(from: validCharacterSet.inverted) != nil {
                     passwordStates.append(PasswordState.invalidChars)
                 }
 
-                let specialCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "-!@$^&*")
+                let specialCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "-!@$^&*+")
                 let lowerCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyz")
                 let upperCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
@@ -253,6 +253,14 @@ class PasswordFormStepView: FormStepView {
                 for label in errorLabels {
                     self.markTipLabelError(label: label)
                 }
+
+                if errorLabels.isEmpty {
+                    self.markTipLabelCompleted(label: self.tipTitleLabel)
+                }
+                else {
+                    self.resetTipLabel(label: self.tipTitleLabel)
+                }
+
             }
             .store(in: &self.cancellables)
     }
@@ -302,24 +310,24 @@ class PasswordFormStepView: FormStepView {
 
     private func resetTipLabel(label: UILabel) {
         label.alpha = 1.0
-//        label.textColor = AppColor.textPrimary
+        label.textColor = AppColor.textPrimary
 //        let attributeString: NSMutableAttributedString = NSMutableAttributedString(string: label.text ?? "")
 //        label.attributedText = attributeString
     }
 
     private func markTipLabelCompleted(label: UILabel) {
         UIView.animate(withDuration: 0.2) {
-            label.alpha = 0.37
+            label.alpha = 0.83
         }
 
-//        label.textColor = AppColor.textPrimary
+        label.textColor = AppColor.alertSuccess
 //        let attributeString: NSMutableAttributedString = NSMutableAttributedString(string: label.text ?? "")
 //        attributeString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: 2, range: NSRange(location: 0, length: attributeString.length))
 //        label.attributedText = attributeString
     }
 
     private func markTipLabelError(label: UILabel) {
-//        label.textColor = AppColor.alertError
+        label.textColor = AppColor.textPrimary
 //        let attributeString: NSMutableAttributedString = NSMutableAttributedString(string: label.text ?? "")
 //        label.attributedText = attributeString
 

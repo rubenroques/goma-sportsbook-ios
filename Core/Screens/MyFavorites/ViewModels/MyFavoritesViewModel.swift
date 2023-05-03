@@ -107,7 +107,7 @@ class MyFavoritesViewModel: NSObject {
         Env.favoritesManager.favoriteEventsIdPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] favoriteEvents in
-                if UserSessionStore.isUserLogged() {
+                if Env.userSessionStore.isUserLogged() {
                     if self?.initialLoading == true {
                      self?.isLoadingPublisher.send(true)
                         self?.initialLoading = false
@@ -293,7 +293,7 @@ class MyFavoritesViewModel: NSObject {
 
     private func updateContentList() {
 
-        if UserSessionStore.isUserLogged() {
+        if Env.userSessionStore.isUserLogged() {
             if self.favoriteMatchesDataPublisher.value.isEmpty &&
                 self.favoriteCompetitionsDataPublisher.value.isEmpty &&
                 self.favoriteOutrightCompetitionsDataPublisher.value.isEmpty {

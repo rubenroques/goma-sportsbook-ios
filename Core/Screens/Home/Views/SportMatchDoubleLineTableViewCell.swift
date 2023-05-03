@@ -386,55 +386,25 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
         }
         else if indexPath.row == 0, let match = self.viewModel?.match(forLine: collectionLineIndex) {
 
-            if self.viewModel?.isMatchLineLive() ?? false {
-                guard
-                    let cell = collectionView.dequeueCellType(MatchWidgetCollectionViewCell.self, indexPath: indexPath)
-                else {
-                    fatalError()
-                }
-
-                let cellViewModel = MatchWidgetCellViewModel(match: match)
-
-                cell.configure(withViewModel: cellViewModel)
-                cell.tappedMatchWidgetAction = { [weak self] in
-                    self?.tappedMatchLineAction?(match)
-                }
-//                cell.didTapFavoriteMatchAction = { [weak self] match in
-//                    self?.didTapFavoriteMatchAction?(match)
-//                }
-
-                cell.didLongPressOdd = { bettingTicket in
-                    self.didLongPressOdd?(bettingTicket)
-                }
-             
-                cell.shouldShowCountryFlag(true)
-                return cell
-
-            }
+            guard
+                let cell = collectionView.dequeueCellType(MatchWidgetCollectionViewCell.self, indexPath: indexPath)
             else {
-                guard
-                    let cell = collectionView.dequeueCellType(MatchWidgetCollectionViewCell.self, indexPath: indexPath)
-                else {
-                    fatalError()
-                }
-
-                let cellViewModel = MatchWidgetCellViewModel(match: match)
-
-                cell.configure(withViewModel: cellViewModel)
-                cell.tappedMatchWidgetAction = { [weak self] in
-                    self?.tappedMatchLineAction?(match)
-                }
-
-                cell.didLongPressOdd = { bettingTicket in
-                    self.didLongPressOdd?(bettingTicket)
-                }
-//                cell.didTapFavoriteMatchAction = { [weak self] match in
-//                    self?.didTapFavoriteMatchAction?(match)
-//                }
-                
-                cell.shouldShowCountryFlag(true)
-                return cell
+                fatalError()
             }
+
+            let cellViewModel = MatchWidgetCellViewModel(match: match)
+
+            cell.configure(withViewModel: cellViewModel)
+            cell.tappedMatchWidgetAction = { [weak self] in
+                self?.tappedMatchLineAction?(match)
+            }
+            cell.didLongPressOdd = { bettingTicket in
+                self.didLongPressOdd?(bettingTicket)
+            }
+
+            cell.shouldShowCountryFlag(true)
+            return cell
+            
         }
         else {
             if let match = viewModel.match(forLine: collectionLineIndex), let market = match.markets[safe: indexPath.row] {

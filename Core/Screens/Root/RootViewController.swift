@@ -107,6 +107,8 @@ class RootViewController: UIViewController {
 
     @IBOutlet private var localAuthenticationBaseView: UIView!
     @IBOutlet private var unlockAppButton: UIButton!
+    @IBOutlet private var cancelUnlockAppButton: UIButton!
+    @IBOutlet private var isLoadingUserSessionView: UIActivityIndicatorView!
 
     //
     //
@@ -120,13 +122,22 @@ class RootViewController: UIViewController {
 
     //
     //
+    private lazy var blockingWindow: BlockingWindow = {
+        var blockingWindow: BlockingWindow = BlockingWindow(frame: UIScreen.main.bounds)
+        blockingWindow.windowLevel = .statusBar
+        return blockingWindow
+    }()
+
     var isLocalAuthenticationCoveringView: Bool = true {
         didSet {
             if isLocalAuthenticationCoveringView {
                 self.localAuthenticationBaseView.isHidden = false
+                self.blockingWindow.isHidden = false
             }
             else {
                 self.localAuthenticationBaseView.isHidden = true
+                self.blockingWindow.isHidden = true
+
             }
         }
     }
@@ -192,7 +203,7 @@ class RootViewController: UIViewController {
     var appMode: AppMode = .sportsbook
 
     enum ScreenState {
-        case logged(user: UserSession)
+        case logged(user: UserProfile)
         case anonymous
     }
     var screenState: ScreenState = .anonymous {
@@ -260,6 +271,9 @@ class RootViewController: UIViewController {
          self.overlayWindow.addSubview(self.pictureInPictureView!, anchors: [.leading(0), .trailing(0), .top(0), .bottom(0)] )
          self.overlayWindow.isHidden = false // .makeKeyAndVisible()
 
+        self.blockingWindow.addSubview(self.localAuthenticationBaseView, anchors: [.leading(0), .trailing(0), .top(0), .bottom(0)])
+        self.blockingWindow.isHidden = false
+
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(self.windowDidResignKeyNotification(_:)),
                                                name: UIWindow.didResignKeyNotification,
@@ -316,13 +330,15 @@ class RootViewController: UIViewController {
         //
         self.setupWithTheme()
 
-        Env.userSessionStore.userSessionPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { userSession in
-                if let userSession = userSession {
-                    self.screenState = .logged(user: userSession)
+        // Detects a new login
 
-                    if let avatarName = userSession.avatarName {
+        Env.userSessionStore.userProfilePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { userProfile in
+                if let userProfile = userProfile {
+                    self.screenState = .logged(user: userProfile)
+
+                    if let avatarName = userProfile.avatarName {
                         self.profilePictureImageView.image = UIImage(named: avatarName)
                     }
                     else {
@@ -374,6 +390,8 @@ class RootViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        self.isLoadingUserSessionView.isHidden = true
+
         // Add blur effect
         self.localAuthenticationBaseView.backgroundColor = .clear
 
@@ -390,7 +408,7 @@ class RootViewController: UIViewController {
             blurEffectView.bottomAnchor.constraint(equalTo: self.localAuthenticationBaseView.bottomAnchor),
         ])
 
-        self.localAuthenticationBaseView.alpha = 0.0
+        self.localAuthenticationBaseView.alpha = 1.0
         self.showLocalAuthenticationCoveringViewIfNeeded()
 
         self.authenticateUser()
@@ -542,6 +560,7 @@ class RootViewController: UIViewController {
 
         self.notificationCounterLabel.font = AppFont.with(type: .semibold, size: 12)
 
+        //
         if TargetVariables.hasFeatureEnabled(feature: .casino) {
             self.casinoButtonBaseView.isHidden = false
         }
@@ -549,6 +568,7 @@ class RootViewController: UIViewController {
             self.casinoButtonBaseView.isHidden = true
         }
 
+        //
         if TargetVariables.hasFeatureEnabled(feature: .tips) {
             self.tipsButtonBaseView.isHidden = false
         }
@@ -556,6 +576,7 @@ class RootViewController: UIViewController {
             self.tipsButtonBaseView.isHidden = true
         }
 
+        //
         self.view.insertSubview(self.topGradientBackgroundView, belowSubview: self.topSafeAreaView)
 
         self.mainContainerView.insertSubview(self.mainContainerGradientView, at: 0)
@@ -585,10 +606,17 @@ class RootViewController: UIViewController {
         self.topBackgroundGradientLayer.locations = [0.0, 0.41, 1.0]
         self.topBackgroundGradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
         self.topBackgroundGradientLayer.endPoint = CGPoint(x: 1.0, y: 0.4)
-        self.topGradientBackgroundView.backgroundColor = .white
-        self.topGradientBackgroundView.layer.insertSublayer(self.topBackgroundGradientLayer, at: 0)
+
+        if TargetVariables.shouldUseGradientBackgrounds {
+            self.topGradientBackgroundView.backgroundColor = .white
+            self.topGradientBackgroundView.layer.insertSublayer(self.topBackgroundGradientLayer, at: 0)
+        }
+        else {
+            self.topGradientBackgroundView.backgroundColor = .clear
+        }
 
 
+        //
         if TargetVariables.shouldUserBlurEffectTabBar {
 
             self.bottomBackgroundView.backgroundColor = .clear
@@ -605,29 +633,46 @@ class RootViewController: UIViewController {
                 blurEffectView.topAnchor.constraint(equalTo: self.bottomBackgroundView.topAnchor),
                 blurEffectView.bottomAnchor.constraint(equalTo: self.bottomBackgroundView.bottomAnchor),
             ])
-
         }
-
     }
 
     func setupWithTheme() {
 
         self.view.backgroundColor = .black
 
+        if TargetVariables.shouldUseGradientBackgrounds {
+            self.topSafeAreaView.backgroundColor = .clear
+            self.topBarView.backgroundColor = .clear
 
-        self.topSafeAreaView.backgroundColor = .clear
-        self.topBarView.backgroundColor = .clear
+            self.topGradientBackgroundView.backgroundColor = .clear
+            self.topBackgroundGradientLayer.colors = [UIColor.App.headerGradient1.cgColor,
+                                                      UIColor.App.headerGradient2.cgColor,
+                                                      UIColor.App.headerGradient3.cgColor]
 
-        self.topGradientBackgroundView.backgroundColor = .clear
-        self.topBackgroundGradientLayer.colors = [UIColor.App.headerGradient1.cgColor,
-                                                  UIColor.App.headerGradient2.cgColor,
-                                                  UIColor.App.headerGradient3.cgColor]
+            self.containerView.backgroundColor = .clear
+            self.mainContainerView.backgroundColor = .clear
+            self.mainContainerGradientView.backgroundColor = .clear
+            self.mainContainerGradientLayer.colors = [UIColor.App.backgroundGradient1.cgColor,
+                                                      UIColor.App.backgroundGradient2.cgColor]
 
-        self.containerView.backgroundColor = .clear
-        self.mainContainerView.backgroundColor = .clear
-        self.mainContainerGradientView.backgroundColor = .clear
-        self.mainContainerGradientLayer.colors = [UIColor.App.backgroundGradient1.cgColor,
-                                                  UIColor.App.backgroundGradient2.cgColor]
+            self.searchButton.imageView?.setImageColor(color: UIColor.white)
+            self.anonymousUserMenuImageView.setImageColor(color: UIColor.white)
+        }
+        else {
+            self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
+            self.topBarView.backgroundColor = UIColor.App.backgroundPrimary
+
+            self.topGradientBackgroundView.backgroundColor = .clear
+            self.topBackgroundGradientLayer.colors = []
+
+            self.containerView.backgroundColor = .clear
+            self.mainContainerView.backgroundColor = UIColor.App.backgroundPrimary
+            self.mainContainerGradientView.backgroundColor = .clear
+            self.mainContainerGradientLayer.colors = []
+
+            self.searchButton.imageView?.setImageColor(color: UIColor.App.textPrimary)
+            self.anonymousUserMenuImageView.setImageColor(color: UIColor.App.textPrimary)
+        }
 
         self.homeBaseView.backgroundColor = .clear
         self.preLiveBaseView.backgroundColor = .clear
@@ -641,7 +686,6 @@ class RootViewController: UIViewController {
         self.tipsTitleLabel.textColor = UIColor.App.highlightPrimary
         self.casinoTitleLabel.textColor = UIColor.App.textSecondary
         self.sportsbookTitleLabel.textColor = UIColor.App.textSecondary
-
 
         if TargetVariables.shouldUserBlurEffectTabBar {
             self.tabBarView.backgroundColor = .clear
@@ -681,10 +725,14 @@ class RootViewController: UIViewController {
         self.redrawButtonButtons()
 
         self.notificationCounterLabel.textColor = UIColor.App.buttonTextPrimary
+
+        self.isLoadingUserSessionView.tintColor = UIColor.App.textSecondary
+        self.isLoadingUserSessionView.color = UIColor.App.textSecondary
+
     }
 
-    func setupWithState(_ state: ScreenState) {
-        switch state {
+    func setupWithState(_ screenState: ScreenState) {
+        switch screenState {
         case .logged:
             self.loginBaseView.isHidden = true
 
@@ -737,7 +785,7 @@ class RootViewController: UIViewController {
     }
 
     func openChatModal() {
-        if UserSessionStore.isUserLogged() {
+        if Env.userSessionStore.isUserLogged() {
             let socialViewController = SocialViewController()
             self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
         }
@@ -983,8 +1031,8 @@ extension RootViewController {
     }
 
     private func presentProfileViewController() {
-        if let loggedUser = UserSessionStore.loggedUserSession() {
-            let profileViewController = ProfileViewController(userSession: loggedUser)
+        if let loggedUser = Env.userSessionStore.loggedUserProfile {
+            let profileViewController = ProfileViewController(userProfile: loggedUser)
             let navigationViewController = Router.navigationController(with: profileViewController)
             self.present(navigationViewController, animated: true, completion: nil)
         }
@@ -1333,14 +1381,36 @@ extension RootViewController {
 
 extension RootViewController {
 
-    func showLocalAuthenticationCoveringViewIfNeeded() {
+    func unlockAppWithUser() {
+        // Unlock the app
 
-        #if DEBUG
+        Env.userSessionStore
+            .isLoadingUserSessionPublisher
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoadingUserSession in
+
+                if !isLoadingUserSession {
+                    self?.isLocalAuthenticationCoveringView = false
+                }
+
+                self?.isLoadingUserSessionView.isHidden = !isLoadingUserSession
+                self?.unlockAppButton.isHidden = isLoadingUserSession
+                self?.cancelUnlockAppButton.isHidden = isLoadingUserSession
+
+            }
+            .store(in: &self.cancellables)
+
+        Env.userSessionStore.startUserSession()
+    }
+
+    func unlockAppAnonymous() {
+        Env.userSessionStore.logout()
         self.isLocalAuthenticationCoveringView = false
-        return
-        #endif
+    }
 
-        if Env.userSessionStore.shouldRequestFaceId() {
+    func showLocalAuthenticationCoveringViewIfNeeded() {
+        if Env.userSessionStore.shouldRequestBiometrics() {
             self.isLocalAuthenticationCoveringView = true
         }
     }
@@ -1349,8 +1419,17 @@ extension RootViewController {
         self.authenticateUser()
     }
 
+    @IBAction private func didTapCancelUnlockButton() {
+        self.unlockAppAnonymous()
+    }
+
     @objc func appWillEnterForeground() {
-        self.authenticateUser()
+        if Env.userSessionStore.shouldRequestBiometrics() {
+            self.authenticateUser()
+        }
+        else if Env.userSessionStore.isUserLogged() {
+
+        }
         print("LocalAuth Foreground")
     }
 
@@ -1372,14 +1451,16 @@ extension RootViewController {
     }
 
     func authenticateUser() {
-
-        #if DEBUG
-        return
-        #endif
-
-        if !Env.userSessionStore.shouldRequestFaceId() {
+        
+        if !Env.userSessionStore.shouldRequestBiometrics() {
+            self.unlockAppAnonymous()
             return
         }
+
+        #if DEBUG
+        self.unlockAppWithUser()
+        return
+        #endif
 
         let context = LAContext()
 
@@ -1396,20 +1477,20 @@ extension RootViewController {
                         if let err = error {
                             switch err._code {
                             case LAError.Code.systemCancel.rawValue:
-                                self.notifyUser("Session cancelled", err: err.localizedDescription)
+                                self.notifyUser("Session cancelled", errorMessage: err.localizedDescription)
                             case LAError.Code.userCancel.rawValue:
-                                self.notifyUser("Please try again", err: err.localizedDescription)
+                                self.notifyUser("Please try again", errorMessage: err.localizedDescription)
                             case LAError.Code.userFallback.rawValue:
-                                self.notifyUser("Authentication", err: "Password option selected")
+                                self.notifyUser("Authentication", errorMessage: "Password option selected")
                             default:
-                                self.notifyUser("Authentication failed", err: err.localizedDescription)
+                                self.notifyUser("Authentication failed", errorMessage: err.localizedDescription)
                             }
                         }
                         else {
-                            // Unlock the app
-                            self.isLocalAuthenticationCoveringView = false
+                            self.unlockAppWithUser()
                         }
                     }
+
             })
 
         }
@@ -1418,30 +1499,27 @@ extension RootViewController {
             if let err = error {
                 switch err.code {
                 case LAError.Code.biometryNotEnrolled.rawValue:
-                    notifyUser("User is not enrolled", err: err.localizedDescription)
+                    notifyUser("User is not enrolled", errorMessage: err.localizedDescription)
                 case LAError.Code.passcodeNotSet.rawValue:
-                    notifyUser("A passcode has not been set", err: err.localizedDescription)
+                    notifyUser("A passcode has not been set", errorMessage: err.localizedDescription)
                 case LAError.Code.biometryNotAvailable.rawValue:
-                    notifyUser("Biometric authentication not available", err: err.localizedDescription)
+                    notifyUser("Biometric authentication not available", errorMessage: err.localizedDescription)
                 default:
-                    notifyUser("Unknown error", err: err.localizedDescription)
+                    notifyUser("Unknown error", errorMessage: err.localizedDescription)
                 }
             }
         }
 
     }
 
-    func notifyUser(_ msg: String, err: String?) {
-        let alert = UIAlertController(title: msg,
-                                      message: err,
+    func notifyUser(_ title: String, errorMessage: String?) {
+        let alert = UIAlertController(title: title,
+                                      message: errorMessage,
                                       preferredStyle: .alert)
-
         let cancelAction = UIAlertAction(title: "OK",
                                          style: .cancel, handler: nil)
-
         alert.addAction(cancelAction)
-        self.present(alert, animated: true,
-                     completion: nil)
+        self.present(alert, animated: true, completion: nil)
     }
 
 }

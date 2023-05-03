@@ -169,12 +169,17 @@ class MyFavoritesViewController: UIViewController {
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.topSafeAreaView.backgroundColor = .clear
+        self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
+        self.topView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.containerView.colors = [(UIColor.App.backgroundGradient1, NSNumber(value: 0.0)),
-                                     (UIColor.App.backgroundGradient2, NSNumber(value: 1.0))]
-
-        self.topView.backgroundColor = .clear
+        if TargetVariables.shouldUseGradientBackgrounds {
+            self.containerView.colors = [(UIColor.App.backgroundGradient1, NSNumber(0.0)),
+                                         (UIColor.App.backgroundGradient2, NSNumber(1.0))]
+        }
+        else {
+            self.containerView.colors = []
+            self.containerView.backgroundColor = UIColor.App.backgroundPrimary
+        }
 
         self.backButton.tintColor = UIColor.App.textHeadlinePrimary
 
@@ -224,7 +229,7 @@ class MyFavoritesViewController: UIViewController {
         }
 
 //        self.myFavoriteMatchesDataSource.didTapFavoriteMatchAction = { [weak self] match in
-//            if !UserSessionStore.isUserLogged() {
+//            if !Env.userSessionStore.isUserLogged() {
 //                self?.presentLoginViewController()
 //            }
 //            else {
@@ -233,7 +238,7 @@ class MyFavoritesViewController: UIViewController {
 //        }
 //
 //        self.myFavoriteCompetitionsDataSource.didTapFavoriteCompetitionAction = { [weak self] competition in
-//            if !UserSessionStore.isUserLogged() {
+//            if !Env.userSessionStore.isUserLogged() {
 //                self?.presentLoginViewController()
 //            }
 //            else {
@@ -242,7 +247,7 @@ class MyFavoritesViewController: UIViewController {
 //        }
 //
 //        self.myFavoriteCompetitionsDataSource.didTapFavoriteMatchAction = { [weak self] match in
-//            if !UserSessionStore.isUserLogged() {
+//            if !Env.userSessionStore.isUserLogged() {
 //                self?.presentLoginViewController()
 //            }
 //            else {
@@ -251,10 +256,10 @@ class MyFavoritesViewController: UIViewController {
 //        }
 
 
-        Env.userSessionStore.userSessionPublisher
+        Env.userSessionStore.userProfilePublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] userSession in
-                if userSession != nil { // Is Logged In
+            .sink { [weak self] userProfile in
+                if userProfile != nil { // Is Logged In
                     self?.accountValueView.isHidden = false
                 }
                 else {
@@ -556,7 +561,7 @@ extension MyFavoritesViewController {
     }
     
     func openChatModal() {
-        if UserSessionStore.isUserLogged() {
+        if Env.userSessionStore.isUserLogged() {
             let socialViewController = SocialViewController()
             self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
         }

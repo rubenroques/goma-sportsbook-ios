@@ -40,6 +40,8 @@ protocol SportsbookTarget {
 
     static var shouldUserBlurEffectTabBar: Bool { get }
 
+    static var shouldUseGradientBackgrounds: Bool { get }
+
 }
 
 enum SportsbookTargetFeatures: CaseIterable {
@@ -78,7 +80,12 @@ extension SportsbookTarget {
     }
 
     static var shouldUserBlurEffectTabBar: Bool {
-        return true
+        return false
+    }
+
+
+    static var shouldUseGradientBackgrounds: Bool {
+        return false
     }
 
 }

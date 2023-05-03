@@ -678,11 +678,11 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        Env.userSessionStore.userSessionPublisher
+        Env.userSessionStore.userProfilePublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] userInfo in
+            .sink(receiveValue: { [weak self] userProfile in
                 
-                if userInfo != nil {
+                if userProfile != nil {
                     self?.placeBetBaseView.isHidden = false
                     self?.tableView.isHidden = false
                     self?.clearBaseView.isHidden = false
@@ -1426,7 +1426,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBAction private func didTapPlaceBetButton() {
 
         self.isLoading = true
-        if UserSessionStore.isUserLogged() {
+        if Env.userSessionStore.isUserLogged() {
             
             if self.listTypePublisher.value == .simple {
                 let singleBetTicketStakes = self.simpleBetsBettingValues.value
@@ -1438,11 +1438,12 @@ class PreSubmissionBetslipViewController: UIViewController {
                         var message = ""
                         switch error {
                         case .betPlacementDetailedError(let detailedMessage):
-                            message = detailedMessage
+                            message = detailedMessage + "\nPlease contact support."
                         default:
                             message = """
                             Something went wrong with your bet request.
                             Make sure you have completed your profile and enought balance.
+                            Please contact support.
                             """
                         }
                         self?.showErrorView(errorMessage: message)
@@ -1463,11 +1464,12 @@ class PreSubmissionBetslipViewController: UIViewController {
                             var message = ""
                             switch error {
                             case .betPlacementDetailedError(let detailedMessage):
-                                message = detailedMessage
+                                message = detailedMessage + "\nPlease contact support."
                             default:
                                 message = """
                                 Something went wrong with your bet request.
                                 Make sure you have completed your profile and enought balance.
+                                Please contact support.
                                 """
                             }
                             self?.showErrorView(errorMessage: message)
@@ -1490,11 +1492,12 @@ class PreSubmissionBetslipViewController: UIViewController {
                             var message = ""
                             switch error {
                             case .betPlacementDetailedError(let detailedMessage):
-                                message = detailedMessage
+                                message = detailedMessage + "\nPlease contact support."
                             default:
                                 message = """
                                 Something went wrong with your bet request.
                                 Make sure you have completed your profile and enought balance.
+                                Please contact support.
                                 """
                             }
                             self?.showErrorView(errorMessage: message)

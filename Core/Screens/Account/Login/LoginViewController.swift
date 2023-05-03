@@ -6,6 +6,7 @@ import Adyen
 import AdyenDropIn
 import AdyenComponents
 import HeaderTextField
+import LocalAuthentication
 
 class LoginViewController: UIViewController {
 
@@ -230,12 +231,7 @@ class LoginViewController: UIViewController {
         debugLogoImageViewTap.numberOfTapsRequired = 3
         self.logoImageView.addGestureRecognizer(debugLogoImageViewTap)
         #endif
-        
-//
-//        let debug2LogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebug))
-//        debug2LogoImageViewTap.numberOfTapsRequired = 2
-//        self.logoImageView.addGestureRecognizer(debug2LogoImageViewTap)
-
+  
     }
 
     func setupWithTheme() {
@@ -375,11 +371,11 @@ class LoginViewController: UIViewController {
             self?.showLimitsOnRegisterViewController(onNavigationController: navigationController)
         }
         biometricPromptViewController.didTapActivateButtonAction = { [weak self] in
-            Env.userSessionStore.setShouldRequestFaceId(true)
+            Env.userSessionStore.setShouldRequestBiometrics(true)
             self?.showLimitsOnRegisterViewController(onNavigationController: navigationController)
         }
         biometricPromptViewController.didTapLaterButtonAction = { [weak self] in
-            Env.userSessionStore.setShouldRequestFaceId(false)
+            Env.userSessionStore.setShouldRequestBiometrics(false)
             self?.showLimitsOnRegisterViewController(onNavigationController: navigationController)
         }
         navigationController.pushViewController(biometricPromptViewController, animated: true)
@@ -460,11 +456,9 @@ class LoginViewController: UIViewController {
     }
 
     @IBAction private func didTapSkipButton() {
-
         UserSessionStore.skippedLoginFlow()
 
-        let mainScreenViewController = Router.mainScreenViewController()
-        self.navigationController?.pushViewController(mainScreenViewController, animated: true)
+        self.navigationController?.popToRootViewController(animated: true)
     }
 
     @IBAction private func didTapLoginButton() {
@@ -501,7 +495,8 @@ class LoginViewController: UIViewController {
                 self.hideLoadingSpinner()
                 self.loginButton.isEnabled = true
             }, receiveValue: { _ in
-                self.showNextViewController()
+                // self.showNextViewController()
+                self.loginSuccessful()
             })
             .store(in: &cancellables)
     }
@@ -525,9 +520,7 @@ class LoginViewController: UIViewController {
             self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
         }
         else {
-            let mainScreenViewController = Router.mainScreenViewController()
-            self.navigationController?.pushViewController(mainScreenViewController, animated: true)
-
+            self.navigationController?.popToRootViewController(animated: true)
             self.presentedViewController?.dismiss(animated: true)
         }
     }
@@ -548,20 +541,106 @@ class LoginViewController: UIViewController {
         spinnerViewController.view.removeFromSuperview()
     }
 
+
+
+    private func loginSuccessful() {
+
+        // The user had a suc login, we shouldn't start the app with the login anymore
+        // is the same behaviour if the user skipped the login
+        UserSessionStore.skippedLoginFlow()
+
+        if self.shouldRememberUser {
+            self.showBiometricAuthenticationAlert()
+        }
+        else {
+            self.showNextViewController()
+        }
+
+    }
+
     private func showNextViewController() {
+
         AnalyticsClient.sendEvent(event: .userLogin)
         if self.isModal {
             self.dismiss(animated: true, completion: nil)
         }
         else {
-            self.pushMainViewController()
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+
+    }
+
+    func showBiometricAuthenticationAlert() {
+        let context = LAContext()
+        var error: NSError?
+
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            let alertTitle: String
+            let alertMessage: String
+
+            switch context.biometryType {
+            case .faceID:
+                alertTitle = localized("face_id_title")
+                alertMessage = localized("face_id_message")
+            case .touchID:
+                alertTitle = localized("touch_id_title")
+                alertMessage = localized("touch_id_message")
+            default:
+                return
+            }
+
+            let alertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
+
+            let noAction = UIAlertAction(title: localized("no"), style: .cancel, handler: { _ in
+                Env.userSessionStore.setShouldRequestBiometrics(false)
+                self.showNextViewController()
+            })
+            alertController.addAction(noAction)
+
+            let yesAction = UIAlertAction(title: localized("yes"), style: .default) { _ in
+                Env.userSessionStore.setShouldRequestBiometrics(true)
+                self.showNextViewController()
+            }
+            alertController.addAction(yesAction)
+
+            alertController.preferredAction = yesAction
+            self.present(alertController, animated: true)
+        }
+        else if let error = error as? LAError, error.code == .userCancel {
+            let alertController = UIAlertController(title: localized("biometric_error_title"), message: localized("biometric_error_denied_message"), preferredStyle: .alert)
+            let okAction = UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
+                Env.userSessionStore.setShouldRequestBiometrics(false)
+                self.showNextViewController()
+            })
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true)
+
+        }
+        else {
+            let alertController = UIAlertController(title: localized("biometric_error_title"), message: localized("biometric_error_general_message"), preferredStyle: .alert)
+            let okAction = UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
+                Env.userSessionStore.setShouldRequestBiometrics(false)
+                self.showNextViewController()
+            })
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true)
         }
     }
 
-    private func pushMainViewController() {
-        let rootViewController = Router.mainScreenViewController()
-        self.navigationController?.pushViewController(rootViewController, animated: true)
-    }
+
+//    func authenticateUser(with context: LAContext) {
+//        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Access requires authentication") { (success, error) in
+//            DispatchQueue.main.async {
+//                if success {
+//                    print("Authentication successful")
+//                } else {
+//                    print("Authentication failed")
+//                }
+//
+//                self.showNextViewController()
+//            }
+//        }
+//    }
 
     private func showWrongPasswordStatus() {
         let alert = UIAlertController(title: localized("login_error_title"),
@@ -629,7 +708,6 @@ class LoginViewController: UIViewController {
                                       preferredStyle: .alert)
 
         alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
-
             if paymentStatus == .authorised {
                 Env.userSessionStore.refreshUserWalletAfterDelay()
                 self?.closeLoginRegisterFlow()
@@ -643,13 +721,6 @@ class LoginViewController: UIViewController {
 }
 
 extension LoginViewController {
-
-    @objc func didTapDebug() {
-        UserDefaults.standard.removeObject(forKey: "RegistrationFormDataKey")
-        UserDefaults.standard.synchronize()
-
-        UIAlertController.showMessage(title: "Debug", message: "Register cached data cleared", on: self)
-    }
 
     @objc func didTapDebugFormFill() {
         

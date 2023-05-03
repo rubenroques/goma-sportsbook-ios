@@ -92,7 +92,7 @@ struct FormStepViewFactory {
             //
         case .password:
             return PasswordFormStepView(viewModel: PasswordFormStepViewModel(title: Localization.localized("security"),
-                                                                             password: userRegisterEnvelop.password,
+                                                                             password: nil,
                                                                              userRegisterEnvelopUpdater: userRegisterEnvelopUpdater))
             //
             //

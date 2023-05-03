@@ -20,7 +20,7 @@ class CasinoViewModel: NSObject {
     }
 
     func setupPublishers() {
-        Env.userSessionStore.userSessionPublisher
+        Env.userSessionStore.userProfilePublisher
             .receive(on: DispatchQueue.main)
             .map({ $0 != nil })
             .sink(receiveValue: { [weak self] isUserLoggedIn in

@@ -78,7 +78,7 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
                 }
             cell.setDescription(primaryText: localized("empty_my_competitions"),
                                 secondaryText: localized("empty_my_competitions"),
-                                userIsLoggedIn: UserSessionStore.isUserLogged() )
+                                userIsLoggedIn: Env.userSessionStore.isUserLogged() )
 
             return cell
         }

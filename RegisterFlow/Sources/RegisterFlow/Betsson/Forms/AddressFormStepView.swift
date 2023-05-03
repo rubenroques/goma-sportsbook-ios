@@ -246,8 +246,8 @@ class AddressFormStepView: FormStepView {
 
         self.stackView.addArrangedSubview(placeContainerView)
         self.stackView.addArrangedSubview(streetContainerView)
-        self.stackView.addArrangedSubview(additionalStreetContainerView)
         self.stackView.addArrangedSubview(self.numberHeaderTextFieldView)
+        self.stackView.addArrangedSubview(additionalStreetContainerView)
 
         NSLayoutConstraint.activate([
             placeContainerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 80),
@@ -342,6 +342,9 @@ class AddressFormStepView: FormStepView {
         self.streetNameHeaderTextFieldView.setText(self.viewModel.street.value ?? "")
         self.numberHeaderTextFieldView.setText(self.viewModel.streetNumber.value ?? "")
 
+        self.postCodeHeaderTextFieldView.setKeyboardType(.numberPad)
+        self.numberHeaderTextFieldView.setKeyboardType(.numberPad)
+
         self.placeHeaderTextFieldView.textPublisher
             .sink { [weak self] place in
                 self?.viewModel.setPlace(place)
@@ -435,8 +438,8 @@ class AddressFormStepView: FormStepView {
                 else {
                     return Just([AddressSearchResult]()).eraseToAnyPublisher()
                 }
-                let cityName = self.postCodeHeaderTextFieldView.text
-                return self.viewModel.requestStreetAutoCompletion(forQuery: query, fromPostcode: cityName)
+                let postCodeu = self.postCodeHeaderTextFieldView.text
+                return self.viewModel.requestStreetAutoCompletion(forQuery: query, fromPostcode: postCodeu)
             }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] (suggestions: [AddressSearchResult]) in

@@ -129,18 +129,25 @@ class LiveDetailsViewController: UIViewController {
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
         self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
 
-        self.backgroundGradientView.colors = [(UIColor.App.backgroundGradient1, 0.0),
-                                              (UIColor.App.backgroundGradient2, 1.0)]
+        if TargetVariables.shouldUseGradientBackgrounds {
+            self.backgroundGradientView.colors = [(UIColor.App.backgroundGradient1, NSNumber(0.0)),
+                                                  (UIColor.App.backgroundGradient2, NSNumber(1.0))]
+        }
+        else {
+            self.backgroundGradientView.colors = []
+            self.backgroundGradientView.backgroundColor = UIColor.App.backgroundPrimary
+        }
+        
     }
 
 
     // MARK: - Bindings
     private func bind(toViewModel viewModel: LiveDetailsViewModel) {
 
-        Env.userSessionStore.userSessionPublisher
+        Env.userSessionStore.userProfilePublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] userSession in
-                if userSession != nil { // Is Logged In
+            .sink { [weak self] userProfile in
+                if userProfile != nil { // Is Logged In
                     self?.accountValueView.isHidden = false
                 }
                 else {
@@ -223,7 +230,7 @@ class LiveDetailsViewController: UIViewController {
     }
     
     func openChatModal() {
-        if UserSessionStore.isUserLogged() {
+        if Env.userSessionStore.isUserLogged() {
             let socialViewController = SocialViewController()
             self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
         }
