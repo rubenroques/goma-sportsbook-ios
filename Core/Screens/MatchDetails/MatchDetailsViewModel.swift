@@ -205,7 +205,6 @@ class MatchDetailsViewModel: NSObject {
             })
             .store(in: &cancellables)
 
-
     }
 
     func getMatchLiveDetails() {
