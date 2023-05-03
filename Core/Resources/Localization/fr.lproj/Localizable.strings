@@ -1263,7 +1263,7 @@
 "password_tips_number" = "• Contenir au moins un chiffre";
 "password_tips_uppercase" = "• Contenir une lettre majuscule";
 "password_tips_lowercase" = "• Contenir une lettre minuscule";
-"password_tips_alphanumeric" = "• Être alphanumérique avec au moins 1 symbole parmi -!@^$&*";
+"password_tips_alphanumeric" = "• Être alphanumérique avec au moins 1 symbole parmi -!@^$&*+";
 "password_tips_length" = "• Avoir une longueur entre 8 et 16 caractères";
 
 "app_version_profile_1" = "Version de l'application {version_1} ({version_2})";

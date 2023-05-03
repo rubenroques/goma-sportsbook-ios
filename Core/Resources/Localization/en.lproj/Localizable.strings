@@ -1002,7 +1002,7 @@
 "third_password_requirement" = "Contain a lowercase character"; // UNUSED
 "fourth_password_requirement" = "Contain at least one number"; // UNUSED
 "lack_requirements" = "Lack requirements"; // UNUSED
-"fifth_password_requirement" = "Be alphanumeric with at least 1 symbol from -!@^$&*"; // UNUSED
+"fifth_password_requirement" = "Be alphanumeric with at least 1 symbol from -!@^$&*+"; // UNUSED
 
 "iban_proof" = "IBAN Proof";
 "iban_invalid" = "Invalid IBAN. Must start with 2 Letters [A to Z] followed by 14 to 29 alphanumeric values [0 to 9 or A to Z]";
@@ -1178,7 +1178,7 @@
 "password_tips_number" = "• Contain at least one number";
 "password_tips_uppercase" = "• Contain an uppercase character";
 "password_tips_lowercase" = "• Contain a lowercase character";
-"password_tips_alphanumeric" = "• Be alphanumeric with at least 1 symbol from -!@^$&*";
+"password_tips_alphanumeric" = "• Be alphanumeric with at least 1 symbol from -!@^$&*+";
 "password_tips_length" = "• Have length between 8 and 16 characters";
 
 "app_version_profile_1" = "App Version {version_1} ({version_2})";

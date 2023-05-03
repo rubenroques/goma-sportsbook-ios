@@ -50,12 +50,12 @@ class PasswordUpdateViewModel: NSObject {
                     passwordStates.append(PasswordState.onlyNumbers)
                 }
 
-                let validCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "-!@$^&*abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+                let validCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "-!@$^&*+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
                 if password.rangeOfCharacter(from: validCharacterSet.inverted) != nil {
                     passwordStates.append(PasswordState.invalidChars)
                 }
 
-                let specialCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "-!@$^&*")
+                let specialCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "-!@$^&*+")
                 let lowerCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyz")
                 let upperCharacterSet: NSCharacterSet = NSCharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
