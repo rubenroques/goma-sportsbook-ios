@@ -52,6 +52,10 @@ struct TargetVariables: SportsbookTarget {
         return .normal
     }
 
+    static var defaultOddsValueType: OddsValueType {
+        return .allOdds
+    }
+
     static var casinoURL: String {
         return "https://sportsbook-cms.gomagaming.com/casino/"
     }

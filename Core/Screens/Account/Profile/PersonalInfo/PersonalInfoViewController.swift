@@ -36,6 +36,9 @@ class PersonalInfoViewController: UIViewController {
 
     @IBOutlet private var placeOfBirthHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var departmentOfBirthHeaderTextFieldView: HeaderTextFieldView!
+
+    @IBOutlet private var infoView: UIView!
+    @IBOutlet private var infoLabel: UILabel!
     // Variables
 
     private var cancellables = Set<AnyCancellable>()
@@ -159,6 +162,14 @@ class PersonalInfoViewController: UIViewController {
 
         self.cardIdHeaderTextFieldView.isHidden = true
         self.bankIdHeaderTextFieldView.isHidden = true
+
+        self.infoView.layer.cornerRadius = CornerRadius.view
+        self.infoView.layer.masksToBounds = true
+
+        self.infoLabel.text = localized("contact_support")
+        self.infoLabel.numberOfLines = 0
+        self.infoLabel.font = AppFont.with(type: .semibold, size: 16)
+        self.infoLabel.textAlignment = .center
     }
 
     func setupWithTheme() {
@@ -246,6 +257,9 @@ class PersonalInfoViewController: UIViewController {
         departmentOfBirthHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         departmentOfBirthHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
 
+        self.infoView.backgroundColor = UIColor.App.highlightPrimary
+
+        self.infoLabel.textColor = UIColor.App.buttonTextPrimary
     }
 
     private func setupPublishers() {

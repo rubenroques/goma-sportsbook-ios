@@ -47,14 +47,13 @@ class BetslipViewController: UIViewController {
 
         self.startScreen = startScreen
         
-//        if Env.betslipManager.bettingTicketsPublisher.value.isEmpty {
-//            self.startScreen = .myTickets(.opened, "")
-//        }
         switch startScreen {
         case .sharedBet(_):
             ()
         default:
-            self.startScreen = .myTickets(.opened, "")
+            if Env.betslipManager.bettingTicketsPublisher.value.isEmpty {
+                self.startScreen = .myTickets(.opened, "")
+            }
         }
 
         switch self.startScreen {

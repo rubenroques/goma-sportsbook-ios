@@ -22,7 +22,7 @@ struct HomeFilterOptions {
          highBoundTimeRange: CGFloat = 365.0,
          defaultMarket: MainMarketType? = nil,
          lowerBoundOddsRange: CGFloat = 1.0,
-         highBoundOddsRange: CGFloat = 30.0,
+         highBoundOddsRange: CGFloat = 300.0,
          countFilters: Int = 0) {
         
         self.lowerBoundTimeRange = lowerBoundTimeRange

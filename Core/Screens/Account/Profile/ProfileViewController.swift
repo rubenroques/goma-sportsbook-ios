@@ -286,6 +286,15 @@ class ProfileViewController: UIViewController {
         let copyCodeTap = UITapGestureRecognizer(target: self, action: #selector(self.tapCopyCode))
         self.userCodeStackView.addGestureRecognizer(copyCodeTap)
 
+        let testTap = UITapGestureRecognizer(target: self, action: #selector(self.testTap))
+        self.profilePictureBaseView.addGestureRecognizer(testTap)
+
+    }
+
+    @objc func testTap() {
+        let depositOnRegisterViewController = DepositOnRegisterViewController()
+
+        self.present(depositOnRegisterViewController, animated: true)
     }
 
     @objc func tapCopyCode() {

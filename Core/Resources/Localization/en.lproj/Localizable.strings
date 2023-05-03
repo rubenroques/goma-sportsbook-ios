@@ -1274,3 +1274,11 @@
 "biometric_error_title" = "Biometric Error";
 "biometric_error_denied_message" = "It looks like you have denied the use of biometry for this app before.";
 "biometric_error_general_message" = "There was an error checking biometric authentication. Please make sure it is enabled in your device settings.";
+
+"contact_support" = "Contact support if you want to change your profile informations";
+
+"all_odds" = "All Odds";
+"between_2_3" = "Between 2 and 3";
+"big_odds" = "Big Odds";
+
+"filters_applied_to" = "Filters applied to:";

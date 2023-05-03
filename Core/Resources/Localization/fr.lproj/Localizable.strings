@@ -1335,3 +1335,12 @@
 "biometric_error_title" = "Erreur biométrique";
 "biometric_error_denied_message" = "Il semble que vous ayez refusé l'utilisation de la biométrie pour cette application.";
 "biometric_error_general_message" = "Une erreur s'est produite lors de la vérification de l'authentification biométrique. Veuillez vous assurer qu'elle est activée dans les réglages de votre appareil.";
+
+"contact_support" = "Contactez le support si vous souhaitez modifier les informations de votre profil";
+
+"all_odds" = "Toutes les cotes";
+"between_2_3" = "Entre 2 et 3";
+"big_odds" = "Les grandes cotes";
+
+"filters_applied_to" = "Filtres appliqués à:";
+
