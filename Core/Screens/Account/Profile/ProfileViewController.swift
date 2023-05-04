@@ -209,6 +209,9 @@ class ProfileViewController: UIViewController {
 
         self.footerResponsibleGamingView.translatesAutoresizingMaskIntoConstraints = false
 
+        self.footerResponsibleGamingView.showLinksView()
+        self.footerResponsibleGamingView.showSocialView()
+
         self.footerBaseView.addSubview(self.footerResponsibleGamingView)
 
         NSLayoutConstraint.activate([

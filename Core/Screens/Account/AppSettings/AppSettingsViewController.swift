@@ -75,7 +75,7 @@ class AppSettingsViewController: UIViewController {
 
         let appearanceView = SettingsRowView()
         appearanceView.setTitle(title: localized("appearance"))
-        // appearanceView.hasSeparatorLineView = true
+        appearanceView.hasSeparatorLineView = true
         appearanceView.hasNavigationImageView = true
         let appearanceTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapAppearanceView))
         appearanceView.addGestureRecognizer(appearanceTap)
@@ -86,6 +86,12 @@ class AppSettingsViewController: UIViewController {
         oddsView.hasNavigationImageView = true
         let oddsTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapOddsView))
         oddsView.addGestureRecognizer(oddsTap)
+
+        let cardsStyleView = SettingsRowView()
+        cardsStyleView.setTitle(title: localized("cards_style"))
+        cardsStyleView.hasNavigationImageView = true
+        let cardsStyleTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapCardsStyleView))
+        cardsStyleView.addGestureRecognizer(cardsStyleTap)
 
 //        let chatView = SettingsRowView()
 //        chatView.setTitle(title: localized("chat"))
@@ -105,6 +111,8 @@ class AppSettingsViewController: UIViewController {
         if TargetVariables.supportedThemes.count > 1 {
             self.topStackView.addArrangedSubview(appearanceView)
         }
+
+        self.topStackView.addArrangedSubview(cardsStyleView)
 
         // TODO: Disabled odds settings
         // self.topStackView.addArrangedSubview(oddsView)
@@ -171,6 +179,11 @@ extension AppSettingsViewController {
     @objc private func didTapOddsView() {
         let oddsViewController = OddsViewController()
         self.navigationController?.pushViewController(oddsViewController, animated: true)
+    }
+
+    @objc private func didTapCardsStyleView() {
+        let cardsStyleViewController = CardsStyleViewController()
+        self.navigationController?.pushViewController(cardsStyleViewController, animated: true)
     }
 
     @objc private func didTapChatView() {

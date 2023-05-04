@@ -4237,6 +4237,30 @@
 		A9A207E4283BDFCB00499DBC /* ChatTicketSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207E0283BDFCB00499DBC /* ChatTicketSelectionView.swift */; };
 		A9A207E5283BDFCB00499DBC /* ChatTicketSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207E0283BDFCB00499DBC /* ChatTicketSelectionView.swift */; };
 		A9A207E6283BDFCB00499DBC /* ChatTicketSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207E0283BDFCB00499DBC /* ChatTicketSelectionView.swift */; };
+		A9A5216F2A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A5216E2A02B98A00C0F6C6 /* CardsStyleViewController.swift */; };
+		A9A521702A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A5216E2A02B98A00C0F6C6 /* CardsStyleViewController.swift */; };
+		A9A521712A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A5216E2A02B98A00C0F6C6 /* CardsStyleViewController.swift */; };
+		A9A521722A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A5216E2A02B98A00C0F6C6 /* CardsStyleViewController.swift */; };
+		A9A521732A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A5216E2A02B98A00C0F6C6 /* CardsStyleViewController.swift */; };
+		A9A521742A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A5216E2A02B98A00C0F6C6 /* CardsStyleViewController.swift */; };
+		A9A521752A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A5216E2A02B98A00C0F6C6 /* CardsStyleViewController.swift */; };
+		A9A521762A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A5216E2A02B98A00C0F6C6 /* CardsStyleViewController.swift */; };
+		A9A521782A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A521772A03B74800C0F6C6 /* CardsStyleViewModel.swift */; };
+		A9A521792A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A521772A03B74800C0F6C6 /* CardsStyleViewModel.swift */; };
+		A9A5217A2A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A521772A03B74800C0F6C6 /* CardsStyleViewModel.swift */; };
+		A9A5217B2A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A521772A03B74800C0F6C6 /* CardsStyleViewModel.swift */; };
+		A9A5217C2A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A521772A03B74800C0F6C6 /* CardsStyleViewModel.swift */; };
+		A9A5217D2A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A521772A03B74800C0F6C6 /* CardsStyleViewModel.swift */; };
+		A9A5217E2A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A521772A03B74800C0F6C6 /* CardsStyleViewModel.swift */; };
+		A9A5217F2A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A521772A03B74800C0F6C6 /* CardsStyleViewModel.swift */; };
+		A9A521812A03BD8D00C0F6C6 /* zendesk_support.html in Resources */ = {isa = PBXBuildFile; fileRef = A9A521802A03BD8D00C0F6C6 /* zendesk_support.html */; };
+		A9A521822A03BD8D00C0F6C6 /* zendesk_support.html in Resources */ = {isa = PBXBuildFile; fileRef = A9A521802A03BD8D00C0F6C6 /* zendesk_support.html */; };
+		A9A521832A03BD8D00C0F6C6 /* zendesk_support.html in Resources */ = {isa = PBXBuildFile; fileRef = A9A521802A03BD8D00C0F6C6 /* zendesk_support.html */; };
+		A9A521842A03BD8D00C0F6C6 /* zendesk_support.html in Resources */ = {isa = PBXBuildFile; fileRef = A9A521802A03BD8D00C0F6C6 /* zendesk_support.html */; };
+		A9A521852A03BD8D00C0F6C6 /* zendesk_support.html in Resources */ = {isa = PBXBuildFile; fileRef = A9A521802A03BD8D00C0F6C6 /* zendesk_support.html */; };
+		A9A521862A03BD8D00C0F6C6 /* zendesk_support.html in Resources */ = {isa = PBXBuildFile; fileRef = A9A521802A03BD8D00C0F6C6 /* zendesk_support.html */; };
+		A9A521872A03BD8D00C0F6C6 /* zendesk_support.html in Resources */ = {isa = PBXBuildFile; fileRef = A9A521802A03BD8D00C0F6C6 /* zendesk_support.html */; };
+		A9A521882A03BD8D00C0F6C6 /* zendesk_support.html in Resources */ = {isa = PBXBuildFile; fileRef = A9A521802A03BD8D00C0F6C6 /* zendesk_support.html */; };
 		A9A7B52629DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */; };
 		A9A7B52729DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */; };
 		A9A7B52829DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */; };
@@ -5800,6 +5824,9 @@
 		A9A2E7F327FDE3DA00D35A9D /* ConversationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDetailViewController.swift; sourceTree = "<group>"; };
 		A9A2E7F727FDF5DE00D35A9D /* ReceivedMessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedMessageTableViewCell.swift; sourceTree = "<group>"; };
 		A9A31454282AA6A0004F7E77 /* ActionButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButtonTableViewCell.swift; sourceTree = "<group>"; };
+		A9A5216E2A02B98A00C0F6C6 /* CardsStyleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsStyleViewController.swift; sourceTree = "<group>"; };
+		A9A521772A03B74800C0F6C6 /* CardsStyleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsStyleViewModel.swift; sourceTree = "<group>"; };
+		A9A521802A03BD8D00C0F6C6 /* zendesk_support.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = zendesk_support.html; sourceTree = "<group>"; };
 		A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusTypeMapper.swift; sourceTree = "<group>"; };
 		A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
 		A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceViewController.xib; sourceTree = "<group>"; };
@@ -8486,6 +8513,15 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		A9A5216D2A02B96E00C0F6C6 /* CardsStyle */ = {
+			isa = PBXGroup;
+			children = (
+				A9A5216E2A02B98A00C0F6C6 /* CardsStyleViewController.swift */,
+				A9A521772A03B74800C0F6C6 /* CardsStyleViewModel.swift */,
+			);
+			path = CardsStyle;
+			sourceTree = "<group>";
+		};
 		A9A836AF26C6AC5D00508923 /* Maintenance */ = {
 			isa = PBXGroup;
 			children = (
@@ -8587,6 +8623,7 @@
 		A9B63068291AB5F800BB850E /* Widgets */ = {
 			isa = PBXGroup;
 			children = (
+				A9A521802A03BD8D00C0F6C6 /* zendesk_support.html */,
 				A9B6307B291BE10100BB850E /* field_widget_light.html */,
 				A9B63084291BE10900BB850E /* field_widget_dark.html */,
 			);
@@ -9086,6 +9123,7 @@
 		A9E7C6AA27BD573000F784C9 /* AppSettings */ = {
 			isa = PBXGroup;
 			children = (
+				A9A5216D2A02B96E00C0F6C6 /* CardsStyle */,
 				A9E7C6AB27BD574F00F784C9 /* AppSettingsViewController.swift */,
 				A9DF8E3B28E5A5B20083BF56 /* Tips */,
 				A91F4B3727BFCA0B008C7510 /* Odds */,
@@ -9671,6 +9709,7 @@
 				450B7B1128F58574009229E3 /* ActivationAlertScrollableView.xib in Resources */,
 				450B7B1228F58574009229E3 /* CompetitionSearchTableViewCell.xib in Resources */,
 				450B7B1328F58574009229E3 /* Gilroy-ExtraBold.ttf in Resources */,
+				A9A521822A03BD8D00C0F6C6 /* zendesk_support.html in Resources */,
 				450B7B1428F58574009229E3 /* DepositWebViewController.xib in Resources */,
 				450B7B1528F58574009229E3 /* .swiftlint.yml in Resources */,
 				450B7B1628F58574009229E3 /* RecentSearchTableViewCell.xib in Resources */,
@@ -9692,6 +9731,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9A521882A03BD8D00C0F6C6 /* zendesk_support.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9809,6 +9849,7 @@
 				457CBC3A282D27D000ED0F00 /* SharedAssets.xcassets in Resources */,
 				457CBC3B282D27D000ED0F00 /* ActivationAlertScrollableView.xib in Resources */,
 				457CBC3C282D27D000ED0F00 /* CompetitionSearchTableViewCell.xib in Resources */,
+				A9A521862A03BD8D00C0F6C6 /* zendesk_support.html in Resources */,
 				457CBC3D282D27D000ED0F00 /* Gilroy-ExtraBold.ttf in Resources */,
 				457CBC3E282D27D000ED0F00 /* DepositWebViewController.xib in Resources */,
 				457CBC3F282D27D000ED0F00 /* .swiftlint.yml in Resources */,
@@ -9940,6 +9981,7 @@
 				457CBEE2282D2CD100ED0F00 /* ActivationAlertScrollableView.xib in Resources */,
 				457CBEE3282D2CD100ED0F00 /* CompetitionSearchTableViewCell.xib in Resources */,
 				457CBF08282D2D3700ED0F00 /* Colors.xcassets in Resources */,
+				A9A521872A03BD8D00C0F6C6 /* zendesk_support.html in Resources */,
 				457CBEE4282D2CD100ED0F00 /* Gilroy-ExtraBold.ttf in Resources */,
 				457CBEE5282D2CD100ED0F00 /* DepositWebViewController.xib in Resources */,
 				457CBEE6282D2CD100ED0F00 /* .swiftlint.yml in Resources */,
@@ -10071,6 +10113,7 @@
 				4589C9B8282024E400243547 /* EditAlertView.xib in Resources */,
 				4589C9B9282024E400243547 /* SharedAssets.xcassets in Resources */,
 				4589C9BA282024E400243547 /* ActivationAlertScrollableView.xib in Resources */,
+				A9A521832A03BD8D00C0F6C6 /* zendesk_support.html in Resources */,
 				4589C9BB282024E400243547 /* CompetitionSearchTableViewCell.xib in Resources */,
 				4589C9BC282024E400243547 /* Gilroy-ExtraBold.ttf in Resources */,
 				4589C9BD282024E400243547 /* DepositWebViewController.xib in Resources */,
@@ -10137,6 +10180,7 @@
 				45A332F7298976BA008181E9 /* BetslipViewController.xib in Resources */,
 				45A332F8298976BA008181E9 /* MatchFiltersViewController.xib in Resources */,
 				45A332F9298976BA008181E9 /* WelcomeViewController.xib in Resources */,
+				A9A521812A03BD8D00C0F6C6 /* zendesk_support.html in Resources */,
 				45A332FA298976BA008181E9 /* UploadView.xib in Resources */,
 				45A332FB298976BA008181E9 /* MyTicketTableViewCell.xib in Resources */,
 				45A332FC298976BA008181E9 /* HeadToHeadCardStatsView.xib in Resources */,
@@ -10334,6 +10378,7 @@
 				45A6BE1128246A7500D9B416 /* EditAlertView.xib in Resources */,
 				45A6BE1228246A7500D9B416 /* SharedAssets.xcassets in Resources */,
 				45A6BE1328246A7500D9B416 /* ActivationAlertScrollableView.xib in Resources */,
+				A9A521852A03BD8D00C0F6C6 /* zendesk_support.html in Resources */,
 				45A6BE1428246A7500D9B416 /* CompetitionSearchTableViewCell.xib in Resources */,
 				45A6BE1528246A7500D9B416 /* Gilroy-ExtraBold.ttf in Resources */,
 				45A6BE1628246A7500D9B416 /* DepositWebViewController.xib in Resources */,
@@ -10400,6 +10445,7 @@
 				A9C3432528F9A74A0055360B /* BetslipViewController.xib in Resources */,
 				A9C3432728F9A74A0055360B /* MatchFiltersViewController.xib in Resources */,
 				A9C3432828F9A74A0055360B /* WelcomeViewController.xib in Resources */,
+				A9A521842A03BD8D00C0F6C6 /* zendesk_support.html in Resources */,
 				A9C3432928F9A74A0055360B /* UploadView.xib in Resources */,
 				A9C3432A28F9A74A0055360B /* MyTicketTableViewCell.xib in Resources */,
 				A9C3432B28F9A74A0055360B /* HeadToHeadCardStatsView.xib in Resources */,
@@ -10622,6 +10668,7 @@
 				450B784B28F58574009229E3 /* NSObject+Shift.swift in Sources */,
 				450B784C28F58574009229E3 /* RoundButton.swift in Sources */,
 				450B784D28F58574009229E3 /* HomeAwayCardStatsView.swift in Sources */,
+				A9A521792A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */,
 				450B784E28F58574009229E3 /* MarketGroupOrganizer.swift in Sources */,
 				450B784F28F58574009229E3 /* SupportPageViewController.swift in Sources */,
 				A90C373129C38DAD007B8AEC /* GrantedBonus.swift in Sources */,
@@ -10870,6 +10917,7 @@
 				450B794328F58574009229E3 /* AggregatorRepository.swift in Sources */,
 				450B794428F58574009229E3 /* LoadingMoreTableViewCell.swift in Sources */,
 				450B794528F58574009229E3 /* UserInfoSimpleCardView.swift in Sources */,
+				A9A521702A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */,
 				450B794628F58574009229E3 /* FavoriteGoma.swift in Sources */,
 				450B794728F58574009229E3 /* ListTitleHeaderFooterView.swift in Sources */,
 				450B794828F58574009229E3 /* Fonts.swift in Sources */,
@@ -11209,6 +11257,7 @@
 				A9FB6D6128C657CE00E3FE58 /* TipsListViewController.swift in Sources */,
 				A9B331C0288EF21300D097F0 /* MessagesViewController.swift in Sources */,
 				A91A05BF29CB534B00E0A772 /* CloseAccountViewController.swift in Sources */,
+				A9A521762A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */,
 				A9958C86297AFE42001474E2 /* AddAnotherDocumentView.swift in Sources */,
 				A9DF8E4328E5A5D80083BF56 /* TipsSettingsViewController.swift in Sources */,
 				A98EC7DA2889AF210044FC46 /* ShareTicketFriendGroupViewModel.swift in Sources */,
@@ -11256,6 +11305,7 @@
 				A9DF8E4C28E6F6720083BF56 /* UserNotificationTableViewCell.swift in Sources */,
 				A9FB6D5028C642AD00E3FE58 /* TipsViewController.swift in Sources */,
 				4589B03128CB47AB0043CE33 /* TipsSliderViewController.swift in Sources */,
+				A9A5217F2A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */,
 				A9C1C09D2873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
 				A9B331EA28904F4800D097F0 /* MessageDetailViewController.swift in Sources */,
 				A9863ED9286F01E500A4A1A2 /* ShareTicketChoiceViewController.swift in Sources */,
@@ -11740,6 +11790,7 @@
 				A9A207DE283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift in Sources */,
 				457CBB53282D27D000ED0F00 /* AnalyticsClient.swift in Sources */,
 				45C10F6828772DA700037BBE /* CAMediaTimingFunction+Shift.swift in Sources */,
+				A9A521742A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */,
 				457CBB54282D27D000ED0F00 /* RealtimeSocketClient.swift in Sources */,
 				457CBB55282D27D000ED0F00 /* AddFriendTableViewCell.swift in Sources */,
 				45B6E1F8283E3EEE001B570C /* EditGroupViewModel.swift in Sources */,
@@ -11815,6 +11866,7 @@
 				457CBB8E282D27D000ED0F00 /* FavoritesManager.swift in Sources */,
 				45B6E208283E3F29001B570C /* EditGroupAddFriendViewModel.swift in Sources */,
 				457CBB8F282D27D000ED0F00 /* MyTicketsRootViewController.swift in Sources */,
+				A9A5217D2A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */,
 				457CBB90282D27D000ED0F00 /* Throwable.swift in Sources */,
 				457CBB92282D27D000ED0F00 /* NotificationsViewController.swift in Sources */,
 				A9DF8E1628E45B970083BF56 /* UserProfileTipsViewModel.swift in Sources */,
@@ -12011,6 +12063,7 @@
 				457CBCF3282D2CD100ED0F00 /* BonusActiveTableViewCell.swift in Sources */,
 				457CBCF4282D2CD100ED0F00 /* GomaGamingService.swift in Sources */,
 				457CBCF5282D2CD100ED0F00 /* DateUserLocation.swift in Sources */,
+				A9A5217E2A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */,
 				457CBCF6282D2CD100ED0F00 /* AppDelegate.swift in Sources */,
 				457CBCF7282D2CD100ED0F00 /* LiveEventsViewController.swift in Sources */,
 				457CBCF8282D2CD100ED0F00 /* UIImage+Extensions.swift in Sources */,
@@ -12365,6 +12418,7 @@
 				457CBE16282D2CD100ED0F00 /* MyFavoritesViewController.swift in Sources */,
 				457CBE18282D2CD100ED0F00 /* PreSubmissionBetslipViewController.swift in Sources */,
 				457CBE19282D2CD100ED0F00 /* DropDownSelectionView.swift in Sources */,
+				A9A521752A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */,
 				A986D34828CB473700AF95D7 /* TipsCellViewModel.swift in Sources */,
 				457CBE1A282D2CD100ED0F00 /* PolicyLinkView.swift in Sources */,
 				A9B331C8288EFE0F00D097F0 /* InAppMessageTableViewCell.swift in Sources */,
@@ -12476,6 +12530,7 @@
 				45C10F7E28772DA700037BBE /* NSObject+Shift.swift in Sources */,
 				4589C77B282024E400243547 /* RoundButton.swift in Sources */,
 				4589C77C282024E400243547 /* HomeAwayCardStatsView.swift in Sources */,
+				A9A5217A2A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */,
 				4589C77D282024E400243547 /* MarketGroupOrganizer.swift in Sources */,
 				451B0A3A286AFD7300005FA5 /* SupportPageViewController.swift in Sources */,
 				A90C373229C38DAD007B8AEC /* GrantedBonus.swift in Sources */,
@@ -12724,6 +12779,7 @@
 				4589C83B282024E400243547 /* LoadingMoreTableViewCell.swift in Sources */,
 				A9DF8DFB28DDC1D80083BF56 /* UserInfoSimpleCardView.swift in Sources */,
 				4589C83C282024E400243547 /* FavoriteGoma.swift in Sources */,
+				A9A521712A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */,
 				A9DF8E6028E751F10083BF56 /* ListTitleHeaderFooterView.swift in Sources */,
 				4589C83D282024E400243547 /* Fonts.swift in Sources */,
 				A98708C528DA278F00F27348 /* UserProfileInfoViewController.swift in Sources */,
@@ -13067,6 +13123,7 @@
 				45A3305B298976BA008181E9 /* NSObject+Shift.swift in Sources */,
 				45A3305C298976BA008181E9 /* RoundButton.swift in Sources */,
 				45A3305D298976BA008181E9 /* HomeAwayCardStatsView.swift in Sources */,
+				A9A521782A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */,
 				45A3305E298976BA008181E9 /* MarketGroupOrganizer.swift in Sources */,
 				45A3305F298976BA008181E9 /* SupportPageViewController.swift in Sources */,
 				A90C373029C38DAD007B8AEC /* GrantedBonus.swift in Sources */,
@@ -13315,6 +13372,7 @@
 				45A3315A298976BA008181E9 /* UploadDocumentsViewModel.swift in Sources */,
 				45A3315B298976BA008181E9 /* AggregatorRepository.swift in Sources */,
 				45A3315C298976BA008181E9 /* LoadingMoreTableViewCell.swift in Sources */,
+				A9A5216F2A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */,
 				45A3315D298976BA008181E9 /* UserInfoSimpleCardView.swift in Sources */,
 				45A3315E298976BA008181E9 /* FavoriteGoma.swift in Sources */,
 				45A3315F298976BA008181E9 /* ListTitleHeaderFooterView.swift in Sources */,
@@ -14102,6 +14160,7 @@
 				45B6E232284151DF001B570C /* EditGroupViewController.swift in Sources */,
 				45A6BD3028246A7500D9B416 /* CenterCellCollectionViewFlowLayout.swift in Sources */,
 				45A6BD3128246A7500D9B416 /* WithdrawViewModel.swift in Sources */,
+				A9A521732A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */,
 				45A6BD3228246A7500D9B416 /* String+Extensions.swift in Sources */,
 				45D1ED5E28A150C2001E18E5 /* BusinessModules.swift in Sources */,
 				45A6BD3328246A7500D9B416 /* SimpleRegisterEmailCheckViewController.swift in Sources */,
@@ -14151,6 +14210,7 @@
 				45A6BD5628246A7500D9B416 /* MyAccountViewController.swift in Sources */,
 				45A6BD5728246A7500D9B416 /* FullRegisterPersonalInfoViewController.swift in Sources */,
 				A9A207DD283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift in Sources */,
+				A9A5217C2A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */,
 				45A6BD5828246A7500D9B416 /* MarketGroupDetailsViewController.swift in Sources */,
 				45A6BD5A28246A7500D9B416 /* OddTripleCollectionViewCell.swift in Sources */,
 				45A6BD5B28246A7500D9B416 /* DebugViewController.swift in Sources */,
@@ -14296,6 +14356,7 @@
 				A9C340D728F9A74A0055360B /* RadioButton.swift in Sources */,
 				A9C340D928F9A74A0055360B /* SocialAppItemCollectionViewCell.swift in Sources */,
 				A9C340DA28F9A74A0055360B /* Constants.swift in Sources */,
+				A9A521722A02B98A00C0F6C6 /* CardsStyleViewController.swift in Sources */,
 				A96FAED22981908900A0751F /* UploadDocumentsViewModel.swift in Sources */,
 				A9C340DC28F9A74A0055360B /* ConversationsDetailViewModel.swift in Sources */,
 				A9C340DD28F9A74A0055360B /* DocumentPickerView.swift in Sources */,
@@ -14570,6 +14631,7 @@
 				A9C341EF28F9A74A0055360B /* NibView.swift in Sources */,
 				A9C341F028F9A74A0055360B /* BonusHistoryCellViewModel.swift in Sources */,
 				A9C341F128F9A74A0055360B /* BonusProgressView.swift in Sources */,
+				A9A5217B2A03B74800C0F6C6 /* CardsStyleViewModel.swift in Sources */,
 				A9C341F228F9A74A0055360B /* DateHeaderFooterView.swift in Sources */,
 				A9C341F328F9A74A0055360B /* ToastCustom.swift in Sources */,
 				A9C341F428F9A74A0055360B /* MaintenanceViewController.swift in Sources */,
