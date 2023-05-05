@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import WebKit
 
 class SupportPageViewController: UIViewController {
     
@@ -27,10 +28,34 @@ class SupportPageViewController: UIViewController {
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var sendButton: UIButton = Self.createSendButton()
 
+    private lazy var webView: WKWebView = {
+        let config = WKWebViewConfiguration()
+//        let js = "document.getElementsByClassName('.sc-htpNat')[0].addEventListener('click', function(){ window.webkit.messageHandlers.clickListener.postMessage('Do something'); })"
+        let js = """
+        document.addEventListener('click', function(evt) {
+        var tagClicked = document.elementFromPoint(evt.clientX, evt.clientY);
+        window.webkit.messageHandlers.clickListener.postMessage(tagClicked.outerHTML.toString());
+        })
+        """
+        let script = WKUserScript(source: js, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
+
+        config.userContentController.addUserScript(script)
+        config.userContentController.add(self, name: "clickListener")
+
+        let webview = WKWebView(frame: .zero, configuration: config)
+        webview.translatesAutoresizingMaskIntoConstraints = false
+
+        return webview
+    }()
+
     // Constraints
     private lazy var anonymousViewTopConstraint: NSLayoutConstraint = Self.createAnonymousViewTopConstraint()
     private lazy var subjectViewTopConstraint: NSLayoutConstraint = Self.createSubjectViewTopConstraint()
-   
+    private lazy var webViewWidthConstraint: NSLayoutConstraint = Self.createWebViewWidthConstraint()
+    private lazy var webViewHeightConstraint: NSLayoutConstraint = Self.createWebViewHeightConstraint()
+    private lazy var webViewLeadingConstraint: NSLayoutConstraint = Self.createWebViewLeadingConstraint()
+    private lazy var webViewTopConstraint: NSLayoutConstraint = Self.createWebViewTopConstraint()
+
     private let viewModel: SupportPageViewModel
     var cancellables = Set<AnyCancellable>()
 
@@ -71,6 +96,21 @@ class SupportPageViewController: UIViewController {
             self.isAnonymous = true
         }
 
+        self.webView.navigationDelegate = self
+        
+        let zendeskSupportFile = "zendesk_support.html"
+        let fileStringSplit = zendeskSupportFile.components(separatedBy: ".")
+
+        let filePath = Bundle.main.path(forResource: fileStringSplit[0], ofType: fileStringSplit[1])
+        let contentData = FileManager.default.contents(atPath: filePath!)
+
+        if let htmlTemplate = NSString(data: contentData!, encoding: String.Encoding.utf8.rawValue) as? String {
+
+            let bundleUrl = Bundle.main.url(forResource: fileStringSplit[0], withExtension: fileStringSplit[1])
+
+            self.webView.loadHTMLString(htmlTemplate, baseURL: bundleUrl)
+        }
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -102,7 +142,6 @@ class SupportPageViewController: UIViewController {
         let tapSendButton = UITapGestureRecognizer(target: self, action: #selector(self.didTapSend))
         self.sendButton.addGestureRecognizer(tapSendButton)
         StyleHelper.styleButton(button: self.sendButton)
-
 
         if Env.userSessionStore.isUserLogged() {
             Publishers.CombineLatest(self.subjectTextField.textPublisher, self.descriptionTextView.textPublisher)
@@ -145,7 +184,6 @@ class SupportPageViewController: UIViewController {
                 .assign(to: \.isEnabled, on: self.sendButton)
                 .store(in: &self.cancellables)
         }
-
 
     }
 
@@ -203,7 +241,11 @@ class SupportPageViewController: UIViewController {
         self.descriptionTextView.textColor = UIColor.App.backgroundOdds
         
         self.backButtonBaseView.backgroundColor = .clear
-        
+
+        self.webView.isOpaque = false
+        self.webView.backgroundColor = .clear
+        self.webView.scrollView.backgroundColor = UIColor.clear
+
     }
 
     // MARK: Binding
@@ -253,6 +295,58 @@ class SupportPageViewController: UIViewController {
                                      lastName: self.lastNameHeaderTextFieldView.text,
                                      email: self.emailHeaderTextFieldView.text)
         }
+
+    }
+
+    private func recalculateWebview() {
+        executeDelayed(1) {
+            self.webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { height, error in
+                if let heightFloat = height as? CGFloat {
+                    print("Zendesk widget height: \(heightFloat)")
+                }
+                if let error = error {
+                    Logger.log("Match details WKWebView didFinish error \(error)")
+                }
+            })
+        }
+    }
+
+    private func addCustomScripts() {
+
+        let userContentController = self.webView.configuration.userContentController
+        let js = "document.getElementsByClassName('.sc-htpNat')[0].addEventListener('click', function(){ window.webkit.messageHandlers.clickListener.postMessage('Do something'); })"
+
+        let script = WKUserScript(source: js, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
+
+        userContentController.addUserScript(script)
+    }
+}
+
+extension SupportPageViewController: WKNavigationDelegate {
+
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        //self.showLoading()
+        print("STARTING LOADING ZENDESK")
+    }
+
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        //self.hideLoading()
+        print("FINISHED LOADING ZENDESK")
+
+        self.webView.evaluateJavaScript("document.readyState", completionHandler: { complete, error in
+            if complete != nil {
+                self.recalculateWebview()
+                //self.addCustomScripts()
+            }
+            else if let error = error {
+                Logger.log("Zendesk support WKWebView didFinish error \(error)")
+            }
+        })
+    }
+
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        //self.hideLoading()
+        print("FAILED LOADING ZENDESK")
 
     }
 }
@@ -374,12 +468,38 @@ extension SupportPageViewController {
         return sendButton
     }
 
+    private static func createWebView() -> WKWebView {
+        let webView = WKWebView()
+        webView.translatesAutoresizingMaskIntoConstraints = false
+
+        return webView
+    }
+
     private static func createAnonymousViewTopConstraint() -> NSLayoutConstraint {
         let constraint = NSLayoutConstraint()
         return constraint
     }
 
     private static func createSubjectViewTopConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    private static func createWebViewWidthConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createWebViewHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createWebViewLeadingConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createWebViewTopConstraint() -> NSLayoutConstraint {
         let constraint = NSLayoutConstraint()
         return constraint
     }
@@ -407,6 +527,8 @@ extension SupportPageViewController {
         self.view.addSubview(self.topSafeAreaView)
         self.view.addSubview(self.baseView)
         self.view.addSubview(self.navigationBaseView)
+
+        self.view.addSubview(self.webView)
 
         self.initConstraints()
     }
@@ -490,6 +612,23 @@ extension SupportPageViewController {
             
         ])
 
+        NSLayoutConstraint.activate([
+            self.webView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.webView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+
+        self.webViewWidthConstraint = self.webView.widthAnchor.constraint(equalToConstant: 100)
+        self.webViewWidthConstraint.isActive = true
+
+        self.webViewHeightConstraint = self.webView.heightAnchor.constraint(equalToConstant: 100)
+        self.webViewHeightConstraint.isActive = true
+
+        self.webViewLeadingConstraint = self.webView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor)
+        self.webViewLeadingConstraint.isActive = false
+
+        self.webViewTopConstraint = self.webView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor)
+        self.webViewTopConstraint.isActive = false
+
         self.anonymousViewTopConstraint = self.anonymousFieldsView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 30)
         self.anonymousViewTopConstraint.isActive = false
 
@@ -519,4 +658,35 @@ extension SupportPageViewController: UITextViewDelegate {
         self.descriptionTextView.textColor =  UIColor.App.backgroundOdds
     }
 
+}
+
+extension SupportPageViewController: WKScriptMessageHandler {
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        print("CLICKED BUTTON ZENDESK: \(message.body)")
+
+        if "\(message.body)".contains("sc-vrqbdz-5 eQUhzA") {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                UIView.animate(withDuration: 0.5, delay: 0, options: UIView.AnimationOptions.curveEaseOut) {
+                    self.webViewWidthConstraint.isActive = true
+                    self.webViewHeightConstraint.isActive = true
+                    self.webViewLeadingConstraint.isActive = false
+                    self.webViewTopConstraint.isActive = false
+                    self.view.setNeedsLayout()
+                    self.view.layoutIfNeeded()
+                }
+            }
+
+        }
+        else {
+            UIView.animate(withDuration: 0.5, delay: 0.25, options: UIView.AnimationOptions.curveEaseOut) {
+                self.webViewWidthConstraint.isActive = false
+                self.webViewHeightConstraint.isActive = false
+                self.webViewLeadingConstraint.isActive = true
+                self.webViewTopConstraint.isActive = true
+                self.view.setNeedsLayout()
+                self.view.layoutIfNeeded()
+            }
+        }
+
+    }
 }

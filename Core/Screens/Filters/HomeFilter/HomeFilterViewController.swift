@@ -167,7 +167,8 @@ class HomeFilterViewController: UIViewController {
             self.availableMarketsCollapseView.setTitle(title: localized("default_market"))
         }
 
-        self.setupCardSltyleCollapseView()
+        //self.setupCardSltyleCollapseView()
+        self.cardSltyleCollapseView.isHidden = true
         self.setupOddsSection()
 
         self.applyButton.setTitle(localized("apply"), for: .normal)
