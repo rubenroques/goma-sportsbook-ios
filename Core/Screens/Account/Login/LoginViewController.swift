@@ -46,7 +46,7 @@ class LoginViewController: UIViewController {
 
     var cancellables = Set<AnyCancellable>()
 
-    let spinnerViewController = SpinnerViewController()
+    let spinnerViewController = LoadingSpinnerViewController()
 
     var dropInComponent: DropInComponent?
     var paymentsDropIn: PaymentsDropIn?

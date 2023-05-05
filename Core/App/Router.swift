@@ -77,9 +77,10 @@ class Router {
 
         self.rootWindow.rootViewController = splashViewController
 
-//        #if DEBUG
-//        self.rootWindow.rootViewController = AnonymousSideMenuViewController(viewModel: AnonymousSideMenuViewModel())
-//        #endif
+        // #if DEBUG
+        // self.rootWindow.rootViewController = LoadingSpinnerViewController()
+        //        // AnonymousSideMenuViewController(viewModel: AnonymousSideMenuViewModel())
+        // #endif
 
         self.rootWindow.makeKeyAndVisible()
     }

@@ -288,6 +288,14 @@ class PasswordUpdateViewController: UIViewController {
                 for label in errorLabels {
                     self.markTipLabelError(label: label)
                 }
+
+                if errorLabels.isEmpty {
+                    self.markTipLabelCompleted(label: self.tipTitleLabel)
+                }
+                else {
+                    self.resetTipLabel(label: self.tipTitleLabel)
+                }
+
             }
             .store(in: &self.cancellables)
 
@@ -374,15 +382,18 @@ class PasswordUpdateViewController: UIViewController {
 
     private func resetTipLabel(label: UILabel) {
         label.alpha = 1.0
+        label.textColor = UIColor.App.textPrimary
     }
 
     private func markTipLabelCompleted(label: UILabel) {
+        label.textColor = UIColor.App.alertSuccess
         UIView.animate(withDuration: 0.2) {
             label.alpha = 0.37
         }
     }
 
     private func markTipLabelError(label: UILabel) {
+        label.textColor = UIColor.App.textPrimary
         UIView.animate(withDuration: 0.2) {
             label.alpha = 1.0
         }

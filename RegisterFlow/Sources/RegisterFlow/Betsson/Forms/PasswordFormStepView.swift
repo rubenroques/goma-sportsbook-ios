@@ -311,8 +311,6 @@ class PasswordFormStepView: FormStepView {
     private func resetTipLabel(label: UILabel) {
         label.alpha = 1.0
         label.textColor = AppColor.textPrimary
-//        let attributeString: NSMutableAttributedString = NSMutableAttributedString(string: label.text ?? "")
-//        label.attributedText = attributeString
     }
 
     private func markTipLabelCompleted(label: UILabel) {

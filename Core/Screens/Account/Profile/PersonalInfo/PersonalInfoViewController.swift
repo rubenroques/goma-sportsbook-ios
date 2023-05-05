@@ -520,7 +520,7 @@ class PersonalInfoViewController: UIViewController {
             self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country, showName: true), slideUp: true)
         }
         
-        self.birthDateHeaderTextFieldView.setText(profile.birthDate.toString(formatString: "yyyy-MM-dd"))
+        self.birthDateHeaderTextFieldView.setText(profile.birthDate.toString(formatString: "dd-MM-yyyy"))
         self.adress1HeaderTextFieldView.setText(profile.address ?? "-")
         self.adress2HeaderTextFieldView.setText(profile.streetNumber ?? "-")
         self.cityHeaderTextFieldView.setText(profile.city ?? "-")

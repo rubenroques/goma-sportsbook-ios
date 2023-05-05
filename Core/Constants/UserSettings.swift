@@ -33,8 +33,13 @@ extension UserDefaults {
 
     var theme: Theme {
         get {
-            self.register(defaults: [UserDefaultsKey.theme.key: Theme.device.rawValue])
-            return Theme(rawValue: self.integer(forKey: UserDefaultsKey.theme.key)) ?? .dark
+            if let themeInt = self.value(forKey: UserDefaultsKey.theme.key) as? Int {
+                return Theme(rawValue: themeInt) ?? .dark
+            }
+
+            self.setValue(Theme.dark.rawValue, forKey: UserDefaultsKey.theme.key)
+            self.synchronize()
+            return .dark
         }
         set {
             self.set(newValue.rawValue, forKey: UserDefaultsKey.theme.key)

@@ -33,7 +33,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
     @IBOutlet private var quitButton: UIButton!
 
     @IBOutlet private var loadingUsernameValidityView: UIActivityIndicatorView!
-    var spinnerViewController = SpinnerViewController()
+    var spinnerViewController = LoadingSpinnerViewController()
 
     var cancellables = Set<AnyCancellable>()
     

@@ -892,6 +892,9 @@ class MatchDetailsViewController: UIViewController {
         }
 
         if let fieldWidget = self.viewModel.fieldWidgetRenderDataType {
+
+            self.matchFieldLoadingView.startAnimating()
+
             self.shouldShowLiveFieldWebView = true
 
             switch fieldWidget {

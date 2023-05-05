@@ -324,7 +324,7 @@
 		450B798728F58574009229E3 /* EditGroupAddUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99FD503282D489B00275509 /* EditGroupAddUserViewController.swift */; };
 		450B798928F58574009229E3 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636D26BE94F600690896 /* Theme.swift */; };
 		450B798A28F58574009229E3 /* UserActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE228071E8C0098854C /* UserActionView.swift */; };
-		450B798B28F58574009229E3 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* SpinnerViewController.swift */; };
+		450B798B28F58574009229E3 /* LoadingSpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* LoadingSpinnerViewController.swift */; };
 		450B798C28F58574009229E3 /* MatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457816AD2706699900F66878 /* MatchWidgetCollectionViewCell.swift */; };
 		450B798D28F58574009229E3 /* UserBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495B2737C2280047169D /* UserBalance.swift */; };
 		450B798E28F58574009229E3 /* SearchEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A948BF93279ED6B9006053C9 /* SearchEvent.swift */; };
@@ -1026,7 +1026,7 @@
 		457CBAE9282D27D000ED0F00 /* CurrencyHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AD02734A39800794E0C /* CurrencyHelper.swift */; };
 		457CBAEB282D27D000ED0F00 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636D26BE94F600690896 /* Theme.swift */; };
 		457CBAEC282D27D000ED0F00 /* UserActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE228071E8C0098854C /* UserActionView.swift */; };
-		457CBAED282D27D000ED0F00 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* SpinnerViewController.swift */; };
+		457CBAED282D27D000ED0F00 /* LoadingSpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* LoadingSpinnerViewController.swift */; };
 		457CBAEE282D27D000ED0F00 /* MatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457816AD2706699900F66878 /* MatchWidgetCollectionViewCell.swift */; };
 		457CBAEF282D27D000ED0F00 /* UserBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495B2737C2280047169D /* UserBalance.swift */; };
 		457CBAF0282D27D000ED0F00 /* SearchEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A948BF93279ED6B9006053C9 /* SearchEvent.swift */; };
@@ -1576,7 +1576,7 @@
 		457CBD91282D2CD100ED0F00 /* CurrencyHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AD02734A39800794E0C /* CurrencyHelper.swift */; };
 		457CBD93282D2CD100ED0F00 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636D26BE94F600690896 /* Theme.swift */; };
 		457CBD94282D2CD100ED0F00 /* UserActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE228071E8C0098854C /* UserActionView.swift */; };
-		457CBD95282D2CD100ED0F00 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* SpinnerViewController.swift */; };
+		457CBD95282D2CD100ED0F00 /* LoadingSpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* LoadingSpinnerViewController.swift */; };
 		457CBD96282D2CD100ED0F00 /* MatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457816AD2706699900F66878 /* MatchWidgetCollectionViewCell.swift */; };
 		457CBD97282D2CD100ED0F00 /* UserBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495B2737C2280047169D /* UserBalance.swift */; };
 		457CBD98282D2CD100ED0F00 /* SearchEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A948BF93279ED6B9006053C9 /* SearchEvent.swift */; };
@@ -2127,7 +2127,7 @@
 		4589C86F282024E400243547 /* CurrencyHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AD02734A39800794E0C /* CurrencyHelper.swift */; };
 		4589C871282024E400243547 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636D26BE94F600690896 /* Theme.swift */; };
 		4589C872282024E400243547 /* UserActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE228071E8C0098854C /* UserActionView.swift */; };
-		4589C873282024E400243547 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* SpinnerViewController.swift */; };
+		4589C873282024E400243547 /* LoadingSpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* LoadingSpinnerViewController.swift */; };
 		4589C874282024E400243547 /* MatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457816AD2706699900F66878 /* MatchWidgetCollectionViewCell.swift */; };
 		4589C875282024E400243547 /* UserBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495B2737C2280047169D /* UserBalance.swift */; };
 		4589C876282024E400243547 /* SearchEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A948BF93279ED6B9006053C9 /* SearchEvent.swift */; };
@@ -2752,7 +2752,7 @@
 		45A331A2298976BA008181E9 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636D26BE94F600690896 /* Theme.swift */; };
 		45A331A3298976BA008181E9 /* BetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45711906294B9A27000395F0 /* BetType.swift */; };
 		45A331A4298976BA008181E9 /* UserActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE228071E8C0098854C /* UserActionView.swift */; };
-		45A331A5298976BA008181E9 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* SpinnerViewController.swift */; };
+		45A331A5298976BA008181E9 /* LoadingSpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* LoadingSpinnerViewController.swift */; };
 		45A331A6298976BA008181E9 /* MatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457816AD2706699900F66878 /* MatchWidgetCollectionViewCell.swift */; };
 		45A331A7298976BA008181E9 /* UserBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495B2737C2280047169D /* UserBalance.swift */; };
 		45A331A8298976BA008181E9 /* SearchEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A948BF93279ED6B9006053C9 /* SearchEvent.swift */; };
@@ -3394,7 +3394,7 @@
 		45A6BCC228246A7500D9B416 /* CurrencyHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AD02734A39800794E0C /* CurrencyHelper.swift */; };
 		45A6BCC428246A7500D9B416 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636D26BE94F600690896 /* Theme.swift */; };
 		45A6BCC528246A7500D9B416 /* UserActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE228071E8C0098854C /* UserActionView.swift */; };
-		45A6BCC628246A7500D9B416 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* SpinnerViewController.swift */; };
+		45A6BCC628246A7500D9B416 /* LoadingSpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* LoadingSpinnerViewController.swift */; };
 		45A6BCC728246A7500D9B416 /* MatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457816AD2706699900F66878 /* MatchWidgetCollectionViewCell.swift */; };
 		45A6BCC828246A7500D9B416 /* UserBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495B2737C2280047169D /* UserBalance.swift */; };
 		45A6BCC928246A7500D9B416 /* SearchEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A948BF93279ED6B9006053C9 /* SearchEvent.swift */; };
@@ -3899,6 +3899,14 @@
 		45F2F9AD298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
 		45F2F9AE298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
 		45F2F9AF298C067C0075AF02 /* StaticColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */; };
+		45F805932A05357E005296E0 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 45F805922A05357E005296E0 /* Lottie */; };
+		45F805962A05385B005296E0 /* dots-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F805952A05385B005296E0 /* dots-loading.json */; };
+		45F805972A05385B005296E0 /* dots-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F805952A05385B005296E0 /* dots-loading.json */; };
+		45F805982A05385B005296E0 /* dots-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F805952A05385B005296E0 /* dots-loading.json */; };
+		45F805992A05385B005296E0 /* dots-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F805952A05385B005296E0 /* dots-loading.json */; };
+		45F8059A2A05385B005296E0 /* dots-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F805952A05385B005296E0 /* dots-loading.json */; };
+		45F8059B2A05385B005296E0 /* dots-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F805952A05385B005296E0 /* dots-loading.json */; };
+		45F8059C2A05385B005296E0 /* dots-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45F805952A05385B005296E0 /* dots-loading.json */; };
 		45FF105329D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
 		45FF105429D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
 		45FF105529D74721009AC196 /* UserTrackingSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */; };
@@ -4695,7 +4703,7 @@
 		A9C341E128F9A74A0055360B /* EditGroupAddUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99FD503282D489B00275509 /* EditGroupAddUserViewController.swift */; };
 		A9C341E328F9A74A0055360B /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515636D26BE94F600690896 /* Theme.swift */; };
 		A9C341E428F9A74A0055360B /* UserActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE228071E8C0098854C /* UserActionView.swift */; };
-		A9C341E528F9A74A0055360B /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* SpinnerViewController.swift */; };
+		A9C341E528F9A74A0055360B /* LoadingSpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* LoadingSpinnerViewController.swift */; };
 		A9C341E628F9A74A0055360B /* MatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457816AD2706699900F66878 /* MatchWidgetCollectionViewCell.swift */; };
 		A9C341E728F9A74A0055360B /* UserBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495B2737C2280047169D /* UserBalance.swift */; };
 		A9C341E828F9A74A0055360B /* SearchEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A948BF93279ED6B9006053C9 /* SearchEvent.swift */; };
@@ -5623,6 +5631,7 @@
 		45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchFiltersViewController.xib; sourceTree = "<group>"; };
 		45EF543A270C664100D1E13E /* CollapsibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleView.swift; sourceTree = "<group>"; };
 		45F2F9A8298C067C0075AF02 /* StaticColors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = StaticColors.xcassets; sourceTree = "<group>"; };
+		45F805952A05385B005296E0 /* dots-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "dots-loading.json"; sourceTree = "<group>"; };
 		45F8B156274BFF710087652B /* SystemBetResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemBetResponse.swift; sourceTree = "<group>"; };
 		45FF105229D74721009AC196 /* UserTrackingSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTrackingSettingsViewController.swift; sourceTree = "<group>"; };
 		A902299F28AFD41100972863 /* QuickBetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickBetViewController.swift; sourceTree = "<group>"; };
@@ -5670,7 +5679,7 @@
 		A92F5D862719D5E600884BDF /* FilterSliderInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSliderInfoView.swift; sourceTree = "<group>"; };
 		A92F5D892719D63300884BDF /* FilterSliderInfoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FilterSliderInfoView.xib; sourceTree = "<group>"; };
 		A92F5D8C271ED08400884BDF /* CGFloat+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extensions.swift"; sourceTree = "<group>"; };
-		A92F5D902729731E00884BDF /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
+		A92F5D902729731E00884BDF /* LoadingSpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingSpinnerViewController.swift; sourceTree = "<group>"; };
 		A92F5D94272C410400884BDF /* DocumentPickerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DocumentPickerView.xib; sourceTree = "<group>"; };
 		A92F5D95272C410400884BDF /* DocumentPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentPickerView.swift; sourceTree = "<group>"; };
 		A92F5DA2272C44A000884BDF /* UploadView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UploadView.xib; sourceTree = "<group>"; };
@@ -6122,6 +6131,7 @@
 				45A332B2298976BA008181E9 /* FirebaseDatabase in Frameworks */,
 				45A332B3298976BA008181E9 /* AdyenDropIn in Frameworks */,
 				45A332B4298976BA008181E9 /* DictionaryCoding in Frameworks */,
+				45F805932A05357E005296E0 /* Lottie in Frameworks */,
 				45A332B5298976BA008181E9 /* Reachability in Frameworks */,
 				45A332B6298976BA008181E9 /* AdyenComponents in Frameworks */,
 				45A332B7298976BA008181E9 /* IQKeyboardManagerSwift in Frameworks */,
@@ -6606,6 +6616,7 @@
 		455A0C9E26BD958600EC572D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				45F805942A053841005296E0 /* Animations */,
 				A9B63068291AB5F800BB850E /* Widgets */,
 				45C3E8D827B57530007A1A0F /* FastTesting */,
 				454A7A6126DA2FD600E6E74E /* Misc */,
@@ -7857,6 +7868,14 @@
 			path = Filters;
 			sourceTree = "<group>";
 		};
+		45F805942A053841005296E0 /* Animations */ = {
+			isa = PBXGroup;
+			children = (
+				45F805952A05385B005296E0 /* dots-loading.json */,
+			);
+			path = Animations;
+			sourceTree = "<group>";
+		};
 		A902299E28AFD3F400972863 /* Quickbet */ = {
 			isa = PBXGroup;
 			children = (
@@ -8049,7 +8068,7 @@
 		A92F5D8F2729730100884BDF /* Spinner */ = {
 			isa = PBXGroup;
 			children = (
-				A92F5D902729731E00884BDF /* SpinnerViewController.swift */,
+				A92F5D902729731E00884BDF /* LoadingSpinnerViewController.swift */,
 			);
 			path = Spinner;
 			sourceTree = "<group>";
@@ -9463,6 +9482,7 @@
 				45A33051298976BA008181E9 /* AdyenSwiftUI */,
 				45A33052298976BA008181E9 /* AdyenWeChatPay */,
 				45C8ECB829CC7AE4006A35DC /* HeaderTextField */,
+				45F805922A05357E005296E0 /* Lottie */,
 			);
 			productName = Sportsbook;
 			productReference = 45A3334E298976BA008181E9 /* Betsson.app */;
@@ -9577,6 +9597,7 @@
 				45EF50E8282E6AD7008180CA /* XCRemoteSwiftPackageReference "Starscream" */,
 				4554ED082976F7FE006942B3 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */,
+				45F805912A05357E005296E0 /* XCRemoteSwiftPackageReference "lottie-spm" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -9695,6 +9716,7 @@
 				450B7B0228F58574009229E3 /* PasswordUpdateViewController.xib in Resources */,
 				450B7B0328F58574009229E3 /* CheckboxToggleView.xib in Resources */,
 				450B7B0428F58574009229E3 /* MatchStatsCollectionViewCell.xib in Resources */,
+				45F805972A05385B005296E0 /* dots-loading.json in Resources */,
 				450B7B0528F58574009229E3 /* ProfileViewController.xib in Resources */,
 				450B7B0728F58574009229E3 /* BannerTopCollectionViewCell.xib in Resources */,
 				450B7B0828F58574009229E3 /* LiveEventsViewController.xib in Resources */,
@@ -9835,6 +9857,7 @@
 				457CBC2B282D27D000ED0F00 /* TestsViewController.xib in Resources */,
 				457CBC2C282D27D000ED0F00 /* PasswordUpdateViewController.xib in Resources */,
 				457CBC2D282D27D000ED0F00 /* CheckboxToggleView.xib in Resources */,
+				45F8059B2A05385B005296E0 /* dots-loading.json in Resources */,
 				457CBC2E282D27D000ED0F00 /* MatchStatsCollectionViewCell.xib in Resources */,
 				457CBC2F282D27D000ED0F00 /* ProfileViewController.xib in Resources */,
 				457CBC31282D27D000ED0F00 /* BannerTopCollectionViewCell.xib in Resources */,
@@ -9967,6 +9990,7 @@
 				457CBED4282D2CD100ED0F00 /* PasswordUpdateViewController.xib in Resources */,
 				457CBED5282D2CD100ED0F00 /* CheckboxToggleView.xib in Resources */,
 				457CBED6282D2CD100ED0F00 /* MatchStatsCollectionViewCell.xib in Resources */,
+				45F8059C2A05385B005296E0 /* dots-loading.json in Resources */,
 				457CBED7282D2CD100ED0F00 /* ProfileViewController.xib in Resources */,
 				457CBED8282D2CD100ED0F00 /* BannerTopCollectionViewCell.xib in Resources */,
 				457CBED9282D2CD100ED0F00 /* LiveEventsViewController.xib in Resources */,
@@ -10099,6 +10123,7 @@
 				4589C9AA282024E400243547 /* TestsViewController.xib in Resources */,
 				4589C9AB282024E400243547 /* PasswordUpdateViewController.xib in Resources */,
 				4589C9AC282024E400243547 /* CheckboxToggleView.xib in Resources */,
+				45F805982A05385B005296E0 /* dots-loading.json in Resources */,
 				4589C9AD282024E400243547 /* MatchStatsCollectionViewCell.xib in Resources */,
 				4589C9AE282024E400243547 /* ProfileViewController.xib in Resources */,
 				4589C9E2282027A100243547 /* GOMASports-Assets.xcassets in Resources */,
@@ -10174,6 +10199,7 @@
 				45A332F1298976BA008181E9 /* README.md in Resources */,
 				45A332F2298976BA008181E9 /* BannerMatchCollectionViewCell.xib in Resources */,
 				45A332F3298976BA008181E9 /* PopUpPromotionView.xib in Resources */,
+				45F805962A05385B005296E0 /* dots-loading.json in Resources */,
 				45A332F4298976BA008181E9 /* Gilroy-Light.ttf in Resources */,
 				45A332F5298976BA008181E9 /* PreSubmissionBetslipViewController.xib in Resources */,
 				45A332F6298976BA008181E9 /* BannerScrollTableViewCell.xib in Resources */,
@@ -10364,6 +10390,7 @@
 				45A6BE0328246A7500D9B416 /* TestsViewController.xib in Resources */,
 				45A6BE0428246A7500D9B416 /* PasswordUpdateViewController.xib in Resources */,
 				45A6BE0528246A7500D9B416 /* CheckboxToggleView.xib in Resources */,
+				45F8059A2A05385B005296E0 /* dots-loading.json in Resources */,
 				45A6BE3328246AFA00D9B416 /* DAZN-Assets.xcassets in Resources */,
 				45A6BE0628246A7500D9B416 /* MatchStatsCollectionViewCell.xib in Resources */,
 				45A6BE0728246A7500D9B416 /* ProfileViewController.xib in Resources */,
@@ -10439,6 +10466,7 @@
 				A9C3432128F9A74A0055360B /* PopUpPromotionView.xib in Resources */,
 				A9C3432228F9A74A0055360B /* Gilroy-Light.ttf in Resources */,
 				A9C3432328F9A74A0055360B /* PreSubmissionBetslipViewController.xib in Resources */,
+				45F805992A05385B005296E0 /* dots-loading.json in Resources */,
 				A9C3439028F9A7DC0055360B /* GoogleService-Info.plist in Resources */,
 				A9D5BB7228FD688F001B0E13 /* GOMASportRadar-Assets.xcassets in Resources */,
 				A9C3432428F9A74A0055360B /* BannerScrollTableViewCell.xib in Resources */,
@@ -10983,7 +11011,7 @@
 				450B798928F58574009229E3 /* Theme.swift in Sources */,
 				45711908294B9A27000395F0 /* BetType.swift in Sources */,
 				450B798A28F58574009229E3 /* UserActionView.swift in Sources */,
-				450B798B28F58574009229E3 /* SpinnerViewController.swift in Sources */,
+				450B798B28F58574009229E3 /* LoadingSpinnerViewController.swift in Sources */,
 				450B798C28F58574009229E3 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				450B798D28F58574009229E3 /* UserBalance.swift in Sources */,
 				450B798E28F58574009229E3 /* SearchEvent.swift in Sources */,
@@ -11667,7 +11695,7 @@
 				457CBAE9282D27D000ED0F00 /* CurrencyHelper.swift in Sources */,
 				457CBAEB282D27D000ED0F00 /* Theme.swift in Sources */,
 				457CBAEC282D27D000ED0F00 /* UserActionView.swift in Sources */,
-				457CBAED282D27D000ED0F00 /* SpinnerViewController.swift in Sources */,
+				457CBAED282D27D000ED0F00 /* LoadingSpinnerViewController.swift in Sources */,
 				457CBAEE282D27D000ED0F00 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				457CBAEF282D27D000ED0F00 /* UserBalance.swift in Sources */,
 				45E8E29A28C88E1300A09B02 /* UserRankingPositionTableViewCell.swift in Sources */,
@@ -12258,7 +12286,7 @@
 				457CBD91282D2CD100ED0F00 /* CurrencyHelper.swift in Sources */,
 				457CBD93282D2CD100ED0F00 /* Theme.swift in Sources */,
 				457CBD94282D2CD100ED0F00 /* UserActionView.swift in Sources */,
-				457CBD95282D2CD100ED0F00 /* SpinnerViewController.swift in Sources */,
+				457CBD95282D2CD100ED0F00 /* LoadingSpinnerViewController.swift in Sources */,
 				457CBD96282D2CD100ED0F00 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				457CBD97282D2CD100ED0F00 /* UserBalance.swift in Sources */,
 				457CBD98282D2CD100ED0F00 /* SearchEvent.swift in Sources */,
@@ -12845,7 +12873,7 @@
 				4589C871282024E400243547 /* Theme.swift in Sources */,
 				45711907294B9A27000395F0 /* BetType.swift in Sources */,
 				4589C872282024E400243547 /* UserActionView.swift in Sources */,
-				4589C873282024E400243547 /* SpinnerViewController.swift in Sources */,
+				4589C873282024E400243547 /* LoadingSpinnerViewController.swift in Sources */,
 				4589C874282024E400243547 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				4589C875282024E400243547 /* UserBalance.swift in Sources */,
 				4589C876282024E400243547 /* SearchEvent.swift in Sources */,
@@ -13439,7 +13467,7 @@
 				45A331A2298976BA008181E9 /* Theme.swift in Sources */,
 				45A331A3298976BA008181E9 /* BetType.swift in Sources */,
 				45A331A4298976BA008181E9 /* UserActionView.swift in Sources */,
-				45A331A5298976BA008181E9 /* SpinnerViewController.swift in Sources */,
+				45A331A5298976BA008181E9 /* LoadingSpinnerViewController.swift in Sources */,
 				45A331A6298976BA008181E9 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				45A331A7298976BA008181E9 /* UserBalance.swift in Sources */,
 				45A331A8298976BA008181E9 /* SearchEvent.swift in Sources */,
@@ -14032,7 +14060,7 @@
 				4566339A29DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */,
 				45A6BCC428246A7500D9B416 /* Theme.swift in Sources */,
 				45A6BCC528246A7500D9B416 /* UserActionView.swift in Sources */,
-				45A6BCC628246A7500D9B416 /* SpinnerViewController.swift in Sources */,
+				45A6BCC628246A7500D9B416 /* LoadingSpinnerViewController.swift in Sources */,
 				45A6BCC728246A7500D9B416 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				45A6BCC828246A7500D9B416 /* UserBalance.swift in Sources */,
 				45E8E29928C88E1300A09B02 /* UserRankingPositionTableViewCell.swift in Sources */,
@@ -14619,7 +14647,7 @@
 				A9C341E128F9A74A0055360B /* EditGroupAddUserViewController.swift in Sources */,
 				A9C341E328F9A74A0055360B /* Theme.swift in Sources */,
 				A9C341E428F9A74A0055360B /* UserActionView.swift in Sources */,
-				A9C341E528F9A74A0055360B /* SpinnerViewController.swift in Sources */,
+				A9C341E528F9A74A0055360B /* LoadingSpinnerViewController.swift in Sources */,
 				A9C341E628F9A74A0055360B /* MatchWidgetCollectionViewCell.swift in Sources */,
 				A9C341E728F9A74A0055360B /* UserBalance.swift in Sources */,
 				A9C341E828F9A74A0055360B /* SearchEvent.swift in Sources */,
@@ -15331,7 +15359,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1112;
+				CURRENT_PROJECT_VERSION = 1120;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15357,7 +15385,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1112;
+				CURRENT_PROJECT_VERSION = 1120;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -16112,6 +16140,14 @@
 				minimumVersion = 4.0.0;
 			};
 		};
+		45F805912A05357E005296E0 /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
 		A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Adyen/adyen-ios";
@@ -16796,6 +16832,11 @@
 		45D3BBAB296F13BB009E0D09 /* RegisterFlow */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RegisterFlow;
+		};
+		45F805922A05357E005296E0 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 45F805912A05357E005296E0 /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
 		};
 		A96FAEE029829CCB00A0751F /* Adyen */ = {
 			isa = XCSwiftPackageProductDependency;
