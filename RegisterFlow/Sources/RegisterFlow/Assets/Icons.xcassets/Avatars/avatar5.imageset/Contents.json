@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "avatar5.png",
+      "filename" : "fervent.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "avatar5@2x.png",
+      "filename" : "fervent 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "avatar5@3x.png",
+      "filename" : "fervent 2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -83,6 +83,7 @@ class RootViewController: UIViewController {
 
     @IBOutlet private var profileBaseView: UIView!
     @IBOutlet private var profilePictureBaseView: UIView!
+    @IBOutlet private var profilePictureBaseInnerView: UIView!
     @IBOutlet private var profilePictureImageView: UIImageView!
 
     @IBOutlet private var anonymousUserMenuBaseView: UIView!
@@ -466,8 +467,10 @@ class RootViewController: UIViewController {
 
         self.profilePictureBaseView.layer.cornerRadius = profilePictureBaseView.frame.size.width/2
         self.profilePictureImageView.layer.cornerRadius = profilePictureImageView.frame.size.width/2
-        self.profilePictureImageView.layer.borderWidth = 1
-        self.profilePictureImageView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+//        self.profilePictureImageView.layer.borderWidth = 1
+//        self.profilePictureImageView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+        self.profilePictureBaseInnerView.layer.cornerRadius = self.profilePictureBaseInnerView.frame.size.width/2
+
 
         self.profilePictureImageView.layer.masksToBounds = true
 
@@ -702,6 +705,8 @@ class RootViewController: UIViewController {
         self.tipsButtonBaseView.backgroundColor = .clear // UIColor.App.backgroundPrimary
 
         self.profilePictureBaseView.backgroundColor = UIColor.App.highlightPrimary
+
+        self.profilePictureBaseInnerView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)

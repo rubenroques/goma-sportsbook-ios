@@ -23,6 +23,7 @@ class BonusActiveTableViewCell: UITableViewCell {
 
     private lazy var stackViewBottomConstraint: NSLayoutConstraint = Self.createStackViewBottomConstraint()
     private lazy var cancelButtonBottomConstraint: NSLayoutConstraint = Self.createCancelButtonBottomConstraint()
+    private lazy var titleTrailingConstraint: NSLayoutConstraint = Self.createTitleTrailingConstraint()
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -43,6 +44,8 @@ class BonusActiveTableViewCell: UITableViewCell {
     var hasTypeStatus: Bool = false {
         didSet {
             self.bonusStatusView.isHidden = !hasTypeStatus
+
+            self.titleTrailingConstraint.isActive = !hasTypeStatus
         }
     }
 
@@ -341,6 +344,11 @@ extension BonusActiveTableViewCell {
         return constraint
     }
 
+    private static func createTitleTrailingConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
     private func setupSubviews() {
         self.contentView.addSubview(self.containerView)
 
@@ -374,7 +382,7 @@ extension BonusActiveTableViewCell {
         // Labels
         NSLayoutConstraint.activate([
             self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
+            //self.titleLabel.trailingAnchor.constraint(equalTo: self.bonusStatusView.leadingAnchor, constant: -8),
             self.titleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 20),
 
             self.subtitleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
@@ -428,6 +436,10 @@ extension BonusActiveTableViewCell {
 
         self.cancelButtonBottomConstraint = self.cancelButton.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20)
         self.cancelButtonBottomConstraint.isActive = true
+
+        self.titleTrailingConstraint =             self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15)
+        self.titleTrailingConstraint.isActive = false
+
 
     }
 

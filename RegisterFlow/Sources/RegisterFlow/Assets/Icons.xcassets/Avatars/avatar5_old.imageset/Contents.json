@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "passione.svg",
+      "filename" : "avatar5.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "passione 1.svg",
+      "filename" : "avatar5@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "passione 2.svg",
+      "filename" : "avatar5@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

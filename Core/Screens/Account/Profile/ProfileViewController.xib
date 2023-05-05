@@ -39,6 +39,7 @@
                 <outlet property="logoutBaseView" destination="bhB-MW-me9" id="zxO-Py-JK4"/>
                 <outlet property="logoutButton" destination="yAA-45-gAr" id="AqD-gg-uWm"/>
                 <outlet property="profileBaseView" destination="lFI-1X-kZb" id="hqb-uQ-2ln"/>
+                <outlet property="profilePictureBaseInnerView" destination="dvg-k3-aVW" id="KsE-8n-DL7"/>
                 <outlet property="profilePictureBaseView" destination="Jbl-ih-uBZ" id="8hF-rq-ajY"/>
                 <outlet property="profilePictureImageView" destination="rcX-bW-GVx" id="gSK-mz-i6d"/>
                 <outlet property="safeAreaTopView" destination="fnZ-QT-A08" id="IMZ-PF-9BS"/>
@@ -71,18 +72,34 @@
                     <rect key="frame" x="0.0" y="48" width="414" height="70"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jbl-ih-uBZ">
-                            <rect key="frame" x="16" y="13" width="43" height="43"/>
-                        </view>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="empty_user_image" translatesAutoresizingMaskIntoConstraints="NO" id="rcX-bW-GVx">
-                            <rect key="frame" x="20" y="17" width="35" height="35"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <rect key="frame" x="16" y="13" width="40" height="40"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dvg-k3-aVW">
+                                    <rect key="frame" x="4" y="4" width="32" height="32"/>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                </view>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="empty_user_image" translatesAutoresizingMaskIntoConstraints="NO" id="rcX-bW-GVx">
+                                    <rect key="frame" x="-2.5" y="-2.5" width="45" height="45"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="45" id="QaO-N1-6Ix"/>
+                                        <constraint firstAttribute="height" constant="45" id="WFq-Eh-PcT"/>
+                                    </constraints>
+                                </imageView>
+                            </subviews>
                             <constraints>
-                                <constraint firstAttribute="width" secondItem="rcX-bW-GVx" secondAttribute="height" multiplier="1:1" id="L7h-Am-ycX"/>
-                                <constraint firstAttribute="width" constant="35" id="QaO-N1-6Ix"/>
+                                <constraint firstAttribute="height" constant="40" id="2la-4d-4dg"/>
+                                <constraint firstItem="rcX-bW-GVx" firstAttribute="centerY" secondItem="Jbl-ih-uBZ" secondAttribute="centerY" id="6Ma-VR-Y2k"/>
+                                <constraint firstAttribute="trailing" secondItem="dvg-k3-aVW" secondAttribute="trailing" constant="4" id="Ip8-HX-Adr"/>
+                                <constraint firstItem="dvg-k3-aVW" firstAttribute="leading" secondItem="Jbl-ih-uBZ" secondAttribute="leading" constant="4" id="N5e-G0-dwf"/>
+                                <constraint firstItem="rcX-bW-GVx" firstAttribute="centerX" secondItem="Jbl-ih-uBZ" secondAttribute="centerX" id="SyQ-xa-li8"/>
+                                <constraint firstAttribute="width" constant="40" id="YAp-qW-eW0"/>
+                                <constraint firstItem="dvg-k3-aVW" firstAttribute="top" secondItem="Jbl-ih-uBZ" secondAttribute="top" constant="4" id="o4H-KD-aUV"/>
+                                <constraint firstAttribute="bottom" secondItem="dvg-k3-aVW" secondAttribute="bottom" constant="4" id="y3E-Ij-zyW"/>
                             </constraints>
-                        </imageView>
+                        </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y8Q-jn-Zp8">
-                            <rect key="frame" x="179" y="25" width="56.5" height="19"/>
+                            <rect key="frame" x="180" y="18" width="54" height="26"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="22"/>
                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -120,7 +137,7 @@
                             </constraints>
                         </stackView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wIc-jL-CMS">
-                            <rect key="frame" x="348" y="17" width="58" height="32"/>
+                            <rect key="frame" x="349" y="17" width="57" height="35"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                             <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -134,18 +151,13 @@
                     <constraints>
                         <constraint firstItem="M40-Fh-HHv" firstAttribute="top" secondItem="Y8Q-jn-Zp8" secondAttribute="bottom" constant="6" id="0Jh-Sb-YAD"/>
                         <constraint firstItem="Y8Q-jn-Zp8" firstAttribute="centerX" secondItem="upr-br-gCP" secondAttribute="centerX" id="77J-tn-z3X"/>
-                        <constraint firstItem="Jbl-ih-uBZ" firstAttribute="centerY" secondItem="rcX-bW-GVx" secondAttribute="centerY" id="F1b-SP-hKa"/>
-                        <constraint firstItem="rcX-bW-GVx" firstAttribute="top" secondItem="upr-br-gCP" secondAttribute="top" constant="17" id="GJg-SE-nyY"/>
+                        <constraint firstItem="Jbl-ih-uBZ" firstAttribute="leading" secondItem="upr-br-gCP" secondAttribute="leading" constant="16" id="TVP-3F-FE6"/>
+                        <constraint firstItem="Jbl-ih-uBZ" firstAttribute="top" secondItem="upr-br-gCP" secondAttribute="top" constant="13" id="X1b-BT-fQW"/>
                         <constraint firstAttribute="trailing" secondItem="wIc-jL-CMS" secondAttribute="trailing" constant="8" id="Xvv-tM-j6t"/>
                         <constraint firstItem="M40-Fh-HHv" firstAttribute="centerX" secondItem="upr-br-gCP" secondAttribute="centerX" id="YVj-tN-PFt"/>
                         <constraint firstAttribute="bottom" secondItem="M40-Fh-HHv" secondAttribute="bottom" id="ZDR-zl-FhS"/>
-                        <constraint firstItem="Jbl-ih-uBZ" firstAttribute="top" secondItem="rcX-bW-GVx" secondAttribute="top" constant="-4" id="biG-e9-zTy"/>
                         <constraint firstAttribute="height" constant="70" id="g4R-ms-IT6"/>
-                        <constraint firstItem="Y8Q-jn-Zp8" firstAttribute="centerY" secondItem="rcX-bW-GVx" secondAttribute="centerY" id="i3R-Mt-1Tb"/>
                         <constraint firstItem="wIc-jL-CMS" firstAttribute="top" secondItem="upr-br-gCP" secondAttribute="top" constant="17" id="iK7-HN-OkL"/>
-                        <constraint firstItem="Jbl-ih-uBZ" firstAttribute="centerX" secondItem="rcX-bW-GVx" secondAttribute="centerX" id="j8b-4b-tTq"/>
-                        <constraint firstItem="rcX-bW-GVx" firstAttribute="leading" secondItem="upr-br-gCP" secondAttribute="leading" constant="20" id="pdS-ch-KRF"/>
-                        <constraint firstItem="Jbl-ih-uBZ" firstAttribute="leading" secondItem="rcX-bW-GVx" secondAttribute="leading" constant="-4" id="sZa-FT-yB3"/>
                     </constraints>
                 </view>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xvy-bu-gRF">
@@ -194,7 +206,7 @@
                                                     <rect key="frame" x="0.0" y="14" width="414" height="80"/>
                                                     <subviews>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yAA-45-gAr">
-                                                            <rect key="frame" x="149.5" y="15.5" width="115" height="49"/>
+                                                            <rect key="frame" x="150" y="15.5" width="114" height="49"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                             <inset key="contentEdgeInsets" minX="15" minY="15" maxX="30" maxY="15"/>
                                                             <inset key="titleEdgeInsets" minX="15" minY="0.0" maxX="-15" maxY="0.0"/>
@@ -215,7 +227,7 @@
                                                     <rect key="frame" x="0.0" y="102" width="414" height="60"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hFx-VW-GNj">
-                                                            <rect key="frame" x="16" y="18" width="382" height="24"/>
+                                                            <rect key="frame" x="16" y="16" width="382" height="28"/>
                                                             <string key="text">App Version 0.0.1 (00100)
 Sportsbook® All Rights Reserved</string>
                                                             <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="12"/>
@@ -253,13 +265,13 @@ Sportsbook® All Rights Reserved</string>
                                             <rect key="frame" x="50" y="8" width="314" height="30"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Current Balance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZNA-lM-Y9t">
-                                                    <rect key="frame" x="0.0" y="6" width="153" height="18"/>
+                                                    <rect key="frame" x="0.0" y="4.5" width="143" height="21"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="18"/>
                                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="49.875.655,59€" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F24-gl-VWS">
-                                                    <rect key="frame" x="157" y="3" width="157" height="24"/>
+                                                    <rect key="frame" x="147" y="1" width="167" height="28"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="24"/>
                                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
@@ -279,13 +291,13 @@ Sportsbook® All Rights Reserved</string>
                                             <rect key="frame" x="50" y="42" width="314" height="30"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Current Balance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bCK-AS-qFJ">
-                                                    <rect key="frame" x="0.0" y="6" width="153" height="18"/>
+                                                    <rect key="frame" x="0.0" y="4.5" width="143" height="21"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="18"/>
                                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="49.875.655,59€" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qQR-iY-klN">
-                                                    <rect key="frame" x="157" y="3" width="157" height="24"/>
+                                                    <rect key="frame" x="147" y="1" width="167" height="28"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="24"/>
                                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>

@@ -20,6 +20,7 @@ class ProfileViewController: UIViewController {
 
     @IBOutlet private weak var profileBaseView: UIView!
     @IBOutlet private weak var profilePictureBaseView: UIView!
+    @IBOutlet private weak var profilePictureBaseInnerView: UIView!
     @IBOutlet private weak var profilePictureImageView: UIImageView!
     @IBOutlet private weak var usernameLabel: UILabel!
 
@@ -110,6 +111,9 @@ class ProfileViewController: UIViewController {
 
             if let avatarName = user.avatarName {
                 self.profilePictureImageView.image = UIImage(named: avatarName)
+            }
+            else {
+                self.profilePictureImageView.image = UIImage(named: "empty_user_image")
             }
             self.userIdLabel.text = user.userIdentifier
         }
@@ -202,6 +206,9 @@ class ProfileViewController: UIViewController {
         super.viewDidLayoutSubviews()
 
         profilePictureBaseView.layer.cornerRadius = profilePictureBaseView.frame.size.width/2
+
+        profilePictureBaseInnerView.layer.cornerRadius = profilePictureBaseInnerView.frame.size.width/2
+
         profilePictureImageView.layer.cornerRadius = profilePictureImageView.frame.size.width/2
     }
 
@@ -289,15 +296,6 @@ class ProfileViewController: UIViewController {
         let copyCodeTap = UITapGestureRecognizer(target: self, action: #selector(self.tapCopyCode))
         self.userCodeStackView.addGestureRecognizer(copyCodeTap)
 
-        let testTap = UITapGestureRecognizer(target: self, action: #selector(self.testTap))
-        self.profilePictureBaseView.addGestureRecognizer(testTap)
-
-    }
-
-    @objc func testTap() {
-        let depositOnRegisterViewController = DepositOnRegisterViewController()
-
-        self.present(depositOnRegisterViewController, animated: true)
     }
 
     @objc func tapCopyCode() {
@@ -386,6 +384,8 @@ class ProfileViewController: UIViewController {
         bonusBalanceBaseView.backgroundColor = UIColor.App.backgroundPrimary
         scrollBaseView.backgroundColor = UIColor.App.backgroundPrimary
         profilePictureImageView.backgroundColor = .clear
+
+        profilePictureBaseInnerView.backgroundColor = UIColor.App.backgroundPrimary
 
         totalBalanceView.backgroundColor = UIColor.App.backgroundPrimary
 
