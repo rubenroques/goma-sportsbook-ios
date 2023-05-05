@@ -71,6 +71,7 @@ class AvatarFormStepView: FormStepView {
 
     private var avatarViews: [String: UIView] = [:]
     private var avatarViewsTags: [Int: String] = [:]
+    private var avatarBackgroundViews: [String: UIView] = [:]
 
     let viewModel: AvatarFormStepViewModel
 
@@ -99,18 +100,44 @@ class AvatarFormStepView: FormStepView {
             let lineStackView = Self.createHorizontalStackView()
             for avatarName in avatarGroup {
 
+                let baseView = Self.createAvatarBaseView()
+
+                NSLayoutConstraint.activate([
+                    baseView.widthAnchor.constraint(equalToConstant: 80),
+                    baseView.heightAnchor.constraint(equalTo: baseView.widthAnchor)
+                ])
+
+                let baseInnerView = Self.createAvatarBaseInnerView()
+                baseInnerView.backgroundColor = AppColor.backgroundPrimary
+
+                baseView.addSubview(baseInnerView)
+                baseView.bringSubviewToFront(baseInnerView)
+
+                NSLayoutConstraint.activate([
+                    baseInnerView.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: 4),
+                    baseInnerView.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: -4),
+                    baseInnerView.topAnchor.constraint(equalTo: baseView.topAnchor,constant: 4),
+                    baseInnerView.bottomAnchor.constraint(equalTo: baseView.bottomAnchor, constant: -4)
+                ])
+
                 let imageView = Self.createAvatarImageView()
                 imageView.image = UIImage(named: avatarName, in: Bundle.module, with: nil)
                 imageView.tag = tagCounter
 
+                baseView.addSubview(imageView)
+
                 NSLayoutConstraint.activate([
                     imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor),
-                    imageView.widthAnchor.constraint(equalToConstant: 80)
+                    imageView.widthAnchor.constraint(equalToConstant: 120),
+                    imageView.centerXAnchor.constraint(equalTo: baseView.centerXAnchor),
+                    imageView.centerYAnchor.constraint(equalTo: baseView.centerYAnchor)
                 ])
 
-                lineStackView.addArrangedSubview(imageView)
+                baseView.bringSubviewToFront(imageView)
+                lineStackView.addArrangedSubview(baseView)
 
-                avatarViews[avatarName] = imageView
+                avatarViews[avatarName] = baseView
+                avatarBackgroundViews[avatarName] = baseInnerView
                 avatarViewsTags[tagCounter] = avatarName
 
                 imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapAvatarImageView(_:))))
@@ -130,6 +157,11 @@ class AvatarFormStepView: FormStepView {
         for avatarView in avatarViews.values {
             avatarView.layer.cornerRadius = avatarView.frame.height/2
         }
+
+        for avatarBackgroundView in avatarBackgroundViews.values {
+            avatarBackgroundView.layer.cornerRadius = avatarBackgroundView.frame.height/2
+
+        }
     }
 
     override func setupWithTheme() {
@@ -142,12 +174,14 @@ class AvatarFormStepView: FormStepView {
 
     func selectAvatarWithName(_ name: String) {
         for avatarView in avatarViews.values {
-            avatarView.layer.borderColor = UIColor.clear.cgColor
+//            avatarView.layer.borderColor = UIColor.clear.cgColor
+            avatarView.backgroundColor = .clear
             avatarView.alpha = 0.95
         }
 
         if let selectedView = avatarViews[name] {
-            selectedView.layer.borderColor = AppColor.highlightPrimary.cgColor
+            //selectedView.layer.borderColor = AppColor.highlightPrimary.cgColor
+            selectedView.backgroundColor = AppColor.highlightPrimary
             selectedView.alpha = 1.0
         }
 
@@ -211,11 +245,23 @@ extension AvatarFormStepView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
 
-        imageView.layer.borderWidth = 4.0
-        imageView.layer.borderColor = UIColor.clear.cgColor
+//        imageView.layer.borderWidth = 4.0
+//        imageView.layer.borderColor = UIColor.clear.cgColor
         imageView.isUserInteractionEnabled = true
 
         return imageView
+    }
+
+    private static func createAvatarBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createAvatarBaseInnerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
 
 }

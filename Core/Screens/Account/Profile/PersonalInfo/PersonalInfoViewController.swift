@@ -170,6 +170,10 @@ class PersonalInfoViewController: UIViewController {
         self.infoLabel.numberOfLines = 0
         self.infoLabel.font = AppFont.with(type: .semibold, size: 16)
         self.infoLabel.textAlignment = .center
+
+        let infoViewTap = UITapGestureRecognizer(target: self, action: #selector(self.tapInfoView))
+        self.infoView.addGestureRecognizer(infoViewTap)
+
     }
 
     func setupWithTheme() {
@@ -329,6 +333,15 @@ class PersonalInfoViewController: UIViewController {
                 self.bankIdHeaderTextFieldView.text,
                 self.placeOfBirthHeaderTextFieldView.text,
                 self.departmentOfBirthHeaderTextFieldView.text].joined().MD5
+    }
+
+    @objc private func tapInfoView() {
+
+        let supportViewModel = SupportPageViewModel()
+
+        let supportViewController = SupportPageViewController(viewModel: supportViewModel)
+
+        self.navigationController?.pushViewController(supportViewController, animated: true)
     }
 
     @IBAction private func didTapBackButton() {

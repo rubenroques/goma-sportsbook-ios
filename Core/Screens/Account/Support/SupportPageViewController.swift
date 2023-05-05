@@ -298,54 +298,20 @@ class SupportPageViewController: UIViewController {
 
     }
 
-    private func recalculateWebview() {
-        executeDelayed(1) {
-            self.webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { height, error in
-                if let heightFloat = height as? CGFloat {
-                    print("Zendesk widget height: \(heightFloat)")
-                }
-                if let error = error {
-                    Logger.log("Match details WKWebView didFinish error \(error)")
-                }
-            })
-        }
-    }
-
-    private func addCustomScripts() {
-
-        let userContentController = self.webView.configuration.userContentController
-        let js = "document.getElementsByClassName('.sc-htpNat')[0].addEventListener('click', function(){ window.webkit.messageHandlers.clickListener.postMessage('Do something'); })"
-
-        let script = WKUserScript(source: js, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
-
-        userContentController.addUserScript(script)
-    }
 }
 
 extension SupportPageViewController: WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        //self.showLoading()
         print("STARTING LOADING ZENDESK")
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        //self.hideLoading()
         print("FINISHED LOADING ZENDESK")
 
-        self.webView.evaluateJavaScript("document.readyState", completionHandler: { complete, error in
-            if complete != nil {
-                self.recalculateWebview()
-                //self.addCustomScripts()
-            }
-            else if let error = error {
-                Logger.log("Zendesk support WKWebView didFinish error \(error)")
-            }
-        })
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        //self.hideLoading()
         print("FAILED LOADING ZENDESK")
 
     }
@@ -642,7 +608,6 @@ extension SupportPageViewController {
 extension SupportPageViewController: UITextViewDelegate {
 
     func textViewDidBeginEditing(_ textView: UITextView) {
-        print("BEGIN EDIT")
         self.descriptionView.layer.cornerRadius = CornerRadius.headerInput
         self.descriptionView.layer.borderWidth = 1
         self.descriptionView.layer.borderColor = UIColor.App.textPrimary.cgColor
@@ -650,7 +615,6 @@ extension SupportPageViewController: UITextViewDelegate {
         self.descriptionTextView.textColor =  UIColor.App.textPrimary
     }
     func textViewDidEndEditing(_ textView: UITextView) {
-        print("end EDIT")
         self.descriptionView.layer.cornerRadius = CornerRadius.headerInput
         self.descriptionView.layer.borderWidth = 1
         self.descriptionView.layer.borderColor = UIColor.App.backgroundPrimary.cgColor
@@ -662,7 +626,6 @@ extension SupportPageViewController: UITextViewDelegate {
 
 extension SupportPageViewController: WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        print("CLICKED BUTTON ZENDESK: \(message.body)")
 
         if "\(message.body)".contains("sc-vrqbdz-5 eQUhzA") {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
