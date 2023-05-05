@@ -292,6 +292,10 @@ class OutcomeSelectionButtonView: NibView {
         }
         else {
             Env.betslipManager.addBettingTicket(bettingTicket)
+
+            let generator = UINotificationFeedbackGenerator()
+            generator.notificationOccurred(.success)
+
             self.isOutcomeButtonSelected = true
         }
     }

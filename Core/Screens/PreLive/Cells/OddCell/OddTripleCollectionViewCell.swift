@@ -699,6 +699,10 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         }
         else {
             Env.betslipManager.addBettingTicket(bettingTicket)
+
+            let generator = UINotificationFeedbackGenerator()
+            generator.notificationOccurred(.success)
+
             self.isLeftOutcomeButtonSelected = true
         }
 
@@ -750,6 +754,10 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         }
         else {
             Env.betslipManager.addBettingTicket(bettingTicket)
+
+            let generator = UINotificationFeedbackGenerator()
+            generator.notificationOccurred(.success)
+
             self.isMiddleOutcomeButtonSelected = true
         }
     }
@@ -800,6 +808,10 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         }
         else {
             Env.betslipManager.addBettingTicket(bettingTicket)
+
+            let generator = UINotificationFeedbackGenerator()
+            generator.notificationOccurred(.success)
+            
             self.isRightOutcomeButtonSelected = true
         }
     }

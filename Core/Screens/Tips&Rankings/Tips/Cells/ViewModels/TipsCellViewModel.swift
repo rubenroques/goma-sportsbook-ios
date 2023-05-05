@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+
 class TipsCellViewModel {
 
     var featuredTip: FeaturedTip
