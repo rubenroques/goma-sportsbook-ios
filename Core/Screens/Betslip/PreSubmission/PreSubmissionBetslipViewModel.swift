@@ -23,7 +23,7 @@ class PreSubmissionBetslipViewModel {
 
     var sharedBettingTicket: [BettingTicket] = []
 
-    var getSharedRetries: Int = 2
+    var getSharedRetries: Int = 5
 
     // MARK: Private Properties
     private var sharedBetToken: String?
@@ -98,7 +98,7 @@ class PreSubmissionBetslipViewModel {
                         self?.sharedBetsPublisher.send(.failed)
                     }
                     else {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             self?.getSharedRetries -= 1
                             self?.getSharedTicket(betId: betId)
                         }

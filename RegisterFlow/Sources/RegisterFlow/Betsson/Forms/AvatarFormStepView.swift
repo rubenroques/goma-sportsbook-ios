@@ -125,10 +125,10 @@ class AvatarFormStepView: FormStepView {
                 baseView.bringSubviewToFront(baseInnerView)
 
                 NSLayoutConstraint.activate([
-                    baseInnerView.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: 4),
-                    baseInnerView.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: -4),
-                    baseInnerView.topAnchor.constraint(equalTo: baseView.topAnchor,constant: 4),
-                    baseInnerView.bottomAnchor.constraint(equalTo: baseView.bottomAnchor, constant: -4)
+                    baseInnerView.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: 2),
+                    baseInnerView.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: -2),
+                    baseInnerView.topAnchor.constraint(equalTo: baseView.topAnchor,constant: 2),
+                    baseInnerView.bottomAnchor.constraint(equalTo: baseView.bottomAnchor, constant: -2)
                 ])
 
                 let imageView = Self.createAvatarImageView()
