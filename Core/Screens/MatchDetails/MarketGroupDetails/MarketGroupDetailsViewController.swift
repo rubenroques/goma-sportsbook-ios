@@ -12,8 +12,6 @@ import OrderedCollections
 
 class MarketGroupDetailsViewController: UIViewController {
 
-    private lazy var backgroundGradientView: GradientView = Self.createBackgroundGradientView()
-
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
@@ -25,10 +23,11 @@ class MarketGroupDetailsViewController: UIViewController {
     
     private var cancellables: Set<AnyCancellable> = []
 
-    // ScrollView content offset
-    private var lastContentOffset: CGFloat = 0
-    var shouldScrollToTop: ((Bool) -> Void)?
-    var enableAutoScroll: (() -> Void?)?
+    weak var innerTableViewScrollDelegate: InnerTableViewScrollDelegate?
+
+    //MARK:- Stored Properties for Scroll Delegate
+    private var dragDirection: InnerScrollDragDirection = .up
+    private var oldContentOffset = CGPoint.zero
 
     // MARK: - Lifetime and Cycle
     init(viewModel: MarketGroupDetailsViewModel) {
@@ -89,17 +88,6 @@ class MarketGroupDetailsViewController: UIViewController {
         self.view.backgroundColor = .clear
 
         self.tableView.backgroundColor = .clear
-
-        //
-        if TargetVariables.shouldUseGradientBackgrounds {
-            self.backgroundGradientView.colors = [(UIColor.App.backgroundGradient1, NSNumber(0.0)),
-                                                  (UIColor.App.backgroundGradient2, NSNumber(1.0))]
-        }
-        else {
-            self.backgroundGradientView.colors = []
-            self.backgroundGradientView.backgroundColor = UIColor.App.backgroundPrimary
-        }
-        
     }
 
     override func viewDidLayoutSubviews() {
@@ -315,37 +303,44 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
         return 120
     }
 
+}
+
+extension MarketGroupDetailsViewController: UIScrollViewDelegate {
+
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
-        let scrollViewTop = scrollView.frame.origin.y
-        let currentYPosition = scrollView.contentOffset.y
-        let currentBottomYPosition = scrollView.frame.size.height + currentYPosition
+        let delta = scrollView.contentOffset.y - oldContentOffset.y
+        let topViewCurrentHeightConst = innerTableViewScrollDelegate?.currentHeaderHeight
 
-        if scrollViewTop == scrollView.contentOffset.y && self.lastContentOffset != 0 {
-            self.shouldScrollToTop?(true)
-            self.enableAutoScroll?()
-        }
-        else if self.lastContentOffset > scrollViewTop {
-            self.shouldScrollToTop?(false)
-        }
-
-        if scrollView.contentOffset.y > self.lastContentOffset {
-            self.tableView.bounces = true
-        }
-        else {
-            if currentBottomYPosition < scrollView.contentSize.height + scrollView.contentInset.bottom {
-
-                self.tableView.bounces = false
+        if let topViewUnwrappedHeight = topViewCurrentHeightConst {
+            if delta > 0, topViewUnwrappedHeight > 0, scrollView.contentOffset.y > 0 {
+                dragDirection = .up
+                innerTableViewScrollDelegate?.innerTableViewDidScroll(withDistance: delta)
+                scrollView.contentOffset.y -= delta
             }
+
+            if delta < 0, scrollView.contentOffset.y < 0 {
+                dragDirection = .down
+                innerTableViewScrollDelegate?.innerTableViewDidScroll(withDistance: delta)
+                scrollView.contentOffset.y -= delta
+            }
+
         }
 
-        self.lastContentOffset = scrollView.contentOffset.y
+        oldContentOffset = scrollView.contentOffset
     }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        self.enableAutoScroll?()
+        if scrollView.contentOffset.y <= 0 {
+            innerTableViewScrollDelegate?.innerTableViewScrollEnded(withScrollDirection: dragDirection)
+        }
     }
 
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if decelerate == false && scrollView.contentOffset.y <= 0 {
+            innerTableViewScrollDelegate?.innerTableViewScrollEnded(withScrollDirection: dragDirection)
+        }
+    }
 }
 
 extension MarketGroupDetailsViewController {
@@ -371,15 +366,9 @@ extension MarketGroupDetailsViewController {
         activityIndicatorView.stopAnimating()
         return activityIndicatorView
     }
-    private static func createBackgroundGradientView() -> GradientView {
-        let view = GradientView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
 
     private func setupSubviews() {
 
-        self.view.addSubview(self.backgroundGradientView)
         self.view.addSubview(self.tableView)
 
         self.view.addSubview(self.loadingBaseView)
@@ -394,12 +383,6 @@ extension MarketGroupDetailsViewController {
     private func initConstraints() {
 
         NSLayoutConstraint.activate([
-
-            self.backgroundGradientView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.backgroundGradientView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.backgroundGradientView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.backgroundGradientView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.tableView.topAnchor.constraint(equalTo: self.view.topAnchor),

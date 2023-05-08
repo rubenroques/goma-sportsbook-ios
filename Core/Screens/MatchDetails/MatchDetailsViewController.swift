@@ -62,7 +62,8 @@ class MatchDetailsViewController: UIViewController {
     
     @IBOutlet private var matchFieldWebView: WKWebView!
     @IBOutlet private var matchFieldWebViewHeight: NSLayoutConstraint!
-    
+
+
     @IBOutlet private var statsBaseView: UIView!
     @IBOutlet private var statsCollectionBaseView: UIView!
     @IBOutlet private var statsCollectionView: UICollectionView!
@@ -71,7 +72,6 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var statsNotFoundLabel: UILabel!
     
     @IBOutlet private var marketTypesCollectionView: UICollectionView!
-    @IBOutlet private var tableView: UITableView!
 
     private lazy var backgroundGradientView: GradientView = {
         let view = GradientView()
@@ -81,8 +81,7 @@ class MatchDetailsViewController: UIViewController {
 
     @IBOutlet private var marketGroupsPagedBaseView: UIView!
     private var marketGroupsPagedViewController: UIPageViewController
-    
-    @IBOutlet private var loadingView: UIActivityIndicatorView!
+
     private let loadingSpinnerViewController = LoadingSpinnerViewController()
 
     @IBOutlet private var matchNotAvailableView: UIView!
@@ -99,7 +98,6 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var marketsStackView: UIStackView!
     @IBOutlet private var contentScrollView: UIScrollView!
 
-    @IBOutlet private var tableViewHeightConstraint: NSLayoutConstraint!
 
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
     private static func createFloatingShortcutsView() -> FloatingShortcutsView {
@@ -141,11 +139,9 @@ class MatchDetailsViewController: UIViewController {
         didSet {
             if self.shouldShowLiveFieldWebView {
                 self.headerLiveButtonBaseView.isHidden = false
-                self.contentScrollView.isScrollEnabled = true
             }
             else {
                 self.headerLiveButtonBaseView.isHidden = true
-                self.contentScrollView.isScrollEnabled = false
             }
         }
     }
@@ -245,7 +241,27 @@ class MatchDetailsViewController: UIViewController {
             }
         }
     }
-    
+
+    //
+    // ======
+    private var matchFieldMaximumHeight: CGFloat {
+        if self.isMatchFieldExpanded {
+            return self.matchFielHeight
+        }
+        else {
+            return 0.0
+        }
+    }
+    private var matchFieldMinimumHeight: CGFloat {
+        return 0.0
+    }
+
+    var dragInitialY: CGFloat = 0
+    var dragPreviousY: CGFloat = 0
+    var dragDirection: InnerScrollDragDirection = .up
+    //
+    //
+
     // =========================================================================
     
     private var marketGroupsViewControllers = [UIViewController]()
@@ -308,9 +324,6 @@ class MatchDetailsViewController: UIViewController {
         self.shouldShowLiveFieldWebView = false
         
         //
-        self.loadingView.hidesWhenStopped = true
-        self.loadingView.stopAnimating()
-        
         self.backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
         
         self.shareButton.setTitle("", for: .normal)
@@ -434,9 +447,6 @@ class MatchDetailsViewController: UIViewController {
             sharedGameCardView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
 
-        self.setTableViewHeight()
-
-        
         let didTapLiveGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLiveButtonHeaderView))
         self.headerLiveButtonBaseView.addGestureRecognizer(didTapLiveGesture)
         
@@ -444,9 +454,6 @@ class MatchDetailsViewController: UIViewController {
         self.headerStatsButtonBaseView.addGestureRecognizer(didTapStatsGesture)
         
         self.headerBarSelection = .none
-
-        // ScrollView
-        self.contentScrollView.delegate = self
 
         let tapMarkets = UITapGestureRecognizer(target: self, action: #selector(didTapMarkets))
         self.headerDetailView.addGestureRecognizer(tapMarkets)
@@ -456,7 +463,6 @@ class MatchDetailsViewController: UIViewController {
         self.bind(toViewModel: self.viewModel)
         
         self.marketTypesCollectionView.reloadData()
-        self.tableView.reloadData()
 
         self.addChildViewController(self.loadingSpinnerViewController, toView: self.view)
         self.loadingSpinnerViewController.view.isHidden = true
@@ -565,10 +571,7 @@ class MatchDetailsViewController: UIViewController {
         self.marketGroupsPagedBaseView.backgroundColor = .clear
         // Market List CollectionView
         self.marketTypesCollectionView.backgroundColor = UIColor.App.pillNavigation
-        
-        // TableView
-        self.tableView.backgroundColor = .clear
-        
+
         self.matchFieldBaseView.backgroundColor = UIColor.App.backgroundTertiary
         self.matchFieldWebView.backgroundColor = UIColor.App.backgroundTertiary
         
@@ -716,7 +719,7 @@ class MatchDetailsViewController: UIViewController {
                     self?.homeRedCardLabel.text = homeScoreValue
                     self?.homeRedCardLabel.isHidden = false
                 }
-               else {
+                else {
                     self?.homeRedCardImage.isHidden = true
                     self?.homeRedCardLabel.isHidden = true
                 }
@@ -726,7 +729,6 @@ class MatchDetailsViewController: UIViewController {
         self.viewModel.awayRedCardsScorePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] awayScoreValue in
-                
                 if awayScoreValue != "0" {
                     self?.awayRedCardImage.isHidden = false
                     self?.awayRedCardsLabel.text = awayScoreValue
@@ -755,32 +757,6 @@ class MatchDetailsViewController: UIViewController {
 
     }
 
-    func setTableViewHeight() {
-        let screenSize: CGRect = UIScreen.main.bounds
-
-        let screenHeight = screenSize.height
-
-        let headerDetailViewHeight = self.headerDetailView.frame.height
-
-        let widgetStackViewHeight = self.headerButtonsBaseView.frame.height
-
-        let marketsStackView = self.marketsStackView.frame.height
-
-        var newTableViewHeight = screenHeight - headerDetailViewHeight - (marketsStackView - widgetStackViewHeight)
-
-        if screenHeight > 800 {
-            newTableViewHeight -= 60
-        }
-        else {
-            newTableViewHeight -= 20
-        }
-
-        self.tableViewHeightConstraint.constant = newTableViewHeight
-        self.contentScrollView.layoutIfNeeded()
-
-        self.contentScrollView.bounces = false
-    }
-    
     func reloadMarketGroupDetails(_ marketGroups: [MarketGroup]) {
         
         guard let match = self.viewModel.match else {
@@ -799,34 +775,7 @@ class MatchDetailsViewController: UIViewController {
                 }
 
                 let marketGroupDetailsViewController = MarketGroupDetailsViewController(viewModel: viewModel)
-
-                marketGroupDetailsViewController.shouldScrollToTop = { [weak self] scrollTop in
-
-                    guard let self = self else {return}
-
-                    if scrollTop {
-                        UIView.animate(withDuration: 0.5, animations: {
-                            self.contentScrollView.setContentOffset(
-                                CGPoint.zero, animated: false)
-                        })
-                    }
-                    else {
-                        if self.autoScrollEnabled {
-                            let marketFilterOffset = self.isMatchFieldExpanded ? self.headerButtonsBaseView.frame.height + self.matchFielHeight : self.headerButtonsBaseView.frame.height
-
-                            UIView.animate(withDuration: 0.5, animations: {
-                                self.contentScrollView.setContentOffset(
-                                    CGPoint(x: 0, y: marketFilterOffset), animated: false)
-                            })
-
-                            self.autoScrollEnabled = false
-                        }
-                    }
-                }
-
-                marketGroupDetailsViewController.enableAutoScroll = { [weak self] in
-                    self?.autoScrollEnabled = true
-                }
+                marketGroupDetailsViewController.innerTableViewScrollDelegate = self
 
                 self.marketGroupsViewControllers.append(marketGroupDetailsViewController)
             }
@@ -964,7 +913,6 @@ class MatchDetailsViewController: UIViewController {
         self.headerCompetitionSportImageView.setTintColor(color: UIColor.App.textPrimary)
     }
 
-
     func expandLiveFieldIfNeeded() {
         if self.viewModel.isLiveMatch {
             self.headerBarSelection = .live
@@ -1012,10 +960,7 @@ class MatchDetailsViewController: UIViewController {
     }
 
     func showMatchNotAvailableView() {
-        self.tableView.isHidden = true
-
         self.shareButton.isHidden = true
-
         self.marketGroupsPagedBaseView.isHidden = true
         self.marketTypesCollectionView.isHidden = true
         self.marketsNotAvailableView.isHidden = true
@@ -1023,9 +968,6 @@ class MatchDetailsViewController: UIViewController {
     }
 
     func showMarketsNotAvailableView() {
-
-        self.tableView.isHidden = true
-
         self.marketGroupsPagedBaseView.isHidden = true
         self.marketTypesCollectionView.isHidden = true
         self.marketsNotAvailableView.isHidden = false
@@ -1041,7 +983,6 @@ class MatchDetailsViewController: UIViewController {
         let betslipViewController = BetslipViewController()
         betslipViewController.willDismissAction = { [weak self] in
             self?.marketTypesCollectionView.reloadData()
-            self?.tableView.reloadData()
             self?.reloadMarketGroupDetailsContent()
         }
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
@@ -1091,11 +1032,9 @@ class MatchDetailsViewController: UIViewController {
     @objc private func didTapAccountValue() {
         let depositViewController = DepositViewController()
         let navigationViewController = Router.navigationController(with: depositViewController)
-
         depositViewController.shouldRefreshUserWallet = { [weak self] in
             Env.userSessionStore.refreshUserWallet()
         }
-
         self.present(navigationViewController, animated: true, completion: nil)
     }
     
@@ -1388,14 +1327,88 @@ extension MatchDetailsViewController: UIScrollViewDelegate {
             }
         }
 
-        if scrollView == self.contentScrollView {
-            let marketFilterOffset = self.isMatchFieldExpanded ? self.headerButtonsBaseView.frame.height + self.matchFielHeight : self.headerButtonsBaseView.frame.height
-            if self.lastContentOffset < scrollView.contentOffset.y {
-                if marketFilterOffset <= scrollView.contentOffset.y {
-                    self.contentScrollView.setContentOffset(CGPoint(x: 0, y: marketFilterOffset), animated: false)
-                }
-            }
-            self.lastContentOffset = scrollView.contentOffset.y
+    }
+}
+
+extension MatchDetailsViewController: InnerTableViewScrollDelegate {
+
+    var currentHeaderHeight: CGFloat {
+        return matchFieldWebViewHeight.constant
+    }
+
+    func innerTableViewDidScroll(withDistance scrollDistance: CGFloat) {
+
+        matchFieldWebViewHeight.constant -= scrollDistance
+
+        if matchFieldWebViewHeight.constant > matchFieldMaximumHeight {
+         matchFieldWebViewHeight.constant = matchFieldMaximumHeight
+        }
+
+        if matchFieldWebViewHeight.constant < matchFieldMinimumHeight {
+            matchFieldWebViewHeight.constant = matchFieldMinimumHeight
         }
     }
+
+    func innerTableViewScrollEnded(withScrollDirection scrollDirection: InnerScrollDragDirection) {
+
+        let topViewHeight = self.matchFieldWebViewHeight.constant
+
+        if topViewHeight <= self.matchFieldMinimumHeight + 20 {
+            self.scrollToFinalView()
+        } else if topViewHeight <= self.matchFieldMaximumHeight - 20 {
+            switch scrollDirection {
+            case .down:
+                self.scrollToInitialView()
+            case .up:
+                self.scrollToFinalView()
+            }
+        } else {
+            self.scrollToInitialView()
+        }
+    }
+
+    func scrollToInitialView() {
+
+        let topViewCurrentHeight = self.matchFieldWebView.frame.height
+        let distanceToBeMoved = abs(topViewCurrentHeight - self.matchFieldMaximumHeight)
+
+        var time = distanceToBeMoved / 500
+        if time < 0.25 {
+            time = 0.25
+        }
+
+        self.matchFieldWebViewHeight.constant = self.matchFieldMaximumHeight
+
+        UIView.animate(withDuration: TimeInterval(time), animations: {
+            self.view.layoutIfNeeded()
+        })
+    }
+
+    func scrollToFinalView() {
+        let topViewCurrentHeight = self.matchFieldWebView.frame.height
+        let distanceToBeMoved = abs(topViewCurrentHeight - self.matchFieldMinimumHeight)
+
+        var time = distanceToBeMoved / 500
+        if time < 0.25 {
+            time = 0.25
+        }
+        self.matchFieldWebViewHeight.constant = self.matchFieldMinimumHeight
+
+        UIView.animate(withDuration: TimeInterval(time), animations: {
+            self.view.layoutIfNeeded()
+        })
+    }
+
+}
+
+//
+enum InnerScrollDragDirection {
+    case up
+    case down
+}
+
+protocol InnerTableViewScrollDelegate: AnyObject {
+    var currentHeaderHeight: CGFloat { get }
+    func innerTableViewDidScroll(withDistance scrollDistance: CGFloat)
+    func innerTableViewScrollEnded(withScrollDirection scrollDirection: InnerScrollDragDirection)
 }
