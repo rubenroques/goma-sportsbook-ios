@@ -61,7 +61,7 @@ class ShareTicketChoiceViewController: UIViewController {
             self.leftSeparatorLineView.isHidden = !hasChatrooms
             self.titleSeparatorLabel.isHidden = !hasChatrooms
             self.rightSeparatorLineView.isHidden = !hasChatrooms
-
+            self.chatTitleLabel.isHidden = !hasChatrooms
             self.sendViaButtonSeparatorTopConstraint?.isActive = hasChatrooms
             self.sendViaButtonTopTitleConstraint?.isActive = !hasChatrooms
         }

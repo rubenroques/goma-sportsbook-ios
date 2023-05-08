@@ -466,11 +466,12 @@ class RootViewController: UIViewController {
         self.mainContainerGradientLayer.frame = self.mainContainerGradientView.bounds
 
         self.profilePictureBaseView.layer.cornerRadius = profilePictureBaseView.frame.size.width/2
+        
         self.profilePictureImageView.layer.cornerRadius = profilePictureImageView.frame.size.width/2
-//        self.profilePictureImageView.layer.borderWidth = 1
-//        self.profilePictureImageView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
-        self.profilePictureBaseInnerView.layer.cornerRadius = self.profilePictureBaseInnerView.frame.size.width/2
+        profilePictureImageView.layer.masksToBounds = false
+        profilePictureImageView.clipsToBounds = true
 
+        self.profilePictureBaseInnerView.layer.cornerRadius = self.profilePictureBaseInnerView.frame.size.width/2
 
         self.profilePictureImageView.layer.masksToBounds = true
 

@@ -210,6 +210,8 @@ class ProfileViewController: UIViewController {
         profilePictureBaseInnerView.layer.cornerRadius = profilePictureBaseInnerView.frame.size.width/2
 
         profilePictureImageView.layer.cornerRadius = profilePictureImageView.frame.size.width/2
+        profilePictureImageView.layer.masksToBounds = false
+        profilePictureImageView.clipsToBounds = true
     }
 
     func commonInit() {

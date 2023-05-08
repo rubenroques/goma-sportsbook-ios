@@ -233,7 +233,7 @@ extension BonusHistoryTableViewCell {
         // Labels
         NSLayoutConstraint.activate([
             self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
+            // self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
             self.titleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 20),
 
             self.startDateDescriptionLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),

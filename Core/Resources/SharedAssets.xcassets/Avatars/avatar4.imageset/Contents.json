@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "flambeur.svg",
+      "filename" : "flambeur.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "flambeur 1.svg",
+      "filename" : "flambeur@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "flambeur 2.svg",
+      "filename" : "flambeur@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
