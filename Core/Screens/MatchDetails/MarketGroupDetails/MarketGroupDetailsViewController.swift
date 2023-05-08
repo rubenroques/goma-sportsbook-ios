@@ -17,6 +17,7 @@ class MarketGroupDetailsViewController: UIViewController {
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
+    private let loadingSpinnerViewController = LoadingSpinnerViewController()
 
     private var expandedMarketGroupIds: Set<String> = []
     private var viewModel: MarketGroupDetailsViewModel
@@ -59,6 +60,8 @@ class MarketGroupDetailsViewController: UIViewController {
         self.tableView.register(OverUnderMarketDetailTableViewCell.nib, forCellReuseIdentifier: OverUnderMarketDetailTableViewCell.identifier)
 
 //        self.tableView.bounces = false
+
+        self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
 
         self.showLoading()
 
@@ -150,13 +153,14 @@ class MarketGroupDetailsViewController: UIViewController {
     }
 
     private func showLoading() {
+        self.loadingSpinnerViewController.startAnimating()
         self.loadingBaseView.isHidden = false
-        self.loadingActivityIndicatorView.startAnimating()
+
     }
 
     private func hideLoading() {
         self.loadingBaseView.isHidden = true
-        self.loadingActivityIndicatorView.stopAnimating()
+        self.loadingSpinnerViewController.stopAnimating()
     }
 
     func firstMarket() -> Market? {

@@ -3886,6 +3886,13 @@
 		45D1ED5F28A150C2001E18E5 /* BusinessModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */; };
 		45D1ED6028A150C2001E18E5 /* BusinessModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D1ED5A28A150C2001E18E5 /* BusinessModules.swift */; };
 		45D3BBAC296F13BB009E0D09 /* RegisterFlow in Frameworks */ = {isa = PBXBuildFile; productRef = 45D3BBAB296F13BB009E0D09 /* RegisterFlow */; };
+		45E46C172A08FEB900BB9B85 /* sports-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45E46C162A08FEB900BB9B85 /* sports-loading.json */; };
+		45E46C182A08FEB900BB9B85 /* sports-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45E46C162A08FEB900BB9B85 /* sports-loading.json */; };
+		45E46C192A08FEB900BB9B85 /* sports-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45E46C162A08FEB900BB9B85 /* sports-loading.json */; };
+		45E46C1A2A08FEB900BB9B85 /* sports-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45E46C162A08FEB900BB9B85 /* sports-loading.json */; };
+		45E46C1B2A08FEB900BB9B85 /* sports-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45E46C162A08FEB900BB9B85 /* sports-loading.json */; };
+		45E46C1C2A08FEB900BB9B85 /* sports-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45E46C162A08FEB900BB9B85 /* sports-loading.json */; };
+		45E46C1D2A08FEB900BB9B85 /* sports-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 45E46C162A08FEB900BB9B85 /* sports-loading.json */; };
 		45E8E29828C88E1300A09B02 /* UserRankingPositionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29528C88E1300A09B02 /* UserRankingPositionTableViewCell.swift */; };
 		45E8E29928C88E1300A09B02 /* UserRankingPositionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29528C88E1300A09B02 /* UserRankingPositionTableViewCell.swift */; };
 		45E8E29A28C88E1300A09B02 /* UserRankingPositionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8E29528C88E1300A09B02 /* UserRankingPositionTableViewCell.swift */; };
@@ -5623,6 +5630,7 @@
 		45DDBA8E26F2146100A73E45 /* Gilroy-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Thin.ttf"; sourceTree = "<group>"; };
 		45DDBA8F26F2146100A73E45 /* Gilroy-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Black.ttf"; sourceTree = "<group>"; };
 		45DDBAB926F2406100A73E45 /* UserSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionStore.swift; sourceTree = "<group>"; };
+		45E46C162A08FEB900BB9B85 /* sports-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "sports-loading.json"; sourceTree = "<group>"; };
 		45E5190B270C8B570052794F /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
 		45E8E29528C88E1300A09B02 /* UserRankingPositionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRankingPositionTableViewCell.swift; sourceTree = "<group>"; };
 		45E8E29C28C8A79C00A09B02 /* RankingTypeTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingTypeTableHeaderView.swift; sourceTree = "<group>"; };
@@ -7871,6 +7879,7 @@
 		45F805942A053841005296E0 /* Animations */ = {
 			isa = PBXGroup;
 			children = (
+				45E46C162A08FEB900BB9B85 /* sports-loading.json */,
 				45F805952A05385B005296E0 /* dots-loading.json */,
 			);
 			path = Animations;
@@ -9686,6 +9695,7 @@
 				450B7AE428F58574009229E3 /* Gilroy-SemiBold.ttf in Resources */,
 				450B7AE528F58574009229E3 /* CountrySelectorTableViewCell.xib in Resources */,
 				450B7AE628F58574009229E3 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
+				45E46C182A08FEB900BB9B85 /* sports-loading.json in Resources */,
 				450B7AE728F58574009229E3 /* EmailVerificationTableViewCell.xib in Resources */,
 				450B7AE828F58574009229E3 /* DepositViewController.xib in Resources */,
 				450B7AE928F58574009229E3 /* Inconsolata-Bold.ttf in Resources */,
@@ -9827,6 +9837,7 @@
 				457CBC0C282D27D000ED0F00 /* Gilroy-Bold.ttf in Resources */,
 				457CBC0D282D27D000ED0F00 /* SimpleRegisterEmailSentViewController.xib in Resources */,
 				457CBC0E282D27D000ED0F00 /* Gilroy-SemiBold.ttf in Resources */,
+				45E46C1C2A08FEB900BB9B85 /* sports-loading.json in Resources */,
 				457CBC0F282D27D000ED0F00 /* CountrySelectorTableViewCell.xib in Resources */,
 				457CBC10282D27D000ED0F00 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
 				457CBC11282D27D000ED0F00 /* EmailVerificationTableViewCell.xib in Resources */,
@@ -9960,6 +9971,7 @@
 				457CBEB6282D2CD100ED0F00 /* Gilroy-SemiBold.ttf in Resources */,
 				457CBEB7282D2CD100ED0F00 /* CountrySelectorTableViewCell.xib in Resources */,
 				457CBEB8282D2CD100ED0F00 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
+				45E46C1D2A08FEB900BB9B85 /* sports-loading.json in Resources */,
 				457CBEB9282D2CD100ED0F00 /* EmailVerificationTableViewCell.xib in Resources */,
 				457CBEBA282D2CD100ED0F00 /* DepositViewController.xib in Resources */,
 				457CBEBB282D2CD100ED0F00 /* Inconsolata-Bold.ttf in Resources */,
@@ -10093,6 +10105,7 @@
 				4589C98A282024E400243547 /* Gilroy-Bold.ttf in Resources */,
 				4589C98B282024E400243547 /* SimpleRegisterEmailSentViewController.xib in Resources */,
 				4589C98C282024E400243547 /* Gilroy-SemiBold.ttf in Resources */,
+				45E46C192A08FEB900BB9B85 /* sports-loading.json in Resources */,
 				4589C98E282024E400243547 /* CountrySelectorTableViewCell.xib in Resources */,
 				4589C98F282024E400243547 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
 				4589C990282024E400243547 /* EmailVerificationTableViewCell.xib in Resources */,
@@ -10191,6 +10204,7 @@
 				45A332EA298976BA008181E9 /* SimpleListMarketDetailTableViewCell.xib in Resources */,
 				45A332EB298976BA008181E9 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				45A332EC298976BA008181E9 /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
+				45E46C172A08FEB900BB9B85 /* sports-loading.json in Resources */,
 				45A332ED298976BA008181E9 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				45A332EE298976BA008181E9 /* Gilroy-Black.ttf in Resources */,
 				45A33363298976E3008181E9 /* Betsson-Assets.xcassets in Resources */,
@@ -10360,6 +10374,7 @@
 				45A6BDE328246A7500D9B416 /* Gilroy-Bold.ttf in Resources */,
 				45A6BDE428246A7500D9B416 /* SimpleRegisterEmailSentViewController.xib in Resources */,
 				45A6BDE528246A7500D9B416 /* Gilroy-SemiBold.ttf in Resources */,
+				45E46C1B2A08FEB900BB9B85 /* sports-loading.json in Resources */,
 				45A6BDE728246A7500D9B416 /* CountrySelectorTableViewCell.xib in Resources */,
 				45A6BDE828246A7500D9B416 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
 				45A6BDE928246A7500D9B416 /* EmailVerificationTableViewCell.xib in Resources */,
@@ -10458,6 +10473,7 @@
 				A9C3431928F9A74A0055360B /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				A9C3431A28F9A74A0055360B /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
 				A9C3431B28F9A74A0055360B /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
+				45E46C1A2A08FEB900BB9B85 /* sports-loading.json in Resources */,
 				A9C3431C28F9A74A0055360B /* Gilroy-Black.ttf in Resources */,
 				A9C3431D28F9A74A0055360B /* PreLiveEventsViewController.xib in Resources */,
 				A9C3431E28F9A74A0055360B /* FullRegisterDocumentsViewController.xib in Resources */,
@@ -15359,7 +15375,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1120;
+				CURRENT_PROJECT_VERSION = 1121;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15385,7 +15401,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1120;
+				CURRENT_PROJECT_VERSION = 1121;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

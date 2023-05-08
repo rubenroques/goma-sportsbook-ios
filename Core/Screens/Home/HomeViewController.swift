@@ -26,7 +26,8 @@ class HomeViewController: UIViewController {
     // Sub Views
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
-    private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
+
+    private let loadingSpinnerViewController = LoadingSpinnerViewController()
 
     private lazy var floatingShortcutsView: FloatingShortcutsView = Self.createFloatingShortcutsView()
     
@@ -105,6 +106,8 @@ class HomeViewController: UIViewController {
             }
         }
 
+        self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
+
         self.showLoading()
 
         executeDelayed(2.0) {
@@ -137,8 +140,6 @@ class HomeViewController: UIViewController {
         self.tableView.backgroundView?.backgroundColor = .clear
 
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        self.loadingActivityIndicatorView.tintColor = UIColor.gray
-
     }
 
     // MARK: - Bindings
@@ -173,12 +174,12 @@ class HomeViewController: UIViewController {
 
     private func showLoading() {
         self.loadingBaseView.isHidden = false
-        self.loadingActivityIndicatorView.startAnimating()
+        self.loadingSpinnerViewController.startAnimating()
     }
 
     private func hideLoading() {
         self.loadingBaseView.isHidden = true
-        self.loadingActivityIndicatorView.stopAnimating()
+        self.loadingSpinnerViewController.stopAnimating()
     }
 
     // MARK: - Actions
@@ -815,7 +816,6 @@ extension HomeViewController {
         self.view.addSubview(self.tableView)
 
         self.view.addSubview(self.loadingBaseView)
-        self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
 
         self.view.addSubview(self.floatingShortcutsView)
 
@@ -841,9 +841,6 @@ extension HomeViewController {
             self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.loadingBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-
-            self.loadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
-            self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
         ])
 
         NSLayoutConstraint.activate([

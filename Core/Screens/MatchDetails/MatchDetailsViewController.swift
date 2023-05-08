@@ -83,7 +83,8 @@ class MatchDetailsViewController: UIViewController {
     private var marketGroupsPagedViewController: UIPageViewController
     
     @IBOutlet private var loadingView: UIActivityIndicatorView!
-    
+    private let loadingSpinnerViewController = LoadingSpinnerViewController()
+
     @IBOutlet private var matchNotAvailableView: UIView!
     @IBOutlet private var matchNotAvailableLabel: UILabel!
 
@@ -434,9 +435,7 @@ class MatchDetailsViewController: UIViewController {
         ])
 
         self.setTableViewHeight()
-        
-        self.view.setNeedsLayout()
-        self.view.layoutIfNeeded()
+
         
         let didTapLiveGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLiveButtonHeaderView))
         self.headerLiveButtonBaseView.addGestureRecognizer(didTapLiveGesture)
@@ -458,12 +457,18 @@ class MatchDetailsViewController: UIViewController {
         
         self.marketTypesCollectionView.reloadData()
         self.tableView.reloadData()
-        
+
+        self.addChildViewController(self.loadingSpinnerViewController, toView: self.view)
+        self.loadingSpinnerViewController.view.isHidden = true
+
         // Shared Game
         self.view.sendSubviewToBack(self.sharedGameCardView)
         
         //
         self.view.bringSubviewToFront(self.matchNotAvailableView)
+
+        self.view.setNeedsLayout()
+        self.view.layoutIfNeeded()
 
     }
     
@@ -618,15 +623,23 @@ class MatchDetailsViewController: UIViewController {
             .sink { [weak self] marketGroupState in
                 switch marketGroupState {
                 case .idle:
-                    self?.loadingView.startAnimating()
+                    self?.loadingSpinnerViewController.startAnimating()
+                    self?.loadingSpinnerViewController.view.isHidden = false
+
                 case .loading:
-                    self?.loadingView.startAnimating()
+                    self?.loadingSpinnerViewController.startAnimating()
+                    self?.loadingSpinnerViewController.view.isHidden = false
+
                 case let .loaded(marketGroups):
-                    self?.loadingView.stopAnimating()
+                    self?.loadingSpinnerViewController.view.isHidden = true
+                    self?.loadingSpinnerViewController.stopAnimating()
+
                     self?.showMarkets()
                     self?.reloadMarketGroupDetails(marketGroups)
                 case .failed:
-                    self?.loadingView.stopAnimating()
+                    self?.loadingSpinnerViewController.view.isHidden = true
+                    self?.loadingSpinnerViewController.stopAnimating()
+
                     self?.showMarketsNotAvailableView()
                     self?.reloadMarketGroupDetails([])
                 }

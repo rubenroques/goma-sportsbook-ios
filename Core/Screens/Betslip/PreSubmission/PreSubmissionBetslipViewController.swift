@@ -115,6 +115,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
+    private let loadingSpinnerViewController = LoadingSpinnerViewController()
 
     @IBOutlet private weak var secondPlaceBetBaseViewConstraint: NSLayoutConstraint!
 
@@ -243,10 +244,12 @@ class PreSubmissionBetslipViewController: UIViewController {
     private var isLoading = false {
         didSet {
             if isLoading {
-                self.loadingBaseView.alpha = 1.0
+                self.loadingSpinnerViewController.startAnimating()
+                self.loadingBaseView.isHidden = false
             }
             else {
-                self.loadingBaseView.alpha = 0.0
+                self.loadingBaseView.isHidden = true
+                self.loadingSpinnerViewController.stopAnimating()
             }
         }
     }
@@ -285,7 +288,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         super.viewDidLoad()
 
         self.systemBetTypeSelectorBaseView.alpha = 0.0
-        self.loadingBaseView.alpha = 0.0
+        self.loadingBaseView.isHidden = true
         self.settingsPickerBaseView.alpha = 0.0
 
         self.freeBetBaseView.isHidden = true
@@ -293,6 +296,11 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.simpleWinningsBaseView.isHidden = false
         self.multipleWinningsBaseView.isHidden = true
         self.systemWinningsBaseView.isHidden = true
+
+        self.loadingView.alpha = 0.0
+        self.loadingView.stopAnimating()
+        self.loadingBaseView.isHidden = true
+        self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
 
         self.view.bringSubviewToFront(systemBetTypeSelectorBaseView)
         self.view.bringSubviewToFront(settingsPickerBaseView)

@@ -17,15 +17,15 @@ class LoadingSpinnerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = .black.withAlphaComponent(0.4)
+        self.view.backgroundColor = .black.withAlphaComponent(0.2)
 
         self.animationView.translatesAutoresizingMaskIntoConstraints = false
         self.animationView.contentMode = .scaleAspectFit
 
         self.view.addSubview(self.animationView)
 
-        /// Some time later
-        let starAnimation = LottieAnimation.named("dots-loading")
+        // Some time later
+        let starAnimation = LottieAnimation.named("sports-loading")
         self.animationView.animation = starAnimation
         self.animationView.loopMode = .loop
 
@@ -43,13 +43,13 @@ class LoadingSpinnerViewController: UIViewController {
         self.animationView.play()
     }
 
-    public func play() {
+    public func startAnimating() {
         self.animationView.play { (finished) in
         /// Animation stopped
         }
     }
 
-    public func stop() {
+    public func stopAnimating() {
         self.animationView.stop()
     }
 

@@ -47,6 +47,7 @@ class PreLiveEventsViewController: UIViewController {
 
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
+    private let loadingSpinnerViewController = LoadingSpinnerViewController()
 
     @IBOutlet private weak var openedCompetitionsFiltersConstraint: NSLayoutConstraint!
     @IBOutlet private weak var competitionsFiltersBaseView: UIView!
@@ -327,7 +328,6 @@ class PreLiveEventsViewController: UIViewController {
 
         // ==
 
-
         let footerResponsibleGamingView = FooterResponsibleGamingView()
         footerResponsibleGamingView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -339,6 +339,9 @@ class PreLiveEventsViewController: UIViewController {
             footerResponsibleGamingView.bottomAnchor.constraint(equalTo: self.emptyBaseView.bottomAnchor),
         ])
 
+        // New loading
+        self.loadingView.alpha = 0.0
+        self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
 
         //
         self.view.bringSubviewToFront(self.competitionsFiltersDarkBackgroundView)
@@ -397,14 +400,15 @@ class PreLiveEventsViewController: UIViewController {
 
                 if isLoadingEvents {
                     self?.loadingBaseView.isHidden = false
-                    self?.loadingView.startAnimating()
+                    self?.loadingSpinnerViewController.startAnimating()
 
                     self?.emptyBaseView.isHidden = true
                     self?.tableView.isHidden = false
                     return
                 }
                 else {
-                    self?.loadingView.stopAnimating()
+                    self?.loadingSpinnerViewController.stopAnimating()
+
                     self?.loadingBaseView.isHidden = true
 
                     self?.refreshControl.endRefreshing()

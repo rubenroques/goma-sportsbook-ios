@@ -23,6 +23,7 @@ class MyTicketsViewController: UIViewController {
 
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
+    private let loadingSpinnerViewController = LoadingSpinnerViewController()
 
     private let refreshControl = UIRefreshControl()
     private var shouldShowCenterLoadingView = false
@@ -33,10 +34,12 @@ class MyTicketsViewController: UIViewController {
     private var isLoading: Bool = false {
         didSet {
             if isLoading {
+                self.loadingSpinnerViewController.startAnimating()
                 self.loadingBaseView.isHidden = false
             }
             else {
                 self.loadingBaseView.isHidden = true
+                self.loadingSpinnerViewController.stopAnimating()
             }
         }
     }
@@ -76,6 +79,12 @@ class MyTicketsViewController: UIViewController {
         self.refreshControl.tintColor = UIColor.lightGray
         self.refreshControl.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
         self.ticketsTableView.addSubview(self.refreshControl)
+
+
+        self.loadingView.alpha = 0.0
+        self.loadingView.stopAnimating()
+        self.loadingBaseView.isHidden = true
+        self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
 
         self.view.bringSubviewToFront(self.loadingBaseView)
 

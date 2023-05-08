@@ -45,6 +45,7 @@ class LiveEventsViewController: UIViewController {
 
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
+    private let loadingSpinnerViewController = LoadingSpinnerViewController()
 
     private let refreshControl = UIRefreshControl()
 
@@ -87,8 +88,6 @@ class LiveEventsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.bringSubviewToFront(self.loadingBaseView)
-
         self.commonInit()
         self.setupWithTheme()
         self.connectPublishers()
@@ -110,6 +109,12 @@ class LiveEventsViewController: UIViewController {
         self.viewModel.resetScrollPosition = { [weak self] in
             self?.tableView.setContentOffset(.zero, animated: false)
         }
+
+        // New loading
+        self.loadingView.alpha = 0.0
+        self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
+        self.view.bringSubviewToFront(self.loadingBaseView)
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -284,6 +289,7 @@ class LiveEventsViewController: UIViewController {
             .sink(receiveValue: { [weak self] screenState, isLoading in
 
                 if isLoading {
+                    self?.loadingSpinnerViewController.startAnimating()
                     self?.loadingBaseView.isHidden = false
                     self?.emptyBaseView.isHidden = true
                     self?.tableView.isHidden = true
@@ -292,6 +298,7 @@ class LiveEventsViewController: UIViewController {
 
                 self?.refreshControl.endRefreshing()
                 self?.loadingBaseView.isHidden = true
+                self?.loadingSpinnerViewController.stopAnimating()
 
                 switch screenState {
                 case .contentNoFilter, .contentAndFilter:
