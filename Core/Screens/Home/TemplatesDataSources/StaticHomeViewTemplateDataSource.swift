@@ -217,7 +217,7 @@ class StaticHomeViewTemplateDataSource {
                 
                 let banners = bannersResponse.bannerItems.map({
                     if let linkUrl = $0.linkUrl,
-                       linkUrl.contains("event"),
+                       // linkUrl.contains("event"),
                        let matchId = linkUrl.components(separatedBy: "/").last {
                         let bannerInfo = BannerInfo(type: $0.type, id: $0.id, matchId: matchId, imageURL: $0.imageUrl, marketId: $0.marketId)
                         return bannerInfo

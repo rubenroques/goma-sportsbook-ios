@@ -963,8 +963,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                                                name: UIResponder.keyboardWillHideNotification,
                                                object: nil)
 
-
         self.placeBetButton.isEnabled = false
+
     }
 
     override func viewWillDisappear(_ animated: Bool) {

@@ -98,13 +98,24 @@ class AvatarFormStepView: FormStepView {
         // Add avatars
         for avatarGroup in self.viewModel.avatarIconNameGroups {
             let lineStackView = Self.createHorizontalStackView()
+
+            NSLayoutConstraint.activate([
+                lineStackView.heightAnchor.constraint(equalToConstant: 100)
+            ])
+
             for avatarName in avatarGroup {
+
+                let outerBaseView = Self.createAvatarOuterBaseView()
 
                 let baseView = Self.createAvatarBaseView()
 
+                outerBaseView.addSubview(baseView)
+
                 NSLayoutConstraint.activate([
                     baseView.widthAnchor.constraint(equalToConstant: 80),
-                    baseView.heightAnchor.constraint(equalTo: baseView.widthAnchor)
+                    baseView.heightAnchor.constraint(equalTo: baseView.widthAnchor),
+                    baseView.centerXAnchor.constraint(equalTo: outerBaseView.centerXAnchor),
+                    baseView.centerYAnchor.constraint(equalTo: outerBaseView.centerYAnchor)
                 ])
 
                 let baseInnerView = Self.createAvatarBaseInnerView()
@@ -128,13 +139,13 @@ class AvatarFormStepView: FormStepView {
 
                 NSLayoutConstraint.activate([
                     imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor),
-                    imageView.widthAnchor.constraint(equalToConstant: 120),
+                    imageView.widthAnchor.constraint(equalToConstant: 90),
                     imageView.centerXAnchor.constraint(equalTo: baseView.centerXAnchor),
                     imageView.centerYAnchor.constraint(equalTo: baseView.centerYAnchor)
                 ])
 
                 baseView.bringSubviewToFront(imageView)
-                lineStackView.addArrangedSubview(baseView)
+                lineStackView.addArrangedSubview(outerBaseView)
 
                 avatarViews[avatarName] = baseView
                 avatarBackgroundViews[avatarName] = baseInnerView
@@ -250,6 +261,12 @@ extension AvatarFormStepView {
         imageView.isUserInteractionEnabled = true
 
         return imageView
+    }
+
+    private static func createAvatarOuterBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
 
     private static func createAvatarBaseView() -> UIView {

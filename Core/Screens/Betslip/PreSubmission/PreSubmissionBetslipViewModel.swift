@@ -23,6 +23,8 @@ class PreSubmissionBetslipViewModel {
 
     var sharedBettingTicket: [BettingTicket] = []
 
+    var getSharedRetries: Int = 2
+
     // MARK: Private Properties
     private var sharedBetToken: String?
 
@@ -36,10 +38,26 @@ class PreSubmissionBetslipViewModel {
 
         // TODO: Get shared bets here
         if let sharedBetToken {
-            self.expectedTicketSelections = 0
-            self.sharedBettingTicket = []
-            self.sharedBettingTicketsIdsRetrieved.value = []
-            self.getSharedTicket(betId: sharedBetToken)
+
+            Env.servicesProvider.bettingConnectionStatePublisher
+                .filter({ $0 == .connected })
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { _ in
+
+                }, receiveValue: { [weak self] _ in
+                    self?.expectedTicketSelections = 0
+                    self?.sharedBettingTicket = []
+                    self?.sharedBettingTicketsIdsRetrieved.value = []
+                    self?.getSharedTicket(betId: sharedBetToken)
+
+                })
+                .store(in: &cancellables)
+
+//            self.expectedTicketSelections = 0
+//            self.sharedBettingTicket = []
+//            self.sharedBettingTicketsIdsRetrieved.value = []
+//            self.getSharedTicket(betId: sharedBetToken)
+
         }
 
         self.sharedBettingTicketsIdsRetrieved
@@ -76,7 +94,16 @@ class PreSubmissionBetslipViewModel {
                     ()
                 case .failure(let error):
                     print("SHARED TICKET ERROR: \(error)")
-                    self?.sharedBetsPublisher.send(.failed)
+                    if self?.getSharedRetries == 0 {
+                        self?.sharedBetsPublisher.send(.failed)
+                    }
+                    else {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            self?.getSharedRetries -= 1
+                            self?.getSharedTicket(betId: betId)
+                        }
+                    }
+
                 }
 
             }, receiveValue: { [weak self] sharedTicketResponse in
@@ -107,8 +134,10 @@ class PreSubmissionBetslipViewModel {
                         ()
                     case .failure(let error):
                         print("SHARED TICKET SELECTION ERROR: \(error)")
-                        self?.sharedBettingTicketsIdsRetrieved.value.append("\(betSelection.id)")
+
                         self?.unavailableBettingTicketsRetrieved.value.append("\(betSelection.id)")
+
+                        self?.sharedBettingTicketsIdsRetrieved.value.append("\(betSelection.id)")
                     }
 
                 }, receiveValue: { [weak self] ticketSelection in
@@ -134,8 +163,9 @@ class PreSubmissionBetslipViewModel {
                 case .failure(let error):
                     print("MARKET ERROR: \(error)")
 
-                    self?.sharedBettingTicketsIdsRetrieved.value.append(ticketSelection.id)
                     self?.unavailableBettingTicketsRetrieved.value.append(ticketSelection.id)
+
+                    self?.sharedBettingTicketsIdsRetrieved.value.append(ticketSelection.id)
 
                 }
             }, receiveValue: { [weak self] market in
