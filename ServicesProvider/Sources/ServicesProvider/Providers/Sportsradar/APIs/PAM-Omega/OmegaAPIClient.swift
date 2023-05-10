@@ -141,6 +141,9 @@ enum OmegaAPIClient {
     case contactUs(firstName: String, lastName: String, email: String, subject: String, message: String)
 
     case contactSupport(userIdentifier: String, subject: String, message: String)
+
+    case getUserConsents
+    case setUserConsents(consentVersionIds: [Int]? = nil, unconsentVersionIds: [Int]? = nil)
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -245,6 +248,11 @@ extension OmegaAPIClient: Endpoint {
 
         case .contactSupport:
             return "/api/v2/requests"
+
+        case .getUserConsents:
+            return "/ps/ips/user/consents"
+        case .setUserConsents:
+            return "/ps/ips/user/consents/save"
         }
     }
     
@@ -504,9 +512,6 @@ extension OmegaAPIClient: Endpoint {
             if let securityQuestion = securityQuestion { query.append(URLQueryItem(name: "securityQuestion", value: securityQuestion)) }
             if let securityAnswer = securityAnswer { query.append(URLQueryItem(name: "securityAnswer", value: securityAnswer)) }
             
-            
-            
-            
             return query
         case .getDocumentTypes:
             return nil
@@ -630,6 +635,30 @@ extension OmegaAPIClient: Endpoint {
 
         case .contactSupport:
             return nil
+
+        case .getUserConsents:
+            return nil
+
+        case .setUserConsents(let consentVersionIds, let unconsentVersionIds):
+
+            var queryItemsURL: [URLQueryItem] = []
+
+
+            if let consentVersionIds {
+                for consentId in consentVersionIds {
+                    let queryItem = URLQueryItem(name: "consentedVersions", value: "\(consentId)")
+                    queryItemsURL.append(queryItem)
+                }
+            }
+
+            if let unconsentVersionIds {
+                for unconsentId in unconsentVersionIds {
+                    let queryItem = URLQueryItem(name: "unConsentedVersions", value: "\(unconsentId)")
+                    queryItemsURL.append(queryItem)
+                }
+            }
+
+            return queryItemsURL
         }
     }
     
@@ -687,6 +716,9 @@ extension OmegaAPIClient: Endpoint {
         case .cancelBonus: return .post
         case .contactUs: return .get
         case .contactSupport: return .post
+
+        case .getUserConsents: return .get
+        case .setUserConsents: return .post
         }
     }
     
@@ -788,6 +820,9 @@ extension OmegaAPIClient: Endpoint {
             
         case .contactUs: return false
         case .contactSupport: return false
+
+        case .getUserConsents: return true
+        case .setUserConsents: return true
         }
     }
     

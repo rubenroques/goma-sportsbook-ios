@@ -1007,6 +1007,26 @@ extension ServicesProviderClient {
         return bettingProvider.getTicketSelection(ticketSelectionId: ticketSelectionId)
     }
 
+    public func getUserConsents() -> AnyPublisher<[UserConsent], ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getUserConsents()
+    }
+
+    public func setUserConsents(consentVersionIds: [Int]? = nil, unconsetVersionIds: [Int]? = nil) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.setUserConsents(consentVersionIds: consentVersionIds, unconsenVersionIds: unconsetVersionIds)
+    }
+
 }
 
 // Utilities

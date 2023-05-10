@@ -9,6 +9,7 @@ import UIKit
 import Theming
 import Extensions
 import Combine
+import ServicesProvider
 
 class TermsCondFormStepViewModel {
 
@@ -17,7 +18,10 @@ class TermsCondFormStepViewModel {
     var isMarketingOn: CurrentValueSubject<Bool, Never> = .init(false)
     var isTermsOn: CurrentValueSubject<Bool, Never> = .init(false)
 
+    private var cancellables = Set<AnyCancellable>()
+
     private var userRegisterEnvelopUpdater: UserRegisterEnvelopUpdater
+
 
     init(title: String,
          isMarketingOn: Bool = false,
@@ -41,7 +45,7 @@ class TermsCondFormStepViewModel {
 
     func setIsMarketingOn(_ isOn: Bool) {
         self.isMarketingOn.send(isOn)
-        self.userRegisterEnvelopUpdater.setAcceptedTerms(isOn)
+        self.userRegisterEnvelopUpdater.setAcceptedMarketing(isOn)
     }
 
 }

@@ -83,6 +83,7 @@ public class SteppedRegistrationViewModel {
     var showRegisterErrors: CurrentValueSubject<[RegisterError]?, Never> = .init(nil)
 
     var confirmationCodeFilled: String?
+    public var isMarketingSelected: Bool = false
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -166,6 +167,10 @@ public class SteppedRegistrationViewModel {
         }
 
         self.isLoading.send(true)
+
+        if self.userRegisterEnvelop.acceptedMarketing {
+            self.isMarketingSelected = true
+        }
 
         serviceProvider.signUp(form: form)
             .receive(on: DispatchQueue.main)

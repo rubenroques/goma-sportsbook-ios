@@ -16,6 +16,14 @@ class ContactSettingsViewController: UIViewController {
     private lazy var topTitleLabel: UILabel = Self.createTopTitleLabel()
     private lazy var contactsStackView: UIStackView = Self.createContactsStackView()
 
+    private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
+    private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
+
+    private var cancellables = Set<AnyCancellable>()
+
+    private var smsSettingView: SettingsRowView?
+    private var emailSettingView: SettingsRowView?
+
     // MARK: Public Properties
     var viewModel: ContactSettingsViewModel
 
@@ -38,6 +46,8 @@ class ContactSettingsViewController: UIViewController {
 
         self.setupContactsStackView()
 
+        self.bind(toViewModel: self.viewModel)
+
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
     }
 
@@ -59,6 +69,8 @@ class ContactSettingsViewController: UIViewController {
 
         self.contactsStackView.backgroundColor = UIColor.App.backgroundSecondary
 
+        self.loadingBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        self.loadingActivityIndicatorView.color = UIColor.lightGray
     }
 
     private func setupContactsStackView() {
@@ -74,6 +86,8 @@ class ContactSettingsViewController: UIViewController {
             self?.viewModel.updateSmsSetting(enabled: isSwitchOn)
         }
 
+        self.smsSettingView = smsView
+
         let emailView = SettingsRowView()
         emailView.setTitle(title: localized("email"))
         emailView.hasSwitchButton = true
@@ -82,27 +96,59 @@ class ContactSettingsViewController: UIViewController {
             self?.viewModel.updateEmailSetting(enabled: isSwitchOn)
         }
 
-        // Check options
-        if let notificationsUserSettings = self.viewModel.notificationsUserSettings {
-            if notificationsUserSettings.notificationsSms {
-                smsView.isSwitchOn = true
-            }
-            else {
-                smsView.isSwitchOn = false
-            }
+        self.emailSettingView = emailView
 
-            if notificationsUserSettings.notificationsEmail {
-                emailView.isSwitchOn = true
-            }
-            else {
-                emailView.isSwitchOn = false
-            }
-        }
+        // Check options
+//        if let notificationsUserSettings = self.viewModel.notificationsUserSettings {
+//            if notificationsUserSettings.notificationsSms {
+//                smsView.isSwitchOn = true
+//            }
+//            else {
+//                smsView.isSwitchOn = false
+//            }
+//
+//            if notificationsUserSettings.notificationsEmail {
+//                emailView.isSwitchOn = true
+//            }
+//            else {
+//                emailView.isSwitchOn = false
+//            }
+//        }
 
         self.contactsStackView.addArrangedSubview(allowSportsbookView)
         self.contactsStackView.addArrangedSubview(smsView)
         self.contactsStackView.addArrangedSubview(emailView)
 
+    }
+
+    // MARK: Binding
+    private func bind(toViewModel viewModel: ContactSettingsViewModel) {
+
+        viewModel.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoading in
+
+                self?.loadingBaseView.isHidden = !isLoading
+
+                if !isLoading {
+                    if let notificationsUserSettings = self?.viewModel.notificationsUserSettings {
+                        if notificationsUserSettings.notificationsSms {
+                            self?.smsSettingView?.isSwitchOn = true
+                        }
+                        else {
+                            self?.smsSettingView?.isSwitchOn = false
+                        }
+
+                        if notificationsUserSettings.notificationsEmail {
+                            self?.emailSettingView?.isSwitchOn = true
+                        }
+                        else {
+                            self?.emailSettingView?.isSwitchOn = false
+                        }
+                    }
+                }
+                })
+            .store(in: &cancellables)
     }
 
     // MARK: Actions
@@ -149,6 +195,20 @@ extension ContactSettingsViewController {
         return stackView
     }
 
+    private static func createLoadingBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createLoadingActivityIndicatorView() -> UIActivityIndicatorView {
+        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.startAnimating()
+        return activityIndicatorView
+    }
+
     private func setupSubviews() {
         self.view.addSubview(self.topView)
 
@@ -157,6 +217,10 @@ extension ContactSettingsViewController {
         self.topView.bringSubviewToFront(self.topTitleLabel)
 
         self.view.addSubview(self.contactsStackView)
+
+        self.view.addSubview(self.loadingBaseView)
+
+        self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
 
         self.initConstraints()
     }
@@ -188,7 +252,17 @@ extension ContactSettingsViewController {
             self.contactsStackView.topAnchor.constraint(equalTo: self.topView.bottomAnchor, constant: 8)
         ])
 
+        // Loading view
+        NSLayoutConstraint.activate([
+            self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
+            self.loadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
+
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+        ])
+
     }
 
 }
-

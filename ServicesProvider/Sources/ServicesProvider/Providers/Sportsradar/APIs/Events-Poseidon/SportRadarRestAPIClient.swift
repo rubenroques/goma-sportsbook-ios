@@ -165,7 +165,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "boNavigationList",
-                                "id": "1355/top"
+                                "id": "1356/top"
                             },
                             "clientContext": {
                                 "language": "\(SportRadarConstants.socketLanguageCode)",
@@ -195,7 +195,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "boNavigationList",
-                                "id": "1355/\(sportId)"
+                                "id": "1356/\(sportId)"
                             },
                             "clientContext": {
                                 "language": "\(SportRadarConstants.socketLanguageCode)",
@@ -210,7 +210,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "boNavigationList",
-                                "id": "1355/\(regionId)"
+                                "id": "1356/\(regionId)"
                             },
                             "clientContext": {
                                 "language": "\(SportRadarConstants.socketLanguageCode)",
@@ -226,7 +226,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "boNavigationList",
-                                "id": "1355/\(competitionId)"
+                                "id": "1356/\(competitionId)"
                             },
                             "clientContext": {
                                 "language": "\(SportRadarConstants.socketLanguageCode)",
@@ -256,7 +256,7 @@ extension SportRadarRestAPIClient: Endpoint {
                         {
                             "contentId": {
                                 "type": "headline",
-                                "id": "1355/20/HomepageSliders"
+                                "id": "1356/20/HomepageSliders"
                             },
                             "clientContext": {
                                 "language": "\(SportRadarConstants.socketLanguageCode)",
