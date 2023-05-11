@@ -320,8 +320,13 @@ class ShareTicketChoiceViewController: UIViewController {
         let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
 
         if let betStatus = self.viewModel.clickedShareTicketInfo?.betStatus, betStatus.lowercased() == "opened" {
-            let shareActivityViewController = UIActivityViewController(activityItems: [metadataItemSource, self.viewModel.clickedShareTicketInfo?.snapshot],
-                                                                       applicationActivities: nil)
+
+            let sharedText = localized("look_bet_made")
+
+            let shareActivityViewController = UIActivityViewController(activityItems: [metadataItemSource,
+                                                                                       self.viewModel.clickedShareTicketInfo?.snapshot,
+                                                                                       sharedText], applicationActivities: nil)
+
             if let popoverController = shareActivityViewController.popoverPresentationController {
                 popoverController.sourceView = self.view
                 popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
@@ -331,7 +336,9 @@ class ShareTicketChoiceViewController: UIViewController {
             self.present(shareActivityViewController, animated: true, completion: nil)
         }
         else {
-            let shareActivityViewController = UIActivityViewController(activityItems: [self.viewModel.clickedShareTicketInfo?.snapshot],
+            let sharedText = localized("check_bet_result")
+
+            let shareActivityViewController = UIActivityViewController(activityItems: [self.viewModel.clickedShareTicketInfo?.snapshot, sharedText],
                                                                        applicationActivities: nil)
             if let popoverController = shareActivityViewController.popoverPresentationController {
                 popoverController.sourceView = self.view
