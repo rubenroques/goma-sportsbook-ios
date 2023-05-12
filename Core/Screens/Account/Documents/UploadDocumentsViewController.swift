@@ -361,6 +361,7 @@ extension UploadDocumentsViewController {
         titleLabel.font = AppFont.with(type: .bold, size: 30)
         titleLabel.textAlignment = .left
         titleLabel.text = localized("upload_documents")
+        titleLabel.numberOfLines = 0
         return titleLabel
     }
 
@@ -498,15 +499,16 @@ extension UploadDocumentsViewController {
 
             self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 35),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
-            self.titleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 50),
+            self.titleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 30),
 
             self.documentsStateView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 35),
             self.documentsStateView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
-            self.documentsStateView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
+            self.documentsStateView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 15),
 
             self.separatorLineView.leadingAnchor.constraint(equalTo: self.documentsStateView.leadingAnchor),
             self.separatorLineView.trailingAnchor.constraint(equalTo: self.documentsStateView.trailingAnchor),
-            self.separatorLineView.topAnchor.constraint(equalTo: self.documentsStateView.topAnchor),
+            // self.separatorLineView.topAnchor.constraint(equalTo: self.documentsStateView.topAnchor),
+            self.separatorLineView.bottomAnchor.constraint(equalTo: self.documentsStateView.bottomAnchor),
             self.separatorLineView.heightAnchor.constraint(equalToConstant: 1),
 
             self.documentsStateTitleLabel.leadingAnchor.constraint(equalTo: self.documentsStateView.leadingAnchor),
@@ -526,8 +528,8 @@ extension UploadDocumentsViewController {
         NSLayoutConstraint.activate([
             self.tableView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 25),
             self.tableView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -25),
-            self.tableView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 15),
-            self.tableView.bottomAnchor.constraint(equalTo: self.documentsStateView.topAnchor, constant: -15)
+            self.tableView.topAnchor.constraint(equalTo: self.documentsStateView.bottomAnchor, constant: 15),
+            self.tableView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -15)
         ])
 
         // Loading view

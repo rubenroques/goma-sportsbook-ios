@@ -234,7 +234,7 @@ class ShareTicketChoiceViewController: UIViewController {
                 let urlMobile = Env.urlMobileShares
                 if betStatus == "OPEN",
                    let betToken = self.viewModel.clickedShareTicketInfo?.betToken {
-                    let userLocale = Locale.current.languageCode
+                    let userLocale = Locale.current.languageCode != "fr" ? "en" : Locale.current.languageCode
                     //let matchUrlString = "\(urlMobile)/bet/\(betToken)"
                     let matchUrlString = "\(urlMobile)/\(userLocale ?? "fr")/share/bet/\(betToken)"
 
@@ -278,7 +278,7 @@ class ShareTicketChoiceViewController: UIViewController {
 
             if betStatus == "OPEN",
                let betToken = self.viewModel.clickedShareTicketInfo?.betToken {
-                let userLocale = Locale.current.languageCode
+                let userLocale = Locale.current.languageCode != "fr" ? "en" : Locale.current.languageCode
                 //let matchUrlString = "\(urlMobile)/bet/\(betToken)"
                 let matchUrlString = "\(urlMobile)/\(userLocale ?? "fr")/share/bet/\(betToken)"
 
@@ -304,7 +304,7 @@ class ShareTicketChoiceViewController: UIViewController {
 
             if betStatus.lowercased() == "opened",
                let betToken = self.viewModel.clickedShareTicketInfo?.betToken {
-                let userLocale = Locale.current.languageCode
+                let userLocale = Locale.current.languageCode != "fr" ? "en" : Locale.current.languageCode
                 //let matchUrl = URL(string: "\(urlMobile)/bet/\(betToken)")
                 let matchUrl = URL(string: "\(urlMobile)/\(userLocale ?? "fr")/share/bet/\(betToken)")
 
