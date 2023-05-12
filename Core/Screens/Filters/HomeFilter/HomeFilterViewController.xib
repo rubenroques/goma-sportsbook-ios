@@ -66,7 +66,7 @@
                             <rect key="frame" x="10" y="5.5" width="46" height="45"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="45" id="CXb-PC-axh"/>
-                                <constraint firstAttribute="width" constant="46" id="VVN-2C-UMG"/>
+                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="45" id="VVN-2C-UMG"/>
                             </constraints>
                             <state key="normal" title="Reset"/>
                             <connections>

@@ -9,10 +9,10 @@ import Foundation
 
 public struct UserConsent: Codable {
     public var consentInfo: UserConsentInfo
-    public var consentStatus: String
+    public var consentStatus: UserConsentStatus? = nil
+    public var consentType: UserConsentType? = nil
 
     enum CodingKeys: String, CodingKey {
         case consentInfo = "consent"
-        case consentStatus = "consentStatus"
     }
 }

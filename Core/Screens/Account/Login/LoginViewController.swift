@@ -358,7 +358,7 @@ class LoginViewController: UIViewController {
 
     private func setUserConsents() {
 
-        Env.servicesProvider.setUserConsents(consentVersionIds: [1, 2])
+        Env.servicesProvider.setUserConsents(consentVersionIds: [UserConsentType.sms.versionId, UserConsentType.email.versionId])
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
 
@@ -524,7 +524,6 @@ class LoginViewController: UIViewController {
             })
             .store(in: &cancellables)
     }
-
 
     func triggerLoginAfterRegister(username: String, password: String, withUserConsents: Bool = false) {
         Env.userSessionStore.disableForcedLimitsScreen()

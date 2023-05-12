@@ -52,6 +52,12 @@ class HomeFilterViewController: UIViewController {
     var highBoundTimeRange: CGFloat = 6.0
     var lowerBoundOddsRange: CGFloat = 1.0
     var highBoundOddsRange: CGFloat = 300.0
+
+    var initialLowerBoundTimeRange: CGFloat = 0.0
+    var initialHighBoundTimeRange: CGFloat = 6.0
+    var initialLowerBoundOddsRange: CGFloat = 1.0
+    var initialHighBoundOddsRange: CGFloat = 300.0
+
     var countFilters: Int = 0
 
     var oddsValueViews: [FilterRowView] = []
@@ -248,6 +254,7 @@ class HomeFilterViewController: UIViewController {
             self.timeRangeCollapseView.isHidden = true
 
         }
+
         lowerBoundTimeRange = values[0]
         highBoundTimeRange = values[1]
         timeRangeCollapseView.setTitle(title: localized("time_today_only"))
@@ -496,7 +503,7 @@ class HomeFilterViewController: UIViewController {
 
             // Default odds selected
             if view.viewId == "\(viewInt)" {
-                view.isChecked = true
+                self.checkOddsRadioOptions(views: self.oddsValueViews ?? [], viewTapped: view)
             }
         }
 
@@ -602,10 +609,14 @@ class HomeFilterViewController: UIViewController {
             }
         }
 
-        lowerBoundTimeRange = homeFilterOptions.lowerBoundTimeRange
-        highBoundTimeRange = homeFilterOptions.highBoundTimeRange
-        timeRangeMultiSlider?.value = [homeFilterOptions.lowerBoundTimeRange, homeFilterOptions.highBoundTimeRange]
-        oddRangeMultiSlider?.value = [homeFilterOptions.lowerBoundOddsRange, homeFilterOptions.highBoundOddsRange]
+//        lowerBoundTimeRange = homeFilterOptions.lowerBoundTimeRange
+//        highBoundTimeRange = homeFilterOptions.highBoundTimeRange
+//        timeRangeMultiSlider?.value = [homeFilterOptions.lowerBoundTimeRange, homeFilterOptions.highBoundTimeRange]
+//        oddRangeMultiSlider?.value = [homeFilterOptions.lowerBoundOddsRange, homeFilterOptions.highBoundOddsRange]
+        lowerBoundTimeRange = initialLowerBoundTimeRange
+        highBoundTimeRange = initialHighBoundTimeRange
+        timeRangeMultiSlider?.value = [initialLowerBoundTimeRange, initialHighBoundTimeRange]
+        oddRangeMultiSlider?.value = [initialLowerBoundOddsRange, initialHighBoundOddsRange]
 
 //        if let oddRangeMultiSlider = oddRangeMultiSlider {
 //            lowerBoundOddsRange = oddRangeMultiSlider.value[0].round(to: 1)
@@ -670,13 +681,15 @@ class HomeFilterViewController: UIViewController {
     }
 
     @IBAction private func applyFiltersAction() {
+        countFilters = 0
+
         if delegate?.turnTimeRangeOn == true {
-            if lowerBoundTimeRange != 0.0 || highBoundTimeRange != 6.0 {
+            if lowerBoundTimeRange != initialLowerBoundTimeRange || highBoundTimeRange != initialHighBoundTimeRange {
                 countFilters += 1
             }
         }
         
-        if lowerBoundOddsRange != 1.0 || highBoundOddsRange != 300.0 {
+        if lowerBoundOddsRange != initialLowerBoundOddsRange || highBoundOddsRange != initialHighBoundOddsRange {
             countFilters += 1
         }
         

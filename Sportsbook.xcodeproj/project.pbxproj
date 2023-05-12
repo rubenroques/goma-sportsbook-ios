@@ -4229,6 +4229,38 @@
 		A99FD50F283546A400275509 /* FriendProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99FD50B283546A300275509 /* FriendProfileViewController.swift */; };
 		A99FD5132835479200275509 /* FriendProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99FD5102835479200275509 /* FriendProfileViewModel.swift */; };
 		A99FD5142835479200275509 /* FriendProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99FD5102835479200275509 /* FriendProfileViewModel.swift */; };
+		A9A1B2B52A0E557000F7A8ED /* UserConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2B42A0E557000F7A8ED /* UserConsent.swift */; };
+		A9A1B2B62A0E557000F7A8ED /* UserConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2B42A0E557000F7A8ED /* UserConsent.swift */; };
+		A9A1B2B72A0E557000F7A8ED /* UserConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2B42A0E557000F7A8ED /* UserConsent.swift */; };
+		A9A1B2B82A0E557000F7A8ED /* UserConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2B42A0E557000F7A8ED /* UserConsent.swift */; };
+		A9A1B2B92A0E557000F7A8ED /* UserConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2B42A0E557000F7A8ED /* UserConsent.swift */; };
+		A9A1B2BA2A0E557000F7A8ED /* UserConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2B42A0E557000F7A8ED /* UserConsent.swift */; };
+		A9A1B2BB2A0E557000F7A8ED /* UserConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2B42A0E557000F7A8ED /* UserConsent.swift */; };
+		A9A1B2BC2A0E557000F7A8ED /* UserConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2B42A0E557000F7A8ED /* UserConsent.swift */; };
+		A9A1B2BE2A0E55B800F7A8ED /* UserConsentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2BD2A0E55B800F7A8ED /* UserConsentType.swift */; };
+		A9A1B2BF2A0E55B800F7A8ED /* UserConsentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2BD2A0E55B800F7A8ED /* UserConsentType.swift */; };
+		A9A1B2C02A0E55B800F7A8ED /* UserConsentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2BD2A0E55B800F7A8ED /* UserConsentType.swift */; };
+		A9A1B2C12A0E55B800F7A8ED /* UserConsentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2BD2A0E55B800F7A8ED /* UserConsentType.swift */; };
+		A9A1B2C22A0E55B800F7A8ED /* UserConsentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2BD2A0E55B800F7A8ED /* UserConsentType.swift */; };
+		A9A1B2C32A0E55B800F7A8ED /* UserConsentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2BD2A0E55B800F7A8ED /* UserConsentType.swift */; };
+		A9A1B2C42A0E55B800F7A8ED /* UserConsentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2BD2A0E55B800F7A8ED /* UserConsentType.swift */; };
+		A9A1B2C52A0E55B800F7A8ED /* UserConsentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2BD2A0E55B800F7A8ED /* UserConsentType.swift */; };
+		A9A1B2C72A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2C62A0E566F00F7A8ED /* UserConsentStatus.swift */; };
+		A9A1B2C82A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2C62A0E566F00F7A8ED /* UserConsentStatus.swift */; };
+		A9A1B2C92A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2C62A0E566F00F7A8ED /* UserConsentStatus.swift */; };
+		A9A1B2CA2A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2C62A0E566F00F7A8ED /* UserConsentStatus.swift */; };
+		A9A1B2CB2A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2C62A0E566F00F7A8ED /* UserConsentStatus.swift */; };
+		A9A1B2CC2A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2C62A0E566F00F7A8ED /* UserConsentStatus.swift */; };
+		A9A1B2CD2A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2C62A0E566F00F7A8ED /* UserConsentStatus.swift */; };
+		A9A1B2CE2A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2C62A0E566F00F7A8ED /* UserConsentStatus.swift */; };
+		A9A1B2D02A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2CF2A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift */; };
+		A9A1B2D12A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2CF2A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift */; };
+		A9A1B2D22A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2CF2A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift */; };
+		A9A1B2D32A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2CF2A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift */; };
+		A9A1B2D42A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2CF2A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift */; };
+		A9A1B2D52A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2CF2A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift */; };
+		A9A1B2D62A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2CF2A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift */; };
+		A9A1B2D72A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2CF2A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift */; };
 		A9A207DC283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207D9283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift */; };
 		A9A207DD283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207D9283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift */; };
 		A9A207DE283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207D9283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift */; };
@@ -5814,6 +5846,10 @@
 		A99FD506282D4E4600275509 /* EditGroupAddFriendViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditGroupAddFriendViewModel.swift; sourceTree = "<group>"; };
 		A99FD50B283546A300275509 /* FriendProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendProfileViewController.swift; sourceTree = "<group>"; };
 		A99FD5102835479200275509 /* FriendProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendProfileViewModel.swift; sourceTree = "<group>"; };
+		A9A1B2B42A0E557000F7A8ED /* UserConsent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserConsent.swift; sourceTree = "<group>"; };
+		A9A1B2BD2A0E55B800F7A8ED /* UserConsentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserConsentType.swift; sourceTree = "<group>"; };
+		A9A1B2C62A0E566F00F7A8ED /* UserConsentStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserConsentStatus.swift; sourceTree = "<group>"; };
+		A9A1B2CF2A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+UserConsent.swift"; sourceTree = "<group>"; };
 		A9A207D9283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationBetSelectionViewModel.swift; sourceTree = "<group>"; };
 		A9A207E0283BDFCB00499DBC /* ChatTicketSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTicketSelectionView.swift; sourceTree = "<group>"; };
 		A9A2E7E227F5BC5C00D35A9D /* WithdrawViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawViewModel.swift; sourceTree = "<group>"; };
@@ -6382,6 +6418,7 @@
 				450B7B3E28F637FA009229E3 /* ServiceProviderModelMapper+Sports.swift */,
 				45838647293E66DF001B96DB /* ServiceProviderModelMapper+Betting.swift */,
 				A90C373729C38EB9007B8AEC /* ServicesProviderModelMapper+Bonus.swift */,
+				A9A1B2CF2A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift */,
 			);
 			path = ModelMappers;
 			sourceTree = "<group>";
@@ -7518,6 +7555,9 @@
 				A90C372F29C38DAD007B8AEC /* GrantedBonus.swift */,
 				A9CB3E6D29CDC25600BEF9C1 /* ApplicableBonus.swift */,
 				A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */,
+				A9A1B2B42A0E557000F7A8ED /* UserConsent.swift */,
+				A9A1B2BD2A0E55B800F7A8ED /* UserConsentType.swift */,
+				A9A1B2C62A0E566F00F7A8ED /* UserConsentStatus.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -10705,6 +10745,7 @@
 				A96FAED92981912100A0751F /* UploadDocuments.swift in Sources */,
 				450B786E28F58574009229E3 /* GeoLocationManager.swift in Sources */,
 				450B787028F58574009229E3 /* PersonalInfoViewController.swift in Sources */,
+				A9A1B2C82A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */,
 				450B787128F58574009229E3 /* SharedBetData.swift in Sources */,
 				A90C372129C35FD0007B8AEC /* WithdrawSuccessViewController.swift in Sources */,
 				450B787228F58574009229E3 /* HeaderTextFieldView.swift in Sources */,
@@ -10973,6 +11014,7 @@
 				450B797D28F58574009229E3 /* MatchStatsCollectionViewCell.swift in Sources */,
 				450B798028F58574009229E3 /* CountryName.swift in Sources */,
 				450B798128F58574009229E3 /* ProfileViewController.swift in Sources */,
+				A9A1B2B62A0E557000F7A8ED /* UserConsent.swift in Sources */,
 				A91A05B929CB534B00E0A772 /* CloseAccountViewController.swift in Sources */,
 				450B798228F58574009229E3 /* TipsViewController.swift in Sources */,
 				450B798328F58574009229E3 /* BonusViewController.swift in Sources */,
@@ -11111,6 +11153,7 @@
 				450B7A0628F58574009229E3 /* CGFloat+Extensions.swift in Sources */,
 				450B7A0728F58574009229E3 /* SportGroupViewModel.swift in Sources */,
 				A9CB3E6F29CDC25600BEF9C1 /* ApplicableBonus.swift in Sources */,
+				A9A1B2D12A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */,
 				450B7A0828F58574009229E3 /* BonusAvailableTableViewCell.swift in Sources */,
 				450B7A0928F58574009229E3 /* MyFavoritesViewModel.swift in Sources */,
 				450B7A0A28F58574009229E3 /* CAMediaTimingFunction+Shift.swift in Sources */,
@@ -11156,6 +11199,7 @@
 				450B7A3328F58574009229E3 /* DropDownSelectionView.swift in Sources */,
 				450B7A3428F58574009229E3 /* PolicyLinkView.swift in Sources */,
 				450B7A3628F58574009229E3 /* HomeFilterOptions.swift in Sources */,
+				A9A1B2BF2A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
 				450B7A3728F58574009229E3 /* Aggregator.swift in Sources */,
 				450B7A3828F58574009229E3 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				450B7A3928F58574009229E3 /* BonusActiveCellViewModel.swift in Sources */,
@@ -11284,6 +11328,7 @@
 				A98708B828D3455300F27348 /* RankingsListViewModel.swift in Sources */,
 				A90FB80029B0CB4400D08A7C /* TipInfoView.swift in Sources */,
 				A9DF8E1828E45B970083BF56 /* UserProfileTipsViewModel.swift in Sources */,
+				A9A1B2CE2A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */,
 				A9DF8E5C28E7447E0083BF56 /* ListActionHeaderFooterView.swift in Sources */,
 				A9C1C0AD28747FC600E9D6AC /* SelectChatroomTableViewCell.swift in Sources */,
 				A996B3F929893FEC00A535FC /* PaymentsDropIn.swift in Sources */,
@@ -11321,6 +11366,7 @@
 				A98708C928DA278F00F27348 /* UserProfileInfoViewController.swift in Sources */,
 				A9DF8DFF28DDC1D80083BF56 /* UserInfoSimpleCardView.swift in Sources */,
 				A9958C6C29703184001474E2 /* UploadDocumentsViewController.swift in Sources */,
+				A9A1B2D72A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */,
 				A96FAEFC2982A06B00A0751F /* PaymentsViewController.swift in Sources */,
 				A98708B028D3451C00F27348 /* RankingsViewModel.swift in Sources */,
 				A9DF8E2828E45C300083BF56 /* UserProfileInfoViewModel.swift in Sources */,
@@ -11330,9 +11376,11 @@
 				A9DF8E3A28E45D2E0083BF56 /* TipsSliderViewModel.swift in Sources */,
 				A9DF8E3128E45CB50083BF56 /* FeaturedTipDetailsViewModel.swift in Sources */,
 				A9B946CC28C21C800091296E /* FeaturedTipDetailsViewController.swift in Sources */,
+				A9A1B2C52A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
 				A9A7B52D29DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
 				A986D35228CB47A900AF95D7 /* TipsViewModel.swift in Sources */,
 				A9FB6D6928C65EF100E3FE58 /* RankingsListViewController.swift in Sources */,
+				A9A1B2BC2A0E557000F7A8ED /* UserConsent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11369,6 +11417,7 @@
 				457CB9FA282D27D000ED0F00 /* BonusHistoryDataSource.swift in Sources */,
 				457CB9FB282D27D000ED0F00 /* SimpleRegisterEmailCheckViewModel.swift in Sources */,
 				457CB9FD282D27D000ED0F00 /* SuggestedBetSummary.swift in Sources */,
+				A9A1B2D52A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */,
 				457CB9FE282D27D000ED0F00 /* Bundle+Extensions.swift in Sources */,
 				A9DF8E0D28DDFC590083BF56 /* SportStatisticView.swift in Sources */,
 				457CB9FF282D27D000ED0F00 /* FullRegisterDocumentsViewController.swift in Sources */,
@@ -11618,6 +11667,7 @@
 				457CBAC1282D27D000ED0F00 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
 				A9CB3E7C29CE1DCD00BEF9C1 /* BonusEmptyView.swift in Sources */,
 				457CBAC2282D27D000ED0F00 /* UserSettingsGoma.swift in Sources */,
+				A9A1B2CC2A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */,
 				457CBAC3282D27D000ED0F00 /* Localization.swift in Sources */,
 				A90FB80829B0F8B100D08A7C /* GenericAlertView.swift in Sources */,
 				457CBAC4282D27D000ED0F00 /* NewGroupViewController.swift in Sources */,
@@ -11631,6 +11681,7 @@
 				457CBACD282D27D000ED0F00 /* UIColor+Extensions.swift in Sources */,
 				457CBACE282D27D000ED0F00 /* ConversationsViewModel.swift in Sources */,
 				457CBAD0282D27D000ED0F00 /* DepositViewController.swift in Sources */,
+				A9A1B2C32A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
 				4571190B294B9A27000395F0 /* BetType.swift in Sources */,
 				457CBAD1282D27D000ED0F00 /* PopularMatchesDataSource.swift in Sources */,
 				457CBAD2282D27D000ED0F00 /* BonusAvailableCellViewModel.swift in Sources */,
@@ -11862,6 +11913,7 @@
 				A99DE667299E825900AA24AA /* RecoverPasswordViewModel.swift in Sources */,
 				A9A7B52B29DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
 				450088F529CE244200DA4C30 /* FooterResponsibleGamingViewCell.swift in Sources */,
+				A9A1B2BA2A0E557000F7A8ED /* UserConsent.swift in Sources */,
 				457CBB8D282D27D000ED0F00 /* TransactionsHistoryRootViewController.swift in Sources */,
 				457CBB8E282D27D000ED0F00 /* FavoritesManager.swift in Sources */,
 				45B6E208283E3F29001B570C /* EditGroupAddFriendViewModel.swift in Sources */,
@@ -11992,6 +12044,7 @@
 				457CBCBA282D2CD100ED0F00 /* SportMatchDoubleLineTableViewCell.swift in Sources */,
 				457CBCBB282D2CD100ED0F00 /* RadioButton.swift in Sources */,
 				A9C1C09C2873455000E9D6AC /* SocialAppItemCollectionViewCell.swift in Sources */,
+				A9A1B2D62A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */,
 				457CBCBD282D2CD100ED0F00 /* Constants.swift in Sources */,
 				A9C2D52A29C2286F00DB95BD /* IBANProofViewController.swift in Sources */,
 				457CBCBF282D2CD100ED0F00 /* ConversationsDetailViewModel.swift in Sources */,
@@ -12350,6 +12403,7 @@
 				A98EFDAE28801DF300655A26 /* SharedTicketBetLineView.swift in Sources */,
 				A9DF8E5328E7071B0083BF56 /* UserNotificationInviteTableViewCell.swift in Sources */,
 				A98EC7D92889AF210044FC46 /* ShareTicketFriendGroupViewModel.swift in Sources */,
+				A9A1B2C42A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
 				457CBDDE282D2CD100ED0F00 /* WithdrawViewController.swift in Sources */,
 				457CBDDF282D2CD100ED0F00 /* OutrightCompetitionLargeLineTableViewCell.swift in Sources */,
 				457CBDE0282D2CD100ED0F00 /* Location.swift in Sources */,
@@ -12363,6 +12417,7 @@
 				457CBDE8282D2CD100ED0F00 /* TabularBarDelegate.swift in Sources */,
 				457CBDE9282D2CD100ED0F00 /* OddDoubleCollectionViewCell.swift in Sources */,
 				457CBDEA282D2CD100ED0F00 /* BonusActiveDataSource.swift in Sources */,
+				A9A1B2CD2A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */,
 				457CBDEB282D2CD100ED0F00 /* BonusSwitchTableViewCell.swift in Sources */,
 				457CBDEC282D2CD100ED0F00 /* CompetitionFilterRowViewModel.swift in Sources */,
 				457CBDEE282D2CD100ED0F00 /* SearchTextField.swift in Sources */,
@@ -12459,6 +12514,7 @@
 				457CBE36282D2CD100ED0F00 /* FavoritesManager.swift in Sources */,
 				45B6E207283E3F29001B570C /* EditGroupAddFriendViewModel.swift in Sources */,
 				457CBE37282D2CD100ED0F00 /* MyTicketsRootViewController.swift in Sources */,
+				A9A1B2BB2A0E557000F7A8ED /* UserConsent.swift in Sources */,
 				457CBE38282D2CD100ED0F00 /* Throwable.swift in Sources */,
 				457CBE3A282D2CD100ED0F00 /* NotificationsViewController.swift in Sources */,
 				A98708AF28D3451C00F27348 /* RankingsViewModel.swift in Sources */,
@@ -12567,6 +12623,7 @@
 				A96FAED82981912100A0751F /* UploadDocuments.swift in Sources */,
 				4589C793282024E400243547 /* GeoLocationManager.swift in Sources */,
 				4589C795282024E400243547 /* PersonalInfoViewController.swift in Sources */,
+				A9A1B2C92A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */,
 				4589C796282024E400243547 /* SharedBetData.swift in Sources */,
 				A90C372229C35FD0007B8AEC /* WithdrawSuccessViewController.swift in Sources */,
 				4589C797282024E400243547 /* HeaderTextFieldView.swift in Sources */,
@@ -12835,6 +12892,7 @@
 				4589C9E02820279900243547 /* ClientVariables.swift in Sources */,
 				4589C86B282024E400243547 /* CountryName.swift in Sources */,
 				4589C86C282024E400243547 /* ProfileViewController.swift in Sources */,
+				A9A1B2B72A0E557000F7A8ED /* UserConsent.swift in Sources */,
 				A91A05BA29CB534B00E0A772 /* CloseAccountViewController.swift in Sources */,
 				A9FB6D4C28C642AD00E3FE58 /* TipsViewController.swift in Sources */,
 				4589C86D282024E400243547 /* BonusViewController.swift in Sources */,
@@ -12973,6 +13031,7 @@
 				4589C8D1282024E400243547 /* CGFloat+Extensions.swift in Sources */,
 				4589C8D2282024E400243547 /* SportGroupViewModel.swift in Sources */,
 				A9CB3E7029CDC25600BEF9C1 /* ApplicableBonus.swift in Sources */,
+				A9A1B2D22A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */,
 				4589C8D3282024E400243547 /* BonusAvailableTableViewCell.swift in Sources */,
 				4589C8D4282024E400243547 /* MyFavoritesViewModel.swift in Sources */,
 				45C10F6628772DA700037BBE /* CAMediaTimingFunction+Shift.swift in Sources */,
@@ -13018,6 +13077,7 @@
 				4589C8F4282024E400243547 /* PolicyLinkView.swift in Sources */,
 				4589C8F6282024E400243547 /* HomeFilterOptions.swift in Sources */,
 				4589C8F7282024E400243547 /* Aggregator.swift in Sources */,
+				A9A1B2C02A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
 				4589C8F8282024E400243547 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				4589C8F9282024E400243547 /* BonusActiveCellViewModel.swift in Sources */,
 				4589C8FA282024E400243547 /* CompetitionFilterHeaderView.swift in Sources */,
@@ -13160,6 +13220,7 @@
 				45A3307F298976BA008181E9 /* UploadDocuments.swift in Sources */,
 				45A33080298976BA008181E9 /* GeoLocationManager.swift in Sources */,
 				45A33082298976BA008181E9 /* PersonalInfoViewController.swift in Sources */,
+				A9A1B2C72A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */,
 				45A33083298976BA008181E9 /* SharedBetData.swift in Sources */,
 				A90C372029C35FD0007B8AEC /* WithdrawSuccessViewController.swift in Sources */,
 				45A33084298976BA008181E9 /* HeaderTextFieldView.swift in Sources */,
@@ -13428,6 +13489,7 @@
 				45A33196298976BA008181E9 /* SelectFriendCellViewModel.swift in Sources */,
 				45A33197298976BA008181E9 /* MatchStatsCollectionViewCell.swift in Sources */,
 				45A33199298976BA008181E9 /* CountryName.swift in Sources */,
+				A9A1B2B52A0E557000F7A8ED /* UserConsent.swift in Sources */,
 				A91A05B829CB534B00E0A772 /* CloseAccountViewController.swift in Sources */,
 				45A3319A298976BA008181E9 /* ProfileViewController.swift in Sources */,
 				45A3319B298976BA008181E9 /* TipsViewController.swift in Sources */,
@@ -13566,6 +13628,7 @@
 				45A33222298976BA008181E9 /* MatchFiltersViewController.swift in Sources */,
 				45A33224298976BA008181E9 /* CGFloat+Extensions.swift in Sources */,
 				A9CB3E6E29CDC25600BEF9C1 /* ApplicableBonus.swift in Sources */,
+				A9A1B2D02A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */,
 				45A33225298976BA008181E9 /* SportGroupViewModel.swift in Sources */,
 				45A33226298976BA008181E9 /* BonusAvailableTableViewCell.swift in Sources */,
 				45A33227298976BA008181E9 /* MyFavoritesViewModel.swift in Sources */,
@@ -13611,6 +13674,7 @@
 				45A33253298976BA008181E9 /* DropDownSelectionView.swift in Sources */,
 				45A33254298976BA008181E9 /* PolicyLinkView.swift in Sources */,
 				45A33256298976BA008181E9 /* HomeFilterOptions.swift in Sources */,
+				A9A1B2BE2A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
 				45A33257298976BA008181E9 /* Aggregator.swift in Sources */,
 				45A33258298976BA008181E9 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				45A33259298976BA008181E9 /* BonusActiveCellViewModel.swift in Sources */,
@@ -13737,6 +13801,7 @@
 				A90FB7C129AF67B000D08A7C /* AlertType.swift in Sources */,
 				45A6BBD328246A7400D9B416 /* SplashViewController.swift in Sources */,
 				45A6BBD428246A7400D9B416 /* BonusHistoryDataSource.swift in Sources */,
+				A9A1B2CB2A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */,
 				45A6BBD528246A7500D9B416 /* SimpleRegisterEmailCheckViewModel.swift in Sources */,
 				45A6BBD728246A7500D9B416 /* SuggestedBetSummary.swift in Sources */,
 				45372F5F29D1FD04002FB894 /* OddOutcomesSortingHelper.swift in Sources */,
@@ -14085,6 +14150,7 @@
 				45A6BCF228246A7500D9B416 /* Colors.swift in Sources */,
 				45A6BCF328246A7500D9B416 /* CashoutAggregator.swift in Sources */,
 				A9B6305A29102BF900BB850E /* RecoverPasswordViewController.swift in Sources */,
+				A9A1B2B92A0E557000F7A8ED /* UserConsent.swift in Sources */,
 				F4DE47AA288F620000CF30AA /* FilterHistoryViewModel.swift in Sources */,
 				45A6BCF428246A7500D9B416 /* ConversationsViewModel.swift in Sources */,
 				45A6BCF528246A7500D9B416 /* FilterRowView.swift in Sources */,
@@ -14187,6 +14253,7 @@
 				45A6BD4228246A7500D9B416 /* SegmentControlItemView.swift in Sources */,
 				45A6BD4328246A7500D9B416 /* AppearanceViewController.swift in Sources */,
 				45A6BD4428246A7500D9B416 /* TransportSessionIDModel.swift in Sources */,
+				A9A1B2D42A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */,
 				45A6BD4528246A7500D9B416 /* OddsViewController.swift in Sources */,
 				A90FB7CB29AF7C1700D08A7C /* ResponsibleGamingViewController.swift in Sources */,
 				A91A05BC29CB534B00E0A772 /* CloseAccountViewController.swift in Sources */,
@@ -14230,6 +14297,7 @@
 				45A6BD6428246A7500D9B416 /* LogViewerViewController.swift in Sources */,
 				45A6BD6528246A7500D9B416 /* TransactionsHistoryRootViewController.swift in Sources */,
 				45A6BD6628246A7500D9B416 /* FavoritesManager.swift in Sources */,
+				A9A1B2C22A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
 				45A6BD6728246A7500D9B416 /* MyTicketsRootViewController.swift in Sources */,
 				45A6BD6828246A7500D9B416 /* Throwable.swift in Sources */,
 				45B6E2422841525F001B570C /* NewMessageViewController.swift in Sources */,
@@ -14361,6 +14429,7 @@
 				A9C340DC28F9A74A0055360B /* ConversationsDetailViewModel.swift in Sources */,
 				A9C340DD28F9A74A0055360B /* DocumentPickerView.swift in Sources */,
 				A9C340DE28F9A74A0055360B /* NSAttributedString+Extensions.swift in Sources */,
+				A9A1B2B82A0E557000F7A8ED /* UserConsent.swift in Sources */,
 				A96FAEC929804C0600A0751F /* Data+Extensions.swift in Sources */,
 				A9C340DF28F9A74A0055360B /* BettingHistoryRootViewController.swift in Sources */,
 				A9C340E028F9A74A0055360B /* DepositViewModel.swift in Sources */,
@@ -14476,6 +14545,7 @@
 				A9C3414D28F9A74A0055360B /* URLSchemaManager.swift in Sources */,
 				A9C3414E28F9A74A0055360B /* TransactionsHistoryViewModel.swift in Sources */,
 				A9C3414F28F9A74A0055360B /* NetworkError.swift in Sources */,
+				A9A1B2C12A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
 				A9C3415128F9A74A0055360B /* FullRegisterAddressCountryViewController.swift in Sources */,
 				A9C3415328F9A74A0055360B /* TabularViewController.swift in Sources */,
 				A9C3415428F9A74A0055360B /* MatchWidgetCellViewModel.swift in Sources */,
@@ -14511,6 +14581,7 @@
 				A9C3417128F9A74A0055360B /* CompetitionFilterTableViewCell.swift in Sources */,
 				A9C3417228F9A74A0055360B /* NewGroupHeaderFooterView.swift in Sources */,
 				A9C3417328F9A74A0055360B /* EmailVerificationViewController.swift in Sources */,
+				A9A1B2D32A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */,
 				A9C3417428F9A74A0055360B /* SuggestedBetTableViewCell.swift in Sources */,
 				A9C3417528F9A74A0055360B /* Optional+Extensions.swift in Sources */,
 				A9C3417628F9A74A0055360B /* OutcomeSelectionButtonView.swift in Sources */,
@@ -14711,6 +14782,7 @@
 				A9C3423F28F9A74A0055360B /* SharedTicketBetLineView.swift in Sources */,
 				A9C3424128F9A74A0055360B /* ShareTicketFriendGroupViewModel.swift in Sources */,
 				A9C3424228F9A74A0055360B /* WithdrawViewController.swift in Sources */,
+				A9A1B2CA2A0E566F00F7A8ED /* UserConsentStatus.swift in Sources */,
 				A9C3424328F9A74A0055360B /* OutrightCompetitionLargeLineTableViewCell.swift in Sources */,
 				A9C3424428F9A74A0055360B /* Location.swift in Sources */,
 				A9C3424628F9A74A0055360B /* WithdrawWebViewController.swift in Sources */,
