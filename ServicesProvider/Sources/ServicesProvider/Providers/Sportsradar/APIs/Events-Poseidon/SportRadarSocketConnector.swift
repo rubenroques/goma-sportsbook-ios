@@ -17,7 +17,6 @@ protocol SportRadarConnectorSubscriber: AnyObject {
     func preLiveSportsUpdated(withSportTypes: [SportRadarModels.SportType])
 
     func eventDetailsUpdated(forContentIdentifier identifier: ContentIdentifier, event: Event)
-    //func eventDetailsLiveInitialData(contentIdentifier: ContentIdentifier, eventLiveDataSummary: SportRadarModels.EventLiveDataSummary)
     func eventDetailsLiveInitialData(contentIdentifier: ContentIdentifier, eventLiveDataExtended: SportRadarModels.EventLiveDataExtended)
 
     func eventGroups(forContentIdentifier identifier: ContentIdentifier, withEvents: [EventsGroup])
@@ -152,8 +151,10 @@ extension SportRadarSocketConnector: WebSocketDelegate {
                     for content in contents {
 
                         switch content {
-                        case .liveEvents, .preLiveEvents, .liveSports, .preLiveSports, .eventDetails, .eventDetailsLiveData, .eventGroup, .outrightEventGroup, .eventSummary, .marketDetails:
+                        case .liveEvents, .preLiveEvents, .liveSports, .preLiveSports, .eventDetails, .eventGroup, .outrightEventGroup, .eventSummary, .marketDetails:
                             ()
+                        case .eventDetailsLiveData:
+                            print("☁️SP debugbetslip WS recieved text with live data: \(string) \n\n")
                         case .addEvent, .removeEvent, .addMarket, .enableMarket, .removeMarket, .updateEventState, .updateEventTime, .updateEventScore, .updateMarketTradability, .updateEventMarketCount, .updateOutcomeOdd, .updateOutcomeTradability:
                             print("☁️SP debugbetslip WS recieved text with content update:\n\(string)\n -------------------> Converted to: \n\(content)\n-----\n")
                         case .unknown:

@@ -43,13 +43,8 @@ public class Subscription: Hashable, Identifiable {
         unsubscriber?.unsubscribe(subscription: self)
     }
 
-    @discardableResult
-    func associateSubscription(_ subscription: Subscription) -> Bool {
-        if self.contentIdentifier.pageableId != subscription.contentIdentifier.pageableId {
-            return false
-        }
+    func associateSubscription(_ subscription: Subscription) {
         self.associatedSubscriptions.append(subscription)
-        return true
     }
 
     public func hash(into hasher: inout Hasher) {

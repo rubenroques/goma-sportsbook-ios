@@ -262,7 +262,6 @@ extension SportRadarEventDetailsCoordinator {
 
 }
 
-
 extension SportRadarEventDetailsCoordinator: UnsubscriptionController {
 
     func unsubscribe(subscription: Subscription) {
