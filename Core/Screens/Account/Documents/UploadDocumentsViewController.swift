@@ -15,6 +15,7 @@ class UploadDocumentsViewController: UIViewController {
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var bottomSafeAreaView: UIView = Self.createBottomSafeAreaView()
     private lazy var navigationView: UIView = Self.createNavigationView()
+    private lazy var navigationTitleLabel: UILabel = Self.createNavigationTitleLabel()
     private lazy var closeButton: UIButton = Self.createCloseButton()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var containerView: UIView = Self.createContainerView()
@@ -103,6 +104,8 @@ class UploadDocumentsViewController: UIViewController {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         self.navigationView.backgroundColor = .clear
+
+        self.navigationTitleLabel.textColor = UIColor.App.textPrimary
 
         self.closeButton.backgroundColor = .clear
 
@@ -346,6 +349,17 @@ extension UploadDocumentsViewController {
         return view
     }
 
+    private static func createNavigationTitleLabel() -> UILabel {
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.textColor = UIColor.App.textPrimary
+        titleLabel.font = AppFont.with(type: .medium, size: 17)
+        titleLabel.textAlignment = .center
+        titleLabel.text = localized("my_documents")
+        titleLabel.numberOfLines = 0
+        return titleLabel
+    }
+
     private static func createCloseButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -443,7 +457,9 @@ extension UploadDocumentsViewController {
         self.view.addSubview(self.bottomSafeAreaView)
         self.view.addSubview(self.navigationView)
 
+        self.navigationView.addSubview(self.navigationTitleLabel)
         self.navigationView.addSubview(self.closeButton)
+
         self.view.addSubview(self.containerView)
 
         self.containerView.addSubview(self.titleLabel)
@@ -486,6 +502,10 @@ extension UploadDocumentsViewController {
             self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
             self.navigationView.heightAnchor.constraint(equalToConstant: 44),
 
+            self.navigationTitleLabel.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 60),
+            self.navigationTitleLabel.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -60),
+            self.navigationTitleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+
             self.closeButton.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -30),
             self.closeButton.heightAnchor.constraint(equalToConstant: 44)
         ])
@@ -499,11 +519,11 @@ extension UploadDocumentsViewController {
 
             self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 35),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
-            self.titleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 30),
+            self.titleLabel.topAnchor.constraint(equalTo: self.documentsStateView.bottomAnchor, constant: 30),
 
             self.documentsStateView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 35),
             self.documentsStateView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
-            self.documentsStateView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 15),
+            self.documentsStateView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 15),
 
             self.separatorLineView.leadingAnchor.constraint(equalTo: self.documentsStateView.leadingAnchor),
             self.separatorLineView.trailingAnchor.constraint(equalTo: self.documentsStateView.trailingAnchor),
@@ -528,7 +548,7 @@ extension UploadDocumentsViewController {
         NSLayoutConstraint.activate([
             self.tableView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 25),
             self.tableView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -25),
-            self.tableView.topAnchor.constraint(equalTo: self.documentsStateView.bottomAnchor, constant: 15),
+            self.tableView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 15),
             self.tableView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -15)
         ])
 

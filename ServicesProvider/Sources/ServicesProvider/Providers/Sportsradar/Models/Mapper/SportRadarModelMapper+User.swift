@@ -458,7 +458,25 @@ extension SportRadarModelMapper {
 
         let userConsentInfo = Self.userConsentInfo(fromUserConsentInfo: internalUserConsent.consentInfo)
 
-        return UserConsent(consentInfo: userConsentInfo, consentStatus: internalUserConsent.consentStatus)
+        var userConsentStatus: UserConsentStatus = .notConsented
+
+        if internalUserConsent.consentStatus == "NOT_CONSENTED" {
+            userConsentStatus = .notConsented
+        }
+        else {
+            userConsentStatus = .consented
+        }
+
+        var userConsentType: UserConsentType = .sms
+
+        if userConsentInfo.key == "sms_promotions" {
+            userConsentType = .sms
+        }
+        else if userConsentInfo.key == "email_promotions" {
+            userConsentType = .email
+        }
+
+        return UserConsent(consentInfo: userConsentInfo, consentStatus: userConsentStatus, consentType: userConsentType)
     }
 
     static func userConsentInfo(fromUserConsentInfo internalUserConsentInfo: SportRadarModels.UserConsentInfo) -> UserConsentInfo {

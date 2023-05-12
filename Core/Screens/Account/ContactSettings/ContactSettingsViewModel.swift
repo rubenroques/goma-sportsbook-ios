@@ -44,26 +44,30 @@ class ContactSettingsViewModel {
 
                 print("USER CONSENTS: \(userConsents)")
 
-                self?.userConsents = userConsents
+                let mappedUserConsents = userConsents.map({
+                    return ServiceProviderModelMapper.userConsent(fromServiceProviderUserConsent: $0)
+                })
+
+                self?.userConsents = mappedUserConsents
 
                 var notificationUserSettings = UserDefaults.standard.notificationsUserSettings
 
-                let smsUserConsent = userConsents.filter({
-                    $0.consentInfo.key == "sms_promotions"
+                let smsUserConsent = mappedUserConsents.filter({
+                    $0.consentType == .sms
                 }).first
 
-                let emailUserConsent = userConsents.filter({
-                    $0.consentInfo.key == "email_promotions"
+                let emailUserConsent = mappedUserConsents.filter({
+                    $0.consentType == .email
                 }).first
 
-                if smsUserConsent?.consentStatus == "NOT_CONSENTED" {
+                if smsUserConsent?.consentStatus == .notConsented {
                     notificationUserSettings.notificationsSms = false
                 }
                 else {
                     notificationUserSettings.notificationsSms = true
                 }
 
-                if emailUserConsent?.consentStatus == "NOT_CONSENTED" {
+                if emailUserConsent?.consentStatus == .notConsented {
                     notificationUserSettings.notificationsEmail = false
                 }
                 else {
@@ -92,8 +96,8 @@ class ContactSettingsViewModel {
         //  self.storeNotificationsUserSettings()
 
         if let versionId = self.userConsents?.filter({
-            $0.consentInfo.key == "sms_promotions"
-        }).first?.consentInfo.consentVersionId {
+            $0.consentType == .sms
+        }).first?.consentVersionId {
 
             self.setUserConsents(versionId: versionId, isConsent: enabled)
 
@@ -107,8 +111,8 @@ class ContactSettingsViewModel {
         //  self.storeNotificationsUserSettings()
 
         if let versionId = self.userConsents?.filter({
-            $0.consentInfo.key == "email_promotions"
-        }).first?.consentInfo.consentVersionId {
+            $0.consentType == .email
+        }).first?.consentVersionId {
 
             self.setUserConsents(versionId: versionId, isConsent: enabled)
 
