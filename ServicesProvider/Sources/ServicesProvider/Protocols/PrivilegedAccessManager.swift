@@ -79,4 +79,8 @@ protocol PrivilegedAccessManager {
 
     func contactUs(firstName: String, lastName: String, email: String, subject: String, message: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
     func contactSupport(userIdentifier: String, subject: String, message: String) -> AnyPublisher<SupportResponse, ServiceProviderError>
+
+    func getUserConsents() -> AnyPublisher<[UserConsent], ServiceProviderError>
+
+    func setUserConsents(consentVersionIds: [Int]?, unconsenVersionIds: [Int]?) -> AnyPublisher<BasicResponse, ServiceProviderError>
 }

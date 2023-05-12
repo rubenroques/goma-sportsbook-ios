@@ -441,6 +441,30 @@ extension SportRadarModelMapper {
                            wagerRequired: internalRedeemBonus.wagerRequired,
                            amountWagered: internalRedeemBonus.amountWagered)
     }
+
+    static func userConsentResponse(fromUserConsentsResponse internalUserConsentsResponse: SportRadarModels.UserConsentsResponse) -> UserConsentsResponse {
+
+        let userConsents = internalUserConsentsResponse.userConsents.map({ userConsent -> UserConsent in
+
+            let userConsent = Self.userConsent(fromUserConsent: userConsent)
+
+            return userConsent
+        })
+
+        return UserConsentsResponse(status: internalUserConsentsResponse.status, message: internalUserConsentsResponse.message, userConsents: userConsents)
+    }
+
+    static func userConsent(fromUserConsent internalUserConsent: SportRadarModels.UserConsent) -> UserConsent {
+
+        let userConsentInfo = Self.userConsentInfo(fromUserConsentInfo: internalUserConsent.consentInfo)
+
+        return UserConsent(consentInfo: userConsentInfo, consentStatus: internalUserConsent.consentStatus)
+    }
+
+    static func userConsentInfo(fromUserConsentInfo internalUserConsentInfo: SportRadarModels.UserConsentInfo) -> UserConsentInfo {
+
+        return UserConsentInfo(id: internalUserConsentInfo.id, key: internalUserConsentInfo.key, name: internalUserConsentInfo.name, consentVersionId: internalUserConsentInfo.consentVersionId)
+    }
 }
 
 private extension UserRegistrationStatus {

@@ -342,7 +342,9 @@ class LoginViewController: UIViewController {
         
         steppedRegistrationViewController.didRegisteredUserAction = { [weak self] registeredUser in
             if let nickname = registeredUser.nickname, let password = registeredUser.password {
-                self?.triggerLoginAfterRegister(username: nickname, password: password)
+
+                self?.triggerLoginAfterRegister(username: nickname, password: password, withUserConsents: viewModel.isMarketingSelected ? true : false)
+
                 self?.showRegisterFeedbackViewController(onNavigationController: registerNavigationController)
             }
         }
@@ -352,6 +354,28 @@ class LoginViewController: UIViewController {
         }
 
         self.present(registerNavigationController, animated: animated)
+    }
+
+    private func setUserConsents() {
+
+        Env.servicesProvider.setUserConsents(consentVersionIds: [1, 2])
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("SET USER CONSENTS REGISTER ERROR: \(error)")
+                }
+
+            }, receiveValue: { [weak self] basicResponse in
+
+                UserDefaults.standard.notificationsUserSettings.notificationsSms = true
+                UserDefaults.standard.notificationsUserSettings.notificationsEmail = true
+
+            })
+            .store(in: &cancellables)
     }
 
     private func showRegisterFeedbackViewController(onNavigationController navigationController: UINavigationController) {
@@ -502,7 +526,7 @@ class LoginViewController: UIViewController {
     }
 
 
-    func triggerLoginAfterRegister(username: String, password: String) {
+    func triggerLoginAfterRegister(username: String, password: String, withUserConsents: Bool = false) {
         Env.userSessionStore.disableForcedLimitsScreen()
         Env.userSessionStore.login(withUsername: username, password: password)
             .receive(on: DispatchQueue.main)
@@ -511,6 +535,10 @@ class LoginViewController: UIViewController {
                 self?.deleteCachedRegistrationData()
             } receiveValue: { [weak self] success in
                 print("triggerLoginAfterRegister ", success)
+
+                if withUserConsents {
+                    self?.setUserConsents()
+                }
             }
             .store(in: &cancellables)
     }

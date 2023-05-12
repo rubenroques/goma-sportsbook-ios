@@ -1052,7 +1052,8 @@ extension SportRadarEventsProvider {
 
             if numericSport.name.lowercased() == "top bets"
                 || numericSport.name.lowercased() == "top bet"
-                || numericSport.name.lowercased() == "outrights" {
+                || numericSport.name.lowercased() == "outrights"
+                || numericSport.name.lowercased() == "popular" {
                 continue
             }
 

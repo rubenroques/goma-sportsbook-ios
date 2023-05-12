@@ -964,6 +964,44 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManager {
             }
         }).eraseToAnyPublisher()
     }
+
+    func getUserConsents() -> AnyPublisher<[UserConsent], ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.getUserConsents
+
+        let publisher: AnyPublisher<SportRadarModels.UserConsentsResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ userConsentsResponse -> AnyPublisher<[UserConsent], ServiceProviderError> in
+            if userConsentsResponse.status == "SUCCESS" {
+
+                let mappedUserConsentsResponse = SportRadarModelMapper.userConsentResponse(fromUserConsentsResponse: userConsentsResponse)
+
+                return Just(mappedUserConsentsResponse.userConsents).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
+            }
+            else {
+                return Fail(outputType: [UserConsent].self, failure: ServiceProviderError.errorMessage(message: userConsentsResponse.message ?? "Error")).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+
+    func setUserConsents(consentVersionIds: [Int]?, unconsenVersionIds: [Int]?) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.setUserConsents(consentVersionIds: consentVersionIds, unconsentVersionIds: unconsenVersionIds)
+
+        let publisher: AnyPublisher<SportRadarModels.BasicResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ basicResponse -> AnyPublisher<BasicResponse, ServiceProviderError> in
+            if basicResponse.status == "SUCCESS" {
+
+                let basicResponse = SportRadarModelMapper.basicResponse(fromInternalBasicResponse: basicResponse)
+
+                return Just(basicResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            return Fail(outputType: BasicResponse.self, failure: ServiceProviderError.errorMessage(message: basicResponse.message ?? "Error")).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+    }
 }
 
 extension SportRadarPrivilegedAccessManager: SportRadarSessionTokenUpdater {
