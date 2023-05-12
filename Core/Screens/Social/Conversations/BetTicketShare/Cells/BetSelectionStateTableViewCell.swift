@@ -149,6 +149,12 @@ class BetSelectionStateTableViewCell: UITableViewCell {
             self.titleLabel.text = localized("system") +
             " - \(viewModel.ticket.systemBetType?.capitalized ?? "") - \(betStatusText(forCode: viewModel.ticket.status?.uppercased() ?? "-"))"
         }
+        else {
+            self.titleLabel.text = String([viewModel.ticket.type, viewModel.ticket.localizedBetStatus]
+                .compactMap({ $0 })
+                .map({ $0.capitalized })
+                .joined(separator: " - "))
+        }
 
         if viewModel.ticket.status == "WON" {
             self.betState = .won

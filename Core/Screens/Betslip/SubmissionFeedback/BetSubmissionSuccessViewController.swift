@@ -201,7 +201,7 @@ class BetSubmissionSuccessViewController: UIViewController {
                 return betHistoryEntriesToShow
             })
             .receive(on: DispatchQueue.main)
-            .sink { completion in
+            .sink { _ in
 
             } receiveValue: { [weak self] betHistoryEntries in
                 self?.configureBetCards(withBetHistoryEntries: betHistoryEntries)

@@ -90,6 +90,12 @@ class ChatTicketStateInMessageView: UIView {
             self.titleLabel.text = localized("system") +
             " - \(self.betSelectionCellViewModel.ticket.systemBetType?.capitalized ?? "") - \(betStatusText(forCode: self.betSelectionCellViewModel.ticket.status?.uppercased() ?? "-"))"
         }
+        else {
+            self.titleLabel.text = String([self.betSelectionCellViewModel.ticket.type, self.betSelectionCellViewModel.ticket.localizedBetStatus]
+                .compactMap({ $0 })
+                .map({ $0.capitalized })
+                .joined(separator: " - "))
+        }
 
         if self.betSelectionCellViewModel.ticket.status == "WON" {
             self.betState = .won

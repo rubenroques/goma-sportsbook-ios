@@ -105,10 +105,10 @@ extension SportRadarModelMapper {
                             homeResult: homeResult,
                             awayResult: awayResult,
                             eventId: eventIdString,
+                            eventDate: internalBet.eventDate,
                             country: country,
                             sportTypeName: internalBet.sportTypeName,
-                            tournamentName: internalBet.tournamentName ?? ""
-        )
+                            tournamentName: internalBet.tournamentName ?? "")
     }
 
     //  ServiceProvider ----> SportRadar

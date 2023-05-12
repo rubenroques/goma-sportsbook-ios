@@ -363,17 +363,16 @@ class MyTicketTableViewCell: UITableViewCell {
 
         //
         if betHistoryEntry.type?.lowercased() == "single" {
-            self.titleLabel.text = localized("single")+" - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))"
+            self.titleLabel.text = localized("single")+" - \(betHistoryEntry.localizedBetStatus)"
         }
         else if betHistoryEntry.type?.lowercased() == "multiple" {
-            self.titleLabel.text = localized("multiple")+" - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))"
+            self.titleLabel.text = localized("multiple")+" - \(betHistoryEntry.localizedBetStatus)"
         }
         else if betHistoryEntry.type?.lowercased() == "system" {
-            self.titleLabel.text = localized("system")+" - \(betHistoryEntry.systemBetType?.capitalized ?? "") - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))"
+            self.titleLabel.text = localized("system")+" - \(betHistoryEntry.systemBetType?.capitalized ?? "") - \(betHistoryEntry.localizedBetStatus)"
         }
         else {
-            let betHistoryEntryStatus = betStatusText(forCode: betHistoryEntry.status ?? "")
-            self.titleLabel.text = String([betHistoryEntry.type, betHistoryEntryStatus]
+            self.titleLabel.text = String([betHistoryEntry.type, betHistoryEntry.localizedBetStatus]
                 .compactMap({ $0 })
                 .map({ $0.capitalized })
                 .joined(separator: " - "))
@@ -715,21 +714,6 @@ class MyTicketTableViewCell: UITableViewCell {
         self.bottomSeparatorLineView.backgroundColor = .white
     }
 
-    private func betStatusText(forCode code: String) -> String {
-        switch code.uppercased() {
-        case "OPENED": return localized("open")
-        case "OPEN": return localized("open")
-        case "DRAW": return localized("draw")
-        case "WON": return localized("won")
-        case "HALF_WON": return localized("half_won")
-        case "LOST": return localized("lost")
-        case "HALF_LOST": return localized("half_lost")
-        case "CANCELLED": return localized("cancelled")
-        case "CASHED_OUT": return localized("cashed_out")
-        case "CASHEDOUT": return localized("cashed_out")
-        default: return ""
-        }
-    }
 }
 
 extension MyTicketTableViewCell {

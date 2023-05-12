@@ -46,6 +46,7 @@ public struct BetSelection: Codable {
     public var awayResult: String?
 
     public var eventId: String
+    public var eventDate: Date?
     public var country: Country?
     public var sportTypeName: String
     public var tournamentName: String
@@ -63,6 +64,7 @@ public struct BetSelection: Codable {
          homeResult: String?,
          awayResult: String?,
          eventId: String,
+         eventDate: Date?,
          country: Country?,
          sportTypeName: String,
          tournamentName: String) {
@@ -79,6 +81,7 @@ public struct BetSelection: Codable {
         self.homeResult = homeResult
         self.awayResult = awayResult
         self.eventId = eventId
+        self.eventDate = eventDate
         self.country = country
         self.sportTypeName = sportTypeName
         self.tournamentName = tournamentName

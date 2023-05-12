@@ -37,6 +37,7 @@ class SharedTicketBetLineView: UIView {
 
         super.init(frame: frame)
 
+        self.setupSubviews()
         self.commonInit()
         self.setupWithTheme()
     }
@@ -47,8 +48,6 @@ class SharedTicketBetLineView: UIView {
     }
 
     func commonInit() {
-
-        self.setupSubviews()
 
         // Sport
         if let sportId = self.betHistoryEntrySelection.sportId {
@@ -72,6 +71,7 @@ class SharedTicketBetLineView: UIView {
         }
 
         // Date
+        self.dateLabel.text = ""
         if let date = self.betHistoryEntrySelection.eventDate {
             self.dateLabel.text = MyTicketBetLineView.dateFormatter.string(from: date)
         }
@@ -96,6 +96,30 @@ class SharedTicketBetLineView: UIView {
             let oddString = OddFormatter.formatOdd(withValue: oddValue)
 
             self.oddsValueLabel.text = oddString
+        }
+
+        // Sport Icon
+        if let sportCode = self.betHistoryEntrySelection.sportName {
+            if let sportId = Env.sportsStore.getSportId(sportCode: sportCode) {
+                let image = UIImage(named: "sport_type_icon_\(sportId)")
+                self.sportTypeImageView.image = image
+            }
+            else {
+                self.sportTypeImageView.image = UIImage(named: "sport_type_icon_default")
+            }
+        }
+        else {
+            self.sportTypeImageView.image = UIImage(named: "sport_type_icon_default")
+        }
+
+        self.sportTypeImageView.setImageColor(color: UIColor.App.textPrimary)
+
+        // Country image
+        if let image = UIImage(named: Assets.flagName(withCountryCode: self.betHistoryEntrySelection.venueName ?? "")) {
+            self.locationImageView.image = image
+        }
+        else {
+            self.locationImageView.isHidden = true
         }
 
     }

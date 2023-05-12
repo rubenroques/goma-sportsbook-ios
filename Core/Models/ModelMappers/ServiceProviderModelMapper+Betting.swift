@@ -96,7 +96,7 @@ extension ServiceProviderModelMapper {
                                                                 eventStatusId: nil,
                                                                 eventName: betSelection.eventName,
                                                                 eventResult: nil,
-                                                                eventDate: nil,
+                                                                eventDate: betSelection.eventDate,
                                                                 bettingTypeId: nil,
                                                                 bettingTypeName: nil,
                                                                 bettingTypeEventPartId: nil,

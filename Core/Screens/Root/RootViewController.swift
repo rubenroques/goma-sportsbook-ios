@@ -418,6 +418,8 @@ class RootViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        self.setNeedsStatusBarAppearanceUpdate()
+
         Env.userSessionStore.userWalletPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] userWallet in
@@ -436,6 +438,7 @@ class RootViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
     }
 
     func checkUserLimitsSet() {
@@ -452,9 +455,15 @@ class RootViewController: UIViewController {
 
     }
 
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        let barStyle: UIStatusBarStyle = traitCollection.userInterfaceStyle == .dark ? .lightContent : .darkContent
+        return barStyle
+    }
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
+        self.setNeedsStatusBarAppearanceUpdate()
         self.setupWithTheme()
     }
 
@@ -528,28 +537,28 @@ class RootViewController: UIViewController {
         self.sportsbookButtonBaseView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
 
         let homeTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapHomeTabItem))
-        homeButtonBaseView.addGestureRecognizer(homeTapGesture)
+        self.homeButtonBaseView.addGestureRecognizer(homeTapGesture)
 
         let sportsTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSportsTabItem))
-        sportsButtonBaseView.addGestureRecognizer(sportsTapGesture)
+        self.sportsButtonBaseView.addGestureRecognizer(sportsTapGesture)
 
         let liveTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLiveTabItem))
-        liveButtonBaseView.addGestureRecognizer(liveTapGesture)
+        self.liveButtonBaseView.addGestureRecognizer(liveTapGesture)
 
         let tipsTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapTipsTabItem))
-        tipsButtonBaseView.addGestureRecognizer(tipsTapGesture)
+        self.tipsButtonBaseView.addGestureRecognizer(tipsTapGesture)
 
         let casinoTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapCasinoTabItem))
-        casinoButtonBaseView.addGestureRecognizer(casinoTapGesture)
+        self.casinoButtonBaseView.addGestureRecognizer(casinoTapGesture)
 
         let sportsbookTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSportsbookIcon))
-        sportsbookButtonBaseView.addGestureRecognizer(sportsbookTapGesture)
+        self.sportsbookButtonBaseView.addGestureRecognizer(sportsbookTapGesture)
 
         let profileTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfileButton))
-        profilePictureBaseView.addGestureRecognizer(profileTapGesture)
+        self.profilePictureBaseView.addGestureRecognizer(profileTapGesture)
 
         let anonymousTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAnonymousButton))
-        anonymousUserMenuBaseView.addGestureRecognizer(anonymousTapGesture)
+        self.anonymousUserMenuBaseView.addGestureRecognizer(anonymousTapGesture)
 
         //
         accountValueLabel.text = localized("loading")
@@ -783,6 +792,15 @@ class RootViewController: UIViewController {
     }
 
     func openBetslipModal() {
+//
+//#if DEBUG
+//        let dummyBetPlacedDetails = BetPlacedDetails(response: BetslipPlaceBetResponse(betId: "349383.10"), tickets: [])
+//        let testViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: [dummyBetPlacedDetails])
+//        testViewController.modalPresentationStyle = .fullScreen
+//        self.present(testViewController, animated: true)
+//        return
+//#endif
+        
         let betslipViewController = BetslipViewController()
         betslipViewController.willDismissAction = { [weak self] in
             self?.reloadChildViewControllersData()

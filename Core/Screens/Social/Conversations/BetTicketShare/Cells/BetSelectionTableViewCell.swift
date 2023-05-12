@@ -93,15 +93,20 @@ class BetSelectionTableViewCell: UITableViewCell {
     func configure(withViewModel viewModel: BetSelectionCellViewModel) {
         self.viewModel = viewModel
 
-        if viewModel.ticket.type == "SINGLE" {
-            self.titleLabel.text = localized("single")+" - \(betStatusText(forCode: viewModel.ticket.status?.uppercased() ?? "-"))"
+        if viewModel.ticket.type?.uppercased() == "SINGLE" {
+            self.titleLabel.text = localized("single")+" - \(viewModel.ticket.localizedBetStatus)"
         }
-        else if viewModel.ticket.type == "MULTIPLE" {
-            self.titleLabel.text = localized("multiple")+" - \(betStatusText(forCode: viewModel.ticket.status?.uppercased() ?? "-"))"
+        else if viewModel.ticket.type?.uppercased() == "MULTIPLE" {
+            self.titleLabel.text = localized("multiple")+" - \(viewModel.ticket.localizedBetStatus)"
         }
-        else if viewModel.ticket.type == "SYSTEM" {
-            self.titleLabel.text = localized("system") +
-            " - \(viewModel.ticket.systemBetType?.capitalized ?? "") - \(betStatusText(forCode: viewModel.ticket.status?.uppercased() ?? "-"))"
+        else if viewModel.ticket.type?.uppercased() == "SYSTEM" {
+            self.titleLabel.text = localized("system") + " - \(viewModel.ticket.systemBetType?.capitalized ?? "") - \(viewModel.ticket.localizedBetStatus)"
+        }
+        else {
+            self.titleLabel.text = String([viewModel.ticket.type, viewModel.ticket.localizedBetStatus]
+                .compactMap({ $0 })
+                .map({ $0.capitalized })
+                .joined(separator: " - "))
         }
 
         viewModel.isCheckboxSelectedPublisher
@@ -127,20 +132,6 @@ class BetSelectionTableViewCell: UITableViewCell {
         }
 
         self.ticketsStackView.layoutIfNeeded()
-    }
-
-    private func betStatusText(forCode code: String) -> String {
-        switch code {
-        case "OPEN": return localized("open")
-        case "DRAW": return localized("draw")
-        case "WON": return localized("won")
-        case "HALF_WON": return localized("half_won")
-        case "LOST": return localized("lost")
-        case "HALF_LOST": return localized("half_lost")
-        case "CANCELLED": return localized("cancelled")
-        case "CASHED_OUT": return localized("cashed_out")
-        default: return ""
-        }
     }
 
     // MARK: Actions

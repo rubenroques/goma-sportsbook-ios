@@ -64,6 +64,24 @@ struct BetHistoryEntry {
     }
 }
 
+extension BetHistoryEntry {
+    public var localizedBetStatus: String {
+        switch (self.status ?? "").uppercased() {
+        case "OPENED": return localized("open").uppercased()
+        case "OPEN": return localized("open").uppercased()
+        case "DRAW": return localized("draw").uppercased()
+        case "WON": return localized("won").uppercased()
+        case "HALF_WON": return localized("half_won").uppercased()
+        case "LOST": return localized("lost").uppercased()
+        case "HALF_LOST": return localized("half_lost").uppercased()
+        case "CANCELLED": return localized("cancelled").uppercased()
+        case "CASHED_OUT": return localized("cashed_out").uppercased()
+        case "CASHEDOUT": return localized("cashed_out").uppercased()
+        default: return ""
+        }
+    }
+}
+
 // MARK: - Selection
 enum BetSelectionStatus: String, Codable, CaseIterable {
     case opened

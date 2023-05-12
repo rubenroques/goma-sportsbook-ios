@@ -108,7 +108,8 @@ class SharedTicketCardView: UIView {
 
         for (index, betHistoryEntrySelection) in (betHistoryEntry.selections ?? []).enumerated() {
 
-            let sharedTicketBetLineView = SharedTicketBetLineView(betHistoryEntrySelection: betHistoryEntrySelection, countryCode: countryCodes[safe: index] ?? "")
+            let sharedTicketBetLineView = SharedTicketBetLineView(betHistoryEntrySelection: betHistoryEntrySelection,
+                                                                  countryCode: countryCodes[safe: index] ?? "")
 
             sharedTicketBetLineView.layoutIfNeeded()
             sharedTicketBetLineView.layoutSubviews()
@@ -116,17 +117,7 @@ class SharedTicketCardView: UIView {
             self.betCardsStackView.addArrangedSubview(sharedTicketBetLineView)
         }
 
-        if betHistoryEntry.type?.lowercased() == "single" {
-            self.titleLabel.text = localized("single")+" Bet"
-        }
-        else if betHistoryEntry.type?.lowercased() == "multiple" {
-            self.titleLabel.text = localized("multiple")+" Bet"
-        }
-        else {
-            self.titleLabel.text = localized("system")+" Bet"
-        }
-
-        self.titleLabel.text = betHistoryEntry.type?.lowercased() ?? ""
+        self.titleLabel.text = viewModel.title
 
         if let date = betHistoryEntry.placedDate {
             self.subtitleLabel.text = MyTicketBetLineView.dateFormatter.string(from: date)

@@ -91,6 +91,9 @@ class MyTicketBetLineView: NibView {
         self.marketLabel.text = ""
         self.oddValueLabel.text = " - "
 
+        self.homeTeamScoreLabel.text = ""
+        self.awayTeamScoreLabel.text = ""
+
         self.liveIconImage.isHidden = true
         
         self.baseView.clipsToBounds = true

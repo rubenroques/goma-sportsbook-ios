@@ -68,7 +68,7 @@ class Router {
             self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
         }
         else {
-            self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
+            self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.unspecified
         }
 
         let splashViewController = SplashViewController(loadingCompleted: {
@@ -82,6 +82,7 @@ class Router {
         //        // AnonymousSideMenuViewController(viewModel: AnonymousSideMenuViewModel())
         // #endif
 
+
         self.rootWindow.makeKeyAndVisible()
     }
 
@@ -90,7 +91,6 @@ class Router {
     }
 
     func showPostLoadingFlow() {
-        
         self.subscribeToUserActionBlockers()
         self.subscribeToURLRedirects()
         self.subscribeToNotificationsOpened()
@@ -103,7 +103,12 @@ class Router {
             bootRootViewController = Router.createLoginViewControllerFlow()
         }
 
+        // if Development
+        //
+        // Prod
         self.rootWindow.rootViewController = bootRootViewController
+        //
+
     }
 
     func subscribeToUserActionBlockers() {
@@ -551,4 +556,3 @@ enum AppSharedState {
     case inactiveApp
     case activeApp
 }
-

@@ -87,6 +87,8 @@ extension SportRadarModels {
         var order: Int
 
         var eventId: Double
+        var eventDate: Date?
+
         var tournamentCountryName: String?
         var tournamentName: String?
 
@@ -122,6 +124,8 @@ extension SportRadarModels {
             case eventResult = "eventResult"
 
             case eventId = "idFOEvent"
+            case eventDate = "tsEventTime"
+
             case tournamentCountryName = "tournamentCountryName"
             case tournamentName = "tournamentName"
 
@@ -174,6 +178,7 @@ extension SportRadarModels {
             self.order = (try? container.decode(Int.self, forKey: .order)) ?? 999
 
             self.eventId = try container.decode(Double.self, forKey: .eventId)
+            self.eventDate = try? container.decode(Date.self, forKey: .eventDate)
 
             self.tournamentCountryName = try container.decodeIfPresent(String.self, forKey: .tournamentCountryName)
 

@@ -1336,16 +1336,35 @@ extension MatchDetailsViewController: InnerTableViewScrollDelegate {
         return matchFieldWebViewHeight.constant
     }
 
+//    func innerTableViewDidScroll(withDistance scrollDistance: CGFloat) {
+//
+//        matchFieldWebViewHeight.constant -= scrollDistance
+//
+//        if matchFieldWebViewHeight.constant > matchFieldMaximumHeight {
+//            matchFieldWebViewHeight.constant = matchFieldMaximumHeight
+//        }
+//
+//        if matchFieldWebViewHeight.constant < matchFieldMinimumHeight {
+//            matchFieldWebViewHeight.constant = matchFieldMinimumHeight
+//        }
+//
+//    }
+
     func innerTableViewDidScroll(withDistance scrollDistance: CGFloat) {
+        let newHeight = matchFieldWebViewHeight.constant - scrollDistance
 
-        matchFieldWebViewHeight.constant -= scrollDistance
-
-        if matchFieldWebViewHeight.constant > matchFieldMaximumHeight {
-         matchFieldWebViewHeight.constant = matchFieldMaximumHeight
+        if newHeight > matchFieldMaximumHeight {
+            if matchFieldWebViewHeight.constant != matchFieldMaximumHeight {
+                matchFieldWebViewHeight.constant = matchFieldMaximumHeight
+            }
         }
-
-        if matchFieldWebViewHeight.constant < matchFieldMinimumHeight {
-            matchFieldWebViewHeight.constant = matchFieldMinimumHeight
+        else if newHeight < matchFieldMinimumHeight {
+            if matchFieldWebViewHeight.constant != matchFieldMinimumHeight {
+                matchFieldWebViewHeight.constant = matchFieldMinimumHeight
+            }
+        }
+        else {
+            matchFieldWebViewHeight.constant = newHeight
         }
     }
 
@@ -1355,14 +1374,16 @@ extension MatchDetailsViewController: InnerTableViewScrollDelegate {
 
         if topViewHeight <= self.matchFieldMinimumHeight + 20 {
             self.scrollToFinalView()
-        } else if topViewHeight <= self.matchFieldMaximumHeight - 20 {
+        }
+        else if topViewHeight <= self.matchFieldMaximumHeight - 20 {
             switch scrollDirection {
             case .down:
                 self.scrollToInitialView()
             case .up:
                 self.scrollToFinalView()
             }
-        } else {
+        }
+        else {
             self.scrollToInitialView()
         }
     }

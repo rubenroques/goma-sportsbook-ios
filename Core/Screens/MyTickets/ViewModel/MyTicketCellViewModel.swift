@@ -61,14 +61,20 @@ class MyTicketCellViewModel {
             self.selections.append( MyTicketBetLineViewModel(selection: selection) )
         }
 
-        if ticket.type == "SINGLE" {
-            self.title = localized("single") + " - \(self.betStatusText(forCode: ticket.status?.uppercased() ?? "-"))"
+        if ticket.type?.lowercased() == "single" {
+            self.title = localized("single")+" - \(ticket.localizedBetStatus)"
         }
-        else if ticket.type == "MULTIPLE" {
-            self.title = localized("multiple") + " - \(self.betStatusText(forCode: ticket.status?.uppercased() ?? "-"))"
+        else if ticket.type?.lowercased() == "multiple" {
+            self.title = localized("multiple")+" - \(ticket.localizedBetStatus)"
         }
-        else if ticket.type == "SYSTEM" {
-            self.title = localized("system") + " - \(ticket.systemBetType?.capitalized ?? "") - \(self.betStatusText(forCode: ticket.status?.uppercased() ?? "-"))"
+        else if ticket.type?.lowercased() == "system" {
+            self.title = localized("system")+" - \(ticket.systemBetType?.capitalized ?? "") - \(ticket.localizedBetStatus)"
+        }
+        else {
+            self.title = String([ticket.type, ticket.localizedBetStatus]
+                .compactMap({ $0 })
+                .map({ $0.capitalized })
+                .joined(separator: " - "))
         }
 
     }
@@ -117,20 +123,6 @@ class MyTicketCellViewModel {
             })
             .store(in: &cancellables)
 
-    }
-
-    private func betStatusText(forCode code: String) -> String {
-        switch code {
-        case "OPEN": return localized("open")
-        case "DRAW": return localized("draw")
-        case "WON": return localized("won")
-        case "HALF_WON": return localized("half_won")
-        case "LOST": return localized("lost")
-        case "HALF_LOST": return localized("half_lost")
-        case "CANCELLED": return localized("cancelled")
-        case "CASHED_OUT": return localized("cashed_out")
-        default: return ""
-        }
     }
 
     static var dateFormatter: DateFormatter = {

@@ -173,6 +173,69 @@ struct BetslipPlaceBetResponse: Decodable {
 
         case selections = "selections"
     }
+
+    init(betId: String? = nil, betSucceed: Bool? = nil, errorCode: String? = nil, errorMessage: String? = nil, totalPriceValue: Double? = nil,
+         oddsValidationType: String? = nil, maxWinningNetto: Double? = nil, totalStakeTax: Double? = nil, basePossibleProfit: Double? = nil,
+         amount: Double? = nil, maxWinningTax: Double? = nil, terminalType: String? = nil, freeBetAmount: Double? = nil, minStake: Double? = nil,
+         numberOfSelections: Int? = nil, bonusBetAmount: Double? = nil, maxStake: Double? = nil, type: String? = nil, totalStakeNetto: Double? = nil,
+         eachWay: Bool? = nil, baseWinning: Double? = nil, possibleProfit: Double? = nil, freeBet: Bool? = nil, maxWinning: Double? = nil,
+         selections: [BetslipPlaceEntry]? = nil) {
+
+        self.betId = betId
+        self.betSucceed = betSucceed
+        self.errorCode = errorCode
+        self.errorMessage = errorMessage
+        self.totalPriceValue = totalPriceValue
+        self.oddsValidationType = oddsValidationType
+        self.maxWinningNetto = maxWinningNetto
+        self.totalStakeTax = totalStakeTax
+        self.basePossibleProfit = basePossibleProfit
+        self.amount = amount
+        self.maxWinningTax = maxWinningTax
+        self.terminalType = terminalType
+        self.freeBetAmount = freeBetAmount
+        self.minStake = minStake
+        self.numberOfSelections = numberOfSelections
+        self.bonusBetAmount = bonusBetAmount
+        self.maxStake = maxStake
+        self.type = type
+        self.totalStakeNetto = totalStakeNetto
+        self.eachWay = eachWay
+        self.baseWinning = baseWinning
+        self.possibleProfit = possibleProfit
+        self.freeBet = freeBet
+        self.maxWinning = maxWinning
+        self.selections = selections
+    }
+
+    init(betId: String) {
+        self.betId = betId
+        self.betSucceed = nil
+        self.errorCode = nil
+        self.errorMessage = nil
+        self.totalPriceValue = nil
+        self.oddsValidationType = nil
+        self.maxWinningNetto = nil
+        self.totalStakeTax = nil
+        self.basePossibleProfit = nil
+        self.amount = nil
+        self.maxWinningTax = nil
+        self.terminalType = nil
+        self.freeBetAmount = nil
+        self.minStake = nil
+        self.numberOfSelections = nil
+        self.bonusBetAmount = nil
+        self.maxStake = nil
+        self.type = nil
+        self.totalStakeNetto = nil
+        self.eachWay = nil
+        self.baseWinning = nil
+        self.possibleProfit = nil
+        self.freeBet = nil
+        self.maxWinning = nil
+        self.selections = nil
+    }
+    
 }
 
 struct BetslipPlaceEntry: Codable {
