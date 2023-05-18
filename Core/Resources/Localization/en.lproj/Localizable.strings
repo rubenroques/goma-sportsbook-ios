@@ -341,7 +341,7 @@
 "filters" = "Filters"; // UNUSED
 "fingerprint_login" = "Fingerprint login";
 "finish_up_profile" = "Finish up profile";
-"first_deposit" = "First deposit!"; // UNUSED
+"first_deposit" = "First deposit!";
 "first_deposit_subtitle" = "Make your first deposit now!";
 "first_name" = "First Name";
 "first_name_is_required" = "The first name is a required field. Please complete this field."; // UNUSED
@@ -989,7 +989,7 @@
 "x_results" = "No Results | 1 Result | {count} Results"; // UNUSED
 "xbets" = "{num} Bets"; // UNUSED
 "year" = "Year"; // UNUSED
-"yes" = "Yes"; // UNUSED
+"yes" = "Yes";
 "you_made_a_bet" = "You made a bet!"; // UNUSED
 "you_shared_a_bet" = "You shared a bet"; // UNUSED
 "you_want_to_quit" = "Are you sure you want to quit?"; // UNUSED
@@ -1287,3 +1287,14 @@
 
 "check_bet_result" = "Check the result of this bet!";
 "my_documents" = "My Documents";
+
+"bonus_deposit_title" = "Would you like to receive a bonus with this deposit?";
+"bonus_deposit_detail" = "See bonus details";
+"bonus_deposit_name" = "Deposit bonus: {bonusName}";
+
+"bonus_dialog_title" = "Are you sure you don't want the bonus?";
+"bonus_dialog_message" = "By accepting you will not receive the following bonus: {bonusName}";
+
+"first_deposit_success_message" = "Your first deposit was successful!";
+
+"deposit_success_message" = "Your deposit was successful!";

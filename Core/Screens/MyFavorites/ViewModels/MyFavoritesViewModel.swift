@@ -157,7 +157,7 @@ class MyFavoritesViewModel: NSObject {
         for competitionInfo in competitionInfos {
 
             if let marketGroup = competitionInfo.marketGroups.filter({
-                $0.name == "Main"
+                $0.name.lowercased().contains("main")
             }).first {
                 self.subscribeCompetitionMatches(forMarketGroupId: marketGroup.id, competitionInfo: competitionInfo)
 

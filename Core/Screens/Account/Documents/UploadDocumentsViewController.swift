@@ -147,9 +147,14 @@ class UploadDocumentsViewController: UIViewController {
             .sink(receiveValue: { [weak self] kycStatus in
                 if let kycStatus = kycStatus {
                     switch kycStatus {
-                    case .request: self?.statusLabel.text = "Requested"
+                    case .request:
+                        self?.statusLabel.text = "Requested"
+                        self?.statusView.backgroundColor = UIColor.App.statsAway
                     case .passConditional: self?.statusLabel.text = "Pass Conditional"
-                    case .pass: self?.statusLabel.text = "Pass"
+                        self?.statusView.backgroundColor = UIColor.App.alertSuccess
+                    case .pass:
+                        self?.statusLabel.text = "Pass"
+                        self?.statusView.backgroundColor = UIColor.App.alertSuccess
                     }
                 }
                 else {

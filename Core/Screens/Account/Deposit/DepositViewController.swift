@@ -11,6 +11,7 @@ import ServicesProvider
 import Adyen
 import AdyenDropIn
 import AdyenComponents
+import Lottie
 
 class DepositViewController: UIViewController {
 
@@ -19,7 +20,17 @@ class DepositViewController: UIViewController {
     @IBOutlet private var navigationView: UIView!
     @IBOutlet private var navigationLabel: UILabel!
     @IBOutlet private var navigationButton: UIButton!
-    @IBOutlet private var titleLabel: UILabel!
+
+    @IBOutlet private var animationBaseView: UIView!
+
+    @IBOutlet private var bonusContentView: UIView!
+    @IBOutlet private var bonusIconImageView: UIImageView!
+    @IBOutlet private var bonusTitleLabel: UILabel!
+    @IBOutlet private var bonusInfoLabel: UILabel!
+    @IBOutlet private var bonusDetailLabel: UILabel!
+    @IBOutlet private var acceptBonusView: OptionRadioView!
+    @IBOutlet private var declineBonusView: OptionRadioView!
+
     @IBOutlet private var depositHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var amountButtonStackView: UIStackView!
     @IBOutlet private var amount10Button: UIButton!
@@ -34,6 +45,8 @@ class DepositViewController: UIViewController {
     @IBOutlet private var depositTipLabel: UILabel!
     @IBOutlet private var loadingBaseView: UIView!
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
+
+    @IBOutlet private var bonusHeightConstraint: NSLayoutConstraint!
 
     private var isLoading: Bool = false {
         didSet {
@@ -65,6 +78,18 @@ class DepositViewController: UIViewController {
 
     var shouldRefreshUserWallet: (() -> Void)?
 
+    var hasBonus: Bool = false {
+        didSet {
+            self.bonusContentView.isHidden = !hasBonus
+
+            if !hasBonus {
+                self.bonusHeightConstraint.isActive = true
+                self.bonusContentView.layoutIfNeeded()
+            }
+
+        }
+    }
+
     // MARK: Lifetime and Cycle
     init() {
         self.viewModel = DepositViewModel()
@@ -93,6 +118,21 @@ class DepositViewController: UIViewController {
 
     }
 
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        self.bonusContentView.layer.cornerRadius = CornerRadius.view
+
+        self.bonusContentView.setNeedsLayout()
+        self.bonusContentView.layoutIfNeeded()
+
+    }
+
     func commonInit() {
 
         self.navigationLabel.text = localized("deposit")
@@ -102,10 +142,6 @@ class DepositViewController: UIViewController {
 
         self.navigationButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
         self.navigationButton.setTitle(localized("cancel"), for: .normal)
-
-        self.titleLabel.text = localized("how_much_deposit")
-        self.titleLabel.font = AppFont.with(type: .bold, size: 20)
-        self.titleLabel.numberOfLines = 0
 
         self.depositHeaderTextFieldView.setPlaceholderText(localized("deposit_value"))
         self.depositHeaderTextFieldView.setKeyboardType(.decimalPad)
@@ -138,6 +174,55 @@ class DepositViewController: UIViewController {
         self.setupPublishers()
 
         self.isLoading = false
+
+        let animationView = LottieAnimationView()
+
+        animationView.translatesAutoresizingMaskIntoConstraints = false
+        animationView.contentMode = .scaleAspectFit
+
+        self.animationBaseView.addSubview(animationView)
+
+        let starAnimation = LottieAnimation.named("deposit_animation")
+
+        animationView.animation = starAnimation
+        animationView.loopMode = .loop
+
+        NSLayoutConstraint.activate([
+            animationView.leadingAnchor.constraint(equalTo: self.animationBaseView.leadingAnchor),
+            animationView.trailingAnchor.constraint(equalTo: self.animationBaseView.trailingAnchor),
+            animationView.topAnchor.constraint(equalTo: self.animationBaseView.topAnchor),
+            animationView.bottomAnchor.constraint(equalTo: self.animationBaseView.bottomAnchor)
+        ])
+
+        animationView.play()
+
+        self.bonusIconImageView.image = UIImage(named: "bonus_sparkle_icon")
+        self.bonusIconImageView.contentMode = .scaleAspectFit
+
+        self.bonusTitleLabel.text = localized("bonus_deposit_title")
+
+        self.setupBonusDetailUnderlineClickableLabel()
+
+        self.acceptBonusView.setTitle(title: localized("yes"))
+
+        self.acceptBonusView.didTapView = { [weak self] isChecked in
+
+            if isChecked {
+                self?.declineBonusView.isChecked = false
+                self?.viewModel.isBonusAccepted = true
+            }
+        }
+
+        self.declineBonusView.setTitle(title: localized("no"))
+
+        self.declineBonusView.didTapView = { [weak self] isChecked in
+
+            if isChecked {
+                self?.acceptBonusView.isChecked = false
+                self?.viewModel.isBonusAccepted = false
+            }
+        }
+
     }
 
     // MARK: Layout and Theme
@@ -161,7 +246,17 @@ class DepositViewController: UIViewController {
         self.navigationButton.backgroundColor = .clear
         self.navigationButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
-        self.titleLabel.textColor = UIColor.App.textPrimary
+        self.animationBaseView.backgroundColor = .clear
+
+        self.bonusContentView.backgroundColor = UIColor.App.backgroundSecondary
+
+        self.bonusIconImageView.backgroundColor = .clear
+
+        self.bonusTitleLabel.textColor = UIColor.App.textPrimary
+
+        self.bonusInfoLabel.textColor = UIColor.App.textSecondary
+
+        self.bonusDetailLabel.textColor = UIColor.App.highlightSecondary
 
         self.depositHeaderTextFieldView.backgroundColor = .clear
         self.depositHeaderTextFieldView.setPlaceholderColor(UIColor.App.textSecondary)
@@ -241,6 +336,20 @@ class DepositViewController: UIViewController {
                 self?.depositTipLabel.isHidden = false
             })
             .store(in: &cancellables)
+
+        viewModel.availableBonuses
+            .dropFirst()
+            .sink(receiveValue: { [weak self] availableBonuses in
+
+                self?.hasBonus = !availableBonuses.isEmpty
+
+                self?.bonusInfoLabel.text = localized("bonus_deposit_name").replacingOccurrences(of: "{bonusName}", with: availableBonuses.first?.name ?? "")
+
+                self?.acceptBonusView.isChecked = true
+
+                self?.viewModel.isBonusAccepted = true
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Functions
@@ -305,6 +414,57 @@ class DepositViewController: UIViewController {
 
     }
 
+    private func setupBonusDetailUnderlineClickableLabel() {
+
+        let fullString = localized("bonus_deposit_detail")
+
+        self.bonusDetailLabel.text = fullString
+
+        let underlineAttriString = NSMutableAttributedString(string: fullString)
+
+        let range = (fullString as NSString).range(of: fullString)
+
+        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .semibold, size: 12), range: range)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.highlightSecondary, range: range)
+        underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range)
+
+        self.bonusDetailLabel.attributedText = underlineAttriString
+        self.bonusDetailLabel.isUserInteractionEnabled = true
+        self.bonusDetailLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapBonusDetailUnderlineLabel)))
+    }
+
+    @objc private func tapBonusDetailUnderlineLabel() {
+        print("TAPPED BONUS DETAIL")
+        if let bonus = self.viewModel.availableBonuses.value.first {
+
+            let bonus = ServiceProviderModelMapper.applicableBonus(fromServiceProviderAvailableBonus: bonus)
+
+            let bonusDetailViewModel = BonusDetailViewModel(bonus: bonus)
+            let bonusDetailViewController = BonusDetailViewController(viewModel: bonusDetailViewModel)
+
+            self.navigationController?.pushViewController(bonusDetailViewController, animated: true)
+        }
+    }
+
+    private func showBonusAlert(bonusAmount: String) {
+
+        let message = localized("bonus_dialog_message").replacingOccurrences(of: "{bonusName}", with: self.bonusInfoLabel.text ?? "")
+
+        let alert = UIAlertController(title: localized("bonus_dialog_title"),
+                                      message: message,
+                                      preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+
+            self?.viewModel.getDepositInfo(amountText: bonusAmount)
+
+        }))
+
+        alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
+    }
+
     private func setupResponsableGamingUnderlineClickableLabel() {
 
         let fullString = localized("responsible_gaming")
@@ -340,25 +500,29 @@ class DepositViewController: UIViewController {
 
         switch paymentStatus {
         case .authorised:
-            alertTitle = localized("payment_authorized")
-            alertMessage = localized("payment_authorized_message")
+
+            self.shouldRefreshUserWallet?()
+
+            let depositSuccessViewController = DepositSuccessViewController()
+
+            depositSuccessViewController.setTextInfo(title: "\(localized("success"))!", subtitle: localized("deposit_success_message"))
+
+            self.navigationController?.pushViewController(depositSuccessViewController, animated: true)
+
         case .refused:
+
             alertTitle = localized("payment_refused")
             alertMessage = localized("payment_refused_message")
+
+            let alert = UIAlertController(title: alertTitle,
+                                          message: alertMessage,
+                                          preferredStyle: .alert)
+
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+
+            self.present(alert, animated: true, completion: nil)
         }
 
-        let alert = UIAlertController(title: alertTitle,
-                                      message: alertMessage,
-                                      preferredStyle: .alert)
-
-        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
-
-            if paymentStatus == .authorised {
-                self.shouldRefreshUserWallet?()
-                self.dismiss(animated: true)
-            }
-        }))
-        self.present(alert, animated: true, completion: nil)
     }
 
     @IBAction private func tapResponsabibleGamingUnderlineLabel(gesture: UITapGestureRecognizer) {
@@ -572,7 +736,13 @@ class DepositViewController: UIViewController {
     @IBAction private func didTapNextButton() {
         let amountText = self.depositHeaderTextFieldView.text
 
-        self.viewModel.getDepositInfo(amountText: amountText)
+        if declineBonusView.isChecked {
+            self.showBonusAlert(bonusAmount: amountText)
+        }
+        else if acceptBonusView.isChecked {
+            self.viewModel.getDepositInfo(amountText: amountText)
+        }
+
     }
 
     func showErrorAlert(errorType: BalanceErrorType) {

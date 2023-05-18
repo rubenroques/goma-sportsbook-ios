@@ -77,7 +77,7 @@ class MyTicketTableViewCell: UITableViewCell {
         didSet {
             self.cashoutBaseView.isHidden = !showCashoutButton
             if showCashoutButton {
-                self.needsHeightRedraw?()
+                self.needsHeightRedraw?(false)
             }
         }
     }
@@ -87,13 +87,14 @@ class MyTicketTableViewCell: UITableViewCell {
             if showPartialCashoutSliderView {
                 self.partialCashoutFilterButton.setImage(UIImage(named: "close_dark_icon"), for: .normal)
                 self.cashoutButton.isEnabled = false
+
             }
             else {
                 self.partialCashoutFilterButton.setImage(UIImage(named: "partial_cashout_slider_icon"), for: .normal)
                 self.cashoutButton.isEnabled = true
             }
             self.partialCashoutSliderView.isHidden = !showPartialCashoutSliderView
-            self.needsHeightRedraw?()
+            self.needsHeightRedraw?(showPartialCashoutSliderView)
         }
     }
 
@@ -105,7 +106,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
     var snapshot: UIImage?
 
-    var needsHeightRedraw: (() -> Void)?
+    var needsHeightRedraw: ((Bool) -> Void)?
     var tappedShareAction: (() -> Void)?
     var tappedMatchDetail: ((String) -> Void)?
     
@@ -672,6 +673,7 @@ class MyTicketTableViewCell: UITableViewCell {
     @IBAction private func didTapPartialCashoutFilterButton() {
 
         self.showPartialCashoutSliderView = !self.showPartialCashoutSliderView
+
     }
 
     @IBAction private func didTapPartialCashoutButton() {

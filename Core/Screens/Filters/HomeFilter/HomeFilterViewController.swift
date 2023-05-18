@@ -279,7 +279,7 @@ class HomeFilterViewController: UIViewController {
         // timeRangeMultiSlider?.distanceBetweenThumbs = 1
         timeRangeMultiSlider?.keepsDistanceBetweenThumbs = false
         timeRangeMultiSlider?.addTarget(self, action: #selector(timeSliderChanged), for: .valueChanged)
-        timeRangeMultiSlider?.valueLabelPosition = .bottom
+        timeRangeMultiSlider?.valueLabelPosition = .firstBaseline
         timeRangeMultiSlider?.valueLabelColor = UIColor.App.textPrimary
         timeRangeMultiSlider?.valueLabelFont = AppFont.with(type: .bold, size: 14)
 

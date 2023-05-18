@@ -433,9 +433,91 @@ class LoginViewController: UIViewController {
         }
 
         depositOnRegisterViewController.didTapDepositButtonAction = { [weak self] amount in
+
+            if depositOnRegisterViewController.isBonusAccepted {
+                if let bonusId = depositOnRegisterViewController.availableBonuses.value.first?.id {
+                    self?.redeemBonus(bonusId: bonusId)
+                }
+            }
+
             self?.paymentsDropIn?.getDepositInfo(amountText: amount)
         }
+
+        depositOnRegisterViewController.getOptInBonus = { [weak self] in
+            self?.getOptInBonus()
+        }
+
+        depositOnRegisterViewController.didTapBonusDetailAction = { [weak self] availableBonus in
+
+            let bonus = ServiceProviderModelMapper.applicableBonus(fromServiceProviderAvailableBonus: availableBonus)
+
+            let bonusDetailViewModel = BonusDetailViewModel(bonus: bonus)
+            let bonusDetailViewController = BonusDetailViewController(viewModel: bonusDetailViewModel)
+
+            navigationController.pushViewController(bonusDetailViewController, animated: true)
+        }
+
         navigationController.pushViewController(depositOnRegisterViewController, animated: true)
+    }
+
+    private func getOptInBonus() {
+
+        Env.servicesProvider.getAvailableBonuses()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("AVAILABLE BONUSES ERROR: \(error)")
+                }
+
+            }, receiveValue: { [weak self] availableBonuses in
+
+                let filteredBonus = availableBonuses.filter({
+                    $0.type == "DEPOSIT"
+                })
+
+                self?.depositOnRegisterViewController?.availableBonuses.send(filteredBonus)
+            })
+            .store(in: &cancellables)
+
+    }
+
+    private func redeemBonus(bonusId: String) {
+
+        if let partyId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
+
+            Env.servicesProvider.redeemAvailableBonus(partyId: partyId, code: bonusId)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+
+                    switch completion {
+                    case .finished:
+                        ()
+                    case .failure(let error):
+                        print("REDEEM AVAILABLE BONUS ERROR: \(error)")
+                        switch error {
+                        case .errorMessage(let message):
+                            if message == "BONUSPLAN_NOT_FOUND" {
+                                print("REDEEM BONUS ERROR: \(message)")
+
+                            }
+                            else {
+                                print("REDEEM BONUS ERROR: \(message)")
+                            }
+                        default:
+                            ()
+                        }
+                    }
+                }, receiveValue: { [weak self] redeemAvailableBonusResponse in
+
+                    print("REDEEM CODE SUCCESS: \(redeemAvailableBonusResponse)")
+
+                })
+                .store(in: &cancellables)
+        }
     }
 
     private func deleteCachedRegistrationData() {
@@ -567,7 +649,6 @@ class LoginViewController: UIViewController {
         spinnerViewController.removeFromParent()
         spinnerViewController.view.removeFromSuperview()
     }
-
 
 
     private func loginSuccessful() {
@@ -723,25 +804,29 @@ class LoginViewController: UIViewController {
 
         switch paymentStatus {
         case .authorised:
-            alertTitle = localized("payment_authorized")
-            alertMessage = localized("payment_authorized_message")
+
+            Env.userSessionStore.refreshUserWalletAfterDelay()
+
+            let depositSuccessViewController = DepositSuccessViewController()
+
+            depositSuccessViewController.setTextInfo(title: "\(localized("success"))!", subtitle: localized("first_deposit_success_message"))
+
+            self.depositOnRegisterViewController?.navigationController?.pushViewController(depositSuccessViewController, animated: true)
+
         case .refused:
             alertTitle = localized("payment_refused")
             alertMessage = localized("payment_refused_message")
+
+            let alert = UIAlertController(title: alertTitle,
+                                          message: alertMessage,
+                                          preferredStyle: .alert)
+
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+
+            //self?.closeLoginRegisterFlow()
+
+            self.depositOnRegisterViewController?.present(alert, animated: true, completion: nil)
         }
-
-        let alert = UIAlertController(title: alertTitle,
-                                      message: alertMessage,
-                                      preferredStyle: .alert)
-
-        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
-            if paymentStatus == .authorised {
-                Env.userSessionStore.refreshUserWalletAfterDelay()
-                self?.closeLoginRegisterFlow()
-            }
-        }))
-
-        self.depositOnRegisterViewController?.present(alert, animated: true, completion: nil)
 
     }
 
