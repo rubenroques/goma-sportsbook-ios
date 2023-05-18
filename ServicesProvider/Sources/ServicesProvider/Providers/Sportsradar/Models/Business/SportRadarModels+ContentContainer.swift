@@ -27,11 +27,17 @@ extension SportRadarModels {
         case marketDetails(contentIdentifier: ContentIdentifier, market: SportRadarModels.Market?)
         //
         case addEvent(contentIdentifier: ContentIdentifier, event: SportRadarModels.Event)
-        case removeEvent(contentIdentifier: ContentIdentifier, eventId: String)
-
         case addMarket(contentIdentifier: ContentIdentifier, market: SportRadarModels.Market)
-        case enableMarket(contentIdentifier: ContentIdentifier, marketId: String)
+        case addSelection(contentIdentifier: ContentIdentifier, selection: SportRadarModels.Outcome)
+        case addSport(contentIdentifier: ContentIdentifier, sportType: SportType)
+
+        case removeEvent(contentIdentifier: ContentIdentifier, eventId: String)
         case removeMarket(contentIdentifier: ContentIdentifier, marketId: String)
+        case removeSelection(contentIdentifier: ContentIdentifier, selectionId: String)
+
+        case enableMarket(contentIdentifier: ContentIdentifier, marketId: String)
+
+        case updateEventLiveDataExtended(contentIdentifier: ContentIdentifier, eventId: String, eventLiveDataExtended: SportRadarModels.EventLiveDataExtended)
 
         case updateEventState(contentIdentifier: ContentIdentifier, eventId: String, state: String)
         case updateEventTime(contentIdentifier: ContentIdentifier, eventId: String, newTime: String)
@@ -76,16 +82,30 @@ extension SportRadarModels {
                 return contentIdentifier
             case .removeEvent(let contentIdentifier, _):
                 return contentIdentifier
+
             case .addMarket(let contentIdentifier, _):
                 return contentIdentifier
             case .enableMarket(let contentIdentifier, _):
                 return contentIdentifier
             case .removeMarket(let contentIdentifier, _):
                 return contentIdentifier
+
+            case .addSelection(let contentIdentifier, _):
+                return contentIdentifier
+            case .removeSelection(let contentIdentifier, _):
+                return contentIdentifier
+
+            case .addSport(let contentIdentifier, _):
+                return contentIdentifier
+
             case .updateOutcomeOdd(let contentIdentifier, _, _, _):
                 return contentIdentifier
             case .updateOutcomeTradability(let contentIdentifier, _, _):
                 return contentIdentifier
+
+            case .updateEventLiveDataExtended(let contentIdentifier, _, _):
+                return contentIdentifier
+
             case .updateEventState(let contentIdentifier, _, _):
                 return contentIdentifier
             case .updateEventTime(let contentIdentifier, _, _):
@@ -132,19 +152,29 @@ extension SportRadarModels {
 
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            if container.contains(.path) {
-                self = try Self.parseUpdates(container: container)
+
+            let changeType: String = (try? container.decode(String.self, forKey: .changeType)) ?? ""
+
+            switch changeType.lowercased() {
+            case "refreshed":
+                self = try Self.parseRefreshed(container: container)
+            case "updated":
+                self = try Self.parseUpdated(container: container)
+            case "added":
+                self = try Self.parseAdded(container: container)
+            case "removed":
+                self = try Self.parseRemoved(container: container)
+            default:
+                self = try Self.parseRefreshed(container: container)
             }
-            else {
-                self = try Self.parseInitialData(container: container)
-            }
+
         }
 
         func encode(to encoder: Encoder) throws {
 
         }
 
-        private static func parseInitialData(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
+        private static func parseRefreshed(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
 
             let contentTypeContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
             let contentType = try contentTypeContainer.decode(ContentType.self, forKey: .contentType)
@@ -230,126 +260,120 @@ extension SportRadarModels {
             }
         }
 
-        private static func parseUpdates(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
+        private static func parseUpdated(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
 
             let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
+            let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
 
-            let path: String? = try container.decodeIfPresent(String.self, forKey: .path)
 
-            let changeType: String = (try? container.decode(String.self, forKey: .changeType)) ?? ""
-
-            if path == nil {
-                // No path recieved
-                if changeType.contains("removed") {
-                    if contentIdentifier.contentType == .market, case .market(let marketId) = contentIdentifier.contentRoute {
-                        return .removeMarket(contentIdentifier: contentIdentifier, marketId: marketId)
-                    }
-                    else if contentIdentifier.contentType == .eventDetails, case .eventDetails(let eventId) = contentIdentifier.contentRoute {
-                        return .removeEvent(contentIdentifier: contentIdentifier, eventId: eventId)
-                    }
+            if case let ContentRoute.eventDetailsLiveData(eventId) = contentIdentifier.contentRoute {
+                if let eventLiveData = (try? container.decode(SportRadarModels.EventLiveDataExtended.self, forKey: .change)) {
+                    return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier, eventId: eventId , eventLiveDataExtended: eventLiveData)
                 }
+                else if path.lowercased().contains("matchtime"), let matchTime = try container.decodeIfPresent(String.self, forKey: .change) {
+                    let eventLiveDataExtended = SportRadarModels.EventLiveDataExtended.init(id: eventId, homeScore: nil, awayScore: nil, matchTime: matchTime, status: nil)
+                    return .updateEventLiveDataExtended(contentIdentifier: contentIdentifier, eventId: eventId, eventLiveDataExtended: eventLiveDataExtended)
+                }
+                return .unknown
             }
-            else if let path = path {
-                // No path recieved
-                if path.contains("idfomarket") && changeType.contains("added") {
-                    // added a new Market
-                    let newMarket = try container.decode(SportRadarModels.Market.self, forKey: .change)
-                    // print("ContentContainer 'add' market with id \(newMarket.id) :: \(path) and associated change \(changeType)")
-                    return .addMarket(contentIdentifier: contentIdentifier, market: newMarket)
-                }
-                else if path.contains("idfomarket") && changeType.contains("removed"), let marketId = SocketMessageParseHelper.extractMarketId(path) {
-                    // removed a Market
-                    // print("ContentContainer removed market with id \(marketId) :: \(path) and associated change \(changeType)")
-                    return .removeMarket(contentIdentifier: contentIdentifier, marketId: marketId)
-                }
-                else if path.contains("idfomarket") && path.contains("istradable") && changeType.contains("updated"), let marketId = SocketMessageParseHelper.extractMarketId(path) {
-                    // removed a Market
-                    let newIsTradable = try container.decode(Bool.self, forKey: .change)
-                    // print("ContentContainer isTradable \(newIsTradable) market with id :: \(path) and associated change \(changeType)")
-                    return .updateMarketTradability(contentIdentifier: contentIdentifier, marketId: marketId, isTradable: newIsTradable)
-                }
-                // Updates on Events
-                else if path.contains("idfoselection") && changeType.contains("updated") {
-                    // Updated a selection
-                    let changeContainer = try container.nestedContainer(keyedBy: SelectionUpdateCodingKeys.self, forKey: .change)
 
-                    let oddNumerator = try changeContainer.decodeIfPresent(String.self, forKey: .oddNumerator)
-                    let oddDenominator = try changeContainer.decodeIfPresent(String.self, forKey: .oddDenominator)
+            if path.contains("idfomarket") && path.contains("istradable"), let marketId = SocketMessageParseHelper.extractMarketId(path) {
+                // removed a Market
+                let newIsTradable = try container.decode(Bool.self, forKey: .change)
+                // print("ContentContainer isTradable \(newIsTradable) market with id :: \(path) and associated change \(changeType)")
+                return .updateMarketTradability(contentIdentifier: contentIdentifier, marketId: marketId, isTradable: newIsTradable)
+            }
+            // Updates on Events
+            else if path.contains("idfoselection") {
+                // Updated a selection
+                let changeContainer = try container.nestedContainer(keyedBy: SelectionUpdateCodingKeys.self, forKey: .change)
 
-                    let selectionId = try changeContainer.decode(String.self, forKey: .selectionId)
+                let oddNumerator = try changeContainer.decodeIfPresent(String.self, forKey: .oddNumerator)
+                let oddDenominator = try changeContainer.decodeIfPresent(String.self, forKey: .oddDenominator)
 
-                    if oddNumerator == nil && oddDenominator == nil {
-                        if changeContainer.contains(.suspensionType) {
-                            if let selectionSuspentionType = try changeContainer.decodeIfPresent(String.self, forKey: .suspensionType),
-                               selectionSuspentionType == "N/O" {
-                                return .updateOutcomeTradability(contentIdentifier: contentIdentifier,
-                                                                 selectionId: selectionId,
-                                                                 isTradable: false)
-                            }
-                            else {
-                                return .updateOutcomeTradability(contentIdentifier: contentIdentifier,
-                                                                 selectionId: selectionId,
-                                                                 isTradable: true)
-                            }
+                let selectionId = try changeContainer.decode(String.self, forKey: .selectionId)
+
+                if oddNumerator == nil && oddDenominator == nil {
+                    if changeContainer.contains(.suspensionType) {
+                        if let selectionSuspentionType = try changeContainer.decodeIfPresent(String.self, forKey: .suspensionType),
+                           selectionSuspentionType == "N/O" {
+                            return .updateOutcomeTradability(contentIdentifier: contentIdentifier,
+                                                             selectionId: selectionId,
+                                                             isTradable: false)
                         }
                         else {
-                            return .unknown
+                            return .updateOutcomeTradability(contentIdentifier: contentIdentifier,
+                                                             selectionId: selectionId,
+                                                             isTradable: true)
                         }
                     }
                     else {
-                        return .updateOutcomeOdd(contentIdentifier: contentIdentifier, selectionId: selectionId, newOddNumerator: oddNumerator, newOddDenominator: oddDenominator)
+                        return .unknown
                     }
                 }
-                else if path.contains("idfoevent") && path.contains("numMarkets") && changeType.contains("updated"), let eventId = SocketMessageParseHelper.extractEventId(path) {
-                    // Changed the number of markets for an event
-                    let newMarketCount = try container.decode(Int.self, forKey: .change)
-                    return .updateEventMarketCount(contentIdentifier: contentIdentifier, eventId: eventId, newMarketCount: newMarketCount)
+                else {
+                    return .updateOutcomeOdd(contentIdentifier: contentIdentifier, selectionId: selectionId, newOddNumerator: oddNumerator, newOddDenominator: oddDenominator)
                 }
-                else if path.contains("attributes") && path.contains("COMPLETE") && path.contains("CURRENT_SCORE") {
-                    let changeContainer = try container.nestedContainer(keyedBy: ScoreUpdateCodingKeys.self, forKey: .change)
-                    let competitorContainer = try changeContainer.nestedContainer(keyedBy: ScoreUpdateCodingKeys.self, forKey: .competitor)
+            }
+            else if path.contains("idfoevent") && path.contains("numMarkets"), let eventId = SocketMessageParseHelper.extractEventId(path) {
+                // Changed the number of markets for an event
+                let newMarketCount = try container.decode(Int.self, forKey: .change)
+                return .updateEventMarketCount(contentIdentifier: contentIdentifier, eventId: eventId, newMarketCount: newMarketCount)
+            }
+            else if path.contains("attributes") && path.contains("COMPLETE") && path.contains("CURRENT_SCORE") {
+                let changeContainer = try container.nestedContainer(keyedBy: ScoreUpdateCodingKeys.self, forKey: .change)
+                let competitorContainer = try changeContainer.nestedContainer(keyedBy: ScoreUpdateCodingKeys.self, forKey: .competitor)
 
-                    let homeScore = try competitorContainer.decodeIfPresent(Int.self, forKey: .home)
-                    let awayScore = try competitorContainer.decodeIfPresent(Int.self, forKey: .away)
+                let homeScore = try competitorContainer.decodeIfPresent(Int.self, forKey: .home)
+                let awayScore = try competitorContainer.decodeIfPresent(Int.self, forKey: .away)
 
-                    let eventIdContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
+                let eventIdContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .content)
 
-                    let eventId = try eventIdContainer.decode(String.self, forKey: .contentId)
+                let eventId = try eventIdContainer.decode(String.self, forKey: .contentId)
 
-                    return .updateEventScore(contentIdentifier: contentIdentifier, eventId: eventId, homeScore: homeScore, awayScore: awayScore)
+                return .updateEventScore(contentIdentifier: contentIdentifier, eventId: eventId, homeScore: homeScore, awayScore: awayScore)
+            }
+            else if path.contains("scores") && path.contains("liveDataSummary") && (path.contains("MATCH_SCORE") || path.contains("CURRENT_SCORE")), let eventId = SocketMessageParseHelper.extractEventId(path) {
+                // Updated score information
+                let changeContainer = try container.nestedContainer(keyedBy: ScoreUpdateCodingKeys.self, forKey: .change)
+                let homeScore = try changeContainer.decodeIfPresent(Int.self, forKey: .home)
+                let awayScore = try changeContainer.decodeIfPresent(Int.self, forKey: .away)
+                return .updateEventScore(contentIdentifier: contentIdentifier, eventId: eventId, homeScore: homeScore, awayScore: awayScore)
+            }
+            else if path.contains("matchTime") && path.contains("liveDataSummary"), let eventId = SocketMessageParseHelper.extractEventId(path) {
+                // Match time
+                let matchTime = try container.decode(String.self, forKey: .change)
+                if let minutesPart = SocketMessageParseHelper.extractMatchMinutes(from: matchTime) {
+                    return .updateEventTime(contentIdentifier: contentIdentifier, eventId: eventId, newTime: minutesPart)
                 }
-                else if path.contains("scores") && path.contains("liveDataSummary") && (path.contains("MATCH_SCORE") || path.contains("CURRENT_SCORE")), let eventId = SocketMessageParseHelper.extractEventId(path) {
-                    // Updated score information
-                    let changeContainer = try container.nestedContainer(keyedBy: ScoreUpdateCodingKeys.self, forKey: .change)
-                    let homeScore = try changeContainer.decodeIfPresent(Int.self, forKey: .home)
-                    let awayScore = try changeContainer.decodeIfPresent(Int.self, forKey: .away)
-                    return .updateEventScore(contentIdentifier: contentIdentifier, eventId: eventId, homeScore: homeScore, awayScore: awayScore)
-                }
-                else if path.contains("matchTime") && path.contains("liveDataSummary"), changeType.contains("updated"), let eventId = SocketMessageParseHelper.extractEventId(path) {
-                    // Match time
-                    let matchTime = try container.decode(String.self, forKey: .change)
-                    if let minutesPart = SocketMessageParseHelper.extractMatchMinutes(from: matchTime) {
-                        return .updateEventTime(contentIdentifier: contentIdentifier, eventId: eventId, newTime: minutesPart)
-                    }
-                }
-                else if path.contains("status") && path.contains("liveDataSummary"), let eventId = SocketMessageParseHelper.extractEventId(path) {
-                    let newStatus = try container.decode(String.self, forKey: .change)
-                    return .updateEventState(contentIdentifier: contentIdentifier, eventId: eventId, state: newStatus)
-                }
-                else if path.contains("selections") && path.contains("idfoselection") {
-                    if let changeContainer = try? container.nestedContainer(keyedBy: SelectionUpdateCodingKeys.self, forKey: .change),
-                       let oddNumerator = try changeContainer.decodeIfPresent(String.self, forKey: .oddNumerator),
-                       let oddDenominator = try changeContainer.decodeIfPresent(String.self, forKey: .oddDenominator),
-                       let selectionId = try? changeContainer.decode(String.self, forKey: .selectionId) {
+            }
+            else if path.contains("status") && path.contains("liveDataSummary"), let eventId = SocketMessageParseHelper.extractEventId(path) {
+                let newStatus = try container.decode(String.self, forKey: .change)
+                return .updateEventState(contentIdentifier: contentIdentifier, eventId: eventId, state: newStatus)
+            }
+            else if path.contains("selections") && path.contains("idfoselection") {
+                if let changeContainer = try? container.nestedContainer(keyedBy: SelectionUpdateCodingKeys.self, forKey: .change),
+                   let oddNumerator = try changeContainer.decodeIfPresent(String.self, forKey: .oddNumerator),
+                   let oddDenominator = try changeContainer.decodeIfPresent(String.self, forKey: .oddDenominator),
+                   let selectionId = try? changeContainer.decode(String.self, forKey: .selectionId) {
 
-                        // print("ContentContainer updated market odd with id \(marketId) and associated change \(changeType)")
-                        return .updateOutcomeOdd(contentIdentifier: contentIdentifier,
-                                                 selectionId: selectionId,
-                                                 newOddNumerator: oddNumerator,
-                                                 newOddDenominator: oddDenominator)
-                    }
+                    // print("ContentContainer updated market odd with id \(marketId) and associated change \(changeType)")
+                    return .updateOutcomeOdd(contentIdentifier: contentIdentifier,
+                                             selectionId: selectionId,
+                                             newOddNumerator: oddNumerator,
+                                             newOddDenominator: oddDenominator)
                 }
-                else if path.contains("istradable"), changeType.contains("updated"), let newIsTradable = try? container.decode(Bool.self, forKey: .change), let marketId = SocketMessageParseHelper.extractMarketId(path) {
+            }
+            else if path.contains("istradable"), let newIsTradable = try? container.decode(Bool.self, forKey: .change), let marketId = SocketMessageParseHelper.extractMarketId(path) {
+                if newIsTradable {
+                    return .enableMarket(contentIdentifier: contentIdentifier, marketId: marketId)
+                }
+                else {
+                    return .removeMarket(contentIdentifier: contentIdentifier, marketId: marketId)
+                }
+            }
+            else if path.contains("istradable"), let newIsTradable = try? container.decode(Bool.self, forKey: .change) {
+                if contentIdentifier.contentType == .market, case .market(let marketId) = contentIdentifier.contentRoute {
                     if newIsTradable {
                         return .enableMarket(contentIdentifier: contentIdentifier, marketId: marketId)
                     }
@@ -357,45 +381,66 @@ extension SportRadarModels {
                         return .removeMarket(contentIdentifier: contentIdentifier, marketId: marketId)
                     }
                 }
-                else if path.contains("istradable"), changeType.contains("updated"), let newIsTradable = try? container.decode(Bool.self, forKey: .change) {
-                    if contentIdentifier.contentType == .market, case .market(let marketId) = contentIdentifier.contentRoute {
-                        if newIsTradable {
-                            return .enableMarket(contentIdentifier: contentIdentifier, marketId: marketId)
-                        }
-                        else {
-                            return .removeMarket(contentIdentifier: contentIdentifier, marketId: marketId)
-                        }
-                    }
-                }
-                else if path.contains("idfoevent") && changeType.contains("added"), let eventId = SocketMessageParseHelper.extractEventId(path)  {
-                    // Added a new event
-                    let newEvent = try container.decode(SportRadarModels.Event.self, forKey: .change)
-                    return .addEvent(contentIdentifier: contentIdentifier, event: newEvent)
-                }
-                else if path.contains("idfoevent") && changeType.contains("removed"), let eventId = SocketMessageParseHelper.extractEventId(path)  {
-                    // Removed an event
-                    return .removeEvent(contentIdentifier: contentIdentifier, eventId: eventId)
-                }
-                else if path.contains("markets") && path.contains("idfomarket") && path.contains("istradable") && changeType.contains("updated"), let marketId = SocketMessageParseHelper.extractMarketId(path) {
-                    let newIsTradable = (try? container.decode(Bool.self, forKey: .change)) ?? true
-                    return .updateMarketTradability(contentIdentifier: contentIdentifier, marketId: marketId, isTradable: newIsTradable)
-                }
-
-                else if path.contains("selections") && path.contains("idfoselection") && changeType.contains("updated"), let selectionId = SocketMessageParseHelper.extractSelectionId(path) {
-                    print("Updated Selection \(selectionId)")
-                }
-                else if contentIdentifier.contentType == .market, // Is a contentRout of market updates
-                        path == "istradable", // the path is istradable
-                        changeType == "updated", // the change needs to be update
-                        case .market(let marketId) = contentIdentifier.contentRoute, // extract the marketId
-                        let newIsTradable = try? container.decode(Bool.self, forKey: .change) {
-
-                    return .updateMarketTradability(contentIdentifier: contentIdentifier, marketId: marketId, isTradable: newIsTradable)
-                }
+            }
+            else if path.contains("markets") && path.contains("idfomarket") && path.contains("istradable"), let marketId = SocketMessageParseHelper.extractMarketId(path) {
+                let newIsTradable = (try? container.decode(Bool.self, forKey: .change)) ?? true
+                return .updateMarketTradability(contentIdentifier: contentIdentifier, marketId: marketId, isTradable: newIsTradable)
             }
 
-            print("ContentContainer ignored update for \(path) and associated change \(changeType)")
-            return .unknown // SportRadarError.ignoredContentUpdate
+            else if path.contains("selections") && path.contains("idfoselection"), let selectionId = SocketMessageParseHelper.extractSelectionId(path) {
+                print("Updated Selection \(selectionId)")
+            }
+            else if contentIdentifier.contentType == .market, // Is a contentRout of market updates
+                    path == "istradable", // the path is istradable
+                    case .market(let marketId) = contentIdentifier.contentRoute, // extract the marketId
+                    let newIsTradable = try? container.decode(Bool.self, forKey: .change) {
+
+                return .updateMarketTradability(contentIdentifier: contentIdentifier, marketId: marketId, isTradable: newIsTradable)
+            }
+
+            print("ContentContainer ignored update for \(path) and associated change: Updated")
+            return .unknown
+        }
+
+        private static func parseAdded(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
+
+            let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
+            let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
+
+            if path.contains("idfomarket"), let newMarket = try? container.decode(SportRadarModels.Market.self, forKey: .change) {
+                return .addMarket(contentIdentifier: contentIdentifier, market: newMarket)
+            }
+            else if path.contains("idfoevent"), let newEvent = try? container.decode(SportRadarModels.Event.self, forKey: .change) {
+                return .addEvent(contentIdentifier: contentIdentifier, event: newEvent)
+            }
+            else if path.contains("idfosporttype"), let newSport = try? container.decodeIfPresent(SportRadarModels.SportTypeDetails.self, forKey: .change) {
+                return .addSport(contentIdentifier: contentIdentifier, sportType: newSport.sportType)
+            }
+            
+            print("ContentContainer ignored update for \(path) and associated change: Added")
+            return .unknown
+        }
+
+        private static func parseRemoved(container: KeyedDecodingContainer<CodingKeys>) throws -> ContentContainer {
+
+            let contentIdentifier = try container.decode(ContentIdentifier.self, forKey: .content)
+            let path: String = try container.decodeIfPresent(String.self, forKey: .path) ?? ""
+
+            if contentIdentifier.contentType == .market, case .market(let marketId) = contentIdentifier.contentRoute {
+                return .removeMarket(contentIdentifier: contentIdentifier, marketId: marketId)
+            }
+            else if path.contains("idfoselection"), let selectionId = SocketMessageParseHelper.extractSelectionId(path) {
+                return .removeSelection(contentIdentifier: contentIdentifier, selectionId: selectionId)
+            }
+            else if path.contains("idfomarket"), let marketId = SocketMessageParseHelper.extractMarketId(path) {
+                return .removeMarket(contentIdentifier: contentIdentifier, marketId: marketId)
+            }
+            else if path.contains("idfoevent"), let eventId = SocketMessageParseHelper.extractEventId(path)  {
+                return .removeEvent(contentIdentifier: contentIdentifier, eventId: eventId)
+            }
+
+            print("ContentContainer ignored update for \(path) and associated change: Removed")
+            return .unknown
         }
 
     }
@@ -427,27 +472,42 @@ extension SportRadarModels.ContentContainer: CustomDebugStringConvertible {
             return "Event Summary (Content ID: \(contentIdentifier)) - Event Details count: \(eventDetails.count)"
         case .marketDetails(let contentIdentifier, let market):
             return "Market Details (Content ID: \(contentIdentifier)) - Market: \(String(describing: market))"
+
         case .addEvent(let contentIdentifier, let event):
             return "Add Event (Content ID: \(contentIdentifier)) - Event: \(event)"
         case .removeEvent(let contentIdentifier, let eventId):
             return "Remove Event (Content ID: \(contentIdentifier)) - Event ID: \(eventId)"
+
         case .addMarket(let contentIdentifier, let market):
             return "Add Market (Content ID: \(contentIdentifier)) - Market: \(market)"
         case .enableMarket(let contentIdentifier, let marketId):
             return "Enable Market (Content ID: \(contentIdentifier)) - Market ID: \(marketId)"
         case .removeMarket(let contentIdentifier, let marketId):
             return "Remove Market (Content ID: \(contentIdentifier)) - Market ID: \(marketId)"
+
+        case .addSelection(let contentIdentifier, let selection):
+            return "Add Selection (Content ID: \(contentIdentifier)) - Selection: \(selection)"
+        case .removeSelection(let contentIdentifier, let selectionId):
+            return "Remove Selection (Content ID: \(contentIdentifier)) - Selection ID: \(selectionId)"
+
+        case .addSport(let contentIdentifier, let sportType):
+            return "Add Sport (Content ID: \(contentIdentifier)) - Sport ID: \(sportType)"
+
+        case .updateEventLiveDataExtended(let contentIdentifier, let eventId, let eventLiveDataExtended):
+            return "Update Event LiveDataExtended (Content ID: \(contentIdentifier)) - Event ID: \(eventId) - LiveDataExtended: \(eventLiveDataExtended)"
+
         case .updateEventState(let contentIdentifier, let eventId, let state):
             return "Update Event State (Content ID: \(contentIdentifier)) - Event ID: \(eventId) - State: \(state)"
         case .updateEventTime(let contentIdentifier, let eventId, let newTime):
             return "Update Event Time (Content ID: \(contentIdentifier)) - Event ID: \(eventId) - New Time: \(newTime)"
         case .updateEventScore(let contentIdentifier, let eventId, let homeScore, let awayScore):
             return "Update Event Score (Content ID: \(contentIdentifier)) - Event ID: \(eventId) - Home Score: \(String(describing: homeScore)) - Away Score: \(String(describing: awayScore))"
-            
-        case .updateMarketTradability(let contentIdentifier, let marketId, let isTradable):
-            return "Update Market Tradability (Content ID: \(contentIdentifier)) - Market ID: \(marketId) - Tradable: \(isTradable)"
         case .updateEventMarketCount(let contentIdentifier, let eventId, let newMarketCount):
             return "Update Event Market Count (Content ID: \(contentIdentifier)) - Event ID: \(eventId) - New Market Count: \(newMarketCount)"
+
+        case .updateMarketTradability(let contentIdentifier, let marketId, let isTradable):
+            return "Update Market Tradability (Content ID: \(contentIdentifier)) - Market ID: \(marketId) - Tradable: \(isTradable)"
+
         case .updateOutcomeOdd(let contentIdentifier, let selectionId, let newOddNumerator, let newOddDenominator):
             return "Update Outcome Odd (Content ID: \(contentIdentifier)) - Selection ID: \(selectionId) - New Odd Numerator: \(String(describing: newOddNumerator)) - New Odd Denominator: \(String(describing: newOddDenominator))"
         case .updateOutcomeTradability(let contentIdentifier, let selectionId, let isTradable):

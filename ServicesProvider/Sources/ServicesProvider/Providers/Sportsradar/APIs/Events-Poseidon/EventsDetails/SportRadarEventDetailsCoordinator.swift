@@ -172,8 +172,13 @@ class SportRadarEventDetailsCoordinator {
 extension SportRadarEventDetailsCoordinator {
 
     func updatedLiveData(eventLiveDataExtended: SportRadarModels.EventLiveDataExtended) {
-        self.storage.updateEventStatus(newStatus: eventLiveDataExtended.status.stringValue)
-        self.storage.updateEventTime(newTime: eventLiveDataExtended.matchTime ?? "")
+
+        if let newStatus = eventLiveDataExtended.status?.stringValue {
+            self.storage.updateEventStatus(newStatus: newStatus)
+        }
+        if let newTime = eventLiveDataExtended.matchTime {
+            self.storage.updateEventTime(newTime: newTime)
+        }
         self.storage.updateEventScore(newHomeScore: eventLiveDataExtended.homeScore, newAwayScore: eventLiveDataExtended.awayScore)
 
         if let storedEvent = self.storage.storedEvent() {
@@ -209,8 +214,18 @@ extension SportRadarEventDetailsCoordinator {
             self.storage.updateOutcomeTradability(withId: selectionId, isTradable: isTradable)
 
         // Live Data
+        case .updateEventLiveDataExtended(_, let eventId, let eventLiveDataExtended):
+            if let newTime = eventLiveDataExtended.matchTime {
+                self.storage.updateEventTime(newTime: newTime)
+            }
+            if let newStatus = eventLiveDataExtended.status {
+                self.storage.updateEventStatus(newStatus: newStatus.stringValue)
+            }
+            self.storage.updateEventScore(newHomeScore: eventLiveDataExtended.homeScore, newAwayScore: eventLiveDataExtended.awayScore)
+
         case .updateEventState(_, _, let newStatus):
             self.storage.updateEventStatus(newStatus: newStatus)
+            
         case .updateEventTime(_, _, let newTime):
             self.storage.updateEventTime(newTime: newTime)
         case .updateEventScore(_, _, let homeScore, let awayScore):

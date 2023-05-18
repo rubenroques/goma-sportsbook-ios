@@ -204,21 +204,21 @@ class MatchDetailsViewModel: NSObject {
 
     func getMatchLiveDetails() {
 //
-//        Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: self.matchId)
-//            .compactMap({ $0 })
-//            .map(ServiceProviderModelMapper.match(fromEvent:))
-//            .sink(receiveCompletion: { completion in
-//                print("matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
-//            }, receiveValue: { [weak self] updatedMatch in
-//                switch updatedMatch.status {
-//                case .notStarted, .ended, .unknown:
-//                    self?.matchModePublisher.send(.preLive)
-//                case .inProgress:
-//                    self?.matchModePublisher.send(.live)
-//                }
-//                self?.matchPublisher.send(.loaded(updatedMatch))
-//            })
-//            .store(in: &self.cancellables)
+        Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: self.matchId)
+            .compactMap({ $0 })
+            .map(ServiceProviderModelMapper.match(fromEvent:))
+            .sink(receiveCompletion: { completion in
+                print("matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
+            }, receiveValue: { [weak self] updatedMatch in
+                switch updatedMatch.status {
+                case .notStarted, .ended, .unknown:
+                    self?.matchModePublisher.send(.preLive)
+                case .inProgress:
+                    self?.matchModePublisher.send(.live)
+                }
+                self?.matchPublisher.send(.loaded(updatedMatch))
+            })
+            .store(in: &self.cancellables)
 
     }
 

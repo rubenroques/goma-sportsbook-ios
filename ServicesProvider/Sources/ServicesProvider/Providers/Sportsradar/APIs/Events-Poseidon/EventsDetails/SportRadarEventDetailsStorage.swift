@@ -116,8 +116,12 @@ extension SportRadarEventDetailsStorage {
 
     func updateEventScore(newHomeScore: Int?, newAwayScore: Int?) {
         guard let event = self.eventSubject.value else { return }
-        event.homeTeamScore = newHomeScore
-        event.awayTeamScore = newAwayScore
+        if let newHomeScoreValue = newHomeScore {
+            event.homeTeamScore = newHomeScoreValue
+        }
+        if let newAwayScoreValue = newAwayScore {
+            event.awayTeamScore = newAwayScoreValue
+        }
         eventSubject.send(event)
     }
 

@@ -138,10 +138,7 @@ extension SportRadarSocketConnector: WebSocketDelegate {
         case .text(let string):
 
             // DEBUGGING HELPER
-            if string.contains("\"contentId\":{\"type\":\"market\",") {
-                print("☁️ SP debugbetslip WS recieved text: \(string) \n----------------- \n")
-            }
-
+            print("☁️ SP debugbetslip WS recieved text: \(string) \n----------------- \n")
 
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {

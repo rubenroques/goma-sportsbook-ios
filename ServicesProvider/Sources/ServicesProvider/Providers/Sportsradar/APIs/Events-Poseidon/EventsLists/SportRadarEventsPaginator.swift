@@ -238,6 +238,16 @@ extension SportRadarEventsPaginator {
         case .updateMarketTradability(_, let marketId, let isTradable):
             self.storage.updateMarketTradability(withId: marketId, isTradable: isTradable)
 
+        //
+        case .updateEventLiveDataExtended(_, let eventId, let eventLiveDataExtended):
+            if let newTime = eventLiveDataExtended.matchTime {
+                self.storage.updateEventTime(withId: eventId, newTime: newTime)
+            }
+            if let newStatus = eventLiveDataExtended.status {
+                self.storage.updateEventStatus(withId: eventId, newStatus: newStatus.stringValue)
+            }
+            self.storage.updateEventScore(withId: eventId, newHomeScore: eventLiveDataExtended.homeScore, newAwayScore: eventLiveDataExtended.awayScore)
+
         case .updateEventState(_, let eventId, let newStatus):
             self.storage.updateEventStatus(withId: eventId, newStatus: newStatus)
         case .updateEventTime(_, let eventId, let newTime):
@@ -245,6 +255,7 @@ extension SportRadarEventsPaginator {
         case .updateEventScore(_, let eventId, let homeScore, let awayScore):
             self.storage.updateEventScore(withId: eventId, newHomeScore: homeScore, newAwayScore: awayScore)
 
+        //
         case .addMarket(_ , let market):
             for outcome in market.outcomes {
                 if let fractionOdd = outcome.odd.fractionOdd {
