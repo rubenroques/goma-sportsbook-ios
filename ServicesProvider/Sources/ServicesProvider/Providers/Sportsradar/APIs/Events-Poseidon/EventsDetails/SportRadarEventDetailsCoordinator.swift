@@ -21,14 +21,15 @@ class SportRadarEventDetailsCoordinator {
         return self.marketsSubscription != nil
     }
 
+    weak var liveDataSubscription: Subscription?
+
     var eventDetailsPublisher: AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
         return eventDetailsCurrentValueSubject.eraseToAnyPublisher()
     }
 
     private var eventDetailsCurrentValueSubject: CurrentValueSubject<SubscribableContent<Event>, ServiceProviderError> = .init(.disconnected)
 
-    private var waiting = true
-    private var timer: Timer?
+    private var cancellables = Set<AnyCancellable>()
 
     init(matchId: String, sessionToken: String, storage: SportRadarEventDetailsStorage) {
         self.sessionToken = sessionToken
@@ -46,10 +47,18 @@ class SportRadarEventDetailsCoordinator {
 
         self.liveDataContentIdentifier = liveDataContentIdentifier
 
-        print("☁️SP debugdetails new SportRadarEventDetailsCoordinator \(marketsContentIdentifier) \(liveDataContentIdentifier)")
-
         self.requestEventDetails()
-        self.requestEventLiveData()
+
+        self.eventDetailsPublisher
+            .sink { _ in
+
+            } receiveValue: { [weak self] subscribableContent in
+                if case .connected = subscribableContent {
+                    self?.requestEventLiveData()
+                }
+            }
+            .store(in: &self.cancellables)
+
     }
 
     func requestEventDetails() {
@@ -106,8 +115,10 @@ class SportRadarEventDetailsCoordinator {
             let subscription = Subscription(contentIdentifier: self.liveDataContentIdentifier,
                                             sessionToken: self.sessionToken,
                                             unsubscriber: self)
+            self.liveDataSubscription = subscription
             self.marketsSubscription?.associateSubscription(subscription)
         }
+
         sessionDataTask.resume()
     }
 
@@ -115,7 +126,6 @@ class SportRadarEventDetailsCoordinator {
         print("☁️SP debugbetslip updateEventDetails SportRadarEventDetailsCoordinator \(marketsContentIdentifier) \(liveDataContentIdentifier)")
 
         self.storage.storeEvent(updatedEvent)
-
         self.eventDetailsCurrentValueSubject.send(.contentUpdate(content: updatedEvent))
     }
 
@@ -161,16 +171,15 @@ class SportRadarEventDetailsCoordinator {
 
 extension SportRadarEventDetailsCoordinator {
 
-//    func initialLiveData(eventLiveDataSummary: SportRadarModels.EventLiveDataSummary) {
-//        self.storage.updateEventStatus(newStatus: eventLiveDataSummary.status.stringValue)
-//        self.storage.updateEventTime(newTime: eventLiveDataSummary.matchTime ?? "")
-//        self.storage.updateEventScore(newHomeScore: eventLiveDataSummary.homeScore, newAwayScore: eventLiveDataSummary.awayScore)
-//    }
-
-    func initialLiveData(eventLiveDataExtended: SportRadarModels.EventLiveDataExtended) {
+    func updatedLiveData(eventLiveDataExtended: SportRadarModels.EventLiveDataExtended) {
         self.storage.updateEventStatus(newStatus: eventLiveDataExtended.status.stringValue)
         self.storage.updateEventTime(newTime: eventLiveDataExtended.matchTime ?? "")
         self.storage.updateEventScore(newHomeScore: eventLiveDataExtended.homeScore, newAwayScore: eventLiveDataExtended.awayScore)
+
+        if let storedEvent = self.storage.storedEvent() {
+            self.eventDetailsCurrentValueSubject.send(.contentUpdate(content: storedEvent))
+        }
+        
     }
 
     func handleContentUpdate(_ content: SportRadarModels.ContentContainer) {

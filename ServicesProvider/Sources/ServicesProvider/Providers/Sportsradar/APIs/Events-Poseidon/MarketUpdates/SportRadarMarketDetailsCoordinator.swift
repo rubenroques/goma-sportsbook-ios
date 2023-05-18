@@ -77,7 +77,7 @@ class SportRadarMarketDetailsCoordinator {
             } receiveValue: { _ in }
             .store(in: &self.cancellables)
 
-
+        print("🤷 betslipbug  \"type\":\"market\" SportRadarMarketDetailsCoordinator init \(self.contentIdentifier) \(self.marketId) \(self.eventId)")
     }
 
     private func checkMarketUpdatesAvailable() -> AnyPublisher<Void, ServiceProviderError> {
@@ -190,17 +190,20 @@ extension SportRadarMarketDetailsCoordinator {
         guard
             let updatedContentIdentifier = content.contentIdentifier
         else {
-            // print("☁️SP debugdetails SportRadarMarketDetailsCoordinator ignoring contentIdentifierLess \(content)")
+            print("SportRadarMarketDetailsCoordinator ignoring contentIdentifierLess \(content)")
             return
         }
 
         if self.contentIdentifier != updatedContentIdentifier {
             // ignoring this update, not subscribed by this class
-            // print("☁️SP debugdetails SportRadarMarketDetailsCoordinator ignoring \(updatedContentIdentifier)")
+            // print("☁️SP \"type\":\"market\" SportRadarMarketDetailsCoordinator ignoring \(updatedContentIdentifier) != \(self.contentIdentifier)")
             return
         }
+        else {
+            print("☁️SP \"type\":\"market\" SportRadarMarketDetailsCoordinator handling \(updatedContentIdentifier) ==  self \(self.contentIdentifier)")
+        }
 
-        // print("☁️SP debugdetails SportRadarMarketDetailsCoordinator handleContentUpdate \(content)")
+        // print("☁️SP debugdetails  \"type\":\"market\" SportRadarMarketDetailsCoordinator handleContentUpdate \(content)")
 
         let trackedMarketId = self.marketId
         

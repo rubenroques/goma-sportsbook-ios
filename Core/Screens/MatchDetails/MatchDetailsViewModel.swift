@@ -17,13 +17,6 @@ class MatchDetailsViewModel: NSObject {
         case live
     }
 
-    enum MarketGroupsState {
-        case idle
-        case loading
-        case loaded([MarketGroup])
-        case failed
-    }
-
     var matchId: String
     var homeRedCardsScorePublisher: CurrentValueSubject<String, Never> = .init("0")
     var awayRedCardsScorePublisher: CurrentValueSubject<String, Never> = .init("0")
@@ -31,7 +24,7 @@ class MatchDetailsViewModel: NSObject {
     var matchModePublisher: CurrentValueSubject<MatchMode, Never> = .init(.preLive)
     var matchPublisher: CurrentValueSubject<LoadableContent<Match>, Never> = .init(.idle)
 
-    var marketGroupsState: CurrentValueSubject<MarketGroupsState, Never> = .init(.idle)
+    var marketGroupsState: CurrentValueSubject<LoadableContent<[MarketGroup]>, Never> = .init(.idle)
     var selectedMarketTypeIndexPublisher: CurrentValueSubject<Int?, Never> = .init(nil)
 
     var matchStatsUpdatedPublisher = PassthroughSubject<Void, Never>.init()
@@ -57,7 +50,7 @@ class MatchDetailsViewModel: NSObject {
             switch match.status {
             case .notStarted, .ended, .unknown:
                 return false
-            case .inProgress(_):
+            case .inProgress:
                 return true
             }
         }
@@ -99,6 +92,8 @@ class MatchDetailsViewModel: NSObject {
     private var cancellables = Set<AnyCancellable>()
     private var subscription: ServicesProvider.Subscription?
 
+    private var liveDataSubscription: ServicesProvider.Subscription?
+
     init(matchMode: MatchMode = .preLive, match: Match) {
         self.matchId = match.id
         self.matchStatsViewModel = MatchStatsViewModel(matchId: match.id)
@@ -134,21 +129,13 @@ class MatchDetailsViewModel: NSObject {
                 }
             })
             .map { marketGroups -> Int in
-                var index = 0
-                var defaultFound = false
-                for group in marketGroups {
-                    if group.isDefault ?? false {
-                        defaultFound = true
-                        break
-                    }
-                    index += 1
-                }
-                return defaultFound ? index : 0
+                return marketGroups.firstIndex(where: { $0.isDefault ?? false }) ?? 0
             }
             .sink { [weak self] defaultSelectedIndex in
                 self?.selectedMarketTypeIndexPublisher.send(defaultSelectedIndex)
             }
             .store(in: &cancellables)
+
 
         self.matchStatsViewModel.statsTypePublisher
             .receive(on: DispatchQueue.main)
@@ -189,6 +176,14 @@ class MatchDetailsViewModel: NSObject {
                     guard let self = self else { return }
 
                     let match = ServiceProviderModelMapper.match(fromEvent: serviceProviderEvent)
+
+                    switch match.status {
+                    case .notStarted, .ended, .unknown:
+                        self.matchModePublisher.send(.preLive)
+                    case .inProgress:
+                        self.matchModePublisher.send(.live)
+                    }
+
                     self.matchPublisher.send(.loaded(match))
 
                     if self.marketGroups.isEmpty {
@@ -208,22 +203,23 @@ class MatchDetailsViewModel: NSObject {
     }
 
     func getMatchLiveDetails() {
+//
+//        Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: self.matchId)
+//            .compactMap({ $0 })
+//            .map(ServiceProviderModelMapper.match(fromEvent:))
+//            .sink(receiveCompletion: { completion in
+//                print("matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
+//            }, receiveValue: { [weak self] updatedMatch in
+//                switch updatedMatch.status {
+//                case .notStarted, .ended, .unknown:
+//                    self?.matchModePublisher.send(.preLive)
+//                case .inProgress:
+//                    self?.matchModePublisher.send(.live)
+//                }
+//                self?.matchPublisher.send(.loaded(updatedMatch))
+//            })
+//            .store(in: &self.cancellables)
 
-        Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: self.matchId)
-            .compactMap({ $0 })
-            .map(ServiceProviderModelMapper.match(fromEvent:))
-            .sink(receiveCompletion: { completion in
-                print("matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
-            }, receiveValue: { [weak self] updatedMatch in
-                switch updatedMatch.status {
-                case .notStarted, .ended, .unknown:
-                    self?.matchModePublisher.send(.preLive)
-                case .inProgress:
-                    self?.matchModePublisher.send(.live)
-                }
-                self?.matchPublisher.send(.loaded(updatedMatch))
-            })
-            .store(in: &self.cancellables)
     }
 
     //

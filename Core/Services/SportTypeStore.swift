@@ -16,7 +16,7 @@ class SportTypeStore {
     var isLoadingLiveSportsPublisher = CurrentValueSubject<Bool, Never>(true)
 
     var preLiveSportsRequestRetries = 0
-    var liveSportsRequestRetries = 0
+
     var maxRequestSportsRetries = 5
 
     var defaultSport: Sport {
@@ -48,7 +48,15 @@ class SportTypeStore {
     private var preLiveSports = [Sport]()
     private var liveSports = [Sport]()
 
-    func getSportTypesList() {
+    init() {
+
+    }
+
+    deinit {
+        print("SportTypeStore deinit")
+    }
+
+    func requestInitialSportsData() {
 
         self.getLiveSports()
 
@@ -79,21 +87,11 @@ class SportTypeStore {
                 case .finished:
                     ()
                 case .failure(let error):
-                    print("LIVE SPORTS ERROR: \(error)")
-                    self?.liveSportsRequestRetries += 1
-                    if let liveSportsRequestRetries = self?.liveSportsRequestRetries,
-                       liveSportsRequestRetries < 5 {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            self?.getLiveSports()
-                        }
-                    }
-                    else {
-                        self?.isLoadingLiveSportsPublisher.send(false)
-                    }
+                    print("Live sports error: \(error)")
+                    self?.isLoadingLiveSportsPublisher.send(false)
                 }
-                print("SportTypeStore subscribeLiveSportTypes completed \(completion)")
-        }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
 
+        }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
             switch subscribableContent {
             case .connected(let subscription):
                 self?.liveSportsSubscription = subscription
@@ -118,22 +116,12 @@ class SportTypeStore {
             case .finished:
                 ()
             case .failure(let error):
-                self?.preLiveSportsRequestRetries += 1
-                if let preLiveSportsRequestRetries = self?.preLiveSportsRequestRetries,
-                   preLiveSportsRequestRetries < 5 {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        self?.getPreLiveSports()
-                    }
-                }
-                else {
-                    self?.isLoadingPreLiveSportsPublisher.send(false)
-                }
+                print("Prelive sports error: \(error)")
+                self?.isLoadingPreLiveSportsPublisher.send(false)
             }
         }, receiveValue: { [weak self] sportsList in
-
             self?.preLiveSports = sportsList.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
             self?.isLoadingPreLiveSportsPublisher.send(false)
-
         })
         .store(in: &cancellables)
     }

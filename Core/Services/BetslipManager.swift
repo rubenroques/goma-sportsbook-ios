@@ -669,4 +669,3 @@ struct BetPotencialReturn: Codable {
     var numberOfBets: Int
     var totalOdd: Double
 }
-

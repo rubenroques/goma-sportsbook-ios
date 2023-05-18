@@ -968,6 +968,7 @@ class MatchDetailsViewController: UIViewController {
     }
 
     func showMarketsNotAvailableView() {
+
         self.marketGroupsPagedBaseView.isHidden = true
         self.marketTypesCollectionView.isHidden = true
         self.marketsNotAvailableView.isHidden = false
@@ -1337,9 +1338,7 @@ extension MatchDetailsViewController: InnerTableViewScrollDelegate {
     }
 
 //    func innerTableViewDidScroll(withDistance scrollDistance: CGFloat) {
-//
 //        matchFieldWebViewHeight.constant -= scrollDistance
-//
 //        if matchFieldWebViewHeight.constant > matchFieldMaximumHeight {
 //            matchFieldWebViewHeight.constant = matchFieldMaximumHeight
 //        }
@@ -1347,7 +1346,6 @@ extension MatchDetailsViewController: InnerTableViewScrollDelegate {
 //        if matchFieldWebViewHeight.constant < matchFieldMinimumHeight {
 //            matchFieldWebViewHeight.constant = matchFieldMinimumHeight
 //        }
-//
 //    }
 
     func innerTableViewDidScroll(withDistance scrollDistance: CGFloat) {

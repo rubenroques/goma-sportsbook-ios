@@ -17,7 +17,7 @@ protocol SportRadarConnectorSubscriber: AnyObject {
     func preLiveSportsUpdated(withSportTypes: [SportRadarModels.SportType])
 
     func eventDetailsUpdated(forContentIdentifier identifier: ContentIdentifier, event: Event)
-    func eventDetailsLiveInitialData(contentIdentifier: ContentIdentifier, eventLiveDataExtended: SportRadarModels.EventLiveDataExtended)
+    func eventDetailsLiveData(contentIdentifier: ContentIdentifier, eventLiveDataExtended: SportRadarModels.EventLiveDataExtended)
 
     func eventGroups(forContentIdentifier identifier: ContentIdentifier, withEvents: [EventsGroup])
     func outrightEventGroups(events: [EventsGroup])
@@ -136,7 +136,13 @@ extension SportRadarSocketConnector: WebSocketDelegate {
             print("ServiceProvider - SportRadarSocketConnector websocket is disconnected: \(reason) with code: \(code)")
 
         case .text(let string):
-            // print("☁️SP debugbetslip WS recieved text: \(string) \n----------------- \n")
+
+            // DEBUGGING HELPER
+            if string.contains("\"contentId\":{\"type\":\"market\",") {
+                print("☁️ SP debugbetslip WS recieved text: \(string) \n----------------- \n")
+            }
+
+
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)
@@ -144,26 +150,26 @@ extension SportRadarSocketConnector: WebSocketDelegate {
                 //
                 //
                 // DEBUGGING HELPER
-                switch sportRadarSocketResponse {
-                case .listeningStarted:
-                    ()
-                case .contentChanges(let contents):
-                    for content in contents {
-
-                        switch content {
-                        case .liveEvents, .preLiveEvents, .liveSports, .preLiveSports, .eventDetails, .eventGroup, .outrightEventGroup, .eventSummary, .marketDetails:
-                            ()
-                        case .eventDetailsLiveData:
-                            print("☁️SP debugbetslip WS recieved text with live data: \(string) \n\n")
-                        case .addEvent, .removeEvent, .addMarket, .enableMarket, .removeMarket, .updateEventState, .updateEventTime, .updateEventScore, .updateMarketTradability, .updateEventMarketCount, .updateOutcomeOdd, .updateOutcomeTradability:
-                            print("☁️SP debugbetslip WS recieved text with content update:\n\(string)\n -------------------> Converted to: \n\(content)\n-----\n")
-                        case .unknown:
-                            print("☁️SP debugbetslip WS recieved text with unknown part of the content: \(string) \n\n")
-                        }
-                    }
-                case .unknown:
-                    print("☁️SP debugbetslip WS recieved text with unknown messa: \(string)\n")
-                }
+//                switch sportRadarSocketResponse {
+//                case .listeningStarted:
+//                    ()
+//                case .contentChanges(let contents):
+//                    for content in contents {
+//
+//                        switch content {
+//                        case .liveEvents, .preLiveEvents, .liveSports, .preLiveSports, .eventDetails, .eventGroup, .outrightEventGroup, .eventSummary, .marketDetails:
+//                            ()
+//                        case .eventDetailsLiveData:
+//                            print("☁️SP debugbetslip WS recieved text with live data: \(string) \n\n")
+//                        case .addEvent, .removeEvent, .addMarket, .enableMarket, .removeMarket, .updateEventState, .updateEventTime, .updateEventScore, .updateMarketTradability, .updateEventMarketCount, .updateOutcomeOdd, .updateOutcomeTradability:
+//                            print("☁️SP debugbetslip WS recieved text with content update:\n\(string)\n -------------------> Converted to: \n\(content)\n-----\n")
+//                        case .unknown:
+//                            print("☁️SP debugbetslip WS recieved text with unknown part of the content: \(string) \n\n")
+//                        }
+//                    }
+//                case .unknown:
+//                    print("☁️SP debugbetslip WS recieved text with unknown message: \(string)\n")
+//                }
                 //
                 //
                 //
@@ -202,8 +208,8 @@ extension SportRadarSocketConnector: WebSocketDelegate {
         
         switch messageType {
         case .listeningStarted(let sessionTokenId):
-            self.isConnected = true
             self.tokenSubject.send(SportRadarSessionAccessToken(hash: sessionTokenId))
+            self.isConnected = true
 
         case .contentChanges(let contents):
             for content in contents {
@@ -250,7 +256,7 @@ extension SportRadarSocketConnector: WebSocketDelegate {
                     }
                 case .eventDetailsLiveData(let contentIdentifier, let eventLiveDataExtended):
                     if let subscriber = self.messageSubscriber, let eventLiveDataExtendedValue = eventLiveDataExtended {
-                        subscriber.eventDetailsLiveInitialData(contentIdentifier: contentIdentifier, eventLiveDataExtended: eventLiveDataExtendedValue)
+                        subscriber.eventDetailsLiveData(contentIdentifier: contentIdentifier, eventLiveDataExtended: eventLiveDataExtendedValue)
                     }
                 default:
                     if let subscriber = self.messageSubscriber {

@@ -370,7 +370,6 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
         self.oddAvailabilitySubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
             .receive(on: DispatchQueue.main)
-            .print("debugbetslip2-B")
             .map({ bettingOfferValue in
                 return bettingOfferValue.isAvailable
             })

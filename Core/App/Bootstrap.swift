@@ -35,8 +35,17 @@ class Bootstrap {
         }
 
         environment.servicesProvider.connect()
-        environment.sportsStore.getSportTypesList()
         environment.betslipManager.start()
+
+        //
+        environment.servicesProvider.eventsConnectionStatePublisher
+            .filter { connectorState in
+                return connectorState == .connected
+            }
+            .sink { _ in
+                environment.sportsStore.requestInitialSportsData()
+            }
+            .store(in: &self.cancellables)
 
         // ConnectModules
         Publishers.CombineLatest(environment.servicesProvider.bettingConnectionStatePublisher,

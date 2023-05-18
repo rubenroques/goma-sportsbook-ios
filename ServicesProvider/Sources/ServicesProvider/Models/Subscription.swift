@@ -40,7 +40,7 @@ public class Subscription: Hashable, Identifiable {
 
     deinit {
         print("ServiceProvider.Subscription deinit \(self)")
-        unsubscriber?.unsubscribe(subscription: self)
+        self.unsubscriber?.unsubscribe(subscription: self)
     }
 
     func associateSubscription(_ subscription: Subscription) {
