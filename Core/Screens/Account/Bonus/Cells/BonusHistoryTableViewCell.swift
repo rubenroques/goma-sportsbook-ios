@@ -100,7 +100,7 @@ class BonusHistoryTableViewCell: UITableViewCell {
 
         viewModel.bonusValuePublisher
             .sink(receiveValue: { [weak self] bonusValue in
-                self?.bonusAmountLabel.text = bonusValue
+                self?.bonusAmountLabel.text = "\(bonusValue)\(Env.userSessionStore.userProfilePublisher.value?.currency ?? "")"
             })
             .store(in: &cancellables)
 

@@ -201,7 +201,7 @@ class BonusActiveTableViewCell: UITableViewCell {
         }
         else {
             if let bonusAmount = bonus.amount {
-                self.bonusLabel.text = "\(bonusAmount)"
+                self.bonusLabel.text = "\(bonusAmount)\(Env.userSessionStore.userProfilePublisher.value?.currency ?? "")"
             }
         }
 
