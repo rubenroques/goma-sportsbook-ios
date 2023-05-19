@@ -27,7 +27,7 @@ class BonusHistoryCellViewModel: NSObject {
 
     private func setupPublishers(bonus: GrantedBonus) {
 
-        self.titlePublisher.value = bonus.name ?? ""
+        self.titlePublisher.value = bonus.name
 
         self.startDateStringPublisher.value = getDateFormatted(dateString: bonus.grantedDate ?? "")
 

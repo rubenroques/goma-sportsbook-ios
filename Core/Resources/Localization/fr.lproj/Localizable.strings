@@ -1348,3 +1348,14 @@
 
 "check_bet_result" = "Consultez le résultat de ce pari!";
 "my_documents" = "Mes Documents";
+
+"bonus_deposit_title" = "Souhaitez-vous recevoir un bonus pour ce dépôt?";
+"bonus_deposit_detail" = "Voir les détails de le bonus";
+"bonus_deposit_name" = "Bonus de dépôt: {bonusName}";
+
+"bonus_dialog_title" = "Êtes-vous sûr de ne pas vouloir le bonus?";
+"bonus_dialog_message" = "En acceptant, vous ne recevrez pas le bonus suivant: {bonusName}";
+
+"first_deposit_success_message" = "Votre premier dépôt a été effectué avec succès!";
+
+"deposit_success_message" = "Votre dépôt a été effectué avec succès!";

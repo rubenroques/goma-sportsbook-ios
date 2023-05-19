@@ -54,7 +54,6 @@ class MyFavoritesViewModel: NSObject {
         self.setupPublishers()
     }
 
-
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
         if let viewModel = cachedMatchStatsViewModels[match.id] {
             return viewModel
@@ -157,7 +156,7 @@ class MyFavoritesViewModel: NSObject {
         for competitionInfo in competitionInfos {
 
             if let marketGroup = competitionInfo.marketGroups.filter({
-                $0.name == "Main"
+                $0.name.lowercased().contains("main")
             }).first {
                 self.subscribeCompetitionMatches(forMarketGroupId: marketGroup.id, competitionInfo: competitionInfo)
 
@@ -232,6 +231,8 @@ class MyFavoritesViewModel: NSObject {
                             ()
                         case .failure(let error):
                             print("EVENT SUMMARY FAV ERROR: \(error)")
+
+                            Env.favoritesManager.removeFavorite(eventId: eventId, favoriteType: .match)
                         }
 
                         self?.fetchedEventSummaryPublisher.value.append(eventId)

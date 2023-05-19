@@ -37,7 +37,7 @@ class MyTicketsViewModel: NSObject {
     var clickedBetHistory: BetHistoryEntry?
     
     var reloadTableViewAction: (() -> Void)?
-    var redrawTableViewAction: (() -> Void)?
+    var redrawTableViewAction: ((Bool) -> Void)?
     var tappedMatchDetail: ((String) -> Void)?
     var requestShareActivityView: ((UIImage, String, String) -> Void)?
 
@@ -489,8 +489,8 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
                     return self.locationsCodesDictionary[id] ?? ""
                 })
 
-            cell.needsHeightRedraw = { [weak self] in
-                self?.redrawTableViewAction?()
+            cell.needsHeightRedraw = { [weak self] withScroll in
+                self?.redrawTableViewAction?(withScroll)
             }
             cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
 
@@ -507,6 +507,7 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
                 self?.tappedMatchDetail?(matchId)
 
             }
+
             return cell
             
         case 1:

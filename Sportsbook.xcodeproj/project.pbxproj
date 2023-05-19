@@ -4046,6 +4046,13 @@
 		A91A05BD29CB534B00E0A772 /* CloseAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A05B729CB534A00E0A772 /* CloseAccountViewController.swift */; };
 		A91A05BE29CB534B00E0A772 /* CloseAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A05B729CB534A00E0A772 /* CloseAccountViewController.swift */; };
 		A91A05BF29CB534B00E0A772 /* CloseAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91A05B729CB534A00E0A772 /* CloseAccountViewController.swift */; };
+		A92BDCF82A163D0200E9B045 /* success_thumbs_up.json in Resources */ = {isa = PBXBuildFile; fileRef = A92BDCF72A163D0100E9B045 /* success_thumbs_up.json */; };
+		A92BDCF92A163D0200E9B045 /* success_thumbs_up.json in Resources */ = {isa = PBXBuildFile; fileRef = A92BDCF72A163D0100E9B045 /* success_thumbs_up.json */; };
+		A92BDCFA2A163D0200E9B045 /* success_thumbs_up.json in Resources */ = {isa = PBXBuildFile; fileRef = A92BDCF72A163D0100E9B045 /* success_thumbs_up.json */; };
+		A92BDCFB2A163D0200E9B045 /* success_thumbs_up.json in Resources */ = {isa = PBXBuildFile; fileRef = A92BDCF72A163D0100E9B045 /* success_thumbs_up.json */; };
+		A92BDCFC2A163D0200E9B045 /* success_thumbs_up.json in Resources */ = {isa = PBXBuildFile; fileRef = A92BDCF72A163D0100E9B045 /* success_thumbs_up.json */; };
+		A92BDCFD2A163D0200E9B045 /* success_thumbs_up.json in Resources */ = {isa = PBXBuildFile; fileRef = A92BDCF72A163D0100E9B045 /* success_thumbs_up.json */; };
+		A92BDCFE2A163D0200E9B045 /* success_thumbs_up.json in Resources */ = {isa = PBXBuildFile; fileRef = A92BDCF72A163D0100E9B045 /* success_thumbs_up.json */; };
 		A96FAEC729804C0600A0751F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEC629804C0600A0751F /* Data+Extensions.swift */; };
 		A96FAEC829804C0600A0751F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEC629804C0600A0751F /* Data+Extensions.swift */; };
 		A96FAEC929804C0600A0751F /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96FAEC629804C0600A0751F /* Data+Extensions.swift */; };
@@ -4283,6 +4290,20 @@
 		A9A1B2D52A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2CF2A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift */; };
 		A9A1B2D62A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2CF2A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift */; };
 		A9A1B2D72A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2CF2A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift */; };
+		A9A1B2D92A128D8B00F7A8ED /* deposit_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = A9A1B2D82A128D8A00F7A8ED /* deposit_animation.json */; };
+		A9A1B2DA2A128D8B00F7A8ED /* deposit_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = A9A1B2D82A128D8A00F7A8ED /* deposit_animation.json */; };
+		A9A1B2DB2A128D8B00F7A8ED /* deposit_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = A9A1B2D82A128D8A00F7A8ED /* deposit_animation.json */; };
+		A9A1B2DC2A128D8B00F7A8ED /* deposit_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = A9A1B2D82A128D8A00F7A8ED /* deposit_animation.json */; };
+		A9A1B2DD2A128D8B00F7A8ED /* deposit_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = A9A1B2D82A128D8A00F7A8ED /* deposit_animation.json */; };
+		A9A1B2DE2A128D8B00F7A8ED /* deposit_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = A9A1B2D82A128D8A00F7A8ED /* deposit_animation.json */; };
+		A9A1B2DF2A128D8B00F7A8ED /* deposit_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = A9A1B2D82A128D8A00F7A8ED /* deposit_animation.json */; };
+		A9A1B2E12A14EC3300F7A8ED /* DepositSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2E02A14EC3300F7A8ED /* DepositSuccessViewController.swift */; };
+		A9A1B2E22A14EC3300F7A8ED /* DepositSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2E02A14EC3300F7A8ED /* DepositSuccessViewController.swift */; };
+		A9A1B2E32A14EC3300F7A8ED /* DepositSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2E02A14EC3300F7A8ED /* DepositSuccessViewController.swift */; };
+		A9A1B2E42A14EC3300F7A8ED /* DepositSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2E02A14EC3300F7A8ED /* DepositSuccessViewController.swift */; };
+		A9A1B2E52A14EC3300F7A8ED /* DepositSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2E02A14EC3300F7A8ED /* DepositSuccessViewController.swift */; };
+		A9A1B2E62A14EC3300F7A8ED /* DepositSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2E02A14EC3300F7A8ED /* DepositSuccessViewController.swift */; };
+		A9A1B2E72A14EC3300F7A8ED /* DepositSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A1B2E02A14EC3300F7A8ED /* DepositSuccessViewController.swift */; };
 		A9A207DC283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207D9283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift */; };
 		A9A207DD283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207D9283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift */; };
 		A9A207DE283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207D9283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift */; };
@@ -4315,6 +4336,13 @@
 		A9A521862A03BD8D00C0F6C6 /* zendesk_support.html in Resources */ = {isa = PBXBuildFile; fileRef = A9A521802A03BD8D00C0F6C6 /* zendesk_support.html */; };
 		A9A521872A03BD8D00C0F6C6 /* zendesk_support.html in Resources */ = {isa = PBXBuildFile; fileRef = A9A521802A03BD8D00C0F6C6 /* zendesk_support.html */; };
 		A9A521882A03BD8D00C0F6C6 /* zendesk_support.html in Resources */ = {isa = PBXBuildFile; fileRef = A9A521802A03BD8D00C0F6C6 /* zendesk_support.html */; };
+		A9A603672A15293A00B06DF1 /* OptionRadioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A603662A15293A00B06DF1 /* OptionRadioView.swift */; };
+		A9A603682A15293A00B06DF1 /* OptionRadioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A603662A15293A00B06DF1 /* OptionRadioView.swift */; };
+		A9A603692A15293A00B06DF1 /* OptionRadioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A603662A15293A00B06DF1 /* OptionRadioView.swift */; };
+		A9A6036A2A15293A00B06DF1 /* OptionRadioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A603662A15293A00B06DF1 /* OptionRadioView.swift */; };
+		A9A6036B2A15293A00B06DF1 /* OptionRadioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A603662A15293A00B06DF1 /* OptionRadioView.swift */; };
+		A9A6036C2A15293A00B06DF1 /* OptionRadioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A603662A15293A00B06DF1 /* OptionRadioView.swift */; };
+		A9A6036D2A15293A00B06DF1 /* OptionRadioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A603662A15293A00B06DF1 /* OptionRadioView.swift */; };
 		A9A7B52629DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */; };
 		A9A7B52729DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */; };
 		A9A7B52829DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */; };
@@ -5720,6 +5748,7 @@
 		A91F4B3B27BFE269008C7510 /* GamesNotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesNotificationViewController.swift; sourceTree = "<group>"; };
 		A91F4B3E27BFFAA8008C7510 /* BettingNotificationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BettingNotificationsViewController.swift; sourceTree = "<group>"; };
 		A91F4B4127C002FA008C7510 /* OddsFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddsFormat.swift; sourceTree = "<group>"; };
+		A92BDCF72A163D0100E9B045 /* success_thumbs_up.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = success_thumbs_up.json; sourceTree = "<group>"; };
 		A92F5D782717169900884BDF /* FilterRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterRowView.swift; sourceTree = "<group>"; };
 		A92F5D7B271716B900884BDF /* FilterRowView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FilterRowView.xib; sourceTree = "<group>"; };
 		A92F5D7F2718384900884BDF /* FilterSliderCollapseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSliderCollapseView.swift; sourceTree = "<group>"; };
@@ -5875,6 +5904,8 @@
 		A9A1B2BD2A0E55B800F7A8ED /* UserConsentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserConsentType.swift; sourceTree = "<group>"; };
 		A9A1B2C62A0E566F00F7A8ED /* UserConsentStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserConsentStatus.swift; sourceTree = "<group>"; };
 		A9A1B2CF2A0E56CF00F7A8ED /* ServiceProviderModelMapper+UserConsent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceProviderModelMapper+UserConsent.swift"; sourceTree = "<group>"; };
+		A9A1B2D82A128D8A00F7A8ED /* deposit_animation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = deposit_animation.json; sourceTree = "<group>"; };
+		A9A1B2E02A14EC3300F7A8ED /* DepositSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositSuccessViewController.swift; sourceTree = "<group>"; };
 		A9A207D9283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationBetSelectionViewModel.swift; sourceTree = "<group>"; };
 		A9A207E0283BDFCB00499DBC /* ChatTicketSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTicketSelectionView.swift; sourceTree = "<group>"; };
 		A9A2E7E227F5BC5C00D35A9D /* WithdrawViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawViewModel.swift; sourceTree = "<group>"; };
@@ -5888,6 +5919,7 @@
 		A9A5216E2A02B98A00C0F6C6 /* CardsStyleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsStyleViewController.swift; sourceTree = "<group>"; };
 		A9A521772A03B74800C0F6C6 /* CardsStyleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsStyleViewModel.swift; sourceTree = "<group>"; };
 		A9A521802A03BD8D00C0F6C6 /* zendesk_support.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = zendesk_support.html; sourceTree = "<group>"; };
+		A9A603662A15293A00B06DF1 /* OptionRadioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionRadioView.swift; sourceTree = "<group>"; };
 		A9A7B52529DDBED900FB22A8 /* BonusTypeMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusTypeMapper.swift; sourceTree = "<group>"; };
 		A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
 		A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceViewController.xib; sourceTree = "<group>"; };
@@ -7314,6 +7346,7 @@
 				A99F7A1527D256D0008BAF41 /* ActionTextFieldView.swift */,
 				454F73B4299152C100437460 /* GradientView.swift */,
 				457C9F2E2A17D72500022C53 /* GradientBorderView */,
+				A9A603662A15293A00B06DF1 /* OptionRadioView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -7936,6 +7969,8 @@
 		45F805942A053841005296E0 /* Animations */ = {
 			isa = PBXGroup;
 			children = (
+				A92BDCF72A163D0100E9B045 /* success_thumbs_up.json */,
+				A9A1B2D82A128D8A00F7A8ED /* deposit_animation.json */,
 				45E46C162A08FEB900BB9B85 /* sports-loading.json */,
 				45F805952A05385B005296E0 /* dots-loading.json */,
 			);
@@ -8321,6 +8356,7 @@
 				A9875794276CA50F0099990D /* DepositViewController.xib */,
 				A9875799276CD3660099990D /* DepositWebViewController.swift */,
 				A987579A276CD3660099990D /* DepositWebViewController.xib */,
+				A9A1B2E02A14EC3300F7A8ED /* DepositSuccessViewController.swift */,
 			);
 			path = Deposit;
 			sourceTree = "<group>";
@@ -9693,6 +9729,7 @@
 				450B7AA828F58574009229E3 /* DebugViewController.xib in Resources */,
 				45F2F9AA298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				450B7AA928F58574009229E3 /* CountryFlags.xcassets in Resources */,
+				A92BDCF92A163D0200E9B045 /* success_thumbs_up.json in Resources */,
 				451F51ED298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				450B7AAA28F58574009229E3 /* FilterSliderCollapseView.xib in Resources */,
 				450B7AAB28F58574009229E3 /* TournamentTableViewHeader.xib in Resources */,
@@ -9707,6 +9744,7 @@
 				450B7AB428F58574009229E3 /* PhonePrefixSelectorViewController.xib in Resources */,
 				A9B6307D291BE10200BB850E /* field_widget_light.html in Resources */,
 				450B7AB528F58574009229E3 /* Inconsolata-Medium.ttf in Resources */,
+				A9A1B2DA2A128D8B00F7A8ED /* deposit_animation.json in Resources */,
 				450B7AB628F58574009229E3 /* TitleTableViewHeader.xib in Resources */,
 				450B7AB828F58574009229E3 /* MyTicketsViewController.xib in Resources */,
 				450B7AB928F58574009229E3 /* LoginViewController.xib in Resources */,
@@ -9835,6 +9873,7 @@
 				457CBBD3282D27D000ED0F00 /* DebugViewController.xib in Resources */,
 				45F2F9AE298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				457CBBD4282D27D000ED0F00 /* CountryFlags.xcassets in Resources */,
+				A92BDCFD2A163D0200E9B045 /* success_thumbs_up.json in Resources */,
 				451F51F1298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				457CBBD5282D27D000ED0F00 /* FilterSliderCollapseView.xib in Resources */,
 				457CBC6B282D2AE800ED0F00 /* LaunchScreen-EveryMatrix.storyboard in Resources */,
@@ -9849,6 +9888,7 @@
 				457CBBDE282D27D000ED0F00 /* FilterCollapseView.xib in Resources */,
 				A9B63082291BE10200BB850E /* field_widget_light.html in Resources */,
 				457CBBDF282D27D000ED0F00 /* PhonePrefixSelectorViewController.xib in Resources */,
+				A9A1B2DE2A128D8B00F7A8ED /* deposit_animation.json in Resources */,
 				457CBBE0282D27D000ED0F00 /* Inconsolata-Medium.ttf in Resources */,
 				457CBBE1282D27D000ED0F00 /* TitleTableViewHeader.xib in Resources */,
 				457CBBE3282D27D000ED0F00 /* MyTicketsViewController.xib in Resources */,
@@ -9969,6 +10009,7 @@
 				457CBE7A282D2CD100ED0F00 /* DebugViewController.xib in Resources */,
 				45F2F9AF298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				457CBE7B282D2CD100ED0F00 /* CountryFlags.xcassets in Resources */,
+				A92BDCFE2A163D0200E9B045 /* success_thumbs_up.json in Resources */,
 				451F51F2298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				457CBE7C282D2CD100ED0F00 /* FilterSliderCollapseView.xib in Resources */,
 				457CBE7E282D2CD100ED0F00 /* TournamentTableViewHeader.xib in Resources */,
@@ -9983,6 +10024,7 @@
 				457CBE86282D2CD100ED0F00 /* FilterCollapseView.xib in Resources */,
 				A9B63083291BE10200BB850E /* field_widget_light.html in Resources */,
 				457CBE87282D2CD100ED0F00 /* PhonePrefixSelectorViewController.xib in Resources */,
+				A9A1B2DF2A128D8B00F7A8ED /* deposit_animation.json in Resources */,
 				457CBE88282D2CD100ED0F00 /* Inconsolata-Medium.ttf in Resources */,
 				457CBE89282D2CD100ED0F00 /* TitleTableViewHeader.xib in Resources */,
 				457CBE8B282D2CD100ED0F00 /* MyTicketsViewController.xib in Resources */,
@@ -10103,6 +10145,7 @@
 				4589C951282024E400243547 /* DebugViewController.xib in Resources */,
 				45F2F9AB298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				4589C952282024E400243547 /* CountryFlags.xcassets in Resources */,
+				A92BDCFA2A163D0200E9B045 /* success_thumbs_up.json in Resources */,
 				451F51EE298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				4589C953282024E400243547 /* FilterSliderCollapseView.xib in Resources */,
 				4589C954282024E400243547 /* TournamentTableViewHeader.xib in Resources */,
@@ -10117,6 +10160,7 @@
 				4589C95D282024E400243547 /* PhonePrefixSelectorViewController.xib in Resources */,
 				A9B6307C291BE10200BB850E /* field_widget_light.html in Resources */,
 				4589C95E282024E400243547 /* Inconsolata-Medium.ttf in Resources */,
+				A9A1B2DB2A128D8B00F7A8ED /* deposit_animation.json in Resources */,
 				4589C95F282024E400243547 /* TitleTableViewHeader.xib in Resources */,
 				4589C961282024E400243547 /* MyTicketsViewController.xib in Resources */,
 				4589C962282024E400243547 /* LoginViewController.xib in Resources */,
@@ -10281,6 +10325,7 @@
 				45A332FA298976BA008181E9 /* UploadView.xib in Resources */,
 				45A332FB298976BA008181E9 /* MyTicketTableViewCell.xib in Resources */,
 				45A332FC298976BA008181E9 /* HeadToHeadCardStatsView.xib in Resources */,
+				A92BDCF82A163D0200E9B045 /* success_thumbs_up.json in Resources */,
 				45A332FD298976BA008181E9 /* Gilroy-Regular.ttf in Resources */,
 				45A332FE298976BA008181E9 /* Gilroy-Medium.ttf in Resources */,
 				45A332FF298976BA008181E9 /* Localizable.strings in Resources */,
@@ -10347,6 +10392,7 @@
 				45A3333B298976BA008181E9 /* Gilroy-ExtraBold.ttf in Resources */,
 				45A3335F298976E3008181E9 /* LaunchScreen-Betsson.storyboard in Resources */,
 				45A3333C298976BA008181E9 /* DepositWebViewController.xib in Resources */,
+				A9A1B2D92A128D8B00F7A8ED /* deposit_animation.json in Resources */,
 				45A3333D298976BA008181E9 /* .swiftlint.yml in Resources */,
 				45A3333E298976BA008181E9 /* RecentSearchTableViewCell.xib in Resources */,
 				45A3333F298976BA008181E9 /* OutcomeSelectionButtonView.xib in Resources */,
@@ -10372,6 +10418,7 @@
 				45A6BDAA28246A7500D9B416 /* DebugViewController.xib in Resources */,
 				45F2F9AD298C067C0075AF02 /* StaticColors.xcassets in Resources */,
 				45A6BDAB28246A7500D9B416 /* CountryFlags.xcassets in Resources */,
+				A92BDCFC2A163D0200E9B045 /* success_thumbs_up.json in Resources */,
 				451F51F0298D2D7D00994660 /* Gradients.xcassets in Resources */,
 				45A6BDAC28246A7500D9B416 /* FilterSliderCollapseView.xib in Resources */,
 				45A6BDAD28246A7500D9B416 /* TournamentTableViewHeader.xib in Resources */,
@@ -10386,6 +10433,7 @@
 				45A6BDB628246A7500D9B416 /* PhonePrefixSelectorViewController.xib in Resources */,
 				A9B63081291BE10200BB850E /* field_widget_light.html in Resources */,
 				45A6BDB728246A7500D9B416 /* Inconsolata-Medium.ttf in Resources */,
+				A9A1B2DD2A128D8B00F7A8ED /* deposit_animation.json in Resources */,
 				45A6BDB828246A7500D9B416 /* TitleTableViewHeader.xib in Resources */,
 				45A6BDBA28246A7500D9B416 /* MyTicketsViewController.xib in Resources */,
 				45A6BDBB28246A7500D9B416 /* LoginViewController.xib in Resources */,
@@ -10550,6 +10598,7 @@
 				A9C3432928F9A74A0055360B /* UploadView.xib in Resources */,
 				A9C3432A28F9A74A0055360B /* MyTicketTableViewCell.xib in Resources */,
 				A9C3432B28F9A74A0055360B /* HeadToHeadCardStatsView.xib in Resources */,
+				A92BDCFB2A163D0200E9B045 /* success_thumbs_up.json in Resources */,
 				A9C3432C28F9A74A0055360B /* Gilroy-Regular.ttf in Resources */,
 				A9C3432D28F9A74A0055360B /* Gilroy-Medium.ttf in Resources */,
 				A9C3432E28F9A74A0055360B /* Localizable.strings in Resources */,
@@ -10616,6 +10665,7 @@
 				A9C3436C28F9A74A0055360B /* DepositWebViewController.xib in Resources */,
 				A9C3436D28F9A74A0055360B /* .swiftlint.yml in Resources */,
 				A9C3436E28F9A74A0055360B /* RecentSearchTableViewCell.xib in Resources */,
+				A9A1B2DC2A128D8B00F7A8ED /* deposit_animation.json in Resources */,
 				A9C3436F28F9A74A0055360B /* OutcomeSelectionButtonView.xib in Resources */,
 				A9C3437028F9A74A0055360B /* TitleTextFieldView.xib in Resources */,
 				A9C3437128F9A74A0055360B /* Inconsolata-Regular.ttf in Resources */,
@@ -10857,6 +10907,7 @@
 				450B789F28F58574009229E3 /* InAppMessageCellViewModel.swift in Sources */,
 				450B78A028F58574009229E3 /* SocialModels.swift in Sources */,
 				450B78A128F58574009229E3 /* BonusRootViewController.swift in Sources */,
+				A9A1B2E22A14EC3300F7A8ED /* DepositSuccessViewController.swift in Sources */,
 				450B78A228F58574009229E3 /* Router.swift in Sources */,
 				450B78A328F58574009229E3 /* Date+Extension.swift in Sources */,
 				450B78A428F58574009229E3 /* LiveDetailsViewController.swift in Sources */,
@@ -10953,6 +11004,7 @@
 				450B790628F58574009229E3 /* BetSelectionStateTableViewCell.swift in Sources */,
 				450B790728F58574009229E3 /* CALayer+Shift.swift in Sources */,
 				450B790828F58574009229E3 /* ChatNotificationsViewModel.swift in Sources */,
+				A9A603682A15293A00B06DF1 /* OptionRadioView.swift in Sources */,
 				450B790928F58574009229E3 /* RequestLocationAccessViewController.swift in Sources */,
 				45B74AD0292BFE3500F2076C /* ServiceProviderType.swift in Sources */,
 				450B790A28F58574009229E3 /* Market.swift in Sources */,
@@ -11555,6 +11607,7 @@
 				457CBA36282D27D000ED0F00 /* ActionTextFieldView.swift in Sources */,
 				45C10F9228772DA700037BBE /* Animator.swift in Sources */,
 				450B7B4428F637FA009229E3 /* ServiceProviderModelMapper+Sports.swift in Sources */,
+				A9A1B2E62A14EC3300F7A8ED /* DepositSuccessViewController.swift in Sources */,
 				A9DF8E4128E5A5D80083BF56 /* TipsSettingsViewController.swift in Sources */,
 				45E8E2A128C8A79C00A09B02 /* RankingTypeTableHeaderView.swift in Sources */,
 				457CBA38282D27D000ED0F00 /* CollapsibleGroupView.swift in Sources */,
@@ -11873,6 +11926,7 @@
 				A9A9103029E85CFD003A2C86 /* ContactSettingsViewModel.swift in Sources */,
 				A98EC7D82889AF210044FC46 /* ShareTicketFriendGroupViewModel.swift in Sources */,
 				457CBB36282D27D000ED0F00 /* WithdrawViewController.swift in Sources */,
+				A9A6036C2A15293A00B06DF1 /* OptionRadioView.swift in Sources */,
 				457CBB37282D27D000ED0F00 /* OutrightCompetitionLargeLineTableViewCell.swift in Sources */,
 				457CBB38282D27D000ED0F00 /* Location.swift in Sources */,
 				457CBB3A282D27D000ED0F00 /* WithdrawWebViewController.swift in Sources */,
@@ -12165,6 +12219,7 @@
 				457CBCE6282D2CD100ED0F00 /* SearchV2Response.swift in Sources */,
 				457CBCE7282D2CD100ED0F00 /* MultiSlider+Internal.swift in Sources */,
 				451B0A4A286AFDC700005FA5 /* SupportTicketResponse.swift in Sources */,
+				A9A6036D2A15293A00B06DF1 /* OptionRadioView.swift in Sources */,
 				457CBCE8282D2CD100ED0F00 /* Cashout.swift in Sources */,
 				457CBCEA282D2CD100ED0F00 /* SuggestedBetViewModel.swift in Sources */,
 				457CBCEC282D2CD100ED0F00 /* Authenticator.swift in Sources */,
@@ -12391,6 +12446,7 @@
 				457CBDA2282D2CD100ED0F00 /* MaintenanceViewController.swift in Sources */,
 				457CBDA3282D2CD100ED0F00 /* FriendStatusCellViewModel.swift in Sources */,
 				45C10F7528772DA700037BBE /* UIView+Shift.swift in Sources */,
+				A9A1B2E72A14EC3300F7A8ED /* DepositSuccessViewController.swift in Sources */,
 				4566339C29DDD44C00C4F1A9 /* AnonymousSideMenuViewController.swift in Sources */,
 				457CBDA4282D2CD100ED0F00 /* FriendStatusTableViewCell.swift in Sources */,
 				A9B331F1289422FC00D097F0 /* MessageDetailViewModel.swift in Sources */,
@@ -12738,6 +12794,7 @@
 				A9B331D5288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */,
 				45A6BB7B28213FEA00D9B416 /* SocialModels.swift in Sources */,
 				4589C7BB282024E400243547 /* BonusRootViewController.swift in Sources */,
+				A9A1B2E32A14EC3300F7A8ED /* DepositSuccessViewController.swift in Sources */,
 				4589C7BC282024E400243547 /* Router.swift in Sources */,
 				4589C7BD282024E400243547 /* Date+Extension.swift in Sources */,
 				4589C7BE282024E400243547 /* LiveDetailsViewController.swift in Sources */,
@@ -12834,6 +12891,7 @@
 				45C10F6C28772DA700037BBE /* CALayer+Shift.swift in Sources */,
 				4589C80E282024E400243547 /* ChatNotificationsViewModel.swift in Sources */,
 				4589C80F282024E400243547 /* RequestLocationAccessViewController.swift in Sources */,
+				A9A603692A15293A00B06DF1 /* OptionRadioView.swift in Sources */,
 				4589C810282024E400243547 /* Market.swift in Sources */,
 				45B74ACF292BFE3500F2076C /* ServiceProviderType.swift in Sources */,
 				4589C811282024E400243547 /* MyTicketTableViewCell.swift in Sources */,
@@ -13336,6 +13394,7 @@
 				45A330B1298976BA008181E9 /* InAppMessageCellViewModel.swift in Sources */,
 				45A330B2298976BA008181E9 /* SocialModels.swift in Sources */,
 				45A330B3298976BA008181E9 /* BonusRootViewController.swift in Sources */,
+				A9A1B2E12A14EC3300F7A8ED /* DepositSuccessViewController.swift in Sources */,
 				45A330B4298976BA008181E9 /* Router.swift in Sources */,
 				45A330B5298976BA008181E9 /* Date+Extension.swift in Sources */,
 				45A330B6298976BA008181E9 /* LiveDetailsViewController.swift in Sources */,
@@ -13432,6 +13491,7 @@
 				45A3311B298976BA008181E9 /* CALayer+Shift.swift in Sources */,
 				45A3311C298976BA008181E9 /* ChatNotificationsViewModel.swift in Sources */,
 				45A3311D298976BA008181E9 /* RequestLocationAccessViewController.swift in Sources */,
+				A9A603672A15293A00B06DF1 /* OptionRadioView.swift in Sources */,
 				45A3311E298976BA008181E9 /* ServiceProviderType.swift in Sources */,
 				45A3311F298976BA008181E9 /* Market.swift in Sources */,
 				45A33120298976BA008181E9 /* MyTicketTableViewCell.swift in Sources */,
@@ -13860,6 +13920,7 @@
 				45A6BBCD28246A7400D9B416 /* FilterSliderCollapseView.swift in Sources */,
 				F4A62A98285946AD007B46C5 /* CasinoGameDetailViewModel.swift in Sources */,
 				45A6BBCE28246A7400D9B416 /* FirebaseClientSettings.swift in Sources */,
+				A9A1B2E52A14EC3300F7A8ED /* DepositSuccessViewController.swift in Sources */,
 				45C10F4928772DA700037BBE /* ModalTransitionModalTransitioningDelegate.swift in Sources */,
 				45A6BBCF28246A7400D9B416 /* PopUpPromotionView.swift in Sources */,
 				45A6BBD028246A7400D9B416 /* CheckboxToggleView.swift in Sources */,
@@ -14348,6 +14409,7 @@
 				45A6BD5828246A7500D9B416 /* MarketGroupDetailsViewController.swift in Sources */,
 				45A6BD5A28246A7500D9B416 /* OddTripleCollectionViewCell.swift in Sources */,
 				45A6BD5B28246A7500D9B416 /* DebugViewController.swift in Sources */,
+				A9A6036B2A15293A00B06DF1 /* OptionRadioView.swift in Sources */,
 				A98EC7DF2889B0AA0044FC46 /* ConversationBetSelectionRootViewModel.swift in Sources */,
 				45A6BD5C28246A7500D9B416 /* UIViewController+Extensions.swift in Sources */,
 				A90229A328AFD41100972863 /* QuickBetViewController.swift in Sources */,
@@ -14611,6 +14673,7 @@
 				A9C3414A28F9A74A0055360B /* BettingTicket.swift in Sources */,
 				A9C3414B28F9A74A0055360B /* FriendsListViewModel.swift in Sources */,
 				A9C3414D28F9A74A0055360B /* URLSchemaManager.swift in Sources */,
+				A9A1B2E42A14EC3300F7A8ED /* DepositSuccessViewController.swift in Sources */,
 				A9C3414E28F9A74A0055360B /* TransactionsHistoryViewModel.swift in Sources */,
 				A9C3414F28F9A74A0055360B /* NetworkError.swift in Sources */,
 				A9A1B2C12A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
@@ -14698,6 +14761,7 @@
 				A9C341A028F9A74A0055360B /* FavoriteGoma.swift in Sources */,
 				A9C341A128F9A74A0055360B /* ListTitleHeaderFooterView.swift in Sources */,
 				A9C341A228F9A74A0055360B /* Fonts.swift in Sources */,
+				A9A6036A2A15293A00B06DF1 /* OptionRadioView.swift in Sources */,
 				A90FB7FC29B0CB4400D08A7C /* TipInfoView.swift in Sources */,
 				A9C341A428F9A74A0055360B /* UserProfileInfoViewController.swift in Sources */,
 				A9C341A628F9A74A0055360B /* NotEmpty.swift in Sources */,

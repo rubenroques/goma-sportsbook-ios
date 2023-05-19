@@ -330,12 +330,14 @@ struct UserProfile: Codable {
     var isRegistrationCompleted: Bool
 
     var kycStatus: KnowYourCustomerStatus
+
+    var currency: String?
     
     init(userIdentifier: String, username: String, email: String, firstName: String? = nil, lastName: String? = nil, birthDate: Date,
          nationality: Country?, country: Country?, gender: UserGender, title: UserTitle?, personalIdNumber: String?, address: String?,
          province: String?, city: String?, postalCode: String?, birthDepartment: String?, streetNumber: String?, avatarName: String?,
          godfatherCode: String?, placeOfBirth: String?, additionalStreetLine: String?,
-         isEmailVerified: Bool, isRegistrationCompleted: Bool, kycStatus: KnowYourCustomerStatus) {
+         isEmailVerified: Bool, isRegistrationCompleted: Bool, kycStatus: KnowYourCustomerStatus, currency: String?) {
         self.userIdentifier = userIdentifier
         self.username = username
         self.email = email
@@ -362,6 +364,7 @@ struct UserProfile: Codable {
         self.isEmailVerified = isEmailVerified
         self.isRegistrationCompleted = isRegistrationCompleted
         self.kycStatus = kycStatus
+        self.currency = currency
     }
     
 }

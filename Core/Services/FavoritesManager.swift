@@ -186,14 +186,14 @@ class FavoritesManager {
                             self?.addFavoriteToList(listId: favoriteListId, eventId: defaultEventId)
                         }
 
-                        self?.fetchedMatchesListIds["Match:\(eventId)"] = favoriteListId
+                        self?.fetchedMatchesListIds["\(eventId)"] = favoriteListId
 
                     })
                     .store(in: &cancellables)
             }
             else if favoriteAction == .remove {
 
-                if let listId = self.fetchedMatchesListIds["Match:\(eventId)"] {
+                if let listId = self.fetchedMatchesListIds["\(eventId)"] {
                     Env.servicesProvider.deleteFavoritesList(listId: listId)
                         .receive(on: DispatchQueue.main)
                         .sink(receiveCompletion: { [weak self] completion in
@@ -205,13 +205,13 @@ class FavoritesManager {
 
                                 if "\(error)" == "emptyData"  {
                                     print("EMPTY DATA SUCCESS")
-                                    self?.fetchedMatchesListIds.removeValue(forKey: "Match:\(eventId)")
+                                    self?.fetchedMatchesListIds.removeValue(forKey: "\(eventId)")
                                 }
                             }
 
                         }, receiveValue: { [weak self] favoritesListDeleteResponse in
 
-                            self?.fetchedMatchesListIds.removeValue(forKey: "Match:\(eventId)")
+                            self?.fetchedMatchesListIds.removeValue(forKey: "\(eventId)")
 
                         })
                         .store(in: &cancellables)

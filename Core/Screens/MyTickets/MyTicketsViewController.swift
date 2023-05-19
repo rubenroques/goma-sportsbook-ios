@@ -155,9 +155,21 @@ class MyTicketsViewController: UIViewController {
             self?.ticketsTableView.reloadData()
         }
 
-        self.viewModel.redrawTableViewAction = { [weak self] in
+        self.viewModel.redrawTableViewAction = { [weak self] withScroll in
+            // Use CATransaction to detect animation from table updates
+            CATransaction.begin()
+
+            CATransaction.setCompletionBlock({
+                if withScroll {
+                    self?.scrollDown()
+                }
+            })
+
             self?.ticketsTableView.beginUpdates()
             self?.ticketsTableView.endUpdates()
+
+            CATransaction.commit()
+
         }
 
         self.viewModel.requestShareActivityView = { [weak self] image, betId, betStatus in
@@ -377,6 +389,23 @@ class MyTicketsViewController: UIViewController {
 
         self.view.bringSubviewToFront(alertView)
 
+    }
+
+    private func scrollDown() {
+
+        let scrollPosition = self.ticketsTableView.contentOffset.y
+
+        let bottomOffset = self.ticketsTableView.contentSize.height - self.ticketsTableView.bounds.size.height
+
+        var newScrollPosition = scrollPosition + 120
+
+        if newScrollPosition > bottomOffset {
+            newScrollPosition = bottomOffset
+        }
+
+        let scrollPoint = CGPoint(x: 0, y: newScrollPosition)
+
+        self.ticketsTableView.setContentOffset(scrollPoint, animated: true)
     }
 
 }

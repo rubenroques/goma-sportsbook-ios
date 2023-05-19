@@ -33,7 +33,7 @@ class BettingHistoryViewController: UIViewController {
     private let rightGradientMaskLayer = CAGradientLayer()
     private var locationsCodesDictionary: [String: String] = [:]
     
-    var redrawTableViewAction: (() -> Void)?
+    //var redrawTableViewAction: ((Bool) -> Void)?
     var tappedMatchDetail: ((String) -> Void)?
     var requestShareActivityView: ((UIImage, String, String) -> Void)?
 
@@ -215,6 +215,41 @@ class BettingHistoryViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
         
     }
+
+    private func redrawTableView(withScroll: Bool) {
+
+        // Use CATransaction to detect animation from table updates
+        CATransaction.begin()
+
+        CATransaction.setCompletionBlock({
+            if withScroll {
+                self.scrollDown()
+            }
+        })
+
+        self.tableView.beginUpdates()
+        self.tableView.endUpdates()
+
+        CATransaction.commit()
+
+    }
+
+    private func scrollDown() {
+
+        let scrollPosition = self.tableView.contentOffset.y
+
+        let bottomOffset = self.tableView.contentSize.height - self.tableView.bounds.size.height
+
+        var newScrollPosition = scrollPosition + 120
+
+        if newScrollPosition > bottomOffset {
+            newScrollPosition = bottomOffset
+        }
+
+        let scrollPoint = CGPoint(x: 0, y: newScrollPosition)
+
+        self.tableView.setContentOffset(scrollPoint, animated: true)
+    }
 }
 
 //
@@ -267,8 +302,8 @@ extension BettingHistoryViewController: UITableViewDelegate, UITableViewDataSour
                     return self.locationsCodesDictionary[id] ?? ""
                 })
 
-            cell.needsHeightRedraw = { [weak self] in
-                self?.redrawTableViewAction?()
+            cell.needsHeightRedraw = { [weak self] withScroll in
+                self?.redrawTableView(withScroll: withScroll)
             }
 
             cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)

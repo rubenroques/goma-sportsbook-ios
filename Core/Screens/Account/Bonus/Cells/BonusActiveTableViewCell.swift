@@ -12,14 +12,17 @@ class BonusActiveTableViewCell: UITableViewCell {
     // MARK: Private Properties
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
-    private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
+    private lazy var dateIconImageView: UIImageView = Self.createDateIconImageView()
     private lazy var dateLabel: UILabel = Self.createDateLabel()
+    private lazy var bonusIconImageView: UIImageView = Self.createBonusIconImageView()
     private lazy var bonusLabel: UILabel = Self.createBonusLabel()
-    private lazy var bonusAmountLabel: UILabel = Self.createBonusAmountLabel()
     private lazy var bonusStatusView: UIView = Self.createBonusStatusView()
+    private lazy var bonusStatusIconImageView: UIImageView = Self.createBonusStatusIconImageView()
     private lazy var bonusStatusLabel: UILabel = Self.createBonusStatusLabel()
     private lazy var stackView: UIStackView = Self.createStackView()
     private lazy var cancelButton: UIButton = Self.createCancelButton()
+
+    private lazy var separatorView: UIView = Self.createSeparatorView()
 
     private lazy var stackViewBottomConstraint: NSLayoutConstraint = Self.createStackViewBottomConstraint()
     private lazy var cancelButtonBottomConstraint: NSLayoutConstraint = Self.createCancelButtonBottomConstraint()
@@ -36,8 +39,8 @@ class BonusActiveTableViewCell: UITableViewCell {
 
     var isSimpleBonus: Bool = false {
         didSet {
+            self.bonusStatusIconImageView.isHidden = !isSimpleBonus
             self.bonusLabel.isHidden = !isSimpleBonus
-            self.bonusAmountLabel.isHidden = !isSimpleBonus
         }
     }
 
@@ -85,8 +88,12 @@ class BonusActiveTableViewCell: UITableViewCell {
 
     override func layoutSubviews() {
         self.cancelButton.layer.cornerRadius = CornerRadius.button
-        self.cancelButton.layer.borderWidth = 1
+        self.cancelButton.layer.borderWidth = 2
         self.cancelButton.layer.masksToBounds = true
+
+        self.bonusStatusView.clipsToBounds = true
+        self.bonusStatusView.layer.cornerRadius = CornerRadius.status
+        self.bonusStatusView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
     }
 
     private func setupWithTheme() {
@@ -97,22 +104,20 @@ class BonusActiveTableViewCell: UITableViewCell {
 
         self.titleLabel.textColor = UIColor.App.highlightPrimary
 
-        self.subtitleLabel.textColor = UIColor.App.textPrimary
-
         self.dateLabel.textColor = UIColor.App.textSecondary
 
-        self.bonusLabel.textColor = UIColor.App.textPrimary
+        self.bonusLabel.textColor = UIColor.App.textSecondary
 
-        self.bonusAmountLabel.textColor = UIColor.App.textSecondary
+        self.bonusStatusView.backgroundColor = UIColor.App.iconSecondary
 
-        self.bonusStatusView.backgroundColor = UIColor.App.backgroundOdds
+        self.bonusStatusLabel.textColor = UIColor.App.buttonTextPrimary
 
-        self.bonusStatusLabel.textColor = UIColor.App.textPrimary
+        self.separatorView.backgroundColor = UIColor.App.separatorLine
 
         self.stackView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.cancelButton.backgroundColor = .clear
-        self.cancelButton.layer.borderColor = UIColor(red: 0.16, green: 0.18, blue: 0.36, alpha: 1).cgColor
+        self.cancelButton.layer.borderColor = UIColor.App.buttonActiveHoverSecondary.cgColor
         self.cancelButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
 
     }
@@ -159,11 +164,15 @@ class BonusActiveTableViewCell: UITableViewCell {
             self.hasTypeStatus = true
             self.hasCancelButton = true
             self.bonusStatusLabel.text = BonusTypeMapper.init(bonusType: bonusStatus)?.bonusName ?? bonusStatus.capitalized
+            self.bonusStatusView.backgroundColor = UIColor.App.iconSecondary
+            self.bonusStatusIconImageView.image = UIImage(named: "pause_circle_icon")
         }
         else {
             self.hasTypeStatus = true
             self.hasCancelButton = false
             self.bonusStatusLabel.text = BonusTypeMapper.init(bonusType: bonusStatus)?.bonusName ?? bonusStatus.capitalized
+            self.bonusStatusView.backgroundColor = UIColor.App.iconSecondary
+            self.bonusStatusIconImageView.image = UIImage(named: "pause_circle_icon")
         }
     }
 
@@ -173,7 +182,7 @@ class BonusActiveTableViewCell: UITableViewCell {
 
         self.stackView.addArrangedSubview(emptyBonusView)
 
-        self.bonusAmountLabel.text = "-"
+        self.bonusLabel.text = "-"
 
     }
 
@@ -192,7 +201,7 @@ class BonusActiveTableViewCell: UITableViewCell {
         }
         else {
             if let bonusAmount = bonus.amount {
-                self.bonusAmountLabel.text = "\(bonusAmount)"
+                self.bonusLabel.text = "\(bonusAmount)\(Env.userSessionStore.userProfilePublisher.value?.currency ?? "")"
             }
         }
 
@@ -270,6 +279,14 @@ extension BonusActiveTableViewCell {
         return label
     }
 
+    private static func createDateIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "calendar_expired_icon")
+        return imageView
+    }
+
     private static func createDateLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -278,6 +295,14 @@ extension BonusActiveTableViewCell {
         label.textAlignment = .left
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return label
+    }
+
+    private static func createBonusIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "cardholder_icon")
+        return imageView
     }
 
     private static func createBonusLabel() -> UILabel {
@@ -290,22 +315,20 @@ extension BonusActiveTableViewCell {
         return label
     }
 
-    private static func createBonusAmountLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "0.0"
-        label.font = AppFont.with(type: .medium, size: 11)
-        label.textAlignment = .left
-        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        return label
-    }
-
     private static func createBonusStatusView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         view.layer.cornerRadius = CornerRadius.label
         return view
+    }
+
+    private static func createBonusStatusIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "pause_circle_icon")
+        return imageView
     }
 
     private static func createBonusStatusLabel() -> UILabel {
@@ -334,6 +357,12 @@ extension BonusActiveTableViewCell {
         return button
     }
 
+    private static func createSeparatorView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
     private static func createStackViewBottomConstraint() -> NSLayoutConstraint {
         let constraint = NSLayoutConstraint()
         return constraint
@@ -353,12 +382,18 @@ extension BonusActiveTableViewCell {
         self.contentView.addSubview(self.containerView)
 
         self.containerView.addSubview(self.titleLabel)
-        self.containerView.addSubview(self.subtitleLabel)
-        self.containerView.addSubview(self.dateLabel)
-        self.containerView.addSubview(self.bonusLabel)
-        self.containerView.addSubview(self.bonusAmountLabel)
-        self.containerView.addSubview(self.bonusStatusView)
 
+        self.containerView.addSubview(self.separatorView)
+
+        self.containerView.addSubview(self.dateIconImageView)
+        self.containerView.addSubview(self.dateLabel)
+
+        self.containerView.addSubview(self.bonusIconImageView)
+        self.containerView.addSubview(self.bonusLabel)
+
+        self.contentView.addSubview(self.bonusStatusView)
+
+        self.bonusStatusView.addSubview(self.bonusStatusIconImageView)
         self.bonusStatusView.addSubview(self.bonusStatusLabel)
 
         self.containerView.addSubview(self.stackView)
@@ -382,43 +417,54 @@ extension BonusActiveTableViewCell {
         // Labels
         NSLayoutConstraint.activate([
             self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
-            //self.titleLabel.trailingAnchor.constraint(equalTo: self.bonusStatusView.leadingAnchor, constant: -8),
-            self.titleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 20),
+            self.titleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 11),
 
-            self.subtitleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
-            self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 12),
-//            self.subtitleLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20),
+            self.separatorView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
+            self.separatorView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
+            self.separatorView.heightAnchor.constraint(equalToConstant: 1),
+            self.separatorView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 10),
 
-            self.dateLabel.leadingAnchor.constraint(equalTo: self.subtitleLabel.trailingAnchor, constant: 4),
-            self.dateLabel.trailingAnchor.constraint(equalTo: self.containerView.centerXAnchor, constant: 5),
-            self.dateLabel.centerYAnchor.constraint(equalTo: self.subtitleLabel.centerYAnchor),
+            self.dateIconImageView.leadingAnchor.constraint(equalTo: self.separatorView.leadingAnchor),
+            self.dateIconImageView.topAnchor.constraint(equalTo: self.separatorView.bottomAnchor, constant: 10),
+            self.dateIconImageView.widthAnchor.constraint(equalToConstant: 12),
+            self.dateIconImageView.heightAnchor.constraint(equalToConstant: 13),
 
-            self.bonusLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
-            self.bonusLabel.topAnchor.constraint(equalTo: self.subtitleLabel.bottomAnchor, constant: 10),
+            self.dateLabel.leadingAnchor.constraint(equalTo: self.dateIconImageView.trailingAnchor, constant: 4),
+            self.dateLabel.centerYAnchor.constraint(equalTo: self.dateIconImageView.centerYAnchor),
 
-            self.bonusAmountLabel.leadingAnchor.constraint(equalTo: self.bonusLabel.trailingAnchor, constant: 4),
-            self.bonusAmountLabel.trailingAnchor.constraint(equalTo: self.containerView.centerXAnchor, constant: 5),
-            self.bonusAmountLabel.centerYAnchor.constraint(equalTo: self.bonusLabel.centerYAnchor),
+            self.bonusIconImageView.leadingAnchor.constraint(equalTo: self.dateLabel.trailingAnchor, constant: 20),
+            self.bonusIconImageView.centerYAnchor.constraint(equalTo: self.dateIconImageView.centerYAnchor),
+            self.bonusIconImageView.widthAnchor.constraint(equalToConstant: 12),
+            self.bonusIconImageView.heightAnchor.constraint(equalToConstant: 13),
+
+            self.bonusLabel.leadingAnchor.constraint(equalTo: self.bonusIconImageView.trailingAnchor, constant: 4),
+            self.bonusLabel.centerYAnchor.constraint(equalTo: self.dateLabel.centerYAnchor)
         ])
 
         // Bonus status
         NSLayoutConstraint.activate([
             self.bonusStatusView.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 8),
-            self.bonusStatusView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
-            self.bonusStatusView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 10),
-            self.bonusStatusView.widthAnchor.constraint(greaterThanOrEqualToConstant: 80),
-            self.bonusStatusView.heightAnchor.constraint(greaterThanOrEqualToConstant: 30),
+            self.bonusStatusView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: 2),
+            self.bonusStatusView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 11),
+//            self.bonusStatusView.widthAnchor.constraint(greaterThanOrEqualToConstant: 80),
+//            self.bonusStatusView.heightAnchor.constraint(greaterThanOrEqualToConstant: 30),
 
-            self.bonusStatusLabel.leadingAnchor.constraint(equalTo: self.bonusStatusView.leadingAnchor, constant: 8),
+            self.bonusStatusIconImageView.leadingAnchor.constraint(equalTo: self.bonusStatusView.leadingAnchor, constant: 8),
+            self.bonusStatusIconImageView.widthAnchor.constraint(equalToConstant: 15),
+            self.bonusStatusIconImageView.heightAnchor.constraint(equalTo: self.bonusStatusIconImageView.widthAnchor),
+            self.bonusStatusIconImageView.topAnchor.constraint(equalTo: self.bonusStatusView.topAnchor, constant: 4),
+            self.bonusStatusIconImageView.bottomAnchor.constraint(equalTo: self.bonusStatusView.bottomAnchor, constant: -4),
+
+            self.bonusStatusLabel.leadingAnchor.constraint(equalTo: self.bonusStatusIconImageView.trailingAnchor, constant: 8),
             self.bonusStatusLabel.trailingAnchor.constraint(equalTo: self.bonusStatusView.trailingAnchor, constant: -8),
-            self.bonusStatusLabel.centerYAnchor.constraint(equalTo: self.bonusStatusView.centerYAnchor)
+            self.bonusStatusLabel.centerYAnchor.constraint(equalTo: self.bonusStatusIconImageView.centerYAnchor)
         ])
 
         // StackView
         NSLayoutConstraint.activate([
             self.stackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
             self.stackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
-            self.stackView.topAnchor.constraint(equalTo: self.bonusLabel.bottomAnchor, constant: 16),
+            self.stackView.topAnchor.constraint(equalTo: self.dateLabel.bottomAnchor, constant: 16),
             // self.stackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20)
         ])
 
@@ -439,7 +485,6 @@ extension BonusActiveTableViewCell {
 
         self.titleTrailingConstraint =             self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15)
         self.titleTrailingConstraint.isActive = false
-
 
     }
 

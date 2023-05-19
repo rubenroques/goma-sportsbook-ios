@@ -62,7 +62,8 @@ extension ServiceProviderModelMapper {
 
                            isEmailVerified: serviceProviderProfile.isEmailVerified,
                            isRegistrationCompleted: serviceProviderProfile.isRegistrationCompleted,
-                           kycStatus: localKYCStatus)
+                           kycStatus: localKYCStatus,
+                           currency: serviceProviderProfile.currency)
     }
     
 }

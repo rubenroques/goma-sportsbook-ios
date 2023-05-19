@@ -551,12 +551,12 @@ class PreLiveEventsViewModel: NSObject {
 
         // TODO: André, esta é a unica forma de fazer isto? parece demasiado hardcoded
         for competitionInfo in competitionInfos {
-            if let marketGroup = competitionInfo.marketGroups.filter({ $0.name == "Main" }).first {
+            if let marketGroup = competitionInfo.marketGroups.filter({ $0.name.lowercased().contains("main") }).first {
                 self.subscribeCompetitionMatches(forMarketGroupId: marketGroup.id, competitionInfo: competitionInfo)
             }
             else {
                 if let marketGroup = competitionInfo.marketGroups.filter({
-                    $0.name == "Outright"
+                    $0.name.lowercased().contains("outright")
                 }).first {
                     self.subscribeCompetitionOutright(forMarketGroupId: marketGroup.id, competitionInfo: competitionInfo)
                     //self.processCompetitionOutrights(competitionInfo: competitionInfo)

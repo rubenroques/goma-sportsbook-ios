@@ -102,6 +102,8 @@ public struct UserProfile: Codable {
     public let emailVerificationStatus: EmailVerificationStatus
     public let userRegistrationStatus: UserRegistrationStatus
     public let kycStatus: KnowYourCustomerStatus
+
+    public let currency: String?
     
     public init(userIdentifier: String,
                 username: String,
@@ -125,7 +127,8 @@ public struct UserProfile: Codable {
                 additionalStreetLine: String?,
                 emailVerificationStatus: EmailVerificationStatus,
                 userRegistrationStatus: UserRegistrationStatus,
-                kycStatus: KnowYourCustomerStatus) {
+                kycStatus: KnowYourCustomerStatus,
+                currency: String?) {
         
         self.userIdentifier = userIdentifier
         self.username = username
@@ -152,6 +155,7 @@ public struct UserProfile: Codable {
         self.emailVerificationStatus = emailVerificationStatus
         self.userRegistrationStatus = userRegistrationStatus
         self.kycStatus = kycStatus
+        self.currency = currency
     }
 
 }

@@ -30,6 +30,21 @@ extension SportRadarModelMapper {
             }
         }
 
+        var currency: String?
+
+        if playerInfoResponse.currency == "EUR" {
+            currency = "€"
+        }
+        else if playerInfoResponse.currency == "USD" {
+            currency = "$"
+        }
+        else if playerInfoResponse.currency == "GBP" {
+            currency = "£"
+        }
+        else {
+            currency = "€"
+        }
+
         return UserProfile(userIdentifier: playerInfoResponse.partyId,
                            username: playerInfoResponse.userId,
                            email: playerInfoResponse.email,
@@ -52,7 +67,8 @@ extension SportRadarModelMapper {
                            additionalStreetLine: additionalStreetLine,
                            emailVerificationStatus: emailVerificationStatus,
                            userRegistrationStatus: userRegistrationStatus,
-                           kycStatus: knowYourCustomerStatus)
+                           kycStatus: knowYourCustomerStatus,
+                           currency: currency)
 
     }
 
