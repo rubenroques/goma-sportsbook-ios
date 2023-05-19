@@ -38,9 +38,11 @@ class BonusEmptyView: UIView {
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
-        self.emptyBonusView.backgroundColor = UIColor.App.backgroundOdds
+        self.emptyBonusView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.emptyBonusLabel.textColor = UIColor.App.textPrimary
+        self.emptyBonusView.layer.borderColor = UIColor.App.buttonBorderTertiary.cgColor
+
+        self.emptyBonusLabel.textColor = UIColor.App.textDisablePrimary
     }
 
     func configure(title: String, message: String) {
@@ -78,6 +80,7 @@ extension BonusEmptyView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = CornerRadius.label
+        view.layer.borderWidth = 2
         return view
     }
 

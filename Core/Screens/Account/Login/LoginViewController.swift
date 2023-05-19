@@ -823,8 +823,6 @@ class LoginViewController: UIViewController {
 
             alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
 
-            //self?.closeLoginRegisterFlow()
-
             self.depositOnRegisterViewController?.present(alert, animated: true, completion: nil)
         }
 

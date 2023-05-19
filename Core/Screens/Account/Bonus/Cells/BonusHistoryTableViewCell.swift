@@ -13,13 +13,17 @@ class BonusHistoryTableViewCell: UITableViewCell {
     // MARK: Private Properties
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
-    private lazy var startDateDescriptionLabel: UILabel = Self.createStartDateDescriptionLabel()
+    private lazy var startDateIconImageView: UIImageView = Self.createStartDateIconImageView()
     private lazy var startDateLabel: UILabel = Self.createStartDateLabel()
-    private lazy var endDateDescriptionLabel: UILabel = Self.createEndDateDescriptionLabel()
+    private lazy var endDateIconImageView: UIImageView = Self.createEndDateIconImageView()
     private lazy var endDateLabel: UILabel = Self.createEndDateLabel()
     private lazy var bonusStatusView: UIView = Self.createBonusStatusView()
+    private lazy var bonusStatusIconImageView: UIImageView = Self.createBonusStatusIconImageView()
     private lazy var bonusStatusLabel: UILabel = Self.createBonusStatusLabel()
-    private lazy var bonusLabel: UILabel = Self.createBonusLabel()
+
+    private lazy var separatorView: UIView = Self.createSeparatorView()
+
+    private lazy var bonusIconImageView: UIImageView = Self.createBonusIconImageView()
     private lazy var bonusAmountLabel: UILabel = Self.createBonusAmountLabel()
 
     private var cancellables = Set<AnyCancellable>()
@@ -44,6 +48,14 @@ class BonusHistoryTableViewCell: UITableViewCell {
         self.setupWithTheme()
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        self.bonusStatusView.clipsToBounds = true
+        self.bonusStatusView.layer.cornerRadius = CornerRadius.status
+        self.bonusStatusView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+    }
+
     private func setupWithTheme() {
 
         self.backgroundColor = .clear
@@ -52,18 +64,18 @@ class BonusHistoryTableViewCell: UITableViewCell {
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
-        self.startDateDescriptionLabel.textColor = UIColor.App.textPrimary
         self.startDateLabel.textColor = UIColor.App.textSecondary
 
-        self.endDateDescriptionLabel.textColor = UIColor.App.textPrimary
         self.endDateLabel.textColor = UIColor.App.textSecondary
 
-        self.bonusLabel.textColor = UIColor.App.textPrimary
         self.bonusAmountLabel.textColor = UIColor.App.textSecondary
 
-        self.bonusStatusView.backgroundColor = UIColor.App.backgroundOdds
+        self.bonusStatusView.backgroundColor = UIColor.App.iconSecondary
 
-        self.bonusStatusLabel.textColor = UIColor.App.textPrimary
+        self.bonusStatusLabel.textColor = UIColor.App.buttonTextPrimary
+
+        self.separatorView.backgroundColor = UIColor.App.separatorLine
+
     }
 
     func configure(withViewModel viewModel: BonusHistoryCellViewModel) {
@@ -95,6 +107,19 @@ class BonusHistoryTableViewCell: UITableViewCell {
         viewModel.bonusStatusPublisher
             .sink(receiveValue: { [weak self] bonusStatus in
                 self?.bonusStatusLabel.text = bonusStatus
+
+                if bonusStatus.lowercased() == "expired" {
+                    self?.bonusStatusView.backgroundColor = UIColor.App.alertWarning
+                    self?.bonusStatusIconImageView.image = UIImage(named: "bell_expired_icon")
+                }
+                else if bonusStatus.lowercased() == "cancelled" {
+                    self?.bonusStatusView.backgroundColor = UIColor.App.alertError
+                    self?.bonusStatusIconImageView.image = UIImage(named: "x_circle_icon")
+                }
+                else {
+                    self?.bonusStatusView.backgroundColor = UIColor.App.iconSecondary
+                    self?.bonusStatusIconImageView.image = UIImage(named: "prohibit_icon")
+                }
             })
             .store(in: &cancellables)
     }
@@ -125,14 +150,12 @@ extension BonusHistoryTableViewCell {
         return label
     }
 
-    private static func createStartDateDescriptionLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "\(localized("start_date")):"
-        label.font = AppFont.with(type: .medium, size: 11)
-        label.textAlignment = .left
-        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        return label
+    private static func createStartDateIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "calendar_check_icon")
+        return imageView
     }
 
     private static func createStartDateLabel() -> UILabel {
@@ -141,18 +164,16 @@ extension BonusHistoryTableViewCell {
         label.text = "01.01.0101"
         label.font = AppFont.with(type: .medium, size: 11)
         label.textAlignment = .left
-        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return label
     }
 
-    private static func createEndDateDescriptionLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "\(localized("expire_date")):"
-        label.font = AppFont.with(type: .medium, size: 11)
-        label.textAlignment = .left
-        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        return label
+    private static func createEndDateIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "calendar_expired_icon")
+        return imageView
     }
 
     private static func createEndDateLabel() -> UILabel {
@@ -161,7 +182,7 @@ extension BonusHistoryTableViewCell {
         label.text = "01.01.0101"
         label.font = AppFont.with(type: .medium, size: 11)
         label.textAlignment = .left
-        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return label
     }
 
@@ -173,6 +194,14 @@ extension BonusHistoryTableViewCell {
         return view
     }
 
+    private static func createBonusStatusIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "check_circle_icon")
+        return imageView
+    }
+
     private static func createBonusStatusLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -182,14 +211,12 @@ extension BonusHistoryTableViewCell {
         return label
     }
 
-    private static func createBonusLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "\(localized("bonus")):"
-        label.font = AppFont.with(type: .medium, size: 11)
-        label.textAlignment = .left
-        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        return label
+    private static func createBonusIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "cardholder_icon")
+        return imageView
     }
 
     private static func createBonusAmountLabel() -> UILabel {
@@ -202,21 +229,33 @@ extension BonusHistoryTableViewCell {
         return label
     }
 
+    private static func createSeparatorView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
     private func setupSubviews() {
         self.contentView.addSubview(self.containerView)
 
         self.containerView.addSubview(self.titleLabel)
-        self.containerView.addSubview(self.startDateDescriptionLabel)
+        self.containerView.addSubview(self.startDateIconImageView)
         self.containerView.addSubview(self.startDateLabel)
-        self.containerView.addSubview(self.endDateDescriptionLabel)
+        self.containerView.addSubview(self.endDateIconImageView)
         self.containerView.addSubview(self.endDateLabel)
-        self.containerView.addSubview(self.bonusStatusView)
-        self.containerView.addSubview(self.bonusLabel)
+        self.contentView.addSubview(self.bonusStatusView)
+        self.containerView.addSubview(self.bonusIconImageView)
         self.containerView.addSubview(self.bonusAmountLabel)
 
+        self.bonusStatusView.addSubview(self.bonusStatusIconImageView)
         self.bonusStatusView.addSubview(self.bonusStatusLabel)
 
+        self.containerView.addSubview(self.separatorView)
+
         self.initConstraints()
+
+        self.bonusStatusView.setNeedsLayout()
+        self.bonusStatusView.layoutIfNeeded()
     }
 
     private func initConstraints() {
@@ -232,43 +271,58 @@ extension BonusHistoryTableViewCell {
 
         // Labels
         NSLayoutConstraint.activate([
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
-            // self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
-            self.titleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 20),
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 12),
+            self.titleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 11),
 
-            self.startDateDescriptionLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
-            self.startDateDescriptionLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 12),
+            self.separatorView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 12),
+            self.separatorView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -12),
+            self.separatorView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 12),
+            self.separatorView.heightAnchor.constraint(equalToConstant: 1),
 
-            self.startDateLabel.leadingAnchor.constraint(equalTo: self.startDateDescriptionLabel.trailingAnchor, constant: 4),
-            self.startDateLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
-            self.startDateLabel.centerYAnchor.constraint(equalTo: self.startDateDescriptionLabel.centerYAnchor),
+            self.startDateIconImageView.leadingAnchor.constraint(equalTo: self.separatorView.leadingAnchor),
+            self.startDateIconImageView.topAnchor.constraint(equalTo: self.separatorView.bottomAnchor, constant: 10),
+            self.startDateIconImageView.widthAnchor.constraint(equalToConstant: 12),
+            self.startDateIconImageView.heightAnchor.constraint(equalToConstant: 13),
 
-            self.endDateDescriptionLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
-            self.endDateDescriptionLabel.topAnchor.constraint(equalTo: self.startDateDescriptionLabel.bottomAnchor, constant: 12),
-            self.endDateDescriptionLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20),
+            self.startDateLabel.leadingAnchor.constraint(equalTo: self.startDateIconImageView.trailingAnchor, constant: 4),
+            self.startDateLabel.centerYAnchor.constraint(equalTo: self.startDateIconImageView.centerYAnchor),
+            self.startDateLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -11),
 
-            self.endDateLabel.leadingAnchor.constraint(equalTo: self.endDateDescriptionLabel.trailingAnchor, constant: 4),
-            self.endDateLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
-            self.endDateLabel.centerYAnchor.constraint(equalTo: self.endDateDescriptionLabel.centerYAnchor),
+            self.endDateIconImageView.leadingAnchor.constraint(equalTo: self.startDateLabel.trailingAnchor, constant: 20),
+            self.endDateIconImageView.centerYAnchor.constraint(equalTo: self.startDateIconImageView.centerYAnchor),
+            self.endDateIconImageView.widthAnchor.constraint(equalToConstant: 12),
+            self.endDateIconImageView.heightAnchor.constraint(equalToConstant: 13),
 
-            self.bonusLabel.centerYAnchor.constraint(equalTo: self.bonusAmountLabel.centerYAnchor),
+            self.endDateLabel.leadingAnchor.constraint(equalTo: self.endDateIconImageView.trailingAnchor, constant: 4),
+            self.endDateLabel.centerYAnchor.constraint(equalTo: self.startDateLabel.centerYAnchor),
 
-            self.bonusAmountLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
-            self.bonusAmountLabel.leadingAnchor.constraint(equalTo: self.bonusLabel.trailingAnchor, constant: 4),
-            self.bonusAmountLabel.centerYAnchor.constraint(equalTo: self.endDateDescriptionLabel.centerYAnchor)
+            self.bonusIconImageView.leadingAnchor.constraint(equalTo: self.endDateLabel.trailingAnchor, constant: 20),
+            self.bonusIconImageView.centerYAnchor.constraint(equalTo: self.endDateIconImageView.centerYAnchor),
+            self.bonusIconImageView.widthAnchor.constraint(equalToConstant: 12),
+            self.bonusIconImageView.heightAnchor.constraint(equalToConstant: 13),
+
+            self.bonusAmountLabel.leadingAnchor.constraint(equalTo: self.bonusIconImageView.trailingAnchor, constant: 4),
+            self.bonusAmountLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -12),
+            self.bonusAmountLabel.centerYAnchor.constraint(equalTo: self.endDateLabel.centerYAnchor)
         ])
 
         // Bonus status
         NSLayoutConstraint.activate([
             self.bonusStatusView.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 8),
-            self.bonusStatusView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
-            self.bonusStatusView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 10),
-            self.bonusStatusView.widthAnchor.constraint(greaterThanOrEqualToConstant: 80),
-            self.bonusStatusView.heightAnchor.constraint(greaterThanOrEqualToConstant: 30),
+            self.bonusStatusView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: 2),
+            self.bonusStatusView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 11),
+//            self.bonusStatusView.widthAnchor.constraint(greaterThanOrEqualToConstant: 80),
+//            self.bonusStatusView.heightAnchor.constraint(greaterThanOrEqualToConstant: 30),
 
-            self.bonusStatusLabel.leadingAnchor.constraint(equalTo: self.bonusStatusView.leadingAnchor, constant: 8),
+            self.bonusStatusIconImageView.leadingAnchor.constraint(equalTo: self.bonusStatusView.leadingAnchor, constant: 8),
+            self.bonusStatusIconImageView.widthAnchor.constraint(equalToConstant: 15),
+            self.bonusStatusIconImageView.heightAnchor.constraint(equalTo: self.bonusStatusIconImageView.widthAnchor),
+            self.bonusStatusIconImageView.topAnchor.constraint(equalTo: self.bonusStatusView.topAnchor, constant: 4),
+            self.bonusStatusIconImageView.bottomAnchor.constraint(equalTo: self.bonusStatusView.bottomAnchor, constant: -4),
+
+            self.bonusStatusLabel.leadingAnchor.constraint(equalTo: self.bonusStatusIconImageView.trailingAnchor, constant: 8),
             self.bonusStatusLabel.trailingAnchor.constraint(equalTo: self.bonusStatusView.trailingAnchor, constant: -8),
-            self.bonusStatusLabel.centerYAnchor.constraint(equalTo: self.bonusStatusView.centerYAnchor)
+            self.bonusStatusLabel.centerYAnchor.constraint(equalTo: self.bonusStatusIconImageView.centerYAnchor)
         ])
     }
 
