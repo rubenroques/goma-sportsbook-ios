@@ -15,6 +15,28 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet private weak var baseView: UIView!
 
+    lazy var gradientBorderView: GradientBorderView = {
+        var gradientBorderView = GradientBorderView()
+        gradientBorderView.translatesAutoresizingMaskIntoConstraints = false
+        gradientBorderView.gradientBorderWidth = 2
+        gradientBorderView.gradientCornerRadius = 9
+        return gradientBorderView
+    }()
+
+    lazy var liveTipView: UIView = {
+        var liveTipView = UIView()
+        liveTipView.translatesAutoresizingMaskIntoConstraints = false
+        return liveTipView
+    }()
+
+    lazy var liveTipLabel: UILabel = {
+        var liveTipLabel = UILabel()
+        liveTipLabel.font = AppFont.with(type: .semibold, size: 9)
+        liveTipLabel.textAlignment = .left
+        liveTipLabel.translatesAutoresizingMaskIntoConstraints = false
+        return liveTipLabel
+    }()
+
     @IBOutlet private weak var favoritesIconImageView: UIImageView!
 
     @IBOutlet private weak var numberOfBetsLabels: UILabel!
@@ -191,6 +213,41 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.suspendedBaseView.isHidden = true
         self.seeAllBaseView.isHidden = true
 
+        // Live add ons to the base view
+        // Gradient Border
+        self.baseView.addSubview(self.gradientBorderView)
+        self.baseView.sendSubviewToBack(self.gradientBorderView)
+
+        NSLayoutConstraint.activate([
+            self.baseView.leadingAnchor.constraint(equalTo: gradientBorderView.leadingAnchor),
+            self.baseView.trailingAnchor.constraint(equalTo: gradientBorderView.trailingAnchor),
+            self.baseView.topAnchor.constraint(equalTo: gradientBorderView.topAnchor),
+            self.baseView.bottomAnchor.constraint(equalTo: gradientBorderView.bottomAnchor),
+        ])
+
+        self.gradientBorderView.isHidden = true
+
+        // Live Tip
+        self.baseView.addSubview(self.liveTipView)
+        self.liveTipView.addSubview(self.liveTipLabel)
+        self.liveTipLabel.text = localized("live")
+
+        self.liveTipView.layer.cornerRadius = 7
+
+        NSLayoutConstraint.activate([
+            self.liveTipView.heightAnchor.constraint(equalToConstant: 14),
+
+            self.liveTipView.leadingAnchor.constraint(equalTo: self.liveTipLabel.leadingAnchor, constant: -8),
+            self.liveTipView.trailingAnchor.constraint(equalTo: self.liveTipLabel.trailingAnchor, constant: 14),
+            self.liveTipView.centerYAnchor.constraint(equalTo: self.liveTipLabel.centerYAnchor),
+            self.liveTipView.topAnchor.constraint(equalTo: self.liveTipLabel.topAnchor, constant: 2),
+
+            self.liveTipView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: 8),
+            self.liveTipView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 12)
+        ])
+
+
+
         self.bringSubviewToFront(self.suspendedBaseView)
         self.bringSubviewToFront(self.seeAllBaseView)
 
@@ -350,6 +407,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.liveMatchDotBaseView.backgroundColor = .clear
         self.liveMatchDotImageView.backgroundColor = .clear
 
+        self.liveTipView.backgroundColor = UIColor.App.highlightPrimary
+        self.liveTipLabel.textColor = UIColor.App.buttonTextPrimary
+
         self.dateLabel.textColor = UIColor.App.textPrimary
         self.timeLabel.textColor = UIColor.App.textPrimary
 
@@ -490,11 +550,17 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         if viewModel.isLiveMatch {
             self.liveMatchDotBaseView.isHidden = false
+            self.gradientBorderView.isHidden = false
+            self.liveTipView.isHidden = false
         }
         else {
             self.liveMatchDotBaseView.isHidden = true
+            self.gradientBorderView.isHidden = true
+            self.liveTipView.isHidden = true
         }
 
+        self.liveMatchDotImageView.isHidden = true
+        
         self.eventNameLabel.text = "\(viewModel.competitionName)"
 
         self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"

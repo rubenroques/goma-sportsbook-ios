@@ -112,6 +112,16 @@ extension UIColor {
             return UIColor(named: "headerGradient3") ?? Self.backgroundPrimary
         }
 
+        static var cardBorderLineGradient1: UIColor {
+            return UIColor(named: "cardBorderLineGradient1") ?? Self.backgroundSecondary
+        }
+        static var cardBorderLineGradient2: UIColor {
+            return UIColor(named: "cardBorderLineGradient2") ?? Self.backgroundSecondary
+        }
+        static var cardBorderLineGradient3: UIColor {
+            return UIColor(named: "cardBorderLineGradient3") ?? Self.backgroundSecondary
+        }
+
         static var gameHeader: UIColor {
             return UIColor(named: "gameHeader") ?? Self.backgroundSecondary
         }

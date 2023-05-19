@@ -794,6 +794,13 @@
 		4571190B294B9A27000395F0 /* BetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45711906294B9A27000395F0 /* BetType.swift */; };
 		4571190C294B9A27000395F0 /* BetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45711906294B9A27000395F0 /* BetType.swift */; };
 		45761A032844E85900A40826 /* PreviewChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D247C281AD374003EEDEC /* PreviewChatTableViewCell.swift */; };
+		457C9F272A17D72000022C53 /* GradientBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457C9F262A17D72000022C53 /* GradientBorderView.swift */; };
+		457C9F282A17D72000022C53 /* GradientBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457C9F262A17D72000022C53 /* GradientBorderView.swift */; };
+		457C9F292A17D72000022C53 /* GradientBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457C9F262A17D72000022C53 /* GradientBorderView.swift */; };
+		457C9F2A2A17D72000022C53 /* GradientBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457C9F262A17D72000022C53 /* GradientBorderView.swift */; };
+		457C9F2B2A17D72000022C53 /* GradientBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457C9F262A17D72000022C53 /* GradientBorderView.swift */; };
+		457C9F2C2A17D72000022C53 /* GradientBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457C9F262A17D72000022C53 /* GradientBorderView.swift */; };
+		457C9F2D2A17D72000022C53 /* GradientBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457C9F262A17D72000022C53 /* GradientBorderView.swift */; };
 		457CB9E6282D27D000ED0F00 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C193279991A100151462 /* SearchViewController.swift */; };
 		457CB9E7282D27D000ED0F00 /* BetslipHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F4971273804810047169D /* BetslipHistory.swift */; };
 		457CB9E8282D27D000ED0F00 /* AppSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D9CBE0270F3C8400B8C321 /* AppSession.swift */; };
@@ -5444,6 +5451,7 @@
 		457BD61027BADEB100E5612E /* TestsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestsViewController.swift; sourceTree = "<group>"; };
 		457BD61127BADEB200E5612E /* TestsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestsViewController.xib; sourceTree = "<group>"; };
 		457BD61627BBAF6100E5612E /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
+		457C9F262A17D72000022C53 /* GradientBorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientBorderView.swift; sourceTree = "<group>"; };
 		457CBC4E282D27D000ED0F00 /* EveryMatrix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EveryMatrix.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		457CBC57282D291200ED0F00 /* EveryMatrix-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "EveryMatrix-Info.plist"; sourceTree = "<group>"; };
 		457CBC58282D291200ED0F00 /* EveryMatrix.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = EveryMatrix.entitlements; sourceTree = "<group>"; };
@@ -7006,6 +7014,14 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		457C9F2E2A17D72500022C53 /* GradientBorderView */ = {
+			isa = PBXGroup;
+			children = (
+				457C9F262A17D72000022C53 /* GradientBorderView.swift */,
+			);
+			path = GradientBorderView;
+			sourceTree = "<group>";
+		};
 		457CBC50282D291200ED0F00 /* EveryMatrix */ = {
 			isa = PBXGroup;
 			children = (
@@ -7297,6 +7313,7 @@
 				457BD61627BBAF6100E5612E /* ContainerViewController.swift */,
 				A99F7A1527D256D0008BAF41 /* ActionTextFieldView.swift */,
 				454F73B4299152C100437460 /* GradientView.swift */,
+				457C9F2E2A17D72500022C53 /* GradientBorderView */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -10976,6 +10993,7 @@
 				450B792B28F58574009229E3 /* CGFloat+Shift.swift in Sources */,
 				450B792C28F58574009229E3 /* DebugTableViewDescription.swift in Sources */,
 				450B792D28F58574009229E3 /* SimpleRegisterEmailSentViewController.swift in Sources */,
+				457C9F282A17D72000022C53 /* GradientBorderView.swift in Sources */,
 				450B792E28F58574009229E3 /* CompetitionsDataSource.swift in Sources */,
 				450B792F28F58574009229E3 /* TipsSliderViewModel.swift in Sources */,
 				A9D5BB82290A9CEC001B0E13 /* EmailVerificationCodeViewController.swift in Sources */,
@@ -11675,6 +11693,7 @@
 				45C10F5028772DA700037BBE /* ModalTransitionPresenting.swift in Sources */,
 				A986D36128CF4C5C00AF95D7 /* InviteContactTableViewCell.swift in Sources */,
 				45C10F2C28772DA700037BBE /* Animations.swift in Sources */,
+				457C9F2C2A17D72000022C53 /* GradientBorderView.swift in Sources */,
 				457CBAA7282D27D000ED0F00 /* UIViewController+SwiftUI.swift in Sources */,
 				A9FB6D4528C61D2100E3FE58 /* TipsRootViewController.swift in Sources */,
 				457CBAA8282D27D000ED0F00 /* BonusDetailViewModel.swift in Sources */,
@@ -12436,6 +12455,7 @@
 				A9C1C0A42874404C00E9D6AC /* ShareTicketFriendGroupViewController.swift in Sources */,
 				457CBDD4282D2CD100ED0F00 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				4568B9722858E45F00FA99B3 /* FlipNumberView.swift in Sources */,
+				457C9F2D2A17D72000022C53 /* GradientBorderView.swift in Sources */,
 				457CBDD5282D2CD100ED0F00 /* TabularBarDataSource.swift in Sources */,
 				457CBDD6282D2CD100ED0F00 /* SportSectionHeaderView.swift in Sources */,
 				457CBDD7282D2CD100ED0F00 /* MyTicketBetLineViewModel.swift in Sources */,
@@ -12854,6 +12874,7 @@
 				4589C82B282024E400243547 /* DebugTableViewDescription.swift in Sources */,
 				4589C82C282024E400243547 /* SimpleRegisterEmailSentViewController.swift in Sources */,
 				4589C82D282024E400243547 /* CompetitionsDataSource.swift in Sources */,
+				457C9F292A17D72000022C53 /* GradientBorderView.swift in Sources */,
 				A9DF8E3628E45D2E0083BF56 /* TipsSliderViewModel.swift in Sources */,
 				4589C82F282024E400243547 /* GamesNotificationViewController.swift in Sources */,
 				A9D5BB81290A9CEC001B0E13 /* EmailVerificationCodeViewController.swift in Sources */,
@@ -13451,6 +13472,7 @@
 				45A33141298976BA008181E9 /* CGFloat+Shift.swift in Sources */,
 				45A33142298976BA008181E9 /* DebugTableViewDescription.swift in Sources */,
 				45A33143298976BA008181E9 /* SimpleRegisterEmailSentViewController.swift in Sources */,
+				457C9F272A17D72000022C53 /* GradientBorderView.swift in Sources */,
 				45A33144298976BA008181E9 /* CompetitionsDataSource.swift in Sources */,
 				45A33145298976BA008181E9 /* TipsSliderViewModel.swift in Sources */,
 				45A33147298976BA008181E9 /* EmailVerificationCodeViewController.swift in Sources */,
@@ -13818,6 +13840,7 @@
 				45A6BBC028246A7400D9B416 /* BetslipHistory.swift in Sources */,
 				45B6E221283FCFDC001B570C /* ReceivedTicketMessageTableViewCell.swift in Sources */,
 				45A6BBC128246A7400D9B416 /* AppSession.swift in Sources */,
+				457C9F2B2A17D72000022C53 /* GradientBorderView.swift in Sources */,
 				45A6BBC228246A7400D9B416 /* HeaderDropDownSelectionView.swift in Sources */,
 				A90C373429C38DAD007B8AEC /* GrantedBonus.swift in Sources */,
 				A9A7B52A29DDBED900FB22A8 /* BonusTypeMapper.swift in Sources */,
@@ -14530,6 +14553,7 @@
 				A9C3411028F9A74A0055360B /* MultiSlider+Internal.swift in Sources */,
 				A9C3411128F9A74A0055360B /* SupportTicketResponse.swift in Sources */,
 				A9C3411228F9A74A0055360B /* Cashout.swift in Sources */,
+				457C9F2A2A17D72000022C53 /* GradientBorderView.swift in Sources */,
 				A9C3411428F9A74A0055360B /* SuggestedBetViewModel.swift in Sources */,
 				A9C3411628F9A74A0055360B /* Authenticator.swift in Sources */,
 				A91A05BB29CB534B00E0A772 /* CloseAccountViewController.swift in Sources */,
@@ -15447,7 +15471,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1131;
+				CURRENT_PROJECT_VERSION = 1135;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -15473,7 +15497,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Betsson/Misc/Betsson.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1131;
+				CURRENT_PROJECT_VERSION = 1135;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/Betsson/Misc/Betsson-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
