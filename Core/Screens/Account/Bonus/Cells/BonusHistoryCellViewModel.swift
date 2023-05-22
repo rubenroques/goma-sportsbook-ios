@@ -17,6 +17,8 @@ class BonusHistoryCellViewModel: NSObject {
     var bonusStatusPublisher: CurrentValueSubject<String, Never> = .init("")
     var bonusValuePublisher: CurrentValueSubject<String, Never> = .init("")
 
+    var bonusType: BonusTypeMapper?
+
     // MARK: Lifetime and Cycle
     init(bonus: GrantedBonus) {
         super.init()
@@ -35,7 +37,10 @@ class BonusHistoryCellViewModel: NSObject {
 
         self.bonusValuePublisher.value = "\(bonus.amount ?? 0.0)"
 
-        self.bonusStatusPublisher.value = BonusTypeMapper.init(bonusType: bonus.status)?.bonusName ?? bonus.status.capitalized
+        self.bonusType = BonusTypeMapper.init(bonusType: bonus.status)
+
+        self.bonusStatusPublisher.value = self.bonusType?.bonusName ?? bonus.status.capitalized
+
 
     }
 

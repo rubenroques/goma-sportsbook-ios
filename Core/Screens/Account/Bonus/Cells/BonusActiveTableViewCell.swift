@@ -266,6 +266,7 @@ extension BonusActiveTableViewCell {
         label.numberOfLines = 0
         label.font = AppFont.with(type: .bold, size: 16)
         label.textAlignment = .left
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return label
     }
 
@@ -337,6 +338,7 @@ extension BonusActiveTableViewCell {
         label.text = "Status"
         label.textAlignment = .center
         label.font = AppFont.with(type: .bold, size: 11)
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return label
     }
 

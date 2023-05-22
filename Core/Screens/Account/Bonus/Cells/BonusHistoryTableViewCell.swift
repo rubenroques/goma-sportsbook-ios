@@ -108,18 +108,18 @@ class BonusHistoryTableViewCell: UITableViewCell {
             .sink(receiveValue: { [weak self] bonusStatus in
                 self?.bonusStatusLabel.text = bonusStatus
 
-                if bonusStatus.lowercased() == "expired" {
+                switch viewModel.bonusType {
+                case .expired:
                     self?.bonusStatusView.backgroundColor = UIColor.App.alertWarning
                     self?.bonusStatusIconImageView.image = UIImage(named: "bell_expired_icon")
-                }
-                else if bonusStatus.lowercased() == "cancelled" {
+                case .cancelled:
                     self?.bonusStatusView.backgroundColor = UIColor.App.alertError
                     self?.bonusStatusIconImageView.image = UIImage(named: "x_circle_icon")
-                }
-                else {
+                default:
                     self?.bonusStatusView.backgroundColor = UIColor.App.iconSecondary
                     self?.bonusStatusIconImageView.image = UIImage(named: "prohibit_icon")
                 }
+
             })
             .store(in: &cancellables)
     }
@@ -208,6 +208,7 @@ extension BonusHistoryTableViewCell {
         label.text = "Status"
         label.textAlignment = .center
         label.font = AppFont.with(type: .bold, size: 11)
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return label
     }
 
@@ -308,7 +309,7 @@ extension BonusHistoryTableViewCell {
 
         // Bonus status
         NSLayoutConstraint.activate([
-            self.bonusStatusView.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 8),
+            self.bonusStatusView.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 2),
             self.bonusStatusView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: 2),
             self.bonusStatusView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 11),
 //            self.bonusStatusView.widthAnchor.constraint(greaterThanOrEqualToConstant: 80),

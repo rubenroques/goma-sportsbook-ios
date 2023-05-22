@@ -49,6 +49,8 @@ class MyTicketBetLineView: NibView {
     
     private var homeResultSubscription: AnyCancellable?
     private var awayResultSubscription: AnyCancellable?
+
+    private var cancellables = Set<AnyCancellable>()
     
     convenience init(betHistoryEntrySelection: BetHistoryEntrySelection, countryCode: String, viewModel: MyTicketBetLineViewModel) {
         self.init(frame: .zero, betHistoryEntrySelection: betHistoryEntrySelection, countryCode: countryCode, viewModel: viewModel)
@@ -62,6 +64,8 @@ class MyTicketBetLineView: NibView {
         super.init(frame: frame)
 
         self.commonInit()
+
+        self.getMatchLiveDetails()
     }
 
     @available(iOS, unavailable)
@@ -190,9 +194,16 @@ class MyTicketBetLineView: NibView {
             let baseViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBaseView))
             baseView.addGestureRecognizer(baseViewTapGesture)
         }
-              
-        self.homeTeamScoreLabel.text = self.betHistoryEntrySelection.homeParticipantScore ?? "-"
-        self.awayTeamScoreLabel.text = self.betHistoryEntrySelection.awayParticipantScore ?? "-"
+
+        if self.betHistoryEntrySelection.homeParticipantName != nil {
+
+            self.homeTeamScoreLabel.text = self.betHistoryEntrySelection.homeParticipantScore ?? "-"
+        }
+
+        if self.betHistoryEntrySelection.awayParticipantName != nil {
+            
+            self.awayTeamScoreLabel.text = self.betHistoryEntrySelection.awayParticipantScore ?? "-"
+        }
 
         if (self.homeTeamNameLabel.text?.isEmpty ?? true) && (self.awayTeamNameLabel.text?.isEmpty ?? true) {
             self.homeTeamNameLabel.isHidden = true
@@ -282,6 +293,43 @@ class MyTicketBetLineView: NibView {
             self.indicatorLabel.text = ""
             self.indicatorBaseView.isHidden = false
         }
+    }
+
+    func getMatchLiveDetails() {
+
+        if let eventId = self.betHistoryEntrySelection.eventId {
+
+            Env.servicesProvider.subscribeToEventLiveDataUpdates(withId: eventId)
+                .compactMap({ $0 })
+                .map(ServiceProviderModelMapper.match(fromEvent:))
+                .sink(receiveCompletion: { completion in
+                    print("matchSubscriber subscribeToEventLiveDataUpdates completion: \(completion)")
+                }, receiveValue: { [weak self] updatedMatch in
+                    switch updatedMatch.status {
+                    case .notStarted, .ended, .unknown:
+//                        self?.matchModePublisher.send(.preLive)
+                        self?.liveIconImage.isHidden = true
+                        self?.dateLabel.isHidden = false
+
+                    case .inProgress:
+//                        self?.matchModePublisher.send(.live)
+                        self?.liveIconImage.isHidden = false
+                        self?.dateLabel.isHidden = true
+
+                        if let homeScore = updatedMatch.homeParticipantScore {
+                            self?.homeTeamScoreLabel.text = "\(homeScore)"
+                        }
+
+                        if let awayScore = updatedMatch.awayParticipantScore {
+                            self?.awayTeamScoreLabel.text = "\(awayScore)"
+                        }
+                    }
+
+//                    self?.matchPublisher.send(.loaded(updatedMatch))
+                })
+                .store(in: &self.cancellables)
+        }
+
     }
     
     @IBAction private func didTapBaseView() {

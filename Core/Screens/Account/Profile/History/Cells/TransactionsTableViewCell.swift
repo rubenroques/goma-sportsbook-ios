@@ -303,6 +303,7 @@ extension TransactionsTableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .medium, size: 11)
         label.text = "\(localized("bet_id")):"
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return label
     }
 
@@ -312,6 +313,7 @@ extension TransactionsTableViewCell {
         label.font = AppFont.with(type: .medium, size: 11)
         label.text = "123456"
         label.textAlignment = .left
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return label
     }
 

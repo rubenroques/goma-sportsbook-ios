@@ -17,11 +17,13 @@ class DepositViewController: UIViewController {
 
     @IBOutlet private var topView: UIView!
     @IBOutlet private var containerView: UIView!
-    @IBOutlet private var navigationView: UIView!
+    @IBOutlet private var navigationView: GradientView!
     @IBOutlet private var navigationLabel: UILabel!
     @IBOutlet private var navigationButton: UIButton!
 
+    @IBOutlet private var backgroundGradientView: GradientView!
     @IBOutlet private var animationBaseView: UIView!
+    @IBOutlet private var shapeView: UIView!
 
     @IBOutlet private var bonusContentView: UIView!
     @IBOutlet private var bonusIconImageView: UIImageView!
@@ -131,6 +133,28 @@ class DepositViewController: UIViewController {
         self.bonusContentView.setNeedsLayout()
         self.bonusContentView.layoutIfNeeded()
 
+        self.navigationView.startPoint = CGPoint(x: 0.0, y: 0.0)
+        self.navigationView.endPoint = CGPoint(x: 2.0, y: 0.0)
+
+        self.backgroundGradientView.startPoint = CGPoint(x: 0.0, y: 0.0)
+        self.backgroundGradientView.endPoint = CGPoint(x: 2.0, y: 0.0)
+
+        let path = UIBezierPath()
+        path.move(to: CGPoint(x: 0.0, y: self.shapeView.frame.size.height))
+        path.addCurve(to: CGPoint(x: self.shapeView.frame.size.width, y: self.shapeView.frame.size.height),
+                      controlPoint1: CGPoint(x: self.shapeView.frame.size.width*0.40, y: 0),
+                      controlPoint2: CGPoint(x:self.shapeView.frame.size.width*0.60, y: 20))
+        path.addLine(to: CGPoint(x: self.shapeView.frame.size.width, y: self.shapeView.frame.size.height))
+        path.addLine(to: CGPoint(x: 0.0, y: self.shapeView.frame.size.height))
+        path.close()
+
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = path.cgPath
+        shapeLayer.fillColor = UIColor.App.backgroundPrimary.cgColor
+
+        self.shapeView.layer.mask = shapeLayer
+        self.shapeView.layer.masksToBounds = true
+
     }
 
     func commonInit() {
@@ -239,14 +263,21 @@ class DepositViewController: UIViewController {
 
         self.containerView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.navigationView.backgroundColor = .clear
+        //self.navigationView.backgroundColor = .clear
+        self.navigationView.colors = [(UIColor(red: 1.0 / 255.0, green: 2.0 / 255.0, blue: 91.0 / 255.0, alpha: 1), NSNumber(0.0)),
+                                              (UIColor(red: 64.0 / 255.0, green: 76.0 / 255.0, blue: 255.0 / 255.0, alpha: 1), NSNumber(1.0))]
 
         self.navigationLabel.textColor = UIColor.App.textPrimary
 
         self.navigationButton.backgroundColor = .clear
         self.navigationButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
+        self.backgroundGradientView.colors = [(UIColor(red: 1.0 / 255.0, green: 2.0 / 255.0, blue: 91.0 / 255.0, alpha: 1), NSNumber(0.0)),
+                                              (UIColor(red: 64.0 / 255.0, green: 76.0 / 255.0, blue: 255.0 / 255.0, alpha: 1), NSNumber(1.0))]
+
         self.animationBaseView.backgroundColor = .clear
+
+        self.shapeView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.bonusContentView.backgroundColor = UIColor.App.backgroundSecondary
 
