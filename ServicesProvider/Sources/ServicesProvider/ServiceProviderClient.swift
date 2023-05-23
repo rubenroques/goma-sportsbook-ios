@@ -940,6 +940,16 @@ extension ServicesProviderClient {
         return privilegedAccessManager.cancelBonus(bonusId: bonusId)
     }
 
+    public func optOutBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.optOutBonus(partyId: partyId, code: code)
+    }
+
     public func contactUs(firstName: String, lastName: String, email: String, subject: String, message: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager

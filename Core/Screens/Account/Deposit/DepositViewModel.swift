@@ -32,7 +32,7 @@ class DepositViewModel: NSObject {
 
     var availableBonuses: CurrentValueSubject<[AvailableBonus], Never> = .init([])
 
-    var isBonusAccepted: Bool = false
+    var bonusState: BonusState = .notNow
 
     // MARK: Lifetime and Cycle
     override init() {
@@ -80,9 +80,14 @@ class DepositViewModel: NSObject {
 
     func getDepositInfo(amountText: String) {
 
-        if self.isBonusAccepted {
+        if self.bonusState == .accepted {
             if let bonusId = self.availableBonuses.value.first?.id {
                 self.redeemBonus(bonusId: bonusId)
+            }
+        }
+        else if self.bonusState == .declined {
+            if let bonusPlanId = self.availableBonuses.value.first?.bonusPlanId {
+                self.optOutBonus(bonusId: "\(bonusPlanId)")
             }
         }
 
@@ -142,6 +147,40 @@ class DepositViewModel: NSObject {
                 }, receiveValue: { [weak self] redeemAvailableBonusResponse in
 
                     print("REDEEM CODE SUCCESS: \(redeemAvailableBonusResponse)")
+
+                })
+                .store(in: &cancellables)
+        }
+    }
+
+    private func optOutBonus(bonusId: String) {
+
+        if let partyId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
+
+            Env.servicesProvider.optOutBonus(partyId: partyId, code: bonusId)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+
+                    switch completion {
+                    case .finished:
+                        ()
+                    case .failure(let error):
+                        print("OPTOUT BONUS ERROR: \(error)")
+                        switch error {
+                        case .errorMessage(let message):
+                            if message == "BONUSPLAN_NOT_FOUND" {
+                                print("OPTOUT BONUS ERROR: \(message)")
+                            }
+                            else {
+                                print("OPTOUT BONUS ERROR: \(message)")
+                            }
+                        default:
+                            ()
+                        }
+                    }
+                }, receiveValue: { [weak self] optOutBonusResponse in
+
+                    print("OPTOUT BONUS SUCCESS: \(optOutBonusResponse)")
 
                 })
                 .store(in: &cancellables)

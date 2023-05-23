@@ -434,9 +434,14 @@ class LoginViewController: UIViewController {
 
         depositOnRegisterViewController.didTapDepositButtonAction = { [weak self] amount in
 
-            if depositOnRegisterViewController.isBonusAccepted {
+            if depositOnRegisterViewController.bonusState == .accepted {
                 if let bonusId = depositOnRegisterViewController.availableBonuses.value.first?.id {
                     self?.redeemBonus(bonusId: bonusId)
+                }
+            }
+            else if depositOnRegisterViewController.bonusState == .declined {
+                if let bonusId = depositOnRegisterViewController.availableBonuses.value.first?.id {
+                    self?.optOutBonus(bonusId: bonusId)
                 }
             }
 
@@ -514,6 +519,40 @@ class LoginViewController: UIViewController {
                 }, receiveValue: { [weak self] redeemAvailableBonusResponse in
 
                     print("REDEEM CODE SUCCESS: \(redeemAvailableBonusResponse)")
+
+                })
+                .store(in: &cancellables)
+        }
+    }
+
+    private func optOutBonus(bonusId: String) {
+
+        if let partyId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
+
+            Env.servicesProvider.optOutBonus(partyId: partyId, code: bonusId)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+
+                    switch completion {
+                    case .finished:
+                        ()
+                    case .failure(let error):
+                        print("OPTOUT BONUS ERROR: \(error)")
+                        switch error {
+                        case .errorMessage(let message):
+                            if message == "BONUSPLAN_NOT_FOUND" {
+                                print("OPTOUT BONUS ERROR: \(message)")
+                            }
+                            else {
+                                print("OPTOUT BONUS ERROR: \(message)")
+                            }
+                        default:
+                            ()
+                        }
+                    }
+                }, receiveValue: { [weak self] optOutBonusResponse in
+
+                    print("OPTOUT BONUS SUCCESS: \(optOutBonusResponse)")
 
                 })
                 .store(in: &cancellables)

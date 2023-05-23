@@ -76,6 +76,7 @@ protocol PrivilegedAccessManager {
     func getAvailableBonuses() -> AnyPublisher<[AvailableBonus], ServiceProviderError>
     func redeemAvailableBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
     func cancelBonus(bonusId: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
+    func optOutBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
 
     func contactUs(firstName: String, lastName: String, email: String, subject: String, message: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
     func contactSupport(userIdentifier: String, subject: String, message: String) -> AnyPublisher<SupportResponse, ServiceProviderError>

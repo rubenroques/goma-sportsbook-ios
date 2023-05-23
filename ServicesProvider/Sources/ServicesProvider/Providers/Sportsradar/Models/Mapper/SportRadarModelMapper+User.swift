@@ -423,6 +423,7 @@ extension SportRadarModelMapper {
     static func availableBonus(fromInternAlavailableBonus internalAvailableBonus: SportRadarModels.AvailableBonus) -> AvailableBonus {
 
         return AvailableBonus(id: internalAvailableBonus.id,
+                              bonusPlanId: internalAvailableBonus.bonusPlanId,
                               name: internalAvailableBonus.name,
                               description: internalAvailableBonus.description,
                               type: internalAvailableBonus.type,

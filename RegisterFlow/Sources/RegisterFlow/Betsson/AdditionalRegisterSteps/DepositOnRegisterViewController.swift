@@ -27,7 +27,7 @@ public class DepositOnRegisterViewController: UIViewController {
 
     public var availableBonuses: CurrentValueSubject<[AvailableBonus], Never> = .init([])
 
-    public var isBonusAccepted: Bool = false
+    public var bonusState: BonusState = .notNow
 
     private lazy var headerBaseView: GradientView = Self.createHeaderBaseView()
     private lazy var backButton: UIButton = Self.createBackButton()
@@ -62,6 +62,8 @@ public class DepositOnRegisterViewController: UIViewController {
     private lazy var bonusDetailLabel: UILabel = Self.createBonusDetailLabel()
     private lazy var acceptBonusView: OptionRadioView = Self.createAcceptBonusView()
     private lazy var declineBonusView: OptionRadioView = Self.createDeclineBonusView()
+    private lazy var notNowBonusView: OptionRadioView = Self.createNotNowBonusView()
+
 
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
@@ -179,9 +181,9 @@ public class DepositOnRegisterViewController: UIViewController {
 
                 self?.bonusInfoLabel.text = Localization.localized("bonus_deposit_name").replacingOccurrences(of: "{bonusName}", with: availableBonuses.first?.name ?? "")
 
-                self?.acceptBonusView.isChecked = true
+                self?.notNowBonusView.isChecked = true
 
-                self?.isBonusAccepted = true
+                self?.bonusState = .notNow
             })
             .store(in: &cancellables)
 
@@ -197,7 +199,8 @@ public class DepositOnRegisterViewController: UIViewController {
 
             if isChecked {
                 self?.declineBonusView.isChecked = false
-                self?.isBonusAccepted = true
+                self?.notNowBonusView.isChecked = false
+                self?.bonusState = .accepted
             }
         }
 
@@ -207,7 +210,19 @@ public class DepositOnRegisterViewController: UIViewController {
 
             if isChecked {
                 self?.acceptBonusView.isChecked = false
-                self?.isBonusAccepted = false
+                self?.notNowBonusView.isChecked = false
+                self?.bonusState = .declined
+            }
+        }
+
+        self.notNowBonusView.setTitle(title: Localization.localized("not_now"))
+
+        self.notNowBonusView.didTapView = { [weak self] isChecked in
+
+            if isChecked {
+                self?.acceptBonusView.isChecked = false
+                self?.declineBonusView.isChecked = false
+                self?.bonusState = .notNow
             }
         }
     }
@@ -299,6 +314,8 @@ public class DepositOnRegisterViewController: UIViewController {
 
         self.declineBonusView.backgroundColor = .clear
 
+        self.notNowBonusView.backgroundColor = .clear
+
     }
 
     @objc func didTapBackButton() {
@@ -313,10 +330,17 @@ public class DepositOnRegisterViewController: UIViewController {
 
         let amount = self.depositHeaderTextFieldView.text
 
-        if declineBonusView.isChecked {
+//        if declineBonusView.isChecked {
+//            self.showBonusAlert(bonusAmount: amount)
+//        }
+//        else if acceptBonusView.isChecked {
+//            self.didTapDepositButtonAction(amount)
+//        }
+
+        if self.bonusState == .declined {
             self.showBonusAlert(bonusAmount: amount)
         }
-        else if acceptBonusView.isChecked {
+        else {
             self.didTapDepositButtonAction(amount)
         }
 
@@ -598,6 +622,12 @@ public extension DepositOnRegisterViewController {
         return view
     }
 
+    private static func createNotNowBonusView() -> OptionRadioView {
+        let view = OptionRadioView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
     private static func createLoadingBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -674,6 +704,7 @@ public extension DepositOnRegisterViewController {
         self.bonusBaseView.addSubview(self.bonusInfoLabel)
         self.bonusBaseView.addSubview(self.bonusDetailLabel)
         self.bonusBaseView.addSubview(self.acceptBonusView)
+        self.bonusBaseView.addSubview(self.notNowBonusView)
         self.bonusBaseView.addSubview(self.declineBonusView)
 
         self.view.addSubview(self.loadingBaseView)
@@ -796,8 +827,11 @@ public extension DepositOnRegisterViewController {
             self.acceptBonusView.topAnchor.constraint(equalTo: self.bonusDetailLabel.bottomAnchor, constant: 15),
             self.acceptBonusView.bottomAnchor.constraint(equalTo: self.bonusBaseView.bottomAnchor, constant: -14),
 
-            self.declineBonusView.leadingAnchor.constraint(equalTo: self.acceptBonusView.trailingAnchor, constant: 25),
-            self.declineBonusView.centerYAnchor.constraint(equalTo: self.acceptBonusView.centerYAnchor)
+            self.notNowBonusView.leadingAnchor.constraint(equalTo: self.acceptBonusView.trailingAnchor, constant: 25),
+            self.notNowBonusView.centerYAnchor.constraint(equalTo: self.acceptBonusView.centerYAnchor),
+
+            self.declineBonusView.leadingAnchor.constraint(equalTo: self.notNowBonusView.trailingAnchor, constant: 25),
+            self.declineBonusView.centerYAnchor.constraint(equalTo: self.notNowBonusView.centerYAnchor)
         ])
 
         // Loading Screen

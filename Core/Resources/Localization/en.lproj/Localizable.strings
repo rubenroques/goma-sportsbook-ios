@@ -585,7 +585,7 @@
 "not_bets_tickets_section_yet" = "You don’t have any selections yet.";
 "not_excluded" = "Not Excluded";
 "not_logged_in" = "You aren’t logged in!";
-"not_now" = "Not right now"; // UNUSED
+"not_now" = "Not Now";
 "not_received" = "Not received"; // UNUSED
 "notifications" = "Notifications";
 "notify_bets_final_result" = "Notify me about my Bets final results";
@@ -1293,7 +1293,7 @@
 "bonus_deposit_name" = "Deposit bonus: {bonusName}";
 
 "bonus_dialog_title" = "Are you sure you don't want the bonus?";
-"bonus_dialog_message" = "By accepting you will not receive the following bonus: {bonusName}";
+"bonus_dialog_message" = "By accepting you will not receive the following bonus: {bonusName}. This bonus will be lost and you won't be able to redeem it later.";
 
 "first_deposit_success_message" = "Your first deposit was successful!";
 

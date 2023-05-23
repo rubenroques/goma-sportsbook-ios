@@ -137,6 +137,7 @@ enum OmegaAPIClient {
     case getAvailableBonuses
     case redeemAvailableBonuses(partyId: String, bonusId: String)
     case cancelBonus(bonusId: String)
+    case optOutBonus(partyId: String, bonusId: String)
 
     case contactUs(firstName: String, lastName: String, email: String, subject: String, message: String)
 
@@ -242,6 +243,8 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/optInBonus"
         case .cancelBonus:
             return "/ps/ips/cancelBonus"
+        case .optOutBonus:
+            return "/ps/ips/optOutBonus"
 
         case .contactUs:
             return "/ps/ips/contactus"
@@ -624,6 +627,12 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "bonusId", value: bonusId)
             ]
 
+        case .optOutBonus(let partyId, let bonusId):
+            return [
+                URLQueryItem(name: "partyId", value: partyId),
+                URLQueryItem(name: "bonusId", value: bonusId),
+            ]
+
         case .contactUs(let firstName, let lastName, let email, let subject, let message):
             return [
                 URLQueryItem(name: "firstName", value: firstName),
@@ -714,6 +723,7 @@ extension OmegaAPIClient: Endpoint {
         case .getAvailableBonuses: return .get
         case .redeemAvailableBonuses: return .post
         case .cancelBonus: return .post
+        case .optOutBonus: return .post
         case .contactUs: return .get
         case .contactSupport: return .post
 
@@ -817,6 +827,7 @@ extension OmegaAPIClient: Endpoint {
         case .getAvailableBonuses: return true
         case .redeemAvailableBonuses: return true
         case .cancelBonus: return true
+        case .optOutBonus: return true
             
         case .contactUs: return false
         case .contactSupport: return false

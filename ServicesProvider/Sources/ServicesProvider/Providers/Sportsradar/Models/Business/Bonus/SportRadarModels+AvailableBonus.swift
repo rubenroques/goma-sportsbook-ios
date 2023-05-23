@@ -11,6 +11,7 @@ extension SportRadarModels {
 
     struct AvailableBonus: Codable {
         var id: String
+        var bonusPlanId: Int
         var name: String
         var description: String?
         var type: String
@@ -22,6 +23,7 @@ extension SportRadarModels {
 
         enum CodingKeys: String, CodingKey {
             case id = "optInId"
+            case bonusPlanId = "bonusPlanId"
             case name = "bonusPlanName"
             case description = "description"
             case type = "bonusPlanType"

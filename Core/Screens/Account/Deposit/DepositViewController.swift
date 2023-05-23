@@ -24,6 +24,7 @@ class DepositViewController: UIViewController {
     @IBOutlet private var backgroundGradientView: GradientView!
     @IBOutlet private var animationBaseView: UIView!
     @IBOutlet private var shapeView: UIView!
+    @IBOutlet private var titleLabel: UILabel!
 
     @IBOutlet private var bonusContentView: UIView!
     @IBOutlet private var bonusIconImageView: UIImageView!
@@ -32,6 +33,7 @@ class DepositViewController: UIViewController {
     @IBOutlet private var bonusDetailLabel: UILabel!
     @IBOutlet private var acceptBonusView: OptionRadioView!
     @IBOutlet private var declineBonusView: OptionRadioView!
+    @IBOutlet private var notNowBonusView: OptionRadioView!
 
     @IBOutlet private var depositHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var amountButtonStackView: UIStackView!
@@ -220,6 +222,8 @@ class DepositViewController: UIViewController {
 
         animationView.play()
 
+        self.titleLabel.text = localized("how_much_deposit")
+
         self.bonusIconImageView.image = UIImage(named: "bonus_sparkle_icon")
         self.bonusIconImageView.contentMode = .scaleAspectFit
 
@@ -233,7 +237,8 @@ class DepositViewController: UIViewController {
 
             if isChecked {
                 self?.declineBonusView.isChecked = false
-                self?.viewModel.isBonusAccepted = true
+                self?.notNowBonusView.isChecked = false
+                self?.viewModel.bonusState = .accepted
             }
         }
 
@@ -243,7 +248,19 @@ class DepositViewController: UIViewController {
 
             if isChecked {
                 self?.acceptBonusView.isChecked = false
-                self?.viewModel.isBonusAccepted = false
+                self?.notNowBonusView.isChecked = false
+                self?.viewModel.bonusState = .declined
+            }
+        }
+
+        self.notNowBonusView.setTitle(title: localized("not_now"))
+
+        self.notNowBonusView.didTapView = { [weak self] isChecked in
+
+            if isChecked {
+                self?.acceptBonusView.isChecked = false
+                self?.declineBonusView.isChecked = false
+                self?.viewModel.bonusState = .notNow
             }
         }
 
@@ -263,7 +280,6 @@ class DepositViewController: UIViewController {
 
         self.containerView.backgroundColor = UIColor.App.backgroundPrimary
 
-        //self.navigationView.backgroundColor = .clear
         self.navigationView.colors = [(UIColor(red: 1.0 / 255.0, green: 2.0 / 255.0, blue: 91.0 / 255.0, alpha: 1), NSNumber(0.0)),
                                               (UIColor(red: 64.0 / 255.0, green: 76.0 / 255.0, blue: 255.0 / 255.0, alpha: 1), NSNumber(1.0))]
 
@@ -278,6 +294,8 @@ class DepositViewController: UIViewController {
         self.animationBaseView.backgroundColor = .clear
 
         self.shapeView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.titleLabel.textColor = UIColor.App.buttonTextPrimary
 
         self.bonusContentView.backgroundColor = UIColor.App.backgroundSecondary
 
@@ -376,9 +394,9 @@ class DepositViewController: UIViewController {
 
                 self?.bonusInfoLabel.text = localized("bonus_deposit_name").replacingOccurrences(of: "{bonusName}", with: availableBonuses.first?.name ?? "")
 
-                self?.acceptBonusView.isChecked = true
+                self?.notNowBonusView.isChecked = true
 
-                self?.viewModel.isBonusAccepted = true
+                self?.viewModel.bonusState = .notNow
             })
             .store(in: &cancellables)
     }
@@ -767,10 +785,17 @@ class DepositViewController: UIViewController {
     @IBAction private func didTapNextButton() {
         let amountText = self.depositHeaderTextFieldView.text
 
-        if declineBonusView.isChecked {
+//        if declineBonusView.isChecked {
+//            self.showBonusAlert(bonusAmount: amountText)
+//        }
+//        else if acceptBonusView.isChecked {
+//            self.viewModel.getDepositInfo(amountText: amountText)
+//        }
+
+        if self.viewModel.bonusState == .declined {
             self.showBonusAlert(bonusAmount: amountText)
         }
-        else if acceptBonusView.isChecked {
+        else {
             self.viewModel.getDepositInfo(amountText: amountText)
         }
 

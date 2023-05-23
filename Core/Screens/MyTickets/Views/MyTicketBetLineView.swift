@@ -195,19 +195,15 @@ class MyTicketBetLineView: NibView {
             baseView.addGestureRecognizer(baseViewTapGesture)
         }
 
-        if self.betHistoryEntrySelection.homeParticipantName != nil {
+        self.homeTeamScoreLabel.text = self.betHistoryEntrySelection.homeParticipantScore ?? "-"
 
-            self.homeTeamScoreLabel.text = self.betHistoryEntrySelection.homeParticipantScore ?? "-"
-        }
-
-        if self.betHistoryEntrySelection.awayParticipantName != nil {
-            
-            self.awayTeamScoreLabel.text = self.betHistoryEntrySelection.awayParticipantScore ?? "-"
-        }
+        self.awayTeamScoreLabel.text = self.betHistoryEntrySelection.awayParticipantScore ?? "-"
 
         if (self.homeTeamNameLabel.text?.isEmpty ?? true) && (self.awayTeamNameLabel.text?.isEmpty ?? true) {
             self.homeTeamNameLabel.isHidden = true
             self.awayTeamNameLabel.isHidden = true
+            self.homeTeamScoreLabel.isHidden = true
+            self.awayTeamScoreLabel.isHidden = true
             self.baseViewHeightConstraint.constant = 100
         }
 

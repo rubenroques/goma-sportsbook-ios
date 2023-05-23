@@ -9,6 +9,7 @@ import Foundation
 
 public struct AvailableBonus: Codable {
     public var id: String
+    public var bonusPlanId: Int
     public var name: String
     public var description: String?
     public var type: String
@@ -20,6 +21,7 @@ public struct AvailableBonus: Codable {
 
     enum CodingKeys: String, CodingKey {
         case id = "optInId"
+        case bonusPlanId = "bonusPlanId"
         case name = "bonusPlanName"
         case description = "description"
         case type = "bonusPlanType"
