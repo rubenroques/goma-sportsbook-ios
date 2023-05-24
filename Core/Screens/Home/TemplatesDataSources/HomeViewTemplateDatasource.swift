@@ -31,7 +31,7 @@ protocol HomeViewTemplateDataSource {
     func favoriteMatch(forIndex index: Int) -> Match?
     func featuredTipLineViewModel() -> FeaturedTipLineViewModel?
     func suggestedBetLineViewModel() -> SuggestedBetLineViewModel?
-    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel
+    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel?
 
 }
 

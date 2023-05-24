@@ -498,7 +498,6 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
         }
         return UITableViewCell()
-
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

@@ -16,7 +16,7 @@ class HomeViewModel {
         case userFavorites
         case bannerLine
         case suggestedBets
-        case sport(Sport)
+        case sportGroup(Sport)
         case userProfile
         case featuredTips
         case footerBanner
@@ -27,7 +27,7 @@ class HomeViewModel {
             case .userFavorites: return "userFavorites"
             case .bannerLine: return "bannerLine"
             case .suggestedBets: return "suggestedBets"
-            case .sport(let sport): return "sport[\(sport)]"
+            case .sportGroup(let sport): return "sport[\(sport)]"
             case .userProfile: return "userProfile"
             case .featuredTips: return "featuredTips"
             case .footerBanner: return "footerBanner"
@@ -110,7 +110,7 @@ extension HomeViewModel {
         return self.homeViewTemplateDataSource.suggestedBetLineViewModel()
     }
 
-    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
+    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel? {
         return self.homeViewTemplateDataSource.matchStatsViewModel(forMatch: match)
     }
 

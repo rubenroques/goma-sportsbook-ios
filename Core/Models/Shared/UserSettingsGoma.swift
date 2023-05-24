@@ -349,6 +349,11 @@ enum HomeFeedContent: Decodable {
     case userMessageAlerts
     case sport(id: String, name: String, sections: [SportSectionFeedContent])
     case featuredTips
+
+    case promotionStoriesBar
+    case highlightedEvents
+    case swipeBetButton
+
     case unknown
 
     private enum CodingKeys: String, CodingKey {
@@ -399,6 +404,9 @@ enum SportSectionFeedContent: Decodable {
     case liveVideos(title: String, contents: [VideoItemFeedContent])
     case competitions(title: String)
     case competitionsVideos(title: String, contents: [VideoItemFeedContent])
+
+    case mixedEvents(title: String?)
+
     case unknown
 
     private enum CodingKeys: String, CodingKey {

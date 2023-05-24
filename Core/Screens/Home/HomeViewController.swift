@@ -409,7 +409,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             return cell
 
-        case .sport:
+        case .sportGroup:
             guard
                 let sportGroupViewModel = self.viewModel.sportGroupViewModel(forSection: indexPath.section),
                 let sportMatchLineViewModel = sportGroupViewModel.sportMatchLineViewModel(forIndex: indexPath.row)
@@ -548,7 +548,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return 420
         case .suggestedBets:
             return 336
-        case .sport:
+        case .sportGroup:
             guard
                 let sportGroupViewModel = self.viewModel.sportGroupViewModel(forSection: indexPath.section),
                 let sportMatchLineViewModel = sportGroupViewModel.sportMatchLineViewModel(forIndex: indexPath.row)
@@ -596,7 +596,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return 420
         case .suggestedBets:
             return 336
-        case .sport:
+        case .sportGroup:
             guard
                 let sportGroupViewModel = self.viewModel.sportGroupViewModel(forSection: indexPath.section),
                 let sportMatchLineViewModel = sportGroupViewModel.sportMatchLineViewModel(forIndex: indexPath.row)
@@ -749,7 +749,7 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
                 ()
             case .suggestedBets:
                 _ = self.viewModel.suggestedBetLineViewModel()
-            case .sport:
+            case .sportGroup:
                 _ = self.viewModel.sportGroupViewModel(forSection: indexPath.section)
             case .userProfile:
                 ()

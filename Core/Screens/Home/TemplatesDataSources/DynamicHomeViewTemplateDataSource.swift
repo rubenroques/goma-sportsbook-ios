@@ -316,7 +316,7 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return HomeViewModel.Content.suggestedBets
         case .sport(let id, let name, _):
             let sport = Sport(id: id, name: name.capitalized, alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0)
-            return HomeViewModel.Content.sport(sport)
+            return HomeViewModel.Content.sportGroup(sport)
         case .unknown:
             return nil
         }
@@ -389,7 +389,7 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         }
     }
 
-    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
+    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel? {
         if let viewModel = cachedMatchStatsViewModels[match.id] {
             return viewModel
         }

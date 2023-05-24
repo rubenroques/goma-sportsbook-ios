@@ -355,6 +355,7 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
                 return 0
             }
         }
+        
     }
 
     func title(forSection section: Int) -> String? {
@@ -439,7 +440,7 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 6: return HomeViewModel.Content.suggestedBets
         default:
             if let sportForSection = self.sportForSection(section) {
-                return HomeViewModel.Content.sport(sportForSection)
+                return HomeViewModel.Content.sportGroup(sportForSection)
             }
             else {
                 return nil
@@ -514,7 +515,7 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         }
     }
 
-    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
+    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel? {
         if let viewModel = cachedMatchStatsViewModels[match.id] {
             return viewModel
         }
