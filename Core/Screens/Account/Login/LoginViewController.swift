@@ -439,11 +439,6 @@ class LoginViewController: UIViewController {
                     self?.redeemBonus(bonusId: bonusId)
                 }
             }
-            else if depositOnRegisterViewController.bonusState == .declined {
-                if let bonusId = depositOnRegisterViewController.availableBonuses.value.first?.id {
-                    self?.cancelBonus(bonusId: bonusId)
-                }
-            }
 
             self?.paymentsDropIn?.getDepositInfo(amountText: amount)
         }
@@ -523,25 +518,6 @@ class LoginViewController: UIViewController {
                 })
                 .store(in: &cancellables)
         }
-    }
-
-    private func cancelBonus(bonusId: String) {
-
-        Env.servicesProvider.cancelBonus(bonusId: bonusId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    print("CANCEL BONUS ERROR: \(error)")
-                }
-            }, receiveValue: { [weak self] cancelBonusResponse in
-
-                print("CANCEL BONUS SUCCESS: \(cancelBonusResponse)")
-
-            })
-            .store(in: &cancellables)
     }
 
     private func deleteCachedRegistrationData() {

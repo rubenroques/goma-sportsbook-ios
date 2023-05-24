@@ -27,7 +27,7 @@ public class DepositOnRegisterViewController: UIViewController {
 
     public var availableBonuses: CurrentValueSubject<[AvailableBonus], Never> = .init([])
 
-    public var bonusState: BonusState = .notNow
+    public var bonusState: BonusState = .declined
 
     private lazy var headerBaseView: GradientView = Self.createHeaderBaseView()
     private lazy var backButton: UIButton = Self.createBackButton()
@@ -62,8 +62,6 @@ public class DepositOnRegisterViewController: UIViewController {
     private lazy var bonusDetailLabel: UILabel = Self.createBonusDetailLabel()
     private lazy var acceptBonusView: OptionRadioView = Self.createAcceptBonusView()
     private lazy var declineBonusView: OptionRadioView = Self.createDeclineBonusView()
-    private lazy var notNowBonusView: OptionRadioView = Self.createNotNowBonusView()
-
 
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
@@ -181,9 +179,9 @@ public class DepositOnRegisterViewController: UIViewController {
 
                 self?.bonusInfoLabel.text = Localization.localized("bonus_deposit_name").replacingOccurrences(of: "{bonusName}", with: availableBonuses.first?.name ?? "")
 
-                self?.notNowBonusView.isChecked = true
+                self?.declineBonusView.isChecked = true
 
-                self?.bonusState = .notNow
+                self?.bonusState = .declined
             })
             .store(in: &cancellables)
 
@@ -199,7 +197,6 @@ public class DepositOnRegisterViewController: UIViewController {
 
             if isChecked {
                 self?.declineBonusView.isChecked = false
-                self?.notNowBonusView.isChecked = false
                 self?.bonusState = .accepted
             }
         }
@@ -210,21 +207,10 @@ public class DepositOnRegisterViewController: UIViewController {
 
             if isChecked {
                 self?.acceptBonusView.isChecked = false
-                self?.notNowBonusView.isChecked = false
                 self?.bonusState = .declined
             }
         }
 
-        self.notNowBonusView.setTitle(title: Localization.localized("not_now"))
-
-        self.notNowBonusView.didTapView = { [weak self] isChecked in
-
-            if isChecked {
-                self?.acceptBonusView.isChecked = false
-                self?.declineBonusView.isChecked = false
-                self?.bonusState = .notNow
-            }
-        }
     }
 
     public override func viewWillAppear(_ animated: Bool) {
@@ -313,8 +299,6 @@ public class DepositOnRegisterViewController: UIViewController {
         self.acceptBonusView.backgroundColor = .clear
 
         self.declineBonusView.backgroundColor = .clear
-
-        self.notNowBonusView.backgroundColor = .clear
 
     }
 
@@ -704,7 +688,6 @@ public extension DepositOnRegisterViewController {
         self.bonusBaseView.addSubview(self.bonusInfoLabel)
         self.bonusBaseView.addSubview(self.bonusDetailLabel)
         self.bonusBaseView.addSubview(self.acceptBonusView)
-        self.bonusBaseView.addSubview(self.notNowBonusView)
         self.bonusBaseView.addSubview(self.declineBonusView)
 
         self.view.addSubview(self.loadingBaseView)
@@ -827,11 +810,8 @@ public extension DepositOnRegisterViewController {
             self.acceptBonusView.topAnchor.constraint(equalTo: self.bonusDetailLabel.bottomAnchor, constant: 15),
             self.acceptBonusView.bottomAnchor.constraint(equalTo: self.bonusBaseView.bottomAnchor, constant: -14),
 
-            self.notNowBonusView.leadingAnchor.constraint(equalTo: self.acceptBonusView.trailingAnchor, constant: 25),
-            self.notNowBonusView.centerYAnchor.constraint(equalTo: self.acceptBonusView.centerYAnchor),
-
-            self.declineBonusView.leadingAnchor.constraint(equalTo: self.notNowBonusView.trailingAnchor, constant: 25),
-            self.declineBonusView.centerYAnchor.constraint(equalTo: self.notNowBonusView.centerYAnchor)
+            self.declineBonusView.leadingAnchor.constraint(equalTo: self.acceptBonusView.trailingAnchor, constant: 25),
+            self.declineBonusView.centerYAnchor.constraint(equalTo: self.acceptBonusView.centerYAnchor)
         ])
 
         // Loading Screen

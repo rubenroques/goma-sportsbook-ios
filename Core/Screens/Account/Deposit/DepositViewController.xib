@@ -45,7 +45,6 @@
                 <outlet property="navigationLabel" destination="p3M-Lq-Kqx" id="xqO-os-cRN"/>
                 <outlet property="navigationView" destination="puZ-O4-0OE" id="arE-L6-DuI"/>
                 <outlet property="nextButton" destination="K8a-m3-CIw" id="7dg-1z-mIc"/>
-                <outlet property="notNowBonusView" destination="57h-wi-KEV" id="9J4-KS-qIw"/>
                 <outlet property="paymentsLabel" destination="Ngw-aR-kDb" id="nSd-dS-Fmq"/>
                 <outlet property="paymentsLogosStackView" destination="KIw-0Y-J3N" id="Kw5-Oz-3QK"/>
                 <outlet property="responsibleGamingLabel" destination="A0t-8w-ZtH" id="BNH-dh-nvr"/>
@@ -165,28 +164,18 @@
                                                 <constraint firstAttribute="width" constant="60" id="S98-lY-8Ge"/>
                                             </constraints>
                                         </view>
-                                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WUD-0T-PMV" customClass="OptionRadioView" customModule="Betsson" customModuleProvider="target">
-                                            <rect key="frame" x="168" y="89" width="60" height="25"/>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WUD-0T-PMV" customClass="OptionRadioView" customModule="Betsson" customModuleProvider="target">
+                                            <rect key="frame" x="108" y="89" width="60" height="25"/>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="25" id="AJt-jU-t3o"/>
                                                 <constraint firstAttribute="width" constant="60" id="aax-sN-Y6N"/>
                                             </constraints>
                                         </view>
-                                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="57h-wi-KEV" customClass="OptionRadioView" customModule="Betsson" customModuleProvider="target">
-                                            <rect key="frame" x="108" y="89" width="60" height="25"/>
-                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="25" id="bkh-d6-wOb"/>
-                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="boV-V1-DEW"/>
-                                            </constraints>
-                                        </view>
                                     </subviews>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstItem="eS5-7l-V3c" firstAttribute="top" secondItem="7XK-qW-d6X" secondAttribute="bottom" constant="15" id="3bu-BS-xvS"/>
-                                        <constraint firstItem="57h-wi-KEV" firstAttribute="leading" secondItem="eS5-7l-V3c" secondAttribute="trailing" id="7Ln-tj-5sr"/>
-                                        <constraint firstItem="WUD-0T-PMV" firstAttribute="leading" secondItem="57h-wi-KEV" secondAttribute="trailing" id="7jY-8z-hCj"/>
                                         <constraint firstItem="oGN-IQ-HcM" firstAttribute="top" secondItem="l5U-K3-Duk" secondAttribute="top" constant="14" id="B5z-xP-NXr"/>
                                         <constraint firstItem="ZDF-Na-PUf" firstAttribute="leading" secondItem="5aC-nr-kOa" secondAttribute="leading" id="Dxs-YT-IFi"/>
                                         <constraint firstItem="5aC-nr-kOa" firstAttribute="top" secondItem="oGN-IQ-HcM" secondAttribute="top" id="Inu-Wx-ZpW"/>
@@ -194,6 +183,7 @@
                                         <constraint firstItem="WUD-0T-PMV" firstAttribute="centerY" secondItem="eS5-7l-V3c" secondAttribute="centerY" id="PuB-N4-Tvc"/>
                                         <constraint firstItem="7XK-qW-d6X" firstAttribute="top" secondItem="ZDF-Na-PUf" secondAttribute="bottom" constant="5" id="UEk-Uz-E0I"/>
                                         <constraint firstAttribute="trailing" secondItem="5aC-nr-kOa" secondAttribute="trailing" constant="12" id="az8-Zp-j8s"/>
+                                        <constraint firstItem="WUD-0T-PMV" firstAttribute="leading" secondItem="eS5-7l-V3c" secondAttribute="trailing" id="b1Y-qo-ih4"/>
                                         <constraint firstItem="ZDF-Na-PUf" firstAttribute="top" secondItem="5aC-nr-kOa" secondAttribute="bottom" constant="15" id="dg5-Rp-fYA"/>
                                         <constraint firstAttribute="trailing" secondItem="ZDF-Na-PUf" secondAttribute="trailing" constant="12" id="kCl-ib-jKd"/>
                                         <constraint firstItem="7XK-qW-d6X" firstAttribute="leading" secondItem="5aC-nr-kOa" secondAttribute="leading" id="q4Z-iQ-83E"/>
@@ -201,7 +191,6 @@
                                         <constraint firstItem="eS5-7l-V3c" firstAttribute="leading" secondItem="5aC-nr-kOa" secondAttribute="leading" id="ssW-dL-KhZ"/>
                                         <constraint firstAttribute="height" id="vNd-Uc-vnn"/>
                                         <constraint firstItem="oGN-IQ-HcM" firstAttribute="leading" secondItem="l5U-K3-Duk" secondAttribute="leading" constant="12" id="w1d-dI-ohr"/>
-                                        <constraint firstItem="57h-wi-KEV" firstAttribute="centerY" secondItem="eS5-7l-V3c" secondAttribute="centerY" id="zkx-gy-nof"/>
                                     </constraints>
                                     <variation key="default">
                                         <mask key="constraints">

@@ -76,4 +76,8 @@ struct TargetVariables: SportsbookTarget {
         return true
     }
 
+    static var shouldUseAlternateTopBar: Bool {
+        return true
+    }
+
 }
