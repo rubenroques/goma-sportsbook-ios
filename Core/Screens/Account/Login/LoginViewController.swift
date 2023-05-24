@@ -441,7 +441,7 @@ class LoginViewController: UIViewController {
             }
             else if depositOnRegisterViewController.bonusState == .declined {
                 if let bonusId = depositOnRegisterViewController.availableBonuses.value.first?.id {
-                    self?.optOutBonus(bonusId: bonusId)
+                    self?.cancelBonus(bonusId: bonusId)
                 }
             }
 
@@ -525,38 +525,23 @@ class LoginViewController: UIViewController {
         }
     }
 
-    private func optOutBonus(bonusId: String) {
+    private func cancelBonus(bonusId: String) {
 
-        if let partyId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
+        Env.servicesProvider.cancelBonus(bonusId: bonusId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("CANCEL BONUS ERROR: \(error)")
+                }
+            }, receiveValue: { [weak self] cancelBonusResponse in
 
-            Env.servicesProvider.optOutBonus(partyId: partyId, code: bonusId)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { [weak self] completion in
+                print("CANCEL BONUS SUCCESS: \(cancelBonusResponse)")
 
-                    switch completion {
-                    case .finished:
-                        ()
-                    case .failure(let error):
-                        print("OPTOUT BONUS ERROR: \(error)")
-                        switch error {
-                        case .errorMessage(let message):
-                            if message == "BONUSPLAN_NOT_FOUND" {
-                                print("OPTOUT BONUS ERROR: \(message)")
-                            }
-                            else {
-                                print("OPTOUT BONUS ERROR: \(message)")
-                            }
-                        default:
-                            ()
-                        }
-                    }
-                }, receiveValue: { [weak self] optOutBonusResponse in
-
-                    print("OPTOUT BONUS SUCCESS: \(optOutBonusResponse)")
-
-                })
-                .store(in: &cancellables)
-        }
+            })
+            .store(in: &cancellables)
     }
 
     private func deleteCachedRegistrationData() {
