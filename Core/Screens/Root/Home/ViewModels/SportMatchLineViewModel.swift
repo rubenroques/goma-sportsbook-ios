@@ -17,6 +17,7 @@ class SportMatchLineViewModel {
         case liveVideo(title: String, contents: [VideoItemFeedContent])
         case topCompetition
         case topCompetitionVideo(title: String, contents: [VideoItemFeedContent])
+        case news(title: String, contents: [NewsItemFeedContent])
 
         var identifier: String {
             switch self {
@@ -26,7 +27,7 @@ class SportMatchLineViewModel {
             case .liveVideo(let title, let contents): return "liveVideo\(title)\(contents.count)"
             case .topCompetition: return "topCompetition"
             case .topCompetitionVideo(let title, let contents): return "topCompetitionVideo\(title)\(contents.count)"
-
+            case .news(let title, let contents): return "news\(title)\(contents.count)"
             }
         }
     }
@@ -42,6 +43,7 @@ class SportMatchLineViewModel {
         case singleLine
         case competition
         case video
+        case news
     }
 
     var refreshPublisher = PassthroughSubject<Void, Never>.init()
@@ -59,6 +61,7 @@ class SportMatchLineViewModel {
     var outrightCompetitions: [Competition] = []
 
     private var videoItemContents: [VideoItemFeedContent]?
+    private var newsItemContents: [NewsItemFeedContent]?
 
     private var matchesType: MatchesType
 
@@ -114,12 +117,29 @@ class SportMatchLineViewModel {
             self.layoutTypePublisher.send(.video)
             self.loadingPublisher.send(.loaded)
             self.refreshPublisher.send()
+
+        case .news(let title, let contents):
+            self.newsItemContents = contents
+            self.titlePublisher = .init(title)
+            self.layoutTypePublisher.send(.news)
+            self.loadingPublisher.send(.loaded)
+            self.refreshPublisher.send()
+
         }
     }
 
 }
 
 extension SportMatchLineViewModel {
+
+    func isNewsLine() -> Bool {
+        switch self.matchesType {
+        case .news:
+            return true
+        default:
+            return false
+        }
+    }
 
     func isVideoLine() -> Bool {
         switch self.matchesType {
@@ -149,7 +169,10 @@ extension SportMatchLineViewModel {
     }
 
     func numberOfSections(forLine lineIndex: Int) -> Int {
-        if self.isVideoLine() {
+        if self.isNewsLine() {
+            return 1
+        }
+        else if self.isVideoLine() {
             return 1
         }
         else if self.isCompetitionLine() {
@@ -171,7 +194,10 @@ extension SportMatchLineViewModel {
     }
 
     func numberOfItems(forLine lineIndex: Int, forSection section: Int) -> Int {
-        if self.isVideoLine() {
+        if self.isNewsLine() {
+            return self.newsItemContents?.count ?? 0
+        }
+        else if self.isVideoLine() {
             return self.videoItemContents?.count ?? 0
         }
         else if lineIndex == 0 && self.isCompetitionLine() {
@@ -247,7 +273,18 @@ extension SportMatchLineViewModel {
 
     func videoPreviewLineCellViewModel() -> VideoPreviewLineCellViewModel? {
         if let videoItemContents = self.videoItemContents {
-            return VideoPreviewLineCellViewModel(title: self.titlePublisher.value, videoItemFeedContents: videoItemContents)
+            return VideoPreviewLineCellViewModel(title: self.titlePublisher.value,
+                                                 videoItemFeedContents: videoItemContents)
+        }
+        else {
+            return nil
+        }
+    }
+
+    func newsPreviewLineCellViewModel() -> NewsPreviewLineCellViewModel? {
+        if let newsItemContents = self.newsItemContents {
+            return NewsPreviewLineCellViewModel(title: self.titlePublisher.value,
+                                                newsItemFeedContents: newsItemContents)
         }
         else {
             return nil
@@ -269,6 +306,8 @@ extension SportMatchLineViewModel {
         case .topCompetition:
             self.fetchTopCompetitionMatches()
         case .popularVideo, .liveVideo, .topCompetitionVideo:
+            self.loadingPublisher.send(.loaded)
+        case .news:
             self.loadingPublisher.send(.loaded)
         }
     }
@@ -519,6 +558,8 @@ extension SportMatchLineViewModel {
                 }
             case .popularVideo, .liveVideo, .topCompetitionVideo:
                 self.layoutTypePublisher.send(.video)
+            case .news:
+                self.layoutTypePublisher.send(.news)
             }
         }
 

@@ -65,4 +65,8 @@ struct TargetVariables: SportsbookTarget {
     static var casinoURL: String {
         return "https://sportsbook-cms.gomagaming.com/casino/"
     }
+
+    static var requiresUserLocation: Bool  {
+        return true
+    }
 }

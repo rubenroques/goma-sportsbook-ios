@@ -622,6 +622,21 @@ extension OddDoubleCollectionViewCell {
             return
         }
 
+        // DUMMY DATA
+        //
+        let homeAwayCardStatsView = HomeAwayCardStatsView()
+
+        homeAwayCardStatsView.setupHomeValues(win: Int.random(in: 1...9), total: 10)
+        homeAwayCardStatsView.setupAwayValues(win: Int.random(in: 1...9), total: 10)
+
+        self.marketStatsStackView.addArrangedSubview(homeAwayCardStatsView)
+
+        self.statsBaseView.isHidden = false
+
+        return
+        //
+
+
         guard
             let eventPartId = self.market?.eventPartId,
             let bettingTypeId = self.market?.bettingTypeId

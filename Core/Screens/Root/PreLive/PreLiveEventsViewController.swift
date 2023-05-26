@@ -209,7 +209,7 @@ class PreLiveEventsViewController: UIViewController {
 
     private func commonInit() {
 
-        self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_1")
+        self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_\(self.selectedSport.id)")
         self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         
         let color = UIColor.App.backgroundPrimary

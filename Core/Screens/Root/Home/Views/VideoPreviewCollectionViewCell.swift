@@ -173,6 +173,44 @@ extension VideoPreviewCollectionViewCell {
         self.bottomBaseView.addSubview(self.titleLabel)
         self.bottomBaseView.addSubview(self.subtitleLabel)
 
+        // Gradient
+        //
+        let gradientView = UIView()
+        gradientView.clipsToBounds = false
+        gradientView.translatesAutoresizingMaskIntoConstraints = false
+        self.baseView.addSubview(gradientView)
+
+        let iconImageView = UIImageView(image: UIImage(named: "video_corner_icon"))
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+
+        gradientView.addSubview(iconImageView)
+
+        // Setup autolayout
+        NSLayoutConstraint.activate([
+            gradientView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
+            gradientView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            gradientView.widthAnchor.constraint(equalToConstant: 60),
+            gradientView.heightAnchor.constraint(equalToConstant: 60),
+
+            iconImageView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 8),
+            iconImageView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -8),
+            iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
+            iconImageView.widthAnchor.constraint(equalToConstant: 17),
+        ])
+
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = CGRect(x: 0, y: 0, width: 60, height: 60)
+
+        gradientLayer.colors = [UIColor.clear.cgColor, UIColor.clear.cgColor,
+                                UIColor.black.cgColor, UIColor.black.cgColor ]
+        gradientLayer.locations = [0.0, 0.51, 0.86, 1.0]
+
+        gradientLayer.startPoint = CGPoint(x: 0.0, y: 1.0)
+        gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.0)
+
+        gradientView.layer.insertSublayer(gradientLayer, at: 0)
+        //
+
         // Initialize constraints
         self.initConstraints()
     }

@@ -778,6 +778,23 @@ extension OddTripleCollectionViewCell {
             return
         }
 
+        // DUMMY DATA
+        //
+        let headToHeadCardStatsView = HeadToHeadCardStatsView()
+        self.marketStatsStackView.addArrangedSubview(headToHeadCardStatsView)
+
+        let homeRandoms = [Int.random(in: 2...9), Int.random(in: 2...9), Int.random(in: 2...9)]
+        let awayRandoms = [Int.random(in: 2...9), Int.random(in: 2...9), Int.random(in: 2...9)]
+
+        headToHeadCardStatsView.setupHomeValues(win: homeRandoms[0], draw: homeRandoms[1], loss: homeRandoms[2], total: homeRandoms.reduce(0, +))
+        headToHeadCardStatsView.setupAwayValues(win: awayRandoms[0], draw: awayRandoms[1], loss: awayRandoms[2], total: awayRandoms.reduce(0, +))
+
+        self.statsBaseView.isHidden = false
+
+        return
+        //
+
+
         guard
             let eventPartId = self.market?.eventPartId,
             let bettingTypeId = self.market?.bettingTypeId

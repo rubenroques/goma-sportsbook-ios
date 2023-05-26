@@ -24,7 +24,11 @@ struct Sport {
     static var football: Sport {
         return Sport(id: "1", name: "Football", showEventCategory: false)
     }
-    
+
+    static var tennis: Sport {
+        return Sport(id: "3", name: "Tennis", showEventCategory: true)
+    }
+
 }
 
 extension Sport {

@@ -59,7 +59,7 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
         
         eventCountView.backgroundColor = UIColor.App.highlightSecondary
         
-        eventCountLabel.textColor = UIColor.App.buttonTextPrimary
+        eventCountLabel.textColor = UIColor.App.highlightSecondaryContrast
     }
     
     func commonInit() {

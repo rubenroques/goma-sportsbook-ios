@@ -36,4 +36,7 @@ protocol SportsbookTarget {
     
     static var casinoURL: String { get }
 
+    static var requiresUserLocation: Bool  { get }
+
 }
+

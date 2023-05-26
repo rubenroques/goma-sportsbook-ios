@@ -97,6 +97,9 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
             delegate?.ssWampTransportDidConnectWithSerializer(JSONSSWampSerializer())
 
         case .text(let text): // String
+
+            // print("TSWebSocketClient receiveMessage text with \(text))")
+
             messageCounter += 1
             if let data = text.data(using: .utf8) {
                 websocketDidReceiveData(socket: client, data: data)

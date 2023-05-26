@@ -22,9 +22,9 @@ struct Bootstrap {
         self.router.makeKeyAndVisible()
         Env.businessSettingsSocket.connect()
 
-        if Env.locationManager.isLocationServicesEnabled() {
-            Env.locationManager.startGeoLocationUpdates()
-        }
+//        if Env.locationManager.isLocationServicesEnabled() {
+//            Env.locationManager.startGeoLocationUpdates()
+//        }
 
     }
 

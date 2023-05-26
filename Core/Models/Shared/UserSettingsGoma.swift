@@ -306,6 +306,7 @@ struct BusinessInstanceSettingsResponse: Decodable {
         case dazn = "dazn"
         case everymatrix = "everymatrix"
         case crocobet = "crocobet"
+        case sportradaratp = "sportradaratp"
     }
 
     init(from decoder: Decoder) throws {
@@ -399,6 +400,8 @@ enum SportSectionFeedContent: Decodable {
     case liveVideos(title: String, contents: [VideoItemFeedContent])
     case competitions(title: String)
     case competitionsVideos(title: String, contents: [VideoItemFeedContent])
+    case news(title: String, contents: [NewsItemFeedContent])
+
     case unknown
 
     private enum CodingKeys: String, CodingKey {
@@ -430,6 +433,9 @@ enum SportSectionFeedContent: Decodable {
         case "competitions - videos":
             let videoItemsContents = try container.decode([FailableDecodable<VideoItemFeedContent>].self, forKey: .contents).compactMap({ $0.base })
             self = .competitionsVideos(title: title, contents: videoItemsContents)
+        case "popular - news":
+            let newsItemFeedContents = try container.decode([FailableDecodable<NewsItemFeedContent>].self, forKey: .contents).compactMap({ $0.base })
+            self = .news(title: title, contents: newsItemFeedContents)
         default:
             self = .unknown
         }
@@ -448,6 +454,22 @@ struct VideoItemFeedContent: Codable {
         case description = "description"
         case imageURL = "image"
         case streamURL = "stream"
+    }
+
+}
+
+struct NewsItemFeedContent: Codable {
+
+    var title: String?
+    var description: String?
+    var imageURL: String?
+    var linkURL: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case title = "title"
+        case description = "description"
+        case imageURL = "image"
+        case linkURL = "url"
     }
 
 }

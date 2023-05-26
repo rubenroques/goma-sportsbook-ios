@@ -126,8 +126,8 @@ class RootViewController: UIViewController {
     //
     // Child view controllers
     lazy var homeViewController = HomeViewController()
-    lazy var preLiveViewController = PreLiveEventsViewController(selectedSportType: Sport.football)
-    lazy var liveEventsViewController = LiveEventsViewController()
+    lazy var preLiveViewController = PreLiveEventsViewController(selectedSportType: self.currentSport)
+    lazy var liveEventsViewController = LiveEventsViewController(selectedSport: self.currentSport)
     lazy var tipsRootViewController = TipsRootViewController()
     lazy var casinoViewController = CasinoWebViewController(userId: self.userId)
 
@@ -191,9 +191,10 @@ class RootViewController: UIViewController {
 
     //
     //
-    init(initialScreen: TabItem = .home, defaultSport: Sport = .football) {
+    init(initialScreen: TabItem = .home, defaultSport: Sport = .tennis) {
         self.selectedTabItem = initialScreen
         self.currentSport = defaultSport
+
         super.init(nibName: "RootViewController", bundle: nil)
     }
 
@@ -462,7 +463,8 @@ class RootViewController: UIViewController {
         self.accountPlusView.layer.cornerRadius = CornerRadius.squareView
         self.accountPlusView.layer.masksToBounds = true
 
-        self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        self.accountPlusImageView.setImageColor(color: UIColor.App.highlightSecondaryContrast)
+
         self.casinoButtonBaseView.layer.cornerRadius = self.casinoButtonBaseView.frame.height / 2
         self.sportsbookButtonBaseView.layer.cornerRadius = self.sportsbookButtonBaseView .frame.height / 2
 

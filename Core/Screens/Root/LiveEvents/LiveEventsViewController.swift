@@ -66,7 +66,7 @@ class LiveEventsViewController: UIViewController {
     var didTapChatButtonAction: (() -> Void)?
     var didTapBetslipButtonAction: (() -> Void)?
 
-    init(selectedSport: Sport = Sport.football) {
+    init(selectedSport: Sport) {
         self.selectedSport = selectedSport
         self.viewModel = LiveEventsViewModel(selectedSport: self.selectedSport)
         super.init(nibName: "LiveEventsViewController", bundle: nil)
@@ -141,11 +141,12 @@ class LiveEventsViewController: UIViewController {
 
     private func commonInit() {
 
-        self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_1")
-       
-        let color = UIColor.App.backgroundPrimary
+        self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_\(self.selectedSport.id)")
+        self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
 
-        self.leftGradientBaseView.backgroundColor = color
+        let gradientColor = UIColor.App.backgroundPrimary
+
+        self.leftGradientBaseView.backgroundColor = gradientColor
         let leftGradientMaskLayer = CAGradientLayer()
         leftGradientMaskLayer.frame = self.leftGradientBaseView.bounds
         leftGradientMaskLayer.colors = [UIColor.white.cgColor, UIColor.white.cgColor, UIColor.clear.cgColor]
@@ -155,7 +156,7 @@ class LiveEventsViewController: UIViewController {
         self.leftGradientBaseView.layer.mask = leftGradientMaskLayer
 
         //
-        self.rightGradientBaseView.backgroundColor = color
+        self.rightGradientBaseView.backgroundColor = gradientColor
         let rightGradientMaskLayer = CAGradientLayer()
         rightGradientMaskLayer.frame = self.rightGradientBaseView.bounds
         rightGradientMaskLayer.colors = [UIColor.clear.cgColor, UIColor.white.cgColor, UIColor.white.cgColor]
@@ -312,15 +313,8 @@ class LiveEventsViewController: UIViewController {
         self.liveEventsCountLabel.font = AppFont.with(type: .semibold, size: 9)
 
         self.liveEventsCountView.backgroundColor = UIColor.App.highlightSecondary
-        self.liveEventsCountLabel.textColor = UIColor.App.buttonTextPrimary
+        self.liveEventsCountLabel.textColor = UIColor.App.highlightSecondaryContrast
 
-        // Flip the color to avoid matching
-        if UIColor.App.highlightPrimary.isEqualTo(UIColor.App.highlightSecondary) {
-            self.liveEventsCountView.backgroundColor = UIColor.App.buttonTextPrimary
-            self.liveEventsCountLabel.textColor = UIColor.App.highlightSecondary
-        }
-        //
-        //
 
         self.tableView.backgroundColor = .clear
         self.tableView.backgroundView?.backgroundColor = .clear

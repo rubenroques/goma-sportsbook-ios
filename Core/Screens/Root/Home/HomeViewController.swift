@@ -69,6 +69,7 @@ class HomeViewController: UIViewController {
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
         self.tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
         self.tableView.register(VideoPreviewLineTableViewCell.self, forCellReuseIdentifier: VideoPreviewLineTableViewCell.identifier)
+        self.tableView.register(NewsPreviewLineTableViewCell.self, forCellReuseIdentifier: NewsPreviewLineTableViewCell.identifier)
         self.tableView.register(FeaturedTipLineTableViewCell.self, forCellReuseIdentifier: FeaturedTipLineTableViewCell.identifier)
 
         self.refreshControl.tintColor = UIColor.lightGray
@@ -480,6 +481,21 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     }
                 }
                 return cell
+            case .news:
+                guard
+                    let cell = tableView.dequeueReusableCell(withIdentifier: NewsPreviewLineTableViewCell.identifier) as? NewsPreviewLineTableViewCell
+                else {
+                    fatalError()
+                }
+                if let newsPreviewLineCellViewModel = sportMatchLineViewModel.newsPreviewLineCellViewModel() {
+                    cell.configure(withViewModel: newsPreviewLineCellViewModel)
+                    cell.didTapNewsPreviewLineCellAction = { [weak self] viewModel in
+                        if let externalLinkURL = viewModel.externalLinkURL {
+                            self?.didTapExternalLinkAction(externalLinkURL)
+                        }
+                    }
+                }
+                return cell
             }
 
         case .userProfile:
@@ -535,6 +551,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 case .singleLine: return UITableView.automaticDimension
                 case .competition: return UITableView.automaticDimension
                 case .video: return 258
+                case .news: return 258
                 }
             }
         case .userProfile:
@@ -581,6 +598,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 case .singleLine: return StyleHelper.cardsStyleHeight() + 79 // 226
                 case .competition: return StyleHelper.competitionCardsStyleHeight() + 20
                 case .video: return 258
+                case .news: return 258
                 }
             }
         case .userProfile:

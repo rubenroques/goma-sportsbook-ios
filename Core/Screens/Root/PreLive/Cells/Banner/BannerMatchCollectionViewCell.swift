@@ -414,7 +414,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 //                            }
 //                        }
 //                        weakSelf.currentHomeOddValue = newOddValue
-                        //weakSelf.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        // weakSelf.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
                         weakSelf.homeOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     })
 
@@ -486,11 +486,13 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
                         weakSelf.awayOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     })
             }
-            
+
+            self.oddsStackView.alpha = 1.0
         }
         else {
             Logger.log("No markets found")
-            oddsStackView.alpha = 0.2
+
+            self.oddsStackView.alpha = 0.2
 
             self.homeOddValueLabel.text = "-"
             self.drawOddValueLabel.text = "-"

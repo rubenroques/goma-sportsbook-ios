@@ -25,11 +25,11 @@ class SuggestedBetViewModel: NSObject {
     var suggestedCancellables = Set<AnyCancellable>()
     var cancellables = Set<AnyCancellable>()
     var suggestedBetsRegisters: [EndpointPublisherIdentifiable] = []
-    var suggestedBet1RetrievedPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    var suggestedBet2RetrievedPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    var suggestedBet3RetrievedPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    var suggestedBet4RetrievedPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    var suggestedBetsRetrievedPublishers: [CurrentValueSubject<Bool, Never>] = []
+    var suggestedBet1RetrievedPublisher: CurrentValueSubject<Bool?, Never> = .init(nil)
+    var suggestedBet2RetrievedPublisher: CurrentValueSubject<Bool?, Never> = .init(nil)
+    var suggestedBet3RetrievedPublisher: CurrentValueSubject<Bool?, Never> = .init(nil)
+    var suggestedBet4RetrievedPublisher: CurrentValueSubject<Bool?, Never> = .init(nil)
+    var suggestedBetsRetrievedPublishers: [CurrentValueSubject<Bool?, Never>] = []
     var isViewModelFinishedLoading: CurrentValueSubject<Bool, Never> = .init(false)
 
     // Suggested Aggregator Variables
@@ -72,10 +72,16 @@ class SuggestedBetViewModel: NSObject {
 
     func getSuggestedBetsOdds() {
 
-        self.suggestedBetsRetrievedPublishers.append(suggestedBet1RetrievedPublisher)
-        self.suggestedBetsRetrievedPublishers.append(suggestedBet2RetrievedPublisher)
-        self.suggestedBetsRetrievedPublishers.append(suggestedBet3RetrievedPublisher)
-        self.suggestedBetsRetrievedPublishers.append(suggestedBet4RetrievedPublisher)
+        self.suggestedBetsRetrievedPublishers.append(self.suggestedBet1RetrievedPublisher)
+        self.suggestedBetsRetrievedPublishers.append(self.suggestedBet2RetrievedPublisher)
+        self.suggestedBetsRetrievedPublishers.append(self.suggestedBet3RetrievedPublisher)
+        self.suggestedBetsRetrievedPublishers.append(self.suggestedBet4RetrievedPublisher)
+
+        self.subscribeSuggestedBet(suggestedBetCardSummary: self.suggestedBetCardSummary)
+
+    }
+
+    func connectPublishers() {
 
         Publishers.CombineLatest4(self.suggestedBet1RetrievedPublisher,
                                   self.suggestedBet2RetrievedPublisher,
@@ -83,13 +89,13 @@ class SuggestedBetViewModel: NSObject {
                                   self.suggestedBet4RetrievedPublisher)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] bet1, bet2, bet3, bet4 in
-                if bet1 && bet2 && bet3 && bet4 {
+                let loadingBets = [bet1, bet2, bet3, bet4].compactMap({ $0 })
+
+                if loadingBets.isNotEmpty && loadingBets.reduce(true, {$0 && $1}) {
                     self?.setupBets()
                 }
             })
             .store(in: &cancellables)
-
-        self.subscribeSuggestedBet(suggestedBetCardSummary: self.suggestedBetCardSummary)
 
     }
 
@@ -227,6 +233,19 @@ class SuggestedBetViewModel: NSObject {
 
         for (index, bet) in betArray.enumerated() {
 
+            switch index {
+            case 0:
+                self.suggestedBet1RetrievedPublisher.send(false)
+            case 1:
+                self.suggestedBet2RetrievedPublisher.send(false)
+            case 2:
+                self.suggestedBet3RetrievedPublisher.send(false)
+            case 3:
+                self.suggestedBet4RetrievedPublisher.send(false)
+            default:
+                ()
+            }
+
             let endpoint = TSRouter.matchMarketOdds(operatorId: Env.appSession.operatorId,
                                                     language: "en",
                                                     matchId: "\(bet.matchId)",
@@ -252,6 +271,8 @@ class SuggestedBetViewModel: NSObject {
                 })
                 .store(in: &suggestedCancellables)
         }
+
+        self.connectPublishers()
 
     }
 

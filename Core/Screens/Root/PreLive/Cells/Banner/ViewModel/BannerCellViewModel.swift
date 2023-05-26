@@ -181,7 +181,9 @@ class BannerCellViewModel {
             case .marketOutcomeRelation(let marketOutcomeRelationContent):
                 marketOutcomeRelations[marketOutcomeRelationContent.id] = marketOutcomeRelationContent
 
-                if let marketId = marketOutcomeRelationContent.marketId, let outcomeId = marketOutcomeRelationContent.outcomeId {
+                if let marketId = marketOutcomeRelationContent.marketId,
+                    let outcomeId = marketOutcomeRelationContent.outcomeId {
+
                     if var outcomesForMatch = bettingOutcomesForMarket[marketId] {
                         outcomesForMatch.insert(outcomeId)
                         bettingOutcomesForMarket[marketId] = outcomesForMatch
