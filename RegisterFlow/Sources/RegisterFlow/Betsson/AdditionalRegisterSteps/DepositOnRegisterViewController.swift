@@ -181,7 +181,13 @@ public class DepositOnRegisterViewController: UIViewController {
 
                 self?.declineBonusView.isChecked = true
 
-                self?.bonusState = .declined
+                if availableBonuses.isEmpty {
+                    self?.bonusState = .nonExistent
+                }
+                else {
+                    self?.bonusState = .declined
+                }
+
             })
             .store(in: &cancellables)
 
@@ -365,9 +371,9 @@ public class DepositOnRegisterViewController: UIViewController {
 
     }
 
-    public func showErrorAlert(errorMessage: String) {
+    public func showErrorAlert(errorTitle: String, errorMessage: String) {
 
-        let errorTitle = Localization.localized("deposit_error")
+        let errorTitle = errorTitle
         let errorMessage = errorMessage
 
         let alert = UIAlertController(title: errorTitle,

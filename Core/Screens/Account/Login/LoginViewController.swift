@@ -108,7 +108,7 @@ class LoginViewController: UIViewController {
                 .sink(receiveValue: { [weak self] depositError in
                     switch depositError {
                     case .error(let message):
-                        self?.depositOnRegisterViewController?.showErrorAlert(errorMessage: message)
+                        self?.depositOnRegisterViewController?.showErrorAlert(errorTitle: localized("deposit_error"), errorMessage: message)
                     default:
                         ()
                     }
@@ -436,11 +436,13 @@ class LoginViewController: UIViewController {
 
             if depositOnRegisterViewController.bonusState == .accepted {
                 if let bonusId = depositOnRegisterViewController.availableBonuses.value.first?.id {
-                    self?.redeemBonus(bonusId: bonusId)
+                    self?.redeemBonus(bonusId: bonusId, amountText: amount)
                 }
             }
+            else {
+                self?.paymentsDropIn?.getDepositInfo(amountText: amount)
+            }
 
-            self?.paymentsDropIn?.getDepositInfo(amountText: amount)
         }
 
         depositOnRegisterViewController.getOptInBonus = { [weak self] in
@@ -485,7 +487,7 @@ class LoginViewController: UIViewController {
 
     }
 
-    private func redeemBonus(bonusId: String) {
+    private func redeemBonus(bonusId: String, amountText: String) {
 
         if let partyId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
 
@@ -510,10 +512,14 @@ class LoginViewController: UIViewController {
                         default:
                             ()
                         }
+
+                        self?.depositOnRegisterViewController?.showErrorAlert(errorTitle: localized("error"), errorMessage: localized("bonus_dialog_error"))
                     }
                 }, receiveValue: { [weak self] redeemAvailableBonusResponse in
 
                     print("REDEEM CODE SUCCESS: \(redeemAvailableBonusResponse)")
+
+                    self?.paymentsDropIn?.getDepositInfo(amountText: amountText)
 
                 })
                 .store(in: &cancellables)

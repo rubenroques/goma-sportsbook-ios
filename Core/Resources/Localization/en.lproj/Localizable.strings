@@ -1299,3 +1299,5 @@
 
 "deposit_success_message" = "Your deposit was successful!";
 "released" = "Released";
+
+"bonus_dialog_error" = "It was not possible to activate the bonus, please contact the support";

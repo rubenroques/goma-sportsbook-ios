@@ -382,7 +382,12 @@ class DepositViewController: UIViewController {
 
                 self?.declineBonusView.isChecked = true
 
-                self?.viewModel.bonusState = .declined
+                if availableBonuses.isEmpty {
+                    self?.viewModel.bonusState = .nonExistent
+                }
+                else {
+                    self?.viewModel.bonusState = .declined
+                }
             })
             .store(in: &cancellables)
     }
@@ -771,13 +776,6 @@ class DepositViewController: UIViewController {
     @IBAction private func didTapNextButton() {
         let amountText = self.depositHeaderTextFieldView.text
 
-//        if declineBonusView.isChecked {
-//            self.showBonusAlert(bonusAmount: amountText)
-//        }
-//        else if acceptBonusView.isChecked {
-//            self.viewModel.getDepositInfo(amountText: amountText)
-//        }
-
         if self.viewModel.bonusState == .declined {
             self.showBonusAlert(bonusAmount: amountText)
         }
@@ -802,6 +800,9 @@ class DepositViewController: UIViewController {
         case .error(let message):
             errorTitle = localized("deposit_error")
             errorMessage = message
+        case .bonus:
+            errorTitle = localized("error")
+            errorMessage = localized("bonus_dialog_error")
         default:
             ()
         }
@@ -848,4 +849,5 @@ enum BalanceErrorType {
     case deposit
     case withdraw
     case error(message: String)
+    case bonus
 }
