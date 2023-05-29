@@ -33,7 +33,6 @@ class DepositViewController: UIViewController {
     @IBOutlet private var bonusDetailLabel: UILabel!
     @IBOutlet private var acceptBonusView: OptionRadioView!
     @IBOutlet private var declineBonusView: OptionRadioView!
-    @IBOutlet private var notNowBonusView: OptionRadioView!
 
     @IBOutlet private var depositHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var amountButtonStackView: UIStackView!
@@ -237,7 +236,6 @@ class DepositViewController: UIViewController {
 
             if isChecked {
                 self?.declineBonusView.isChecked = false
-                self?.notNowBonusView.isChecked = false
                 self?.viewModel.bonusState = .accepted
             }
         }
@@ -248,19 +246,7 @@ class DepositViewController: UIViewController {
 
             if isChecked {
                 self?.acceptBonusView.isChecked = false
-                self?.notNowBonusView.isChecked = false
                 self?.viewModel.bonusState = .declined
-            }
-        }
-
-        self.notNowBonusView.setTitle(title: localized("not_now"))
-
-        self.notNowBonusView.didTapView = { [weak self] isChecked in
-
-            if isChecked {
-                self?.acceptBonusView.isChecked = false
-                self?.declineBonusView.isChecked = false
-                self?.viewModel.bonusState = .notNow
             }
         }
 
@@ -394,9 +380,9 @@ class DepositViewController: UIViewController {
 
                 self?.bonusInfoLabel.text = localized("bonus_deposit_name").replacingOccurrences(of: "{bonusName}", with: availableBonuses.first?.name ?? "")
 
-                self?.notNowBonusView.isChecked = true
+                self?.declineBonusView.isChecked = true
 
-                self?.viewModel.bonusState = .notNow
+                self?.viewModel.bonusState = .declined
             })
             .store(in: &cancellables)
     }

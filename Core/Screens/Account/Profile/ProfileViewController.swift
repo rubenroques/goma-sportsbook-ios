@@ -62,6 +62,8 @@ class ProfileViewController: UIViewController {
     @IBOutlet private weak var footerBaseView: UIView!
     private var footerResponsibleGamingView = FooterResponsibleGamingView()
 
+    var depositOnRegisterViewController: DepositOnRegisterViewController?
+
     var userProfile: UserProfile?
     var cancellables = Set<AnyCancellable>()
     let pasteboard = UIPasteboard.general
@@ -297,6 +299,31 @@ class ProfileViewController: UIViewController {
 
         let copyCodeTap = UITapGestureRecognizer(target: self, action: #selector(self.tapCopyCode))
         self.userCodeStackView.addGestureRecognizer(copyCodeTap)
+
+    }
+
+    private func getOptInBonus() {
+
+        Env.servicesProvider.getAvailableBonuses()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("AVAILABLE BONUSES ERROR: \(error)")
+                }
+
+            }, receiveValue: { [weak self] availableBonuses in
+
+                let filteredBonus = availableBonuses.filter({
+                    $0.type == "DEPOSIT"
+                })
+
+                self?.depositOnRegisterViewController?.availableBonuses.send(filteredBonus)
+            })
+            .store(in: &cancellables)
 
     }
 

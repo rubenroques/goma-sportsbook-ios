@@ -32,7 +32,7 @@ class DepositViewModel: NSObject {
 
     var availableBonuses: CurrentValueSubject<[AvailableBonus], Never> = .init([])
 
-    var bonusState: BonusState = .notNow
+    var bonusState: BonusState = .declined
 
     // MARK: Lifetime and Cycle
     override init() {
@@ -83,11 +83,6 @@ class DepositViewModel: NSObject {
         if self.bonusState == .accepted {
             if let bonusId = self.availableBonuses.value.first?.id {
                 self.redeemBonus(bonusId: bonusId)
-            }
-        }
-        else if self.bonusState == .declined {
-            if let bonusId = self.availableBonuses.value.first?.id {
-                self.cancelBonus(bonusId: bonusId)
             }
         }
 
@@ -152,23 +147,5 @@ class DepositViewModel: NSObject {
                 .store(in: &cancellables)
         }
     }
-
-    private func cancelBonus(bonusId: String) {
-
-        Env.servicesProvider.cancelBonus(bonusId: bonusId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .finished:
-                    ()
-                case .failure(let error):
-                    print("CANCEL BONUS ERROR: \(error)")
-                }
-            }, receiveValue: { [weak self] cancelBonusResponse in
-
-                print("CANCEL BONUS SUCCESS: \(cancelBonusResponse)")
-
-            })
-            .store(in: &cancellables)
-    }
+    
 }

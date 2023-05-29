@@ -1293,8 +1293,9 @@
 "bonus_deposit_name" = "Deposit bonus: {bonusName}";
 
 "bonus_dialog_title" = "Are you sure you don't want the bonus?";
-"bonus_dialog_message" = "By accepting you will not receive the following bonus: {bonusName}. This bonus will be lost and you won't be able to redeem it later.";
+"bonus_dialog_message" = "By accepting you will not receive the following bonus: {bonusName}.";
 
 "first_deposit_success_message" = "Your first deposit was successful!";
 
 "deposit_success_message" = "Your deposit was successful!";
+"released" = "Released";

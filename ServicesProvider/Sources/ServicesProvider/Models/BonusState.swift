@@ -10,5 +10,4 @@ import Foundation
 public enum BonusState {
     case accepted
     case declined
-    case notNow
 }
