@@ -32,7 +32,7 @@ class DepositViewModel: NSObject {
 
     var availableBonuses: CurrentValueSubject<[AvailableBonus], Never> = .init([])
 
-    var bonusState: BonusState = .declined
+    var bonusState: BonusState = .nonExistent
 
     // MARK: Lifetime and Cycle
     override init() {
@@ -82,11 +82,13 @@ class DepositViewModel: NSObject {
 
         if self.bonusState == .accepted {
             if let bonusId = self.availableBonuses.value.first?.id {
-                self.redeemBonus(bonusId: bonusId)
+                self.redeemBonus(bonusId: bonusId, amountText: amountText)
             }
         }
+        else {
+            self.paymentsDropIn.getDepositInfo(amountText: amountText)
+        }
 
-        self.paymentsDropIn.getDepositInfo(amountText: amountText)
     }
 
     private func getOptInBonus() {
@@ -109,12 +111,15 @@ class DepositViewModel: NSObject {
                 })
 
                 self?.availableBonuses.send(filteredBonus)
+
             })
             .store(in: &cancellables)
 
     }
 
-    private func redeemBonus(bonusId: String) {
+    private func redeemBonus(bonusId: String, amountText: String) {
+
+//        self.showErrorAlertTypePublisher.send(.bonus)
 
         if let partyId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier {
 
@@ -138,10 +143,14 @@ class DepositViewModel: NSObject {
                         default:
                             ()
                         }
+
+                        self?.showErrorAlertTypePublisher.send(.bonus)
                     }
                 }, receiveValue: { [weak self] redeemAvailableBonusResponse in
 
                     print("REDEEM CODE SUCCESS: \(redeemAvailableBonusResponse)")
+
+                    self?.paymentsDropIn.getDepositInfo(amountText: amountText)
 
                 })
                 .store(in: &cancellables)

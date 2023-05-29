@@ -1360,3 +1360,5 @@
 
 "deposit_success_message" = "Votre dépôt a été effectué avec succès!";
 "released" = "Libéré";
+
+"bonus_dialog_error" = "Il n'a pas été possible d'activer le bonus, veuillez contacter le support";
