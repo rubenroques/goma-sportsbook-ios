@@ -343,7 +343,7 @@ class AddressFormStepView: FormStepView {
         self.numberHeaderTextFieldView.setText(self.viewModel.streetNumber.value ?? "")
 
         self.postCodeHeaderTextFieldView.setKeyboardType(.numberPad)
-        self.numberHeaderTextFieldView.setKeyboardType(.numberPad)
+        self.numberHeaderTextFieldView.setKeyboardType(.numbersAndPunctuation)
 
         self.placeHeaderTextFieldView.textPublisher
             .sink { [weak self] place in
