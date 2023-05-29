@@ -41,7 +41,6 @@ class BonusHistoryCellViewModel: NSObject {
 
         self.bonusStatusPublisher.value = self.bonusType?.bonusName ?? bonus.status.capitalized
 
-
     }
 
     private func getDateFormatted(dateString: String) -> String {

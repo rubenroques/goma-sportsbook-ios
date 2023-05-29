@@ -115,6 +115,9 @@ class BonusHistoryTableViewCell: UITableViewCell {
                 case .cancelled:
                     self?.bonusStatusView.backgroundColor = UIColor.App.alertError
                     self?.bonusStatusIconImageView.image = UIImage(named: "x_circle_icon")
+                case .released:
+                    self?.bonusStatusView.backgroundColor = UIColor.App.iconSecondary
+                    self?.bonusStatusIconImageView.image = UIImage(named: "prohibit_icon")
                 default:
                     self?.bonusStatusView.backgroundColor = UIColor.App.iconSecondary
                     self?.bonusStatusIconImageView.image = UIImage(named: "prohibit_icon")
@@ -146,7 +149,9 @@ extension BonusHistoryTableViewCell {
         label.numberOfLines = 0
         label.font = AppFont.with(type: .bold, size: 16)
         label.textAlignment = .left
-        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
         return label
     }
 
@@ -189,7 +194,8 @@ extension BonusHistoryTableViewCell {
     private static func createBonusStatusView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        view.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        view.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         view.layer.cornerRadius = CornerRadius.label
         return view
     }
@@ -208,7 +214,6 @@ extension BonusHistoryTableViewCell {
         label.text = "Status"
         label.textAlignment = .center
         label.font = AppFont.with(type: .bold, size: 11)
-        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return label
     }
 
@@ -309,11 +314,9 @@ extension BonusHistoryTableViewCell {
 
         // Bonus status
         NSLayoutConstraint.activate([
-            self.bonusStatusView.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 2),
+            self.bonusStatusView.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 8),
             self.bonusStatusView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: 2),
             self.bonusStatusView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 11),
-//            self.bonusStatusView.widthAnchor.constraint(greaterThanOrEqualToConstant: 80),
-//            self.bonusStatusView.heightAnchor.constraint(greaterThanOrEqualToConstant: 30),
 
             self.bonusStatusIconImageView.leadingAnchor.constraint(equalTo: self.bonusStatusView.leadingAnchor, constant: 8),
             self.bonusStatusIconImageView.widthAnchor.constraint(equalToConstant: 15),
@@ -321,7 +324,7 @@ extension BonusHistoryTableViewCell {
             self.bonusStatusIconImageView.topAnchor.constraint(equalTo: self.bonusStatusView.topAnchor, constant: 4),
             self.bonusStatusIconImageView.bottomAnchor.constraint(equalTo: self.bonusStatusView.bottomAnchor, constant: -4),
 
-            self.bonusStatusLabel.leadingAnchor.constraint(equalTo: self.bonusStatusIconImageView.trailingAnchor, constant: 8),
+            self.bonusStatusLabel.leadingAnchor.constraint(equalTo: self.bonusStatusIconImageView.trailingAnchor, constant: 4),
             self.bonusStatusLabel.trailingAnchor.constraint(equalTo: self.bonusStatusView.trailingAnchor, constant: -8),
             self.bonusStatusLabel.centerYAnchor.constraint(equalTo: self.bonusStatusIconImageView.centerYAnchor)
         ])

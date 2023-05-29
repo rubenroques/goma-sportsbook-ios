@@ -148,6 +148,8 @@ class RootViewController: UIViewController {
     private lazy var cashbackAlternateView: UIView = Self.createCashbackAlternateView()
     private lazy var cashbackIconAlternateImageView: UIImageView = Self.createCashbackIconAlternateImageView()
     private lazy var cashbackAlternateLabel: UILabel = Self.createCashbackAlternateLabel()
+    private lazy var loginAlternateBaseView: UIView = Self.createLoginAlternateBaseView()
+    private lazy var loginAlternateButton: UIButton = Self.createLoginAlternateButton()
 
     var isLocalAuthenticationCoveringView: Bool = true {
         didSet {
@@ -352,6 +354,8 @@ class RootViewController: UIViewController {
 
         //
         self.setupWithTheme()
+
+        self.loginAlternateButton.addTarget(self, action: #selector(self.didTapLoginAlternateButton), for: UIControl.Event.primaryActionTriggered)
 
         // Detects a new login
 
@@ -841,6 +845,15 @@ class RootViewController: UIViewController {
         self.cashbackAlternateLabel.textColor = UIColor.App.textSecondary
 
         self.cashbackAlternateView.backgroundColor = UIColor.App.highlightPrimaryContrast.withAlphaComponent(0.05)
+
+        self.loginAlternateButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        self.loginAlternateButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.loginAlternateButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
+        self.loginAlternateButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        self.loginAlternateButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
+
+        self.loginAlternateButton.layer.cornerRadius = CornerRadius.view
+        self.loginAlternateButton.layer.masksToBounds = true
     }
 
     func setupWithState(_ screenState: ScreenState) {
@@ -860,6 +873,8 @@ class RootViewController: UIViewController {
             self.accountValueAlternateBaseView.isHidden = false
             self.cashbackAlternateBaseView.isHidden = false
 
+            self.loginAlternateBaseView.isHidden = true
+
         case .anonymous:
             self.loginBaseView.isHidden = false
 
@@ -873,6 +888,9 @@ class RootViewController: UIViewController {
 
             self.accountValueAlternateBaseView.isHidden = true
             self.cashbackAlternateBaseView.isHidden = true
+
+            self.loginAlternateBaseView.isHidden = false
+
 
         }
     }
@@ -1138,6 +1156,10 @@ extension RootViewController {
 extension RootViewController {
 
     @IBAction private func didTapLoginButton() {
+        self.presentLoginScreen()
+    }
+
+    @objc private func didTapLoginAlternateButton() {
         self.presentLoginScreen()
     }
 
@@ -1785,6 +1807,20 @@ extension RootViewController {
         return label
     }
 
+    private static func createLoginAlternateBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createLoginAlternateButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(localized("login"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 13)
+        return button
+    }
+
     private func setupSubviews() {
 
         self.view.addSubview(self.topBarAlternateView)
@@ -1821,6 +1857,10 @@ extension RootViewController {
         self.accountValueAlternateView.addSubview(self.accountValueAlternateLabel)
 
         self.accountPlusAlternateView.addSubview(self.accountPlusAlternateImageView)
+
+        self.userInfoAlternateStackView.addArrangedSubview(self.loginAlternateBaseView)
+
+        self.loginAlternateBaseView.addSubview(self.loginAlternateButton)
 
         self.initConstraints()
     }
@@ -1912,6 +1952,14 @@ extension RootViewController {
             self.cashbackAlternateLabel.leadingAnchor.constraint(equalTo: self.cashbackIconAlternateImageView.trailingAnchor, constant: 4),
             self.cashbackAlternateLabel.trailingAnchor.constraint(equalTo: self.cashbackAlternateView.trailingAnchor, constant: -4),
             self.cashbackAlternateLabel.centerYAnchor.constraint(equalTo: self.cashbackAlternateView.centerYAnchor),
+
+            self.loginAlternateBaseView.centerYAnchor.constraint(equalTo: self.userInfoAlternateStackView.centerYAnchor),
+
+            self.loginAlternateButton.leadingAnchor.constraint(equalTo: self.loginAlternateBaseView.leadingAnchor),
+            self.loginAlternateButton.trailingAnchor.constraint(equalTo: self.loginAlternateBaseView.trailingAnchor),
+            self.loginAlternateButton.widthAnchor.constraint(equalToConstant: 80),
+            self.loginAlternateButton.heightAnchor.constraint(equalToConstant: 30),
+            self.loginAlternateButton.centerYAnchor.constraint(equalTo: self.loginAlternateBaseView.centerYAnchor)
 
         ])
 

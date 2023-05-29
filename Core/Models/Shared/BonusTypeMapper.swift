@@ -14,6 +14,7 @@ enum BonusTypeMapper {
     case optedIn
     case expired
     case cancelled
+    case released
 
     init?(bonusType: String) {
 
@@ -23,6 +24,7 @@ enum BonusTypeMapper {
         case "OPTED_IN": self = .optedIn
         case "EXPIRED": self = .expired
         case "CANCELED": self = .cancelled
+        case "RELEASED": self = .released
         default: return nil
         }
     }
@@ -34,6 +36,7 @@ enum BonusTypeMapper {
         case .optedIn: return localized("opted_in")
         case .expired: return localized("expired")
         case .cancelled: return localized("cancelled")
+        case .released: return localized("released")
         }
     }
 }
