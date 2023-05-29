@@ -266,7 +266,7 @@ extension BonusActiveTableViewCell {
         label.numberOfLines = 0
         label.font = AppFont.with(type: .bold, size: 16)
         label.textAlignment = .left
-        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }
@@ -320,7 +320,7 @@ extension BonusActiveTableViewCell {
     private static func createBonusStatusView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        view.setContentHuggingPriority(.required, for: .horizontal)
         view.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         view.layer.cornerRadius = CornerRadius.label
         return view
@@ -340,6 +340,7 @@ extension BonusActiveTableViewCell {
         label.text = "Status"
         label.textAlignment = .center
         label.font = AppFont.with(type: .bold, size: 11)
+        label.setContentHuggingPriority(.required, for: .horizontal)
         return label
     }
 
