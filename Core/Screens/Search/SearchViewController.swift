@@ -67,8 +67,9 @@ class SearchViewController: UIViewController {
 
     var searchTextPublisher: CurrentValueSubject<String, Never> = .init("")
 
-    init() {
-        self.viewModel = SearchViewModel()
+    init(viewModel: SearchViewModel) {
+        self.viewModel = viewModel
+        
         super.init(nibName: "SearchViewController", bundle: nil)
     }
 

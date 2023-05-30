@@ -43,6 +43,8 @@ class SearchViewModel: NSObject {
 
     private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
 
+    var isLiveSearch: Bool = false
+
     override init() {
         super.init()
 
@@ -128,7 +130,7 @@ class SearchViewModel: NSObject {
         self.clearData()
         self.isEmptySearch = false
 
-        Env.servicesProvider.getSearchEvents(query: searchQuery, resultLimit: "20", page: "0")
+        Env.servicesProvider.getSearchEvents(query: searchQuery, resultLimit: "20", page: "0", isLive: self.isLiveSearch)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {

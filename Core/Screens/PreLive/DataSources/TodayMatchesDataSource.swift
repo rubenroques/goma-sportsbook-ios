@@ -20,6 +20,7 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     var didSelectCompetitionAction: ((Competition) -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
+    var shouldShowSearch: (() -> Void)?
 
     override init() {
         super.init()
@@ -116,7 +117,15 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
         if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
             as? TitleTableViewHeader {
+
             headerView.configureWithTitle(localized("upcoming"))
+
+            headerView.setSearchIcon(hasSearch: true)
+
+            headerView.shouldShowSearch = { [weak self] in
+                self?.shouldShowSearch?()
+            }
+            
             return headerView
         }
         return nil

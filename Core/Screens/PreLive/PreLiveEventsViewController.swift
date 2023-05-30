@@ -144,6 +144,17 @@ class PreLiveEventsViewController: UIViewController {
             self.navigationController?.pushViewController(outrightMarketDetailsViewController, animated: true)
         }
 
+        self.viewModel.shouldShowSearch = { [weak self] in
+            let searchViewModel = SearchViewModel()
+
+            let searchViewController = SearchViewController(viewModel: searchViewModel)
+
+            let navigationViewController = Router.navigationController(with: searchViewController)
+
+            self?.present(navigationViewController, animated: true, completion: nil)
+
+        }
+
         self.tableView.isHidden = false
         self.emptyBaseView.isHidden = true
 
@@ -938,4 +949,3 @@ extension PreLiveEventsViewController: HomeFilterOptionsViewDelegate {
     }
 
 }
-

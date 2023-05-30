@@ -307,14 +307,14 @@ extension ServicesProviderClient {
         return eventsProvider.getCompetitionMarketGroups(competitionId: competitionId)
     }
 
-    public func getSearchEvents(query: String, resultLimit: String, page: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+    public func getSearchEvents(query: String, resultLimit: String, page: String, isLive: Bool = false) -> AnyPublisher<EventsGroup, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
 
-        return eventsProvider.getSearchEvents(query: query, resultLimit: resultLimit, page: page)
+        return eventsProvider.getSearchEvents(query: query, resultLimit: resultLimit, page: page, isLive: isLive)
     }
 
     public func getBanners() -> AnyPublisher<BannerResponse, ServiceProviderError> {

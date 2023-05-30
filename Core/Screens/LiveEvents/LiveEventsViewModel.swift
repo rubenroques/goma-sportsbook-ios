@@ -36,6 +36,8 @@ class LiveEventsViewModel: NSObject {
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
 
+    var shouldShowSearch: (() -> Void)?
+
     var didChangeSportType = false
     var selectedSport: Sport {
         willSet {
@@ -105,6 +107,10 @@ class LiveEventsViewModel: NSObject {
 
         self.liveMatchesViewModelDataSource.didLongPressOdd = {[weak self] bettingTicket in
             self?.didLongPressOdd?(bettingTicket)
+        }
+
+        self.liveMatchesViewModelDataSource.shouldShowSearch = { [weak self] in
+            self?.shouldShowSearch?()
         }
 
     }
@@ -403,6 +409,7 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
     var didSelectMatchAction: ((Match) -> Void)?
     var didTapFavoriteAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
+    var shouldShowSearch: (() -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
@@ -470,7 +477,15 @@ class LiveMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
         else {
             fatalError()
         }
+
         headerView.configureWithTitle(localized("all_live_events"))
+
+        headerView.setSearchIcon(hasSearch: true)
+
+        headerView.shouldShowSearch = { [weak self] in
+            self?.shouldShowSearch?()
+        }
+
         return headerView
     }
 

@@ -79,6 +79,7 @@ class PreLiveEventsViewModel: NSObject {
     var didSelectCompetitionAction: ((Competition) -> Void)?
     var didLongPressOddAction: ((BettingTicket) -> Void)?
     var resetScrollPositionAction: (() -> Void)?
+    var shouldShowSearch: (() -> Void)?
 
     var selectedCompetitionsInfoPublisher: CurrentValueSubject<[String: SportCompetitionInfo], Never> = .init([:])
     var expectedCompetitionsPublisher: CurrentValueSubject<Int, Never> = .init(0)
@@ -236,6 +237,15 @@ class PreLiveEventsViewModel: NSObject {
 
         self.todayMatchesDataSource.didLongPressOdd = { [weak self] bettingTicket in
             self?.didLongPressOddAction?(bettingTicket)
+        }
+
+        // Clicked search
+        self.popularMatchesDataSource.shouldShowSearch = { [weak self] in
+            self?.shouldShowSearch?()
+        }
+
+        self.todayMatchesDataSource.shouldShowSearch = { [weak self] in
+            self?.shouldShowSearch?()
         }
 
     }

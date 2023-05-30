@@ -43,6 +43,8 @@ public enum AppColor {
     public static let buttonBackgroundSecondary = UIColor(named: "buttonBackgroundSecondary")!
     public static let buttonActiveHoverSecondary = UIColor(named: "buttonActiveHoverSecondary")!
 
+    public static let buttonActiveHoverTertiary = UIColor(named: "buttonActiveHoverTertiary")
+
     public static let buttonBorderTertiary = UIColor(named: "buttonBorderTertiary")!
 
     public static let bubblesPrimary = UIColor(named: "bubblesPrimary")!

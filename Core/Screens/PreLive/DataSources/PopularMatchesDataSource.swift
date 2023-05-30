@@ -24,6 +24,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     var didSelectCompetitionAction: ((Competition) -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didLongPressOdd: ((BettingTicket) -> Void)?
+    var shouldShowSearch: (() -> Void)?
 
     override init() {
         super.init()
@@ -120,7 +121,15 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
         else {
             fatalError()
         }
+
         headerView.configureWithTitle(localized("popular_games"))
+
+        headerView.setSearchIcon(hasSearch: true)
+
+        headerView.shouldShowSearch = { [weak self] in
+            self?.shouldShowSearch?()
+        }
+
         return headerView
     }
 

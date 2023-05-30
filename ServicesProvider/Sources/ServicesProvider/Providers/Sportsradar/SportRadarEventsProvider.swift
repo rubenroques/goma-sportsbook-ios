@@ -878,9 +878,9 @@ extension SportRadarEventsProvider {
         .eraseToAnyPublisher()
     }
 
-    func getSearchEvents(query: String, resultLimit: String, page: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+    func getSearchEvents(query: String, resultLimit: String, page: String, isLive: Bool = false) -> AnyPublisher<EventsGroup, ServiceProviderError> {
 
-        let endpoint = SportRadarRestAPIClient.search(query: query, resultLimit: resultLimit, page: page)
+        let endpoint = SportRadarRestAPIClient.search(query: query, resultLimit: resultLimit, page: page, isLive: isLive)
 
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<[SportRadarModels.Event]>, ServiceProviderError> = self.restConnector.request(endpoint)
 

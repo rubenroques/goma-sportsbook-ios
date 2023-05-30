@@ -110,6 +110,10 @@ class LiveEventsViewController: UIViewController {
             self?.tableView.setContentOffset(.zero, animated: false)
         }
 
+        self.viewModel.shouldShowSearch = { [weak self] in
+            self?.showSearch()
+        }
+
         // New loading
         self.loadingView.alpha = 0.0
         self.addChildViewController(self.loadingSpinnerViewController, toView: self.loadingBaseView)
@@ -410,6 +414,18 @@ class LiveEventsViewController: UIViewController {
             let loginViewController = Router.navigationController(with: LoginViewController())
             self.present(loginViewController, animated: true, completion: nil)
         }
+    }
+
+    private func showSearch() {
+        let searchViewModel = SearchViewModel()
+
+        searchViewModel.isLiveSearch = true
+
+        let searchViewController = SearchViewController(viewModel: searchViewModel)
+
+        let navigationViewController = Router.navigationController(with: searchViewController)
+
+        self.present(navigationViewController, animated: true, completion: nil)
     }
 
     @objc func handleSportsSelectionTap() {

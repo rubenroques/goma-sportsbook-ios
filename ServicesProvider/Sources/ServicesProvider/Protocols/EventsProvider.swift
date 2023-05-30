@@ -62,7 +62,7 @@ protocol EventsProvider: Connector {
 
     func getCompetitionMarketGroups(competitionId: String) -> AnyPublisher<SportCompetitionInfo, ServiceProviderError>
 
-    func getSearchEvents(query: String, resultLimit: String, page: String) -> AnyPublisher<EventsGroup, ServiceProviderError>
+    func getSearchEvents(query: String, resultLimit: String, page: String, isLive: Bool) -> AnyPublisher<EventsGroup, ServiceProviderError>
 
     func getBanners() -> AnyPublisher<BannerResponse, ServiceProviderError>
 

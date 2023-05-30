@@ -21,7 +21,7 @@ enum SportRadarRestAPIClient {
     case sportRegionsNavigationList(sportId: String)
     case regionCompetitions(regionId: String)
     case competitionMarketGroups(competitionId: String)
-    case search(query: String, resultLimit: String, page: String)
+    case search(query: String, resultLimit: String, page: String, isLive: Bool)
     case banners
     case getEventSummary(eventId: String)
     case favoritesList
@@ -235,13 +235,16 @@ extension SportRadarRestAPIClient: Endpoint {
                         }
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
-        case .search(let query, let resultLimit, let page):
+        case .search(let query, let resultLimit, let page, let isLive):
+
+            let type = isLive ? "Inplay" : "Prematch"
+
             let bodyString =
                         """
                         {
                             "contentId": {
                                 "type": "eventSearch",
-                                "id": "\(query)/\(resultLimit)/\(page)"
+                                "id": "\(query)/\(resultLimit)/\(page)/\(type)"
                             },
                             "clientContext": {
                                 "language": "\(SportRadarConstants.socketLanguageCode)",
