@@ -580,6 +580,7 @@ extension SportRadarModels {
         }
     }
 
+    // Banners
     struct BannerResponse: Codable {
         var bannerItems: [Banner]
 

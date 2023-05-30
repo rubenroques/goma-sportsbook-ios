@@ -35,11 +35,7 @@ struct TargetVariables: SportsbookTarget {
         // "ht tps://goma-sportsbook.europe-west1.firebasedatabase.app/"
 #endif
     }
-    
-    static var homeTemplateKey: String? {
-        return "crocobet"
-    }
-    
+
     static var everyMatrixHost: String {
         return ""
     }
@@ -58,6 +54,10 @@ struct TargetVariables: SportsbookTarget {
     
     static var serviceProviderType: ServiceProviderType {
         return .everymatrix
+    }
+
+    static var homeTemplateBuilder: HomeTemplateBuilderType {
+        return HomeTemplateBuilderType.backendDynamic(clientTemplateKey: "crocobet")
     }
 
     static var features: [SportsbookTargetFeatures] {

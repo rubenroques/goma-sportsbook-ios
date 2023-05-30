@@ -64,11 +64,13 @@ protocol EventsProvider: Connector {
 
     func getSearchEvents(query: String, resultLimit: String, page: String) -> AnyPublisher<EventsGroup, ServiceProviderError>
 
-    func getBanners() -> AnyPublisher<BannerResponse, ServiceProviderError>
-
     func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError>
-
     func getMarketInfo(marketId: String) -> AnyPublisher<Market, ServiceProviderError>
+
+    func getHomeSliders() -> AnyPublisher<BannerResponse, ServiceProviderError>
+    func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError>
+    func getPromotionalTopEvents() -> AnyPublisher<BannerResponse, ServiceProviderError>
+    func getPromotionalTopStories() -> AnyPublisher<BannerResponse, ServiceProviderError>
 
     //
     // Favorites

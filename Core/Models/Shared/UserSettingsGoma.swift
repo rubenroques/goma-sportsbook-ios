@@ -315,7 +315,7 @@ struct BusinessInstanceSettingsResponse: Decodable {
         let settingsContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .settings)
         let clientsContainer = try settingsContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .clients)
 
-        if let homeTemplateKey = TargetVariables.homeTemplateKey {
+        if case let .backendDynamic(homeTemplateKey) = TargetVariables.homeTemplateBuilder {
             let clientKey = BusinessInstanceSettingsResponse.CodingKeys(rawValue: homeTemplateKey)!
             self.homeFeedTemplate = try clientsContainer.decode(HomeFeedTemplate.self, forKey: clientKey)
         }

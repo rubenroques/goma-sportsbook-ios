@@ -36,10 +36,6 @@ struct TargetVariables: SportsbookTarget {
         #endif
     }
 
-    static var homeTemplateKey: String? {
-        return nil
-    }
-
     static var everyMatrixHost: String {
         return ""
     }
@@ -58,6 +54,10 @@ struct TargetVariables: SportsbookTarget {
 
     static var serviceProviderType: ServiceProviderType {
         return .everymatrix
+    }
+
+    static var homeTemplateBuilder: HomeTemplateBuilderType {
+        return HomeTemplateBuilderType.appStatic
     }
 
     static var features: [SportsbookTargetFeatures] {

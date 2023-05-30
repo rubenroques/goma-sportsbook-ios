@@ -225,6 +225,12 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.suggestedBets.isEmpty ? 0 : 1
         case .sport(_, _, let contents):
             return contents.count
+        case .promotionStoriesBar:
+            return 0
+        case .highlightedEvents:
+            return 0
+        case .swipeBetButton:
+            return 0
         case .unknown:
             return 0
         }
@@ -249,6 +255,12 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.suggestedBets.isNotEmpty ? localized("suggested_bets") : nil
         case .sport(_, let name, _):
             return name.capitalized
+        case .promotionStoriesBar:
+            return nil
+        case .highlightedEvents:
+            return nil
+        case .swipeBetButton:
+            return nil
         case .unknown:
             return nil
         }
@@ -287,6 +299,12 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.suggestedBets.isNotEmpty
         case .sport:
             return true
+        case .promotionStoriesBar:
+            return false
+        case .highlightedEvents:
+            return false
+        case .swipeBetButton:
+            return false
         case .unknown:
             return false
         }
@@ -317,6 +335,12 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case .sport(let id, let name, _):
             let sport = Sport(id: id, name: name.capitalized, alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0)
             return HomeViewModel.Content.sportGroup(sport)
+        case .promotionStoriesBar:
+            return nil
+        case .highlightedEvents:
+            return nil
+        case .swipeBetButton:
+            return nil
         case .unknown:
             return nil
         }
@@ -401,4 +425,3 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
 }
-

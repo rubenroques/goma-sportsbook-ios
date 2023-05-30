@@ -317,14 +317,44 @@ extension ServicesProviderClient {
         return eventsProvider.getSearchEvents(query: query, resultLimit: resultLimit, page: page)
     }
 
-    public func getBanners() -> AnyPublisher<BannerResponse, ServiceProviderError> {
+    public func getHomeSliders() -> AnyPublisher<BannerResponse, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
 
-        return eventsProvider.getBanners()
+        return eventsProvider.getHomeSliders()
+    }
+
+    public func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getPromotionalTopBanners()
+    }
+
+    public func getPromotionalTopEvents() -> AnyPublisher<BannerResponse, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getPromotionalTopEvents()
+    }
+
+    public func getPromotionalTopStories() -> AnyPublisher<BannerResponse, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getPromotionalTopStories()
     }
 
     public func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {

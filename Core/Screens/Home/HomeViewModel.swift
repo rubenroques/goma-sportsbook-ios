@@ -9,6 +9,12 @@ import Foundation
 import Combine
 import OrderedCollections
 
+enum HomeTemplateBuilderType {
+    case appStatic
+    case backendDynamic(clientTemplateKey: String)
+    case clientDynamic
+}
+
 class HomeViewModel {
 
     enum Content {
@@ -42,11 +48,19 @@ class HomeViewModel {
 
     // MARK: - Life Cycle
     init() {
-        if let homeFeedTemplate = Env.appSession.homeFeedTemplate {
-            self.homeViewTemplateDataSource = DynamicHomeViewTemplateDataSource(homeFeedTemplate: homeFeedTemplate)
-        }
-        else {
+
+        switch TargetVariables.homeTemplateBuilder {
+        case .appStatic: // hardcoded in the app code
             self.homeViewTemplateDataSource = StaticHomeViewTemplateDataSource()
+        case .backendDynamic: // provided by our backend
+            if let homeFeedTemplate = Env.appSession.homeFeedTemplate {
+                self.homeViewTemplateDataSource = DynamicHomeViewTemplateDataSource(homeFeedTemplate: homeFeedTemplate)
+            }
+            else {
+                fatalError("homeFeedTemplate or homeTemplateKey not found for client with homeTemplateBuilder = backendDynamic")
+            }
+        case .clientDynamic: // provided by the client backend
+            self.homeViewTemplateDataSource = ClientManagedHomeViewTemplateDataSource()
         }
 
         self.homeViewTemplateDataSource.refreshRequestedPublisher

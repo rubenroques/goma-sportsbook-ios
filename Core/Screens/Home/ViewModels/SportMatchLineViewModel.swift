@@ -18,6 +18,7 @@ class SportMatchLineViewModel {
         case liveVideo(title: String, contents: [VideoItemFeedContent])
         case topCompetition
         case topCompetitionVideo(title: String, contents: [VideoItemFeedContent])
+        case mixedEvents(title: String?)
 
         var identifier: String {
             switch self {
@@ -27,7 +28,7 @@ class SportMatchLineViewModel {
             case .liveVideo(let title, let contents): return "liveVideo\(title)\(contents.count)"
             case .topCompetition: return "topCompetition"
             case .topCompetitionVideo(let title, let contents): return "topCompetitionVideo\(title)\(contents.count)"
-
+            case .mixedEvents(let title): return "mixedEvents\(title ?? "nil")"
             }
         }
     }
@@ -103,6 +104,9 @@ class SportMatchLineViewModel {
             self.layoutTypePublisher.send(.video)
             self.loadingPublisher.send(.loaded)
             self.refreshPublisher.send()
+        case .mixedEvents(let title):
+            self.titlePublisher = .init(title ?? "")
+            self.requestMatches()
         }
     }
 
@@ -262,6 +266,8 @@ extension SportMatchLineViewModel {
             self.fetchTopCompetitionMatches()
         case .popularVideo, .liveVideo, .topCompetitionVideo:
             self.loadingPublisher.send(.loaded)
+        case .mixedEvents:
+            ()
         }
     }
 
@@ -423,6 +429,9 @@ extension SportMatchLineViewModel {
                 }
             case .popularVideo, .liveVideo, .topCompetitionVideo:
                 self.layoutTypePublisher.send(.video)
+
+            case .mixedEvents:
+                self.loadingPublisher.send(.empty)
             }
         }
 

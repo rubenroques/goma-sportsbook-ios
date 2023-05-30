@@ -13,12 +13,106 @@ class ClientManagedHomeViewTemplateDataSource {
 
     private var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
-    private var homeFeedTemplate: HomeFeedTemplate
+    //
+    private var alertsArray: [ActivationAlert] = []
 
-    init(homeFeedTemplate: HomeFeedTemplate) {
-        self.homeFeedTemplate = homeFeedTemplate
+    //
+    private var banners: [BannerInfo] = [] {
+        didSet {
+            var bannerCellViewModels: [BannerCellViewModel] = []
+
+            for banner in self.banners {
+                if let bannerViewModel = self.bannersLineViewModelCache[banner.id] {
+                    bannerCellViewModels.append(bannerViewModel)
+                }
+                else {
+                    let bannerViewModel = BannerCellViewModel(id: banner.id,
+                                                              matchId: banner.matchId,
+                                                              imageURL: banner.imageURL ?? "",
+                                                              marketId: banner.marketId)
+                    bannerCellViewModels.append(bannerViewModel)
+                    self.bannersLineViewModelCache[banner.id] = bannerViewModel
+                }
+            }
+
+            self.bannersLineViewModel = BannerLineCellViewModel(banners: bannerCellViewModels)
+        }
+    }
+    private var bannersLineViewModelCache: [String: BannerCellViewModel] = [:]
+    private var bannersLineViewModel: BannerLineCellViewModel? {
+        didSet {
+            self.refreshPublisher.send()
+        }
     }
 
+    //
+    private var cancellables: Set<AnyCancellable> = []
+
+    init() {
+
+        self.fetchAlerts()
+        self.fetchBanners()
+
+        Env.servicesProvider.getPromotionalTopEvents()
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("")
+            } receiveValue: { (promotionalBannersResponse: BannerResponse) in
+                print("")
+            }
+            .store(in: &self.cancellables)
+
+        Env.servicesProvider.getPromotionalTopStories()
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("")
+            } receiveValue: { (promotionalBannersResponse: BannerResponse) in
+                print("")
+            }
+            .store(in: &self.cancellables)
+
+    }
+
+
+    // User alerts
+    func fetchAlerts() {
+        self.alertsArray = []
+        if let isUserEmailVerified = Env.userSessionStore.isUserEmailVerified, !isUserEmailVerified {
+            let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
+                                                           description: localized("app_full_potential"),
+                                                           linkLabel: localized("verify_my_account"),
+                                                           alertType: .email)
+
+            alertsArray.append(emailActivationAlertData)
+        }
+
+        if let isUserProfileComplete = Env.userSessionStore.isUserProfileComplete, !isUserProfileComplete {
+            let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
+                                                           description: localized("complete_profile_description"),
+                                                           linkLabel: localized("finish_up_profile"),
+                                                           alertType: .profile)
+            alertsArray.append(completeProfileAlertData)
+        }
+    }
+
+
+    // User alerts
+    func fetchBanners() {
+
+        Env.servicesProvider.getPromotionalTopBanners()
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("")
+            } receiveValue: { [weak self] (promotionalBanners: [PromotionalBanner]) in
+                print("", promotionalBanners.count)
+
+                self?.banners = promotionalBanners.map({ promotionalBanner in
+                    return BannerInfo(type: "", id: promotionalBanner.id, matchId: nil, imageURL: promotionalBanner.imageURL, priorityOrder: nil, marketId: nil)
+                })
+            }
+            .store(in: &self.cancellables)
+
+    }
 }
 
 extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
@@ -33,19 +127,28 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func numberOfSections() -> Int {
-        return 0
+        return 2
     }
 
     func numberOfRows(forSectionIndex section: Int) -> Int {
-        return 0
+
+        switch section {
+        case 0:
+            return self.alertsArray.isEmpty ? 0 : 1
+        case 1:
+            return self.bannersLineViewModel == nil ? 0 : 1
+        default:
+            return 0
+        }
+
     }
 
     func title(forSection section: Int) -> String? {
-        return "Title"
+        return nil
     }
 
     func iconName(forSection section: Int) -> String? {
-        return ""
+        return nil
     }
 
     func shouldShowTitle(forSection section: Int) -> Bool {
@@ -58,16 +161,23 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     // Detail each content type for the section
     func contentType(forSection section: Int) -> HomeViewModel.Content? {
-        return nil
+        switch section {
+        case 0:
+            return .userProfile
+        case 1:
+            return .bannerLine
+        default:
+            return nil
+        }
     }
 
     // Content type ViewModels methods
     func alertsArrayViewModel() -> [ActivationAlert] {
-        return []
+        return self.alertsArray
     }
 
     func bannerLineViewModel() -> BannerLineCellViewModel? {
-        return nil
+        return self.bannersLineViewModel
     }
 
     func sportGroupViewModel(forSection section: Int) -> SportGroupViewModel? {

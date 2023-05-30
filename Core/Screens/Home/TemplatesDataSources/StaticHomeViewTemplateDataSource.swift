@@ -204,7 +204,7 @@ class StaticHomeViewTemplateDataSource {
     func fetchBanners() {
         self.banners = []
 
-        Env.servicesProvider.getBanners()
+        Env.servicesProvider.getHomeSliders()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {

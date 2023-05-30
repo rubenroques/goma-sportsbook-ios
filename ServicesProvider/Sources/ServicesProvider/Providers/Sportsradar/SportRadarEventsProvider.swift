@@ -900,9 +900,9 @@ extension SportRadarEventsProvider {
 
     }
 
-    func getBanners() -> AnyPublisher<BannerResponse, ServiceProviderError> {
+    func getHomeSliders() -> AnyPublisher<BannerResponse, ServiceProviderError> {
 
-        let endpoint = SportRadarRestAPIClient.banners
+        let endpoint = SportRadarRestAPIClient.homeSliders
 
         let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.BannerResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
 
@@ -915,6 +915,40 @@ extension SportRadarEventsProvider {
         })
         .eraseToAnyPublisher()
 
+    }
+
+    public func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError> {
+        let endpoint = SportRadarRestAPIClient.promotionalTopBanners
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<[SportRadarModels.PromotionalBannersResponse]>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { sportRadarResponse -> [PromotionalBanner] in
+            let promotionalBannersResponse = sportRadarResponse.data.flatMap({ $0.promotionalBannerItems })
+            let mappedBannersResponse: [PromotionalBanner] = promotionalBannersResponse.map(SportRadarModelMapper.promotionalBanner(fromInternalPromotionalBanner:))
+            return mappedBannersResponse
+        })
+        .eraseToAnyPublisher()
+    }
+    public func getPromotionalTopEvents() -> AnyPublisher<BannerResponse, ServiceProviderError> {
+        let endpoint = SportRadarRestAPIClient.promotionalTopEvents
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.BannerResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { sportRadarResponse -> BannerResponse in
+            let bannersResponse = sportRadarResponse.data
+            let mappedBannersResponse = SportRadarModelMapper.bannerResponse(fromInternalBannerResponse: bannersResponse)
+            return mappedBannersResponse
+        })
+        .eraseToAnyPublisher()
+    }
+    public func getPromotionalTopStories() -> AnyPublisher<BannerResponse, ServiceProviderError> {
+        let endpoint = SportRadarRestAPIClient.promotionalTopStories
+        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.BannerResponse>, ServiceProviderError> = self.restConnector.request(endpoint)
+
+        return requestPublisher.map( { sportRadarResponse -> BannerResponse in
+            let bannersResponse = sportRadarResponse.data
+            let mappedBannersResponse = SportRadarModelMapper.bannerResponse(fromInternalBannerResponse: bannersResponse)
+            return mappedBannersResponse
+        })
+        .eraseToAnyPublisher()
     }
 
     func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {

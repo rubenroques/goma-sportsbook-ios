@@ -101,7 +101,14 @@ extension SportRadarModelMapper {
     }
 
     static func banner(fromInternalBanner internalBanner: SportRadarModels.Banner) -> Banner {
-        return Banner(id: internalBanner.id, name: internalBanner.name, title: internalBanner.title, imageUrl: internalBanner.imageUrl, bodyText: internalBanner.bodyText, type: internalBanner.type, linkUrl: internalBanner.linkUrl, marketId: internalBanner.marketId)
+        return Banner(id: internalBanner.id,
+                      name: internalBanner.name,
+                      title: internalBanner.title,
+                      imageUrl: internalBanner.imageUrl,
+                      bodyText: internalBanner.bodyText,
+                      type: internalBanner.type,
+                      linkUrl: internalBanner.linkUrl,
+                      marketId: internalBanner.marketId)
     }
 
     // Favorites

@@ -447,6 +447,8 @@ public struct Banner: Codable {
     }
 }
 
+
+
 // Favorites
 public struct FavoritesListResponse: Codable {
     public var favoritesList: [FavoriteList]
