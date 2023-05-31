@@ -226,13 +226,15 @@ class SearchViewModel: NSObject {
                     newRecentSearchesArray.remove(at: 0)
                 }
 
-                newRecentSearchesArray.append(search)
-                let reversedNewSearchesArray = Array(newRecentSearchesArray.reversed())
-                UserDefaults.standard.removeObject(forKey: "recentSearches")
-                UserDefaults.standard.set(reversedNewSearchesArray, forKey: "recentSearches")
-                self.recentSearchesPublisher.value = reversedNewSearchesArray
-                recentSearchesPublisher.send(recentSearchesPublisher.value)
+                if !newRecentSearchesArray.contains(search) {
 
+                    newRecentSearchesArray.append(search)
+                    let reversedNewSearchesArray = Array(newRecentSearchesArray.reversed())
+                    UserDefaults.standard.removeObject(forKey: "recentSearches")
+                    UserDefaults.standard.set(reversedNewSearchesArray, forKey: "recentSearches")
+                    self.recentSearchesPublisher.value = reversedNewSearchesArray
+                    recentSearchesPublisher.send(recentSearchesPublisher.value)
+                }
             }
 
         }

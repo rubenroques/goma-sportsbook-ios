@@ -401,6 +401,7 @@ extension SearchViewController: UISearchBarDelegate {
 
             if recentSearch != "" && recentSearch.count > 2 {
                 self.viewModel.addRecentSearch(search: recentSearch)
+                self.searchMatches(searchQuery: recentSearch)
             }
         }
         self.searchBarView.resignFirstResponder()
