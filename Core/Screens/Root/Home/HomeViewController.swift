@@ -371,6 +371,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             else {
                 fatalError()
             }
+
             cell.configure(withViewModel: suggestedBetLineViewModel)
             cell.betNowCallbackAction = { [weak self] in
                 self?.didTapBetslipButtonAction?()
