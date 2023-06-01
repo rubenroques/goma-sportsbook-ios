@@ -1301,3 +1301,9 @@
 "released" = "Released";
 
 "bonus_dialog_error" = "It was not possible to activate the bonus, please contact the support";
+
+"identification_docs" = "Identification Docs.";
+"rib" = "RiB";
+"extra_docs" = "Extra Docs.";
+
+"id_card_residence_id" = "Identification card or Residence ID";

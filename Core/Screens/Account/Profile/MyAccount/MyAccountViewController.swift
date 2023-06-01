@@ -97,11 +97,17 @@ extension MyAccountViewController {
 
     @objc private func didTapDocuments(sender: UITapGestureRecognizer) {
 
-        let uploadDocumentsViewModel = UploadDocumentsViewModel()
+//        let uploadDocumentsViewModel = UploadDocumentsViewModel()
+//
+//        let uploadDocumentsViewController = UploadDocumentsViewController(viewModel: uploadDocumentsViewModel)
+//
+//        self.present(uploadDocumentsViewController, animated: true)
 
-        let uploadDocumentsViewController = UploadDocumentsViewController(viewModel: uploadDocumentsViewModel)
+        let documentsRootViewModel = DocumentsRootViewModel()
 
-        self.present(uploadDocumentsViewController, animated: true)
+        let documentsRootViewController = DocumentsRootViewController(viewModel: documentsRootViewModel)
+
+        self.navigationController?.pushViewController(documentsRootViewController, animated: true)
 
     }
     

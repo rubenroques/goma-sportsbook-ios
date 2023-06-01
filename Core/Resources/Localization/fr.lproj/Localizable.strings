@@ -1362,3 +1362,9 @@
 "released" = "Libéré";
 
 "bonus_dialog_error" = "Il n'a pas été possible d'activer le bonus, veuillez contacter le support";
+
+"identification_docs" = "Docs d'identification.";
+"rib" = "RiB";
+"extra_docs" = "Extra Docs.";
+
+"id_card_residence_id" = "Carte d'identité ou carte de séjour";
