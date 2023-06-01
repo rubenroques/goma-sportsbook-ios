@@ -2444,6 +2444,13 @@
 		4589C9E12820279E00243547 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4589C9DA282025C400243547 /* Colors.xcassets */; };
 		4589C9E2282027A100243547 /* GOMASports-Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4589C9DB282025C400243547 /* GOMASports-Assets.xcassets */; };
 		4589C9E4282029F700243547 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4589C9E3282029F700243547 /* GoogleService-Info.plist */; };
+		459874B82A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459874B72A28D271008C0ADE /* CardsCollectionViewLayout.swift */; };
+		459874B92A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459874B72A28D271008C0ADE /* CardsCollectionViewLayout.swift */; };
+		459874BA2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459874B72A28D271008C0ADE /* CardsCollectionViewLayout.swift */; };
+		459874BB2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459874B72A28D271008C0ADE /* CardsCollectionViewLayout.swift */; };
+		459874BC2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459874B72A28D271008C0ADE /* CardsCollectionViewLayout.swift */; };
+		459874BD2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459874B72A28D271008C0ADE /* CardsCollectionViewLayout.swift */; };
+		459874BE2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459874B72A28D271008C0ADE /* CardsCollectionViewLayout.swift */; };
 		45A3301C298935F6008181E9 /* Adyen in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3301B298935F6008181E9 /* Adyen */; };
 		45A3301E298935F6008181E9 /* AdyenActions in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3301D298935F6008181E9 /* AdyenActions */; };
 		45A33020298935F6008181E9 /* AdyenCard in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3301F298935F6008181E9 /* AdyenCard */; };
@@ -5570,6 +5577,7 @@
 		45936CAF270EEFA200E8260E /* LoadableContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadableContent.swift; sourceTree = "<group>"; };
 		45936CB2270EF02200E8260E /* SearchTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTextField.swift; sourceTree = "<group>"; };
 		45936CB5270EF04500E8260E /* SportType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportType.swift; sourceTree = "<group>"; };
+		459874B72A28D271008C0ADE /* CardsCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsCollectionViewLayout.swift; sourceTree = "<group>"; };
 		45A0B301274FA3B800211A85 /* MarketGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketGroup.swift; sourceTree = "<group>"; };
 		45A16E122707B6C100A95C01 /* ListTypeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTypeCollectionViewCell.swift; sourceTree = "<group>"; };
 		45A16E132707B6C100A95C01 /* ListTypeCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListTypeCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -6960,6 +6968,7 @@
 		456B341A26C17A0C009D7D27 /* MiscHelpers */ = {
 			isa = PBXGroup;
 			children = (
+				459874B62A28D259008C0ADE /* CollectionViewLayouts */,
 				4589F42726C02E07005DF543 /* StaticTableViews */,
 				455A0CC526BD9D9000EC572D /* AutoLayoutDSL */,
 				455A0CD626BD9D9000EC572D /* CollectionViewFlowLayouts */,
@@ -7415,6 +7424,14 @@
 				458BAC802770EF53006C4BC7 /* MyTicketBetLineView.xib */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		459874B62A28D259008C0ADE /* CollectionViewLayouts */ = {
+			isa = PBXGroup;
+			children = (
+				459874B72A28D271008C0ADE /* CardsCollectionViewLayout.swift */,
+			);
+			path = CollectionViewLayouts;
 			sourceTree = "<group>";
 		};
 		45A16E112707B69200A95C01 /* Filters */ = {
@@ -11352,6 +11369,7 @@
 				A9A1B2BF2A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
 				450B7A3728F58574009229E3 /* Aggregator.swift in Sources */,
 				450B7A3828F58574009229E3 /* OutrightMarketDetailsViewModel.swift in Sources */,
+				459874B92A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
 				450B7A3928F58574009229E3 /* BonusActiveCellViewModel.swift in Sources */,
 				450B7A3A28F58574009229E3 /* CompetitionFilterHeaderView.swift in Sources */,
 				450B7A3B28F58574009229E3 /* CashoutSubmission.swift in Sources */,
@@ -11635,6 +11653,7 @@
 				A9B331D7288FFE6100D097F0 /* InAppMessageCellViewModel.swift in Sources */,
 				457CBA30282D27D000ED0F00 /* BonusRootViewController.swift in Sources */,
 				457CBA31282D27D000ED0F00 /* Router.swift in Sources */,
+				459874BD2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
 				457CBA32282D27D000ED0F00 /* Date+Extension.swift in Sources */,
 				457CBA33282D27D000ED0F00 /* LiveDetailsViewController.swift in Sources */,
 				457CBA34282D27D000ED0F00 /* GomaGamingServiceClient.swift in Sources */,
@@ -12223,6 +12242,7 @@
 				457CBCCA282D2CD100ED0F00 /* EMMatch.swift in Sources */,
 				457CBCCB282D2CD100ED0F00 /* RecentSearchRowView.swift in Sources */,
 				457CBCCC282D2CD100ED0F00 /* OddViewPosition.swift in Sources */,
+				459874BE2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
 				457CBCCD282D2CD100ED0F00 /* FilterSliderInfoView.swift in Sources */,
 				457CBCCE282D2CD100ED0F00 /* BannerScrollTableViewCell.swift in Sources */,
 				A99DE67A29A643F800AA24AA /* PaymentStatus.swift in Sources */,
@@ -13245,6 +13265,7 @@
 				A9A1B2C02A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
 				4589C8F8282024E400243547 /* OutrightMarketDetailsViewModel.swift in Sources */,
 				4589C8F9282024E400243547 /* BonusActiveCellViewModel.swift in Sources */,
+				459874BA2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
 				4589C8FA282024E400243547 /* CompetitionFilterHeaderView.swift in Sources */,
 				4589C8FB282024E400243547 /* CashoutSubmission.swift in Sources */,
 				4589C8FC282024E400243547 /* ProfileLimitsManagementViewModel.swift in Sources */,
@@ -13847,6 +13868,7 @@
 				A9A1B2BE2A0E55B800F7A8ED /* UserConsentType.swift in Sources */,
 				45A33257298976BA008181E9 /* Aggregator.swift in Sources */,
 				45A33258298976BA008181E9 /* OutrightMarketDetailsViewModel.swift in Sources */,
+				459874B82A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
 				45A33259298976BA008181E9 /* BonusActiveCellViewModel.swift in Sources */,
 				45A3325A298976BA008181E9 /* CompetitionFilterHeaderView.swift in Sources */,
 				45A3325B298976BA008181E9 /* CashoutSubmission.swift in Sources */,
@@ -14495,6 +14517,7 @@
 				45A6BD7328246A7500D9B416 /* Debounce.swift in Sources */,
 				45A6BD7428246A7500D9B416 /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				45A6BD7528246A7500D9B416 /* ConversationsViewController.swift in Sources */,
+				459874BC2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
 				45A6BD7628246A7500D9B416 /* WithdrawResponse.swift in Sources */,
 				A907B6B029D10C7500AC4A17 /* PromotionsWebViewController.swift in Sources */,
 				45A6BD7728246A7500D9B416 /* NavigationCardView.swift in Sources */,
@@ -14968,6 +14991,7 @@
 				451ABD6929CB3B1D0062641F /* Match.swift in Sources */,
 				A9C3424728F9A74A0055360B /* MarketDetailCollectionViewCell.swift in Sources */,
 				A9C3424828F9A74A0055360B /* BettingHistoryViewController.swift in Sources */,
+				459874BB2A28D272008C0ADE /* CardsCollectionViewLayout.swift in Sources */,
 				A9C3424928F9A74A0055360B /* Snapshot.swift in Sources */,
 				A9C3424A28F9A74A0055360B /* InternalBrowserViewController.swift in Sources */,
 				A9C3424B28F9A74A0055360B /* TabularBarButton.swift in Sources */,

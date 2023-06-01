@@ -73,10 +73,26 @@ class ClientManagedHomeViewTemplateDataSource {
 
     }
 
-
     // User alerts
     func fetchAlerts() {
         self.alertsArray = []
+
+#if DEBUG
+            let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
+                                                           description: localized("app_full_potential"),
+                                                           linkLabel: localized("verify_my_account"),
+                                                           alertType: .email)
+
+            alertsArray.append(emailActivationAlertData)
+
+            let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
+                                                           description: localized("complete_profile_description"),
+                                                           linkLabel: localized("finish_up_profile"),
+                                                           alertType: .profile)
+            alertsArray.append(completeProfileAlertData)
+
+#else
+
         if let isUserEmailVerified = Env.userSessionStore.isUserEmailVerified, !isUserEmailVerified {
             let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
                                                            description: localized("app_full_potential"),
@@ -93,8 +109,9 @@ class ClientManagedHomeViewTemplateDataSource {
                                                            alertType: .profile)
             alertsArray.append(completeProfileAlertData)
         }
-    }
+#endif
 
+    }
 
     // User alerts
     func fetchBanners() {
