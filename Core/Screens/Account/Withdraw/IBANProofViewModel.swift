@@ -47,6 +47,8 @@ class IBANProofViewModel {
     var shouldShowAlert: ((AlertType, String) -> Void)?
     var shouldShowSuccessScreen: (() -> Void)?
 
+    let dateFormatter = DateFormatter()
+
     init() {
 
         self.getDocumentTypes()
@@ -93,7 +95,10 @@ class IBANProofViewModel {
 
                 let userDocumentStatus = FileState(code: userDocument.status)
 
-                return DocumentFileInfo(id: userDocument.documentType, name: userDocument.fileName, status: userDocumentStatus ?? .pendingApproved)
+                self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
+                let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
+                
+                return DocumentFileInfo(id: userDocument.documentType, name: userDocument.fileName, status: userDocumentStatus ?? .pendingApproved, uploadDate: uploadDate ?? Date())
             })
 
             let documentInfo = DocumentInfo(id: documentType.documentType,

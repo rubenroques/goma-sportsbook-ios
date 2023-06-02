@@ -1306,4 +1306,6 @@
 "rib" = "RiB";
 "extra_docs" = "Extra Docs.";
 
-"id_card_residence_id" = "Identification card or Residence ID";
+"id_card_or_residence_id" = "Identification card or Residence ID";
+"driving_licence_or_passport" = "Driving Licence or Passport";
+"add_documents" = "Add documents";

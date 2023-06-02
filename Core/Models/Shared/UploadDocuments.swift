@@ -12,12 +12,14 @@ struct DocumentInfo {
     var typeName: String
     var status: DocumentState
     var uploadedFiles: [DocumentFileInfo]
+    var typeGroup: DocumentTypeGroup?
 }
 
 struct DocumentFileInfo {
     var id: String
     var name: String
     var status: FileState
+    var uploadDate: Date
 }
 
 enum FileState {
@@ -89,4 +91,14 @@ enum DocumentUploadState {
     case uploaded
     case documentReceived
     case addAnother
+}
+
+enum DocumentTypeGroup {
+    case identityCard
+    case passport
+    case drivingLicense
+    case residenceId
+    case rib
+    case other
+
 }

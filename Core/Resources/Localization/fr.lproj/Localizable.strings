@@ -1367,4 +1367,6 @@
 "rib" = "RiB";
 "extra_docs" = "Extra Docs.";
 
-"id_card_residence_id" = "Carte d'identité ou carte de séjour";
+"id_card_or_residence_id" = "Carte d'identité ou carte de séjour";
+"driving_licence_or_passport" = "Permis de conduire ou passeport";
+"add_documents" = "Add documents";

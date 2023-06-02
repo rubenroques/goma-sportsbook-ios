@@ -14,6 +14,8 @@ class DocumentsRootViewModel {
         return Env.userSessionStore.userKnowYourCustomerStatusPublisher.eraseToAnyPublisher()
     }
 
+    var kycStatus: KnowYourCustomerStatus?
+
     var selectedDocumentTypeIndexPublisher: CurrentValueSubject<Int?, Never> = .init(nil)
 
     private var startTabIndex: Int
@@ -94,7 +96,7 @@ class DocumentsRootViewController: UIViewController {
 
         self.documentTypesViewControllers = [
             IdentificationDocsViewController(viewModel: IdentificationDocsViewModel()),
-            IdentificationDocsViewController(viewModel: IdentificationDocsViewModel()),
+            RibDocsViewController(viewModel: RibDocsViewModel()),
             IdentificationDocsViewController(viewModel: IdentificationDocsViewModel()),
         ]
 
@@ -188,6 +190,10 @@ class DocumentsRootViewController: UIViewController {
                 else {
                     self?.kycStatusLabel.text = ""
                 }
+
+                self?.viewModel.kycStatus = kycStatus
+
+                self?.documentTypesCollectionView.reloadData()
             })
             .store(in: &cancellables)
 
@@ -309,7 +315,18 @@ extension DocumentsRootViewController: UICollectionViewDelegate, UICollectionVie
         case 0:
             cell.setupInfo(title: localized("identification_docs"))
         case 1:
-            cell.setupInfo(title: localized("rib"), iconName: "lock_icon")
+            if let kycStatus = self.viewModel.kycStatus {
+                if kycStatus == .request || kycStatus == .pass {
+                    cell.setupInfo(title: localized("rib"), iconName: "lock_icon")
+                }
+                else {
+                    cell.setupInfo(title: localized("rib"))
+
+                }
+            }
+            else {
+                cell.setupInfo(title: localized("rib"))
+            }
         case 2:
             cell.setupInfo(title: localized("extra_docs"))
         default:

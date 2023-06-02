@@ -66,6 +66,7 @@ class ListTypeIconCollectionViewCell: UICollectionViewCell {
         self.selectionHighlightView.backgroundColor = UIColor.App.highlightPrimary
         self.containerView.backgroundColor = UIColor.App.pillBackground
         self.setupWithSelection(self.selectedType)
+
         self.titleLabel.textColor = UIColor.App.textPrimary
 
         self.stackView.backgroundColor = .clear

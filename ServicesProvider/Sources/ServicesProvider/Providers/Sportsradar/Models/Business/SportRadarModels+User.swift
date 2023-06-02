@@ -525,11 +525,13 @@ extension SportRadarModels {
         var documentType: String
         var fileName: String
         var status: String
+        var uploadDate: String
 
         enum CodingKeys: String, CodingKey {
             case documentType = "documentType"
             case fileName = "fileName"
             case status = "status"
+            case uploadDate = "uploadDate"
         }
     }
 

@@ -800,6 +800,8 @@ extension SportRadarEventsProvider {
         let dateRange = ContentDateFormatter.getDateRangeId(startDate: initialDate, endDate: endDate)
         let codeSportsEndpoint = SportRadarRestAPIClient.sportsScheduledList(dateRange: dateRange)
 
+        // TODO: BONavigationList has alpha codes now
+
         let codeSportsRequestPublisher: AnyPublisher<SportRadarModels.RestResponse<[SportRadarModels.ScheduledSport]>, ServiceProviderError> = self.restConnector.request(codeSportsEndpoint)
 
         return Publishers.CombineLatest(sportsRequestPublisher, codeSportsRequestPublisher)

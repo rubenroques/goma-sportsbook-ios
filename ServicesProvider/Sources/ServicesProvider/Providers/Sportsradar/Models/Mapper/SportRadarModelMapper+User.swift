@@ -140,7 +140,9 @@ extension SportRadarModelMapper {
 
     static func documentType(fromDocumentType internalDocumentType: SportRadarModels.DocumentType) -> DocumentType {
 
-        return DocumentType(documentType: internalDocumentType.documentType, issueDateRequired: internalDocumentType.issueDateRequired, expiryDateRequired: internalDocumentType.expiryDateRequired, documentNumberRequired: internalDocumentType.documentNumberRequired)
+        let documentTypeGroup = DocumentTypeGroup.init(documentType: internalDocumentType.documentType)
+
+        return DocumentType(documentType: internalDocumentType.documentType, issueDateRequired: internalDocumentType.issueDateRequired, expiryDateRequired: internalDocumentType.expiryDateRequired, documentNumberRequired: internalDocumentType.documentNumberRequired, documentTypeGroup: documentTypeGroup)
     }
 
     static func userDocumentsResponse(fromUserDocumentsResponse internalUserDocumentsResponse: SportRadarModels.UserDocumentsResponse) -> UserDocumentsResponse {
@@ -157,7 +159,7 @@ extension SportRadarModelMapper {
 
     static func userDocument(fromUserDocument internalUserDocument: SportRadarModels.UserDocument) -> UserDocument {
 
-        return UserDocument(documentType: internalUserDocument.documentType, fileName: internalUserDocument.fileName, status: internalUserDocument.status)
+        return UserDocument(documentType: internalUserDocument.documentType, fileName: internalUserDocument.fileName, status: internalUserDocument.status, uploadDate: internalUserDocument.uploadDate)
     }
 
     static func uploadDocumentResponse(fromUploadDocumentResponse internalUploadDocumentResponse: SportRadarModels.UploadDocumentResponse) -> UploadDocumentResponse {
