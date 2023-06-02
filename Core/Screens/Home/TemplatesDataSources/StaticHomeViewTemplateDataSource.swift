@@ -526,6 +526,10 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         }
     }
 
+    func quickSwipeStackViewModel() -> QuickSwipeStackCellViewModel? {
+        return nil
+    }
+
 }
 
 extension StaticHomeViewTemplateDataSource {

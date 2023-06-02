@@ -13,10 +13,10 @@ class ClientManagedHomeViewTemplateDataSource {
 
     private var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
-    //
+    // User Alert
     private var alertsArray: [ActivationAlert] = []
 
-    //
+    // Banners
     private var banners: [BannerInfo] = [] {
         didSet {
             var bannerCellViewModels: [BannerCellViewModel] = []
@@ -44,6 +44,50 @@ class ClientManagedHomeViewTemplateDataSource {
             self.refreshPublisher.send()
         }
     }
+
+    // Quick Swipe Stack Matches
+    private var quickSwipeStackCellViewModel: QuickSwipeStackCellViewModel?
+
+    private var quickSwipeStackMatches: [Match] {
+        return  [
+            Match(id: "A1", competitionId: "PL1", competitionName: "Primeira Liga",
+                  homeParticipant: Participant(id: "P1", name: "Benfica"),
+                  awayParticipant: Participant(id: "P2", name: "Braga"), date: Date(timeIntervalSince1970: 1696620600),
+                  sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0),
+                  numberTotalOfMarkets: 0,
+                  markets: [], rootPartId: "", status: .notStarted),
+            Match(id: "A2", competitionId: "PL2", competitionName: "Serie A",
+                  homeParticipant: Participant(id: "P3", name: "Juventus"),
+                  awayParticipant: Participant(id: "P4", name: "Inter Milan"), date: Date(timeIntervalSince1970: 1696620600),
+                  sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0),
+                  numberTotalOfMarkets: 0,
+                  markets: [], rootPartId: "", status: .notStarted),
+            Match(id: "A3", competitionId: "PL3", competitionName: "La Liga",
+                  homeParticipant: Participant(id: "P5", name: "Real Madrid"),
+                  awayParticipant: Participant(id: "P6", name: "Barcelona"), date: Date(timeIntervalSince1970: 1696620600),
+                  sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0),
+                  numberTotalOfMarkets: 0,
+                  markets: [], rootPartId: "", status: .notStarted),
+            Match(id: "A4", competitionId: "PL4", competitionName: "Bundesliga",
+                  homeParticipant: Participant(id: "P7", name: "Bayern Munich"),
+                  awayParticipant: Participant(id: "P8", name: "Dortmund"), date: Date(timeIntervalSince1970: 1696620600),
+                  sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0),
+                  numberTotalOfMarkets: 0,
+                  markets: [], rootPartId: "", status: .notStarted),
+            Match(id: "A5", competitionId: "PL5", competitionName: "Premier League",
+                  homeParticipant: Participant(id: "P9", name: "Manchester United"),
+                  awayParticipant: Participant(id: "P10", name: "Manchester City"), date: Date(timeIntervalSince1970: 1696620600),
+                  sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0),
+                  numberTotalOfMarkets: 0,
+                  markets: [], rootPartId: "", status: .notStarted)
+
+        ]
+
+    }
+    //
+
+    // Make your own bet call to action
+    var shouldShowOwnBetCallToAction: Bool = true
 
     //
     private var cancellables: Set<AnyCancellable> = []
@@ -144,7 +188,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func numberOfSections() -> Int {
-        return 2
+        return 4
     }
 
     func numberOfRows(forSectionIndex section: Int) -> Int {
@@ -154,6 +198,10 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.alertsArray.isEmpty ? 0 : 1
         case 1:
             return self.bannersLineViewModel == nil ? 0 : 1
+        case 2:
+            return self.quickSwipeStackMatches.isEmpty ? 0 : 1
+        case 3:
+            return self.shouldShowOwnBetCallToAction ? 1 : 0
         default:
             return 0
         }
@@ -183,6 +231,10 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return .userProfile
         case 1:
             return .bannerLine
+        case 2:
+            return .quickSwipeStack
+        case 3:
+            return .makeOwnBetCallToAction
         default:
             return nil
         }
@@ -215,6 +267,18 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel? {
         return nil
+    }
+
+    func quickSwipeStackViewModel() -> QuickSwipeStackCellViewModel? {
+        if let quickSwipeStackCellViewModel = self.quickSwipeStackCellViewModel {
+            return quickSwipeStackCellViewModel
+        }
+        else {
+            let matches = self.quickSwipeStackMatches
+            self.quickSwipeStackCellViewModel = QuickSwipeStackCellViewModel(title: nil, matches: matches)
+            return self.quickSwipeStackCellViewModel!
+        }
+
     }
 
 }

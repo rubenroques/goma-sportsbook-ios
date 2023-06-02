@@ -23,9 +23,13 @@ class HomeViewModel {
         case bannerLine
         case suggestedBets
         case sportGroup(Sport)
+
         case userProfile
         case featuredTips
         case footerBanner
+
+        case quickSwipeStack
+        case makeOwnBetCallToAction
 
         var identifier: String {
             switch self {
@@ -37,6 +41,9 @@ class HomeViewModel {
             case .userProfile: return "userProfile"
             case .featuredTips: return "featuredTips"
             case .footerBanner: return "footerBanner"
+            case .quickSwipeStack: return "quickSwipeStack"
+
+            case .makeOwnBetCallToAction: return "makeOwnBetCallToAction"
             }
         }
     }
@@ -126,6 +133,10 @@ extension HomeViewModel {
 
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel? {
         return self.homeViewTemplateDataSource.matchStatsViewModel(forMatch: match)
+    }
+
+    func quickSwipeStackViewModel() -> QuickSwipeStackCellViewModel? {
+        return self.homeViewTemplateDataSource.quickSwipeStackViewModel()
     }
 
 }

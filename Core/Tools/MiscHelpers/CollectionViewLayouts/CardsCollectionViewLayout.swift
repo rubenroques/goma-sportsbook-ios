@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class CardsCollectionViewLayout: UICollectionViewLayout {
+class QuickSwipeStackCollectionViewLayout: UICollectionViewLayout {
 
     public var maximumVisibleItems: Int = 4 {
         didSet{

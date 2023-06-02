@@ -33,5 +33,6 @@ protocol HomeViewTemplateDataSource {
     func suggestedBetLineViewModel() -> SuggestedBetLineViewModel?
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel?
 
-}
+    func quickSwipeStackViewModel() -> QuickSwipeStackCellViewModel?
 
+}

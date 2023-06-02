@@ -71,8 +71,9 @@ class HomeViewController: UIViewController {
         self.tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
         self.tableView.register(VideoPreviewLineTableViewCell.self, forCellReuseIdentifier: VideoPreviewLineTableViewCell.identifier)
         self.tableView.register(FeaturedTipLineTableViewCell.self, forCellReuseIdentifier: FeaturedTipLineTableViewCell.identifier)
-
         self.tableView.register(FooterResponsibleGamingViewCell.self, forCellReuseIdentifier: FooterResponsibleGamingViewCell.identifier)
+        self.tableView.register(QuickSwipeStackTableViewCell.self, forCellReuseIdentifier: QuickSwipeStackTableViewCell.identifier)
+        self.tableView.register(MakeYourBetTableViewCell.self, forCellReuseIdentifier: MakeYourBetTableViewCell.identifier)
 
         self.refreshControl.tintColor = UIColor.lightGray
         self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
@@ -527,6 +528,24 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
             return cell
 
+        case .quickSwipeStack:
+            guard
+                let cell = tableView.dequeueCellType(QuickSwipeStackTableViewCell.self),
+                let viewModel = self.viewModel.quickSwipeStackViewModel()
+            else {
+                fatalError()
+            }
+
+            cell.configure(withViewModel: viewModel)
+            return cell
+
+        case .makeOwnBetCallToAction:
+            guard
+                let cell = tableView.dequeueCellType(MakeYourBetTableViewCell.self)
+            else {
+                fatalError()
+            }
+            return cell
         }
     }
 
@@ -573,6 +592,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .userProfile:
             return 126
         case .footerBanner:
+            return UITableView.automaticDimension
+        case .quickSwipeStack:
+            return UITableView.automaticDimension
+        case .makeOwnBetCallToAction:
             return UITableView.automaticDimension
         }
 
@@ -622,6 +645,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return 126
         case .footerBanner:
             return 120
+        case .quickSwipeStack:
+            return 180
+        case .makeOwnBetCallToAction:
+            return 75
         }
     }
 
@@ -752,6 +779,10 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
             case .sportGroup:
                 _ = self.viewModel.sportGroupViewModel(forSection: indexPath.section)
             case .userProfile:
+                ()
+            case .quickSwipeStack:
+                ()
+            case .makeOwnBetCallToAction:
                 ()
             }
         }

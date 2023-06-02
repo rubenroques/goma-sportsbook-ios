@@ -424,4 +424,8 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         }
     }
 
+    func quickSwipeStackViewModel() -> QuickSwipeStackCellViewModel? {
+        return nil
+    }
+
 }
