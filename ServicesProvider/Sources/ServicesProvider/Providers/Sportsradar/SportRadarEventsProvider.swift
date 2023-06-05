@@ -81,6 +81,8 @@ class SportRadarEventsProvider: EventsProvider {
 
     private var allSportTypesPublisher: CurrentValueSubject<SubscribableContent<[SportType]>, ServiceProviderError>?
 
+    private var allSportsListTypesPublisher: CurrentValueSubject<SubscribableContent<[SportType]>, ServiceProviderError>?
+
     private var eventsPaginators: [String: SportRadarEventsPaginator] = [:]
     private var eventDetailsCoordinator: SportRadarEventDetailsCoordinator?
     private var marketUpdatesCoordinators: [String: SportRadarMarketDetailsCoordinator] = [:]
@@ -364,6 +366,67 @@ class SportRadarEventsProvider: EventsProvider {
             }
 
             publisher.send(.connected(subscription: liveSportsSubscription))
+        }
+
+        sessionDataTask.resume()
+        return publisher.eraseToAnyPublisher()
+    }
+
+    func subscribeAllSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+
+        guard
+            let sessionToken = self.socketConnector.token
+        else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+
+        let contentType = ContentType.allSports
+        let contentRoute = ContentRoute.allSports
+        let contentIdentifier = ContentIdentifier(contentType: contentType, contentRoute: contentRoute)
+
+        let allSportsSubscription = self.allSportTypesSubscription ?? Subscription(contentIdentifier: contentIdentifier, sessionToken: sessionToken.hash, unsubscriber: self)
+        self.allSportTypesSubscription = allSportsSubscription
+
+        let endpoint = SportRadarRestAPIClient.subscribe(sessionToken: sessionToken.hash, contentIdentifier: contentIdentifier)
+
+        if let allSportsListTypesPublisher = self.allSportsListTypesPublisher {
+            if case let .connected(allSportsSubscription) = allSportsListTypesPublisher.value {
+                return allSportsListTypesPublisher
+                    .prepend(.connected(subscription: allSportsSubscription))
+                    .eraseToAnyPublisher()
+            }
+            else if case .contentUpdate(_) = allSportsListTypesPublisher.value {
+                return allSportsListTypesPublisher
+                    .prepend(.connected(subscription: allSportsSubscription))
+                    .eraseToAnyPublisher()
+            }
+            else {
+                return allSportsListTypesPublisher.eraseToAnyPublisher()
+            }
+        }
+        else {
+            self.allSportsListTypesPublisher = CurrentValueSubject<SubscribableContent<[SportType]>, ServiceProviderError>.init(.disconnected)
+        }
+
+        guard
+            let publisher = self.allSportsListTypesPublisher,
+            let request = endpoint.request()
+        else {
+            return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
+        }
+
+        let sessionDataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard
+                error == nil,
+                let httpResponse = response as? HTTPURLResponse,
+                (200...299).contains(httpResponse.statusCode)
+            else {
+                print("ServiceProvider subscribeAllSportTypes \(error) \(response)")
+                publisher.send(completion: .failure(ServiceProviderError.onSubscribe))
+                return
+            }
+
+            publisher.send(.connected(subscription: allSportsSubscription))
         }
 
         sessionDataTask.resume()
@@ -659,7 +722,8 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
                                   showEventCategory: externalSport.showEventCategory,
                                   numberEvents: externalSport.numberEvents,
                                   numberOutrightEvents: externalSport.numberOutrightEvents,
-                                  numberOutrightMarkets: externalSport.numberOutrightMarkets)
+                                  numberOutrightMarkets: externalSport.numberOutrightMarkets,
+                                                                    numberLiveEvents: externalSport.numberLiveEvents)
 
                         compleatedExternalSportTypes.append(compleatedExternalSportType)
                     }
@@ -674,6 +738,50 @@ extension SportRadarEventsProvider: SportRadarConnectorSubscriber {
         if let allSportTypesPublisher = self.allSportTypesPublisher {
             let sports = sportTypes.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
             allSportTypesPublisher.send(.contentUpdate(content: sports))
+        }
+    }
+
+    func allSportsUpdated(withSportTypes sportTypes: [SportRadarModels.SportType]) {
+
+        if let allSportsListTypesPublisher = self.allSportsListTypesPublisher {
+            let sports = sportTypes.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
+            allSportsListTypesPublisher.send(.contentUpdate(content: sports))
+        }
+    }
+
+    func updateSportLiveCount(nodeId: String, liveCount: Int) {
+        if let allSportsListTypesPublisher = self.allSportsListTypesPublisher {
+            let content = allSportsListTypesPublisher.value
+            switch content {
+            case .contentUpdate(let content):
+                var sportTypes = content
+
+                if let sportIndex = sportTypes.firstIndex(where: {$0.numericId == nodeId}) {
+                    sportTypes[sportIndex].numberLiveEvents = liveCount
+
+                    allSportsListTypesPublisher.send(.contentUpdate(content: sportTypes))
+                }
+            default:
+                ()
+            }
+        }
+    }
+
+    func updateSportEventCount(nodeId: String, eventCount: Int) {
+        if let allSportsListTypesPublisher = self.allSportsListTypesPublisher {
+            let content = allSportsListTypesPublisher.value
+            switch content {
+            case .contentUpdate(let content):
+                var sportTypes = content
+
+                if let sportIndex = sportTypes.firstIndex(where: {$0.numericId == nodeId}) {
+                    sportTypes[sportIndex].numberEvents = eventCount
+
+                    allSportsListTypesPublisher.send(.contentUpdate(content: sportTypes))
+                }
+            default:
+                ()
+            }
         }
     }
 
@@ -797,28 +905,44 @@ extension SportRadarEventsProvider {
         let sportsRequestPublisher: AnyPublisher<SportRadarModels.RestResponse<SportRadarModels.SportsList>, ServiceProviderError> = self.restConnector.request(sportsEndpoint)
 
         // Code Sports
-        let dateRange = ContentDateFormatter.getDateRangeId(startDate: initialDate, endDate: endDate)
-        let codeSportsEndpoint = SportRadarRestAPIClient.sportsScheduledList(dateRange: dateRange)
+//        let dateRange = ContentDateFormatter.getDateRangeId(startDate: initialDate, endDate: endDate)
+//        let codeSportsEndpoint = SportRadarRestAPIClient.sportsScheduledList(dateRange: dateRange)
+//
+//        let codeSportsRequestPublisher: AnyPublisher<SportRadarModels.RestResponse<[SportRadarModels.ScheduledSport]>, ServiceProviderError> = self.restConnector.request(codeSportsEndpoint)
 
-        let codeSportsRequestPublisher: AnyPublisher<SportRadarModels.RestResponse<[SportRadarModels.ScheduledSport]>, ServiceProviderError> = self.restConnector.request(codeSportsEndpoint)
+//        return Publishers.CombineLatest(sportsRequestPublisher, codeSportsRequestPublisher)
+//            .flatMap({ numericSportsList, alphaSportsList -> AnyPublisher<[SportType], ServiceProviderError> in
+//                if
+//                    let numericSports = numericSportsList.data?.sportNodes?.filter({
+//                        $0.numberEvents > 0 || $0.numberOutrightEvents > 0 //|| $0.numberOutrightMarkets > 0
+//                    }),
+//                    let alphaSports = alphaSportsList.data
+//                {
+//                    let newNumericSports = numericSports.map(SportRadarModelMapper.sportType(fromSportNode:))
+//                    let newAlphaSports = alphaSports.map(SportRadarModelMapper.sportType(fromScheduledSport:))
+//                    let unifiedSportsList = self.mergeSports(numericSportArray: newNumericSports, alphaSportArray: newAlphaSports)
+//                    let sportTypes = unifiedSportsList.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
+//                    return Just(sportTypes).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+//                }
+//                return Fail(outputType: [SportType].self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+//            })
+//            .eraseToAnyPublisher()
 
-        return Publishers.CombineLatest(sportsRequestPublisher, codeSportsRequestPublisher)
-            .flatMap({ numericSportsList, alphaSportsList -> AnyPublisher<[SportType], ServiceProviderError> in
-                if
-                    let numericSports = numericSportsList.data?.sportNodes?.filter({
-                        $0.numberEvents > 0 || $0.numberOutrightEvents > 0 //|| $0.numberOutrightMarkets > 0
-                    }),
-                    let alphaSports = alphaSportsList.data
-                {
-                    let newNumericSports = numericSports.map(SportRadarModelMapper.sportType(fromSportNode:))
-                    let newAlphaSports = alphaSports.map(SportRadarModelMapper.sportType(fromScheduledSport:))
-                    let unifiedSportsList = self.mergeSports(numericSportArray: newNumericSports, alphaSportArray: newAlphaSports)
-                    let sportTypes = unifiedSportsList.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
-                    return Just(sportTypes).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-                }
-                return Fail(outputType: [SportType].self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
-            })
-            .eraseToAnyPublisher()
+        return sportsRequestPublisher.flatMap({ numericSportsList -> AnyPublisher<[SportType], ServiceProviderError> in
+            if
+                let numericSports = numericSportsList.data?.sportNodes?.filter({
+                    $0.numberEvents > 0 || $0.numberOutrightEvents > 0 || $0.numberLiveEvents > 0
+                }) {
+
+                let mappedNumericSports = numericSports.map(SportRadarModelMapper.sportType(fromSportNode:))
+
+                let sportTypes = mappedNumericSports.map(SportRadarModelMapper.sportType(fromSportRadarSportType:))
+
+                return Just(sportTypes).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            return Fail(outputType: [SportType].self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
     }
 
     func getSportRegions(sportId: String) -> AnyPublisher<SportNodeInfo, ServiceProviderError> {
@@ -1092,7 +1216,8 @@ extension SportRadarEventsProvider {
                                                              alphaId: alphaSport.alphaId,
                                                              numberEvents: numericSport.numberEvents,
                                                              numberOutrightEvents: numericSport.numberOutrightEvents,
-                                                             numberOutrightMarkets: numericSport.numberOutrightMarkets)
+                                                             numberOutrightMarkets: numericSport.numberOutrightMarkets,
+                                                             numberLiveEvents: numericSport.numberLiveEvents)
                 uniqueSportsArray.append(mergedSport)
             }
             else {

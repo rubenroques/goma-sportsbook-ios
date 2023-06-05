@@ -16,6 +16,7 @@ struct Sport {
     let showEventCategory: Bool
     let liveEventsCount: Int
     let outrightEventsCount: Int
+    let eventsCount: Int
 
     init(id: String,
          name: String,
@@ -23,7 +24,8 @@ struct Sport {
          numericId: String?,
          showEventCategory: Bool,
          liveEventsCount: Int,
-         outrightEventsCount: Int = 0) {
+         outrightEventsCount: Int = 0,
+         eventsCount: Int) {
         self.id = id
         self.name = name
         self.alphaId = alphaId
@@ -31,6 +33,7 @@ struct Sport {
         self.showEventCategory = showEventCategory
         self.liveEventsCount = liveEventsCount
         self.outrightEventsCount = outrightEventsCount
+        self.eventsCount = eventsCount
     }
     
 }

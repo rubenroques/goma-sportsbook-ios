@@ -19,8 +19,9 @@ extension ServiceProviderModelMapper {
                           alphaId: sportType.alphaId,
                           numericId: sportType.numericId,
                           showEventCategory: sportType.showEventCategory,
-                          liveEventsCount: sportType.numberEvents,
-                          outrightEventsCount: sportType.numberOutrightEvents)
+                          liveEventsCount: sportType.numberLiveEvents,
+                          outrightEventsCount: sportType.numberOutrightEvents,
+                          eventsCount: sportType.numberEvents)
         return sport
     }
 
@@ -32,7 +33,8 @@ extension ServiceProviderModelMapper {
                                                                   showEventCategory: sport.showEventCategory,
                                                                   numberEvents: sport.liveEventsCount,
                                                                   numberOutrightEvents: sport.outrightEventsCount,
-                                                                  numberOutrightMarkets: 0)
+                                                                  numberOutrightMarkets: 0,
+                                                                  numberLiveEvents: sport.liveEventsCount)
         return serviceProviderSportType
     }
 

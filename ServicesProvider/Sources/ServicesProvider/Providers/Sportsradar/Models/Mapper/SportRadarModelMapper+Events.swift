@@ -26,7 +26,8 @@ extension SportRadarModelMapper {
                                                alphaId: internalEvent.sportTypeCode,
                                                numberEvents: 0,
                                                numberOutrightEvents: 0,
-                                               numberOutrightMarkets: 0)
+                                               numberOutrightMarkets: 0,
+                                                             numberLiveEvents: 0)
 
         let sport = SportRadarModelMapper.sportType(fromSportRadarSportType: sportRadarSportType)
 

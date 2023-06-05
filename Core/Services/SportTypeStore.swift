@@ -24,7 +24,7 @@ class SportTypeStore {
             return firstSport
         }
         else {
-            return Sport(id: "1", name: "Football", alphaId: "FBL", numericId: nil, showEventCategory: false, liveEventsCount: 0)
+            return Sport(id: "1", name: "Football", alphaId: "FBL", numericId: nil, showEventCategory: false, liveEventsCount: 0, eventsCount: 0)
         }
     }
 
@@ -35,7 +35,7 @@ class SportTypeStore {
             return firstSportWithCodeId
         }
         else {
-            return Sport(id: "1", name: "Football", alphaId: "FBL", numericId: "19781.1", showEventCategory: false, liveEventsCount: 0)
+            return Sport(id: "1", name: "Football", alphaId: "FBL", numericId: "19781.1", showEventCategory: false, liveEventsCount: 0, eventsCount: 0)
         }
     }
 
@@ -58,24 +58,74 @@ class SportTypeStore {
 
     func requestInitialSportsData() {
 
-        self.getLiveSports()
+        self.getAllSports()
 
-        self.getPreLiveSports()
+        //self.getPreLiveSports()
 
-        Publishers.CombineLatest(self.isLoadingLiveSportsPublisher, self.isLoadingPreLiveSportsPublisher)
+//        Publishers.CombineLatest(self.isLoadingLiveSportsPublisher, self.isLoadingPreLiveSportsPublisher)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] isLoadingLiveSports, isLoadingPreLiveSports in
+//
+//                if !isLoadingLiveSports && !isLoadingPreLiveSports {
+//
+//                    if let liveSports = self?.liveSports,
+//                       let preLiveSports = self?.preLiveSports {
+//
+//                        self?.mergeAllSports(liveSports: liveSports, preLiveSports: preLiveSports)
+//                    }
+//                }
+//            })
+//            .store(in: &cancellables)
+    }
+
+    private func getAllSports() {
+        Env.servicesProvider.subscribeAllSportTypes()
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] isLoadingLiveSports, isLoadingPreLiveSports in
-
-                if !isLoadingLiveSports && !isLoadingPreLiveSports {
-
-                    if let liveSports = self?.liveSports,
-                       let preLiveSports = self?.preLiveSports {
-
-                        self?.mergeAllSports(liveSports: liveSports, preLiveSports: preLiveSports)
-                    }
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("All sports error: \(error)")
+                    self?.isLoadingPreLiveSportsPublisher.send(false)
+                    self?.isLoadingLiveSportsPublisher.send(false)
+                    self?.isLoadingSportTypesPublisher.send(false)
                 }
-            })
-            .store(in: &cancellables)
+
+        }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
+            switch subscribableContent {
+            case .connected(let subscription):
+                self?.preLiveSportsSubscription = subscription
+            case .contentUpdate(let sportTypes):
+                // Prelive sports
+                let sports = sportTypes.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
+
+                let filteredSports = sports.filter({
+                    $0.eventsCount > 0 || $0.liveEventsCount > 0 || $0.outrightEventsCount > 0
+                })
+
+                self?.preLiveSports = filteredSports
+
+                self?.isLoadingPreLiveSportsPublisher.send(false)
+
+                // Live sports
+                let liveSports = sports.filter({
+                    $0.liveEventsCount > 0
+                })
+
+                self?.liveSports = liveSports
+
+                self?.isLoadingLiveSportsPublisher.send(false)
+
+                self?.sports = filteredSports
+
+                self?.isLoadingSportTypesPublisher.send(false)
+            case .disconnected:
+                ()
+            }
+
+        })
+        .store(in: &cancellables)
     }
 
     private func getLiveSports() {
@@ -121,7 +171,20 @@ class SportTypeStore {
             }
         }, receiveValue: { [weak self] sportsList in
             self?.preLiveSports = sportsList.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
+
+            let liveSports = sportsList.filter( {
+                $0.numberLiveEvents > 0
+            })
+
+            self?.liveSports = liveSports.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
+
+            let testSport = sportsList.filter({
+                $0.numericId == "29412.1"
+            })
+            
             self?.isLoadingPreLiveSportsPublisher.send(false)
+
+            self?.getLiveSports()
         })
         .store(in: &cancellables)
     }

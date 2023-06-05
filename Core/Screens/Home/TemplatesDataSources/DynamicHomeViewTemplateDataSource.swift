@@ -315,7 +315,7 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case .suggestedBets:
             return HomeViewModel.Content.suggestedBets
         case .sport(let id, let name, _):
-            let sport = Sport(id: id, name: name.capitalized, alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0)
+            let sport = Sport(id: id, name: name.capitalized, alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0, eventsCount: 0)
             return HomeViewModel.Content.sport(sport)
         case .unknown:
             return nil
@@ -343,7 +343,7 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return viewModel
         }
         else {
-            let sport = Sport(id: sportId, name: name.capitalized, alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0)
+            let sport = Sport(id: sportId, name: name.capitalized, alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0, eventsCount: 0)
             let sportGroupViewModel = SportGroupViewModel(sport: sport, contents: contents)
             sportGroupViewModel.requestRefreshPublisher
                 .sink { [weak self] _ in

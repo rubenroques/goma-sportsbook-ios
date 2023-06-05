@@ -16,13 +16,15 @@ extension SportRadarModels {
         var numberEvents: Int
         var numberOutrightEvents: Int
         var numberOutrightMarkets: Int
+        var numberLiveEvents: Int
 
         init(name: String,
                     numericId: String? = nil,
                     alphaId: String? = nil,
                     numberEvents: Int,
                     numberOutrightEvents: Int,
-                    numberOutrightMarkets: Int) {
+                    numberOutrightMarkets: Int,
+             numberLiveEvents: Int) {
 
             self.name = name
             self.numericId = numericId
@@ -30,6 +32,7 @@ extension SportRadarModels {
             self.numberEvents = numberEvents
             self.numberOutrightEvents = numberOutrightEvents
             self.numberOutrightMarkets = numberOutrightMarkets
+            self.numberLiveEvents = numberLiveEvents
         }
     }
 
@@ -61,7 +64,7 @@ extension SportRadarModels {
                                            alphaId: sportTypeIdString,
                                            numberEvents: eventsCount,
                                            numberOutrightEvents: 0,
-                                           numberOutrightMarkets: 0)
+                                       numberOutrightMarkets: 0, numberLiveEvents: 0)
 
             self.eventsCount = eventsCount
             self.sportName = sportTypeName
@@ -90,6 +93,8 @@ extension SportRadarModels {
         var numberEvents: Int
         var numberOutrightEvents: Int
         var numberOutrightMarkets: Int
+        var numberLiveEvents: Int
+        var alphaCode: String
 
         enum CodingKeys: String, CodingKey {
             case id = "idfwbonavigation"
@@ -97,6 +102,8 @@ extension SportRadarModels {
             case numberEvents = "numevents"
             case numberOutrightEvents = "numoutrightevents"
             case numberOutrightMarkets = "numoutrightmarkets"
+            case numberLiveEvents = "numinplayevents"
+            case alphaCode = "focontentid"
         }
 
         init(from decoder: Decoder) throws {
@@ -106,6 +113,8 @@ extension SportRadarModels {
             self.numberEvents = Int((try? container.decode(String.self, forKey: SportRadarModels.SportNode.CodingKeys.numberEvents)) ?? "0") ?? 0
             self.numberOutrightEvents = Int((try? container.decode(String.self, forKey: SportRadarModels.SportNode.CodingKeys.numberOutrightEvents)) ?? "0") ?? 0
             self.numberOutrightMarkets = Int((try? container.decode(String.self, forKey: SportRadarModels.SportNode.CodingKeys.numberOutrightMarkets)) ?? "0") ?? 0
+            self.numberLiveEvents = Int((try? container.decode(String.self, forKey: SportRadarModels.SportNode.CodingKeys.numberLiveEvents)) ?? "0") ?? 0
+            self.alphaCode = try container.decode(String.self, forKey: SportRadarModels.SportNode.CodingKeys.alphaCode)
         }
     }
 

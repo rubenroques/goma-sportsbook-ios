@@ -17,6 +17,7 @@ public struct SportType: Codable {
     public var numberEvents: Int
     public var numberOutrightEvents: Int
     public var numberOutrightMarkets: Int
+    public var numberLiveEvents: Int
 
     public init(name: String,
                 numericId: String?,
@@ -25,7 +26,8 @@ public struct SportType: Codable {
                 showEventCategory: Bool,
                 numberEvents: Int,
                 numberOutrightEvents: Int,
-                numberOutrightMarkets: Int) {
+                numberOutrightMarkets: Int,
+                numberLiveEvents: Int) {
         self.name = name
         self.numericId = numericId
         self.alphaId = alphaId
@@ -34,6 +36,7 @@ public struct SportType: Codable {
         self.numberEvents = numberEvents
         self.numberOutrightEvents = numberOutrightEvents
         self.numberOutrightMarkets = numberOutrightMarkets
+        self.numberLiveEvents = numberLiveEvents
     }
     
 }

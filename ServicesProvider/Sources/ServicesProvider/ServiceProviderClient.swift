@@ -103,6 +103,15 @@ extension ServicesProviderClient {
         return eventsProvider.subscribeLiveSportTypes()
     }
 
+    public func subscribeAllSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeAllSportTypes()
+    }
+
     //
     // Events
     //

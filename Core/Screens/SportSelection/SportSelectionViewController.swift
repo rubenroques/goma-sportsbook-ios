@@ -33,6 +33,8 @@ class SportSelectionViewController: UIViewController {
     var allSportsPublisher: AnyCancellable?
     var liveSportsPublisher: AnyCancellable?
 
+    var allSportsSubscribePublisher: AnyCancellable?
+
     var selectionDelegate: SportTypeSelectionViewDelegate?
 
     var cancellables = Set<AnyCancellable>()
@@ -86,10 +88,12 @@ class SportSelectionViewController: UIViewController {
         self.isLoading = true
 
         if isLiveSport {
-            self.getSportsLive()
+            //self.getSportsLive()
+            self.getAllSports(onlyLiveSports: true)
         }
         else {
-            self.getAvailableSports()
+            //self.getAvailableSports()
+            self.getAllSports()
         }
 
         self.navigationLabel.text = localized("choose_sport")
@@ -142,6 +146,41 @@ class SportSelectionViewController: UIViewController {
         }
 
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
+    }
+
+    func getAllSports(onlyLiveSports: Bool = false) {
+
+        self.allSportsSubscribePublisher = Env.servicesProvider.subscribeAllSportTypes()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                print("Env.servicesProvider.allSportTypes completed \(completion)")
+            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
+                switch subscribableContent {
+                case .connected(subscription: let subscription):
+                    self?.sportsSubscription = subscription
+                case .contentUpdate(let sportTypes):
+
+                    if onlyLiveSports {
+                        let liveSportTypes = sportTypes.filter({
+                            $0.numberLiveEvents > 0
+                        })
+                        self?.configureWithSports(liveSportTypes)
+                    }
+                    else {
+                        let preLiveSports = sportTypes.filter({
+                            $0.numberEvents > 0 || $0.numberLiveEvents > 0 || $0.numberOutrightEvents > 0
+                        })
+
+                        self?.configureWithSports(preLiveSports)
+                    }
+
+                    self?.isLoading = false
+
+                case .disconnected:
+                    ()
+                }
+            })
 
     }
 
