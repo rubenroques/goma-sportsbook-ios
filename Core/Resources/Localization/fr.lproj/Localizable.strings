@@ -1370,3 +1370,6 @@
 "id_card_or_residence_id" = "Carte d'identité ou carte de séjour";
 "driving_licence_or_passport" = "Permis de conduire ou passeport";
 "add_documents" = "Add documents";
+"rib_number" = "Numéro du RIB";
+"rib_document" = "RIB Document";
+"locked_rib_message" = "Vos documents d'identité doivent être valides pour que vous puissiez ajouter votre RiB.";

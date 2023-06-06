@@ -673,7 +673,6 @@ extension IdentificationDocsViewController {
             self.idAddDocBaseView.leadingAnchor.constraint(equalTo: self.identificationBaseView.leadingAnchor, constant: 14),
             self.idAddDocBaseView.trailingAnchor.constraint(equalTo: self.identificationBaseView.trailingAnchor, constant: -14),
             self.idAddDocBaseView.topAnchor.constraint(equalTo: self.identificationBottomStackView.bottomAnchor, constant: 5),
-            //self.idAddDocBaseView.bottomAnchor.constraint(equalTo: self.identificationBaseView.bottomAnchor, constant: -20),
             self.idAddDocBaseView.heightAnchor.constraint(equalToConstant: 30),
 
             self.idAddDocView.centerXAnchor.constraint(equalTo: self.idAddDocBaseView.centerXAnchor),
