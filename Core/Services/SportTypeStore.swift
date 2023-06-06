@@ -48,6 +48,8 @@ class SportTypeStore {
     private var preLiveSports = [Sport]()
     private var liveSports = [Sport]()
 
+    var sportsPublisher: CurrentValueSubject<[Sport], Never> = .init([])
+
     init() {
 
     }
@@ -60,22 +62,6 @@ class SportTypeStore {
 
         self.getAllSports()
 
-        //self.getPreLiveSports()
-
-//        Publishers.CombineLatest(self.isLoadingLiveSportsPublisher, self.isLoadingPreLiveSportsPublisher)
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] isLoadingLiveSports, isLoadingPreLiveSports in
-//
-//                if !isLoadingLiveSports && !isLoadingPreLiveSports {
-//
-//                    if let liveSports = self?.liveSports,
-//                       let preLiveSports = self?.preLiveSports {
-//
-//                        self?.mergeAllSports(liveSports: liveSports, preLiveSports: preLiveSports)
-//                    }
-//                }
-//            })
-//            .store(in: &cancellables)
     }
 
     private func getAllSports() {
@@ -118,6 +104,8 @@ class SportTypeStore {
                 self?.isLoadingLiveSportsPublisher.send(false)
 
                 self?.sports = filteredSports
+
+                self?.sportsPublisher.send(filteredSports)
 
                 self?.isLoadingSportTypesPublisher.send(false)
             case .disconnected:
@@ -177,10 +165,6 @@ class SportTypeStore {
             })
 
             self?.liveSports = liveSports.map(ServiceProviderModelMapper.sport(fromServiceProviderSportType:))
-
-            let testSport = sportsList.filter({
-                $0.numericId == "29412.1"
-            })
             
             self?.isLoadingPreLiveSportsPublisher.send(false)
 

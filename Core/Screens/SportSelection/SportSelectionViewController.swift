@@ -151,36 +151,55 @@ class SportSelectionViewController: UIViewController {
 
     func getAllSports(onlyLiveSports: Bool = false) {
 
-        self.allSportsSubscribePublisher = Env.servicesProvider.subscribeAllSportTypes()
+        Env.sportsStore.sportsPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                print("Env.servicesProvider.allSportTypes completed \(completion)")
-            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
-                switch subscribableContent {
-                case .connected(subscription: let subscription):
-                    self?.sportsSubscription = subscription
-                case .contentUpdate(let sportTypes):
+            .sink(receiveValue: { [weak self] allSports in
 
-                    if onlyLiveSports {
-                        let liveSportTypes = sportTypes.filter({
-                            $0.numberLiveEvents > 0
-                        })
-                        self?.configureWithSports(liveSportTypes)
-                    }
-                    else {
-                        let preLiveSports = sportTypes.filter({
-                            $0.numberEvents > 0 || $0.numberLiveEvents > 0 || $0.numberOutrightEvents > 0
-                        })
+                if onlyLiveSports {
+                    let liveSports = allSports.filter({
+                        $0.liveEventsCount > 0
+                    })
 
-                        self?.configureWithSports(preLiveSports)
-                    }
-
-                    self?.isLoading = false
-
-                case .disconnected:
-                    ()
+                    self?.configureWithSports(liveSports)
                 }
+                else {
+                    self?.configureWithSports(allSports)
+                }
+
+                self?.isLoading = false
             })
+            .store(in: &cancellables)
+
+//        self.allSportsSubscribePublisher = Env.servicesProvider.subscribeAllSportTypes()
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                print("Env.servicesProvider.allSportTypes completed \(completion)")
+//            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[SportType]>) in
+//                switch subscribableContent {
+//                case .connected(subscription: let subscription):
+//                    self?.sportsSubscription = subscription
+//                case .contentUpdate(let sportTypes):
+//
+//                    if onlyLiveSports {
+//                        let liveSportTypes = sportTypes.filter({
+//                            $0.numberLiveEvents > 0
+//                        })
+//                        self?.configureWithSports(liveSportTypes)
+//                    }
+//                    else {
+//                        let preLiveSports = sportTypes.filter({
+//                            $0.numberEvents > 0 || $0.numberLiveEvents > 0 || $0.numberOutrightEvents > 0
+//                        })
+//
+//                        self?.configureWithSports(preLiveSports)
+//                    }
+//
+//                    self?.isLoading = false
+//
+//                case .disconnected:
+//                    ()
+//                }
+//            })
 
     }
 
@@ -195,7 +214,7 @@ class SportSelectionViewController: UIViewController {
             .sink(receiveCompletion: { [weak self] completion in
                 self?.isLoading = false
             }, receiveValue: { [weak self] (sportTypes: [SportType]) in
-                self?.configureWithSports(sportTypes)
+                self?.configureWithSportTypes(sportTypes)
                 self?.isLoading = false
             })
 
@@ -218,7 +237,7 @@ class SportSelectionViewController: UIViewController {
                 case .connected(subscription: let subscription):
                     self?.sportsSubscription = subscription
                 case .contentUpdate(let sportTypes):
-                    self?.configureWithSports(sportTypes)
+                    self?.configureWithSportTypes(sportTypes)
                     self?.isLoading = false
                 case .disconnected:
                     self?.configureWithSports([])
@@ -227,10 +246,16 @@ class SportSelectionViewController: UIViewController {
 
     }
 
-    func configureWithSports(_ sportTypes: [ServicesProvider.SportType]) {
+    func configureWithSportTypes(_ sportTypes: [ServicesProvider.SportType]) {
         self.sportsData = sportTypes.map({ sportType in
             ServiceProviderModelMapper.sport(fromServiceProviderSportType: sportType)
         })
+        self.fullSportsData = self.sportsData
+        self.collectionView.reloadData()
+    }
+
+    func configureWithSports(_ sports: [Sport]) {
+        self.sportsData = sports
         self.fullSportsData = self.sportsData
         self.collectionView.reloadData()
     }
