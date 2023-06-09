@@ -74,6 +74,8 @@ class HomeViewController: UIViewController {
         self.tableView.register(FooterResponsibleGamingViewCell.self, forCellReuseIdentifier: FooterResponsibleGamingViewCell.identifier)
         self.tableView.register(QuickSwipeStackTableViewCell.self, forCellReuseIdentifier: QuickSwipeStackTableViewCell.identifier)
         self.tableView.register(MakeYourBetTableViewCell.self, forCellReuseIdentifier: MakeYourBetTableViewCell.identifier)
+        self.tableView.register(MatchWidgetContainerTableViewCell.self, forCellReuseIdentifier: MatchWidgetContainerTableViewCell.identifier)
+        self.tableView.register(StoriesLineTableViewCell.self, forCellReuseIdentifier: StoriesLineTableViewCell.identifier)
 
         self.refreshControl.tintColor = UIColor.lightGray
         self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
@@ -238,14 +240,18 @@ class HomeViewController: UIViewController {
 
     private func openFeaturedTipSlider(featuredTips: [FeaturedTip], atIndex index: Int = 0) {
         let tipsSliderViewController = TipsSliderViewController(viewModel: TipsSliderViewModel(featuredTips: featuredTips, startIndex: index))
-        
         tipsSliderViewController.shift.enable()
-
         tipsSliderViewController.shouldShowBetslip = { [weak self] in
             self?.didTapBetslipButtonAction?()
         }
-
         self.present(tipsSliderViewController, animated: true)
+    }
+
+    private func openStoriesFullScreen(index: Int) {
+        let storiesFullScreenViewModel = StoriesFullScreenViewModel()
+        let storiesFullScreenViewController = StoriesFullScreenViewController(viewModel: storiesFullScreenViewModel)
+        storiesFullScreenViewController.modalPresentationStyle = .fullScreen
+        self.present(storiesFullScreenViewController, animated: true)
     }
 
     @objc private func didTapOpenFavorites() {
@@ -357,7 +363,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
             cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
             cell.setupWithMatch(match)
-            cell.tappedMatchLineAction = { [weak self] in
+            cell.tappedMatchLineAction = { [weak self] match in
                 self?.openMatchDetails(matchId: match.id)
             }
 
@@ -529,8 +535,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
 
         case .quickSwipeStack:
+
             guard
-                let cell = tableView.dequeueCellType(QuickSwipeStackTableViewCell.self),
+                let cell = tableView.dequeueReusableCell(withIdentifier: QuickSwipeStackTableViewCell.identifier) as? QuickSwipeStackTableViewCell,
                 let viewModel = self.viewModel.quickSwipeStackViewModel()
             else {
                 fatalError()
@@ -541,12 +548,62 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
         case .makeOwnBetCallToAction:
             guard
-                let cell = tableView.dequeueCellType(MakeYourBetTableViewCell.self)
+                let cell = tableView.dequeueReusableCell(withIdentifier: MakeYourBetTableViewCell.identifier) as? MakeYourBetTableViewCell
             else {
                 fatalError()
             }
+
+            return cell
+
+        case .highlightedMatches:
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: MatchWidgetContainerTableViewCell.identifier) as? MatchWidgetContainerTableViewCell,
+                let viewModel = self.viewModel.highlightedMatchViewModel(forIndex: indexPath.row)
+            else {
+                fatalError()
+            }
+
+            cell.setupWithViewModel(viewModel)
+            cell.tappedMatchLineAction = { [weak self] match in
+                self?.openMatchDetails(matchId: match.id)
+            }
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.openQuickbet(bettingTicket)
+            }
+            return cell
+
+        case .promotionalStories:
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: StoriesLineTableViewCell.identifier) as? StoriesLineTableViewCell
+            else {
+                fatalError()
+            }
+            cell.selectedItemAction = { [weak self] itemIndex in
+                self?.openStoriesFullScreen(index: itemIndex)
+            }
+            return cell
+
+        case .promotedSportSection:
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: MatchLineTableViewCell.identifier) as? MatchLineTableViewCell,
+                let match = self.viewModel.promotedMatch(forSection: indexPath.section, forIndex: indexPath.row)
+            else {
+                fatalError()
+            }
+
+            cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
+            cell.setupWithMatch(match)
+            cell.tappedMatchLineAction = { [weak self] match in
+                self?.openMatchDetails(matchId: match.id)
+            }
+
+            cell.didLongPressOdd = { [weak self] bettingTicket in
+                self?.openQuickbet(bettingTicket)
+            }
+
             return cell
         }
+
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -596,6 +653,12 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .quickSwipeStack:
             return UITableView.automaticDimension
         case .makeOwnBetCallToAction:
+            return UITableView.automaticDimension
+        case .highlightedMatches:
+            return UITableView.automaticDimension
+        case .promotionalStories:
+            return UITableView.automaticDimension
+        case .promotedSportSection:
             return UITableView.automaticDimension
         }
 
@@ -649,6 +712,12 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return 180
         case .makeOwnBetCallToAction:
             return 75
+        case .highlightedMatches:
+            return 520
+        case .promotionalStories:
+            return 115
+        case .promotedSportSection:
+            return StyleHelper.cardsStyleHeight() + 20
         }
     }
 
@@ -783,6 +852,12 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
             case .quickSwipeStack:
                 ()
             case .makeOwnBetCallToAction:
+                ()
+            case .highlightedMatches:
+                ()
+            case .promotionalStories:
+                ()
+            case .promotedSportSection:
                 ()
             }
         }

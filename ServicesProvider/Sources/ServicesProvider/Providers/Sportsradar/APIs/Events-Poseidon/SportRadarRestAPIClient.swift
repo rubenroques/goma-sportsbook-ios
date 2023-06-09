@@ -25,11 +25,18 @@ enum SportRadarRestAPIClient {
     case getEventSummary(eventId: String)
     case getMarketInfo(marketId: String)
 
-    case homeSliders
-    case promotionalTopBanners
+    case getEventsForMarketGroup(marketGroupId: String)
+    case getEventForMarket(marketId: String)
 
+    case homeSliders
+    
+    case promotionalTopBanners
     case promotionalTopEvents
     case promotionalTopStories
+    case highlightsBoostedOddsEvents
+    case highlightsImageVisualEvents
+
+    case promotedSports
 
     case favoritesList
     case addFavoriteList(name: String)
@@ -76,6 +83,11 @@ extension SportRadarRestAPIClient: Endpoint {
         case .getMarketInfo:
             return "/services/content/get"
 
+        case .getEventsForMarketGroup:
+            return "/services/content/get"
+        case .getEventForMarket:
+            return "/services/content/get"
+
         //
         case .homeSliders:
             return "/services/content/get"
@@ -86,6 +98,15 @@ extension SportRadarRestAPIClient: Endpoint {
             return "/services/content/get"
         case .promotionalTopStories:
             return "/services/content/get"
+
+        case .highlightsBoostedOddsEvents:
+            return "/services/content/get"
+        case .highlightsImageVisualEvents:
+            return "/services/content/get"
+
+        case .promotedSports:
+            return "/services/content/get"
+
         //
         case .favoritesList:
             return "/api/favourites/fw/getAccountFavouriteCoupon"
@@ -119,10 +140,18 @@ extension SportRadarRestAPIClient: Endpoint {
         case .getEventSummary: return nil
         case .getMarketInfo: return nil
 
+        case .getEventsForMarketGroup: return nil
+        case .getEventForMarket: return nil
+
         case .homeSliders: return nil
         case .promotionalTopBanners: return nil
         case .promotionalTopEvents: return nil
         case .promotionalTopStories: return nil
+
+        case .highlightsBoostedOddsEvents: return nil
+        case .highlightsImageVisualEvents: return nil
+
+        case .promotedSports: return nil
 
         case .favoritesList: return nil
         case .addFavoriteList: return nil
@@ -150,10 +179,18 @@ extension SportRadarRestAPIClient: Endpoint {
         case .getEventSummary: return .post
         case .getMarketInfo: return .post
 
+        case .getEventsForMarketGroup: return .post
+        case .getEventForMarket: return .post
+
         case .homeSliders: return .post
         case .promotionalTopBanners: return .post
         case .promotionalTopEvents: return .post
         case .promotionalTopStories: return .post
+
+        case .highlightsBoostedOddsEvents: return .post
+        case .highlightsImageVisualEvents: return .post
+
+        case .promotedSports: return .post
 
         case .favoritesList: return .get
         case .addFavoriteList: return .post
@@ -311,7 +348,8 @@ extension SportRadarRestAPIClient: Endpoint {
                         }
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
-        case .promotionalTopBanners:
+
+        case .promotionalTopBanners: // TODO: use correct language
             let bodyString =
                         """
                         {
@@ -320,7 +358,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "1355/Homepage"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "FR",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -336,7 +374,7 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "1355/20/slidingEvent"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "FR",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -352,7 +390,39 @@ extension SportRadarRestAPIClient: Endpoint {
                                 "id": "1355/20/PromotionsSummary"
                             },
                             "clientContext": {
-                                "language": "\(SportRadarConstants.socketLanguageCode)",
+                                "language": "FR",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
+        case .highlightsBoostedOddsEvents:
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "headline",
+                                "id": "1355/20/boostedOddCard"
+                            },
+                            "clientContext": {
+                                "language": "FR",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
+        case .highlightsImageVisualEvents:
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "headline",
+                                "id": "1355/20/eventCard"
+                            },
+                            "clientContext": {
+                                "language": "FR",
                                 "ipAddress": "127.0.0.1"
                             }
                         }
@@ -419,6 +489,56 @@ extension SportRadarRestAPIClient: Endpoint {
                         }
                         """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
+        case .getEventsForMarketGroup(let marketGroupId):
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "eventGroup",
+                                "id": "\(marketGroupId)"
+                            },
+                            "clientContext": {
+                                "language": "FR",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
+        case .getEventForMarket(let marketId):
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "market",
+                                "id": "\(marketId)"
+                            },
+                            "clientContext": {
+                                "language": "FR",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
+        case .promotedSports:
+            let bodyString =
+                        """
+                        {
+                            "contentId": {
+                                "type": "boNavigationList",
+                                "id": "1356/top"
+                            },
+                            "clientContext": {
+                                "language": "FR",
+                                "ipAddress": "127.0.0.1"
+                            }
+                        }
+                        """
+            return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
+
         default:
             return nil
         }
@@ -458,6 +578,11 @@ extension SportRadarRestAPIClient: Endpoint {
         case .getMarketInfo:
             return SportRadarConstants.servicesRestHostname
 
+        case .getEventsForMarketGroup:
+            return SportRadarConstants.servicesRestHostname
+        case .getEventForMarket:
+            return SportRadarConstants.servicesRestHostname
+
         case .homeSliders:
             return SportRadarConstants.servicesRestHostname
         case .promotionalTopBanners:
@@ -465,6 +590,13 @@ extension SportRadarRestAPIClient: Endpoint {
         case .promotionalTopEvents:
             return SportRadarConstants.servicesRestHostname
         case .promotionalTopStories:
+            return SportRadarConstants.servicesRestHostname
+        case .highlightsBoostedOddsEvents:
+            return SportRadarConstants.servicesRestHostname
+        case .highlightsImageVisualEvents:
+            return SportRadarConstants.servicesRestHostname
+
+        case .promotedSports:
             return SportRadarConstants.servicesRestHostname
 
         case .favoritesList:
@@ -490,6 +622,7 @@ extension SportRadarRestAPIClient: Endpoint {
             "Media-Type": "application/json",
             "Accept": "application/json"
         ]
+
         switch self {
         case .get:
             return defaultHeaders
@@ -520,6 +653,19 @@ extension SportRadarRestAPIClient: Endpoint {
         case .getMarketInfo:
             return defaultHeaders
 
+        case .getEventsForMarketGroup:
+            return defaultHeaders
+        case .getEventForMarket:
+            return defaultHeaders
+            
+        case .highlightsBoostedOddsEvents:
+            return defaultHeaders
+        case .highlightsImageVisualEvents:
+            return defaultHeaders
+
+        case .promotedSports:
+            return defaultHeaders
+            
         case .homeSliders:
             return defaultHeaders
         case .promotionalTopBanners:

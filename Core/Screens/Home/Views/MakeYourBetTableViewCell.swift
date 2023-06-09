@@ -70,14 +70,14 @@ extension MakeYourBetTableViewCell {
 
     private static func createImageView() -> UIImageView {
         let view = UIImageView()
+        view.image = UIImage(named: "hand_pointing_image")
         view.translatesAutoresizingMaskIntoConstraints = false
         view.contentMode = .scaleAspectFit
-        view.backgroundColor = .red
+        view.backgroundColor = .clear
         return view
     }
 
     private func setupSubviews() {
-
         // Add subviews to self.view or each other
         self.contentView.addSubview(self.baseView)
         self.baseView.addSubview(self.titleLabel)
@@ -89,22 +89,22 @@ extension MakeYourBetTableViewCell {
 
     private func initConstraints() {
         NSLayoutConstraint.activate([
-
             self.baseView.heightAnchor.constraint(equalToConstant: self.cellHeight),
 
             self.baseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 18),
             self.baseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -18),
-            self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            self.baseView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+            self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 6),
+            self.baseView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -16),
 
             self.swipeImageView.widthAnchor.constraint(equalTo: self.swipeImageView.heightAnchor),
             self.swipeImageView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
-            self.swipeImageView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
-            self.swipeImageView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -24),
+            self.swipeImageView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: 28),
+            self.swipeImageView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -12),
 
             self.titleLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.swipeImageView.leadingAnchor),
             self.titleLabel.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor),
         ])
     }
+
 }

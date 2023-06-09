@@ -11,6 +11,7 @@ import ServicesProvider
 
 class ClientManagedHomeViewTemplateDataSource {
 
+    private let fixedSection = 6
     private var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
     // User Alert
@@ -45,75 +46,76 @@ class ClientManagedHomeViewTemplateDataSource {
         }
     }
 
+    //
+    // Should show instagram like promotional stories
+    var shouldShowPromotionalStories: Bool = true
+
+    //
     // Quick Swipe Stack Matches
     private var quickSwipeStackCellViewModel: QuickSwipeStackCellViewModel?
 
-    private var quickSwipeStackMatches: [Match] {
-        return  [
-            Match(id: "A1", competitionId: "PL1", competitionName: "Primeira Liga",
-                  homeParticipant: Participant(id: "P1", name: "Benfica"),
-                  awayParticipant: Participant(id: "P2", name: "Braga"), date: Date(timeIntervalSince1970: 1696620600),
-                  sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0),
-                  numberTotalOfMarkets: 0,
-                  markets: [], rootPartId: "", status: .notStarted),
-            Match(id: "A2", competitionId: "PL2", competitionName: "Serie A",
-                  homeParticipant: Participant(id: "P3", name: "Juventus"),
-                  awayParticipant: Participant(id: "P4", name: "Inter Milan"), date: Date(timeIntervalSince1970: 1696620600),
-                  sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0),
-                  numberTotalOfMarkets: 0,
-                  markets: [], rootPartId: "", status: .notStarted),
-            Match(id: "A3", competitionId: "PL3", competitionName: "La Liga",
-                  homeParticipant: Participant(id: "P5", name: "Real Madrid"),
-                  awayParticipant: Participant(id: "P6", name: "Barcelona"), date: Date(timeIntervalSince1970: 1696620600),
-                  sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0),
-                  numberTotalOfMarkets: 0,
-                  markets: [], rootPartId: "", status: .notStarted),
-            Match(id: "A4", competitionId: "PL4", competitionName: "Bundesliga",
-                  homeParticipant: Participant(id: "P7", name: "Bayern Munich"),
-                  awayParticipant: Participant(id: "P8", name: "Dortmund"), date: Date(timeIntervalSince1970: 1696620600),
-                  sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0),
-                  numberTotalOfMarkets: 0,
-                  markets: [], rootPartId: "", status: .notStarted),
-            Match(id: "A5", competitionId: "PL5", competitionName: "Premier League",
-                  homeParticipant: Participant(id: "P9", name: "Manchester United"),
-                  awayParticipant: Participant(id: "P10", name: "Manchester City"), date: Date(timeIntervalSince1970: 1696620600),
-                  sport: Sport.init(id: "1", name: "Football", alphaId: nil, numericId: nil, showEventCategory: false, liveEventsCount: 0),
-                  numberTotalOfMarkets: 0,
-                  markets: [], rootPartId: "", status: .notStarted)
-
-        ]
-
+    private var quickSwipeStackMatches: [Match] = [] {
+        didSet {
+            self.quickSwipeStackCellViewModel = QuickSwipeStackCellViewModel(title: nil, matches: self.quickSwipeStackMatches)
+        }
     }
+    //
+
+    //
+    // Quick Swipe Stack Matches
+    private var highlightsVisualImageMatches: [Match]  = []
+    private var highlightsBoostedMatches: [Match] = []
+
     //
 
     // Make your own bet call to action
     var shouldShowOwnBetCallToAction: Bool = true
+
+
+    // PromotedSports
+    var promotedSports: [PromotedSport] = [] {
+        didSet {
+            self.promotedSports.forEach { [weak self] promotedSport in
+                self?.fetchMatchesForPromotedSport(promotedSport)
+            }
+        }
+    }
+    var promotedSportsMatches: [String: [Match]] = [:]
 
     //
     private var cancellables: Set<AnyCancellable> = []
 
     init() {
 
+        self.refreshData()
+//
+//        Env.servicesProvider.getPromotionalTopEvents()
+//            .receive(on: DispatchQueue.main)
+//            .sink { completion in
+//                print("")
+//            } receiveValue: { (promotionalBannersResponse: BannerResponse) in
+//                print("")
+//            }
+//            .store(in: &self.cancellables)
+//
+//        Env.servicesProvider.getPromotionalTopStories()
+//            .receive(on: DispatchQueue.main)
+//            .sink { completion in
+//                print("")
+//            } receiveValue: { (promotionalBannersResponse: BannerResponse) in
+//                print("")
+//            }
+//            .store(in: &self.cancellables)
+
+    }
+
+    func refreshData() {
+
         self.fetchAlerts()
+        self.fetchQuickSwipeMatches()
         self.fetchBanners()
-
-        Env.servicesProvider.getPromotionalTopEvents()
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                print("")
-            } receiveValue: { (promotionalBannersResponse: BannerResponse) in
-                print("")
-            }
-            .store(in: &self.cancellables)
-
-        Env.servicesProvider.getPromotionalTopStories()
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                print("")
-            } receiveValue: { (promotionalBannersResponse: BannerResponse) in
-                print("")
-            }
-            .store(in: &self.cancellables)
+        self.fetchHighlightMatches()
+        self.fetchPromotedSports()
 
     }
 
@@ -121,23 +123,7 @@ class ClientManagedHomeViewTemplateDataSource {
     func fetchAlerts() {
         self.alertsArray = []
 
-#if DEBUG
-            let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
-                                                           description: localized("app_full_potential"),
-                                                           linkLabel: localized("verify_my_account"),
-                                                           alertType: .email)
-
-            alertsArray.append(emailActivationAlertData)
-
-            let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
-                                                           description: localized("complete_profile_description"),
-                                                           linkLabel: localized("finish_up_profile"),
-                                                           alertType: .profile)
-            alertsArray.append(completeProfileAlertData)
-
-#else
-
-        if let isUserEmailVerified = Env.userSessionStore.isUserEmailVerified, !isUserEmailVerified {
+        if let isUserEmailVerified = Env.userSessionStore.isUserEmailVerified.value, !isUserEmailVerified {
             let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
                                                            description: localized("app_full_potential"),
                                                            linkLabel: localized("verify_my_account"),
@@ -153,8 +139,17 @@ class ClientManagedHomeViewTemplateDataSource {
                                                            alertType: .profile)
             alertsArray.append(completeProfileAlertData)
         }
-#endif
 
+        if let userKnowYourCustomerStatus = Env.userSessionStore.userKnowYourCustomerStatus,
+            userKnowYourCustomerStatus == .request {
+            let uploadDocumentsAlertData = ActivationAlert(title: localized("document_validation_required"),
+                                                           description: localized("document_validation_required_description"),
+                                                           linkLabel: localized("complete_your_verification"),
+                                                           alertType: .documents)
+
+            alertsArray.append(uploadDocumentsAlertData)
+        }
+        
     }
 
     // User alerts
@@ -163,10 +158,8 @@ class ClientManagedHomeViewTemplateDataSource {
         Env.servicesProvider.getPromotionalTopBanners()
             .receive(on: DispatchQueue.main)
             .sink { completion in
-                print("")
+                print("completion \(dump(completion))")
             } receiveValue: { [weak self] (promotionalBanners: [PromotionalBanner]) in
-                print("", promotionalBanners.count)
-
                 self?.banners = promotionalBanners.map({ promotionalBanner in
                     return BannerInfo(type: "", id: promotionalBanner.id, matchId: nil, imageURL: promotionalBanner.imageURL, priorityOrder: nil, marketId: nil)
                 })
@@ -174,6 +167,100 @@ class ClientManagedHomeViewTemplateDataSource {
             .store(in: &self.cancellables)
 
     }
+
+    func fetchSportsSections() {
+
+    }
+
+    func fetchQuickSwipeMatches() {
+
+        Env.servicesProvider.getPromotionalSlidingTopEvents()
+            .map(ServiceProviderModelMapper.matches(fromEvents:))
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                print("completion \(dump(completion))")
+            }, receiveValue: { [weak self] matches in
+                self?.quickSwipeStackMatches = matches
+                self?.refreshPublisher.send()
+            })
+            .store(in: &self.cancellables)
+
+    }
+
+    func fetchHighlightMatches() {
+
+        let imageMatches = Env.servicesProvider.getHighlightedVisualImageEvents()
+            .map(ServiceProviderModelMapper.matches(fromEvents:))
+
+        let boostedMatches = Env.servicesProvider.getHighlightedBoostedEvents()
+            .map(ServiceProviderModelMapper.matches(fromEvents:))
+
+        Publishers.CombineLatest(imageMatches, boostedMatches)
+        .map { highlightedVisualImageEvents, highlightedBoostedEvents -> [HighlightedMatchType] in
+            var events: [HighlightedMatchType] = highlightedVisualImageEvents.map({ HighlightedMatchType.visualImageMatch($0) })
+            events.append(contentsOf: highlightedBoostedEvents.map({ HighlightedMatchType.boostedOddsMatch($0) }))
+            return events
+        }
+        .receive(on: DispatchQueue.main)
+        .sink(receiveCompletion: { completion in
+            print("completion \(dump(completion))")
+        }, receiveValue: { [weak self] highlightedMatchTypes in
+            var imageMatches: [Match] = [ ]
+            var boostedMatches: [Match] = []
+            for highlightedMatchType in highlightedMatchTypes {
+                switch highlightedMatchType {
+                case .visualImageMatch(let match):
+                    imageMatches.append(match)
+                case .boostedOddsMatch(let match):
+                    boostedMatches.append(match)
+                }
+            }
+
+            self?.highlightsVisualImageMatches = imageMatches
+            self?.highlightsBoostedMatches = boostedMatches
+
+            self?.refreshPublisher.send()
+        })
+        .store(in: &self.cancellables)
+
+    }
+
+    func fetchPromotedSports() {
+
+        self.promotedSports = []
+        self.promotedSportsMatches = [:]
+
+        Env.servicesProvider.getPromotedSports()
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("completion \(dump(completion))")
+            } receiveValue: { [weak self] promotedSports in
+                print("promotedSports \(promotedSports)")
+                self?.promotedSports = promotedSports
+                self?.refreshPublisher.send()
+            }
+            .store(in: &self.cancellables)
+
+    }
+
+    func fetchMatchesForPromotedSport(_ promotedSport: PromotedSport) {
+
+        let publishers = promotedSport.marketGroups.map({ Env.servicesProvider.getEventsForMarketGroup(withId: $0.id) })
+
+        Publishers.MergeMany(publishers)
+            .collect()
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("completion \(dump(completion))")
+            } receiveValue: { [weak self] eventGroups in
+                let matches = eventGroups.flatMap(\.events).map(ServiceProviderModelMapper.match(fromEvent:))
+                self?.promotedSportsMatches[promotedSport.id] = matches
+                self?.refreshPublisher.send()
+            }
+            .store(in: &self.cancellables)
+
+    }
+
 }
 
 extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
@@ -183,12 +270,13 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func refresh() {
-        // The Controller requested a refresh
-
+        self.refreshData()
     }
 
     func numberOfSections() -> Int {
-        return 4
+        var sections = self.fixedSection
+        sections += self.promotedSports.count
+        return sections
     }
 
     func numberOfRows(forSectionIndex section: Int) -> Int {
@@ -201,14 +289,36 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 2:
             return self.quickSwipeStackMatches.isEmpty ? 0 : 1
         case 3:
+            return self.shouldShowPromotionalStories ? 1 : 0
+        case 4:
+            return self.highlightsVisualImageMatches.count + self.highlightsBoostedMatches.count
+        case 5:
             return self.shouldShowOwnBetCallToAction ? 1 : 0
         default:
-            return 0
+            ()
         }
 
+        let croppedSection = section - self.fixedSection
+        if let promotedSportId = self.promotedSports[safe: croppedSection]?.id, let matchesForSport = self.promotedSportsMatches[promotedSportId] {
+            return matchesForSport.count
+        }
+
+        return 0
     }
 
     func title(forSection section: Int) -> String? {
+        switch section {
+        case 4:
+            return "Highlights"
+        default:
+            ()
+        }
+
+        let croppedSection = section - self.fixedSection
+        if let promotedSportName = self.promotedSports[safe: croppedSection]?.name {
+            return promotedSportName
+        }
+
         return nil
     }
 
@@ -217,6 +327,18 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
     }
 
     func shouldShowTitle(forSection section: Int) -> Bool {
+        switch section {
+        case 4:
+            return true
+        default:
+            ()
+        }
+
+        let croppedSection = section - self.fixedSection
+        if let promotedSportId = self.promotedSports[safe: croppedSection]?.id, let matchesForSport = self.promotedSportsMatches[promotedSportId] {
+            return matchesForSport.isNotEmpty
+        }
+
         return false
     }
 
@@ -226,6 +348,7 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
     // Detail each content type for the section
     func contentType(forSection section: Int) -> HomeViewModel.Content? {
+
         switch section {
         case 0:
             return .userProfile
@@ -234,10 +357,23 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         case 2:
             return .quickSwipeStack
         case 3:
+            return .promotionalStories
+        case 4:
+            return .highlightedMatches
+        case 5:
             return .makeOwnBetCallToAction
         default:
-            return nil
+            ()
         }
+
+        let croppedSection = section - self.fixedSection
+        if let promotedSportId = self.promotedSports[safe: croppedSection]?.id,
+           let matchesForSport = self.promotedSportsMatches[promotedSportId],
+           matchesForSport.isNotEmpty {
+            return .promotedSportSection
+        }
+
+        return nil
     }
 
     // Content type ViewModels methods
@@ -279,6 +415,27 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return self.quickSwipeStackCellViewModel!
         }
 
+    }
+
+    func highlightedMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
+        let boostedMatchesIndex = index-self.highlightsVisualImageMatches.count
+        if let match = self.highlightsVisualImageMatches[safe: index] {
+            return MatchWidgetCellViewModel(match: match, matchWidgetType: .topImage)
+        }
+        else if let match = self.highlightsVisualImageMatches[safe: boostedMatchesIndex] {
+            return MatchWidgetCellViewModel(match: match, matchWidgetType: .boosted)
+        }
+        return nil
+    }
+
+    func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {
+        let croppedSection = section - self.fixedSection
+        if let promotedSportId = self.promotedSports[safe: croppedSection]?.id,
+           let matchesForSport = self.promotedSportsMatches[promotedSportId],
+           let match = matchesForSport[safe: index] {
+            return match
+        }
+        return nil
     }
 
 }

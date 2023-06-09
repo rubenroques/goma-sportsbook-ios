@@ -337,14 +337,14 @@ extension ServicesProviderClient {
         return eventsProvider.getPromotionalTopBanners()
     }
 
-    public func getPromotionalTopEvents() -> AnyPublisher<BannerResponse, ServiceProviderError> {
+    public func getPromotionalSlidingTopEvents() -> AnyPublisher<[Event], ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
 
-        return eventsProvider.getPromotionalTopEvents()
+        return eventsProvider.getPromotionalSlidingTopEvents()
     }
 
     public func getPromotionalTopStories() -> AnyPublisher<BannerResponse, ServiceProviderError> {
@@ -357,6 +357,52 @@ extension ServicesProviderClient {
         return eventsProvider.getPromotionalTopStories()
     }
 
+
+    public func getHighlightedBoostedEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getHighlightedBoostedEvents()
+    }
+
+    public func getHighlightedVisualImageEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getHighlightedVisualImageEvents()
+    }
+
+
+    //
+    //
+    public func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getPromotedSports()
+    }
+
+    public func getEventsForMarketGroup(withId marketGroupId: String) -> AnyPublisher<EventsGroup, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getEventsForMarketGroup(withId: marketGroupId)
+    }
+
+    //
+    //
     public func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider

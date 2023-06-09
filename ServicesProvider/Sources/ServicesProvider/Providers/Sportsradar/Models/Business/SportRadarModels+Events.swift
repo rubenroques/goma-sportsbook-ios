@@ -176,7 +176,22 @@ extension SportRadarModels {
 
         }
     }
-    
+
+    struct EventsGroup: Codable {
+        var events: [Event]
+        var marketGroupId: String?
+
+        enum CodingKeys: String, CodingKey {
+            case events = "events"
+            case marketGroupId = "idfwmarketgroup"
+        }
+
+        init(events: [Event], marketGroupId: String?) {
+            self.events = events
+            self.marketGroupId = marketGroupId
+        }
+    }
+
     struct Event: Codable {
         
         var id: String
@@ -189,7 +204,7 @@ extension SportRadarModels {
         var competitionName: String?
         var startDate: Date?
         
-        var markets: [Market]?
+        var markets: [Market]
 
         var tournamentCountryName: String?
         
@@ -265,20 +280,27 @@ extension SportRadarModels {
             self.competitionName = try container.decodeIfPresent(String.self, forKey: .competitionName)
             self.tournamentCountryName = try container.decodeIfPresent(String.self, forKey: .tournamentCountryName)
 
-            self.markets = try container.decodeIfPresent([SportRadarModels.Market].self, forKey: .markets)
+            if let markets = try container.decodeIfPresent([SportRadarModels.Market].self, forKey: .markets) {
+                self.markets = markets
+            }
+            else if let market = try? Market(from: decoder) { // Check if we can parse a flatten event + market
+                self.markets = [market]
+            }
+            else {
+                self.markets = []
+            }
 
-            self.numberMarkets = container.contains(.numberMarkets) ? try container.decode(Int.self, forKey: .numberMarkets) : self.markets?.first?.eventMarketCount
+            self.numberMarkets = container.contains(.numberMarkets) ? try container.decode(Int.self, forKey: .numberMarkets) : self.markets.first?.eventMarketCount
 
             self.name = try container.decodeIfPresent(String.self, forKey: .name)
 
             self.sportTypeName = try container.decodeIfPresent(String.self, forKey: .sportTypeName)
             self.sportTypeCode = try container.decodeIfPresent(String.self, forKey: .sportTypeCode)
 
-
-            #if DEBUG
-            self.homeName = self.id + " " + (self.homeName ?? "")
-            self.awayName = (self.markets?.first?.id ?? "") + " " + (self.awayName ?? "")
-            #endif
+//            #if DEBUG
+//            self.homeName = self.id + " " + (self.homeName ?? "")
+//            self.awayName = (self.markets.first?.id ?? "") + " " + (self.awayName ?? "")
+//            #endif
 
             if let startDateString = try container.decodeIfPresent(String.self, forKey: .startDate) {
                 if let date = Self.dateFormatter.date(from: startDateString) {
@@ -416,10 +438,10 @@ extension SportRadarModels {
             self.homeParticipant = try container.decodeIfPresent(String.self, forKey: .homeParticipant)
             self.awayParticipant = try container.decodeIfPresent(String.self, forKey: .awayParticipant)
             self.eventId = try container.decodeIfPresent(String.self, forKey: .eventId)
-
-            #if DEBUG
-            self.name = self.id + " " + self.name
-            #endif
+//
+//            #if DEBUG
+//            self.name = self.id + " " + self.name
+//            #endif
 
         }
         
@@ -470,9 +492,9 @@ extension SportRadarModels {
             self.odd = .fraction(numerator: Int(numerator), denominator: Int(denominator) )
             self.isTradable = (try? container.decode(Bool.self, forKey: .isTradable)) ?? true
 
-            #if DEBUG
-            self.name = self.id + " " + self.name
-            #endif
+//            #if DEBUG
+//            self.name = self.id + " " + self.name
+//            #endif
 
         }
 

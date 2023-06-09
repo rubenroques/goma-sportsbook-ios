@@ -428,4 +428,12 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return nil
     }
 
+    func highlightedMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
+        return nil
+    }
+
+    func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {
+        return nil
+    }
+
 }

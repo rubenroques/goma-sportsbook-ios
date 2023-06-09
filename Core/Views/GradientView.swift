@@ -28,6 +28,8 @@ class GradientView: UIView {
         }
     }
 
+    var isAnimating: Bool = false
+
     private let gradientLayer: CAGradientLayer = CAGradientLayer()
 
     override init(frame: CGRect) {
@@ -42,17 +44,56 @@ class GradientView: UIView {
 
     private func commonInit() {
         self.backgroundColor = .white
-        self.layer.insertSublayer(self.gradientLayer, at: 0)
-
         self.gradientLayer.startPoint = self.startPoint
         self.gradientLayer.endPoint = self.endPoint
         self.gradientLayer.colors = self.colors.map(\.color).map(\.cgColor)
         self.gradientLayer.locations = self.colors.map(\.location)
+        self.layer.insertSublayer(self.gradientLayer, at: 0)
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
+
         self.gradientLayer.frame = self.bounds
+
+        if self.isAnimating {
+            self.stopAnimations()
+            self.startAnimations()
+        }
+
+    }
+
+    func startAnimations() {
+
+        self.isAnimating = true
+
+        let animation = CABasicAnimation(keyPath: "locations")
+        animation.fromValue = self.colors.map(\.location).map({ $0.floatValue - 1.0 })
+          // [-1.0, -0.5, 0.0]
+        animation.toValue = self.colors.map(\.location).map({ $0.floatValue + 1.0 })
+          // [1.0, 1.5, 2.0]
+        animation.duration = 2.0
+        animation.autoreverses = true
+
+        let animationGroup = CAAnimationGroup()
+        animationGroup.duration = 4.0
+        animationGroup.repeatCount = .infinity
+        animationGroup.animations = [animation]
+        gradientLayer.add(animationGroup, forKey: nil)
+
+//        // Apply to gradient to the border
+//        let gradientBorder = CAShapeLayer()
+//        gradientBorder.lineWidth = 5.0
+//        gradientBorder.path = UIBezierPath(rect: self.bounds).cgPath
+//        gradientBorder.fillColor = nil
+//        gradientBorder.strokeColor = UIColor.black.cgColor
+//        gradientLayer.mask = gradientBorder
+
+    }
+
+    func stopAnimations() {
+        self.isAnimating = false
+        self.gradientLayer.removeAnimation(forKey: "locations")
     }
 
 }

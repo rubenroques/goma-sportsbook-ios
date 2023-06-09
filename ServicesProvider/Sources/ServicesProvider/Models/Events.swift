@@ -8,11 +8,13 @@
 import Foundation
 import SharedModels
 
-public struct EventsGroup {
+public class EventsGroup {
     public var events: [Event]
+    public var marketGroupId: String?
 
-    public init(events: [Event]) {
+    public init(events: [Event], marketGroupId: String?) {
         self.events = events
+        self.marketGroupId = marketGroupId
     }
 }
 
@@ -45,6 +47,8 @@ public class Event: Codable {
     public var status: Status?
 
     public var matchTime: String?
+
+    public var promoImageURL: String?
 
     public var type: EventType {
         if self.homeTeamName.isEmpty && self.awayTeamName.isEmpty {
@@ -121,6 +125,7 @@ public class Event: Codable {
         self.status = status
         self.matchTime = matchTime
 
+        self.promoImageURL = nil
     }
 
     public required init(from decoder: Decoder) throws {

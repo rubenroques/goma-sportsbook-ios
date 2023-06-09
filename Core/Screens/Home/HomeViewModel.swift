@@ -31,6 +31,11 @@ class HomeViewModel {
         case quickSwipeStack
         case makeOwnBetCallToAction
 
+        case highlightedMatches
+
+        case promotionalStories
+        case promotedSportSection
+
         var identifier: String {
             switch self {
             case .userMessage: return "userMessage"
@@ -41,9 +46,13 @@ class HomeViewModel {
             case .userProfile: return "userProfile"
             case .featuredTips: return "featuredTips"
             case .footerBanner: return "footerBanner"
-            case .quickSwipeStack: return "quickSwipeStack"
 
+            case .quickSwipeStack: return "quickSwipeStack"
             case .makeOwnBetCallToAction: return "makeOwnBetCallToAction"
+            case .highlightedMatches: return "highlightedMatches"
+
+            case .promotionalStories: return "promotionalStories"
+            case .promotedSportSection: return "promotedSportSection"
             }
         }
     }
@@ -139,4 +148,11 @@ extension HomeViewModel {
         return self.homeViewTemplateDataSource.quickSwipeStackViewModel()
     }
 
+    func highlightedMatchViewModel(forIndex index: Int) -> MatchWidgetCellViewModel? {
+        return self.homeViewTemplateDataSource.highlightedMatchViewModel(forIndex: index)
+    }
+
+    func promotedMatch(forSection section: Int, forIndex index: Int) -> Match? {
+        return self.homeViewTemplateDataSource.promotedMatch(forSection: section, forIndex: index)
+    }
 }

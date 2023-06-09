@@ -34,7 +34,7 @@ class QuickSwipeStackCellViewModel {
             return viewModel
         }
         else {
-            let viewModel = MatchWidgetCellViewModel(match: match)
+            let viewModel = MatchWidgetCellViewModel(match: match, matchWidgetType: .backgroundImage)
             cellViewModelsCache[match.id] = viewModel
             return viewModel
         }
@@ -130,10 +130,8 @@ extension QuickSwipeStackTableViewCell: UICollectionViewDelegate, UICollectionVi
         }
 
         cell.configure(withViewModel: viewModel)
-        cell.tappedMatchWidgetAction = { [weak self] in
-            if let match = viewModel.match {
-                self?.didTapMatchAction(match)
-            }
+        cell.tappedMatchWidgetAction = { [weak self] match in
+            self?.didTapMatchAction(match)
         }
         cell.shouldShowCountryFlag(true)
         return cell

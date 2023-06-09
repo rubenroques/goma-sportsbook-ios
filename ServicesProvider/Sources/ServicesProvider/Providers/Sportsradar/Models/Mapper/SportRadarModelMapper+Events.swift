@@ -10,9 +10,15 @@ import SharedModels
 
 extension SportRadarModelMapper {
 
+    static func eventsGroup(fromInternalEventsGroup internalEventsGroup: SportRadarModels.EventsGroup) -> EventsGroup {
+        let events = internalEventsGroup.events.map(Self.event(fromInternalEvent:))
+        return EventsGroup(events: events,
+                           marketGroupId: internalEventsGroup.marketGroupId)
+    }
+
     static func eventsGroup(fromInternalEvents internalEvents: [SportRadarModels.Event]) -> EventsGroup {
         let events = internalEvents.map(Self.event(fromInternalEvent:))
-        return EventsGroup(events: events)
+        return EventsGroup(events: events, marketGroupId: nil)
     }
 
     static func event(fromInternalEvent internalEvent: SportRadarModels.Event) -> Event {
