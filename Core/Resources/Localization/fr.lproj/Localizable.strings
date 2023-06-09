@@ -1373,3 +1373,17 @@
 "rib_number" = "Numéro du RIB";
 "rib_document" = "RIB Document";
 "locked_rib_message" = "Vos documents d'identité doivent être valides pour que vous puissiez ajouter votre RiB.";
+"additional_documents" = "Documents complémentaires";
+
+"choose_type_identification" = "Choisir le type d'identification";
+
+"identity_card" = "Carte d'identité";
+"residence_id" = "ID de résidence";
+"driving_licence" = "Permis de conduire";
+"passport" = "Passeport";
+
+"upload_information" = "Télécharger les informations";
+"upload_document_info_rule" = "Télécharger le recto et le verso du document";
+"upload_corner_info_rule" = "Les 4 coins doivent apparaître";
+"upload_type_info_rule" = "Types de fichiers autorisés: png, jpg, pdf";
+"upload_size_info_rule" = "Taille max. : 10MB";

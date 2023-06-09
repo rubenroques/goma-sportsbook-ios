@@ -1312,3 +1312,17 @@
 "rib_number" = "RIB Number";
 "rib_document" = "RIB Document";
 "locked_rib_message" = "Your identification documents need to be valid before you can add your RiB";
+"additional_documents" = "Additional documents";
+
+"choose_type_identification" = "Choose what type of identification";
+
+"identity_card" = "Identity Card";
+"residence_id" = "Residence ID";
+"driving_licence" = "Driving Licence";
+"passport" = "Passport";
+
+"upload_information" = "Upload information";
+"upload_document_info_rule" = "Upload the front and back of the document";
+"upload_corner_info_rule" = "All 4 corners should appear";
+"upload_type_info_rule" = "Allowed file types: png, jpg, pdf";
+"upload_size_info_rule" = "Max. size: 10MB";

@@ -16,9 +16,21 @@ class RibDocsViewModel {
     // MARK: Public Properties
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
-    init() {
-        
+    var isLocked: CurrentValueSubject<Bool, Never> = .init(false)
+
+    var kycStatusPublisher: AnyPublisher<KnowYourCustomerStatus?, Never> {
+        return Env.userSessionStore.userKnowYourCustomerStatusPublisher.eraseToAnyPublisher()
     }
+
+    init() {
+
+        self.getKYCStatus()
+    }
+
+    private func getKYCStatus() {
+        Env.userSessionStore.refreshProfile()
+    }
+
 }
 class RibDocsViewController: UIViewController {
     private lazy var containerView: UIView = Self.createContainerView()
@@ -61,7 +73,7 @@ class RibDocsViewController: UIViewController {
 
     var isLocked: Bool = false {
         didSet {
-            self.lockTitleLabel.isHidden = !isLocked
+            self.lockTitleBaseView.isHidden = !isLocked
             self.lockContainerView.isHidden = !isLocked
         }
     }
@@ -102,7 +114,7 @@ class RibDocsViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
-        self.isLocked = true
+        self.isLocked = false
 
         let ribAddDocTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapRibAddDoc))
         self.ribAddDocBaseView.addGestureRecognizer(ribAddDocTap)
@@ -183,6 +195,19 @@ class RibDocsViewController: UIViewController {
 
                 self?.isLoading = isLoading
 
+            })
+            .store(in: &cancellables)
+
+        viewModel.kycStatusPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] kycStatus in
+
+                switch kycStatus {
+                case .request:
+                    self?.isLocked = true
+                default:
+                    self?.isLocked = false
+                }
             })
             .store(in: &cancellables)
     }

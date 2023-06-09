@@ -275,10 +275,10 @@ extension SportRadarModels {
             self.sportTypeCode = try container.decodeIfPresent(String.self, forKey: .sportTypeCode)
 
 
-            #if DEBUG
-            self.homeName = self.id + " " + (self.homeName ?? "")
-            self.awayName = (self.markets?.first?.id ?? "") + " " + (self.awayName ?? "")
-            #endif
+//            #if DEBUG
+//            self.homeName = self.id + " " + (self.homeName ?? "")
+//            self.awayName = (self.markets?.first?.id ?? "") + " " + (self.awayName ?? "")
+//            #endif
 
             if let startDateString = try container.decodeIfPresent(String.self, forKey: .startDate) {
                 if let date = Self.dateFormatter.date(from: startDateString) {

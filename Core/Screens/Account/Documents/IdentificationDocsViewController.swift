@@ -351,10 +351,20 @@ class IdentificationDocsViewController: UIViewController {
     // MARK: Action
     @objc func didTapIdAddDoc() {
         print("ADD ID DOC")
+        let manualUploadDocumentViewModel = ManualUploadsDocumentsViewModel()
+
+        let manualUploadDocumentViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocumentViewModel)
+
+        self.navigationController?.pushViewController(manualUploadDocumentViewController, animated: true)
     }
 
     @objc func didTapProofAddDoc() {
         print("ADD PROOF DOC")
+        let manualUploadDocumentViewModel = ManualUploadsDocumentsViewModel()
+
+        let manualUploadDocumentViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocumentViewModel)
+
+        self.navigationController?.pushViewController(manualUploadDocumentViewController, animated: true)
     }
 
     // MARK: Functions

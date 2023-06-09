@@ -1,17 +1,18 @@
 //
-//  OptionRadioView.swift
+//  CardOptionRadioView.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 17/05/2023.
+//  Created by André Lascas on 07/06/2023.
 //
 
 import UIKit
 
-class OptionRadioView: UIView {
+class CardOptionRadioView: UIView {
 
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var radioImageView: UIImageView = Self.createRadioImageView()
+    private lazy var separatorView: UIView = Self.createSeparatorView()
 
     var isChecked: Bool = false {
         didSet {
@@ -28,6 +29,12 @@ class OptionRadioView: UIView {
                 self.radioImageView.backgroundColor = UIColor.App.backgroundSecondary
                 self.radioImageView.image = nil
             }
+        }
+    }
+
+    var hasSeparator: Bool = false {
+        didSet {
+            self.separatorView.isHidden = !hasSeparator
         }
     }
 
@@ -53,6 +60,14 @@ class OptionRadioView: UIView {
         self.setupWithTheme()
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        self.radioImageView.layer.borderWidth = 2.0
+        self.radioImageView.layer.cornerRadius = self.radioImageView.frame.size.width / 2
+
+    }
+
     func setupWithTheme() {
         self.backgroundColor = .clear
 
@@ -62,27 +77,18 @@ class OptionRadioView: UIView {
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
+        self.separatorView.backgroundColor = UIColor.App.separatorLine
+
     }
 
     private func commonInit() {
 
         self.isChecked = false
 
+        self.hasSeparator = false
+
         let gestureTap = UITapGestureRecognizer(target: self, action: #selector(self.tappedView))
         self.addGestureRecognizer(gestureTap)
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        self.radioImageView.layer.cornerRadius = self.radioImageView.frame.width/2
-        self.radioImageView.layer.borderWidth = 2.0
-
-        self.radioImageView.layer.borderColor = UIColor.App.separatorLine.cgColor
-        self.radioImageView.backgroundColor = UIColor.App.backgroundSecondary
-
-        self.radioImageView.image = nil
-        self.radioImageView.contentMode = .center
 
     }
 
@@ -107,7 +113,7 @@ class OptionRadioView: UIView {
 
 }
 
-extension OptionRadioView {
+extension CardOptionRadioView {
 
     private static func createContainerView() -> UIView {
         let view = UIView()
@@ -126,9 +132,15 @@ extension OptionRadioView {
     private static func createRadioImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .center
         imageView.image = nil
         return imageView
+    }
+
+    private static func createSeparatorView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
 
     private func setupSubviews() {
@@ -138,6 +150,8 @@ extension OptionRadioView {
         self.containerView.addSubview(self.titleLabel)
 
         self.containerView.addSubview(self.radioImageView)
+
+        self.containerView.addSubview(self.separatorView)
 
         self.initConstraints()
 
@@ -154,14 +168,19 @@ extension OptionRadioView {
             self.containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
 
             self.radioImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 4),
-            self.radioImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 4),
-            self.radioImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -4),
+            self.radioImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 14),
+            self.radioImageView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -14),
             self.radioImageView.widthAnchor.constraint(equalToConstant: 17),
             self.radioImageView.heightAnchor.constraint(equalTo: self.radioImageView.widthAnchor),
 
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.radioImageView.trailingAnchor, constant: 7),
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.radioImageView.trailingAnchor, constant: 10),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -4),
-            self.titleLabel.centerYAnchor.constraint(equalTo: self.radioImageView.centerYAnchor)
+            self.titleLabel.centerYAnchor.constraint(equalTo: self.radioImageView.centerYAnchor),
+
+            self.separatorView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.separatorView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.separatorView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
+            self.separatorView.heightAnchor.constraint(equalToConstant: 1)
 
         ])
 

@@ -97,7 +97,7 @@ class DocumentsRootViewController: UIViewController {
         self.documentTypesViewControllers = [
             IdentificationDocsViewController(viewModel: IdentificationDocsViewModel()),
             RibDocsViewController(viewModel: RibDocsViewModel()),
-            IdentificationDocsViewController(viewModel: IdentificationDocsViewModel()),
+            ExtraDocsViewController(viewModel: ExtraDocsViewModel()),
         ]
 
         self.documentTypePagedViewController.delegate = self
