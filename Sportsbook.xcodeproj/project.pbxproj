@@ -4531,6 +4531,7 @@
 		A9BA04252A33399D007880FC /* UploadDocumentsInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA041F2A33399D007880FC /* UploadDocumentsInformationView.swift */; };
 		A9BA04262A33399D007880FC /* UploadDocumentsInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA041F2A33399D007880FC /* UploadDocumentsInformationView.swift */; };
 		A9BA04272A33399D007880FC /* UploadDocumentsInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA041F2A33399D007880FC /* UploadDocumentsInformationView.swift */; };
+		A9BA04312A37282D007880FC /* IdensicMobileSDK in Frameworks */ = {isa = PBXBuildFile; productRef = A9BA04302A37282D007880FC /* IdensicMobileSDK */; };
 		A9BDD4F1292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
 		A9BDD4F2292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
 		A9BDD4F3292E3F08001A7799 /* SportTypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BDD4F0292E3F08001A7799 /* SportTypeStore.swift */; };
@@ -6343,6 +6344,7 @@
 				45A332C8298976BA008181E9 /* Starscream in Frameworks */,
 				45C8ECB929CC7AE4006A35DC /* HeaderTextField in Frameworks */,
 				45A332C9298976BA008181E9 /* SocketIO in Frameworks */,
+				A9BA04312A37282D007880FC /* IdensicMobileSDK in Frameworks */,
 				45A332CA298976BA008181E9 /* SharedModels in Frameworks */,
 				45A332CB298976BA008181E9 /* ServicesProvider in Frameworks */,
 			);
@@ -9718,6 +9720,7 @@
 				45A33052298976BA008181E9 /* AdyenWeChatPay */,
 				45C8ECB829CC7AE4006A35DC /* HeaderTextField */,
 				45F805922A05357E005296E0 /* Lottie */,
+				A9BA04302A37282D007880FC /* IdensicMobileSDK */,
 			);
 			productName = Sportsbook;
 			productReference = 45A3334E298976BA008181E9 /* Betsson.app */;
@@ -9833,6 +9836,7 @@
 				4554ED082976F7FE006942B3 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */,
 				45F805912A05357E005296E0 /* XCRemoteSwiftPackageReference "lottie-spm" */,
+				A9BA042F2A37282D007880FC /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -16566,6 +16570,14 @@
 				minimumVersion = 1.0.9;
 			};
 		};
+		A9BA042F2A37282D007880FC /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SumSubstance/IdensicMobileSDK-iOS.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		A9C3408028F9A74A0055360B /* XCRemoteSwiftPackageReference "Reachability" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ashleymills/Reachability.swift";
@@ -17289,6 +17301,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A96FAEDF29829CCA00A0751F /* XCRemoteSwiftPackageReference "adyen-ios" */;
 			productName = AdyenDropIn;
+		};
+		A9BA04302A37282D007880FC /* IdensicMobileSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A9BA042F2A37282D007880FC /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */;
+			productName = IdensicMobileSDK;
 		};
 		A9C3407F28F9A74A0055360B /* Reachability */ = {
 			isa = XCSwiftPackageProductDependency;

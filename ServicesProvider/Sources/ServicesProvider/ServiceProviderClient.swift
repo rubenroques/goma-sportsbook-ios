@@ -27,6 +27,8 @@ public class ServicesProviderClient {
 
     private var cancellables = Set<AnyCancellable>()
 
+    public var sumsubDataProvider: SumsubDataProvider?
+
     public init(providerType: ProviderType) {
         self.providerType = providerType
     }
@@ -63,6 +65,8 @@ public class ServicesProviderClient {
                 }).store(in: &self.cancellables)
 
             self.bettingConnectionStatePublisher = self.bettingProvider!.connectionStatePublisher
+
+            self.sumsubDataProvider = SumsubDataProvider()
         }
     }
 
@@ -1035,6 +1039,26 @@ extension ServicesProviderClient {
         }
 
         return privilegedAccessManager.setUserConsents(consentVersionIds: consentVersionIds, unconsenVersionIds: unconsetVersionIds)
+    }
+
+    public func getSumsubAccessToken(userId: String, levelName: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getSumsubAccessToken(userId: userId, levelName: levelName)
+    }
+
+    public func getSumsubApplicantData(userId: String) -> AnyPublisher<ApplicantDataResponse, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getSumsubApplicantData(userId: userId)
     }
 
 }

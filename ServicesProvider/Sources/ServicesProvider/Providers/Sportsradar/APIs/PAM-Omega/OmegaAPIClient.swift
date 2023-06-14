@@ -145,6 +145,10 @@ enum OmegaAPIClient {
 
     case getUserConsents
     case setUserConsents(consentVersionIds: [Int]? = nil, unconsentVersionIds: [Int]? = nil)
+
+    case getSumsubAccessToken(userId: String, levelName: String, body: Data? = nil, header: [String: String])
+    case getSumsubApplicantData(userId: String, body: Data? = nil, header: [String: String])
+
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -256,6 +260,11 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/user/consents"
         case .setUserConsents:
             return "/ps/ips/user/consents/save"
+
+        case .getSumsubAccessToken:
+            return "/resources/accessTokens"
+        case .getSumsubApplicantData(let userId, _, _):
+            return "/resources/applicants/-;externalUserId=\(userId)/one"
         }
     }
     
@@ -668,6 +677,18 @@ extension OmegaAPIClient: Endpoint {
             }
 
             return queryItemsURL
+
+        case .getSumsubAccessToken(let userId, let levelName, _, _):
+            return [
+
+                URLQueryItem(name: "userId", value: userId),
+                URLQueryItem(name: "levelName", value: levelName)
+//                URLQueryItem(name: "ttlInSecs", value: "600")
+
+            ]
+
+        case .getSumsubApplicantData:
+            return nil
         }
     }
     
@@ -729,6 +750,9 @@ extension OmegaAPIClient: Endpoint {
 
         case .getUserConsents: return .get
         case .setUserConsents: return .post
+
+        case .getSumsubAccessToken: return .post
+        case .getSumsubApplicantData: return .get
         }
     }
     
@@ -763,6 +787,10 @@ extension OmegaAPIClient: Endpoint {
             }
             """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
+        case .getSumsubAccessToken( _, _, let body, _):
+            return body
+
         default:
             return nil
         }
@@ -834,6 +862,9 @@ extension OmegaAPIClient: Endpoint {
 
         case .getUserConsents: return true
         case .setUserConsents: return true
+
+        case .getSumsubAccessToken: return false
+        case .getSumsubApplicantData: return false
         }
     }
     
@@ -842,6 +873,10 @@ extension OmegaAPIClient: Endpoint {
         switch self {
         case .contactSupport:
             return SportRadarConstants.supportHostname
+        case .getSumsubAccessToken:
+            return SportRadarConstants.sumsubHostname
+        case .getSumsubApplicantData:
+            return SportRadarConstants.sumsubHostname
         default:
             return SportRadarConstants.pamHostname
         }
@@ -856,6 +891,10 @@ extension OmegaAPIClient: Endpoint {
                 "Content-Type": header
             ]
             return customHeaders
+        case .getSumsubAccessToken(_ , _, _, let header):
+            return header
+        case .getSumsubApplicantData( _, _,  let header):
+            return header
         default:
             let defaultHeaders = [
                 "Accept-Encoding": "gzip, deflate",

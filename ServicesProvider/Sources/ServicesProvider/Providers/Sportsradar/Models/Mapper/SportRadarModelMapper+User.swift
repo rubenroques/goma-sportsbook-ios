@@ -502,6 +502,64 @@ extension SportRadarModelMapper {
 
         return UserConsentInfo(id: internalUserConsentInfo.id, key: internalUserConsentInfo.key, name: internalUserConsentInfo.name, consentVersionId: internalUserConsentInfo.consentVersionId)
     }
+
+    static func accessTokenResponse(fromInternalAccessTokenResponse internalAccessTokenResponse: SportRadarModels.AccessTokenResponse) -> AccessTokenResponse {
+
+        return AccessTokenResponse(token: internalAccessTokenResponse.token, userId: internalAccessTokenResponse.userId, description: internalAccessTokenResponse.description, code: internalAccessTokenResponse.code)
+    }
+
+    static func applicantDataResponse(fromInternalApplicantDataResponse internalApplicantDataResponse: SportRadarModels.ApplicantDataResponse) -> ApplicantDataResponse {
+
+        if let info = internalApplicantDataResponse.info,
+           let reviewData = internalApplicantDataResponse.reviewData {
+
+            let mappedInfo = Self.applicantDataInfo(fromInternalApplicantDataInfo: info)
+
+            let mappedReviewData = Self.applicantReviewData(fromInternalApplicantReviewData: reviewData)
+
+            return ApplicantDataResponse(externalUserId: internalApplicantDataResponse.externalUserId, info: mappedInfo, reviewData: mappedReviewData, description: internalApplicantDataResponse.description)
+        }
+
+        return ApplicantDataResponse(externalUserId: internalApplicantDataResponse.externalUserId, info: nil, reviewData: nil, description: internalApplicantDataResponse.description)
+    }
+
+    static func applicantDataInfo(fromInternalApplicantDataInfo internalApplicantDataInfo: SportRadarModels.ApplicantDataInfo) -> ApplicantDataInfo {
+
+        let mappedApplicantDocs = internalApplicantDataInfo.applicantDocs.map({
+            applicantDoc -> ApplicantDoc in
+
+            let applicantDoc = Self.applicantDoc(fromInternalApplicantDoc: applicantDoc)
+
+            return applicantDoc
+        })
+
+        return ApplicantDataInfo(applicantDocs: mappedApplicantDocs)
+    }
+
+    static func applicantDoc(fromInternalApplicantDoc internalApplicantDoc: SportRadarModels.ApplicantDoc) -> ApplicantDoc {
+
+        return ApplicantDoc(docType: internalApplicantDoc.docType)
+    }
+
+    static func applicantReviewData(fromInternalApplicantReviewData internalApplicantReviewData: SportRadarModels.ApplicantReviewData) -> ApplicantReviewData {
+
+        if let applicantReviewResult = internalApplicantReviewData.reviewResult {
+
+            let mappedApplicantReviewResult = Self.applicantReviewResult(fromInternalApplicantReviewResult: applicantReviewResult)
+
+            return ApplicantReviewData(attemptCount: internalApplicantReviewData.attemptCount, createDate: internalApplicantReviewData.createDate, reviewDate: internalApplicantReviewData.reviewDate, reviewResult: mappedApplicantReviewResult, reviewStatus: internalApplicantReviewData.reviewStatus, levelName: internalApplicantReviewData.levelName)
+        }
+
+
+        return ApplicantReviewData(attemptCount: internalApplicantReviewData.attemptCount, createDate: internalApplicantReviewData.createDate, reviewDate: internalApplicantReviewData.reviewDate, reviewResult: nil, reviewStatus: internalApplicantReviewData.reviewStatus,
+                                   levelName: internalApplicantReviewData.levelName)
+    }
+
+    static func applicantReviewResult(fromInternalApplicantReviewResult internalApplicantReviewResult: SportRadarModels.ApplicantReviewResult) -> ApplicantReviewResult {
+
+        return ApplicantReviewResult(reviewAnswer: internalApplicantReviewResult.reviewAnswer, reviewRejectType: internalApplicantReviewResult.reviewRejectType)
+    }
+
 }
 
 private extension UserRegistrationStatus {

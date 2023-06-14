@@ -63,6 +63,9 @@ struct SportRadarConstants {
     // Support
     static var supportHostname = "https://betssonfrance.zendesk.com"
 
+    // Sumsub
+    static var sumsubHostname = "https://api.sumsub.com"
+
     //static var sportRadarLegacyFrontEndURL = "https://cdn1.optimahq.com"
 
 //    ===================================================================================================================

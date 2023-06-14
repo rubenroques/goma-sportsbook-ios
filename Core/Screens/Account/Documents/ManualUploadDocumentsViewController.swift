@@ -14,10 +14,64 @@ class ManualUploadsDocumentsViewModel {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
+    let supportedTypes = ["com.apple.iwork.pages.pages",
+                          "com.apple.iwork.numbers.numbers",
+                          "com.apple.iwork.keynote.key",
+                          "public.image",
+                          "com.apple.application",
+                          "public.item",
+                          "public.data",
+                          "public.content",
+                          "public.audiovisual-content",
+                          "public.movie",
+                          "public.audiovisual-content",
+                          "public.video", "public.audio",
+                          "public.text", "public.data",
+                          "public.zip-archive",
+                          "com.pkware.zip-archive",
+                          "public.composite-content",
+                          "public.text"]
+
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
-    init() {
+    var documentTypeCode: DocumentTypeCode
 
+    var shouldShowAlert: ((AlertType, String) -> Void)?
+    var shouldShowSuccessScreen: (() -> Void)?
+
+    init(documentTypeCode: DocumentTypeCode) {
+        self.documentTypeCode = documentTypeCode
+    }
+
+    func addPaymentInformation(rib: String) {
+
+        self.isLoadingPublisher.send(true)
+
+        let fieldsInfo = """
+                        {
+                        "IBAN":"\(rib)"
+                        }
+                        """
+
+        Env.servicesProvider.addPaymentInformation(type: "BANK", fields: fieldsInfo)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("ADD PAYMENT ERROR: \(error)")
+                    self?.shouldShowAlert?(.error, localized("upload_iban_error_message"))
+                    self?.isLoadingPublisher.send(false)
+                }
+            }, receiveValue: { [weak self] addPaymentResponse in
+
+                self?.shouldShowSuccessScreen?()
+                self?.isLoadingPublisher.send(false)
+
+            })
+            .store(in: &cancellables)
     }
 }
 
@@ -31,9 +85,19 @@ class ManualUploadDocumentsViewController: UIViewController {
     private lazy var contentBaseView: UIView = Self.createContentBaseView()
     private lazy var sendButton: UIButton = Self.createSendButton()
 
+    private lazy var topSectionStackView: UIStackView = Self.createTopSectionStackView()
+
     private lazy var documentTypeBaseView: UIView = Self.createDocumentTypeBaseView()
     private lazy var documentTypeTitleLabel: UILabel = Self.createDocumentTypeTitleLabel()
     private lazy var documentTypeStackView: UIStackView = Self.createDocumentTypeStackView()
+
+    private lazy var ribInputBaseView: UIView = Self.createRibInputBaseView()
+    private lazy var ribInputTitleLabel: UILabel = Self.createRibInputTitleLabel()
+    private lazy var ribNumberHeaderTextFieldView: HeaderTextFieldView = Self.createRibNumberHeaderTextFieldView()
+    private lazy var ribInputStackView: UIStackView = Self.createRibInputStackView()
+    private lazy var invalidIbanView: UIView = Self.createInvalidIbanView()
+    private lazy var invalidIbanIconImageView: UIImageView = Self.createInvalidIbanIconImageView()
+    private lazy var invalidIbanLabel: UILabel = Self.createInvalidIbanLabel()
 
     private lazy var documentUploadsStackView: UIStackView = Self.createDocumentUploadsStackView()
 
@@ -60,6 +124,18 @@ class ManualUploadDocumentsViewController: UIViewController {
 
     var documentUploadsInfoViews: [DocumentTypeGroup: UploadDocumentsInformationView] = [:]
 
+    var selectedDocs: [DocumentTypeGroup: [SelectedDoc]] = [:]
+
+    var currentDoc: CurrentDoc?
+
+    var isIbanValid: CurrentValueSubject<Bool, Never> = .init(false)
+
+    var showInvalidIban: Bool = false {
+        didSet {
+            self.invalidIbanView.isHidden = !showInvalidIban
+        }
+    }
+
     // MARK: - Lifetime and Cycle
     init(viewModel: ManualUploadsDocumentsViewModel) {
         self.viewModel = viewModel
@@ -76,8 +152,6 @@ class ManualUploadDocumentsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        self.setupDocumentTypesSelector()
-
     }
 
     override func viewDidLoad() {
@@ -88,9 +162,18 @@ class ManualUploadDocumentsViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
+        self.setupPublishers()
+
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
+        let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
+        self.view.addGestureRecognizer(tapGestureRecognizer)
+
         self.canSendDocuments = false
+
+        self.showInvalidIban = false
+
+        self.setupUploadLayout()
 
     }
 
@@ -98,6 +181,8 @@ class ManualUploadDocumentsViewController: UIViewController {
         super.viewDidLayoutSubviews()
 
         self.documentTypeBaseView.layer.cornerRadius = CornerRadius.card
+
+        self.ribInputBaseView.layer.cornerRadius = CornerRadius.card
 
         for view in self.cardOptionRadioViews {
             view.setNeedsLayout()
@@ -126,6 +211,22 @@ class ManualUploadDocumentsViewController: UIViewController {
 
         self.navigationTitleLabel.textColor = UIColor.App.textPrimary
 
+        self.topSectionStackView.backgroundColor = .clear
+
+        self.ribInputBaseView.backgroundColor = UIColor.App.backgroundSecondary
+
+        self.ribInputTitleLabel.textColor = UIColor.App.textPrimary
+
+        self.ribNumberHeaderTextFieldView.setViewColor(UIColor.App.inputBackground)
+        self.ribNumberHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        self.ribNumberHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
+
+        self.invalidIbanView.backgroundColor = .clear
+
+        self.invalidIbanIconImageView.backgroundColor = .clear
+
+        self.invalidIbanLabel.textColor = UIColor.App.inputError
+
         self.documentTypeBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.documentTypeTitleLabel.textColor = UIColor.App.textPrimary
@@ -141,6 +242,28 @@ class ManualUploadDocumentsViewController: UIViewController {
    }
 
     // MARK: Functions
+    private func setupUploadLayout() {
+
+        switch self.viewModel.documentTypeCode {
+        case .identification:
+            self.documentTypeBaseView.isHidden = false
+            self.ribInputBaseView.isHidden = true
+            self.setupDocumentTypesSelector()
+        case .proofAddress:
+            self.documentTypeBaseView.isHidden = true
+            self.ribInputBaseView.isHidden = true
+            self.setupDocumentUploadViews(documentTypeGroups: [.proofAddress])
+        case .ibanProof:
+            self.documentTypeBaseView.isHidden = true
+            self.ribInputBaseView.isHidden = false
+            self.setupDocumentUploadViews(documentTypeGroups: [.rib])
+        case .others:
+            self.documentTypeBaseView.isHidden = true
+            self.ribInputBaseView.isHidden = true
+            self.setupDocumentUploadViews(documentTypeGroups: [.other])
+        }
+    }
+
     private func setupDocumentTypesSelector() {
 
         let identityCardView = CardOptionRadioView()
@@ -241,18 +364,102 @@ class ManualUploadDocumentsViewController: UIViewController {
 
             self.documentUploadsStackView.addArrangedSubview(uploadDocumentsInformationView)
 
-            if documentTypeGroup == documentTypeGroups.first {
-                uploadDocumentsInformationView.isHidden = false
+            if documentTypeGroup == .identityCard ||
+                documentTypeGroup == .residenceId ||
+                documentTypeGroup == .drivingLicense ||
+                documentTypeGroup == .passport {
                 uploadDocumentsInformationView.isMultiUpload = true
             }
             else {
-                uploadDocumentsInformationView.isHidden = true
                 uploadDocumentsInformationView.isMultiUpload = false
+            }
 
+            if self.viewModel.documentTypeCode == .identification,
+               documentTypeGroup == documentTypeGroups.first {
+                uploadDocumentsInformationView.isHidden = false
+            }
+            else {
+                uploadDocumentsInformationView.isHidden = false
             }
 
         }
 
+        self.setupDocumentInformationViewCallbacks()
+
+    }
+
+    private func setupDocumentInformationViewCallbacks() {
+
+        for documentInformationView in self.documentUploadsInfoViews.values {
+
+            documentInformationView.tappedFrontDocumentAction = { [weak self] documentTypeGroup in
+                self?.currentDoc = CurrentDoc(documentTypeGroup: documentTypeGroup, docSide: .front)
+
+                self?.openFile()
+            }
+
+            documentInformationView.tappedBackDocumentAction = { [weak self] documentTypeGroup in
+                self?.currentDoc = CurrentDoc(documentTypeGroup: documentTypeGroup, docSide: .back)
+
+                self?.openFile()
+            }
+
+            documentInformationView.tappedRemoveFrontDocumentAction = { [weak self] documentTypeGroup in
+
+                if let selectedDocs = self?.selectedDocs[documentTypeGroup] {
+
+                    let filteredSelectedDocs = selectedDocs.filter({
+                        $0.docSide != .front
+                    })
+
+                    self?.selectedDocs[documentTypeGroup] = filteredSelectedDocs
+
+                    documentInformationView.removeFrontDoc()
+
+                    self?.checkSendDocument()
+                }
+            }
+
+            documentInformationView.tappedRemoveBackDocumentAction = { [weak self] documentTypeGroup in
+
+                if let selectedDocs = self?.selectedDocs[documentTypeGroup] {
+
+                    let filteredSelectedDocs = selectedDocs.filter({
+                        $0.docSide != .back
+                    })
+
+                    self?.selectedDocs[documentTypeGroup] = filteredSelectedDocs
+
+                    documentInformationView.removeBackDoc()
+
+                    self?.checkSendDocument()
+                }
+            }
+        }
+
+    }
+
+    private func checkSendDocument() {
+
+        switch self.viewModel.documentTypeCode {
+        case .identification:
+            ()
+        case .proofAddress:
+            ()
+        case .ibanProof:
+            if let selectedDocs = self.selectedDocs[.rib] {
+                if selectedDocs.contains(where: {
+                    $0.docSide == .front
+                }) && self.isIbanValid.value == true {
+                    self.canSendDocuments = true
+                }
+                else {
+                    self.canSendDocuments = false
+                }
+            }
+        case .others:
+            ()
+        }
     }
 
     private func checkUploadDocumentInfoViewToShow(documentTypeGroup: DocumentTypeGroup) {
@@ -268,7 +475,125 @@ class ManualUploadDocumentsViewController: UIViewController {
                 documentUploadsInfoView.isHidden = true
             }
         }
+    }
 
+    private func openFile() {
+        let documentPicker = UIDocumentPickerViewController(documentTypes: self.viewModel.supportedTypes, in: .import)
+        documentPicker.delegate = self
+        documentPicker.allowsMultipleSelection = false
+        documentPicker.shouldShowFileExtensions = true
+        self.present(documentPicker, animated: true, completion: nil)
+    }
+
+    private func setupFilePicked(fileName: String, fileData: Data) {
+
+        if let currentDoc = self.currentDoc,
+           let documentInfoView = self.documentUploadsInfoViews[currentDoc.documentTypeGroup] {
+
+            switch currentDoc.docSide {
+            case .front:
+                documentInfoView.setFrontDocSelected(fileName: fileName)
+                let selectedDoc = SelectedDoc(name: fileName, fileData: fileData, docSide: .front)
+
+                if let selectedDocs = self.selectedDocs[currentDoc.documentTypeGroup] {
+                    self.selectedDocs[currentDoc.documentTypeGroup]?.append(selectedDoc)
+                }
+                else {
+                    self.selectedDocs[currentDoc.documentTypeGroup] = [selectedDoc]
+                }
+
+            case .back:
+                documentInfoView.setBackDocSelected(fileName: fileName)
+                let selectedDoc = SelectedDoc(name: fileName, fileData: fileData, docSide: .back)
+
+                if let selectedDocs = self.selectedDocs[currentDoc.documentTypeGroup] {
+                    self.selectedDocs[currentDoc.documentTypeGroup]?.append(selectedDoc)
+                }
+                else {
+                    self.selectedDocs[currentDoc.documentTypeGroup] = [selectedDoc]
+                }
+            }
+
+            self.checkSendDocument()
+        }
+    }
+
+    private func validateIBANFormat(ibanValue: String) {
+
+        let pattern = "^[A-Z]{2}[A-Z0-9]{14,29}$"
+        if let regex = try? NSRegularExpression(pattern: pattern) {
+
+            let range = NSRange(location: 0, length: ibanValue.utf16.count)
+
+            if regex.firstMatch(in: ibanValue, options: [], range: range) != nil {
+                self.ribNumberHeaderTextFieldView.showBorderState(state: .hidden)
+                self.showInvalidIban = false
+                self.isIbanValid.send(true)
+            }
+            else {
+                self.ribNumberHeaderTextFieldView.showBorderState(state: .error)
+                self.showInvalidIban = true
+                self.isIbanValid.send(false)
+            }
+        }
+    }
+
+    private func showAlert(alertType: AlertType, text: String) {
+
+        switch alertType {
+        case .success:
+            let alert = UIAlertController(title: localized("upload_iban_success"),
+                                          message: text,
+                                          preferredStyle: .alert)
+
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+
+                self?.dismiss(animated: true)
+            }))
+
+            self.present(alert, animated: true, completion: nil)
+        case .error:
+            let alert = UIAlertController(title: localized("upload_iban_error"),
+                                          message: text,
+                                          preferredStyle: .alert)
+
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
+
+            self.present(alert, animated: true, completion: nil)
+        }
+
+    }
+
+    private func setupPublishers() {
+
+        self.ribNumberHeaderTextFieldView.textPublisher
+            .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] textValue in
+                if let textValue {
+
+                    if textValue != "" {
+                        self?.validateIBANFormat(ibanValue: textValue)
+                    }
+                    else {
+                        self?.ribNumberHeaderTextFieldView.showBorderState(state: .hidden)
+                        self?.showInvalidIban = false
+                        self?.isIbanValid.send(false)
+                    }
+
+                    self?.ribInputBaseView.setNeedsLayout()
+                    self?.ribInputBaseView.layoutIfNeeded()
+                }
+            })
+            .store(in: &cancellables)
+
+        self.isIbanValid
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isIbanValid in
+
+                self?.checkSendDocument()
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: - Bindings
@@ -283,11 +608,56 @@ class ManualUploadDocumentsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        viewModel.shouldShowAlert = { [weak self] alertType, text in
+            self?.showAlert(alertType: alertType, text: text)
+        }
+
     }
 
     // MARK: Actions
     @objc private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
+    }
+
+    @objc func didTapBackground() {
+        self.resignFirstResponder()
+
+        self.ribNumberHeaderTextFieldView.resignFirstResponder()
+
+    }
+}
+
+extension ManualUploadDocumentsViewController: UIDocumentPickerDelegate, UINavigationControllerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+
+        let fileUrl = urls[0]
+        let fileName = urls[0].lastPathComponent
+        var fileSize = 0.0
+
+        do {
+
+            let attribute = try FileManager.default.attributesOfItem(atPath: fileUrl.path)
+            if let size = attribute[FileAttributeKey.size] as? NSNumber {
+                fileSize = size.doubleValue / 1000000.0
+            }
+
+            if fileSize > 10.0 {
+                self.showSimpleAlert(title: localized("max_file_size_exceeded"), message: localized("max_file_size_exceeded_message"))
+            }
+            else {
+                let fileData = try Data(contentsOf: fileUrl)
+
+                self.setupFilePicked(fileName: fileName, fileData: fileData)
+            }
+        }
+        catch {
+            print("No data")
+        }
+
+    }
+
+     func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        controller.dismiss(animated: true, completion: nil)
     }
 }
 
@@ -332,6 +702,73 @@ extension ManualUploadDocumentsViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }
+
+    private static func createTopSectionStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 8
+        return stackView
+    }
+
+    private static func createRibInputBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createRibInputTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("rib_number")
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.textAlignment = .left
+        return label
+    }
+
+    private static func createRibInputStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 0
+        return stackView
+    }
+
+    private static func createRibNumberHeaderTextFieldView() -> HeaderTextFieldView {
+        let headerTextFieldView = HeaderTextFieldView()
+        headerTextFieldView.translatesAutoresizingMaskIntoConstraints = false
+        headerTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
+        headerTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
+        headerTextFieldView.setPlaceholderText(localized("rib"))
+        headerTextFieldView.setKeyboardType(.default)
+        return headerTextFieldView
+    }
+
+    private static func createInvalidIbanView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createInvalidIbanIconImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "error_input_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+
+    private static func createInvalidIbanLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("iban_invalid")
+        label.font = AppFont.with(type: .semibold, size: 12)
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        return label
     }
 
     private static func createDocumentTypeBaseView() -> UIView {
@@ -414,9 +851,23 @@ extension ManualUploadDocumentsViewController {
 
         self.scrollView.addSubview(self.contentBaseView)
 
-        self.contentBaseView.addSubview(self.documentTypeBaseView)
+        self.contentBaseView.addSubview(self.topSectionStackView)
+
+        self.topSectionStackView.addArrangedSubview(self.documentTypeBaseView)
+
         self.documentTypeBaseView.addSubview(self.documentTypeTitleLabel)
         self.documentTypeBaseView.addSubview(self.documentTypeStackView)
+
+        self.topSectionStackView.addArrangedSubview(self.ribInputBaseView)
+
+        self.ribInputBaseView.addSubview(self.ribInputTitleLabel)
+        self.ribInputBaseView.addSubview(self.ribNumberHeaderTextFieldView)
+        self.ribInputBaseView.addSubview(self.ribInputStackView)
+
+        self.ribInputStackView.addArrangedSubview(self.invalidIbanView)
+
+        self.invalidIbanView.addSubview(self.invalidIbanIconImageView)
+        self.invalidIbanView.addSubview(self.invalidIbanLabel)
 
         self.contentBaseView.addSubview(self.documentUploadsStackView)
 
@@ -473,9 +924,44 @@ extension ManualUploadDocumentsViewController {
 
         // Content base view
         NSLayoutConstraint.activate([
-            self.documentTypeBaseView.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor, constant: 14),
-            self.documentTypeBaseView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor, constant: -14),
-            self.documentTypeBaseView.topAnchor.constraint(equalTo: self.contentBaseView.topAnchor, constant: 20),
+            self.topSectionStackView.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor, constant: 14),
+            self.topSectionStackView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor, constant: -14),
+            self.topSectionStackView.topAnchor.constraint(equalTo: self.contentBaseView.topAnchor, constant: 20),
+
+            self.ribInputBaseView.leadingAnchor.constraint(equalTo: self.topSectionStackView.leadingAnchor),
+            self.ribInputBaseView.trailingAnchor.constraint(equalTo: self.topSectionStackView.trailingAnchor),
+
+            self.ribInputTitleLabel.leadingAnchor.constraint(equalTo: self.ribInputBaseView.leadingAnchor, constant: 14),
+            self.ribInputTitleLabel.trailingAnchor.constraint(equalTo: self.ribInputBaseView.trailingAnchor, constant: -14),
+            self.ribInputTitleLabel.topAnchor.constraint(equalTo: self.ribInputBaseView.topAnchor, constant: 18),
+
+            self.ribNumberHeaderTextFieldView.leadingAnchor.constraint(equalTo: self.ribInputBaseView.leadingAnchor, constant: 14),
+            self.ribNumberHeaderTextFieldView.trailingAnchor.constraint(equalTo: self.ribInputBaseView.trailingAnchor, constant: -14),
+            self.ribNumberHeaderTextFieldView.topAnchor.constraint(equalTo: self.ribInputTitleLabel.bottomAnchor, constant: 14),
+            self.ribNumberHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80),
+
+            self.ribInputStackView.leadingAnchor.constraint(equalTo: self.ribNumberHeaderTextFieldView.leadingAnchor),
+            self.ribInputStackView.trailingAnchor.constraint(equalTo: self.ribNumberHeaderTextFieldView.trailingAnchor),
+            self.ribInputStackView.topAnchor.constraint(equalTo: self.ribNumberHeaderTextFieldView.bottomAnchor, constant: -12),
+            self.ribInputStackView.bottomAnchor.constraint(equalTo: self.ribInputBaseView.bottomAnchor, constant: -14),
+
+            self.invalidIbanView.leadingAnchor.constraint(equalTo: self.ribInputStackView.leadingAnchor),
+            self.invalidIbanView.trailingAnchor.constraint(equalTo: self.ribInputStackView.trailingAnchor),
+//            self.invalidIbanView.topAnchor.constraint(equalTo: self.ribNumberHeaderTextFieldView.bottomAnchor, constant: -12),
+//            self.invalidIbanView.bottomAnchor.constraint(equalTo: self.ribInputBaseView.bottomAnchor, constant: -14),
+
+            self.invalidIbanIconImageView.leadingAnchor.constraint(equalTo: self.invalidIbanView.leadingAnchor),
+            self.invalidIbanIconImageView.topAnchor.constraint(equalTo: self.invalidIbanView.topAnchor, constant: 2),
+            self.invalidIbanIconImageView.widthAnchor.constraint(equalToConstant: 22),
+            self.invalidIbanIconImageView.heightAnchor.constraint(equalTo: self.invalidIbanIconImageView.widthAnchor),
+
+            self.invalidIbanLabel.leadingAnchor.constraint(equalTo: self.invalidIbanIconImageView.trailingAnchor, constant: 4),
+            self.invalidIbanLabel.topAnchor.constraint(equalTo: self.invalidIbanIconImageView.topAnchor),
+            self.invalidIbanLabel.trailingAnchor.constraint(equalTo: self.invalidIbanView.trailingAnchor),
+            self.invalidIbanLabel.bottomAnchor.constraint(equalTo: self.invalidIbanView.bottomAnchor, constant: -4),
+
+            self.documentTypeBaseView.leadingAnchor.constraint(equalTo: self.topSectionStackView.leadingAnchor),
+            self.documentTypeBaseView.trailingAnchor.constraint(equalTo: self.topSectionStackView.trailingAnchor),
 
             self.documentTypeTitleLabel.leadingAnchor.constraint(equalTo: self.documentTypeBaseView.leadingAnchor, constant: 17),
             self.documentTypeTitleLabel.trailingAnchor.constraint(equalTo: self.documentTypeBaseView.trailingAnchor, constant: -17),
@@ -488,9 +974,25 @@ extension ManualUploadDocumentsViewController {
 
             self.documentUploadsStackView.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor, constant: 14),
             self.documentUploadsStackView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor, constant: -14),
-            self.documentUploadsStackView.topAnchor.constraint(equalTo: self.documentTypeBaseView.bottomAnchor, constant: 25),
+            self.documentUploadsStackView.topAnchor.constraint(equalTo: self.topSectionStackView.bottomAnchor, constant: 25),
             self.documentUploadsStackView.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor, constant: -20),
         ])
 
     }
+}
+
+enum DocSide {
+    case front
+    case back
+}
+
+struct SelectedDoc {
+    let name: String
+    let fileData: Data
+    let docSide: DocSide
+}
+
+struct CurrentDoc {
+    let documentTypeGroup: DocumentTypeGroup
+    let docSide: DocSide
 }

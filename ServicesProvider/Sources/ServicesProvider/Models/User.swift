@@ -427,6 +427,7 @@ public enum DocumentTypeGroup {
     case passport
     case drivingLicense
     case residenceId
+    case proofOfAddress
     case rib
     case other
 
@@ -437,6 +438,7 @@ public enum DocumentTypeGroup {
         case "PASSPORT": self = .passport
         case "DRIVING_LICENCE": self = .drivingLicense
         case "RESIDENCE_ID": self = .residenceId
+        case "POA": self = .proofOfAddress
         case "RIB": self = .rib
         case "OTHER": self = .other
         default: return nil

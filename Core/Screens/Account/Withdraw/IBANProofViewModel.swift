@@ -98,7 +98,11 @@ class IBANProofViewModel {
                 self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
                 let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
                 
-                return DocumentFileInfo(id: userDocument.documentType, name: userDocument.fileName, status: userDocumentStatus ?? .pendingApproved, uploadDate: uploadDate ?? Date())
+                return DocumentFileInfo(id: userDocument.documentType,
+                                        name: userDocument.fileName,
+                                        status: userDocumentStatus ?? .pendingApproved,
+                                        uploadDate: uploadDate ?? Date(),
+                                        documentTypeGroup: .rib)
             })
 
             let documentInfo = DocumentInfo(id: documentType.documentType,

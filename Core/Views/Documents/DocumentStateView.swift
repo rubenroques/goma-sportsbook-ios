@@ -58,7 +58,13 @@ class DocumentStateView: UIView {
 
         self.titleLabel.text = documentFileInfo.name
 
-        self.dateLabel.text = documentFileInfo.uploadDate.toString(formatString: "dd-MM-yyyy")
+        if let uploadDate = documentFileInfo.uploadDate {
+            self.dateLabel.text = uploadDate.toString(formatString: "dd-MM-yyyy")
+        }
+        else {
+            self.dateLabel.text = ""
+        }
+
 
         switch documentFileInfo.status {
         case .approved:
@@ -66,7 +72,12 @@ class DocumentStateView: UIView {
         case .pendingApproved:
             self.stateView.backgroundColor = UIColor.App.statsAway
         case .failed:
-            self.stateView.backgroundColor = UIColor.App.alertSuccess
+            self.stateView.backgroundColor = UIColor.App.alertError
+        case .rejected:
+            self.stateView.backgroundColor = UIColor.App.alertError
+        case .incomplete:
+            self.stateView.backgroundColor = UIColor.App.alertWarning
+
         }
 
         self.stateLabel.text = documentFileInfo.status.statusName

@@ -8,6 +8,8 @@
 import UIKit
 import Combine
 import ServicesProvider
+import IdensicMobileSDK
+import CryptoKit
 
 class IdentificationDocsViewModel {
 
@@ -24,6 +26,9 @@ class IdentificationDocsViewModel {
     var hasLoadedDocumentTypes: CurrentValueSubject<Bool, Never> = .init(false)
     var hasLoadedUserDocuments: CurrentValueSubject<Bool, Never> = .init(false)
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var hasDocumentsProcessed: CurrentValueSubject<Bool, Never> = .init(false)
+
+    var sumsubAccessTokenPublisher: CurrentValueSubject<String, Never> = .init("")
 
     var shouldReloadData: (() -> Void)?
 
@@ -34,6 +39,101 @@ class IdentificationDocsViewModel {
 
         self.getDocumentTypes()
 
+    }
+
+    func getSumsubAccessToken(levelName: String) {
+
+        self.isLoadingPublisher.send(true)
+
+        let userId = Env.userSessionStore.userProfilePublisher.value?.username ?? ""
+
+        Env.servicesProvider.sumsubDataProvider?.getSumsubAccessToken(userId: "adrianotest15", levelName: levelName)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("SUMSUB ACCESS TOKEN ERROR: \(error)")
+
+                    self?.isLoadingPublisher.send(false)
+
+                case .finished:
+                    ()
+                }
+            }, receiveValue: { [weak self] accessTokenResponse in
+                print("SUMSUB ACCESS TOKEN RESPONSE: \(accessTokenResponse)")
+
+                if let accessToken = accessTokenResponse.token {
+                    self?.sumsubAccessTokenPublisher.send(accessToken)
+                }
+
+                self?.isLoadingPublisher.send(false)
+
+            })
+            .store(in: &cancellables)
+
+//        Env.servicesProvider.getSumsubAccessToken(userId: userId, levelName: levelName)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { [weak self] completion in
+//                switch completion {
+//                case .finished:
+//                    ()
+//                case .failure(let error):
+//                    print("SUMSUB ACCESS TOKEN ERROR: \(error)")
+//                    switch error {
+//                    case .errorMessage(let message):
+//                        print("ERROR MESSAGE: \(message)")
+//
+//                    default:
+//                        ()
+//                    }
+//
+//                    self?.isLoadingPublisher.send(false)
+//
+//                }
+//            }, receiveValue: { [weak self] accessTokenResponse in
+//                print("SUMSUB ACCESS TOKEN: \(accessTokenResponse)")
+//
+//                if let accessToken = accessTokenResponse.token {
+//                    self?.sumsubAccessTokenPublisher.send(accessToken)
+//                }
+//
+//                self?.isLoadingPublisher.send(false)
+//
+//            })
+//            .store(in: &cancellables)
+    }
+
+    func getSumSubDocuments() {
+
+        self.isLoadingPublisher.send(true)
+        self.hasLoadedUserDocuments.send(false)
+        self.hasDocumentsProcessed.send(false)
+
+        let userId = Env.userSessionStore.userProfilePublisher.value?.username ?? ""
+
+        Env.servicesProvider.sumsubDataProvider?.getApplicantData(userId: "adrianotest15")
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("SUMSUB DATA ERROR: \(error)")
+
+                    self?.isLoadingPublisher.send(false)
+
+                case .finished:
+                    ()
+                }
+            }, receiveValue: { [weak self] applicantDataResponse in
+                print("SUMSUB DATA RESPONSE: \(applicantDataResponse)")
+
+                if let requiredDocumentTypes = self?.requiredDocumentTypes {
+                    self?.processSumsubDocuments(documentTypes: requiredDocumentTypes, applicantDataResponse: applicantDataResponse)
+                }
+
+                //self?.isLoadingPublisher.send(false)
+
+            })
+            .store(in: &cancellables)
     }
 
     private func setupPublishers() {
@@ -65,14 +165,19 @@ class IdentificationDocsViewModel {
             }, receiveValue: { [weak self] documentTypesResponse in
 
                 let requiredDocumentTypes = documentTypesResponse.documentTypes.filter({
-                    $0.documentTypeGroup == .identityCard  || $0.documentTypeGroup == .residenceId || $0.documentTypeGroup == .drivingLicense || $0.documentTypeGroup == .passport
+                    $0.documentTypeGroup == .identityCard  ||
+                    $0.documentTypeGroup == .residenceId ||
+                    $0.documentTypeGroup == .drivingLicense ||
+                    $0.documentTypeGroup == .passport ||
+                    $0.documentTypeGroup == .proofOfAddress
                 })
 
                 self?.requiredDocumentTypes.append(contentsOf: requiredDocumentTypes)
 
                 self?.hasLoadedDocumentTypes.send(true)
 
-                self?.getUserDocuments()
+                //self?.getUserDocuments()
+                self?.getSumSubDocuments()
             })
             .store(in: &cancellables)
     }
@@ -101,27 +206,121 @@ class IdentificationDocsViewModel {
             .store(in: &cancellables)
     }
 
-    private func processDocuments(documentTypes: [DocumentType], userDocuments: [UserDocument]) {
+    private func clearDocumentsData() {
+        self.documents = []
+        self.identificationDocuments = []
+        self.proofAddressDocuments = []
 
+    }
+
+    private func processSumsubDocuments(documentTypes: [DocumentType], applicantDataResponse: ApplicantDataResponse) {
+
+        self.clearDocumentsData()
+
+        var documentFilesInfo = [DocumentFileInfo]()
+
+        if let docTypes = applicantDataResponse.info?.applicantDocs {
+
+            for docType in docTypes {
+
+                let docId = docType.docType
+
+                let docTypeGroup = DocumentTypeGroup(externalCode: docId)
+
+                let docName = docTypeGroup?.codeName ?? ""
+
+                var docStatus = FileState.pendingApproved
+
+                var retry = true
+
+                self.dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+                var uploadDate: Date? = nil
+
+                // Check documents state
+                if let levelName = applicantDataResponse.reviewData?.levelName,
+                   let reviewStatus = applicantDataResponse.reviewData?.reviewStatus,
+                   let docTypeGroup = docTypeGroup {
+
+                    // Doc in same level group
+                    if levelName == docTypeGroup.levelName {
+
+                        uploadDate = self.dateFormatter.date(from: applicantDataResponse.reviewData?.createDate ?? "")
+
+                        if reviewStatus == "completed" {
+                            if let reviewResult = applicantDataResponse.reviewData?.reviewResult?.reviewAnswer,
+                               reviewResult == "RED" {
+                                docStatus = .rejected
+
+                                if let reviewRejectType = applicantDataResponse.reviewData?.reviewResult?.reviewRejectType {
+                                    retry = reviewRejectType == "RETRY" ? true : false
+                                }
+                            }
+                            else if let reviewResult = applicantDataResponse.reviewData?.reviewResult?.reviewAnswer,
+                                    reviewResult == "GREEN" {
+                                docStatus = .approved
+
+                                retry = false
+                            }
+                        }
+                        else if reviewStatus == "init" {
+                            if let reviewResult = applicantDataResponse.reviewData?.reviewResult?.reviewAnswer,
+                               reviewResult == "RED" {
+                                docStatus = .rejected
+
+                                if let reviewRejectType = applicantDataResponse.reviewData?.reviewResult?.reviewRejectType {
+                                    retry = reviewRejectType == "RETRY" ? true : false
+                                }
+                            }
+                            else if let reviewResult = applicantDataResponse.reviewData?.reviewResult?.reviewAnswer,
+                                    reviewResult == "GREEN" {
+                                docStatus = .incomplete
+
+                                retry = true
+                            }
+                        }
+                        else {
+                            docStatus = .pendingApproved
+                            retry = false
+                        }
+                    }
+                    else {
+                        if let reviewResult = applicantDataResponse.reviewData?.reviewResult?.reviewAnswer,
+                           reviewResult == "RED" {
+                            docStatus = .rejected
+
+                            if let reviewRejectType = applicantDataResponse.reviewData?.reviewResult?.reviewRejectType {
+                                retry = reviewRejectType == "RETRY" ? true : false
+                            }
+                        }
+                        else if let reviewResult = applicantDataResponse.reviewData?.reviewResult?.reviewAnswer,
+                                reviewResult == "GREEN" {
+                            docStatus = .approved
+
+                            //retry = reviewStatus == "complete" ? true : false
+                            retry = false
+                        }
+                    }
+
+                }
+
+                let docFileInfo = DocumentFileInfo(id: docId, name: docName, status: docStatus, uploadDate: uploadDate, retry: retry, documentTypeGroup: docTypeGroup ?? .none)
+
+                documentFilesInfo.append(docFileInfo)
+            }
+        }
+
+        // Associate docFileInfos to documentTypes
         for documentType in documentTypes {
 
             let documentTypeCode = DocumentTypeCode(code: documentType.documentType)
 
-            let uploadedFiles = userDocuments.filter({
-                $0.documentType == documentType.documentType
-            }).map({ userDocument -> DocumentFileInfo in
-
-                let userDocumentStatus = FileState(code: userDocument.status)
-
-                self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
-                let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
-
-                return DocumentFileInfo(id: userDocument.documentType, name: userDocument.fileName, status: userDocumentStatus ?? .pendingApproved, uploadDate: uploadDate ?? Date())
-            })
-
             if let documentTypeGroup = documentType.documentTypeGroup {
 
                 let mappedDocumentTypeGroup = ServiceProviderModelMapper.documentTypeGroup(fromServiceProviderDocumentTypeGroup: documentTypeGroup)
+
+                let uploadedFiles = documentFilesInfo.filter( {
+                    $0.documentTypeGroup == mappedDocumentTypeGroup
+                })
 
                 let documentInfo = DocumentInfo(id: documentType.documentType,
                                                 typeName: documentTypeCode?.codeName ?? "",
@@ -133,6 +332,89 @@ class IdentificationDocsViewModel {
 
             }
             else {
+
+                let uploadedFiles = documentFilesInfo
+
+                let documentInfo = DocumentInfo(id: documentType.documentType,
+                                                typeName: documentTypeCode?.codeName ?? "",
+                                                status: uploadedFiles.isEmpty ? .notReceived : .received,
+                                                uploadedFiles: uploadedFiles)
+
+                self.documents.append(documentInfo)
+            }
+        }
+
+        let identificationDocuments = self.documents.filter({
+            $0.typeGroup == .identityCard ||
+            $0.typeGroup == .residenceId ||
+            $0.typeGroup == .drivingLicense ||
+            $0.typeGroup == .passport
+        })
+        self.identificationDocuments = identificationDocuments
+
+        let proofAddress = self.documents.filter({
+            $0.typeGroup == .proofAddress
+        })
+        self.proofAddressDocuments = proofAddress
+
+        self.isLoadingPublisher.send(false)
+        self.hasLoadedUserDocuments.send(true)
+        self.hasDocumentsProcessed.send(true)
+        self.shouldReloadData?()
+    }
+
+    private func processDocuments(documentTypes: [DocumentType], userDocuments: [UserDocument]) {
+
+        for documentType in documentTypes {
+
+            let documentTypeCode = DocumentTypeCode(code: documentType.documentType)
+
+            if let documentTypeGroup = documentType.documentTypeGroup {
+
+                let mappedDocumentTypeGroup = ServiceProviderModelMapper.documentTypeGroup(fromServiceProviderDocumentTypeGroup: documentTypeGroup)
+
+                let uploadedFiles = userDocuments.filter({
+                    $0.documentType == documentType.documentType
+                }).map({ userDocument -> DocumentFileInfo in
+
+                    let userDocumentStatus = FileState(code: userDocument.status)
+
+                    self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
+                    let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
+
+                    return DocumentFileInfo(id: userDocument.documentType,
+                                            name: userDocument.fileName,
+                                            status: userDocumentStatus ?? .pendingApproved,
+                                            uploadDate: uploadDate ?? Date(),
+                                            documentTypeGroup: mappedDocumentTypeGroup)
+                })
+
+                let documentInfo = DocumentInfo(id: documentType.documentType,
+                                                typeName: documentTypeCode?.codeName ?? "",
+                                                status: uploadedFiles.isEmpty ? .notReceived : .received,
+                                                uploadedFiles: uploadedFiles,
+                                                typeGroup: mappedDocumentTypeGroup)
+
+                self.documents.append(documentInfo)
+
+            }
+            else {
+
+                let uploadedFiles = userDocuments.filter({
+                    $0.documentType == documentType.documentType
+                }).map({ userDocument -> DocumentFileInfo in
+
+                    let userDocumentStatus = FileState(code: userDocument.status)
+
+                    self.dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
+                    let uploadDate = self.dateFormatter.date(from: userDocument.uploadDate)
+
+                    return DocumentFileInfo(id: userDocument.documentType,
+                                            name: userDocument.fileName,
+                                            status: userDocumentStatus ?? .pendingApproved,
+                                            uploadDate: uploadDate ?? Date(),
+                                            documentTypeGroup: .none)
+                })
 
                 let documentInfo = DocumentInfo(id: documentType.documentType,
                                                 typeName: documentTypeCode?.codeName ?? "",
@@ -154,6 +436,9 @@ class IdentificationDocsViewModel {
         self.proofAddressDocuments = proofAddress
 
         self.isLoadingPublisher.send(false)
+
+        self.hasLoadedUserDocuments.send(false)
+
         self.shouldReloadData?()
     }
 }
@@ -326,23 +611,37 @@ class IdentificationDocsViewController: UIViewController {
 
                 self?.isLoading = isLoading
 
-                if !isLoading {
+            })
+            .store(in: &cancellables)
 
-                    if let identificationDocuments = self?.viewModel.identificationDocuments {
-                        self?.identificationSubtitleLabel.isHidden = identificationDocuments.isEmpty
-                    }
+        viewModel.sumsubAccessTokenPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue:  { [weak self] accessToken in
+                if accessToken != "" {
+                    self?.showSumsub(accessToken: accessToken)
+                }
+            })
+            .store(in: &cancellables)
 
-                    if let proofAddressDocuments = self?.viewModel.proofAddressDocuments {
-                        self?.proofAddressSubtitleLabel.isHidden = proofAddressDocuments.isEmpty
+        viewModel.hasDocumentsProcessed
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isProcessed in
 
-                    }
+                if isProcessed {
 
-                    // TEST
-                    if let documents = self?.viewModel.documents {
-                        self?.setupDocumentStateViews(documentsInfo: documents)
+                        if let identificationDocuments = self?.viewModel.identificationDocuments {
+                            self?.identificationSubtitleLabel.isHidden = identificationDocuments.isEmpty
+                        }
 
-                    }
+                        if let proofAddressDocuments = self?.viewModel.proofAddressDocuments {
+                            self?.proofAddressSubtitleLabel.isHidden = proofAddressDocuments.isEmpty
 
+                        }
+
+                        if let documents = self?.viewModel.documents {
+                            self?.setupDocumentStateViews(documentsInfo: documents)
+
+                        }
                 }
             })
             .store(in: &cancellables)
@@ -351,47 +650,117 @@ class IdentificationDocsViewController: UIViewController {
     // MARK: Action
     @objc func didTapIdAddDoc() {
         print("ADD ID DOC")
-        let manualUploadDocumentViewModel = ManualUploadsDocumentsViewModel()
 
-        let manualUploadDocumentViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocumentViewModel)
-
-        self.navigationController?.pushViewController(manualUploadDocumentViewController, animated: true)
+        self.viewModel.getSumsubAccessToken(levelName: "ID Verifiication")
+//        let manualUploadDocumentViewModel = ManualUploadsDocumentsViewModel()
+//
+//        let manualUploadDocumentViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocumentViewModel)
+//
+//        self.navigationController?.pushViewController(manualUploadDocumentViewController, animated: true)
     }
 
     @objc func didTapProofAddDoc() {
         print("ADD PROOF DOC")
-        let manualUploadDocumentViewModel = ManualUploadsDocumentsViewModel()
-
-        let manualUploadDocumentViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocumentViewModel)
-
-        self.navigationController?.pushViewController(manualUploadDocumentViewController, animated: true)
+        self.viewModel.getSumsubAccessToken(levelName: "POA Verification")
+//        let manualUploadDocumentViewModel = ManualUploadsDocumentsViewModel()
+//
+//        let manualUploadDocumentViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocumentViewModel)
+//
+//        self.navigationController?.pushViewController(manualUploadDocumentViewController, animated: true)
     }
 
     // MARK: Functions
+    private func showSumsub(accessToken: String) {
+
+        let sdk = SNSMobileSDK(
+            accessToken: accessToken
+        )
+
+        guard sdk.isReady else {
+            print("Initialization failed: " + sdk.verboseStatus)
+            return
+        }
+
+        // TODO: Check token expiration
+//        sdk.tokenExpirationHandler { (onComplete) in
+//            self.viewModel.getSumsubAccessToken()
+//
+//            self.viewModel.
+//            { (newToken) in
+//                onComplete(newToken)
+//            }
+//        }
+
+        // Verification handler
+        sdk.verificationHandler { (isApproved) in
+            print("verificationHandler: Applicant is " + (isApproved ? "approved" : "finally rejected"))
+        }
+
+        // Dismiss handler
+        sdk.dismissHandler { (sdk, mainVC) in
+            mainVC.dismiss(animated: true, completion: nil)
+
+            self.viewModel.getSumSubDocuments()
+        }
+
+        self.present(sdk.mainVC, animated: true, completion: nil)
+
+    }
     private func setupDocumentStateViews(documentsInfo: [DocumentInfo]) {
 
-        let testDocumentInfo = DocumentInfo(id: "Identity",
-                                            typeName: "IDENTITY_CARD",
-                                            status: .received,
-                                            uploadedFiles: [DocumentFileInfo(id: "1",
-                                                                             name: "Identity Card Test",
-                                                                             status: .approved,
-                                                                             uploadDate: Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date())])
+        self.identificationBottomStackView.removeAllArrangedSubviews()
+        self.proofAddressBottomStackView.removeAllArrangedSubviews()
 
-        if let testDocumentFileInfo = testDocumentInfo.uploadedFiles.first {
+        if let identityFileInfo = self.viewModel.identificationDocuments.first?.uploadedFiles.first {
 
             let documentStateView = DocumentStateView()
 
-            documentStateView.configure(documentFileInfo: testDocumentFileInfo)
+            documentStateView.configure(documentFileInfo: identityFileInfo)
 
             self.identificationBottomStackView.addArrangedSubview(documentStateView)
 
             self.identificationSubtitleLabel.isHidden = true
 
-            self.canAddIdentificationDocs = false
+            if let canRetry = identityFileInfo.retry {
 
-            self.canAddProofDocs = true
+                self.canAddIdentificationDocs = canRetry
+
+            }
+
         }
+
+        if let proofAddressFileInfo = self.viewModel.proofAddressDocuments.first?.uploadedFiles.first {
+
+            let documentStateView = DocumentStateView()
+
+            documentStateView.configure(documentFileInfo: proofAddressFileInfo)
+
+            self.proofAddressBottomStackView.addArrangedSubview(documentStateView)
+
+            self.proofAddressSubtitleLabel.isHidden = true
+
+            if let canRetry = proofAddressFileInfo.retry {
+
+                self.canAddProofDocs = canRetry
+
+            }
+
+        }
+
+//        if let testDocumentFileInfo = testDocumentInfo.uploadedFiles.first {
+//
+//            let documentStateView = DocumentStateView()
+//
+//            documentStateView.configure(documentFileInfo: testDocumentFileInfo)
+//
+//            self.identificationBottomStackView.addArrangedSubview(documentStateView)
+//
+//            self.identificationSubtitleLabel.isHidden = true
+//
+//            self.canAddIdentificationDocs = false
+//
+//            self.canAddProofDocs = true
+//        }
 
     }
 }

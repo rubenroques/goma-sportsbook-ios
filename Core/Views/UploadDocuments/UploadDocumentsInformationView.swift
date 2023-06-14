@@ -79,6 +79,11 @@ class UploadDocumentsInformationView: UIView {
         }
     }
 
+    var tappedFrontDocumentAction: ((DocumentTypeGroup) -> Void)?
+    var tappedBackDocumentAction: ((DocumentTypeGroup) -> Void)?
+    var tappedRemoveFrontDocumentAction: ((DocumentTypeGroup) -> Void)?
+    var tappedRemoveBackDocumentAction: ((DocumentTypeGroup) -> Void)?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -178,28 +183,57 @@ class UploadDocumentsInformationView: UIView {
         self.containerView.backgroundColor = color
     }
 
-    @objc private func didTapFrontDocument() {
-        print("TAPPED FRONT DOC UPLOAD")
+    func setFrontDocSelected(fileName: String) {
+        self.frontPickedTitleLabel.text = fileName
         self.frontDocumentUploadState = .uploaded
+
     }
 
-    @objc private func didTapRemoveFrontDocument() {
-        print("REMOVE FRONT DOCUMENT")
+    func setBackDocSelected(fileName: String) {
+        self.backPickedTitleLabel.text = fileName
+        self.backDocumentUploadState = .uploaded
+
+    }
+
+    func removeFrontDoc() {
+        self.frontPickedTitleLabel.text = ""
         self.frontDocumentUploadState = .preUpload
 
     }
 
-    @objc private func didTapBackDocument() {
-        print("TAPPED FRONT DOC UPLOAD")
-        self.backDocumentUploadState = .uploaded
-    }
-
-    @objc private func didTapRemoveBackDocument() {
-        print("REMOVE BACK DOCUMENT")
+    func removeBackDoc() {
+        self.backPickedTitleLabel.text = ""
         self.backDocumentUploadState = .preUpload
 
     }
 
+    @objc private func didTapFrontDocument() {
+        print("TAPPED FRONT DOC UPLOAD")
+        if let documentTypeGroup = self.documentTypeGroup {
+            self.tappedFrontDocumentAction?(documentTypeGroup)
+        }
+    }
+
+    @objc private func didTapRemoveFrontDocument() {
+        print("REMOVE FRONT DOCUMENT")
+        if let documentTypeGroup = self.documentTypeGroup {
+            self.tappedRemoveFrontDocumentAction?(documentTypeGroup)
+        }
+    }
+
+    @objc private func didTapBackDocument() {
+        print("TAPPED FRONT DOC UPLOAD")
+        if let documentTypeGroup = self.documentTypeGroup {
+            self.tappedBackDocumentAction?(documentTypeGroup)
+        }
+    }
+
+    @objc private func didTapRemoveBackDocument() {
+        print("REMOVE BACK DOCUMENT")
+        if let documentTypeGroup = self.documentTypeGroup {
+            self.tappedRemoveBackDocumentAction?(documentTypeGroup)
+        }
+    }
 
 }
 

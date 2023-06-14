@@ -49,6 +49,7 @@ extension ServiceProviderModelMapper {
         case .passport: return .passport
         case .drivingLicense: return .drivingLicense
         case .residenceId: return .residenceId
+        case .proofOfAddress: return .proofAddress
         case .rib: return .rib
         case .other: return .other
         }

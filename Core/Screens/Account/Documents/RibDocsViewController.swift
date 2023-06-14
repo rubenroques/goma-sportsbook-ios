@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import ServicesProvider
 
 class RibDocsViewModel {
 
@@ -14,6 +15,8 @@ class RibDocsViewModel {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
+    var documents: [DocumentInfo] = []
+    var requiredDocumentTypes: [DocumentType] = []
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     var isLocked: CurrentValueSubject<Bool, Never> = .init(false)
@@ -43,9 +46,9 @@ class RibDocsViewController: UIViewController {
     private lazy var lockContainerView: UIView = Self.createLockContainerView()
     private lazy var lockIconImageView: UIImageView = Self.createLockIconImageView()
 
-    private lazy var ribNumberBaseView: UIView = Self.createRibNumberBaseView()
-    private lazy var ribNumberLabel: UILabel = Self.createRibNumberLabel()
-    private lazy var ribNumberHeaderTextFieldView: HeaderTextFieldView = Self.createRibNumberHeaderTextFieldView()
+//    private lazy var ribNumberBaseView: UIView = Self.createRibNumberBaseView()
+//    private lazy var ribNumberLabel: UILabel = Self.createRibNumberLabel()
+//    private lazy var ribNumberHeaderTextFieldView: HeaderTextFieldView = Self.createRibNumberHeaderTextFieldView()
 
     private lazy var ribDocumentBaseView: UIView = Self.createRibDocumentBaseView()
     private lazy var ribDocumentTitleLabel: UILabel = Self.createRibDocumentTitleLabel()
@@ -109,8 +112,8 @@ class RibDocsViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.ribNumberHeaderTextFieldView.setPlaceholderText(localized("rib_number"))
-        self.ribNumberHeaderTextFieldView.setKeyboardType(.decimalPad)
+//        self.ribNumberHeaderTextFieldView.setPlaceholderText(localized("rib_number"))
+//        self.ribNumberHeaderTextFieldView.setKeyboardType(.decimalPad)
 
         self.bind(toViewModel: self.viewModel)
 
@@ -128,7 +131,7 @@ class RibDocsViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        self.ribNumberBaseView.layer.cornerRadius = CornerRadius.card
+//        self.ribNumberBaseView.layer.cornerRadius = CornerRadius.card
 
         self.ribDocumentBaseView.layer.cornerRadius = CornerRadius.card
 
@@ -159,13 +162,13 @@ class RibDocsViewController: UIViewController {
 
         self.lockIconImageView.backgroundColor = .clear
 
-        self.ribNumberBaseView.backgroundColor = UIColor.App.backgroundSecondary
-
-        self.ribNumberLabel.textColor = UIColor.App.textPrimary
-
-        self.ribNumberHeaderTextFieldView.setViewColor(UIColor.App.inputBackground)
-        self.ribNumberHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
-        self.ribNumberHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
+//        self.ribNumberBaseView.backgroundColor = UIColor.App.backgroundSecondary
+//
+//        self.ribNumberLabel.textColor = UIColor.App.textPrimary
+//
+//        self.ribNumberHeaderTextFieldView.setViewColor(UIColor.App.inputBackground)
+//        self.ribNumberHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+//        self.ribNumberHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
 
         self.ribDocumentBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
@@ -215,12 +218,18 @@ class RibDocsViewController: UIViewController {
     // MARK: Action
     @objc func didTapRibAddDoc() {
         print("ADD RIB DOC")
+
+        let manualUploadDocViewModel = ManualUploadsDocumentsViewModel(documentTypeCode: .ibanProof)
+
+        let manualUploadDocViewController = ManualUploadDocumentsViewController(viewModel: manualUploadDocViewModel)
+
+        self.navigationController?.pushViewController(manualUploadDocViewController, animated: true)
     }
 
     @objc func didTapBackground() {
         self.resignFirstResponder()
 
-        self.ribNumberHeaderTextFieldView.resignFirstResponder()
+//        self.ribNumberHeaderTextFieldView.resignFirstResponder()
 
     }
 
@@ -399,10 +408,10 @@ extension RibDocsViewController {
 
         self.lockTitleBaseView.addSubview(self.lockTitleLabel)
 
-        self.topStackView.addArrangedSubview(self.ribNumberBaseView)
+//        self.topStackView.addArrangedSubview(self.ribNumberBaseView)
 
-        self.ribNumberBaseView.addSubview(self.ribNumberLabel)
-        self.ribNumberBaseView.addSubview(self.ribNumberHeaderTextFieldView)
+//        self.ribNumberBaseView.addSubview(self.ribNumberLabel)
+//        self.ribNumberBaseView.addSubview(self.ribNumberHeaderTextFieldView)
 
         self.contentBaseView.addSubview(self.ribDocumentBaseView)
 
@@ -458,15 +467,15 @@ extension RibDocsViewController {
             self.lockTitleLabel.topAnchor.constraint(equalTo: self.lockTitleBaseView.topAnchor, constant: 8),
             self.lockTitleLabel.bottomAnchor.constraint(equalTo: self.lockTitleBaseView.bottomAnchor, constant: -8),
 
-            self.ribNumberLabel.leadingAnchor.constraint(equalTo: self.ribNumberBaseView.leadingAnchor, constant: 14),
-            self.ribNumberLabel.trailingAnchor.constraint(equalTo: self.ribNumberBaseView.trailingAnchor, constant: -14),
-            self.ribNumberLabel.topAnchor.constraint(equalTo: self.ribNumberBaseView.topAnchor, constant: 18),
-
-            self.ribNumberHeaderTextFieldView.leadingAnchor.constraint(equalTo: self.ribNumberBaseView.leadingAnchor, constant: 14),
-            self.ribNumberHeaderTextFieldView.trailingAnchor.constraint(equalTo: self.ribNumberBaseView.trailingAnchor, constant: -14),
-            self.ribNumberHeaderTextFieldView.topAnchor.constraint(equalTo: self.ribNumberLabel.bottomAnchor, constant: 14),
-            self.ribNumberHeaderTextFieldView.bottomAnchor.constraint(equalTo: self.ribNumberBaseView.bottomAnchor),
-            self.ribNumberHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80)
+//            self.ribNumberLabel.leadingAnchor.constraint(equalTo: self.ribNumberBaseView.leadingAnchor, constant: 14),
+//            self.ribNumberLabel.trailingAnchor.constraint(equalTo: self.ribNumberBaseView.trailingAnchor, constant: -14),
+//            self.ribNumberLabel.topAnchor.constraint(equalTo: self.ribNumberBaseView.topAnchor, constant: 18),
+//
+//            self.ribNumberHeaderTextFieldView.leadingAnchor.constraint(equalTo: self.ribNumberBaseView.leadingAnchor, constant: 14),
+//            self.ribNumberHeaderTextFieldView.trailingAnchor.constraint(equalTo: self.ribNumberBaseView.trailingAnchor, constant: -14),
+//            self.ribNumberHeaderTextFieldView.topAnchor.constraint(equalTo: self.ribNumberLabel.bottomAnchor, constant: 14),
+//            self.ribNumberHeaderTextFieldView.bottomAnchor.constraint(equalTo: self.ribNumberBaseView.bottomAnchor),
+//            self.ribNumberHeaderTextFieldView.heightAnchor.constraint(equalToConstant: 80)
 
         ])
 
@@ -474,7 +483,7 @@ extension RibDocsViewController {
         NSLayoutConstraint.activate([
             self.ribDocumentBaseView.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor, constant: 14),
             self.ribDocumentBaseView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor, constant: -14),
-            self.ribDocumentBaseView.topAnchor.constraint(equalTo: self.ribNumberBaseView.bottomAnchor, constant: 23),
+            self.ribDocumentBaseView.topAnchor.constraint(equalTo: self.topStackView.bottomAnchor, constant: 23),
             self.ribDocumentBaseView.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor, constant: -20),
 
             self.ribDocumentTitleLabel.leadingAnchor.constraint(equalTo: self.ribDocumentBaseView.leadingAnchor, constant: 14),
@@ -519,7 +528,7 @@ extension RibDocsViewController {
         NSLayoutConstraint.activate([
             self.lockContainerView.leadingAnchor.constraint(equalTo: self.contentBaseView.leadingAnchor),
             self.lockContainerView.trailingAnchor.constraint(equalTo: self.contentBaseView.trailingAnchor),
-            self.lockContainerView.topAnchor.constraint(equalTo: self.ribNumberBaseView.topAnchor),
+            self.lockContainerView.topAnchor.constraint(equalTo: self.topStackView.topAnchor),
             self.lockContainerView.bottomAnchor.constraint(equalTo: self.contentBaseView.bottomAnchor),
 
             self.lockIconImageView.widthAnchor.constraint(equalToConstant: 83),

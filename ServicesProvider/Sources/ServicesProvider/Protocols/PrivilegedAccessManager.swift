@@ -84,4 +84,9 @@ protocol PrivilegedAccessManager {
     func getUserConsents() -> AnyPublisher<[UserConsent], ServiceProviderError>
 
     func setUserConsents(consentVersionIds: [Int]?, unconsenVersionIds: [Int]?) -> AnyPublisher<BasicResponse, ServiceProviderError>
+
+    func getSumsubAccessToken(userId: String, levelName: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError>
+
+    func getSumsubApplicantData(userId: String) -> AnyPublisher<ApplicantDataResponse, ServiceProviderError>
+
 }
